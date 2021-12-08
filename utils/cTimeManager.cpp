@@ -214,7 +214,7 @@ void cTimeManager::handleTimerGameTime() {
             for (int i = 0; i < MAX_PARTICLES; i++) {
                 cParticle &pParticle = particle[i];
                 if (pParticle.isValid()) {
-                    pParticle.think();
+                    pParticle.thinkFast();
                 }
             }
 

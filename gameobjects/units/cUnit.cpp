@@ -33,6 +33,7 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 
 void cUnit::init(int i) {
     mission = -1;
+    boundParticleId = -1;
     bSelected = false;
     bHovered  = false;
 
@@ -132,6 +133,10 @@ void cUnit::recreateDimensions() {
     dimensions = cRectangle(draw_x(), draw_y(), getBmpWidth(), getBmpHeight());
 }
 
+void cUnit::setBoundParticleId(int particleId) {
+    this->boundParticleId = particleId;
+}
+
 void cUnit::die(bool bBlowUp, bool bSquish) {
     // DO NOTE: We do *not* set the HP to -1 here for a reason. Being: that the isValid() function checks for
     // health and that will give us a unit ID that is the *same* as this unit ID. (see UNIT_NEW() implementation).
@@ -142,6 +147,15 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     //
     // TODO: this should be revisited and fixed in a later version properly!
     bRemoveMe = true;
+
+    // any damage particle dies with the unit?
+    if (boundParticleId > -1) {
+        cParticle &pParticle = particle[boundParticleId];
+        if (pParticle.isValid()) {
+            pParticle.die();
+        }
+        boundParticleId = -1;
+    }
 
     // Animation / Sound
 
@@ -1833,14 +1847,34 @@ void cUnit::think_move_air() {
 
 //    int movespeed = getUnitInfo().speed;
     int movespeed = 2; // 2 pixels, the actual 'speed' is done by the delay above using TIMER_move! :/
-    posX += cos(angle) * movespeed;
-    posY += sin(angle) * movespeed;
+    float newPosX = posX + cos(angle) * movespeed;
+    float newPosY = posY + sin(angle) * movespeed;
+    setPosX(newPosX);
+    setPosY(newPosY);
 
     // Cell of unit is determined by its center
     iCell = mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
 
     updateCellXAndY();
     map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+}
+
+void cUnit::setPosX(float newVal) {
+    float diff = newVal - posX;
+    posX = newVal;
+    if (boundParticleId > -1) {
+        cParticle &pParticle = particle[boundParticleId];
+        pParticle.addPosX(diff);
+    }
+}
+
+void cUnit::setPosY(float newVal) {
+    float diff = newVal - posY;
+    posY = newVal;
+    if (boundParticleId > -1) {
+        cParticle &pParticle = particle[boundParticleId];
+        pParticle.addPosY(diff);
+    }
 }
 
 void cUnit::forgetAboutUnitToPickUp() {// forget about this
@@ -2859,14 +2893,14 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
     // movement in pixels
     if (bToLeft == 0)
-        posX--;
+        setPosX(posX-1);
     else if (bToLeft == 1)
-        posX++;
+        setPosX(posX+1);
 
     if (bToDown == 0)
-        posY++;
+        setPosY(posY+1);
     else if (bToDown == 1)
-        posY--;
+        setPosY(posY-1);
 
     // When moving, infantry has some animation
     if (isInfantryUnit()) {
@@ -3091,8 +3125,8 @@ void cUnit::move_to(int iGoalCell) {
 
 void cUnit::setCell(int cll) {
     this->iCell = cll;
-    this->posX = map.getAbsoluteXPositionFromCell(cll);
-    this->posY = map.getAbsoluteYPositionFromCell(cll);
+    setPosX(map.getAbsoluteXPositionFromCell(cll));
+    setPosY(map.getAbsoluteYPositionFromCell(cll));
 }
 
 void cUnit::assignMission(int aMission) {
@@ -3285,6 +3319,23 @@ void cUnit::takeDamage(int damage) {
     if (isDead()) {
         die(true, false);
     } else {
+        if (boundParticleId < 0) {
+            if (getUnitInfo().renderSmokeOnUnitWhenThresholdMet) {
+                float hpThreshold = getUnitInfo().smokeHpFactor * getUnitInfo().hp;
+                if (iHitPoints < hpThreshold) {
+                    int particleId = cParticle::create(
+                            pos_x_centered(),
+                            pos_y_centered(),
+                            D2TM_PARTICLE_SMOKE,
+                            -1,
+                            -1,
+                            iID
+                    );
+                    boundParticleId = particleId;
+                }
+            }
+        }
+
         if (iHitPoints < getUnitInfo().dieWhenLowerThanHP) {
             iHitPoints = 0; // to make it appear 'dead' for the rest of the code
             // unit does not explode in this case, simply vanishes

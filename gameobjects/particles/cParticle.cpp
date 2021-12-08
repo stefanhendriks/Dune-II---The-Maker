@@ -25,6 +25,8 @@ cParticle::~cParticle() {
 
 // init
 void cParticle::init() {
+    boundUnitID = -1;
+    boundParticleID = -1;
     oldParticle = true;
     bAlive = false;       // alive (if yes, it is in use, if not it can be used)
     iAlpha = -1;            // alpha number
@@ -63,10 +65,17 @@ int cParticle::draw_y() {
 }
 
 /**
- * Poor man solution to frequently update the dimensions of unit, better would be using events?
+ * Poor man solution to frequently update the dimensions, better would be using events?
  * (onMove, onViewportMove, onViewportZoom?)
  */
 void cParticle::think_position() {
+    if (boundUnitID > -1) {
+        cUnit &pUnit = unit[boundUnitID];
+        if (!pUnit.isValid()) {
+            bindToUnit(-1);
+        }
+    }
+
     // keep updating dimensions
     dimensions->move(draw_x(), draw_y());
     if (mapCamera) {
@@ -132,7 +141,7 @@ void cParticle::draw() {
     destroy_bitmap(stretched);
 }
 
-s_ParticleInfo& cParticle::getParticleInfo() const {
+s_ParticleInfo &cParticle::getParticleInfo() const {
     s_ParticleInfo &particleInfo = sParticleInfo[iType];
     return particleInfo;
 }
@@ -148,7 +157,7 @@ bool cParticle::isWithinViewport(cRectangle *viewport) {
 
 
 // think
-void cParticle::think() {
+void cParticle::thinkFast() {
     think_position();
 
     if (!oldParticle) {
@@ -158,7 +167,8 @@ void cParticle::think() {
     }
 
     // old way
-    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 || iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 ||
+        iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
         iType == D2TM_PARTICLE_OBJECT_BOOM03) {
         TIMER_frame++;
 
@@ -167,8 +177,10 @@ void cParticle::think() {
 
             iAlpha -= 2;
 
-            if (iAlpha < 1)
-                bAlive = false;
+            if (iAlpha < 1) {
+                die();
+                return;
+            }
         }
     }
 
@@ -179,15 +191,18 @@ void cParticle::think() {
             frameIndex++;
             TIMER_frame = 100 + rnd(100);
 
-            if (frameIndex > 5)
-                bAlive = false;
+            if (frameIndex > 5) {
+                die();
+                return;
+            }
 
             iAlpha -= 16;
         }
     }
 
     // move
-    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK) {
+    if (iType == D2TM_PARTICLE_MOVE ||
+        iType == D2TM_PARTICLE_ATTACK) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
@@ -199,8 +214,10 @@ void cParticle::think() {
             iAlpha -= 35;
             frameIndex = 9;
 
-            if (iAlpha < 10)
-                bAlive = false;
+            if (iAlpha < 10) {
+                die();
+                return;
+            }
         }
 
         return;
@@ -212,20 +229,19 @@ void cParticle::think() {
         if (TIMER_frame < 0) {
             frameIndex++;
 
-
             if (frameIndex > 2) {
                 frameIndex = 2;
                 iAlpha -= 10;
 
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                    return;
+                }
 
                 TIMER_frame = 10;
-
-            } else
+            } else {
                 TIMER_frame = 250;
-
-
+            }
         }
     }
 
@@ -238,9 +254,10 @@ void cParticle::think() {
             if (frameIndex < 1 && iAlpha < 220)
                 frameIndex++;
 
-            if (frameIndex >= 1 && iAlpha < 10)
-                bAlive = false;
-
+            if (frameIndex >= 1 && iAlpha < 10) {
+                die();
+                return;
+            }
         }
     }
 
@@ -248,32 +265,44 @@ void cParticle::think() {
         iType == D2TM_PARTICLE_SMOKE_SHADOW) {
         TIMER_frame--;
         TIMER_dead--;
-        if (iAlpha < 255 && TIMER_dead > 0) {
-            if (iType == D2TM_PARTICLE_SMOKE)
+
+        // particle is not yet going to die, and still not opaque, make it fade-in
+        if (TIMER_dead > 0 && iAlpha < 255) {
+            if (iType == D2TM_PARTICLE_SMOKE) {
                 iAlpha++;
-            else if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
-                if (iAlpha < 128)
+            } else if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
+                // shadow remains 128 alpha (never fully opaque)
+                if (iAlpha < 128) {
                     iAlpha++;
+                }
+            }
         }
 
+        // animation timer
         if (TIMER_frame < 0) {
             TIMER_frame = 50;
             frameIndex++;
 
-            if (frameIndex > 2)
+            if (frameIndex > 2) {
                 frameIndex = 0;
+            }
 
+            // make it fade-out at the speed we animate
             if (TIMER_dead < 0) {
                 TIMER_dead = -1;
-                if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
+                if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
                     iAlpha -= 10;
-                else
+                } else {
                     iAlpha -= 14;
+                }
 
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                    return;
+                }
             }
         }
+        return;
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA ||
@@ -293,10 +322,11 @@ void cParticle::think() {
 
             } else {
                 // its dying
-                if (iAlpha > 10)
+                if (iAlpha > 10) {
                     iAlpha -= 10;
-                else
-                    bAlive = false;
+                } else {
+                    die();
+                }
 
             }
         }
@@ -310,8 +340,9 @@ void cParticle::think() {
 
             frameIndex++;
 
-            if (frameIndex > 7)
-                bAlive = false;
+            if (frameIndex > 7) {
+                die();
+            }
         }
 
     }
@@ -326,8 +357,10 @@ void cParticle::think() {
                 TIMER_dead = -1;
                 iAlpha -= 5;
 
-                if (iAlpha < 5)
-                    bAlive = false;
+                if (iAlpha < 5) {
+                    die();
+                }
+
             }
 
             TIMER_frame = 10;
@@ -348,8 +381,9 @@ void cParticle::think() {
 
                 iAlpha -= 25;
 
-                if (iAlpha < 25)
-                    bAlive = false;
+                if (iAlpha < 25) {
+                    die();
+                }
             }
         }
     }
@@ -368,8 +402,9 @@ void cParticle::think() {
 
                 iAlpha -= 35;
 
-                if (iAlpha < 25)
-                    bAlive = false;
+                if (iAlpha < 25) {
+                    die();
+                }
             }
         }
     }
@@ -390,8 +425,9 @@ void cParticle::think() {
 
                 iAlpha -= 5;
 
-                if (iAlpha < 5)
-                    bAlive = false;
+                if (iAlpha < 5) {
+                    die();
+                }
             }
         }
     }
@@ -420,7 +456,7 @@ void cParticle::think() {
                 iAlpha -= 15;
 
                 if (iAlpha < 25) {
-                    bAlive = false;
+                    die();
                 }
             }
         }
@@ -446,7 +482,7 @@ void cParticle::think() {
 
                 // until particle dies
                 if (iAlpha < 25) {
-                    bAlive = false;
+                    die();
                 }
             }
         }
@@ -458,8 +494,9 @@ void cParticle::think() {
         if (TIMER_frame < 0) {
             TIMER_frame = 10;
             frameIndex++;
-            if (frameIndex > 1)
-                bAlive = false;
+            if (frameIndex > 1) {
+                die();
+            }
 
         }
 
@@ -471,10 +508,11 @@ void cParticle::think() {
         iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
-            if (iAlpha > 5)
+            if (iAlpha > 5) {
                 iAlpha -= 5;
-            else
-                bAlive = false;
+            } else {
+                die();
+            }
 
             TIMER_frame = 50;
         }
@@ -492,8 +530,9 @@ void cParticle::think() {
                 TIMER_dead = -1;
                 iAlpha -= 15;
 
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                }
             }
         }
     }
@@ -513,8 +552,9 @@ void cParticle::think() {
 
             if (TIMER_dead < 0) {
                 iAlpha -= 20;
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                }
             } else {
                 if (iAlpha + 15 < 255)
                     iAlpha += 15;
@@ -524,14 +564,17 @@ void cParticle::think() {
 
         }
     }
-
 }
 
-void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+    return create(x, y, iType, iHouse, iFrame, -1);
+}
+
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID) {
     int iNewId = findNewSlot();
 
     if (iNewId < 0) {
-        return;
+        return -1;
     }
 
     cParticle &pParticle = particle[iNewId];
@@ -544,6 +587,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     pParticle.x = x;
     pParticle.y = y;
+    pParticle.boundUnitID = iUnitID;
 
     pParticle.iType = iType;
 
@@ -562,16 +606,25 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
         // TODO: Spawn additional particle property
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE) {
-        pParticle.TIMER_dead = 900;
-        create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
+        pParticle.TIMER_dead = 1500;
+        int shadowParticleId = create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, iUnitID);
+
+        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
+        // offset is not in center). So we have to subtract half of the sprite's height
+        pParticle.y += pParticle.drawYBmpOffset;
+        pParticle.boundParticleID = shadowParticleId;
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
-        pParticle.TIMER_dead = 1000;
+        pParticle.TIMER_dead = 1500;
+
+        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
+        // offset is not in center). So we have to subtract half of the sprite's height
+        pParticle.y += pParticle.drawYBmpOffset;
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
@@ -600,7 +653,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         iType == D2TM_PARTICLE_EXPLOSION_GAS) {
 
         if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
-            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
         }
 
     }
@@ -628,9 +681,9 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.iAlpha = 255;
         pParticle.TIMER_frame = 500 + rnd(300);
 
-        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
-        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1);
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1, iUnitID);
+        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1, iUnitID);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_CARRYPUFF) {
@@ -642,14 +695,15 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
         pParticle.iAlpha = 255;
         // also create bloom
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, iUnitID);
     }
 
+    return iNewId;
 }
 
 int cParticle::findNewSlot() {
     for (int i = 0; i < MAX_PARTICLES; i++) {
-        if (!particle[i].bAlive)
+        if (!particle[i].isValid())
             return i;
     }
 
@@ -693,4 +747,44 @@ void cParticle::recreateDimensions() {
 
 void cParticle::think_new() {
 
+}
+
+void cParticle::bindToUnit(int unitID) {
+    if (boundUnitID > -1) {
+        cUnit &pUnit = unit[boundUnitID];
+        if (pUnit.isValid()) {
+            pUnit.setBoundParticleId(-1);
+        }
+    }
+    boundUnitID = unitID;
+}
+
+void cParticle::addPosX(float d) {
+    this->x += d;
+    if (boundParticleID > -1) {
+        cParticle &otherParticle = particle[boundParticleID];
+        if (otherParticle.isValid()) {
+            otherParticle.addPosX(d);
+        } else {
+            boundParticleID = -1;
+        }
+    }
+}
+
+void cParticle::addPosY(float d) {
+    this->y += d;
+    if (boundParticleID > -1) {
+        cParticle &otherParticle = particle[boundParticleID];
+        if (otherParticle.isValid()) {
+            otherParticle.addPosY(d);
+        } else {
+            boundParticleID = -1;
+        }
+    }
+}
+
+void cParticle::die() {
+    bindToUnit(-1);
+    bAlive = false;
+    boundParticleID = -1;
 }
