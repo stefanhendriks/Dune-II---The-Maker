@@ -14,7 +14,7 @@ public:
     ~cBuildingListItem();
 
 	// uber constructor
-    cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable);
+    cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable);
 
 	// easier constructors (they have no LIST, this is intentional and assigned later to the item by add**toList functions in the cBuildingList.cpp class
     cBuildingListItem(int theID, s_StructureInfo entry, int subList);
@@ -26,7 +26,6 @@ public:
     static const int DebugTimerCap = 2;
 
 	// getters
-	int getTotalBuildTime() { return totalBuildTime; }
 	int getTotalBuildTimeInMs();
 	int getProgressBuildTimeInMs(); // how much time has passed for build item
 	int getIconId() { return icon; }
@@ -138,7 +137,7 @@ public:
         TIMER_progressFrame = 0.0f;
 	}
 
-    int getBuildTime();
+    int getTotalBuildTime() const;
 
     bool isDoneBuilding();
 
@@ -194,7 +193,6 @@ private:
 	bool deployIt;			// when true, this item is ready for deployment (FYI, super weapons)
 	bool queuable;			// when true, this item can be ordered multiple times to build
 
-	int totalBuildTime;		// total time it takes to build.
 	int subList;            // subList id's allow us to distinguish built items within the same buildingList.
 
 	float TIMER_progressFrame; // timer used for progress drawing animation

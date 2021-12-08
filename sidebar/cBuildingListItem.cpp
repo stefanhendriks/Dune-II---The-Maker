@@ -2,17 +2,7 @@
 #include "cBuildingListItem.h"
 
 
-/**
- *
- * @param type
- * @param buildId (id of the TYPE, ie structureType ID or unitType ID or upgradeType ID)
- * @param cost
- * @param icon
- * @param totalBuildTime
- * @param list
- * @param subList
- */
-cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable) {
+cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable) {
     assert(buildId >= 0);
     this->icon = icon;
     this->buildId = buildId;
@@ -27,14 +17,11 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     slotId = -1; // is set later
 
     creditsPerProgressTime = 0;
-    if (cost > 0 && totalBuildTime > 0) {
-        creditsPerProgressTime = (float)this->cost / (float)this->totalBuildTime;
-    }
     placeIt = false;
     deployIt = false;
     this->queuable = queuable;
 
-    this->totalBuildTime = totalBuildTime;
+//    this->totalBuildTime = totalBuildTime;
     this->subList = subList;
 
     TIMER_progressFrame = 0.0f;
@@ -43,6 +30,11 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     timerCap = DEBUGGING ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
+
+    int totalBuildTime = getTotalBuildTime();
+    if (cost > 0 && totalBuildTime > 0) {
+        creditsPerProgressTime = (float)this->cost / (float)totalBuildTime;
+    }
 
     if (DEBUGGING) {
         char msg[255];
@@ -65,7 +57,7 @@ cBuildingListItem::~cBuildingListItem() {
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
+                    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, list, subList, entry.queuable) {
 }
 
 /**
@@ -76,7 +68,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, cBuilding
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(SPECIAL, theID, 0, entry.icon, entry.buildTime, list, subList, false) {
+                    cBuildingListItem(SPECIAL, theID, 0, entry.icon, list, subList, false) {
 }
 
 /**
@@ -87,7 +79,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingLi
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, entry.buildTime, list, subList, false) {
+                    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, list, subList, false) {
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
@@ -104,7 +96,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, int subList
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
+                    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, list, subList, entry.queuable) {
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
@@ -147,13 +139,13 @@ void cBuildingListItem::increaseProgress(int byAmount) {
 }
 
 /**
- * Duplicated by getTotalBuildtime!?
+ * Returns the (total) build time of this item, which is the same as retrieving the buildTime property from the
+ * appropriate *info struct.
  * @return
  */
-int cBuildingListItem::getBuildTime() {
-//    if (DEBUGGING) return 1;
+int cBuildingListItem::getTotalBuildTime() const {
     if (type == STRUCTURE) {
-        return sStructureInfo[buildId].build_time;
+        return sStructureInfo[buildId].buildTime;
     }
     if (type == UPGRADE) {
         return sUpgradeInfo[buildId].buildTime;
@@ -162,11 +154,11 @@ int cBuildingListItem::getBuildTime() {
         return sSpecialInfo[buildId].buildTime;
     }
     // assumes units by default
-    return sUnitInfo[buildId].build_time;
+    return sUnitInfo[buildId].buildTime;
 }
 
 bool cBuildingListItem::isDoneBuilding() {
-    return getProgress() >= getBuildTime();
+    return getProgress() >= getTotalBuildTime();
 }
 
 bool cBuildingListItem::isTypeUpgrade() {
@@ -238,6 +230,7 @@ eListType cBuildingListItem::getListType() {
 
 int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress() {
     // frame to draw (for building in progress)
+//    int iFrame = health_bar(31, progress, getTotalBuildTime());
     int iFrame = health_bar(31, progress, getTotalBuildTime());
 
     if (iFrame > 31) {
@@ -267,7 +260,7 @@ void cBuildingListItem::resetProgressFrameTimer() {
 }
 
 int cBuildingListItem::getTotalBuildTimeInTicks() const {
-    return getInTicks(totalBuildTime);
+    return getInTicks(getTotalBuildTime());
 }
 
 int cBuildingListItem::getInTicks(int getTimeInTicks) const {
@@ -300,10 +293,10 @@ const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int build
     int buildTime = 0;
     switch (type) {
         case UNIT:
-            buildTime = sUnitInfo[buildId].build_time;
+            buildTime = sUnitInfo[buildId].buildTime;
             break;
         case STRUCTURE:
-            buildTime = sStructureInfo[buildId].build_time;
+            buildTime = sStructureInfo[buildId].buildTime;
             break;
         case SPECIAL:
             buildTime = sSpecialInfo[buildId].buildTime;

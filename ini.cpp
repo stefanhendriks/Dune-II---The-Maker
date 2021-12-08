@@ -2214,7 +2214,7 @@ void INI_Install_Game(std::string filename) {
                     if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_RANGE) unitInfo.range = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_BUILDTIME) unitInfo.build_time = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_BUILDTIME) unitInfo.buildTime = INI_WordValueINT(linefeed);
 
                     // Unit description
                     if (wordtype == WORD_DESCRIPTION) {
@@ -2257,7 +2257,7 @@ void INI_Install_Game(std::string filename) {
                 if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = INI_WordValueINT(linefeed);
 
                 if (wordtype == WORD_COST) sStructureInfo[id].cost = INI_WordValueINT(linefeed);
-                if (wordtype == WORD_BUILDTIME) sStructureInfo[id].build_time = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = INI_WordValueINT(linefeed);
 
             }
 
