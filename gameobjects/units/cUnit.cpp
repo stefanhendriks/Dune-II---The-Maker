@@ -150,10 +150,10 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
     // any damage particle dies with the unit?
     if (boundParticleId > -1) {
-//        cParticle &pParticle = particle[boundParticleId];
-//        if (pParticle.isValid()) {
-//            pParticle.die();
-//        }
+        cParticle &pParticle = particle[boundParticleId];
+        if (pParticle.isValid()) {
+            pParticle.die();
+        }
         boundParticleId = -1;
     }
 
