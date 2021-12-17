@@ -608,9 +608,9 @@ public:
 
     void detonateSpiceBloom(int cell);
 
-    bool setAutoDetonateSpiceBlooms(bool value) { m_bAutoDetonateSpiceBlooms = value; }
+    void setAutoDetonateSpiceBlooms(bool value) { m_bAutoDetonateSpiceBlooms = value; }
 
-    bool setAutoSpawnSpiceBlooms(bool value) { m_bAutoSpawnSpiceBlooms = value; }
+    void setAutoSpawnSpiceBlooms(bool value) { m_bAutoSpawnSpiceBlooms = value; }
 
     void setDesiredAmountOfWorms(int value);
 
