@@ -17,3 +17,5 @@ cmake-build-release-mingw
 dependencies/allegro-src
 cmake-build-relwithdebinfo
 tools/*.bmp
+
+build
