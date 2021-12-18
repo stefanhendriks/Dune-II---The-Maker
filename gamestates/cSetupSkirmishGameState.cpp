@@ -681,6 +681,8 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_MOVED_TO:
             onMouseMovedTo(event);
             break;
+        default:
+            break;
     }
 
     backButton->onNotifyMouseEvent(event);

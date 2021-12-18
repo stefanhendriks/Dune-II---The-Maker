@@ -227,6 +227,8 @@ void cMapCamera::onNotify(const s_MouseEvent &event) {
         case eMouseEventType::MOUSE_SCROLLED_UP:
             mapCamera->zoomIn();
             return;
+        default:
+            return;
     }
 
 }

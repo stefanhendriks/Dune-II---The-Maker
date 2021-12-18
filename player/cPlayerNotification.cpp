@@ -28,4 +28,5 @@ int cPlayerNotification::getColor() {
         case BAD:
             return justStarted ? game.getColorFadeSelected(badColor) : badColor;
     }
+    return 0;
 }
