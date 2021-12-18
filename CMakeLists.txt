@@ -1,14 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.21)
 
-# set the project name
 project(d2tm)
-
-# this cmakelist file is directly tied to MinGW, if you know a better way please let me know (PR, comment, etc)
-link_directories("lib/mingw")
-
-# add the executableS
-add_executable(d2tm Script.rc)
-target_link_libraries(d2tm fblend alleg aldat almp3dll alfontdll -static-libgcc -static-libstdc++)
 
 file(GLOB d2tm_SRC
         "*.h"
@@ -68,10 +60,32 @@ file(GLOB d2tm_SRC
         "utils/*.cpp"
         )
 
-# specify sources
-target_sources(d2tm
-        PUBLIC ${d2tm_SRC})
+add_executable(${PROJECT_NAME}
+  ${d2tm_SRC}
+  Script.rc
+)
 
-# TODO: Point to mingw include dir?
-target_include_directories(d2tm
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/building ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/building
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    fblend # Must link before alleg
+    alleg
+    almp3dll
+    alfontdll
+    -static-libgcc
+    -static-libstdc++
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
+  COMMAND_EXPAND_LISTS
+)
+
+add_subdirectory(dependencies)
+

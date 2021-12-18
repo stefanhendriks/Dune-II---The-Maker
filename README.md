@@ -30,9 +30,17 @@ Hence the `CMakeList.txt` file in the root of this project.
 
 I also use MinGW32.
 
-The required libraries (ALFont, ALMP3, fblend, etc) are in the [lib folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/lib/mingw).
+Building via the command-line:
+    mkdir build
+    cd build
+    cmake .. -G Ninja
+    ninja
+One can also use make, but ninja is more efficient.
 
-Do not forget to also point to the [dependency includes dir](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/dependencies/mingw32/include), or copy those over to your MinGW folder.
+## Running
+Easiest is to run the executable from the root. Shared libraries that are required are: alfont.dll, alleg42.dll, almp3.dll, libwinpthread-1.dll and mscvr70.dll.
+The required libraries (Allegro 4, ALFont, ALMP3 and fblend) are in the [dll folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/dll/mingw).
+libwinpthread-1.dll Could be on your MinGW path. If it is not on the path, copy it from your mingw32 installation.
 
 ## Project status
 See the [Project Board](https://github.com/stefanhendriks/Dune-II---The-Maker/projects/1) what's going on.
