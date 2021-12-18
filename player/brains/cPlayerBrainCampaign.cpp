@@ -126,6 +126,8 @@ namespace brains {
                         onMyStructureDecayed(event);
                         // should repair when under 75%?
                         break;
+                    default:
+                        break;
                 }
             }
         }

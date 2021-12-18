@@ -114,6 +114,8 @@ namespace brains {
             case GAME_EVENT_DEVIATED:
                 onEventDeviated(event);
                 break;
+            default:
+                break;
         }
     }
 
