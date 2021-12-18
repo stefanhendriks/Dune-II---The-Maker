@@ -1764,14 +1764,9 @@ void setMusicVolume(int i) {
 
 
 void mp3_play_file(char filename[VOLUME_MAX]) {
-	char *data;  // mp3 file in memory
-	int len;     // length of file(also the buffer)
-	FILE *f = NULL;  // file.mp3
-
-	len = (int)file_size_ex(filename);
-
-	data = new char[len];
-	f = fopen(filename, "r");
+	auto len = file_size(filename);
+  char *data = new char[len];  // mp3 file in memory
+	FILE *f = fopen(filename, "r");
 
 	if (f != NULL) {
 		fread(data, 1, len, f);
