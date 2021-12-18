@@ -1,0 +1,36 @@
+name: CI
+
+# Workflow file for windows
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  Windows:
+    name: build-windows
+    runs-on: [self-hosted, windows]
+
+    steps:
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+         platform: x86 # D2TM is built within a MinGW32 bit environment
+
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
+
+      - name: Running cmake (windows)
+        run: |
+          cd ${{ github.workspace }}
+          mkdir build
+          cd build
+          cmake .. -G "MinGW Makefiles"
+
+      - name: Build
+        run: |
+          cd build
+          cmake --build . --target all -- -j 6
