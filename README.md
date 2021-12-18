@@ -24,18 +24,22 @@ Report bugs via Discord, Twitter or add one in Github.
 Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for more information about startup params, controls, and more.
 
 ## Compiling
-I work with CLion which uses CMake.
+This project uses `CMake`, you need atleast version 3.21. It currently depends
+on MinGW32. Make sure you can run `make` (or `ninja`) from command line.
 
-Hence the `CMakeList.txt` file in the root of this project.
-
-I also use MinGW32.
-
-Building via the command-line:
+Then:
+- git clone this project
+- create a `build` dir
+```
     mkdir build
     cd build
-    cmake .. -G Ninja
-    ninja
-One can also use make, but ninja is more efficient.
+    cmake .. -G "MinGW Makefiles"
+    cmake --build . --target all -- -j 6
+```
+
+If you use `ninja` you can use `cmake .. -G Ninja` instead.
+
+Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
 
 ## Running
 Easiest is to run the executable from the root. Shared libraries that are required are: alfont.dll, alleg42.dll, almp3.dll, libwinpthread-1.dll and mscvr70.dll.
