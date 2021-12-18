@@ -13,8 +13,9 @@
 #ifndef D2TM_UNIT_H
 #define D2TM_UNIT_H
 
-#include <player/brains/missions/cPlayerBrainMission.h>
-#include <utils/cRectangle.h>
+#include "player/brains/missions/cPlayerBrainMission.h"
+#include "structs.h"
+#include "utils/cRectangle.h"
 
 // Define TRANSFER stuff for reinforcements
 

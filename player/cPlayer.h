@@ -20,9 +20,17 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <vector>
 #include "cPlayerNotification.h"
 
+#include <set>
+#include <string>
+#include <vector>
+
+class cAbstractStructure;
+class cItemBuilder;
+class cOrderProcesser;
+class cSideBar;
+class cPlayerDifficultySettings;
 
 struct s_PlaceResult {
     bool success = false; // if true, all is ok
@@ -142,11 +150,7 @@ public:
 
     bool hasRadarAndEnoughPower() const;
 
-    std::string asString() const {
-        char msg[512];
-        sprintf(msg, "Player [id=%d, human=%b, sidebar=%d]", this->id, this->m_Human, this->sidebar);
-        return std::string(msg);
-    }
+    std::string asString() const;
 
     BITMAP *getStructureBitmap(int index);
 

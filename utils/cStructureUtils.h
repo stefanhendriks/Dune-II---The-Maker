@@ -8,6 +8,10 @@
 #ifndef CSTRUCTUREUTILS_H_
 #define CSTRUCTUREUTILS_H_
 
+class cAbstractStructure;
+class cBuildingListItem;
+class cPlayer;
+
 class cStructureUtils {
 public:
     cStructureUtils();
@@ -41,10 +45,6 @@ public:
     int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer);
 
     int getStructureTypeByUnitBuildId(int unitBuildId) const;
-
-protected:
-
-private:
 };
 
 #endif /* CSTRUCTUREUTILS_H_ */
