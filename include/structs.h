@@ -1,8 +1,11 @@
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
-#include <vector>
 #include "enums.h"
+
+#include <vector>
+
+struct BITMAP;
 
 // Unit properties
 // the s_UnitInfo struct is holding all properties for a specific unit type.

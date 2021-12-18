@@ -16,13 +16,13 @@
 #include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
 
-// forward declaration :/ sigh should really look into this
-class cRectangle;
 class cAbstractMentat;
-class cPlayer;
 class cGameControlsContext;
-class cInteractionManager;
 class cGameState;
+class cInteractionManager;
+class cPlayer;
+class cRectangle;
+class cSoundPlayer;
 
 class cGame : public cScenarioObserver, cMouseObserver {
 

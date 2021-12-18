@@ -18,6 +18,15 @@
 #ifndef CABSTRACTSTRUCTURE_H_
 #define CABSTRACTSTRUCTURE_H_
 
+#include "structs.h"
+
+#include <vector>
+
+class cFlag;
+class cPlayer;
+
+struct BITMAP;
+
 class cAbstractStructure {
 
 	private:
