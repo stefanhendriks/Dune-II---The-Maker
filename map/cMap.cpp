@@ -1401,6 +1401,8 @@ void cMap::onNotify(const s_GameEvent &event) {
         case eGameEventType::GAME_EVENT_CREATED:
             onEntityCreated(event);
             break;
+        default:
+            break;
     }
 }
 

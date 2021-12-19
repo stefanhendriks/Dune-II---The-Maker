@@ -146,6 +146,8 @@ void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_LEFT_BUTTON_PRESSED:
             onMouseLeftButtonPressed(event);
             break;
+        default:
+            break;
     }
 }
 

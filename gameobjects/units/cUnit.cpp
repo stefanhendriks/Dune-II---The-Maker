@@ -4098,19 +4098,19 @@ int UNIT_find_harvest_spot(int id) {
  * @param iStart where to start from
 
  */
-int REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
-   return REINFORCE(iPlr, iTpe, iCll, iStart, true);
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
+   REINFORCE(iPlr, iTpe, iCll, iStart, true);
 }
 
-int REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 
     // handle invalid arguments
     if (iPlr < 0 || iTpe < 0)
-        return -1;
+        return;
 
     //if (iCll < 0 || iCll >= MAX_CELLS)
     if (map.isValidCell(iCll) == false)
-        return -1;
+        return;
 
     if (iStart < 0)
         iStart = iCll;
@@ -4127,7 +4127,7 @@ int REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 
     if (iStartCell < 0) {
         logbook("ERROR (reinforce): Could not figure a startcell");
-        return -1;
+        return;
     }
 
     char msg[255];
@@ -4139,7 +4139,7 @@ int REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
     if (iUnit < 0) {
         // cannot create carry-all!
         logbook("ERROR (reinforce): Cannot create CARRYALL unit.");
-        return -1;
+        return;
     }
 
     // STEP 3: assign order to carryall

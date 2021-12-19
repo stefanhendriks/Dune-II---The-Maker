@@ -54,6 +54,12 @@ namespace brains {
             case PLAYERBRAINMISSION_KIND_EXPLORE:
                 missionKind = new cPlayerBrainMissionKindExplore(player, this);
                 break;
+            case PLAYERBRAINMISSION_IMPROVE_ECONOMY:
+            case PLAYERBRAINMISSION_KIND_FIND_SPICE:
+            case PLAYERBRAINMISSION_KIND_AIRSTRIKE:
+            case PLAYERBRAINMISSION_KIND_HARASS:
+                // TODO
+                break;
         }
 
         char msg[255];
@@ -124,6 +130,8 @@ namespace brains {
                 break;
             case GAME_EVENT_DEVIATED:
                 onEventDeviated(event);
+                break;
+            default:
                 break;
         }
 

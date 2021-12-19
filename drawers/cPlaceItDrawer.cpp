@@ -231,9 +231,7 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
 }
 
 void cPlaceItDrawer::onNotify(const s_MouseEvent &event) {
-    switch (event.eventType) {
-        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseClickedLeft(event);
-            return;
+    if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
+        onMouseClickedLeft(event);
     }
 }

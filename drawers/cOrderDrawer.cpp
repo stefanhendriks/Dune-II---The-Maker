@@ -84,6 +84,8 @@ void cOrderDrawer::onNotify(const s_MouseEvent &event) {
         case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
             onMouseClickedLeft(event);
             return;
+        default:
+            return;
     }
 }
 

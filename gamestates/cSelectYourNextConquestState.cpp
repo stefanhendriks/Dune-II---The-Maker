@@ -574,6 +574,9 @@ void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
+            break;
+        default:
+            break;
     }
 }
 

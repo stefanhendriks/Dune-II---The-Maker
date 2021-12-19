@@ -84,6 +84,8 @@ void cChooseHouseGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_MOVED_TO:
             onMouseMoved(event);
             break;
+        default:
+            break;
     }
 }
 

@@ -133,6 +133,8 @@ namespace brains {
                         onMyStructureDecayed(event);
                         // should repair when under 75%?
                         break;
+                    default:
+                        break;
                 }
             }
         }
@@ -1183,44 +1185,49 @@ namespace brains {
 
         // can build it?
         eCantBuildReason reason = player->canBuildStructure(structureIWantToBuild);
-        if (reason != eCantBuildReason::NONE) {
-            // there is a reason why we cannot build it
-            switch (reason) {
-                case REQUIRES_UPGRADE:
-                    // build the upgrade instead
-                    if (structureIWantToBuild == RTURRET) {
-                        // upgrade ...
-                        cBuildingListItem *pItem = player->isUpgradeAvailableToGrantStructure(RTURRET);
-                        if (!pItem) {
-                            // we first need to upgrade to SLAB4 before we can upgrade to RTURRET
-                            pItem = player->isUpgradeAvailableToGrantStructure(SLAB4);
-                        }
-
-                        if (pItem != nullptr) {
-                            // we have something to upgrade
-                            if (!player->startUpgrading(pItem->getBuildId())) {
-                                // failed to build upgrade.
-                            } else {
-                                // we should wait a bit before re-evaluating base building
-                            }
-                        }
-
-                        // in both cases, we should first wait, so return -1 anyways
-                        return -1;
-                    } else if (structureIWantToBuild == SLAB4) {
-
+        switch (reason) {
+            case NONE:
+                // We can build. Carry on.
+                break;
+            case REQUIRES_UPGRADE:
+                // build the upgrade instead
+                if (structureIWantToBuild == RTURRET) {
+                    // upgrade ...
+                    cBuildingListItem *pItem = player->isUpgradeAvailableToGrantStructure(RTURRET);
+                    if (!pItem) {
+                        // we first need to upgrade to SLAB4 before we can upgrade to RTURRET
+                        pItem = player->isUpgradeAvailableToGrantStructure(SLAB4);
                     }
-                    break;
-                case REQUIRES_STRUCTURE:
-                    // update state, we don't have a constyard anymore!
-                    break;
-                case NOT_ENOUGH_MONEY:
-                    // economy is bad? set state for that
-                    break;
-                case ALREADY_BUILDING:
-                    // already building something, so don't return any id to build
+
+                    if (pItem != nullptr) {
+                        // we have something to upgrade
+                        if (!player->startUpgrading(pItem->getBuildId())) {
+                            // failed to build upgrade.
+                        } else {
+                            // we should wait a bit before re-evaluating base building
+                        }
+                    }
+
+                    // in both cases, we should first wait, so return -1 anyways
                     return -1;
-            }
+                } else if (structureIWantToBuild == SLAB4) {
+
+                }
+                break;
+            case REQUIRES_STRUCTURE:
+                // update state, we don't have a constyard anymore!
+                break;
+            case REQUIRES_ADDITIONAL_STRUCTURE:
+                break;
+            case NOT_ENOUGH_MONEY:
+                // economy is bad? set state for that
+                break;
+            case ALREADY_BUILDING:
+                // already building something, so don't return any id to build
+                return -1;
+            case NOT_AVAILABLE:
+                // The building is not available
+                return -1;
         }
 
         return structureIWantToBuild;

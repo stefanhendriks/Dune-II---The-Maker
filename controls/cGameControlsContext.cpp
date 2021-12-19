@@ -136,9 +136,7 @@ void cGameControlsContext::onMouseAt(const s_MouseEvent &event) {
 }
 
 void cGameControlsContext::onNotify(const s_MouseEvent &event) {
-    switch (event.eventType) {
-        case eMouseEventType::MOUSE_MOVED_TO:
-            onMouseAt(event);
-            return;
-    }
+  if (event.eventType == eMouseEventType::MOUSE_MOVED_TO) {
+      onMouseAt(event);
+  }
 }

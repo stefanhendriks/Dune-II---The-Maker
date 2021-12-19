@@ -84,11 +84,8 @@ namespace brains {
         sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotify() -> %s", event.toString(event.eventType));
         log(msg);
 
-
-        switch(event.eventType) {
-            case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED:
-                onBuildItemCancelled(event);
-                break;
+        if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED) {
+            onBuildItemCancelled(event);
         }
     }
 

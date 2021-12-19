@@ -82,6 +82,12 @@ target_link_libraries(${PROJECT_NAME}
     -static-libstdc++
 )
 
+target_compile_options(${PROJECT_NAME}
+  PRIVATE
+    "-Werror"
+    "-Wswitch" # Part of -Wall, but that options gives too many warnings at this time
+)
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
   COMMAND_EXPAND_LISTS

@@ -46,6 +46,8 @@ void cHighTech::think_animation_unitDeploy() {
                     setAnimating(false);
                 }
                 break;
+            default:
+                break;
         }
 
         TIMER_flag = 0;
