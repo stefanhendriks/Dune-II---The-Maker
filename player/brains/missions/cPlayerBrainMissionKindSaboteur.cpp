@@ -63,10 +63,8 @@ namespace brains {
         sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotify() -> %s", event.toString(event.eventType));
         log(msg);
 
-        switch(event.eventType) {
-            case GAME_EVENT_DESTROYED:
-                onEventDestroyed(event);
-                break;
+        if (event.eventType == GAME_EVENT_DESTROYED) {
+          onEventDestroyed(event);
         }
     }
 

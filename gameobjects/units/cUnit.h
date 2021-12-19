@@ -462,7 +462,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
 
-int REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
 
 /**
  * Allows overriding reinforcement flag, ie used when a unit is reinforced by construction or other way, rather
@@ -473,7 +473,7 @@ int REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
  * @param iStart
  * @param isReinforcement
  */
-int REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
 
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 

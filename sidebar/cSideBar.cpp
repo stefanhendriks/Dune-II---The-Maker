@@ -265,10 +265,8 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event) {
 
     if (!pContext->isMouseOnSidebarOrMinimap()) {
         // we're only interested in mouse movement
-        switch (event.eventType) {
-            case eMouseEventType::MOUSE_MOVED_TO:
-                onMouseAt(event);
-                return;
+        if (event.eventType == eMouseEventType::MOUSE_MOVED_TO) {
+            onMouseAt(event);
         }
         return;
     }
@@ -282,6 +280,8 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event) {
             return;
         case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED:
             onMouseClickedRight(event);
+            return;
+        default:
             return;
     }
 }

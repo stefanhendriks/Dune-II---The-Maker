@@ -54,6 +54,10 @@ std::string cLogger::getLogComponentString(eLogComponent component) {
 			return std::string("BULLET");
 		case COMP_AI:
 			return std::string("AI");
+    case COMP_UPGRADE_LIST:
+      return std::string("UPGRADE_LIST");
+	  case COMP_BUILDING_LIST_UPDATER:
+      return std::string("BUILDING_LIST_UPDATER");
 		case COMP_MAP:
 			return std::string("MAP");
 		case COMP_SIDEBAR:
@@ -89,8 +93,12 @@ std::string cLogger::getLogOutcomeString(eLogOutcome outcome) {
 			return std::string("FAILED");
 		case OUTC_NONE:
 			return std::string("NONE");
+	  case OUTC_UNKNOWN:
+      break;
+	  case OUTC_IGNOREME:
+      break;
 	}
-	return std::string("UNIDENTIFIED");
+ 	return std::string("UNIDENTIFIED");
 }
 
 std::string cLogger::getLogHouseString(int houseId) {

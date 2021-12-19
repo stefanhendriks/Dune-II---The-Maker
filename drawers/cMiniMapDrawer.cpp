@@ -379,6 +379,8 @@ void cMiniMapDrawer::onNotify(const s_MouseEvent &event) {
         case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
             onMousePressedLeft(event);
             return;
+        default:
+            return;
     }
 
 }

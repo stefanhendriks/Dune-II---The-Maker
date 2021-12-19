@@ -76,6 +76,8 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
         case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED:
             onMouseClickedRight(mouseEvent);
             break;
+        default:
+            break;
     }
 
     // now call all its other interested listeners

@@ -325,17 +325,18 @@ const int cBuildingListItem::getListId(eBuildType type, int buildId) {
 //            return sUpgradeInfo[buildId].;
             return LIST_UPGRADES;
             break;
+        default:
+            return -1;
     }
-    return -1;
 }
 
 const bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
     switch (type) {
         case SPECIAL:
             return sSpecialInfo[buildId].autoBuild;
-            break;
+        default:
+            return false;
     }
-    return false;
 }
 
 bool cBuildingListItem::isAutoBuild() {
