@@ -1,9 +1,10 @@
 #include "d2tmh.h"
 
-cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState) : cGameState(theGame),
-                                                                                  textDrawer(cTextDrawer(bene_font)),
-                                                                                  prevState(prevState),
-                                                                                  background(background) {
+cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
+  : cGameState(theGame)
+  ,  background(background)
+  ,  prevState(prevState)
+  ,  textDrawer(cTextDrawer(bene_font)) {
     int margin = game.screen_y * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
