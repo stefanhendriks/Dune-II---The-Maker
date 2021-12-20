@@ -1,12 +1,14 @@
 #include "d2tmh.h"
 
 
-cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay) :
-        player(player), absCoords(absCoords),
-        frames(frames), animationDelay(animationDelay) {
-    TIMER_animate = 0;
-    frame = 0;
-    big = true;
+cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
+  : absCoords(absCoords)
+  , player(player)
+  , TIMER_animate(0)
+  , big(true)
+  , animationDelay(animationDelay)
+  , frames(frames)
+  , frame(0) {
 }
 
 void cFlag::draw() {
