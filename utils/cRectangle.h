@@ -7,13 +7,11 @@ class cRectangle {
 public:
     cRectangle();
 
-    cRectangle(int x, int y, int width, int height) : topLeft(cPoint(x,y)), height(height), width(width) {
+    cRectangle(int x, int y, int width, int height) : topLeft(cPoint(x,y)), width(width), height(height) {
     }
 
-    cRectangle(cPoint &coord, cPoint &dimensions) : topLeft(cPoint(coord.x, coord.y)), height(dimensions.x), width(dimensions.y) {
+    cRectangle(cPoint &coord, cPoint &dimensions) : topLeft(cPoint(coord.x, coord.y)), width(dimensions.y), height(dimensions.x) {
     }
-
-    ~cRectangle();
 
     static bool isWithin(int pointX, int pointY, int x, int y, int width, int height) {
         return (pointX >= x && pointX <= (x + width)) &&

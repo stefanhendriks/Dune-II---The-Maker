@@ -86,6 +86,7 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
     "-Wswitch" # Part of -Wall, but that options gives too many warnings at this time
+    "-Wreorder" # Part of -Wall
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

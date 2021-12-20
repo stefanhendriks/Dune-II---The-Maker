@@ -1,34 +1,34 @@
 #include "d2tmh.h"
 
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string & btnText) : textDrawer(
-        textDrawer), rect(rect), btnText(btnText) {
-    gui_colorButton = makecol(176, 176, 196);
-    gui_colorBorderDark = makecol(84, 84, 120);
-    gui_colorBorderLight = makecol(252, 252, 252);
-    focus = false;
-    pressed = false;
-    enabled = true; // by default always enabled
-    renderKind = eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER;
-    textAlignHorizontal = eGuiTextAlignHorizontal::CENTER;
-    text_color = makecol(255, 255, 255); // default white color
-    text_colorHover = makecol(255, 0, 0);
-    onLeftMouseButtonClicked_action = nullptr;
-}
+cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string & btnText)
+  : rect(rect)
+  , textDrawer(textDrawer)
+  , btnText(btnText)
+  , renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
+  , textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
+  , onLeftMouseButtonClicked_action(nullptr)
+  , focus(false)
+  , gui_colorButton(makecol(176, 176, 196))
+  , gui_colorBorderLight(makecol(252, 252, 252))
+  , gui_colorBorderDark(makecol(84, 84, 120))
+  , text_color(makecol(255, 255, 255)) // default white color
+  , text_colorHover(makecol(255, 0, 0))
+  , pressed(false)
+  , enabled(true) { // by default always enabled
+ }
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
-                       eGuiButtonRenderKind renderKind) : cGuiButton(textDrawer, rect, btnText) {
+                       eGuiButtonRenderKind renderKind)
+  : cGuiButton(textDrawer, rect, btnText) {
     this->renderKind = renderKind;
-    onLeftMouseButtonClicked_action = nullptr;
 }
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, int gui_colorButton,
-                       int gui_colorBorderLight,
-                       int gui_colorBorderDark) : cGuiButton(textDrawer, rect, btnText) {
-    focus = false;
+                       int gui_colorBorderLight, int gui_colorBorderDark)
+  : cGuiButton(textDrawer, rect, btnText) {
     this->gui_colorButton = gui_colorButton;
     this->gui_colorBorderLight = gui_colorBorderLight;
     this->gui_colorBorderDark = gui_colorBorderDark;
-    onLeftMouseButtonClicked_action = nullptr;
 }
 
 cGuiButton::~cGuiButton() {

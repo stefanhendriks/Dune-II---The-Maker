@@ -29,7 +29,6 @@ private:
 
     // move to 'type object' later (ie flag definitions)
     int animationDelay;
-    int frameHeight;
     int frames; // max amount of frames
 
     int frame;  // frame to draw
