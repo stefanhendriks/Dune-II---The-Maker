@@ -10,25 +10,23 @@
 #include "cPlayerBrainMissionKindFremen.h"
 #include "cPlayerBrainMission.h"
 
-
 namespace brains {
 
     cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind,
                                              cPlayerBrain *brain, std::vector<S_groupKind> group,
-                                             int initialDelay, int uniqueId) :
-                                             player(player),
-                                             kind(kind),
-                                             state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY),
-                                             brain(brain),
-                                             group(group),
-                                             TIMER_delay(initialDelay),
-                                             uniqueIdentifier(uniqueId) {
-        units = std::vector<int>();
-        TIMER_awaitingGatheringResoures = -1;
-        missionKind = nullptr;
-        specialEventMakesStateSwitchToSelectTarget = false;
-        missionWithUnits = true; // by default, the missions are executed with units
-
+                                             int initialDelay, int uniqueId)
+      : TIMER_delay(initialDelay)
+      , TIMER_awaitingGatheringResoures(-1)
+      , uniqueIdentifier(uniqueId)
+      , player(player)
+      , kind(kind)
+      , missionKind(nullptr)
+      , brain(brain)
+      , state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY)
+      , specialEventMakesStateSwitchToSelectTarget(false)
+      , missionWithUnits(true) // by default, the missions are executed with units
+      , units()
+      , group(group) {
         switch (kind) {
             case PLAYERBRAINMISSION_KIND_ATTACK:
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
@@ -593,22 +591,21 @@ namespace brains {
     }
 
     cPlayerBrainMission::cPlayerBrainMission(const cPlayerBrainMission &src) :
-        player(src.player),
-        state(src.state),
-        uniqueIdentifier(src.uniqueIdentifier),
-        units(src.units),
-        group(src.group),
-        brain(src.brain),
-        kind(src.kind),
         TIMER_delay(src.TIMER_delay),
         TIMER_awaitingGatheringResoures(src.TIMER_awaitingGatheringResoures),
+        uniqueIdentifier(src.uniqueIdentifier),
+        player(src.player),
+        kind(src.kind),
+        missionKind(nullptr),
+        brain(src.brain),
+        state(src.state),
+        specialEventMakesStateSwitchToSelectTarget(src.specialEventMakesStateSwitchToSelectTarget),
         missionWithUnits(src.missionWithUnits),
-        specialEventMakesStateSwitchToSelectTarget(src.specialEventMakesStateSwitchToSelectTarget)
+        units(src.units),
+        group(src.group)
     {
         if (src.missionKind) {
             missionKind = src.missionKind->clone(src.player, this);
-        } else {
-            missionKind = nullptr;
         }
     }
 
