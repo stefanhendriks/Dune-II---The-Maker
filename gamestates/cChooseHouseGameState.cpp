@@ -3,10 +3,8 @@
 
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) : cGameState(theGame) {
-    int screen_x = game.screen_x;
-    int screen_y = game.screen_y;
     textDrawer = cTextDrawer(bene_font);
-    backButtonRect = textDrawer.getAsRectangle(0, screen_y - textDrawer.getFontHeight(), " BACK");
+    backButtonRect = textDrawer.getAsRectangle(0, game.screen_y - textDrawer.getFontHeight(), " BACK");
 
     bmp_Dune = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
 

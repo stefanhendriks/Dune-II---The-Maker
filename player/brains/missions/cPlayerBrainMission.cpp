@@ -155,8 +155,6 @@ namespace brains {
 
                 // it is an event about my own stuff
                 if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
-                    cUnit &entityUnit = unit[event.entityID];
-
                     auto position = std::find(units.begin(), units.end(), event.entityID);
                     if (position != units.end()) {
                         // found unit in our list, so a unit we produced before and assigned to our

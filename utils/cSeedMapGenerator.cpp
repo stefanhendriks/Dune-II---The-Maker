@@ -134,7 +134,7 @@ void cSeedMapGenerator::convertMap(struct cell map[64][64], short *iconmap)
  */
 void cSeedMapGenerator::addSpiceAt(struct cell map[64][64],short x,short y)
 {
-      short dx,dy,d,x2,y2;
+      short dx,dy,x2,y2;
       if(map[y][x].w==SMG_SPICE){
          map[y][x].w=SMG_MUCHSPICE;
          addSpiceAt(map,x,y);
@@ -175,7 +175,7 @@ void cSeedMapGenerator::addSpiceAt(struct cell map[64][64],short x,short y)
 
 void cSeedMapGenerator::addSpice(struct cell map[64][64])
 {
-     short i,x,y,a,b,c,d;
+     short i,x,y,a,b,c;
      short e,j,m,x2,y2,x3,y3;
      signed char k;
 

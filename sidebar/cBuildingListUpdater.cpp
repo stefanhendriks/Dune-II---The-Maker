@@ -691,7 +691,7 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
 
     if (pItem->isTypeSpecial()) {
         // do stuff here for special item
-        const s_SpecialInfo &special = pItem->getSpecialInfo();
+        // const s_SpecialInfo &special = pItem->getSpecialInfo();
         return;
     }
 
@@ -707,10 +707,7 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) c
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
     cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
 
-    int house = player->getHouse();
-    int techLevel = player->getTechLevel();
-
-    if (techLevel >= 7) {
+    if (player->getTechLevel() >= 7) {
         if (!player->hasAtleastOneStructure(HEAVYFACTORY) ||
             !player->hasAtleastOneStructure(IX)) {
             if (player->getHouse() == ATREIDES) {
@@ -762,9 +759,6 @@ void cBuildingListUpdater::onStructureDestroyedCampaignMode(int structureType) c
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
-
-    int house = player->getHouse();
-    int techLevel = player->getTechLevel();
 
     if (!player->hasAtleastOneStructure(HIGHTECH)) {
         pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
