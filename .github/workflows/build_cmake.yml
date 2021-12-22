@@ -13,6 +13,15 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
+      - name: Cache MinGW modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            C:\Users\runneradmin\AppData\Local\Temp\chocolatey\mingw\8.1.0\
+            C:\ProgramData\chocolatey\lib\mingw\
+
+          key: ${{ runner.os }}-"MinGW32-8.1.0"
+
       - name: Set up MinGW
         uses: egor-tensin/setup-mingw@v2
         with:
