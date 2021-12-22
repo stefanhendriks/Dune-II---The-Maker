@@ -1,21 +1,24 @@
 bin/
-cmake-build-debug/
-.vs/
-Release/
-/Default/
+create_binary.bat
+tools/*.bmp
+
+# IDE related
+Dune 2.vcxproj
 .project
 .cproject
 .settings/language.settings.xml
 .idea/workspace.xml
 .settings/org.eclipse.cdt.managedbuilder.core.prefs
 .idea/
-create_binary.bat
-Dune 2.vcxproj
+.vs/
+
+# build directories
+build
 cmake-build-debug-mingw
 cmake-build-release
 cmake-build-release-mingw
 dependencies/allegro-src
 cmake-build-relwithdebinfo
-tools/*.bmp
-
-build
+Release/
+/Default/
+cmake-build-debug/
