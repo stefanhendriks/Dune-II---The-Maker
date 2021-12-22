@@ -127,10 +127,6 @@ void cGame::mission_init() {
 
     initPlayers(true);
 
-    // instantiate the creditDrawer with the appropriate player. Only
-    // possible once game has been initialized and player has been created.
-    assert(drawManager);
-    assert(drawManager->getCreditsDrawer());
     drawManager->getCreditsDrawer()->setCredits();
 }
 
