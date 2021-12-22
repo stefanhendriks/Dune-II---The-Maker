@@ -1711,5 +1711,117 @@ void cGame::drawCombatMouse() {
 }
 
 void cGame::onCombatMouseEventMovedTo(const s_MouseEvent &event) {
-    // not needed?
+    cPlayer &humanPlayer = players[HUMAN];
+    cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
+    const int hover_unit = pContext->getIdOfUnitWhereMouseHovers();
+
+    // Mouse is hovering above a unit
+    if (hover_unit > -1) {
+        cUnit &hoverUnit = unit[hover_unit];
+        if (hoverUnit.iPlayer == HUMAN) {
+            mouse->setTile(MOUSE_PICK);
+
+            // wanting to repair this unit, check if it is allowed, if so, change mouse tile
+            if (key[KEY_R] && humanPlayer.hasAtleastOneStructure(REPAIR)) {
+                if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit()) {
+                    mouse->setTile(MOUSE_REPAIR);
+                }
+            }
+        }
+    } else {
+        if (!mouse->isTile(MOUSE_MOVE) && !mouse->isTile(MOUSE_ATTACK)){
+            mouse->setTile(MOUSE_NORMAL);
+        }
+    }
+
+    if (pContext->isMouseOverStructure()) {
+        mouse_combat_hoverOverStructureInteraction(humanPlayer, pContext, false);
+    }
+}
+
+void cGame::onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event) {
+    cPlayer &humanPlayer = players[HUMAN];
+    cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
+    const int hoverUnitId = pContext->getIdOfUnitWhereMouseHovers();
+    const int hoverStructureId = pContext->getIdOfStructureWhereMouseHovers();
+    const int mouseCell = pContext->getMouseCell();
+
+    if (mouse->isTile(MOUSE_REPAIR)) {
+        // Mouse is hovering above a unit
+        if (hoverUnitId > -1) {
+            // wanting to repair UNITS, check if this is possible
+            cUnit &hoverUnit = unit[hoverUnitId];
+            if (hoverUnit.iPlayer == HUMAN) {
+                if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit()) {
+                    hoverUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
+                }
+            }
+        }
+        
+        if (hoverStructureId > -1) {
+            cAbstractStructure *pStructure = structure[hoverStructureId];
+
+            if (pStructure) {
+                // toggle between repairing and not repairing
+                pStructure->setRepairing(!pStructure->isRepairing());
+            }
+        }
+    }
+
+    if (mouse->isTile(MOUSE_NORMAL)) {
+        humanPlayer.selected_structure = hoverStructureId;
+
+        // select list that belongs to structure when it is ours
+        cAbstractStructure * theSelectedStructure = structure[humanPlayer.selected_structure];
+        if (theSelectedStructure) {
+            if (theSelectedStructure->getOwner() == HUMAN) {
+                int typeOfStructure = theSelectedStructure->getType();
+                cListUtils listUtils;
+                int listId = listUtils.findListTypeByStructureType(typeOfStructure);
+                if (listId != LIST_NONE) {
+                    humanPlayer.getSideBar()->setSelectedListId(listId);
+                }
+            }
+        } else {
+            humanPlayer.selected_structure = -1;
+        }
+    }
+
+    if (mouse->isTile(MOUSE_RALLY)) {
+        cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
+        if (pStructure && pStructure->belongsTo(&humanPlayer)) {
+            pStructure->setRallyPoint(mouseCell);
+            int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
+            int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
+
+            cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_MOVE, -1, -1);
+        }
+    }
+}
+
+void cGame::onCombatMouseEventRightButtonClicked(const s_MouseEvent &event) {
+    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
+    cGameControlsContext *context = player.getGameControlsContext();
+
+    if (context->isMouseOnBattleField()) {
+        mouse->dragViewportInteraction();
+    }
+
+    mouse->setTile(MOUSE_NORMAL);
+
+    int structureId = context->getIdOfStructureWhereMouseHovers();
+
+    if (structureId > -1) {
+        cAbstractStructure *pStructure = structure[structureId];
+        if (pStructure->belongsTo(&player)) {
+            if (pStructure->getType() == LIGHTFACTORY ||
+                pStructure->getType() == HEAVYFACTORY ||
+                pStructure->getType() == HIGHTECH ||
+                pStructure->getType() == STARPORT ||
+                pStructure->getType() == WOR ||
+                pStructure->getType() == BARRACKS ||
+                pStructure->getType() == REPAIR)
+                player.setPrimaryBuildingForStructureType(pStructure->getType(), structureId);
+        }
+    }
 }

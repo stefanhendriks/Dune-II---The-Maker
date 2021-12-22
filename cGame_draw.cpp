@@ -69,17 +69,19 @@ void cGame::onCombatMouseEvent(const s_MouseEvent &event) {
 
     if (player.isNotPlacingSomething() && player.isNotDeployingSomething()) {
         combat_mouse_normalCombatInteraction(player, bOrderingUnits, context->getMouseCell());
-    } // NOT PLACING / DEPLOYING STUFF
+    }
 
     switch (event.eventType) {
         case MOUSE_RIGHT_BUTTON_PRESSED:
-            if (context->isMouseOnBattleField()) {
-                mouse->dragViewportInteraction();
-            }
-            mouse->setTile(MOUSE_NORMAL);
+            onCombatMouseEventRightButtonClicked(event);
             break;
         case MOUSE_MOVED_TO:
             onCombatMouseEventMovedTo(event);
+            break;
+        case MOUSE_LEFT_BUTTON_CLICKED:
+            if (context->isMouseOnBattleField()) {
+                onCombatMouseEventLeftButtonClicked(event);
+            }
             break;
         default:
             // set to -1 only when it was > -1
@@ -91,29 +93,11 @@ void cGame::onCombatMouseEvent(const s_MouseEvent &event) {
         player.deselectStructure();
 	}
 
-	if (context->isMouseOverStructure()) {
-        mouse_combat_hoverOverStructureInteraction(player, context, bOrderingUnits);
-    }
 }
 
 void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context,
                                                        bool bOrderingUnits) const {
     int structureIdWhereMouseHovers = context->getIdOfStructureWhereMouseHovers();
-
-    if (key[KEY_P])	{
-        int iStr= structureIdWhereMouseHovers;
-
-        if (structure[iStr]->getOwner() == HUMAN) {
-            if (structure[iStr]->getType() == LIGHTFACTORY ||
-                structure[iStr]->getType() == HEAVYFACTORY ||
-                structure[iStr]->getType() == HIGHTECH ||
-                structure[iStr]->getType() == STARPORT ||
-                structure[iStr]->getType() == WOR ||
-                structure[iStr]->getType() == BARRACKS ||
-                structure[iStr]->getType() == REPAIR)
-                player.setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
-        }
-    }
 
     // REPAIR
     if (key[KEY_R] && !bOrderingUnits) {
@@ -121,71 +105,13 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameCon
 
         if (structure[structureId]->getOwner() == HUMAN &&
             structure[structureId]->isDamaged()) {
-            if (mouse->isLeftButtonClicked()) {
-
-                if (!structure[structureId]->isRepairing()) {
-                    structure[structureId]->setRepairing(true);
-                } else {
-                    structure[structureId]->setRepairing(false);
-                }
-
-            }
-
             mouse->setTile(MOUSE_REPAIR);
         }
     } // MOUSE PRESSED
-
-    // select structure
-    if (mouse->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
-        player.selected_structure = structureIdWhereMouseHovers;
-
-        // select list that belongs to structure when it is ours
-        cAbstractStructure * theSelectedStructure = structure[player.selected_structure];
-        if (theSelectedStructure) {
-            if (theSelectedStructure->getOwner() == HUMAN) {
-                int typeOfStructure = theSelectedStructure->getType();
-                cListUtils listUtils;
-                int listId = listUtils.findListTypeByStructureType(typeOfStructure);
-                if (listId != LIST_NONE) {
-                    player.getSideBar()->setSelectedListId(listId);
-                }
-            }
-        } else {
-            player.selected_structure = -1;
-        }
-    }
 }
 
 void
 cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mouseCell) const {
-    cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
-    const int hover_unit = pContext->getIdOfUnitWhereMouseHovers();
-    // Mouse is hovering above a unit
-    if (hover_unit > -1) {
-        cUnit &hoverUnit = unit[hover_unit];
-        if (hoverUnit.iPlayer == HUMAN) {
-            mouse->setTile(MOUSE_PICK);
-        }
-
-        // wanting to repair UNITS, check if its possible
-        if (key[KEY_R] && humanPlayer.hasAtleastOneStructure(REPAIR)) {
-            if (hoverUnit.iPlayer == HUMAN) {
-                if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit())	{
-                    if (mouse->isLeftButtonClicked()) {
-                        // find closest repair bay to move to
-                        hoverUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
-                    }
-
-                    mouse->setTile(MOUSE_REPAIR);
-                }
-            }
-        }
-    } else {
-        if (!mouse->isTile(MOUSE_MOVE) && !mouse->isTile(MOUSE_ATTACK)){
-            mouse->setTile(MOUSE_NORMAL);
-        }
-    }
-
     // when mouse hovers above a valid cell
     if (mouseCell > -1) {
         mouseOnBattlefield(mouseCell, bOrderingUnits);
@@ -284,17 +210,18 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
     }
 
     // single clicking and moving
-    if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting() && !player.bPlaceIt) {
+    if (mouse->isLeftButtonClicked()) {
         bool bParticle=false;
 
-        if (mouse->isTile(MOUSE_RALLY)) {
-            int id = player.selected_structure;
-            if (id > -1)
-                if (structure[id]->getOwner() == HUMAN) {
-                    structure[id]->setRallyPoint(mouseCell);
-                    bParticle=true;
-                }
-        }
+//        if (mouse->isTile(MOUSE_RALLY)) {
+//            int id = player.selected_structure;
+//            if (id > -1) {
+//                if (structure[id]->getOwner() == HUMAN) {
+//                    structure[id]->setRallyPoint(mouseCell);
+//                    bParticle = true;
+//                }
+//            }
+//        }
 
         if (hover_unit > -1 && (mouse->isTile(MOUSE_NORMAL) || mouse->isTile(MOUSE_PICK))) {
             cUnit &hoverUnit = unit[hover_unit];

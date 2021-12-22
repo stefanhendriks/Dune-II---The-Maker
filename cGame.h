@@ -298,6 +298,10 @@ private:
     void onCombatMouseEventMovedTo(const s_MouseEvent &event);
 
     void initPlayers(bool rememberHouse) const;
+
+    void onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event);
+
+    void onCombatMouseEventRightButtonClicked(const s_MouseEvent &event);
 };
 
 #endif
