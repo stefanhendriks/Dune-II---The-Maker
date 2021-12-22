@@ -79,9 +79,7 @@ void cGame::init() {
 
 	map.init(64, 64);
 
-	for (int i=0; i < MAX_PLAYERS; i++) {
-		players[i].init(i, nullptr);
-    }
+    initPlayers(false);
 
 	for (int i=0; i < MAX_UNITS; i++) {
 	    unit[i].init(i);
@@ -127,55 +125,53 @@ void cGame::mission_init() {
 
     map.init(64, 64);
 
+    initPlayers(true);
+
+    drawManager->getCreditsDrawer()->setCredits();
+}
+
+void cGame::initPlayers(bool rememberHouse) const {
     int maxThinkingAIs = MAX_PLAYERS;
     if (bOneAi) {
         maxThinkingAIs = 1;
     }
-    // clear out players but not entirely
+
     for (int i=0; i < MAX_PLAYERS; i++) {
         cPlayer &pPlayer = players[i];
         int h = pPlayer.getHouse();
 
-        if (i == HUMAN) {
-            pPlayer.init(i, nullptr);
-        } else if (i < AI_CPU5) {
+        brains::cPlayerBrain *brain = nullptr;
+        bool autoSlabStructures = false;
+
+        if (i > HUMAN && i < AI_CPU5) {
             // TODO: playing attribute? (from ai player class?)
-            if (game.bDisableAI) {
-                pPlayer.init(i, nullptr);
-            } else {
-                if (game.bSkirmish) {
-                    if (maxThinkingAIs > 0) {
-                        pPlayer.init(i, new brains::cPlayerBrainSkirmish(&pPlayer));
+            if (!game.bDisableAI) {
+                if (maxThinkingAIs > 0) {
+                    if (game.bSkirmish) {
+                        brain = new brains::cPlayerBrainSkirmish(&pPlayer);
                     } else {
-                        pPlayer.init(i, nullptr);
+                        brain = new brains::cPlayerBrainCampaign(&pPlayer);
+                        autoSlabStructures = true;  // campaign based AI's autoslab structures...
                     }
-                } else {
-                    if (maxThinkingAIs > 0) {
-                        pPlayer.init(i, new brains::cPlayerBrainCampaign(&pPlayer));
-                    } else {
-                        pPlayer.init(i, nullptr);
-                    }
-                    pPlayer.setAutoSlabStructures(true); // campaign based AI's autoslab structures...
                 }
             }
             maxThinkingAIs--;
         } else if (i == AI_CPU5) {
-            pPlayer.init(i, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
+            brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
         } else if (i == AI_CPU6) {
-            pPlayer.init(i, new brains::cPlayerBrainSandworm(&pPlayer));
+            brain = new brains::cPlayerBrainSandworm(&pPlayer);
         }
-        pPlayer.setHouse(h);
+
+        pPlayer.init(i, brain);
+        pPlayer.setAutoSlabStructures(autoSlabStructures);
+        if (rememberHouse) {
+            pPlayer.setHouse(h);
+        }
 
         if (bSkirmish) {
             pPlayer.setCredits(2500);
         }
     }
-
-    // instantiate the creditDrawer with the appropriate player. Only
-    // possible once game has been initialized and player has been created.
-    assert(drawManager);
-    assert(drawManager->getCreditsDrawer());
-    drawManager->getCreditsDrawer()->setCredits();
 }
 
 /**
@@ -1307,6 +1303,7 @@ void cGame::setState(int newState) {
 
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
+                initPlayers(false);
                 newStatePtr = new cSetupSkirmishGameState(*this);
             } else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuGameState(*this);
