@@ -21,7 +21,8 @@ jobs:
       - name: Cache MinGW modules
         uses: actions/cache@v2
         with:
-          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey\mingw\8.1.0\
+          path: |
+            C:\Users\runneradmin\AppData\Local\Temp\chocolatey\mingw\8.1.0\
           #path: C:\ProgramData\chocolatey\lib\mingw\
 
       - name: Set up MinGW
