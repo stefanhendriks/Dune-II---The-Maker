@@ -296,6 +296,8 @@ private:
     void setState(int newState);
 
     void onCombatMouseEventMovedTo(const s_MouseEvent &event);
+
+    void initPlayers(bool rememberHouse) const;
 };
 
 #endif
