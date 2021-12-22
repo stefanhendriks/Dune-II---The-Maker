@@ -23,6 +23,7 @@ jobs:
         with:
           path: |
             C:\Users\runneradmin\AppData\Local\Temp\chocolatey\mingw\8.1.0\
+          key: ${{ runner.os }}-"MinGW32"
           #path: C:\ProgramData\chocolatey\lib\mingw\
 
       - name: Set up MinGW
