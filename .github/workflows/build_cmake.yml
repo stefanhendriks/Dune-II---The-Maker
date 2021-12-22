@@ -13,15 +13,21 @@ jobs:
     runs-on: [windows-latest]
 
     steps:
-      - name: Set up MinGW
-        uses: egor-tensin/setup-mingw@v2
-        with:
-         platform: x86 # D2TM is built within a MinGW32 bit environment
-
       - name: Checkout
         uses: actions/checkout@v1
         with:
           submodules: recursive
+
+      - name: Cache MinGW modules
+        uses: actions/cache@v2
+        with:
+          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey\mingw\8.1.0\
+          #path: C:\ProgramData\chocolatey\lib\mingw\
+
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+         platform: x86 # D2TM is built within a MinGW32 bit environment
 
       - name: Running cmake (windows)
         run: |
