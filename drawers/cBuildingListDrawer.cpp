@@ -203,7 +203,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
-                    int yellow = makecol(255, 207, 41);
                     int red = makecol(255, 0, 0);
 				    textDrawer->setFont(small_font);
 				    textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);

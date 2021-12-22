@@ -233,9 +233,6 @@ public:
         if (idLayer < 0 || idLayer >= 4) return; // safeguard layers
         tCell *pCell = getCell(cellNr);
         if (!pCell) return;
-        if (id > MAX_UNITS) {
-            int foo = 123;
-        }
         pCell->id[idLayer] = id;
     }
 

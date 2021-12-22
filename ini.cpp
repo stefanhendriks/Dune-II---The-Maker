@@ -833,7 +833,6 @@ int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c) {
 std::string INI_WordValueString(char result[MAX_LINE_LENGTH]) {
     std::string resultAsString(result);
     int isPos = INI_GetPositionOfCharacter(result, '=');
-    int length = resultAsString.size();
     return resultAsString.substr(isPos + 1);
 }
 
@@ -975,7 +974,6 @@ void INI_Load_seed(int seed) {
 
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
-            char c = seedMap->getCellTypeCharacter(mapX, mapY);
             int type = seedMap->getCellType(mapX, mapY);
             int iCell = map.makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
@@ -1481,7 +1479,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
         char word[10];
         memset(word, 0, sizeof(word)); // clear string
 
-        for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
+        for (; iStringID < MAX_LINE_LENGTH; iStringID++) {
             // until we encounter a "," ...
 
             char letter[1];
@@ -1533,7 +1531,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
         char word[10];
         memset(word, 0, sizeof(word)); // clear string
 
-        for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
+        for (; iStringID < MAX_LINE_LENGTH; iStringID++) {
             // until we encounter a "," ...
 
             char letter[1];
@@ -1591,8 +1589,6 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
     bool bClearChunk = true;
     bool bSkipped = false;
     int iC = -1;
-    int iIS = -1;
-
 
     for (int c = 0; c < MAX_LINE_LENGTH; c++) {
         // clear chunk
@@ -1662,7 +1658,6 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
         // found the = mark, this means we start chopping now!
         if (linefeed[c] == '=') {
             bSkipped = true;
-            iIS = c;
         }
 
 
@@ -2073,11 +2068,6 @@ void INI_Install_Game(std::string filename) {
     int wordtype = WORD_NONE;
     int id = -1;
 
-    int side_r, side_b, side_g;
-    int team_r, team_g, team_b;   // rgb colors for a team
-    side_r = side_g = side_b = -1;
-    team_r = team_g = team_b = -1;
-
     char msg[255];
     sprintf(msg, "Opening game settings from : %s", filename.c_str());
     logbook(msg);
@@ -2122,8 +2112,9 @@ void INI_Install_Game(std::string filename) {
                     // check if we found a new [TEAM part!
                     if (strstr(linefeed, "[TEAM:") != NULL) {
                         id++; // New ID
-                        team_r = team_g = team_b = -1;    // new team colors
-                        if (id > MAX_HOUSES) id--;
+                        if (id > MAX_HOUSES) {
+                          id--;
+                        }
                     }
                 }
 

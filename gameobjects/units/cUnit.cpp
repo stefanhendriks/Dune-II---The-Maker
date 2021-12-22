@@ -663,8 +663,9 @@ void cUnit::draw() {
         return;
     }
 
-    int ux = draw_x();
-    int uy = draw_y();
+    // Selection box x, y position. Depends on unit size
+    const int ux = draw_x();
+    const int uy = draw_y();
 
     if (isSandworm()) {
         // randomize drawing shimmer effect, as it is expensive
@@ -675,29 +676,23 @@ void cUnit::draw() {
     }
 
     s_UnitInfo &unitType = getUnitInfo();
-    int bmp_width = unitType.bmp_width;
-    int bmp_height = unitType.bmp_height;
+    const int bmp_width = unitType.bmp_width;
+    const int bmp_height = unitType.bmp_height;
 
     // the multiplier we will use to draw the unit
-    int bmp_head = convert_angle(iHeadFacing);
-    int bmp_body = convert_angle(iBodyFacing);
-
-    int start_x, start_y;
+    const int bmp_head = convert_angle(iHeadFacing);
+    const int bmp_body = convert_angle(iBodyFacing);
 
     // draw body first
-    start_x = bmp_body * bmp_width;
-    start_y = bmp_height * iFrame;
-
-    // Selection box x, y position. Depends on unit size
-    int iSelX = ux;
-    int iSelY = uy;
+    int start_x = bmp_body * bmp_width;
+    int start_y = bmp_height * iFrame;
 
     cPlayer &cPlayer = players[this->iPlayer];
 
     // Draw SHADOW
     BITMAP *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
-    float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
-    float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
+    const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
+    const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
     if (shadow) {
         int destY = uy;
@@ -1120,8 +1115,6 @@ void cUnit::think() {
         if (pPlayer->isHuman()) {
             if (bSelected) {
                 if (key[KEY_D]) {
-                    cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
-
                     bool result = getPlayer()->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
 
                     if (result) {
@@ -1215,8 +1208,6 @@ void cUnit::think() {
     }
 
     // HARVESTERs logic here
-    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
-
     if (iType == HARVESTER) {
         bool bFindRefinery = false;
 
@@ -2250,8 +2241,6 @@ void cUnit::think_attack() {
             }
         }
     } else {
-        s_UnitInfo &unitType = getUnitInfo();
-
         // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
 
@@ -2775,8 +2764,6 @@ void cUnit::thinkFast_move() {
                             }
                         }
                         return; // unit is dead, no need to go further
-                    } else {
-                        int i = 5;
                     }
                 }
             }
