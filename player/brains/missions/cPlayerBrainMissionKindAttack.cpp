@@ -88,7 +88,6 @@ namespace brains {
                 }
             }
         } else if (targetUnitID > -1) {
-            cUnit &targetUnit = unit[targetUnitID];
             const std::vector<int> &units = mission->getUnits();
             for (auto &myUnit : units) {
                 cUnit &aUnit = unit[myUnit];

@@ -206,8 +206,8 @@ void cSetupSkirmishGameState::draw() const {
 
     // draw players who will be playing ;)
     for (int p = 0; p < (AI_WORM - 1); p++) {
-        int iDrawY = playerList.getY() + 4 + (p * 22);
-        int iDrawX = 4;
+        const int iDrawY = playerList.getY() + 4 + (p * 22);
+        const int iDrawX = 4;
 
         const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
 
@@ -218,30 +218,28 @@ void cSetupSkirmishGameState::draw() const {
             drawPlayerBrain(sSkirmishPlayer, brainRect);
 
             // HOUSE
-            cPlayer &cPlayer = players[p];
-
-            int houseX = 74;
-            int houseY = iDrawY;
+            const int houseX = 74;
+            const int houseY = iDrawY;
             cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
 
             drawHouse(sSkirmishPlayer, houseRec);
 
             // Credits
-            int creditsX = 174;
-            int creditsY = iDrawY;
+            const int creditsX = 174;
+            const int creditsY = iDrawY;
             cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
 
             drawCredits(sSkirmishPlayer, creditsRect);
 
             // Units
-            int startingUnitsX = 272;
-            int startingUnitsY = iDrawY;
+            const int startingUnitsX = 272;
+            const int startingUnitsY = iDrawY;
             cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
             drawStartingUnits(sSkirmishPlayer, startingUnitsRect);
 
             // Credits
-            int teamsX = 340;
-            int teamsY = iDrawY;
+            const int teamsX = 340;
+            const int teamsY = iDrawY;
             cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
             drawTeams(sSkirmishPlayer, teamsRect);
         }
@@ -697,18 +695,15 @@ void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &even
 
 void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw players who will be playing ;)
     for (int p = 0; p < (AI_WORM - 1); p++) {
-        int iDrawY = playerList.getY() + 4 + (p * 22);
-        int iDrawX = 4;
+        const int iDrawY = playerList.getY() + 4 + (p * 22);
 
         if (p < iStartingPoints) {
             s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
             if (!sSkirmishPlayer.bPlaying) continue;
 
             // HOUSE
-            cPlayer &cPlayer = players[p];
-
-            int houseX = 74;
-            int houseY = iDrawY;
+            const int houseX = 74;
+            const int houseY = iDrawY;
             cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
             // on click:
             if (houseRec.isPointWithin(mouse_x, mouse_y)) {
@@ -725,8 +720,8 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw p
             }
 
             // Credits
-            int creditsX = 174;
-            int creditsY = iDrawY;
+            const int creditsX = 174;
+            const int creditsY = iDrawY;
             cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
 
             // on click:
@@ -738,8 +733,8 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw p
             }
 
             // Units
-            int startingUnitsX = 272;
-            int startingUnitsY = iDrawY;
+            const int startingUnitsX = 272;
+            const int startingUnitsY = iDrawY;
             cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
             // on click:
             if (startingUnitsRect.isPointWithin(mouse_x, mouse_y)) {
@@ -750,8 +745,8 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw p
             }
 
             // Credits
-            int teamsX = 340;
-            int teamsY = iDrawY;
+            const int teamsX = 340;
+            const int teamsY = iDrawY;
             cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
             // on click:
             if (teamsRect.isPointWithin(mouse_x, mouse_y)) {
@@ -797,10 +792,11 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList() {
                 }
             }
 
-            if (!sSkirmishPlayer.bPlaying) continue;
-            // HOUSE
-            cPlayer &cPlayer = players[p];
+            if (!sSkirmishPlayer.bPlaying) {
+                continue;
+            }
 
+            // HOUSE
             int houseX = 74;
             int houseY = iDrawY;
             cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);

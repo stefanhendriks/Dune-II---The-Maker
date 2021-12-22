@@ -1035,8 +1035,6 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
     // ignore any units (we can move them out of the way). But do take
     // terrain and other structures into consideration!
 
-    int centerOfBase = getFocusCell();
-
     const std::vector<int> &allMyStructuresAsId = getAllMyStructuresAsId();
     std::vector<int> potentialCells = std::vector<int>();
 

@@ -1011,7 +1011,6 @@ namespace brains {
                                                                                   cBuildingListItem *pItem,
                                                                                   const s_PlaceResult &placeResult) {
         // unable to place it, we determined previously that we could, so what to do?
-        bool changedPlacePosition = false;
         if (placeResult.badTerrain) {
             findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
             return;
