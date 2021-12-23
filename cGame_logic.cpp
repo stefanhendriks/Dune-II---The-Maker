@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
+#include "cGame.h"
 
 
 cGame::cGame() {
@@ -400,7 +401,8 @@ bool cGame::isMusicPlaying() {
 }
 
 void cGame::updateState() {
-    mouse->updateState(); // calls observers that are interested in mouse changes etc
+    mouse->updateState(); // calls observers that are interested in mouse input
+    keyboard->updateState(); // calls observers that are interested in keyboard input
 
     if (state != GAME_PLAYING) {
         return;
@@ -707,6 +709,7 @@ void cGame::shutdown() {
     delete allegroDrawer;
     delete m_dataRepository;
     delete mouse;
+    delete keyboard;
 
     if (gfxdata) {
         unload_datafile(gfxdata);
@@ -819,6 +822,7 @@ bool cGame::setupGame() {
     alfont_init();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
     install_keyboard();
+    keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
     install_mouse();
     mouse = new cMouse();
@@ -1204,6 +1208,7 @@ bool cGame::setupGame() {
  */
 void cGame::setup_players() {
     mouse->setMouseObserver(nullptr);
+    keyboard->setKeyboardObserver(nullptr);
 
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
@@ -1232,6 +1237,7 @@ void cGame::setup_players() {
     cPlayer *humanPlayer = &players[HUMAN];
     _interactionManager = new cInteractionManager(humanPlayer);
     mouse->setMouseObserver(_interactionManager);
+    keyboard->setKeyboardObserver(_interactionManager);
 }
 
 bool cGame::isState(int thisState) {
@@ -1672,6 +1678,18 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     } else {
         if (state == GAME_PLAYING) {
             onCombatMouseEvent(event);
+        }
+    }
+}
+
+void cGame::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+    // pass through any classes that are interested
+    if (currentState) {
+        currentState->onNotifyKeyboardEvent(event);
+    } else {
+        if (state == GAME_PLAYING) {
+            logbook(s_KeyboardEvent::toString(event).c_str());
+//            onCombatMouseEvent(event);
         }
     }
 }

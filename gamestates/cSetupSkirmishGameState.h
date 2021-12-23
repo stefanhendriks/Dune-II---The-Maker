@@ -26,6 +26,7 @@ public:
     void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
 
     eGameStateType getType() override;
 

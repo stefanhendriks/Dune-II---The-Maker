@@ -2,7 +2,7 @@
 #define CMOUSE_H_
 
 #include <utils/cPoint.h>
-#include "../observers/cMouseObserver.h"
+#include "../observers/cInputObserver.h"
 
 class cRectangle;
 
@@ -13,9 +13,9 @@ public:
 
     ~cMouse();
 
-    void updateState(); // updates state from Allegro, calls appropiate on* methods on gameControlContext class
+    void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
-    void setMouseObserver(cMouseObserver *mouseObserver) {
+    void setMouseObserver(cInputObserver *mouseObserver) {
         this->_mouseObserver = mouseObserver;
     }
 
@@ -80,7 +80,7 @@ public:
     cPoint getDragLineEndPoint();
 
 private:
-    cMouseObserver *_mouseObserver;
+    cInputObserver *_mouseObserver;
 
     bool leftButtonPressed;
     bool rightButtonPressed;

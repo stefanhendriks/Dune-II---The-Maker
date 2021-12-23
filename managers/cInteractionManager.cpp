@@ -1,6 +1,8 @@
 #include "../include/d2tmh.h"
+#include "cInteractionManager.h"
 
-cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver() {
+
+cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cInputObserver() {
 	assert(thePlayer);
 	// does not own these things!
 	player = thePlayer;
@@ -99,4 +101,8 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
     // somewhere above this function, the lines after this onNotify might end up pointing to invalid memory addresses
     // and cause a SIGSEV
     game.onNotifyMouseEvent(mouseEvent);
+}
+
+void cInteractionManager::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+    game.onNotifyKeyboardEvent(event);
 }

@@ -13,8 +13,11 @@
 #define D2TM_GAME_H
 
 #include <controls/cMouse.h>
+#include <controls/cKeyboard.h>
 #include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
+#include "utils/cSoundPlayer.h"
+#include "definitions.h"
 
 // forward declaration :/ sigh should really look into this
 class cRectangle;
@@ -24,7 +27,7 @@ class cGameControlsContext;
 class cInteractionManager;
 class cGameState;
 
-class cGame : public cScenarioObserver, cMouseObserver {
+class cGame : public cScenarioObserver, cInputObserver {
 
 public:
 
@@ -154,6 +157,7 @@ public:
 
     void onNotify(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
 
     void onEventDiscovered(const s_GameEvent &event);
     void onEventSpecialLaunch(const s_GameEvent &event);
@@ -222,6 +226,7 @@ private:
 
     cSoundPlayer *soundPlayer;
     cMouse *mouse;
+    cKeyboard *keyboard;
 
     bool missionWasWon; // hack: used for state transitioning :/
 
