@@ -17,20 +17,20 @@
 
 
 cGame::cGame() {
-    memset(states, 0, sizeof(cGameState*));
+    memset(states, 0, sizeof(cGameState *));
 
     nextState = -1;
     currentState = nullptr;
-	screen_x = 800;
-	screen_y = 600;
+    screen_x = 800;
+    screen_y = 600;
     windowed = false;
     bPlaySound = true;
     bPlayMusic = true;
     bMp3 = false;
-	// default INI screen width and height is not loaded
-	// if not loaded, we will try automatic setup
-	ini_screen_width=-1;
-	ini_screen_height=-1;
+    // default INI screen width and height is not loaded
+    // if not loaded, we will try automatic setup
+    ini_screen_width = -1;
+    ini_screen_height = -1;
 
     memset(version, 0, sizeof(version));
     sprintf(version, "0.6.x");
@@ -43,61 +43,61 @@ void cGame::init() {
     nextState = -1;
     missionWasWon = false;
     currentState = nullptr;
-	screenshot=0;
-	bPlaying=true;
+    screenshot = 0;
+    bPlaying = true;
 
     TIMER_evaluatePlayerStatus = 5;
 
-    bSkirmish=false;
+    bSkirmish = false;
 
     // Alpha (for fading in/out)
-    fadeAlpha=0;                             // 255 = opaque , anything else
-    fadeAction=eFadeAction::FADE_IN;           // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    fadeAlpha = 0;                             // 255 = opaque , anything else
+    fadeAction = eFadeAction::FADE_IN;           // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
-    iMusicVolume=96; // volume is 0...
+    iMusicVolume = 96; // volume is 0...
 
-	paths_created=0;
+    paths_created = 0;
 
     setState(GAME_INITIALIZE);
 
-	// mentat
+    // mentat
     delete pMentat;
     pMentat = nullptr;
 
-	fade_select=1.0f;
+    fade_select = 1.0f;
 
-    bFadeSelectDir=true;    // fade select direction
+    bFadeSelectDir = true;    // fade select direction
 
-    iRegion=1;          // what region ? (calumative, from player perspective, NOT the actual region number)
-	iMission=0;         // calculated by mission loading (region -> mission calculation)
+    iRegion = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
+    iMission = 0;         // calculated by mission loading (region -> mission calculation)
 
-    shake_x=0;
-    shake_y=0;
-    TIMER_shake=0;
+    shake_x = 0;
+    shake_y = 0;
+    TIMER_shake = 0;
 
-    iMusicType=MUSIC_MENU;
+    iMusicType = MUSIC_MENU;
 
-	map.init(64, 64);
+    map.init(64, 64);
 
     initPlayers(false);
 
-	for (int i=0; i < MAX_UNITS; i++) {
-	    unit[i].init(i);
-	}
+    for (int i = 0; i < MAX_UNITS; i++) {
+        unit[i].init(i);
+    }
 
-	for (int i=0; i < MAX_PARTICLES; i++) {
-	    particle[i].init();
-	}
+    for (int i = 0; i < MAX_PARTICLES; i++) {
+        particle[i].init();
+    }
 
-	// Units & Structures are already initialized in map.init()
-	if (game.bMp3 && mp3_music) {
-	    almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
-	}
+    // Units & Structures are already initialized in map.init()
+    if (game.bMp3 && mp3_music) {
+        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
+    }
 
-	// Load properties
-	INI_Install_Game(game_filename);
+    // Load properties
+    INI_Install_Game(game_filename);
 
-    mp3_music=NULL;
+    mp3_music = NULL;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -111,17 +111,17 @@ void cGame::mission_init() {
     winFlags = 0;
     loseFlags = 0;
 
-    iMusicVolume=96; // volume is 0...
+    iMusicVolume = 96; // volume is 0...
 
-	paths_created=0;
+    paths_created = 0;
 
-	fade_select=1.0f;
+    fade_select = 1.0f;
 
-    bFadeSelectDir=true;    // fade select direction
+    bFadeSelectDir = true;    // fade select direction
 
-    shake_x=0;
-    shake_y=0;
-    TIMER_shake=0;
+    shake_x = 0;
+    shake_y = 0;
+    TIMER_shake = 0;
 
     map.init(64, 64);
 
@@ -136,7 +136,7 @@ void cGame::initPlayers(bool rememberHouse) const {
         maxThinkingAIs = 1;
     }
 
-    for (int i=0; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer &pPlayer = players[i];
         int h = pPlayer.getHouse();
 
@@ -190,7 +190,7 @@ void cGame::thinkSlow_combat() {
             player.evaluateStillAlive();
 
             if (isAlive && !player.isAlive()) {
-                s_GameEvent event {
+                s_GameEvent event{
                         .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
                         .entityType = eBuildType::SPECIAL,
                         .entityID = -1,
@@ -408,7 +408,7 @@ void cGame::updateState() {
 
     // Mission playing state logic
     // TODO: Move this to combat state object
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer *pPlayer = &players[i];
         cGameControlsContext *context = pPlayer->getGameControlsContext();
 
@@ -420,7 +420,7 @@ void cGame::updateState() {
         int mc = context->getMouseCell();
         if (mc > -1) {
             // check if any unit is 'selected'
-            for (int j=0; j < MAX_UNITS; j++) {
+            for (int j = 0; j < MAX_UNITS; j++) {
                 cUnit &cUnit = unit[j];
                 if (!cUnit.isValid()) continue;
                 if (cUnit.iPlayer != HUMAN) continue;
@@ -519,68 +519,65 @@ void cGame::init_skirmish() const {
 }
 
 int cGame::getGroupNumberFromKeyboard() {
-	if (key[KEY_1]) {
-		return 1;
-	}
-	if (key[KEY_2]) {
-		return 2;
-	}
-	if (key[KEY_3]) {
-		return 3;
-	}
-	if (key[KEY_4]) {
-		return 4;
-	}
-	if (key[KEY_5]) {
-		return 5;
-	}
-	return 0;
+    if (key[KEY_1]) {
+        return 1;
+    }
+    if (key[KEY_2]) {
+        return 2;
+    }
+    if (key[KEY_3]) {
+        return 3;
+    }
+    if (key[KEY_4]) {
+        return 4;
+    }
+    if (key[KEY_5]) {
+        return 5;
+    }
+    return 0;
 }
 
 void cGame::handleTimeSlicing() {
-	if (iRest > 0) {
-		rest(iRest);
-	}
+    if (iRest > 0) {
+        rest(iRest);
+    }
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
     if (TIMER_shake == 0) {
-		TIMER_shake = -1;
-	}
-	// blitSprite on screen
+        TIMER_shake = -1;
+    }
+    // blitSprite on screen
 
-	if (TIMER_shake > 0)
-	{
-		// the more we get to the 'end' the less we 'throttle'.
-		// Structure explosions are 6 time units per cell.
-		// Max is 9 cells (9*6=54)
-		// the max border is then 9. So, we do time / 6
-		if (TIMER_shake > 69) TIMER_shake = 69;
+    if (TIMER_shake > 0) {
+        // the more we get to the 'end' the less we 'throttle'.
+        // Structure explosions are 6 time units per cell.
+        // Max is 9 cells (9*6=54)
+        // the max border is then 9. So, we do time / 6
+        if (TIMER_shake > 69) TIMER_shake = 69;
 
-		int offset = TIMER_shake / 5;
-		if (offset > 9)
-			offset = 9;
+        int offset = TIMER_shake / 5;
+        if (offset > 9)
+            offset = 9;
 
-		shake_x = -abs(offset/2) + rnd(offset);
-		shake_y = -abs(offset/2) + rnd(offset);
+        shake_x = -abs(offset / 2) + rnd(offset);
+        shake_y = -abs(offset / 2) + rnd(offset);
 
-		blit(bmp_screen, bmp_throttle, 0, 0, 0+shake_x, 0+shake_y, screen_x, screen_y);
-		blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
-	}
-	else
-	{
-		// when fading
-		if (fadeAlpha == 255) {
+        blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, screen_x, screen_y);
+        blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
+    } else {
+        // when fading
+        if (fadeAlpha == 255) {
             blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
         } else {
-			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
-			assert(temp != NULL);
-			clear(temp);
-			fblend_trans(bmp_screen, temp, 0, 0, fadeAlpha);
-			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
-			destroy_bitmap(temp);
-		}
-	}
+            BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
+            assert(temp != NULL);
+            clear(temp);
+            fblend_trans(bmp_screen, temp, 0, 0, fadeAlpha);
+            blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
+            destroy_bitmap(temp);
+        }
+    }
 }
 
 void cGame::drawState() {
@@ -600,49 +597,49 @@ void cGame::drawState() {
         case GAME_TELLHOUSE:
             stateMentat(pMentat);
             break;
-		case GAME_PLAYING:
-			combat();
-			break;
-		case GAME_BRIEFING:
+        case GAME_PLAYING:
+            combat();
+            break;
+        case GAME_BRIEFING:
             stateMentat(pMentat);
-			break;
-		case GAME_MENU:
-			menu();
-			break;
+            break;
+        case GAME_MENU:
+            menu();
+            break;
         case GAME_WINNING:
-			winning();
-			break;
-		case GAME_LOSING:
-			losing();
-			break;
-		case GAME_WINBRIEF:
+            winning();
+            break;
+        case GAME_LOSING:
+            losing();
+            break;
+        case GAME_WINBRIEF:
             stateMentat(pMentat);
-			break;
-		case GAME_LOSEBRIEF:
+            break;
+        case GAME_LOSEBRIEF:
             stateMentat(pMentat);
-			break;
+            break;
         default:
             currentState->draw();
-        // TODO: GAME_STATISTICS, ETC
-	}
+            // TODO: GAME_STATISTICS, ETC
+    }
 }
 
 /**
 	Main game loop
 */
 void cGame::run() {
-	set_trans_blender(0, 0, 0, 128);
+    set_trans_blender(0, 0, 0, 128);
 
-	while (bPlaying) {
-		TimeManager.processTime();
+    while (bPlaying) {
+        TimeManager.processTime();
         updateState();
-		handleTimeSlicing(); // handle time diff (needs to change!)
+        handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
-		_interactionManager->interactWithKeyboard(); // generic interaction
-		shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
-		frame_count++;
-	}
+        _interactionManager->interactWithKeyboard(); // generic interaction
+        shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
+        frame_count++;
+    }
 }
 
 void cGame::shakeScreen(int duration) {
@@ -653,8 +650,8 @@ void cGame::shakeScreen(int duration) {
 	Shutdown the game
 */
 void cGame::shutdown() {
-	cLogger *logger = cLogger::getInstance();
-	logger->logHeader("SHUTDOWN");
+    cLogger *logger = cLogger::getInstance();
+    logger->logHeader("SHUTDOWN");
 
     for (int i = 0; i < GAME_MAX_STATES; i++) {
         cGameState *pState = states[i];
@@ -673,7 +670,7 @@ void cGame::shutdown() {
             }
         }
     }
-    
+
     if (currentState != nullptr) {
         assert(false);
         if (currentState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
@@ -684,7 +681,7 @@ void cGame::shutdown() {
         }
     }
 
-	if (soundPlayer) {
+    if (soundPlayer) {
         soundPlayer->destroyAllSounds();
     }
     delete soundPlayer;
@@ -725,27 +722,27 @@ void cGame::shutdown() {
     }
 
     // Destroy font of Allegro FONT library
-	alfont_destroy_font(game_font);
-	alfont_destroy_font(bene_font);
+    alfont_destroy_font(game_font);
+    alfont_destroy_font(bene_font);
 
-	// Exit the font library (must be first)
-	alfont_exit();
+    // Exit the font library (must be first)
+    alfont_exit();
 
-	logbook("Allegro FONT library shut down.");
+    logbook("Allegro FONT library shut down.");
 
-	// MP3 Library
-	if (mp3_music) {
-		almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
-		almp3_destroy_mp3(mp3_music);
-	}
+    // MP3 Library
+    if (mp3_music) {
+        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
+        almp3_destroy_mp3(mp3_music);
+    }
 
-	logbook("Allegro MP3 library shut down.");
+    logbook("Allegro MP3 library shut down.");
 
-	// Now we are all neatly closed, we exit Allegro and return to OS.
-	allegro_exit();
+    // Now we are all neatly closed, we exit Allegro and return to OS.
+    allegro_exit();
 
-	logbook("Allegro shut down.");
-	logbook("Thanks for playing.");
+    logbook("Allegro shut down.");
+    logbook("Thanks for playing.");
 
     cLogger::destroy();
 }
@@ -776,138 +773,140 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 	Should not be called twice.
 */
 bool cGame::setupGame() {
-	cLogger *logger = cLogger::getInstance();
+    cLogger *logger = cLogger::getInstance();
 
-	game.init(); // Must be first!
+    game.init(); // Must be first!
 
-	logger->clearLogFile();
+    logger->clearLogFile();
 
-	logger->logHeader("Dune II - The Maker");
-	logger->logCommentLine(""); // whitespace
+    logger->logHeader("Dune II - The Maker");
+    logger->logCommentLine(""); // whitespace
 
-	logger->logHeader("Version information");
-	char msg[255];
-	sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
-	logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
+    logger->logHeader("Version information");
+    char msg[255];
+    sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
+    logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
 
-	// init game
-	if (game.windowed) {
-		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
-	} else {
-		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
-	}
+    // init game
+    if (game.windowed) {
+        logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
+    } else {
+        logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
+    }
 
-	// TODO: load eventual game settings (resolution, etc)
+    // TODO: load eventual game settings (resolution, etc)
 
-	// Logbook notification
-	logger->logHeader("Allegro");
+    // Logbook notification
+    logger->logHeader("Allegro");
 
-	// ALLEGRO - INIT
-	if (allegro_init() != 0) {
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
-		return false;
-	}
+    // ALLEGRO - INIT
+    if (allegro_init() != 0) {
+        logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
+        return false;
+    }
 
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
-	int r = install_timer();
-	if (r > -1) {
-		logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
-	}
-	else
-	{
-		allegro_message("Failed to install timer");
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
-		return false;
-	}
+    int r = install_timer();
+    if (r > -1) {
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
+    } else {
+        allegro_message("Failed to install timer");
+        logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
+        return false;
+    }
 
-	alfont_init();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
-	install_keyboard();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
-	install_mouse();
-	mouse = new cMouse();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
+    alfont_init();
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
+    install_keyboard();
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
+    install_mouse();
+    mouse = new cMouse();
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
-	/* set up the interrupt routines... */
-	game.TIMER_shake=0;
+    /* set up the interrupt routines... */
+    game.TIMER_shake = 0;
 
-	LOCK_VARIABLE(allegro_timerUnits);
-	LOCK_VARIABLE(allegro_timerGlobal);
-	LOCK_VARIABLE(allegro_timerSecond);
+    LOCK_VARIABLE(allegro_timerUnits);
+    LOCK_VARIABLE(allegro_timerGlobal);
+    LOCK_VARIABLE(allegro_timerSecond);
 
-	LOCK_FUNCTION(allegro_timerunits);
-	LOCK_FUNCTION(allegro_timergametime);
-	LOCK_FUNCTION(allegro_timerseconds);
+    LOCK_FUNCTION(allegro_timerunits);
+    LOCK_FUNCTION(allegro_timergametime);
+    LOCK_FUNCTION(allegro_timerseconds);
 
-	// Install timers
-	install_int(allegro_timerunits, 100); // 100 milliseconds
-    install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
+    // Install timers
+    install_int(allegro_timerunits, 100); // 100 milliseconds
+    install_int(allegro_timergametime,
+                5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
     install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
 
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
-	frame_count = fps = 0;
+    frame_count = fps = 0;
 
-	// set window title
-	char title[128];
-	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
+    // set window title
+    char title[128];
+    sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
 
-	// Set window title
-	set_window_title(title);
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
+    // Set window title
+    set_window_title(title);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
     int colorDepth = desktop_color_depth();
     set_color_depth(colorDepth);
 
     char colorDepthMsg[255];
-    sprintf(colorDepthMsg,"Desktop color dept is %d.", colorDepth);
+    sprintf(colorDepthMsg, "Desktop color dept is %d.", colorDepth);
     cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
 
 
-	// TODO: read/write rest value so it does not have to 'fine-tune'
-	// but is already set up. Perhaps even offer it in the options screen? So the user
-	// can specify how much CPU this game may use?
+    // TODO: read/write rest value so it does not have to 'fine-tune'
+    // but is already set up. Perhaps even offer it in the options screen? So the user
+    // can specify how much CPU this game may use?
 
-	if (game.windowed) {
-		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
+    if (game.windowed) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
 
-		if (isResolutionInGameINIFoundAndSet()) {
-			setScreenResolutionFromGameIniSettings();
-		}
+        if (isResolutionInGameINIFoundAndSet()) {
+            setScreenResolutionFromGameIniSettings();
+        }
 
         r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
-		char msg[255];
-		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.screen_x, game.screen_y, colorDepth);
+        char msg[255];
+        sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.screen_x,
+                game.screen_y, colorDepth);
         logbook(msg);
 
-		if (r > -1) {
-			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
-		} else {
-		    allegro_message("Failed to initialize graphics mode");
-		    return false;
-		}
-	} else {
+        if (r > -1) {
+            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
+        } else {
+            allegro_message("Failed to initialize graphics mode");
+            return false;
+        }
+    } else {
         /**
          * Fullscreen mode
         */
 
-		bool mustAutoDetectResolution = false;
-		if (isResolutionInGameINIFoundAndSet()) {
-			setScreenResolutionFromGameIniSettings();
-			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-			char msg[255];
-			sprintf(msg,"Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d", game.ini_screen_width, game.ini_screen_height, colorDepth, r);
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
+        bool mustAutoDetectResolution = false;
+        if (isResolutionInGameINIFoundAndSet()) {
+            setScreenResolutionFromGameIniSettings();
+            r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+            char msg[255];
+            sprintf(msg, "Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d",
+                    game.ini_screen_width, game.ini_screen_height, colorDepth, r);
+            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
             mustAutoDetectResolution = r < 0;
-		} else {
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", "No resolution defined in ini file.");
+        } else {
+            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
+                                        "No resolution defined in ini file.");
             mustAutoDetectResolution = true;
-		}
+        }
 
-		// find best possible resolution
-		if (mustAutoDetectResolution) {
+        // find best possible resolution
+        if (mustAutoDetectResolution) {
             char msg[255];
             sprintf(msg, "Autodetecting resolutions at color depth %d", colorDepth);
             cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
@@ -918,70 +917,73 @@ bool cGame::setupGame() {
 
             // success
             if (result) {
-                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
+                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)",
+                            "Succesfully initialized graphics mode.", OUTC_SUCCESS);
             } else {
-                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Failed to initializ graphics mode.", OUTC_FAILED);
-                allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
+                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)",
+                            "Failed to initializ graphics mode.", OUTC_FAILED);
+                allegro_message(
+                        "Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
                 return false;
             }
-		}
-	}
+        }
+    }
 
-	alfont_text_mode(-1);
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
+    alfont_text_mode(-1);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-	game_font = alfont_load_font("data/arakeen.fon");
+    game_font = alfont_load_font("data/arakeen.fon");
 
-	if (game_font != NULL) {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
-		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
-	} else {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
-		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
-		return false;
-	}
+    if (game_font != NULL) {
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
+        alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
+    } else {
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
+        allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
+        return false;
+    }
 
 
     bene_font = alfont_load_font("data/benegess.fon");
 
-	if (bene_font != NULL) {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
-		alfont_set_font_size(bene_font, 10); // set size
-	} else {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
-		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
-		return false;
-	}
+    if (bene_font != NULL) {
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
+        alfont_set_font_size(bene_font, 10); // set size
+    } else {
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
+        allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
+        return false;
+    }
 
-	small_font = alfont_load_font("data/small.ttf");
+    small_font = alfont_load_font("data/small.ttf");
 
-	if (small_font != NULL) {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
-		alfont_set_font_size(small_font, 10); // set size
-	} else {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
-		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
-		return false;
-	}
+    if (small_font != NULL) {
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
+        alfont_set_font_size(small_font, 10); // set size
+    } else {
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
+        allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
+        return false;
+    }
 
-	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)	{
-		set_display_switch_mode(SWITCH_PAUSE);
-		logbook("Display 'switch and pause' mode set");
-	} else {
-		logbook("Display 'switch to background' mode set");
-	}
+    if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
+        set_display_switch_mode(SWITCH_PAUSE);
+        logbook("Display 'switch and pause' mode set");
+    } else {
+        logbook("Display 'switch to background' mode set");
+    }
 
-	int maxSounds = getAmountReservedVoicesAndInstallSound();
-	memset(msg, 0, sizeof(msg));
+    int maxSounds = getAmountReservedVoicesAndInstallSound();
+    memset(msg, 0, sizeof(msg));
 
     if (maxSounds > -1) {
-		sprintf(msg, "Successfully installed sound. %d voices reserved", maxSounds);
-		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-	} else {
-		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
-	}
-	soundPlayer = new cSoundPlayer(maxSounds);
+        sprintf(msg, "Successfully installed sound. %d voices reserved", maxSounds);
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+    } else {
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
+    }
+    soundPlayer = new cSoundPlayer(maxSounds);
 
     // normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
     iMaxVolume = 220;
@@ -990,41 +992,36 @@ bool cGame::setupGame() {
     /***
      * Viewport(s)
      */
-    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x-cSideBar::SidebarWidth, game.screen_y-cSideBar::TopBarHeight);
+    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x - cSideBar::SidebarWidth,
+                                 game.screen_y - cSideBar::TopBarHeight);
 
     /***
     Bitmap Creation
     ***/
 
-	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
+    bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 
-	if (bmp_screen == NULL)
-	{
-		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_screen");
-		return false;
-	}
-	else
-	{
-		logbook("Memory bitmap created: bmp_screen");
-		clear(bmp_screen);
-	}
+    if (bmp_screen == NULL) {
+        allegro_message("Failed to create a memory bitmap");
+        logbook("ERROR: Could not create bitmap: bmp_screen");
+        return false;
+    } else {
+        logbook("Memory bitmap created: bmp_screen");
+        clear(bmp_screen);
+    }
 
     bmp_backgroundMentat = create_bitmap(game.screen_x, game.screen_y);
 
-	if (bmp_backgroundMentat == NULL)
-	{
-		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
-		return false;
-	}
-	else
-	{
-		logbook("Memory bitmap created: bmp_backgroundMentat");
-		clear(bmp_backgroundMentat);
+    if (bmp_backgroundMentat == NULL) {
+        allegro_message("Failed to create a memory bitmap");
+        logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
+        return false;
+    } else {
+        logbook("Memory bitmap created: bmp_backgroundMentat");
+        clear(bmp_backgroundMentat);
 
-		// create only once
-        clear_to_color(bmp_backgroundMentat, makecol(8,8,16));
+        // create only once
+        clear_to_color(bmp_backgroundMentat, makecol(8, 8, 16));
         bool offsetX = false;
 
         float horizon = game.screen_y / 2;
@@ -1034,7 +1031,7 @@ bool cGame::setupGame() {
             if (y < horizon) {
                 diffYToCenter = y / horizon;
             } else {
-                diffYToCenter = 1 - ((y-horizon) / horizon);
+                diffYToCenter = 1 - ((y - horizon) / horizon);
             }
 
             for (int x = offsetX ? 0 : 1; x < game.screen_x; x += 2) {
@@ -1042,169 +1039,163 @@ bool cGame::setupGame() {
                 if (x < centered) {
                     diffXToCenter = x / centered;
                 } else {
-                    diffXToCenter = 1-((x-centered) / centered);
+                    diffXToCenter = 1 - ((x - centered) / centered);
                 }
 
                 float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
                 float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
                 float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
-                putpixel(bmp_backgroundMentat, x, y, makecol((int)red, (int)green, (int)blue));
+                putpixel(bmp_backgroundMentat, x, y, makecol((int) red, (int) green, (int) blue));
             }
             // flip offset every y row
             offsetX = !offsetX;
         }
-	}
+    }
 
     bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
 
-	if (bmp_throttle == NULL)
-	{
-		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_throttle");
-		return false;
-	}
-	else {
-		logbook("Memory bitmap created: bmp_throttle");
-	}
+    if (bmp_throttle == NULL) {
+        allegro_message("Failed to create a memory bitmap");
+        logbook("ERROR: Could not create bitmap: bmp_throttle");
+        return false;
+    } else {
+        logbook("Memory bitmap created: bmp_throttle");
+    }
 
-	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
+    bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
 
-	if (bmp_winlose == NULL)
-	{
-		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_winlose");
-		return false;
-	}
-	else {
-		logbook("Memory bitmap created: bmp_winlose");
-	}
+    if (bmp_winlose == NULL) {
+        allegro_message("Failed to create a memory bitmap");
+        logbook("ERROR: Could not create bitmap: bmp_winlose");
+        return false;
+    } else {
+        logbook("Memory bitmap created: bmp_winlose");
+    }
 
-	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
+    bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
 
-	if (bmp_fadeout == NULL)
-	{
-		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_fadeout");
-		return false;
-	}
-	else {
-		logbook("Memory bitmap created: bmp_fadeout");
-	}
+    if (bmp_fadeout == NULL) {
+        allegro_message("Failed to create a memory bitmap");
+        logbook("ERROR: Could not create bitmap: bmp_fadeout");
+        return false;
+    } else {
+        logbook("Memory bitmap created: bmp_fadeout");
+    }
 
-	/*** End of Bitmap Creation ***/
-	set_color_conversion(COLORCONV_MOST);
+    /*** End of Bitmap Creation ***/
+    set_color_conversion(COLORCONV_MOST);
 
-	logbook("Color conversion method set");
+    logbook("Color conversion method set");
 
-	// setup mouse speed
-	set_mouse_speed(0,0);
+    // setup mouse speed
+    set_mouse_speed(0, 0);
 
-	logbook("MOUSE: Mouse speed set");
+    logbook("MOUSE: Mouse speed set");
 
     logger->logHeader("GAME");
 
-	/*** Data files ***/
+    /*** Data files ***/
 
-	// load datafiles
-	gfxdata = load_datafile("data/gfxdata.dat");
-	if (gfxdata == nullptr) {
-		logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
-		return false;
-	} else {
-		logbook("Datafile hooked: gfxdata.dat");
-		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
-	}
+    // load datafiles
+    gfxdata = load_datafile("data/gfxdata.dat");
+    if (gfxdata == nullptr) {
+        logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
+        return false;
+    } else {
+        logbook("Datafile hooked: gfxdata.dat");
+        memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+    }
 
-	gfxaudio = load_datafile("data/gfxaudio.dat");
-	if (gfxaudio == nullptr)  {
-		logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
-		return false;
-	} else {
-		logbook("Datafile hooked: gfxaudio.dat");
-	}
+    gfxaudio = load_datafile("data/gfxaudio.dat");
+    if (gfxaudio == nullptr) {
+        logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
+        return false;
+    } else {
+        logbook("Datafile hooked: gfxaudio.dat");
+    }
 
-	gfxinter = load_datafile("data/gfxinter.dat");
-	if (gfxinter == nullptr)  {
-		logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
-		return false;
-	} else {
-		logbook("Datafile hooked: gfxinter.dat");
-	}
+    gfxinter = load_datafile("data/gfxinter.dat");
+    if (gfxinter == nullptr) {
+        logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
+        return false;
+    } else {
+        logbook("Datafile hooked: gfxinter.dat");
+    }
 
-	gfxworld = load_datafile("data/gfxworld.dat");
-	if (gfxworld == nullptr) {
-		logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
-		return false;
-	} else {
-		logbook("Datafile hooked: gfxworld.dat");
-	}
+    gfxworld = load_datafile("data/gfxworld.dat");
+    if (gfxworld == nullptr) {
+        logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
+        return false;
+    } else {
+        logbook("Datafile hooked: gfxworld.dat");
+    }
 
-	gfxmentat = load_datafile("data/gfxmentat.dat");
-	if (gfxworld == nullptr) {
-		logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
-		return false;
-	} else {
-		logbook("Datafile hooked: gfxmentat.dat");
-	}
+    gfxmentat = load_datafile("data/gfxmentat.dat");
+    if (gfxworld == nullptr) {
+        logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
+        return false;
+    } else {
+        logbook("Datafile hooked: gfxmentat.dat");
+    }
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
     allegroDrawer = new cAllegroDrawer(m_dataRepository);
 
     // randomize timer
-	unsigned int t = (unsigned int) time(0);
-	char seedtxt[80];
-	sprintf(seedtxt, "Seed is %u", t);
-	logbook(seedtxt);
-	srand(t);
+    unsigned int t = (unsigned int) time(0);
+    char seedtxt[80];
+    sprintf(seedtxt, "Seed is %u", t);
+    logbook(seedtxt);
+    srand(t);
 
-	game.bPlaying = true;
-	game.screenshot = 0;
-	game.state = GAME_INITIALIZE;
+    game.bPlaying = true;
+    game.screenshot = 0;
+    game.state = GAME_INITIALIZE;
 
-	set_palette(general_palette);
+    set_palette(general_palette);
 
-	// A few messages for the player
-	logbook("Initializing:  PLAYERS");
+    // A few messages for the player
+    logbook("Initializing:  PLAYERS");
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].init(i, nullptr);
     }
     logbook("Setup:  BITMAPS");
     install_bitmaps();
     logbook("Setup:  HOUSES");
-	INSTALL_HOUSES();
+    INSTALL_HOUSES();
     logbook("Setup:  STRUCTURES");
-	install_structures();
+    install_structures();
     logbook("Setup:  PROJECTILES");
-	install_bullets();
+    install_bullets();
     logbook("Setup:  UNITS");
-	install_units();
+    install_units();
     logbook("Setup:  SPECIALS");
-	install_specials();
+    install_specials();
     logbook("Setup:  PARTICLES");
-	install_particles();
+    install_particles();
 
     delete mapCamera;
-	mapCamera = new cMapCamera(&map);
+    mapCamera = new cMapCamera(&map);
 
     delete drawManager;
-	drawManager = new cDrawManager(&players[HUMAN]);
+    drawManager = new cDrawManager(&players[HUMAN]);
 
-	game.init(); // AGAIN!?
+    game.init(); // AGAIN!?
 
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
-	// do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
-	// unit/structures catalog loaded - which the install_upgrades depends on.
+    // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
+    // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
 
-	game.setup_players();
+    game.setup_players();
 
-	playMusicByType(MUSIC_MENU);
+    playMusicByType(MUSIC_MENU);
 
-	// all has installed well. Lets rock and roll.
-	return true;
+    // all has installed well. Lets rock and roll.
+    return true;
 
 }
 
@@ -1214,28 +1205,28 @@ bool cGame::setupGame() {
 void cGame::setup_players() {
     mouse->setMouseObserver(nullptr);
 
-	// make sure each player has an own item builder
-	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-		cPlayer * thePlayer = &players[i];
+    // make sure each player has an own item builder
+    for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+        cPlayer *thePlayer = &players[i];
 
-		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
-		thePlayer->setBuildingListUpdater(buildingListUpdater);
+        cBuildingListUpdater *buildingListUpdater = new cBuildingListUpdater(thePlayer);
+        thePlayer->setBuildingListUpdater(buildingListUpdater);
 
-        cItemBuilder * itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
+        cItemBuilder *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-        cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
+        cSideBar *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
         thePlayer->setSideBar(sidebar);
 
-        cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
-		thePlayer->setOrderProcesser(orderProcesser);
+        cOrderProcesser *orderProcesser = new cOrderProcesser(thePlayer);
+        thePlayer->setOrderProcesser(orderProcesser);
 
-		cGameControlsContext * gameControlsContext = new cGameControlsContext(thePlayer);
-		thePlayer->setGameControlsContext(gameControlsContext);
+        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer);
+        thePlayer->setGameControlsContext(gameControlsContext);
 
-		// set tech level
-		thePlayer->setTechLevel(game.iMission);
-	}
+        // set tech level
+        thePlayer->setTechLevel(game.iMission);
+    }
 
     delete _interactionManager;
     cPlayer *humanPlayer = &players[HUMAN];
@@ -1244,7 +1235,7 @@ void cGame::setup_players() {
 }
 
 bool cGame::isState(int thisState) {
-	return (state == thisState);
+    return (state == thisState);
 }
 
 void cGame::setState(int newState) {
@@ -1258,7 +1249,8 @@ void cGame::setState(int newState) {
     logbook(msg);
 
     if (newState > -1) {
-        bool deleteOldState = (newState != GAME_REGION && newState != GAME_PLAYING); // don't delete these states, but re-use!
+        bool deleteOldState = (newState != GAME_REGION &&
+                               newState != GAME_PLAYING); // don't delete these states, but re-use!
         if (state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
             deleteOldState = false; // so we don't lose data when we go back
         }
@@ -1271,7 +1263,7 @@ void cGame::setState(int newState) {
         cGameState *existingStatePtr = states[newState];
         if (existingStatePtr) {
             if (currentState->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState*>(currentState);
+                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(currentState);
 
                 if (missionWasWon) {
                     // we won
@@ -1333,19 +1325,19 @@ void cGame::setState(int newState) {
         }
     }
 
-	state = newState;
+    state = newState;
 }
 
 void cGame::think_fading() {
     // Fading / pulsating of selected stuff
-    static float fadeSelectIncrement = (1/256.0f);
+    static float fadeSelectIncrement = (1 / 256.0f);
     if (bFadeSelectDir) {
         fade_select += fadeSelectIncrement;
 
         // when 255, then fade back
         if (fade_select > 0.99) {
             fade_select = 1.0f;
-            bFadeSelectDir=false;
+            bFadeSelectDir = false;
         }
 
         return;
@@ -1354,7 +1346,7 @@ void cGame::think_fading() {
     fade_select -= fadeSelectIncrement;
     // not too dark,
     // 0.03125
-    if (fade_select < 0.3125f)  {
+    if (fade_select < 0.3125f) {
         bFadeSelectDir = true;
     }
 }
@@ -1486,12 +1478,14 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
             int mouseCellX = map.getCellX(iMouseCell) - precision;
             int mouseCellY = map.getCellY(iMouseCell) - precision;
 
-            int posX = mouseCellX + rnd((precision*2) + 1);
-            int posY = mouseCellY + rnd((precision*2) + 1);
+            int posX = mouseCellX + rnd((precision * 2) + 1);
+            int posY = mouseCellY + rnd((precision * 2) + 1);
             FIX_POS(posX, posY);
 
             char msg[255];
-            sprintf(msg, "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = %d,%d - target pos =%d,%d - precision %d", mouseCellY, mouseCellY, posX, posY,
+            sprintf(msg,
+                    "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = %d,%d - target pos =%d,%d - precision %d",
+                    mouseCellY, mouseCellY, posX, posY,
                     precision);
             logbook(msg);
 
@@ -1509,7 +1503,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
                     create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
-                    s_GameEvent newEvent {
+                    s_GameEvent newEvent{
                             .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
                             .entityType = itemToDeploy->getBuildType(),
                             .entityID = -1,
@@ -1539,7 +1533,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
     }
 
     // notify game that the item just has been finished!
-    s_GameEvent newEvent {
+    s_GameEvent newEvent{
             .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
             .entityType = itemToDeploy->getBuildType(),
             .entityID = -1,
@@ -1588,8 +1582,10 @@ void cGame::install_bitmaps() {
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_WORMEAT, OBJECT_WORMEAT);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_ONE, EXPLOSION_TANK_ONE);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_TWO, EXPLOSION_TANK_TWO);
-    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE01, EXPLOSION_STRUCTURE01);
-    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE02, EXPLOSION_STRUCTURE02);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE01,
+                                                      EXPLOSION_STRUCTURE01);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE02,
+                                                      EXPLOSION_STRUCTURE02);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_GAS, EXPLOSION_GAS);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_WORMTRAIL, OBJECT_WORMTRAIL);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_DEADINF01, OBJECT_DEADINF01);
@@ -1603,7 +1599,8 @@ void cGame::install_bitmaps() {
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SIEGEDIE, OBJECT_SIEGEDIE);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_CARRYPUFF, OBJECT_CARRYPUFF);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET, EXPLOSION_ROCKET);
-    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET_SMALL, EXPLOSION_ROCKET_SMALL);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET_SMALL,
+                                                      EXPLOSION_ROCKET_SMALL);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM01, OBJECT_BOOM01);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM02, OBJECT_BOOM02);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM03, OBJECT_BOOM03);
@@ -1680,10 +1677,10 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
 }
 
 void cGame::transitionStateIfRequired() {
-    if (nextState > -1){
+    if (nextState > -1) {
         setState(nextState);
 
-        if(nextState == GAME_BRIEFING) {
+        if (nextState == GAME_BRIEFING) {
             playMusicByType(MUSIC_BRIEFING);
             game.createAndPrepareMentatForHumanPlayer();
         }
@@ -1698,13 +1695,15 @@ void cGame::setNextStateToTransitionTo(int newState) {
 
 void cGame::drawCombatMouse() {
     if (mouse->isBoxSelecting()) {
-        allegroDrawer->drawRectangle(bmp_screen, mouse->getBoxSelectRectangle(), game.getColorFadeSelected(255, 255, 255));
+        allegroDrawer->drawRectangle(bmp_screen, mouse->getBoxSelectRectangle(),
+                                     game.getColorFadeSelected(255, 255, 255));
     }
 
-    if(mouse->isMapScrolling()) {
+    if (mouse->isMapScrolling()) {
         cPoint startPoint = mouse->getDragLineStartPoint();
         cPoint endPoint = mouse->getDragLineEndPoint();
-        allegroDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y, game.getColorFadeSelected(255, 255, 255));
+        allegroDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+                                game.getColorFadeSelected(255, 255, 255));
     }
 
     mouse->draw();
@@ -1713,11 +1712,12 @@ void cGame::drawCombatMouse() {
 void cGame::onCombatMouseEventMovedTo(const s_MouseEvent &event) {
     cPlayer &humanPlayer = players[HUMAN];
     cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
-    const int hover_unit = pContext->getIdOfUnitWhereMouseHovers();
+    const int hoverUnitId = pContext->getIdOfUnitWhereMouseHovers();
+    const int hoverStructureId = pContext->getIdOfStructureWhereMouseHovers();
 
     // Mouse is hovering above a unit
-    if (hover_unit > -1) {
-        cUnit &hoverUnit = unit[hover_unit];
+    if (hoverUnitId > -1) {
+        cUnit &hoverUnit = unit[hoverUnitId];
         if (hoverUnit.iPlayer == HUMAN) {
             mouse->setTile(MOUSE_PICK);
 
@@ -1728,14 +1728,17 @@ void cGame::onCombatMouseEventMovedTo(const s_MouseEvent &event) {
                 }
             }
         }
-    } else {
-        if (!mouse->isTile(MOUSE_MOVE) && !mouse->isTile(MOUSE_ATTACK)){
+    } else if (hoverStructureId > -1) {
+        cAbstractStructure *pStructure = structure[hoverStructureId];
+        if (pStructure && key[KEY_R] && pStructure->belongsTo(&humanPlayer) && pStructure->isDamaged()) {
+            mouse->setTile(MOUSE_REPAIR);
+        } else {
             mouse->setTile(MOUSE_NORMAL);
         }
-    }
-
-    if (pContext->isMouseOverStructure()) {
-        mouse_combat_hoverOverStructureInteraction(humanPlayer, pContext, false);
+    } else {
+        if (!mouse->isTile(MOUSE_MOVE) && !mouse->isTile(MOUSE_ATTACK)) {
+            mouse->setTile(MOUSE_NORMAL);
+        }
     }
 }
 
@@ -1757,7 +1760,7 @@ void cGame::onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event) {
                 }
             }
         }
-        
+
         if (hoverStructureId > -1) {
             cAbstractStructure *pStructure = structure[hoverStructureId];
 
@@ -1772,7 +1775,7 @@ void cGame::onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event) {
         humanPlayer.selected_structure = hoverStructureId;
 
         // select list that belongs to structure when it is ours
-        cAbstractStructure * theSelectedStructure = structure[humanPlayer.selected_structure];
+        cAbstractStructure *theSelectedStructure = structure[humanPlayer.selected_structure];
         if (theSelectedStructure) {
             if (theSelectedStructure->getOwner() == HUMAN) {
                 int typeOfStructure = theSelectedStructure->getType();

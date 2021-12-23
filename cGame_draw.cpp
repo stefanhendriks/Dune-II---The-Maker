@@ -95,21 +95,6 @@ void cGame::onCombatMouseEvent(const s_MouseEvent &event) {
 
 }
 
-void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context,
-                                                       bool bOrderingUnits) const {
-    int structureIdWhereMouseHovers = context->getIdOfStructureWhereMouseHovers();
-
-    // REPAIR
-    if (key[KEY_R] && !bOrderingUnits) {
-        int structureId = structureIdWhereMouseHovers;
-
-        if (structure[structureId]->getOwner() == HUMAN &&
-            structure[structureId]->isDamaged()) {
-            mouse->setTile(MOUSE_REPAIR);
-        }
-    } // MOUSE PRESSED
-}
-
 void
 cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mouseCell) const {
     // when mouse hovers above a valid cell
