@@ -2,14 +2,15 @@
 #define D2TM_CGUIOBJECT_H
 
 #include "utils/cRectangle.h"
-#include "../observers/cMouseObserver.h"
+#include "../observers/cInputObserver.h"
 #include "cGuiAction.h"
 
-class cGuiObject : cMouseObserver {
+class cGuiObject : cInputObserver {
 public:
     virtual ~cGuiObject() = default;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
+    virtual void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override = 0;
 
     // cGuiObject specific
     virtual void draw() const = 0; // pure virtual function

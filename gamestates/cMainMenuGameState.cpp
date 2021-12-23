@@ -1,4 +1,6 @@
 #include "d2tmh.h"
+#include "cMainMenuGameState.h"
+
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)) {
     bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;
@@ -159,4 +161,8 @@ void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
 
 eGameStateType cMainMenuGameState::getType() {
     return GAMESTATE_MAIN_MENU;
+}
+
+void cMainMenuGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+
 }

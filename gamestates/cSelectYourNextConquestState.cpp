@@ -1,4 +1,5 @@
 #include "d2tmh.h"
+#include "cSelectYourNextConquestState.h"
 
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame) {
@@ -601,4 +602,8 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
     if (pRegion && pRegion->bSelectable) {
         loadScenarioAndTransitionToNextState(game.iMission);
     }
+}
+
+void cSelectYourNextConquestState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+
 }

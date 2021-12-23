@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "d2tmh.h"
+#include "cSetupSkirmishGameState.h"
 
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
@@ -1017,6 +1018,10 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms() {
 
 
 void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &event) {
+
+}
+
+void cSetupSkirmishGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
 
 }
 
