@@ -271,8 +271,6 @@ private:
 
     void combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mc) const;
 
-    void mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context, bool bOrderingUnits) const;
-
     void mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const;
 
     bool isMissionWon() const;
