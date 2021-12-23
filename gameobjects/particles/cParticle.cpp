@@ -566,6 +566,20 @@ void cParticle::thinkFast() {
     }
 }
 
+/**
+ * Thoughts 23/12/2021<br/>
+ *
+ * This should really move to a kind of 'repository' or 'container' thing. Now basically the container is globally
+ * scoped. And this factory method finds a new 'free slot' for a particle to be revived. It is a fixed array, no
+ * fancy thing. Better would be to have a cParticleContainer/Repository and there add/remove particles. We could
+ * query the particles based on viewport coordinates, and do things with them from there (render for instance?).
+ * @param x
+ * @param y
+ * @param iType
+ * @param iHouse
+ * @param iFrame
+ * @return
+ */
 int cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     return create(x, y, iType, iHouse, iFrame, -1);
 }
