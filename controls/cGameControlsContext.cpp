@@ -58,18 +58,11 @@ void cGameControlsContext::determineToolTip() {
 void cGameControlsContext::determineHoveringOverStructureId(int mouseX, int mouseY) {
 	mouseHoveringOverStructureId = -1;
 
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-		cAbstractStructure * theStructure = structure[i];
+    if (!map.isVisible(mouseCell, this->player)) {
+        return; // cell not visible
+    }
 
-		if (theStructure) {
-			if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
-				if (structureUtils.isMouseOverStructure(theStructure, mouseX, mouseY)) {
-					mouseHoveringOverStructureId = i;
-					break;
-				}
-			}
-		}
-	}
+    mouseHoveringOverStructureId = map.getCellIdStructuresLayer(mouseCell);
 }
 
 void cGameControlsContext::determineHoveringOverUnitId() {
