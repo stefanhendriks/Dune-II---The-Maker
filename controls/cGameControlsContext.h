@@ -17,6 +17,24 @@
 //
 // a context belongs to a player
 
+
+// 24/12/2021 -> This is a kind of "Combat Mouse State" object really. This could move into a
+// combat state object, or 2 separate objects (state & mouse object).
+
+
+// Mouse status (taken from somewhere else)
+//#define MOUSE_STATE_NORMAL  0
+//#define MOUSE_STATE_MOVE    1
+//#define MOUSE_STATE_ATTACK  2
+//#define MOUSE_STATE_PLACE   3
+
+enum eMouseState {
+    MOUSESTATE_SELECT, // mouse is in 'normal' mode, it is able to select units
+    MOUSESTATE_UNITS_SELECTED, // mouse has selected units
+    MOUSESTATE_REPAIR, // mouse is in repair state
+    MOUSESTATE_PLACE, // mouse is going to place a structure
+};
+
 class cGameControlsContext {
 	public:
 		cGameControlsContext(cPlayer *thePlayer);
@@ -42,16 +60,19 @@ class cGameControlsContext {
 
 		int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
-        void onNotify(const s_MouseEvent &event);
+        void onNotifyMouseEvent(const s_MouseEvent &event);
+        void onNotifyKeyboardEvent(const s_KeyboardEvent &event);
 
-protected:
+        void updateMouseState();
+
+    protected:
 		void determineToolTip();
 		void determineHoveringOverStructureId(int mouseX, int mouseY);
 		void determineHoveringOverUnitId();
 
 
 	private:
-        void onMouseAt(const s_MouseEvent &event);
+        void onMouseMovedTo(const s_MouseEvent &event);
 
         void updateMouseCell(const cPoint &coords);
 
@@ -65,6 +86,9 @@ protected:
 
 		// context belongs to specific player
 		cPlayer * player;
+
+        eMouseState state;
+
 };
 
 #endif /* CGAMECONTROLSCONTEXT_H_ */

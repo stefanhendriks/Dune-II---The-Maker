@@ -124,7 +124,7 @@ void cSideBar::onMouseAt(const s_MouseEvent &event) {
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
-    // TODO: move this whole 'draw something' out of the onMouseAt function
+    // TODO: move this whole 'draw something' out of the onMouseMovedTo function
     drawMessageBarWithItemInfo(item);
 }
 
