@@ -110,8 +110,6 @@ public:
 	    return soundPlayer;
 	}
 
-    void onCombatMouseEvent(const s_MouseEvent &event);
-
 	int getGroupNumberFromKeyboard();
 
     int getColorFadeSelected(int r, int g, int b) {
@@ -274,10 +272,6 @@ private:
 
     void install_bitmaps();
 
-    void combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mc) const;
-
-    void mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const;
-
     bool isMissionWon() const;
 
     bool isMissionFailed() const;
@@ -298,19 +292,8 @@ private:
 
     void setState(int newState);
 
-    void onCombatMouseEventMovedTo(const s_MouseEvent &event);
-
     void initPlayers(bool rememberHouse) const;
 
-    void onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event);
-
-    void onCombatMouseEventRightButtonClicked(const s_MouseEvent &event);
-
-    void onCombatKeyboardEvent(const s_KeyboardEvent &event);
-
-    void updateMouseTileState(const cPlayer *pPlayer);
-
-    int getMouseTile(const cPlayer *pPlayer) const;
 };
 
 #endif

@@ -150,12 +150,6 @@
 #define FACE_LEFT         6
 #define FACE_UPLEFT       7
 
-// Mouse status
-#define MOUSE_STATE_NORMAL  0
-#define MOUSE_STATE_MOVE    1
-#define MOUSE_STATE_ATTACK  2
-#define MOUSE_STATE_PLACE   3
-
 // House id's
 #define GENERALHOUSE   0     // no house at all, general house (gray)
 #define HARKONNEN 1

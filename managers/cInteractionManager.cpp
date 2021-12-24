@@ -84,7 +84,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 
     // now call all its other interested listeners
     cGameControlsContext *pContext = player->getGameControlsContext();
-    pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
+    pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
     // TODO: call state instead (get rid of this interaction manager thing, so we don't need to do this)
     if (game.isState(GAME_PLAYING)) {
@@ -104,5 +104,8 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 }
 
 void cInteractionManager::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+    cGameControlsContext *pContext = player->getGameControlsContext();
+    pContext->onNotifyKeyboardEvent(event);
+
     game.onNotifyKeyboardEvent(event);
 }

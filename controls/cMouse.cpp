@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-cMouse::cMouse() : coords(cPoint(0,0)){
+cMouse::cMouse() : coords(cPoint(0,0)) {
 	z=0;
 	leftButtonPressed=false;
 	rightButtonPressed=false;
