@@ -1,39 +1,58 @@
+#include <algorithm>
 #include "../include/d2tmh.h"
 #include "cKeyboard.h"
 
 
-cKeyboard::cKeyboard() {
-    memset(keyPressed, 0, sizeof(keyPressed));
-    _keyboardObserver = nullptr;
+cKeyboard::cKeyboard() :
+    _keyboardObserver(nullptr),
+    keysPressed() {
+
 }
 
 cKeyboard::~cKeyboard() {
 }
 
 void cKeyboard::updateState() {
-    // this is the naive way, but Allegro 4 also knows "keypressed()" and "readkey()". So lets try that later.
-    for (int k = KEY_A; k < KEY_MAX; k++) {
-        if (key[k]) {
-            keyPressed[k] = true;
-            s_KeyboardEvent event {
-                    eKeyboardEventType::KEY_HOLD,
+    std::set<int> newKeysPressed = std::set<int>();
+
+    // capture all the pressed keys here, use a set so we don't capture multiple times the same key (which
+    // can happen with readkey())
+    while (keypressed()) {
+        int theKeyPressed = readkey();
+        int scanCode = (theKeyPressed >> 8);
+        newKeysPressed.insert(scanCode);
+    }
+
+    // now emit events
+    for (auto k : newKeysPressed) {
+        s_KeyboardEvent event {
+                eKeyboardEventType::KEY_HOLD,
+                k,
+        };
+
+        _keyboardObserver->onNotifyKeyboardEvent(event);
+    }
+
+    // Check if any keys are no longer pressed
+    for (auto k : keysPressed) {
+        // the 'old' key is still held down in the 'new' state, so ignore
+        if (std::find(newKeysPressed.begin(), newKeysPressed.end(), k) != newKeysPressed.end()) {
+            // still pressed (by keyboard event)
+        } else if (key[k]) {
+            // still pressed "down
+            // but not in the 'newKeysPressed' set, so make sure to add it still, so we don't forget it being pressed
+            newKeysPressed.insert(k);
+        } else {
+            // the 'old' key is not present in newKeysPressed, so it has been released. This means a 'pressed' event.
+            s_KeyboardEvent event{
+                    eKeyboardEventType::KEY_PRESSED,
                     k,
             };
 
             _keyboardObserver->onNotifyKeyboardEvent(event);
-        } else {
-            bool wasPressed = keyPressed[k];
-            keyPressed[k] = false;
-
-            if (wasPressed) {
-                // it was hold, no
-                s_KeyboardEvent event{
-                        eKeyboardEventType::KEY_PRESSED,
-                        k,
-                };
-
-                _keyboardObserver->onNotifyKeyboardEvent(event);
-            }
         }
     }
+
+    // finally, update the state
+    keysPressed = newKeysPressed;
 }
