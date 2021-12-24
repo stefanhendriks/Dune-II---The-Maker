@@ -309,3 +309,10 @@ cPoint cMouse::getDragLineStartPoint() {
 cPoint cMouse::getDragLineEndPoint() {
     return cPoint(mouse_mv_x2, mouse_mv_y2);
 }
+
+void cMouse::setTile(int value) {
+    char msg[255];
+    sprintf(msg, "MOUSE: Changing mouse tile from %d to %d", mouse_tile, value);
+    logbook(msg);
+    mouse_tile = value;
+}
