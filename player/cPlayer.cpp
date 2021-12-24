@@ -673,7 +673,7 @@ std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType) {
     return ids;
 }
 
-bool cPlayer::isSameTeamAs(cPlayer *pPlayer) {
+bool cPlayer::isSameTeamAs(const cPlayer *pPlayer) {
     if (pPlayer == nullptr) return false;
     return pPlayer->iTeam == iTeam;
 }
@@ -2009,7 +2009,7 @@ void cPlayer::addNotification(const char *msg, eNotificationType type) {
     }
 }
 
-cAbstractStructure *cPlayer::getSelectedStructure() {
+cAbstractStructure *cPlayer::getSelectedStructure() const {
     if (selected_structure < 0) return nullptr;
     return structure[selected_structure];
 }
@@ -2024,4 +2024,17 @@ bool cPlayer::isNotDeployingSomething() {
 
 void cPlayer::deselectStructure() {
     selected_structure = -1;
+}
+
+std::vector<int> cPlayer::getSelectedUnits() const {
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (!cUnit.belongsTo(this)) continue;
+        if (cUnit.bSelected) {
+            ids.push_back(i);
+        }
+    }
+    return ids;
 }
