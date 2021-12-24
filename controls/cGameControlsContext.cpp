@@ -45,19 +45,7 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords) {
 int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const {
     int absMapX = mapCamera->getAbsMapMouseX(mouseX);
     int absMapY = mapCamera->getAbsMapMouseY(mouseY);
-//    int iMouseX = mapCamera->divideByZoomLevel(mouseX);
-//    int iMouseY = mapCamera->divideByZoomLevel(mouseY - heightTopBar);
-//
-//    // absolute coordinates
-//    int viewportMouseX = iMouseX + mapCamera->getViewportStartX();
-//    int viewportMouseY = iMouseY + mapCamera->getViewportStartY();
-//
-//    // map coordinates
-//    int mapX = viewportMouseX / TILESIZE_WIDTH_PIXELS;
-//    int mapY = viewportMouseY / TILESIZE_HEIGHT_PIXELS;
-
     return mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
-//    return map.getCellWithMapBorders(mapX, mapY);
 }
 
 void cGameControlsContext::determineToolTip() {
