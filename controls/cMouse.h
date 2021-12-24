@@ -53,7 +53,7 @@ public:
      * TODO: should become "state" so it decouples drawing and game mechanic
      * @param value
      */
-    void setTile(int value) { mouse_tile = value; }
+    void setTile(int value);
 
     void resetDragViewportInteraction();
 
