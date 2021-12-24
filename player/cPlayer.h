@@ -106,7 +106,7 @@ public:
 
     cSideBar *getSideBar() const { return sidebar; }
 
-    cAbstractStructure *getSelectedStructure();
+    cAbstractStructure *getSelectedStructure() const;
 
     eHouseBitFlag getHouseBitFlag();
 
@@ -219,7 +219,9 @@ public:
 
     std::vector<int> getAllMyStructuresAsIdForType(int structureType);
 
-    bool isSameTeamAs(cPlayer *pPlayer);
+    std::vector<int> getSelectedUnits() const;
+
+    bool isSameTeamAs(const cPlayer *pPlayer);
 
     void update();
 

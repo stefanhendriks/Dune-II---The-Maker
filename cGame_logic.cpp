@@ -412,82 +412,94 @@ void cGame::updateState() {
     // TODO: Move this to combat state object
     for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer *pPlayer = &players[i];
-        cGameControlsContext *context = pPlayer->getGameControlsContext();
 
         pPlayer->update();
 
-        if (i != HUMAN) continue; // non HUMAN players are done
-
-        // change the mouse tile depending on what we're hovering over
-        int mc = context->getMouseCell();
-        if (mc > -1) {
-            // check if any unit is 'selected'
-            for (int j = 0; j < MAX_UNITS; j++) {
-                cUnit &cUnit = unit[j];
-                if (!cUnit.isValid()) continue;
-                if (cUnit.iPlayer != HUMAN) continue;
-                if (cUnit.bSelected) {
-                    mouse->setTile(MOUSE_MOVE);
-                    break;
-                }
-            }
-
-            if (mouse->isTile(MOUSE_MOVE)) {
-                // change to attack cursor if hovering over enemy unit
-                if (map.isVisible(mc, HUMAN)) {
-
-                    int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
-
-                    if (idOfUnitOnCell > -1) {
-                        int id = idOfUnitOnCell;
-
-                        if (!unit[id].getPlayer()->isSameTeamAs(&players[HUMAN])) {
-                            mouse->setTile(MOUSE_ATTACK);
-                        }
-                    }
-
-                    int idOfStructureOnCell = map.getCellIdStructuresLayer(mc);
-
-                    if (idOfStructureOnCell > -1) {
-                        int id = idOfStructureOnCell;
-
-                        if (!structure[id]->getPlayer()->isSameTeamAs(&players[HUMAN])) {
-                            mouse->setTile(MOUSE_ATTACK);
-                        }
-                    }
-
-                    if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) { // force attack
-                        mouse->setTile(MOUSE_ATTACK);
-                    }
-
-                    if (key[KEY_ALT]) { // force move
-                        mouse->setTile(MOUSE_MOVE);
-                    }
-
-                } // visible
-            }
-        } else {
-            // TODO: base this on events
-            // not on battlefield
-            mouse->setTile(MOUSE_NORMAL);
-        }
-
-        if (mouse->isTile(MOUSE_NORMAL)) {
-            // when selecting a structure
-            if (pPlayer->selected_structure > -1) {
-                int id = pPlayer->selected_structure;
-                cAbstractStructure *pStructure = structure[id];
-                if (pStructure && pStructure->getOwner() == HUMAN) {
-                    if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
-                        mouse->setTile(MOUSE_RALLY);
-                    }
-                }
-            }
-        }
+        updateMouseTileState(pPlayer);
 
         pPlayer->bPlacedIt = false;
         pPlayer->bDeployedIt = false;
+
     }
+}
+
+void cGame::updateMouseTileState(const cPlayer *pPlayer) {
+    const cGameControlsContext *context = pPlayer->getGameControlsContext();
+    int mc = context->getMouseCell();
+    if (mc > -1) {
+        if (!mouse->isTile(MOUSE_NORMAL) && !mouse->isTile(MOUSE_REPAIR)) {
+            // make sure to keep checking if this is still valid, ie, when state changed?
+            mouse->setTile(getMouseTile(pPlayer));
+        }
+    }
+}
+
+int cGame::getMouseTile(const cPlayer *pPlayer) const {
+    const cGameControlsContext *context = pPlayer->getGameControlsContext();
+    int mc = context->getMouseCell();
+    int mouseTile = MOUSE_NORMAL;
+
+    if (mc > -1) { // on battle field
+        int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+        int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+
+        // check if any unit is 'selected'
+        const std::vector<int> &selectedUnits = pPlayer->getSelectedUnits();
+
+        if (!selectedUnits.empty()) {
+            mouseTile = MOUSE_MOVE;
+
+            // change to attack cursor if hovering over enemy unit
+            if (map.isVisible(mc, pPlayer->getId())) {
+                if (hoverUnitId > -1) {
+                    if (unit[hoverUnitId].isValid() && !unit[hoverUnitId].getPlayer()->isSameTeamAs(pPlayer)) {
+                        mouseTile = MOUSE_ATTACK;
+                    }
+                }
+
+                if (hoverStructureId > -1) {
+                    cAbstractStructure *pHoverStructure = structure[hoverStructureId];
+                    if (pHoverStructure && !pHoverStructure->getPlayer()->isSameTeamAs(pPlayer)) {
+                        mouseTile = MOUSE_ATTACK;
+                    }
+                }
+
+                // MOVE THIS to onKeyboardEvent
+                if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) { // force attack
+                    mouseTile = MOUSE_ATTACK;
+                }
+
+                // MOVE THIS to onKeyboardEvent
+                if (key[KEY_ALT]) { // force move
+                    mouseTile = MOUSE_MOVE;
+                }
+            }
+        } else {
+            if (map.isVisible(mc, pPlayer->getId())) {
+                if (hoverUnitId > -1) {
+                    cUnit &hoverUnit = unit[hoverUnitId];
+                    if (hoverUnit.iPlayer == HUMAN) {
+                        mouseTile = MOUSE_PICK;
+                    }
+                } else if (hoverStructureId > -1) {
+                    mouse->setTile(MOUSE_NORMAL);
+                }
+            }
+        }
+    }
+
+    // MOVE THIS
+    if (mouseTile == MOUSE_NORMAL) {
+        cAbstractStructure *pSelectedStructure = pPlayer->getSelectedStructure();
+        // when selecting a structure
+        if (pSelectedStructure && pSelectedStructure->belongsTo(pPlayer)) {
+            if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
+                mouseTile = MOUSE_RALLY;
+            }
+        }
+    }
+
+    return mouseTile;
 }
 
 void cGame::combat() {
@@ -1689,6 +1701,7 @@ void cGame::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
     } else {
         if (state == GAME_PLAYING) {
             logbook(s_KeyboardEvent::toString(event).c_str());
+            onCombatKeyboardEvent(event);
 //            onCombatMouseEvent(event);
         }
     }
@@ -1728,36 +1741,9 @@ void cGame::drawCombatMouse() {
 }
 
 void cGame::onCombatMouseEventMovedTo(const s_MouseEvent &event) {
-    cPlayer &humanPlayer = players[HUMAN];
-    cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
-    const int hoverUnitId = pContext->getIdOfUnitWhereMouseHovers();
-    const int hoverStructureId = pContext->getIdOfStructureWhereMouseHovers();
-
-    // Mouse is hovering above a unit
-    if (hoverUnitId > -1) {
-        cUnit &hoverUnit = unit[hoverUnitId];
-        if (hoverUnit.iPlayer == HUMAN) {
-            mouse->setTile(MOUSE_PICK);
-
-            // wanting to repair this unit, check if it is allowed, if so, change mouse tile
-            if (key[KEY_R] && humanPlayer.hasAtleastOneStructure(REPAIR)) {
-                if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit()) {
-                    mouse->setTile(MOUSE_REPAIR);
-                }
-            }
-        }
-    } else if (hoverStructureId > -1) {
-        cAbstractStructure *pStructure = structure[hoverStructureId];
-        if (pStructure && key[KEY_R] && pStructure->belongsTo(&humanPlayer) && pStructure->isDamaged()) {
-            mouse->setTile(MOUSE_REPAIR);
-        } else {
-            mouse->setTile(MOUSE_NORMAL);
-        }
-    } else {
-        if (!mouse->isTile(MOUSE_MOVE) && !mouse->isTile(MOUSE_ATTACK)) {
-            mouse->setTile(MOUSE_NORMAL);
-        }
-    }
+    cPlayer *humanPlayer = &players[HUMAN];
+    int mouseTile = getMouseTile(humanPlayer);
+    mouse->setTile(mouseTile);
 }
 
 void cGame::onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event) {
@@ -1843,6 +1829,43 @@ void cGame::onCombatMouseEventRightButtonClicked(const s_MouseEvent &event) {
                 pStructure->getType() == BARRACKS ||
                 pStructure->getType() == REPAIR)
                 player.setPrimaryBuildingForStructureType(pStructure->getType(), structureId);
+        }
+    }
+}
+
+void cGame::onCombatKeyboardEvent(const s_KeyboardEvent &event) {
+    const cPlayer *humanPlayer = &players[HUMAN];
+    const cGameControlsContext *pContext = humanPlayer->getGameControlsContext();
+    const int hoverUnitId = pContext->getIdOfUnitWhereMouseHovers();
+    const int hoverStructureId = pContext->getIdOfStructureWhereMouseHovers();
+
+    if (event.eventType == KEY_HOLD) {
+        if (event.key == KEY_R) {
+            // Mouse is hovering above a unit
+            if (hoverUnitId > -1) {
+                cUnit &hoverUnit = unit[hoverUnitId];
+                if (hoverUnit.iPlayer == HUMAN) {
+                    mouse->setTile(MOUSE_PICK);
+
+                    // wanting to repair this unit, check if it is allowed, if so, change mouse tile
+                    if (humanPlayer->hasAtleastOneStructure(REPAIR)) {
+                        if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit()) {
+                            mouse->setTile(MOUSE_REPAIR);
+                        }
+                    }
+                }
+            } else if (hoverStructureId > -1) {
+                cAbstractStructure *pStructure = structure[hoverStructureId];
+                if (pStructure && pStructure->belongsTo(humanPlayer) && pStructure->isDamaged()) {
+                    mouse->setTile(MOUSE_REPAIR);
+                }
+            }
+        }
+    } else if (event.eventType == KEY_PRESSED) {
+        // also "released"
+        if (event.key == KEY_R) {
+            int mouseTile = getMouseTile(humanPlayer);
+            mouse->setTile(mouseTile);
         }
     }
 }

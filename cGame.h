@@ -305,6 +305,12 @@ private:
     void onCombatMouseEventLeftButtonClicked(const s_MouseEvent &event);
 
     void onCombatMouseEventRightButtonClicked(const s_MouseEvent &event);
+
+    void onCombatKeyboardEvent(const s_KeyboardEvent &event);
+
+    void updateMouseTileState(const cPlayer *pPlayer);
+
+    int getMouseTile(const cPlayer *pPlayer) const;
 };
 
 #endif
