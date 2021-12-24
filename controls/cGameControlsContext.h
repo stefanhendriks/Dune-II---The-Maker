@@ -22,8 +22,8 @@ class cGameControlsContext {
 		cGameControlsContext(cPlayer *thePlayer);
 		~cGameControlsContext();
 
-		int getIdOfStructureWhereMouseHovers() { return mouseHoveringOverStructureId; }
-		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
+		int getIdOfStructureWhereMouseHovers() const { return mouseHoveringOverStructureId; }
+		int getIdOfUnitWhereMouseHovers() const { return mouseHoveringOverUnitId; }
 
 		int getMouseCell() const { return mouseCell; }
 
