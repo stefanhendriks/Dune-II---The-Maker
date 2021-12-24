@@ -77,6 +77,10 @@ void cGameControlsContext::determineHoveringOverUnitId() {
     tCell *cellOfMouse = map.getCell(mc);
     if (cellOfMouse == nullptr) return; // mouse is not on battlefield
 
+    if (!map.isVisible(mc, this->player)) {
+        return; // cell not visible
+    }
+
     if (cellOfMouse->id[MAPID_UNITS] > -1) {
         int iUnitId = cellOfMouse->id[MAPID_UNITS];
 
