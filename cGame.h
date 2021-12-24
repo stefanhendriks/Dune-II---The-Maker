@@ -262,7 +262,7 @@ private:
     void combat();		// the combat part (main) of the game
     bool isMusicPlaying();
 
-    void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
+    void stateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction
     void menu();		// main menu
 
     void drawState();
