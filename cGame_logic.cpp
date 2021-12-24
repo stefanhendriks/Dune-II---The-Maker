@@ -500,13 +500,13 @@ void cGame::combat() {
 }
 
 // stateMentat logic + drawing mouth/eyes
-void cGame::stateMentat(cAbstractMentat *pMentat) {
+void cGame::stateMentat(cAbstractMentat *mentat) {
     draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
     mouse->setTile(MOUSE_NORMAL);
 
-    pMentat->draw();
-    pMentat->interact();
+    mentat->draw();
+    mentat->interact();
 
     mouse->draw();
 }
