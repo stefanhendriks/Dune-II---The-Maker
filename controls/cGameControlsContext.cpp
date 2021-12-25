@@ -9,10 +9,12 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer) {
     mouseHoveringOverUnitId = -1;
     mouseHoveringOverStructureId = -1;
     state = MOUSESTATE_SELECT;
+    mouseNormalState = new cMouseNormalState(this, game.getMouse());
 }
 
 cGameControlsContext::~cGameControlsContext() {
     player = nullptr;
+    delete mouseNormalState;
 }
 
 
@@ -121,6 +123,18 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
         onMouseMovedTo(event);
     }
 
+    switch (state) {
+        case MOUSESTATE_SELECT:
+            mouseNormalState->onNotifyMouseEvent(event);
+            break;
+
+        // not yet implemented
+        case MOUSESTATE_PLACE:
+        case MOUSESTATE_REPAIR:
+        case MOUSESTATE_UNITS_SELECTED:
+            break;
+    }
+    
 //    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
 //    cGameControlsContext *context = player.getGameControlsContext();
 //    bool bOrderingUnits=false;

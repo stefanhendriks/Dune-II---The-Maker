@@ -1,10 +1,3 @@
-/*
- * cGameControlsContext.h
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
 #ifndef CGAMECONTROLSCONTEXT_H_
 #define CGAMECONTROLSCONTEXT_H_
 
@@ -21,12 +14,13 @@
 // 24/12/2021 -> This is a kind of "Combat Mouse State" object really. This could move into a
 // combat state object, or 2 separate objects (state & mouse object).
 
-
 // Mouse status (taken from somewhere else)
 //#define MOUSE_STATE_NORMAL  0
 //#define MOUSE_STATE_MOVE    1
 //#define MOUSE_STATE_ATTACK  2
 //#define MOUSE_STATE_PLACE   3
+
+#include "controls/mousestates/cMouseNormalState.h"
 
 enum eMouseState {
     MOUSESTATE_SELECT, // mouse is in 'normal' mode, it is able to select units
@@ -35,7 +29,7 @@ enum eMouseState {
     MOUSESTATE_PLACE, // mouse is going to place a structure
 };
 
-class cGameControlsContext {
+class cGameControlsContext : public cInputObserver {
 	public:
 		cGameControlsContext(cPlayer *thePlayer);
 		~cGameControlsContext();
@@ -60,8 +54,8 @@ class cGameControlsContext {
 
 		int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
-        void onNotifyMouseEvent(const s_MouseEvent &event);
-        void onNotifyKeyboardEvent(const s_KeyboardEvent &event);
+        void onNotifyMouseEvent(const s_MouseEvent &event) override;
+        void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
 
         void updateMouseState();
 
@@ -87,7 +81,11 @@ class cGameControlsContext {
 		// context belongs to specific player
 		cPlayer * player;
 
+        // the state to direct events to
         eMouseState state;
+
+        // the states, initialized once to save a lot of construct/destructs
+        cMouseNormalState * mouseNormalState;
 
 };
 
