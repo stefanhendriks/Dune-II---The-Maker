@@ -2,7 +2,7 @@
 
 #include "cMouseNormalState.h"
 
-cMouseNormalState::cMouseNormalState(cGameControlsContext *context, cMouse *mouse) : cMouseState(context, mouse) {
+cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) : cMouseState(player, context, mouse) {
 
 }
 
@@ -26,10 +26,18 @@ cMouseNormalState::~cMouseNormalState() {
 }
 
 void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
-// where we box selecting? then this must be the unpress of the mouse button and thus we
-//        // should start selecting units within the rectangle
-//        if (mouse->isBoxSelecting()) {
-//            cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
+    if (mouse->isBoxSelecting()) {
+        player->deselectAllUnits();
+    }
+
+    // remember, these are screen coordinates
+    // TODO: Make it use absolute coordinates? (so we could have a rectangle bigger than the screen at one point?)
+    cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
+
+    const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
+    for (auto id : ids) {
+        unit[id].bSelected = true; // naive way
+    }
 //
 //            //  char msg[256];
 //            //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
@@ -37,8 +45,6 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
 //
 //            // Now do it!
 //            // deselect all units
-//            UNIT_deselect_all();
-//            mouse->setTile(MOUSE_NORMAL);
 //
 //            bool bPlayRep = false;
 //            bool bPlayInf = false;

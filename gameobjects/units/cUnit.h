@@ -477,8 +477,6 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
 
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
-void UNIT_deselect_all();
-
 int UNIT_find_harvest_spot(int id);
 
 int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);

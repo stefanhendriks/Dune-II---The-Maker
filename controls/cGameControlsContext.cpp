@@ -9,7 +9,7 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer) {
     mouseHoveringOverUnitId = -1;
     mouseHoveringOverStructureId = -1;
     state = MOUSESTATE_SELECT;
-    mouseNormalState = new cMouseNormalState(this, game.getMouse());
+    mouseNormalState = new cMouseNormalState(thePlayer, this, game.getMouse());
 }
 
 cGameControlsContext::~cGameControlsContext() {
