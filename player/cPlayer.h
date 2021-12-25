@@ -215,6 +215,8 @@ public:
 
     std::vector<int> getAllMyUnitsForType(int unitType) const;
 
+    std::vector<int> getAllMyUnitsWithinViewportRect(const cRectangle &rect) const;
+
     std::vector<int> getAllMyStructuresAsId();
 
     std::vector<int> getAllMyStructuresAsIdForType(int structureType);
@@ -395,6 +397,8 @@ public:
     bool bDeployedIt;   // for remembering, for onCombatMouseEvent stuff..
 
     void deselectStructure();
+
+    void deselectAllUnits();
 
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;

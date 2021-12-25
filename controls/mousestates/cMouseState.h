@@ -7,18 +7,21 @@
 
 // forward declaration
 class cGameControlsContext;
+class cPlayer;
 
 class cMouseState : public cMouseObserver {
 
 public:
-    cMouseState(cGameControlsContext *context, cMouse * mouse);
+    cMouseState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
     ~cMouseState();
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
 
 protected:
+    cPlayer * player;
     cGameControlsContext * context;
     cMouse * mouse;
+
     int mouseTile;
 
 };

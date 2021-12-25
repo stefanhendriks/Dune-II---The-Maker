@@ -388,6 +388,24 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const {
     return getAllMyUnitsForType(unitType).size();
 }
 
+std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const {
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (pUnit.isDead()) continue;
+        if (!pUnit.belongsTo(this)) continue;
+        if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
+
+        if (!rect.isPointWithin(pUnit.center_draw_x(), pUnit.center_draw_y())) {
+            continue;
+        }
+
+        ids.push_back(i);
+    }
+    return ids;
+};
+
 /**
  * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
  * loop over all units and count them. Use it with caution.
@@ -2037,4 +2055,13 @@ std::vector<int> cPlayer::getSelectedUnits() const {
         }
     }
     return ids;
+}
+
+void cPlayer::deselectAllUnits() {
+    const std::vector<int> &ids = getAllMyUnits();
+    for (auto i : ids) {
+        if (unit[i].isValid()) {
+            unit[i].bSelected = false;
+        }
+    }
 }

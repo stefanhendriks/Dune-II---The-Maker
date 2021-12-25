@@ -4176,19 +4176,6 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
     return carryAllUnitId;
 }
 
-/**
- * Deselect all units (not player specific)
- * TODO: Move to unitUtils class.
- *
- */
-void UNIT_deselect_all() {
-    for (int i = 0; i < MAX_UNITS; i++) {
-        if (unit[i].isValid()) {
-            unit[i].bSelected = false;
-        }
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////
 // REINFORCEMENT STUFF
 ///////////////////////////////////////////////////////////////////////
