@@ -82,12 +82,12 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
             break;
     }
 
-    // now call all its other interested listeners
-    cGameControlsContext *pContext = player->getGameControlsContext();
-    pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
-
     // TODO: call state instead (get rid of this interaction manager thing, so we don't need to do this)
     if (game.isState(GAME_PLAYING)) {
+        // now call all its other interested listeners
+        cGameControlsContext *pContext = player->getGameControlsContext();
+        pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
+
         sidebar->onNotifyMouseEvent(mouseEvent);
         placeItDrawer->onNotify(mouseEvent);
         mapCamera->onNotify(mouseEvent);

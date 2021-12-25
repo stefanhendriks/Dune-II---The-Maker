@@ -9,6 +9,8 @@ file(GLOB d2tm_SRC
         "building/*.cpp"
         "controls/*.h"
         "controls/*.cpp"
+        "controls/mousestates/*.h"
+        "controls/mousestates/*.cpp"
         "data/*.h"
         "data/*.cpp"
         "drawers/*.h"

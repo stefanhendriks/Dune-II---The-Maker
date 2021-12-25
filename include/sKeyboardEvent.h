@@ -1,6 +1,8 @@
 #ifndef D2TM_SKEYBOARDEVENT_H
 #define D2TM_SKEYBOARDEVENT_H
 
+#include "allegroh.h"
+
 #include <string>
 #include "../utils/cPoint.h"
 #include "enums.h"
