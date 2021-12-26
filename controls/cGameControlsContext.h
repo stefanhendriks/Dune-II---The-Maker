@@ -29,6 +29,20 @@ enum eMouseState {
     MOUSESTATE_PLACE, // mouse is going to place a structure
 };
 
+static const char* mouseStateString(const eMouseState &state) {
+    switch (state) {
+        case MOUSESTATE_SELECT: return "MOUSESTATE_SELECT";
+        case MOUSESTATE_UNITS_SELECTED: return "MOUSESTATE_UNITS_SELECTED";
+        case MOUSESTATE_REPAIR: return "MOUSESTATE_REPAIR";
+        case MOUSESTATE_PLACE: return "MOUSESTATE_PLACE";
+        default:
+            assert(false);
+            break;
+    }
+    return "";
+}
+
+
 class cGameControlsContext : public cInputObserver {
 	public:
 		cGameControlsContext(cPlayer *thePlayer);
@@ -56,6 +70,8 @@ class cGameControlsContext : public cInputObserver {
 
         void onNotifyMouseEvent(const s_MouseEvent &event) override;
         void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
+
+        void setMouseState(eMouseState newState);
 
         void updateMouseState();
 

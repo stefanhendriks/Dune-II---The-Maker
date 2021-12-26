@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "d2tmh.h"
 
 #include "cMouseNormalState.h"
@@ -8,6 +9,7 @@ cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *cont
 
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
 
+    // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_PRESSED:
             mouse->boxSelectLogic(context->getMouseCell());
@@ -21,10 +23,14 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_RIGHT_BUTTON_CLICKED:
             onMouseRightButtonClicked(event);
             break;
+        case MOUSE_MOVED_TO:
+            onMouseMovedTo(event);
+            break;
         default:
             break;
     }
 
+    // ... so set it here
     mouse->setTile(mouseTile);
 }
 
@@ -33,88 +39,92 @@ cMouseNormalState::~cMouseNormalState() {
 }
 
 void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+    bool infantrySelected = false;
+    bool unitSelected = false;
+
     if (mouse->isBoxSelecting()) {
         player->deselectAllUnits();
+
+        // remember, these are screen coordinates
+        // TODO: Make it use absolute coordinates? (so we could have a rectangle bigger than the screen at one point?)
+        cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
+
+        const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
+
+        // check if there is a harvester in this group
+        auto position = std::find_if(ids.begin(), ids.end(), [&](const int & id){ return unit[id].isHarvester(); });
+        bool hasHarvesterSelected = position != ids.end();
+
+        position = std::find_if(ids.begin(), ids.end(), [&](const int & id){ return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
+        bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
+
+        if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
+            // select all the harvester units, skip airborn
+            for (auto id : ids) {
+                cUnit &pUnit = unit[id];
+                if (pUnit.isAirbornUnit()) continue;
+                if (!pUnit.isHarvester()) continue;
+                pUnit.bSelected = true;
+                unitSelected = true; // do it here, instead of iterating again
+            }
+        } else {
+            // select all the non-harvester,non-airborn units
+            for (auto id : ids) {
+                cUnit &pUnit = unit[id];
+                if (pUnit.isAirbornUnit()) continue;
+                if (pUnit.isHarvester()) continue;
+                pUnit.bSelected = true;
+                if (pUnit.isInfantryUnit()) {
+                    infantrySelected = true;
+                } else {
+                    unitSelected = true;
+                }
+            }
+        }
+    } else {
+        // single click, no box select
+        int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+        if (hoverUnitId > -1) {
+            player->deselectAllUnits();
+
+            cUnit &pUnit = unit[hoverUnitId];
+            if (pUnit.isValid() && pUnit.belongsTo(player) && !pUnit.bSelected) {
+                pUnit.bSelected = true;
+                if (pUnit.isInfantryUnit()) {
+                    infantrySelected = true;
+                } else {
+                    unitSelected = true;
+                }
+            }
+        }
+
+        int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+        if (hoverStructureId > -1) {
+            player->selected_structure = hoverStructureId;
+        }
     }
 
-    // remember, these are screen coordinates
-    // TODO: Make it use absolute coordinates? (so we could have a rectangle bigger than the screen at one point?)
-    cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
 
-    const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
-    for (auto id : ids) {
-        unit[id].bSelected = true; // naive way
+    // determine what kind of units are selected, and
+//    std::vector<int> selectedUnitIds;
+//    std::copy_if(ids.begin(), ids.end(), std::back_inserter(selectedUnitIds), [&](const int & id){ return unit[id].bSelected; });
+//
+//    for (auto id : selectedUnitIds) {
+//
+//    }
+
+    if (unitSelected) {
+        play_sound_id(SOUND_REPORTING);
     }
-//
-//            //  char msg[256];
-//            //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
-//            //  logbook(msg);
-//
-//            // Now do it!
-//            // deselect all units
-//
-//            bool bPlayRep = false;
-//            bool bPlayInf = false;
-//
-//            bool harvesterSelected=false;
-//            bool attackingUnitSelected=false;
-//
-//            for (int i = 0; i < MAX_UNITS; i++) {
-//                cUnit &cUnit = unit[i];
-//                if (!cUnit.isValid()) continue;
-//                if (cUnit.iPlayer != HUMAN) continue;
-//                // do not select airborn units
-//                if (cUnit.isAirbornUnit()) {
-//                    // always deselect unit:
-//                    cUnit.bSelected = false;
-//                    continue;
-//                }
-//                if (cUnit.iTempHitPoints >= 0) continue; // skip units that have been 'hidden' in a refinery or repair
-//
-//                if (boxSelectRectangle.isPointWithin(cUnit.center_draw_x(), cUnit.center_draw_y())) {
-//                    // It is in the borders, select it
-//                    cUnit.bSelected = true;
-//
-//                    if (cUnit.iType == HARVESTER) {
-//                        harvesterSelected = true;
-//                    } else {
-//                        attackingUnitSelected = true;
-//                    }
-//
-//                    if (sUnitInfo[cUnit.iType].infantry) {
-//                        bPlayInf = true;
-//                    } else {
-//                        bPlayRep = true;
-//                    }
-//
-//                }
-//            }
-//
-//            if (harvesterSelected && attackingUnitSelected) {
-//                // unselect harvesters
-//                for (int i = 0; i < MAX_UNITS; i++) {
-//                    cUnit &cUnit = unit[i];
-//                    if (!cUnit.isValid()) continue;
-//                    if (cUnit.iPlayer != HUMAN) continue;
-//                    if (!cUnit.bSelected) continue;
-//                    if (cUnit.iType == HARVESTER) {
-//                        cUnit.bSelected = false; // unselect
-//                    }
-//                }
-//            }
-//
-//            if (bPlayInf || bPlayRep) {
-//                if (bPlayRep)
-//                    play_sound_id(SOUND_REPORTING);
-//
-//                if (bPlayInf)
-//                    play_sound_id(SOUND_YESSIR);
-//
-//                bOrderingUnits = true;
-//            }
-//
-//        }
-//
+
+    if (infantrySelected) {
+        play_sound_id(SOUND_YESSIR);
+    }
+
+    if (infantrySelected || unitSelected) {
+        context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
+
     mouse->resetBoxSelect();
 }
 
@@ -125,5 +135,18 @@ void cMouseNormalState::onMouseRightButtonPressed(const s_MouseEvent &event) {
 void cMouseNormalState::onMouseRightButtonClicked(const s_MouseEvent &event) {
     if (mouse->isMapScrolling()){
         mouse->resetDragViewportInteraction();
+    }
+
+    // for now?
+    player->deselectAllUnits();
+}
+
+void cMouseNormalState::onMouseMovedTo(const s_MouseEvent &event) {
+    int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+    int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+    if (hoverStructureId > -1 || hoverUnitId > -1) {
+        mouseTile = MOUSE_PICK;
+    } else {
+        mouseTile = MOUSE_NORMAL;
     }
 }
