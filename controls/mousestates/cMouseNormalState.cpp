@@ -3,8 +3,9 @@
 
 #include "cMouseNormalState.h"
 
-cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) : cMouseState(player, context, mouse) {
-
+cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
+    cMouseState(player, context, mouse),
+    state(SELECT_STATE_NORMAL) {
 }
 
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
@@ -52,15 +53,16 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
         const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
 
         // check if there is a harvester in this group
-        auto position = std::find_if(ids.begin(), ids.end(), [&](const int & id){ return unit[id].isHarvester(); });
+        auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) { return unit[id].isHarvester(); });
         bool hasHarvesterSelected = position != ids.end();
 
-        position = std::find_if(ids.begin(), ids.end(), [&](const int & id){ return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
+        position = std::find_if(ids.begin(), ids.end(),
+                                [&](const int &id) { return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
         bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
 
         if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
             // select all the harvester units, skip airborn
-            for (auto id : ids) {
+            for (auto id: ids) {
                 cUnit &pUnit = unit[id];
                 if (pUnit.isAirbornUnit()) continue;
                 if (!pUnit.isHarvester()) continue;
@@ -69,7 +71,7 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
             }
         } else {
             // select all the non-harvester,non-airborn units
-            for (auto id : ids) {
+            for (auto id: ids) {
                 cUnit &pUnit = unit[id];
                 if (pUnit.isAirbornUnit()) continue;
                 if (pUnit.isHarvester()) continue;
@@ -82,25 +84,48 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
             }
         }
     } else {
-        // single click, no box select
-        int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
-        if (hoverUnitId > -1) {
-            player->deselectAllUnits();
+        if (state == SELECT_STATE_NORMAL) {
+            // single click, no box select
+            int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+            if (hoverUnitId > -1) {
+                player->deselectAllUnits();
 
-            cUnit &pUnit = unit[hoverUnitId];
-            if (pUnit.isValid() && pUnit.belongsTo(player) && !pUnit.bSelected) {
-                pUnit.bSelected = true;
-                if (pUnit.isInfantryUnit()) {
-                    infantrySelected = true;
-                } else {
-                    unitSelected = true;
+                cUnit &pUnit = unit[hoverUnitId];
+                if (pUnit.isValid() && pUnit.belongsTo(player) && !pUnit.bSelected) {
+                    pUnit.bSelected = true;
+                    if (pUnit.isInfantryUnit()) {
+                        infantrySelected = true;
+                    } else {
+                        unitSelected = true;
+                    }
                 }
             }
-        }
 
-        int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
-        if (hoverStructureId > -1) {
-            player->selected_structure = hoverStructureId;
+            int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+            if (hoverStructureId > -1) {
+                player->selected_structure = hoverStructureId;
+            }
+        } else if (state == SELECT_STATE_RALLY) {
+            // setting a rally point!
+            cAbstractStructure *pStructure = player->getSelectedStructure();
+            if (pStructure && pStructure->isValid()) {
+                pStructure->setRallyPoint(context->getMouseCell());
+            }
+        } else if (state == SELECT_STATE_REPAIR) {
+            int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+            if (hoverUnitId > -1) {
+                cUnit &pUnit = unit[hoverUnitId];
+                if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
+                    pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
+                }
+            }
+
+            cAbstractStructure *pStructure = context->getStructurePointerWhereMouseHovers();
+            if (pStructure && pStructure->isValid()) {
+                if (pStructure->belongsTo(player) && pStructure->isDamaged()) {
+                    pStructure->setRepairing(!pStructure->isRepairing());
+                }
+            }
         }
     }
 
@@ -133,20 +158,89 @@ void cMouseNormalState::onMouseRightButtonPressed(const s_MouseEvent &event) {
 }
 
 void cMouseNormalState::onMouseRightButtonClicked(const s_MouseEvent &event) {
-    if (mouse->isMapScrolling()){
-        mouse->resetDragViewportInteraction();
-    }
-
-    // for now?
-    player->deselectAllUnits();
+    mouse->resetDragViewportInteraction();
 }
 
 void cMouseNormalState::onMouseMovedTo(const s_MouseEvent &event) {
-    int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+    if (state == SELECT_STATE_NORMAL) {
+        mouseTile = getMouseTileForNormalState();
+    } else if (state == SELECT_STATE_RALLY) {
+        mouseTile = MOUSE_RALLY;
+    } else if (state == SELECT_STATE_REPAIR) {
+        mouseTile = getMouseTileForRepairState();
+    }
+}
+
+int cMouseNormalState::getMouseTileForNormalState() const {
     int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
-    if (hoverStructureId > -1 || hoverUnitId > -1) {
-        mouseTile = MOUSE_PICK;
-    } else {
+    if (hoverUnitId > -1) {
+        // only show this for units
+        return MOUSE_PICK;
+    }
+    return MOUSE_NORMAL;
+}
+
+int cMouseNormalState::getMouseTileForRepairState() {
+    int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+    if (hoverUnitId > -1) {
+        cUnit &pUnit = unit[hoverUnitId];
+        if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
+            return MOUSE_REPAIR;
+        }
+    }
+
+    cAbstractStructure *pStructure = context->getStructurePointerWhereMouseHovers();
+    if (pStructure && pStructure->isValid()) {
+        if (pStructure->belongsTo(player) && pStructure->isDamaged()) {
+            return MOUSE_REPAIR;
+        }
+    }
+
+    return MOUSE_NORMAL;
+}
+
+void cMouseNormalState::onStateSet() {
+    mouseTile = MOUSE_NORMAL;
+    mouse->setTile(mouseTile);
+}
+
+void cMouseNormalState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+    // these methods can have a side-effect which changes mouseTile...
+    switch (event.eventType) {
+        case KEY_HOLD:
+            onKeyDown(event);
+            break;
+        case KEY_PRESSED:
+            onKeyPressed(event);
+            break;
+        default:
+            break;
+    }
+
+    // ... so set it here
+    mouse->setTile(mouseTile);
+}
+
+void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
+    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+        cAbstractStructure *pSelectedStructure = player->getSelectedStructure();
+        // when selecting a structure
+        if (pSelectedStructure && pSelectedStructure->belongsTo(player) && pSelectedStructure->canSpawnUnits()) {
+            state = SELECT_STATE_RALLY;
+            mouseTile = MOUSE_RALLY;
+        }
+    } else if (event.key == KEY_R) {
+        state = SELECT_STATE_REPAIR;
+        mouseTile = getMouseTileForRepairState();
+    }
+}
+
+void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
+    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+        state = SELECT_STATE_NORMAL;
+        mouseTile = MOUSE_NORMAL;
+    } else if (event.key == KEY_R) {
+        state = SELECT_STATE_NORMAL;
         mouseTile = MOUSE_NORMAL;
     }
 }

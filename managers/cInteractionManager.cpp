@@ -104,8 +104,10 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 }
 
 void cInteractionManager::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-    cGameControlsContext *pContext = player->getGameControlsContext();
-    pContext->onNotifyKeyboardEvent(event);
+    if (game.isState(GAME_PLAYING)) {
+        cGameControlsContext *pContext = player->getGameControlsContext();
+        pContext->onNotifyKeyboardEvent(event);
+    }
 
     game.onNotifyKeyboardEvent(event);
 }

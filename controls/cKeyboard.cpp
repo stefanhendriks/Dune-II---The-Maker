@@ -23,6 +23,13 @@ void cKeyboard::updateState() {
         newKeysPressed.insert(scanCode);
     }
 
+    // these keys are not detected as a separate keypress by allegro (by keypressed(), and hence not readkey()).
+    // so check these via the key[] way.
+    if (key[KEY_RCONTROL]) newKeysPressed.insert(KEY_RCONTROL);
+    if (key[KEY_LCONTROL]) newKeysPressed.insert(KEY_LCONTROL);
+    if (key[KEY_RSHIFT]) newKeysPressed.insert(KEY_RSHIFT);
+    if (key[KEY_LSHIFT]) newKeysPressed.insert(KEY_LSHIFT);
+
     // now emit events
     for (auto k : newKeysPressed) {
         s_KeyboardEvent event {

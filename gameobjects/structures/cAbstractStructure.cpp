@@ -817,3 +817,17 @@ void cAbstractStructure::drawWithShadow() {
         destroy_bitmap(stretchedShadow);
     }
 }
+
+/**
+ * Returns true, if this unit can create units, or have them enter/leave.
+ * @return
+ */
+bool cAbstractStructure::canSpawnUnits() {
+    return getType() == REFINERY ||
+            getType() == HEAVYFACTORY ||
+            getType() == LIGHTFACTORY ||
+            /*getType() == PALACE ||*/
+            getType() == STARPORT ||
+            getType() == HIGHTECH ||
+            getType() == REPAIR;
+}

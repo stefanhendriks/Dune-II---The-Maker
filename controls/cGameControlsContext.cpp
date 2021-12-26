@@ -9,12 +9,15 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer) {
     mouseHoveringOverUnitId = -1;
     mouseHoveringOverStructureId = -1;
     state = MOUSESTATE_SELECT;
+    prevState = MOUSESTATE_SELECT;
     mouseNormalState = new cMouseNormalState(thePlayer, this, game.getMouse());
+    mouseUnitsSelectedState = new cMouseUnitsSelectedState(thePlayer, this, game.getMouse());
 }
 
 cGameControlsContext::~cGameControlsContext() {
     player = nullptr;
     delete mouseNormalState;
+    delete mouseUnitsSelectedState;
 }
 
 
@@ -127,11 +130,13 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSESTATE_SELECT:
             mouseNormalState->onNotifyMouseEvent(event);
             break;
+        case MOUSESTATE_UNITS_SELECTED:
+            mouseUnitsSelectedState->onNotifyMouseEvent(event);
+            break;
 
         // not yet implemented
         case MOUSESTATE_PLACE:
         case MOUSESTATE_REPAIR:
-        case MOUSESTATE_UNITS_SELECTED:
             break;
     }
     
@@ -168,6 +173,21 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
 }
 
 void cGameControlsContext::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+    switch (state) {
+        case MOUSESTATE_SELECT:
+            mouseNormalState->onNotifyKeyboardEvent(event);
+            break;
+        case MOUSESTATE_UNITS_SELECTED:
+            mouseUnitsSelectedState->onNotifyKeyboardEvent(event);
+            break;
+
+            // not yet implemented
+        case MOUSESTATE_PLACE:
+        case MOUSESTATE_REPAIR:
+            break;
+    }
+
+
 //    const cPlayer *humanPlayer = &players[HUMAN];
 //    const cGameControlsContext *pContext = humanPlayer->getGameControlsContext();
 //    const int hoverUnitId = pContext->getIdOfUnitWhereMouseHovers();
@@ -220,10 +240,23 @@ void cGameControlsContext::updateMouseState() {
 }
 
 void cGameControlsContext::setMouseState(eMouseState newState) {
-    char msg[255];
-    sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(state), mouseStateString(newState));
-    logbook(msg);
+    this->prevState = state;
     this->state = newState;
+    char msg[255];
+    sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(prevState), mouseStateString(state));
+    logbook(msg);
+    switch (state) {
+        case MOUSESTATE_SELECT:
+            mouseNormalState->onStateSet();
+            break;
+        case MOUSESTATE_UNITS_SELECTED:
+            mouseUnitsSelectedState->onStateSet();
+            break;
+            // not yet implemented
+        case MOUSESTATE_PLACE:
+        case MOUSESTATE_REPAIR:
+            break;
+    }
 }
 
 //void
@@ -524,32 +557,6 @@ void cGameControlsContext::setMouseState(eMouseState newState) {
 //        const std::vector<int> &selectedUnits = pPlayer->getSelectedUnits();
 //
 //        if (!selectedUnits.empty()) {
-//            mouseTile = MOUSE_MOVE;
-//
-//            // change to attack cursor if hovering over enemy unit
-//            if (map.isVisible(mc, pPlayer->getId())) {
-//                if (hoverUnitId > -1) {
-//                    if (unit[hoverUnitId].isValid() && !unit[hoverUnitId].getPlayer()->isSameTeamAs(pPlayer)) {
-//                        mouseTile = MOUSE_ATTACK;
-//                    }
-//                }
-//
-//                if (hoverStructureId > -1) {
-//                    cAbstractStructure *pHoverStructure = structure[hoverStructureId];
-//                    if (pHoverStructure && !pHoverStructure->getPlayer()->isSameTeamAs(pPlayer)) {
-//                        mouseTile = MOUSE_ATTACK;
-//                    }
-//                }
-//
-//                // MOVE THIS to onKeyboardEvent
-//                if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) { // force attack
-//                    mouseTile = MOUSE_ATTACK;
-//                }
-//
-//                // MOVE THIS to onKeyboardEvent
-//                if (key[KEY_ALT]) { // force move
-//                    mouseTile = MOUSE_MOVE;
-//                }
 //            }
 //        } else {
 //            if (map.isVisible(mc, pPlayer->getId())) {

@@ -21,6 +21,7 @@
 //#define MOUSE_STATE_PLACE   3
 
 #include "controls/mousestates/cMouseNormalState.h"
+#include "controls/mousestates/cMouseUnitsSelectedState.h"
 
 enum eMouseState {
     MOUSESTATE_SELECT, // mouse is in 'normal' mode, it is able to select units
@@ -99,9 +100,11 @@ class cGameControlsContext : public cInputObserver {
 
         // the state to direct events to
         eMouseState state;
+        eMouseState prevState; // in case we want to switch from repair mode (back and forth)
 
         // the states, initialized once to save a lot of construct/destructs
         cMouseNormalState * mouseNormalState;
+        cMouseUnitsSelectedState * mouseUnitsSelectedState;
 
 };
 
