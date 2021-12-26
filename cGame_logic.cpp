@@ -1616,6 +1616,11 @@ void cGame::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
     if (currentState) {
         currentState->onNotifyKeyboardEvent(event);
     }
+
+    // take screenshot
+    if (event.eventType == KEY_PRESSED && event.key == KEY_F11) {
+        takeScreenshot();
+    }
 }
 
 void cGame::transitionStateIfRequired() {
@@ -1649,5 +1654,23 @@ void cGame::drawCombatMouse() {
     }
 
     mouse->draw();
+}
+
+void cGame::takeScreenshot() {
+    char filename[25];
+
+    if (screenshot < 10) {
+        sprintf(filename, "%dx%d_000%d.bmp", screen_x, screen_y, screenshot);
+    } else if (screenshot < 100) {
+        sprintf(filename, "%dx%d_00%d.bmp", screen_x, screen_y, screenshot);
+    } else if (screenshot < 1000) {
+        sprintf(filename, "%dx%d_0%d.bmp", screen_x, screen_y, screenshot);
+    } else {
+        sprintf(filename, "%dx%d_%d.bmp", screen_x, screen_y, screenshot);
+    }
+
+    save_bmp(filename, bmp_screen, general_palette);
+
+    screenshot++;
 }
 
