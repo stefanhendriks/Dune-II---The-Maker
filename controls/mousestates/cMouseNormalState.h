@@ -21,6 +21,8 @@ public:
     void onMouseRightButtonPressed(const s_MouseEvent &event);
 
     void onMouseRightButtonClicked(const s_MouseEvent &event);
+
+    void onMouseMovedTo(const s_MouseEvent &event);
 };
 
 

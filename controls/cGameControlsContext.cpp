@@ -219,6 +219,13 @@ void cGameControlsContext::updateMouseState() {
 //    mouse->setTile(mouseTile);
 }
 
+void cGameControlsContext::setMouseState(eMouseState newState) {
+    char msg[255];
+    sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(state), mouseStateString(newState));
+    logbook(msg);
+    this->state = newState;
+}
+
 //void
 //cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mouseCell) const {
 //    // when mouse hovers above a valid cell
