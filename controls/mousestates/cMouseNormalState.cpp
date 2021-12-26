@@ -14,6 +14,13 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
+            break;
+        case MOUSE_RIGHT_BUTTON_PRESSED:
+            onMouseRightButtonPressed(event);
+            break;
+        case MOUSE_RIGHT_BUTTON_CLICKED:
+            onMouseRightButtonClicked(event);
+            break;
         default:
             break;
     }
@@ -109,4 +116,14 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
 //        }
 //
     mouse->resetBoxSelect();
+}
+
+void cMouseNormalState::onMouseRightButtonPressed(const s_MouseEvent &event) {
+    mouse->dragViewportInteraction();
+}
+
+void cMouseNormalState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+    if (mouse->isMapScrolling()){
+        mouse->resetDragViewportInteraction();
+    }
 }

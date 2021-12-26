@@ -17,6 +17,10 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+
+    void onMouseRightButtonPressed(const s_MouseEvent &event);
+
+    void onMouseRightButtonClicked(const s_MouseEvent &event);
 };
 
 
