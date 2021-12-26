@@ -6,6 +6,7 @@
 enum eMouseUnitsSelectedState {
     SELECTED_STATE_MOVE, // move selected units to location
     SELECTED_STATE_ATTACK, // attack target with selected units
+    SELECTED_STATE_FORCE_ATTACK, // force attack target with selected units
     SELECTED_STATE_REPAIR, // enter structure to repair units
     SELECTED_STATE_CAPTURE, // enter structure to capture it
     SELECTED_STATE_REFINERY, // enter refinery to dump spice / collect credits
@@ -15,6 +16,7 @@ static const char* mouseUnitsSelectedStateString(const eMouseUnitsSelectedState 
     switch (state) {
         case SELECTED_STATE_MOVE: return "SELECTED_STATE_MOVE";
         case SELECTED_STATE_ATTACK: return "SELECTED_STATE_ATTACK";
+        case SELECTED_STATE_FORCE_ATTACK: return "SELECTED_STATE_FORCE_ATTACK";
         case SELECTED_STATE_REPAIR: return "SELECTED_STATE_REPAIR";
         case SELECTED_STATE_CAPTURE: return "SELECTED_STATE_CAPTURE";
         case SELECTED_STATE_REFINERY: return "SELECTED_STATE_REFINERY";
@@ -73,6 +75,10 @@ private:
     void setState(eMouseUnitsSelectedState newState);
 
     eMouseUnitsSelectedState state;
+
+    void onKeyDown(const s_KeyboardEvent &event);
+
+    void onKeyPressed(const s_KeyboardEvent &event);
 };
 
 
