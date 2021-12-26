@@ -70,9 +70,6 @@ public:
     int iRegion;        // what region is selected? (changed by cSelectYourNextConquestState class)
 	int iMission;		// what mission are we playing? (= techlevel)
 
-//	int selected_structure;
-//	int hover_unit;
-
 	int paths_created;
 
     int iMusicVolume;       // volume of the mp3 / midi
