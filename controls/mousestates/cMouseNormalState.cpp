@@ -174,8 +174,13 @@ void cMouseNormalState::onMouseMovedTo(const s_MouseEvent &event) {
 int cMouseNormalState::getMouseTileForNormalState() const {
     int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        // only show this for units
-        return MOUSE_PICK;
+        cUnit &pUnit = unit[hoverUnitId];
+        if (pUnit.isValid() && pUnit.belongsTo(player)) {
+            // only show this for units
+            return MOUSE_PICK;
+        }
+        // non-selectable units (all from other players), don't give a "pick" mouse tile
+        return MOUSE_NORMAL;
     }
     return MOUSE_NORMAL;
 }
