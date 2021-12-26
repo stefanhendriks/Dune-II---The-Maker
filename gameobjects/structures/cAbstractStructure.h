@@ -241,6 +241,8 @@ class cAbstractStructure {
         void unitIsNoLongerInteractingWithStructure(int unitID);
 
     void think_flag_new();
+
+    bool canSpawnUnits();
 };
 
 #endif

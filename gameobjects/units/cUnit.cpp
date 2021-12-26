@@ -415,6 +415,10 @@ void cUnit::createExplosionParticle() {
     }
 }
 
+/**
+ * Any unit this structure was "interacting with" (ie, wanted to enter), make sure
+ * to remove that connection.
+ */
 void cUnit::unitWillNoLongerBeInteractingWithStructure() const {
     cAbstractStructure *pStructure = getStructureUnitWantsToEnter();
     if (pStructure == nullptr) return; // nothing to do here
@@ -3329,6 +3333,10 @@ void cUnit::takeDamage(int damage) {
             die(false, false);
         }
     }
+}
+
+bool cUnit::isEligibleForRepair() {
+    return isDamaged() && !isInfantryUnit() && !isAirbornUnit();
 }
 
 

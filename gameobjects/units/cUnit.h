@@ -351,6 +351,8 @@ public:
 
     int getHitPoints() { return iHitPoints; }
 
+    bool isEligibleForRepair();
+
 private:
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
