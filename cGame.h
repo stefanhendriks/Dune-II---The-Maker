@@ -291,6 +291,7 @@ private:
 
     void initPlayers(bool rememberHouse) const;
 
+    void takeScreenshot();
 };
 
 #endif
