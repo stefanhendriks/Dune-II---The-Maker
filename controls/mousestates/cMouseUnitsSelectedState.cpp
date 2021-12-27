@@ -9,7 +9,8 @@ cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControl
         harvestersSelected(false),
         infantrySelected(false),
         repairableUnitsSelected(false),
-        state(SELECTED_STATE_MOVE) {
+        state(SELECTED_STATE_MOVE),
+        prevState(SELECTED_STATE_MOVE) {
 
 }
 
@@ -48,8 +49,11 @@ cMouseUnitsSelectedState::~cMouseUnitsSelectedState() {
 
 void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     if (mouse->isBoxSelecting()) {
-        player->deselectAllUnits();
-        selectedUnits.clear();
+        // clear only when we don't want to add to selection
+        if (state != SELECTED_STATE_ADD_TO_SELECTION) {
+            player->deselectAllUnits();
+            selectedUnits.clear();
+        }
 
         bool infantryReporting = false;
         bool unitReporting = false;
@@ -195,53 +199,59 @@ void cMouseUnitsSelectedState::onMouseRightButtonClicked(const s_MouseEvent &eve
 }
 
 void cMouseUnitsSelectedState::onMouseMovedTo(const s_MouseEvent &event) {
-    if (state == SELECTED_STATE_FORCE_ATTACK){
+    if (state == SELECTED_STATE_FORCE_ATTACK) {
         mouseTile = MOUSE_ATTACK;
+    } if (state == SELECTED_STATE_ADD_TO_SELECTION) {
+        mouseTile = MOUSE_NORMAL;
     } else {
-        mouseTile = MOUSE_MOVE;
-        setState(SELECTED_STATE_MOVE);
+        evaluateMouseMoveState();
+    }
+}
 
-        cAbstractStructure *hoverStructure = context->getStructurePointerWhereMouseHovers();
+void cMouseUnitsSelectedState::evaluateMouseMoveState() {
+    mouseTile = MOUSE_MOVE;
+    setState(SELECTED_STATE_MOVE);
 
-        // this feels a little awkward, but having an extra 'bool' for this if statement
-        // is probably a bit too much at this point.
-        bool unitsWhichCanAttackSelected = infantrySelected || repairableUnitsSelected; // don't try to attack with harvesters
+    cAbstractStructure *hoverStructure = context->getStructurePointerWhereMouseHovers();
 
-        if (hoverStructure) {
-            if (!hoverStructure->getPlayer()->isSameTeamAs(player)) {
-                if (unitsWhichCanAttackSelected) {
-                    mouseTile = MOUSE_ATTACK;
-                    setState(SELECTED_STATE_ATTACK);
-                }
-            } else if (hoverStructure->belongsTo(player)) {
-                if (hoverStructure->getType() == REFINERY) {
-                    if (harvestersSelected) {
-                        setState(SELECTED_STATE_REFINERY);
-                    } else {
-                        setState(SELECTED_STATE_SELECT);
-                        mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
-                    }
-                } else if (hoverStructure->getType() == REPAIR) {
-                    if (repairableUnitsSelected) {
-                        setState(SELECTED_STATE_REPAIR);
-                    } else {
-                        setState(SELECTED_STATE_SELECT);
-                        mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
-                    }
+    // this feels a little awkward, but having an extra 'bool' for this if statement
+// is probably a bit too much at this point.
+    bool unitsWhichCanAttackSelected = infantrySelected || repairableUnitsSelected; // don't try to attack with harvesters
+
+    if (hoverStructure) {
+        if (!hoverStructure->getPlayer()->isSameTeamAs(player)) {
+            if (unitsWhichCanAttackSelected) {
+                mouseTile = MOUSE_ATTACK;
+                setState(SELECTED_STATE_ATTACK);
+            }
+        } else if (hoverStructure->belongsTo(player)) {
+            if (hoverStructure->getType() == REFINERY) {
+                if (harvestersSelected) {
+                    setState(SELECTED_STATE_REFINERY);
                 } else {
                     setState(SELECTED_STATE_SELECT);
                     mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                 }
+            } else if (hoverStructure->getType() == REPAIR) {
+                if (repairableUnitsSelected) {
+                    setState(SELECTED_STATE_REPAIR);
+                } else {
+                    setState(SELECTED_STATE_SELECT);
+                    mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                }
+            } else {
+                setState(SELECTED_STATE_SELECT);
+                mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
             }
         }
+    }
 
-        if (unitsWhichCanAttackSelected) {
-            int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
-            if (hoverUnitId > -1) {
-                if (unit[hoverUnitId].isValid() && !unit[hoverUnitId].getPlayer()->isSameTeamAs(player)) {
-                    mouseTile = MOUSE_ATTACK;
-                    setState(SELECTED_STATE_ATTACK);
-                }
+    if (unitsWhichCanAttackSelected) {
+        int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+        if (hoverUnitId > -1) {
+            if (unit[hoverUnitId].isValid() && !unit[hoverUnitId].getPlayer()->isSameTeamAs(player)) {
+                mouseTile = MOUSE_ATTACK;
+                setState(SELECTED_STATE_ATTACK);
             }
         }
     }
@@ -302,6 +312,7 @@ void cMouseUnitsSelectedState::setState(eMouseUnitsSelectedState newState) {
         sprintf(msg, "cMouseUnitsSelectedState: Changed state from [%s] to [%s]", mouseUnitsSelectedStateString(state),
                 mouseUnitsSelectedStateString(newState));
         logbook(msg);
+        this->prevState = this->state;
         this->state = newState;
     }
 }
@@ -318,8 +329,9 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const s_KeyboardEvent &even
             break;
 
     }
+
     if (state == SELECTED_STATE_MOVE) {
-//        if ()
+
     }
 
     if (context->isState(MOUSESTATE_UNITS_SELECTED)) { // if , required in case we switched state
@@ -329,8 +341,14 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const s_KeyboardEvent &even
 
 void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
     if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
-        state = SELECTED_STATE_ATTACK;
+        setState(SELECTED_STATE_ATTACK);
         mouseTile = MOUSE_ATTACK;
+    }
+
+    if (event.key == KEY_LSHIFT || event.key == KEY_RSHIFT) {
+        setState(SELECTED_STATE_ADD_TO_SELECTION);
+        mouseTile = MOUSE_NORMAL;
+        // don't change mouse-tile
     }
 
     // force move?
@@ -338,9 +356,15 @@ void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
 
 void cMouseUnitsSelectedState::onKeyPressed(const s_KeyboardEvent &event) {
     if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
-        state = SELECTED_STATE_ATTACK;
+        setState(SELECTED_STATE_ATTACK);
         mouseTile = MOUSE_ATTACK;
     }
+
+    if (event.key == KEY_LSHIFT || event.key == KEY_RSHIFT) {
+        toPreviousState();
+        evaluateMouseMoveState();
+    }
+
 
     // go to repair state
     if (event.key == KEY_R) {
@@ -348,6 +372,10 @@ void cMouseUnitsSelectedState::onKeyPressed(const s_KeyboardEvent &event) {
     }
 
     // force move?
+}
+
+void cMouseUnitsSelectedState::toPreviousState() {
+    state = prevState;
 }
 
 void cMouseUnitsSelectedState::spawnParticle(const int type) {
