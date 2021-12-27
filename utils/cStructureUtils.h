@@ -8,10 +8,6 @@
 #ifndef CSTRUCTUREUTILS_H_
 #define CSTRUCTUREUTILS_H_
 
-class cAbstractStructure;
-class cBuildingListItem;
-class cPlayer;
-
 class cStructureUtils {
 public:
     cStructureUtils();

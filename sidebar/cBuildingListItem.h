@@ -8,6 +8,12 @@
 #ifndef CBUILDINGLISTITEM
 #define CBUILDINGLISTITEM
 
+#include "structs.h"
+
+#include <string>
+
+class cBuildingList;
+
 class cBuildingListItem {
 
 public:

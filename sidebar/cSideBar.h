@@ -15,11 +15,6 @@
 #define CSIDEBAR_H_
 
 class cPlayer;
-class cBuildingList;
-class cBuildingListItem;
-
-struct s_MouseEvent;
-struct s_GameEvent;
 
 //// List ID's corresponding buttons
 //#define LIST_NONE        0

@@ -21,16 +21,13 @@
 #define PLAYER_H
 
 #include "cPlayerNotification.h"
+#include "gameobjects/structures/cOrderProcesser.h"
+#include "player/cPlayerDifficultySettings.h"
+#include "sidebar/cSideBar.h"
 
 #include <set>
 #include <string>
 #include <vector>
-
-class cAbstractStructure;
-class cItemBuilder;
-class cOrderProcesser;
-class cSideBar;
-class cPlayerDifficultySettings;
 
 struct s_PlaceResult {
     bool success = false; // if true, all is ok
