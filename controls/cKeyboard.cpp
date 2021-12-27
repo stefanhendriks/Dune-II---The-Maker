@@ -13,6 +13,16 @@ cKeyboard::~cKeyboard() {
 }
 
 void cKeyboard::updateState() {
+    // Stefan: I made this more 'efficient', and I tried to differentiate between a HOLD and a "Released" state
+    // which makes sense. However, the way the events are being sent needs to be done differently (not now, I am tired)
+    //
+    // so this is for future me:
+    // make sure you send an event, 1 for "HOLD" and 1 for "Released". But, send the list of all key scancodes within
+    // that event (and not for every keypress 1 event).
+    //
+    // So that you can find combinations of keypresses. Ie CTRL-1 for create group...
+    //
+
     std::set<int> newKeysPressed = std::set<int>();
 
     // capture all the pressed keys here, use a set so we don't capture multiple times the same key (which
