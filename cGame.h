@@ -13,16 +13,16 @@
 #define D2TM_GAME_H
 
 #include <controls/cMouse.h>
-#include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
+#include <observers/cScenarioObserver.h>
+#include <utils/cRectangle.h>
+#include <utils/cSoundPlayer.h>
 
 class cAbstractMentat;
 class cGameControlsContext;
 class cGameState;
 class cInteractionManager;
 class cPlayer;
-class cRectangle;
-class cSoundPlayer;
 
 class cGame : public cScenarioObserver, cMouseObserver {
 

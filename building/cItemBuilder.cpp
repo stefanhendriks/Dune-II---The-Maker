@@ -8,12 +8,11 @@
 #include "player/cPlayerDifficultySettings.h"
 #include "sGameEvent.h"
 #include "sidebar/cBuildingList.h"
-#include "sidebar/cBuildingListItem.h"
-#include "sidebar/cBuildingListUpdater.h"
 #include "structs.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/d2tm_math.h"
+
 
 #include <allegro/keyboard.h>
 
