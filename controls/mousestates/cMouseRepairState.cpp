@@ -55,11 +55,15 @@ void cMouseRepairState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
 }
 
 void cMouseRepairState::onMouseRightButtonPressed(const s_MouseEvent &event) {
-    // NOOP
+    mouse->dragViewportInteraction();
 }
 
 void cMouseRepairState::onMouseRightButtonClicked(const s_MouseEvent &event) {
-    context->toPreviousState();
+    if (!mouse->isMapScrolling()) {
+        context->toPreviousState();
+    }
+
+    mouse->resetDragViewportInteraction();
 }
 
 void cMouseRepairState::onMouseMovedTo(const s_MouseEvent &event) {
