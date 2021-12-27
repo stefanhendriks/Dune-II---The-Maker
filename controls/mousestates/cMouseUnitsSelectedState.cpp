@@ -55,59 +55,9 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
             selectedUnits.clear();
         }
 
-        bool infantryReporting = false;
-        bool unitReporting = false;
-
-        // remember, these are screen coordinates
-        // TODO: Make it use absolute coordinates? (so we could have a rectangle bigger than the screen at one point?)
         cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
-
         const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
-
-        // check if there is a harvester in this group
-        auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) { return unit[id].isHarvester(); });
-        bool hasHarvesterSelected = position != ids.end();
-
-        position = std::find_if(ids.begin(), ids.end(),
-                                [&](const int &id) { return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
-        bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
-
-        if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
-            // select all the harvester units, skip airborn
-            for (auto id: ids) {
-                cUnit &pUnit = unit[id];
-                if (pUnit.isAirbornUnit()) continue;
-                if (!pUnit.isHarvester()) continue;
-                pUnit.bSelected = true;
-                unitReporting = true; // do it here, instead of iterating again
-            }
-        } else {
-            // select all the non-harvester,non-airborn units
-            for (auto id: ids) {
-                cUnit &pUnit = unit[id];
-                if (pUnit.isAirbornUnit()) continue;
-                if (pUnit.isHarvester()) continue;
-                pUnit.bSelected = true;
-                if (pUnit.isInfantryUnit()) {
-                    infantryReporting = true;
-                } else {
-                    unitReporting = true;
-                }
-            }
-        }
-
-        if (unitReporting) {
-            play_sound_id(SOUND_REPORTING);
-        }
-
-        if (infantryReporting) {
-            play_sound_id(SOUND_YESSIR);
-        }
-
-        selectedUnits = player->getSelectedUnits();
-        if (selectedUnits.empty()) {
-            context->setMouseState(MOUSESTATE_SELECT);
-        }
+        player->selectUnits(ids);
     } else {
         // single click, no box select
         evaluateSelectedUnits();
@@ -181,6 +131,12 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
     }
 
     mouse->resetBoxSelect();
+
+    selectedUnits = player->getSelectedUnits();
+    if (selectedUnits.empty()) {
+        context->setMouseState(MOUSESTATE_SELECT);
+    }
+
 }
 
 void cMouseUnitsSelectedState::onMouseRightButtonPressed(const s_MouseEvent &event) {
@@ -215,7 +171,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState() {
     cAbstractStructure *hoverStructure = context->getStructurePointerWhereMouseHovers();
 
     // this feels a little awkward, but having an extra 'bool' for this if statement
-// is probably a bit too much at this point.
+    // is probably a bit too much at this point.
     bool unitsWhichCanAttackSelected = infantrySelected || repairableUnitsSelected; // don't try to attack with harvesters
 
     if (hoverStructure) {
@@ -348,23 +304,46 @@ void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
     if (event.key == KEY_LSHIFT || event.key == KEY_RSHIFT) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
         mouseTile = MOUSE_NORMAL;
-        // don't change mouse-tile
-    }
 
+        // HACK HACK: This reads keyboard state for another key (see cKeyboard for reason)
+        int iGroup = game.getGroupNumberFromKeyboard();
+
+        // holding shift & group number, so add group to the selected units
+        if (iGroup > 0) {
+            this->player->selectUnitsFromGroup(iGroup);
+        }
+
+        selectedUnits = player->getSelectedUnits();
+    } else {
+        if (!key[KEY_LSHIFT] && !key[KEY_RSHIFT]) {
+            // HACK HACK, do this within the "HOLD" event, because if we do it at Pressed event
+            // we miss the fact that we hold SHIFT as well (see cKeyboard for reason).
+
+            // no SHIFT pressed, so select units of group
+
+            int iGroup = game.getGroupNumberFromScanCode(event.key);
+
+            if (iGroup > 0) {
+                // select all units for group
+                player->deselectAllUnits();
+                player->selectUnitsFromGroup(iGroup);
+                selectedUnits = player->getSelectedUnits();
+            }
+        }
+    }
     // force move?
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const s_KeyboardEvent &event) {
     if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
         setState(SELECTED_STATE_ATTACK);
-        mouseTile = MOUSE_ATTACK;
+        evaluateMouseMoveState();
     }
 
     if (event.key == KEY_LSHIFT || event.key == KEY_RSHIFT) {
         toPreviousState();
         evaluateMouseMoveState();
     }
-
 
     // go to repair state
     if (event.key == KEY_R) {

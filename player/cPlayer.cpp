@@ -388,6 +388,22 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const {
     return getAllMyUnitsForType(unitType).size();
 }
 
+std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const {
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (pUnit.isDead()) continue;
+        if (!pUnit.belongsTo(this)) continue;
+        if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
+
+        if (pUnit.iGroup == groupId) {
+            ids.push_back(i);
+        }
+    }
+    return ids;
+}
+
 std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
@@ -2060,8 +2076,65 @@ std::vector<int> cPlayer::getSelectedUnits() const {
 void cPlayer::deselectAllUnits() {
     const std::vector<int> &ids = getAllMyUnits();
     for (auto i : ids) {
-        if (unit[i].isValid()) {
-            unit[i].bSelected = false;
+        unit[i].bSelected = false;
+    }
+}
+
+bool cPlayer::selectUnitsFromGroup(int groupId) {
+    const std::vector<int> &ids = getAllMyUnitsForGroupNr(groupId);
+    return selectUnits(ids);
+}
+
+bool cPlayer::selectUnits(const std::vector<int> &ids) const {
+    bool infantrySelected = false;
+    bool unitSelected = false;
+
+    // check if there is a harvester in this group
+    auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) { return unit[id].isHarvester(); });
+    bool hasHarvesterSelected = position != ids.end();
+
+    position = std::find_if(ids.begin(), ids.end(),
+                            [&](const int &id) { return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
+    bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
+
+    if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
+        // select all the harvester units, skip airborn
+        for (auto id: ids) {
+            cUnit &pUnit = unit[id];
+            if (pUnit.isAirbornUnit()) continue;
+            if (!pUnit.isHarvester()) continue;
+            // only check if it has not been selected, so we only play sound when we truly select a new unit.
+            if (!pUnit.bSelected) {
+                pUnit.bSelected = true;
+                unitSelected = true; // do it here, instead of iterating again
+            }
+        }
+    } else {
+        // select all the non-harvester, non-airborn units
+        for (auto id: ids) {
+            cUnit &pUnit = unit[id];
+            if (pUnit.isAirbornUnit()) continue;
+            if (pUnit.isHarvester()) continue;
+            // only check if it has not been selected, so we only play sound when we truly select a new unit.
+            if (!pUnit.bSelected) {
+                pUnit.bSelected = true;
+                if (pUnit.isInfantryUnit()) {
+                    infantrySelected = true;
+                } else {
+                    unitSelected = true;
+                }
+            }
         }
     }
+
+    if (unitSelected) {
+        play_sound_id(SOUND_REPORTING);
+    }
+
+    if (infantrySelected) {
+        play_sound_id(SOUND_YESSIR);
+    }
+
+    // return true if we selected any unit
+    return unitSelected || infantrySelected;
 }

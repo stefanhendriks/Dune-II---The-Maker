@@ -472,6 +472,25 @@ int cGame::getGroupNumberFromKeyboard() {
     return 0;
 }
 
+int cGame::getGroupNumberFromScanCode(int scanCode) {
+    if (scanCode == KEY_1) {
+        return 1;
+    }
+    if (scanCode == KEY_2) {
+        return 2;
+    }
+    if (scanCode == KEY_3) {
+        return 3;
+    }
+    if (scanCode == KEY_4) {
+        return 4;
+    }
+    if (scanCode == KEY_5) {
+        return 5;
+    }
+    return 0;
+}
+
 void cGame::handleTimeSlicing() {
     if (iRest > 0) {
         rest(iRest);
@@ -1622,6 +1641,11 @@ void cGame::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
     if (event.eventType == KEY_PRESSED && event.key == KEY_F11) {
         takeScreenshot();
     }
+
+    // TODO: this has to be its own state class. Then this if is no longer needed.
+    if (state == GAME_PLAYING) {
+        onNotifyKeyboardEventGamePlaying(event);
+    }
 }
 
 void cGame::transitionStateIfRequired() {
@@ -1673,5 +1697,64 @@ void cGame::takeScreenshot() {
     save_bmp(filename, bmp_screen, general_palette);
 
     screenshot++;
+}
+
+void cGame::onNotifyKeyboardEventGamePlaying(const s_KeyboardEvent &event) {
+    switch (event.eventType) {
+        case KEY_HOLD:
+            onKeyDownGamePlaying(event);
+            break;
+        case KEY_PRESSED:
+            onKeyPressedGamePlaying(event);
+            break;
+        default:
+            break;
+    }
+}
+
+void cGame::onKeyDownGamePlaying(const s_KeyboardEvent &event) {
+    const cPlayer *humanPlayer = &players[HUMAN];
+
+    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+        // HACK HACK: This reads keyboard state for another key (see cKeyboard for reason)
+        int iGroup = getGroupNumberFromKeyboard();
+
+        if (iGroup > 0) {
+
+            // go over all units, and mark units for this group if selected.
+            // and unmark them for the group when not/no longer selected.
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &pUnit = unit[i];
+                if (!pUnit.isValid()) continue;
+                if (!pUnit.belongsTo(humanPlayer)) continue;
+                if (pUnit.bSelected) {
+                    pUnit.iGroup = iGroup;
+                    continue;
+                }
+
+                // unit belongs to this group, but is not/no longer selected. So unmark it.
+                if (pUnit.iGroup == iGroup) {
+                    pUnit.iGroup = -1;
+                }
+            }
+        }
+    }
+
+}
+
+void cGame::onKeyPressedGamePlaying(const s_KeyboardEvent &event) {
+    cPlayer &humanPlayer = players[HUMAN];
+
+    if (event.key == KEY_H) {
+        mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+    }
+
+    // Center on the selected structure
+    if (event.key == KEY_C) {
+        cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+        if (selectedStructure) {
+            mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+        }
+    }
 }
 

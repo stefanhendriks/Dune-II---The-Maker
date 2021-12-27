@@ -42,9 +42,7 @@ cMouseNormalState::~cMouseNormalState() {
 }
 
 void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
-    bool infantrySelected = false;
-    bool unitSelected = false;
-
+    bool selectedUnits = false;
     if (mouse->isBoxSelecting()) {
         player->deselectAllUnits();
 
@@ -53,39 +51,11 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
         cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
 
         const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
-
-        // check if there is a harvester in this group
-        auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) { return unit[id].isHarvester(); });
-        bool hasHarvesterSelected = position != ids.end();
-
-        position = std::find_if(ids.begin(), ids.end(),
-                                [&](const int &id) { return !unit[id].isHarvester() && !unit[id].isAirbornUnit(); });
-        bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
-
-        if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
-            // select all the harvester units, skip airborn
-            for (auto id: ids) {
-                cUnit &pUnit = unit[id];
-                if (pUnit.isAirbornUnit()) continue;
-                if (!pUnit.isHarvester()) continue;
-                pUnit.bSelected = true;
-                unitSelected = true; // do it here, instead of iterating again
-            }
-        } else {
-            // select all the non-harvester,non-airborn units
-            for (auto id: ids) {
-                cUnit &pUnit = unit[id];
-                if (pUnit.isAirbornUnit()) continue;
-                if (pUnit.isHarvester()) continue;
-                pUnit.bSelected = true;
-                if (pUnit.isInfantryUnit()) {
-                    infantrySelected = true;
-                } else {
-                    unitSelected = true;
-                }
-            }
-        }
+        selectedUnits = player->selectUnits(ids);
     } else {
+        bool infantrySelected = false;
+        bool unitSelected = false;
+
         if (state == SELECT_STATE_NORMAL) {
             // single click, no box select
             int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
@@ -120,26 +90,19 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
                 pStructure->setRallyPoint(context->getMouseCell());
             }
         }
+
+        if (unitSelected) {
+            play_sound_id(SOUND_REPORTING);
+        }
+
+        if (infantrySelected) {
+            play_sound_id(SOUND_YESSIR);
+        }
+
+        selectedUnits = unitSelected || infantrySelected;
     }
 
-
-    // determine what kind of units are selected, and
-//    std::vector<int> selectedUnitIds;
-//    std::copy_if(ids.begin(), ids.end(), std::back_inserter(selectedUnitIds), [&](const int & id){ return unit[id].bSelected; });
-//
-//    for (auto id : selectedUnitIds) {
-//
-//    }
-
-    if (unitSelected) {
-        play_sound_id(SOUND_REPORTING);
-    }
-
-    if (infantrySelected) {
-        play_sound_id(SOUND_YESSIR);
-    }
-
-    if (infantrySelected || unitSelected) {
+    if (selectedUnits) {
         context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
 
@@ -216,7 +179,17 @@ void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
         state = SELECT_STATE_NORMAL;
         mouseTile = MOUSE_NORMAL;
     }
+
     if (event.key == KEY_R) {
         context->setMouseState(MOUSESTATE_REPAIR);
+    }
+
+    int iGroup = game.getGroupNumberFromScanCode(event.key);
+
+    if (iGroup > 0) {
+        // select all units for group
+        player->deselectAllUnits();
+        player->selectUnitsFromGroup(iGroup);
+        player->getGameControlsContext()->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
 }
