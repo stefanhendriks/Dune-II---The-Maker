@@ -9,7 +9,7 @@
 
 struct s_KeyboardEvent {
     eKeyboardEventType eventType = eKeyboardEventType::KEY_NONE;
-    int key;
+    int key; // TODO: Make this a vector/array of all keys pressed
 
     static const std::string toString(const s_KeyboardEvent &event) {
         char msg[255];
