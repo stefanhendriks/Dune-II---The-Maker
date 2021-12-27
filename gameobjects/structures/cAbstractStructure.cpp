@@ -11,6 +11,7 @@
   */
 
 #include "../../include/d2tmh.h"
+#include "cAbstractStructure.h"
 
 
 // "default" Constructor
@@ -822,7 +823,8 @@ void cAbstractStructure::drawWithShadow() {
  * Returns true, if this unit can create units, or have them enter/leave.
  * @return
  */
-bool cAbstractStructure::canSpawnUnits() {
+bool cAbstractStructure::canSpawnUnits() const {
+    // TODO: make this virtual and implement at the structure classes themselves
     return getType() == REFINERY ||
             getType() == HEAVYFACTORY ||
             getType() == LIGHTFACTORY ||
@@ -830,4 +832,28 @@ bool cAbstractStructure::canSpawnUnits() {
             getType() == STARPORT ||
             getType() == HIGHTECH ||
             getType() == REPAIR;
+}
+
+int cAbstractStructure::getAssociatedListID() const {
+    // TODO: make this virtual and implement at the structure classes themselves
+    switch (getType()) {
+        case CONSTYARD:
+            return LIST_CONSTYARD;
+        case LIGHTFACTORY:
+            return LIST_UNITS;
+        case HEAVYFACTORY:
+            return LIST_UNITS;
+        case HIGHTECH:
+            return LIST_UNITS;
+        case PALACE:
+            return LIST_PALACE;
+        case BARRACKS:
+            return LIST_FOOT_UNITS;
+        case WOR:
+            return LIST_FOOT_UNITS;
+        case STARPORT:
+            return LIST_STARPORT;
+        default:
+            return LIST_NONE;
+    }
 }

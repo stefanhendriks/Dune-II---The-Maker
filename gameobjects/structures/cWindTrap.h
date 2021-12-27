@@ -1,7 +1,6 @@
-// Structure class
+#pragma once
 
-class cWindTrap : public cAbstractStructure
-{
+class cWindTrap : public cAbstractStructure {
 private:
     int iFade;          // Fading progress (windtraps)
     bool bFadeDir;      // Fading direction (TRUE -> up, FALSE -> down)
@@ -9,25 +8,31 @@ private:
     // TIMER
     int TIMER_fade;
 
-	// windtrap specific animation:
-	void think_fade();
+    // windtrap specific animation:
+    void think_fade();
 
 public:
     cWindTrap();
+
     ~cWindTrap();
 
     // overloaded functions
-    void think();
-    void think_animation();
-    void think_guard();
-    void startAnimating() {};
+    void think() override;
+
+    void think_animation() override;
+
+    void think_guard() override;
+
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
-    int getType() const;
+    int getType() const override;
 
-	int getPowerOut();
-	int getMaxPowerOut();
+    int getPowerOut();
 
-	int getFade() { return iFade; }
+    int getMaxPowerOut();
+
+    int getFade() { return iFade; }
 };
 

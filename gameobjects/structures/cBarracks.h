@@ -1,4 +1,4 @@
-// Structure class
+#pragma once
 
 class cBarracks : public cAbstractStructure {
 private:
@@ -10,16 +10,16 @@ public:
     ~cBarracks();
 
     // overloaded functions    
-    void think();
+    void think() override;
 
-    void think_animation();
+    void think_animation() override;
 
-    void think_guard();
+    void think_guard() override;
 
-    void startAnimating() {};
+    void startAnimating() override {};
 
     void draw() override { drawWithShadow(); }
 
-    int getType() const;
+    int getType() const override;
 };
 

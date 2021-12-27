@@ -1,23 +1,28 @@
-// Structure class
+#pragma once
 
-class cSpiceSilo : public cAbstractStructure
-{
+class cSpiceSilo : public cAbstractStructure {
+
 private:
 
 
 public:
     cSpiceSilo();
+
     ~cSpiceSilo();
 
     // overloaded functions
-    void think();
-    void think_animation();
-    void think_guard();
+    void think() override;
 
-    int getType() const;
-    void startAnimating() {};
+    void think_animation() override;
+
+    void think_guard() override;
+
+    int getType() const override;
+
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
-	int getSpiceSiloCapacity();
+    int getSpiceSiloCapacity();
 };
 

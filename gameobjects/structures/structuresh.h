@@ -1,5 +1,4 @@
-#ifndef STRUCTURESH_H_
-#define STRUCTURESH_H_
+#pragma once
 
 #include "cAbstractStructure.h"
 
@@ -22,5 +21,3 @@
 
 #include "cStructureFactory.h"
 #include "cOrderProcesser.h"
-
-#endif
