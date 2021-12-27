@@ -270,6 +270,9 @@ void cMouse::draw() {
         } else if (mouse_tile == MOUSE_REPAIR) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
+        } else if (mouse_tile == MOUSE_FORBIDDEN) {
+            mouseDrawX -= 16;
+            mouseDrawY -= 16;
         } else if (mouse_tile == MOUSE_PICK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;

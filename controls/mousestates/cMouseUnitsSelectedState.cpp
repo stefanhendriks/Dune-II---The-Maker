@@ -37,7 +37,9 @@ void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     // ... so set it here
-    mouse->setTile(mouseTile);
+    if (context->isState(MOUSESTATE_UNITS_SELECTED)) { // if , required in case we switched state
+        mouse->setTile(mouseTile);
+    }
 }
 
 cMouseUnitsSelectedState::~cMouseUnitsSelectedState() {
@@ -308,7 +310,9 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const s_KeyboardEvent &even
 //        if ()
     }
 
-    mouse->setTile(mouseTile);
+    if (context->isState(MOUSESTATE_UNITS_SELECTED)) { // if , required in case we switched state
+        mouse->setTile(mouseTile);
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
@@ -324,6 +328,11 @@ void cMouseUnitsSelectedState::onKeyPressed(const s_KeyboardEvent &event) {
     if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
         state = SELECTED_STATE_ATTACK;
         mouseTile = MOUSE_ATTACK;
+    }
+
+    // go to repair state
+    if (event.key == KEY_R) {
+        context->setMouseState(MOUSESTATE_REPAIR);
     }
 
     // force move?

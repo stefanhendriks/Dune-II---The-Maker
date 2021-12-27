@@ -6,14 +6,12 @@
 enum eMouseNormalState {
     SELECT_STATE_NORMAL, // normal state, selecting stuff, etc
     SELECT_STATE_RALLY,  // set rally point for structure
-    SELECT_STATE_REPAIR, // repair mode
 };
 
 static const char* mouseNormalStateString(const eMouseNormalState &state) {
     switch (state) {
         case SELECT_STATE_NORMAL: return "SELECT_STATE_NORMAL";
         case SELECT_STATE_RALLY: return "SELECT_STATE_RALLY";
-        case SELECT_STATE_REPAIR: return "SELECT_STATE_REPAIR";
         default:
             assert(false);
             break;
@@ -51,8 +49,6 @@ private:
     void onKeyPressed(const s_KeyboardEvent &event);
 
     eMouseNormalState state;
-
-    int getMouseTileForRepairState();
 
     int getMouseTileForNormalState() const;
 };

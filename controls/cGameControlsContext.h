@@ -22,6 +22,7 @@
 
 #include "controls/mousestates/cMouseNormalState.h"
 #include "controls/mousestates/cMouseUnitsSelectedState.h"
+#include "controls/mousestates/cMouseRepairState.h"
 
 enum eMouseState {
     MOUSESTATE_SELECT, // mouse is in 'normal' mode, it is able to select units
@@ -76,7 +77,11 @@ class cGameControlsContext : public cInputObserver {
 
         void updateMouseState();
 
-    protected:
+        void toPreviousState();
+
+        bool isState(eMouseState other);
+
+protected:
 		void determineToolTip();
 		void determineHoveringOverStructureId(int mouseX, int mouseY);
 		void determineHoveringOverUnitId();
@@ -105,6 +110,7 @@ class cGameControlsContext : public cInputObserver {
         // the states, initialized once to save a lot of construct/destructs
         cMouseNormalState * mouseNormalState;
         cMouseUnitsSelectedState * mouseUnitsSelectedState;
+        cMouseRepairState * mouseRepairState;
 
 };
 

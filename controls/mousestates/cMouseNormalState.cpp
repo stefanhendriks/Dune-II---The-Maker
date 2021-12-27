@@ -32,7 +32,9 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     // ... so set it here
-    mouse->setTile(mouseTile);
+    if (context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
+        mouse->setTile(mouseTile);
+    }
 }
 
 cMouseNormalState::~cMouseNormalState() {
@@ -111,21 +113,6 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
             if (pStructure && pStructure->isValid()) {
                 pStructure->setRallyPoint(context->getMouseCell());
             }
-        } else if (state == SELECT_STATE_REPAIR) {
-            int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
-            if (hoverUnitId > -1) {
-                cUnit &pUnit = unit[hoverUnitId];
-                if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
-                    pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
-                }
-            }
-
-            cAbstractStructure *pStructure = context->getStructurePointerWhereMouseHovers();
-            if (pStructure && pStructure->isValid()) {
-                if (pStructure->belongsTo(player) && pStructure->isDamaged()) {
-                    pStructure->setRepairing(!pStructure->isRepairing());
-                }
-            }
         }
     }
 
@@ -166,8 +153,6 @@ void cMouseNormalState::onMouseMovedTo(const s_MouseEvent &event) {
         mouseTile = getMouseTileForNormalState();
     } else if (state == SELECT_STATE_RALLY) {
         mouseTile = MOUSE_RALLY;
-    } else if (state == SELECT_STATE_REPAIR) {
-        mouseTile = getMouseTileForRepairState();
     }
 }
 
@@ -182,25 +167,6 @@ int cMouseNormalState::getMouseTileForNormalState() const {
         // non-selectable units (all from other players), don't give a "pick" mouse tile
         return MOUSE_NORMAL;
     }
-    return MOUSE_NORMAL;
-}
-
-int cMouseNormalState::getMouseTileForRepairState() {
-    int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
-    if (hoverUnitId > -1) {
-        cUnit &pUnit = unit[hoverUnitId];
-        if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
-            return MOUSE_REPAIR;
-        }
-    }
-
-    cAbstractStructure *pStructure = context->getStructurePointerWhereMouseHovers();
-    if (pStructure && pStructure->isValid()) {
-        if (pStructure->belongsTo(player) && pStructure->isDamaged()) {
-            return MOUSE_REPAIR;
-        }
-    }
-
     return MOUSE_NORMAL;
 }
 
@@ -223,7 +189,9 @@ void cMouseNormalState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
     }
 
     // ... so set it here
-    mouse->setTile(mouseTile);
+    if (context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
+        mouse->setTile(mouseTile);
+    }
 }
 
 void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
@@ -234,9 +202,6 @@ void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
             state = SELECT_STATE_RALLY;
             mouseTile = MOUSE_RALLY;
         }
-    } else if (event.key == KEY_R) {
-        state = SELECT_STATE_REPAIR;
-        mouseTile = getMouseTileForRepairState();
     }
 }
 
@@ -244,8 +209,8 @@ void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
     if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
         state = SELECT_STATE_NORMAL;
         mouseTile = MOUSE_NORMAL;
-    } else if (event.key == KEY_R) {
-        state = SELECT_STATE_NORMAL;
-        mouseTile = MOUSE_NORMAL;
+    }
+    if (event.key == KEY_R) {
+        context->setMouseState(MOUSESTATE_REPAIR);
     }
 }

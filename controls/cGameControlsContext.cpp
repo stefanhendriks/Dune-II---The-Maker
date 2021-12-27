@@ -12,6 +12,7 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer) {
     prevState = MOUSESTATE_SELECT;
     mouseNormalState = new cMouseNormalState(thePlayer, this, game.getMouse());
     mouseUnitsSelectedState = new cMouseUnitsSelectedState(thePlayer, this, game.getMouse());
+    mouseRepairState = new cMouseRepairState(thePlayer, this, game.getMouse());
 }
 
 cGameControlsContext::~cGameControlsContext() {
@@ -133,10 +134,12 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSESTATE_UNITS_SELECTED:
             mouseUnitsSelectedState->onNotifyMouseEvent(event);
             break;
+        case MOUSESTATE_REPAIR:
+            mouseRepairState->onNotifyMouseEvent(event);
+            break;
 
         // not yet implemented
         case MOUSESTATE_PLACE:
-        case MOUSESTATE_REPAIR:
             break;
     }
     
@@ -180,13 +183,14 @@ void cGameControlsContext::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
         case MOUSESTATE_UNITS_SELECTED:
             mouseUnitsSelectedState->onNotifyKeyboardEvent(event);
             break;
+        case MOUSESTATE_REPAIR:
+            mouseRepairState->onNotifyKeyboardEvent(event);
+            break;
 
             // not yet implemented
         case MOUSESTATE_PLACE:
-        case MOUSESTATE_REPAIR:
             break;
     }
-
 
 //    const cPlayer *humanPlayer = &players[HUMAN];
 //    const cGameControlsContext *pContext = humanPlayer->getGameControlsContext();
@@ -252,11 +256,21 @@ void cGameControlsContext::setMouseState(eMouseState newState) {
         case MOUSESTATE_UNITS_SELECTED:
             mouseUnitsSelectedState->onStateSet();
             break;
+        case MOUSESTATE_REPAIR:
+            mouseRepairState->onStateSet();
+            break;
             // not yet implemented
         case MOUSESTATE_PLACE:
-        case MOUSESTATE_REPAIR:
             break;
     }
+}
+
+void cGameControlsContext::toPreviousState() {
+    setMouseState(prevState);
+}
+
+bool cGameControlsContext::isState(eMouseState other) {
+    return this->state == other;
 }
 
 //void
