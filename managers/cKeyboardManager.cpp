@@ -151,7 +151,7 @@ void cKeyboardManager::DEBUG_KEYS() {
 
 // WHen holding CTRL
 void cKeyboardManager::GAME_KEYS() {
-    int iGroup = game.getGroupNumberFromKeyboard();
+//    int iGroup = game.getGroupNumberFromKeyboard();
 
     if (key[KEY_Z]) {
         mapCamera->resetZoom();
@@ -159,34 +159,34 @@ void cKeyboardManager::GAME_KEYS() {
 
     // WHEN PRESSED CTRL, MEANING, ADD....
     if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
-        // UNIT GROUPING
-        if (iGroup > 0) {
-
-            // First: Any unit that is already this group number, but NOT selected, must be removed
-            for (int i = 0; i < MAX_UNITS; i++) {
-                // TODO: This can be done smaller.
-                if (unit[i].isValid()) {
-                    if (unit[i].iPlayer == 0) {
-                        if (unit[i].iGroup == iGroup) {
-                            if (unit[i].bSelected == false) {
-                                unit[i].iGroup = -1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // now add
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid()) {
-                    if (unit[i].iPlayer == 0) {
-                        if (unit[i].bSelected) {
-                            unit[i].iGroup = iGroup;
-                        }
-                    }
-                }
-            }
-        }
+//        // UNIT GROUPING
+//        if (iGroup > 0) {
+//
+//            // First: Any unit that is already this group number, but NOT selected, must be removed
+//            for (int i = 0; i < MAX_UNITS; i++) {
+//                // TODO: This can be done smaller.
+//                if (unit[i].isValid()) {
+//                    if (unit[i].iPlayer == 0) {
+//                        if (unit[i].iGroup == iGroup) {
+//                            if (unit[i].bSelected == false) {
+//                                unit[i].iGroup = -1;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // now add
+//            for (int i = 0; i < MAX_UNITS; i++) {
+//                if (unit[i].isValid()) {
+//                    if (unit[i].iPlayer == 0) {
+//                        if (unit[i].bSelected) {
+//                            unit[i].iGroup = iGroup;
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
     }// HOLDING CTRL -> create group
     else {
@@ -205,51 +205,51 @@ void cKeyboardManager::GAME_KEYS() {
             }
         }
 
-        if (iGroup > 0) {
-            // First: Any unit that is already this group number, but NOT selected, must be removed
-
-            // not pressing shift, meaning, we remove all selected stuff
-            if (key[KEY_LSHIFT] == false) {
-                for (int i = 0; i < MAX_UNITS; i++) {
-                    if (unit[i].isValid()) {
-                        if (unit[i].iPlayer == 0) {
-                            if (unit[i].bSelected) {
-                                unit[i].bSelected = false;
-                            }
-                        }
-                    }
-                }
-            }
-
-            bool bPlayRep = false;
-            bool bPlayInf = false;
-            // now add
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid())
-                    if (unit[i].iPlayer == 0)
-                        if (unit[i].iGroup == iGroup) {
-                            unit[i].bSelected = true;
-
-                            if (sUnitInfo[unit[i].iType].infantry) {
-                                bPlayInf = true;
-                            } else {
-                                bPlayRep = true;
-                            }
-                        }
-            }
-
-            // HACK HACK: This should actually not be randomized. This is done
-            // so you will not hear 100x "yes sir" at a time, blowing your speakers
-            if (rnd(100) < 15) {
-                if (bPlayRep) {
-                    play_sound_id(SOUND_REPORTING);
-                }
-
-                if (bPlayInf) {
-                    play_sound_id(SOUND_YESSIR);
-                }
-            } // END HACK
-        }
+//        if (iGroup > 0) {
+//            // First: Any unit that is already this group number, but NOT selected, must be removed
+//
+//            // not pressing shift, meaning, we remove all selected stuff
+//            if (key[KEY_LSHIFT] == false) {
+//                for (int i = 0; i < MAX_UNITS; i++) {
+//                    if (unit[i].isValid()) {
+//                        if (unit[i].iPlayer == 0) {
+//                            if (unit[i].bSelected) {
+//                                unit[i].bSelected = false;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//            bool bPlayRep = false;
+//            bool bPlayInf = false;
+//            // now add
+//            for (int i = 0; i < MAX_UNITS; i++) {
+//                if (unit[i].isValid())
+//                    if (unit[i].iPlayer == 0)
+//                        if (unit[i].iGroup == iGroup) {
+//                            unit[i].bSelected = true;
+//
+//                            if (sUnitInfo[unit[i].iType].infantry) {
+//                                bPlayInf = true;
+//                            } else {
+//                                bPlayRep = true;
+//                            }
+//                        }
+//            }
+//
+//            // HACK HACK: This should actually not be randomized. This is done
+//            // so you will not hear 100x "yes sir" at a time, blowing your speakers
+//            if (rnd(100) < 15) {
+//                if (bPlayRep) {
+//                    play_sound_id(SOUND_REPORTING);
+//                }
+//
+//                if (bPlayInf) {
+//                    play_sound_id(SOUND_YESSIR);
+//                }
+//            } // END HACK
+//        }
     }
 }
 

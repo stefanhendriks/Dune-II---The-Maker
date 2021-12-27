@@ -108,6 +108,7 @@ public:
 	}
 
 	int getGroupNumberFromKeyboard();
+    int getGroupNumberFromScanCode(int scanCode);
 
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
@@ -292,6 +293,12 @@ private:
     void initPlayers(bool rememberHouse) const;
 
     void takeScreenshot();
+
+    void onNotifyKeyboardEventGamePlaying(const s_KeyboardEvent &event);
+
+    void onKeyDownGamePlaying(const s_KeyboardEvent &event);
+
+    void onKeyPressedGamePlaying(const s_KeyboardEvent &event);
 };
 
 #endif

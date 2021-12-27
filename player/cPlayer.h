@@ -221,6 +221,8 @@ public:
 
     std::vector<int> getAllMyStructuresAsIdForType(int structureType);
 
+    std::vector<int> getAllMyUnitsForGroupNr(const int groupId) const;
+
     std::vector<int> getSelectedUnits() const;
 
     bool isSameTeamAs(const cPlayer *pPlayer);
@@ -400,6 +402,15 @@ public:
 
     void deselectAllUnits();
 
+    bool selectUnitsFromGroup(int groupId);
+
+    /**
+     * Given this list of unit id's, select them. Also applies logic, to skip harvesters if non-harvesters
+     * are within this list of ID's. Also plays sound effects (reporting!) depending on infantry/non-infantry unit.
+     * @param ids
+     */
+    bool selectUnits(const std::vector<int> &ids) const;
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -474,7 +485,6 @@ private:
     bool alive;
 
     std::vector<cPlayerNotification> notifications;
-
 };
 
 #endif

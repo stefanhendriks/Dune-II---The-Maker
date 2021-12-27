@@ -244,24 +244,26 @@ void cGameControlsContext::updateMouseState() {
 }
 
 void cGameControlsContext::setMouseState(eMouseState newState) {
-    this->prevState = state;
-    this->state = newState;
-    char msg[255];
-    sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(prevState), mouseStateString(state));
-    logbook(msg);
-    switch (state) {
-        case MOUSESTATE_SELECT:
-            mouseNormalState->onStateSet();
-            break;
-        case MOUSESTATE_UNITS_SELECTED:
-            mouseUnitsSelectedState->onStateSet();
-            break;
-        case MOUSESTATE_REPAIR:
-            mouseRepairState->onStateSet();
-            break;
-            // not yet implemented
-        case MOUSESTATE_PLACE:
-            break;
+    if (newState != state) {
+        this->prevState = state;
+        this->state = newState;
+        char msg[255];
+        sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(prevState), mouseStateString(state));
+        logbook(msg);
+        switch (state) {
+            case MOUSESTATE_SELECT:
+                mouseNormalState->onStateSet();
+                break;
+            case MOUSESTATE_UNITS_SELECTED:
+                mouseUnitsSelectedState->onStateSet();
+                break;
+            case MOUSESTATE_REPAIR:
+                mouseRepairState->onStateSet();
+                break;
+                // not yet implemented
+            case MOUSESTATE_PLACE:
+                break;
+        }
     }
 }
 
