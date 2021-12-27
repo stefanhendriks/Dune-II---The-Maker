@@ -112,8 +112,18 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
 
         bool infantryAcknowledged = false;
         bool unitAcknowledged = false;
-
-        if (state == SELECTED_STATE_REPAIR ||
+        if (state ==SELECTED_STATE_SELECT) {
+            int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+            if (hoverStructureId > -1) {
+                player->selected_structure = hoverStructureId;
+                cAbstractStructure *pStructure = player->getSelectedStructure();
+                if (pStructure && pStructure->isValid() && pStructure->belongsTo(player)) {
+                    player->getSideBar()->setSelectedListId(pStructure->getAssociatedListID());
+                } else {
+                    player->selected_structure = -1;
+                }
+            }
+        } else  if (state == SELECTED_STATE_REPAIR ||
             state == SELECTED_STATE_REFINERY ||
             state == SELECTED_STATE_MOVE) {
 
@@ -139,6 +149,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
                     pUnit.move_to(mouseCell);
                 }
             }
+            spawnParticle(D2TM_PARTICLE_MOVE);
         } else if (state == SELECTED_STATE_ATTACK || state == SELECTED_STATE_FORCE_ATTACK) {
             for (auto id: selectedUnits) {
                 cUnit &pUnit = unit[id];
@@ -152,6 +163,8 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
                 }
                 pUnit.attackAt(mouseCell);
             }
+
+            spawnParticle(D2TM_PARTICLE_ATTACK);
         }
 
         if (infantryAcknowledged) {
@@ -160,15 +173,6 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
 
         if (unitAcknowledged) {
             play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
-        }
-
-        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
-        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
-
-        if (mouse->isTile(MOUSE_ATTACK)) {
-            cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_ATTACK, -1, -1);
-        } else {
-            cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_MOVE, -1, -1);
         }
     }
 
@@ -213,12 +217,20 @@ void cMouseUnitsSelectedState::onMouseMovedTo(const s_MouseEvent &event) {
                 if (hoverStructure->getType() == REFINERY) {
                     if (harvestersSelected) {
                         setState(SELECTED_STATE_REFINERY);
+                    } else {
+                        setState(SELECTED_STATE_SELECT);
+                        mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                     }
-                }
-                if (hoverStructure->getType() == REPAIR) {
+                } else if (hoverStructure->getType() == REPAIR) {
                     if (repairableUnitsSelected) {
                         setState(SELECTED_STATE_REPAIR);
+                    } else {
+                        setState(SELECTED_STATE_SELECT);
+                        mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                     }
+                } else {
+                    setState(SELECTED_STATE_SELECT);
+                    mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                 }
             }
         }
@@ -336,4 +348,10 @@ void cMouseUnitsSelectedState::onKeyPressed(const s_KeyboardEvent &event) {
     }
 
     // force move?
+}
+
+void cMouseUnitsSelectedState::spawnParticle(const int type) {
+    int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
+    int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
+    cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1);
 }
