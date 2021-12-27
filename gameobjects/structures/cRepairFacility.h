@@ -1,4 +1,4 @@
-// Structure class
+#pragma once
 
 class cRepairFacility : public cAbstractStructure {
 
@@ -14,17 +14,18 @@ public:
     ~cRepairFacility();
 
     // overloaded functions    
-    void think();
+    void think() override;
 
-    void think_animation();
+    void think_animation() override;
 
-    void think_guard();
+    void think_guard() override;
 
-    int getType() const;
+    int getType() const override;
 
     void think_repairUnit();
 
-    void startAnimating();
+    void startAnimating() override;
+
     void draw() override { drawWithShadow(); }
 
 };

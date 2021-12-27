@@ -1,5 +1,4 @@
-#ifndef CORDERPROCESSER_H_
-#define CORDERPROCESSER_H_
+#pragma once
 
 class cBuildingListItem;
 
@@ -81,5 +80,3 @@ private:
     // will be set in the LIST_STARPORT
     int secondsUntilNewPricesWillBeCalculated;
 };
-
-#endif /* CORDERPROCESSER_H_ */

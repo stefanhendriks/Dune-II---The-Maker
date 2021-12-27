@@ -106,6 +106,12 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
             int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
             if (hoverStructureId > -1) {
                 player->selected_structure = hoverStructureId;
+                cAbstractStructure *pStructure = player->getSelectedStructure();
+                if (pStructure && pStructure->isValid() && pStructure->belongsTo(player)) {
+                    player->getSideBar()->setSelectedListId(pStructure->getAssociatedListID());
+                } else {
+                    player->selected_structure = -1;
+                }
             }
         } else if (state == SELECT_STATE_RALLY) {
             // setting a rally point!

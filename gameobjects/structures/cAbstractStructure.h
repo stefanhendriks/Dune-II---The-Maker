@@ -240,9 +240,11 @@ class cAbstractStructure {
 
         void unitIsNoLongerInteractingWithStructure(int unitID);
 
-    void think_flag_new();
+        void think_flag_new();
 
-    bool canSpawnUnits();
+        bool canSpawnUnits() const;
+
+        int getAssociatedListID() const;
 };
 
 #endif

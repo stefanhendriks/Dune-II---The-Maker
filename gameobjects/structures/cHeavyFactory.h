@@ -1,4 +1,4 @@
-// Structure class
+#pragma once
 
 class cHeavyFactory : public cAbstractStructure {
 private:
@@ -15,17 +15,17 @@ public:
     ~cHeavyFactory();
 
     // overloaded functions    
-    void think();
+    void think() override;
 
-    void think_animation();
+    void think_animation() override;
 
-    void think_guard();
+    void think_guard() override;
 
-    void startAnimating();
+    void startAnimating() override;
 
     void draw() override;
 
-    int getType() const;
+    int getType() const override;
 
 };
 

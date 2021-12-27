@@ -1,7 +1,6 @@
-// Structure class
+#pragma once
 
-class cRefinery : public cAbstractStructure
-{
+class cRefinery : public cAbstractStructure {
 private:
     int iFade;          // Fading progress (windtraps)
     bool bFadeDir;      // Fading direction (TRUE -> up, FALSE -> down)
@@ -9,22 +8,29 @@ private:
     // TIMER
     int TIMER_fade;
 
-	void think_harvester_deploy();
+    void think_harvester_deploy();
 
 public:
     cRefinery();
+
     ~cRefinery();
 
     // overloaded functions
-    void think();
-    void think_animation();
-    void think_guard();
+    void think() override;
+
+    void think_animation() override;
+
+    void think_guard() override;
+
     void think_unit_occupation();
-    void startAnimating() {};
+
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
-    int getType() const;
-	int getSpiceSiloCapacity();
+    int getType() const override;
+
+    int getSpiceSiloCapacity();
 
 };
 
