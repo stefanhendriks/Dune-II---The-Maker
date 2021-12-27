@@ -112,7 +112,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
 
         bool infantryAcknowledged = false;
         bool unitAcknowledged = false;
-        if (state ==SELECTED_STATE_SELECT) {
+        if (state == SELECTED_STATE_SELECT) {
             int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
             if (hoverStructureId > -1) {
                 player->selected_structure = hoverStructureId;
