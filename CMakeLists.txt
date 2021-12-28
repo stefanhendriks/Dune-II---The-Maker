@@ -91,6 +91,8 @@ target_compile_options(${PROJECT_NAME}
     "-Wunused-variable" # Part of -Wall
     "-Wunused-but-set-variable" # Part of -Wall
     "-Wunused-function" # Part of -Wall
+    "-Wsign-compare" # Part of -Wall
+    "-Wsizeof-pointer-memaccess" # Part of -Wall
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
