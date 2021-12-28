@@ -12,8 +12,8 @@ cGuiWindow::cGuiWindow(cRectangle rect) {
 }
 
 cGuiWindow::~cGuiWindow() noexcept {
-    for (int i = 0; i < gui_objects.size(); i++) {
-        delete gui_objects[i];
+    for (auto gui_object : gui_objects) {
+        delete gui_object;
     }
 }
 
