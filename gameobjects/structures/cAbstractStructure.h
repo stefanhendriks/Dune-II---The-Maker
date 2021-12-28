@@ -15,8 +15,11 @@
 
   Giving a go for true OOP programming, using a base class and derived classes.
   */
-#ifndef CABSTRACTSTRUCTURE_H_
-#define CABSTRACTSTRUCTURE_H_
+#pragma once
+
+#include <vector>
+#include "gameobjects/cFlag.h"
+#include "include/structs.h"
 
 class cAbstractStructure {
 
@@ -246,5 +249,3 @@ class cAbstractStructure {
 
         int getAssociatedListID() const;
 };
-
-#endif

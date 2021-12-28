@@ -21,8 +21,15 @@
 #define PLAYER_H
 
 #include <vector>
+#include <set>
 #include "cPlayerNotification.h"
 
+// all kinds of forward declarations to make a compiler happy when not using d2tmh.h
+class cItemBuilder;
+class cSideBar;
+class cBuildingListUpdater;
+class cOrderProcesser;
+class cPlayerDifficultySettings;
 
 struct s_PlaceResult {
     bool success = false; // if true, all is ok

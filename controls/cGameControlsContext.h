@@ -1,5 +1,4 @@
-#ifndef CGAMECONTROLSCONTEXT_H_
-#define CGAMECONTROLSCONTEXT_H_
+#pragma once
 
 // this class holds the game controls context. This means, the updateState() method
 // will check how the mouse is positioned in this particular frame. It then updates
@@ -19,6 +18,9 @@
 //#define MOUSE_STATE_MOVE    1
 //#define MOUSE_STATE_ATTACK  2
 //#define MOUSE_STATE_PLACE   3
+
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "include/definitions.h"
 
 #include "controls/mousestates/cMouseNormalState.h"
 #include "controls/mousestates/cMouseUnitsSelectedState.h"
@@ -113,5 +115,3 @@ protected:
         cMouseRepairState * mouseRepairState;
 
 };
-
-#endif /* CGAMECONTROLSCONTEXT_H_ */

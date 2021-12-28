@@ -3,6 +3,7 @@
 
 // forward declaration
 class cPlayer;
+class cBuildingListUpdater;
 
 class cItemBuilder {
 
