@@ -45,7 +45,6 @@ class cMouseUnitsSelectedState : public cMouseState {
 
 public:
     explicit cMouseUnitsSelectedState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
-    ~cMouseUnitsSelectedState() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;

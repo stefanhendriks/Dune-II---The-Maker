@@ -37,10 +37,6 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-cMouseNormalState::~cMouseNormalState() {
-
-}
-
 void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     bool selectedUnits = false;
     if (mouse->isBoxSelecting()) {

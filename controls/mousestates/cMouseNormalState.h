@@ -28,7 +28,6 @@ class cMouseNormalState : public cMouseState {
 
 public:
     explicit cMouseNormalState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
-    ~cMouseNormalState() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;

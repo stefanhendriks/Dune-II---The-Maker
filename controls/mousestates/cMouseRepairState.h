@@ -11,7 +11,6 @@ class cMouseRepairState : public cMouseState {
 
 public:
     explicit cMouseRepairState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
-    ~cMouseRepairState() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;

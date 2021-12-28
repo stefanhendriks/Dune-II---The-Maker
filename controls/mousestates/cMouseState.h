@@ -13,7 +13,6 @@ class cMouseState : public cInputObserver {
 
 public:
     cMouseState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
-    ~cMouseState();
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
     virtual void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override = 0;
