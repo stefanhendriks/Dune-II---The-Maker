@@ -4,7 +4,7 @@
 #include "allegroh.h"
 
 #include <string>
-#include "../utils/cPoint.h"
+#include "utils/cPoint.h"
 #include "enums.h"
 
 struct s_KeyboardEvent {
