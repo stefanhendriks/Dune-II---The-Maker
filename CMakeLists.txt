@@ -85,14 +85,7 @@ target_link_libraries(${PROJECT_NAME}
 target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
-    "-Wswitch" # Part of -Wall, but that options gives too many warnings at this time
-    "-Wreorder" # Part of -Wall
-    "-Wunused-value" # Part of -Wall
-    "-Wunused-variable" # Part of -Wall
-    "-Wunused-but-set-variable" # Part of -Wall
-    "-Wunused-function" # Part of -Wall
-    "-Wsign-compare" # Part of -Wall
-    "-Wsizeof-pointer-memaccess" # Part of -Wall
+    "-Wall"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

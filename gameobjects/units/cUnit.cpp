@@ -246,7 +246,7 @@ void cUnit::createExplosionParticle() {
         }
     }
 
-    if (iType == SIEGETANK || iType == DEVASTATOR && rnd(100) < 25) {
+    if ((iType == SIEGETANK || iType == DEVASTATOR) && rnd(100) < 25) {
         if (iBodyFacing == FACE_UPLEFT ||
             iBodyFacing == FACE_DOWNRIGHT) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
