@@ -367,7 +367,7 @@ bool cPlayer::hasRadarAndEnoughPower() const {
 
 std::string cPlayer::asString() const {
     char msg[512];
-    sprintf(msg, "Player [id=%d, human=%b, sidebar=%d]", this->id, this->m_Human, this->sidebar);
+    sprintf(msg, "Player [id=%d, human=%d, sidebar=%p]", this->id, this->m_Human, this->sidebar);
     return std::string(msg);
 }
 
