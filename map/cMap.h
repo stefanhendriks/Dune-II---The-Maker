@@ -9,17 +9,20 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
+#ifndef CMAP_H
+#define CMAP_H
 
-#include <vector>
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "gameobjects/units/cUnit.h"
+#include "map/cCell.h"
+#include "sGameEvent.h"
+#include "utils/d2tm_math.h"
+
 #include <map>
-#include <gameobjects/structures/cAbstractStructure.h>
-#include <gameobjects/units/cUnit.h>
+#include <vector>
 
 #define TILESIZE_WIDTH_PIXELS 32
 #define TILESIZE_HEIGHT_PIXELS 32
-
-#ifndef CMAP_H
-#define CMAP_H
 
 class cMap : public cScenarioObserver {
 
@@ -356,27 +359,7 @@ public:
      */
     cAbstractStructure * findClosestStructureType(int cell, int structureType, cPlayer * player);
 
-    void cellTakeDamage(int cellNr, int damage) {
-        tCell *pCell = getCell(cellNr);
-        if (pCell) {
-            pCell->health -= damage;
-
-            if (pCell->health < -25) {
-                if (pCell->type == TERRAIN_ROCK) {
-                    smudge_increase(SMUDGE_ROCK, cellNr);
-                }
-
-                if (pCell->type == TERRAIN_SAND ||
-                    pCell->type == TERRAIN_HILL ||
-                    pCell->type == TERRAIN_SPICE ||
-                    pCell->type == TERRAIN_SPICEHILL) {
-                    smudge_increase(SMUDGE_SAND, cellNr);
-                }
-
-                pCell->health += rnd(35);
-            }
-        }
-    }
+    void cellTakeDamage(int cellNr, int damage);
 
     void cellTakeCredits(int cellNr, int amount) {
         tCell *pCell = getCell(cellNr);
@@ -393,18 +376,7 @@ public:
         if (pCell) pCell->credits += amount;
     }
 
-    void cellChangeType(int cellNr, int type) {
-        tCell *pCell = getCell(cellNr);
-        if (pCell) {
-            if (type > TERRAIN_WALL) {
-                pCell->type = type;
-            } else if (type < TERRAIN_BLOOM) {
-                pCell->type = type;
-            } else {
-                pCell->type = type;
-            }
-        }
-    }
+    void cellChangeType(int cellNr, int type);
 
     void cellChangeHealth(int cellNr, int value) {
         tCell *pCell = getCell(cellNr);
@@ -441,28 +413,7 @@ public:
         if (pCell) pCell->passableFoot = value;
     }
 
-    void cellInit(int cellNr) {
-        tCell *pCell = getCell(cellNr);
-        if (!pCell) return; // bail
-
-        pCell->credits = 0;
-        pCell->health = 0;
-        pCell->passable = true;
-        pCell->passableFoot = true;
-        pCell->tile = 0;
-        pCell->type = TERRAIN_SAND;    // refers to gfxdata!
-
-        pCell->smudgetile = -1;
-        pCell->smudgetype = -1;
-
-        // clear out the ID stuff
-        memset(pCell->id, -1, sizeof(pCell->id));
-        memset(pCell->iVisible, 0, sizeof(pCell->iVisible));
-
-//        for (int i = 0; i < MAX_PLAYERS; i++) {
-//            setVisible(cellNr, i, false);
-//        }
-    }
+    void cellInit(int cellNr);
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
 

@@ -1,6 +1,8 @@
 #ifndef CBUILDINGLISTUPDATER_H_
 #define CBUILDINGLISTUPDATER_H_
 
+class cPlayer;
+
 class cBuildingListUpdater {
 	public:
 		cBuildingListUpdater(cPlayer * thePlayer);

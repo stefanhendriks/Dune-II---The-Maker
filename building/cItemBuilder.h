@@ -1,7 +1,12 @@
 #ifndef CITEMBUILDER_H_
 #define CITEMBUILDER_H_
 
-// forward declaration
+#include "definitions.h"
+#include "enums.h"
+
+#include "sidebar/cBuildingListItem.h"
+#include "sidebar/cBuildingListUpdater.h"
+
 class cPlayer;
 class cBuildingListUpdater;
 
