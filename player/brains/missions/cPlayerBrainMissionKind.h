@@ -60,25 +60,8 @@ namespace brains {
 
     };
 
-    static const char* ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind) {
-        switch (kind) {
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_DEFEND: return "PLAYERBRAINMISSION_KIND_DEFEND";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK: return "PLAYERBRAINMISSION_KIND_ATTACK";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY: return "PLAYERBRAINMISSION_IMPROVE_ECONOMY";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND: return "PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR: return "PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN: return "PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE: return "PLAYERBRAINMISSION_KIND_EXPLORE";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_AIRSTRIKE: return "PLAYERBRAINMISSION_KIND_AIRSTRIKE";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_FIND_SPICE: return "PLAYERBRAINMISSION_KIND_FIND_SPICE";
-            case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_HARASS: return "PLAYERBRAINMISSION_KIND_HARASS";
-            default:
-                assert(false && "Unknown kind?");
-                break;
-        }
-        return "";
-    }
-
+    const char* ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind);
+    
     class cPlayerBrainMissionKind : public cScenarioObserver {
 
     public:

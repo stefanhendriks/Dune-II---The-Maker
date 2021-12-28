@@ -90,6 +90,7 @@ target_compile_options(${PROJECT_NAME}
     "-Wunused-value" # Part of -Wall
     "-Wunused-variable" # Part of -Wall
     "-Wunused-but-set-variable" # Part of -Wall
+    "-Wunused-function" # Part of -Wall
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
