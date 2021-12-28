@@ -33,10 +33,6 @@ void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-cMouseRepairState::~cMouseRepairState() {
-
-}
-
 void cMouseRepairState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {

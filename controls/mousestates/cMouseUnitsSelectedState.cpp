@@ -43,10 +43,6 @@ void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-cMouseUnitsSelectedState::~cMouseUnitsSelectedState() {
-
-}
-
 void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     if (mouse->isBoxSelecting()) {
         // clear only when we don't want to add to selection

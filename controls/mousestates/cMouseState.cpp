@@ -9,7 +9,3 @@ cMouseState::cMouseState(cPlayer * player, cGameControlsContext *context, cMouse
         mouseTile(MOUSE_NORMAL) {
 
 }
-
-cMouseState::~cMouseState() {
-
-}
