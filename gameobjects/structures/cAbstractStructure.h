@@ -18,6 +18,17 @@
 #ifndef CABSTRACTSTRUCTURE_H_
 #define CABSTRACTSTRUCTURE_H_
 
+#include <vector>
+
+#include "structs.h"
+#include "gameobjects/cFlag.h"
+
+#include <allegro/gfx.h>
+
+#include <vector>
+
+class cPlayer;
+
 class cAbstractStructure {
 
 	private:

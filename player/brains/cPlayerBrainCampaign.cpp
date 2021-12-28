@@ -1,7 +1,9 @@
-#include <algorithm>
 #include "include/d2tmh.h"
-#include "cPlayerBrainCampaign.h"
 
+#include "cPlayerBrainCampaign.h"
+#include "enums.h"
+
+#include <algorithm>
 
 namespace brains {
 

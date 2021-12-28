@@ -13,16 +13,16 @@
 #define D2TM_GAME_H
 
 #include <controls/cMouse.h>
-#include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
+#include <observers/cScenarioObserver.h>
+#include <utils/cRectangle.h>
+#include <utils/cSoundPlayer.h>
 
-// forward declaration :/ sigh should really look into this
-class cRectangle;
 class cAbstractMentat;
-class cPlayer;
 class cGameControlsContext;
-class cInteractionManager;
 class cGameState;
+class cInteractionManager;
+class cPlayer;
 
 class cGame : public cScenarioObserver, cMouseObserver {
 

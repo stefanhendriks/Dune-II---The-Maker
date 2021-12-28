@@ -1255,6 +1255,64 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
     return nullptr;
 }
 
+void cMap::cellTakeDamage(int cellNr, int damage) {
+    tCell *pCell = getCell(cellNr);
+    if (pCell) {
+        pCell->health -= damage;
+
+        if (pCell->health < -25) {
+            if (pCell->type == TERRAIN_ROCK) {
+                smudge_increase(SMUDGE_ROCK, cellNr);
+            }
+
+            if (pCell->type == TERRAIN_SAND ||
+                pCell->type == TERRAIN_HILL ||
+                pCell->type == TERRAIN_SPICE ||
+                pCell->type == TERRAIN_SPICEHILL) {
+                smudge_increase(SMUDGE_SAND, cellNr);
+            }
+
+            pCell->health += rnd(35);
+        }
+    }
+}
+
+void cMap::cellChangeType(int cellNr, int type) {
+    tCell *pCell = getCell(cellNr);
+    if (pCell) {
+        if (type > TERRAIN_WALL) {
+            pCell->type = type;
+        } else if (type < TERRAIN_BLOOM) {
+            pCell->type = type;
+        } else {
+            pCell->type = type;
+        }
+    }
+}
+
+void cMap::cellInit(int cellNr) {
+    tCell *pCell = getCell(cellNr);
+    if (!pCell) return; // bail
+
+    pCell->credits = 0;
+    pCell->health = 0;
+    pCell->passable = true;
+    pCell->passableFoot = true;
+    pCell->tile = 0;
+    pCell->type = TERRAIN_SAND;    // refers to gfxdata!
+
+    pCell->smudgetile = -1;
+    pCell->smudgetype = -1;
+
+    // clear out the ID stuff
+    memset(pCell->id, -1, sizeof(pCell->id));
+    memset(pCell->iVisible, 0, sizeof(pCell->iVisible));
+
+    // for (int i = 0; i < MAX_PLAYERS; i++) {
+    //     setVisible(cellNr, i, false);
+    // }
+}
+
 cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer) {
     assert(pPlayer);
     assert(structureType > -1);
