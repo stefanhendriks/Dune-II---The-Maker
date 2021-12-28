@@ -41,10 +41,6 @@ public:
     int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer);
 
     int getStructureTypeByUnitBuildId(int unitBuildId) const;
-
-protected:
-
-private:
 };
 
 #endif /* CSTRUCTUREUTILS_H_ */

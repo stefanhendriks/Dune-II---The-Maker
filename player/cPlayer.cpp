@@ -365,6 +365,12 @@ bool cPlayer::hasRadarAndEnoughPower() const {
     return getAmountOfStructuresForType(RADAR) > 0 && bEnoughPower();
 }
 
+std::string cPlayer::asString() const {
+    char msg[512];
+    sprintf(msg, "Player [id=%d, human=%b, sidebar=%d]", this->id, this->m_Human, this->sidebar);
+    return std::string(msg);
+}
+
 /**
  * This function returns the amount for the given structure type. If structureType param is invalid, then it will
  * return -1

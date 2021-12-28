@@ -18,6 +18,34 @@
 
 #ifndef D2TMC_H
 
+#include "cGame.h"
+#include "definitions.h"
+#include "map/cMap.h"
+#include "structs.h"
+#include "utils/cStructureUtils.h"
+
+#include <allegro/palette.h>
+
+class cAbstractStructure;
+class cAllegroDrawer;
+class cBullet;
+class cDrawManager;
+class cMapCamera;
+class cMapEditor;
+class cRandomMapGenerator;
+class cUnit;
+class cParticle;
+class cPlayer;
+class cRegion;
+class cTimeManager;
+
+struct sReinforcement;
+
+struct ALFONT_FONT;
+struct ALMP3_MP3;
+struct BITMAP;
+struct DATAFILE;
+
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
 extern int		iRest;	// rest value

@@ -1,4 +1,23 @@
-#include "../include/d2tmh.h"
+#include "cItemBuilder.h"
+
+#include "data/gfxaudio.h"
+#include "d2tmc.h"
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "gameobjects/units/cUnit.h"
+#include "player/cPlayer.h"
+#include "player/cPlayerDifficultySettings.h"
+#include "sGameEvent.h"
+#include "sidebar/cBuildingList.h"
+#include "structs.h"
+#include "utils/cLog.h"
+#include "utils/common.h"
+#include "utils/d2tm_math.h"
+
+
+#include <allegro/keyboard.h>
+
+#include <cassert>
+#include <string.h>
 
 cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) {
 	assert(thePlayer);

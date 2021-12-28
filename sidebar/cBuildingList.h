@@ -16,6 +16,8 @@
 #ifndef CBUILDINGLIST
 #define CBUILDINGLIST
 
+#include "sidebar/cBuildingListItem.h"
+
 // forward declr..
 class cItemBuilder;
 

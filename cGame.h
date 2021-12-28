@@ -16,16 +16,16 @@
 #include <controls/cKeyboard.h>
 #include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
-#include "utils/cSoundPlayer.h"
+#include <observers/cScenarioObserver.h>
+#include <utils/cRectangle.h>
+#include <utils/cSoundPlayer.h>
 #include "definitions.h"
 
-// forward declaration :/ sigh should really look into this
-class cRectangle;
 class cAbstractMentat;
-class cPlayer;
 class cGameControlsContext;
-class cInteractionManager;
 class cGameState;
+class cInteractionManager;
+class cPlayer;
 
 class cGame : public cScenarioObserver, cInputObserver {
 
