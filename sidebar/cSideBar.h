@@ -14,7 +14,6 @@
 #ifndef CSIDEBAR_H_
 #define CSIDEBAR_H_
 
-// forward declaration
 class cPlayer;
 
 //// List ID's corresponding buttons
