@@ -1,10 +1,3 @@
-/*
- * d2tmh.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 // this file is the uber header file. Responsible for including all proper header files in the
 // right order
 #ifndef D2TMH_H
