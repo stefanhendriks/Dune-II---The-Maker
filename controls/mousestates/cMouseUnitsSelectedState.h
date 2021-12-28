@@ -1,6 +1,7 @@
 #ifndef D2TM_CMOUSEUNITSSELECTEDSTATE_H
 #define D2TM_CMOUSEUNITSSELECTEDSTATE_H
 
+#include <vector>
 #include "cMouseState.h"
 
 enum eMouseUnitsSelectedState {

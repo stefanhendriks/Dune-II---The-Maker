@@ -1,7 +1,24 @@
 #include <algorithm>
-#include "d2tmh.h"
+
+#include "controls/cGameControlsContext.h"
+#include "controls/cMouse.h"
+
+#include "utils/cRectangle.h"
+#include "gameobjects/units/cUnit.h"
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "player/cPlayer.h"
+#include "sidebar/cSideBar.h"
+
+#include "cGame.h"
+
+// instead of using d2tmc.h
+extern cGame		  game;
+extern cUnit          unit[MAX_UNITS];
 
 #include "cMouseNormalState.h"
+
+#include "data/gfxaudio.h"
+#include "data/gfxdata.h"
 
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse),
