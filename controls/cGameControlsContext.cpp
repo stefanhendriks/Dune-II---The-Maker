@@ -248,7 +248,7 @@ void cGameControlsContext::setMouseState(eMouseState newState) {
         this->prevState = state;
         this->state = newState;
         char msg[255];
-        sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(prevState), mouseStateString(state));
+        sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(prevState).c_str(), mouseStateString(state).c_str());
         logbook(msg);
         switch (state) {
             case MOUSESTATE_SELECT:

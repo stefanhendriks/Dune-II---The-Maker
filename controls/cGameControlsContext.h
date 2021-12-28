@@ -31,7 +31,7 @@ enum eMouseState {
     MOUSESTATE_PLACE, // mouse is going to place a structure
 };
 
-static const char* mouseStateString(const eMouseState &state) {
+static std::string mouseStateString(eMouseState state) {
     switch (state) {
         case MOUSESTATE_SELECT: return "MOUSESTATE_SELECT";
         case MOUSESTATE_UNITS_SELECTED: return "MOUSESTATE_UNITS_SELECTED";
