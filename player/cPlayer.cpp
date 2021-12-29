@@ -1647,7 +1647,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType) {
         return canPlaceStructureAt(iCell, iStructureType, -1);
     }
     // SLAB4 logic is a bit different
-    return canPlaceConcreteAt(iCell, iStructureType);
+    return canPlaceConcreteAt(iCell);
 }
 
 
@@ -1873,7 +1873,7 @@ int cPlayer::getSameOrSimilarUnitType(int requestedUnitType) {
  * @param iCell
  * @return
  */
-s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell, int iStructureType) {
+s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell) {
     s_PlaceResult result;
 
     if (!map.isValidCell(iCell)) {

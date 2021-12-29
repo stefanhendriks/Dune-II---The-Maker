@@ -1,6 +1,6 @@
 #include "d2tmh.h"
 
-void cNoButtonCommand::execute(cAbstractMentat& mentat) {
+void cNoButtonCommand::execute(cAbstractMentat&) {
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
     players[HUMAN].setHouse(GENERALHOUSE);

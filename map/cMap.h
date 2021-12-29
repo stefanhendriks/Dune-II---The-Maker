@@ -9,8 +9,7 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
-#ifndef CMAP_H
-#define CMAP_H
+#pragma once
 
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
@@ -588,7 +587,7 @@ private:
 
     int maxCells;
 
-    void drawUnitDebug(int i, cUnit &pUnit) const;
+    void drawUnitDebug(cUnit &pUnit) const;
 
     // thinking related
     void thinkAutoDetonateSpiceBlooms();
@@ -604,6 +603,3 @@ private:
 
     void evaluateIfWeShouldSetTimerToRespawnWorm();
 };
-
-
-#endif

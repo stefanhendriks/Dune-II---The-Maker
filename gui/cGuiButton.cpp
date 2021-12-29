@@ -155,7 +155,7 @@ void cGuiButton::onMouseMovedTo(const s_MouseEvent &event) {
     focus = rect.isPointWithin(event.coords);
 }
 
-void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &event) {
+void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &) {
     if (key[KEY_LSHIFT]) {
         if (focus) toggleTextAlignHorizontal();
     } else {
@@ -163,13 +163,13 @@ void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &event) {
     }
 }
 
-void cGuiButton::onMouseLeftButtonPressed(const s_MouseEvent &event) {
+void cGuiButton::onMouseLeftButtonPressed(const s_MouseEvent &) {
     if (enabled) {
         pressed = focus;
     }
 }
 
-void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &) {
     if (focus) {
         if (enabled && onLeftMouseButtonClicked_action) {
             onLeftMouseButtonClicked_action->execute();

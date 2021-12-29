@@ -57,7 +57,7 @@ namespace brains {
         return copy;
     }
 
-    void cPlayerBrainMissionKindExplore::onNotify_SpecificStateSwitch(const s_GameEvent &event) {
+    void cPlayerBrainMissionKindExplore::onNotify_SpecificStateSwitch(const s_GameEvent &) {
         // NOOP
     }
 

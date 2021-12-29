@@ -79,7 +79,6 @@ void cGame::onCombatMouseEvent(const s_MouseEvent &event) {
             mouse->setTile(MOUSE_NORMAL);
             break;
         case MOUSE_MOVED_TO:
-            onCombatMouseEventMovedTo(event);
             break;
         default:
             // set to -1 only when it was > -1
