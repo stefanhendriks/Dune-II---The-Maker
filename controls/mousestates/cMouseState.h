@@ -3,9 +3,7 @@
 
 #include "observers/cInputObserver.h"
 #include "controls/cMouse.h"
-//#include "controls/cGameControlsContext.h"
 
-// forward declaration
 class cGameControlsContext;
 class cPlayer;
 
