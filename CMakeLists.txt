@@ -86,6 +86,7 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
     "-Wall"
+    "-Wunused-parameter" # part of -Wextra
     "-Wnon-virtual-dtor"
 )
 

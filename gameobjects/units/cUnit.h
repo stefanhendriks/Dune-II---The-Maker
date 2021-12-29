@@ -112,7 +112,7 @@ public:
 
 	float fExpDamage();	// experience damage by bullet (extra damage that is)
 
-    bool isWithinViewport(cRectangle *viewport);
+    bool isWithinViewport(cRectangle *viewport) const;
 
     // ------------
     void init(int i);        // inits units
@@ -132,9 +132,9 @@ public:
     void draw_health();
 	void draw_experience();
 	void draw_spice();
-    void draw();
-	void draw_path();
-    bool isValid();     // valid unit?
+  void draw();
+	void draw_path() const;
+  bool isValid() const;     // valid unit?
 
     void shoot(int iTargetCell);  // shoot at goalcell
 
@@ -210,7 +210,7 @@ public:
      * is this unit an airborn unit?
      * @return
      */
-    bool isAirbornUnit() {
+    bool isAirbornUnit() const {
         return getUnitInfo().airborn;
     }
 
@@ -237,7 +237,7 @@ public:
         return getUnitInfo().canAttackAirUnits;
     }
 
-    bool isInfantryUnit();
+    bool isInfantryUnit() const;
 
     int getBmpWidth() const;
 

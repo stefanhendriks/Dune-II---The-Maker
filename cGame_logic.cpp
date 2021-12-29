@@ -1451,9 +1451,6 @@ void cGame::onNotify(const s_GameEvent &event) {
 
     // game itself handles events
     switch (event.eventType) {
-        case eGameEventType::GAME_EVENT_DISCOVERED:
-            onEventDiscovered(event);
-            break;
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
             onEventSpecialLaunch(event);
             break;
@@ -1465,10 +1462,6 @@ void cGame::onNotify(const s_GameEvent &event) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].onNotify(event);
     }
-}
-
-void cGame::onEventDiscovered(const s_GameEvent &event) {
-
 }
 
 void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
@@ -1708,8 +1701,4 @@ void cGame::drawCombatMouse() {
     }
 
     mouse->draw();
-}
-
-void cGame::onCombatMouseEventMovedTo(const s_MouseEvent &event) {
-    // not needed?
 }

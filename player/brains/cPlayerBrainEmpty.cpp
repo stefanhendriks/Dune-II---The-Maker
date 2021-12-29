@@ -16,11 +16,11 @@ namespace brains {
         // NOOP
     }
 
-    void cPlayerBrainEmpty::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainEmpty::onNotify(const s_GameEvent &) {
         // NOOP
     }
 
-    void cPlayerBrainEmpty::addBuildOrder(S_buildOrder order) {
+    void cPlayerBrainEmpty::addBuildOrder(S_buildOrder) {
         // NOOP
     }
 
