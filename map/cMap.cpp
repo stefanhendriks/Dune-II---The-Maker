@@ -497,7 +497,7 @@ void cMap::draw_units() {
             pUnit.draw();
         }
 
-        drawUnitDebug(i, pUnit);
+        drawUnitDebug(pUnit);
 
     }
 
@@ -514,7 +514,7 @@ void cMap::draw_units() {
             pUnit.draw();
         }
 
-        drawUnitDebug(i, pUnit);
+        drawUnitDebug(pUnit);
     }
 
     // then: draw ground units
@@ -532,11 +532,11 @@ void cMap::draw_units() {
             pUnit.draw();
         }
 
-        drawUnitDebug(i, pUnit);
+        drawUnitDebug(pUnit);
     }
 }
 
-void cMap::drawUnitDebug(int i, cUnit &pUnit) const {
+void cMap::drawUnitDebug(cUnit &pUnit) const {
     if (!game.bDrawUnitDebug) return;
 
     pUnit.draw_debug();
@@ -572,7 +572,7 @@ void cMap::draw_units_2nd() {
             // TODO: Only human players?
             pUnit.draw_health();
             if (DEBUGGING) {
-                drawUnitDebug(i, pUnit);
+                drawUnitDebug(pUnit);
             }
         }
 

@@ -20,7 +20,7 @@ cMapDrawer::~cMapDrawer() {
     }
 }
 
-void cMapDrawer::drawShroud(int startX, int startY) {
+void cMapDrawer::drawShroud() {
     set_trans_blender(0, 0, 0, 128);
 
     float tileWidth = mapCamera->getZoomedTileWidth();
@@ -81,7 +81,7 @@ void cMapDrawer::drawShroud(int startX, int startY) {
     destroy_bitmap(temp);
 }
 
-void cMapDrawer::drawTerrain(int startX, int startY) {
+void cMapDrawer::drawTerrain() {
     if (bmp_temp == nullptr) {
         int colorDepthScreen = bitmap_color_depth(bmp_screen);
         bmp_temp = create_bitmap_ex(colorDepthScreen, 32, 32);

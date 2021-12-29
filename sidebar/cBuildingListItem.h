@@ -5,8 +5,7 @@
  *
  *
  */
-#ifndef CBUILDINGLISTITEM
-#define CBUILDINGLISTITEM
+#pragma once
 
 #include "structs.h"
 
@@ -216,5 +215,3 @@ private:
 
     int getInTicks(int getTimeInTicks) const;
 };
-
-#endif

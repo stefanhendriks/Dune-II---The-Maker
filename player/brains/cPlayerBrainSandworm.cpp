@@ -43,11 +43,11 @@ namespace brains {
 
     }
 
-    void cPlayerBrainSandworm::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainSandworm::onNotify(const s_GameEvent &) {
 
     }
 
-    void cPlayerBrainSandworm::addBuildOrder(S_buildOrder order) {
+    void cPlayerBrainSandworm::addBuildOrder(S_buildOrder) {
 
     }
 

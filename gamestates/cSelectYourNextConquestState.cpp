@@ -593,7 +593,7 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event) {
     }
 }
 
-void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &) {
     // no interaction unless we select next conquest
     if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
 

@@ -424,18 +424,18 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 
     if (player->isHuman()) {
         // always strict (skirmish) mode. Which means, do not cheat...
-        onStructureDestroyedSkirmishMode(structureType);
+        onStructureDestroyedSkirmishMode();
         evaluateUpgrades();
     } else {
         // AI players...
 
         if (game.bSkirmish) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human players)
-            onStructureDestroyedSkirmishMode(structureType);
+            onStructureDestroyedSkirmishMode();
             evaluateUpgrades();
         } else {
             // but on campaign missions, the AI has to cheat in order to be more fun...
-            onStructureDestroyedCampaignMode(structureType);
+            onStructureDestroyedCampaignMode();
             // AI does use upgrades at all...
         }
     }
@@ -701,7 +701,7 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
     listUpgrades->setStatusAvailable(pItem->getSubList());
 }
 
-void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) const {
+void cBuildingListUpdater::onStructureDestroyedSkirmishMode() const {
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
@@ -755,7 +755,7 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) c
     }
 }
 
-void cBuildingListUpdater::onStructureDestroyedCampaignMode(int structureType) const {
+void cBuildingListUpdater::onStructureDestroyedCampaignMode() const {
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);

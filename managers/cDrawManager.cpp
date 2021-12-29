@@ -41,7 +41,7 @@ void cDrawManager::drawCombatState() {
     // MAP
 	assert(mapDrawer);
 	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.screen_y);
-    mapDrawer->drawTerrain(0, 42);
+  mapDrawer->drawTerrain();
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
@@ -50,7 +50,7 @@ void cDrawManager::drawCombatState() {
     }
 
 	// draw layer 1 (beneath units, on top of terrain)
-    particleDrawer->determineParticlesToDraw();
+  particleDrawer->determineParticlesToDraw();
 	particleDrawer->drawLowerLayer();
 
 	map.draw_units();
@@ -62,8 +62,8 @@ void cDrawManager::drawCombatState() {
 
 	map.draw_units_2nd();
 
-    particleDrawer->drawTopLayer();
-	mapDrawer->drawShroud(0, 42);
+  particleDrawer->drawTopLayer();
+	mapDrawer->drawShroud();
 
 	drawRallyPoint();
 

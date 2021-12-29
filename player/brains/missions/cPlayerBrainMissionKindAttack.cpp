@@ -163,7 +163,7 @@ namespace brains {
         return copy;
     }
 
-    void cPlayerBrainMissionKindAttack::onNotify_SpecificStateSwitch(const s_GameEvent &event) {
+    void cPlayerBrainMissionKindAttack::onNotify_SpecificStateSwitch(const s_GameEvent &) {
         // NOOP
     }
 

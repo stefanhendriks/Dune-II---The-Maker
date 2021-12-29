@@ -181,7 +181,7 @@ namespace brains {
 
         void produceMissionsDuringPeacetime(int scoutingUnitType);
 
-        void produceAttackingMissions(int scoutingUnitType);
+        void produceAttackingMissions();
 
         void produceSuperWeaponMissionsWhenApplicable();
 

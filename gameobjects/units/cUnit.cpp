@@ -435,7 +435,7 @@ void cUnit::unitWillNoLongerBeInteractingWithStructure() const {
  * dying but the HP is > 0.
  * @return
  */
-bool cUnit::isValid() {
+bool cUnit::isValid() const {
     if (iPlayer < 0)
         return false;
 
@@ -623,7 +623,7 @@ void cUnit::draw_experience() {
 
 }
 
-void cUnit::draw_path() {
+void cUnit::draw_path() const {
     // for debugging purposes
     if (iCell == iGoalCell)
         return;
@@ -2114,6 +2114,8 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 }
             }
         }
+    } else if (iShotStructure > -1) {
+      // TODO?
     }
 
     // for infantry , infantry turns into soldier and troopers into trooper when on 50% damage.
@@ -3004,7 +3006,7 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait) {
     TIMER_movewait = timeToWait;
 }
 
-bool cUnit::isInfantryUnit() {
+bool cUnit::isInfantryUnit() const {
     return sUnitInfo[iType].infantry;
 }
 
@@ -3286,7 +3288,7 @@ bool cUnit::isMarkedForRemoval() {
     return bRemoveMe;
 }
 
-bool cUnit::isWithinViewport(cRectangle *viewport) {
+bool cUnit::isWithinViewport(cRectangle *viewport) const {
     if (viewport == nullptr) return false;
     return dimensions.isOverlapping(viewport);
 }

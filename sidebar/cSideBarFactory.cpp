@@ -7,7 +7,7 @@
 
 #include "../include/d2tmh.h"
 
-cSideBarFactory *cSideBarFactory::instance = NULL;
+cSideBarFactory *cSideBarFactory::instance = nullptr;
 
 cSideBarFactory::cSideBarFactory() {
 }
@@ -29,7 +29,7 @@ cSideBar * cSideBarFactory::createSideBar(cPlayer * thePlayer) {
 	cSideBar *sidebar = new cSideBar(thePlayer);
 
     for (const auto listType : AllListTypes) {
-        cBuildingList *list = cBuildingListFactory::getInstance()->createList(listType, thePlayer->getHouse());
+        cBuildingList *list = cBuildingListFactory::getInstance()->createList(listType);
         sidebar->setList(listType, list);
         list->setItemBuilder(thePlayer->getItemBuilder()); // TODO: this should be easier!?
     }

@@ -209,7 +209,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
     destroy_bitmap(temp);
 }
 
-void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &) {
     // this assumes the context has been updated beforehand...
     int mouseCell = player->getGameControlsContext()->getMouseCell();
 

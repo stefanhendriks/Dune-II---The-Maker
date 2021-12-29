@@ -9,8 +9,7 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
-#ifndef D2TM_GAME_H
-#define D2TM_GAME_H
+#pragma once
 
 #include <controls/cMouse.h>
 #include <data/cAllegroDataRepository.h>
@@ -155,7 +154,6 @@ public:
     void onNotify(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
-    void onEventDiscovered(const s_GameEvent &event);
     void onEventSpecialLaunch(const s_GameEvent &event);
 
     static const char* stateString(const int &state) {
@@ -295,9 +293,5 @@ private:
 
     void setState(int newState);
 
-    void onCombatMouseEventMovedTo(const s_MouseEvent &event);
-
     void initPlayers(bool rememberHouse) const;
 };
-
-#endif

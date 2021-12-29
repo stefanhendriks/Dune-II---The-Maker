@@ -354,7 +354,7 @@ public:
 
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore);
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType);
-    s_PlaceResult canPlaceConcreteAt(int iCell, int iStructureType);
+    s_PlaceResult canPlaceConcreteAt(int iCell);
 
     void log(const char *txt) const;
 
