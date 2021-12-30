@@ -15,6 +15,7 @@
 #include <random>
 #include "include/d2tmh.h"
 
+#include <fmt/core.h>
 
 cGame::cGame() {
     memset(states, 0, sizeof(cGameState*));
@@ -32,8 +33,7 @@ cGame::cGame() {
 	ini_screen_width=-1;
 	ini_screen_height=-1;
 
-    memset(version, 0, sizeof(version));
-    sprintf(version, "0.6.x");
+  version = "0.6.x";
 
     pMentat = nullptr;
 }
@@ -786,9 +786,8 @@ bool cGame::setupGame() {
 	logger->logCommentLine(""); // whitespace
 
 	logger->logHeader("Version information");
-	char msg[255];
-	sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
-	logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
+	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
+              fmt::format("Version {}, Compiled at {} , {}", game.version, __DATE__, __TIME__));
 
 	// init game
 	if (game.windowed) {
@@ -850,11 +849,10 @@ bool cGame::setupGame() {
 	frame_count = fps = 0;
 
 	// set window title
-	char title[128];
-	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
+  auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.version);
 
 	// Set window title
-	set_window_title(title);
+	set_window_title(title.c_str());
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
     int colorDepth = desktop_color_depth();
@@ -973,11 +971,11 @@ bool cGame::setupGame() {
 	}
 
 	int maxSounds = getAmountReservedVoicesAndInstallSound();
-	memset(msg, 0, sizeof(msg));
 
-    if (maxSounds > -1) {
-		sprintf(msg, "Successfully installed sound. %d voices reserved", maxSounds);
-		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+  if (maxSounds > -1) {
+		logger->log(LOG_INFO, COMP_SOUND, "Initialization",
+                fmt::format("Successfully installed sound. {} voices reserved", maxSounds),
+                OUTC_SUCCESS);
 	} else {
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
 	}
