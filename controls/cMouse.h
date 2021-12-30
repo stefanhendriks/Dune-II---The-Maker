@@ -1,8 +1,8 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
-#include <utils/cPoint.h>
-#include "../observers/cInputObserver.h"
+#include "observers/cInputObserver.h"
+#include "utils/cPoint.h"
 
 class cRectangle;
 
