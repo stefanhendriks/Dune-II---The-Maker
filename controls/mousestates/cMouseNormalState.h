@@ -2,6 +2,11 @@
 #define D2TM_CMOUSENORMALSTATE_H
 
 #include "cMouseState.h"
+#include "controls/cMouse.h"
+#include "sMouseEvent.h"
+#include "sKeyboardEvent.h"
+
+class cPlayer;
 
 enum eMouseNormalState {
     SELECT_STATE_NORMAL, // normal state, selecting stuff, etc
