@@ -7,11 +7,7 @@ public:
 
     ~cPlaceItDrawer();
 
-    void draw(cBuildingListItem *itemToPlace);
-
-    void onNotify(const s_MouseEvent &event);
-
-    bool mayPlaceIt();
+    void draw(cBuildingListItem *itemToPlace, int mouseCell);
 
 protected:
     void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
@@ -19,14 +15,9 @@ protected:
     void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 
 private:
-    void onMouseClickedLeft(const s_MouseEvent &event);
-
-    bool m_bMayPlace;
-
     cStructureUtils structureUtils;
 
     cPlayer *player;
-    cBuildingListItem *itemToPlace;
 };
 
 #endif /* CPLACEITDRAWER_H_ */
