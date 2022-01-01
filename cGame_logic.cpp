@@ -417,7 +417,6 @@ void cGame::updateState() {
 
         pPlayer->getGameControlsContext()->updateMouseState();
 
-        pPlayer->bPlacedIt = false;
         pPlayer->bDeployedIt = false;
 
     }
@@ -426,7 +425,6 @@ void cGame::updateState() {
 void cGame::combat() {
     // -----------------
     cPlayer &humanPlayer = players[HUMAN];
-    humanPlayer.bPlacedIt = humanPlayer.bPlaceIt;
     humanPlayer.bDeployedIt = humanPlayer.bDeployIt;
 
     drawManager->drawCombatState();

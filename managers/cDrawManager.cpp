@@ -195,8 +195,8 @@ void cDrawManager::drawSidebar() {
  */
 void cDrawManager::drawStructurePlacing() {
     if (player->bDeployIt) return; // do not do this
-    if (!player->bPlaceIt) return;
-
+    // TODO: move drawing this into mouse state draw function ??
+    if (!player->getGameControlsContext()->isState(eMouseState::MOUSESTATE_PLACE)) return;
 
     cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
@@ -209,7 +209,7 @@ void cDrawManager::drawStructurePlacing() {
  * When deploying something
  */
 void cDrawManager::drawDeployment() {
-    if (player->bPlaceIt) return;
+    if (player->getGameControlsContext()->isState(eMouseState::MOUSESTATE_PLACE)) return;
     if (!player->bDeployIt) return;
 
     // mouse attack special?

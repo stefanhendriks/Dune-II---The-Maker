@@ -394,14 +394,10 @@ public:
 
     void addNotification(const char *msg, eNotificationType type);
 
-    bool isNotPlacingSomething();
     bool isNotDeployingSomething();
 
     // properties (for now public, should become private)
     int selected_structure;
-
-    bool bPlaceIt;		// placing something? (for structures only)
-    bool bPlacedIt;		// for remembering, for onCombatMouseEvent stuff..
 
     bool bDeployIt;		// deploying something? (for palace)
     bool bDeployedIt;   // for remembering, for onCombatMouseEvent stuff..

@@ -38,9 +38,7 @@ void cInteractionManager::onMouseClickedRight(const s_MouseEvent &event) {
     // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
     bool isANormalButtonClick = game.getMouse()->isNormalRightClick();
     if (isANormalButtonClick) {
-        if (player->bPlaceIt) {
-            player->bPlaceIt = false;
-        }
+        // TODO: remove this whole thing when we have a deploy mouse state
         if (player->bDeployIt) {
             player->bDeployIt = false;
         }
