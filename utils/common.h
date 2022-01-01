@@ -71,3 +71,5 @@ const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int
 //void masked_stretch_blit(BITMAP *s, BITMAP *d, int s_x, int s_y, int s_w, int s_h, int d_x, int d_y, int d_w, int d_h);
 //void stretch_blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int src_w, int src_h, int dst_x, int dst_y, int dst_w, int dst_h);
 //void stretch_sprite(BITMAP *dst, BITMAP *src, int x, int y, int w, int h);
+
+char scanCodeToAscii(int scanCode);
