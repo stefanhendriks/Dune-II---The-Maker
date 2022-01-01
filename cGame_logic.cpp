@@ -1178,7 +1178,7 @@ void cGame::setup_players() {
         cOrderProcesser *orderProcesser = new cOrderProcesser(thePlayer);
         thePlayer->setOrderProcesser(orderProcesser);
 
-        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer);
+        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer, this->mouse);
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level

@@ -50,6 +50,8 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
     void onStateSet() override;
+    void onFocus() override {};
+    void onBlur() override {};
 
 private:
     void onMouseLeftButtonClicked(const s_MouseEvent &event);

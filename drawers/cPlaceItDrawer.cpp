@@ -221,13 +221,17 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
         return;
     }
 
-    if (m_bMayPlace)	{
-        play_sound_id(SOUND_PLACE);
-        player->placeItem(mouseCell, itemToPlace);
-        player->bPlaceIt=false;
+//    if (m_bMayPlace)	{
+//        play_sound_id(SOUND_PLACE);
+//        player->placeItem(mouseCell, itemToPlace);
+//        player->bPlaceIt=false;
+//
+//        itemToPlace = nullptr;
+//    }
+}
 
-        itemToPlace = nullptr;
-    }
+bool cPlaceItDrawer::mayPlaceIt() {
+    return m_bMayPlace;
 }
 
 void cPlaceItDrawer::onNotify(const s_MouseEvent &event) {

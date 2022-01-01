@@ -25,7 +25,9 @@
 #include "controls/mousestates/cMouseNormalState.h"
 #include "controls/mousestates/cMouseUnitsSelectedState.h"
 #include "controls/mousestates/cMouseRepairState.h"
+#include "controls/mousestates/cMousePlaceState.h"
 
+// states, apply to battlefield only
 enum eMouseState {
     MOUSESTATE_SELECT, // mouse is in 'normal' mode, it is able to select units
     MOUSESTATE_UNITS_SELECTED, // mouse has selected units
@@ -49,7 +51,7 @@ inline std::string mouseStateString(eMouseState state) {
 
 class cGameControlsContext : public cInputObserver {
 	public:
-		cGameControlsContext(cPlayer *thePlayer);
+		cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse);
 		~cGameControlsContext();
 
 		int getIdOfStructureWhereMouseHovers() const { return mouseHoveringOverStructureId; }
@@ -83,11 +85,10 @@ class cGameControlsContext : public cInputObserver {
 
         bool isState(eMouseState other);
 
-protected:
+	protected:
 		void determineToolTip();
 		void determineHoveringOverStructureId(int mouseX, int mouseY);
 		void determineHoveringOverUnitId();
-
 
 	private:
         void onMouseMovedTo(const s_MouseEvent &event);
@@ -113,5 +114,15 @@ protected:
         cMouseNormalState * mouseNormalState;
         cMouseUnitsSelectedState * mouseUnitsSelectedState;
         cMouseRepairState * mouseRepairState;
+		cMousePlaceState * mousePlaceState;
 
+		//
+		bool prevTickMouseAtBattleField;
+
+		// mouse state
+		void onNotifyMouseStateEvent(const s_MouseEvent &event);
+		void onFocusMouseStateEvent();
+		void onBlurMouseStateEvent();
+
+		cMouse *mouse;
 };

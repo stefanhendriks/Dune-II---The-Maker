@@ -15,6 +15,8 @@ public:
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
     virtual void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override = 0;
     virtual void onStateSet() = 0; // called when switched to this mouse state
+    virtual void onFocus() = 0; // called when state regains focus
+    virtual void onBlur() = 0; // called when state loses focus
 
 protected:
     cPlayer * player;
