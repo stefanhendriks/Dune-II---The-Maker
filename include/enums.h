@@ -152,7 +152,7 @@ enum eBuildType {
     BULLET     // 4 (ie, used for super weapon)
 };
 
-static const char* eBuildTypeString(const eBuildType &buildType) {
+inline const char* eBuildTypeString(const eBuildType &buildType) {
     switch (buildType) {
         case eBuildType::SPECIAL: return "SPECIAL";
         case eBuildType::UNIT: return "UNIT";
