@@ -11,6 +11,8 @@ public:
 
     void onNotify(const s_MouseEvent &event);
 
+    bool mayPlaceIt();
+
 protected:
     void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
 

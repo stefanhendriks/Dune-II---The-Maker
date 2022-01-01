@@ -1,7 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cGameControlsContext.h"
 
-cGameControlsContext::cGameControlsContext(cPlayer *thePlayer) {
+cGameControlsContext::cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse) {
     assert(thePlayer);
     player = thePlayer;
     mouseCell = -99;
@@ -10,15 +10,20 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer) {
     mouseHoveringOverStructureId = -1;
     state = MOUSESTATE_SELECT;
     prevState = MOUSESTATE_SELECT;
-    mouseNormalState = new cMouseNormalState(thePlayer, this, game.getMouse());
-    mouseUnitsSelectedState = new cMouseUnitsSelectedState(thePlayer, this, game.getMouse());
-    mouseRepairState = new cMouseRepairState(thePlayer, this, game.getMouse());
+    mouse = theMouse;
+    mouseNormalState = new cMouseNormalState(thePlayer, this, mouse);
+    mouseUnitsSelectedState = new cMouseUnitsSelectedState(thePlayer, this, mouse);
+    mouseRepairState = new cMouseRepairState(thePlayer, this, mouse);
+    mousePlaceState = new cMousePlaceState(thePlayer, this, mouse);
+    prevTickMouseAtBattleField = false;
 }
 
 cGameControlsContext::~cGameControlsContext() {
     player = nullptr;
     delete mouseNormalState;
     delete mouseUnitsSelectedState;
+    delete mouseRepairState;
+    delete mousePlaceState;
 }
 
 
@@ -118,6 +123,18 @@ void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event) {
         mouseHoveringOverUnitId = -1;
     }
 
+    // mouse went to battlefield
+    if (!prevTickMouseAtBattleField && isMouseOnBattleField()) {
+        // call 'onFocus' on state object
+    }
+
+    // mouse went from battlefield to non-battlefield segment on screen
+    if (prevTickMouseAtBattleField && !isMouseOnBattleField()) {
+        // call 'onBlur' on state object (lost focus)?
+    }
+
+    prevTickMouseAtBattleField = isMouseOnBattleField();
+
     // UPDATE MOUSE STATE
     updateMouseState();
 }
@@ -127,22 +144,14 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
         onMouseMovedTo(event);
     }
 
-    switch (state) {
-        case MOUSESTATE_SELECT:
-            mouseNormalState->onNotifyMouseEvent(event);
-            break;
-        case MOUSESTATE_UNITS_SELECTED:
-            mouseUnitsSelectedState->onNotifyMouseEvent(event);
-            break;
-        case MOUSESTATE_REPAIR:
-            mouseRepairState->onNotifyMouseEvent(event);
-            break;
-
-        // not yet implemented
-        case MOUSESTATE_PLACE:
-            break;
+    if (isMouseOnBattleField()) {
+        // mouse states only apply to battlefield (for now)
+        onNotifyMouseStateEvent(event);
+    } else {
+        // ...
+        mouse->setTile(MOUSE_NORMAL);
     }
-    
+
 //    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
 //    cGameControlsContext *context = player.getGameControlsContext();
 //    bool bOrderingUnits=false;
@@ -175,6 +184,25 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
 
 }
 
+void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
+    if (isMouseOnBattleField()) {
+        switch (state) {
+            case MOUSESTATE_SELECT:
+                mouseNormalState->onNotifyMouseEvent(event);
+                break;
+            case MOUSESTATE_UNITS_SELECTED:
+                mouseUnitsSelectedState->onNotifyMouseEvent(event);
+                break;
+            case MOUSESTATE_REPAIR:
+                mouseRepairState->onNotifyMouseEvent(event);
+                break;
+            case MOUSESTATE_PLACE:
+                mousePlaceState->onNotifyMouseEvent(event);
+                break;
+        }
+    }
+}
+
 void cGameControlsContext::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
     switch (state) {
         case MOUSESTATE_SELECT:
@@ -186,9 +214,8 @@ void cGameControlsContext::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
         case MOUSESTATE_REPAIR:
             mouseRepairState->onNotifyKeyboardEvent(event);
             break;
-
-            // not yet implemented
         case MOUSESTATE_PLACE:
+            mousePlaceState->onNotifyKeyboardEvent(event);
             break;
     }
 
@@ -260,8 +287,8 @@ void cGameControlsContext::setMouseState(eMouseState newState) {
             case MOUSESTATE_REPAIR:
                 mouseRepairState->onStateSet();
                 break;
-                // not yet implemented
             case MOUSESTATE_PLACE:
+                mousePlaceState->onStateSet();
                 break;
         }
     }
@@ -273,6 +300,40 @@ void cGameControlsContext::toPreviousState() {
 
 bool cGameControlsContext::isState(eMouseState other) {
     return this->state == other;
+}
+
+void cGameControlsContext::onBlurMouseStateEvent() {
+    switch (state) {
+        case MOUSESTATE_SELECT:
+            mouseNormalState->onBlur();
+            break;
+        case MOUSESTATE_UNITS_SELECTED:
+            mouseUnitsSelectedState->onBlur();
+            break;
+        case MOUSESTATE_REPAIR:
+            mouseRepairState->onBlur();
+            break;
+        case MOUSESTATE_PLACE:
+            mousePlaceState->onBlur();
+            break;
+    }
+}
+
+void cGameControlsContext::onFocusMouseStateEvent() {
+    switch (state) {
+        case MOUSESTATE_SELECT:
+            mouseNormalState->onFocus();
+            break;
+        case MOUSESTATE_UNITS_SELECTED:
+            mouseUnitsSelectedState->onFocus();
+            break;
+        case MOUSESTATE_REPAIR:
+            mouseRepairState->onFocus();
+            break;
+        case MOUSESTATE_PLACE:
+            mousePlaceState->onFocus();
+            break;
+    }
 }
 
 //void
