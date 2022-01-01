@@ -1,5 +1,4 @@
-#ifndef CKEYBOARD_H_
-#define CKEYBOARD_H_
+#pragma once
 
 #include "observers/cInputObserver.h"
 #include <set>
@@ -19,5 +18,3 @@ class cKeyboard {
         cInputObserver *_keyboardObserver;
         std::set<int> keysPressed;
 };
-
-#endif /* CKEYBOARD_H_ */

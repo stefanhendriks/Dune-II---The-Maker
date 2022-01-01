@@ -1,5 +1,4 @@
-#ifndef D2TM_cMousePlaceState_H
-#define D2TM_cMousePlaceState_H
+#pragma once
 
 #include "cMouseState.h"
 
@@ -31,6 +30,3 @@ private:
 
     bool mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell);
 };
-
-
-#endif //D2TM_cMousePlaceState_H

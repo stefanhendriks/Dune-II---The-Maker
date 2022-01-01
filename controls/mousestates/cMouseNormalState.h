@@ -1,5 +1,4 @@
-#ifndef D2TM_CMOUSENORMALSTATE_H
-#define D2TM_CMOUSENORMALSTATE_H
+#pragma once
 
 #include "cMouseState.h"
 #include "controls/cMouse.h"
@@ -60,6 +59,3 @@ private:
 
     int getMouseTileForNormalState() const;
 };
-
-
-#endif //D2TM_CMOUSENORMALSTATE_H
