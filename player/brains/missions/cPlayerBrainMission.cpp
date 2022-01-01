@@ -423,9 +423,7 @@ namespace brains {
         // all other (normal) missions can go to select target state if we acquired all units
         if (producedAllRequiredUnits()) {
             char msg[255];
-            sprintf(msg,
-                    "thinkState_PrepareGatherResources() : nothing left to build",
-                    player->getId());
+            sprintf(msg, "thinkState_PrepareGatherResources() : nothing left to build");
             log(msg);
             changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
             return;

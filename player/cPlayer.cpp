@@ -12,7 +12,7 @@ cPlayer::cPlayer() {
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
     char msg[255];
-    sprintf(msg, "MAX_STRUCTURE_BMPS=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURE_BMPS,
+    sprintf(msg, "MAX_STRUCTURE_BMPS=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)=%d", MAX_STRUCTURE_BMPS,
             sizeof(bmp_structure), sizeof(BITMAP *));
     logbook(msg); // no log(), because we can't assume player is fully initialized yet
     memset(bmp_structure, 0, sizeof(bmp_structure));
@@ -929,7 +929,7 @@ cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
         char msg[255];
         sprintf(msg,
                 "isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.",
-                getId(), listId, sublistId);
+                listId, sublistId);
         log(msg);
         assert(false);
         return nullptr;
