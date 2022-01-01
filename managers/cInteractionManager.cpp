@@ -89,7 +89,6 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
         pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
         sidebar->onNotifyMouseEvent(mouseEvent);
-        placeItDrawer->onNotify(mouseEvent);
         mapCamera->onNotify(mouseEvent);
         miniMapDrawer->onNotify(mouseEvent);
         orderDrawer->onNotify(mouseEvent);

@@ -202,7 +202,7 @@ void cDrawManager::drawStructurePlacing() {
     if (itemToPlace == nullptr) return;
 
     assert(placeitDrawer);
-    placeitDrawer->draw(itemToPlace);
+    placeitDrawer->draw(itemToPlace, player->getGameControlsContext()->getMouseCell());
 }
 
 /**

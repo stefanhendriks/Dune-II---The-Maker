@@ -1,33 +1,23 @@
 #include "../include/d2tmh.h"
 
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
-    m_bMayPlace = true;
-    itemToPlace = nullptr;
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
     player = nullptr;
-    itemToPlace = nullptr;
 }
 
-void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
-	assert(itemToPlace);
-	assert(itemToPlace->getBuildType() == STRUCTURE);
+void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell) {
+    if (itemToPlace == nullptr) {
+        return;
+    }
 
-	// this is only done when bPlaceIt=true
-	if (player->getSideBar() == NULL) {
+	if (mouseCell < 0) {
 		return;
 	}
 
-	int iMouseCell = player->getGameControlsContext()->getMouseCell();
-
-	if (iMouseCell < 0) {
-		return;
-	}
-
-	drawStructureIdAtCell(itemToPlace, iMouseCell);
-	drawStatusOfStructureAtCell(itemToPlace, iMouseCell);
-	this->itemToPlace = itemToPlace;
+	drawStructureIdAtCell(itemToPlace, mouseCell);
+	drawStatusOfStructureAtCell(itemToPlace, mouseCell);
 }
 
 void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell) {
@@ -38,8 +28,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	assert(structureId > -1);
 
 	bool bWithinBuildDistance = false;
-
-    m_bMayPlace=true;
 
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
@@ -88,14 +76,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
                 }
-            } else {
-                m_bMayPlace = false;
             }
 		}
-	}
-
-	if (!bWithinBuildDistance) {
-        m_bMayPlace=false;
 	}
 
 	int iDrawX = map.mouse_draw_x();
@@ -116,8 +98,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int cellY = iCellY + iY;
 
                 if (!map.isWithinBoundaries(cellX, cellY)) {
-                    m_bMayPlace=false;
-                    break;
+                    continue;
                 }
 
                 int iCll = map.makeCell(cellX, cellY);
@@ -134,10 +115,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     placeColor = game.getColorPlaceBad();
-                    // may not place when we're not placing a slab.. hack hack
-                    if (structureId != SLAB4) {
-                        m_bMayPlace = false;
-                    }
                 }
 
                 int unitIdOnMap = map.getCellIdUnitLayer(iCll);
@@ -145,7 +122,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!unit[unitIdOnMap].isDead()) {
                         placeColor = game.getColorPlaceBad();
-                        m_bMayPlace = false;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?
                 }
@@ -207,35 +183,4 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
     draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
     destroy_bitmap(temp);
-}
-
-void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
-    // this assumes the context has been updated beforehand...
-    int mouseCell = player->getGameControlsContext()->getMouseCell();
-
-    if (mouseCell < 0) {
-        return;
-    }
-
-    if (itemToPlace == nullptr) {
-        return;
-    }
-
-//    if (m_bMayPlace)	{
-//        play_sound_id(SOUND_PLACE);
-//        player->placeItem(mouseCell, itemToPlace);
-//        player->bPlaceIt=false;
-//
-//        itemToPlace = nullptr;
-//    }
-}
-
-bool cPlaceItDrawer::mayPlaceIt() {
-    return m_bMayPlace;
-}
-
-void cPlaceItDrawer::onNotify(const s_MouseEvent &event) {
-    if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
-        onMouseClickedLeft(event);
-    }
 }
