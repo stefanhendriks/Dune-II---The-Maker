@@ -2092,3 +2092,7 @@ const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int
     }
     return "";
 }
+
+char scanCodeToAscii(int scanCode) {
+    return (char)scancode_to_ascii(scanCode);
+}

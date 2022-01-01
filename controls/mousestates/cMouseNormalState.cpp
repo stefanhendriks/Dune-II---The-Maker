@@ -6,7 +6,7 @@
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "player/cPlayer.h"
-#include "sidebar/cSideBar.h"
+//#include "sidebar/cSideBar.h"
 
 #include "d2tmc.h"
 #include "cGame.h"

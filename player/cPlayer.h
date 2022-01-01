@@ -24,10 +24,13 @@
 #include <string>
 #include <vector>
 
+#include "allegro/palette.h"
+
 #include "cPlayerNotification.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
+
 
 // all kinds of forward declarations to make a compiler happy when not using d2tmh.h
 class cItemBuilder;

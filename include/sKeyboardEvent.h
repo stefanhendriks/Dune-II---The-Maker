@@ -1,11 +1,10 @@
 #ifndef D2TM_SKEYBOARDEVENT_H
 #define D2TM_SKEYBOARDEVENT_H
 
-#include "allegroh.h"
-
 #include <string>
 #include "utils/cPoint.h"
 #include "enums.h"
+#include "utils/common.h"
 
 struct s_KeyboardEvent {
     eKeyboardEventType eventType = eKeyboardEventType::KEY_NONE;
@@ -16,7 +15,7 @@ struct s_KeyboardEvent {
         sprintf(msg, "s_KeyboardEvent [type=%s], [key=%d (=%c)]",
                 toStringKeyboardEventType(event.eventType),
                 event.key,
-                scancode_to_ascii(event.key)
+                scanCodeToAscii(event.key)
         );
         return std::string(msg);
     }
