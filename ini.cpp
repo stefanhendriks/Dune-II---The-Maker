@@ -24,7 +24,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
 
 int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed);
 
-void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordtype, char *linefeed);
+void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, int wordtype, char *linefeed);
 
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
@@ -1240,7 +1240,6 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
     // declare some temp fields while reading the scenario file.
     int blooms[30], fields[30];
-    char value[256];
     memset(blooms, -1, sizeof(blooms));
     memset(fields, -1, sizeof(fields));
 
@@ -1321,7 +1320,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
             }
 
             if (section == INI_BASIC) {
-                INI_Scenario_Section_Basic(pMentat, value, wordtype, linefeed);
+                INI_Scenario_Section_Basic(pMentat, wordtype, linefeed);
             }
 
             // Dune 2 house found, load player data
@@ -1388,11 +1387,9 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
     map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
-void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordtype, char *linefeed) {
+void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, int wordtype, char *linefeed) {
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
-        memset(value, 0, sizeof(value));
-
         std::string scenefile = INI_WordValueString(linefeed);
         std::string scene = INI_SceneFileToScene(scenefile);
 

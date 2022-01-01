@@ -1,4 +1,18 @@
+#include "player/cPlayerNotification.h"
+
 #include "../include/d2tmh.h"
+
+const char* eNotificationTypeString(const eNotificationType &type) {
+    switch (type) {
+        case eNotificationType::NEUTRAL: return "NEUTRAL";
+        case eNotificationType::PRIORITY: return "PRIORITY";
+        case eNotificationType::BAD: return "BAD";
+        default:
+            assert(false && "Unknown eNotificationType?");
+            break;
+    }
+    return "";
+}
 
 cPlayerNotification::cPlayerNotification(std::string msg, eNotificationType type) {
     this->msg = msg;
