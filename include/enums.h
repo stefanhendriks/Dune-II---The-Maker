@@ -173,7 +173,7 @@ namespace buildOrder {
 		REMOVEME
 	};
 
-    static const char* eBuildOrderStateString(const eBuildOrderState &state) {
+    inline const char* eBuildOrderStateString(const eBuildOrderState &state) {
         switch (state) {
             case eBuildOrderState::PROCESSME: return "PROCESSME";
             case eBuildOrderState::REMOVEME: return "REMOVEME";
