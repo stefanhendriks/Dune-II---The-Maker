@@ -15,7 +15,7 @@ enum eMouseUnitsSelectedState {
     SELECTED_STATE_REFINERY, // enter refinery to dump spice / collect credits
 };
 
-static const char* mouseUnitsSelectedStateString(const eMouseUnitsSelectedState &state) {
+inline const char* mouseUnitsSelectedStateString(const eMouseUnitsSelectedState &state) {
     switch (state) {
         case SELECTED_STATE_MOVE: return "SELECTED_STATE_MOVE";
         case SELECTED_STATE_SELECT: return "SELECTED_STATE_SELECT";

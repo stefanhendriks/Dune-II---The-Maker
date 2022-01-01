@@ -13,7 +13,7 @@ enum eMouseNormalState {
     SELECT_STATE_RALLY,  // set rally point for structure
 };
 
-static const char* mouseNormalStateString(const eMouseNormalState &state) {
+inline const char* mouseNormalStateString(const eMouseNormalState &state) {
     switch (state) {
         case SELECT_STATE_NORMAL: return "SELECT_STATE_NORMAL";
         case SELECT_STATE_RALLY: return "SELECT_STATE_RALLY";
@@ -51,6 +51,8 @@ private:
     void onKeyDown(const s_KeyboardEvent &event);
 
     void onKeyPressed(const s_KeyboardEvent &event);
+
+    void setState(eMouseNormalState newState);
 
     eMouseNormalState state;
 

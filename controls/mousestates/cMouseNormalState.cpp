@@ -177,7 +177,7 @@ void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
         cAbstractStructure *pSelectedStructure = player->getSelectedStructure();
         // when selecting a structure
         if (pSelectedStructure && pSelectedStructure->belongsTo(player) && pSelectedStructure->canSpawnUnits()) {
-            state = SELECT_STATE_RALLY;
+            setState(SELECT_STATE_RALLY);
             mouseTile = MOUSE_RALLY;
         }
     }
@@ -185,7 +185,7 @@ void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
 
 void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
     if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
-        state = SELECT_STATE_NORMAL;
+        setState(SELECT_STATE_NORMAL);
         mouseTile = MOUSE_NORMAL;
     }
 
@@ -201,4 +201,13 @@ void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
         player->selectUnitsFromGroup(iGroup);
         player->getGameControlsContext()->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
+}
+
+void cMouseNormalState::setState(eMouseNormalState newState) {
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "Setting state from %s to %s", mouseNormalStateString(state), mouseNormalStateString(newState));
+        logbook(msg);
+    }
+    state = newState;
 }
