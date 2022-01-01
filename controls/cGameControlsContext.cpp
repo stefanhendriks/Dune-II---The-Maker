@@ -1,5 +1,6 @@
-#include "../include/d2tmh.h"
 #include "cGameControlsContext.h"
+
+#include "../include/d2tmh.h"
 
 cGameControlsContext::cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse) {
     assert(thePlayer);

@@ -1,6 +1,7 @@
+#include "cKeyboard.h"
+
 #include <algorithm>
 #include "../include/d2tmh.h"
-#include "cKeyboard.h"
 
 
 cKeyboard::cKeyboard() :

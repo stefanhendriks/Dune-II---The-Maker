@@ -26,6 +26,7 @@
 
 #include "allegro/palette.h"
 
+#include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayerDifficultySettings.h"
@@ -137,6 +138,10 @@ public:
     cOrderProcesser *getOrderProcesser() const { return orderProcesser; }
 
     cGameControlsContext *getGameControlsContext() const { return gameControlsContext; }
+
+    void setContextMouseState(eMouseState newState);
+
+    bool isContextMouseState(eMouseState state);
 
     int getMinimapColor() const { return minimapColor; }
 

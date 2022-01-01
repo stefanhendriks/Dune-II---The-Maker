@@ -1,7 +1,7 @@
+#include "cMouseRepairState.h"
+
 #include <algorithm>
 #include "d2tmh.h"
-
-#include "cMouseRepairState.h"
 
 cMouseRepairState::cMouseRepairState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse) {
