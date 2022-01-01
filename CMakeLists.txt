@@ -87,6 +87,7 @@ target_compile_options(${PROJECT_NAME}
     "-Werror"
     "-Wall"
     "-Wnon-virtual-dtor"
+    "-Wuseless-cast"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -95,4 +96,3 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 
 add_subdirectory(dependencies)
-

@@ -74,7 +74,7 @@ void cMouse::updateState() {
 	if (_mouseObserver) {
         s_MouseEvent event {
                 eMouseEventType::MOUSE_MOVED_TO,
-                cPoint(coords),
+                coords,
                 z
         };
 
