@@ -89,7 +89,7 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
                 if (pStructure && pStructure->isValid() && pStructure->belongsTo(player)) {
                     int listId = pStructure->getAssociatedListID();
                     if (listId > -1) {
-                        player->getSideBar()->setSelectedListId();
+                        player->getSideBar()->setSelectedListId(listId);
                     }
                 } else {
                     player->selected_structure = -1;
