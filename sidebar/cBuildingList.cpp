@@ -246,7 +246,7 @@ bool cBuildingList::removeItemFromList(int position) {
  * @return
  */
 bool cBuildingList::isOverButton(int x, int y) {
-    return game.getMouse()->isOverRectangle(getButtonDrawX(), getButtonDrawY(), 33, 27);
+    return cRectangle::isWithin(x, y, getButtonDrawX(), getButtonDrawY(), 33, 27);
 }
 
 /**
