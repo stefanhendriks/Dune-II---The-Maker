@@ -415,8 +415,6 @@ void cGame::updateState() {
 
         pPlayer->update();
 
-        pPlayer->getGameControlsContext()->updateMouseState();
-
         pPlayer->bDeployedIt = false;
 
     }

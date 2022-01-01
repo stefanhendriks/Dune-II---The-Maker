@@ -1,7 +1,7 @@
+#include "cMousePlaceState.h"
+
 #include <algorithm>
 #include "d2tmh.h"
-
-#include "cMousePlaceState.h"
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse) {

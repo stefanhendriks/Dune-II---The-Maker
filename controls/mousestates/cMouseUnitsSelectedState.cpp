@@ -1,7 +1,7 @@
+#include "cMouseUnitsSelectedState.h"
+
 #include <algorithm>
 #include "d2tmh.h"
-
-#include "cMouseUnitsSelectedState.h"
 
 cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse),

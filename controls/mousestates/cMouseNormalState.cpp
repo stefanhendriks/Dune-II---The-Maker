@@ -202,7 +202,7 @@ void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
         // select all units for group
         player->deselectAllUnits();
         player->selectUnitsFromGroup(iGroup);
-        player->getGameControlsContext()->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        player->setContextMouseState(MOUSESTATE_UNITS_SELECTED);
     }
 }
 

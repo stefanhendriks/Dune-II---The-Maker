@@ -1,6 +1,7 @@
 #ifndef CKEYBOARD_H_
 #define CKEYBOARD_H_
 
+#include "observers/cInputObserver.h"
 #include <set>
 
 class cKeyboard {

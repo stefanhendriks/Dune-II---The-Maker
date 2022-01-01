@@ -723,6 +723,8 @@ void cPlayer::update() {
     powerProduce_ = structureUtils.getTotalPowerOutForPlayer(this);
     // update spice capacity
     maxCredits_ = structureUtils.getTotalSpiceCapacityForPlayer(this);
+
+    gameControlsContext->updateMouseState();
 }
 
 int cPlayer::getCredits() {
@@ -2136,4 +2138,12 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const {
 
     // return true if we selected any unit
     return unitSelected || infantrySelected;
+}
+
+void cPlayer::setContextMouseState(eMouseState newState) {
+    gameControlsContext->setMouseState(newState);
+}
+
+bool cPlayer::isContextMouseState(eMouseState state) {
+    return gameControlsContext->isState(state);
 }
