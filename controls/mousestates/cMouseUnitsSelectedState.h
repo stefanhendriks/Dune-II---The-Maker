@@ -1,5 +1,4 @@
-#ifndef D2TM_CMOUSEUNITSSELECTEDSTATE_H
-#define D2TM_CMOUSEUNITSSELECTEDSTATE_H
+#pragma once
 
 #include <vector>
 #include "cMouseState.h"
@@ -93,6 +92,3 @@ private:
 
     void evaluateMouseMoveState();
 };
-
-
-#endif //D2TM_CMOUSEUNITSSELECTEDSTATE_H

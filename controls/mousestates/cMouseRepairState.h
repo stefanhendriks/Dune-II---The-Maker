@@ -1,5 +1,4 @@
-#ifndef D2TM_CMOUSEREPAIRSTATE_H
-#define D2TM_CMOUSEREPAIRSTATE_H
+#pragma once
 
 #include "cMouseState.h"
 
@@ -30,6 +29,3 @@ private:
     int getMouseTileForRepairState();
 
 };
-
-
-#endif //D2TM_CMOUSEREPAIRSTATE_H

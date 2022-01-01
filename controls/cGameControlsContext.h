@@ -10,14 +10,7 @@
 // a context belongs to a player
 
 
-// 24/12/2021 -> This is a kind of "Combat Mouse State" object really. This could move into a
-// combat state object, or 2 separate objects (state & mouse object).
-
-// Mouse status (taken from somewhere else)
-//#define MOUSE_STATE_NORMAL  0
-//#define MOUSE_STATE_MOVE    1
-//#define MOUSE_STATE_ATTACK  2
-//#define MOUSE_STATE_PLACE   3
+// 01/01/2022 -> Move this into a `Combat` state object; or within player object as state.
 
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "include/definitions.h"

@@ -1,5 +1,4 @@
-#ifndef CMOUSE_H_
-#define CMOUSE_H_
+#pragma once
 
 #include "observers/cInputObserver.h"
 #include "utils/cPoint.h"
@@ -111,5 +110,3 @@ private:
 
     int mouse_tile;       // mouse picture in gfxdata
 };
-
-#endif /* CMOUSE_H_ */
