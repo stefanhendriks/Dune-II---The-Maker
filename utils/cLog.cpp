@@ -227,7 +227,7 @@ std::string cLogger::getIntegerAsString(int value) {
 
 std::string cLogger::getLongAsString(long value) {
 	char numberChar[256];
-	sprintf(numberChar, "%d", value);
+	sprintf(numberChar, "%ld", value);
 	return std::string(numberChar);
 }
 
