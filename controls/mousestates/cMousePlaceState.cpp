@@ -49,7 +49,6 @@ void cMousePlaceState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     if (mayPlaceIt(itemToPlace, context->getMouseCell())) {
         play_sound_id(SOUND_PLACE);
         player->placeItem(mouseCell, itemToPlace);
-        player->bPlaceIt = false;
         context->toPreviousState();
     }
 }

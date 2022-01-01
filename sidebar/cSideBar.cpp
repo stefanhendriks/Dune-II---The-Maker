@@ -176,7 +176,6 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
     if (list->getType() != LIST_STARPORT) {
         // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
         if (item->shouldPlaceIt()) {
-            player->bPlaceIt = true;
             player->getGameControlsContext()->setMouseState(eMouseState::MOUSESTATE_PLACE);
         } else if (item->shouldDeployIt()) {
             player->bDeployIt = true; // this puts the "deploy/launch it at mode" state active.
