@@ -86,6 +86,7 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
     "-Wall"
+    "-Wnon-virtual-dtor"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
