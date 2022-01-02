@@ -26,7 +26,7 @@ CreditsDrawer::~CreditsDrawer() {
 }
 
 void CreditsDrawer::setCredits() {
-	setCredits((int)player->getCredits());
+	setCredits(player->getCredits());
 }
 
 void CreditsDrawer::setCredits(int amount) {
@@ -49,7 +49,7 @@ void CreditsDrawer::think() {
 		// determine new currentCredits
 		// TODO: make it 'roll' instead of 'jump' to the newest credits?
 		previousCredits = currentCredits;
-		int newCurrentCredits = (int)player->getCredits();
+		auto newCurrentCredits = player->getCredits();
 
 		if (newCurrentCredits != previousCredits) {
 			int diff = newCurrentCredits - previousCredits;

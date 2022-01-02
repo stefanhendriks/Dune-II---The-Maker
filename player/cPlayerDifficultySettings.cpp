@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cPlayerDifficultySettings.h"
 
+#include <cmath>
 
 cPlayerDifficultySettings::cPlayerDifficultySettings() :
                                 m_moveSpeedFactor(1.0f),
@@ -27,23 +28,23 @@ cPlayerDifficultySettings::~cPlayerDifficultySettings() {
 }
 
 float cPlayerDifficultySettings::getMoveSpeed(int iUnitType, int slowDown) {
-    return (int)(sUnitInfo[iUnitType].speed) + ((float)slowDown * m_moveSpeedFactor);
+    return sUnitInfo[iUnitType].speed + slowDown * m_moveSpeedFactor;
 }
 
 float cPlayerDifficultySettings::getBuildSpeed(int iSpeed) {
-    return (int) (iSpeed * m_buildSpeedFactor);
+    return std::floor(iSpeed * m_buildSpeedFactor);
 }
 
 float cPlayerDifficultySettings::getHarvestSpeed(int iSpeed) {
-    return (int) (iSpeed * m_harvestSpeedFactor);
+    return std::floor(iSpeed * m_harvestSpeedFactor);
 }
 
 float cPlayerDifficultySettings::getDumpSpeed(int iSpeed) {
-    return (int) (iSpeed * m_dumpSpeedFactor);
+    return std::floor(iSpeed * m_dumpSpeedFactor);
 }
 
 float cPlayerDifficultySettings::getInflictDamage(int iDamageInflicted) {
-    return (int) (iDamageInflicted * m_inflictDamageFactor);
+    return std::floor(iDamageInflicted * m_inflictDamageFactor);
 }
 
 cPlayerDifficultySettings *cPlayerDifficultySettings::createFromHouse(int house) {

@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <algorithm>
+
 cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer);
 	buildingListDrawer = new cBuildingListDrawer(thePlayer);
@@ -234,8 +236,8 @@ void cSideBarDrawer::drawCreditsUsage() {
     int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
     int structuresWithSpice = player->getAmountOfStructuresForType(REFINERY) + player->getAmountOfStructuresForType(SILO);
     float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
-    float maxSpice = (float)player->getMaxCredits() / totalSpiceCapacity;
-    float spiceStored = (float)player->getCredits() / totalSpiceCapacity;
+    float maxSpice = player->getMaxCredits() / totalSpiceCapacity;
+    float spiceStored = static_cast<float>(player->getCredits()) / totalSpiceCapacity;
 
     float barHeightToDraw = barTotalHeight * maxSpice;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -247,9 +249,8 @@ void cSideBarDrawer::drawCreditsUsage() {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float spiceCapacityRatio = ((float)player->getCredits() + 1) / ((float)player->getMaxCredits() + 1);
-    if (spiceCapacityRatio < 0) spiceCapacityRatio= 0;
-    if (spiceCapacityRatio > 1) spiceCapacityRatio= 1;
+    auto spiceCapacityRatio = static_cast<float>(player->getCredits() + 1) / (player->getMaxCredits() + 1);
+    spiceCapacityRatio = std::clamp(spiceCapacityRatio, 0.0f, 1.0f);
     int r = spiceCapacityRatio * 255;
     int g = (1.1 - spiceCapacityRatio) * 255;
 
