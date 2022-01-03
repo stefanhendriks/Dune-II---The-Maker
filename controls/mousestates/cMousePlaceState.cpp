@@ -41,7 +41,7 @@ void cMousePlaceState::onMouseLeftButtonClicked() {
         return;
     }
 
-    cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+    cBuildingListItem *itemToPlace = player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) {
         return;
     }

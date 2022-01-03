@@ -196,7 +196,7 @@ void install_units() {
         sUnitInfo[i].credit_capacity = 0;
 
         // list properties
-        sUnitInfo[i].listId = 0;
+        sUnitInfo[i].listType = eListType::LIST_NONE;
         sUnitInfo[i].subListId = 0;
 
         // attack related
@@ -225,7 +225,7 @@ void install_units() {
     sUnitInfo[CARRYALL].icon = ICON_UNIT_CARRYALL;
     sUnitInfo[CARRYALL].airborn = true;   // is airborn
     sUnitInfo[CARRYALL].free_roam = true; // may freely roam the air
-    sUnitInfo[CARRYALL].listId = LIST_UNITS;
+    sUnitInfo[CARRYALL].listType = eListType::LIST_UNITS;
     sUnitInfo[CARRYALL].subListId = SUBLIST_HIGHTECH;
     strcpy(sUnitInfo[CARRYALL].name, "Carry-All");
 
@@ -243,7 +243,7 @@ void install_units() {
     sUnitInfo[ORNITHOPTER].airborn = true;   // is airborn
     sUnitInfo[ORNITHOPTER].squish = false;   // can't squish infantry
     sUnitInfo[ORNITHOPTER].free_roam = true; // may freely roam the air
-    sUnitInfo[ORNITHOPTER].listId = LIST_UNITS;
+    sUnitInfo[ORNITHOPTER].listType = eListType::LIST_UNITS;
     sUnitInfo[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
 //    sUnitInfo[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
     strcpy(sUnitInfo[ORNITHOPTER].name, "Ornithopter");
@@ -259,7 +259,7 @@ void install_units() {
     sUnitInfo[DEVASTATOR].bulletType = BULLET_DEVASTATOR;
     sUnitInfo[DEVASTATOR].fireTwice = true;
     sUnitInfo[DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
-    sUnitInfo[DEVASTATOR].listId = LIST_UNITS;
+    sUnitInfo[DEVASTATOR].listType = eListType::LIST_UNITS;
     sUnitInfo[DEVASTATOR].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[DEVASTATOR].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[DEVASTATOR].smokeHpFactor = 0.5f;
@@ -276,7 +276,7 @@ void install_units() {
     sUnitInfo[HARVESTER].icon = ICON_UNIT_HARVESTER;
     sUnitInfo[HARVESTER].credit_capacity = 700;
     sUnitInfo[HARVESTER].harvesting_amount = 5;
-    sUnitInfo[HARVESTER].listId = LIST_UNITS;
+    sUnitInfo[HARVESTER].listType = eListType::LIST_UNITS;
     sUnitInfo[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[HARVESTER].smokeHpFactor = 0.5f;
@@ -293,7 +293,7 @@ void install_units() {
     sUnitInfo[TANK].bmp_frames = 0;
     sUnitInfo[TANK].bulletType = BULLET_TANK;
     sUnitInfo[TANK].icon = ICON_UNIT_TANK;
-    sUnitInfo[TANK].listId = LIST_UNITS;
+    sUnitInfo[TANK].listType = eListType::LIST_UNITS;
     sUnitInfo[TANK].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[TANK].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[TANK].smokeHpFactor = 0.5f;
@@ -312,7 +312,7 @@ void install_units() {
     sUnitInfo[SIEGETANK].bulletType = BULLET_SIEGE;
     sUnitInfo[SIEGETANK].fireTwice = true;
     sUnitInfo[SIEGETANK].icon = ICON_UNIT_SIEGETANK;
-    sUnitInfo[SIEGETANK].listId = LIST_UNITS;
+    sUnitInfo[SIEGETANK].listType = eListType::LIST_UNITS;
     sUnitInfo[SIEGETANK].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[SIEGETANK].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[SIEGETANK].smokeHpFactor = 0.5f;
@@ -327,7 +327,7 @@ void install_units() {
     sUnitInfo[MCV].bmp_height = 25 * 2;
     sUnitInfo[MCV].bmp_frames = 1;
     sUnitInfo[MCV].icon = ICON_UNIT_MCV;
-    sUnitInfo[MCV].listId = LIST_UNITS;
+    sUnitInfo[MCV].listType = eListType::LIST_UNITS;
     sUnitInfo[MCV].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[MCV].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[MCV].smokeHpFactor = 0.5f;
@@ -343,7 +343,7 @@ void install_units() {
     sUnitInfo[DEVIATOR].bmp_frames = 1;
     sUnitInfo[DEVIATOR].icon = ICON_UNIT_DEVIATOR;
     sUnitInfo[DEVIATOR].bulletType = BULLET_GAS; // our gassy rocket
-    sUnitInfo[DEVIATOR].listId = LIST_UNITS;
+    sUnitInfo[DEVIATOR].listType = eListType::LIST_UNITS;
     sUnitInfo[DEVIATOR].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[DEVIATOR].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[DEVIATOR].smokeHpFactor = 0.5f;
@@ -361,7 +361,7 @@ void install_units() {
     sUnitInfo[LAUNCHER].fireTwice = true;
     //units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
     sUnitInfo[LAUNCHER].bulletType = ROCKET_NORMAL; // our gassy rocket
-    sUnitInfo[LAUNCHER].listId = LIST_UNITS;
+    sUnitInfo[LAUNCHER].listType = eListType::LIST_UNITS;
     sUnitInfo[LAUNCHER].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[LAUNCHER].canAttackAirUnits = true;
     sUnitInfo[LAUNCHER].renderSmokeOnUnitWhenThresholdMet = true;
@@ -380,7 +380,7 @@ void install_units() {
     sUnitInfo[QUAD].fireTwice = true;
     sUnitInfo[QUAD].bulletType = BULLET_QUAD;
     sUnitInfo[QUAD].squish = false;
-    sUnitInfo[QUAD].listId = LIST_UNITS;
+    sUnitInfo[QUAD].listType = eListType::LIST_UNITS;
     sUnitInfo[QUAD].subListId = SUBLIST_LIGHTFCTRY;
     sUnitInfo[QUAD].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[QUAD].smokeHpFactor = 0.5f;
@@ -398,7 +398,7 @@ void install_units() {
     sUnitInfo[TRIKE].icon = ICON_UNIT_TRIKE;
     sUnitInfo[TRIKE].bulletType = BULLET_TRIKE;
     sUnitInfo[TRIKE].squish = false;
-    sUnitInfo[TRIKE].listId = LIST_UNITS;
+    sUnitInfo[TRIKE].listType = eListType::LIST_UNITS;
     sUnitInfo[TRIKE].subListId = SUBLIST_LIGHTFCTRY;
     sUnitInfo[TRIKE].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[TRIKE].smokeHpFactor = 0.5f;
@@ -416,7 +416,7 @@ void install_units() {
     sUnitInfo[RAIDER].icon = ICON_UNIT_RAIDER;
     sUnitInfo[RAIDER].bulletType = BULLET_TRIKE;
     sUnitInfo[RAIDER].squish = false;
-    sUnitInfo[RAIDER].listId = LIST_UNITS;
+    sUnitInfo[RAIDER].listType = eListType::LIST_UNITS;
     sUnitInfo[RAIDER].subListId = SUBLIST_LIGHTFCTRY;
     sUnitInfo[RAIDER].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[RAIDER].smokeHpFactor = 0.5f;
@@ -458,7 +458,7 @@ void install_units() {
     sUnitInfo[SONICTANK].bmp_frames = 1; // no extra frames
     sUnitInfo[SONICTANK].bulletType = BULLET_SHIMMER;
     sUnitInfo[SONICTANK].icon = ICON_UNIT_SONICTANK;
-    sUnitInfo[SONICTANK].listId = LIST_UNITS;
+    sUnitInfo[SONICTANK].listType = eListType::LIST_UNITS;
     sUnitInfo[SONICTANK].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[SONICTANK].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[SONICTANK].smokeHpFactor = 0.5f;
@@ -478,7 +478,7 @@ void install_units() {
     sUnitInfo[SOLDIER].icon = ICON_UNIT_SOLDIER;
     sUnitInfo[SOLDIER].squish = false;
     sUnitInfo[SOLDIER].canBeSquished = true;
-    sUnitInfo[SOLDIER].listId = LIST_FOOT_UNITS;
+    sUnitInfo[SOLDIER].listType = eListType::LIST_FOOT_UNITS;
     sUnitInfo[SOLDIER].subListId = SUBLIST_INFANTRY;
     sUnitInfo[SOLDIER].canEnterAndDamageStructure = true;
     sUnitInfo[SOLDIER].attackIsEnterStructure = false;
@@ -500,7 +500,7 @@ void install_units() {
     sUnitInfo[INFANTRY].icon = ICON_UNIT_INFANTRY;
     sUnitInfo[INFANTRY].squish = false;
     sUnitInfo[INFANTRY].canBeSquished = true;
-    sUnitInfo[INFANTRY].listId = LIST_FOOT_UNITS;
+    sUnitInfo[INFANTRY].listType = eListType::LIST_FOOT_UNITS;
     sUnitInfo[INFANTRY].subListId = SUBLIST_INFANTRY;
     sUnitInfo[INFANTRY].canEnterAndDamageStructure = true;
     sUnitInfo[INFANTRY].attackIsEnterStructure = false;
@@ -518,7 +518,7 @@ void install_units() {
     sUnitInfo[TROOPER].infantry = true;
     sUnitInfo[TROOPER].bulletType = ROCKET_SMALL;
     sUnitInfo[TROOPER].icon = ICON_UNIT_TROOPER;
-    sUnitInfo[TROOPER].listId = LIST_FOOT_UNITS;
+    sUnitInfo[TROOPER].listType = eListType::LIST_FOOT_UNITS;
     sUnitInfo[TROOPER].subListId = SUBLIST_TROOPERS;
     sUnitInfo[TROOPER].squish = false;
     sUnitInfo[TROOPER].canBeSquished = true;
@@ -541,7 +541,7 @@ void install_units() {
     sUnitInfo[TROOPERS].bulletType = ROCKET_SMALL;
     sUnitInfo[TROOPERS].fireTwice = true;
     sUnitInfo[TROOPERS].infantry = true;
-    sUnitInfo[TROOPERS].listId = LIST_FOOT_UNITS;
+    sUnitInfo[TROOPERS].listType = eListType::LIST_FOOT_UNITS;
     sUnitInfo[TROOPERS].subListId = SUBLIST_TROOPERS;
     sUnitInfo[TROOPERS].squish = false;
     sUnitInfo[TROOPERS].canBeSquished = true;
@@ -568,7 +568,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_ONE].canBeSquished = true;
     sUnitInfo[UNIT_FREMEN_ONE].canAttackAirUnits = true;
 
-//  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
+//  units[UNIT_FREMEN_ONE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_ONE].subListId=0;
 
     // Unit        : Fremen
@@ -586,7 +586,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_THREE].squish = false;
     sUnitInfo[UNIT_FREMEN_THREE].canBeSquished = true;
     sUnitInfo[UNIT_FREMEN_THREE].canAttackAirUnits = true;
-//  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
+//  units[UNIT_FREMEN_THREE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_THREE].subListId=0;
 
     // Unit        : Saboteur
@@ -609,7 +609,7 @@ void install_units() {
     sUnitInfo[SABOTEUR].squish = false;
     sUnitInfo[SABOTEUR].canBeSquished = true;
     sUnitInfo[SABOTEUR].infantry = true; // infantry unit, so it can be squished
-    sUnitInfo[SABOTEUR].listId = LIST_PALACE;
+    sUnitInfo[SABOTEUR].listType = eListType::LIST_PALACE;
     sUnitInfo[SABOTEUR].subListId = 0;
     sUnitInfo[SABOTEUR].canEnterAndDamageStructure = true;
     sUnitInfo[SABOTEUR].attackIsEnterStructure = true;
@@ -821,7 +821,7 @@ void install_specials() {
         sSpecialInfo[i].autoBuild = false;
         sSpecialInfo[i].deployTargetType = eDeployTargetType::TARGET_NONE;
         sSpecialInfo[i].deployTargetPrecision = 0;
-        sSpecialInfo[i].listId = -1;
+        sSpecialInfo[i].listType = eListType::LIST_NONE;
         sSpecialInfo[i].subListId = -1;
         strcpy(sSpecialInfo[i].description, "\0");
     }
@@ -836,7 +836,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
     sSpecialInfo[SPECIAL_SABOTEUR].units = 1;
     sSpecialInfo[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
-    sSpecialInfo[SPECIAL_SABOTEUR].listId=LIST_PALACE;
+    sSpecialInfo[SPECIAL_SABOTEUR].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_SABOTEUR].subListId=0;
     strcpy(sSpecialInfo[SPECIAL_SABOTEUR].description, "Saboteur");
 
@@ -850,7 +850,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
     sSpecialInfo[SPECIAL_FREMEN].units = 6; // ... but this is
     sSpecialInfo[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
-    sSpecialInfo[SPECIAL_FREMEN].listId=LIST_PALACE;
+    sSpecialInfo[SPECIAL_FREMEN].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_FREMEN].subListId=0;
     strcpy(sSpecialInfo[SPECIAL_FREMEN].description, "Fremen");
 
@@ -869,7 +869,7 @@ void install_specials() {
         // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
 
     sSpecialInfo[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
-    sSpecialInfo[SPECIAL_DEATHHAND].listId=LIST_PALACE;
+    sSpecialInfo[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_DEATHHAND].subListId=0;
     strcpy(sSpecialInfo[SPECIAL_DEATHHAND].description, "Death Hand");
 
@@ -1111,7 +1111,7 @@ void install_upgrades() {
         sUpgradeInfo[i].structureType = CONSTYARD;
         sUpgradeInfo[i].providesTypeId = -1;
         sUpgradeInfo[i].providesType = STRUCTURE;
-        sUpgradeInfo[i].providesTypeList = -1;
+        sUpgradeInfo[i].providesTypeList = eListType::LIST_NONE;
         sUpgradeInfo[i].providesTypeSubList = -1;
         sUpgradeInfo[i].buildTime = 5;
         strcpy(sUpgradeInfo[i].description, "Upgrade");
@@ -1129,7 +1129,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].atUpgradeLevel = 0;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesType = STRUCTURE;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
-    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = LIST_CONSTYARD;
+    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = eListType::LIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
     strcpy(sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
@@ -1145,7 +1145,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].atUpgradeLevel = 1;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesType = STRUCTURE;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
-    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = LIST_CONSTYARD;
+    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = eListType::LIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
 
@@ -1162,7 +1162,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeId = QUAD;
-    sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = LIST_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
 
@@ -1181,7 +1181,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeId = MCV;
-    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = LIST_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
 
@@ -1198,7 +1198,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeId = LAUNCHER;
-    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = LIST_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
 
@@ -1214,7 +1214,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeId = SIEGETANK;
-    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = LIST_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
 
@@ -1230,7 +1230,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeId = SIEGETANK;
-    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = LIST_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
 
@@ -1246,7 +1246,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
-    sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = LIST_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
     strcpy(sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
@@ -1261,7 +1261,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0;
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
-    sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = LIST_FOOT_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
     if (!DEBUGGING) {
         sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
@@ -1278,7 +1278,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0;
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
-    sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = LIST_FOOT_UNITS;
+    sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
     if (!DEBUGGING) {
         sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;

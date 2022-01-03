@@ -834,26 +834,26 @@ bool cAbstractStructure::canSpawnUnits() const {
             getType() == REPAIR;
 }
 
-int cAbstractStructure::getAssociatedListID() const {
+eListType cAbstractStructure::getAssociatedListID() const {
     // TODO: make this virtual and implement at the structure classes themselves
     switch (getType()) {
         case CONSTYARD:
-            return LIST_CONSTYARD;
+            return eListType::LIST_CONSTYARD;
         case LIGHTFACTORY:
-            return LIST_UNITS;
+            return eListType::LIST_UNITS;
         case HEAVYFACTORY:
-            return LIST_UNITS;
+            return eListType::LIST_UNITS;
         case HIGHTECH:
-            return LIST_UNITS;
+            return eListType::LIST_UNITS;
         case PALACE:
-            return LIST_PALACE;
+            return eListType::LIST_PALACE;
         case BARRACKS:
-            return LIST_FOOT_UNITS;
+            return eListType::LIST_FOOT_UNITS;
         case WOR:
-            return LIST_FOOT_UNITS;
+            return eListType::LIST_FOOT_UNITS;
         case STARPORT:
-            return LIST_STARPORT;
+            return eListType::LIST_STARPORT;
         default:
-            return LIST_NONE;
+            return eListType::LIST_NONE;
     }
 }

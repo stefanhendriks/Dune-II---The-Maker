@@ -256,5 +256,5 @@ class cAbstractStructure {
 
         bool canSpawnUnits() const;
 
-        int getAssociatedListID() const;
+        eListType getAssociatedListID() const;
 };
