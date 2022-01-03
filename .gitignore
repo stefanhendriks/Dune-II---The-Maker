@@ -14,11 +14,7 @@ Dune 2.vcxproj
 
 # build directories
 build
-cmake-build-debug-mingw
-cmake-build-release
-cmake-build-release-mingw
+cmake-build-*
 dependencies/allegro-src
-cmake-build-relwithdebinfo
 Release/
 /Default/
-cmake-build-debug/
