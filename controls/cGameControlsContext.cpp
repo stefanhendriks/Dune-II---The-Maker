@@ -60,7 +60,7 @@ void cGameControlsContext::determineToolTip() {
     }
 }
 
-void cGameControlsContext::determineHoveringOverStructureId(int mouseX, int mouseY) {
+void cGameControlsContext::determineHoveringOverStructureId() {
     mouseHoveringOverStructureId = -1;
 
     if (!map.isVisible(mouseCell, this->player)) {
@@ -117,7 +117,7 @@ void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event) {
     updateMouseCell(event.coords);
     if (isMouseOnBattleField()) {
         determineToolTip();
-        determineHoveringOverStructureId(event.coords.x, event.coords.y);
+        determineHoveringOverStructureId();
         determineHoveringOverUnitId();
     } else {
         mouseHoveringOverStructureId = -1;

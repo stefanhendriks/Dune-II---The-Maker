@@ -604,6 +604,5 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
     }
 }
 
-void cSelectYourNextConquestState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-
+void cSelectYourNextConquestState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
 }

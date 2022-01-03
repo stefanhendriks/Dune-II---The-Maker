@@ -59,7 +59,7 @@ class cGameControlsContext : public cInputObserver {
 
 	protected:
 		void determineToolTip();
-		void determineHoveringOverStructureId(int mouseX, int mouseY);
+		void determineHoveringOverStructureId();
 		void determineHoveringOverUnitId();
 
 	private:

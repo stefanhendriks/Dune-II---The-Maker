@@ -20,13 +20,13 @@ public:
     void onBlur() override {};
 
 private:
-    void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    void onMouseLeftButtonClicked();
 
-    void onMouseRightButtonPressed(const s_MouseEvent &event);
+    void onMouseRightButtonPressed();
 
-    void onMouseRightButtonClicked(const s_MouseEvent &event);
+    void onMouseRightButtonClicked();
 
-    void onMouseMovedTo(const s_MouseEvent &event);
+    void onMouseMovedTo();
 
     bool mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell);
 };

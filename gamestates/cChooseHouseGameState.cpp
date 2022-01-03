@@ -115,6 +115,5 @@ void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event) {
     hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
 }
 
-void cChooseHouseGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-
+void cChooseHouseGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
 }

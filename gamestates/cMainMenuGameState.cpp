@@ -163,6 +163,5 @@ eGameStateType cMainMenuGameState::getType() {
     return GAMESTATE_MAIN_MENU;
 }
 
-void cMainMenuGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-
+void cMainMenuGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
 }
