@@ -1,5 +1,4 @@
-#ifndef CBUILDINGLISTUPDATER_H_
-#define CBUILDINGLISTUPDATER_H_
+#pragma once
 
 class cPlayer;
 
@@ -42,10 +41,8 @@ private:
 
         void onStructureCreatedCampaignMode(int structureType) const;
 
-        void onStructureDestroyedSkirmishMode(int structureType) const;
+        void onStructureDestroyedSkirmishMode() const;
 
-        void onStructureDestroyedCampaignMode(int structureType) const;
+        void onStructureDestroyedCampaignMode() const;
 
 };
-
-#endif /* CBUILDINGLISTUPDATER_H_ */

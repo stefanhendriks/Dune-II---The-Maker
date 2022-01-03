@@ -8,8 +8,8 @@ class cMapDrawer {
 
 		void setPlayer(cPlayer * thePlayer);
 
-		void drawTerrain(int startX, int startY);
-		void drawShroud(int startX, int startY);
+		void drawTerrain();
+		void drawShroud();
 
 	protected:
 

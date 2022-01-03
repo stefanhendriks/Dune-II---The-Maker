@@ -5,7 +5,7 @@
  * @param other
  * @return
  */
-bool cRectangle::isOverlapping(cRectangle *other) {
+bool cRectangle::isOverlapping(cRectangle *other) const {
     if (other == nullptr) return false;
 
     if (other->isPointWithin(getX(), getY())) return true;

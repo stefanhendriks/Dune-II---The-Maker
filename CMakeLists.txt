@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
+set(CMAKE_CXX_STANDARD 17)
+
 project(d2tm)
 
 file(GLOB d2tm_SRC
@@ -88,6 +90,9 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
     "-Wall"
+    "-Wextra"
+    "-Wnon-virtual-dtor"
+    "-Wuseless-cast"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -96,4 +101,3 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 
 add_subdirectory(dependencies)
-

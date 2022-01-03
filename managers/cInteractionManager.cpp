@@ -31,10 +31,10 @@ void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     logbook(msg);
 }
 
-void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &event) {
+void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &) {
 }
 
-void cInteractionManager::onMouseClickedRight(const s_MouseEvent &event) {
+void cInteractionManager::onMouseClickedRight(const s_MouseEvent &) {
     // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
     bool isANormalButtonClick = game.getMouse()->isNormalRightClick();
     if (isANormalButtonClick) {
@@ -45,13 +45,13 @@ void cInteractionManager::onMouseClickedRight(const s_MouseEvent &event) {
     }
 }
 
-void cInteractionManager::onMouseAt(const s_MouseEvent &mouseEvent) {
+void cInteractionManager::onMouseAt(const s_MouseEvent &) {
 }
 
-void cInteractionManager::onMouseScrolledUp(const s_MouseEvent &mouseEvent) {
+void cInteractionManager::onMouseScrolledUp(const s_MouseEvent &) {
 }
 
-void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &mouseEvent) {
+void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &) {
 }
 
 /**

@@ -10,13 +10,14 @@
 
   */
 
-#ifndef CABSTRUNIT
-#define CABSTRUNIT
+#pragma once
 
 class cAbstractUnit {
 
 public:
 	cAbstractUnit();
+
+  virtual ~cAbstractUnit() = default;
 
 	virtual void think() = 0;
 	virtual void die() = 0;
@@ -55,7 +56,3 @@ private:
 	int iOffsetY;
 
 };
-
-
-
-#endif
