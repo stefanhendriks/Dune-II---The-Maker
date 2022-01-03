@@ -322,7 +322,7 @@ public:
     cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
     cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
 
-    cBuildingListItem * isUpgradingList(int listId, int sublistId) const;
+    cBuildingListItem * isUpgradingList(eListType listType, int sublistId) const;
     cBuildingListItem * isUpgradingConstyard() const;
     cBuildingListItem * isBuildingStructure() const;
     bool isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const;
@@ -431,7 +431,7 @@ private:
 
     int getEmblemBackgroundColorForHouse(int houseId);
 
-    bool isBuildingAnythingForListAndSublist(int listId, int subListId) const;
+    bool isBuildingAnythingForListAndSublist(eListType listType, int subListId) const;
 
     bool startBuilding(cBuildingListItem *pItem);
 

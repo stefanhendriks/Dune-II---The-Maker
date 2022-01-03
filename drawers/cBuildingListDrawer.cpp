@@ -10,7 +10,7 @@ cBuildingListDrawer::~cBuildingListDrawer() {
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
-	if (listIDToDraw == LIST_CONSTYARD) {
+	if (listIDToDraw == eListTypeAsInt(eListType::LIST_CONSTYARD)) {
         drawListWithStructures(list);
 	} else {
         drawListWithUnitsOrAbilities(list);
@@ -226,7 +226,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 				}
 			}
 
-			if (list->getType() == LIST_STARPORT) {
+			if (list->getType() == eListType::LIST_STARPORT) {
 			    // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
 			    // payment/progress)
 				if (cannotPayIt) {
@@ -252,7 +252,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         int amountToShow = item->getTimesToBuild();
 		bool showAmount = item->isQueuable() && amountToShow > 0;
 
-        bool listIsStarport = item->getList()->getType() == LIST_STARPORT;
+        bool listIsStarport = item->getList()->getType() == eListType::LIST_STARPORT;
         if (listIsStarport) {
             amountToShow = item->getTimesOrdered();
             showAmount = true; // starport shows always all amounts

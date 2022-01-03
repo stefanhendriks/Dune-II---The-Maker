@@ -1,12 +1,4 @@
-/*
- * cBuildingListDrawer.h
- *
- *  Created on: Aug 1, 2009
- *      Author: Stefan
- */
-
-#ifndef CBUILDINGLISTDRAWER_H_
-#define CBUILDINGLISTDRAWER_H_
+#pragma once
 
 class cBuildingListDrawer {
 
@@ -36,10 +28,7 @@ private:
 	bool isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY);
 
 	// the list to draw
-	cBuildingList *list;
 	cTextDrawer *textDrawer;
 
 	cPlayer * player;
 };
-
-#endif /* CBUILDINGLISTDRAWER_H_ */

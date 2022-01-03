@@ -808,13 +808,13 @@ void cPlayer::setBrain(brains::cPlayerBrain *brain) {
 }
 
 bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const {
-    cBuildingListItem *pItem = sidebar->getBuildingListItem(LIST_CONSTYARD, iStructureType);
+    cBuildingListItem *pItem = sidebar->getBuildingListItem(eListType::LIST_CONSTYARD, iStructureType);
     return pItem != nullptr;
 }
 
 bool cPlayer::canBuildUnitType(int iUnitType) const {
-    int listId = sUnitInfo[iUnitType].listId;
-    cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iUnitType);
+    eListType listType = sUnitInfo[iUnitType].listType;
+    cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iUnitType);
     char msg[255];
     bool result = pItem != nullptr;
     sprintf(msg, "canBuildUnitType(unitType=%d) -> %s", iUnitType, result ? "TRUE" : "FALSE");
@@ -823,8 +823,8 @@ bool cPlayer::canBuildUnitType(int iUnitType) const {
 }
 
 bool cPlayer::canBuildSpecialType(int iType) const {
-    int listId = sSpecialInfo[iType].listId;
-    cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iType);
+    eListType listType = sSpecialInfo[iType].listType;
+    cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iType);
 
     bool result = pItem != nullptr;
 
@@ -844,7 +844,7 @@ int cPlayer::getStructureTypeBeingBuilt() const {
 }
 
 cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const {
-    return itemBuilder->getListItemWhichIsBuilding(LIST_CONSTYARD, 0);
+    return itemBuilder->getListItemWhichIsBuilding(eListType::LIST_CONSTYARD, 0);
 }
 
 /**
@@ -857,15 +857,15 @@ cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const {
  */
 bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const {
     s_UnitInfo &p = sUnitInfo[iUnitType];
-    int listId = p.listId;
+    eListType listType = p.listType;
     int subListId = p.subListId;
 
-    return isBuildingAnythingForListAndSublist(listId, subListId);
+    return isBuildingAnythingForListAndSublist(listType, subListId);
 }
 
-bool cPlayer::isBuildingAnythingForListAndSublist(int listId,
+bool cPlayer::isBuildingAnythingForListAndSublist(eListType listType,
                                                   int subListId) const {
-    return itemBuilder->isAnythingBeingBuiltForListId(listId, subListId);
+    return itemBuilder->isAnythingBeingBuiltForListType(listType, subListId);
 }
 
 
@@ -901,7 +901,7 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const {
  * @return
  */
 cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const {
-    cBuildingList *pList = sidebar->getList(LIST_UPGRADES);
+    cBuildingList *pList = sidebar->getList(eListType::LIST_UPGRADES);
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
         if (pItem == nullptr) continue;
@@ -916,18 +916,19 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, i
 
 
 /**
- * Checks if any Upgrade is in progress for the given listId/sublistId
+ * Checks if any Upgrade is in progress for the given listType/sublistId
  *
- * @param listId
+ * @param listType
  * @param sublistId
  * @return
  */
-cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
-    cBuildingList *upgradesList = sidebar->getList(LIST_UPGRADES);
+cBuildingListItem *cPlayer::isUpgradingList(eListType listType, int sublistId) const {
+    int listId = eListTypeAsInt(listType);
+    cBuildingList *upgradesList = sidebar->getList(eListType::LIST_UPGRADES);
     if (upgradesList == nullptr) {
         char msg[255];
         sprintf(msg,
-                "isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.",
+                "isUpgradingList for listType [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.",
                 listId, sublistId);
         log(msg);
         assert(false);
@@ -938,8 +939,8 @@ cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
         cBuildingListItem *pItem = upgradesList->getItem(i);
         if (pItem == nullptr) continue;
         const s_UpgradeInfo &theUpgrade = pItem->getUpgradeInfo();
-        // is this upgrade applicable to the listId/sublistId we're interested in?
-        if (theUpgrade.providesTypeList == listId && theUpgrade.providesTypeSubList == sublistId) {
+        // is this upgrade applicable to the listType/sublistId we're interested in?
+        if (theUpgrade.providesTypeList == listType && theUpgrade.providesTypeSubList == sublistId) {
             if (pItem->isBuilding()) {
                 // it is in progress, so yes!
                 return pItem;
@@ -950,29 +951,29 @@ cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
 }
 
 cBuildingListItem *cPlayer::isUpgradingConstyard() const {
-    return isUpgradingList(LIST_CONSTYARD, 0);
+    return isUpgradingList(eListType::LIST_CONSTYARD, 0);
 }
 
 /**
  * Returns true if anything is built from ConstYard
  */
 cBuildingListItem *cPlayer::isBuildingStructure() const {
-    return itemBuilder->getListItemWhichIsBuilding(LIST_CONSTYARD, 0);
+    return itemBuilder->getListItemWhichIsBuilding(eListType::LIST_CONSTYARD, 0);
 }
 
 bool cPlayer::startBuildingUnit(int iUnitType) const {
     s_UnitInfo &unitType = sUnitInfo[iUnitType];
-    int listId = unitType.listId;
-    bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iUnitType);
+    eListType listType = unitType.listType;
+    bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUnitType);
 
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - SUCCESS", unitType.name,
-                    iUnitType, listId);
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listType[%d] - SUCCESS", unitType.name,
+                    iUnitType, eListTypeAsInt(listType));
         } else {
-            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - FAILED", unitType.name,
-                    iUnitType, listId);
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listType[%d] - FAILED", unitType.name,
+                    iUnitType, eListTypeAsInt(listType));
         }
         log(msg);
     }
@@ -980,18 +981,18 @@ bool cPlayer::startBuildingUnit(int iUnitType) const {
 }
 
 bool cPlayer::startBuildingStructure(int iStructureType) const {
-    int listId = LIST_CONSTYARD;
+    eListType listType = eListType::LIST_CONSTYARD;
 
-    bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iStructureType);
+    bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iStructureType);
 
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - SUCCESS",
-                    sStructureInfo[iStructureType].name, iStructureType, listId);
+            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listType[%d] - SUCCESS",
+                    sStructureInfo[iStructureType].name, iStructureType, eListTypeAsInt(listType));
         } else {
-            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - FAILED",
-                    sStructureInfo[iStructureType].name, iStructureType, listId);
+            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listType[%d] - FAILED",
+                    sStructureInfo[iStructureType].name, iStructureType, eListTypeAsInt(listType));
         }
         log(msg);
     }
@@ -999,18 +1000,18 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
 }
 
 bool cPlayer::startBuildingSpecial(int iSpecialType) const {
-    int listId = LIST_PALACE;
+    eListType listType = eListType::LIST_PALACE;
 
-    bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iSpecialType);
+    bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iSpecialType);
 
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - SUCCESS",
-                    sSpecialInfo[iSpecialType].description, iSpecialType, listId);
+            sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listType[%d] - SUCCESS",
+                    sSpecialInfo[iSpecialType].description, iSpecialType, eListTypeAsInt(listType));
         } else {
-            sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - FAILED",
-                    sSpecialInfo[iSpecialType].description, iSpecialType, listId);
+            sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listType[%d] - FAILED",
+                    sSpecialInfo[iSpecialType].description, iSpecialType, eListTypeAsInt(listType));
         }
         log(msg);
     }
@@ -1018,17 +1019,17 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
 }
 
 bool cPlayer::startUpgrading(int iUpgradeType) const {
-    int listId = LIST_UPGRADES;
-    bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iUpgradeType);
+    eListType listType = eListType::LIST_UPGRADES;
+    bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUpgradeType);
 
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - SUCCESS",
-                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, listId);
+            sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listType[%d] - SUCCESS",
+                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, eListTypeAsInt(listType));
         } else {
-            sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - FAILED",
-                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, listId);
+            sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listType[%d] - FAILED",
+                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, eListTypeAsInt(listType));
         }
         log(msg);
     }
@@ -1039,14 +1040,14 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
  * Returns true if anything is built and awaiting placement from ConstYard
  */
 bool cPlayer::isBuildingStructureAwaitingPlacement() const {
-    return itemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
+    return itemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(eListType::LIST_CONSTYARD, 0);
 }
 
 /**
  * Returns true if anything is built & awaiting deployment from Palace
  */
 bool cPlayer::isSpecialAwaitingPlacement() const {
-    return itemBuilder->isAnythingBeingBuiltForListIdAwaitingDeployment(LIST_PALACE, 0);
+    return itemBuilder->isAnythingBeingBuiltForListIdAwaitingDeployment(eListType::LIST_PALACE, 0);
 }
 
 /**
@@ -1054,7 +1055,7 @@ bool cPlayer::isSpecialAwaitingPlacement() const {
  * @return
  */
 cBuildingListItem * cPlayer::getSpecialAwaitingPlacement() const {
-    return itemBuilder->getListItemWhichIsAwaitingDeployment(LIST_PALACE, 0);
+    return itemBuilder->getListItemWhichIsAwaitingDeployment(eListType::LIST_PALACE, 0);
 }
 
 
@@ -1245,7 +1246,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
         // assume it requires an upgrade?
         char msg[255];
         sprintf(msg, "canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [%d] for this unit: [%s]",
-                sUnitInfo[iUnitType].listId, sUnitInfo[iUnitType].name);
+                eListTypeAsInt(sUnitInfo[iUnitType].listType), sUnitInfo[iUnitType].name);
         log(msg);
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
@@ -1274,7 +1275,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
     }
 
     // Are we building this thing already?
-    if (isBuildingAnythingForListAndSublist(special.listId, special.subListId)) {
+    if (isBuildingAnythingForListAndSublist(special.listType, special.subListId)) {
         char msg[255];
         sprintf(msg, "canBuildSpecial: FALSE, because already building it");
         log(msg);
@@ -1286,7 +1287,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
         // assume it requires an upgrade?
         char msg[255];
         sprintf(msg, "canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [%d] for this special: [%s]",
-                special.listId, special.description);
+                eListTypeAsInt(special.listType), special.description);
         log(msg);
         return eCantBuildReason::REQUIRES_UPGRADE;
     }

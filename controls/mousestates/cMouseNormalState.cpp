@@ -87,8 +87,8 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                 player->selected_structure = hoverStructureId;
                 cAbstractStructure *pStructure = player->getSelectedStructure();
                 if (pStructure && pStructure->isValid() && pStructure->belongsTo(player)) {
-                    int listId = pStructure->getAssociatedListID();
-                    if (listId > -1) {
+                    eListType listId = pStructure->getAssociatedListID();
+                    if (listId != eListType::LIST_NONE) {
                         player->getSideBar()->setSelectedListId(listId);
                     }
                 } else {

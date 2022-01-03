@@ -75,7 +75,7 @@ struct s_UnitInfo {
   // house specific rates
 
   // list related
-  int listId;               // ie LIST_FOOT_UNITS or LIST_UNITS
+  eListType listType;               // ie LIST_FOOT_UNITS or LIST_UNITS
   int subListId;            // ie SUBLIST_LIGHTFCTRY
 
   // attack related
@@ -168,7 +168,7 @@ struct s_UpgradeInfo {
     eBuildType providesType;    // UNIT or STRUCTURE, etc
 
     int providesTypeId;   // upgrade results into getting this typeId (type depends on 'providesType') (points to s_Unit/s_Structure)
-    int providesTypeList; // into which list will this type be made available?
+    eListType providesTypeList; // into which list will this type be made available?
     int providesTypeSubList; // and sublist
 
 };
@@ -207,7 +207,7 @@ struct s_SpecialInfo {
 
     int deployAtStructure; // if deployFrom == STRUCTURE, then this is the structure type to deploy at
 
-    int listId;
+    eListType listType;
     int subListId;
 };
 

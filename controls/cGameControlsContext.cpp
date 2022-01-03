@@ -573,9 +573,9 @@ void cGameControlsContext::onFocusMouseStateEvent() {
 //            if (theSelectedStructure->getOwner() == HUMAN) {
 //                int typeOfStructure = theSelectedStructure->getType();
 //                cListUtils listUtils;
-//                int listId = listUtils.findListTypeByStructureType(typeOfStructure);
-//                if (listId != LIST_NONE) {
-//                    humanPlayer.getSideBar()->setSelectedListId(listId);
+//                int listType = listUtils.findListTypeByStructureType(typeOfStructure);
+//                if (listType != LIST_NONE) {
+//                    humanPlayer.getSideBar()->setSelectedListId(listType);
 //                }
 //            }
 //        } else {
