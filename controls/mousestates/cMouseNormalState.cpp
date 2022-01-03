@@ -29,16 +29,16 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
             mouse->boxSelectLogic(context->getMouseCell());
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseLeftButtonClicked(event);
+            onMouseLeftButtonClicked();
             break;
         case MOUSE_RIGHT_BUTTON_PRESSED:
-            onMouseRightButtonPressed(event);
+            onMouseRightButtonPressed();
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
-            onMouseRightButtonClicked(event);
+            onMouseRightButtonClicked();
             break;
         case MOUSE_MOVED_TO:
-            onMouseMovedTo(event);
+            onMouseMovedTo();
             break;
         default:
             break;
@@ -50,7 +50,7 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cMouseNormalState::onMouseLeftButtonClicked() {
     bool selectedUnits = false;
     if (mouse->isBoxSelecting()) {
         player->deselectAllUnits();
@@ -121,15 +121,15 @@ void cMouseNormalState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     mouse->resetBoxSelect();
 }
 
-void cMouseNormalState::onMouseRightButtonPressed(const s_MouseEvent &event) {
+void cMouseNormalState::onMouseRightButtonPressed() {
     mouse->dragViewportInteraction();
 }
 
-void cMouseNormalState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+void cMouseNormalState::onMouseRightButtonClicked() {
     mouse->resetDragViewportInteraction();
 }
 
-void cMouseNormalState::onMouseMovedTo(const s_MouseEvent &event) {
+void cMouseNormalState::onMouseMovedTo() {
     if (state == SELECT_STATE_NORMAL) {
         mouseTile = getMouseTileForNormalState();
     } else if (state == SELECT_STATE_RALLY) {

@@ -22,16 +22,16 @@ void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event) {
             mouse->boxSelectLogic(context->getMouseCell());
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseLeftButtonClicked(event);
+            onMouseLeftButtonClicked();
             break;
         case MOUSE_RIGHT_BUTTON_PRESSED:
-            onMouseRightButtonPressed(event);
+            onMouseRightButtonPressed();
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
-            onMouseRightButtonClicked(event);
+            onMouseRightButtonClicked();
             break;
         case MOUSE_MOVED_TO:
-            onMouseMovedTo(event);
+            onMouseMovedTo();
             break;
         default:
             break;
@@ -43,7 +43,7 @@ void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
     if (mouse->isBoxSelecting()) {
         // clear only when we don't want to add to selection
         if (state != SELECTED_STATE_ADD_TO_SELECTION) {
@@ -135,11 +135,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked(const s_MouseEvent &even
 
 }
 
-void cMouseUnitsSelectedState::onMouseRightButtonPressed(const s_MouseEvent &event) {
+void cMouseUnitsSelectedState::onMouseRightButtonPressed() {
     mouse->dragViewportInteraction();
 }
 
-void cMouseUnitsSelectedState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+void cMouseUnitsSelectedState::onMouseRightButtonClicked() {
     // if we were dragging the viewport, keep the units and this state.
     if (!mouse->isMapScrolling()) {
         player->deselectAllUnits();
@@ -150,7 +150,7 @@ void cMouseUnitsSelectedState::onMouseRightButtonClicked(const s_MouseEvent &eve
     mouse->resetDragViewportInteraction();
 }
 
-void cMouseUnitsSelectedState::onMouseMovedTo(const s_MouseEvent &event) {
+void cMouseUnitsSelectedState::onMouseMovedTo() {
     if (state == SELECTED_STATE_FORCE_ATTACK) {
         mouseTile = MOUSE_ATTACK;
     } if (state == SELECTED_STATE_ADD_TO_SELECTION) {

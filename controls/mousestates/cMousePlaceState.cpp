@@ -12,16 +12,16 @@ void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event) {
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseLeftButtonClicked(event);
+            onMouseLeftButtonClicked();
             break;
         case MOUSE_RIGHT_BUTTON_PRESSED:
-            onMouseRightButtonPressed(event);
+            onMouseRightButtonPressed();
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
-            onMouseRightButtonClicked(event);
+            onMouseRightButtonClicked();
             break;
         case MOUSE_MOVED_TO:
-            onMouseMovedTo(event);
+            onMouseMovedTo();
             break;
         default:
             break;
@@ -33,7 +33,7 @@ void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMousePlaceState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cMousePlaceState::onMouseLeftButtonClicked() {
     // this assumes the context has been updated beforehand...
     int mouseCell = context->getMouseCell();
 
@@ -151,16 +151,21 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     return true;
 }
 
-void cMousePlaceState::onMouseRightButtonPressed(const s_MouseEvent &event) {
-
+void cMousePlaceState::onMouseRightButtonPressed() {
+    mouse->dragViewportInteraction();
 }
 
-void cMousePlaceState::onMouseRightButtonClicked(const s_MouseEvent &event) {
-    context->toPreviousState();
+void cMousePlaceState::onMouseRightButtonClicked() {
+    if (mouse->isMapScrolling()) {
+        mouse->resetDragViewportInteraction();
+    } else {
+        context->toPreviousState();
+    }
 }
 
-void cMousePlaceState::onMouseMovedTo(const s_MouseEvent &event) {
-
+void cMousePlaceState::onMouseMovedTo() {
+    // TODO: update state for determining place result so that renderer does not need to do
+    // that logic every frame (see cPlaceItDrawer)
 }
 
 void cMousePlaceState::onStateSet() {
@@ -169,6 +174,5 @@ void cMousePlaceState::onStateSet() {
 }
 
 
-void cMousePlaceState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-
+void cMousePlaceState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
 }

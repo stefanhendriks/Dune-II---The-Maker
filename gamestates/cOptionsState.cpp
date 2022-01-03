@@ -84,6 +84,5 @@ eGameStateType cOptionsState::getType() {
     return GAMESTATE_OPTIONS;
 }
 
-void cOptionsState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-
+void cOptionsState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
 }

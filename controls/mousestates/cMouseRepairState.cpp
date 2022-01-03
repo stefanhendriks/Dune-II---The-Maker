@@ -12,16 +12,16 @@ void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event) {
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseLeftButtonClicked(event);
+            onMouseLeftButtonClicked();
             break;
         case MOUSE_RIGHT_BUTTON_PRESSED:
-            onMouseRightButtonPressed(event);
+            onMouseRightButtonPressed();
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
-            onMouseRightButtonClicked(event);
+            onMouseRightButtonClicked();
             break;
         case MOUSE_MOVED_TO:
-            onMouseMovedTo(event);
+            onMouseMovedTo();
             break;
         default:
             break;
@@ -33,7 +33,7 @@ void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMouseRepairState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cMouseRepairState::onMouseLeftButtonClicked() {
     int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
@@ -50,11 +50,11 @@ void cMouseRepairState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     }
 }
 
-void cMouseRepairState::onMouseRightButtonPressed(const s_MouseEvent &event) {
+void cMouseRepairState::onMouseRightButtonPressed() {
     mouse->dragViewportInteraction();
 }
 
-void cMouseRepairState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+void cMouseRepairState::onMouseRightButtonClicked() {
     if (!mouse->isMapScrolling()) {
         context->toPreviousState();
     }
@@ -62,7 +62,7 @@ void cMouseRepairState::onMouseRightButtonClicked(const s_MouseEvent &event) {
     mouse->resetDragViewportInteraction();
 }
 
-void cMouseRepairState::onMouseMovedTo(const s_MouseEvent &event) {
+void cMouseRepairState::onMouseMovedTo() {
     mouseTile = getMouseTileForRepairState();
 }
 

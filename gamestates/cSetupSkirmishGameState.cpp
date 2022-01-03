@@ -1021,7 +1021,6 @@ void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &) {
 
 }
 
-void cSetupSkirmishGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-
+void cSetupSkirmishGameState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
 }
 
