@@ -107,9 +107,8 @@ void cBullet::draw() {
         return;
     }
 
-    if (sBulletInfo[iType].bmp != NULL) {
-        BITMAP *src = (BITMAP *) sBulletInfo[iType].bmp;
-        allegroDrawer->maskedStretchBlit(src,
+    if (sBulletInfo[iType].bmp != nullptr) {
+        allegroDrawer->maskedStretchBlit(sBulletInfo[iType].bmp,
                                          bmp_screen,
                                          sx, sy,
                                          bmp_width, bmp_width,

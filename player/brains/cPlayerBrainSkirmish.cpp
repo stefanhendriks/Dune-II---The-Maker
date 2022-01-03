@@ -445,7 +445,7 @@ namespace brains {
         if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             produceMissionsDuringPeacetime(scoutingUnitType);
         } else if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-            produceAttackingMissions(scoutingUnitType);
+            produceAttackingMissions();
         }
     }
 
@@ -511,7 +511,7 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainSkirmish::produceAttackingMissions(int scoutingUnitType) {
+    void cPlayerBrainSkirmish::produceAttackingMissions() {
         if (!hasMission(MISSION_ATTACK1)) {
             produceSkirmishGroundAttackMission(MISSION_ATTACK1);
         } else if (!hasMission(MISSION_ATTACK2)) {

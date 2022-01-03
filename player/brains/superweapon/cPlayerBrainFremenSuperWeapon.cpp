@@ -85,11 +85,11 @@ namespace brains {
         player->log(msg);
     }
 
-    void cPlayerBrainFremenSuperWeapon::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainFremenSuperWeapon::onNotify(const s_GameEvent &) {
         // not interested
     }
 
-    void cPlayerBrainFremenSuperWeapon::addBuildOrder(S_buildOrder order) {
+    void cPlayerBrainFremenSuperWeapon::addBuildOrder(S_buildOrder) {
 
     }
 

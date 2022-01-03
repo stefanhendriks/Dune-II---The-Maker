@@ -289,7 +289,7 @@ int cBuildingListItem::getProgressBuildTimeInMs() {
     return getInTicks(progress) * 5; // 5 = ms for every time we call the itemBuilder
 }
 
-const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
+int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
     int buildTime = 0;
     switch (type) {
         case UNIT:
@@ -305,14 +305,14 @@ const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int build
             buildTime = sUpgradeInfo[buildId].buildTime;
             break;
         case BULLET:
-            buildTime = 0;
         default:
             buildTime = 0;
+            break;
     }
     return buildTime * 35;
 }
 
-const int cBuildingListItem::getListId(eBuildType type, int buildId) {
+int cBuildingListItem::getListId(eBuildType type, int buildId) {
     switch (type) {
         case UNIT:
             return sUnitInfo[buildId].listId;
@@ -330,7 +330,7 @@ const int cBuildingListItem::getListId(eBuildType type, int buildId) {
     }
 }
 
-const bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
+bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
     switch (type) {
         case SPECIAL:
             return sSpecialInfo[buildId].autoBuild;

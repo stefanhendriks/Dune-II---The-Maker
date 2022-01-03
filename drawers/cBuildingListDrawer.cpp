@@ -11,17 +11,17 @@ cBuildingListDrawer::~cBuildingListDrawer() {
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
 	if (listIDToDraw == LIST_CONSTYARD) {
-        drawListWithStructures(list, listIDToDraw);
+        drawListWithStructures(list);
 	} else {
-        drawListWithUnitsOrAbilities(list, listIDToDraw);
+        drawListWithUnitsOrAbilities(list);
 	}
 }
 
-void cBuildingListDrawer::drawListWithStructures(cBuildingList *list, int listIDToDraw) {
+void cBuildingListDrawer::drawListWithStructures(cBuildingList *list) {
     drawList(list, true);
 }
 
-void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw) {
+void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list) {
     drawList(list, false);
 }
 

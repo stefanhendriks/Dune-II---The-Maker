@@ -1634,7 +1634,7 @@ float health_bar(float max_w, int i, int w) {
   }
 
   // amount of pixels (max_w = 100%)
-  float health = (float)(flHP / flMAX);
+  auto health = flHP / flMAX;
 
   return (health * max_w);
 }

@@ -607,7 +607,7 @@ int INI_WordType(char word[25], int section) {
 
 
 // Scenario section types
-int SCEN_INI_SectionType(char section[30], int last) {
+int SCEN_INI_SectionType(char section[30]) {
     if (strcmp(section, "UNITS") == 0)
         return INI_UNITS;
 
@@ -1279,7 +1279,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
             // line is not starting empty and section is found
             if (linesection[0] != '\0' && strlen(linesection) > 1) {
-                int sectionType = SCEN_INI_SectionType(linesection, section);
+                int sectionType = SCEN_INI_SectionType(linesection);
                 if (sectionType > -1) {
                     // found a section
                     section = sectionType;
@@ -2274,7 +2274,7 @@ void INI_Install_Game(std::string filename) {
 }
 
 
-void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
+void INI_LOAD_SKIRMISH(char filename[80]) {
     // search for new entry in previewed maps
     int iNew = -1;
     for (int i = 0; i < 100; i++) {
@@ -2510,7 +2510,7 @@ void INI_PRESCAN_SKIRMISH() {
             sprintf(fullname, "skirmish/%s", file.name);
             sprintf(msg, "Loading skirmish map: %s", fullname);
             logbook(msg);
-            INI_LOAD_SKIRMISH(fullname, true);
+            INI_LOAD_SKIRMISH(fullname);
         } while (!al_findnext(&file));
     } else {
         logbook("No skirmish maps found in skirmish directory.");

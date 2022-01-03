@@ -688,7 +688,7 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
     startButton->onNotifyMouseEvent(event);
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &) {
     onMouseRightButtonClickedAtStartPoints();
     onMouseRightButtonClickedAtWorms();
     onMouseRightButtonClickedAtPlayerList();
@@ -760,7 +760,7 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw p
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &) {
     onMouseLeftButtonClickedAtMapList();
     onMouseLeftButtonClickedAtStartPoints();
     onMouseLeftButtonClickedAtWorms();
@@ -1017,7 +1017,7 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms() {
 }
 
 
-void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &event) {
+void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &) {
 
 }
 

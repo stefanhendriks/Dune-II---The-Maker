@@ -5,8 +5,7 @@
  *      Author: Stefan
  */
 
-#ifndef CBUILDINGLISTFACTORY_H_
-#define CBUILDINGLISTFACTORY_H_
+#pragma once
 
 class cBuildingListFactory {
 
@@ -24,9 +23,7 @@ class cBuildingListFactory {
 
 		~cBuildingListFactory();
 
-		void initializeList(cBuildingList *list, eListType listType, int house);
-		cBuildingList *createList(eListType listType, int house);
+		void initializeList(cBuildingList *list, eListType listType);
+		cBuildingList *createList(eListType listType);
 
 };
-
-#endif /* CBUILDINGLISTFACTORY_H_ */

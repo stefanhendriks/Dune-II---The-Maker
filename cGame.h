@@ -9,8 +9,7 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
-#ifndef D2TM_GAME_H
-#define D2TM_GAME_H
+#pragma once
 
 #include <controls/cMouse.h>
 #include <controls/cKeyboard.h>
@@ -155,7 +154,6 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
 
-    void onEventDiscovered(const s_GameEvent &event);
     void onEventSpecialLaunch(const s_GameEvent &event);
 
     static const char* stateString(const int &state) {
@@ -300,5 +298,3 @@ private:
 
     void onKeyPressedGamePlaying(const s_KeyboardEvent &event);
 };
-
-#endif
