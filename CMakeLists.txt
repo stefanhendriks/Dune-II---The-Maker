@@ -88,7 +88,7 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
     "-Wall"
-    "-Wunused-parameter" # part of -Wextra
+    "-Wextra"
     "-Wnon-virtual-dtor"
     "-Wuseless-cast"
 )
