@@ -80,6 +80,7 @@ target_link_libraries(${PROJECT_NAME}
     alleg
     almp3dll
     alfontdll
+    fmt::fmt
     -static-libgcc
     -static-libstdc++
 )

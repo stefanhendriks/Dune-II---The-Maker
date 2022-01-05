@@ -10,6 +10,8 @@
 
   */
 
+#include <string>
+
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
  * @param desiredMs
@@ -24,7 +26,7 @@ int slowThinkMsToTicks(int desiredMs);
  */
 int fastThinkMsToTicks(int desiredMs);
 
-void logbook(const char *txt);
+void logbook(const std::string& txt);
 
 int BETWEEN(int val, int min, int max);
 void FIX_BORDER_POS(int &x, int &y);
