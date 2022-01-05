@@ -205,12 +205,12 @@ namespace brains {
                 // this structure got destroyed, so mark it as destroyed in my base plan
                 structurePosition.isDestroyed = true;
                 // and add order to rebuild it
-                addBuildOrder((S_buildOrder) {
-                        buildType : STRUCTURE,
-                        priority : 1,
-                        buildId : structurePosition.type,
-                        placeAt : structurePosition.cell,
-                        state : buildOrder::PROCESSME,
+                addBuildOrder(S_buildOrder{
+                        .buildType = STRUCTURE,
+                        .priority = 1,
+                        .buildId = structurePosition.type,
+                        .placeAt = structurePosition.cell,
+                        .state = buildOrder::PROCESSME,
                 });
             }
         }
@@ -290,12 +290,12 @@ namespace brains {
                 // add it to the build queue
 
                 if (result.structureType > -1 && result.cell > -1) {
-                    addBuildOrder((S_buildOrder) {
-                            buildType : STRUCTURE,
-                            priority : 1,
-                            buildId : result.structureType,
-                            placeAt : result.cell,
-                            state : buildOrder::PROCESSME,
+                    addBuildOrder(S_buildOrder{
+                            .buildType = STRUCTURE,
+                            .priority = 1,
+                            .buildId = result.structureType,
+                            .placeAt = result.cell,
+                            .state = buildOrder::PROCESSME,
                     });
                 }
             }
@@ -408,12 +408,12 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::addBuildOrderForUnit(int type) {
-        addBuildOrder((S_buildOrder) {
-            buildType : UNIT,
-            priority : 0,
-            buildId : type,
-            placeAt : -1,
-            state : buildOrder::PROCESSME,
+        addBuildOrder(S_buildOrder{
+            .buildType = UNIT,
+            .priority = 0,
+            .buildId = type,
+            .placeAt = -1,
+            .state = buildOrder::PROCESSME,
         });
     }
 
@@ -456,12 +456,12 @@ namespace brains {
             if (amountOfHarvesters < idealAmountHarvesters) {
                 if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER)) {
                     std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: UNIT,
-                            type : HARVESTER,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = UNIT,
+                            .type = HARVESTER,
+                            .required = 1,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER);
                 }
@@ -474,12 +474,12 @@ namespace brains {
             if (player->getAmountOfUnitsForType(CARRYALL) < idealAmountOfCarryAlls) {
                 if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL)) {
                     std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: UNIT,
-                            type : CARRYALL,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = UNIT,
+                            .type = CARRYALL,
+                            .required = 1,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL);
                 }
@@ -526,12 +526,12 @@ namespace brains {
         if (!hasMission(MISSION_ATTACK5)) {
             if (player->canBuildUnitBool(ORNITHOPTER)) {
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: UNIT,
-                        type : ORNITHOPTER,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = UNIT,
+                        .type = ORNITHOPTER,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15),
                            MISSION_ATTACK5);
@@ -544,12 +544,12 @@ namespace brains {
             if (!hasMission(MISSION_SCOUT1)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: UNIT,
-                        type : scoutingUnitType,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = UNIT,
+                        .type = scoutingUnitType,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
 
                 addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15),
@@ -557,12 +557,12 @@ namespace brains {
             } else if (!hasMission(MISSION_SCOUT2)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: UNIT,
-                        type : scoutingUnitType,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = UNIT,
+                        .type = scoutingUnitType,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
 
                 addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15),
@@ -570,12 +570,12 @@ namespace brains {
             } else if (!hasMission(MISSION_SCOUT3)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: UNIT,
-                        type : scoutingUnitType,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = UNIT,
+                        .type = scoutingUnitType,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
 
                 addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT3);
@@ -585,19 +585,19 @@ namespace brains {
         if (!hasMission(MISSION_GUARDFORCE) && player->canBuildUnitBool(QUAD) && player->canBuildUnitBool(TANK)) {
             // add defending force
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : QUAD,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = QUAD,
+                    .required = 1,
+                    .ordered = 0,
+                    .produced = 0,
             });
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : TANK,
-                    required: 2,
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = TANK,
+                    .required = 2,
+                    .ordered = 0,
+                    .produced = 0,
             });
             addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
         }
@@ -625,12 +625,12 @@ namespace brains {
         }
 
         if (rnd(100) < normalChance && player->canBuildUnitBool(SIEGETANK)) {
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : SIEGETANK,
-                    required: 1+rnd(4),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = SIEGETANK,
+                    .required = 1+rnd(4),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
@@ -639,12 +639,12 @@ namespace brains {
             if (player->canBuildUnitBool(TROOPERS)) {
                 trooperUnit = TROOPERS;
             }
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : trooperUnit,
-                    required: 1 + rnd(2),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = trooperUnit,
+                    .required = 1 + rnd(2),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
@@ -653,64 +653,64 @@ namespace brains {
             if (player->canBuildUnitBool(INFANTRY)) {
                 infantryUnit = INFANTRY;
             }
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : infantryUnit,
-                    required: 1 + rnd(2),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = infantryUnit,
+                    .required = 1 + rnd(2),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
         if (rnd(100) < bigChance && player->canBuildUnitBool(LAUNCHER)) {
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : LAUNCHER,
-                    required: 1+rnd(3),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = LAUNCHER,
+                    .required = 1+rnd(3),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
         if (rnd(100) < bigChance && player->canBuildUnitBool(TANK)) {
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : TANK,
-                    required: 1+rnd(4),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = TANK,
+                    .required = 1+rnd(4),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
         int scoutingUnitType = player->getScoutingUnitType();
         if (rnd(100) < smallChance && player->canBuildUnitBool(scoutingUnitType)) {
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : scoutingUnitType,
-                    required: 1+rnd(2),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = scoutingUnitType,
+                    .required = 1+rnd(2),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
         if (QUAD != scoutingUnitType && player->canBuildUnitBool(QUAD) && rnd(100) < normalChance) {
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : QUAD,
-                    required: 1+rnd(3),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = QUAD,
+                    .required = 1+rnd(3),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
         int specialType = player->getSpecialUnitType();
         if (rnd(100) < normalChance && player->canBuildUnitBool(specialType)) {
-            group.push_back((S_groupKind) {
-                    buildType: UNIT,
-                    type : specialType,
-                    required: 1+rnd(2),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = specialType,
+                    .required = 1+rnd(2),
+                    .ordered = 0,
+                    .produced = 0,
             });
         }
 
