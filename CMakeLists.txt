@@ -90,9 +90,11 @@ target_compile_options(${PROJECT_NAME}
     "-Werror"
     "-Wall"
     "-Wextra"
+    "-Wpedantic"
     "-Wnon-virtual-dtor"
     "-Wuseless-cast"
     "-Wredundant-tags"
+    "-Wzero-as-null-pointer-constant"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
