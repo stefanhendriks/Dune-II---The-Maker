@@ -314,12 +314,12 @@ namespace brains {
 
                     // else, we order stuff, if we didn't already?
                     while (thingIWant.ordered < thingIWant.required) {
-                        brain->addBuildOrder((S_buildOrder) {
-                                buildType : thingIWant.buildType,
-                                priority : 0,
-                                buildId : thingIWant.type,
-                                placeAt : -1,
-                                state : buildOrder::eBuildOrderState::PROCESSME,
+                        brain->addBuildOrder(S_buildOrder{
+                                .buildType = thingIWant.buildType,
+                                .priority = 0,
+                                .buildId = thingIWant.type,
+                                .placeAt = -1,
+                                .state = buildOrder::eBuildOrderState::PROCESSME,
                         });
 //                        // amount of 'think' iterations to wait before we bail the mission
 //                        // brains 'normal thinking' is 100ms every tick. The missions have much faster thinking (5ms).
