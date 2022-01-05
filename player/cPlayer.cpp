@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "../include/d2tmh.h"
 
+#include <fmt/core.h>
 
 cPlayer::cPlayer() {
     itemBuilder = nullptr;
@@ -1764,12 +1765,10 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     return result;
 }
 
-void cPlayer::log(const char *txt) const {
-    if (DEBUGGING) {
-        char msg[1024];
-        sprintf(msg, "PLAYER [%d(=%s)] : %s", getId(), getHouseName().c_str(), txt);
-        logbook(msg);
-    }
+void cPlayer::log(const std::string& txt) const {
+  if (DEBUGGING) {
+    logbook(fmt::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
+  }
 }
 
 bool cPlayer::startUpgradingForUnitIfPossible(int iUpgradeType) const {

@@ -10,10 +10,12 @@
 
   */
 
-#include <math.h>
-#include "../../include/d2tmh.h"
+#include "d2tmh.h"
 #include "cUnit.h"
 
+#include <fmt/core.h>
+
+#include <cmath>
 
 // Path creation definitions / var
 #define CLOSED        -1
@@ -726,9 +728,7 @@ void cUnit::draw() {
                                          scaledWidth,
                                          scaledHeight);
     } else {
-        char msg[255];
-        sprintf(msg, "unit of iType [%d] did not have a bitmap!?", iType);
-        log(msg);
+        log(fmt::format("unit of iType [{}] did not have a bitmap!?", iType));
     }
 
     // Draw TOP
@@ -784,23 +784,17 @@ void cUnit::updateCellXAndY() {
 }
 
 void cUnit::attackUnit(int targetUnit) {
-    char msg[255];
-    sprintf(msg, "attackUnit() : target is [%d]", targetUnit);
-    log(msg);
+    log(fmt::format("attackUnit() : target is [{}]", targetUnit));
     attack(unit[targetUnit].iCell, targetUnit, -1, -1);
 }
 
 void cUnit::attackStructure(int targetStructure) {
-    char msg[255];
-    sprintf(msg, "attackStructure() : target is [%d]", targetStructure);
-    log(msg);
+    log(fmt::format("attackStructure() : target is [{}]", targetStructure));
     attack(structure[targetStructure]->getCell(), -1, targetStructure, -1);
 }
 
 void cUnit::attackCell(int cell) {
-    char msg[255];
-    sprintf(msg, "attackCell() : cell target is [%d]", cell);
-    log(msg);
+    log(fmt::format("attackCell() : cell target is [{}]", cell));
     attack(cell, -1, -1, cell);
 }
 
@@ -809,10 +803,8 @@ void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
-    char msg[255];
-    sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure,
-            iAttackCell, iGoalCell);
-    log(msg);
+    log(fmt::format("Attacking UNIT ID [{}], STRUCTURE ID [{}], ATTACKCLL [{}], GoalCell [{}]",
+                    iUnit, iStructure, iAttackCell, iGoalCell));
 
     if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
         log("What is this? Ordered to attack but no target?");
@@ -835,9 +827,7 @@ void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
 }
 
 void cUnit::attackAt(int cell) {
-    char msg[255];
-    sprintf(msg, "attackAt() : cell target is [%d]", cell);
-    log(msg);
+    log(fmt::format("attackAt() : cell target is [{}]", cell));
 
     if (!map.isWithinBoundaries(cell)) {
         log("attackAt() : Invalid cell, aborting");
@@ -846,8 +836,7 @@ void cUnit::attackAt(int cell) {
 
     int unitId = map.getCellIdUnitLayer(cell);
     int structureId = map.getCellIdStructuresLayer(cell);
-    sprintf(msg, "attackAt() : cell target is [%d], structureId [%d], unitId [%d]", cell, structureId, unitId);
-    log(msg);
+    log(fmt::format("attackAt() : cell target is [{}], structureId [{}], unitId [{}]", cell, structureId, unitId));
 
     if (structureId > -1) {
         attackStructure(structureId);
@@ -867,9 +856,8 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup) {
 }
 
 void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent) {
-    char msg[255];
-    sprintf(msg, "(move_to - START) : to cell [%d], iStructureIdToEnter[%d], iUnitIdToPickup[%d] (to attack, if > -1), intent[%s]", iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent));
-    log(msg);
+    log(fmt::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
+                    iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
     iGoalCell = iCll;
     if (iStructureID > -1) {
         unitWillNoLongerBeInteractingWithStructure();
@@ -2152,11 +2140,10 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
     }
 }
 
-void cUnit::log(const char *txt) const {
+void cUnit::log(const std::string& txt) const {
     // logs unit stuff, but gives unit information
-    char msg[512];
-    sprintf(msg, "[UNIT[%d]: type = %d(=%s), iCell = %d, iGoalCell = %d] '%s'", iID, iType, sUnitInfo[iType].name, iCell, iGoalCell, txt);
-    players[iPlayer].log(msg);
+    players[iPlayer].log(fmt::format("[UNIT[{}]: type = {}(={}), iCell = {}, iGoalCell = {}] '{}'",
+                                     iID, iType, sUnitInfo[iType].name, iCell, iGoalCell, txt));
 }
 
 /**
@@ -2314,9 +2301,8 @@ void cUnit::think_attack_sandworm() {
         }
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "think_attack_sandworm() -> eaten unit. Units eaten %d, TIMER_guard %d", unitsEaten, TIMER_guard);
-            logbook(msg);
+            logbook(fmt::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
+                                unitsEaten, TIMER_guard));
         }
         return;
     }
@@ -2474,10 +2460,8 @@ void cUnit::thinkFast_move() {
 
             // when we do have a different goal, we should get a path:
             if (iGoalCell != iCell) {
-                char msg[255];
                 int iResult = CREATE_PATH(iID, 0); // do not take units into account yet
-                sprintf(msg, "Create path ... result = %d", iResult);
-                log(msg);
+                log(fmt::format("Create path ... result = {}", iResult));
 
                 // On fail:
                 if (iResult < 0) {
@@ -3123,9 +3107,7 @@ void cUnit::setCell(int cll) {
 }
 
 void cUnit::assignMission(int aMission) {
-    char msg[255];
-    sprintf(msg, "I'm being assigned to mission %d (prev mission was %d)", aMission, mission);
-    log(msg);
+    log(fmt::format("I'm being assigned to mission {} (prev mission was {})", aMission, mission));
     mission = aMission;
 }
 
@@ -3147,6 +3129,21 @@ int cUnit::getPlayerId() const {
 
 int cUnit::getType() const {
     return iType;
+}
+
+std::string cUnit::eUnitActionIntentString(eUnitActionIntent intent) {
+    switch (intent) {
+        case eUnitActionIntent::INTENT_CAPTURE: return "INTENT_CAPTURE";
+        case eUnitActionIntent::INTENT_MOVE: return "INTENT_MOVE";
+        case eUnitActionIntent::INTENT_ATTACK: return "INTENT_ATTACK";
+        case eUnitActionIntent::INTENT_NONE: return "INTENT_NONE";
+        case eUnitActionIntent::INTENT_REPAIR: return "INTENT_REPAIR";
+        case eUnitActionIntent::INTENT_UNLOAD_SPICE: return "INTENT_UNLOAD_SPICE";
+        default:
+            assert(false);
+            break;
+    }
+    return "";
 }
 
 /**
@@ -3210,9 +3207,8 @@ void cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, 
     iFrame = 0; // stop animating
     assert(structureType > -1);
 
-    char msg[255];
-    sprintf(msg, "cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [%s]", sStructureInfo[structureType].name);
-    log(msg);
+    log(fmt::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
+                    sStructureInfo[structureType].name));
 
     cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(structureType);
 
@@ -4127,9 +4123,8 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
         return;
     }
 
-    char msg[255];
-    sprintf(msg, "REINFORCE: Bringing unit type %d for player %d. Starting from cell %d, going to cell %d", iTpe, iPlr, iStartCell, iCll);
-    logbook(msg);
+    logbook(fmt::format("REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}",
+                        iTpe, iPlr, iStartCell, iCll));
 
     // STEP 2: create carryall
     int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true, isReinforcement);
@@ -4256,10 +4251,8 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType) {
         return;
     }
 
-    char msg[255];
-    sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr,
-            players[iPlyr].getHouse(), iTime, iUType);
-    logbook(msg);
+    logbook(fmt::format("[{}] Reinforcement: Controller = {}, House {}, Time {}, Type = {}",
+                        iIndex, iPlyr, players[iPlyr].getHouse(), iTime, iUType));
 
     // DEBUG DEBUG
     if (!DEBUGGING)

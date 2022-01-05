@@ -132,7 +132,7 @@ void cMainMenuGameState::draw() const {
 
 
     // draw version
-    textDrawer.drawTextBottomRight(game.version);
+    textDrawer.drawTextBottomRight(game.version.c_str());
 
     // mp3 addon?
     if (game.bMp3) {
