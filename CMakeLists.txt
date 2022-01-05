@@ -92,6 +92,7 @@ target_compile_options(${PROJECT_NAME}
     "-Wextra"
     "-Wnon-virtual-dtor"
     "-Wuseless-cast"
+    "-Wredundant-tags"    
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
