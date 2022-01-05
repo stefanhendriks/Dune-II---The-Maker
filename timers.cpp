@@ -1,27 +1,24 @@
-#include "include/d2tmh.h"
+#include "timers.h"
 
+#include <allegro.h>
 /**
 	Timers lib specific implementations
 **/
 
-#ifdef ALLEGRO_H
-	/** FPS timer **/
-	void allegro_timerseconds() {
-		allegro_timerSecond++;
-	}
-	END_OF_FUNCTION(allegro_timerseconds);
+/** FPS timer **/
+void allegro_timerseconds() {
+  allegro_timerSecond = allegro_timerSecond + 1;
+}
+END_OF_FUNCTION(allegro_timerseconds);
 
-	/** Global timer **/
-	void allegro_timergametime() {
-		allegro_timerGlobal++;
-	}
-	END_OF_FUNCTION(allegro_timergametime);
+/** Global timer **/
+void allegro_timergametime() {
+  allegro_timerGlobal = allegro_timerGlobal + 1;
+}
+END_OF_FUNCTION(allegro_timergametime);
 
-	/** Unit timer **/
-	void allegro_timerunits() {
-		allegro_timerUnits++;
-	}
-	END_OF_FUNCTION(allegro_timerunits);
-#else
-	// Theoretically some other library could be used and have timer specific code here...
-#endif
+/** Unit timer **/
+void allegro_timerunits() {
+  allegro_timerUnits = allegro_timerUnits + 1;
+}
+END_OF_FUNCTION(allegro_timerunits);
