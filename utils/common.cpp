@@ -16,24 +16,16 @@
 
 namespace
 {
-    const int PAN_CENTER = 128;
-}
-
-namespace
-{
-    const int VOLUME_MAX = 255;
-}
-
-namespace
-{
-    const int BUFFER_SIZE = 32768;
+    constexpr int PAN_CENTER = 128;
+    constexpr int VOLUME_MAX = 255;
+    constexpr int BUFFER_SIZE = 32768;
 }
 
 /**
  * Default printing in logs. Only will be done if DEBUGGING is true.
  * @param txt
  */
-void logbook(const char *txt) {
+void logbook(const std::string& txt) {
   if (DEBUGGING) {
     cLogger *logger = cLogger::getInstance();
     logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);

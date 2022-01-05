@@ -150,7 +150,7 @@ public:
     void think_attack();
     void thinkFast_guard();
 
-	void log(const char *txt) const;
+	void log(const std::string& txt) const;
 
     void think_hit(int iShotUnit, int iShotStructure);
 
@@ -297,20 +297,7 @@ public:
      */
     int getType() const;
 
-    static const char* eUnitActionIntentString(const eUnitActionIntent &intent) {
-        switch (intent) {
-            case eUnitActionIntent::INTENT_CAPTURE: return "INTENT_CAPTURE";
-            case eUnitActionIntent::INTENT_MOVE: return "INTENT_MOVE";
-            case eUnitActionIntent::INTENT_ATTACK: return "INTENT_ATTACK";
-            case eUnitActionIntent::INTENT_NONE: return "INTENT_NONE";
-            case eUnitActionIntent::INTENT_REPAIR: return "INTENT_REPAIR";
-            case eUnitActionIntent::INTENT_UNLOAD_SPICE: return "INTENT_UNLOAD_SPICE";
-            default:
-                assert(false);
-                break;
-        }
-        return "";
-    }
+    static std::string eUnitActionIntentString(eUnitActionIntent intent);
 
     bool isUnableToMove();
 

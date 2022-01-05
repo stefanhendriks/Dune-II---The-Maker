@@ -22,10 +22,7 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
     const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
 
     // Title
-    char title[128];
-    sprintf(title, "Dune II - The Maker - version %s", game.version);
-
-    gui_window->setTitle(std::string(title));
+    gui_window->setTitle("Dune II - The Maker - version " + game.version);
 
     // EXIT
     int rows = 2;

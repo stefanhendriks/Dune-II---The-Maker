@@ -17,6 +17,8 @@
 #include <utils/cRectangle.h>
 #include <utils/cSoundPlayer.h>
 
+#include <string>
+
 class cAbstractMentat;
 class cGameControlsContext;
 class cGameState;
@@ -32,8 +34,8 @@ public:
 
 	std::string game_filename;
 
-	bool windowed;				// windowed
-	char version[15];			// version number, or name.
+	bool windowed;			 // windowed
+	std::string version; // version number, or name.
 
     // Alpha (for fading in/out)
     int fadeAlpha;           // 255 = opaque , anything else
