@@ -16,6 +16,7 @@
 #include "include/d2tmh.h"
 #include "cGame.h"
 
+#include <fmt/core.h>
 
 cGame::cGame() {
     memset(states, 0, sizeof(cGameState *));
@@ -33,8 +34,7 @@ cGame::cGame() {
     ini_screen_width = -1;
     ini_screen_height = -1;
 
-    memset(version, 0, sizeof(version));
-    sprintf(version, "0.6.x");
+  version = "0.6.x";
 
     pMentat = nullptr;
 }
@@ -733,10 +733,9 @@ bool cGame::setupGame() {
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
 
-    logger->logHeader("Version information");
-    char msg[255];
-    sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
-    logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
+	logger->logHeader("Version information");
+	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
+              fmt::format("Version {}, Compiled at {} , {}", game.version, __DATE__, __TIME__));
 
     // init game
     if (game.windowed) {
@@ -797,13 +796,12 @@ bool cGame::setupGame() {
 
     frame_count = fps = 0;
 
-    // set window title
-    char title[128];
-    sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
+	// set window title
+    auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.version);
 
-    // Set window title
-    set_window_title(title);
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
+	// Set window title
+	set_window_title(title.c_str());
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
     int colorDepth = desktop_color_depth();
     set_color_depth(colorDepth);
@@ -926,16 +924,16 @@ bool cGame::setupGame() {
         logbook("Display 'switch to background' mode set");
     }
 
-    int maxSounds = getAmountReservedVoicesAndInstallSound();
-    memset(msg, 0, sizeof(msg));
+	int maxSounds = getAmountReservedVoicesAndInstallSound();
 
     if (maxSounds > -1) {
-        sprintf(msg, "Successfully installed sound. %d voices reserved", maxSounds);
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization",
+                    fmt::format("Successfully installed sound. {} voices reserved", maxSounds),
+                    OUTC_SUCCESS);
     } else {
         logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
     }
-    soundPlayer = new cSoundPlayer(maxSounds);
+	soundPlayer = new cSoundPlayer(maxSounds);
 
     // normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
     iMaxVolume = 220;

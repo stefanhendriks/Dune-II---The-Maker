@@ -16,24 +16,16 @@
 
 namespace
 {
-    const int PAN_CENTER = 128;
-}
-
-namespace
-{
-    const int VOLUME_MAX = 255;
-}
-
-namespace
-{
-    const int BUFFER_SIZE = 32768;
+    constexpr int PAN_CENTER = 128;
+    constexpr int VOLUME_MAX = 255;
+    constexpr int BUFFER_SIZE = 32768;
 }
 
 /**
  * Default printing in logs. Only will be done if DEBUGGING is true.
  * @param txt
  */
-void logbook(const char *txt) {
+void logbook(const std::string& txt) {
   if (DEBUGGING) {
     cLogger *logger = cLogger::getInstance();
     logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
@@ -1357,7 +1349,7 @@ void install_structures() {
     sStructureInfo[WINDTRAP].fademax = 134;
     sStructureInfo[WINDTRAP].icon = ICON_STR_WINDTRAP;
     sStructureInfo[WINDTRAP].configured = true;
-    sStructureInfo[WINDTRAP].flags.push_back((s_FlagInfo) {
+    sStructureInfo[WINDTRAP].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 53,
             .relY = 37
@@ -1374,7 +1366,7 @@ void install_structures() {
     sStructureInfo[HEAVYFACTORY].fadecol = -1;
     sStructureInfo[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
     sStructureInfo[HEAVYFACTORY].configured = true;
-    sStructureInfo[HEAVYFACTORY].flags.push_back((s_FlagInfo) {
+    sStructureInfo[HEAVYFACTORY].flags.push_back(s_FlagInfo{
             .big = false,
             .relX = 25,
             .relY = 3
@@ -1390,7 +1382,7 @@ void install_structures() {
     sStructureInfo[HIGHTECH].fadecol = -1;
     sStructureInfo[HIGHTECH].icon = ICON_STR_HIGHTECH;
     sStructureInfo[HIGHTECH].configured = true;
-    sStructureInfo[HIGHTECH].flags.push_back((s_FlagInfo) {
+    sStructureInfo[HIGHTECH].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 19,
             .relY = 36
@@ -1406,7 +1398,7 @@ void install_structures() {
     sStructureInfo[REPAIR].fadecol = -1;
     sStructureInfo[REPAIR].icon = ICON_STR_REPAIR;
     sStructureInfo[REPAIR].configured = true;
-    sStructureInfo[REPAIR].flags.push_back((s_FlagInfo) {
+    sStructureInfo[REPAIR].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 41,
             .relY = 3
@@ -1421,7 +1413,7 @@ void install_structures() {
     sStructureInfo[PALACE].shadow = (BITMAP *) gfxdata[BUILD_PALACE_SHADOW].dat;
     sStructureInfo[PALACE].icon = ICON_STR_PALACE;
     sStructureInfo[PALACE].configured = true;
-    sStructureInfo[PALACE].flags.push_back((s_FlagInfo) {
+    sStructureInfo[PALACE].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 28,
             .relY = 14
@@ -1438,7 +1430,7 @@ void install_structures() {
     sStructureInfo[LIGHTFACTORY].fadecol = -1;
     sStructureInfo[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
     sStructureInfo[LIGHTFACTORY].configured = true;
-    sStructureInfo[LIGHTFACTORY].flags.push_back((s_FlagInfo) {
+    sStructureInfo[LIGHTFACTORY].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 41,
             .relY = 2
@@ -1456,12 +1448,12 @@ void install_structures() {
     sStructureInfo[RADAR].icon = ICON_STR_RADAR;
     sStructureInfo[RADAR].configured = true;
     // outpost has 2 flags
-    sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
+    sStructureInfo[RADAR].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 17,
             .relY = 38
     });
-    sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
+    sStructureInfo[RADAR].flags.push_back(s_FlagInfo{
             .big = false,
             .relX = 12,
             .relY = 46
@@ -1477,12 +1469,12 @@ void install_structures() {
     sStructureInfo[BARRACKS].fadecol = -1;
     sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
     sStructureInfo[BARRACKS].configured = true;
-    sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
+    sStructureInfo[BARRACKS].flags.push_back(s_FlagInfo{
             .big = false,
             .relX = 60,
             .relY = 47
     });
-    sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
+    sStructureInfo[BARRACKS].flags.push_back(s_FlagInfo{
             .big = false,
             .relX = 51,
             .relY = 50
@@ -1498,7 +1490,7 @@ void install_structures() {
     sStructureInfo[WOR].fadecol = -1;
     sStructureInfo[WOR].icon = ICON_STR_WOR;
     sStructureInfo[WOR].configured = true;
-    sStructureInfo[WOR].flags.push_back((s_FlagInfo) {
+    sStructureInfo[WOR].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 21,
             .relY = 31
@@ -1516,7 +1508,7 @@ void install_structures() {
     sStructureInfo[SILO].icon = ICON_STR_SILO;
     sStructureInfo[SILO].configured = true;
     sStructureInfo[SILO].queuable = true;
-    sStructureInfo[SILO].flags.push_back((s_FlagInfo) {
+    sStructureInfo[SILO].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 43,
             .relY = 20
@@ -1532,7 +1524,7 @@ void install_structures() {
     sStructureInfo[REFINERY].fadecol = -1;
     sStructureInfo[REFINERY].icon = ICON_STR_REFINERY;
     sStructureInfo[REFINERY].configured = true;
-    sStructureInfo[REFINERY].flags.push_back((s_FlagInfo) {
+    sStructureInfo[REFINERY].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 45,
             .relY = 12
@@ -1546,7 +1538,7 @@ void install_structures() {
     sStructureInfo[CONSTYARD].sight = 4;
     sStructureInfo[CONSTYARD].bmp = (BITMAP *) gfxdata[BUILD_CONSTYARD].dat;
     sStructureInfo[CONSTYARD].shadow = (BITMAP *) gfxdata[BUILD_CONSTYARD_SHADOW].dat;
-    sStructureInfo[CONSTYARD].flags.push_back((s_FlagInfo) {
+    sStructureInfo[CONSTYARD].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 14,
             .relY = 14
@@ -1565,7 +1557,7 @@ void install_structures() {
     sStructureInfo[STARPORT].fadecol = -1;
     sStructureInfo[STARPORT].icon = ICON_STR_STARPORT;
     sStructureInfo[STARPORT].configured = true;
-    sStructureInfo[STARPORT].flags.push_back((s_FlagInfo) {
+    sStructureInfo[STARPORT].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 16,
             .relY = 3
@@ -1581,7 +1573,7 @@ void install_structures() {
     sStructureInfo[IX].fadecol = -1;
     sStructureInfo[IX].icon = ICON_STR_IX;
     sStructureInfo[IX].configured = true;
-    sStructureInfo[IX].flags.push_back((s_FlagInfo) {
+    sStructureInfo[IX].flags.push_back(s_FlagInfo{
             .big = true,
             .relX = 60, // 60
             .relY = 40  // 40

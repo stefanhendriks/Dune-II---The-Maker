@@ -374,7 +374,7 @@ public:
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType);
     s_PlaceResult canPlaceConcreteAt(int iCell);
 
-    void log(const char *txt) const;
+    void log(const std::string& txt) const;
 
     void thinkFast();
 

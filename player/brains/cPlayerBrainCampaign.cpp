@@ -186,12 +186,12 @@ namespace brains {
                 // this structure got destroyed, so mark it as destroyed in my base plan
                 structurePosition.isDestroyed = true;
                 // and add order to rebuild it
-                addBuildOrder((S_buildOrder) {
-                        buildType : STRUCTURE,
-                        priority : 1,
-                        buildId : structurePosition.type,
-                        placeAt : structurePosition.cell,
-                        state : buildOrder::PROCESSME,
+                addBuildOrder(S_buildOrder{
+                        .buildType = STRUCTURE,
+                        .priority = 1,
+                        .buildId = structurePosition.type,
+                        .placeAt = structurePosition.cell,
+                        .state = buildOrder::PROCESSME,
                 });
             }
         }
@@ -249,12 +249,12 @@ namespace brains {
             if (!hasMission(99)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : player->getScoutingUnitType(),
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = player->getScoutingUnitType(),
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
 
                 cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), 99);
@@ -355,27 +355,27 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
@@ -384,38 +384,38 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : LAUNCHER,
-                            required: 1 + rnd(2),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = LAUNCHER,
+                            .required = 1 + rnd(2),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 1 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 1 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 4 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 4 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
@@ -425,21 +425,21 @@ namespace brains {
             // 25% chance we want another different attack force
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 if (player->getHouse() != ORDOS) {
                     if (rnd(100) < 75) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : LAUNCHER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = LAUNCHER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                     }
                 }
@@ -449,12 +449,12 @@ namespace brains {
         if (!hasMission(3)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : infantryKind,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = infantryKind,
+                        .required = 2 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
@@ -464,12 +464,12 @@ namespace brains {
         if (harvesters < 2) {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : HARVESTER,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = HARVESTER,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
             } else {
@@ -479,12 +479,12 @@ namespace brains {
                 if (!hasMission(5)) {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : HARVESTER,
-                                required: 1,
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = HARVESTER,
+                                .required = 1,
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         // different mission ID
                         addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
@@ -498,27 +498,27 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
@@ -527,56 +527,56 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : LAUNCHER,
-                            required: 1 + rnd(3),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = LAUNCHER,
+                            .required = 1 + rnd(3),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : TANK,
-                            required: 2 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = TANK,
+                            .required = 2 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 3 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 3 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : SIEGETANK,
-                        required: 3 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = SIEGETANK,
+                        .required = 3 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
@@ -586,30 +586,30 @@ namespace brains {
             // 25% chance we want another different attack force
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 1 + rnd(2),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 1 + rnd(2),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (player->getHouse() != ORDOS) {
                     if (rnd(100) < 75) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : LAUNCHER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = LAUNCHER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                     }
                 }
@@ -619,12 +619,12 @@ namespace brains {
         if (!hasMission(3)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : infantryKind,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = infantryKind,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
@@ -634,12 +634,12 @@ namespace brains {
         if (harvesters < 4) {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : HARVESTER,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = HARVESTER,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
             } else {
@@ -650,12 +650,12 @@ namespace brains {
                 if (!hasMission(5)) {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : HARVESTER,
-                                required: 2,
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = HARVESTER,
+                                .required = 2,
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         // different mission ID
                         addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
@@ -669,27 +669,27 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
@@ -698,56 +698,56 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : LAUNCHER,
-                            required: 1 + rnd(3),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = LAUNCHER,
+                            .required = 1 + rnd(3),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : TANK,
-                            required: 2 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = TANK,
+                            .required = 2 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 3 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 3 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : SIEGETANK,
-                        required: 3 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = SIEGETANK,
+                        .required = 3 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
@@ -757,30 +757,30 @@ namespace brains {
             // 25% chance we want another different attack force
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 1 + rnd(2),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 1 + rnd(2),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (player->getHouse() != ORDOS) {
                     if (rnd(100) < 75) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : LAUNCHER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = LAUNCHER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                     }
                 }
@@ -790,12 +790,12 @@ namespace brains {
         if (!hasMission(3)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : infantryKind,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = infantryKind,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
@@ -805,12 +805,12 @@ namespace brains {
         if (harvesters < 4) {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : HARVESTER,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = HARVESTER,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
             } else {
@@ -821,12 +821,12 @@ namespace brains {
                 if (!hasMission(5)) {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : HARVESTER,
-                                required: 2,
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = HARVESTER,
+                                .required = 2,
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         // different mission ID
                         addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
@@ -840,12 +840,12 @@ namespace brains {
                 if (!hasMission(6)) {
                     group = std::vector<S_groupKind>();
                     if (rnd(100) < 10) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : ORNITHOPTER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = ORNITHOPTER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
                     }
@@ -857,12 +857,12 @@ namespace brains {
             if (!hasMission(7)) {
                 group = std::vector<S_groupKind>();
                 if (rnd(100) < 10) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : CARRYALL,
-                            required: 2,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = CARRYALL,
+                            .required = 2,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
                 }
@@ -874,27 +874,27 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
@@ -903,56 +903,56 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : LAUNCHER,
-                            required: 1 + rnd(3),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = LAUNCHER,
+                            .required = 1 + rnd(3),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : TANK,
-                            required: 2 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = TANK,
+                            .required = 2 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 3 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 3 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : SIEGETANK,
-                        required: 3 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = SIEGETANK,
+                        .required = 3 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
@@ -962,30 +962,30 @@ namespace brains {
             // 25% chance we want another different attack force
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 1 + rnd(2),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 1 + rnd(2),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (player->getHouse() != ORDOS) {
                     if (rnd(100) < 75) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : LAUNCHER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = LAUNCHER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                     }
                 }
@@ -995,12 +995,12 @@ namespace brains {
         if (!hasMission(3)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : infantryKind,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = infantryKind,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
@@ -1010,12 +1010,12 @@ namespace brains {
         if (harvesters < 4) {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : HARVESTER,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = HARVESTER,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
             } else {
@@ -1026,12 +1026,12 @@ namespace brains {
                 if (!hasMission(5)) {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : HARVESTER,
-                                required: 2,
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = HARVESTER,
+                                .required = 2,
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         // different mission ID
                         addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
@@ -1045,12 +1045,12 @@ namespace brains {
                 if (!hasMission(6)) {
                     group = std::vector<S_groupKind>();
                     if (rnd(100) < 10) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : ORNITHOPTER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = ORNITHOPTER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
                     }
@@ -1062,12 +1062,12 @@ namespace brains {
             if (!hasMission(7)) {
                 group = std::vector<S_groupKind>();
                 if (rnd(100) < 10) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : CARRYALL,
-                            required: 2,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = CARRYALL,
+                            .required = 2,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
                 }
@@ -1079,27 +1079,27 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
@@ -1108,77 +1108,77 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : LAUNCHER,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = LAUNCHER,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 if (rnd(100) < 35) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : TANK,
-                            required: 2 + rnd(4),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = TANK,
+                            .required = 2 + rnd(4),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : SIEGETANK,
-                        required: 3 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = SIEGETANK,
+                        .required = 3 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
 
                 if (player->getHouse() == ATREIDES) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SONICTANK,
-                            required: 2,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SONICTANK,
+                            .required = 2,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : DEVASTATOR,
-                            required: 2,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = DEVASTATOR,
+                            .required = 2,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : SIEGETANK,
-                        required: 3 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = SIEGETANK,
+                        .required = 3 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : DEVIATOR,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = DEVIATOR,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
@@ -1188,29 +1188,29 @@ namespace brains {
             // 25% chance we want another different attack force
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : TANK,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = TANK,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 if (rnd(100) < 75) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: 1 + rnd(2),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = SIEGETANK,
+                            .required = 1 + rnd(2),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 if (player->getHouse() != ORDOS) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : LAUNCHER,
-                            required: 1 + rnd(2),
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = LAUNCHER,
+                            .required = 1 + rnd(2),
+                            .ordered = 0,
+                            .produced = 0,
                     });
                 }
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
@@ -1219,12 +1219,12 @@ namespace brains {
         if (!hasMission(3)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 5) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : infantryKind,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = infantryKind,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
@@ -1234,12 +1234,12 @@ namespace brains {
         if (harvesters < 4) {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : HARVESTER,
-                        required: 2,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = HARVESTER,
+                        .required = 2,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
             } else {
@@ -1250,12 +1250,12 @@ namespace brains {
                 if (!hasMission(5)) {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : HARVESTER,
-                                required: 2,
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = HARVESTER,
+                                .required = 2,
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         // different mission ID
                         addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
@@ -1269,12 +1269,12 @@ namespace brains {
                 if (!hasMission(6)) {
                     group = std::vector<S_groupKind>();
                     if (rnd(100) < 10) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : ORNITHOPTER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = ORNITHOPTER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
                     }
@@ -1286,12 +1286,12 @@ namespace brains {
             if (!hasMission(7)) {
                 group = std::vector<S_groupKind>();
                 if (rnd(100) < 10) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : CARRYALL,
-                            required: 2,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = CARRYALL,
+                            .required = 2,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
                 }
@@ -1303,12 +1303,12 @@ namespace brains {
                 if (!hasMission(6)) {
                     group = std::vector<S_groupKind>();
                     if (rnd(100) < 10) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : ORNITHOPTER,
-                                required: 1 + rnd(2),
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = ORNITHOPTER,
+                                .required = 1 + rnd(2),
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
                     }
@@ -1320,12 +1320,12 @@ namespace brains {
             if (!hasMission(7)) {
                 group = std::vector<S_groupKind>();
                 if (rnd(100) < 10) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : CARRYALL,
-                            required: 2,
-                            ordered: 0,
-                            produced: 0,
+                    group.push_back(S_groupKind{
+                            .buildType = eBuildType::UNIT,
+                            .type = CARRYALL,
+                            .required = 2,
+                            .ordered = 0,
+                            .produced = 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
                 }
@@ -1337,58 +1337,58 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 1 + rnd(1),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 1 + rnd(1),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 2 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 2 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
         }
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    buildType: eBuildType::UNIT,
-                    type : TANK,
-                    required: 1 + rnd(3),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = eBuildType::UNIT,
+                    .type = TANK,
+                    .required = 1 + rnd(3),
+                    .ordered = 0,
+                    .produced = 0,
             });
-            group.push_back((S_groupKind) {
-                    buildType: eBuildType::UNIT,
-                    type : QUAD,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = eBuildType::UNIT,
+                    .type = QUAD,
+                    .required = 1,
+                    .ordered = 0,
+                    .produced = 0,
             });
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 1);
         }
         if (!hasMission(2)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : infantryKind,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = infantryKind,
+                        .required = 2 + rnd(4),
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 2);
             }
@@ -1399,12 +1399,12 @@ namespace brains {
         if (harvesters < 2) {
             if (!hasMission(3)) {
                 group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : HARVESTER,
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = HARVESTER,
+                        .required = 1,
+                        .ordered = 0,
+                        .produced = 0,
                 });
                 addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 3);
             } else {
@@ -1414,12 +1414,12 @@ namespace brains {
                 if (!hasMission(4)) {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : HARVESTER,
-                                required: 1,
-                                ordered: 0,
-                                produced: 0,
+                        group.push_back(S_groupKind{
+                                .buildType = eBuildType::UNIT,
+                                .type = HARVESTER,
+                                .required = 1,
+                                .ordered = 0,
+                                .produced = 0,
                         });
                         // different mission ID
                         addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
@@ -1433,27 +1433,27 @@ namespace brains {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 1 + rnd(2),
+                        .ordered = 0,
+                        .produced = 0,
                 });
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : trikeKind,
-                        required: 1 + rnd(1),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = trikeKind,
+                        .required = 1 + rnd(1),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             } else {
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : QUAD,
-                        required: 2 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
+                group.push_back(S_groupKind{
+                        .buildType = eBuildType::UNIT,
+                        .type = QUAD,
+                        .required = 2 + rnd(3),
+                        .ordered = 0,
+                        .produced = 0,
                 });
             }
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
@@ -1461,19 +1461,19 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
 
-            group.push_back((S_groupKind) {
-                    buildType: eBuildType::UNIT,
-                    type : soldierKind,
-                    required: 1 + rnd(3),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = eBuildType::UNIT,
+                    .type = soldierKind,
+                    .required = 1 + rnd(3),
+                    .ordered = 0,
+                    .produced = 0,
             });
-            group.push_back((S_groupKind) {
-                    buildType: eBuildType::UNIT,
-                    type : infantryKind,
-                    required: 1 + rnd(2),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = eBuildType::UNIT,
+                    .type = infantryKind,
+                    .required = 1 + rnd(2),
+                    .ordered = 0,
+                    .produced = 0,
             });
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 1);
         }
@@ -1482,19 +1482,19 @@ namespace brains {
     void cPlayerBrainCampaign::produceLevel2Missions(int soldierKind, int infantryKind) {
         if (!hasMission(0)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    buildType: eBuildType::UNIT,
-                    type : soldierKind,
-                    required: 2 + rnd(1),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = eBuildType::UNIT,
+                    .type = soldierKind,
+                    .required = 2 + rnd(1),
+                    .ordered = 0,
+                    .produced = 0,
             });
-            group.push_back((S_groupKind) {
-                    buildType: eBuildType::UNIT,
-                    type : infantryKind,
-                    required: 1 + rnd(1),
-                    ordered: 0,
-                    produced: 0,
+            group.push_back(S_groupKind{
+                    .buildType = eBuildType::UNIT,
+                    .type = infantryKind,
+                    .required = 1 + rnd(1),
+                    .ordered = 0,
+                    .produced = 0,
             });
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 0);
         }
