@@ -1052,10 +1052,8 @@ bool cGame::setupGame() {
     allegroDrawer = new cAllegroDrawer(m_dataRepository);
 
     // randomize timer
-    unsigned int t = (unsigned int) time(0);
-    char seedtxt[80];
-    sprintf(seedtxt, "Seed is %u", t);
-    logbook(seedtxt);
+    auto t = static_cast<unsigned int>(time(nullptr));
+    logbook(fmt::format("Seed is {}", t));
     srand(t);
 
     game.bPlaying = true;
