@@ -395,8 +395,7 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const {
 void cPlayer::markUnitsForGroup(const int groupId) const {
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
-    for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+    for (auto &pUnit : unit) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.bSelected) {
