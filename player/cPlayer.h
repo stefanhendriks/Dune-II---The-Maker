@@ -413,6 +413,8 @@ public:
 
     bool selectUnitsFromGroup(int groupId);
 
+    void markUnitsForGroup(const int groupId) const;
+
     /**
      * Given this list of unit id's, select them. Also applies logic, to skip harvesters if non-harvesters
      * are within this list of ID's. Also plays sound effects (reporting!) depending on infantry/non-infantry unit.

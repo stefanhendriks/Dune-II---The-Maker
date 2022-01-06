@@ -108,8 +108,6 @@ public:
 	    return soundPlayer;
 	}
 
-	int getGroupNumberFromKeyboard();
-
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
         return getColorFadeSelected(r, g, b, true, true, true);
