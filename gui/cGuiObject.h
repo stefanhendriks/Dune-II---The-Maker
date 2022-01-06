@@ -10,7 +10,7 @@ public:
     virtual ~cGuiObject() = default;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
-    virtual void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override = 0;
+    virtual void onNotifyKeyboardEvent(const cKeyboardEvent &event) override = 0;
 
     // cGuiObject specific
     virtual void draw() const = 0; // pure virtual function

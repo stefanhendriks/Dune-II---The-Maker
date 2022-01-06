@@ -3,7 +3,7 @@
 #include "cMouseState.h"
 #include "controls/cMouse.h"
 #include "sMouseEvent.h"
-#include "sKeyboardEvent.h"
+#include "controls/cKeyboardEvent.h"
 
 class cPlayer;
 
@@ -34,7 +34,7 @@ public:
     explicit cMouseNormalState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
-    void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void onStateSet() override;
     void onFocus() override {};
@@ -49,9 +49,9 @@ private:
 
     void onMouseMovedTo();
 
-    void onKeyDown(const s_KeyboardEvent &event);
+    void onKeyDown(const cKeyboardEvent &event);
 
-    void onKeyPressed(const s_KeyboardEvent &event);
+    void onKeyPressed(const cKeyboardEvent &event);
 
     void setState(eMouseNormalState newState);
 

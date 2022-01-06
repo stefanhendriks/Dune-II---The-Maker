@@ -174,5 +174,5 @@ void cMousePlaceState::onStateSet() {
 }
 
 
-void cMousePlaceState::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
+void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }

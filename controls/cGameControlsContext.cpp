@@ -204,7 +204,7 @@ void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
     }
 }
 
-void cGameControlsContext::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     switch (state) {
         case MOUSESTATE_SELECT:
             mouseNormalState->onNotifyKeyboardEvent(event);

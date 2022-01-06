@@ -297,13 +297,6 @@ enum eMouseEventType {
 	MOUSE_SCROLLED_DOWN
 };
 
-enum eKeyboardEventType {
-	KEY_NONE,
-	KEY_HOLD,   // key is being pressed down (hold)
-//	KEY_RELEASED, // key was pressed down, but lifted (released)
-    KEY_PRESSED, // the combination of the two events above (hold, then release) makes a key "pressed".
-};
-
 enum eGameEventType {
 	GAME_EVENT_NONE,
     // an entity was created

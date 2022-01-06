@@ -72,8 +72,8 @@ void cMouseRepairState::onStateSet() {
 }
 
 
-void cMouseRepairState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
-    if (event.eventType == KEY_PRESSED && event.key == KEY_R) {
+void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_R)) {
         context->toPreviousState();
     }
 }

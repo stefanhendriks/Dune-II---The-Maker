@@ -269,12 +269,12 @@ void cMouseUnitsSelectedState::setState(eMouseUnitsSelectedState newState) {
     }
 }
 
-void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     switch (event.eventType) {
-        case KEY_HOLD:
+        case eKeyEventType::HOLD:
             onKeyDown(event);
             break;
-        case KEY_PRESSED:
+        case eKeyEventType::PRESSED:
             onKeyPressed(event);
             break;
         default:
@@ -291,13 +291,13 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const s_KeyboardEvent &even
     }
 }
 
-void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
-    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event) {
+    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
         setState(SELECTED_STATE_ATTACK);
         mouseTile = MOUSE_ATTACK;
     }
 
-    if (event.key == KEY_LSHIFT || event.key == KEY_RSHIFT) {
+    if (event.hasKey(KEY_LSHIFT) || event.hasKey(KEY_RSHIFT)) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
         mouseTile = MOUSE_NORMAL;
 
@@ -317,7 +317,7 @@ void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
 
             // no SHIFT pressed, so select units of group
 
-            int iGroup = game.getGroupNumberFromScanCode(event.key);
+            int iGroup = event.getGroupNumber();
 
             if (iGroup > 0) {
                 // select all units for group
@@ -330,19 +330,19 @@ void cMouseUnitsSelectedState::onKeyDown(const s_KeyboardEvent &event) {
     // force move?
 }
 
-void cMouseUnitsSelectedState::onKeyPressed(const s_KeyboardEvent &event) {
-    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event) {
+    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
         setState(SELECTED_STATE_ATTACK);
         evaluateMouseMoveState();
     }
 
-    if (event.key == KEY_LSHIFT || event.key == KEY_RSHIFT) {
+    if (event.hasKey(KEY_LSHIFT) || event.hasKey(KEY_RSHIFT)) {
         toPreviousState();
         evaluateMouseMoveState();
     }
 
     // go to repair state
-    if (event.key == KEY_R) {
+    if (event.hasKey(KEY_R)) {
         context->setMouseState(MOUSESTATE_REPAIR);
     }
 

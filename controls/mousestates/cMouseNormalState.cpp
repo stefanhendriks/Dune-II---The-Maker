@@ -9,7 +9,6 @@
 //#include "sidebar/cSideBar.h"
 
 #include "d2tmc.h"
-#include "cGame.h"
 
 #include "data/gfxaudio.h"
 #include "data/gfxdata.h"
@@ -156,13 +155,13 @@ void cMouseNormalState::onStateSet() {
     mouse->setTile(mouseTile);
 }
 
-void cMouseNormalState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
-        case KEY_HOLD:
+        case eKeyEventType::HOLD:
             onKeyDown(event);
             break;
-        case KEY_PRESSED:
+        case eKeyEventType::PRESSED:
             onKeyPressed(event);
             break;
         default:
@@ -175,8 +174,8 @@ void cMouseNormalState::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
     }
 }
 
-void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
-    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+void cMouseNormalState::onKeyDown(const cKeyboardEvent &event) {
+    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
         cAbstractStructure *pSelectedStructure = player->getSelectedStructure();
         // when selecting a structure
         if (pSelectedStructure && pSelectedStructure->belongsTo(player) && pSelectedStructure->canSpawnUnits()) {
@@ -186,17 +185,17 @@ void cMouseNormalState::onKeyDown(const s_KeyboardEvent &event) {
     }
 }
 
-void cMouseNormalState::onKeyPressed(const s_KeyboardEvent &event) {
-    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
+    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
         setState(SELECT_STATE_NORMAL);
         mouseTile = MOUSE_NORMAL;
     }
 
-    if (event.key == KEY_R) {
+    if (event.hasKey(KEY_R)) {
         context->setMouseState(MOUSESTATE_REPAIR);
     }
 
-    int iGroup = game.getGroupNumberFromScanCode(event.key);
+    int iGroup = event.getGroupNumber();
 
     if (iGroup > 0) {
         // select all units for group
