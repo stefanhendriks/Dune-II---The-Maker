@@ -1,4 +1,6 @@
-#include "../include/d2tmh.h"
+#include "cSeedMapGenerator.h"
+
+#include "data/gfxdata.h"
 
 // static initialize
 short cSeedMapGenerator::offsets2[SMG_OFFSET2_SIZE] =
