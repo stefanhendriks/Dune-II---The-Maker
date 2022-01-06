@@ -297,12 +297,12 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event) {
         mouseTile = MOUSE_ATTACK;
     }
 
-    if (event.hasKey(KEY_LSHIFT) || event.hasKey(KEY_RSHIFT)) {
+    bool appendingSelectionToGroup = event.hasKey(KEY_LSHIFT) || event.hasKey(KEY_RSHIFT);
+    if (appendingSelectionToGroup) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
         mouseTile = MOUSE_NORMAL;
 
-        // HACK HACK: This reads keyboard state for another key (see cKeyboard for reason)
-        int iGroup = game.getGroupNumberFromKeyboard();
+        int iGroup = event.getGroupNumber();
 
         // holding shift & group number, so add group to the selected units
         if (iGroup > 0) {
@@ -311,12 +311,10 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event) {
 
         selectedUnits = player->getSelectedUnits();
     } else {
-        if (!key[KEY_LSHIFT] && !key[KEY_RSHIFT]) {
-            // HACK HACK, do this within the "HOLD" event, because if we do it at Pressed event
-            // we miss the fact that we hold SHIFT as well (see cKeyboard for reason).
-
-            // no SHIFT pressed, so select units of group
-
+        bool createGroup = event.hasKey(KEY_RCONTROL) || event.hasKey(KEY_LCONTROL);
+        // Do this within the "HOLD" event, because if we do it at Pressed event
+        // we miss the fact that we hold SHIFT as well (see cKeyboard for reason).
+        if (!createGroup) {
             int iGroup = event.getGroupNumber();
 
             if (iGroup > 0) {

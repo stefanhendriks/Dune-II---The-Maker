@@ -449,25 +449,6 @@ void cGame::init_skirmish() const {
     game.mission_init();
 }
 
-int cGame::getGroupNumberFromKeyboard() {
-    if (key[KEY_1]) {
-        return 1;
-    }
-    if (key[KEY_2]) {
-        return 2;
-    }
-    if (key[KEY_3]) {
-        return 3;
-    }
-    if (key[KEY_4]) {
-        return 4;
-    }
-    if (key[KEY_5]) {
-        return 5;
-    }
-    return 0;
-}
-
 void cGame::handleTimeSlicing() {
     if (iRest > 0) {
         rest(iRest);
@@ -1683,28 +1664,12 @@ void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
 void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
     const cPlayer *humanPlayer = &players[HUMAN];
 
-    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
-        // HACK HACK: This reads keyboard state for another key (see cKeyboard for reason)
-        int iGroup = getGroupNumberFromKeyboard();
+    bool createGroup = event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL);
+    if (createGroup) {
+        int iGroup = event.getGroupNumber();
 
         if (iGroup > 0) {
-
-            // go over all units, and mark units for this group if selected.
-            // and unmark them for the group when not/no longer selected.
-            for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &pUnit = unit[i];
-                if (!pUnit.isValid()) continue;
-                if (!pUnit.belongsTo(humanPlayer)) continue;
-                if (pUnit.bSelected) {
-                    pUnit.iGroup = iGroup;
-                    continue;
-                }
-
-                // unit belongs to this group, but is not/no longer selected. So unmark it.
-                if (pUnit.iGroup == iGroup) {
-                    pUnit.iGroup = -1;
-                }
-            }
+            humanPlayer->markUnitsForGroup(iGroup);
         }
     }
 

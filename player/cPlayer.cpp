@@ -392,6 +392,25 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const {
     return getAllMyUnitsForType(unitType).size();
 }
 
+void cPlayer::markUnitsForGroup(const int groupId) const {
+    // go over all units, and mark units for this group if selected.
+    // and unmark them for the group when not/no longer selected.
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (!pUnit.belongsTo(this)) continue;
+        if (pUnit.bSelected) {
+            pUnit.iGroup = groupId;
+            continue;
+        }
+
+        // unit belongs to this group, but is not/no longer selected. So unmark it.
+        if (pUnit.iGroup == groupId) {
+            pUnit.iGroup = -1;
+        }
+    }
+}
+
 std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {

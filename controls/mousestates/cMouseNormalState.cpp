@@ -186,22 +186,25 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event) {
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
-    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
+    bool createGroup = event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL);
+    if (createGroup) {
+        // actual group creation is at cGameLogic onKeyPressed
         setState(SELECT_STATE_NORMAL);
         mouseTile = MOUSE_NORMAL;
+    } else {
+        // select group
+        int iGroup = event.getGroupNumber();
+
+        if (iGroup > 0) {
+            // select all units for group
+            player->deselectAllUnits();
+            player->selectUnitsFromGroup(iGroup);
+            player->setContextMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
     if (event.hasKey(KEY_R)) {
         context->setMouseState(MOUSESTATE_REPAIR);
-    }
-
-    int iGroup = event.getGroupNumber();
-
-    if (iGroup > 0) {
-        // select all units for group
-        player->deselectAllUnits();
-        player->selectUnitsFromGroup(iGroup);
-        player->setContextMouseState(MOUSESTATE_UNITS_SELECTED);
     }
 }
 
