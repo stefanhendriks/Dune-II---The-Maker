@@ -37,11 +37,11 @@ private:
 
 	/* these is array used to find corresponding points */
 	/*
-	      A�B�C    00��20��40
-	      �����    ����������
-	      D�E�F    02��22��42
-	      �����    ����������
-	      G�H�I    04��24��44
+	      A.B.C    00..20..40
+	      .....    ..........
+	      D.E.F    02..22..42
+	      .....    ..........
+	      G.H.I    04..24..44
 	*/
 	static short offsets2[SMG_OFFSET2_SIZE];
 	static short offsets[21];
