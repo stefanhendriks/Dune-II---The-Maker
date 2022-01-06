@@ -11,7 +11,7 @@ public:
     ~cGuiWindow();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
-    void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void draw() const override;
 

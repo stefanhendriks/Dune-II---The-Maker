@@ -1,4 +1,5 @@
 #include "cKeyboard.h"
+#include "cKeyboardEvent.h"
 
 #include <algorithm>
 #include "../include/d2tmh.h"
@@ -41,16 +42,9 @@ void cKeyboard::updateState() {
     if (key[KEY_RSHIFT]) newKeysPressed.insert(KEY_RSHIFT);
     if (key[KEY_LSHIFT]) newKeysPressed.insert(KEY_LSHIFT);
 
-    // now emit events
-    for (auto k : newKeysPressed) {
-        s_KeyboardEvent event {
-                eKeyboardEventType::KEY_HOLD,
-                k,
-        };
+    _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, newKeysPressed));
 
-        _keyboardObserver->onNotifyKeyboardEvent(event);
-    }
-
+    std::set<int> keysReleased;
     // Check if any keys are no longer pressed
     for (auto k : keysPressed) {
         // the 'old' key is still held down in the 'new' state, so ignore
@@ -61,14 +55,14 @@ void cKeyboard::updateState() {
             // but not in the 'newKeysPressed' set, so make sure to add it still, so we don't forget it being pressed
             newKeysPressed.insert(k);
         } else {
-            // the 'old' key is not present in newKeysPressed, so it has been released. This means a 'pressed' event.
-            s_KeyboardEvent event{
-                    eKeyboardEventType::KEY_PRESSED,
-                    k,
-            };
-
-            _keyboardObserver->onNotifyKeyboardEvent(event);
+            // the 'old' key is not present in newKeysPressed, so it has been released.
+            keysReleased.insert(k);
         }
+    }
+
+    if (!keysReleased.empty()) {
+        // "keys released" mean a "pressed" event (ie down and then released).
+        _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, keysReleased));
     }
 
     // finally, update the state

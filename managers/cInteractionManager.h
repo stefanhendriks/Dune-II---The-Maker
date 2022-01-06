@@ -29,7 +29,7 @@ class cInteractionManager : public cInputObserver {
 		~cInteractionManager();
 
 		void onNotifyMouseEvent(const s_MouseEvent &mouseEvent) override;
-        void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
+        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
         void interactWithKeyboard();
 

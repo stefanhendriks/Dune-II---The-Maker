@@ -21,7 +21,7 @@ public:
     virtual void draw() const = 0;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
-    virtual void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override = 0;
+    virtual void onNotifyKeyboardEvent(const cKeyboardEvent &event) override = 0;
 
     virtual eGameStateType getType() = 0;
 

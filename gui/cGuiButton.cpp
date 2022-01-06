@@ -187,7 +187,7 @@ void cGuiButton::setEnabled(bool value) {
     enabled = value;
 }
 
-void cGuiButton::onNotifyKeyboardEvent(const s_KeyboardEvent &) {
+void cGuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }
 
 //

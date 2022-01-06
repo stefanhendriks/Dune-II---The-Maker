@@ -468,25 +468,6 @@ int cGame::getGroupNumberFromKeyboard() {
     return 0;
 }
 
-int cGame::getGroupNumberFromScanCode(int scanCode) {
-    if (scanCode == KEY_1) {
-        return 1;
-    }
-    if (scanCode == KEY_2) {
-        return 2;
-    }
-    if (scanCode == KEY_3) {
-        return 3;
-    }
-    if (scanCode == KEY_4) {
-        return 4;
-    }
-    if (scanCode == KEY_5) {
-        return 5;
-    }
-    return 0;
-}
-
 void cGame::handleTimeSlicing() {
     if (iRest > 0) {
         rest(iRest);
@@ -1618,14 +1599,14 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cGame::onNotifyKeyboardEvent(const s_KeyboardEvent &event) {
+void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     // pass through any classes that are interested
     if (currentState) {
         currentState->onNotifyKeyboardEvent(event);
     }
 
     // take screenshot
-    if (event.eventType == KEY_PRESSED && event.key == KEY_F11) {
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_F11)) {
         takeScreenshot();
     }
 
@@ -1686,12 +1667,12 @@ void cGame::takeScreenshot() {
     screenshot++;
 }
 
-void cGame::onNotifyKeyboardEventGamePlaying(const s_KeyboardEvent &event) {
+void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
     switch (event.eventType) {
-        case KEY_HOLD:
+        case eKeyEventType::HOLD:
             onKeyDownGamePlaying(event);
             break;
-        case KEY_PRESSED:
+        case eKeyEventType::PRESSED:
             onKeyPressedGamePlaying(event);
             break;
         default:
@@ -1699,10 +1680,10 @@ void cGame::onNotifyKeyboardEventGamePlaying(const s_KeyboardEvent &event) {
     }
 }
 
-void cGame::onKeyDownGamePlaying(const s_KeyboardEvent &event) {
+void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
     const cPlayer *humanPlayer = &players[HUMAN];
 
-    if (event.key == KEY_LCONTROL || event.key == KEY_RCONTROL) {
+    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
         // HACK HACK: This reads keyboard state for another key (see cKeyboard for reason)
         int iGroup = getGroupNumberFromKeyboard();
 
@@ -1729,15 +1710,15 @@ void cGame::onKeyDownGamePlaying(const s_KeyboardEvent &event) {
 
 }
 
-void cGame::onKeyPressedGamePlaying(const s_KeyboardEvent &event) {
+void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
     cPlayer &humanPlayer = players[HUMAN];
 
-    if (event.key == KEY_H) {
+    if (event.hasKey(KEY_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     // Center on the selected structure
-    if (event.key == KEY_C) {
+    if (event.hasKey(KEY_C)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
             mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());

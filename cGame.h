@@ -109,7 +109,6 @@ public:
 	}
 
 	int getGroupNumberFromKeyboard();
-    int getGroupNumberFromScanCode(int scanCode);
 
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
@@ -154,7 +153,7 @@ public:
 
     void onNotify(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
-    void onNotifyKeyboardEvent(const s_KeyboardEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void onEventSpecialLaunch(const s_GameEvent &event);
 
@@ -294,9 +293,9 @@ private:
 
     void takeScreenshot();
 
-    void onNotifyKeyboardEventGamePlaying(const s_KeyboardEvent &event);
+    void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
 
-    void onKeyDownGamePlaying(const s_KeyboardEvent &event);
+    void onKeyDownGamePlaying(const cKeyboardEvent &event);
 
-    void onKeyPressedGamePlaying(const s_KeyboardEvent &event);
+    void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 };
