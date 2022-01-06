@@ -1,5 +1,6 @@
-#ifndef SEEDMAP_GENERATOR
-#define SEEDMAP_GENERATOR
+#pragma once
+
+#include "cSeedMap.h"
 
 struct cell
 {
@@ -72,5 +73,3 @@ public:
 
 	cSeedMap *generateSeedMap();
 };
-
-#endif
