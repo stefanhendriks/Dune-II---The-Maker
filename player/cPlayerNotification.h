@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERNOTIFICATION_H
-#define D2TM_CPLAYERNOTIFICATION_H
+#pragma once
 
 #include <string>
 
@@ -9,21 +8,21 @@ enum eNotificationType {
     BAD         // bad news, in red
 };
 
-const char* eNotificationTypeString(const eNotificationType &type);
+std::string eNotificationTypeString(const eNotificationType &type);
 
 class cPlayerNotification {
 public:
-    cPlayerNotification(std::string msg, eNotificationType type);
+    cPlayerNotification(const std::string& msg, eNotificationType type);
 
     void thinkFast();
 
-    bool isVisible() { return TIMER > 0; }
+    bool isVisible() const { return TIMER > 0; }
 
-    std::string & getMessage();
+    const std::string& getMessage() const;
 
     int getTimer() const { return TIMER; }
 
-    int getColor();
+    int getColor() const;
 
 private:
     std::string msg;
@@ -31,5 +30,3 @@ private:
     int initialDuration;
     eNotificationType type;
 };
-
-#endif //D2TM_CPLAYERNOTIFICATION_H
