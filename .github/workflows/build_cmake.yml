@@ -20,7 +20,7 @@ jobs:
         with:
           msystem: MINGW32 # D2TM is built within a MinGW32 bit environment
           update: true
-          install: mingw-w64-i686-gcc mingw-w64-i686-binutils mingw-w64-i686-cmake mingw-w64-i686-ninja git
+          install: mingw-w64-i686-gcc mingw-w64-i686-binutils mingw-w64-i686-cmake mingw-w64-i686-make git
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -30,8 +30,8 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -G "Ninja"
+          cmake .. -G "MinGW Makefiles"
       - name: Build
         run: |
           cd "${{ github.workspace }}\build"
-          ninja
+          make -j -l 3
