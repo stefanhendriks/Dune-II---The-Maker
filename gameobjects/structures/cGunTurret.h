@@ -25,7 +25,7 @@ public:
 
     void think_attack();
 
-    void startAnimating() override {};
+    void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
 

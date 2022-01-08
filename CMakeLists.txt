@@ -95,6 +95,7 @@ target_compile_options(${PROJECT_NAME}
     "-Wuseless-cast"
     "-Wredundant-tags"
     "-Wzero-as-null-pointer-constant"
+    "-Wextra-semi"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

@@ -42,7 +42,7 @@ class cItemBuilder {
         cBuildingListItem *getListItemWhichIsAwaitingPlacement(eListType listType, int sublistType);
         cBuildingListItem *getListItemWhichIsAwaitingDeployment(eListType listType, int sublistType);
 
-        cPlayer * getPlayer() { return player; };
+        cPlayer * getPlayer() { return player; }
 
 	private:
         cBuildingListItem *items[MAX_ITEMS];
