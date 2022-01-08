@@ -19,7 +19,7 @@ public:
 
     int getType() const override;
 
-    void startAnimating() override {};
+    void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
 

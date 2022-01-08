@@ -25,7 +25,7 @@ class cInteractionManager : public cInputObserver, cScenarioObserver {
 
 		void onNotifyMouseEvent(const s_MouseEvent &mouseEvent) override;
         void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-        void onNotifyGameEvent(const s_GameEvent &) override {};
+        void onNotifyGameEvent(const s_GameEvent &) override {}
 
         void interactWithKeyboard();
 
