@@ -1,5 +1,4 @@
-#ifndef CORDERDRAWER_H_
-#define CORDERDRAWER_H_
+#pragma once
 
 class cOrderDrawer {
 public:
@@ -25,10 +24,7 @@ private:
 
     bool _isMouseOverOrderButton;
 
-    cPlayer * player;
+    cPlayer* player;
     cRectangle buttonRect;
-    BITMAP *buttonBitmap;
-
+    BITMAP* buttonBitmap;
 };
-
-#endif /* CORDERDRAWER_H_ */

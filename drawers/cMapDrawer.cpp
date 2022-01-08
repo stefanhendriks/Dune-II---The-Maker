@@ -167,8 +167,8 @@ void cMapDrawer::drawTerrain() {
                     int mcY = map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        fblend_rect_trans(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, makecol(255, 255, 0),
-                                          96);
+                      allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                                                                    makecol(255, 255, 0), 96);
                     }
                 }
 

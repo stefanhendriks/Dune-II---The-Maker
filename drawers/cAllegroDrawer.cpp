@@ -1,6 +1,8 @@
-#include "../include/d2tmh.h"
 #include "cAllegroDrawer.h"
 
+#include "d2tmc.h"
+
+#include <memory>
 
 cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {
     colorBlack=makecol(0,0,0);
@@ -198,6 +200,19 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int he
 
 void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
+}
+
+void cAllegroDrawer::drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha) {
+  assert(alpha >= 0);
+  assert(alpha <= 255);
+
+  // Create a temporary bitmap that automatically destroys itself when going out-of-scope
+  // TODO: save these bitmaps in cAllegroDrawer and re-use them.
+  std::unique_ptr<BITMAP, decltype(&destroy_bitmap)> rect_bmp{create_bitmap(rect.getWidth(), rect.getHeight()), destroy_bitmap};
+	rectfill(rect_bmp.get(), 0, 0, rect.getWidth(), rect.getHeight(), color);
+
+  set_trans_blender(0, 0, 0, alpha);
+  draw_trans_sprite(dest, rect_bmp.get(), rect.getX(),rect.getY());
 }
 
 cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {

@@ -127,11 +127,11 @@ void cParticle::draw() {
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
-            fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
+            set_add_blender(0, 0, 0, iAlpha);
         } else {
             set_trans_blender(0, 0, 0, iAlpha);
-            draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
         }
+        draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
     } else {
         draw_sprite(bmp_screen, stretched, drawX, drawY);
     }

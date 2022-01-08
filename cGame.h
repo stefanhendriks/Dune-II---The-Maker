@@ -11,14 +11,13 @@
   */
 #pragma once
 
-#include <controls/cMouse.h>
-#include <controls/cKeyboard.h>
-#include <observers/cScenarioObserver.h>
-#include <data/cAllegroDataRepository.h>
-#include <observers/cScenarioObserver.h>
-#include <utils/cRectangle.h>
-#include <utils/cSoundPlayer.h>
+#include "controls/cMouse.h"
+#include "controls/cKeyboard.h"
+#include "data/cAllegroDataRepository.h"
 #include "definitions.h"
+#include "observers/cScenarioObserver.h"
+#include "utils/cRectangle.h"
+#include "utils/cSoundPlayer.h"
 
 #include <string>
 

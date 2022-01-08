@@ -1,5 +1,6 @@
 #include "../include/d2tmh.h"
 
+#include <memory>
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
@@ -17,20 +18,20 @@ cOrderDrawer::~cOrderDrawer() {
 }
 
 void cOrderDrawer::drawOrderPlaced() {
-	BITMAP *bmp_trans=create_bitmap(buttonBitmap->w, buttonBitmap->h);
-	clear_to_color(bmp_trans, makecol(255,0,255));
+  // Create a temporary bitmap that destroys itself when going out of scope
+  // TODO: either save this or use buttonBitmap?
+  std::unique_ptr<BITMAP, decltype(&destroy_bitmap)> bmp_trans{create_bitmap(buttonBitmap->w, buttonBitmap->h), destroy_bitmap};
+	clear_to_color(bmp_trans.get(), makecol(255,0,255));
 
 	// copy
-	draw_sprite(bmp_trans, (BITMAP *)gfxinter[BTN_ORDER].dat, 0, 0);
+	draw_sprite(bmp_trans.get(), (BITMAP *)gfxinter[BTN_ORDER].dat, 0, 0);
 
 	// make black
 	allegroDrawer->drawRectangleFilled(bmp_screen, buttonRect, makecol(0,0,0));
 
 	// trans
-	fblend_trans(bmp_trans, bmp_screen, buttonRect.getX(), buttonRect.getY(), 128);
-
-	// destroy - phew
-	destroy_bitmap(bmp_trans);
+  set_trans_blender(0, 0, 0, 128);
+  draw_trans_sprite(bmp_screen, bmp_trans.get(), buttonRect.getX(), buttonRect.getY());
 }
 
 void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
