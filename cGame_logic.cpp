@@ -748,11 +748,10 @@ bool cGame::setupGame() {
     LOCK_FUNCTION(allegro_timergametime);
     LOCK_FUNCTION(allegro_timerseconds);
 
-    // Install timers
-    install_int(allegro_timerunits, 100); // 100 milliseconds
-    install_int(allegro_timergametime,
-                5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
-    install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
+	// Install timers
+	install_int(allegro_timerunits, 100); // 100 milliseconds
+  install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
+  install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
 
     logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 

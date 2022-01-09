@@ -962,7 +962,7 @@ namespace brains {
         if (player->isBuildingStructureAwaitingPlacement()) {
             int structureType = player->getStructureTypeBeingBuilt();
 
-            struct S_buildOrder * matchingOrder = nullptr;
+            S_buildOrder * matchingOrder = nullptr;
             for (auto &buildOrder : buildOrders) {
                 if (buildOrder.buildType != eBuildType::STRUCTURE) {
                     continue;
