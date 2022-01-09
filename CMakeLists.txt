@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 project(d2tm)
 
@@ -94,6 +94,7 @@ target_compile_options(${PROJECT_NAME}
     "-Wextra"
     "-Wnon-virtual-dtor"
     "-Wuseless-cast"
+    "-Wredundant-tags"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

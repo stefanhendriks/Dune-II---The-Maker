@@ -2441,7 +2441,7 @@ void INI_PRESCAN_SKIRMISH() {
     // scans for all ini files
     INIT_PREVIEWS(); // clear all of them
 
-    struct al_ffblk file;
+    al_ffblk file;
     if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
         do {
             auto fullname = fmt::format("skirmish/{}", file.name);

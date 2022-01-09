@@ -1,4 +1,6 @@
-#include "../include/d2tmh.h"
+#include "cSeedMapGenerator.h"
+
+#include "data/gfxdata.h"
 
 // static initialize
 short cSeedMapGenerator::offsets2[SMG_OFFSET2_SIZE] =
@@ -112,7 +114,7 @@ short cSeedMapGenerator::random() {
    return a;
 }
 
-void cSeedMapGenerator::convertMap(struct cell map[64][64], short *iconmap)
+void cSeedMapGenerator::convertMap(cell map[64][64], short *iconmap)
 {
    short *icontab, w, x, y;
 
@@ -132,7 +134,7 @@ void cSeedMapGenerator::convertMap(struct cell map[64][64], short *iconmap)
 /*
  * Add spice at specified position
  */
-void cSeedMapGenerator::addSpiceAt(struct cell map[64][64],short x,short y)
+void cSeedMapGenerator::addSpiceAt(cell map[64][64],short x,short y)
 {
       short dx,dy,x2,y2;
       if(map[y][x].w==SMG_SPICE){
@@ -173,7 +175,7 @@ void cSeedMapGenerator::addSpiceAt(struct cell map[64][64],short x,short y)
  * Add spice to the map
  */
 
-void cSeedMapGenerator::addSpice(struct cell map[64][64])
+void cSeedMapGenerator::addSpice(cell map[64][64])
 {
      short i,x,y,a,b,c;
      short e,j,m,x2,y2,x3,y3;
@@ -236,7 +238,7 @@ void cSeedMapGenerator::addSpice(struct cell map[64][64])
  * The technique is similiar to --> balanceMap
  */
 
-void cSeedMapGenerator::scanRegions(struct cell map[64][64])
+void cSeedMapGenerator::scanRegions(cell map[64][64])
 {
    short prevln[64], currln[64];
    short i, x, y, left, up, right, down, middle, id;
@@ -320,7 +322,7 @@ void cSeedMapGenerator::scanRegions(struct cell map[64][64])
  * creates terrain regions by replacing numbers within specified range
  */
 
-void cSeedMapGenerator::createRegions(struct cell map[64][64])
+void cSeedMapGenerator::createRegions(cell map[64][64])
 {
    /* variables named like terrains are range limits */
    short x, y, rock, dunes, mountains, num, reg;
@@ -353,7 +355,7 @@ void cSeedMapGenerator::createRegions(struct cell map[64][64])
  * to 'prevln'.
  */
 
-void cSeedMapGenerator::balanceMap(struct cell map[64][64]) {
+void cSeedMapGenerator::balanceMap(cell map[64][64]) {
    short prevln[64], currln[64];
    short i, x, y;
 
@@ -404,7 +406,7 @@ void cSeedMapGenerator::balanceMap(struct cell map[64][64]) {
  * also the right border cells are inproperly calculated.
  */
 
-void cSeedMapGenerator::spreadMatrix(struct cell map[64][64])
+void cSeedMapGenerator::spreadMatrix(cell map[64][64])
 {
    short i, x, y, bx, by, ex, ey, medx, medy, diag=0, *offs;
 
@@ -435,7 +437,7 @@ void cSeedMapGenerator::spreadMatrix(struct cell map[64][64])
  * (the generator has a tend to use that extra row in spreadMatrix :)
  */
 
-void cSeedMapGenerator::copyMatrix(char *matrix, struct cell map[65][64])
+void cSeedMapGenerator::copyMatrix(char *matrix, cell map[65][64])
 {
    short x, y, i=0;
 
