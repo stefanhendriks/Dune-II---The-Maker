@@ -9,13 +9,12 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
+#pragma once
 
-#ifndef TIMERS_H
-	void allegro_timerseconds();	/** FPS timer **/
-	void allegro_timergametime(); /** Global timer **/
-	void allegro_timerunits();	/** Unit timer **/
+void allegro_timerseconds();	/** FPS timer **/
+void allegro_timergametime(); /** Global timer **/
+void allegro_timerunits();	/** Unit timer **/
 
-	extern volatile int allegro_timerSecond;
-	extern volatile int allegro_timerGlobal;
-	extern volatile int allegro_timerUnits;
-#endif
+extern volatile int allegro_timerSecond;
+extern volatile int allegro_timerGlobal;
+extern volatile int allegro_timerUnits;
