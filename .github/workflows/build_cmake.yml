@@ -8,38 +8,30 @@ on:
   pull_request: {}
 
 jobs:
-  Windows:
-    name: build-windows
+  MSYS2:
+    name: Windows-msys2-mingw32
     runs-on: [windows-latest]
-
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-      - name: Cache MinGW modules
-        uses: actions/cache@v2
+      - name: Install MSYS2 with MinGW 32-bit
+        uses: msys2/setup-msys2@v2
         with:
-          path: |
-            C:\Users\runneradmin\AppData\Local\Temp\chocolatey\mingw\8.1.0\
-            C:\ProgramData\chocolatey\lib\mingw\
-
-          key: ${{ runner.os }}-"MinGW32-8.1.0"
-
-      - name: Set up MinGW
-        uses: egor-tensin/setup-mingw@v2
-        with:
-         platform: x86 # D2TM is built within a MinGW32 bit environment
-
+          msystem: MINGW32 # D2TM is built within a MinGW32 bit environment
+          update: true
+          install: mingw-w64-i686-gcc mingw-w64-i686-binutils mingw-w64-i686-cmake mingw-w64-i686-make git
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           submodules: recursive
-
-      - name: Running cmake (windows)
+      - name: Configure
         run: |
-          cd ${{ github.workspace }}
+          cd "${{ github.workspace }}"
           mkdir build
           cd build
           cmake .. -G "MinGW Makefiles"
-
       - name: Build
         run: |
-          cd build
-          cmake --build . --target all -- -j 6
+          cd "${{ github.workspace }}\build"
+          cmake --build . --target all -- -j -l 3

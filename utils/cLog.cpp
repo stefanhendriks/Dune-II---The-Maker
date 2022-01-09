@@ -124,10 +124,9 @@ std::string cLogger::getLogHouseString(int houseId) {
 
 // courtesy from : http://www.codeguru.com/forum/showthread.php?t=477894
 std::string cLogger::getCurrentFormattedTime() {
-	struct tm* ts;
 	char szBuffer[80];
 
-	ts = localtime(&current_time);
+	auto ts = localtime(&current_time);
 
 	// Format the time
 	strftime(szBuffer, sizeof(szBuffer), "%H:%M:%S", ts);
