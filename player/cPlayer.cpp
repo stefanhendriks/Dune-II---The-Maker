@@ -742,8 +742,6 @@ void cPlayer::update() {
     powerProduce_ = structureUtils.getTotalPowerOutForPlayer(this);
     // update spice capacity
     maxCredits_ = structureUtils.getTotalSpiceCapacityForPlayer(this);
-
-    gameControlsContext->updateMouseState();
 }
 
 int cPlayer::getCredits() {
