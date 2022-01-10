@@ -6,6 +6,8 @@
  */
 #include "../../include/d2tmh.h"
 
+#include "utils/cSoundPlayer.h"
+
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
     player = thePlayer;
@@ -76,7 +78,7 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 	}
 
 	if (soundIdToPlay > -1) {
-        play_sound_id(soundIdToPlay);
+        game.getSoundPlayer().playSound(soundIdToPlay);
 	}
 }
 

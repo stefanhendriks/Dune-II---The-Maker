@@ -1,5 +1,7 @@
 #include "../../include/d2tmh.h"
 
+#include "utils/cSoundPlayer.h"
+
 // Constructor
 cRefinery::cRefinery() {
 
@@ -74,7 +76,7 @@ void cRefinery::think_unit_occupation() {
 
     // let player know...
     if (pPlayer->isHuman()) {
-        play_voice(SOUND_VOICE_02_ATR);
+        game.getSoundPlayer().playSound(SOUND_VOICE_02_ATR, pPlayer->getHouse());
     }
 
     // perhaps we can find a carryall to help us out

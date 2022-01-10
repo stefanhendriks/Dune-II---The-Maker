@@ -2,6 +2,7 @@
 #include "d2tmh.h"
 #include "cChooseHouseGameState.h"
 
+#include "utils/cSoundPlayer.h"
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) : cGameState(theGame) {
     textDrawer = cTextDrawer(bene_font);
@@ -92,17 +93,17 @@ void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) 
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
         game.prepareMentatToTellAboutHouse(ATREIDES);
-        play_sound_id(SOUND_ATREIDES);
+        game.getSoundPlayer().playSound(SOUND_ATREIDES);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(&houseOrdos)) {
         game.prepareMentatToTellAboutHouse(ORDOS);
-        play_sound_id(SOUND_ORDOS);
+        game.getSoundPlayer().playSound(SOUND_ORDOS);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         game.prepareMentatToTellAboutHouse(HARKONNEN);
-        play_sound_id(SOUND_HARKONNEN);
+        game.getSoundPlayer().playSound(SOUND_HARKONNEN);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(backButtonRect)) {

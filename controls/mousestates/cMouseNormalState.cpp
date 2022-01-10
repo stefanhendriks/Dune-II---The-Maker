@@ -3,14 +3,13 @@
 #include "controls/cGameControlsContext.h"
 
 #include "utils/cRectangle.h"
+#include "utils/cSoundPlayer.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "player/cPlayer.h"
-//#include "sidebar/cSideBar.h"
 
 #include "d2tmc.h"
 
-#include "data/gfxaudio.h"
 #include "data/gfxdata.h"
 
 #include <algorithm>
@@ -103,11 +102,11 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
         }
 
         if (unitSelected) {
-            play_sound_id(SOUND_REPORTING);
+            game.getSoundPlayer().playSound(SOUND_REPORTING);
         }
 
         if (infantrySelected) {
-            play_sound_id(SOUND_YESSIR);
+            game.getSoundPlayer().playSound(SOUND_YESSIR);
         }
 
         selectedUnits = unitSelected || infantrySelected;
