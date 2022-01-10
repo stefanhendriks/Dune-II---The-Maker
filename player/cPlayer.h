@@ -20,14 +20,22 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <set>
+#include <string>
+#include <vector>
+
+#include "allegro/palette.h"
+
+#include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
 
-#include <set>
-#include <string>
-#include <vector>
+
+// all kinds of forward declarations to make a compiler happy when not using d2tmh.h
+class cItemBuilder;
+class cBuildingListUpdater;
 
 struct s_PlaceResult {
     bool success = false; // if true, all is ok
@@ -111,7 +119,7 @@ public:
 
     cSideBar *getSideBar() const { return sidebar; }
 
-    cAbstractStructure *getSelectedStructure();
+    cAbstractStructure *getSelectedStructure() const;
 
     eHouseBitFlag getHouseBitFlag();
 
@@ -130,6 +138,10 @@ public:
     cOrderProcesser *getOrderProcesser() const { return orderProcesser; }
 
     cGameControlsContext *getGameControlsContext() const { return gameControlsContext; }
+
+    void setContextMouseState(eMouseState newState);
+
+    bool isContextMouseState(eMouseState state);
 
     int getMinimapColor() const { return minimapColor; }
 
@@ -216,11 +228,17 @@ public:
 
     std::vector<int> getAllMyUnitsForType(int unitType) const;
 
+    std::vector<int> getAllMyUnitsWithinViewportRect(const cRectangle &rect) const;
+
     std::vector<int> getAllMyStructuresAsId();
 
     std::vector<int> getAllMyStructuresAsIdForType(int structureType);
 
-    bool isSameTeamAs(cPlayer *pPlayer);
+    std::vector<int> getAllMyUnitsForGroupNr(const int groupId) const;
+
+    std::vector<int> getSelectedUnits() const;
+
+    bool isSameTeamAs(const cPlayer *pPlayer);
 
     void update();
 
@@ -304,7 +322,7 @@ public:
     cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
     cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
 
-    cBuildingListItem * isUpgradingList(int listId, int sublistId) const;
+    cBuildingListItem * isUpgradingList(eListType listType, int sublistId) const;
     cBuildingListItem * isUpgradingConstyard() const;
     cBuildingListItem * isBuildingStructure() const;
     bool isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const;
@@ -381,19 +399,28 @@ public:
 
     void addNotification(const char *msg, eNotificationType type);
 
-    bool isNotPlacingSomething();
     bool isNotDeployingSomething();
 
     // properties (for now public, should become private)
     int selected_structure;
 
-    bool bPlaceIt;		// placing something? (for structures only)
-    bool bPlacedIt;		// for remembering, for onCombatMouseEvent stuff..
-
     bool bDeployIt;		// deploying something? (for palace)
     bool bDeployedIt;   // for remembering, for onCombatMouseEvent stuff..
 
     void deselectStructure();
+
+    void deselectAllUnits();
+
+    bool selectUnitsFromGroup(int groupId);
+
+    void markUnitsForGroup(const int groupId) const;
+
+    /**
+     * Given this list of unit id's, select them. Also applies logic, to skip harvesters if non-harvesters
+     * are within this list of ID's. Also plays sound effects (reporting!) depending on infantry/non-infantry unit.
+     * @param ids
+     */
+    bool selectUnits(const std::vector<int> &ids) const;
 
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
@@ -406,7 +433,7 @@ private:
 
     int getEmblemBackgroundColorForHouse(int houseId);
 
-    bool isBuildingAnythingForListAndSublist(int listId, int subListId) const;
+    bool isBuildingAnythingForListAndSublist(eListType listType, int subListId) const;
 
     bool startBuilding(cBuildingListItem *pItem);
 
@@ -469,7 +496,6 @@ private:
     bool alive;
 
     std::vector<cPlayerNotification> notifications;
-
 };
 
 #endif

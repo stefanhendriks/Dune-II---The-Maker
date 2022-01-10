@@ -315,15 +315,15 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
 int cBuildingListItem::getListId(eBuildType type, int buildId) {
     switch (type) {
         case UNIT:
-            return sUnitInfo[buildId].listId;
+            return eListTypeAsInt(sUnitInfo[buildId].listType);
         case STRUCTURE:
             return sStructureInfo[buildId].list;
         case SPECIAL:
-            return sSpecialInfo[buildId].listId;
+            return eListTypeAsInt(sSpecialInfo[buildId].listType);
             break;
         case UPGRADE:
 //            return sUpgradeInfo[buildId].;
-            return LIST_UPGRADES;
+            return eListTypeAsInt(eListType::LIST_UPGRADES);
             break;
         default:
             return -1;

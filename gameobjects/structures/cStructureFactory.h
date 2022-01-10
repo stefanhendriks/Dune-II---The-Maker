@@ -10,8 +10,7 @@
 
   */
 
-#ifndef STRUCTURE_FACTORY
-#define STRUCTURE_FACTORY
+#pragma once
 
 #include <set>
 
@@ -19,34 +18,38 @@ class cStructureFactory {
 
 
 private:
-	static cStructureFactory *instance;
+    static cStructureFactory *instance;
 
 protected:
-	cStructureFactory();
+    cStructureFactory();
+
     ~cStructureFactory();
 
 public:
 
-	static cStructureFactory *getInstance();
-	static void destroy();
+    static cStructureFactory *getInstance();
 
-	void deleteStructureInstance(cAbstractStructure *pStructure);
+    static void destroy();
 
-	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
-	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer);
+    void deleteStructureInstance(cAbstractStructure *pStructure);
 
-	int getFreeSlot();
+    cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
 
-	void deleteAllExistingStructures();
+    cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer);
 
-	void clearFogForStructureType(int iCell, cAbstractStructure *str);
-	void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);
+    int getFreeSlot();
 
-	void createSlabForStructureType(int iCell, int iStructureType);
+    void deleteAllExistingStructures();
 
-	void updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer);
+    void clearFogForStructureType(int iCell, cAbstractStructure *str);
 
-	int getSlabStatus(int iCell, int iStructureType);
+    void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);
+
+    void createSlabForStructureType(int iCell, int iStructureType);
+
+    void updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer);
+
+    int getSlabStatus(int iCell, int iStructureType);
 
     void slabStructure(int iCll, int iStructureType, int iPlayer);
 
@@ -54,4 +57,3 @@ private:
     cAbstractStructure *createStructureInstance(int type);
 
 };
-#endif

@@ -1,4 +1,6 @@
 #include "d2tmh.h"
+#include "cGuiButton.h"
+
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string & btnText)
   : rect(rect)
@@ -183,6 +185,9 @@ void cGuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action) {
 
 void cGuiButton::setEnabled(bool value) {
     enabled = value;
+}
+
+void cGuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }
 
 //

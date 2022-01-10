@@ -339,6 +339,8 @@ public:
 
     int getHitPoints() { return iHitPoints; }
 
+    bool isEligibleForRepair();
+
 private:
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
@@ -464,8 +466,6 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
 void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
 
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
-
-void UNIT_deselect_all();
 
 int UNIT_find_harvest_spot(int id);
 

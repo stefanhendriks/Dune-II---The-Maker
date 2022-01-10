@@ -1,7 +1,7 @@
 #ifndef D2TM_CGAMESTATE_H
 #define D2TM_CGAMESTATE_H
 
-#include "../observers/cMouseObserver.h"
+#include "../observers/cInputObserver.h"
 
 enum eGameStateType {
     GAMESTATE_MAIN_MENU,
@@ -11,7 +11,7 @@ enum eGameStateType {
     GAMESTATE_SETUP_SKIRMISH_GAME,
 };
 
-class cGameState : cMouseObserver {
+class cGameState : cInputObserver {
 
 public:
     cGameState(cGame& theGame);
@@ -21,6 +21,7 @@ public:
     virtual void draw() const = 0;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
+    virtual void onNotifyKeyboardEvent(const cKeyboardEvent &event) override = 0;
 
     virtual eGameStateType getType() = 0;
 

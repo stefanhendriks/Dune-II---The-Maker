@@ -1,12 +1,4 @@
-/*
- * cGameControlsContext.h
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
-#ifndef CGAMECONTROLSCONTEXT_H_
-#define CGAMECONTROLSCONTEXT_H_
+#pragma once
 
 // this class holds the game controls context. This means, the updateState() method
 // will check how the mouse is positioned in this particular frame. It then updates
@@ -17,13 +9,25 @@
 //
 // a context belongs to a player
 
-class cGameControlsContext {
+
+// 01/01/2022 -> Move this into a `Combat` state object; or within player object as state.
+
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "include/definitions.h"
+
+#include "controls/mousestates/eMouseStates.h"
+#include "controls/mousestates/cMouseNormalState.h"
+#include "controls/mousestates/cMouseUnitsSelectedState.h"
+#include "controls/mousestates/cMouseRepairState.h"
+#include "controls/mousestates/cMousePlaceState.h"
+
+class cGameControlsContext : public cInputObserver {
 	public:
-		cGameControlsContext(cPlayer *thePlayer);
+		cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse);
 		~cGameControlsContext();
 
-		int getIdOfStructureWhereMouseHovers() { return mouseHoveringOverStructureId; }
-		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
+		int getIdOfStructureWhereMouseHovers() const { return mouseHoveringOverStructureId; }
+		int getIdOfUnitWhereMouseHovers() const { return mouseHoveringOverUnitId; }
 
 		int getMouseCell() const { return mouseCell; }
 
@@ -42,16 +46,22 @@ class cGameControlsContext {
 
 		int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
-        void onNotify(const s_MouseEvent &event);
+        void onNotifyMouseEvent(const s_MouseEvent &event) override;
+        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-protected:
+        void setMouseState(eMouseState newState);
+
+        void toPreviousState();
+
+        bool isState(eMouseState other);
+
+	protected:
 		void determineToolTip();
-		void determineHoveringOverStructureId(int mouseX, int mouseY);
+		void determineHoveringOverStructureId();
 		void determineHoveringOverUnitId();
 
-
 	private:
-        void onMouseAt(const s_MouseEvent &event);
+        void onMouseMovedTo(const s_MouseEvent &event);
 
         void updateMouseCell(const cPoint &coords);
 
@@ -65,6 +75,24 @@ protected:
 
 		// context belongs to specific player
 		cPlayer * player;
-};
 
-#endif /* CGAMECONTROLSCONTEXT_H_ */
+        // the state to direct events to
+        eMouseState state;
+        eMouseState prevState; // in case we want to switch from repair mode (back and forth)
+
+        // the states, initialized once to save a lot of construct/destructs
+        cMouseNormalState * mouseNormalState;
+        cMouseUnitsSelectedState * mouseUnitsSelectedState;
+        cMouseRepairState * mouseRepairState;
+		cMousePlaceState * mousePlaceState;
+
+		//
+		bool prevTickMouseAtBattleField;
+
+		// mouse state
+		void onNotifyMouseStateEvent(const s_MouseEvent &event);
+		void onFocusMouseStateEvent();
+		void onBlurMouseStateEvent();
+
+		cMouse *mouse;
+};

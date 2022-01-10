@@ -2,7 +2,7 @@
 #define D2TM_CGUIBUTTON_H
 
 #include <utils/cRectangle.h>
-#include <observers/cMouseObserver.h>
+#include <observers/cInputObserver.h>
 #include "cGuiObject.h"
 
 enum eGuiButtonRenderKind {
@@ -43,6 +43,7 @@ public:
 //    cGuiButton &operator=(const cGuiButton &rhs);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void draw() const override;
 

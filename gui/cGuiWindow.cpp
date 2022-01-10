@@ -45,3 +45,6 @@ cRectangle cGuiWindow::getRelativeRect(int x, int y, int width, int height) {
     cRectangle result = cRectangle(x + rect.getX(), y + rect.getY(), width, height);
     return result;
 }
+
+void cGuiWindow::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+}

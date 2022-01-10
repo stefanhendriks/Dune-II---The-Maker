@@ -109,7 +109,8 @@ void cSideBarDrawer::drawBuildingLists() {
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
 
-	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
+    int startPos = eListTypeAsInt(eListType::LIST_CONSTYARD);
+	for (int listId = startPos; listId < cSideBar::LIST_MAX; listId++) {
 		cBuildingList *list = sidebar->getList(listId);
 		bool isListIdSelectedList = (selectedListId == listId);
 		buildingListDrawer->drawButton(list, isListIdSelectedList);
@@ -145,7 +146,7 @@ void cSideBarDrawer::drawBuildingLists() {
 
     int endY = game.screen_y;
     int rows = 6;
-    if (selectedList && selectedList->getType() == LIST_STARPORT) {
+    if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         rows = 5;
         endY = game.screen_y - 50;
     }
@@ -165,7 +166,7 @@ void cSideBarDrawer::drawBuildingLists() {
         }
     }
 
-    if (selectedList && selectedList->getType() == LIST_STARPORT) {
+    if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         rectfill(bmp_screen, iDrawX, endY, game.screen_x, game.screen_y, sidebarColor);
         draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
     }
@@ -181,7 +182,7 @@ void cSideBarDrawer::drawBuildingLists() {
 	}
 
     // button interaction
-    for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
+    for (int i = startPos; i < cSideBar::LIST_MAX; i++) {
         if (i == selectedListId) continue; // skip selected list for button interaction
         cBuildingList *list = sidebar->getList(i);
 
@@ -196,7 +197,7 @@ void cSideBarDrawer::drawBuildingLists() {
     cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
 
     // allow clicking on the order button
-    if (selectedList && selectedList->getType() == LIST_STARPORT) {
+    if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         orderDrawer->drawOrderButton(player);
     }
 }

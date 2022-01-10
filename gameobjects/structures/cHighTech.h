@@ -1,6 +1,4 @@
-// Structure class
-#ifndef CHIGHTECH_H
-#define CHIGHTECH_H
+#pragma once
 
 class cHighTech : public cAbstractStructure {
 private:
@@ -14,19 +12,16 @@ public:
     ~cHighTech();
 
     // overloaded functions    
-    void think();
+    void think() override;
 
     void startAnimating() override;
 
     void draw() override { drawWithShadow(); }
 
-    void think_animation();
+    void think_animation() override;
 
-    void think_guard();
+    void think_guard() override;
 
-    int getType() const;
-
+    int getType() const override;
 
 };
-
-#endif

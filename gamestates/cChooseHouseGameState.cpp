@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "d2tmh.h"
+#include "cChooseHouseGameState.h"
 
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) : cGameState(theGame) {
@@ -112,4 +113,7 @@ void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) 
 
 void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event) {
     hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
+}
+
+void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }

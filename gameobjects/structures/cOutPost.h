@@ -1,23 +1,26 @@
-// Structure class
+#pragma once
 
-class cOutPost : public cAbstractStructure
-{
+class cOutPost : public cAbstractStructure {
 private:
-  // outpost does not use any variables in p
+    // outpost does not use any variables in p
 
 public:
     cOutPost();
+
     ~cOutPost();
 
     // overloaded functions
-    void think();
-    void think_animation();
-    void think_guard();
-    void think_flag();
-    void startAnimating() {};
+    void think() override;
+
+    void think_animation() override;
+
+    void think_guard() override;
+
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
-    int getType() const;
+    int getType() const override;
 
 };
 

@@ -8,6 +8,7 @@
 #include "sidebar/cBuildingListUpdater.h"
 
 class cPlayer;
+class cBuildingListUpdater;
 
 class cItemBuilder {
 
@@ -33,13 +34,13 @@ class cItemBuilder {
 		void removeItemFromList(cBuildingListItem *item);
 		bool isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item);
 
-		bool isAnythingBeingBuiltForListId(int listType, int sublistType);
-        bool isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType);
-        bool isAnythingBeingBuiltForListIdAwaitingDeployment(int listType, int sublistType);
+		bool isAnythingBeingBuiltForListType(eListType listType, int sublistType);
+        bool isAnythingBeingBuiltForListIdAwaitingPlacement(eListType listType, int sublistType);
+        bool isAnythingBeingBuiltForListIdAwaitingDeployment(eListType listType, int sublistType);
 
-        cBuildingListItem *getListItemWhichIsBuilding(int listType, int sublistType);
-        cBuildingListItem *getListItemWhichIsAwaitingPlacement(int listType, int sublistType);
-        cBuildingListItem *getListItemWhichIsAwaitingDeployment(int listType, int sublistType);
+        cBuildingListItem *getListItemWhichIsBuilding(eListType listType, int sublistType);
+        cBuildingListItem *getListItemWhichIsAwaitingPlacement(eListType listType, int sublistType);
+        cBuildingListItem *getListItemWhichIsAwaitingDeployment(eListType listType, int sublistType);
 
         cPlayer * getPlayer() { return player; };
 

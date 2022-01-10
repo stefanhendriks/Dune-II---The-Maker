@@ -1,8 +1,7 @@
-#ifndef CMOUSE_H_
-#define CMOUSE_H_
+#pragma once
 
-#include <utils/cPoint.h>
-#include "../observers/cMouseObserver.h"
+#include "observers/cInputObserver.h"
+#include "utils/cPoint.h"
 
 class cRectangle;
 
@@ -13,9 +12,9 @@ public:
 
     ~cMouse();
 
-    void updateState(); // updates state from Allegro, calls appropiate on* methods on gameControlContext class
+    void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
-    void setMouseObserver(cMouseObserver *mouseObserver) {
+    void setMouseObserver(cInputObserver *mouseObserver) {
         this->_mouseObserver = mouseObserver;
     }
 
@@ -53,7 +52,7 @@ public:
      * TODO: should become "state" so it decouples drawing and game mechanic
      * @param value
      */
-    void setTile(int value) { mouse_tile = value; }
+    void setTile(int value);
 
     void resetDragViewportInteraction();
 
@@ -80,7 +79,7 @@ public:
     cPoint getDragLineEndPoint();
 
 private:
-    cMouseObserver *_mouseObserver;
+    cInputObserver *_mouseObserver;
 
     bool leftButtonPressed;
     bool rightButtonPressed;
@@ -110,6 +109,5 @@ private:
     int mouse_mv_y2;        // dragging viewport
 
     int mouse_tile;       // mouse picture in gfxdata
+    std::string mouseTileName(int tile);
 };
-
-#endif /* CMOUSE_H_ */

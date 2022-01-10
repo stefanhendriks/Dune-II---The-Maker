@@ -1,10 +1,3 @@
-/*
- * allegroh.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 #ifndef ALLEGROH_H_
 #define ALLEGROH_H_
 

@@ -1,6 +1,8 @@
 #include "../include/d2tmh.h"
+#include "cInteractionManager.h"
 
-cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver() {
+
+cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cInputObserver() {
 	assert(thePlayer);
 	// does not own these things!
 	player = thePlayer;
@@ -36,9 +38,7 @@ void cInteractionManager::onMouseClickedRight(const s_MouseEvent &) {
     // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
     bool isANormalButtonClick = game.getMouse()->isNormalRightClick();
     if (isANormalButtonClick) {
-        if (player->bPlaceIt) {
-            player->bPlaceIt = false;
-        }
+        // TODO: remove this whole thing when we have a deploy mouse state
         if (player->bDeployIt) {
             player->bDeployIt = false;
         }
@@ -80,14 +80,13 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
             break;
     }
 
-    // now call all its other interested listeners
-    cGameControlsContext *pContext = player->getGameControlsContext();
-    pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
-
     // TODO: call state instead (get rid of this interaction manager thing, so we don't need to do this)
     if (game.isState(GAME_PLAYING)) {
+        // now call all its other interested listeners
+        cGameControlsContext *pContext = player->getGameControlsContext();
+        pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
+
         sidebar->onNotifyMouseEvent(mouseEvent);
-        placeItDrawer->onNotify(mouseEvent);
         mapCamera->onNotify(mouseEvent);
         miniMapDrawer->onNotify(mouseEvent);
         orderDrawer->onNotify(mouseEvent);
@@ -99,4 +98,13 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
     // somewhere above this function, the lines after this onNotify might end up pointing to invalid memory addresses
     // and cause a SIGSEV
     game.onNotifyMouseEvent(mouseEvent);
+}
+
+void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (game.isState(GAME_PLAYING)) {
+        cGameControlsContext *pContext = player->getGameControlsContext();
+        pContext->onNotifyKeyboardEvent(event);
+    }
+
+    game.onNotifyKeyboardEvent(event);
 }

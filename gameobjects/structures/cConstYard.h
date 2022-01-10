@@ -1,18 +1,22 @@
-// Structure class
+#pragma once
 
-class cConstYard : public cAbstractStructure
-{
+class cConstYard : public cAbstractStructure {
 public:
     cConstYard();
+
     ~cConstYard();
-  
+
     // overloaded functions    
-    void think();
-    void think_animation();
-    void think_guard();
-    void startAnimating() {};
+    void think() override;
+
+    void think_animation() override;
+
+    void think_guard() override;
+
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
-    int getType() const;
+    int getType() const override;
 };
 

@@ -110,7 +110,7 @@ void cOrderProcesser::think() {
 }
 
 void cOrderProcesser::updatePricesForStarport() {
-	cBuildingList * list = player->getSideBar()->getList(LIST_STARPORT);
+	cBuildingList * list = player->getSideBar()->getList(eListType::LIST_STARPORT);
 	assert(list);
 	for (int i = 0; i < MAX_ICONS; i++) {
 		cBuildingListItem * item = list->getItem(i);

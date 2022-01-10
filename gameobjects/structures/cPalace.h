@@ -1,21 +1,25 @@
-// Structure class
+#pragma once
 
-class cPalace : public cAbstractStructure
-{
+class cPalace : public cAbstractStructure {
 private:
-    
+
 public:
     cPalace();
+
     ~cPalace();
-  
+
     // overloaded functions    
-    void think();
-    void think_animation();
-    void think_guard();
-    void startAnimating() {};
+    void think() override;
+
+    void think_animation() override;
+
+    void think_guard() override;
+
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
-    int getType() const;
+    int getType() const override;
 
 };
 
