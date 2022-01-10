@@ -109,4 +109,5 @@ private:
     int mouse_mv_y2;        // dragging viewport
 
     int mouse_tile;       // mouse picture in gfxdata
+    std::string mouseTileName(int tile);
 };
