@@ -216,3 +216,7 @@ void cMouseNormalState::setState(eMouseNormalState newState) {
     }
     state = newState;
 }
+
+void cMouseNormalState::onFocus() {
+    mouse->setTile(mouseTile);
+}

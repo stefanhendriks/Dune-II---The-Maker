@@ -96,3 +96,7 @@ int cMouseRepairState::getMouseTileForRepairState() {
 
     return MOUSE_FORBIDDEN;
 }
+
+void cMouseRepairState::onFocus() {
+    mouse->setTile(mouseTile);
+}

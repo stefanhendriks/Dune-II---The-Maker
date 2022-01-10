@@ -176,3 +176,7 @@ void cMousePlaceState::onStateSet() {
 
 void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }
+
+void cMousePlaceState::onFocus() {
+    mouse->setTile(mouseTile);
+}
