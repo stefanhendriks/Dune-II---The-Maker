@@ -15,15 +15,16 @@
 
   Giving a go for true OOP programming, using a base class and derived classes.
   */
-#ifndef CABSTRACTSTRUCTURE_H_
-#define CABSTRACTSTRUCTURE_H_
+#pragma once
+
+#include <vector>
+#include "gameobjects/cFlag.h"
+#include "include/structs.h"
 
 #include <vector>
 
 #include "structs.h"
 #include "gameobjects/cFlag.h"
-
-#include <allegro/gfx.h>
 
 #include <vector>
 
@@ -251,7 +252,9 @@ class cAbstractStructure {
 
         void unitIsNoLongerInteractingWithStructure(int unitID);
 
-    void think_flag_new();
-};
+        void think_flag_new();
 
-#endif
+        bool canSpawnUnits() const;
+
+        eListType getAssociatedListID() const;
+};

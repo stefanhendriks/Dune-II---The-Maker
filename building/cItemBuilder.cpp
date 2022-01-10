@@ -550,7 +550,7 @@ bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingLis
  * @param sublistType
  * @return
  */
-bool cItemBuilder::isAnythingBeingBuiltForListId(int listType, int sublistType) {
+bool cItemBuilder::isAnythingBeingBuiltForListType(eListType listType, int sublistType) {
     cBuildingListItem *pItem = getListItemWhichIsBuilding(listType, sublistType);
     return pItem != nullptr;
 }
@@ -562,7 +562,7 @@ bool cItemBuilder::isAnythingBeingBuiltForListId(int listType, int sublistType) 
  * @param sublistType
  * @return
  */
-bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType) {
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(eListType listType, int sublistType) {
     cBuildingListItem *pItem = getListItemWhichIsAwaitingPlacement(listType, sublistType);
     return pItem != nullptr;
 }
@@ -574,7 +574,7 @@ bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, 
  * @param sublistType
  * @return
  */
-bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(int listType, int sublistType) {
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(eListType listType, int sublistType) {
     cBuildingListItem *pItem = getListItemWhichIsAwaitingDeployment(listType, sublistType);
     return pItem != nullptr;
 }
@@ -585,7 +585,7 @@ bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(int listType,
  * @param sublistType
  * @return
  */
-cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(int listType, int sublistType) {
+cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(eListType listType, int sublistType) {
     cBuildingListItem *pItem = nullptr; // get through the build list and find an item that is of the same list.
 
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -610,7 +610,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(int listType, int su
  * @param sublistType
  * @return
  */
-cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listType, int sublistType) {
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(eListType listType, int sublistType) {
     cBuildingListItem *pItem = nullptr;
 
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -636,7 +636,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listTyp
  * @param sublistType
  * @return
  */
-cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(int listType, int sublistType) {
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(eListType listType, int sublistType) {
     cBuildingListItem *pItem = nullptr;
 
     for (int i = 0; i < MAX_ITEMS; i++) {

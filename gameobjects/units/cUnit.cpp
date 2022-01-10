@@ -417,6 +417,10 @@ void cUnit::createExplosionParticle() {
     }
 }
 
+/**
+ * Any unit this structure was "interacting with" (ie, wanted to enter), make sure
+ * to remove that connection.
+ */
 void cUnit::unitWillNoLongerBeInteractingWithStructure() const {
     cAbstractStructure *pStructure = getStructureUnitWantsToEnter();
     if (pStructure == nullptr) return; // nothing to do here
@@ -3329,6 +3333,10 @@ void cUnit::takeDamage(int damage) {
     }
 }
 
+bool cUnit::isEligibleForRepair() {
+    return isDamaged() && !isInfantryUnit() && !isAirbornUnit();
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -4171,19 +4179,6 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
         cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
     }
     return carryAllUnitId;
-}
-
-/**
- * Deselect all units (not player specific)
- * TODO: Move to unitUtils class.
- *
- */
-void UNIT_deselect_all() {
-    for (int i = 0; i < MAX_UNITS; i++) {
-        if (unit[i].isValid()) {
-            unit[i].bSelected = false;
-        }
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////

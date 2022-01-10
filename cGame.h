@@ -12,10 +12,13 @@
 #pragma once
 
 #include <controls/cMouse.h>
+#include <controls/cKeyboard.h>
+#include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
 #include <observers/cScenarioObserver.h>
 #include <utils/cRectangle.h>
 #include <utils/cSoundPlayer.h>
+#include "definitions.h"
 
 #include <string>
 
@@ -25,7 +28,7 @@ class cGameState;
 class cInteractionManager;
 class cPlayer;
 
-class cGame : public cScenarioObserver, cMouseObserver {
+class cGame : public cScenarioObserver, cInputObserver {
 
 public:
 
@@ -68,9 +71,6 @@ public:
     int iRegion;        // what region is selected? (changed by cSelectYourNextConquestState class)
 	int iMission;		// what mission are we playing? (= techlevel)
 
-//	int selected_structure;
-//	int hover_unit;
-
 	int paths_created;
 
     int iMusicVolume;       // volume of the mp3 / midi
@@ -107,10 +107,6 @@ public:
 	cSoundPlayer * getSoundPlayer() {
 	    return soundPlayer;
 	}
-
-    void onCombatMouseEvent(const s_MouseEvent &event);
-
-	int getGroupNumberFromKeyboard();
 
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
@@ -155,6 +151,7 @@ public:
 
     void onNotify(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void onEventSpecialLaunch(const s_GameEvent &event);
 
@@ -222,6 +219,7 @@ private:
 
     cSoundPlayer *soundPlayer;
     cMouse *mouse;
+    cKeyboard *keyboard;
 
     bool missionWasWon; // hack: used for state transitioning :/
 
@@ -257,7 +255,7 @@ private:
     void combat();		// the combat part (main) of the game
     bool isMusicPlaying();
 
-    void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
+    void stateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction
     void menu();		// main menu
 
     void drawState();
@@ -268,12 +266,6 @@ private:
     void setScreenResolutionFromGameIniSettings();
 
     void install_bitmaps();
-
-    void combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mc) const;
-
-    void mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context, bool bOrderingUnits) const;
-
-    void mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const;
 
     bool isMissionWon() const;
 
@@ -296,4 +288,12 @@ private:
     void setState(int newState);
 
     void initPlayers(bool rememberHouse) const;
+
+    void takeScreenshot();
+
+    void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
+
+    void onKeyDownGamePlaying(const cKeyboardEvent &event);
+
+    void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 };

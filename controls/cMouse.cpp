@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-cMouse::cMouse() : coords(cPoint(0,0)){
+cMouse::cMouse() : coords(cPoint(0,0)) {
 	z=0;
 	leftButtonPressed=false;
 	rightButtonPressed=false;
@@ -270,6 +270,9 @@ void cMouse::draw() {
         } else if (mouse_tile == MOUSE_REPAIR) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
+        } else if (mouse_tile == MOUSE_FORBIDDEN) {
+            mouseDrawX -= 16;
+            mouseDrawY -= 16;
         } else if (mouse_tile == MOUSE_PICK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
@@ -308,4 +311,34 @@ cPoint cMouse::getDragLineStartPoint() {
 
 cPoint cMouse::getDragLineEndPoint() {
     return cPoint(mouse_mv_x2, mouse_mv_y2);
+}
+
+void cMouse::setTile(int value) {
+    if (value != mouse_tile) {
+        char msg[255];
+        sprintf(msg, "cMouse::setTile(): Changing mouse tile from %d (%s) to %d (%s)", mouse_tile,
+                mouseTileName(mouse_tile).c_str(), value,
+                mouseTileName(value).c_str());
+        logbook(msg);
+        mouse_tile = value;
+    }
+}
+
+std::string cMouse::mouseTileName(int tile) {
+    if (tile == MOUSE_NORMAL) {
+        return "MOUSE_NORMAL";
+    }
+    if (tile == MOUSE_MOVE) {
+        return "MOUSE_MOVE";
+    }
+    if (tile == MOUSE_PICK) {
+        return "MOUSE_PICK";
+    }
+    if (tile == MOUSE_RALLY) {
+        return "MOUSE_RALLY";
+    }
+    if (tile == MOUSE_REPAIR) {
+        return "MOUSE_REPAIR";
+    }
+    return "UNKNOWN";
 }

@@ -1,31 +1,33 @@
-// Structure class
+#pragma once
 
-class cStarPort : public cAbstractStructure
-{
+class cStarPort : public cAbstractStructure {
 private:
-	void think_deployment();
+    void think_deployment();
 
-	bool frigateDroppedPackage;
+    bool frigateDroppedPackage;
 
     // TIMERs
     int TIMER_deploy;
 
 public:
     cStarPort();
+
     ~cStarPort();
 
     // overloaded functions
-    void think();
-    void think_animation();
+    void think() override;
+
+    void think_animation() override;
+
     void think_deploy();            // starport uses this to deploy unit
-    void think_guard();
+    void think_guard() override;
 
-    int getType() const;
+    int getType() const override;
 
-	bool isFrigatePackageDropped() { return frigateDroppedPackage; }
-	void setFrigateDroppedPackage (bool value) { frigateDroppedPackage = value; }
+    void setFrigateDroppedPackage(bool value) { frigateDroppedPackage = value; }
 
-    void startAnimating() {};
+    void startAnimating() override {};
+
     void draw() override { drawWithShadow(); }
 
 };

@@ -11,6 +11,7 @@
   */
 
 #include "../../include/d2tmh.h"
+#include "cAbstractStructure.h"
 
 
 // "default" Constructor
@@ -815,5 +816,44 @@ void cAbstractStructure::drawWithShadow() {
         allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
         destroy_bitmap(stretchedShadow);
+    }
+}
+
+/**
+ * Returns true, if this unit can create units, or have them enter/leave.
+ * @return
+ */
+bool cAbstractStructure::canSpawnUnits() const {
+    // TODO: make this virtual and implement at the structure classes themselves
+    return getType() == REFINERY ||
+            getType() == HEAVYFACTORY ||
+            getType() == LIGHTFACTORY ||
+            /*getType() == PALACE ||*/
+            getType() == STARPORT ||
+            getType() == HIGHTECH ||
+            getType() == REPAIR;
+}
+
+eListType cAbstractStructure::getAssociatedListID() const {
+    // TODO: make this virtual and implement at the structure classes themselves
+    switch (getType()) {
+        case CONSTYARD:
+            return eListType::LIST_CONSTYARD;
+        case LIGHTFACTORY:
+            return eListType::LIST_UNITS;
+        case HEAVYFACTORY:
+            return eListType::LIST_UNITS;
+        case HIGHTECH:
+            return eListType::LIST_UNITS;
+        case PALACE:
+            return eListType::LIST_PALACE;
+        case BARRACKS:
+            return eListType::LIST_FOOT_UNITS;
+        case WOR:
+            return eListType::LIST_FOOT_UNITS;
+        case STARPORT:
+            return eListType::LIST_STARPORT;
+        default:
+            return eListType::LIST_NONE;
     }
 }

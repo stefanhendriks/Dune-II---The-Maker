@@ -18,8 +18,7 @@ void cStructureDrawer::drawStructuresHealthBars() {
 	cGameControlsContext * context = players[HUMAN].getGameControlsContext();
 
     // DRAW HEALTH
-    if (context->isMouseOverStructure())
-    {
+    if (context->isMouseOverStructure()) {
         int i = context->getIdOfStructureWhereMouseHovers();
         drawStructureHealthBar(i);
     }

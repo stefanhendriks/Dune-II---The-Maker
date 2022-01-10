@@ -61,7 +61,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 	int startX = getButtonDrawXStart();
 
 	// now set it up
-	if (listType == LIST_CONSTYARD) {
+	if (listType == eListType::LIST_CONSTYARD) {
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
 		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
@@ -72,7 +72,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 
 	// other lists, have 40 pixels more Y , but the X remains the same
 	// now set it up
-	if (listType == LIST_FOOT_UNITS) {
+	if (listType == eListType::LIST_FOOT_UNITS) {
         list->setButtonDrawX(startX);
         list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
@@ -80,7 +80,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 
     startX += widthOfButtonIncludingMargin;
 
-	if (listType == LIST_UNITS) {
+	if (listType == eListType::LIST_UNITS) {
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_FACTORY);
 		list->setButtonIconIdUnpressed(LIST_BTN_FACTORY);
@@ -88,7 +88,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 
 	startX += widthOfButtonIncludingMargin;
 
-	if (listType == LIST_STARPORT) {
+	if (listType == eListType::LIST_STARPORT) {
         list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_STARPORT);
 		list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
@@ -96,7 +96,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 
 	startX += widthOfButtonIncludingMargin;
 
-	if (listType == LIST_PALACE) {
+	if (listType == eListType::LIST_PALACE) {
         list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_PALACE);
 		list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
@@ -104,7 +104,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 
 	startX += widthOfButtonIncludingMargin;
 
-	if (listType == LIST_UPGRADES) {
+	if (listType == eListType::LIST_UPGRADES) {
         list->setButtonDrawX(startX);
         // temp, use CONST YARD
 		list->setButtonIconIdPressed(LIST_BTN_UPGRADE);

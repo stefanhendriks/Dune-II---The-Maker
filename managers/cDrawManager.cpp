@@ -195,27 +195,27 @@ void cDrawManager::drawSidebar() {
  */
 void cDrawManager::drawStructurePlacing() {
     if (player->bDeployIt) return; // do not do this
-    if (!player->bPlaceIt) return;
+    // TODO: move drawing this into mouse state draw function ??
+    if (!player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
 
-
-    cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+    cBuildingListItem *itemToPlace = player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
 
     assert(placeitDrawer);
-    placeitDrawer->draw(itemToPlace);
+    placeitDrawer->draw(itemToPlace, player->getGameControlsContext()->getMouseCell());
 }
 
 /**
  * When deploying something
  */
 void cDrawManager::drawDeployment() {
-    if (player->bPlaceIt) return;
+    if (player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
     if (!player->bDeployIt) return;
 
     // mouse attack special?
     game.getMouse()->setTile(MOUSE_ATTACK);
 
-    cBuildingListItem *itemToDeploy = player->getSideBar()->getList(LIST_PALACE)->getItemToDeploy();
+    cBuildingListItem *itemToDeploy = player->getSideBar()->getList(eListType::LIST_PALACE)->getItemToDeploy();
     if (itemToDeploy == nullptr) return;
 
     int iMouseCell = player->getGameControlsContext()->getMouseCell();

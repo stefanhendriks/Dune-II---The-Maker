@@ -45,9 +45,9 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
 
     // activate/deactivate any lists if needed
     cSideBar *sideBar = player->getSideBar();
-    cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
-    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
-    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+    cBuildingList *listConstYard = sideBar->getList(eListType::LIST_CONSTYARD);
+    cBuildingList *listFootUnits = sideBar->getList(eListType::LIST_FOOT_UNITS);
+    cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
 
     int house = player->getHouse();
     int techLevel = player->getTechLevel();
@@ -147,7 +147,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
     }
 
     if (structureType == STARPORT) {
-        cBuildingList *list = sideBar->getList(LIST_STARPORT);
+        cBuildingList *list = sideBar->getList(eListType::LIST_STARPORT);
         list->addUnitToList(INFANTRY, 0);
         list->addUnitToList(TROOPERS, 0);
         list->addUnitToList(TRIKE, 0);
@@ -167,7 +167,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
     }
 
     if (structureType == PALACE) {
-        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
+        cBuildingList *listPalace = sideBar->getList(eListType::LIST_PALACE);
         // special weapons
         switch (house) {
             case ATREIDES:
@@ -189,9 +189,9 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
 void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) const {
     // activate/deactivate any lists if needed
     cSideBar *sideBar = player->getSideBar();
-    cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
-    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
-    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+    cBuildingList *listConstYard = sideBar->getList(eListType::LIST_CONSTYARD);
+    cBuildingList *listFootUnits = sideBar->getList(eListType::LIST_FOOT_UNITS);
+    cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
 
     int house = player->getHouse();
     int techLevel = player->getTechLevel();
@@ -231,7 +231,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     }
 
     if (structureType == STARPORT) {
-        cBuildingList *list = sideBar->getList(LIST_STARPORT);
+        cBuildingList *list = sideBar->getList(eListType::LIST_STARPORT);
         list->addUnitToList(INFANTRY, 0);
         list->addUnitToList(TROOPERS, 0);
         list->addUnitToList(TRIKE, 0);
@@ -372,7 +372,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     }
 
     if (structureType == PALACE) {
-        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
+        cBuildingList *listPalace = sideBar->getList(eListType::LIST_PALACE);
         // special weapons
         switch (house) {
             case ATREIDES:
@@ -405,20 +405,20 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     // activate/deactivate any lists if needed
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
-    cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
+    cBuildingList *listConstYard = sideBar->getList(eListType::LIST_CONSTYARD);
 
     if (structureType == STARPORT) {
         if (!player->hasAtleastOneStructure(STARPORT)) {
             listConstYard->removeItemFromListByBuildId(IX);
             cOrderProcesser *pProcesser = player->getOrderProcesser();
             pProcesser->clear();
-            cBuildingList *listStarport = sideBar->getList(LIST_STARPORT);
+            cBuildingList *listStarport = sideBar->getList(eListType::LIST_STARPORT);
             listStarport->resetTimesOrderedForAllItems();
         }
     }
 
     if (!player->hasAtleastOneStructure(CONSTYARD)) {
-        pItemBuilder->removeItemsFromListType(LIST_CONSTYARD, SUBLIST_CONSTYARD);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_CONSTYARD, SUBLIST_CONSTYARD);
         listConstYard->removeAllSublistItems(SUBLIST_CONSTYARD);        
     }
 
@@ -448,7 +448,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 void cBuildingListUpdater::evaluateUpgrades() {
     player->log("evaluateUpgrades - start");
     cSideBar *sideBar = player->getSideBar();
-    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
         s_UpgradeInfo &upgradeInfo = sUpgradeInfo[i];
@@ -575,17 +575,13 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
  */
 void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeInfo) {
     cSideBar *sideBar = player->getSideBar();
-    int listType = upgradeInfo.providesTypeList;
+    eListType listType = upgradeInfo.providesTypeList;
     int subListType = upgradeInfo.providesTypeSubList;
 
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusAvailable(subListType);
     
     assert(upgradeInfo.providesTypeId > -1);
-    assert(upgradeInfo.providesType > -1);
-
-    assert(listType > -1);
-    assert(listType < LIST_UPGRADES);
 
     cBuildingList *list = sideBar->getList(listType);
     if (upgradeInfo.providesType == UNIT) {
@@ -609,7 +605,7 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
 
     // get the structure type it is upgrading
     const s_UpgradeInfo &upgrade = pItem->getUpgradeInfo();
-    int listType = upgrade.providesTypeList;
+    eListType listType = upgrade.providesTypeList;
     int subListType = upgrade.providesTypeSubList;
 
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
@@ -630,7 +626,7 @@ void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem) {
 
     // get the structure type it is upgrading
     const s_UpgradeInfo &upgrade = pItem->getUpgradeInfo();
-    int listType = upgrade.providesTypeList;
+    eListType listType = upgrade.providesTypeList;
     int subListType = upgrade.providesTypeSubList;
 
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
@@ -649,7 +645,7 @@ void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
 
     // it is a unit/structure/special
     cSideBar *sideBar = player->getSideBar();
-    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
 
     player->log("onBuildItemCancelled - end");
@@ -673,7 +669,7 @@ void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
 
     // it is a unit/structure/special
     cSideBar *sideBar = player->getSideBar();
-    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
     listUpgrades->setStatusPendingBuilding(pItem->getSubList());
 }
 
@@ -697,15 +693,15 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
 
     // it is a unit/structure/special
     cSideBar *sideBar = player->getSideBar();
-    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
 }
 
 void cBuildingListUpdater::onStructureDestroyedSkirmishMode() const {
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
-    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
-    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
+    cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
+    cBuildingList *listFootUnits = sideBar->getList(eListType::LIST_FOOT_UNITS);
 
     if (player->getTechLevel() >= 7) {
         if (!player->hasAtleastOneStructure(HEAVYFACTORY) ||
@@ -724,33 +720,33 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode() const {
     }
 
     if (!player->hasAtleastOneStructure(HIGHTECH)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HIGHTECH);
         listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
     }
 
     if (!player->hasAtleastOneStructure(WOR)) {
-        pItemBuilder->removeItemsFromListType(LIST_FOOT_UNITS, SUBLIST_TROOPERS);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_FOOT_UNITS, SUBLIST_TROOPERS);
         listFootUnits->removeAllSublistItems(SUBLIST_TROOPERS);
     }
 
     if (!player->hasAtleastOneStructure(BARRACKS)) {
-        pItemBuilder->removeItemsFromListType(LIST_FOOT_UNITS, SUBLIST_INFANTRY);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_FOOT_UNITS, SUBLIST_INFANTRY);
         listFootUnits->removeAllSublistItems(SUBLIST_INFANTRY);
     }
 
     if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_LIGHTFCTRY);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_LIGHTFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
     }
 
     if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HEAVYFCTRY);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HEAVYFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
     }
 
     if (!player->hasAtleastOneStructure(PALACE)) {
-        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
-        pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
+        cBuildingList *listPalace = sideBar->getList(eListType::LIST_PALACE);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_PALACE, 0);
         listPalace->removeAllSublistItems(0);
     }
 }
@@ -758,26 +754,26 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode() const {
 void cBuildingListUpdater::onStructureDestroyedCampaignMode() const {
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
-    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+    cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
 
     if (!player->hasAtleastOneStructure(HIGHTECH)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HIGHTECH);
         listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
     }
 
     if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_LIGHTFCTRY);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_LIGHTFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
     }
 
     if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HEAVYFCTRY);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HEAVYFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
     }
 
     if (!player->hasAtleastOneStructure(PALACE)) {
-        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
-        pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
+        cBuildingList *listPalace = sideBar->getList(eListType::LIST_PALACE);
+        pItemBuilder->removeItemsFromListType(eListType::LIST_PALACE, 0);
         listPalace->removeAllSublistItems(0);
     }
 

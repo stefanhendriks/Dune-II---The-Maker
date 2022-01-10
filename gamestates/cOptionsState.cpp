@@ -1,4 +1,6 @@
 #include "d2tmh.h"
+#include "cOptionsState.h"
+
 
 cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
   : cGameState(theGame)
@@ -77,4 +79,7 @@ void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event) {
 
 eGameStateType cOptionsState::getType() {
     return GAMESTATE_OPTIONS;
+}
+
+void cOptionsState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }

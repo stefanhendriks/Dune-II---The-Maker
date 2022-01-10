@@ -1,10 +1,3 @@
-/* 
- * File:   cKeyboardManager.h
- * Author: el.anormal
- *
- * Created Oct 23, 2010
- */
-
 #ifndef CKEYBOARDMANAGER_H
 #define	CKEYBOARDMANAGER_H
 
@@ -14,11 +7,10 @@ public:
     cKeyboardManager(const cKeyboardManager& orig);
     virtual ~cKeyboardManager();
     void interact();
+
 private:
     void DEBUG_KEYS();
     void GAME_KEYS();
-
-    void takeScreenshot() const;
 };
 
 #endif	/* CKEYBOARDMANAGER_H */

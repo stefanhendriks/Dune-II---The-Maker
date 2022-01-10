@@ -52,18 +52,22 @@ public:
 
     cBuildingList *getList(int listId) { return lists[listId]; }
 
-    bool startBuildingItemIfOk(int listId, int buildId) const;
+    cBuildingList *getList(eListType listType) { return getList(eListTypeAsInt(listType)); }
 
-    void setList(int listId, cBuildingList *list);
+    bool startBuildingItemIfOk(eListType listType, int buildId) const;
+
+    void setList(eListType listType, cBuildingList *list);
 
     int getSelectedListID() { return selectedListID; }
-    cBuildingListItem * getBuildingListItem(int listId, int buildId) const;
+    cBuildingListItem * getBuildingListItem(eListType listType, int buildId) const;
 
     void think();    // timer based
 
     // set
     // no set Player, re-create Sidebar object instead if needed
-    void setSelectedListId(int value);
+    void setSelectedListId(eListType value);
+
+    static const int LIST_MAX = 7;
 
     static const int VerticalCandyBarWidth = 24;
     static const int SidebarWidthWithoutCandyBar = 200;

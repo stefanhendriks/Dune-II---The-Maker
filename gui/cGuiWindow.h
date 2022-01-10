@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "cGuiObject.h"
-#include "../observers/cMouseObserver.h"
+#include "../observers/cInputObserver.h"
 
 class cGuiWindow : cGuiObject {
 public:
@@ -11,6 +11,7 @@ public:
     ~cGuiWindow();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void draw() const override;
 

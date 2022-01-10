@@ -345,7 +345,7 @@ namespace brains {
                         cSideBar *pSideBar = player->getSideBar();
                         int awaitingResourcesTimeToIncrease = 15;
                         if (thingIWant.buildType == UNIT) {
-                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(sUnitInfo[thingIWant.type].listId,
+                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(sUnitInfo[thingIWant.type].listType,
                                                                                      thingIWant.type);
 
                             if (pItem) {
@@ -355,7 +355,7 @@ namespace brains {
                                 // this should not happen!?
                             }
                         } else if (thingIWant.buildType == STRUCTURE) {
-                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(LIST_CONSTYARD,
+                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(eListType::LIST_CONSTYARD,
                                                                                      thingIWant.type);
                             if (pItem) {
                                 int msToWaitBeforeGivingUp = ((1+(float)pItem->getTotalBuildTimeInMs()) * 1.25f);
@@ -365,7 +365,7 @@ namespace brains {
                             }
                         } else if (thingIWant.buildType == SPECIAL) {
                             // "sSpecialInfo" are from the "palace" list
-                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(LIST_PALACE,
+                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(eListType::LIST_PALACE,
                                                                                      thingIWant.type);
                             if (pItem) {
                                 int msToWaitBeforeGivingUp = ((1+(float)pItem->getTotalBuildTimeInMs() * 1.25f));
