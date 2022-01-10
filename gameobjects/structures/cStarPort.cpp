@@ -1,5 +1,7 @@
 #include "../../include/d2tmh.h"
 
+#include "utils/cSoundPlayer.h"
+
 // Constructor
 cStarPort::cStarPort() {
     // other variables (class specific)
@@ -72,7 +74,8 @@ void cStarPort::think_deploy() {
                     if (rallyPoint > -1) {
                         unit[id].move_to(rallyPoint, -1, -1);
                     }
-                    play_voice(SOUND_VOICE_05_ATR); // unit deployed
+                    const int house = players[iPlayer].getHouse();
+                    game.getSoundPlayer().playVoice(SOUND_VOICE_05_ATR, house); // unit deployed
                 } else {
                     // could not find cell to deploy to, reinforce it
                     if (rallyPoint > -1) {

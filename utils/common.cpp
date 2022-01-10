@@ -13,6 +13,7 @@
 #include "../include/d2tmh.h"
 
 #include "utils/cLog.h"
+#include "utils/cSoundPlayer.h"
 
 #include <math.h>
 
@@ -1667,20 +1668,6 @@ int distanceBetweenCellAndCenterOfScreen(int iCell) {
     return 1;
 }
 
-void play_sound_id(int s, int volume) {
-    if (!game.bPlaySound) return; // do not play sound when boolean is false.
-
-    int vol = keepBetween(volume, 0, 255);
-
-    if (vol > 0) {
-        game.getSoundPlayer()->playSound(s, 127, vol);
-    }
-}
-
-void play_sound_id(int s) {
-    play_sound_id(s, VOLUME_MAX);
-}
-
 /**
  * Play sound (s = ID from gfxaudio) with distance into account. iDistance
  * is the distance outside screen. Meaning <= 1 is ON SCREEN > 1 means distance from screen.
@@ -1691,10 +1678,8 @@ void play_sound_id(int s) {
 void play_sound_id_with_distance(int s, int iDistance) {
 	if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
-	if (gfxaudio[s].dat == NULL) return; // no data file at the specified position in index.
-
 	if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
-	    play_sound_id(s, VOLUME_MAX);
+        game.getSoundPlayer().playSound(s);
 		return;
 	}
 
@@ -1703,7 +1688,7 @@ void play_sound_id_with_distance(int s, int iDistance) {
     float maxDistance = mapCamera->divideByZoomLevel(map.getMaxDistanceInPixels()/2);
     float distanceNormalized = 1.0 - ((float)iDistance / maxDistance);
 
-    float volume = game.getMaxVolume() * distanceNormalized;
+    float volume = game.getSoundPlayer().getMaxVolume() * distanceNormalized;
 
     // zoom factor influences volume (more zoomed in means louder)
     float volumeFactor = mapCamera->factorZoomLevel(0.7f);
@@ -1722,21 +1707,8 @@ void play_sound_id_with_distance(int s, int iDistance) {
         logbook(msg);
     }
 
-    play_sound_id(s, iVolFactored);
+    game.getSoundPlayer().playSound(s, iVolFactored);
 }
-
-void play_voice(int iType) {
-	if (players[0].getHouse() == HARKONNEN) {
-		iType++;
-	}
-
-	if (players[0].getHouse() == ORDOS) {
-		iType+=2;
-	}
-
-    play_sound_id(iType); // pass -1 as 'onscreen' since its a normal sound
-}
-
 
 bool MIDI_music_playing() {
 	if (midi_pos > -1) {
@@ -1859,7 +1831,7 @@ void playMusicByType(int iType) {
             iNumber = iNumber+1;
         }
         // play midi file
-        play_midi((MIDI *)gfxaudio[iNumber].dat, 0);
+        game.getSoundPlayer().playMusic(iNumber);
     }
 }
 
@@ -2041,31 +2013,6 @@ void INIT_PREVIEWS() {
     sprintf(PreviewMap[0].name, "RANDOM MAP");
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
     PreviewMap[0].terrain = create_bitmap(128, 128);
-}
-
-int getAmountReservedVoicesAndInstallSound() {
-	int voices = 256;
-	while (1) {
-		if (voices < 4) {
-			// failed!
-			return -1;
-		}
-		reserve_voices(voices, 0);
-		char msg[VOLUME_MAX];
-		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
-		{
-			sprintf(msg, "Success reserving %d voices.", voices);
-			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-			break;
-		}
-		else {
-			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
-			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
-			voices /= 2;
-		}
-	}
-
-	return voices;
 }
 
 const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {

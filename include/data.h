@@ -15,7 +15,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // data file header(s)                          - THIS
 #include "../data/gfxdata.h"						// general gfx
-#include "../data/gfxaudio.h"                     	// audio (sounds and music , midi)
 #include "../data/gfxinter.h"                  	// sidebar/downbar gfx
 #include "../data/gfxworld.h"                  	// world / regions gfx
 #include "../data/gfxmentat.h"                  	// mentat gfx

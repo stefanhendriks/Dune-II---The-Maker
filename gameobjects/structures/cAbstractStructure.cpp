@@ -13,6 +13,7 @@
 #include "../../include/d2tmh.h"
 #include "cAbstractStructure.h"
 
+#include "utils/cSoundPlayer.h"
 
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() {

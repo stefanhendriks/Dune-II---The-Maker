@@ -3,6 +3,8 @@
 #include <algorithm>
 #include "d2tmh.h"
 
+#include "utils/cSoundPlayer.h"
+
 cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse),
         selectedUnits(),
@@ -118,11 +120,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
         }
 
         if (infantryAcknowledged) {
-            play_sound_id(SOUND_MOVINGOUT + rnd(2));
+            game.getSoundPlayer().playSound(SOUND_MOVINGOUT + rnd(2));
         }
 
         if (unitAcknowledged) {
-            play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
+            game.getSoundPlayer().playSound(SOUND_ACKNOWLEDGED + rnd(3));
         }
     }
 

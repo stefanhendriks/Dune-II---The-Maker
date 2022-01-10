@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "CreditsDrawer.h"
 
+#include "utils/cSoundPlayer.h"
 
 CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : player(thePlayer){
 	assert(thePlayer);
@@ -135,7 +136,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 			//offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
 			offset_credit[i] = 0.0F; // so we do not keep matching our IF :)
 			if (soundsMade < 7) {
-                play_sound_id(soundType, 32);
+                game.getSoundPlayer().playSound(soundType, 32);
 				soundsMade++;
 			}
 			// it is fully 'moved'. Now update the array.

@@ -18,6 +18,7 @@
 #include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
+#include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
 
@@ -236,7 +237,7 @@ void cGame::setMissionWon() {
     TIMER_shake = 0;
     mouse->setTile(MOUSE_NORMAL);
 
-    play_voice(SOUND_VOICE_07_ATR);
+    _soundplayer->playVoice(SOUND_VOICE_07_ATR, players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_WIN);
 
@@ -255,7 +256,7 @@ void cGame::setMissionLost() {
     TIMER_shake = 0;
     mouse->setTile(MOUSE_NORMAL);
 
-    play_voice(SOUND_VOICE_08_ATR);
+    _soundplayer->playVoice(SOUND_VOICE_08_ATR, players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
@@ -597,11 +598,6 @@ void cGame::shutdown() {
         }
     }
 
-    if (soundPlayer) {
-        soundPlayer->destroyAllSounds();
-    }
-    delete soundPlayer;
-
     delete pMentat;
     delete mapViewport;
 
@@ -622,6 +618,7 @@ void cGame::shutdown() {
 
     delete allegroDrawer;
     delete m_dataRepository;
+    _soundplayer.reset();
     delete mouse;
     delete keyboard;
 
@@ -875,20 +872,11 @@ bool cGame::setupGame() {
         logbook("Display 'switch to background' mode set");
     }
 
-	int maxSounds = getAmountReservedVoicesAndInstallSound();
-
-    if (maxSounds > -1) {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization",
-                    fmt::format("Successfully installed sound. {} voices reserved", maxSounds),
-                    OUTC_SUCCESS);
+    if (!bPlaySound) {
+        _soundplayer = std::make_unique<cSoundPlayer>(*_PLInit, 0);
     } else {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
+        _soundplayer = std::make_unique<cSoundPlayer>(*_PLInit);
     }
-	soundPlayer = new cSoundPlayer(maxSounds);
-
-    // normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
-    iMaxVolume = 220;
-    set_volume(iMaxVolume, 110);
 
     /***
      * Viewport(s)
@@ -1005,14 +993,6 @@ bool cGame::setupGame() {
     } else {
         logbook("Datafile hooked: gfxdata.dat");
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
-    }
-
-    gfxaudio = load_datafile("data/gfxaudio.dat");
-    if (gfxaudio == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
-        return false;
-    } else {
-        logbook("Datafile hooked: gfxaudio.dat");
     }
 
     gfxinter = load_datafile("data/gfxinter.dat");
@@ -1412,7 +1392,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
             if (structureId > -1) {
                 cAbstractStructure *pStructure = structure[structureId];
                 if (pStructure && pStructure->isValid()) {
-                    play_sound_id(SOUND_PLACE);
+                    _soundplayer->playSound(SOUND_PLACE);
                     create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!

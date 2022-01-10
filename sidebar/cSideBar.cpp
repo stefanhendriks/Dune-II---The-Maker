@@ -2,6 +2,7 @@
 #include "cSideBar.h"
 
 #include "utils/cLog.h"
+#include "utils/cSoundPlayer.h"
 
 cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
@@ -142,7 +143,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(eListTypeFromInt(i));
-            play_sound_id(SOUND_BUTTON, 64); // click sound
+            game.getSoundPlayer().playSound(SOUND_BUTTON, 64); // click sound
             break;
         }
     }

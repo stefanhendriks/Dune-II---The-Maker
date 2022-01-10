@@ -3,6 +3,7 @@
 #include "cPlayer.h"
 
 #include "utils/common.h"
+#include "utils/cSoundPlayer.h"
 
 #include <fmt/format.h>
 
@@ -1773,7 +1774,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
     }
 
     if (voiceId > -1) {
-        play_voice(voiceId);
+        game.getSoundPlayer().playVoice(voiceId, getHouse());
     }
 }
 
@@ -2051,11 +2052,11 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const {
     }
 
     if (unitSelected) {
-        play_sound_id(SOUND_REPORTING);
+        game.getSoundPlayer().playSound(SOUND_REPORTING);
     }
 
     if (infantrySelected) {
-        play_sound_id(SOUND_YESSIR);
+        game.getSoundPlayer().playSound(SOUND_YESSIR);
     }
 
     // return true if we selected any unit
