@@ -1,48 +1,66 @@
-#ifndef D2TM_CLOG_H_
-#define D2TM_CLOG_H_
+#pragma once
 
-class cLogger {
+#include <cstdio>
+#include <string>
 
-public:
-	void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message);
-	void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId);
-	void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome);
-
-	void logCommentLine(const char *txt);
-
-	void logHeader(const char *txt);
-
-	static cLogger *getInstance();
-	static void destroy();
-
-    void clearLogFile();
-
-private:
-	FILE *file;
-
-	time_t current_time;
-
-	std::string getLogLevelString(eLogLevel level);
-	std::string getLogComponentString(eLogComponent component);
-	std::string getLogOutcomeString(eLogOutcome outcome);
-
-	std::string getCurrentFormattedTime();
-	std::string getLogHouseString(int houseId);
-
-	void updateTime();
-
-	static cLogger *instance;
-
-	std::string getIntegerAsString(int value);
-	std::string getLongAsString(long value);
-
-	long startTime; // start time of logging in miliseconds
-
-	long getTimeInMilisDifference();
-protected:
-	cLogger();
-	~cLogger();
-
+enum eLogLevel {
+    LOG_INFO,
+    LOG_TRACE,
+    LOG_WARN,
+    LOG_ERROR,
+    LOG_FATAL
 };
 
-#endif
+enum eLogComponent {
+    COMP_UNITS,
+    COMP_STRUCTURES,
+    COMP_GAMEINI,
+    COMP_SCENARIOINI,
+    COMP_PARTICLE,
+    COMP_BULLET,
+    COMP_AI,
+    COMP_UPGRADE_LIST,
+    COMP_BUILDING_LIST_UPDATER,
+    COMP_SIDEBAR,
+    COMP_MAP,
+    COMP_NONE,
+    COMP_INIT,
+    COMP_ALLEGRO,		/** Use for allegro specific calls **/
+    COMP_SETUP,
+    COMP_VERSION,		/** version specific loggin messages **/
+    COMP_SKIRMISHSETUP, /** When skirmish game is being set up **/
+    COMP_ALFONT, 		/** ALFONT library specific **/
+    COMP_SOUND, 		/** Sound related **/
+    COMP_REGIONINI		/** Used for regions **/
+};
+
+enum eLogOutcome {
+    OUTC_SUCCESS,
+    OUTC_FAILED,
+    OUTC_NONE,
+    OUTC_UNKNOWN,
+    OUTC_IGNOREME /** will not be printed **/
+};
+
+class cLogger {
+  public:
+      static cLogger* getInstance();
+
+      void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message);
+      void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId);
+      void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome);
+
+      void logCommentLine(const std::string& txt);
+
+      void logHeader(const std::string& txt);
+
+  private:
+      cLogger();
+      ~cLogger();
+
+      std::FILE* file;
+
+      long startTime; // start time of logging in miliseconds
+
+      long getTimeInMilisDifference() const;
+};
