@@ -256,21 +256,6 @@ void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
 //    }
 }
 
-void cGameControlsContext::updateMouseState() {
-//    const cGameControlsContext *context = pPlayer->getGameControlsContext();
-//    int mc = context->getMouseCell();
-//    if (mc > -1) {
-//        if (!mouse->isTile(MOUSE_NORMAL) && !mouse->isTile(MOUSE_REPAIR)) {
-//            // make sure to keep checking if this is still valid, ie, when state changed?
-//            mouse->setTile(getMouseTile(pPlayer));
-//        }
-//    }
-
-//    cPlayer *humanPlayer = &players[HUMAN];
-//    int mouseTile = getMouseTile(humanPlayer);
-//    mouse->setTile(mouseTile);
-}
-
 void cGameControlsContext::setMouseState(eMouseState newState) {
     if (newState != state) {
         this->prevState = state;

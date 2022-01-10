@@ -51,8 +51,6 @@ class cGameControlsContext : public cInputObserver {
 
         void setMouseState(eMouseState newState);
 
-        void updateMouseState();
-
         void toPreviousState();
 
         bool isState(eMouseState other);
