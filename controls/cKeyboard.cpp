@@ -42,7 +42,9 @@ void cKeyboard::updateState() {
     if (key[KEY_RSHIFT]) newKeysPressed.insert(KEY_RSHIFT);
     if (key[KEY_LSHIFT]) newKeysPressed.insert(KEY_LSHIFT);
 
-    _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, newKeysPressed));
+    if (!newKeysPressed.empty()) {
+        _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, newKeysPressed));
+    }
 
     std::set<int> keysReleased;
     // Check if any keys are no longer pressed
