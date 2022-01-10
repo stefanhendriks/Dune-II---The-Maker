@@ -115,29 +115,26 @@ cAbstractStructure *cGameControlsContext::getStructurePointerWhereMouseHovers() 
 
 void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event) {
     updateMouseCell(event.coords);
-    if (isMouseOnBattleField()) {
+    bool mouseOnBattleField = isMouseOnBattleField();
+    if (mouseOnBattleField) {
         determineToolTip();
         determineHoveringOverStructureId();
         determineHoveringOverUnitId();
+
+        if (!prevTickMouseAtBattleField) {
+            onFocusMouseStateEvent();
+        }
     } else {
         mouseHoveringOverStructureId = -1;
         mouseHoveringOverUnitId = -1;
+
+        if (prevTickMouseAtBattleField) {
+            onBlurMouseStateEvent();
+        }
     }
 
-    // mouse went to battlefield
-    if (!prevTickMouseAtBattleField && isMouseOnBattleField()) {
-        // call 'onFocus' on state object
-    }
-
-    // mouse went from battlefield to non-battlefield segment on screen
-    if (prevTickMouseAtBattleField && !isMouseOnBattleField()) {
-        // call 'onBlur' on state object (lost focus)?
-    }
-
-    prevTickMouseAtBattleField = isMouseOnBattleField();
-
-    // UPDATE MOUSE STATE
-    updateMouseState();
+    // remember state
+    prevTickMouseAtBattleField = mouseOnBattleField;
 }
 
 void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
@@ -145,11 +142,10 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
         onMouseMovedTo(event);
     }
 
-    if (isMouseOnBattleField()) {
-        // mouse states only apply to battlefield (for now)
-        onNotifyMouseStateEvent(event);
-    } else {
-        // ...
+    // mouse states only apply to battlefield (for now)
+    onNotifyMouseStateEvent(event);
+
+    if (!isMouseOnBattleField()) {
         mouse->setTile(MOUSE_NORMAL);
     }
 
@@ -177,10 +173,6 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
 //            // set to -1 only when it was > -1
 //            mouse->resetDragViewportInteraction();
 //            break;
-//    }
-//
-//    if (bOrderingUnits) {
-//        player.deselectStructure();
 //    }
 
 }

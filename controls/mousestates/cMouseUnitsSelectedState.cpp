@@ -356,3 +356,7 @@ void cMouseUnitsSelectedState::spawnParticle(const int type) {
     int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
     cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1);
 }
+
+void cMouseUnitsSelectedState::onFocus() {
+    mouse->setTile(mouseTile);
+}
