@@ -2,6 +2,7 @@
 
 #include "utils/cRectangle.h"
 
+#include <map>
 #include <memory>
 
 // Forward declarations to prevent including Allegro headers
@@ -76,4 +77,11 @@ protected:
 
 private:
     cAllegroDataRepository * m_dataRepository;
+    struct sSize{
+        int width;
+        int height;
+
+        bool operator<(sSize rhs) const { return width == rhs.width ? height < rhs.height : width < rhs.width; }
+    };
+    std::map<sSize, BITMAP*> bitmapCache;
 };

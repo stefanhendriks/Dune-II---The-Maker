@@ -14,6 +14,10 @@ cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_data
 cAllegroDrawer::~cAllegroDrawer() {
     // do not delete data repository, we do not own it!
     m_dataRepository = nullptr;
+
+    for (auto& p : bitmapCache) {
+      destroy_bitmap(p.second);
+    }
 }
 
 void cAllegroDrawer::stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
@@ -203,16 +207,19 @@ void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectan
 }
 
 void cAllegroDrawer::drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha) {
-  assert(alpha >= 0);
-  assert(alpha <= 255);
+    assert(alpha >= 0);
+    assert(alpha <= 255);
 
-  // Create a temporary bitmap that automatically destroys itself when going out-of-scope
-  // TODO: save these bitmaps in cAllegroDrawer and re-use them.
-  std::unique_ptr<BITMAP, decltype(&destroy_bitmap)> rect_bmp{create_bitmap(rect.getWidth(), rect.getHeight()), destroy_bitmap};
-	rectfill(rect_bmp.get(), 0, 0, rect.getWidth(), rect.getHeight(), color);
+    auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
+    if (bitmap == nullptr) {
+        bitmap = create_bitmap(rect.getWidth(), rect.getHeight());
+        bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
+    }
 
-  set_trans_blender(0, 0, 0, alpha);
-  draw_trans_sprite(dest, rect_bmp.get(), rect.getX(),rect.getY());
+    rectfill(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
+
+    set_trans_blender(0, 0, 0, alpha);
+    draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
 cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
