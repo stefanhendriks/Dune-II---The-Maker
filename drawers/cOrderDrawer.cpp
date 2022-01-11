@@ -1,6 +1,12 @@
-#include "../include/d2tmh.h"
+#include "cOrderDrawer.h"
 
-#include <memory>
+#include "allegroh.h"
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gameobjects/structures/cOrderProcesser.h"
+#include "player/cPlayer.h"
+#include "sidebar/cSideBar.h"
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
@@ -12,26 +18,21 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
                                 (game.screen_y - halfOfHeightLeftForButton) - halfOfButtonHeight,
                                 buttonBitmap->w, buttonBitmap->h);
     _isMouseOverOrderButton = false;
+
+    auto temp_bitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
+    clear_to_color(temp_bitmap, makecol(255,0,255));
+	  draw_sprite(temp_bitmap, buttonBitmap, 0, 0);
+
+    greyedButtonBitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
+    clear_to_color(greyedButtonBitmap, makecol(0, 0, 0));
+    set_trans_blender(0, 0, 0, 128);
+    draw_trans_sprite(greyedButtonBitmap, temp_bitmap, 0, 0);
+
+    destroy_bitmap(temp_bitmap);
 }
 
 cOrderDrawer::~cOrderDrawer() {
-}
-
-void cOrderDrawer::drawOrderPlaced() {
-  // Create a temporary bitmap that destroys itself when going out of scope
-  // TODO: either save this or use buttonBitmap?
-  std::unique_ptr<BITMAP, decltype(&destroy_bitmap)> bmp_trans{create_bitmap(buttonBitmap->w, buttonBitmap->h), destroy_bitmap};
-	clear_to_color(bmp_trans.get(), makecol(255,0,255));
-
-	// copy
-	draw_sprite(bmp_trans.get(), (BITMAP *)gfxinter[BTN_ORDER].dat, 0, 0);
-
-	// make black
-	allegroDrawer->drawRectangleFilled(bmp_screen, buttonRect, makecol(0,0,0));
-
-	// trans
-  set_trans_blender(0, 0, 0, 128);
-  draw_trans_sprite(bmp_screen, bmp_trans.get(), buttonRect.getX(), buttonRect.getY());
+    destroy_bitmap(greyedButtonBitmap);
 }
 
 void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
@@ -41,7 +42,7 @@ void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
 
 	assert(orderProcesser);
 	if (orderProcesser->isOrderPlaced()) {
-		drawOrderPlaced();
+		draw_sprite(bmp_screen, greyedButtonBitmap, buttonRect.getX(), buttonRect.getY());
 	} else {
 		draw_sprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
 	}
