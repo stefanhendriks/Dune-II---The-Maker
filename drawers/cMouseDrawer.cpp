@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cMouseDrawer.h"
 
+#include <algorithm>
 
 cMouseDrawer::cMouseDrawer(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer);
@@ -148,10 +149,9 @@ void cMouseDrawer::drawToolTipBackground() {
 	int blue = getb(color);
 
 	// tone down a bit
-	cSimpleCalculator simpleCalculator;
-	red = simpleCalculator.substractWithFloor(red, 64, 0);
-	green = simpleCalculator.substractWithFloor(green, 64, 0);
-	blue = simpleCalculator.substractWithFloor(blue, 64, 0);
+  red = std::max(red - 64, 0);
+  green = std::max(green - 64, 0);
+  blue = std::max(blue - 64, 0);
 
 	color = makecol(red, green, blue);
 
