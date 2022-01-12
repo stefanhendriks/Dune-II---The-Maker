@@ -10,10 +10,8 @@
 #include "cScreenResolution.h"
 #include "cBestScreenResolutionFinder.h"
 
-
 #include "cSeedMap.h"
 #include "cSeedMapGenerator.h"
-#include "cSimpleCalculator.h"
 #include "cStructureUtils.h"
 
 #include "cTimeManager.h"

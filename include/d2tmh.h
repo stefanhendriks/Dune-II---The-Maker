@@ -12,7 +12,7 @@
 #include "gameobjects.h"
 #include "gamestates.h"
 #include "gamelogic.h"
-#include "utils.h"
+#include "utils/utilsh.h"
 
 // Player related
 #include "../player/playerh.h"
