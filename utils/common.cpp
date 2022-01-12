@@ -856,8 +856,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
     sSpecialInfo[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     sSpecialInfo[SPECIAL_DEATHHAND].units = 1;
-    sSpecialInfo[SPECIAL_DEATHHAND].buildTime = 100; // ~ 10 minutes with base line (Atreides difficulty)
-//    sSpecialInfo[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
+    sSpecialInfo[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
         // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
         // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
 
