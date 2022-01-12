@@ -140,7 +140,7 @@ void cMapCamera::setViewportPosition(int x, int y) {
     keepViewportWithinReasonableBounds();
 }
 
-// TODO: replace with onNotify (mouse observer)
+// TODO: replace with onNotifyGameEvent (mouse observer)
 // replace this with an event based system, where the
 // event "mouse moved" is captured, hence we can
 // react on those events and then move the camera around

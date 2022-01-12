@@ -194,8 +194,8 @@ void cDrawManager::drawSidebar() {
  * When placing a structure, draw a transparent version of the structure we want to place.
  */
 void cDrawManager::drawStructurePlacing() {
-    if (player->bDeployIt) return; // do not do this
     // TODO: move drawing this into mouse state draw function ??
+    if (player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) return;
     if (!player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
 
     cBuildingListItem *itemToPlace = player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
@@ -209,8 +209,9 @@ void cDrawManager::drawStructurePlacing() {
  * When deploying something
  */
 void cDrawManager::drawDeployment() {
+    // TODO: move drawing this into mouse state draw function ??
+    if (!player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) return;
     if (player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
-    if (!player->bDeployIt) return;
 
     // mouse attack special?
     game.getMouse()->setTile(MOUSE_ATTACK);
@@ -231,7 +232,7 @@ void cDrawManager::drawDeployment() {
                 .isReinforce = false,
                 .buildingListItem = itemToDeploy
         };
-        game.onNotify(event);
+        game.onNotifyGameEvent(event);
     }
 }
 

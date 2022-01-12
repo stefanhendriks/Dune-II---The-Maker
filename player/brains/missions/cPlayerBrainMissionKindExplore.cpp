@@ -40,10 +40,10 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainMissionKindExplore::onNotify(const s_GameEvent &event) {
-        cPlayerBrainMissionKind::onNotify(event);
+    void cPlayerBrainMissionKindExplore::onNotifyGameEvent(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotifyGameEvent(event);
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindExplore::onNotify() -> %s", event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMissionKindExplore::onNotifyGameEvent() -> %s", event.toString(event.eventType));
         log(msg);
     }
 

@@ -5,9 +5,9 @@
 
 class cScenarioObserver {
 public:
-    virtual ~cScenarioObserver();
+    virtual ~cScenarioObserver() = default;
 
-    virtual void onNotify(const s_GameEvent &event) = 0;
+    virtual void onNotifyGameEvent(const s_GameEvent &event) = 0;
 };
 
 

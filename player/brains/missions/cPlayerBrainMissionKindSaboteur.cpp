@@ -60,11 +60,11 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainMissionKindSaboteur::onNotify(const s_GameEvent &event) {
-        cPlayerBrainMissionKind::onNotify(event);
+    void cPlayerBrainMissionKindSaboteur::onNotifyGameEvent(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotify() -> %s", event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotifyGameEvent() -> %s", event.toString(event.eventType));
         log(msg);
 
         if (event.eventType == GAME_EVENT_DESTROYED) {

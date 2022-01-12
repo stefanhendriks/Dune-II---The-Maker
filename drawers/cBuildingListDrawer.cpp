@@ -168,7 +168,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     // TODO: draw white/red (flicker)
                     // TODO: draw DEPLOY
                     int icon = READY01;
-                    if (player->bDeployIt) {
+                    if (player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
                     draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);

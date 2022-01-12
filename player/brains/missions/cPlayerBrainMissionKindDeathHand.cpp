@@ -65,7 +65,7 @@ namespace brains {
                 .isReinforce = false,
                 .buildingListItem = itemToLaunch
         };
-        game.onNotify(event);
+        game.onNotifyGameEvent(event);
 
         // clear out item
         itemToLaunch = nullptr;
@@ -77,11 +77,11 @@ namespace brains {
         mission->changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
     }
 
-    void cPlayerBrainMissionKindDeathHand::onNotify(const s_GameEvent &event) {
-        cPlayerBrainMissionKind::onNotify(event);
+    void cPlayerBrainMissionKindDeathHand::onNotifyGameEvent(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotify() -> %s", event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotifyGameEvent() -> %s", event.toString(event.eventType));
         log(msg);
 
         if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED) {

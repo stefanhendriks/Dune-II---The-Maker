@@ -20,7 +20,6 @@
 #include "gui.h"
 #include "drawers.h"
 #include "../managers/managers.h"
-#include "../observers/observers.h"
 
 // Extern references & variable declarations
 #include "d2tmc.h"

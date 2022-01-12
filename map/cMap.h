@@ -32,7 +32,7 @@ public:
 
     void init(int width, int height);
 
-    void onNotify(const s_GameEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
     bool canDeployUnitAtCell(int iCell, int iUnitId);
 	bool canDeployUnitTypeAtCell(int iCell, int iUnitType);

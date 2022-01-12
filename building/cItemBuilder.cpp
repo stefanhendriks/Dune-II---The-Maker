@@ -209,7 +209,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                     .buildingListItem = item // mandatory for this event!
             };
 
-            game.onNotify(event);
+            game.onNotifyGameEvent(event);
         }
     } else {
         if (eBuildType == UNIT) {
@@ -252,7 +252,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                     .buildingListItem = nullptr
             };
 
-            game.onNotify(newEvent);
+            game.onNotifyGameEvent(newEvent);
         } else if (eBuildType == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
             const s_SpecialInfo &special = item->getSpecialInfo();
@@ -322,7 +322,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                         .buildingListItem = nullptr
                 };
 
-                game.onNotify(newEvent);
+                game.onNotifyGameEvent(newEvent);
             } else if (special.providesType == BULLET) {
                 // Case: Deathhand, it is finished, and the player should select a target first.
                 // So emit a "special_ready" event first.
@@ -341,7 +341,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                                 .buildingListItem = item // mandatory for this event!
                         };
 
-                        game.onNotify(event);
+                        game.onNotifyGameEvent(event);
                     }
                 } else {
                     // unsupported case
@@ -363,7 +363,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                     .buildingListItem = item
             };
 
-            game.onNotify(newEvent);
+            game.onNotifyGameEvent(newEvent);
 
             // these destroy the data..
             buildingListUpdater->onUpgradeCompleted(item);

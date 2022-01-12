@@ -103,7 +103,7 @@ namespace brains {
 
         void think();
 
-        void onNotify(const s_GameEvent &event);
+        void onNotifyGameEvent(const s_GameEvent &event);
 
         bool isEnded() const;
 

@@ -16,6 +16,7 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse)
     mouseUnitsSelectedState = new cMouseUnitsSelectedState(thePlayer, this, mouse);
     mouseRepairState = new cMouseRepairState(thePlayer, this, mouse);
     mousePlaceState = new cMousePlaceState(thePlayer, this, mouse);
+    mouseDeployState = new cMouseDeployState(thePlayer, this, mouse);
     prevTickMouseAtBattleField = false;
 }
 
@@ -192,6 +193,9 @@ void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
             case MOUSESTATE_PLACE:
                 mousePlaceState->onNotifyMouseEvent(event);
                 break;
+            case MOUSESTATE_DEPLOY:
+                mouseDeployState->onNotifyMouseEvent(event);
+                break;
         }
     }
 }
@@ -209,6 +213,9 @@ void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
             break;
         case MOUSESTATE_PLACE:
             mousePlaceState->onNotifyKeyboardEvent(event);
+            break;
+        case MOUSESTATE_DEPLOY:
+            mouseDeployState->onNotifyKeyboardEvent(event);
             break;
     }
 
@@ -268,6 +275,9 @@ void cGameControlsContext::setMouseState(eMouseState newState) {
             case MOUSESTATE_PLACE:
                 mousePlaceState->onStateSet();
                 break;
+            case MOUSESTATE_DEPLOY:
+                mouseDeployState->onStateSet();
+                break;
         }
     }
 }
@@ -294,6 +304,9 @@ void cGameControlsContext::onBlurMouseStateEvent() {
         case MOUSESTATE_PLACE:
             mousePlaceState->onBlur();
             break;
+        case MOUSESTATE_DEPLOY:
+            mouseDeployState->onBlur();
+            break;
     }
 }
 
@@ -310,6 +323,29 @@ void cGameControlsContext::onFocusMouseStateEvent() {
             break;
         case MOUSESTATE_PLACE:
             mousePlaceState->onFocus();
+            break;
+        case MOUSESTATE_DEPLOY:
+            mouseDeployState->onFocus();
+            break;
+    }
+}
+
+void cGameControlsContext::onNotifyGameEvent(const s_GameEvent &event) {
+    switch (state) {
+        case MOUSESTATE_SELECT:
+            mouseNormalState->onNotifyGameEvent(event);
+            break;
+        case MOUSESTATE_UNITS_SELECTED:
+            mouseUnitsSelectedState->onNotifyGameEvent(event);
+            break;
+        case MOUSESTATE_REPAIR:
+            mouseRepairState->onNotifyGameEvent(event);
+            break;
+        case MOUSESTATE_PLACE:
+            mousePlaceState->onNotifyGameEvent(event);
+            break;
+        case MOUSESTATE_DEPLOY:
+            mouseDeployState->onNotifyGameEvent(event);
             break;
     }
 }

@@ -116,7 +116,7 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainSkirmish::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event) {
         if (event.player == player) {
             // events about my structures
             if (event.entityType == eBuildType::STRUCTURE) {
@@ -147,7 +147,7 @@ namespace brains {
 
         // notify mission about any kind of event
         for (auto &mission : missions) {
-            mission.onNotify(event);
+            mission.onNotifyGameEvent(event);
         }
     }
 
@@ -183,7 +183,7 @@ namespace brains {
         if (!foundExistingStructureInBase) {
             char msg[255];
             sprintf(msg,
-                    "cPlayerBrainSkirmish::onNotify() - concluded to add structure %s to base register:",
+                    "cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure %s to base register:",
                     pStructure->getS_StructuresType().name);
             log(msg);
 
@@ -940,7 +940,7 @@ namespace brains {
                             .buildingListItem = nullptr
                     };
 
-                    game.onNotify(event);
+                    game.onNotifyGameEvent(event);
                 }
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 if (player->startBuildingSpecial(buildOrder.buildId)) {

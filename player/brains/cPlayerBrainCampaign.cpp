@@ -109,7 +109,7 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainCampaign::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event) {
         if (event.player == player) {
             // events about my structures
             if (event.entityType == eBuildType::STRUCTURE) {
@@ -140,7 +140,7 @@ namespace brains {
 
         // notify mission about any kind of event
         for (auto &mission : missions) {
-            mission.onNotify(event);
+            mission.onNotifyGameEvent(event);
         }
     }
 
@@ -164,7 +164,7 @@ namespace brains {
         if (!foundExistingStructureInBase) {
             char msg[255];
             sprintf(msg,
-                    "cPlayerBrainCampaign::onNotify() - concluded to add structure %s to base register:",
+                    "cPlayerBrainCampaign::onNotifyGameEvent() - concluded to add structure %s to base register:",
                     pStructure->getS_StructuresType().name);
             player->log(msg);
 

@@ -35,14 +35,6 @@ void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &) {
 }
 
 void cInteractionManager::onMouseClickedRight(const s_MouseEvent &) {
-    // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
-    bool isANormalButtonClick = game.getMouse()->isNormalRightClick();
-    if (isANormalButtonClick) {
-        // TODO: remove this whole thing when we have a deploy mouse state
-        if (player->bDeployIt) {
-            player->bDeployIt = false;
-        }
-    }
 }
 
 void cInteractionManager::onMouseAt(const s_MouseEvent &) {
@@ -95,7 +87,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
     mouseDrawer->onNotify(mouseEvent);
 
     // LAST FOR NOW, as this can change states and thus break things. Hence, if you put this
-    // somewhere above this function, the lines after this onNotify might end up pointing to invalid memory addresses
+    // somewhere above this function, the lines after this onNotifyGameEvent might end up pointing to invalid memory addresses
     // and cause a SIGSEV
     game.onNotifyMouseEvent(mouseEvent);
 }

@@ -22,7 +22,7 @@ namespace brains {
 
         void think_Execute() override;
 
-        void onNotify(const s_GameEvent &event) override;
+        void onNotifyGameEvent(const s_GameEvent &event) override;
 
         void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
 

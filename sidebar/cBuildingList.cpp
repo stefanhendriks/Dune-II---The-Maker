@@ -147,7 +147,7 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
             .buildingListItem = item
     };
 
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 
     if (isAvailable() != beforeAddingAvailable) {
         // emit another event that this list became available! (so that sidebar can animate things)
@@ -163,7 +163,7 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
                 .buildingList = this
         };
 
-        game.onNotify(event);
+        game.onNotifyGameEvent(event);
     }
 
     startFlashing();
@@ -232,7 +232,7 @@ bool cBuildingList::removeItemFromList(int position) {
                 .buildingList = this
         };
 
-        game.onNotify(event);
+        game.onNotifyGameEvent(event);
     }
     return true;
 }

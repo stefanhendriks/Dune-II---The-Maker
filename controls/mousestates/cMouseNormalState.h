@@ -35,8 +35,10 @@ public:
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &) override {};
 
     void onStateSet() override;
+
     void onFocus() override;
     void onBlur() override {};
 
