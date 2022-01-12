@@ -20,8 +20,9 @@
 #include "controls/mousestates/cMouseUnitsSelectedState.h"
 #include "controls/mousestates/cMouseRepairState.h"
 #include "controls/mousestates/cMousePlaceState.h"
+#include "controls/mousestates/cMouseDeployState.h"
 
-class cGameControlsContext : public cInputObserver {
+class cGameControlsContext : public cInputObserver, cScenarioObserver {
 	public:
 		cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse);
 		~cGameControlsContext();
@@ -48,6 +49,7 @@ class cGameControlsContext : public cInputObserver {
 
         void onNotifyMouseEvent(const s_MouseEvent &event) override;
         void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+        void onNotifyGameEvent(const s_GameEvent &event) override;
 
         void setMouseState(eMouseState newState);
 
@@ -80,11 +82,13 @@ class cGameControlsContext : public cInputObserver {
         eMouseState state;
         eMouseState prevState; // in case we want to switch from repair mode (back and forth)
 
-        // the states, initialized once to save a lot of construct/destructs
+        // the states, initialized once to save a lot of construct/destructs (and make it possible
+        // to switch between states without needing to restore 'state' within the state object)
         cMouseNormalState * mouseNormalState;
         cMouseUnitsSelectedState * mouseUnitsSelectedState;
         cMouseRepairState * mouseRepairState;
 		cMousePlaceState * mousePlaceState;
+		cMouseDeployState * mouseDeployState;
 
 		//
 		bool prevTickMouseAtBattleField;

@@ -78,7 +78,7 @@ namespace brains {
 
         virtual void onNotify_SpecificStateSwitch(const s_GameEvent &event) = 0;
 
-        void onNotify(const s_GameEvent &event);
+        void onNotifyGameEvent(const s_GameEvent &event);
 
         virtual const char *toString() = 0;
 

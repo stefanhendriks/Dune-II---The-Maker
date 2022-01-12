@@ -442,7 +442,7 @@ void cMap::clearShroud(int c, int size, int playerId) {
                             .atCell = cl
                     };
 
-                    game.onNotify(event);
+                    game.onNotifyGameEvent(event);
                 }
 
                 int unitId = map.getCellIdUnitLayer(cl);
@@ -458,7 +458,7 @@ void cMap::clearShroud(int c, int size, int playerId) {
                                 .atCell = cl
                         };
 
-                        game.onNotify(event);
+                        game.onNotifyGameEvent(event);
                     }
                 }
             } // make visible
@@ -950,7 +950,7 @@ void cMap::createCell(int cell, int terrainType, int tile) {
                 .buildingList = nullptr
         };
 
-        game.onNotify(event);
+        game.onNotifyGameEvent(event);
     }
 }
 
@@ -1435,11 +1435,11 @@ void cMap::detonateSpiceBloom(int cell) {
             .buildingListItem = nullptr,
             .buildingList = nullptr
     };
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 
 }
 
-void cMap::onNotify(const s_GameEvent &event) {
+void cMap::onNotifyGameEvent(const s_GameEvent &event) {
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED:
             if (m_bAutoDetonateSpiceBlooms) {

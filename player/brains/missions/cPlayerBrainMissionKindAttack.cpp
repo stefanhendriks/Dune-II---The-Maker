@@ -99,11 +99,11 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainMissionKindAttack::onNotify(const s_GameEvent &event) {
-        cPlayerBrainMissionKind::onNotify(event);
+    void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindAttack::onNotify() -> %s", event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMissionKindAttack::onNotifyGameEvent() -> %s", event.toString(event.eventType));
         log(msg);
 
         switch(event.eventType) {
