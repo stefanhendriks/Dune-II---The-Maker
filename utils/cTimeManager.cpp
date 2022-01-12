@@ -115,20 +115,7 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
 void cTimeManager::handleTimerGameTime() {
     // keep up with time cycles
     while (timerGlobal > 0) {
-        if (game.fadeAction == eFadeAction::FADE_OUT) {
-            game.fadeAlpha -= 2;
-            if (game.fadeAlpha < 0) {
-                game.fadeAlpha = 0;
-                game.fadeAction = eFadeAction::FADE_NONE;
-            }
-        } else if (game.fadeAction == eFadeAction::FADE_IN) {
-            game.fadeAlpha += 2;
-            if (game.fadeAlpha > 255) {
-                game.fadeAlpha = 255;
-                game.fadeAction = eFadeAction::FADE_NONE;
-            }
-        }
-
+        game.think_fading();
         game.getSoundPlayer()->think();
         game.think_music();
         game.think_mentat();
@@ -231,8 +218,6 @@ void cTimeManager::handleTimerGameTime() {
         if (game.isState(GAME_WINNING)) {
 
         }
-
-        game.think_fading();
 
         timerGlobal--;
     }
