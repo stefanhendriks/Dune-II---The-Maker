@@ -29,6 +29,4 @@ private:
     void onMouseRightButtonClicked();
 
     void onMouseMovedTo();
-
-    bool mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell);
 };
