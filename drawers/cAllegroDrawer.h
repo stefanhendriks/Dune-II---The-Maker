@@ -1,5 +1,14 @@
-#ifndef CALLEGRODRAWER_H_
-#define CALLEGRODRAWER_H_
+#pragma once
+
+#include "utils/cRectangle.h"
+
+#include <map>
+#include <memory>
+
+// Forward declarations to prevent including Allegro headers
+class cAllegroDataRepository;
+struct BITMAP;
+struct sBitmap;
 
 class cAllegroDrawer {
 	public:
@@ -11,9 +20,9 @@ class cAllegroDrawer {
 		void drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y, int totalWidth, int xOffset);
 		void drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x);
 		void drawCenteredSprite(BITMAP *dest, BITMAP *src);
-        void drawTransSprite(BITMAP *sprite, BITMAP *dest, int x, int y);
+    void drawTransSprite(BITMAP *sprite, BITMAP *dest, int x, int y);
 
-        void drawSprite(BITMAP *dest, BITMAP *src, int x, int y);
+    void drawSprite(BITMAP *dest, BITMAP *src, int x, int y);
 		void drawSprite(BITMAP *dest, int index, int x, int y);
 
 		void resetClippingFor(BITMAP *bmp);
@@ -29,29 +38,30 @@ class cAllegroDrawer {
 		void stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
 		void stretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
-        void stretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    void stretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-        void maskedBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
-        void maskedBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
+    void maskedBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
+    void maskedBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
 
 		void maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 		void maskedStretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-        void drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color);
-        void drawRectangle(BITMAP *dest, const cRectangle &pRectangle, int color);
-        void drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color);
+    void drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color);
+    void drawRectangle(BITMAP *dest, const cRectangle &pRectangle, int color);
+    void drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color);
+    void drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha);
 
-        int getColor_BLACK() { return colorBlack; }
+    int getColor_BLACK() { return colorBlack; }
 
-        void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
+    void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
 
-        void setTransBlender(int red, int green, int blue, int alpha);
+    void setTransBlender(int red, int green, int blue, int alpha);
 
-        int getColorByNormValue(int r, int g, int b, float norm);
+    int getColorByNormValue(int r, int g, int b, float norm);
 
-        void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle);
-        void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
-        void gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
+    void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle);
+    void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
+    void gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
 
     void drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color);
 
@@ -61,12 +71,17 @@ protected:
 
 		int colorBlack;
 
-        int gui_colorWindow;
-        int gui_colorBorderLight;
-        int gui_colorBorderDark;
+    int gui_colorWindow;
+    int gui_colorBorderLight;
+    int gui_colorBorderDark;
 
 private:
     cAllegroDataRepository * m_dataRepository;
-};
+    struct sSize{
+        int width;
+        int height;
 
-#endif /* CALLEGRODRAWER_H_ */
+        bool operator<(sSize rhs) const { return width == rhs.width ? height < rhs.height : width < rhs.width; }
+    };
+    std::map<sSize, BITMAP*> bitmapCache;
+};

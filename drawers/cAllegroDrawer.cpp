@@ -1,6 +1,8 @@
-#include "../include/d2tmh.h"
 #include "cAllegroDrawer.h"
 
+#include "d2tmc.h"
+
+#include <memory>
 
 cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {
     colorBlack=makecol(0,0,0);
@@ -12,6 +14,10 @@ cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_data
 cAllegroDrawer::~cAllegroDrawer() {
     // do not delete data repository, we do not own it!
     m_dataRepository = nullptr;
+
+    for (auto& p : bitmapCache) {
+      destroy_bitmap(p.second);
+    }
 }
 
 void cAllegroDrawer::stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
@@ -198,6 +204,22 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int he
 
 void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
+}
+
+void cAllegroDrawer::drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha) {
+    assert(alpha >= 0);
+    assert(alpha <= 255);
+
+    auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
+    if (bitmap == nullptr) {
+        bitmap = create_bitmap(rect.getWidth(), rect.getHeight());
+        bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
+    }
+
+    rectfill(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
+
+    set_trans_blender(0, 0, 0, alpha);
+    draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
 cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {

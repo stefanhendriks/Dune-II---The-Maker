@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 // Allegro: must be after any default headers...
+#define HAVE_STDINT_H
 #include <allegro.h>
 
 
@@ -22,11 +23,5 @@
 
 #include <alfont.h>
 #include <almp3.h>
-
-// Needed by fblend (fast blending techniques (3 - 10 times faster than
-// default Allegro routines)
-#include "fblend.h"
-#include "sse.h"
-#include "mmx.h"
 
 #endif /* ALLEGROH_H_ */

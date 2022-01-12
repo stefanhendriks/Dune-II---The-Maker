@@ -155,13 +155,14 @@ void cMouseDrawer::drawToolTipBackground() {
 
 	color = makecol(red, green, blue);
 
-//	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
-	rect(bmp_screen, x, y, x+(width-1), y + (height-1), makecol(255,255,255));
-	fblend_rect_trans(bmp_screen, x, y, width, height, color, 128);
+  const auto black = allegroDrawer->getColor_BLACK();
+  const auto white = makecol(255, 255, 255);
+	rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
+  allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
 	int shadowX = x + width;
 	int shadowY = y + height;
-	fblend_rect_trans(bmp_screen, x + 4, shadowY, (width - 4), 4, makecol(0,0,0), 128);
-	fblend_rect_trans(bmp_screen, shadowX, y + 4, 4, height, makecol(0,0,0), 128);
+	allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {x + 4, shadowY, (width - 4), 4}, black, 128);
+	allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {shadowX, y + 4, 4, height}, black, 128);
 }
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {

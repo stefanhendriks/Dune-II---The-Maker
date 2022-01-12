@@ -64,15 +64,15 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	int height = ((BITMAP *)gfxinter[id].dat)->h;
 //	rectfill(bmp_screen, x, y, x+width, y+height, makecol(255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
 
-    // clear
+  // clear
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
 
-    // set blender
-    set_trans_blender(0,0,0,128);
+  // set blender
+  set_trans_blender(0,0,0,128);
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
 
     if (!list->isAvailable()) {
-    	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 96);
+      allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, makecol(0,0,0), 96);
     }
 
     if (pressed) {
@@ -193,8 +193,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
 			if (!item->isAvailable() || isBuildingSameSubListItem) {
-				set_trans_blender(0,0,0,128);
-				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+				set_trans_blender(0, 0, 0, 64);
+        draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
 
 				// Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
 				if (item->isPendingUpgrading()) {
@@ -230,13 +230,12 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 			    // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
 			    // payment/progress)
 				if (cannotPayIt) {
-					set_trans_blender(0,0,0,128);
-					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+					set_trans_blender(0, 0, 0, 64);
+          draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
 					int errorFadingColor = player->getErrorFadingColor();
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
-					set_trans_blender(0,0,0,128);
 				}
 			}
 

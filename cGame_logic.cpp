@@ -18,6 +18,13 @@
 
 #include <fmt/core.h>
 
+namespace {
+
+constexpr auto kMinAlpha = 0;
+constexpr auto kMaxAlpha = 255;
+
+};
+
 cGame::cGame() {
     memset(states, 0, sizeof(cGameState *));
 
@@ -52,8 +59,8 @@ void cGame::init() {
     bSkirmish = false;
 
     // Alpha (for fading in/out)
-    fadeAlpha = 0;                             // 255 = opaque , anything else
-    fadeAction = eFadeAction::FADE_IN;           // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
+    fadeAction = eFadeAction::FADE_IN; // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     iMusicVolume = 96; // volume is 0...
 
@@ -457,39 +464,42 @@ void cGame::handleTimeSlicing() {
 
 void cGame::shakeScreenAndBlitBuffer() {
     if (TIMER_shake == 0) {
-        TIMER_shake = -1;
-    }
-    // blitSprite on screen
+		    TIMER_shake = -1;
+	  }
 
-    if (TIMER_shake > 0) {
-        // the more we get to the 'end' the less we 'throttle'.
-        // Structure explosions are 6 time units per cell.
-        // Max is 9 cells (9*6=54)
-        // the max border is then 9. So, we do time / 6
-        if (TIMER_shake > 69) TIMER_shake = 69;
-
-        int offset = TIMER_shake / 5;
-        if (offset > 9)
-            offset = 9;
+	  // blitSprite on screen
+	  if (TIMER_shake > 0)
+	  {
+		    // the more we get to the 'end' the less we 'throttle'.
+		    // Structure explosions are 6 time units per cell.
+		    // Max is 9 cells (9*6=54)
+		    // the max border is then 9. So, we do time / 6
+        TIMER_shake = std::min(TIMER_shake, 69);
+        int offset = std::min(TIMER_shake / 5, 9);
 
         shake_x = -abs(offset / 2) + rnd(offset);
         shake_y = -abs(offset / 2) + rnd(offset);
 
-        blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, screen_x, screen_y);
-        blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
+		    blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, screen_x, screen_y);
+		    blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
+	  }
+	  else
+	  {
+		    if (fadeAction == eFadeAction::FADE_NONE) {
+  		  // Not shaking and not fading.
+        blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
     } else {
-        // when fading
-        if (fadeAlpha == 255) {
-            blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
-        } else {
-            BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
-            assert(temp != NULL);
-            clear(temp);
-            fblend_trans(bmp_screen, temp, 0, 0, fadeAlpha);
-            blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
-            destroy_bitmap(temp);
-        }
-    }
+        // Fading
+        assert(fadeAlpha >= kMinAlpha);
+        assert(fadeAlpha <= kMaxAlpha);
+        auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(create_bitmap(game.screen_x, game.screen_y), destroy_bitmap);
+			  assert(temp);
+			  clear(temp.get());
+        set_trans_blender(0, 0, 0, fadeAlpha);
+        draw_trans_sprite(temp.get(), bmp_screen, 0, 0);
+			  blit(temp.get(), screen, 0, 0, 0, 0, screen_x, screen_y);
+		}
+	}
 }
 
 void cGame::drawState() {
@@ -501,7 +511,7 @@ void cGame::drawState() {
     }
 
     // this makes fade-in happen after fade-out automatically
-    if (fadeAlpha == 0) {
+    if (fadeAlpha == kMinAlpha) {
         fadeAction = eFadeAction::FADE_IN;
     }
 
@@ -1242,8 +1252,23 @@ void cGame::setState(int newState) {
 }
 
 void cGame::think_fading() {
+    // Fading of the entire screen
+    if (fadeAction == eFadeAction::FADE_OUT) {
+        fadeAlpha -= 2;
+        if (fadeAlpha < kMinAlpha) {
+            fadeAlpha = kMinAlpha;
+            fadeAction = eFadeAction::FADE_NONE;
+        }
+    } else if (fadeAction == eFadeAction::FADE_IN) {
+        fadeAlpha += 2;
+        if (fadeAlpha > kMaxAlpha) {
+            fadeAlpha = kMaxAlpha;
+            fadeAction = eFadeAction::FADE_NONE;
+        }
+    }
+
     // Fading / pulsating of selected stuff
-    static float fadeSelectIncrement = (1 / 256.0f);
+    static constexpr float fadeSelectIncrement = 1 / 256.0f;
     if (bFadeSelectDir) {
         fade_select += fadeSelectIncrement;
 
