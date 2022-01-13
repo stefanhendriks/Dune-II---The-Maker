@@ -17,8 +17,7 @@
   The state of upgrades is held by a cPlayerUpgradeState object.
 
   */
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <set>
 #include <string>
@@ -28,7 +27,10 @@
 
 #include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
+#include "definitions.h"
 #include "gameobjects/structures/cOrderProcesser.h"
+#include "observers/cScenarioObserver.h"
+#include "player/brains/cPlayerBrain.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
 
@@ -59,7 +61,7 @@ struct s_PlaceResult {
 class cPlayer : public cScenarioObserver {
 
 public:
-    static const int MAX_STRUCTURE_BMPS = MAX_STRUCTURETYPES*2;
+    static constexpr int MAX_STRUCTURE_BMPS = MAX_STRUCTURETYPES*2;
     cPlayer();
 
     ~cPlayer();
@@ -397,7 +399,7 @@ public:
 
     std::vector<cPlayerNotification> & getNotifications();
 
-    void addNotification(const char *msg, eNotificationType type);
+    void addNotification(const std::string& msg, eNotificationType type);
 
     // properties (for now public, should become private)
     int selected_structure;
@@ -492,5 +494,3 @@ private:
 
     std::vector<cPlayerNotification> notifications;
 };
-
-#endif
