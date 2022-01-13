@@ -1,8 +1,9 @@
-#include "player/cPlayerNotification.h"
+#include "cPlayerNotification.h"
 
-#include "../include/d2tmh.h"
+#include "allegroh.h"
+#include "d2tmc.h"
 
-const char* eNotificationTypeString(const eNotificationType &type) {
+std::string eNotificationTypeString(const eNotificationType &type) {
     switch (type) {
         case eNotificationType::NEUTRAL: return "NEUTRAL";
         case eNotificationType::PRIORITY: return "PRIORITY";
@@ -11,29 +12,26 @@ const char* eNotificationTypeString(const eNotificationType &type) {
             assert(false && "Unknown eNotificationType?");
             break;
     }
-    return "";
+    return {};
 }
 
-cPlayerNotification::cPlayerNotification(std::string msg, eNotificationType type) {
-    this->msg = msg;
-    this->type = type;
-    TIMER = (1000/5) * 7;
-    initialDuration = TIMER;
+cPlayerNotification::cPlayerNotification(const std::string& msg, eNotificationType type)
+  : msg(msg), TIMER((1000/5) * 7), initialDuration(TIMER), type(type) {
 }
 
 void cPlayerNotification::thinkFast() {
     TIMER--;
 }
 
-std::string & cPlayerNotification::getMessage() {
+const std::string& cPlayerNotification::getMessage() const {
     return msg;
 }
 
-int cPlayerNotification::getColor() {
+int cPlayerNotification::getColor() const {
     bool justStarted = (initialDuration - TIMER) < 500;
-    static int neutralColor = makecol(255, 255, 255); // white
-    static int priorityColor = makecol(255, 207, 41); // yellow
-    static int badColor = makecol(255, 0, 0); // red
+    static const int neutralColor = makecol(255, 255, 255); // white
+    static const int priorityColor = makecol(255, 207, 41); // yellow
+    static const int badColor = makecol(255, 0, 0); // red
     switch (type) {
         case NEUTRAL:
             return justStarted ? game.getColorFadeSelected(neutralColor) : neutralColor;
