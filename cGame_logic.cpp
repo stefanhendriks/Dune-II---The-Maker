@@ -1113,6 +1113,7 @@ bool cGame::setupGame() {
 
 /**
  * Set up players
+ * (Elegible for combat state object initialization)
  */
 void cGame::setup_players() {
     mouse->setMouseObserver(nullptr);
@@ -1225,6 +1226,9 @@ void cGame::setState(int newState) {
                     cPlayer &player = players[i];
                     player.evaluateStillAlive();
                 }
+
+                // in-between solution until we have a proper combat state object
+                drawManager->init();
 
                 // handle update
                 s_GameEvent event{

@@ -30,6 +30,10 @@ public:
 
     void setPlayerToDraw(cPlayer *playerToDraw);
 
+    void think();
+
+    void init();
+
 protected:
     void drawSidebar();
 

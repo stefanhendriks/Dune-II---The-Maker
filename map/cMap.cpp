@@ -374,14 +374,6 @@ void cMap::thinkAutoDetonateSpiceBlooms() {// let spice bloom detonate after X a
     }
 }
 
-// do the static info thinking
-void cMap::think_minimap() {
-    // Draw static info
-    cMiniMapDrawer *miniMapDrawer = drawManager->getMiniMapDrawer();
-    miniMapDrawer->think();
-
-}
-
 void cMap::draw_bullets() {
     // Loop through all units, check if they should be drawn, and if so, draw them
     for (int i = 0; i < MAX_BULLETS; i++) {
@@ -581,6 +573,7 @@ void cMap::draw_units_2nd() {
     set_trans_blender(0, 0, 0, 128);
 }
 
+// TODO: Remove this, in favor of having mapCamera respond to keyboard and mouse events
 void cMap::thinkInteraction() {
     mapCamera->thinkInteraction();
 }

@@ -31,7 +31,7 @@ cPlayer        				players[MAX_PLAYERS];             // player is
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
-cDrawManager   			*	drawManager = NULL;
+cDrawManager   			*	drawManager = nullptr;
 
 cAllegroDrawer          *   allegroDrawer = nullptr;
 

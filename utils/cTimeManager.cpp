@@ -229,6 +229,7 @@ void cTimeManager::handleTimerGameTime() {
 void cTimeManager::handleTimerUnits() {
     while (timerUnits > 0) {
         if (game.isState(GAME_PLAYING)) {
+            // TODO: state->think()
             // units think
             for (int i = 0; i < MAX_UNITS; i++) {
                 cUnit &cUnit = unit[i];
@@ -242,7 +243,7 @@ void cTimeManager::handleTimerUnits() {
                 }
             }
 
-            map.think_minimap();
+            drawManager->think();
 
             for (int i = 0; i < MAX_PLAYERS; i++) {
                 players[i].think();
