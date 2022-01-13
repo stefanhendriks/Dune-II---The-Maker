@@ -16,6 +16,7 @@
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
+#include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 
 #include "gamestates/cCreditsState.h"
@@ -666,7 +667,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     game.m_screenY = game.m_iniScreenHeight;
     char msg[255];
     sprintf(msg, "Resolution %dx%d loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight);
-    cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Resolution from ini file", msg);
+    cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", msg);
 }
 
 /**
@@ -686,13 +687,6 @@ bool cGame::setupGame() {
 	logger->logHeader("Version information");
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
-
-    // init game
-    if (game.m_windowed) {
-        logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
-    } else {
-        logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
-    }
 
     // TODO: load eventual game settings (resolution, etc)
 
@@ -741,85 +735,21 @@ bool cGame::setupGame() {
 	// set window title
     auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
-	// Set window title
-	set_window_title(title.c_str());
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
-
-    int colorDepth = desktop_color_depth();
-    set_color_depth(colorDepth);
-
-    char colorDepthMsg[255];
-    sprintf(colorDepthMsg, "Desktop color dept is %d.", colorDepth);
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
-
-
     // TODO: read/write rest value so it does not have to 'fine-tune'
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
 
-    if (game.m_windowed) {
-        logger->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
-
-        if (isResolutionInGameINIFoundAndSet()) {
-            setScreenResolutionFromGameIniSettings();
-        }
-
-        r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.m_screenX, game.m_screenY, game.m_screenX, game.m_screenY);
-
-        char msg[255];
-        sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.m_screenX,
-                game.m_screenY, colorDepth);
-        logbook(msg);
-
-        if (r > -1) {
-            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
-        } else {
-            allegro_message("Failed to initialize graphics mode");
-            return false;
-        }
+    if (isResolutionInGameINIFoundAndSet()) {
+        setScreenResolutionFromGameIniSettings();
+        m_Screen = make_unique<cScreenInit>(*m_PLInit, title, m_windowed, m_screenX, m_screenY);
     } else {
-        /**
-         * Fullscreen mode
-        */
-
-        bool mustAutoDetectResolution = false;
-        if (isResolutionInGameINIFoundAndSet()) {
-            setScreenResolutionFromGameIniSettings();
-            r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.m_screenX, game.m_screenY, game.m_screenX, game.m_screenY);
-            char msg[255];
-            sprintf(msg, "Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d",
-                    game.m_iniScreenWidth, game.m_iniScreenHeight, colorDepth, r);
-            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
-            mustAutoDetectResolution = r < 0;
-        } else {
-            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
-                                        "No resolution defined in ini file.");
-            mustAutoDetectResolution = true;
+        if (m_windowed) {
+            logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
         }
-
-        // find best possible resolution
-        if (mustAutoDetectResolution) {
-            char msg[255];
-            sprintf(msg, "Autodetecting resolutions at color depth %d", colorDepth);
-            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
-            // find best possible resolution
-            cBestScreenResolutionFinder bestScreenResolutionFinder(colorDepth);
-            bestScreenResolutionFinder.checkResolutions();
-            bool result = bestScreenResolutionFinder.acquireBestScreenResolutionFullScreen();
-
-            // success
-            if (result) {
-                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)",
-                            "Succesfully initialized graphics mode.", OUTC_SUCCESS);
-            } else {
-                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)",
-                            "Failed to initializ graphics mode.", OUTC_FAILED);
-                allegro_message(
-                        "Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
-                return false;
-            }
-        }
+        m_Screen = make_unique<cScreenInit>(*m_PLInit, title);
     }
+    m_screenX = m_Screen->Width();
+    m_screenY = m_Screen->Height();
 
     alfont_text_mode(-1);
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);

@@ -10,4 +10,9 @@ class cPlatformLayerInit {
   public:
     explicit cPlatformLayerInit(const std::string& path_to_config_file);
     ~cPlatformLayerInit();
+
+    cPlatformLayerInit& operator=(const cPlatformLayerInit&) = delete;
+    cPlatformLayerInit& operator=(cPlatformLayerInit&&) = delete;
+    cPlatformLayerInit(const cPlatformLayerInit&) = delete;
+    cPlatformLayerInit(cPlatformLayerInit&&) = delete;
 };

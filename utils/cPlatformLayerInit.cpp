@@ -4,6 +4,7 @@
 
 #include <allegro/config.h>
 #include <allegro/system.h>
+#include <allegro/timer.h>
 
 #include <cstring>
 #include <stdexcept>
