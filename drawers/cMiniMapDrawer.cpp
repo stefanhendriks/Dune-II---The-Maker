@@ -2,7 +2,7 @@
 #include "cMiniMapDrawer.h"
 
 
-cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) :
+cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
         m_isMouseOver(false),
         map(theMap),
         player(thePlayer),
@@ -10,11 +10,10 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * t
         status(eMinimapStatus::NOTAVAILABLE),
         iStaticFrame(STAT14),
         iTrans(0),
-        isBigMap(theMap->isBigMap())
-{
-	assert(theMap);
-	assert(thePlayer);
-	assert(theMapCamera);
+        isBigMap(theMap->isBigMap()) {
+    assert(theMap);
+    assert(thePlayer);
+    assert(theMapCamera);
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
@@ -31,9 +30,9 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * t
 }
 
 cMiniMapDrawer::~cMiniMapDrawer() {
-	map = NULL;
-	mapCamera = NULL;
-	iStaticFrame = STAT14;
+    map = NULL;
+    mapCamera = NULL;
+    iStaticFrame = STAT14;
     status = eMinimapStatus::NOTAVAILABLE;
 }
 
@@ -80,23 +79,23 @@ int cMiniMapDrawer::getMapHeightInPixels() {
 void cMiniMapDrawer::drawTerrain() {
     int iColor = 0;
 
-	for (int x = 0; x < (map->getWidth()); x++) {
+    for (int x = 0; x < (map->getWidth()); x++) {
         for (int y = 0; y < (map->getHeight()); y++) {
             iColor = makecol(0, 0, 0);
             int iCll = map->makeCell(x, y);
 
-			if (map->isVisible(iCll, player->getId())) {
-				iColor = getRGBColorForTerrainType(map->getCellType(iCll));
-			}
+            if (map->isVisible(iCll, player->getId())) {
+                iColor = getRGBColorForTerrainType(map->getCellType(iCll));
+            }
 
-			// TODO: make flexible map borders
-			// do not show the helper border
-			if (!map->isWithinBoundaries(x, y)) {
-				iColor = makecol(0, 0, 0);
-			}
+            // TODO: make flexible map borders
+            // do not show the helper border
+            if (!map->isWithinBoundaries(x, y)) {
+                iColor = makecol(0, 0, 0);
+            }
 
-			int iDrawX = drawX + x;
-			int iDrawY = drawY + y;
+            int iDrawX = drawX + x;
+            int iDrawY = drawY + y;
 
             if (!isBigMap) {
                 // double sized 'pixels'.
@@ -105,7 +104,7 @@ void cMiniMapDrawer::drawTerrain() {
             }
             allegroDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
         }
-	}
+    }
 }
 
 /**
@@ -115,25 +114,25 @@ void cMiniMapDrawer::drawTerrain() {
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
-	int iColor=allegroDrawer->getColor_BLACK();
+    int iColor = allegroDrawer->getColor_BLACK();
 
-	for (int x = 0; x < map->getWidth(); x++) {
-		for (int y = 0; y < map->getHeight(); y++) {
+    for (int x = 0; x < map->getWidth(); x++) {
+        for (int y = 0; y < map->getHeight(); y++) {
             // do not show the helper border
             if (!map->isWithinBoundaries(x, y)) continue;
 
             int iCll = map->makeCell(x, y);
 
-			if (!map->isVisible(iCll, player->getId())) {
-			    // invisible cell
-			    continue;
-			}
+            if (!map->isVisible(iCll, player->getId())) {
+                // invisible cell
+                continue;
+            }
 
             iColor = allegroDrawer->getColor_BLACK();
 
             int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
-                int	iPlr = structure[idOfStructureAtCell]->getOwner();
+                int iPlr = structure[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
                     if (iPlr != player->getId()) continue; // skip non player units
                 }
@@ -168,8 +167,8 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
             // no need to draw black on black background
             if (iColor != allegroDrawer->getColor_BLACK()) {
-                int iDrawX=drawX + x;
-                int iDrawY=drawY + y;
+                int iDrawX = drawX + x;
+                int iDrawY = drawY + y;
 
                 if (!isBigMap) {
                     iDrawX += x;
@@ -177,38 +176,37 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                 }
                 allegroDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
             }
-		}
-	}
+        }
+    }
 }
 
 
-
 int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
-	// get color for terrain type (for minimap)
-	switch (terrainType) {
-		case TERRAIN_ROCK:
-			return makecol(80,80,60);
-		case TERRAIN_SPICE:
-			return makecol(186,93,32);
-		case TERRAIN_SPICEHILL:
-			return makecol(180,90,25);
-		case TERRAIN_HILL:
-			return makecol(188, 115, 50);
-		case TERRAIN_MOUNTAIN:
-			return makecol(48, 48, 36);
-		case TERRAIN_SAND:
-			return makecol(194, 125, 60);
-		case TERRAIN_WALL:
-			return makecol(192, 192, 192);
-		case TERRAIN_SLAB:
-			return makecol(80,80,80);
-		case TERRAIN_BLOOM:
-			return makecol(214,145,100);
-	    case -1:
+    // get color for terrain type (for minimap)
+    switch (terrainType) {
+        case TERRAIN_ROCK:
+            return makecol(80, 80, 60);
+        case TERRAIN_SPICE:
+            return makecol(186, 93, 32);
+        case TERRAIN_SPICEHILL:
+            return makecol(180, 90, 25);
+        case TERRAIN_HILL:
+            return makecol(188, 115, 50);
+        case TERRAIN_MOUNTAIN:
+            return makecol(48, 48, 36);
+        case TERRAIN_SAND:
+            return makecol(194, 125, 60);
+        case TERRAIN_WALL:
+            return makecol(192, 192, 192);
+        case TERRAIN_SLAB:
+            return makecol(80, 80, 80);
+        case TERRAIN_BLOOM:
+            return makecol(214, 145, 100);
+        case -1:
             return makecol(255, 0, 255);
-		default:
-			return makecol(255, 0, 255);
-	}
+        default:
+            return makecol(255, 0, 255);
+    }
 }
 
 void cMiniMapDrawer::draw() {
@@ -216,8 +214,9 @@ void cMiniMapDrawer::draw() {
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    allegroDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0,0,0));
-    set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(), m_RectFullMinimap.getEndY());
+    allegroDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0, 0, 0));
+    set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(),
+                  m_RectFullMinimap.getEndY());
 
     if (status == eMinimapStatus::POWERUP ||
         status == eMinimapStatus::RENDERMAP ||
@@ -242,26 +241,26 @@ void cMiniMapDrawer::drawStaticFrame() {
     if (status == eMinimapStatus::LOWPOWER) return;
 
     if (status == eMinimapStatus::POWERDOWN) {
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
+        draw_sprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, drawX, drawY);
         return;
     }
 
-	// Draw static info
+    // Draw static info
     // < STAT01 frames are going from very transparent to opaque
-     if (iStaticFrame < STAT10) {
-         iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
-     } else {
-         iTrans = 255;
-     }
+    if (iStaticFrame < STAT10) {
+        iTrans = 255 - health_bar(192, (STAT12 - iStaticFrame), 12);
+    } else {
+        iTrans = 255;
+    }
 
-     // non-stat01 frames are drawn transparent
-     if (iStaticFrame != STAT01) {
-         set_trans_blender(0,0,0, iTrans);
+    // non-stat01 frames are drawn transparent
+    if (iStaticFrame != STAT01) {
+        set_trans_blender(0, 0, 0, iTrans);
 
-         draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
-         // reset the trans blender
-         set_trans_blender(0,0,0,128);
-     }
+        draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, drawX, drawY);
+        // reset the trans blender
+        set_trans_blender(0, 0, 0, 128);
+    }
 }
 
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
