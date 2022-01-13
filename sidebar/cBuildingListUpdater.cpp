@@ -1,6 +1,7 @@
 #include "include/d2tmh.h"
 #include "cBuildingListUpdater.h"
 
+#include "utils/cLog.h"
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 	assert(thePlayer);

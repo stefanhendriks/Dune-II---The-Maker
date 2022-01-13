@@ -44,10 +44,10 @@ std::string getLogComponentString(eLogComponent component) {
             return std::string("BULLET");
         case COMP_AI:
             return std::string("AI");
-    case COMP_UPGRADE_LIST:
-      return std::string("UPGRADE_LIST");
-      case COMP_BUILDING_LIST_UPDATER:
-      return std::string("BUILDING_LIST_UPDATER");
+        case COMP_UPGRADE_LIST:
+            return std::string("UPGRADE_LIST");
+        case COMP_BUILDING_LIST_UPDATER:
+            return std::string("BUILDING_LIST_UPDATER");
         case COMP_MAP:
             return std::string("MAP");
         case COMP_SIDEBAR:
@@ -83,12 +83,13 @@ std::string getLogOutcomeString(eLogOutcome outcome) {
             return std::string("FAILED");
         case OUTC_NONE:
             return std::string("NONE");
-      case OUTC_UNKNOWN:
-      break;
-      case OUTC_IGNOREME:
-      break;
+        case OUTC_UNKNOWN:
+            break;
+        case OUTC_IGNOREME:
+            break;
     }
-     return std::string("UNIDENTIFIED");
+
+    return std::string("UNIDENTIFIED");
 }
 
 std::string getLogHouseString(int houseId) {
@@ -114,9 +115,9 @@ std::string getLogHouseString(int houseId) {
 }
 
 cLogger* cLogger::getInstance() {
-  // The logger is initialized once as soon as this function is called for the first time.
-  static cLogger theLogger;
-  return &theLogger;
+    // The logger is initialized once as soon as this function is called for the first time.
+    static cLogger theLogger;
+    return &theLogger;
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message) {
@@ -149,8 +150,8 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
     logline += "|";
 
     if (playerId >= GENERALHOUSE) {
-            logline += getLogHouseString(houseId);
-            logline += "|";
+        logline += getLogHouseString(houseId);
+        logline += "|";
     }
 
     if (playerId >= HUMAN) {
@@ -168,7 +169,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 
     logline += event;
 
-  fprintf(file, "%s\n", logline.c_str()); // print the text into the file
+    fprintf(file, "%s\n", logline.c_str()); // print the text into the file
 }
 
 void cLogger::logCommentLine(const std::string& txt) {
@@ -176,7 +177,7 @@ void cLogger::logCommentLine(const std::string& txt) {
 }
 
 void cLogger::logHeader(const std::string& txt) {
-  auto str = txt.substr(0, 79);
+    auto str = txt.substr(0, 79);
     auto line = std::string(str.length(), '-');
 
     logCommentLine(str);
@@ -186,14 +187,14 @@ void cLogger::logHeader(const std::string& txt) {
 
 
 cLogger::cLogger() : file(std::fopen("log.txt", "wt")), startTime(std::clock()) {
-  if (file == nullptr) {
-    // This translates the POSIX error number into a C++ exception
-    throw std::system_error(errno, std::generic_category());
-  }
+    if (file == nullptr) {
+        // This translates the POSIX error number into a C++ exception
+        throw std::system_error(errno, std::generic_category());
+    }
 }
 
 cLogger::~cLogger() {
-  fclose(file);
+    fclose(file);
 }
 
 /* From 1970-01-01T00:00:00 */

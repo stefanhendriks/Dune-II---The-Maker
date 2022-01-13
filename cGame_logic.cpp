@@ -15,6 +15,7 @@
 #include <random>
 #include "include/d2tmh.h"
 #include "cGame.h"
+#include "utils/cLog.h"
 
 #include <fmt/core.h>
 
