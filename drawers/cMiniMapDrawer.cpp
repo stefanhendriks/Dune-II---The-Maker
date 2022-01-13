@@ -2,16 +2,19 @@
 #include "cMiniMapDrawer.h"
 
 
-cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) : player(thePlayer) {
+cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) :
+        m_isMouseOver(false),
+        map(theMap),
+        player(thePlayer),
+        mapCamera(theMapCamera),
+        status(eMinimapStatus::NOTAVAILABLE),
+        iStaticFrame(STAT14),
+        iTrans(0),
+        isBigMap(theMap->isBigMap())
+{
 	assert(theMap);
 	assert(thePlayer);
 	assert(theMapCamera);
-	map = theMap;
-	mapCamera = theMapCamera;
-	iStaticFrame = STAT14;
-	status = eMinimapStatus::NOTAVAILABLE;
-	iTrans = 0;
-    _isMouseOver = false;
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
@@ -32,6 +35,14 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 	mapCamera = NULL;
 	iStaticFrame = STAT14;
     status = eMinimapStatus::NOTAVAILABLE;
+}
+
+void cMiniMapDrawer::init() {
+    status = eMinimapStatus::NOTAVAILABLE;
+    iStaticFrame = STAT14;
+    iTrans = 0;
+    isBigMap = map->isBigMap();
+    m_isMouseOver = false;
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
@@ -67,9 +78,6 @@ int cMiniMapDrawer::getMapHeightInPixels() {
 }
 
 void cMiniMapDrawer::drawTerrain() {
-	// startX = MAX_SCREEN_X - 129
-    bool isBigMap = map->getWidth() > 64 || map->getHeight() > 64;
-
     int iColor = 0;
 
 	for (int x = 0; x < (map->getWidth()); x++) {
@@ -89,15 +97,14 @@ void cMiniMapDrawer::drawTerrain() {
 
 			int iDrawX = drawX + x;
 			int iDrawY = drawY + y;
-            if (isBigMap) {
-                drawSingleDot(iDrawX, iDrawY, iColor);
-            } else {
+
+            if (!isBigMap) {
                 // double sized 'pixels'.
                 iDrawX += x;
                 iDrawY += y;
-                drawDoubleDot(iDrawX, iDrawY, iColor);
             }
-		}
+            allegroDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+        }
 	}
 }
 
@@ -164,13 +171,11 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                 int iDrawX=drawX + x;
                 int iDrawY=drawY + y;
 
-                if (map->getWidth() > 64 || map->getHeight() > 64) {
-                    drawSingleDot(iDrawX, iDrawY, iColor);
-                } else {
+                if (!isBigMap) {
                     iDrawX += x;
                     iDrawY += y;
-                    drawDoubleDot(iDrawX, iDrawY, iColor);
                 }
+                allegroDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
             }
 		}
 	}
@@ -259,18 +264,6 @@ void cMiniMapDrawer::drawStaticFrame() {
      }
 }
 
-void cMiniMapDrawer::drawDoubleDot(int x, int y, int color) {
-	// draw a double sized 'pixel'
-	putpixel(bmp_screen, x, y, color);
-	putpixel(bmp_screen, x + 1, y, color);
-	putpixel(bmp_screen, x + 1, y + 1, color);
-	putpixel(bmp_screen, x, y + 1, color);
-}
-
-void cMiniMapDrawer::drawSingleDot(int x, int y, int color) {
-	putpixel(bmp_screen, x, y, color);
-}
-
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
     // the minimap can be 128x128 pixels at the bottom right of the screen.
     int mouseMiniMapX = mouseX - drawX;
@@ -295,6 +288,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
     return map->getCellWithMapBorders(newX, newY);
 }
 
+// TODO: Respond to game events instead of using the "think" function (tell, don't ask)
 void cMiniMapDrawer::think() {
     if (player->hasAtleastOneStructure(RADAR)) {
         if (status == eMinimapStatus::NOTAVAILABLE) {
@@ -345,11 +339,11 @@ void cMiniMapDrawer::think() {
 }
 
 void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event) {
-    _isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
+    m_isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
 }
 
 bool cMiniMapDrawer::isMouseOver() {
-    return _isMouseOver;
+    return m_isMouseOver;
 }
 
 void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
@@ -368,7 +362,7 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
     }
 }
 
-void cMiniMapDrawer::onNotify(const s_MouseEvent &event) {
+void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event) {
     switch (event.eventType) {
         case eMouseEventType::MOUSE_MOVED_TO:
             onMouseAt(event);

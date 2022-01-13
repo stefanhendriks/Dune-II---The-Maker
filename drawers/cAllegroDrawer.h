@@ -65,11 +65,13 @@ class cAllegroDrawer {
 
     void drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color);
 
-protected:
-		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
-		int getCenteredYPosForBitmap(BITMAP *bmp);
+    void drawDot(BITMAP *bmp, int x, int y, int color, int size);
 
-		int colorBlack;
+protected:
+    int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
+    int getCenteredYPosForBitmap(BITMAP *bmp);
+
+    int colorBlack;
 
     int gui_colorWindow;
     int gui_colorBorderLight;
