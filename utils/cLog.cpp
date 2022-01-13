@@ -14,62 +14,62 @@ std::string getLogLevelString(eLogLevel level) {
     // LOG_TRACE, LOG_WARN, LOG_ERROR, LOG_FATAL
     switch (level) {
         case LOG_FATAL:
-            return std::string("FATAL");
+            return "FATAL";
         case LOG_WARN:
-            return std::string("WARN");
+            return "WARN";
         case LOG_ERROR:
-            return std::string("ERROR");
+            return "ERROR";
         case LOG_TRACE:
-            return std::string("TRACE");
+            return "TRACE";
         case LOG_INFO:
-            return std::string("INFO");
+            return "INFO";
     }
 
-    return std::string("UNIDENTIFIED");
+    return "UNIDENTIFIED";
 }
 
 std::string getLogComponentString(eLogComponent component) {
     switch(component) {
         case COMP_UNITS:
-            return std::string("UNITS");
+            return "UNITS";
         case COMP_STRUCTURES:
-            return std::string("STRUCTURES");
+            return "STRUCTURES";
         case COMP_GAMEINI:
-            return std::string("GAMEINI");
+            return "GAMEINI";
         case COMP_SCENARIOINI:
-            return std::string("SCENARIOINI");
+            return "SCENARIOINI";
         case COMP_PARTICLE:
-            return std::string("PARTICLE");
+            return "PARTICLE";
         case COMP_BULLET:
-            return std::string("BULLET");
+            return "BULLET";
         case COMP_AI:
-            return std::string("AI");
+            return "AI";
         case COMP_UPGRADE_LIST:
-            return std::string("UPGRADE_LIST");
+            return "UPGRADE_LIST";
         case COMP_BUILDING_LIST_UPDATER:
-            return std::string("BUILDING_LIST_UPDATER");
+            return "BUILDING_LIST_UPDATER";
         case COMP_MAP:
-            return std::string("MAP");
+            return "MAP";
         case COMP_SIDEBAR:
-            return std::string("SIDEBAR");
+            return "SIDEBAR";
         case COMP_NONE:
-            return std::string("NONE");
+            return "NONE";
         case COMP_SETUP:
-            return std::string("SETUP");
+            return "SETUP";
         case COMP_INIT:
-            return std::string("INIT");
+            return "INIT";
         case COMP_ALLEGRO:
-            return std::string("ALLEGRO");
+            return "ALLEGRO";
         case COMP_VERSION:
-            return std::string("VERSION");
+            return "VERSION";
         case COMP_SKIRMISHSETUP:
-            return std::string("SKIRMISHSETUP");
+            return "SKIRMISHSETUP";
         case COMP_ALFONT:
-            return std::string("ALFONT");
+            return "ALFONT";
         case COMP_SOUND:
-            return std::string("SOUND");
+            return "SOUND";
         case COMP_REGIONINI:
-            return std::string("REGIONINI");
+            return "REGIONINI";
     }
 
     return std::string("UNIDENTIFIED");
@@ -78,38 +78,38 @@ std::string getLogComponentString(eLogComponent component) {
 std::string getLogOutcomeString(eLogOutcome outcome) {
     switch (outcome) {
         case OUTC_SUCCESS:
-            return std::string("SUCCESS");
+            return "SUCCESS";
         case OUTC_FAILED:
-            return std::string("FAILED");
+            return "FAILED";
         case OUTC_NONE:
-            return std::string("NONE");
+            return "NONE";
         case OUTC_UNKNOWN:
-            break;
+            return "UNKNOWN";
         case OUTC_IGNOREME:
-            break;
+            return "IGNOREME";
     }
 
-    return std::string("UNIDENTIFIED");
+    return "UNIDENTIFIED";
 }
 
 std::string getLogHouseString(int houseId) {
     switch (houseId) {
         case ATREIDES:
-            return std::string("ATREIDES");
+            return "ATREIDES";
         case HARKONNEN:
-            return std::string("HARKONNEN");
+            return "HARKONNEN";
         case ORDOS:
-            return std::string("ORDOS");
+            return "ORDOS";
         case FREMEN:
-            return std::string("FREMEN");
+            return "FREMEN";
         case SARDAUKAR:
-            return std::string("SARDAUKAR");
+            return "SARDAUKAR";
         case MERCENARY:
-            return std::string("MERCENARY");
+            return "MERCENARY";
         default:
-            return std::string("UNKNOWN HOUSE");
+            return "UNKNOWN HOUSE";
     }
-    return std::string("UNIDENTIFIED");
+    return "UNIDENTIFIED";
 }
 
 }
