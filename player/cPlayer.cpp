@@ -168,9 +168,6 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     this->id = id;
     this->selected_structure = -1;
 
-    bDeployIt=false;
-    bDeployedIt=false;
-
     // by default we're alive
     alive = true;
 
@@ -1422,7 +1419,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     return pStructure;
 }
 
-void cPlayer::onNotify(const s_GameEvent &event) {
+void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.eventType == eGameEventType::GAME_EVENT_PLAYER_DEFEATED) {
         auto msg = fmt::format("Player {} ({}) has been defeated.", event.player->getId(), event.player->getHouseName());
@@ -1479,7 +1476,7 @@ void cPlayer::onNotify(const s_GameEvent &event) {
 
     // pass event to brain
     if (brain_) {
-        brain_->onNotify(event);
+        brain_->onNotifyGameEvent(event);
     }
 
     if (sidebar) {
@@ -1980,10 +1977,6 @@ void cPlayer::addNotification(const std::string& msg, eNotificationType type) {
 cAbstractStructure *cPlayer::getSelectedStructure() const {
     if (selected_structure < 0) return nullptr;
     return structure[selected_structure];
-}
-
-bool cPlayer::isNotDeployingSomething() {
-    return bDeployIt == false && bDeployedIt == false;
 }
 
 void cPlayer::deselectStructure() {

@@ -16,7 +16,7 @@ namespace brains {
         // NOOP
     }
 
-    void cPlayerBrainEmpty::onNotify(const s_GameEvent &) {
+    void cPlayerBrainEmpty::onNotifyGameEvent(const s_GameEvent &) {
         // NOOP
     }
 

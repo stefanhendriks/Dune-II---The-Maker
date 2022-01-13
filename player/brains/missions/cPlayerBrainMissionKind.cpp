@@ -50,9 +50,9 @@ namespace brains {
         mission->log(txt);
     }
 
-    void cPlayerBrainMissionKind::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainMissionKind::onNotifyGameEvent(const s_GameEvent &event) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKind::onNotify() -> %s", event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMissionKind::onNotifyGameEvent() -> %s", event.toString(event.eventType));
         log(msg);
 
         if (event.player == specificPlayerForEventToGoToSelectTargetState) {

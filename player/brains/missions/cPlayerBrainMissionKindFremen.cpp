@@ -23,8 +23,8 @@ namespace brains {
         mission->changeState(PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES); // keep awaiting resources
     }
 
-    void cPlayerBrainMissionKindFremen::onNotify(const s_GameEvent &event) {
-        cPlayerBrainMissionKind::onNotify(event);
+    void cPlayerBrainMissionKindFremen::onNotifyGameEvent(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotifyGameEvent(event);
     }
 
     cPlayerBrainMissionKind *cPlayerBrainMissionKindFremen::clone(cPlayer *player, cPlayerBrainMission * mission) {

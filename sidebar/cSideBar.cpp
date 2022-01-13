@@ -178,7 +178,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         if (item->shouldPlaceIt()) {
             player->setContextMouseState(eMouseState::MOUSESTATE_PLACE);
         } else if (item->shouldDeployIt()) {
-            player->bDeployIt = true; // this puts the "deploy/launch it at mode" state active.
+            player->setContextMouseState(eMouseState::MOUSESTATE_DEPLOY);
         } else {
             startBuildingItemIfOk(item);
         }
@@ -251,7 +251,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
                     .buildingListItem = item
             };
 
-            game.onNotify(newEvent);
+            game.onNotifyGameEvent(newEvent);
             // else, only the number is decreased (used for queueing)
 
             cItemBuilder *itemBuilder = player->getItemBuilder();

@@ -43,7 +43,7 @@ namespace brains {
 
     }
 
-    void cPlayerBrainSandworm::onNotify(const s_GameEvent &) {
+    void cPlayerBrainSandworm::onNotifyGameEvent(const s_GameEvent &) {
 
     }
 

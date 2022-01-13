@@ -108,9 +108,9 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainMission::onNotify(const s_GameEvent &event) {
+    void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::onNotify() -> %s", event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMission::onNotifyGameEvent() -> %s", event.toString(event.eventType));
         log(msg);
 
         switch(event.eventType) {
@@ -134,7 +134,7 @@ namespace brains {
         }
 
         if (missionKind) {
-            missionKind->onNotify(event);
+            missionKind->onNotifyGameEvent(event);
         }
     }
 
@@ -415,7 +415,7 @@ namespace brains {
                         .buildingListItem = item // mandatory for this event!
                 };
                 // fake notification for missionKind so that its state gets updated...
-                missionKind->onNotify(event);
+                missionKind->onNotifyGameEvent(event);
             }
             return; // bail, mission without units will wait for events
         }

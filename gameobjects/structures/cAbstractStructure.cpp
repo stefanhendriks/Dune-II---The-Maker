@@ -238,7 +238,7 @@ void cAbstractStructure::die() {
         .entitySpecificType = getType()
     };
 
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 }
 
 
@@ -431,7 +431,7 @@ void cAbstractStructure::decay(int hp) {
             .entitySpecificType = getType()
     };
 
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 }
 
 
@@ -476,7 +476,7 @@ void cAbstractStructure::damage(int hp) {
                 .entitySpecificType = getType()
         };
 
-        game.onNotify(event);
+        game.onNotifyGameEvent(event);
     }
 }
 

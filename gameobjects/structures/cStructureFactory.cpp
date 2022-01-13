@@ -160,7 +160,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
             .entitySpecificType = iStructureType
     };
 
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 
     return str;
 }
