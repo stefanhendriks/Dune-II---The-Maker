@@ -128,14 +128,6 @@ int handleArguments(int argc, char *argv[]) {
 }
 
 /**
- * This stuff initializes only at the beginning, a plug point/method before moving to actual constructor, but
- * atleast moving out the big game.init and game.setup_players methods.
- */
-void initializingOnlyOnce() {
-
-}
-
-/**
 	Entry point of the game
 */
 int main(int argc, char **argv) {
@@ -145,10 +137,6 @@ int main(int argc, char **argv) {
     if (handleArguments(argc, argv) > 0) {
         return 0;
     }
-
-    initializingOnlyOnce();
-
-    game.init();
 
     if (game.setupGame()) {
 		game.run();
