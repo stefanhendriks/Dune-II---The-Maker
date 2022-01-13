@@ -2,18 +2,19 @@
 
 #include "cMouseState.h"
 
+class cBuildingListItem;
+
 /**
- * In this state the mouse can repair (or order to repair) things.
- *
+ * Mouse placing structure at battlefield
  */
-class cMouseRepairState : public cMouseState {
+class cMouseDeployState : public cMouseState {
 
 public:
-    explicit cMouseRepairState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
+    explicit cMouseDeployState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-    void onNotifyGameEvent(const s_GameEvent &) override {};
+    void onNotifyGameEvent(const s_GameEvent &) override;
 
     void onStateSet() override;
 
@@ -28,7 +29,4 @@ private:
     void onMouseRightButtonClicked();
 
     void onMouseMovedTo();
-
-    int getMouseTileForRepairState();
-
 };

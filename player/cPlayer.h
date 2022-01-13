@@ -359,7 +359,7 @@ public:
      */
     cAbstractStructure* placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage);
 
-    void onNotify(const s_GameEvent &event);
+    void onNotifyGameEvent(const s_GameEvent &event);
 
     int getScoutingUnitType();
     int getSpecialUnitType();
@@ -401,13 +401,8 @@ public:
 
     void addNotification(const std::string& msg, eNotificationType type);
 
-    bool isNotDeployingSomething();
-
     // properties (for now public, should become private)
     int selected_structure;
-
-    bool bDeployIt;		// deploying something? (for palace)
-    bool bDeployedIt;   // for remembering, for onCombatMouseEvent stuff..
 
     void deselectStructure();
 

@@ -205,7 +205,7 @@ void cGame::thinkSlow_combat() {
                         .player = &player
                 };
 
-                game.onNotify(event);
+                game.onNotifyGameEvent(event);
             }
 
             // TODO: event : Player joined/became alive, etc?
@@ -417,21 +417,12 @@ void cGame::updateState() {
 
     // Mission playing state logic
     // TODO: Move this to combat state object
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer *pPlayer = &players[i];
-
-        pPlayer->update();
-
-        pPlayer->bDeployedIt = false;
-
+    for (auto &pPlayer : players) {
+        pPlayer.update();
     }
 }
 
 void cGame::combat() {
-    // -----------------
-    cPlayer &humanPlayer = players[HUMAN];
-    humanPlayer.bDeployedIt = humanPlayer.bDeployIt;
-
     drawManager->drawCombatState();
 }
 
@@ -1240,7 +1231,7 @@ void cGame::setState(int newState) {
                         .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
                 };
                 // the game is about to begin!
-                game.onNotify(event);
+                game.onNotifyGameEvent(event);
             }
 
             states[newState] = newStatePtr;
@@ -1374,10 +1365,10 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
     _interactionManager->setPlayerToInteractFor(pPlayer);
 }
 
-void cGame::onNotify(const s_GameEvent &event) {
-    logbook(s_GameEvent::toString(event).c_str());
+void cGame::onNotifyGameEvent(const s_GameEvent &event) {
+    logbook(s_GameEvent::toString(event));
 
-    map.onNotify(event);
+    map.onNotifyGameEvent(event);
 
     // game itself handles events
     switch (event.eventType) {
@@ -1390,7 +1381,7 @@ void cGame::onNotify(const s_GameEvent &event) {
 
     // players handle events
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        players[i].onNotify(event);
+        players[i].onNotifyGameEvent(event);
     }
 }
 
@@ -1445,7 +1436,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
                             .buildingListItem = itemToDeploy
                     };
 
-                    game.onNotify(newEvent);
+                    game.onNotifyGameEvent(newEvent);
                 }
             }
         }
@@ -1460,7 +1451,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
     }
 
     if (player) {
-        player->bDeployIt = false;
+        player->getGameControlsContext()->toPreviousState();
     }
 
     // notify game that the item just has been finished!
@@ -1475,7 +1466,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
             .buildingListItem = nullptr
     };
 
-    game.onNotify(newEvent);
+    game.onNotifyGameEvent(newEvent);
 }
 
 void cGame::reduceShaking() {

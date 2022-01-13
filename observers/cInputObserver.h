@@ -2,6 +2,7 @@
 #define D2TM_CINPUTOBSERVER_H
 
 #include "controls/cKeyboardEvent.h"
+#include "include/sGameEvent.h"
 #include "include/sMouseEvent.h"
 
 class cInputObserver {

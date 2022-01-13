@@ -85,7 +85,7 @@ namespace brains {
         player->log(msg);
     }
 
-    void cPlayerBrainFremenSuperWeapon::onNotify(const s_GameEvent &) {
+    void cPlayerBrainFremenSuperWeapon::onNotifyGameEvent(const s_GameEvent &) {
         // not interested
     }
 

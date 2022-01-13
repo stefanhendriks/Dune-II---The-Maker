@@ -211,7 +211,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             .entitySpecificType = iType
     };
 
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 
     init(iID);    // re-init
 
@@ -1043,7 +1043,7 @@ void cUnit::thinkFast_guard() {
 //                    .atCell = unitToAttack.iCell
 //            };
 
-//            game.onNotify(event);
+//            game.onNotifyGameEvent(event);
         }
 
         if (isSandworm()) {
@@ -2537,7 +2537,7 @@ void cUnit::thinkFast_move() {
                                 .isReinforce = isReinforcement
                         };
 
-                        game.onNotify(event);
+                        game.onNotifyGameEvent(event);
 
                         // stop trying - forget about path stuff
                         iGoalCell = iCell;
@@ -3474,7 +3474,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
             .isReinforce = isReinforcement
     };
 
-    game.onNotify(event);
+    game.onNotifyGameEvent(event);
 
     return iNewId;
 }

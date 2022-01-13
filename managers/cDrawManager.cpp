@@ -78,10 +78,8 @@ void cDrawManager::drawCombatState() {
 	drawStructurePlacing();
     allegroDrawer->resetClippingFor(bmp_screen);
 
-    drawDeployment();
     drawTopBarBackground();
 	drawCredits();
-
 
 	// THE MESSAGE
 	drawMessage();
@@ -194,8 +192,8 @@ void cDrawManager::drawSidebar() {
  * When placing a structure, draw a transparent version of the structure we want to place.
  */
 void cDrawManager::drawStructurePlacing() {
-    if (player->bDeployIt) return; // do not do this
     // TODO: move drawing this into mouse state draw function ??
+    if (player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) return;
     if (!player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
 
     cBuildingListItem *itemToPlace = player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
@@ -203,36 +201,6 @@ void cDrawManager::drawStructurePlacing() {
 
     assert(placeitDrawer);
     placeitDrawer->draw(itemToPlace, player->getGameControlsContext()->getMouseCell());
-}
-
-/**
- * When deploying something
- */
-void cDrawManager::drawDeployment() {
-    if (player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
-    if (!player->bDeployIt) return;
-
-    // mouse attack special?
-    game.getMouse()->setTile(MOUSE_ATTACK);
-
-    cBuildingListItem *itemToDeploy = player->getSideBar()->getList(eListType::LIST_PALACE)->getItemToDeploy();
-    if (itemToDeploy == nullptr) return;
-
-    int iMouseCell = player->getGameControlsContext()->getMouseCell();
-
-    if (game.getMouse()->isLeftButtonClicked() && iMouseCell > -1) {
-        s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCH,
-                .entityType = eBuildType::SPECIAL,
-                .entityID = -1,
-                .player = player,
-                .entitySpecificType = itemToDeploy->getBuildId(),
-                .atCell = iMouseCell,
-                .isReinforce = false,
-                .buildingListItem = itemToDeploy
-        };
-        game.onNotify(event);
-    }
 }
 
 void cDrawManager::drawMessage() {

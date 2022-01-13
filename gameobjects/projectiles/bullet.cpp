@@ -432,7 +432,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
                         .entitySpecificType = groundUnitTakingDamage.iType
                 };
 
-                game.onNotify(event);
+                game.onNotifyGameEvent(event);
             }
         }
     }

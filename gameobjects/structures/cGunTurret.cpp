@@ -223,7 +223,7 @@ void cGunTurret::think_guard() {
                         .atCell = unitToAttack.getCell()
                 };
 
-                game.onNotify(event);
+                game.onNotifyGameEvent(event);
             }
         }
     }

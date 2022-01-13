@@ -37,8 +37,6 @@ protected:
 
     void drawStructurePlacing();
 
-    void drawDeployment();
-
     void drawMessage();
 
     void drawCombatMouse();
