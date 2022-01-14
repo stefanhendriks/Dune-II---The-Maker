@@ -180,9 +180,9 @@ void cLogger::logHeader(const std::string& txt) {
     auto str = txt.substr(0, 79);
     auto line = std::string(str.length(), '-');
 
+    logCommentLine(line);
     logCommentLine(str);
-    logCommentLine(txt);
-    logCommentLine(str);
+    logCommentLine(line);
 }
 
 
