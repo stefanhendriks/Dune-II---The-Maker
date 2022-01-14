@@ -15,6 +15,7 @@
 #include <random>
 #include "include/d2tmh.h"
 #include "cGame.h"
+#include "utils/cLog.h"
 
 #include <fmt/core.h>
 
@@ -657,8 +658,6 @@ void cGame::shutdown() {
 
     logbook("Allegro shut down.");
     logbook("Thanks for playing.");
-
-    cLogger::destroy();
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
@@ -690,8 +689,6 @@ bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
 
     game.init(); // Must be first!
-
-    logger->clearLogFile();
 
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace

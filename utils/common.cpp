@@ -12,6 +12,8 @@
 
 #include "../include/d2tmh.h"
 
+#include "utils/cLog.h"
+
 #include <math.h>
 
 namespace
