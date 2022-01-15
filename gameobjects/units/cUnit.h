@@ -172,25 +172,25 @@ public:
 	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
 
     // -------------
-	int TIMER_blink;	// blink
+	int TIMER_blink;	    // blink
 
-    int TIMER_move;     // movement timer
-    int TIMER_movewait; // wait for move think...
-    int TIMER_movedelay; // if given, it will delay movement
+    int TIMER_move;         // movement timer
+    int TIMER_movewait;     // wait for move think...
+    int TIMER_movedelay;    // if given, it will delay movement
 
     int TIMER_thinkwait;    // wait with normal thinking..
 
-    float TIMER_turn;     // turning around
-    int TIMER_frame;    // frame
+    float TIMER_turn;       // turning around
+    int TIMER_frame;        // frame
 
-    int TIMER_harvest;  // harvesting
+    int TIMER_harvest;      // harvesting
 
-    int TIMER_guard;    // guard scanning timer
-    int TIMER_bored;    // how long are we bored?
+    int TIMER_guard;        // guard scanning timer
+    int TIMER_bored;        // how long are we bored?
 
-    int TIMER_attack;   // when to shoot?
+    int TIMER_attack;       // when to shoot?
 
-    int TIMER_wormtrail;  // when to spawn a trail when moving
+    int TIMER_wormtrail;    // when to spawn a trail when moving
 
     s_UnitInfo& getUnitInfo() const;
 
