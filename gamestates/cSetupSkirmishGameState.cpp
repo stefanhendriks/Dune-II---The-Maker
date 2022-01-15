@@ -2,6 +2,7 @@
 #include "d2tmh.h"
 #include "cSetupSkirmishGameState.h"
 
+#include "utils/cLog.h"
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
     for (int i = 0; i < MAX_PLAYERS; i++) {

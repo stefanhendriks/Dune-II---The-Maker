@@ -15,6 +15,7 @@
 #include <random>
 #include "include/d2tmh.h"
 #include "cGame.h"
+#include "utils/cLog.h"
 
 #include <fmt/core.h>
 
@@ -657,8 +658,6 @@ void cGame::shutdown() {
 
     logbook("Allegro shut down.");
     logbook("Thanks for playing.");
-
-    cLogger::destroy();
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
@@ -690,8 +689,6 @@ bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
 
     game.init(); // Must be first!
-
-    logger->clearLogFile();
 
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
@@ -750,9 +747,9 @@ bool cGame::setupGame() {
     LOCK_FUNCTION(allegro_timerseconds);
 
 	// Install timers
-	install_int(allegro_timerunits, 100); // 100 milliseconds
-  install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
-  install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
+    install_int(allegro_timerunits, 100); // 100 milliseconds
+    install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
+    install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
 
     logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
