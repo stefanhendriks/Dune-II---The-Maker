@@ -30,8 +30,8 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
 }
 
 cMiniMapDrawer::~cMiniMapDrawer() {
-    map = NULL;
-    mapCamera = NULL;
+    map = nullptr;
+    mapCamera = nullptr;
     iStaticFrame = STAT14;
     status = eMinimapStatus::NOTAVAILABLE;
 }
