@@ -15,6 +15,7 @@
 #include <random>
 #include "include/d2tmh.h"
 #include "cGame.h"
+#include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 
