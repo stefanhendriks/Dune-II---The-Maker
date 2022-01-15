@@ -88,6 +88,7 @@ struct s_UnitInfo {
   bool renderSmokeOnUnitWhenThresholdMet; // if yes, spawn smoke particle (and attach to unit) when hp factor met
   float smokeHpFactor; // 0.5 = 50% health, etc. When health is getting lower than this and unit is damaged, spawn smoke particle,
 
+  bool canGuard; // if true, the unit has guarding behavior (will try to attack nearby enemy units)
 };
 
 struct s_FlagInfo {

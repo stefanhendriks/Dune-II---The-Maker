@@ -908,28 +908,20 @@ void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const {
 
 
 /**
- * Called every 5 ms
+ * Called every 5 ms, when action = ACTION_GUARD
  */
 void cUnit::thinkFast_guard() {
     if (!isValid()) {
         return;
     }
 
-    if (isAirbornUnit()) {
-        iAction = ACTION_MOVE; // fly around man
-        return;
-    }
-
-    if (isHarvester()) {
+    // for now here, the state is set back to MOVE because unit is not able to guard
+    if (!isAbleToGuard()) {
         iAction = ACTION_MOVE;
         return;
     }
 
-    if (isSaboteur()) {
-        return; // do nothing
-    }
-
-    TIMER_bored++; // we are bored ow yeah
+    TIMER_bored++;
     if (TIMER_bored > 3500) {
         TIMER_bored = 0;
         iBodyShouldFace = rnd(8);
@@ -3335,6 +3327,10 @@ void cUnit::takeDamage(int damage) {
 
 bool cUnit::isEligibleForRepair() {
     return isDamaged() && !isInfantryUnit() && !isAirbornUnit();
+}
+
+bool cUnit::isAbleToGuard() {
+    return getUnitInfo().canGuard;
 }
 
 
