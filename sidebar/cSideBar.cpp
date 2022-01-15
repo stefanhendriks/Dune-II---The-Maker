@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cSideBar.h"
 
+#include "utils/cLog.h"
 
 cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");

@@ -12,6 +12,8 @@
 
 #include "include/d2tmh.h"
 
+#include "utils/cLog.h"
+
 #include <fmt/core.h>
 
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
