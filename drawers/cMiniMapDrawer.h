@@ -24,14 +24,10 @@ class cMiniMapDrawer {
 
 		void draw();
 
-		void setStaticFrame(int value) { iStaticFrame = value; }
-		int getStaticFrame() { return iStaticFrame; }
-
-		void setStatus(eMinimapStatus value) { status = value; }
-
 		void drawStaticFrame();
 
-        int getMouseCell(int mouseX, int mouseY);
+        // in-between solution until we have a proper combat state object
+        void init();
 
         void think();
 
@@ -39,7 +35,7 @@ class cMiniMapDrawer {
 
         void setPlayer(cPlayer * thePlayer);
 
-	    void onNotify(const s_MouseEvent &event);
+	    void onNotifyMouseEvent(const s_MouseEvent &event);
 
 protected:
 
@@ -49,9 +45,6 @@ protected:
 
 		int getRGBColorForTerrainType(int terrainType);
 
-		void drawDoubleDot(int x, int y, int color);
-		void drawSingleDot(int x, int y, int color);
-
 		int getMapHeightInPixels();
 		int getMapWidthInPixels();
 
@@ -59,7 +52,9 @@ protected:
 		void onMouseAt(const s_MouseEvent &event);
 		void onMousePressedLeft(const s_MouseEvent &event);
 
-		bool _isMouseOver;
+        int getMouseCell(int mouseX, int mouseY);
+
+		bool m_isMouseOver;
 
 		cMap *map;	// the minimap drawer reads data from here
 		cPlayer * player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
@@ -74,6 +69,8 @@ protected:
 
 	    // the top left coordinates for the minimap
 	    int drawX, drawY;
+
+        bool isBigMap;
 };
 
 #endif /* CMINIMAPDRAWER_H_ */

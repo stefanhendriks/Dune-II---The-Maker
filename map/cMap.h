@@ -179,7 +179,6 @@ public:
     void thinkFast();
 
     void thinkInteraction();
-    void think_minimap();
 
     void clear_all(int playerId);
 
