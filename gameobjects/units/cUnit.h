@@ -431,6 +431,8 @@ private:
     int draw_x(int bmpWidth);
 
     int draw_y(int bmpHeight);
+
+    bool isAbleToGuard();
 };
 
 
