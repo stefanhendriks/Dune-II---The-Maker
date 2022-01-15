@@ -41,7 +41,7 @@ void cDrawManager::drawCombatState() {
     // MAP
 	assert(mapDrawer);
 	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.screen_y);
-  mapDrawer->drawTerrain();
+    mapDrawer->drawTerrain();
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
@@ -50,7 +50,7 @@ void cDrawManager::drawCombatState() {
     }
 
 	// draw layer 1 (beneath units, on top of terrain)
-  particleDrawer->determineParticlesToDraw();
+    particleDrawer->determineParticlesToDraw();
 	particleDrawer->drawLowerLayer();
 
 	map.draw_units();
@@ -62,7 +62,7 @@ void cDrawManager::drawCombatState() {
 
 	map.draw_units_2nd();
 
-  particleDrawer->drawTopLayer();
+    particleDrawer->drawTopLayer();
 	mapDrawer->drawShroud();
 
 	drawRallyPoint();
@@ -85,10 +85,6 @@ void cDrawManager::drawCombatState() {
 	drawMessage();
 
     drawNotifications();
-//
-//	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
-//	// this class should be doing)
-//    game.onCombatMouseEvent();
 
     // for now, call this on game class.
     // TODO: move this "combat" state into own game state class
@@ -286,6 +282,14 @@ void cDrawManager::drawNotifications() {
         textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;
     }
+}
+
+void cDrawManager::think() {
+    miniMapDrawer->think();
+}
+
+void cDrawManager::init() {
+    miniMapDrawer->init();
 }
 
 

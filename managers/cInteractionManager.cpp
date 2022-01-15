@@ -80,7 +80,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 
         sidebar->onNotifyMouseEvent(mouseEvent);
         mapCamera->onNotify(mouseEvent);
-        miniMapDrawer->onNotify(mouseEvent);
+        miniMapDrawer->onNotifyMouseEvent(mouseEvent);
         orderDrawer->onNotify(mouseEvent);
     }
 

@@ -321,3 +321,20 @@ void cAllegroDrawer::drawTransSprite(BITMAP *sprite, BITMAP *dest, int x, int y)
 void cAllegroDrawer::drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color) {
     line(bmp, x1, y1, x2, y2, color);
 }
+
+void cAllegroDrawer::drawDot(BITMAP *bmp, int x, int y, int color, int size) {
+    if (size < 1) return;
+
+    if (size == 1) {
+        putpixel(bmp, x, y, color);
+        return;
+    }
+
+    int endX = x + size;
+    int endY = y + size;
+    for (; x < endX; x++) {
+        for (; y < endY; y++) {
+            putpixel(bmp, x, y, color);
+        }
+    }
+}
