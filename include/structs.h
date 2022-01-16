@@ -137,7 +137,8 @@ struct s_StructureInfo {
 
   bool configured;     // is this structure configured? (poor man solution)
 
-  bool canAttackAirUnits; // for turrets
+  bool canAttackAirUnits;    // for turrets
+  bool canAttackGroundUnits; // for turrets
 };
 
 /**

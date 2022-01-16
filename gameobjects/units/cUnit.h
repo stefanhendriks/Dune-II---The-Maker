@@ -401,7 +401,7 @@ private:
 
     int getFaceAngleToCell(int cell) const;
 
-    void attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell);
+    void attack(int goalCell, int unitId, int structureId, int attackCell);
 
     int findNewDropLocation(int unitTypeToDrop, int cell) const;
 
@@ -437,6 +437,14 @@ private:
     bool isAbleToGuard();
 
     void thinkFast_guard_sandworm();
+
+    int findNearbyStructureToAttack(int range);
+
+    int findNearbyStructureThatCanDamageUnitsToAttack(int range);
+
+    int findNearbyGroundUnitToAttack(int range);
+
+    int findNearbyAirUnitToAttack(int range);
 };
 
 
