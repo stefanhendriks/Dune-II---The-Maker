@@ -288,7 +288,7 @@ private:
 
     void initPlayers(bool rememberHouse) const;
 
-    void takeScreenshot();
+    void saveBmpScreenToDisk();
 
     void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
 
