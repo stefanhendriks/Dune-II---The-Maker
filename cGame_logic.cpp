@@ -1687,7 +1687,7 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
 
     // take screenshot
     if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_F11)) {
-        takeScreenshot();
+        saveBmpScreenToDisk();
     }
 
     // TODO: this has to be its own state class. Then this if is no longer needed.
@@ -1729,7 +1729,7 @@ void cGame::drawCombatMouse() {
     mouse->draw();
 }
 
-void cGame::takeScreenshot() {
+void cGame::saveBmpScreenToDisk() {
     char filename[25];
 
     if (screenshot < 10) {
@@ -1743,6 +1743,11 @@ void cGame::takeScreenshot() {
     }
 
     save_bmp(filename, bmp_screen, general_palette);
+
+    // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
+    // a Quake console perhaps?
+    cPlayer &humanPlayer = players[HUMAN];
+    humanPlayer.addNotification(fmt::format("Screenshot saved {}.", filename), eNotificationType::NEUTRAL);
 
     screenshot++;
 }
