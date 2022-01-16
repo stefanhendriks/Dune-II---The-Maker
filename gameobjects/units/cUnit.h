@@ -143,7 +143,7 @@ public:
     void updateCellXAndY();        // updateCellXAndY status
 
     void think();       // thinking in general
-    void think_move_air();  // aircraft specific
+    void thinkFast_move_airUnit();  // aircraft specific
     void think_move_foot(); // soldiers specific
     void thinkFast_move();  // thinking about movement (which is called upon a faster rate)
                         // for wheeled/tracked units
@@ -245,7 +245,7 @@ public:
 
     void recreateDimensions();
 
-    void think_position();
+    void thinkFast_position();
 
     bool isMovingBetweenCells();
 
@@ -340,6 +340,8 @@ public:
     int getHitPoints() { return iHitPoints; }
 
     bool isEligibleForRepair();
+
+    void thinkFast();
 
 private:
 

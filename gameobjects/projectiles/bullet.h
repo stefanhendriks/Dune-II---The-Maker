@@ -34,7 +34,7 @@ public:
 
     int draw_y();
 
-    void think();       // think (when dying, doing damage, etc)
+    void thinkFast();       // think (when dying, doing damage, etc)
     void think_move();  // thinking for movement
 
     bool bAlive;

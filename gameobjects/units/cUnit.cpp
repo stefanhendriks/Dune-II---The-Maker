@@ -1435,7 +1435,7 @@ int cUnit::determineNewFacing(int currentFacing, int desiredFacing) {
 }
 
 // aircraft specific thinking
-void cUnit::think_move_air() {
+void cUnit::thinkFast_move_airUnit() {
     if (iTempHitPoints > -1) {
         return;
     }
@@ -2796,7 +2796,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
     // from here on, set the map id, so no other unit can take its place
     if (!isSandworm()) {
-        // note, no AIRBORN here (27/03/2021 - I guess this is because this method is not called by think_move_air())
+        // note, no AIRBORN here (27/03/2021 - I guess this is because this method is not called by thinkFast_move_airUnit())
         map.cellSetIdForLayer(iNextCell, MAPID_UNITS, iID);
     } else {
         map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
@@ -3002,7 +3002,7 @@ cUnit::~cUnit() {
  * Poor man solution to frequently update the dimensions of unit, better would be using events?
  * (onMove, onViewportMove, onViewportZoom?)
  */
-void cUnit::think_position() {
+void cUnit::thinkFast_position() {
     // keep updating dimensions
     dimensions.move(draw_x(), draw_y());
     if (mapCamera) {
@@ -3331,6 +3331,27 @@ bool cUnit::isEligibleForRepair() {
 
 bool cUnit::isAbleToGuard() {
     return getUnitInfo().canGuard;
+}
+
+// called every 5 ms
+// used for movement logic
+void cUnit::thinkFast() {
+    thinkFast_position();
+
+    // aircraft
+    if (isAirbornUnit()) {
+        thinkFast_move_airUnit();
+    } else {
+        // move
+        if (iAction == ACTION_MOVE || iAction == ACTION_CHASE || isMovingBetweenCells()) {
+            thinkFast_move();
+        }
+    }
+
+    // guard
+    if (iAction == ACTION_GUARD) {
+        thinkFast_guard();
+    }
 }
 
 

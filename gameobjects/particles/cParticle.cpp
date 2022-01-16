@@ -156,7 +156,7 @@ bool cParticle::isWithinViewport(cRectangle *viewport) {
 }
 
 
-// think
+// called every 5 ms
 void cParticle::thinkFast() {
     think_position();
 
