@@ -16,6 +16,7 @@
 #include "include/d2tmh.h"
 #include "cGame.h"
 #include "utils/cLog.h"
+#include "utils/cPlatformLayerInit.h"
 
 #include <fmt/core.h>
 
@@ -653,11 +654,8 @@ void cGame::shutdown() {
 
     logbook("Allegro MP3 library shut down.");
 
-    // Now we are all neatly closed, we exit Allegro and return to OS.
-    allegro_exit();
-
-    logbook("Allegro shut down.");
-    logbook("Thanks for playing.");
+    // Release the game dev framework, so that it can do cleanup
+    _PLInit.reset();
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
@@ -706,16 +704,9 @@ bool cGame::setupGame() {
 
     // TODO: load eventual game settings (resolution, etc)
 
-    // Logbook notification
-    logger->logHeader("Allegro");
-
-    // ALLEGRO - INIT
-    if (allegro_init() != 0) {
-        logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
-        return false;
-    }
-
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
+    // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
+    // global anymore, because it needs to be destructed before main exits.
+    _PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg");
 
     int r = install_timer();
     if (r > -1) {
