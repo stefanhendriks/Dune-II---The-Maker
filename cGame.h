@@ -78,6 +78,7 @@ public:
     int iMusicType;
 
     void thinkSlow_combat();
+    void thinkFast_combat();
 
     void winning();       // winning (during combat you get the window "you have been successful"), after clicking you get to debrief
     void losing();        // losing (during combat you get the window "you have lost"), after clicking you get to debrief
@@ -138,7 +139,7 @@ public:
 
     void loadScenario();
 
-    void think_state();
+    void thinkFast_state();
 
     cMouse *getMouse() {
         return mouse; // NOOOO

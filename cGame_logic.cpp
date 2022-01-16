@@ -1356,9 +1356,92 @@ void cGame::loadScenario() {
     INI_Load_scenario(iHouse, game.iRegion, pMentat);
 }
 
-void cGame::think_state() {
+void cGame::thinkFast_state() {
+    think_music();
+    think_mentat();
+
+    soundPlayer->think();
+
     if (currentState) {
         currentState->thinkFast();
+    }
+
+    // THINKING ONLY WHEN PLAYING / COMBAT (no state object yet)
+    if (isState(GAME_PLAYING)) {
+        if (drawManager) {
+            if (drawManager->getCreditsDrawer()) {
+                drawManager->getCreditsDrawer()->think();
+            }
+        }
+
+        thinkFast_combat();
+    }
+
+
+    if (drawManager) {
+        // the messageDrawer is used in playing state, but also during "select your next conquest"(next mission)
+        // state.
+        // TODO: this should be all moved to state specific think/update functions
+        cMessageDrawer *pMessageDrawer = drawManager->getMessageDrawer();
+        if (pMessageDrawer) {
+            pMessageDrawer->thinkFast();
+        }
+    }
+}
+
+void cGame::thinkFast_combat() {
+    for (cPlayer &pPlayer : players) {
+        pPlayer.thinkFast();
+    }
+
+    // structures think
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure == nullptr) continue;
+        if (pStructure->isValid()) {
+            pStructure->think();           // think about actions going on
+            pStructure->think_animation(); // think about animating
+            pStructure->think_guard();     // think about 'guarding' the area (turrets only)
+        }
+
+        if (pStructure->isDead()) {
+            cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
+        }
+    }
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        cItemBuilder *itemBuilder = players[i].getItemBuilder();
+        if (itemBuilder) {
+            itemBuilder->think();
+        }
+    }
+
+    map.increaseScrollTimer();
+    map.thinkFast();
+
+    if (map.isTimeToScroll()) {
+        map.thinkInteraction();
+        map.resetScrollTimer();
+    }
+
+    game.reduceShaking();
+
+    // units think (move only)
+    for (cUnit & cUnit : unit) {
+        if (!cUnit.isValid()) continue;
+        cUnit.thinkFast();
+    }
+
+    for (cParticle &pParticle : particle) {
+        if (!pParticle.isValid()) continue;
+        pParticle.thinkFast();
+    }
+
+    // when not drawing the options, the game does all it needs to do
+// bullets think
+    for (cBullet &cBullet : bullet) {
+        if (!cBullet.bAlive) continue;
+        cBullet.thinkFast();
     }
 }
 
