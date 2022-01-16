@@ -170,6 +170,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
     logline += event;
 
     fprintf(file, "%s\n", logline.c_str()); // print the text into the file
+    fflush(file);
 }
 
 void cLogger::logCommentLine(const std::string& txt) {
@@ -194,6 +195,7 @@ cLogger::cLogger() : file(std::fopen("log.txt", "wt")), startTime(std::clock()) 
 }
 
 cLogger::~cLogger() {
+    log(eLogLevel::LOG_INFO, eLogComponent::COMP_NONE, "Logger shut down", "Thanks for playing.");
     fclose(file);
 }
 

@@ -19,12 +19,14 @@
 #include "utils/cRectangle.h"
 #include "utils/cSoundPlayer.h"
 
+#include <memory>
 #include <string>
 
 class cAbstractMentat;
 class cGameControlsContext;
 class cGameState;
 class cInteractionManager;
+class cPlatformLayerInit;
 class cPlayer;
 
 class cGame : public cScenarioObserver, cInputObserver {
@@ -213,6 +215,7 @@ private:
     /**
      * Variables start here
      */
+    std::unique_ptr<cPlatformLayerInit> _PLInit;
     cInteractionManager *_interactionManager;
     cAllegroDataRepository *m_dataRepository;
 
