@@ -435,6 +435,8 @@ private:
     int draw_y(int bmpHeight);
 
     bool isAbleToGuard();
+
+    void thinkFast_guard_sandworm();
 };
 
 

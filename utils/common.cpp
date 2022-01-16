@@ -640,6 +640,7 @@ void install_units() {
     strcpy(sUnitInfo[SANDWORM].name, "Sandworm");
     sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
     sUnitInfo[SANDWORM].squish = false;
+//    sUnitInfo[SANDWORM].canGuard = true;
 
 
     // Unit        : <name>

@@ -945,80 +945,67 @@ void cUnit::thinkFast_guard() {
 
     updateCellXAndY();
 
-    // scan
+    if (isSandworm()) {
+        thinkFast_guard_sandworm();
+        return;
+    }
+
+    // not sandworm
     int iDistance = 9999;
     int unitIdSelectedForAttacking = -1;
 
-    if (isSandworm()) {
-        for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &potentialDinner = unit[i];
-            if (i == iID) continue;
-            if (!potentialDinner.isValid()) continue;
-            if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
-            if (potentialDinner.isAirbornUnit()) continue;
-            if (potentialDinner.isSandworm()) continue; // don't eat other worms
-            if (!map.isCellPassableForWorm(iCell)) continue;
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (i == iID) continue; // skip self
+        cUnit &potentialThreat = unit[i];
+        if (!potentialThreat.isValid()) continue;
+        if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
+        if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
+        if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-            double distance = map.distance(iCell, potentialDinner.iCell);
+        int distance = map.distance(iCell, potentialThreat.iCell);
 
-            if (distance <= getSight() && distance < iDistance) {
-                iDistance = distance;
-                unitIdSelectedForAttacking = i;
-            }
+        // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
+//            int range = getSight() + 3; // do react earlier than already in range.
+        int range = getSight();
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            unitIdSelectedForAttacking = i;
         }
+    }
 
-    } else { // not sandworm
+    // can attack air units, and no ground threats found. (prioritize ground over air units!)
+    if (canAttackAirUnits() && unitIdSelectedForAttacking < 0) {
+        iDistance = 9999; // reset
+
+        int airUnitToAttack = -1;
         for (int i = 0; i < MAX_UNITS; i++) {
             if (i == iID) continue; // skip self
             cUnit &potentialThreat = unit[i];
             if (!potentialThreat.isValid()) continue;
-            if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
-            if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
+            if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
+            if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
             if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+            if (!potentialThreat.isAttackableAirUnit()) continue;
             if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-            int distance = ABS_length(iCellX, iCellY, potentialThreat.iCellX, potentialThreat.iCellY);
+            int distance = map.distance(iCell, potentialThreat.iCell);
 
             // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-//            int range = getSight() + 3; // do react earlier than already in range.
-            int range = getSight();
+            int range = getSight() + 3; // do react earlier than already in range.
 
-            if (distance <= range && distance < iDistance) {
+            if (distance <= range &&
+                distance < iDistance) // closer than found thus far
+            {
                 iDistance = distance;
-                unitIdSelectedForAttacking = i;
+                airUnitToAttack = i;
             }
         }
 
-        // can attack air units, and no ground threats found. (prioritize ground over air units!)
-        if (canAttackAirUnits() && unitIdSelectedForAttacking < 0) {
-            int airUnitToAttack = -1;
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (i == iID) continue; // skip self
-                cUnit &potentialThreat = unit[i];
-                if (!potentialThreat.isValid()) continue;
-                if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
-                if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
-                if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-                if (!potentialThreat.isAttackableAirUnit()) continue;
-                if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
-
-                int distance = ABS_length(iCellX, iCellY, potentialThreat.iCellX, potentialThreat.iCellY);
-
-                // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-                int range = getSight() + 3; // do react earlier than already in range.
-
-                if (distance <= range &&
-                    distance < iDistance) // closer than found thus far
-                {
-                    iDistance = distance;
-                    airUnitToAttack = i;
-                }
-            }
-
-            if (airUnitToAttack > -1) {
-                // air units override ground units for units that can attack air units ?
-                unitIdSelectedForAttacking = airUnitToAttack;
-            }
+        if (airUnitToAttack > -1) {
+            // air units override ground units for units that can attack air units ?
+            unitIdSelectedForAttacking = airUnitToAttack;
         }
     }
 
@@ -1034,31 +1021,27 @@ void cUnit::thinkFast_guard() {
 //                    .entitySpecificType = unitToAttack.getType(),
 //                    .atCell = unitToAttack.iCell
 //            };
-
 //            game.onNotifyGameEvent(event);
         }
 
-        if (isSandworm()) {
-            attackUnit(unitIdSelectedForAttacking);
-        } else {
-            // TODO: move this code somewhere else?
-            if (!getPlayer()->isHuman()) {
-                if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
-                    // AI will try to squish infantry units
-                    move_to(unitToAttack.iCell);
-                } else {
-                    attackUnit(unitIdSelectedForAttacking);
-                }
+        // TODO: move this code somewhere else?
+        if (!getPlayer()->isHuman()) {
+            if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
+                // AI will try to squish infantry units
+                move_to(unitToAttack.iCell);
             } else {
                 attackUnit(unitIdSelectedForAttacking);
             }
+        } else {
+            attackUnit(unitIdSelectedForAttacking);
         }
 
         return;
     }
 
     // no unit found for attacking
-    if (!isSandworm() && !getPlayer()->isHuman()) {
+    if (!getPlayer()->isHuman()) {
+        // TODO: Move this to the AI / brain classes?
         // ai units will auto-attack structures nearby
 
         int structureIdSelectedForAttacking = -1;
@@ -3351,6 +3334,45 @@ void cUnit::thinkFast() {
     // guard
     if (iAction == ACTION_GUARD) {
         thinkFast_guard();
+    }
+}
+
+void cUnit::thinkFast_guard_sandworm() {
+    int iDistance = 9999;
+    int unitIdToAttack = -1;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &potentialDinner = unit[i];
+        if (i == iID) continue;
+        if (!potentialDinner.isValid()) continue;
+        if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
+        if (potentialDinner.isAirbornUnit()) continue;
+        if (potentialDinner.isSandworm()) continue; // don't eat other worms
+
+        double distance = map.distance(iCell, potentialDinner.iCell);
+
+        if (distance <= getSight() && distance < iDistance) {
+            iDistance = distance;
+            unitIdToAttack = i;
+        }
+    }
+
+    if (unitIdToAttack > -1) {
+        cUnit &unitToAttack = unit[unitIdToAttack];
+
+        if (unitToAttack.isValid()) {
+//            s_GameEvent event{
+//                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+//                    .entityType = eBuildType::UNIT,
+//                    .entityID = unitToAttack.iID,
+//                    .player = getPlayer(),
+//                    .entitySpecificType = unitToAttack.getType(),
+//                    .atCell = unitToAttack.iCell
+//            };
+//            game.onNotifyGameEvent(event);
+        }
+
+        attackUnit(unitIdToAttack);
     }
 }
 
