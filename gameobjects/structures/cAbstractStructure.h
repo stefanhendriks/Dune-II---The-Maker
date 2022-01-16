@@ -197,7 +197,7 @@ class cAbstractStructure {
 
 		bool isValid();
 		bool canAttackAirUnits() const { return getS_StructuresType().canAttackAirUnits; }
-
+		bool canAttackGroundUnits() const { return getS_StructuresType().canAttackGroundUnits; }
 
 		void setHeight(int height);
 		void setWidth(int width);

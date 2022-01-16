@@ -798,15 +798,15 @@ void cUnit::attackCell(int cell) {
     attack(cell, -1, -1, cell);
 }
 
-void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
+void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell) {
     // basically the same as move, but since we use iAction as ATTACK
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
     log(fmt::format("Attacking UNIT ID [{}], STRUCTURE ID [{}], ATTACKCLL [{}], GoalCell [{}]",
-                    iUnit, iStructure, iAttackCell, iGoalCell));
+                    unitId, structureId, attackCell, goalCell));
 
-    if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
+    if (unitId < 0 && structureId < 0 && attackCell < 0) {
         log("What is this? Ordered to attack but no target?");
         return;
     }
@@ -814,15 +814,15 @@ void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
     // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
     if (isSaboteur()) {
         // saboteur does not attack, but only captures
-        move_to(iGoalCell, iStructure, -1, eUnitActionIntent::INTENT_CAPTURE);
+        move_to(goalCell, structureId, -1, eUnitActionIntent::INTENT_CAPTURE);
         return;
     }
 
     iAction = ACTION_ATTACK;
-    this->iGoalCell = iGoalCell;
-    iAttackStructure = iStructure;
-    iAttackUnit = iUnit;
-    this->iAttackCell = iAttackCell;
+    this->iGoalCell = goalCell;
+    iAttackStructure = structureId;
+    iAttackUnit = unitId;
+    this->iAttackCell = attackCell;
     forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
 }
 
@@ -950,66 +950,24 @@ void cUnit::thinkFast_guard() {
     }
 
     // not sandworm
-    int iDistance = 9999;
-    int unitIdSelectedForAttacking = -1;
-
-    for (int i = 0; i < MAX_UNITS; i++) {
-        if (i == iID) continue; // skip self
-        cUnit &potentialThreat = unit[i];
-        if (!potentialThreat.isValid()) continue;
-        if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
-        if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
-        if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
-
-        int distance = map.distance(iCell, potentialThreat.iCell);
-
-        // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-//            int range = getSight() + 3; // do react earlier than already in range.
-        int range = getSight();
-
-        if (distance <= range && distance < iDistance) {
-            iDistance = distance;
-            unitIdSelectedForAttacking = i;
-        }
-    }
+    // TODO: make 'guard range' configurable for ground units
+    int unitIdToAttack = findNearbyGroundUnitToAttack(getSight());
 
     // can attack air units, and no ground threats found. (prioritize ground over air units!)
-    if (canAttackAirUnits() && unitIdSelectedForAttacking < 0) {
-        iDistance = 9999; // reset
-
-        int airUnitToAttack = -1;
-        for (int i = 0; i < MAX_UNITS; i++) {
-            if (i == iID) continue; // skip self
-            cUnit &potentialThreat = unit[i];
-            if (!potentialThreat.isValid()) continue;
-            if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
-            if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
-            if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-            if (!potentialThreat.isAttackableAirUnit()) continue;
-            if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
-
-            int distance = map.distance(iCell, potentialThreat.iCell);
-
-            // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-            int range = getSight() + 3; // do react earlier than already in range.
-
-            if (distance <= range &&
-                distance < iDistance) // closer than found thus far
-            {
-                iDistance = distance;
-                airUnitToAttack = i;
-            }
-        }
+    if (canAttackAirUnits() && unitIdToAttack < 0) {
+        // TODO: make 'guard range' configurable for air units
+        int range = getSight() + 3; // do react earlier than already in range for air units
+        int airUnitToAttack = findNearbyAirUnitToAttack(range);
 
         if (airUnitToAttack > -1) {
             // air units override ground units for units that can attack air units ?
-            unitIdSelectedForAttacking = airUnitToAttack;
+            // TODO: Make this configurable?
+            unitIdToAttack = airUnitToAttack;
         }
     }
 
-    if (unitIdSelectedForAttacking > -1) {
-        cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
+    if (unitIdToAttack > -1) {
+        cUnit &unitToAttack = unit[unitIdToAttack];
 
         if (unitToAttack.isValid()) {
 //            s_GameEvent event{
@@ -1029,40 +987,33 @@ void cUnit::thinkFast_guard() {
                 // AI will try to squish infantry units
                 move_to(unitToAttack.iCell);
             } else {
-                attackUnit(unitIdSelectedForAttacking);
+                attackUnit(unitIdToAttack);
             }
         } else {
-            attackUnit(unitIdSelectedForAttacking);
+            attackUnit(unitIdToAttack);
         }
 
         return;
     }
 
     // no unit found for attacking
+    // TODO: think about how to make this generic and deviate from default behavior elsewhere?
     if (!getPlayer()->isHuman()) {
         // TODO: Move this to the AI / brain classes?
         // ai units will auto-attack structures nearby
 
-        int structureIdSelectedForAttacking = -1;
+        int range = getSight() + 3;
+        int id = findNearbyStructureToAttack(range);
 
-        for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *pStructure = structure[i];
-            if (!pStructure) continue;
-            if (!pStructure->isValid()) continue;
-            if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
-            if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
-
-            int distance = map.distance(iCell, pStructure->getRandomStructureCell());
-            int sight = getSight() + 3;
-
-            if (distance <= sight && distance < iDistance) {
-                iDistance = distance;
-                structureIdSelectedForAttacking = i;
-            }
+        if (id > -1) {
+            attackStructure(id);
         }
-
-        if (structureIdSelectedForAttacking > -1) {
-            attackStructure(structureIdSelectedForAttacking);
+        return;
+    } else {
+        // human units do auto-attack structures that can attack things
+        int id = findNearbyStructureThatCanDamageUnitsToAttack(getRange());
+        if (id > -1) {
+            attackStructure(id);
         }
     }
 }
@@ -3375,6 +3326,141 @@ void cUnit::thinkFast_guard_sandworm() {
     }
 }
 
+/**
+ * Checks for units within given range (in cells).
+ * @return
+ */
+int cUnit::findNearbyGroundUnitToAttack(int range) {
+    // TODO: it would be nice if we could have a 'predicate' lambda here, so we can use that in the for loop
+    // and have 1 function to do some of the logic. For now it is very explicit and duplicated.
+    // See also findNearbyAirUnitToAttack, or the thinkFast_guard_sandworm logic.
+
+    // TODO: another improvement would be to return list of ids in range, so we can order them
+    // later by priority?
+
+    int iDistance = 9999;
+    int unitIdToAttack = -1;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (i == iID) continue; // skip self
+        cUnit &potentialThreat = unit[i];
+        if (!potentialThreat.isValid()) continue;
+        if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
+        if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
+        if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+
+        int distance = map.distance(iCell, potentialThreat.iCell);
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            unitIdToAttack = i;
+        }
+    }
+
+    return unitIdToAttack;
+}
+
+int cUnit::findNearbyAirUnitToAttack(int range) {
+    int iDistance = 9999;
+    int airUnitToAttack = -1;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (i == iID) continue; // skip self
+        cUnit &potentialThreat = unit[i];
+        if (!potentialThreat.isValid()) continue;
+        if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
+        if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
+        if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+        if (!potentialThreat.isAttackableAirUnit()) continue;
+        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+
+        int distance = map.distance(iCell, potentialThreat.iCell);
+
+        if (distance <= range &&
+            distance < iDistance) // closer than found thus far
+        {
+            iDistance = distance;
+            airUnitToAttack = i;
+        }
+    }
+
+    return airUnitToAttack;
+}
+
+int cUnit::findNearbyStructureThatCanDamageUnitsToAttack(int range) {
+    // TODO: have some kind of lambda here as well
+
+    // TODO: another improvement would be to return list of ids in range, so we can order them
+    // later by priority?
+    int structureIdToAttack = -1;
+    int iDistance = 9999;
+
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (!pStructure) continue;
+        if (!pStructure->isValid()) continue;
+        if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
+        if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+
+        // ignore structures which cannot attack air or ground units
+        if (!pStructure->canAttackAirUnits()) continue;
+        if (!pStructure->canAttackGroundUnits()) continue;
+
+        // see big comment about this in findNearbyStructureToAttack
+        int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            structureIdToAttack = i;
+        }
+    }
+
+    return structureIdToAttack;
+}
+
+int cUnit::findNearbyStructureToAttack(int range) {
+    // TODO: have some kind of lambda here as well
+
+    // TODO: another improvement would be to return list of ids in range, so we can order them
+    // later by priority?
+    int structureIdToAttack = -1;
+    int iDistance = 9999;
+
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (!pStructure) continue;
+        if (!pStructure->isValid()) continue;
+        if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
+        if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+
+        // TODO: this is a bit tricky and hacky
+        // basically you want to check against the 'closest' cell from that structure.
+        // Example:
+        // suppose you want to attack a Palace, and you are at the bottom left of that
+        // structure. The palace's bottom-left cell would be closest to the unit and
+        // hence be evaluated.
+        //
+        // the other approach would be to check cells around a unit, but that is potentially
+        // even more expensive because then you will be checking for every unit, every cell in range
+        // although we can read the ID of a structure.
+        //
+        // A quick calculation says:
+        // 10 units, with a 'range' of 5 cells, gives (if we assume a square for now) ~ 5*5 = 25 - 1 (own cell) = 24
+        // cells to evaluate. For every unit * 10 = 240 cells to evaluate.
+        //
+        // Regardless, this is something to think about. There are probably better/smarter ways to do this.
+        int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            structureIdToAttack = i;
+        }
+    }
+
+    return structureIdToAttack;
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -4345,4 +4431,3 @@ int UNIT_FREE_AROUND_MOVE(int iUnit) {
 
     return iClls[rnd(foundCoordinates)]; // random cell
 }
-

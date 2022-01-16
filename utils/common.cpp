@@ -1329,6 +1329,7 @@ void install_structures() {
         structureInfo.queuable = false;
         structureInfo.configured = false;
         structureInfo.canAttackAirUnits = false;
+        structureInfo.canAttackGroundUnits = false;
         strcpy(structureInfo.name, "Unknown");
     }
 
@@ -1611,6 +1612,7 @@ void install_structures() {
     sStructureInfo[TURRET].icon = ICON_STR_TURRET;
     sStructureInfo[TURRET].sight = 7;
     sStructureInfo[TURRET].configured = true;
+    sStructureInfo[TURRET].canAttackGroundUnits = true;
     strcpy(sStructureInfo[TURRET].name, "Gun Turret");
 
     // Structure    : Rocket Turret
@@ -1624,6 +1626,7 @@ void install_structures() {
     sStructureInfo[RTURRET].sight = 10;
     sStructureInfo[RTURRET].configured = true;
     sStructureInfo[RTURRET].canAttackAirUnits = true;
+    sStructureInfo[RTURRET].canAttackGroundUnits = true;
     strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
 
     // Structure    : Windtrap
