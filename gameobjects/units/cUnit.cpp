@@ -915,9 +915,8 @@ void cUnit::thinkFast_guard() {
         return;
     }
 
-    // for now here, the state is set back to MOVE because unit is not able to guard
+    // unit is not able to 'guard', so guarding does nothing.
     if (!isAbleToGuard()) {
-        iAction = ACTION_MOVE;
         return;
     }
 
