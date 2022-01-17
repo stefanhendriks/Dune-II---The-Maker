@@ -26,7 +26,7 @@ public:
 
     void setFrigateDroppedPackage(bool value) { frigateDroppedPackage = value; }
 
-    void startAnimating() override {};
+    void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
 

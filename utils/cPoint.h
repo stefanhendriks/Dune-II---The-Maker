@@ -9,9 +9,9 @@ class cRectangle;
  */
 class cPoint {
 public:
-    cPoint() : cPoint(0,0) { };
+    cPoint() : cPoint(0,0) { }
 
-    cPoint(int x, int y) : x(x), y(y) {};
+    cPoint(int x, int y) : x(x), y(y) {}
 
     int x;
     int y;
