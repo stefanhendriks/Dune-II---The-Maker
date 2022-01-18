@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cassert>
 #include <memory>
+#include <stdexcept>
 
 namespace {
 
@@ -40,8 +41,9 @@ class cSoundData {
 
         gfxaudio = load_datafile("data/gfxaudio.dat");
         if (gfxaudio == nullptr) {
-            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", "Could not hook/load datafile: gfxaudio.dat.", OUTC_FAILED);
-            throw 1; // FIXME: real exception
+            static auto msg = "Could not hook/load datafile: gfxaudio.dat.";
+            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+            throw std::runtime_error(msg);
         } else {
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Hooked datafile: gfxaudio.dat.", OUTC_SUCCESS);
         }
