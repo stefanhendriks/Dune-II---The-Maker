@@ -162,11 +162,6 @@
 #define SANDHOUSE 9
 #define GREYHOUSE	10
 
-#define ATREIDES_TALK	20
-#define HARKONNEN_TALK	21
-#define ORDOS_TALK		22
-// .. add another id for another house
-
 // Structure types
 #define PALACE            0         // cPalace
 #define WINDTRAP          1         // cWindTrap

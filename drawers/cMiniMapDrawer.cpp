@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cMiniMapDrawer.h"
 
+#include "utils/cSoundPlayer.h"
 
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
         m_isMouseOver(false),
@@ -306,7 +307,8 @@ void cMiniMapDrawer::think() {
         if (!hasRadarAndEnoughPower) {
             // go to state power down (not enough power)
             status = eMinimapStatus::POWERDOWN;
-            play_voice(SOUND_VOICE_04_ATR); // radar de-activated!
+            // "Radar de-activated""
+            game.playVoice(SOUND_VOICE_04_ATR, player->getHouse());
         }
     }
 
@@ -315,8 +317,9 @@ void cMiniMapDrawer::think() {
         if (hasRadarAndEnoughPower) {
             // go to state power up (enough power)
             status = eMinimapStatus::POWERUP;
-            play_sound_id(SOUND_RADAR);
-            play_voice(SOUND_VOICE_03_ATR); // radar activated!
+            game.playSound(SOUND_RADAR);
+            // "Radar activated"
+            game.playVoice(SOUND_VOICE_03_ATR, player->getHouse());
         }
     }
 

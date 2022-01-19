@@ -13,6 +13,8 @@
 #include "d2tmh.h"
 #include "cUnit.h"
 
+#include "utils/cSoundPlayer.h"
+
 #include <fmt/core.h>
 
 #include <cmath>

@@ -12,8 +12,6 @@
 
 #include "include/d2tmh.h"
 
-#include "utils/cLog.h"
-
 bool bDoDebug = false;
 int	iRest = 1;	// default rest value
 
@@ -60,7 +58,6 @@ BITMAP *bmp_fadeout;
 
 // datafile(s)
 DATAFILE *gfxdata;		// graphics (terrain, units, structures)
-DATAFILE *gfxaudio;		// audio
 DATAFILE *gfxinter;		// interface graphics
 DATAFILE *gfxworld;		// world/pieces graphics
 DATAFILE *gfxmentat;	// mentat graphics
