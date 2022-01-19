@@ -118,8 +118,7 @@ void cTimeManager::handleTimerGameTime() {
     // keep up with time cycles
     while (timerGlobal > 0) {
         game.think_fading();
-        game.getSoundPlayer().think();
-        game.think_music();
+        game.think_audio();
         game.think_mentat();
         game.think_state();
 

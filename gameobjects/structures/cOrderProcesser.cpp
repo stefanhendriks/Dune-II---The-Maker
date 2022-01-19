@@ -78,7 +78,7 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 	}
 
 	if (soundIdToPlay > -1) {
-        game.getSoundPlayer().playSound(soundIdToPlay);
+        game.playSound(soundIdToPlay);
 	}
 }
 

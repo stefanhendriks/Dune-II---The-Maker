@@ -49,7 +49,7 @@ void cMousePlaceState::onMouseLeftButtonClicked() {
     }
 
     if (mayPlaceIt(itemToPlace, context->getMouseCell())) {
-        game.getSoundPlayer().playSound(SOUND_PLACE);
+        game.playSound(SOUND_PLACE);
         player->placeItem(mouseCell, itemToPlace);
         context->toPreviousState();
     }

@@ -109,7 +109,7 @@ void cGame::init() {
     // Load properties
     INI_Install_Game(game_filename);
 
-    mp3_music = NULL;
+    mp3_music = nullptr;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -382,8 +382,10 @@ void cGame::think_mentat() {
     }
 }
 
-// TODO: Move to music related class (MusicPlayer?)
-void cGame::think_music() {
+// think function belongs to combat state (tbd)
+void cGame::think_audio() {
+    _soundplayer->think();
+
     if (!game.bPlayMusic) // no music enabled, so no need to think
         return;
 
@@ -833,7 +835,7 @@ bool cGame::setupGame() {
 
     game_font = alfont_load_font("data/arakeen.fon");
 
-    if (game_font != NULL) {
+    if (game_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
@@ -845,7 +847,7 @@ bool cGame::setupGame() {
 
     bene_font = alfont_load_font("data/benegess.fon");
 
-    if (bene_font != NULL) {
+    if (bene_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
@@ -856,7 +858,7 @@ bool cGame::setupGame() {
 
     small_font = alfont_load_font("data/small.ttf");
 
-    if (small_font != NULL) {
+    if (small_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
@@ -890,7 +892,7 @@ bool cGame::setupGame() {
 
     bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_screen == NULL) {
+    if (bmp_screen == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_screen");
         return false;
@@ -901,7 +903,7 @@ bool cGame::setupGame() {
 
     bmp_backgroundMentat = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_backgroundMentat == NULL) {
+    if (bmp_backgroundMentat == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
         return false;
@@ -943,7 +945,7 @@ bool cGame::setupGame() {
 
     bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_throttle == NULL) {
+    if (bmp_throttle == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_throttle");
         return false;
@@ -953,7 +955,7 @@ bool cGame::setupGame() {
 
     bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_winlose == NULL) {
+    if (bmp_winlose == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_winlose");
         return false;
@@ -963,7 +965,7 @@ bool cGame::setupGame() {
 
     bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_fadeout == NULL) {
+    if (bmp_fadeout == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_fadeout");
         return false;
@@ -1682,3 +1684,22 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
     }
 }
 
+void cGame::playSound(int sampleId) {
+    _soundplayer->playSound(sampleId);
+}
+
+void cGame::playSound(int sampleId, int vol) {
+    _soundplayer->playSound(sampleId, vol);
+}
+
+void cGame::playVoice(int sampleId, int house) {
+    _soundplayer->playVoice(sampleId, house);
+}
+
+void cGame::playMusic(int sampleId) {
+    _soundplayer->playMusic(sampleId);
+}
+
+int cGame::getMaxVolume() {
+    return _soundplayer->getMaxVolume();
+}

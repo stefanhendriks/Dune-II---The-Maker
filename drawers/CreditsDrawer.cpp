@@ -136,7 +136,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 			//offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
 			offset_credit[i] = 0.0F; // so we do not keep matching our IF :)
 			if (soundsMade < 7) {
-                game.getSoundPlayer().playSound(soundType, 32);
+                game.playSound(soundType, 32);
 				soundsMade++;
 			}
 			// it is fully 'moved'. Now update the array.

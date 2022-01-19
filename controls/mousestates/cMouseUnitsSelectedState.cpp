@@ -120,11 +120,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
         }
 
         if (infantryAcknowledged) {
-            game.getSoundPlayer().playSound(SOUND_MOVINGOUT + rnd(2));
+            game.playSound(SOUND_MOVINGOUT + rnd(2));
         }
 
         if (unitAcknowledged) {
-            game.getSoundPlayer().playSound(SOUND_ACKNOWLEDGED + rnd(3));
+            game.playSound(SOUND_ACKNOWLEDGED + rnd(3));
         }
     }
 
