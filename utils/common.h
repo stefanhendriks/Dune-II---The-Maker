@@ -9,6 +9,7 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
+#pragma once
 
 #include <string>
 
@@ -52,12 +53,9 @@ int iFindCloseBorderCell(int iCll);
 
 void mp3_play_file(char filename[255]);
 
-void play_sound_id(int s, int volume);
-void play_sound_id(int s);
 void play_sound_id_with_distance(int s, int iOnScreen);
 
 bool MIDI_music_playing();
-void play_voice(int iType);
 void setMusicVolume(int i);
 
 void playMusicByType(int iType);
@@ -65,8 +63,6 @@ void Shimmer(int r, int x, int y);
 int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots);
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
-
-int getAmountReservedVoicesAndInstallSound();
 
 const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
 

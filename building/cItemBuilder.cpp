@@ -1,6 +1,5 @@
 #include "cItemBuilder.h"
 
-#include "data/gfxaudio.h"
 #include "d2tmc.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
@@ -11,8 +10,8 @@
 #include "structs.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
+#include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
-
 
 #include <allegro/keyboard.h>
 
@@ -194,7 +193,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
         // play voice when placeIt is false`
         if (!item->shouldPlaceIt()) {
             if (player->isHuman()) {
-                play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
+                game.playVoice(SOUND_VOICE_01_ATR, player->getHouse()); // "Construction Complete"
             }
             item->setPlaceIt(true);
 
@@ -434,7 +433,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
  */
 int cItemBuilder::getFreeSlot() {
 	for (int i = 0; i < MAX_ITEMS; i++) {
-		if (items[i] == NULL) {
+		if (items[i] == nullptr) {
 			return i; // return free slot
 		}
 	}
@@ -518,7 +517,7 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
             return listItem;
         }
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**

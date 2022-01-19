@@ -1,38 +1,34 @@
-/*
- * cSoundPlayer.h
- *
- *  Created on: 6-aug-2010
- *      Author: Stefan
- *
- *  A class responsible for playing sounds. But also managing the sounds being played (ie, not
- *  playing too many sounds in the same frame, etc).
- *
- */
+#pragma once
 
-#ifndef CSOUNDPLAYER_H_
-#define CSOUNDPLAYER_H_
+#include "cPlatformLayerInit.h"
+#include "data/gfxaudio.h" // Use IDs from this file to play samples
+
+#include <memory>
+#include <vector>
+
+class cSoundData;
 
 class cSoundPlayer {
-
 	public:
-		cSoundPlayer(int maxVoices);
+        // Initialize the platform layer before creating this object.
+		explicit cSoundPlayer(const cPlatformLayerInit& init);
+		cSoundPlayer(const cPlatformLayerInit& init, int maxNrVoices);
 		~cSoundPlayer();
 
-		void playSound(SAMPLE *sample, int pan, int vol);
-		void playSound(int sampleId, int pan, int vol);
+        static int getMaxVolume();
+
+        void playSound(int sampleId); // Maximum volume
+		void playSound(int sampleId, int vol);
+
+        // Pass the sample ID of the Atreides voice
+        void playVoice(int sampleId, int house);
+
+        void playMusic(int sampleId);
 
 		// think about voices, clear voices, etc.
 		void think();
 
-        void destroyAllSounds();
-
-	protected:
-		void destroySound(int voice, bool force);
-
 	private:
-		int maximumVoices;
-		int voices[256];
-
+		std::vector<int> voices;
+        std::unique_ptr<cSoundData> soundData;
 };
-
-#endif /* CSOUNDPLAYER_H_ */
