@@ -433,7 +433,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
  */
 int cItemBuilder::getFreeSlot() {
 	for (int i = 0; i < MAX_ITEMS; i++) {
-		if (items[i] == NULL) {
+		if (items[i] == nullptr) {
 			return i; // return free slot
 		}
 	}
@@ -517,7 +517,7 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
             return listItem;
         }
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**

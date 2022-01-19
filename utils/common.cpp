@@ -878,7 +878,7 @@ void install_bullets() {
     logbook("Installing:  BULLET TYPES");
 
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
-        sBulletInfo[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
+        sBulletInfo[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
         sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
         sBulletInfo[i].damage = 0;      // damage to vehicles
         sBulletInfo[i].damage_inf = 0;  // damage to infantry
@@ -1067,7 +1067,7 @@ void install_bullets() {
     strcpy(sBulletInfo[BULLET_TURRET].description, "BULLET_TURRET");
 
     // EXEPTION: Shimmer/ Sonic tank
-    sBulletInfo[BULLET_SHIMMER].bmp = NULL;
+    sBulletInfo[BULLET_SHIMMER].bmp = nullptr;
     sBulletInfo[BULLET_SHIMMER].deathParticle = -1;
     sBulletInfo[BULLET_SHIMMER].bmp_width = 0;
     sBulletInfo[BULLET_SHIMMER].damage = 55;
@@ -1720,7 +1720,7 @@ bool MIDI_music_playing() {
 
 void setMusicVolume(int i) {
     if (game.bMp3) {
-        if (mp3_music != NULL) {
+        if (mp3_music != nullptr) {
         	almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
         }
     } else {
@@ -1734,7 +1734,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
   char *data = new char[len];  // mp3 file in memory
 	FILE *f = fopen(filename, "r");
 
-	if (f != NULL) {
+	if (f != nullptr) {
 		fread(data, 1, len, f);
 		fclose(f);
 	} else {
@@ -1742,11 +1742,11 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
 		game.bMp3=false;
 
-		if (mp3_music != NULL) {
+		if (mp3_music != nullptr) {
 		   almp3_destroy_mp3(mp3_music);
 		}
 
-		mp3_music = NULL;
+		mp3_music = nullptr;
 		return;
 	}
 
@@ -1984,7 +1984,7 @@ void Shimmer(int r, int x, int y) {
 void INIT_PREVIEWS() {
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
-        previewMap.terrain = NULL;
+        previewMap.terrain = nullptr;
 
         // clear out name
         memset(previewMap.name, 0, sizeof(previewMap.name));
@@ -2032,8 +2032,4 @@ const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int
             break;
     }
     return "";
-}
-
-char scanCodeToAscii(int scanCode) {
-    return (char)scancode_to_ascii(scanCode);
 }
