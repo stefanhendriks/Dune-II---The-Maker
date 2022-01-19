@@ -1,14 +1,3 @@
-/*
- * cSoundPlayer.h
- *
- *  Created on: 6-aug-2010
- *      Author: Stefan
- *
- *  A class responsible for playing sounds. But also managing the sounds being played (ie, not
- *  playing too many sounds in the same frame, etc).
- *
- */
-
 #pragma once
 
 #include "cPlatformLayerInit.h"

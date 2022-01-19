@@ -23,16 +23,16 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 
 cOrderProcesser::~cOrderProcesser() {
 	removeAllItems();
-    player = NULL;
+    player = nullptr;
 }
 
 cBuildingListItem * cOrderProcesser::getItemToDeploy() {
 	for (int i = 0; i < MAX_ITEMS_TO_ORDER; i++) {
-		if (orderedItems[i] != NULL) {
+		if (orderedItems[i] != nullptr) {
 			return orderedItems[i];
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 bool cOrderProcesser::hasOrderedAnything() {
@@ -46,7 +46,7 @@ void cOrderProcesser::markOrderAsDeployed(cBuildingListItem * item) {
 	int slot = getSlotForItem(item);
 	assert(slot > -1);
 	// remove item from the ordered items
-	orderedItems[slot] = NULL;
+	orderedItems[slot] = nullptr;
 	pricePaidForItem[slot] = -1;
 }
 
@@ -146,7 +146,7 @@ void cOrderProcesser::removeOrder(cBuildingListItem *item) {
 
 int cOrderProcesser::getFreeSlot() {
 	for (int i = 0; i < MAX_ITEMS_TO_ORDER; i++) {
-		if (orderedItems[i] == NULL) {
+		if (orderedItems[i] == nullptr) {
 			return i;
 		}
 	}
@@ -171,7 +171,7 @@ void cOrderProcesser::removeAllItems() {
 void cOrderProcesser::removeItem(int slot) {
 	assert(slot >= 0);
 	assert(slot < MAX_ITEMS_TO_ORDER);
-	orderedItems[slot] = NULL;
+	orderedItems[slot] = nullptr;
 	// give money back to player
 	if (pricePaidForItem[slot] > 0) {
         player->giveCredits(pricePaidForItem[slot]);
