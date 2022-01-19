@@ -24,7 +24,7 @@ public:
 
     void think_unit_occupation();
 
-    void startAnimating() override {};
+    void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
 

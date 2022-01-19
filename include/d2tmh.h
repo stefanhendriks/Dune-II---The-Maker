@@ -1,14 +1,11 @@
 // this file is the uber header file. Responsible for including all proper header files in the
 // right order
-#ifndef D2TMH_H
-#define D2TMH_H
+#pragma once
 
-#include "system.h"
 #include "allegroh.h"
 #include "data.h"
 #include "definitions.h"
 #include "structs.h"
-#include "global.h"
 #include "gameobjects.h"
 #include "gamestates.h"
 #include "gamelogic.h"
@@ -23,5 +20,3 @@
 
 // Extern references & variable declarations
 #include "d2tmc.h"
-
-#endif

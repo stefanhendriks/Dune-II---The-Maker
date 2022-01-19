@@ -332,9 +332,9 @@ void cAllegroDrawer::drawDot(BITMAP *bmp, int x, int y, int color, int size) {
 
     int endX = x + size;
     int endY = y + size;
-    for (; x < endX; x++) {
-        for (; y < endY; y++) {
-            putpixel(bmp, x, y, color);
+    for (int sx = x; sx < endX; sx++) {
+        for (int sy = y; sy < endY; sy++) {
+            putpixel(bmp, sx, sy, color);
         }
     }
 }
