@@ -15,7 +15,7 @@ public:
     // cGuiObject specific
     virtual void draw() const = 0; // pure virtual function
 
-    cRectangle &getRect() { return rect; };
+    cRectangle &getRect() { return rect; }
     void setRect(const cRectangle &newRect) { rect = newRect; }
 
 protected:

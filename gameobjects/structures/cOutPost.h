@@ -16,7 +16,7 @@ public:
 
     void think_guard() override;
 
-    void startAnimating() override {};
+    void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
 

@@ -1,8 +1,4 @@
-#ifndef UTILSH_H_
-#define UTILSH_H_
-
-// TODO: Rethink this, perhaps other global dir is needed
-#include "cRectangle.h"
+#pragma once
 
 #include "common.h"					// commonly used functions
 #include "../ini.h"							// INI loading
@@ -15,5 +11,3 @@
 #include "cStructureUtils.h"
 
 #include "cTimeManager.h"
-
-#endif /* UTILSH_H_ */
