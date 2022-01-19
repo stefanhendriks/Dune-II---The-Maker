@@ -3,6 +3,7 @@
 #include "cPlayer.h"
 
 #include "utils/common.h"
+#include "utils/cSoundPlayer.h"
 
 #include <fmt/format.h>
 
@@ -212,7 +213,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
 void cPlayer::setHouse(int iHouse) {
     int currentHouse = house;
     // not yet set up house properly.. so use logbook instead of log()
-    logbook(fmt::format("cPlayer[{}]::setHouse - Current house is [{}/{}], setting house to [{}/{}]", 
+    logbook(fmt::format("cPlayer[{}]::setHouse - Current house is [{}/{}], setting house to [{}/{}]",
                         this->id, currentHouse, getHouseNameForId(currentHouse), iHouse, getHouseNameForId(iHouse)));
     house = iHouse; // use rules of this house
 
@@ -1712,7 +1713,7 @@ bool cPlayer::startBuilding(cBuildingListItem *pItem) {
         log("startBuilding: Cannot start building null item!");
         return false;
     }
-    
+
     return startBuilding(pItem->getBuildType(), pItem->getBuildId());
 }
 
@@ -1773,7 +1774,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
     }
 
     if (voiceId > -1) {
-        play_voice(voiceId);
+        game.playVoice(voiceId, getHouse());
     }
 }
 
@@ -2051,11 +2052,11 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const {
     }
 
     if (unitSelected) {
-        play_sound_id(SOUND_REPORTING);
+        game.playSound(SOUND_REPORTING);
     }
 
     if (infantrySelected) {
-        play_sound_id(SOUND_YESSIR);
+        game.playSound(SOUND_YESSIR);
     }
 
     // return true if we selected any unit

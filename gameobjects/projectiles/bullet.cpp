@@ -12,6 +12,8 @@
 
 #include "../../include/d2tmh.h"
 
+#include "utils/cSoundPlayer.h"
+
 #include <math.h>
 
 void cBullet::init() {
