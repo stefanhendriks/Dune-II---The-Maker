@@ -14,7 +14,7 @@ namespace brains {
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        TIMER_rest = (10 * 60) * 4;
         TIMER_rest = rnd(25); // todo: based on difficulty?
-        if (game.bNoAiRest) {
+        if (game.m_noAiRest) {
             TIMER_rest = 10;
         }
         TIMER_produceMissionCooldown = 0;

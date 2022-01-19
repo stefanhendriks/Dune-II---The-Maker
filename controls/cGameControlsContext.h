@@ -1,6 +1,6 @@
 #pragma once
 
-// this class holds the game controls context. This means, the updateState() method
+// this class holds the game controls context. This means, the updateMouseAndKeyboardStateAndGamePlaying() method
 // will check how the mouse is positioned in this particular frame. It then updates
 // any ids, or other relevant data.
 //

@@ -194,8 +194,8 @@ void cMouse::boxSelectLogic(int mouseCell) {
 
             // assign 2nd coordinates
             mouse_co_x2 = mouse_x;
-            if (mouse_x > game.screen_x - cSideBar::SidebarWidth) {
-                mouse_co_x2 = game.screen_x - cSideBar::SidebarWidth - 1;
+            if (mouse_x > game.m_screenX - cSideBar::SidebarWidth) {
+                mouse_co_x2 = game.m_screenX - cSideBar::SidebarWidth - 1;
             }
 
             mouse_co_y2 = mouse_y;

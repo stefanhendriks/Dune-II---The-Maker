@@ -55,7 +55,7 @@ void cTextDrawer::drawTextCentered(const char *msg, int y) const{
 void cTextDrawer::drawTextCentered(const char * msg, int y, int color) const {
 	int lenghtInPixels = alfont_text_length(font, msg);
 	int half = lenghtInPixels / 2;
-	int xPos = (game.screen_x / 2) - half;
+	int xPos = (game.m_screenX / 2) - half;
     drawText(xPos, y, color, msg);
 }
 
@@ -97,8 +97,8 @@ void cTextDrawer::drawTextBottomLeft(const char * msg) const {
 
 void cTextDrawer::drawTextBottomRight(int color, const char * msg) const {
 	int lenghtInPixels = alfont_text_length(font, msg);
-	int x = game.screen_x - lenghtInPixels;
-	int y = game.screen_y - getFontHeight();
+	int x = game.m_screenX - lenghtInPixels;
+	int y = game.m_screenY - getFontHeight();
 	drawText(x, y, color, msg);
 }
 
@@ -108,7 +108,7 @@ int cTextDrawer::getFontHeight() const {
 }
 
 void cTextDrawer::drawTextBottomLeft(int color, const char * msg) const {
-	int y = game.screen_y - alfont_text_height(font);
+	int y = game.m_screenY - alfont_text_height(font);
 	drawText(0, y, color, msg);
 }
 

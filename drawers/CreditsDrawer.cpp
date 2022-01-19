@@ -18,7 +18,7 @@ CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : player(thePlayer){
 
 	// center credits bar within sidebar
     int widthCreditsBar = ((BITMAP *)gfxinter[CREDITS_BAR].dat)->w;
-	drawX = game.screen_x - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
+	drawX = game.m_screenX - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
 	drawY = 0;
 }
 
@@ -204,7 +204,7 @@ void CreditsDrawer::drawCurrentCredits() {
 	int offset = getXDrawingOffset(currentCredits);
 
 	for (int i=0; i < 6; i++) {
-		// the actual position to draw on is: ((game.screen_x - 120) +
+		// the actual position to draw on is: ((game.m_screenX - 120) +
 		//        screen        -  14 + (6 digits (each 20 pixels due borders))
 		int dx = ((offset + i) * 20);
 		int dy = 0;
@@ -237,7 +237,7 @@ void CreditsDrawer::drawPreviousCredits() {
 	int offset = getXDrawingOffset(previousCredits);
 
 	for (int i=0; i < 6; i++) {
-		// the actual position to draw on is: ((game.screen_x - 120) +
+		// the actual position to draw on is: ((game.m_screenX - 120) +
 		//        screen        -  14 + (6 digits (each 20 pixels due borders))
 		int dx = ((offset + i) * 20);
 		int dy = 0;

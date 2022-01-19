@@ -15,8 +15,8 @@ cMapCamera::cMapCamera(cMap * theMap) : pMap(theMap) {
     int widthOfSidebar = cSideBar::SidebarWidth;
     heightOfTopBar = cSideBar::TopBarHeight;
 
-    windowWidth=game.screen_x-widthOfSidebar;
-    windowHeight= game.screen_y - heightOfTopBar;
+    windowWidth= game.m_screenX - widthOfSidebar;
+    windowHeight= game.m_screenY - heightOfTopBar;
 
     viewportWidth=windowWidth;
     viewportHeight=windowHeight;
@@ -199,14 +199,14 @@ void cMapCamera::thinkInteraction() {
 		}
 	}
 
-	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
+	if (mouse_x >= (game.m_screenX - 2) || key[KEY_RIGHT]) {
 		if (getViewportEndX() < ((map.getWidth()*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
             setViewportPosition(viewportStartX += 1, viewportStartY);
             pMouse->setTile(MOUSE_RIGHT);
 		}
 	}
 
-	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
+	if (mouse_y >= (game.m_screenY - 2) || key[KEY_DOWN]) {
 		if ((getViewportEndY()) < ((map.getHeight()*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
             setViewportPosition(viewportStartX, viewportStartY += 1);
             pMouse->setTile(MOUSE_DOWN);

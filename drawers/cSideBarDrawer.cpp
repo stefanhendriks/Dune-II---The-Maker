@@ -25,13 +25,13 @@ void cSideBarDrawer::drawCandybar() {
         createCandyBar();
     }
 
-	int drawX = game.screen_x - cSideBar::SidebarWidth;
+	int drawX = game.m_screenX - cSideBar::SidebarWidth;
 	int drawY = 40;
 	draw_sprite(bmp_screen, candybar, drawX, drawY);
 }
 
 void cSideBarDrawer::createCandyBar() {
-    int heightInPixels = (game.screen_y - cSideBar::TopBarHeight);
+    int heightInPixels = (game.m_screenY - cSideBar::TopBarHeight);
     candybar = create_bitmap_ex(8, 24, heightInPixels);
     clear_to_color(candybar, makecol(0, 0, 0));
 
@@ -73,10 +73,10 @@ void cSideBarDrawer::createCandyBar() {
 //    set_palette(thePlayer->pal);
 //
 //    // black out
-//    rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+//    rectfill(bmp_screen, (game.m_screenX-160), 0, game.m_screenX, game.m_screenY, makecol(0,0,0));
 //
 //    // upper bar
-//    rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
+//    rectfill(bmp_screen, 0, 0, game.m_screenX, 42, makecol(0,0,0));
 //
 //    int iHouse = thePlayer->getHouse();
 //
@@ -119,13 +119,13 @@ void cSideBarDrawer::drawBuildingLists() {
     // draw background of buildlist
     BITMAP * backgroundSprite = (BITMAP *)gfxinter[BMP_GERALD_ICONLIST_BACKGROUND].dat;
 
-    int drawX = game.screen_x - cSideBar::SidebarWidthWithoutCandyBar + 1;
+    int drawX = game.m_screenX - cSideBar::SidebarWidthWithoutCandyBar + 1;
 
     int startY = cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight +
                  cSideBar::HeightOfListButton;
 
-    for (; drawX < game.screen_x; drawX += backgroundSprite->w) {
-        for (int drawY=startY; drawY < game.screen_y; drawY += backgroundSprite->h) {
+    for (; drawX < game.m_screenX; drawX += backgroundSprite->w) {
+        for (int drawY=startY; drawY < game.m_screenY; drawY += backgroundSprite->h) {
             draw_sprite(bmp_screen, backgroundSprite, drawX, drawY);
         }
     }
@@ -144,11 +144,11 @@ void cSideBarDrawer::drawBuildingLists() {
         selectedList = sidebar->getList(selectedListId);
     }
 
-    int endY = game.screen_y;
+    int endY = game.m_screenY;
     int rows = 6;
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         rows = 5;
-        endY = game.screen_y - 50;
+        endY = game.m_screenY - 50;
     }
 
     for (int i = 1; i < 3; i++) {
@@ -161,19 +161,19 @@ void cSideBarDrawer::drawBuildingLists() {
         // horizontal lines
         for (int j = 1; j < rows; j++) {
             int barY = iDrawY - 1 + (j * 50);
-            line(bmp_screen, iDrawX, barY-1, game.screen_x, barY-1, darker);
-            line(bmp_screen, iDrawX, barY, game.screen_x, barY, veryDark);
+            line(bmp_screen, iDrawX, barY-1, game.m_screenX, barY - 1, darker);
+            line(bmp_screen, iDrawX, barY, game.m_screenX, barY, veryDark);
         }
     }
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
-        rectfill(bmp_screen, iDrawX, endY, game.screen_x, game.screen_y, sidebarColor);
+        rectfill(bmp_screen, iDrawX, endY, game.m_screenX, game.m_screenY, sidebarColor);
         draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
     }
 
     // vertical lines at the side
-    line(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.screen_y, makecol(255, 211, 125)); // left
-    line(bmp_screen, game.screen_x - 1, iDrawY-38, game.screen_x - 1, endY, makecol(209, 150, 28)); // right
+    line(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenY, makecol(255, 211, 125)); // left
+    line(bmp_screen, game.m_screenX - 1, iDrawY - 38, game.m_screenX - 1, endY, makecol(209, 150, 28)); // right
 
     // END drawing icons grid
 
@@ -207,7 +207,7 @@ void cSideBarDrawer::draw() {
     set_palette(player->pal);
 
     // black out sidebar
-    rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+    rectfill(bmp_screen, (game.m_screenX - cSideBar::SidebarWidth), 0, game.m_screenX, game.m_screenY, makecol(0, 0, 0));
 
     drawCandybar();
 
@@ -223,7 +223,7 @@ void cSideBarDrawer::drawCapacities() {
 
 void cSideBarDrawer::drawCreditsUsage() {
     int barTotalHeight = (cSideBar::HeightOfMinimap - 76);
-    int barX = (game.screen_x - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barX = (game.m_screenX - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TopBarHeight + 48;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
@@ -280,8 +280,8 @@ void cSideBarDrawer::drawCreditsUsage() {
 
 void cSideBarDrawer::drawPowerUsage() const {
     int arbitraryMargin = 6;
-    int barTotalHeight = game.screen_y - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
-    int barX = (game.screen_x - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barTotalHeight = game.m_screenY - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
+    int barX = (game.m_screenX - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
@@ -334,7 +334,7 @@ void cSideBarDrawer::drawPowerUsage() const {
 
 void cSideBarDrawer::drawMinimap() {
 	BITMAP * sprite = (BITMAP *)gfxinter[HORIZONTAL_CANDYBAR].dat;
-	int drawX = (game.screen_x - sprite->w) + 1;
+	int drawX = (game.m_screenX - sprite->w) + 1;
 	// 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
 	int drawY = cSideBar::TopBarHeight + heightMinimap;
@@ -352,7 +352,7 @@ void cSideBarDrawer::drawMinimap() {
     }
 
     // else, we render the house emblem
-	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, player->getEmblemBackgroundColor());
+	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.m_screenX, drawY, player->getEmblemBackgroundColor());
 
 	if (player->isHouse(ATREIDES) || player->isHouse(HARKONNEN) || player->isHouse(ORDOS)) {
 	    int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
