@@ -49,17 +49,17 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     widthOfSomething = 300; //??
 
     // Screen
-    screen_x = game.screen_x;
-    screen_y = game.screen_y;
+    screen_x = game.m_screenX;
+    screen_y = game.m_screenY;
 
     // Background
     background = create_bitmap(screen_x, screen_y);
     clear_to_color(background, makecol(0, 0, 0));
 
     BITMAP *dunePlanet = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
-    allegroDrawer->drawSprite(background, dunePlanet, game.screen_x * 0.2, (game.screen_y * 0.5));
+    allegroDrawer->drawSprite(background, dunePlanet, game.m_screenX * 0.2, (game.m_screenY * 0.5));
 
-    for (int dy = 0; dy < game.screen_y; dy += 2) {
+    for (int dy = 0; dy < game.m_screenY; dy += 2) {
         allegroDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0, 0, 0));
     }
 
@@ -103,7 +103,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
 
     // actual list of maps
-//    int mapListHeight = screen_y - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
+//    int mapListHeight = m_screenY - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
     int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
     int mapListWidth = mapListTitle.getWidth();
     int mapListTopX = mapListTitle.getX();
@@ -292,7 +292,7 @@ cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPl
         return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
     }
 
-    if (sSkirmishPlayer.bHuman) { // should be redundant when player is always bPlaying?
+    if (sSkirmishPlayer.bHuman) { // should be redundant when player is always m_playing?
         return colorWhite;
     }
 
@@ -387,13 +387,13 @@ void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
 void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap) {
     s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
 
-    // this needs to be before setup_players :/
-    game.iMission = 9; // high tech level (TODO: make this customizable)
+    // this needs to be before setupPlayers :/
+    game.m_mission = 9; // high tech level (TODO: make this customizable)
 
-    game.setup_players();
+    game.setupPlayers();
 
     // Starting skirmish mode
-    game.bSkirmish = true;
+    game.m_skirmish = true;
 
     /* set up starting positions */
     std::vector<int> iStartPositions;
@@ -438,11 +438,11 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     }
 
     int maxThinkingAIs = MAX_PLAYERS;
-    if (game.bOneAi) {
+    if (game.m_oneAi) {
         maxThinkingAIs = 1;
     }
 
-    if (game.bDisableAI) {
+    if (game.m_disableAI) {
         maxThinkingAIs = 0;
     }
 
@@ -662,7 +662,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
     drawManager->getMessageDrawer()->initCombatPosition();
 
-    game.START_FADING_OUT();
+    game.initiateFadingOut();
     game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
 }
 
@@ -882,8 +882,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms() {
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton() {
     int topBarHeight = 21;
-    int screen_y = game.screen_y;
-    int screen_x = game.screen_x;
+    int screen_y = game.m_screenY;
+    int screen_x = game.m_screenX;
 
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;

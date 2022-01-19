@@ -18,7 +18,7 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
-    int topLeftX = game.screen_x - cSideBar::WidthOfMinimap;
+    int topLeftX = game.m_screenX - cSideBar::WidthOfMinimap;
     drawX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
@@ -233,7 +233,7 @@ void cMiniMapDrawer::draw() {
     drawStaticFrame();
 
     drawViewPortRectangle();
-    set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
+    set_clip_rect(bmp_screen, 0, 0, game.m_screenX, game.m_screenY);
 }
 
 void cMiniMapDrawer::drawStaticFrame() {

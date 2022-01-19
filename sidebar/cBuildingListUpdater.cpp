@@ -18,7 +18,7 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
     } else {
         // AI players...
 
-        if (game.bSkirmish) {
+        if (game.m_skirmish) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human players)
             onStructureCreatedSkirmishMode(structureType);
             evaluateUpgrades();
@@ -430,7 +430,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     } else {
         // AI players...
 
-        if (game.bSkirmish) {
+        if (game.m_skirmish) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human players)
             onStructureDestroyedSkirmishMode();
             evaluateUpgrades();
