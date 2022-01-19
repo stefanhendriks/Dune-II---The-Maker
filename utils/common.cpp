@@ -13,6 +13,7 @@
 #include "../include/d2tmh.h"
 
 #include "utils/cLog.h"
+#include "utils/cSoundPlayer.h"
 
 #include <math.h>
 
@@ -896,7 +897,7 @@ void install_bullets() {
     logbook("Installing:  BULLET TYPES");
 
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
-        sBulletInfo[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
+        sBulletInfo[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
         sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
         sBulletInfo[i].damage = 0;      // damage to vehicles
         sBulletInfo[i].damage_inf = 0;  // damage to infantry
@@ -1085,7 +1086,7 @@ void install_bullets() {
     strcpy(sBulletInfo[BULLET_TURRET].description, "BULLET_TURRET");
 
     // EXEPTION: Shimmer/ Sonic tank
-    sBulletInfo[BULLET_SHIMMER].bmp = NULL;
+    sBulletInfo[BULLET_SHIMMER].bmp = nullptr;
     sBulletInfo[BULLET_SHIMMER].deathParticle = -1;
     sBulletInfo[BULLET_SHIMMER].bmp_width = 0;
     sBulletInfo[BULLET_SHIMMER].damage = 55;
@@ -1689,20 +1690,6 @@ int distanceBetweenCellAndCenterOfScreen(int iCell) {
     return 1;
 }
 
-void play_sound_id(int s, int volume) {
-    if (!game.bPlaySound) return; // do not play sound when boolean is false.
-
-    int vol = keepBetween(volume, 0, 255);
-
-    if (vol > 0) {
-        game.getSoundPlayer()->playSound(s, 127, vol);
-    }
-}
-
-void play_sound_id(int s) {
-    play_sound_id(s, VOLUME_MAX);
-}
-
 /**
  * Play sound (s = ID from gfxaudio) with distance into account. iDistance
  * is the distance outside screen. Meaning <= 1 is ON SCREEN > 1 means distance from screen.
@@ -1713,10 +1700,8 @@ void play_sound_id(int s) {
 void play_sound_id_with_distance(int s, int iDistance) {
 	if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
-	if (gfxaudio[s].dat == NULL) return; // no data file at the specified position in index.
-
 	if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
-	    play_sound_id(s, VOLUME_MAX);
+        game.playSound(s);
 		return;
 	}
 
@@ -1744,21 +1729,8 @@ void play_sound_id_with_distance(int s, int iDistance) {
         logbook(msg);
     }
 
-    play_sound_id(s, iVolFactored);
+    game.playSound(s, iVolFactored);
 }
-
-void play_voice(int iType) {
-	if (players[0].getHouse() == HARKONNEN) {
-		iType++;
-	}
-
-	if (players[0].getHouse() == ORDOS) {
-		iType+=2;
-	}
-
-    play_sound_id(iType); // pass -1 as 'onscreen' since its a normal sound
-}
-
 
 bool MIDI_music_playing() {
 	if (midi_pos > -1) {
@@ -1770,7 +1742,7 @@ bool MIDI_music_playing() {
 
 void setMusicVolume(int i) {
     if (game.bMp3) {
-        if (mp3_music != NULL) {
+        if (mp3_music != nullptr) {
         	almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
         }
     } else {
@@ -1784,7 +1756,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
   char *data = new char[len];  // mp3 file in memory
 	FILE *f = fopen(filename, "r");
 
-	if (f != NULL) {
+	if (f != nullptr) {
 		fread(data, 1, len, f);
 		fclose(f);
 	} else {
@@ -1792,11 +1764,11 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
 		game.bMp3=false;
 
-		if (mp3_music != NULL) {
+		if (mp3_music != nullptr) {
 		   almp3_destroy_mp3(mp3_music);
 		}
 
-		mp3_music = NULL;
+		mp3_music = nullptr;
 		return;
 	}
 
@@ -1881,7 +1853,7 @@ void playMusicByType(int iType) {
             iNumber = iNumber+1;
         }
         // play midi file
-        play_midi((MIDI *)gfxaudio[iNumber].dat, 0);
+        game.playMusic(iNumber);
     }
 }
 
@@ -2034,7 +2006,7 @@ void Shimmer(int r, int x, int y) {
 void INIT_PREVIEWS() {
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
-        previewMap.terrain = NULL;
+        previewMap.terrain = nullptr;
 
         // clear out name
         memset(previewMap.name, 0, sizeof(previewMap.name));
@@ -2065,31 +2037,6 @@ void INIT_PREVIEWS() {
     PreviewMap[0].terrain = create_bitmap(128, 128);
 }
 
-int getAmountReservedVoicesAndInstallSound() {
-	int voices = 256;
-	while (1) {
-		if (voices < 4) {
-			// failed!
-			return -1;
-		}
-		reserve_voices(voices, 0);
-		char msg[VOLUME_MAX];
-		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
-		{
-			sprintf(msg, "Success reserving %d voices.", voices);
-			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-			break;
-		}
-		else {
-			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
-			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
-			voices /= 2;
-		}
-	}
-
-	return voices;
-}
-
 const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {
         case eBuildType::SPECIAL:
@@ -2107,8 +2054,4 @@ const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int
             break;
     }
     return "";
-}
-
-char scanCodeToAscii(int scanCode) {
-    return (char)scancode_to_ascii(scanCode);
 }

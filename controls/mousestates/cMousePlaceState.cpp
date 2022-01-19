@@ -3,6 +3,8 @@
 #include <algorithm>
 #include "d2tmh.h"
 
+#include "utils/cSoundPlayer.h"
+
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse) {
 
@@ -47,7 +49,7 @@ void cMousePlaceState::onMouseLeftButtonClicked() {
     }
 
     if (mayPlaceIt(itemToPlace, context->getMouseCell())) {
-        play_sound_id(SOUND_PLACE);
+        game.playSound(SOUND_PLACE);
         player->placeItem(mouseCell, itemToPlace);
         context->toPreviousState();
     }

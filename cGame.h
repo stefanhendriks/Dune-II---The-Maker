@@ -17,7 +17,6 @@
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-#include "utils/cSoundPlayer.h"
 
 #include <memory>
 #include <string>
@@ -28,6 +27,7 @@ class cGameState;
 class cInteractionManager;
 class cPlatformLayerInit;
 class cPlayer;
+class cSoundPlayer;
 
 class cGame : public cScenarioObserver, cInputObserver {
 
@@ -88,7 +88,7 @@ public:
 
 	void setup_players();
 
-    void think_music();
+    void think_audio();
 
 	void think_mentat();
 
@@ -104,11 +104,14 @@ public:
     // Use this instead
 	void setNextStateToTransitionTo(int newState);
 
-	int getMaxVolume() { return iMaxVolume; }
+    // Game acts as a facade, delegates to sound player
+    void playSound(int sampleId); // Maximum volume
+    void playSound(int sampleId, int vol);
 
-	cSoundPlayer * getSoundPlayer() {
-	    return soundPlayer;
-	}
+    void playVoice(int sampleId, int house);
+    void playMusic(int sampleId);
+
+    int getMaxVolume();
 
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
@@ -220,15 +223,14 @@ private:
     cInteractionManager *_interactionManager;
     cAllegroDataRepository *m_dataRepository;
 
-    cSoundPlayer *soundPlayer;
+    std::unique_ptr<cSoundPlayer> _soundplayer;
+
     cMouse *mouse;
     cKeyboard *keyboard;
 
     bool missionWasWon; // hack: used for state transitioning :/
 
 	int state;
-
-	int iMaxVolume;
 
 	cAbstractMentat *pMentat; // TODO: Move this into a currentState class (as field)?
 

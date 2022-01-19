@@ -18,6 +18,7 @@
 #include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
+#include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
 
@@ -26,7 +27,7 @@ namespace {
 constexpr auto kMinAlpha = 0;
 constexpr auto kMaxAlpha = 255;
 
-};
+}
 
 cGame::cGame() {
     memset(states, 0, sizeof(cGameState *));
@@ -108,7 +109,7 @@ void cGame::init() {
     // Load properties
     INI_Install_Game(game_filename);
 
-    mp3_music = NULL;
+    mp3_music = nullptr;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -236,7 +237,7 @@ void cGame::setMissionWon() {
     TIMER_shake = 0;
     mouse->setTile(MOUSE_NORMAL);
 
-    play_voice(SOUND_VOICE_07_ATR);
+    _soundplayer->playVoice(SOUND_VOICE_07_ATR, players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_WIN);
 
@@ -255,7 +256,7 @@ void cGame::setMissionLost() {
     TIMER_shake = 0;
     mouse->setTile(MOUSE_NORMAL);
 
-    play_voice(SOUND_VOICE_08_ATR);
+    _soundplayer->playVoice(SOUND_VOICE_08_ATR, players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
@@ -381,8 +382,10 @@ void cGame::think_mentat() {
     }
 }
 
-// TODO: Move to music related class (MusicPlayer?)
-void cGame::think_music() {
+// think function belongs to combat state (tbd)
+void cGame::think_audio() {
+    _soundplayer->think();
+
     if (!game.bPlayMusic) // no music enabled, so no need to think
         return;
 
@@ -597,11 +600,6 @@ void cGame::shutdown() {
         }
     }
 
-    if (soundPlayer) {
-        soundPlayer->destroyAllSounds();
-    }
-    delete soundPlayer;
-
     delete pMentat;
     delete mapViewport;
 
@@ -622,6 +620,7 @@ void cGame::shutdown() {
 
     delete allegroDrawer;
     delete m_dataRepository;
+    _soundplayer.reset();
     delete mouse;
     delete keyboard;
 
@@ -836,7 +835,7 @@ bool cGame::setupGame() {
 
     game_font = alfont_load_font("data/arakeen.fon");
 
-    if (game_font != NULL) {
+    if (game_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
@@ -848,7 +847,7 @@ bool cGame::setupGame() {
 
     bene_font = alfont_load_font("data/benegess.fon");
 
-    if (bene_font != NULL) {
+    if (bene_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
@@ -859,7 +858,7 @@ bool cGame::setupGame() {
 
     small_font = alfont_load_font("data/small.ttf");
 
-    if (small_font != NULL) {
+    if (small_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
@@ -875,20 +874,11 @@ bool cGame::setupGame() {
         logbook("Display 'switch to background' mode set");
     }
 
-	int maxSounds = getAmountReservedVoicesAndInstallSound();
-
-    if (maxSounds > -1) {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization",
-                    fmt::format("Successfully installed sound. {} voices reserved", maxSounds),
-                    OUTC_SUCCESS);
+    if (!bPlaySound) {
+        _soundplayer = std::make_unique<cSoundPlayer>(*_PLInit, 0);
     } else {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
+        _soundplayer = std::make_unique<cSoundPlayer>(*_PLInit);
     }
-	soundPlayer = new cSoundPlayer(maxSounds);
-
-    // normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
-    iMaxVolume = 220;
-    set_volume(iMaxVolume, 110);
 
     /***
      * Viewport(s)
@@ -902,7 +892,7 @@ bool cGame::setupGame() {
 
     bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_screen == NULL) {
+    if (bmp_screen == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_screen");
         return false;
@@ -913,7 +903,7 @@ bool cGame::setupGame() {
 
     bmp_backgroundMentat = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_backgroundMentat == NULL) {
+    if (bmp_backgroundMentat == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
         return false;
@@ -955,7 +945,7 @@ bool cGame::setupGame() {
 
     bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_throttle == NULL) {
+    if (bmp_throttle == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_throttle");
         return false;
@@ -965,7 +955,7 @@ bool cGame::setupGame() {
 
     bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_winlose == NULL) {
+    if (bmp_winlose == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_winlose");
         return false;
@@ -975,7 +965,7 @@ bool cGame::setupGame() {
 
     bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
 
-    if (bmp_fadeout == NULL) {
+    if (bmp_fadeout == nullptr) {
         allegro_message("Failed to create a memory bitmap");
         logbook("ERROR: Could not create bitmap: bmp_fadeout");
         return false;
@@ -1005,14 +995,6 @@ bool cGame::setupGame() {
     } else {
         logbook("Datafile hooked: gfxdata.dat");
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
-    }
-
-    gfxaudio = load_datafile("data/gfxaudio.dat");
-    if (gfxaudio == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
-        return false;
-    } else {
-        logbook("Datafile hooked: gfxaudio.dat");
     }
 
     gfxinter = load_datafile("data/gfxinter.dat");
@@ -1347,10 +1329,8 @@ void cGame::loadScenario() {
 }
 
 void cGame::thinkFast_state() {
-    think_music();
+    think_audio();
     think_mentat();
-
-    soundPlayer->think();
 
     if (currentState) {
         currentState->thinkFast();
@@ -1495,7 +1475,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
             if (structureId > -1) {
                 cAbstractStructure *pStructure = structure[structureId];
                 if (pStructure && pStructure->isValid()) {
-                    play_sound_id(SOUND_PLACE);
+                    _soundplayer->playSound(SOUND_PLACE);
                     create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
@@ -1785,3 +1765,22 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
     }
 }
 
+void cGame::playSound(int sampleId) {
+    _soundplayer->playSound(sampleId);
+}
+
+void cGame::playSound(int sampleId, int vol) {
+    _soundplayer->playSound(sampleId, vol);
+}
+
+void cGame::playVoice(int sampleId, int house) {
+    _soundplayer->playVoice(sampleId, house);
+}
+
+void cGame::playMusic(int sampleId) {
+    _soundplayer->playMusic(sampleId);
+}
+
+int cGame::getMaxVolume() {
+    return _soundplayer->getMaxVolume();
+}

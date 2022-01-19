@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 
 #include "timers.h"
+#include "utils/cSoundPlayer.h"
 
 cTimeManager::cTimeManager() {
     timerUnits = 0;
