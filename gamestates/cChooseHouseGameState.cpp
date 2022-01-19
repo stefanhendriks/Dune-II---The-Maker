@@ -4,8 +4,9 @@
 
 #include "utils/cSoundPlayer.h"
 
-cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) : cGameState(theGame) {
-    textDrawer = cTextDrawer(bene_font);
+cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
+    cGameState(theGame),
+    textDrawer(cTextDrawer(bene_font)) {
     backButtonRect = textDrawer.getAsRectangle(0, game.screen_y - textDrawer.getFontHeight(), " BACK");
 
     bmp_Dune = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
@@ -93,17 +94,17 @@ void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) 
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
         game.prepareMentatToTellAboutHouse(ATREIDES);
-        game.getSoundPlayer().playSound(SOUND_ATREIDES);
+        game.playSound(SOUND_ATREIDES);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(&houseOrdos)) {
         game.prepareMentatToTellAboutHouse(ORDOS);
-        game.getSoundPlayer().playSound(SOUND_ORDOS);
+        game.playSound(SOUND_ORDOS);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         game.prepareMentatToTellAboutHouse(HARKONNEN);
-        game.getSoundPlayer().playSound(SOUND_HARKONNEN);
+        game.playSound(SOUND_HARKONNEN);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(backButtonRect)) {

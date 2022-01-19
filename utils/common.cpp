@@ -1679,7 +1679,7 @@ void play_sound_id_with_distance(int s, int iDistance) {
 	if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
 	if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
-        game.getSoundPlayer().playSound(s);
+        game.playSound(s);
 		return;
 	}
 
@@ -1688,7 +1688,7 @@ void play_sound_id_with_distance(int s, int iDistance) {
     float maxDistance = mapCamera->divideByZoomLevel(map.getMaxDistanceInPixels()/2);
     float distanceNormalized = 1.0 - ((float)iDistance / maxDistance);
 
-    float volume = game.getSoundPlayer().getMaxVolume() * distanceNormalized;
+    float volume = game.getMaxVolume() * distanceNormalized;
 
     // zoom factor influences volume (more zoomed in means louder)
     float volumeFactor = mapCamera->factorZoomLevel(0.7f);
@@ -1707,7 +1707,7 @@ void play_sound_id_with_distance(int s, int iDistance) {
         logbook(msg);
     }
 
-    game.getSoundPlayer().playSound(s, iVolFactored);
+    game.playSound(s, iVolFactored);
 }
 
 bool MIDI_music_playing() {
@@ -1831,7 +1831,7 @@ void playMusicByType(int iType) {
             iNumber = iNumber+1;
         }
         // play midi file
-        game.getSoundPlayer().playMusic(iNumber);
+        game.playMusic(iNumber);
     }
 }
 

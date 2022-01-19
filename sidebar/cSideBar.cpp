@@ -143,7 +143,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(eListTypeFromInt(i));
-            game.getSoundPlayer().playSound(SOUND_BUTTON, 64); // click sound
+            game.playSound(SOUND_BUTTON, 64); // click sound
             break;
         }
     }

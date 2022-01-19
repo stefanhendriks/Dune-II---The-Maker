@@ -102,11 +102,11 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
         }
 
         if (unitSelected) {
-            game.getSoundPlayer().playSound(SOUND_REPORTING);
+            game.playSound(SOUND_REPORTING);
         }
 
         if (infantrySelected) {
-            game.getSoundPlayer().playSound(SOUND_YESSIR);
+            game.playSound(SOUND_YESSIR);
         }
 
         selectedUnits = unitSelected || infantrySelected;

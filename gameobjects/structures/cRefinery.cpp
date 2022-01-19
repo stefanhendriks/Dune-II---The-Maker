@@ -76,7 +76,7 @@ void cRefinery::think_unit_occupation() {
 
     // let player know...
     if (pPlayer->isHuman()) {
-        game.getSoundPlayer().playSound(SOUND_VOICE_02_ATR, pPlayer->getHouse());
+        game.playSound(SOUND_VOICE_02_ATR, pPlayer->getHouse());
     }
 
     // perhaps we can find a carryall to help us out

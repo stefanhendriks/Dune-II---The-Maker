@@ -308,7 +308,7 @@ void cMiniMapDrawer::think() {
             // go to state power down (not enough power)
             status = eMinimapStatus::POWERDOWN;
             // "Radar de-activated""
-            game.getSoundPlayer().playVoice(SOUND_VOICE_04_ATR, player->getHouse());
+            game.playVoice(SOUND_VOICE_04_ATR, player->getHouse());
         }
     }
 
@@ -317,9 +317,9 @@ void cMiniMapDrawer::think() {
         if (hasRadarAndEnoughPower) {
             // go to state power up (enough power)
             status = eMinimapStatus::POWERUP;
-            game.getSoundPlayer().playSound(SOUND_RADAR);
+            game.playSound(SOUND_RADAR);
             // "Radar activated"
-            game.getSoundPlayer().playVoice(SOUND_VOICE_03_ATR, player->getHouse());
+            game.playVoice(SOUND_VOICE_03_ATR, player->getHouse());
         }
     }
 

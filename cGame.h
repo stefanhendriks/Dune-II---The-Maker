@@ -87,7 +87,7 @@ public:
 
 	void setup_players();
 
-    void think_music();
+    void think_audio();
 
 	void think_mentat();
 
@@ -103,9 +103,14 @@ public:
     // Use this instead
 	void setNextStateToTransitionTo(int newState);
 
-	cSoundPlayer& getSoundPlayer() {
-	    return *_soundplayer;
-	}
+    // Game acts as a facade, delegates to sound player
+    void playSound(int sampleId); // Maximum volume
+    void playSound(int sampleId, int vol);
+
+    void playVoice(int sampleId, int house);
+    void playMusic(int sampleId);
+
+    int getMaxVolume();
 
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb

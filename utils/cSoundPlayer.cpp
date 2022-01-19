@@ -114,6 +114,7 @@ cSoundPlayer::~cSoundPlayer() {
 }
 
 int cSoundPlayer::getMaxVolume() {
+    // TODO: This will become configurable (so you can set your own max volume for sounds, etc)
     return kAllegroMaxVolume;
 }
 
