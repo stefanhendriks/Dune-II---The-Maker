@@ -13,7 +13,7 @@ namespace brains {
         // timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
         // 10*60 -> 1 minute. * 4 -> 4 minutes
         TIMER_rest = (10 * 60) * 4;
-        if (game.bNoAiRest) {
+        if (game.m_noAiRest) {
             TIMER_rest = 10;
         }
         myBase = std::vector<S_structurePosition>();
@@ -310,42 +310,42 @@ namespace brains {
             }
         }
 
-        if (game.iMission == 2) {
+        if (game.m_mission == 2) {
             produceLevel2Missions(soldierKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 3) {
+        if (game.m_mission == 3) {
             produceLevel3Missions(trikeKind, soldierKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 4) {
+        if (game.m_mission == 4) {
             produceLevel4Missions(trikeKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 5) {
+        if (game.m_mission == 5) {
             produceLevel5Missions(trikeKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 6) {
+        if (game.m_mission == 6) {
             produceLevel6Missions(trikeKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 7) {
+        if (game.m_mission == 7) {
             produceLevel7Missions(trikeKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 8) {
+        if (game.m_mission == 8) {
             produceLevel8Missions(trikeKind, infantryKind);
             return;
         }
 
-        if (game.iMission == 9) {
+        if (game.m_mission == 9) {
             produceLevel9Missions(trikeKind, infantryKind);
             return;
         }

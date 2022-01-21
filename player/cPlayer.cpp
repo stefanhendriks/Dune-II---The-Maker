@@ -342,7 +342,7 @@ bool cPlayer::bEnoughSpiceCapacityToStoreCredits(int threshold) const {
 }
 
 bool cPlayer::bEnoughPower() const {
-    if (!game.bSkirmish) {
+    if (!game.m_skirmish) {
         // AI cheats on power
         if (!m_Human) {
             // Dune 2 non-skirmish AI cheats; else it will be unplayable in some missions.
@@ -1281,7 +1281,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
         }
 
         // HACK HACK: the AI player does not need to discover an enemy player yet
-        if (isVisibleForPlayer || game.bSkirmish) {
+        if (isVisibleForPlayer || game.m_skirmish) {
             iTargets[maxTargets] = i;
             maxTargets++;
 
@@ -1308,7 +1308,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
         if (structure[i])
             if (structure[i]->getOwner() == iAttackPlayer)
                 if (map.isVisible(structure[i]->getCell(), this) ||
-                    game.bSkirmish) {
+                    game.m_skirmish) {
                     iTargets[iT] = i;
 
                     iT++;
@@ -1722,7 +1722,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
 //        // do nothing
 //        return;
 //    }
-    if (game.iMusicType != MUSIC_PEACE) {
+    if (game.m_musicType != MUSIC_PEACE) {
         // nothing to do here music-wise
         return;
     }

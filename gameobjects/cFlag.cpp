@@ -18,8 +18,8 @@ void cFlag::draw() {
     int drawX = mapCamera->getWindowXPosition(absCoords.x);
     int drawY = mapCamera->getWindowYPosition(absCoords.y);
 
-    if ((drawX >= 0 && drawX < game.screen_x) &&
-        (drawY >= 0 && drawY < game.screen_y)) { // within screen
+    if ((drawX >= 0 && drawX < game.m_screenX) &&
+        (drawY >= 0 && drawY < game.m_screenY)) { // within screen
         // draw it
 
         int pixelWidth = flagBitmap->w;

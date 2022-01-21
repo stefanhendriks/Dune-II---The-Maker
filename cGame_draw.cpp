@@ -12,53 +12,53 @@
 #include "include/d2tmh.h"
 
 // Fading between menu items
-void cGame::START_FADING_OUT() {
+void cGame::initiateFadingOut() {
     // set state to fade out
-    fadeAction = eFadeAction::FADE_OUT; // fade out
+    m_fadeAction = eFadeAction::FADE_OUT; // fade out
 
     // copy the last bitmap of screen into a separate bitmap which we use for fading out.
     draw_sprite(bmp_fadeout, bmp_screen, 0, 0);
 }
 
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::losing() {
-    blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
+void cGame::drawStateLosing() {
+    blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenX, m_screenY);
 
     draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (mouse->isLeftButtonClicked()) {
+    if (m_mouse->isLeftButtonClicked()) {
         // OMG, MENTAT IS NOT HAPPY
-        state = GAME_LOSEBRIEF;
+        m_state = GAME_LOSEBRIEF;
 
-        if (bSkirmish) {
-            game.mission_init();
+        if (m_skirmish) {
+            game.missionInit();
         }
 
         createAndPrepareMentatForHumanPlayer();
 
         // FADE OUT
-        START_FADING_OUT();
+        initiateFadingOut();
     }
 }
 
 // this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::winning() {
-    blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
+void cGame::drawStateWinning() {
+    blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenX, m_screenY);
 
     draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (mouse->isLeftButtonClicked()) {
+    if (m_mouse->isLeftButtonClicked()) {
         // Mentat will be happy, after that enter "Select your next Conquest"
-        state = GAME_WINBRIEF;
+        m_state = GAME_WINBRIEF;
 
-        if (bSkirmish) {
-            game.mission_init();
+        if (m_skirmish) {
+            game.missionInit();
         }
 
         createAndPrepareMentatForHumanPlayer();
 
         // FADE OUT
-        START_FADING_OUT();
+        initiateFadingOut();
     }
 }
 

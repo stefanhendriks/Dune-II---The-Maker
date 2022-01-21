@@ -229,8 +229,8 @@ bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure) 
 	int width = mapCamera->factorZoomLevel(structure->getWidthInPixels());
 	int height = mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
-	return (drawX + width  >= 0 && drawX < game.screen_x) &&
-	       (drawY + height >= 0 && drawY < game.screen_y);
+	return (drawX + width  >= 0 && drawX < game.m_screenX) &&
+           (drawY + height >= 0 && drawY < game.m_screenY);
 }
 
 bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int screenX, int screenY) {
@@ -308,7 +308,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
         }
 	}
 
-	if (!game.bSkirmish) {
+	if (!game.m_skirmish) {
 	    // ?? (mission 9 etc AI has no power)
 	}
 	return totalPowerOut;

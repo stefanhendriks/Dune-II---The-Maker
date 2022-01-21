@@ -7,11 +7,11 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
   ,  background(background)
   ,  prevState(prevState)
   ,  textDrawer(cTextDrawer(bene_font)) {
-    int margin = game.screen_y * 0.3;
+    int margin = game.m_screenY * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = game.screen_x - (margin * 2);
-    int mainMenuHeight = game.screen_y - (margin * 2);
+    int mainMenuWidth = game.m_screenX - (margin * 2);
+    int mainMenuHeight = game.m_screenY - (margin * 2);
 
     margin = 4;
     int buttonHeight = (textDrawer.getFontHeight() + margin);
@@ -24,7 +24,7 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
     const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
 
     // Title
-    gui_window->setTitle("Dune II - The Maker - version " + game.version);
+    gui_window->setTitle("Dune II - The Maker - version " + game.m_version);
 
     // EXIT
     int rows = 2;

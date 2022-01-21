@@ -7,21 +7,21 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
         drawManager->getMessageDrawer()->initCombatPosition();
 
         // CENTER MOUSE
-        game.getMouse()->positionMouseCursor(game.screen_x / 2, game.screen_y / 2);
+        game.getMouse()->positionMouseCursor(game.m_screenX / 2, game.m_screenY / 2);
 
-        game.START_FADING_OUT();
+        game.initiateFadingOut();
 
         playMusicByType(MUSIC_PEACE);
         return;
     }
 
-    if (game.bSkirmish) {
+    if (game.m_skirmish) {
         if (game.isState(GAME_WINBRIEF) || game.isState(GAME_LOSEBRIEF)) {
-            // regardless of winning or losing, always go back to main menu
+            // regardless of drawStateWinning or drawStateLosing, always go back to main menu
             game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-            game.init_skirmish();
+            game.initSkirmish();
             playMusicByType(MUSIC_MENU);
-            game.START_FADING_OUT();
+            game.initiateFadingOut();
         } else {
             logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
         }
@@ -37,18 +37,18 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
         // PLAY THE MUSIC
         playMusicByType(MUSIC_CONQUEST);
 
-        game.START_FADING_OUT();
+        game.initiateFadingOut();
         return;
     }
 
     // lost mission
     if (game.isState(GAME_LOSEBRIEF)) {
-        game.mission_init();
+        game.missionInit();
         // lost mission > 1, so we go back to region select
-        if (game.iMission > 1)   {
+        if (game.m_mission > 1)   {
             game.setNextStateToTransitionTo(GAME_REGION);
 
-            game.iMission--; // we did not win
+            game.m_mission--; // we did not win
 
             // PLAY THE MUSIC
             playMusicByType(MUSIC_CONQUEST);
@@ -60,7 +60,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             mentat.resetSpeak();
         }
 
-        game.START_FADING_OUT();
+        game.initiateFadingOut();
         return;
     }
 }
