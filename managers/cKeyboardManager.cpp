@@ -53,9 +53,9 @@ void cKeyboardManager::DEBUG_KEYS() {
 
     //JUMP TO MISSION 9
     if (key[KEY_F1] && players[HUMAN].getHouse() > 0) {
-        game.mission_init();
-        game.iMission = 9;
-        game.iRegion = 22;
+        game.missionInit();
+        game.m_mission = 9;
+        game.m_region = 22;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
@@ -121,9 +121,9 @@ void cKeyboardManager::DEBUG_KEYS() {
 
     //JUMP TO MISSION 3
     if (key[KEY_F6] && players[HUMAN].getHouse() > 0) {
-        game.mission_init();
-        game.iMission = 3;
-        game.iRegion = 6;
+        game.missionInit();
+        game.m_mission = 3;
+        game.m_region = 6;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
@@ -131,18 +131,18 @@ void cKeyboardManager::DEBUG_KEYS() {
 
     //JUMP TO MISSION 4
     if (key[KEY_F7] && players[HUMAN].getHouse() > 0) {
-        game.mission_init();
-        game.iMission = 4;
-        game.iRegion = 10;
+        game.missionInit();
+        game.m_mission = 4;
+        game.m_region = 10;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
     }
     //JUMP TO MISSION 5
     if (key[KEY_F8] && players[HUMAN].getHouse() > 0) {
-        game.mission_init();
-        game.iMission = 5;
-        game.iRegion = 13;
+        game.missionInit();
+        game.m_mission = 5;
+        game.m_region = 13;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();

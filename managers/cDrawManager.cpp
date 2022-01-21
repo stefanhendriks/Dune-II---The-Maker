@@ -40,7 +40,7 @@ cDrawManager::~cDrawManager() {
 void cDrawManager::drawCombatState() {
     // MAP
 	assert(mapDrawer);
-	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.screen_y);
+	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenY);
     mapDrawer->drawTerrain();
 
 	// Only draw units/structures, etc, when we do NOT press D
@@ -92,7 +92,7 @@ void cDrawManager::drawCombatState() {
 
     allegroDrawer->resetClippingFor(bmp_screen);
 
-    if (game.bDrawUsages) {
+    if (game.m_drawUsages) {
         drawDebugInfoUsages();
         particleDrawer->drawDebugInfo();
     }
@@ -178,7 +178,7 @@ void cDrawManager::drawRallyPoint() {
 }
 
 void cDrawManager::drawSidebar() {
-    allegroDrawer->setClippingFor(bmp_screen, game.screen_x-cSideBar::SidebarWidth, 0, game.screen_x, game.screen_y);
+    allegroDrawer->setClippingFor(bmp_screen, game.m_screenX - cSideBar::SidebarWidth, 0, game.m_screenX, game.m_screenY);
     sidebarDrawer->draw();
     miniMapDrawer->draw();
     allegroDrawer->resetClippingFor(bmp_screen);
@@ -224,9 +224,9 @@ void cDrawManager::drawMouse() {
 
 void cDrawManager::drawTopBarBackground() {
     if (topBarBmp == nullptr) {
-        topBarBmp = create_bitmap(game.screen_x, 30);
+        topBarBmp = create_bitmap(game.m_screenX, 30);
         BITMAP *topbarPiece = (BITMAP *)gfxinter[BMP_TOPBAR_BACKGROUND].dat;
-        for (int x = 0; x < game.screen_x; x+= topbarPiece->w) {
+        for (int x = 0; x < game.m_screenX; x+= topbarPiece->w) {
             allegroDrawer->drawSprite(topBarBmp, topbarPiece, x, 0);
         }
 
@@ -261,12 +261,12 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
 
 void cDrawManager::drawOptionBar() {
     // upper bar
-    rectfill(bmp_screen, 0, 0, game.screen_x, cSideBar::TopBarHeight, makecol(0,0,0));
+    rectfill(bmp_screen, 0, 0, game.m_screenX, cSideBar::TopBarHeight, makecol(0, 0, 0));
     if (optionsBar == NULL) {
-        optionsBar = create_bitmap(game.screen_x, 40);
+        optionsBar = create_bitmap(game.m_screenX, 40);
         clear_to_color(optionsBar, sidebarColor);
 
-        for (int w = 0; w < (game.screen_x + 800); w += 789) {
+        for (int w = 0; w < (game.m_screenX + 800); w += 789) {
             draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
         }
     }
@@ -277,7 +277,7 @@ void cDrawManager::drawOptionBar() {
 void cDrawManager::drawNotifications() {
     std::vector<cPlayerNotification> &notifications = player->getNotifications();
 //    int y = cSideBar::TopBarHeight + 14; // 12 pixels
-    int y = game.screen_y - 11;
+    int y = game.m_screenY - 11;
     for (auto &notification : notifications) {
         textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;

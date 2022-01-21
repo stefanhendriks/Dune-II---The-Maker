@@ -479,13 +479,13 @@ void cMap::draw_units() {
         if (!pUnit.isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
-        if (game.bDrawUnitDebug) {
+        if (game.m_drawUnitDebug) {
             pUnit.draw_path();
         }
 
         if (pUnit.iType != SANDWORM) continue;
 
-        if (pUnit.isWithinViewport(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.m_mapViewport)) {
             pUnit.draw();
         }
 
@@ -501,7 +501,7 @@ void cMap::draw_units() {
         if (!pUnit.isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit.isWithinViewport(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.m_mapViewport)) {
             // draw
             pUnit.draw();
         }
@@ -519,7 +519,7 @@ void cMap::draw_units() {
             pUnit.isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit.isWithinViewport(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.m_mapViewport)) {
             // draw
             pUnit.draw();
         }
@@ -529,7 +529,7 @@ void cMap::draw_units() {
 }
 
 void cMap::drawUnitDebug(cUnit &pUnit) const {
-    if (!game.bDrawUnitDebug) return;
+    if (!game.m_drawUnitDebug) return;
 
     pUnit.draw_debug();
 }
@@ -543,7 +543,7 @@ void cMap::draw_units_2nd() {
         cUnit &pUnit = unit[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.bHovered && !pUnit.bSelected) continue;
-        if (!pUnit.isWithinViewport(game.mapViewport)) continue;
+        if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
         if (pUnit.iTempHitPoints > -1) continue;
 
         pUnit.draw_health();
@@ -559,7 +559,7 @@ void cMap::draw_units_2nd() {
         if (!pUnit.isValid()) continue;
         if (!pUnit.isAirbornUnit()) continue;
 
-        if (pUnit.isWithinViewport(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.m_mapViewport)) {
             pUnit.draw();
             // TODO: Only human players?
             pUnit.draw_health();

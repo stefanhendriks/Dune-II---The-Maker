@@ -21,8 +21,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
 }
 
 void cSelectYourNextConquestState::calculateOffset() {
-    offsetX = (game.screen_x - 640) / 2;
-    offsetY = (game.screen_y - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetX = (game.m_screenX - 640) / 2;
+    offsetY = (game.m_screenY - 480) / 2; // same goes for offsetY (but then for 480 height).
 }
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState() {
@@ -57,7 +57,7 @@ void cSelectYourNextConquestState::thinkFast() {
         }
 
         int iHouse = players[0].getHouse();
-        int iMission = game.iMission;
+        int iMission = game.m_mission;
 
         if (regionSceneState == SCENE_INIT) {
             REGION_SETUP_NEXT_MISSION(iMission, iHouse);
@@ -335,21 +335,21 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     iNewReg += iReg;
 
     //char msg[255];
-//sprintf(msg, "Mission = %d", game.iMission);
+//sprintf(msg, "Mission = %d", game.m_mission);
 //allegro_message(msg);
 
-    game.mission_init();
+    game.missionInit();
     game.setNextStateToTransitionTo(GAME_BRIEFING);
-    game.iRegion = iNewReg;
-    game.iMission++;                        // FINALLY ADD MISSION NUMBER...
+    game.m_region = iNewReg;
+    game.m_mission++;                        // FINALLY ADD MISSION NUMBER...
 
-    // set up stateMentat
+    // set up drawStateMentat
     game.createAndPrepareMentatForHumanPlayer();
 
     // load map
     game.loadScenario();
 
-    //sprintf(msg, "Mission = %d", game.iMission);
+    //sprintf(msg, "Mission = %d", game.m_mission);
 //allegro_message(msg);
 
     playMusicByType(MUSIC_BRIEFING);
@@ -357,7 +357,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     //allegro_message(msg);
 
     state = REGSTATE_FADEOUT;
-    game.START_FADING_OUT();
+    game.initiateFadingOut();
 }
 
 cRegion * cSelectYourNextConquestState::getRegionMouseIsOver() const {
@@ -600,7 +600,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
-        loadScenarioAndTransitionToNextState(game.iMission);
+        loadScenarioAndTransitionToNextState(game.m_mission);
     }
 }
 
