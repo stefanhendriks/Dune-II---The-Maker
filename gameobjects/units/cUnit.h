@@ -16,17 +16,18 @@
 #include "utils/cRectangle.h"
 
 // Define TRANSFER stuff for reinforcements
-
 #define TRANSFER_NONE	-1				// nothing to transfer
 #define TRANSFER_NEW_STAY	0			// bring a new unit, and let the carryall stay
 #define TRANSFER_NEW_LEAVE	2			// bring a new unit, and let the carryall go back (and die)
 #define TRANSFER_PICKUP		1			// carry an existing unit, bring to new location
 #define TRANSFER_DIE		3			// will die when reaching goal-cell (added for proper animation)
 
-#define ACTION_GUARD        0           // on guard (scanning for enemy activitiy)
-#define ACTION_MOVE         1           // moving
-#define ACTION_CHASE        2           // chasing a unit to attack
-#define ACTION_ATTACK       3           // attacking (not moving)
+enum class eActionType {
+    GUARD,                              // on guard (scanning for enemy activity)
+    MOVE,                               // moving
+    CHASE,                              // chasing a unit to attack
+    ATTACK,                             // attacking (not moving)
+};
 
 // Reinforcement data (loaded from ini file)
 struct sReinforcement
@@ -245,7 +246,7 @@ public:
     bool isMovingBetweenCells();
 
     bool isIdle() {
-        return iAction == ACTION_GUARD;
+        return m_action == eActionType::GUARD;
     }
 
     void takeDamage(int damage);
@@ -339,8 +340,7 @@ public:
     void thinkFast();
 
 private:
-    // Action its doing:
-    int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
+    eActionType m_action;
     eUnitActionIntent intent;
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
