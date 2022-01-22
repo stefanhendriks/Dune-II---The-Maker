@@ -785,22 +785,30 @@ void cUnit::updateCellXAndY() {
     iCellY = map.getCellY(iCell);
 }
 
+/**
+ * Attack unit, and will chase target when out of range.
+ * @param targetUnit
+ */
 void cUnit::attackUnit(int targetUnit) {
-    log(fmt::format("attackUnit() : target is [{}]", targetUnit));
-    attack(unit[targetUnit].iCell, targetUnit, -1, -1);
+    attackUnit(targetUnit, true);
+}
+
+void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange) {
+    log(fmt::format("attackUnit() : target is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
+    attack(unit[targetUnit].iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure) {
     log(fmt::format("attackStructure() : target is [{}]", targetStructure));
-    attack(structure[targetStructure]->getCell(), -1, targetStructure, -1);
+    attack(structure[targetStructure]->getCell(), -1, targetStructure, -1, true);
 }
 
 void cUnit::attackCell(int cell) {
     log(fmt::format("attackCell() : cell target is [{}]", cell));
-    attack(cell, -1, -1, cell);
+    attack(cell, -1, -1, cell, true);
 }
 
-void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell) {
+void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bool chaseWhenOutOfRange) {
     // basically the same as move, but since we use m_action as ATTACK
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
@@ -820,7 +828,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell) {
         return;
     }
 
-    m_action = eActionType::ATTACK;
+    setAction(chaseWhenOutOfRange ? eActionType::ATTACK_CHASE : eActionType::ATTACK);
     this->iGoalCell = goalCell;
     iAttackStructure = structureId;
     iAttackUnit = unitId;
@@ -886,7 +894,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         iNextCell = -1;
     }
 
-    m_action = eActionType::MOVE;
+    setAction(eActionType::MOVE);
     this->intent = intent;
 
     forgetAboutCurrentPathAndPrepareToCreateNewOne();
@@ -989,10 +997,10 @@ void cUnit::thinkFast_guard() {
                 // AI will try to squish infantry units
                 move_to(unitToAttack.iCell);
             } else {
-                attackUnit(unitIdToAttack);
+                attackUnit(unitIdToAttack, false);
             }
         } else {
-            attackUnit(unitIdToAttack);
+            attackUnit(unitIdToAttack, false);
         }
 
         return;
@@ -1031,7 +1039,7 @@ void cUnit::think() {
     thinkActionAgnostic();
 
     // Think attack style
-    if (m_action == eActionType::ATTACK) {
+    if (m_action == eActionType::ATTACK_CHASE || m_action == eActionType::ATTACK) {
         think_attack();
     }
 }
@@ -1864,7 +1872,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
             // only auto attack back when it is not an airborn unit
             // note: guard state already takes care of scanning for air units and attacking them
             if (!unitWhoShotMeIsAirborn) {
-                attackUnit(iShotUnit);
+                attackUnit(iShotUnit); // by default chase unit in case it is out of range
             }
         }
 
@@ -1878,7 +1886,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 }
 
             } else {
-                if (m_action != eActionType::ATTACK) {
+                if (m_action != eActionType::ATTACK_CHASE && m_action != eActionType::ATTACK) {
                     if (canSquishInfantry() && unitWhoShotMeIsInfantry) {
                         // AI tries to run over infantry units that attack it
                         move_to(unit[iShotUnit].iCell);
@@ -2010,7 +2018,7 @@ void cUnit::think_attack() {
             iAttackUnit = -1;
             iAttackStructure = -1;
             iGoalCell = iCell;
-            m_action = eActionType::GUARD;
+            setAction(eActionType::GUARD);
             return;
         }
 
@@ -2045,20 +2053,7 @@ void cUnit::think_attack() {
     // Distance check
     int distance = map.distance(iCell, iGoalCell);
 
-    if (!isAirbornUnit()) {
-        if (!isMovingBetweenCells()) {
-            if (distance <= getRange()) {
-                setAngleTowardsTargetAndFireBullets(distance);
-            } else { // not within distance
-                startChasingTarget();
-            }
-        } else {
-            if (distance > getRange()) {
-                // atleast don't try to attack it
-                startChasingTarget();
-            }
-        }
-    } else {
+    if (isAirbornUnit()) {
         // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
 
@@ -2071,14 +2066,37 @@ void cUnit::think_attack() {
 
                 iAttackUnit = -1;
                 iAttackStructure = -1;
-                m_action = eActionType::MOVE;
+                setAction(eActionType::MOVE);
                 iGoalCell = map.getCellWithMapDimensions(rx, ry);
             }
         } else {
             // stop attacking, move instead?
-            m_action = eActionType::MOVE;
+            setAction(eActionType::MOVE);
             iAttackUnit = -1;
             iAttackStructure = -1;
+        }
+
+        return; // bail, air-unit attack thinking finished
+    }
+
+    if (!isMovingBetweenCells()) {
+        if (distance <= getRange()) {
+            setAngleTowardsTargetAndFireBullets(distance);
+        } else { // not within distance
+            if (m_action == eActionType::ATTACK_CHASE) {
+                startChasingTarget();
+            } else {
+                actionGuard();
+            }
+        }
+    } else {
+        if (distance > getRange()) {
+            // atleast don't try to attack it
+            if (m_action == eActionType::ATTACK_CHASE) {
+                startChasingTarget();
+            } else {
+                actionGuard();
+            }
         }
     }
 }
@@ -2143,7 +2161,7 @@ void cUnit::think_attack_sandworm() {
 }
 
 void cUnit::actionGuard() {
-    m_action = eActionType::GUARD;
+    setAction(eActionType::GUARD);
     iAttackUnit = -1;
     iAttackCell = -1;
     iAttackStructure =-1;
@@ -2156,26 +2174,26 @@ int cUnit::getFaceAngleToCell(int cell) const {
 
 void cUnit::startChasingTarget() {
     if (iAttackStructure > -1) {
-        m_action = eActionType::CHASE;
+        setAction(eActionType::CHASE);
         // a structure does not move, so don't need to re-calculate path?
 //        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     } else if (iAttackUnit > -1) {
         cUnit * attackUnit = &unit[iAttackUnit];
         // chase unit, but only when ground unit
         if (!attackUnit->isSandworm() && !attackUnit->isAirbornUnit()) {
-            m_action = eActionType::CHASE;
+            setAction(eActionType::CHASE);
             // only think of new path when our target moved
             if (attackUnit->getCell() != iGoalCell) {
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
             }
         } else {
             // do not chase sandworms or other air units, very ... inconvenient
-            m_action = eActionType::GUARD;
+            setAction(eActionType::GUARD);
             iGoalCell = iCell;
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
     } else if (iAttackCell > -1) {
-        m_action = eActionType::CHASE;
+        setAction(eActionType::CHASE);
     }
 }
 
@@ -2270,7 +2288,7 @@ void cUnit::thinkFast_move() {
 
     // when there is a valid goal cell (differs), then we go further
     if (iGoalCell == iCell) {
-        m_action = eActionType::GUARD; // do nothing
+        setAction(eActionType::GUARD); // do nothing
         forgetAboutCurrentPathAndPrepareToCreateNewOne();
         return;
     }
@@ -2723,7 +2741,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         // when we are chasing, we now set on attack...
         if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            m_action = eActionType::ATTACK;
+            setAction(eActionType::ATTACK_CHASE);
             forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
         }
 
@@ -3176,7 +3194,7 @@ void cUnit::thinkFast() {
         thinkFast_move_airUnit();
     } else {
         // move
-        if (m_action == eActionType::MOVE || m_action == eActionType::ATTACK || isMovingBetweenCells()) {
+        if (m_action == eActionType::MOVE || m_action == eActionType::CHASE || isMovingBetweenCells()) {
             thinkFast_move();
         }
     }
@@ -3457,6 +3475,17 @@ void cUnit::think_harvester() {
         iFrame = 0;
     }
 }
+
+
+void cUnit::setAction(eActionType action) {
+    log(fmt::format("setAction() from current action {} to new action {}", eActionTypeString(m_action),
+                        eActionTypeString(action)));
+    m_action = action;
+}
+
+
+
+
 
 
 // return new valid ID
