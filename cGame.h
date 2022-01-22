@@ -96,7 +96,7 @@ public:
 
     void run();			            // run the game (MAIN LOOP)
 
-    void thinkSlow_combat();
+    void thinkSlow_stateCombat_evaluatePlayerStatus();
 
     void thinkFast_combat();
     void thinkFast_state();
@@ -108,7 +108,7 @@ public:
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
 
-	bool isState(int thisState);
+	bool isState(int thisState) const;
 
     // Use this instead
 	void setNextStateToTransitionTo(int newState);
@@ -201,13 +201,16 @@ public:
 
     // FPS related
     bool isRunningAtIdealFps();
-    void resetFrameCount();
-    void setFps();
     int getFps();
 
     void prepareMentatToTellAboutHouse(int house);
 
     void drawCombatMouse();
+
+    void think_state();
+
+    void thinkSlow();
+
 private:
     /**
      * Variables start here
@@ -301,4 +304,7 @@ private:
     void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
+
+    void thinkSlow_state();
+    void thinkSlow_reinforcements();
 };

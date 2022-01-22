@@ -419,6 +419,8 @@ public:
      */
     bool selectUnits(const std::vector<int> &ids) const;
 
+    void thinkSlow();
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 

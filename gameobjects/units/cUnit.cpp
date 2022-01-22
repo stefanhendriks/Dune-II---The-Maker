@@ -1024,30 +1024,25 @@ bool cUnit::isSandworm() const {
     return iType == SANDWORM;
 }
 
-// NORMAL thinking
+/**
+ * Called every 100ms
+ */
 void cUnit::think() {
-    if (TIMER_blink > 0)
+    thinkActionAgnostic();
+
+    // Think attack style
+    if (iAction == ACTION_ATTACK) {
+        think_attack();
+    }
+}
+
+void cUnit::thinkActionAgnostic() {
+    if (TIMER_blink > 0) {
         TIMER_blink--;
+    }
 
-    cPlayer *pPlayer = getPlayer();
     if (iType == MCV) {
-        if (pPlayer->isHuman()) {
-            if (bSelected) {
-                if (key[KEY_D]) {
-                    bool result = getPlayer()->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
-
-                    if (result) {
-                        int iLocation = iCell;
-
-                        die(false, false);
-
-                        // place const yard
-                        pPlayer->placeStructure(iLocation, CONSTYARD, 100);
-                        return;
-                    }
-                }
-            }
-        }
+        think_MVC();
     }
 
     // HEAD is not facing correctly
@@ -1055,36 +1050,10 @@ void cUnit::think() {
         if (iBodyFacing == iBodyShouldFace) {
             if (iHeadFacing != iHeadShouldFace) {
                 TIMER_turn++;
-                if (TIMER_turn > (sUnitInfo[iType].turnspeed)) {
+                if (TIMER_turn > getTurnSpeed()) {
                     TIMER_turn = 0;
-
                     iHeadFacing = determineNewFacing(iHeadFacing, iHeadShouldFace);
-
-//                    int d = 1;
-//
-//                    int toleft = (iHeadFacing + 8) - iHeadShouldFace;
-//                    if (toleft > 7) toleft -= 8;
-//
-//                    int toright = abs(toleft - 8);
-//
-//                    if (toright == toleft) d = -1 + (rnd(2));
-//                    if (toleft > toright) d = 1;
-//                    if (toright > toleft) d = -1;
-//
-//                    iHeadFacing += d;
-//
-//                    if (iHeadFacing < 0)
-//                        iHeadFacing = 7;
-//
-//                    if (iHeadFacing > 7)
-//                        iHeadFacing = 0;
-
-
                 } // turn
-
-
-
-
             } // head facing
 
         } else {
@@ -1107,95 +1076,23 @@ void cUnit::think() {
     if (iTempHitPoints > -1)
         return;
 
-    // when any unit is on a spice bloom, you got a problem, you die!
+    // when any non-airborn, non-sandworm unit is on a spice bloom, it dies
     int cellType = map.getCellType(iCell);
-    if (!isAirbornUnit() && cellType == TERRAIN_BLOOM) {
+    if (!isAirbornUnit() && !isSandworm() && cellType == TERRAIN_BLOOM) {
         map.detonateSpiceBloom(iCell);
-
-        // non-sandworm units die of this
-        if (!isSandworm()) {
-            die(true, false);
-        }
-
+        die(true, false);
         return;
     }
 
     // --- think
     if (iType == ORNITHOPTER) {
-        think_ornithopter(pPlayer);
+        think_ornithopter();
         return;
     }
 
     // HARVESTERs logic here
     if (iType == HARVESTER) {
-        bool bFindRefinery = false;
-
-        if (iCredits > 0 && bSelected && key[KEY_D]) {
-            bFindRefinery = true;
-        }
-
-        // cell = goal cell (doing nothing)
-        if (iCell == iGoalCell) {
-            // when on spice, harvest
-            if (cellType == TERRAIN_SPICE ||
-                cellType == TERRAIN_SPICEHILL) {
-                // do timer stuff
-                if (iCredits < sUnitInfo[iType].credit_capacity)
-                    TIMER_harvest++;
-            } else {
-                // not on spice, find a new location
-                if (iCredits < sUnitInfo[iType].credit_capacity) {
-                    // find harvest cell
-                    move_to(UNIT_find_harvest_spot(iID), -1, -1);
-                } else {
-                    iFrame = 0;
-                    bFindRefinery = true;
-                    // find a refinery
-                }
-            }
-
-            if (iCredits >= sUnitInfo[iType].credit_capacity)
-                bFindRefinery = true;
-
-            // when we should harvest...
-            cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
-            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
-                iCredits < sUnitInfo[iType].credit_capacity) {
-                TIMER_harvest = 1;
-
-                iFrame++;
-
-                if (iFrame > 3)
-                    iFrame = 1;
-
-                iCredits += sUnitInfo[iType].harvesting_amount;
-                map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
-
-                // turn into sand/spice (when spicehill)
-                if (map.getCellCredits(iCell) <= 0) {
-                    if (cellType == TERRAIN_SPICEHILL) {
-                        map.cellChangeType(iCell, TERRAIN_SPICE);
-                        map.cellGiveCredits(iCell, rnd(100));
-                    } else {
-                        map.cellChangeType(iCell, TERRAIN_SAND);
-                        map.cellChangeTile(iCell, 0);
-                    }
-
-                    move_to(UNIT_find_harvest_spot(iID), -1, -1);
-
-                    mapEditor.smoothAroundCell(iCell);
-                }
-            }
-
-            // refinery required, go find one that is available
-            if (bFindRefinery) {
-                findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
-                return;
-            }
-        } else {
-            // ??
-            iFrame = 0;
-        }
+        think_harvester();
     }
 
     // When this is a carry-all, show proper animation when filled
@@ -1236,7 +1133,8 @@ void cUnit::think_carryAll() {// A carry-all has something when:
     }
 }
 
-void cUnit::think_ornithopter(cPlayer *pPlayer) {// flap with your wings
+void cUnit::think_ornithopter() {
+    cPlayer *pPlayer = getPlayer();
     iFrame++;
 
     if (iFrame > 3) {
@@ -3463,6 +3361,103 @@ int cUnit::findNearbyStructureToAttack(int range) {
     return structureIdToAttack;
 }
 
+void cUnit::think_MVC() {
+    cPlayer *pPlayer = getPlayer();
+    if (pPlayer->isHuman()) {
+        if (bSelected) {
+            if (key[KEY_D]) {
+                bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
+
+                if (result) {
+                    int iLocation = iCell;
+
+                    die(false, false);
+
+                    // place const yard
+                    pPlayer->placeStructure(iLocation, CONSTYARD, 100);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+int cUnit::getTurnSpeed() {
+    return sUnitInfo[iType].turnspeed;
+}
+
+void cUnit::think_harvester() {
+    bool bFindRefinery = false;
+
+    if (iCredits > 0 && bSelected && key[KEY_D]) {
+        bFindRefinery = true;
+    }
+
+    // cell = goal cell (doing nothing)
+    if (iCell == iGoalCell) {
+        int cellType = map.getCellType(iCell);
+        // when on spice, harvest
+        if (cellType == TERRAIN_SPICE ||
+            cellType == TERRAIN_SPICEHILL) {
+            // do timer stuff
+            if (iCredits < sUnitInfo[iType].credit_capacity)
+                TIMER_harvest++;
+        } else {
+            // not on spice, find a new location
+            if (iCredits < sUnitInfo[iType].credit_capacity) {
+                // find harvest cell
+                move_to(UNIT_find_harvest_spot(iID), -1, -1);
+            } else {
+                iFrame = 0;
+                bFindRefinery = true;
+                // find a refinery
+            }
+        }
+
+        if (iCredits >= sUnitInfo[iType].credit_capacity)
+            bFindRefinery = true;
+
+        // when we should harvest...
+        cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
+        if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
+            iCredits < sUnitInfo[iType].credit_capacity) {
+            TIMER_harvest = 1;
+
+            iFrame++;
+
+            if (iFrame > 3)
+                iFrame = 1;
+
+            iCredits += sUnitInfo[iType].harvesting_amount;
+            map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
+
+            // turn into sand/spice (when spicehill)
+            if (map.getCellCredits(iCell) <= 0) {
+                if (cellType == TERRAIN_SPICEHILL) {
+                    map.cellChangeType(iCell, TERRAIN_SPICE);
+                    map.cellGiveCredits(iCell, rnd(100));
+                } else {
+                    map.cellChangeType(iCell, TERRAIN_SAND);
+                    map.cellChangeTile(iCell, 0);
+                }
+
+                move_to(UNIT_find_harvest_spot(iID), -1, -1);
+
+                mapEditor.smoothAroundCell(iCell);
+            }
+        }
+
+        // refinery required, go find one that is available
+        if (bFindRefinery) {
+            findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+            return;
+        }
+    } else {
+        // ??
+        iFrame = 0;
+    }
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -4316,25 +4311,6 @@ void INIT_REINFORCEMENT() {
         reinforcements[i].iPlayer = -1;
         reinforcements[i].iSeconds = -1;
         reinforcements[i].iUnitType = -1;
-    }
-}
-
-// done every second
-void THINK_REINFORCEMENTS() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        if (reinforcements[i].iCell > -1) {
-            if (reinforcements[i].iSeconds > 0) {
-                reinforcements[i].iSeconds--;
-                continue; // next one
-            } else {
-                // deliver
-                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          players[reinforcements[i].iPlayer].getFocusCell());
-
-                // and make this unvalid
-                reinforcements[i].iCell = -1;
-            }
-        }
     }
 }
 

@@ -514,7 +514,7 @@ void cAbstractStructure::setOwner(int player) {
 /**
 	Think actions like any other structure would have.
 **/
-void cAbstractStructure::think() {
+void cAbstractStructure::thinkFast() {
     think_decay();
     think_repair();
     if (getS_StructuresType().flags.empty()) {

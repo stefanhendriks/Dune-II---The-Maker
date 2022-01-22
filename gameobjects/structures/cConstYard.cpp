@@ -12,8 +12,8 @@ int cConstYard::getType() const {
 	return CONSTYARD;
 }
 
-void cConstYard::think() {
-	cAbstractStructure::think();
+void cConstYard::thinkFast() {
+    cAbstractStructure::thinkFast();
 }
 
 void cConstYard::think_animation() {

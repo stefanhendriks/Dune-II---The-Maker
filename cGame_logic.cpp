@@ -189,7 +189,7 @@ void cGame::initPlayers(bool rememberHouse) const {
 /**
  * Thinking every second while in combat
  */
-void cGame::thinkSlow_combat() {
+void cGame::thinkSlow_stateCombat_evaluatePlayerStatus() {
     if (m_TIMER_evaluatePlayerStatus > 0) {
         m_TIMER_evaluatePlayerStatus--;
     } else {
@@ -1118,7 +1118,7 @@ void cGame::setupPlayers() {
     m_keyboard->setKeyboardObserver(m_interactionManager);
 }
 
-bool cGame::isState(int thisState) {
+bool cGame::isState(int thisState) const {
     return (m_state == thisState);
 }
 
@@ -1369,7 +1369,7 @@ void cGame::thinkFast_combat() {
         cAbstractStructure *pStructure = structure[i];
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
-            pStructure->think();           // think about actions going on
+            pStructure->thinkFast();           // think about actions going on
             pStructure->think_animation(); // think about animating
             pStructure->think_guard();     // think about 'guarding' the area (turrets only)
         }
@@ -1630,14 +1630,6 @@ bool cGame::isRunningAtIdealFps() {
     return m_fps > IDEAL_FPS;
 }
 
-void cGame::resetFrameCount() {
-    m_frameCount = 0;
-}
-
-void cGame::setFps() {
-    m_fps = m_frameCount;
-}
-
 int cGame::getFps() {
     return m_fps;
 }
@@ -1783,4 +1775,91 @@ void cGame::playMusic(int sampleId) {
 
 int cGame::getMaxVolume() {
     return m_soundPlayer->getMaxVolume();
+}
+
+/**
+ * Called every 100ms
+ */
+void cGame::think_state() {
+    if (game.isState(GAME_PLAYING)) {
+        // TODO: state->think()
+        // units think
+        for (int i = 0; i < MAX_UNITS; i++) {
+            cUnit &cUnit = unit[i];
+            if (cUnit.isValid()) {
+                cUnit.think();
+            }
+        }
+
+        drawManager->think();
+
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            players[i].think();
+        }
+
+    }
+}
+
+/**
+ * Called every second
+ */
+void cGame::thinkSlow() {
+    thinkSlow_state();
+
+    m_fps = m_frameCount;
+
+    // 'auto resting' / giving CPU some time for other processes
+    if (isRunningAtIdealFps()) {
+        iRest += 1; // give CPU a bit more slack
+    } else {
+        if (iRest > 0) iRest -= 1;
+        if (iRest < 0) iRest = 0;
+    }
+
+    m_frameCount = 0;
+}
+
+void cGame::thinkSlow_state() {
+    if (isState(GAME_PLAYING)) {
+        thinkSlow_stateCombat_evaluatePlayerStatus(); // so we can call non-const from a const :S
+
+        m_pathsCreated = 0;
+
+        if (!m_disableReinforcements) {
+            thinkSlow_reinforcements();
+        }
+
+        // starports think per second for deployment (if any)
+        for (int i = 0; i < MAX_STRUCTURES; i++) {
+            cAbstractStructure *pStructure = structure[i];
+            if (pStructure && pStructure->isValid()) {
+                pStructure->thinkSlow();
+            }
+        }
+
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            cPlayer &player = players[i];
+            player.thinkSlow();
+        }
+
+    } // game specific stuff
+
+}
+
+void cGame::thinkSlow_reinforcements() {
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        if (reinforcements[i].iCell > -1) {
+            if (reinforcements[i].iSeconds > 0) {
+                reinforcements[i].iSeconds--;
+                continue; // next one
+            } else {
+                // deliver
+                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
+                          players[reinforcements[i].iPlayer].getFocusCell());
+
+                // and make this unvalid
+                reinforcements[i].iCell = -1;
+            }
+        }
+    }
 }

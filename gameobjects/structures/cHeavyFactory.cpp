@@ -17,9 +17,9 @@ cHeavyFactory::~cHeavyFactory() {
 }
 
 
-void cHeavyFactory::think() {
+void cHeavyFactory::thinkFast() {
     // last but not least, think like our abstraction
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 }
 
 // think animation for unit deployment (when building unit is finished)
