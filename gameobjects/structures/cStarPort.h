@@ -9,17 +9,20 @@ private:
     // TIMERs
     int TIMER_deploy;
 
+    void think_deploy();            // starport uses this to deploy unit
+
 public:
     cStarPort();
 
     ~cStarPort();
 
     // overloaded functions
-    void think() override;
+    void thinkFast() override;
+
+    void thinkSlow() override;
 
     void think_animation() override;
 
-    void think_deploy();            // starport uses this to deploy unit
     void think_guard() override;
 
     int getType() const override;

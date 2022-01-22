@@ -13,9 +13,9 @@ cWor::~cWor() {
 
 }
 
-void cWor::think() {
+void cWor::thinkFast() {
     // think like base class
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 
 }
 

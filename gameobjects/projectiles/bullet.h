@@ -10,7 +10,7 @@ static const int ANIMATION_SPEED = 12;
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 
   */
 
@@ -34,7 +34,7 @@ public:
 
     int draw_y();
 
-    void think();       // think (when dying, doing damage, etc)
+    void thinkFast();       // think (when dying, doing damage, etc)
     void think_move();  // thinking for movement
 
     bool bAlive;

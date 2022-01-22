@@ -14,8 +14,8 @@ cPalace::~cPalace() {
 
 }
 
-void cPalace::think() {
-    cAbstractStructure::think();
+void cPalace::thinkFast() {
+    cAbstractStructure::thinkFast();
 }
 
 void cPalace::think_animation() {

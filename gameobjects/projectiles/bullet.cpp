@@ -6,7 +6,7 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 
   */
 
@@ -128,7 +128,8 @@ int cBullet::getBulletBmpHeight() const {
 }
 
 
-void cBullet::think() {
+// called every 5 ms
+void cBullet::thinkFast() {
     int maxFrames = gets_Bullet().max_frames;
     if (maxFrames > 0) {
         // frame animation first

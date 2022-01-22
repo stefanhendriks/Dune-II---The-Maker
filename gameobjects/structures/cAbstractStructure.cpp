@@ -6,7 +6,7 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 
   */
 
@@ -514,7 +514,7 @@ void cAbstractStructure::setOwner(int player) {
 /**
 	Think actions like any other structure would have.
 **/
-void cAbstractStructure::think() {
+void cAbstractStructure::thinkFast() {
     think_decay();
     think_repair();
     if (getS_StructuresType().flags.empty()) {

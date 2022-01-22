@@ -17,7 +17,7 @@ cRepairFacility::~cRepairFacility() {
 }
 
 
-void cRepairFacility::think() {
+void cRepairFacility::thinkFast() {
 
     // Repair unit here (if any)
     if (hasUnitWithin()) {
@@ -25,7 +25,7 @@ void cRepairFacility::think() {
     }
 
     // think like base class
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 
 }
 

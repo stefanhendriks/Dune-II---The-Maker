@@ -53,58 +53,9 @@ void cTimeManager::capTimers() {
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
 void cTimeManager::handleTimerAllegroTimerSeconds() {
-    // run this only once
-    if (timerSecond > 0) {
-        if (game.isState(GAME_PLAYING)) {
-            game.thinkSlow_combat();
-        }
-    }
-
     while (timerSecond > 0) {
         gameTime++;
-
-        if (game.isState(GAME_PLAYING)) {
-            game.m_pathsCreated = 0;
-
-            if (!game.m_disableReinforcements) {
-                THINK_REINFORCEMENTS();
-            }
-
-            // starports think per second for deployment (if any)
-            for (int i = 0; i < MAX_STRUCTURES; i++) {
-                cAbstractStructure *pStructure = structure[i];
-                if (pStructure && pStructure->isValid()) {
-                    if (pStructure->getType() == STARPORT) {
-                        ((cStarPort *) pStructure)->think_deploy();
-                    }
-                }
-            }
-
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                cPlayer &player = players[i];
-                if (player.getOrderProcesser()) {
-                    cOrderProcesser *orderProcesser = player.getOrderProcesser();
-                    assert(orderProcesser);
-                    orderProcesser->think();
-                }
-            }
-
-        } // game specific stuff
-
-
-        // Frame Per Second counter
-        game.setFps();
-
-        // 'auto resting' / giving CPU some time for other processes
-        if (game.isRunningAtIdealFps()) {
-            iRest += 1; // give CPU a bit more slack
-        } else {
-            if (iRest > 0) iRest -= 1;
-            if (iRest < 0) iRest = 0;
-        }
-
-        game.resetFrameCount();
-
+        game.thinkSlow();
         timerSecond--; // done!
     }
 
@@ -117,107 +68,7 @@ void cTimeManager::handleTimerGameTime() {
     // keep up with time cycles
     while (timerGlobal > 0) {
         game.think_fading();
-        game.think_audio();
-        game.think_mentat();
-        game.think_state();
-
-
-        if (drawManager) {
-            if (game.isState(GAME_PLAYING)) {
-                if (drawManager->getCreditsDrawer()) {
-                    drawManager->getCreditsDrawer()->think();
-                }
-            }
-
-            // this thing is also in another state
-            // TODO: this should be all moved to state specific think/update functions
-            if (drawManager->getMessageDrawer()) {
-                drawManager->getMessageDrawer()->think();
-            }
-        }
-
-        // THINKING ONLY WHEN PLAYING / COMBAT
-        if (game.isState(GAME_PLAYING)) {
-            for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-                cPlayer &pPlayer = players[i];
-                pPlayer.thinkFast();
-            }
-
-            // structures think
-            for (int i = 0; i < MAX_STRUCTURES; i++) {
-                cAbstractStructure *pStructure = structure[i];
-                if (pStructure == nullptr) continue;
-                if (pStructure->isValid()) {
-                    pStructure->think();           // think about actions going on
-                    pStructure->think_animation(); // think about animating
-                    pStructure->think_guard();     // think about 'guarding' the area (turrets only)
-                }
-
-                if (pStructure->isDead()) {
-                    cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
-                }
-            }
-
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                cItemBuilder *itemBuilder = players[i].getItemBuilder();
-                if (itemBuilder) {
-                    itemBuilder->think();
-                }
-            }
-
-            map.increaseScrollTimer();
-            map.thinkFast();
-
-            if (map.isTimeToScroll()) {
-                map.thinkInteraction();
-                map.resetScrollTimer();
-            }
-
-            game.reduceShaking();
-
-            // units think (move only)
-            for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &cUnit = unit[i];
-                if (!cUnit.isValid()) continue;
-
-                cUnit.think_position();
-
-                // aircraft
-                if (cUnit.isAirbornUnit()) {
-                    cUnit.think_move_air();
-                } else {
-                    // move
-                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE || cUnit.isMovingBetweenCells()) {
-                        cUnit.thinkFast_move();
-                    }
-                }
-
-                // guard
-                if (cUnit.iAction == ACTION_GUARD) {
-                    cUnit.thinkFast_guard();
-                }
-            }
-
-            for (int i = 0; i < MAX_PARTICLES; i++) {
-                cParticle &pParticle = particle[i];
-                if (pParticle.isValid()) {
-                    pParticle.thinkFast();
-                }
-            }
-
-            // when not drawing the options, the game does all it needs to do
-            // bullets think
-            for (int i = 0; i < MAX_BULLETS; i++) {
-                cBullet &cBullet = bullet[i];
-                if (cBullet.bAlive) {
-                    cBullet.think();
-                }
-            }
-        }
-
-        if (game.isState(GAME_WINNING)) {
-
-        }
+        game.thinkFast_state();
 
         timerGlobal--;
     }
@@ -228,29 +79,7 @@ void cTimeManager::handleTimerGameTime() {
  */
 void cTimeManager::handleTimerUnits() {
     while (timerUnits > 0) {
-        if (game.isState(GAME_PLAYING)) {
-            // TODO: state->think()
-            // units think
-            for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &cUnit = unit[i];
-                if (cUnit.isValid()) {
-                    cUnit.think();
-
-                    // Think attack style
-                    if (cUnit.iAction == ACTION_ATTACK) {
-                        cUnit.think_attack();
-                    }
-                }
-            }
-
-            drawManager->think();
-
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                players[i].think();
-            }
-
-        }
-
+        game.think_state();
         timerUnits--;
     }
 }

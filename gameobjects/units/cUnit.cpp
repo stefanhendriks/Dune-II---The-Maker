@@ -6,7 +6,7 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 
   */
 
@@ -81,7 +81,7 @@ void cUnit::init(int i) {
     // it should wait when moving, etc, etc
 
 
-    iAction = ACTION_GUARD;
+    m_action = eActionType::GUARD;
     intent = INTENT_NONE;
 
     iAttackUnit = -1;      // attacking unit id
@@ -96,7 +96,7 @@ void cUnit::init(int i) {
     iStructureID = -1;   // structure ID to attack/bring to (refinery)
 
     // Carry-All specific
-    iTransferType = -1;    // -1 = none, 0 = new , 1 = carrying existing unit
+    m_transferType = eTransferType::NONE;
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
@@ -785,30 +785,38 @@ void cUnit::updateCellXAndY() {
     iCellY = map.getCellY(iCell);
 }
 
+/**
+ * Attack unit, and will chase target when out of range.
+ * @param targetUnit
+ */
 void cUnit::attackUnit(int targetUnit) {
-    log(fmt::format("attackUnit() : target is [{}]", targetUnit));
-    attack(unit[targetUnit].iCell, targetUnit, -1, -1);
+    attackUnit(targetUnit, true);
+}
+
+void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange) {
+    log(fmt::format("attackUnit() : target is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
+    attack(unit[targetUnit].iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure) {
     log(fmt::format("attackStructure() : target is [{}]", targetStructure));
-    attack(structure[targetStructure]->getCell(), -1, targetStructure, -1);
+    attack(structure[targetStructure]->getCell(), -1, targetStructure, -1, true);
 }
 
 void cUnit::attackCell(int cell) {
     log(fmt::format("attackCell() : cell target is [{}]", cell));
-    attack(cell, -1, -1, cell);
+    attack(cell, -1, -1, cell, true);
 }
 
-void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
-    // basically the same as move, but since we use iAction as ATTACK
+void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bool chaseWhenOutOfRange) {
+    // basically the same as move, but since we use m_action as ATTACK
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
     log(fmt::format("Attacking UNIT ID [{}], STRUCTURE ID [{}], ATTACKCLL [{}], GoalCell [{}]",
-                    iUnit, iStructure, iAttackCell, iGoalCell));
+                    unitId, structureId, attackCell, goalCell));
 
-    if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
+    if (unitId < 0 && structureId < 0 && attackCell < 0) {
         log("What is this? Ordered to attack but no target?");
         return;
     }
@@ -816,15 +824,15 @@ void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
     // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
     if (isSaboteur()) {
         // saboteur does not attack, but only captures
-        move_to(iGoalCell, iStructure, -1, eUnitActionIntent::INTENT_CAPTURE);
+        move_to(goalCell, structureId, -1, eUnitActionIntent::INTENT_CAPTURE);
         return;
     }
 
-    iAction = ACTION_ATTACK;
-    this->iGoalCell = iGoalCell;
-    iAttackStructure = iStructure;
-    iAttackUnit = iUnit;
-    this->iAttackCell = iAttackCell;
+    setAction(chaseWhenOutOfRange ? eActionType::ATTACK_CHASE : eActionType::ATTACK);
+    this->iGoalCell = goalCell;
+    iAttackStructure = structureId;
+    iAttackUnit = unitId;
+    this->iAttackCell = attackCell;
     forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
 }
 
@@ -886,7 +894,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         iNextCell = -1;
     }
 
-    iAction = ACTION_MOVE;
+    setAction(eActionType::MOVE);
     this->intent = intent;
 
     forgetAboutCurrentPathAndPrepareToCreateNewOne();
@@ -910,28 +918,19 @@ void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const {
 
 
 /**
- * Called every 5 ms
+ * Called every 5 ms, when action = ACTION_GUARD
  */
 void cUnit::thinkFast_guard() {
     if (!isValid()) {
         return;
     }
 
-    if (isAirbornUnit()) {
-        iAction = ACTION_MOVE; // fly around man
+    // unit is not able to 'guard', so guarding does nothing.
+    if (!isAbleToGuard()) {
         return;
     }
 
-    if (isHarvester()) {
-        iAction = ACTION_MOVE;
-        return;
-    }
-
-    if (isSaboteur()) {
-        return; // do nothing
-    }
-
-    TIMER_bored++; // we are bored ow yeah
+    TIMER_bored++;
     if (TIMER_bored > 3500) {
         TIMER_bored = 0;
         iBodyShouldFace = rnd(8);
@@ -955,85 +954,30 @@ void cUnit::thinkFast_guard() {
 
     updateCellXAndY();
 
-    // scan
-    int iDistance = 9999;
-    int unitIdSelectedForAttacking = -1;
-
     if (isSandworm()) {
-        for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &potentialDinner = unit[i];
-            if (i == iID) continue;
-            if (!potentialDinner.isValid()) continue;
-            if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
-            if (potentialDinner.isAirbornUnit()) continue;
-            if (potentialDinner.isSandworm()) continue; // don't eat other worms
-            if (!map.isCellPassableForWorm(iCell)) continue;
+        thinkFast_guard_sandworm();
+        return;
+    }
 
-            double distance = map.distance(iCell, potentialDinner.iCell);
+    // not sandworm
+    // TODO: make 'guard range' configurable for ground units
+    int unitIdToAttack = findNearbyGroundUnitToAttack(getSight());
 
-            if (distance <= getSight() && distance < iDistance) {
-                iDistance = distance;
-                unitIdSelectedForAttacking = i;
-            }
-        }
+    // can attack air units, and no ground threats found. (prioritize ground over air units!)
+    if (canAttackAirUnits() && unitIdToAttack < 0) {
+        // TODO: make 'guard range' configurable for air units
+        int range = getSight() + 3; // do react earlier than already in range for air units
+        int airUnitToAttack = findNearbyAirUnitToAttack(range);
 
-    } else { // not sandworm
-        for (int i = 0; i < MAX_UNITS; i++) {
-            if (i == iID) continue; // skip self
-            cUnit &potentialThreat = unit[i];
-            if (!potentialThreat.isValid()) continue;
-            if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
-            if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
-            if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-            if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
-
-            int distance = ABS_length(iCellX, iCellY, potentialThreat.iCellX, potentialThreat.iCellY);
-
-            // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-//            int range = getSight() + 3; // do react earlier than already in range.
-            int range = getSight();
-
-            if (distance <= range && distance < iDistance) {
-                iDistance = distance;
-                unitIdSelectedForAttacking = i;
-            }
-        }
-
-        // can attack air units, and no ground threats found. (prioritize ground over air units!)
-        if (canAttackAirUnits() && unitIdSelectedForAttacking < 0) {
-            int airUnitToAttack = -1;
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (i == iID) continue; // skip self
-                cUnit &potentialThreat = unit[i];
-                if (!potentialThreat.isValid()) continue;
-                if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
-                if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
-                if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-                if (!potentialThreat.isAttackableAirUnit()) continue;
-                if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
-
-                int distance = ABS_length(iCellX, iCellY, potentialThreat.iCellX, potentialThreat.iCellY);
-
-                // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-                int range = getSight() + 3; // do react earlier than already in range.
-
-                if (distance <= range &&
-                    distance < iDistance) // closer than found thus far
-                {
-                    iDistance = distance;
-                    airUnitToAttack = i;
-                }
-            }
-
-            if (airUnitToAttack > -1) {
-                // air units override ground units for units that can attack air units ?
-                unitIdSelectedForAttacking = airUnitToAttack;
-            }
+        if (airUnitToAttack > -1) {
+            // air units override ground units for units that can attack air units ?
+            // TODO: Make this configurable?
+            unitIdToAttack = airUnitToAttack;
         }
     }
 
-    if (unitIdSelectedForAttacking > -1) {
-        cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
+    if (unitIdToAttack > -1) {
+        cUnit &unitToAttack = unit[unitIdToAttack];
 
         if (unitToAttack.isValid()) {
 //            s_GameEvent event{
@@ -1044,53 +988,42 @@ void cUnit::thinkFast_guard() {
 //                    .entitySpecificType = unitToAttack.getType(),
 //                    .atCell = unitToAttack.iCell
 //            };
-
 //            game.onNotifyGameEvent(event);
         }
 
-        if (isSandworm()) {
-            attackUnit(unitIdSelectedForAttacking);
-        } else {
-            // TODO: move this code somewhere else?
-            if (!getPlayer()->isHuman()) {
-                if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
-                    // AI will try to squish infantry units
-                    move_to(unitToAttack.iCell);
-                } else {
-                    attackUnit(unitIdSelectedForAttacking);
-                }
+        // TODO: move this code somewhere else?
+        if (!getPlayer()->isHuman()) {
+            if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
+                // AI will try to squish infantry units
+                move_to(unitToAttack.iCell);
             } else {
-                attackUnit(unitIdSelectedForAttacking);
+                attackUnit(unitIdToAttack, false);
             }
+        } else {
+            attackUnit(unitIdToAttack, false);
         }
 
         return;
     }
 
     // no unit found for attacking
-    if (!isSandworm() && !getPlayer()->isHuman()) {
+    // TODO: think about how to make this generic and deviate from default behavior elsewhere?
+    if (!getPlayer()->isHuman()) {
+        // TODO: Move this to the AI / brain classes?
         // ai units will auto-attack structures nearby
 
-        int structureIdSelectedForAttacking = -1;
+        int range = getSight() + 3;
+        int id = findNearbyStructureToAttack(range);
 
-        for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *pStructure = structure[i];
-            if (!pStructure) continue;
-            if (!pStructure->isValid()) continue;
-            if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
-            if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
-
-            int distance = map.distance(iCell, pStructure->getRandomStructureCell());
-            int sight = getSight() + 3;
-
-            if (distance <= sight && distance < iDistance) {
-                iDistance = distance;
-                structureIdSelectedForAttacking = i;
-            }
+        if (id > -1) {
+            attackStructure(id);
         }
-
-        if (structureIdSelectedForAttacking > -1) {
-            attackStructure(structureIdSelectedForAttacking);
+        return;
+    } else {
+        // human units do auto-attack structures that can attack things
+        int id = findNearbyStructureThatCanDamageUnitsToAttack(getRange());
+        if (id > -1) {
+            attackStructure(id);
         }
     }
 }
@@ -1099,30 +1032,25 @@ bool cUnit::isSandworm() const {
     return iType == SANDWORM;
 }
 
-// NORMAL thinking
+/**
+ * Called every 100ms
+ */
 void cUnit::think() {
-    if (TIMER_blink > 0)
+    thinkActionAgnostic();
+
+    // Think attack style
+    if (m_action == eActionType::ATTACK_CHASE || m_action == eActionType::ATTACK) {
+        think_attack();
+    }
+}
+
+void cUnit::thinkActionAgnostic() {
+    if (TIMER_blink > 0) {
         TIMER_blink--;
+    }
 
-    cPlayer *pPlayer = getPlayer();
     if (iType == MCV) {
-        if (pPlayer->isHuman()) {
-            if (bSelected) {
-                if (key[KEY_D]) {
-                    bool result = getPlayer()->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
-
-                    if (result) {
-                        int iLocation = iCell;
-
-                        die(false, false);
-
-                        // place const yard
-                        pPlayer->placeStructure(iLocation, CONSTYARD, 100);
-                        return;
-                    }
-                }
-            }
-        }
+        think_MVC();
     }
 
     // HEAD is not facing correctly
@@ -1130,36 +1058,10 @@ void cUnit::think() {
         if (iBodyFacing == iBodyShouldFace) {
             if (iHeadFacing != iHeadShouldFace) {
                 TIMER_turn++;
-                if (TIMER_turn > (sUnitInfo[iType].turnspeed)) {
+                if (TIMER_turn > getTurnSpeed()) {
                     TIMER_turn = 0;
-
                     iHeadFacing = determineNewFacing(iHeadFacing, iHeadShouldFace);
-
-//                    int d = 1;
-//
-//                    int toleft = (iHeadFacing + 8) - iHeadShouldFace;
-//                    if (toleft > 7) toleft -= 8;
-//
-//                    int toright = abs(toleft - 8);
-//
-//                    if (toright == toleft) d = -1 + (rnd(2));
-//                    if (toleft > toright) d = 1;
-//                    if (toright > toleft) d = -1;
-//
-//                    iHeadFacing += d;
-//
-//                    if (iHeadFacing < 0)
-//                        iHeadFacing = 7;
-//
-//                    if (iHeadFacing > 7)
-//                        iHeadFacing = 0;
-
-
                 } // turn
-
-
-
-
             } // head facing
 
         } else {
@@ -1182,95 +1084,23 @@ void cUnit::think() {
     if (iTempHitPoints > -1)
         return;
 
-    // when any unit is on a spice bloom, you got a problem, you die!
+    // when any non-airborn, non-sandworm unit is on a spice bloom, it dies
     int cellType = map.getCellType(iCell);
-    if (!isAirbornUnit() && cellType == TERRAIN_BLOOM) {
+    if (!isAirbornUnit() && !isSandworm() && cellType == TERRAIN_BLOOM) {
         map.detonateSpiceBloom(iCell);
-
-        // non-sandworm units die of this
-        if (!isSandworm()) {
-            die(true, false);
-        }
-
+        die(true, false);
         return;
     }
 
     // --- think
     if (iType == ORNITHOPTER) {
-        think_ornithopter(pPlayer);
+        think_ornithopter();
         return;
     }
 
     // HARVESTERs logic here
     if (iType == HARVESTER) {
-        bool bFindRefinery = false;
-
-        if (iCredits > 0 && bSelected && key[KEY_D]) {
-            bFindRefinery = true;
-        }
-
-        // cell = goal cell (doing nothing)
-        if (iCell == iGoalCell) {
-            // when on spice, harvest
-            if (cellType == TERRAIN_SPICE ||
-                cellType == TERRAIN_SPICEHILL) {
-                // do timer stuff
-                if (iCredits < sUnitInfo[iType].credit_capacity)
-                    TIMER_harvest++;
-            } else {
-                // not on spice, find a new location
-                if (iCredits < sUnitInfo[iType].credit_capacity) {
-                    // find harvest cell
-                    move_to(UNIT_find_harvest_spot(iID), -1, -1);
-                } else {
-                    iFrame = 0;
-                    bFindRefinery = true;
-                    // find a refinery
-                }
-            }
-
-            if (iCredits >= sUnitInfo[iType].credit_capacity)
-                bFindRefinery = true;
-
-            // when we should harvest...
-            cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
-            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
-                iCredits < sUnitInfo[iType].credit_capacity) {
-                TIMER_harvest = 1;
-
-                iFrame++;
-
-                if (iFrame > 3)
-                    iFrame = 1;
-
-                iCredits += sUnitInfo[iType].harvesting_amount;
-                map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
-
-                // turn into sand/spice (when spicehill)
-                if (map.getCellCredits(iCell) <= 0) {
-                    if (cellType == TERRAIN_SPICEHILL) {
-                        map.cellChangeType(iCell, TERRAIN_SPICE);
-                        map.cellGiveCredits(iCell, rnd(100));
-                    } else {
-                        map.cellChangeType(iCell, TERRAIN_SAND);
-                        map.cellChangeTile(iCell, 0);
-                    }
-
-                    move_to(UNIT_find_harvest_spot(iID), -1, -1);
-
-                    mapEditor.smoothAroundCell(iCell);
-                }
-            }
-
-            // refinery required, go find one that is available
-            if (bFindRefinery) {
-                findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
-                return;
-            }
-        } else {
-            // ??
-            iFrame = 0;
-        }
+        think_harvester();
     }
 
     // When this is a carry-all, show proper animation when filled
@@ -1293,25 +1123,26 @@ cAbstractStructure * cUnit::findClosestStructureType(int structureType) {
 
 void cUnit::think_carryAll() {// A carry-all has something when:
 // - it carries a unit (iUnitIDWithinStructure > -1)
-// - it has the flag TRANSFER_NEW_
+// - it has the flag eTransferType::NEW_
 
-    if ((iTransferType == TRANSFER_NEW_STAY ||
-         iTransferType == TRANSFER_NEW_LEAVE ||
-         iTransferType == TRANSFER_PICKUP) || iUnitID > -1) {
+    if ((m_transferType == eTransferType::NEW_STAY ||
+         m_transferType == eTransferType::NEW_LEAVE ||
+         m_transferType == eTransferType::PICKUP) || iUnitID > -1) {
 
         // when picking up a unit.. only draw when picked up
-        if (iTransferType == TRANSFER_PICKUP && bPickedUp)
+        if (m_transferType == eTransferType::PICKUP && bPickedUp)
             iFrame = 1;
 
         // any other transfer, means it is filled from start...
-        if (iTransferType != TRANSFER_PICKUP)
+        if (m_transferType != eTransferType::PICKUP)
             iFrame = 1;
     } else {
         iFrame = 0;
     }
 }
 
-void cUnit::think_ornithopter(cPlayer *pPlayer) {// flap with your wings
+void cUnit::think_ornithopter() {
+    cPlayer *pPlayer = getPlayer();
     iFrame++;
 
     if (iFrame > 3) {
@@ -1445,7 +1276,7 @@ int cUnit::determineNewFacing(int currentFacing, int desiredFacing) {
 }
 
 // aircraft specific thinking
-void cUnit::think_move_air() {
+void cUnit::thinkFast_move_airUnit() {
     if (iTempHitPoints > -1) {
         return;
     }
@@ -1485,14 +1316,14 @@ void cUnit::think_move_air() {
         bool isWithinMapBoundaries = map.isWithinBoundaries(iCellX, iCellY);
 
         // reinforcement stuff happens here...
-        if (iTransferType == TRANSFER_DIE) {
+        if (m_transferType == eTransferType::DIE) {
             // kill (probably reached border or something)
             die(false, false);
             return;
         }
 
         // transfer wants to pickup and drop a unit...
-        if (iTransferType == TRANSFER_PICKUP) {
+        if (m_transferType == eTransferType::PICKUP) {
             if (iUnitID > -1) {
                 // Not yet picked up the unit
                 cUnit &unitToPickupOrDrop = getUnitToPickupOrDrop();
@@ -1615,7 +1446,7 @@ void cUnit::think_move_air() {
 
                             iUnitID = -1;         // reset this
                             iTempHitPoints = -1; // reset this
-                            iTransferType = TRANSFER_NONE; // done
+                            m_transferType = eTransferType::NONE; // done
 
                             // make it enter the structure instantly
                             if (structureUnitWantsToEnter) {
@@ -1637,14 +1468,14 @@ void cUnit::think_move_air() {
                     }
                 }
             } else {
-                iTransferType = TRANSFER_NONE; // unit is not valid?
+                m_transferType = eTransferType::NONE; // unit is not valid?
                 return;
             }
         }
 
         // transfer is to create a new unit
-        if (iTransferType == TRANSFER_NEW_LEAVE ||
-            iTransferType == TRANSFER_NEW_STAY) {
+        if (m_transferType == eTransferType::NEW_LEAVE ||
+            m_transferType == eTransferType::NEW_STAY) {
             // bring a new unit
 
             if (iType == FRIGATE) {
@@ -1652,7 +1483,7 @@ void cUnit::think_move_air() {
 
                 if (iStrucId > -1) {
                     iGoalCell = iFindCloseBorderCell(iCell);
-                    iTransferType = TRANSFER_DIE;
+                    m_transferType = eTransferType::DIE;
 
                     structure[iStrucId]->setFrame(4); // show package on this structure
                     structure[iStrucId]->setAnimating(true); // keep animating
@@ -1695,15 +1526,15 @@ void cUnit::think_move_air() {
                 iNewUnitType = -1;
 
                 // depending on transfertype...
-                if (iTransferType == TRANSFER_NEW_LEAVE) {
-                    iTransferType = TRANSFER_DIE;
+                if (m_transferType == eTransferType::NEW_LEAVE) {
+                    m_transferType = eTransferType::DIE;
 
                     // find a new border cell close to us... to die
                     iGoalCell = iFindCloseBorderCell(iCell);
                     return;
-                } else if (iTransferType == TRANSFER_NEW_STAY) {
+                } else if (m_transferType == eTransferType::NEW_STAY) {
                     // reset transfertype:
-                    iTransferType = TRANSFER_NONE;
+                    m_transferType = eTransferType::NONE;
                     return;
                 }
 
@@ -1732,7 +1563,7 @@ void cUnit::think_move_air() {
     int goalCellY = map.getCellY(iGoalCell);
 
     // use this when picking something up
-    if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE)) {
+    if (iUnitID > -1 || (m_transferType != eTransferType::DIE && m_transferType != eTransferType::NONE)) {
         int iLength = ABS_length(iCellX, iCellY, goalCellX, goalCellY);
 
         if (iType != FRIGATE) {
@@ -1864,7 +1695,7 @@ void cUnit::setPosY(float newVal) {
 
 void cUnit::forgetAboutUnitToPickUp() {// forget about this
     iGoalCell = iCell;
-    iTransferType = TRANSFER_NONE;
+    m_transferType = eTransferType::NONE;
     iUnitID = -1;
 }
 
@@ -1898,20 +1729,20 @@ int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const {
 // Carryall-order
 //
 // Purpose:
-// Order a carryall to pickup a unit, or send a new unit (depending on iTransfer)
+// Order a carryall to pickup a unit, or send a new unit (depending on transferType)
 //
-void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
-    if (iTransferType > -1)
+void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe) {
+    if (m_transferType != eTransferType::NONE)
         return; // we cannot do multiple things at a time!!
 
-    if (iTransfer == TRANSFER_NEW_STAY || iTransfer == TRANSFER_NEW_LEAVE) {
-        // bring a new unit, depending on the iTransfer the carryall who brings this will be
+    if (transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE) {
+        // bring a new unit, depending on the transferType the carryall who brings this will be
         // removed after he brought the unit...
 
         // when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
         // sets the target and such.
 
-        iTransferType = iTransfer;
+        m_transferType = transferType;
 
         // Go to this:
         iGoalCell = iBring;
@@ -1928,12 +1759,12 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
 
         bPickedUp = false;
         // DONE!
-    } else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
+    } else if (transferType == eTransferType::PICKUP && iuID > -1) {
 
         // the carryall must pickup the unit, and then bring it to the iBring stuff
         cUnit &pUnit = unit[iuID];
         if (pUnit.isValid()) {
-            iTransferType = iTransfer;
+            m_transferType = transferType;
 
             iGoalCell = pUnit.iCell; // first go to the target to pick it up
             iCarryTarget = pUnit.iCell; // same here...
@@ -2037,11 +1868,11 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
         bool unitWhoShotMeIsAirborn = unitWhoShotMe.isAirbornUnit();
 
         // only act when we are doing 'nothing'...
-        if (iAction == ACTION_GUARD) {
+        if (m_action == eActionType::GUARD) {
             // only auto attack back when it is not an airborn unit
             // note: guard state already takes care of scanning for air units and attacking them
             if (!unitWhoShotMeIsAirborn) {
-                attackUnit(iShotUnit);
+                attackUnit(iShotUnit); // by default chase unit in case it is out of range
             }
         }
 
@@ -2055,7 +1886,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 }
 
             } else {
-                if (iAction != ACTION_ATTACK) {
+                if (m_action != eActionType::ATTACK_CHASE && m_action != eActionType::ATTACK) {
                     if (canSquishInfantry() && unitWhoShotMeIsInfantry) {
                         // AI tries to run over infantry units that attack it
                         move_to(unit[iShotUnit].iCell);
@@ -2187,7 +2018,7 @@ void cUnit::think_attack() {
             iAttackUnit = -1;
             iAttackStructure = -1;
             iGoalCell = iCell;
-            iAction = ACTION_GUARD;
+            setAction(eActionType::GUARD);
             return;
         }
 
@@ -2222,20 +2053,7 @@ void cUnit::think_attack() {
     // Distance check
     int distance = map.distance(iCell, iGoalCell);
 
-    if (!isAirbornUnit()) {
-        if (!isMovingBetweenCells()) {
-            if (distance <= getRange()) {
-                setAngleTowardsTargetAndFireBullets(distance);
-            } else { // not within distance
-                startChasingTarget();
-            }
-        } else {
-            if (distance > getRange()) {
-                // atleast don't try to attack it
-                startChasingTarget();
-            }
-        }
-    } else {
+    if (isAirbornUnit()) {
         // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
 
@@ -2248,14 +2066,37 @@ void cUnit::think_attack() {
 
                 iAttackUnit = -1;
                 iAttackStructure = -1;
-                iAction = ACTION_MOVE;
+                setAction(eActionType::MOVE);
                 iGoalCell = map.getCellWithMapDimensions(rx, ry);
             }
         } else {
             // stop attacking, move instead?
-            iAction = ACTION_MOVE;
+            setAction(eActionType::MOVE);
             iAttackUnit = -1;
             iAttackStructure = -1;
+        }
+
+        return; // bail, air-unit attack thinking finished
+    }
+
+    if (!isMovingBetweenCells()) {
+        if (distance <= getRange()) {
+            setAngleTowardsTargetAndFireBullets(distance);
+        } else { // not within distance
+            if (m_action == eActionType::ATTACK_CHASE) {
+                startChasingTarget();
+            } else {
+                actionGuard();
+            }
+        }
+    } else {
+        if (distance > getRange()) {
+            // atleast don't try to attack it
+            if (m_action == eActionType::ATTACK_CHASE) {
+                startChasingTarget();
+            } else {
+                actionGuard();
+            }
         }
     }
 }
@@ -2320,7 +2161,7 @@ void cUnit::think_attack_sandworm() {
 }
 
 void cUnit::actionGuard() {
-    iAction = ACTION_GUARD;
+    setAction(eActionType::GUARD);
     iAttackUnit = -1;
     iAttackCell = -1;
     iAttackStructure =-1;
@@ -2333,26 +2174,26 @@ int cUnit::getFaceAngleToCell(int cell) const {
 
 void cUnit::startChasingTarget() {
     if (iAttackStructure > -1) {
-        iAction = ACTION_CHASE;
+        setAction(eActionType::CHASE);
         // a structure does not move, so don't need to re-calculate path?
 //        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     } else if (iAttackUnit > -1) {
         cUnit * attackUnit = &unit[iAttackUnit];
         // chase unit, but only when ground unit
         if (!attackUnit->isSandworm() && !attackUnit->isAirbornUnit()) {
-            iAction = ACTION_CHASE;
+            setAction(eActionType::CHASE);
             // only think of new path when our target moved
             if (attackUnit->getCell() != iGoalCell) {
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
             }
         } else {
             // do not chase sandworms or other air units, very ... inconvenient
-            iAction = ACTION_GUARD;
+            setAction(eActionType::GUARD);
             iGoalCell = iCell;
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
     } else if (iAttackCell > -1) {
-        iAction = ACTION_CHASE;
+        setAction(eActionType::CHASE);
     }
 }
 
@@ -2447,7 +2288,7 @@ void cUnit::thinkFast_move() {
 
     // when there is a valid goal cell (differs), then we go further
     if (iGoalCell == iCell) {
-        iAction = ACTION_GUARD; // do nothing
+        setAction(eActionType::GUARD); // do nothing
         forgetAboutCurrentPathAndPrepareToCreateNewOne();
         return;
     }
@@ -2806,7 +2647,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
     // from here on, set the map id, so no other unit can take its place
     if (!isSandworm()) {
-        // note, no AIRBORN here (27/03/2021 - I guess this is because this method is not called by think_move_air())
+        // note, no AIRBORN here (27/03/2021 - I guess this is because this method is not called by thinkFast_move_airUnit())
         map.cellSetIdForLayer(iNextCell, MAPID_UNITS, iID);
     } else {
         map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
@@ -2898,9 +2739,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     // movement is done, determine what to do with new state.
     if (!isMovingBetweenCells()) {
         // when we are chasing, we now set on attack...
-        if (iAction == ACTION_CHASE) {
+        if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            iAction = ACTION_ATTACK;
+            setAction(eActionType::ATTACK_CHASE);
             forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
         }
 
@@ -3012,7 +2853,7 @@ cUnit::~cUnit() {
  * Poor man solution to frequently update the dimensions of unit, better would be using events?
  * (onMove, onViewportMove, onViewportZoom?)
  */
-void cUnit::think_position() {
+void cUnit::thinkFast_position() {
     // keep updating dimensions
     dimensions.move(draw_x(), draw_y());
     if (mapCamera) {
@@ -3257,7 +3098,7 @@ bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *c
 }
 
 void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell) {
-    carryall_order(unitIdToTransfer, TRANSFER_PICKUP, destinationCell, -1);
+    carryall_order(unitIdToTransfer, eTransferType::PICKUP, destinationCell, -1);
 }
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate) {
@@ -3338,6 +3179,313 @@ void cUnit::takeDamage(int damage) {
 bool cUnit::isEligibleForRepair() {
     return isDamaged() && !isInfantryUnit() && !isAirbornUnit();
 }
+
+bool cUnit::isAbleToGuard() {
+    return getUnitInfo().canGuard;
+}
+
+// called every 5 ms
+// used for movement logic
+void cUnit::thinkFast() {
+    thinkFast_position();
+
+    // aircraft
+    if (isAirbornUnit()) {
+        thinkFast_move_airUnit();
+    } else {
+        // move
+        if (m_action == eActionType::MOVE || m_action == eActionType::CHASE || isMovingBetweenCells()) {
+            thinkFast_move();
+        }
+    }
+
+    // guard
+    if (m_action == eActionType::GUARD) {
+        thinkFast_guard();
+    }
+}
+
+void cUnit::thinkFast_guard_sandworm() {
+    int iDistance = 9999;
+    int unitIdToAttack = -1;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &potentialDinner = unit[i];
+        if (i == iID) continue;
+        if (!potentialDinner.isValid()) continue;
+        if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
+        if (potentialDinner.isAirbornUnit()) continue;
+        if (potentialDinner.isSandworm()) continue; // don't eat other worms
+
+        double distance = map.distance(iCell, potentialDinner.iCell);
+
+        if (distance <= getSight() && distance < iDistance) {
+            iDistance = distance;
+            unitIdToAttack = i;
+        }
+    }
+
+    if (unitIdToAttack > -1) {
+        cUnit &unitToAttack = unit[unitIdToAttack];
+
+        if (unitToAttack.isValid()) {
+//            s_GameEvent event{
+//                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+//                    .entityType = eBuildType::UNIT,
+//                    .entityID = unitToAttack.iID,
+//                    .player = getPlayer(),
+//                    .entitySpecificType = unitToAttack.getType(),
+//                    .atCell = unitToAttack.iCell
+//            };
+//            game.onNotifyGameEvent(event);
+        }
+
+        attackUnit(unitIdToAttack);
+    }
+}
+
+/**
+ * Checks for units within given range (in cells).
+ * @return
+ */
+int cUnit::findNearbyGroundUnitToAttack(int range) {
+    // TODO: it would be nice if we could have a 'predicate' lambda here, so we can use that in the for loop
+    // and have 1 function to do some of the logic. For now it is very explicit and duplicated.
+    // See also findNearbyAirUnitToAttack, or the thinkFast_guard_sandworm logic.
+
+    // TODO: another improvement would be to return list of ids in range, so we can order them
+    // later by priority?
+
+    int iDistance = 9999;
+    int unitIdToAttack = -1;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (i == iID) continue; // skip self
+        cUnit &potentialThreat = unit[i];
+        if (!potentialThreat.isValid()) continue;
+        if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
+        if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
+        if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+
+        int distance = map.distance(iCell, potentialThreat.iCell);
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            unitIdToAttack = i;
+        }
+    }
+
+    return unitIdToAttack;
+}
+
+int cUnit::findNearbyAirUnitToAttack(int range) {
+    int iDistance = 9999;
+    int airUnitToAttack = -1;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (i == iID) continue; // skip self
+        cUnit &potentialThreat = unit[i];
+        if (!potentialThreat.isValid()) continue;
+        if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
+        if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
+        if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+        if (!potentialThreat.isAttackableAirUnit()) continue;
+        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+
+        int distance = map.distance(iCell, potentialThreat.iCell);
+
+        if (distance <= range &&
+            distance < iDistance) // closer than found thus far
+        {
+            iDistance = distance;
+            airUnitToAttack = i;
+        }
+    }
+
+    return airUnitToAttack;
+}
+
+int cUnit::findNearbyStructureThatCanDamageUnitsToAttack(int range) {
+    // TODO: have some kind of lambda here as well
+
+    // TODO: another improvement would be to return list of ids in range, so we can order them
+    // later by priority?
+    int structureIdToAttack = -1;
+    int iDistance = 9999;
+
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (!pStructure) continue;
+        if (!pStructure->isValid()) continue;
+        if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
+        if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+
+        // ignore structures which cannot attack air or ground units
+        if (!pStructure->canAttackAirUnits()) continue;
+        if (!pStructure->canAttackGroundUnits()) continue;
+
+        // see big comment about this in findNearbyStructureToAttack
+        int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            structureIdToAttack = i;
+        }
+    }
+
+    return structureIdToAttack;
+}
+
+int cUnit::findNearbyStructureToAttack(int range) {
+    // TODO: have some kind of lambda here as well
+
+    // TODO: another improvement would be to return list of ids in range, so we can order them
+    // later by priority?
+    int structureIdToAttack = -1;
+    int iDistance = 9999;
+
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (!pStructure) continue;
+        if (!pStructure->isValid()) continue;
+        if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
+        if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+
+        // TODO: this is a bit tricky and hacky
+        // basically you want to check against the 'closest' cell from that structure.
+        // Example:
+        // suppose you want to attack a Palace, and you are at the bottom left of that
+        // structure. The palace's bottom-left cell would be closest to the unit and
+        // hence be evaluated.
+        //
+        // the other approach would be to check cells around a unit, but that is potentially
+        // even more expensive because then you will be checking for every unit, every cell in range
+        // although we can read the ID of a structure.
+        //
+        // A quick calculation says:
+        // 10 units, with a 'range' of 5 cells, gives (if we assume a square for now) ~ 5*5 = 25 - 1 (own cell) = 24
+        // cells to evaluate. For every unit * 10 = 240 cells to evaluate.
+        //
+        // Regardless, this is something to think about. There are probably better/smarter ways to do this.
+        int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+
+        if (distance <= range && distance < iDistance) {
+            iDistance = distance;
+            structureIdToAttack = i;
+        }
+    }
+
+    return structureIdToAttack;
+}
+
+void cUnit::think_MVC() {
+    cPlayer *pPlayer = getPlayer();
+    if (pPlayer->isHuman()) {
+        if (bSelected) {
+            if (key[KEY_D]) {
+                bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
+
+                if (result) {
+                    int iLocation = iCell;
+
+                    die(false, false);
+
+                    // place const yard
+                    pPlayer->placeStructure(iLocation, CONSTYARD, 100);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+int cUnit::getTurnSpeed() {
+    return sUnitInfo[iType].turnspeed;
+}
+
+void cUnit::think_harvester() {
+    bool bFindRefinery = false;
+
+    if (iCredits > 0 && bSelected && key[KEY_D]) {
+        bFindRefinery = true;
+    }
+
+    // cell = goal cell (doing nothing)
+    if (iCell == iGoalCell) {
+        int cellType = map.getCellType(iCell);
+        // when on spice, harvest
+        if (cellType == TERRAIN_SPICE ||
+            cellType == TERRAIN_SPICEHILL) {
+            // do timer stuff
+            if (iCredits < sUnitInfo[iType].credit_capacity)
+                TIMER_harvest++;
+        } else {
+            // not on spice, find a new location
+            if (iCredits < sUnitInfo[iType].credit_capacity) {
+                // find harvest cell
+                move_to(UNIT_find_harvest_spot(iID), -1, -1);
+            } else {
+                iFrame = 0;
+                bFindRefinery = true;
+                // find a refinery
+            }
+        }
+
+        if (iCredits >= sUnitInfo[iType].credit_capacity)
+            bFindRefinery = true;
+
+        // when we should harvest...
+        cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
+        if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
+            iCredits < sUnitInfo[iType].credit_capacity) {
+            TIMER_harvest = 1;
+
+            iFrame++;
+
+            if (iFrame > 3)
+                iFrame = 1;
+
+            iCredits += sUnitInfo[iType].harvesting_amount;
+            map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
+
+            // turn into sand/spice (when spicehill)
+            if (map.getCellCredits(iCell) <= 0) {
+                if (cellType == TERRAIN_SPICEHILL) {
+                    map.cellChangeType(iCell, TERRAIN_SPICE);
+                    map.cellGiveCredits(iCell, rnd(100));
+                } else {
+                    map.cellChangeType(iCell, TERRAIN_SAND);
+                    map.cellChangeTile(iCell, 0);
+                }
+
+                move_to(UNIT_find_harvest_spot(iID), -1, -1);
+
+                mapEditor.smoothAroundCell(iCell);
+            }
+        }
+
+        // refinery required, go find one that is available
+        if (bFindRefinery) {
+            findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+            return;
+        }
+    } else {
+        // ??
+        iFrame = 0;
+    }
+}
+
+
+void cUnit::setAction(eActionType action) {
+    log(fmt::format("setAction() from current action {} to new action {}", eActionTypeString(m_action),
+                        eActionTypeString(action)));
+    m_action = action;
+}
+
+
+
+
 
 
 // return new valid ID
@@ -4150,7 +4298,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
     unit[iUnit].iHeadShouldFace = f;
     unit[iUnit].iHeadFacing = f;
 
-    unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
+    unit[iUnit].carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
 }
 
 int CARRYALL_FREE_FOR_TRANSFER(int iPlayer) {
@@ -4160,7 +4308,7 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer) {
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != iPlayer) continue;
         if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
-        if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
+        if (cUnit.m_transferType != eTransferType::NONE) continue; // skip busy carry-alls
         return i;
     }
     
@@ -4178,7 +4326,7 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
     int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(unit[iuID].iPlayer);
     if (carryAllUnitId > -1) {
         cUnit &cUnit = unit[carryAllUnitId];
-        cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
+        cUnit.carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
     }
     return carryAllUnitId;
 }
@@ -4192,25 +4340,6 @@ void INIT_REINFORCEMENT() {
         reinforcements[i].iPlayer = -1;
         reinforcements[i].iSeconds = -1;
         reinforcements[i].iUnitType = -1;
-    }
-}
-
-// done every second
-void THINK_REINFORCEMENTS() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        if (reinforcements[i].iCell > -1) {
-            if (reinforcements[i].iSeconds > 0) {
-                reinforcements[i].iSeconds--;
-                continue; // next one
-            } else {
-                // deliver
-                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          players[reinforcements[i].iPlayer].getFocusCell());
-
-                // and make this unvalid
-                reinforcements[i].iCell = -1;
-            }
-        }
     }
 }
 
@@ -4309,4 +4438,3 @@ int UNIT_FREE_AROUND_MOVE(int iUnit) {
 
     return iClls[rnd(foundCoordinates)]; // random cell
 }
-
