@@ -13,8 +13,8 @@ cIx::~cIx() {
 
 }
 
-void cIx::think() {
-    cAbstractStructure::think();
+void cIx::thinkFast() {
+    cAbstractStructure::thinkFast();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)

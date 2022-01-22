@@ -20,7 +20,7 @@ class cMessageDrawer {
 
 		void draw();
 
-		void think(); // timer based thinking to fade in/out message
+		void thinkFast(); // timer based thinking to fade in/out message
 
 		void init();
 		void destroy();

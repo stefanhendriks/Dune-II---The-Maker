@@ -6,7 +6,7 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 
 
   ---
@@ -103,7 +103,8 @@ class cAbstractStructure {
 
 
 		// Filled in by derived classes
-		virtual void think()=0;           // think
+		virtual void thinkFast()=0;       // think fast (every 5ms)
+		virtual void thinkSlow()=0;       // think slow (every second)
 		virtual void think_animation()=0; // think animation stuff
 		virtual void think_guard();       // think guard stuff
 
@@ -197,7 +198,7 @@ class cAbstractStructure {
 
 		bool isValid();
 		bool canAttackAirUnits() const { return getS_StructuresType().canAttackAirUnits; }
-
+		bool canAttackGroundUnits() const { return getS_StructuresType().canAttackGroundUnits; }
 
 		void setHeight(int height);
 		void setWidth(int width);

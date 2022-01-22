@@ -6,7 +6,7 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 */
 
 #include "../../include/d2tmh.h"
@@ -156,7 +156,7 @@ bool cParticle::isWithinViewport(cRectangle *viewport) {
 }
 
 
-// think
+// called every 5 ms
 void cParticle::thinkFast() {
     think_position();
 

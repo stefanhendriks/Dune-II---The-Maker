@@ -15,9 +15,9 @@ cOutPost::~cOutPost() {
 }
 
 
-void cOutPost::think() {
+void cOutPost::thinkFast() {
     // last but not least, think like our abstraction
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 
     // this is not really flag animation anymore, but just base animation (ie, turning around of
     // dish on outpost)

@@ -15,7 +15,9 @@ public:
     ~cHeavyFactory();
 
     // overloaded functions    
-    void think() override;
+    void thinkFast() override;
+
+    void thinkSlow() override {}
 
     void think_animation() override;
 

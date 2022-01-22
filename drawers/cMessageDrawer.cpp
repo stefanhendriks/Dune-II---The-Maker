@@ -54,7 +54,7 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
     temp = create_bitmap(bmpBar->w, bmpBar->h);
 }
 
-void cMessageDrawer::think() {
+void cMessageDrawer::thinkFast() {
     if (cMessage[0] != '\0') {
         // no message, bail
     }

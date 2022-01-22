@@ -6,29 +6,30 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2021 (c) code by Stefan Hendriks
+  2001 - 2022 (c) code by Stefan Hendriks
 
   */
-
-#ifndef D2TM_UNIT_H
-#define D2TM_UNIT_H
+#pragma once
 
 #include "player/brains/missions/cPlayerBrainMission.h"
 #include "structs.h"
 #include "utils/cRectangle.h"
 
-// Define TRANSFER stuff for reinforcements
+enum class eTransferType {
+    NONE,                               // nothing to transfer
+    NEW_STAY,                           // bring a new unit, and let the carryall stay
+    NEW_LEAVE,                          // bring a new unit, and let the carryall go back (and die)
+    PICKUP,                             // carry an existing unit, bring to new location
+    DIE,                                // will die when reaching goal-cell (added for proper animation)
+};
 
-#define TRANSFER_NONE	-1				// nothing to transfer
-#define TRANSFER_NEW_STAY	0			// bring a new unit, and let the carryall stay
-#define TRANSFER_NEW_LEAVE	2			// bring a new unit, and let the carryall go back (and die)
-#define TRANSFER_PICKUP		1			// carry an existing unit, bring to new location
-#define TRANSFER_DIE		3			// will die when reaching goal-cell (added for proper animation)
-
-#define ACTION_GUARD        0           // on guard (scanning for enemy activitiy)
-#define ACTION_MOVE         1           // moving
-#define ACTION_CHASE        2           // chasing a unit to attack
-#define ACTION_ATTACK       3           // attacking (not moving)
+enum class eActionType {
+    GUARD,                              // on guard (scanning for enemy activity)
+    MOVE,                               // moving
+    CHASE,                              // chasing a unit to attack
+    ATTACK_CHASE,                       // attacking (not moving), will chase when target is out of range
+    ATTACK,                             // attacking (not moving), will revert to GUARD when target is out of range
+};
 
 // Reinforcement data (loaded from ini file)
 struct sReinforcement
@@ -38,6 +39,20 @@ struct sReinforcement
     int iPlayer;         // to who?
     int iCell;          // Where to?
 };
+
+inline std::string eActionTypeString(eActionType actionType) {
+    switch (actionType) {
+        case eActionType::GUARD: return "GUARD";
+        case eActionType::ATTACK_CHASE: return "ATTACK_CHASE";
+        case eActionType::ATTACK: return "ATTACK";
+        case eActionType::MOVE: return "MOVE";
+        case eActionType::CHASE: return "CHASE";
+        default:
+            assert(false);
+            break;
+    }
+    return "";
+}
 
 class cUnit {
 
@@ -79,11 +94,7 @@ public:
     int iAttackStructure; // attack structure id
     int iAttackCell;      // attacking a cell (which is force attack)
 
-    // Action its doing:
-    int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
-    eUnitActionIntent intent;
-
-    // Action given code 
+    // Action given code
     int iUnitID;        // Unit ID to attack/pickup, etc
     int iStructureID;   // structure ID to attack/bring to (refinery)/capture
 
@@ -91,9 +102,11 @@ public:
     int iCredits;       // credits stored in this baby
 
 	// Carry-All specific
-	int iTransferType;	// -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
-						// iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
-						// iTempHitPoints = hp of unit when transfertype = 1
+
+    // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
+    // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
+    // iTempHitPoints = hp of unit when transfertype = 1
+    eTransferType m_transferType;
 
 	int iCarryTarget;	// Unit ID to carry, but is not carried yet
 	int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
@@ -132,9 +145,9 @@ public:
     void draw_health();
 	void draw_experience();
 	void draw_spice();
-  void draw();
+    void draw();
 	void draw_path() const;
-  bool isValid() const;     // valid unit?
+    bool isValid() const;     // valid unit?
 
     void shoot(int iTargetCell);  // shoot at goalcell
 
@@ -142,8 +155,9 @@ public:
 
     void updateCellXAndY();        // updateCellXAndY status
 
-    void think();       // thinking in general
-    void think_move_air();  // aircraft specific
+    void think();
+
+    void thinkFast_move_airUnit();  // aircraft specific
     void think_move_foot(); // soldiers specific
     void thinkFast_move();  // thinking about movement (which is called upon a faster rate)
                         // for wheeled/tracked units
@@ -169,28 +183,28 @@ public:
     cAbstractStructure * findClosestStructureType(int structureType);
 
 	// carryall-functions:
-	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
+	void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     // -------------
-	int TIMER_blink;	// blink
+	int TIMER_blink;	    // blink
 
-    int TIMER_move;     // movement timer
-    int TIMER_movewait; // wait for move think...
-    int TIMER_movedelay; // if given, it will delay movement
+    int TIMER_move;         // movement timer
+    int TIMER_movewait;     // wait for move think...
+    int TIMER_movedelay;    // if given, it will delay movement
 
     int TIMER_thinkwait;    // wait with normal thinking..
 
-    float TIMER_turn;     // turning around
-    int TIMER_frame;    // frame
+    float TIMER_turn;       // turning around
+    int TIMER_frame;        // frame
 
-    int TIMER_harvest;  // harvesting
+    int TIMER_harvest;      // harvesting
 
-    int TIMER_guard;    // guard scanning timer
-    int TIMER_bored;    // how long are we bored?
+    int TIMER_guard;        // guard scanning timer
+    int TIMER_bored;        // how long are we bored?
 
-    int TIMER_attack;   // when to shoot?
+    int TIMER_attack;       // when to shoot?
 
-    int TIMER_wormtrail;  // when to spawn a trail when moving
+    int TIMER_wormtrail;    // when to spawn a trail when moving
 
     s_UnitInfo& getUnitInfo() const;
 
@@ -245,12 +259,12 @@ public:
 
     void recreateDimensions();
 
-    void think_position();
+    void thinkFast_position();
 
     bool isMovingBetweenCells();
 
     bool isIdle() {
-        return iAction == ACTION_GUARD;
+        return m_action == eActionType::GUARD;
     }
 
     void takeDamage(int damage);
@@ -302,11 +316,13 @@ public:
     bool isUnableToMove();
 
     void attackUnit(int targetUnit);
+    void attackUnit(int targetUnit, bool chaseWhenOutOfRange);
     void attackStructure(int targetStructure);
     void attackCell(int cell);
 
     /**
      * Figures out if at cell is a unit, structure or nothing, and invokes the appropiate attackUnit/Structure/Cell function.
+     * Assumes unit should move closer (chase) to target
      * @param cell
      */
     void attackAt(int cell);
@@ -341,7 +357,11 @@ public:
 
     bool isEligibleForRepair();
 
+    void thinkFast();
+
 private:
+    eActionType m_action;
+    eUnitActionIntent intent;
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
     bool bPickedUp;     // did this unit pick up a unit? (this unit is a carry-all or frigate)
@@ -387,9 +407,9 @@ private:
 
     void selectTargetForOrnithopter(cPlayer *pPlayer);
 
-    void think_ornithopter(cPlayer *pPlayer);
-
     void think_carryAll();
+
+    void thinkActionAgnostic();       // thinking in general
 
     int determineNewFacing(int currentFacing, int desiredFacing);
 
@@ -399,7 +419,7 @@ private:
 
     int getFaceAngleToCell(int cell) const;
 
-    void attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell);
+    void attack(int goalCell, int unitId, int structureId, int attackCell, bool chaseWhenOutOfRange);
 
     int findNewDropLocation(int unitTypeToDrop, int cell) const;
 
@@ -431,6 +451,27 @@ private:
     int draw_x(int bmpWidth);
 
     int draw_y(int bmpHeight);
+
+    bool isAbleToGuard();
+
+    void thinkFast_guard_sandworm();
+
+    int findNearbyStructureToAttack(int range);
+
+    int findNearbyStructureThatCanDamageUnitsToAttack(int range);
+
+    int findNearbyGroundUnitToAttack(int range);
+
+    int findNearbyAirUnitToAttack(int range);
+
+
+    int getTurnSpeed();
+
+    void think_MVC();
+    void think_ornithopter();
+    void think_harvester();
+
+    void setAction(eActionType action);
 };
 
 
@@ -475,8 +516,5 @@ int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);
 
-void THINK_REINFORCEMENTS();
 void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
 void INIT_REINFORCEMENT();
-
-#endif

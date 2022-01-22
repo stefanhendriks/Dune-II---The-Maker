@@ -21,14 +21,14 @@ cRefinery::~cRefinery() {
 /*  OVERLOADED FUNCTIONS  */
 
 // Specific Construction Yard thinking
-void cRefinery::think() {
+void cRefinery::thinkFast() {
 
     if (hasUnitWithin()) { // unit has entered structure
         think_unit_occupation();
     }
 
     // think like base class
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 }
 
 void cRefinery::think_unit_occupation() {

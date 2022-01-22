@@ -16,9 +16,9 @@ cSpiceSilo::~cSpiceSilo() {
 }
 
 
-void cSpiceSilo::think() {
+void cSpiceSilo::thinkFast() {
     // think like base class
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 
 }
 

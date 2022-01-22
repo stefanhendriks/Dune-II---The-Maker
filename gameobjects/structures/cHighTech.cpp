@@ -17,9 +17,9 @@ cHighTech::~cHighTech() {
 }
 
 
-void cHighTech::think() {
+void cHighTech::thinkFast() {
     // last but not least, think like our abstraction
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 }
 
 void cHighTech::think_animation_unitDeploy() {
