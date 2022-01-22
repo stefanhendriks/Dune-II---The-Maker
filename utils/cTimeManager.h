@@ -41,14 +41,6 @@ public:
 	int gameTime;		/** Definition of game time (= in seconds) **/
 
 	void processTime();
-
-	/** This function sets the timers; its an ugly hack but Allegro does not
-		like to directly call the increase.. functions (you need to lock the
-		entire thing which is not what we want. */
-
-	void increaseTimerForUnits();
-	void increaseTimerForFPS();
-	void increaseTimerGlobal();
 };
 
 #endif

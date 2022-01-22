@@ -88,7 +88,7 @@ void cTimeManager::handleTimerUnits() {
 	This function is called by the game class in the run() function.
 
 	It is important that this function is called first, as it will make sure
-	the situation is set as it should be (since time passed between the previous
+	the timers state is updated (since time passed between the previous
 	and the current frame), therefore any think() function is relying on the data
 	that eventually is set by this function.
 
@@ -110,18 +110,6 @@ void cTimeManager::processTime() {
 #ifdef ALLEGRO_H
     syncAllegroTimers();
 #endif
-}
-
-void cTimeManager::increaseTimerForFPS() {
-    timerSecond++;
-}
-
-void cTimeManager::increaseTimerForUnits() {
-    timerUnits++;
-}
-
-void cTimeManager::increaseTimerGlobal() {
-    timerGlobal++;
 }
 
 /** allegro specific routine **/
