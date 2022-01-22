@@ -1770,7 +1770,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
     }
 
     if (triggerMusic) {
-        playMusicByType(MUSIC_ATTACK);
+        game.playMusicByType(MUSIC_ATTACK);
     }
 
     if (voiceId > -1) {

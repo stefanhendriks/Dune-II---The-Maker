@@ -618,7 +618,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     game.setWinFlags(3);
     game.setLoseFlags(1);
 
-    playMusicByType(MUSIC_PEACE);
+    game.playMusicByType(MUSIC_PEACE);
 
     map.setAutoSpawnSpiceBlooms(spawnBlooms);
     map.setAutoDetonateSpiceBlooms(detonateBlooms);

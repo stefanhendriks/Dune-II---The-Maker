@@ -306,8 +306,8 @@ void cBullet::arrivedAtDestinationLogic() {
                 // HACK HACK: produce sounds here... should be taken from bullet data structure; or via events
                 // so that elsewhere this can be handled.
                 if (rnd(100) < 35) {
-                    play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
-                                                distanceBetweenCellAndCenterOfScreen(cellToDamage));
+                    game.playSoundWithDistance(SOUND_TANKDIE + rnd(2),
+                                               distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
                 if (rnd(100) < 20) {
                     cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE, -1, -1);
@@ -417,7 +417,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
 
         // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
         // TODO: impact sound effect should be configured!?
-        play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(cell));
+        game.playSoundWithDistance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(cell));
 
         // take over unit
         if (rnd(100) < gets_Bullet().deviateProbability) {

@@ -229,10 +229,10 @@ void cUnit::createSquishedParticle() {
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
         int iType1 = D2TM_PARTICLE_SQUISH01 + rnd(2);
         cParticle::create(iDieX, iDieY, iType1, iPlayer, iFrame);
-        play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     } else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, iFrame);
-        play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
 
@@ -243,7 +243,7 @@ void cUnit::createExplosionParticle() {
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1);
-        play_sound_id_with_distance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
 
         if (rnd(100) < 30) {
             cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
@@ -262,10 +262,10 @@ void cUnit::createExplosionParticle() {
         // play quick 'boom' sound and show animation
         if (rnd(100) < 50) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
-            play_sound_id_with_distance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
+            game.playSoundWithDistance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
         } else {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1);
-            play_sound_id_with_distance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+            game.playSoundWithDistance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
         }
 
         if (rnd(100) < 30) {
@@ -305,8 +305,8 @@ void cUnit::createExplosionParticle() {
                 }
 
                 if (rnd(100) < 35)
-                    play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
-                                                distanceBetweenCellAndCenterOfScreen(iCell));
+                    game.playSoundWithDistance(SOUND_TANKDIE + rnd(2),
+                                               distanceBetweenCellAndCenterOfScreen(iCell));
 
                 // calculate cell and damage stuff around this
                 int cll = map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
@@ -407,7 +407,7 @@ void cUnit::createExplosionParticle() {
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1);
 
-        play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
 
     if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
@@ -415,7 +415,7 @@ void cUnit::createExplosionParticle() {
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
-        play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
 
@@ -1965,8 +1965,8 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 
                 cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
-                play_sound_id_with_distance(SOUND_DIE01 + rnd(5),
-                                            distanceBetweenCellAndCenterOfScreen(iCell));
+                game.playSoundWithDistance(SOUND_DIE01 + rnd(5),
+                                           distanceBetweenCellAndCenterOfScreen(iCell));
 
             }
         }
@@ -2130,7 +2130,7 @@ void cUnit::think_attack_sandworm() {
         long x = pos_x_centered();
         long y = pos_y_centered();
         cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
-        play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
         actionGuard();
         TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
         TIMER_guard = (1000/5) * 4; // timer guard works other way around..

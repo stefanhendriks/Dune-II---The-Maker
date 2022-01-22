@@ -335,8 +335,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     iNewReg += iReg;
 
     //char msg[255];
-//sprintf(msg, "Mission = %d", game.m_mission);
-//allegro_message(msg);
+    //sprintf(msg, "Mission = %d", game.m_mission);
 
     game.missionInit();
     game.setNextStateToTransitionTo(GAME_BRIEFING);
@@ -350,11 +349,8 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     game.loadScenario();
 
     //sprintf(msg, "Mission = %d", game.m_mission);
-//allegro_message(msg);
 
-    playMusicByType(MUSIC_BRIEFING);
-
-    //allegro_message(msg);
+    game.playMusicByType(MUSIC_BRIEFING);
 
     state = REGSTATE_FADEOUT;
     game.initiateFadingOut();

@@ -11,7 +11,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
 
         game.initiateFadingOut();
 
-        playMusicByType(MUSIC_PEACE);
+        game.playMusicByType(MUSIC_PEACE);
         return;
     }
 
@@ -20,7 +20,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             // regardless of drawStateWinning or drawStateLosing, always go back to main menu
             game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
             game.initSkirmish();
-            playMusicByType(MUSIC_MENU);
+            game.playMusicByType(MUSIC_MENU);
             game.initiateFadingOut();
         } else {
             logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
@@ -35,7 +35,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
         game.setNextStateToTransitionTo(GAME_REGION);
 
         // PLAY THE MUSIC
-        playMusicByType(MUSIC_CONQUEST);
+        game.playMusicByType(MUSIC_CONQUEST);
 
         game.initiateFadingOut();
         return;
@@ -51,12 +51,12 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.m_mission--; // we did not win
 
             // PLAY THE MUSIC
-            playMusicByType(MUSIC_CONQUEST);
+            game.playMusicByType(MUSIC_CONQUEST);
         } else {
             // mission 1 failed, really?..., back to mentat with briefing
             game.setNextStateToTransitionTo(GAME_BRIEFING);
             game.prepareMentatForPlayer();
-            playMusicByType(MUSIC_BRIEFING);
+            game.playMusicByType(MUSIC_BRIEFING);
             mentat.resetSpeak();
         }
 
