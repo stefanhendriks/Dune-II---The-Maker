@@ -96,7 +96,7 @@ void cUnit::init(int i) {
     iStructureID = -1;   // structure ID to attack/bring to (refinery)
 
     // Carry-All specific
-    iTransferType = -1;    // -1 = none, 0 = new , 1 = carrying existing unit
+    m_transferType = eTransferType::NONE;
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
@@ -1115,18 +1115,18 @@ cAbstractStructure * cUnit::findClosestStructureType(int structureType) {
 
 void cUnit::think_carryAll() {// A carry-all has something when:
 // - it carries a unit (iUnitIDWithinStructure > -1)
-// - it has the flag TRANSFER_NEW_
+// - it has the flag eTransferType::NEW_
 
-    if ((iTransferType == TRANSFER_NEW_STAY ||
-         iTransferType == TRANSFER_NEW_LEAVE ||
-         iTransferType == TRANSFER_PICKUP) || iUnitID > -1) {
+    if ((m_transferType == eTransferType::NEW_STAY ||
+         m_transferType == eTransferType::NEW_LEAVE ||
+         m_transferType == eTransferType::PICKUP) || iUnitID > -1) {
 
         // when picking up a unit.. only draw when picked up
-        if (iTransferType == TRANSFER_PICKUP && bPickedUp)
+        if (m_transferType == eTransferType::PICKUP && bPickedUp)
             iFrame = 1;
 
         // any other transfer, means it is filled from start...
-        if (iTransferType != TRANSFER_PICKUP)
+        if (m_transferType != eTransferType::PICKUP)
             iFrame = 1;
     } else {
         iFrame = 0;
@@ -1308,14 +1308,14 @@ void cUnit::thinkFast_move_airUnit() {
         bool isWithinMapBoundaries = map.isWithinBoundaries(iCellX, iCellY);
 
         // reinforcement stuff happens here...
-        if (iTransferType == TRANSFER_DIE) {
+        if (m_transferType == eTransferType::DIE) {
             // kill (probably reached border or something)
             die(false, false);
             return;
         }
 
         // transfer wants to pickup and drop a unit...
-        if (iTransferType == TRANSFER_PICKUP) {
+        if (m_transferType == eTransferType::PICKUP) {
             if (iUnitID > -1) {
                 // Not yet picked up the unit
                 cUnit &unitToPickupOrDrop = getUnitToPickupOrDrop();
@@ -1438,7 +1438,7 @@ void cUnit::thinkFast_move_airUnit() {
 
                             iUnitID = -1;         // reset this
                             iTempHitPoints = -1; // reset this
-                            iTransferType = TRANSFER_NONE; // done
+                            m_transferType = eTransferType::NONE; // done
 
                             // make it enter the structure instantly
                             if (structureUnitWantsToEnter) {
@@ -1460,14 +1460,14 @@ void cUnit::thinkFast_move_airUnit() {
                     }
                 }
             } else {
-                iTransferType = TRANSFER_NONE; // unit is not valid?
+                m_transferType = eTransferType::NONE; // unit is not valid?
                 return;
             }
         }
 
         // transfer is to create a new unit
-        if (iTransferType == TRANSFER_NEW_LEAVE ||
-            iTransferType == TRANSFER_NEW_STAY) {
+        if (m_transferType == eTransferType::NEW_LEAVE ||
+            m_transferType == eTransferType::NEW_STAY) {
             // bring a new unit
 
             if (iType == FRIGATE) {
@@ -1475,7 +1475,7 @@ void cUnit::thinkFast_move_airUnit() {
 
                 if (iStrucId > -1) {
                     iGoalCell = iFindCloseBorderCell(iCell);
-                    iTransferType = TRANSFER_DIE;
+                    m_transferType = eTransferType::DIE;
 
                     structure[iStrucId]->setFrame(4); // show package on this structure
                     structure[iStrucId]->setAnimating(true); // keep animating
@@ -1518,15 +1518,15 @@ void cUnit::thinkFast_move_airUnit() {
                 iNewUnitType = -1;
 
                 // depending on transfertype...
-                if (iTransferType == TRANSFER_NEW_LEAVE) {
-                    iTransferType = TRANSFER_DIE;
+                if (m_transferType == eTransferType::NEW_LEAVE) {
+                    m_transferType = eTransferType::DIE;
 
                     // find a new border cell close to us... to die
                     iGoalCell = iFindCloseBorderCell(iCell);
                     return;
-                } else if (iTransferType == TRANSFER_NEW_STAY) {
+                } else if (m_transferType == eTransferType::NEW_STAY) {
                     // reset transfertype:
-                    iTransferType = TRANSFER_NONE;
+                    m_transferType = eTransferType::NONE;
                     return;
                 }
 
@@ -1555,7 +1555,7 @@ void cUnit::thinkFast_move_airUnit() {
     int goalCellY = map.getCellY(iGoalCell);
 
     // use this when picking something up
-    if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE)) {
+    if (iUnitID > -1 || (m_transferType != eTransferType::DIE && m_transferType != eTransferType::NONE)) {
         int iLength = ABS_length(iCellX, iCellY, goalCellX, goalCellY);
 
         if (iType != FRIGATE) {
@@ -1687,7 +1687,7 @@ void cUnit::setPosY(float newVal) {
 
 void cUnit::forgetAboutUnitToPickUp() {// forget about this
     iGoalCell = iCell;
-    iTransferType = TRANSFER_NONE;
+    m_transferType = eTransferType::NONE;
     iUnitID = -1;
 }
 
@@ -1721,20 +1721,20 @@ int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const {
 // Carryall-order
 //
 // Purpose:
-// Order a carryall to pickup a unit, or send a new unit (depending on iTransfer)
+// Order a carryall to pickup a unit, or send a new unit (depending on transferType)
 //
-void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
-    if (iTransferType > -1)
+void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe) {
+    if (m_transferType != eTransferType::NONE)
         return; // we cannot do multiple things at a time!!
 
-    if (iTransfer == TRANSFER_NEW_STAY || iTransfer == TRANSFER_NEW_LEAVE) {
-        // bring a new unit, depending on the iTransfer the carryall who brings this will be
+    if (transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE) {
+        // bring a new unit, depending on the transferType the carryall who brings this will be
         // removed after he brought the unit...
 
         // when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
         // sets the target and such.
 
-        iTransferType = iTransfer;
+        m_transferType = transferType;
 
         // Go to this:
         iGoalCell = iBring;
@@ -1751,12 +1751,12 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
 
         bPickedUp = false;
         // DONE!
-    } else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
+    } else if (transferType == eTransferType::PICKUP && iuID > -1) {
 
         // the carryall must pickup the unit, and then bring it to the iBring stuff
         cUnit &pUnit = unit[iuID];
         if (pUnit.isValid()) {
-            iTransferType = iTransfer;
+            m_transferType = transferType;
 
             iGoalCell = pUnit.iCell; // first go to the target to pick it up
             iCarryTarget = pUnit.iCell; // same here...
@@ -3080,7 +3080,7 @@ bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *c
 }
 
 void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell) {
-    carryall_order(unitIdToTransfer, TRANSFER_PICKUP, destinationCell, -1);
+    carryall_order(unitIdToTransfer, eTransferType::PICKUP, destinationCell, -1);
 }
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate) {
@@ -4269,7 +4269,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
     unit[iUnit].iHeadShouldFace = f;
     unit[iUnit].iHeadFacing = f;
 
-    unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
+    unit[iUnit].carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
 }
 
 int CARRYALL_FREE_FOR_TRANSFER(int iPlayer) {
@@ -4279,7 +4279,7 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer) {
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != iPlayer) continue;
         if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
-        if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
+        if (cUnit.m_transferType != eTransferType::NONE) continue; // skip busy carry-alls
         return i;
     }
     
@@ -4297,7 +4297,7 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
     int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(unit[iuID].iPlayer);
     if (carryAllUnitId > -1) {
         cUnit &cUnit = unit[carryAllUnitId];
-        cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
+        cUnit.carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
     }
     return carryAllUnitId;
 }

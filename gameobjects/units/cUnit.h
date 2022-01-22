@@ -15,12 +15,13 @@
 #include "structs.h"
 #include "utils/cRectangle.h"
 
-// Define TRANSFER stuff for reinforcements
-#define TRANSFER_NONE	-1				// nothing to transfer
-#define TRANSFER_NEW_STAY	0			// bring a new unit, and let the carryall stay
-#define TRANSFER_NEW_LEAVE	2			// bring a new unit, and let the carryall go back (and die)
-#define TRANSFER_PICKUP		1			// carry an existing unit, bring to new location
-#define TRANSFER_DIE		3			// will die when reaching goal-cell (added for proper animation)
+enum class eTransferType {
+    NONE,                               // nothing to transfer
+    NEW_STAY,                           // bring a new unit, and let the carryall stay
+    NEW_LEAVE,                          // bring a new unit, and let the carryall go back (and die)
+    PICKUP,                             // carry an existing unit, bring to new location
+    DIE,                                // will die when reaching goal-cell (added for proper animation)
+};
 
 enum class eActionType {
     GUARD,                              // on guard (scanning for enemy activity)
@@ -86,9 +87,11 @@ public:
     int iCredits;       // credits stored in this baby
 
 	// Carry-All specific
-	int iTransferType;	// -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
-						// iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
-						// iTempHitPoints = hp of unit when transfertype = 1
+
+    // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
+    // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
+    // iTempHitPoints = hp of unit when transfertype = 1
+    eTransferType m_transferType;
 
 	int iCarryTarget;	// Unit ID to carry, but is not carried yet
 	int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
@@ -165,7 +168,7 @@ public:
     cAbstractStructure * findClosestStructureType(int structureType);
 
 	// carryall-functions:
-	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
+	void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     // -------------
 	int TIMER_blink;	    // blink
