@@ -27,7 +27,8 @@ enum class eActionType {
     GUARD,                              // on guard (scanning for enemy activity)
     MOVE,                               // moving
     CHASE,                              // chasing a unit to attack
-    ATTACK,                             // attacking (not moving)
+    ATTACK_CHASE,                       // attacking (not moving), will chase when target is out of range
+    ATTACK,                             // attacking (not moving), will revert to GUARD when target is out of range
 };
 
 // Reinforcement data (loaded from ini file)
@@ -38,6 +39,20 @@ struct sReinforcement
     int iPlayer;         // to who?
     int iCell;          // Where to?
 };
+
+inline std::string eActionTypeString(eActionType actionType) {
+    switch (actionType) {
+        case eActionType::GUARD: return "GUARD";
+        case eActionType::ATTACK_CHASE: return "ATTACK_CHASE";
+        case eActionType::ATTACK: return "ATTACK";
+        case eActionType::MOVE: return "MOVE";
+        case eActionType::CHASE: return "CHASE";
+        default:
+            assert(false);
+            break;
+    }
+    return "";
+}
 
 class cUnit {
 
@@ -301,11 +316,13 @@ public:
     bool isUnableToMove();
 
     void attackUnit(int targetUnit);
+    void attackUnit(int targetUnit, bool chaseWhenOutOfRange);
     void attackStructure(int targetStructure);
     void attackCell(int cell);
 
     /**
      * Figures out if at cell is a unit, structure or nothing, and invokes the appropiate attackUnit/Structure/Cell function.
+     * Assumes unit should move closer (chase) to target
      * @param cell
      */
     void attackAt(int cell);
@@ -402,7 +419,7 @@ private:
 
     int getFaceAngleToCell(int cell) const;
 
-    void attack(int goalCell, int unitId, int structureId, int attackCell);
+    void attack(int goalCell, int unitId, int structureId, int attackCell, bool chaseWhenOutOfRange);
 
     int findNewDropLocation(int unitTypeToDrop, int cell) const;
 
@@ -453,6 +470,8 @@ private:
     void think_MVC();
     void think_ornithopter();
     void think_harvester();
+
+    void setAction(eActionType action);
 };
 
 
