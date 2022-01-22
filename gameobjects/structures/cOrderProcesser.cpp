@@ -228,7 +228,7 @@ void cOrderProcesser::sendFrigate() {
             unit[unitId].iHeadFacing = f;
 
             // STEP 3: assign order to frigate (use carryall order function)
-			unit[unitId].carryall_order(-1, TRANSFER_NEW_LEAVE, destinationCell, -1);
+			unit[unitId].carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
 			unitIdOfFrigateSent = unitId;
 			frigateSent = true;
 		}
