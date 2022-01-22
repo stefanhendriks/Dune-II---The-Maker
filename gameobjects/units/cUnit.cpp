@@ -820,7 +820,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell) {
         return;
     }
 
-    m_action = eActionType::GUARD;
+    m_action = eActionType::ATTACK;
     this->iGoalCell = goalCell;
     iAttackStructure = structureId;
     iAttackUnit = unitId;
