@@ -24,7 +24,7 @@ cGunTurret::~cGunTurret()
 
 }
 
-void cGunTurret::think() {
+void cGunTurret::thinkFast() {
 	if (!getPlayer()->bEnoughPower()) {
         return;
 	}
@@ -35,7 +35,7 @@ void cGunTurret::think() {
     }
 
 	// last but not least, think like our abstraction
-	cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)

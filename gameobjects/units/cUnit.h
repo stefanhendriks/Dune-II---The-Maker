@@ -77,11 +77,7 @@ public:
     int iAttackStructure; // attack structure id
     int iAttackCell;      // attacking a cell (which is force attack)
 
-    // Action its doing:
-    int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
-    eUnitActionIntent intent;
-
-    // Action given code 
+    // Action given code
     int iUnitID;        // Unit ID to attack/pickup, etc
     int iStructureID;   // structure ID to attack/bring to (refinery)/capture
 
@@ -130,9 +126,9 @@ public:
     void draw_health();
 	void draw_experience();
 	void draw_spice();
-  void draw();
+    void draw();
 	void draw_path() const;
-  bool isValid() const;     // valid unit?
+    bool isValid() const;     // valid unit?
 
     void shoot(int iTargetCell);  // shoot at goalcell
 
@@ -140,7 +136,8 @@ public:
 
     void updateCellXAndY();        // updateCellXAndY status
 
-    void think();       // thinking in general
+    void think();
+
     void thinkFast_move_airUnit();  // aircraft specific
     void think_move_foot(); // soldiers specific
     void thinkFast_move();  // thinking about movement (which is called upon a faster rate)
@@ -342,6 +339,9 @@ public:
     void thinkFast();
 
 private:
+    // Action its doing:
+    int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
+    eUnitActionIntent intent;
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
     bool bPickedUp;     // did this unit pick up a unit? (this unit is a carry-all or frigate)
@@ -387,9 +387,9 @@ private:
 
     void selectTargetForOrnithopter(cPlayer *pPlayer);
 
-    void think_ornithopter(cPlayer *pPlayer);
-
     void think_carryAll();
+
+    void thinkActionAgnostic();       // thinking in general
 
     int determineNewFacing(int currentFacing, int desiredFacing);
 
@@ -443,6 +443,13 @@ private:
     int findNearbyGroundUnitToAttack(int range);
 
     int findNearbyAirUnitToAttack(int range);
+
+
+    int getTurnSpeed();
+
+    void think_MVC();
+    void think_ornithopter();
+    void think_harvester();
 };
 
 
@@ -487,6 +494,5 @@ int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);
 
-void THINK_REINFORCEMENTS();
 void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
 void INIT_REINFORCEMENT();

@@ -2070,3 +2070,9 @@ void cPlayer::setContextMouseState(eMouseState newState) {
 bool cPlayer::isContextMouseState(eMouseState state) {
     return gameControlsContext->isState(state);
 }
+
+void cPlayer::thinkSlow() {
+    if (orderProcesser) {
+        orderProcesser->think();
+    }
+}

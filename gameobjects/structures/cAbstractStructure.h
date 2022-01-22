@@ -103,7 +103,8 @@ class cAbstractStructure {
 
 
 		// Filled in by derived classes
-		virtual void think()=0;           // think
+		virtual void thinkFast()=0;       // think fast (every 5ms)
+		virtual void thinkSlow()=0;       // think slow (every second)
 		virtual void think_animation()=0; // think animation stuff
 		virtual void think_guard();       // think guard stuff
 

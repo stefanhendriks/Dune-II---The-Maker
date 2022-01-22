@@ -17,9 +17,9 @@ cStarPort::~cStarPort() {
 
 }
 
-void cStarPort::think() {
+void cStarPort::thinkFast() {
     // think like base class
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 
 }
 
@@ -52,6 +52,10 @@ void cStarPort::think_animation() {
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_deployment();
+}
+
+void cStarPort::thinkSlow() {
+    think_deploy();
 }
 
 // FPS based thing function (every second called)

@@ -7,8 +7,8 @@ cBarracks::cBarracks() {
 cBarracks::~cBarracks() {
 }
 
-void cBarracks::think() {
-	cAbstractStructure::think();
+void cBarracks::thinkFast() {
+    cAbstractStructure::thinkFast();
 }
 
 int cBarracks::getType() const {

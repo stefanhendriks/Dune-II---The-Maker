@@ -28,9 +28,9 @@ cWindTrap::~cWindTrap() {
 }
 
 
-void cWindTrap::think() {
+void cWindTrap::thinkFast() {
     // think like base class
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 }
 
 void cWindTrap::think_fade() {

@@ -16,9 +16,9 @@ cLightFactory::~cLightFactory() {
 }
 
 
-void cLightFactory::think() {
+void cLightFactory::thinkFast() {
     // last but not least, think like our abstraction
-    cAbstractStructure::think();
+    cAbstractStructure::thinkFast();
 }
 
 void cLightFactory::think_animation_unitDeploy() {

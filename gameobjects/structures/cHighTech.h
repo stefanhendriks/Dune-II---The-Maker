@@ -12,7 +12,9 @@ public:
     ~cHighTech();
 
     // overloaded functions    
-    void think() override;
+    void thinkFast() override;
+
+    void thinkSlow() override {}
 
     void startAnimating() override;
 
