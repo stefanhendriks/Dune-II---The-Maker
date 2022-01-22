@@ -44,8 +44,8 @@ cAbstractMentat::cAbstractMentat() {
     font = alfont_load_font("data/arrak.ttf");
 
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
-    offsetX = (game.screen_x - 640) / 2;
-    offsetY = (game.screen_y - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetX = (game.m_screenX - 640) / 2;
+    offsetY = (game.m_screenY - 480) / 2; // same goes for offsetY (but then for 480 height).
 
 	memset(sentence, 0, sizeof(sentence));
 	logbook("cAbstractMentat::cAbstractMentat()");

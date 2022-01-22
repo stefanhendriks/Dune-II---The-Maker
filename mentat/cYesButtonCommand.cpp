@@ -3,12 +3,12 @@
 void cYesButtonCommand::execute(cAbstractMentat& mentat) {
     logbook("cYesButtonCommand::execute()");
     game.setNextStateToTransitionTo(GAME_BRIEFING);
-    game.iMission = 1; // first mission
-    game.iRegion  = 1; // and the first "region" so to speak
-    game.mission_init();
+    game.m_mission = 1; // first mission
+    game.m_region  = 1; // and the first "region" so to speak
+    game.missionInit();
 
     players[HUMAN].setHouse(mentat.getHouse());
 
-    game.START_FADING_OUT();
+    game.initiateFadingOut();
 }
 

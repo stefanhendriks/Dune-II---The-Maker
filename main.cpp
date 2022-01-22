@@ -78,13 +78,13 @@ ALMP3_MP3   *mp3_music; // pointer to mp3 music
 #endif
 
 int handleArguments(int argc, char *argv[]) {
-    game.bDisableAI = false;
-    game.bDisableReinforcements = false;
-    game.bDrawUsages = false;
-    game.bDrawUnitDebug = false;
-    game.bOneAi = false;
-    game.windowed = false;
-    game.bNoAiRest = false;
+    game.m_disableAI = false;
+    game.m_disableReinforcements = false;
+    game.m_drawUsages = false;
+    game.m_drawUnitDebug = false;
+    game.m_oneAi = false;
+    game.m_windowed = false;
+    game.m_noAiRest = false;
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
@@ -92,33 +92,33 @@ int handleArguments(int argc, char *argv[]) {
 			if (command.compare("-game") == 0) {
 				if ((i + 1) < argc) {
 					i++;
-					game.game_filename = std::string(argv[i]);
+					game.m_gameFilename = std::string(argv[i]);
 				}
 			} else if (command.compare("-windowed") == 0) {
 				// Windowed flag passed, so use that
-				game.windowed = true;
+				game.m_windowed = true;
 			} else if (command.compare("-nomusic") == 0) {
-				game.bPlayMusic = false;
+				game.m_playMusic = false;
 			} else if (command.compare("-nosound") == 0) {
 			    // disable all sound effects
-				game.bPlayMusic = false;
-				game.bPlaySound = false;
+				game.m_playMusic = false;
+				game.m_playSound = false;
 			} else if (command.compare("-debug") == 0) {
 			    // generic debugging enabled
                 bDoDebug = true;
 			} else if (command.compare("-debug-units") == 0) {
                 // unit debugging enabled
-                game.bDrawUnitDebug = true;
+                game.m_drawUnitDebug = true;
 			} else if (command.compare("-noai") == 0) {
-                game.bDisableAI = true;
+                game.m_disableAI = true;
             } else if (command.compare("-oneai") == 0) {
-                game.bOneAi = true;
+                game.m_oneAi = true;
             } else if (command.compare("-noreinforcements") == 0) {
-                game.bDisableReinforcements = true;
+                game.m_disableReinforcements = true;
             } else if (command.compare("-noairest") == 0) {
-                game.bNoAiRest = true;
+                game.m_noAiRest = true;
             } else if (command.compare("-usages") == 0) {
-                game.bDrawUsages = true;
+                game.m_drawUsages = true;
             }
 		}
 	} // arguments passed
@@ -130,7 +130,7 @@ int handleArguments(int argc, char *argv[]) {
 	Entry point of the game
 */
 int main(int argc, char **argv) {
-	game.game_filename = "game.ini";
+	game.m_gameFilename = "game.ini";
 
     if (handleArguments(argc, argv) > 0) {
         return 0;

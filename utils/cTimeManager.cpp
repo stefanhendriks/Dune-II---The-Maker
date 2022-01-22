@@ -64,9 +64,9 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
         gameTime++;
 
         if (game.isState(GAME_PLAYING)) {
-            game.paths_created = 0;
+            game.m_pathsCreated = 0;
 
-            if (!game.bDisableReinforcements) {
+            if (!game.m_disableReinforcements) {
                 THINK_REINFORCEMENTS();
             }
 
@@ -95,13 +95,12 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
         // Frame Per Second counter
         game.setFps();
 
-        // 'auto resting'
+        // 'auto resting' / giving CPU some time for other processes
         if (game.isRunningAtIdealFps()) {
+            iRest += 1; // give CPU a bit more slack
+        } else {
             if (iRest > 0) iRest -= 1;
             if (iRest < 0) iRest = 0;
-        } else {
-            if (iRest < 500) iRest += 1;
-            if (iRest > 500) iRest = 500;
         }
 
         game.resetFrameCount();

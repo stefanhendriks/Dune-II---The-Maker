@@ -770,7 +770,7 @@ void cUnit::draw() {
                                          );
     }
 
-    if (game.bDrawUnitDebug) {
+    if (game.m_drawUnitDebug) {
         // render pixel at the very center
         putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 255, 0));
 
@@ -3648,7 +3648,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
     // Too many paths where created , so we wait a little.
     // make sure not to create too many paths at once
-    if (game.paths_created > 40) {
+    if (game.m_pathsCreated > 40) {
         pUnit.log("CREATE_PATH -- END 3");
         pUnit.TIMER_movewait = (50 + rnd(50));
         return -3;
@@ -3682,7 +3682,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     int goal_cell = pUnit.iGoalCell;
     int controller = pUnit.iPlayer;
 
-    game.paths_created++;
+    game.m_pathsCreated++;
     memset(temp_map, -1, sizeof(temp_map));
 
     the_cll = -1;

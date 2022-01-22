@@ -29,75 +29,84 @@ class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
 
+// Naming thoughts:
+// member variables, start with m_<camelCasedVariableName>
+//
+// functions are camelCased()
+// exceptions (for now):
+// think()
+// thinkFast_...()
+// thinkSlow_....() --> for now used to distinguish certain speed of "thinking" / invocations
+// state_...() --> because elegible for moving away
+
 class cGame : public cScenarioObserver, cInputObserver {
 
 public:
-
 	cGame();
 	~cGame();
 
-	std::string game_filename;
+	std::string m_gameFilename;
 
-	bool windowed;			 // windowed
-	std::string version; // version number, or name.
+	bool m_windowed;			    // windowed
+	std::string m_version;          // version number, or name.
 
     // Alpha (for fading in/out)
-    int fadeAlpha;           // 255 = opaque , anything else
-    eFadeAction fadeAction;    // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    int m_fadeAlpha;                // 255 = opaque , anything else
+    eFadeAction m_fadeAction;       // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     // resolution of the game
-	int screen_x;
-	int screen_y;
-    int ini_screen_width;
-    int ini_screen_height;
+	int m_screenX;
+	int m_screenY;
+    int m_iniScreenWidth;
+    int m_iniScreenHeight;
 
-    bool bPlaySound;            // play sound?
-    bool bDisableAI;            // disable AI thinking?
-    bool bOneAi;                // disable all but one AI brain? (default == false)
-    bool bDisableReinforcements;// disable any reinforcements from scenario ini file?
-    bool bDrawUsages;           // draw the amount of structures/units/bullets used during combat
-    bool bDrawUnitDebug;        // draw the unit debug info (rects, paths, etc)
-    bool bNoAiRest;             // Campaign AI does not have long initial REST time
-    bool bPlayMusic;            // play any music?
-    bool bMp3;                  // use mp3 files instead of midi
+    bool m_playSound;               // play sound?
+    bool m_disableAI;               // disable AI thinking?
+    bool m_oneAi;                   // disable all but one AI brain? (default == false)
+    bool m_disableReinforcements;   // disable any reinforcements from scenario ini file?
+    bool m_drawUsages;              // draw the amount of structures/units/bullets used during combat
+    bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
+    bool m_noAiRest;                // Campaign AI does not have long initial REST time
+    bool m_playMusic;               // play any music?
+    bool m_mp3;                     // use mp3 files instead of midi
 
-	bool bPlaying;				// playing or not
-    bool bSkirmish;             // playing a skirmish game  or not
-	int screenshot;				// screenshot taking number
+	bool m_playing;				    // playing or not
+    bool m_skirmish;                // playing a skirmish game or not
+	int m_screenshot;				// screenshot taking number
 
-	void init();		// initialize all game variables
-	void mission_init(); // initialize variables for mission loading only
-	void run();			// run the game
+    int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
+	int m_mission;		            // what mission are we playing? (= techlevel)
 
-    int iRegion;        // what region is selected? (changed by cSelectYourNextConquestState class)
-	int iMission;		// what mission are we playing? (= techlevel)
+	int m_pathsCreated;
 
-	int paths_created;
+    int m_musicVolume;              // volume of the mp3 / midi
+    int m_musicType;
 
-    int iMusicVolume;       // volume of the mp3 / midi
+    cRectangle *m_mapViewport;
 
+    // Initialization functions
+    void init();		            // initialize all game variables
+    void missionInit();             // initialize variables for mission loading only
+    void setupPlayers();            // initialize players only (combat state initialization)
+    bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
+    void shutdown();
+    void initSkirmish() const;      // initialize combat state to start a skirmish game
+    void createAndPrepareMentatForHumanPlayer();
+    void loadScenario();
 
-    int iMusicType;
+    void run();			            // run the game (MAIN LOOP)
 
     void thinkSlow_combat();
+
     void thinkFast_combat();
-
-    void winning();       // winning (during combat you get the window "you have been successful"), after clicking you get to debrief
-    void losing();        // losing (during combat you get the window "you have lost"), after clicking you get to debrief
-    void options();
-
-	void setup_players();
+    void thinkFast_state();
 
     void think_audio();
-
 	void think_mentat();
+    void think_fading();
 
-    void START_FADING_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
-
+    void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
-
-	bool setupGame();
-	void shutdown();
 
 	bool isState(int thisState);
 
@@ -134,26 +143,13 @@ public:
 
     int getColorFadeSelected(int color);
 
-    void think_fading();
-
-    cRectangle * mapViewport;
-
-    void init_skirmish() const;
-
-    void createAndPrepareMentatForHumanPlayer();
-
-    void loadScenario();
-
-    void thinkFast_state();
-
     cMouse *getMouse() {
-        return mouse; // NOOOO
+        return m_mouse; // NOOOO
     }
-
-    void shakeScreen(int duration);
 
     void setPlayerToInteractFor(cPlayer *pPlayer);
 
+    // Event handling
     void onNotifyGameEvent(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -184,6 +180,7 @@ public:
         return "";
     }
 
+    void shakeScreen(int duration);
     void reduceShaking();
 
     cAllegroDataRepository * getDataRepository() {
@@ -200,105 +197,108 @@ public:
     void setLoseFlags(int value);
 
     void setMissionLost();
-
     void setMissionWon();
 
+    // FPS related
     bool isRunningAtIdealFps();
-
     void resetFrameCount();
-
     void setFps();
-
     int getFps();
 
     void prepareMentatToTellAboutHouse(int house);
 
     void drawCombatMouse();
-
 private:
     /**
      * Variables start here
      */
-    std::unique_ptr<cPlatformLayerInit> _PLInit;
-    cInteractionManager *_interactionManager;
+
+    std::unique_ptr<cPlatformLayerInit> m_PLInit;
+    cInteractionManager *m_interactionManager;
     cAllegroDataRepository *m_dataRepository;
 
-    std::unique_ptr<cSoundPlayer> _soundplayer;
+    std::unique_ptr<cSoundPlayer> m_soundPlayer;
 
-    cMouse *mouse;
-    cKeyboard *keyboard;
+    cMouse *m_mouse;
+    cKeyboard *m_keyboard;
 
-    bool missionWasWon; // hack: used for state transitioning :/
+    bool m_missionWasWon;               // hack: used for state transitioning :/
 
-	int state;
+	int m_state;
 
-	cAbstractMentat *pMentat; // TODO: Move this into a currentState class (as field)?
+	cAbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
 
-    float fade_select;        // fade color when selected
-    bool bFadeSelectDir;    // fade select direction
+    float m_fadeSelect;                 // fade color when selected
+    bool m_fadeSelectDir;               // fade select direction
 
     // screen shaking
-    int shake_x;
-    int shake_y;
-    int TIMER_shake;
+    int m_shakeX;
+    int m_shakeY;
 
-    int TIMER_evaluatePlayerStatus;
+    int m_TIMER_shake;
+    int m_TIMER_evaluatePlayerStatus;
 
     // win/lose flags
-    int8_t winFlags, loseFlags;
+    int8_t m_winFlags, m_loseFlags;
 
-    int frame_count, fps;  // fps and such
+    int m_frameCount, m_fps;            // fps and such
 
-    int nextState;
+    int m_nextState;
 
     // the current game state we are running
-    cGameState *currentState;
+    cGameState *m_currentState;
 
-    cGameState *states[GAME_MAX_STATES];
+    cGameState *m_states[GAME_MAX_STATES];
 
-    void updateState();
-    void combat();		// the combat part (main) of the game
     bool isMusicPlaying();
 
-    void stateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction
-    void menu();		// main menu
+    void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/
+    void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
+    void drawStateCombat();		// the combat part (main) of the game
+    void drawStateMenu();		// main menu
+    void drawStateWinning();    // drawStateWinning (during combat you get the window "you have been successful"),
+                                // after clicking you get to debrief
 
-    void drawState();
+    void drawStateLosing();     // drawStateLosing (during combat you get the window "you have lost"),
+                                // after clicking you get to debrief
+
+
+    void drawStateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction
+
     void shakeScreenAndBlitBuffer();
     void handleTimeSlicing();
 
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
 
+    void initPlayers(bool rememberHouse) const;
+
     void install_bitmaps();
 
-    bool isMissionWon() const;
+    [[nodiscard]] bool isMissionWon() const;
 
-    bool isMissionFailed() const;
+    [[nodiscard]] bool isMissionFailed() const;
 
-    bool hasGameOverConditionHarvestForSpiceQuota() const;
+    [[nodiscard]] bool hasGameOverConditionHarvestForSpiceQuota() const;
 
-    bool hasGameOverConditionPlayerHasNoBuildings() const;
+    [[nodiscard]] bool hasGameOverConditionPlayerHasNoBuildings() const;
 
-    bool hasWinConditionHumanMustLoseAllBuildings() const;
+    [[nodiscard]] bool hasWinConditionHumanMustLoseAllBuildings() const;
 
-    bool hasWinConditionAIShouldLoseEverything() const;
+    [[nodiscard]] bool hasWinConditionAIShouldLoseEverything() const;
 
-    bool allAIPlayersAreDestroyed() const;
+    [[nodiscard]] bool allAIPlayersAreDestroyed() const;
 
-    bool hasGameOverConditionAIHasNoBuildings() const;
+    [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
 
     void transitionStateIfRequired();
 
     void setState(int newState);
 
-    void initPlayers(bool rememberHouse) const;
-
     void saveBmpScreenToDisk();
 
+    // Combat state specific event handling for now
     void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
-
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
-
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 };
