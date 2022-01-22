@@ -18,7 +18,7 @@ void cParticleDrawer::determineParticlesToDraw() {
     for (int i=0; i < MAX_PARTICLES; i++) {
         cParticle &pParticle = particle[i];
         if (!pParticle.isValid()) continue;
-        if (!pParticle.isWithinViewport(game.mapViewport)) continue;
+        if (!pParticle.isWithinViewport(game.m_mapViewport)) continue;
 
         if (pParticle.getLayer() == D2TM_RENDER_LAYER_PARTICLE_BOTTOM) {
             particlesLowerLayer.push_back(i);

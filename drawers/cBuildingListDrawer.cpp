@@ -95,7 +95,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
 
 int cBuildingListDrawer::getDrawX() {
-	return (game.screen_x - cSideBar::SidebarWidthWithoutCandyBar) + 2;
+	return (game.m_screenX - cSideBar::SidebarWidthWithoutCandyBar) + 2;
 }
 
 int cBuildingListDrawer::getDrawY() {
@@ -304,7 +304,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         }
     }
 
-	set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
+	set_clip_rect(bmp_screen, 0, 0, game.m_screenX, game.m_screenY);
 }
 
 /**

@@ -6,6 +6,6 @@ cGuiActionToGameState::cGuiActionToGameState(int nextState, bool fadeOut) : fade
 void cGuiActionToGameState::execute() {
     game.setNextStateToTransitionTo(nextState);
     if (fadeOut) {
-        game.START_FADING_OUT();
+        game.initiateFadingOut();
     }
 }

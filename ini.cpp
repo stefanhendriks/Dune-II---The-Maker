@@ -1210,14 +1210,14 @@ std::string INI_GetScenarioFileName(int iHouse, int iRegion) {
 
 
 void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
-    game.bSkirmish = false;
-    game.mission_init();
+    game.m_skirmish = false;
+    game.missionInit();
 
     std::string filename = INI_GetScenarioFileName(iHouse, iRegion);
 
-    game.iMission = getTechLevelByRegion(iRegion);
+    game.m_mission = getTechLevelByRegion(iRegion);
 
-    logbook(fmt::format("[SCENARIO] '{}' (Mission {})", filename, game.iMission));
+    logbook(fmt::format("[SCENARIO] '{}' (Mission {})", filename, game.m_mission));
     logbook("[SCENARIO] Opening file");
 
     // declare some temp fields while reading the scenario file.
@@ -2199,13 +2199,13 @@ void INI_Install_Game(std::string filename) {
 //				  game.windowed = (INI_WordValueBOOL(linefeed) == false);
 //				  break;
                     case WORD_SCREENWIDTH:
-                        game.ini_screen_width = INI_WordValueINT(linefeed);
+                        game.m_iniScreenWidth = INI_WordValueINT(linefeed);
                         break;
                     case WORD_SCREENHEIGHT:
-                        game.ini_screen_height = INI_WordValueINT(linefeed);
+                        game.m_iniScreenHeight = INI_WordValueINT(linefeed);
                         break;
                     case WORD_MP3MUSIC:
-                        game.bMp3 = INI_WordValueBOOL(linefeed);
+                        game.m_mp3 = INI_WordValueBOOL(linefeed);
                         break;
                 }
             }

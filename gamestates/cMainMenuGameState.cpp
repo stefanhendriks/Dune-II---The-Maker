@@ -8,7 +8,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
 
-    int centerOfScreen = game.screen_x / 2;
+    int centerOfScreen = game.m_screenX / 2;
 
     logoX = centerOfScreen - (logoWidth / 2);
     logoY = (logoHeight/10);
@@ -112,8 +112,8 @@ void cMainMenuGameState::thinkFast() {
 
 void cMainMenuGameState::draw() const {
     if (DEBUGGING) {
-        for (int x = 0; x < game.screen_x; x += 60) {
-            for (int y = 0; y < game.screen_y; y += 20) {
+        for (int x = 0; x < game.m_screenX; x += 60) {
+            for (int y = 0; y < game.m_screenY; y += 20) {
                 rect(bmp_screen, x, y, x + 50, y + 10, makecol(64, 64, 64));
                 putpixel(bmp_screen, x, y, makecol(255, 255, 255));
                 alfont_textprintf(bmp_screen, bene_font, x, y, makecol(32, 32, 32), "Debug");
@@ -127,15 +127,15 @@ void cMainMenuGameState::draw() const {
 
     gui_window->draw();
 
-    int creditsX = (game.screen_x / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
+    int creditsX = (game.m_screenX / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
     GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
 
 
     // draw version
-    textDrawer.drawTextBottomRight(game.version.c_str());
+    textDrawer.drawTextBottomRight(game.m_version.c_str());
 
     // mp3 addon?
-    if (game.bMp3) {
+    if (game.m_mp3) {
         textDrawer.drawTextBottomLeft("Music: MP3 ADD-ON");
     } else {
         textDrawer.drawTextBottomLeft("Music: MIDI");
@@ -151,7 +151,7 @@ void cMainMenuGameState::draw() const {
     game.getMouse()->draw();
 
     if (key[KEY_ESC]) {
-        game.bPlaying=false;
+        game.m_playing=false;
     }
 }
 

@@ -126,16 +126,16 @@ void cAllegroDrawer::maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int
 void cAllegroDrawer::drawCenteredSprite(BITMAP *dest, BITMAP *src) {
 	assert(src);
 	assert(dest);
-	int xPos = getCenteredXPosForBitmap(src, game.screen_x);
+	int xPos = getCenteredXPosForBitmap(src, game.m_screenX);
 	int yPos = getCenteredYPosForBitmap(src);
 	draw_sprite(dest, src, xPos, yPos);
 }
 
 void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage) {
-	int xPos = getCenteredXPosForBitmap(src, game.screen_x);
+	int xPos = getCenteredXPosForBitmap(src, game.m_screenX);
 
 	// we want to know the 'center' first. This is done in the percentage
-	int wantedYPos = ((float)game.screen_y * percentage);
+	int wantedYPos = ((float)game.m_screenY * percentage);
 
 	// we need to know the height of the src
 	int height = src->h;
@@ -155,7 +155,7 @@ void cAllegroDrawer::drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int
 void cAllegroDrawer::drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x) {
 	assert(src);
 	assert(dest);
-	int yPos = getCenteredXPosForBitmap(src, game.screen_x);
+	int yPos = getCenteredXPosForBitmap(src, game.m_screenX);
 	draw_sprite(dest, src, x, yPos);
 }
 
@@ -170,7 +170,7 @@ int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 	assert(bmp);
 	int height = bmp->h;
 	int halfOfHeight = height / 2;
-	return (game.screen_y / 2) - halfOfHeight;
+	return (game.m_screenY / 2) - halfOfHeight;
 }
 
 void cAllegroDrawer::blit(sBitmap *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {

@@ -1698,7 +1698,7 @@ int distanceBetweenCellAndCenterOfScreen(int iCell) {
  * @param iDistance
  */
 void play_sound_id_with_distance(int s, int iDistance) {
-	if (!game.bPlaySound) return; // do not play sound when boolean is false.
+	if (!game.m_playSound) return; // do not play sound when boolean is false.
 
 	if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
         game.playSound(s);
@@ -1741,7 +1741,7 @@ bool MIDI_music_playing() {
 }
 
 void setMusicVolume(int i) {
-    if (game.bMp3) {
+    if (game.m_mp3) {
         if (mp3_music != nullptr) {
         	almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
         }
@@ -1762,7 +1762,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	} else {
 		logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
 		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
-		game.bMp3=false;
+		game.m_mp3=false;
 
 		if (mp3_music != nullptr) {
 		   almp3_destroy_mp3(mp3_music);
@@ -1780,14 +1780,14 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	int result = almp3_play_mp3(mp3_music, BUFFER_SIZE, VOLUME_MAX, PAN_CENTER);
 	assert(result == ALMP3_OK);
 
-	setMusicVolume(game.iMusicVolume);
+	setMusicVolume(game.m_musicVolume);
 }
 
 // play type of music
 void playMusicByType(int iType) {
-    game.iMusicType = iType;
+    game.m_musicType = iType;
 
-    if (!game.bPlayMusic) return;
+    if (!game.m_playMusic) return;
 
     int iNumber=0;
 
@@ -1809,7 +1809,7 @@ void playMusicByType(int iType) {
     }
 
     // In the end, when mp3, play it:
-    if (game.bMp3) {
+    if (game.m_mp3) {
         char filename[50];
         memset(filename, 0, sizeof(filename));
 
@@ -1977,8 +1977,8 @@ void Shimmer(int r, int x, int y) {
 
             if (x1 < 0) x1 = 0;
             if (y1 < 0) y1 = 0;
-            if (x1 >= game.screen_x) x1 = game.screen_x - 1;
-            if (y1 >= game.screen_y) y1 = game.screen_y - 1;
+            if (x1 >= game.m_screenX) x1 = game.m_screenX - 1;
+            if (y1 >= game.m_screenY) y1 = game.m_screenY - 1;
 
             gp = getpixel(bmp_screen, x1, y1); // use this inline function to speed up things.
             // Now choose random spot to 'switch' with.
@@ -1987,8 +1987,8 @@ void Shimmer(int r, int x, int y) {
 
             if (nx < 0) nx = 0;
             if (ny < 0) ny = 0;
-            if (nx >= game.screen_x) nx = game.screen_x - 1;
-            if (ny >= game.screen_y) ny = game.screen_y - 1;
+            if (nx >= game.m_screenX) nx = game.m_screenX - 1;
+            if (ny >= game.m_screenY) ny = game.m_screenY - 1;
 
             tc = getpixel(bmp_screen, nx, ny);
 

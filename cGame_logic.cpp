@@ -30,64 +30,64 @@ constexpr auto kMaxAlpha = 255;
 }
 
 cGame::cGame() {
-    memset(states, 0, sizeof(cGameState *));
+    memset(m_states, 0, sizeof(cGameState *));
 
-    nextState = -1;
-    currentState = nullptr;
-    screen_x = 800;
-    screen_y = 600;
-    windowed = false;
-    bPlaySound = true;
-    bPlayMusic = true;
-    bMp3 = false;
+    m_nextState = -1;
+    m_currentState = nullptr;
+    m_screenX = 800;
+    m_screenY = 600;
+    m_windowed = false;
+    m_playSound = true;
+    m_playMusic = true;
+    m_mp3 = false;
     // default INI screen width and height is not loaded
     // if not loaded, we will try automatic setup
-    ini_screen_width = -1;
-    ini_screen_height = -1;
+    m_iniScreenWidth = -1;
+    m_iniScreenHeight = -1;
 
-  version = "0.6.x";
+    m_version = "0.6.x";
 
-    pMentat = nullptr;
+    m_mentat = nullptr;
 }
 
 
 void cGame::init() {
-    nextState = -1;
-    missionWasWon = false;
-    currentState = nullptr;
-    screenshot = 0;
-    bPlaying = true;
+    m_nextState = -1;
+    m_missionWasWon = false;
+    m_currentState = nullptr;
+    m_screenshot = 0;
+    m_playing = true;
 
-    TIMER_evaluatePlayerStatus = 5;
+    m_TIMER_evaluatePlayerStatus = 5;
 
-    bSkirmish = false;
+    m_skirmish = false;
 
     // Alpha (for fading in/out)
-    fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
-    fadeAction = eFadeAction::FADE_IN; // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
+    m_fadeAction = eFadeAction::FADE_IN; // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
-    iMusicVolume = 96; // volume is 0...
+    m_musicVolume = 96; // volume is 0...
 
-    paths_created = 0;
+    m_pathsCreated = 0;
 
     setState(GAME_INITIALIZE);
 
     // mentat
-    delete pMentat;
-    pMentat = nullptr;
+    delete m_mentat;
+    m_mentat = nullptr;
 
-    fade_select = 1.0f;
+    m_fadeSelect = 1.0f;
 
-    bFadeSelectDir = true;    // fade select direction
+    m_fadeSelectDir = true;    // fade select direction
 
-    iRegion = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
-    iMission = 0;         // calculated by mission loading (region -> mission calculation)
+    m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
+    m_mission = 0;         // calculated by mission loading (region -> mission calculation)
 
-    shake_x = 0;
-    shake_y = 0;
-    TIMER_shake = 0;
+    m_shakeX = 0;
+    m_shakeY = 0;
+    m_TIMER_shake = 0;
 
-    iMusicType = MUSIC_MENU;
+    m_musicType = MUSIC_MENU;
 
     map.init(64, 64);
 
@@ -102,38 +102,38 @@ void cGame::init() {
     }
 
     // Units & Structures are already initialized in map.init()
-    if (game.bMp3 && mp3_music) {
-        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
+    if (game.m_mp3 && mp3_music) {
+        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateMouseAndKeyboardStateAndGamePlaying
     }
 
     // Load properties
-    INI_Install_Game(game_filename);
+    INI_Install_Game(m_gameFilename);
 
     mp3_music = nullptr;
 }
 
 // TODO: Bad smell (duplicate code)
 // initialize for missions
-void cGame::mission_init() {
+void cGame::missionInit() {
     mapCamera->resetZoom();
 
     // first 15 seconds, do not evaluate player alive status
-    TIMER_evaluatePlayerStatus = 5;
+    m_TIMER_evaluatePlayerStatus = 5;
 
-    winFlags = 0;
-    loseFlags = 0;
+    m_winFlags = 0;
+    m_loseFlags = 0;
 
-    iMusicVolume = 96; // volume is 0...
+    m_musicVolume = 96; // volume is 0...
 
-    paths_created = 0;
+    m_pathsCreated = 0;
 
-    fade_select = 1.0f;
+    m_fadeSelect = 1.0f;
 
-    bFadeSelectDir = true;    // fade select direction
+    m_fadeSelectDir = true;    // fade select direction
 
-    shake_x = 0;
-    shake_y = 0;
-    TIMER_shake = 0;
+    m_shakeX = 0;
+    m_shakeY = 0;
+    m_TIMER_shake = 0;
 
     map.init(64, 64);
 
@@ -144,7 +144,7 @@ void cGame::mission_init() {
 
 void cGame::initPlayers(bool rememberHouse) const {
     int maxThinkingAIs = MAX_PLAYERS;
-    if (bOneAi) {
+    if (m_oneAi) {
         maxThinkingAIs = 1;
     }
 
@@ -157,9 +157,9 @@ void cGame::initPlayers(bool rememberHouse) const {
 
         if (i > HUMAN && i < AI_CPU5) {
             // TODO: playing attribute? (from ai player class?)
-            if (!game.bDisableAI) {
+            if (!game.m_disableAI) {
                 if (maxThinkingAIs > 0) {
-                    if (game.bSkirmish) {
+                    if (game.m_skirmish) {
                         brain = new brains::cPlayerBrainSkirmish(&pPlayer);
                     } else {
                         brain = new brains::cPlayerBrainCampaign(&pPlayer);
@@ -180,7 +180,7 @@ void cGame::initPlayers(bool rememberHouse) const {
             pPlayer.setHouse(h);
         }
 
-        if (bSkirmish) {
+        if (m_skirmish) {
             pPlayer.setCredits(2500);
         }
     }
@@ -190,8 +190,8 @@ void cGame::initPlayers(bool rememberHouse) const {
  * Thinking every second while in combat
  */
 void cGame::thinkSlow_combat() {
-    if (TIMER_evaluatePlayerStatus > 0) {
-        TIMER_evaluatePlayerStatus--;
+    if (m_TIMER_evaluatePlayerStatus > 0) {
+        m_TIMER_evaluatePlayerStatus--;
     } else {
         // TODO: Better way is with events (ie created/destroyed). However, there is no such
         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
@@ -214,7 +214,7 @@ void cGame::thinkSlow_combat() {
 
             // TODO: event : Player joined/became alive, etc?
         }
-        TIMER_evaluatePlayerStatus = 2;
+        m_TIMER_evaluatePlayerStatus = 2;
     }
 
     if (isMissionFailed()) {
@@ -229,39 +229,39 @@ void cGame::thinkSlow_combat() {
 }
 
 void cGame::setMissionWon() {
-    missionWasWon = true;
+    m_missionWasWon = true;
     setState(GAME_WINNING);
 
-    shake_x = 0;
-    shake_y = 0;
-    TIMER_shake = 0;
-    mouse->setTile(MOUSE_NORMAL);
+    m_shakeX = 0;
+    m_shakeY = 0;
+    m_TIMER_shake = 0;
+    m_mouse->setTile(MOUSE_NORMAL);
 
-    _soundplayer->playVoice(SOUND_VOICE_07_ATR, players[HUMAN].getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_WIN);
 
     // copy over
-    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
+    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenX, m_screenY);
 
     allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
 }
 
 void cGame::setMissionLost() {
-    missionWasWon = false;
+    m_missionWasWon = false;
     setState(GAME_LOSING);
 
-    shake_x = 0;
-    shake_y = 0;
-    TIMER_shake = 0;
-    mouse->setTile(MOUSE_NORMAL);
+    m_shakeX = 0;
+    m_shakeY = 0;
+    m_TIMER_shake = 0;
+    m_mouse->setTile(MOUSE_NORMAL);
 
-    _soundplayer->playVoice(SOUND_VOICE_08_ATR, players[HUMAN].getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
     // copy over
-    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
+    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenX, m_screenY);
 
     allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
 }
@@ -291,7 +291,7 @@ bool cGame::isMissionFailed() const {
                 // since we have a fixed list of players.
 
                 // so for now just do this:
-                return false; // it is meant to win the game by losing all...
+                return false; // it is meant to win the game by drawStateLosing all...
             } else {
                 return true; // nope, it should lose mission now
             }
@@ -344,16 +344,16 @@ bool cGame::allAIPlayersAreDestroyed() const {
 
 
 /**
- * Remember, the 'winFlags' are used to determine when the game is "over". Only then the lose flags are evaluated
+ * Remember, the 'm_winFlags' are used to determine when the game is "over". Only then the lose flags are evaluated
  * and used to determine who has won. (According to the SCEN specification).
  * @return
  */
 bool cGame::hasWinConditionHumanMustLoseAllBuildings() const {
-    return (loseFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
+    return (m_loseFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
 }
 
 bool cGame::hasWinConditionAIShouldLoseEverything() const {
-    return (loseFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
+    return (m_loseFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
 }
 
 /**
@@ -361,7 +361,7 @@ bool cGame::hasWinConditionAIShouldLoseEverything() const {
  * @return
  */
 bool cGame::hasGameOverConditionPlayerHasNoBuildings() const {
-    return (winFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
+    return (m_winFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
 }
 
 /**
@@ -369,42 +369,42 @@ bool cGame::hasGameOverConditionPlayerHasNoBuildings() const {
  * @return
  */
 bool cGame::hasGameOverConditionHarvestForSpiceQuota() const {
-    return (winFlags & WINLOSEFLAGS_QUOTA) != 0;
+    return (m_winFlags & WINLOSEFLAGS_QUOTA) != 0;
 }
 
 bool cGame::hasGameOverConditionAIHasNoBuildings() const {
-    return (winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
+    return (m_winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
 }
 
 void cGame::think_mentat() {
-    if (pMentat) {
-        pMentat->think();
+    if (m_mentat) {
+        m_mentat->think();
     }
 }
 
 // think function belongs to combat state (tbd)
 void cGame::think_audio() {
-    _soundplayer->think();
+    m_soundPlayer->think();
 
-    if (!game.bPlayMusic) // no music enabled, so no need to think
+    if (!game.m_playMusic) // no music enabled, so no need to think
         return;
 
     // all this does is repeating music in the same theme.
-    if (iMusicType < 0)
+    if (m_musicType < 0)
         return;
 
     if (!isMusicPlaying()) {
 
-        if (iMusicType == MUSIC_ATTACK) {
-            iMusicType = MUSIC_PEACE; // set back to peace
+        if (m_musicType == MUSIC_ATTACK) {
+            m_musicType = MUSIC_PEACE; // set back to peace
         }
 
-        playMusicByType(iMusicType);
+        playMusicByType(m_musicType);
     }
 }
 
 bool cGame::isMusicPlaying() {
-    if (bMp3 && mp3_music) {
+    if (m_mp3 && mp3_music) {
         int s = almp3_poll_mp3(mp3_music);
         return !(s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING);
     }
@@ -413,11 +413,11 @@ bool cGame::isMusicPlaying() {
     return MIDI_music_playing();
 }
 
-void cGame::updateState() {
-    mouse->updateState(); // calls observers that are interested in mouse input
-    keyboard->updateState(); // calls observers that are interested in keyboard input
+void cGame::updateMouseAndKeyboardStateAndGamePlaying() {
+    m_mouse->updateState(); // calls observers that are interested in mouse input
+    m_keyboard->updateState(); // calls observers that are interested in keyboard input
 
-    if (state != GAME_PLAYING) {
+    if (m_state != GAME_PLAYING) {
         return;
     }
 
@@ -428,29 +428,29 @@ void cGame::updateState() {
     }
 }
 
-void cGame::combat() {
+void cGame::drawStateCombat() {
     drawManager->drawCombatState();
 }
 
-// stateMentat logic + drawing mouth/eyes
-void cGame::stateMentat(cAbstractMentat *mentat) {
+// drawStateMentat logic + drawing mouth/eyes
+void cGame::drawStateMentat(cAbstractMentat *mentat) {
     draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
-    mouse->setTile(MOUSE_NORMAL);
+    m_mouse->setTile(MOUSE_NORMAL);
 
     mentat->draw();
     mentat->interact();
 
-    mouse->draw();
+    m_mouse->draw();
 }
 
 // draw menu
-void cGame::menu() {
-    currentState->draw();
+void cGame::drawStateMenu() {
+    m_currentState->draw();
 }
 
-void cGame::init_skirmish() const {
-    game.mission_init();
+void cGame::initSkirmish() const {
+    game.missionInit();
 }
 
 void cGame::handleTimeSlicing() {
@@ -460,41 +460,41 @@ void cGame::handleTimeSlicing() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-    if (TIMER_shake == 0) {
-		    TIMER_shake = -1;
+    if (m_TIMER_shake == 0) {
+        m_TIMER_shake = -1;
 	  }
 
 	  // blitSprite on screen
-	  if (TIMER_shake > 0)
+	  if (m_TIMER_shake > 0)
 	  {
 		    // the more we get to the 'end' the less we 'throttle'.
 		    // Structure explosions are 6 time units per cell.
 		    // Max is 9 cells (9*6=54)
 		    // the max border is then 9. So, we do time / 6
-        TIMER_shake = std::min(TIMER_shake, 69);
-        int offset = std::min(TIMER_shake / 5, 9);
+        m_TIMER_shake = std::min(m_TIMER_shake, 69);
+        int offset = std::min(m_TIMER_shake / 5, 9);
 
-        shake_x = -abs(offset / 2) + rnd(offset);
-        shake_y = -abs(offset / 2) + rnd(offset);
+          m_shakeX = -abs(offset / 2) + rnd(offset);
+          m_shakeY = -abs(offset / 2) + rnd(offset);
 
-		    blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, screen_x, screen_y);
-		    blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
+		    blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenX, m_screenY);
+		    blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenX, m_screenY);
 	  }
 	  else
 	  {
-		    if (fadeAction == eFadeAction::FADE_NONE) {
+		    if (m_fadeAction == eFadeAction::FADE_NONE) {
   		  // Not shaking and not fading.
-        blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
+        blit(bmp_screen, screen, 0, 0, 0, 0, m_screenX, m_screenY);
     } else {
         // Fading
-        assert(fadeAlpha >= kMinAlpha);
-        assert(fadeAlpha <= kMaxAlpha);
-        auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(create_bitmap(game.screen_x, game.screen_y), destroy_bitmap);
+        assert(m_fadeAlpha >= kMinAlpha);
+        assert(m_fadeAlpha <= kMaxAlpha);
+        auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(create_bitmap(game.m_screenX, game.m_screenY), destroy_bitmap);
 			  assert(temp);
 			  clear(temp.get());
-        set_trans_blender(0, 0, 0, fadeAlpha);
+        set_trans_blender(0, 0, 0, m_fadeAlpha);
         draw_trans_sprite(temp.get(), bmp_screen, 0, 0);
-			  blit(temp.get(), screen, 0, 0, 0, 0, screen_x, screen_y);
+			  blit(temp.get(), screen, 0, 0, 0, 0, m_screenX, m_screenY);
 		}
 	}
 }
@@ -502,43 +502,43 @@ void cGame::shakeScreenAndBlitBuffer() {
 void cGame::drawState() {
     clear(bmp_screen);
 
-    if (fadeAction == eFadeAction::FADE_OUT) {
+    if (m_fadeAction == eFadeAction::FADE_OUT) {
         draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
         return;
     }
 
     // this makes fade-in happen after fade-out automatically
-    if (fadeAlpha == kMinAlpha) {
-        fadeAction = eFadeAction::FADE_IN;
+    if (m_fadeAlpha == kMinAlpha) {
+        m_fadeAction = eFadeAction::FADE_IN;
     }
 
-    switch (state) {
+    switch (m_state) {
         case GAME_TELLHOUSE:
-            stateMentat(pMentat);
+            drawStateMentat(m_mentat);
             break;
         case GAME_PLAYING:
-            combat();
+            drawStateCombat();
             break;
         case GAME_BRIEFING:
-            stateMentat(pMentat);
+            drawStateMentat(m_mentat);
             break;
         case GAME_MENU:
-            menu();
+            drawStateMenu();
             break;
         case GAME_WINNING:
-            winning();
+            drawStateWinning();
             break;
         case GAME_LOSING:
-            losing();
+            drawStateLosing();
             break;
         case GAME_WINBRIEF:
-            stateMentat(pMentat);
+            drawStateMentat(m_mentat);
             break;
         case GAME_LOSEBRIEF:
-            stateMentat(pMentat);
+            drawStateMentat(m_mentat);
             break;
         default:
-            currentState->draw();
+            m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
     }
 }
@@ -549,20 +549,20 @@ void cGame::drawState() {
 void cGame::run() {
     set_trans_blender(0, 0, 0, 128);
 
-    while (bPlaying) {
+    while (m_playing) {
         TimeManager.processTime();
-        updateState();
+        updateMouseAndKeyboardStateAndGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
-        _interactionManager->interactWithKeyboard(); // generic interaction
+        m_interactionManager->interactWithKeyboard(); // generic interaction
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
-        frame_count++;
+        m_frameCount++;
     }
 }
 
 void cGame::shakeScreen(int duration) {
-    game.TIMER_shake += duration;
+    game.m_TIMER_shake += duration;
 }
 
 /**
@@ -573,41 +573,41 @@ void cGame::shutdown() {
     logger->logHeader("SHUTDOWN");
 
     for (int i = 0; i < GAME_MAX_STATES; i++) {
-        cGameState *pState = states[i];
+        cGameState *pState = m_states[i];
         if (pState) {
             if (pState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-                if (currentState == pState) {
-                    currentState = nullptr; // reset
+                if (m_currentState == pState) {
+                    m_currentState = nullptr; // reset
                 }
                 delete pState;
-                states[i] = nullptr;
+                m_states[i] = nullptr;
             } else {
-                if (currentState == pState) {
-                    currentState = nullptr; // reset
+                if (m_currentState == pState) {
+                    m_currentState = nullptr; // reset
                 }
-                states[i] = nullptr;
+                m_states[i] = nullptr;
             }
         }
     }
 
-    if (currentState != nullptr) {
+    if (m_currentState != nullptr) {
         assert(false);
-        if (currentState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
+        if (m_currentState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
             // destroy game state object, unless we talk about the region select
-            delete currentState;
+            delete m_currentState;
         } else {
-            currentState = nullptr;
+            m_currentState = nullptr;
         }
     }
 
-    delete pMentat;
-    delete mapViewport;
+    delete m_mentat;
+    delete m_mapViewport;
 
     drawManager->destroy();
     delete drawManager;
 
     delete mapCamera;
-    delete _interactionManager;
+    delete m_interactionManager;
 
 
     cStructureFactory::destroy();
@@ -620,9 +620,9 @@ void cGame::shutdown() {
 
     delete allegroDrawer;
     delete m_dataRepository;
-    _soundplayer.reset();
-    delete mouse;
-    delete keyboard;
+    m_soundPlayer.reset();
+    delete m_mouse;
+    delete m_keyboard;
 
     if (gfxdata) {
         unload_datafile(gfxdata);
@@ -648,33 +648,33 @@ void cGame::shutdown() {
 
     // MP3 Library
     if (mp3_music) {
-        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
+        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateMouseAndKeyboardStateAndGamePlaying
         almp3_destroy_mp3(mp3_music);
     }
 
     logbook("Allegro MP3 library shut down.");
 
     // Release the game dev framework, so that it can do cleanup
-    _PLInit.reset();
+    m_PLInit.reset();
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
-    return game.ini_screen_height != -1 && game.ini_screen_width != -1;
+    return game.m_iniScreenHeight != -1 && game.m_iniScreenWidth != -1;
 }
 
 void cGame::setScreenResolutionFromGameIniSettings() {
-    if (game.ini_screen_width < 800) {
-        game.ini_screen_width = 800;
+    if (game.m_iniScreenWidth < 800) {
+        game.m_iniScreenWidth = 800;
         logbook("INI screen width < 800; unsupported; will set to 800.");
     }
-    if (game.ini_screen_height < 600) {
-        game.ini_screen_height = 600;
+    if (game.m_iniScreenHeight < 600) {
+        game.m_iniScreenHeight = 600;
         logbook("INI screen height < 600; unsupported; will set to 600.");
     }
-    game.screen_x = game.ini_screen_width;
-    game.screen_y = game.ini_screen_height;
+    game.m_screenX = game.m_iniScreenWidth;
+    game.m_screenY = game.m_iniScreenHeight;
     char msg[255];
-    sprintf(msg, "Resolution %dx%d loaded from ini file.", game.ini_screen_width, game.ini_screen_height);
+    sprintf(msg, "Resolution %dx%d loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight);
     cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Resolution from ini file", msg);
 }
 
@@ -693,10 +693,10 @@ bool cGame::setupGame() {
 
 	logger->logHeader("Version information");
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
-              fmt::format("Version {}, Compiled at {} , {}", game.version, __DATE__, __TIME__));
+              fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
     // init game
-    if (game.windowed) {
+    if (game.m_windowed) {
         logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
     } else {
         logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
@@ -706,7 +706,7 @@ bool cGame::setupGame() {
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.
-    _PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg");
+    m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg");
 
     int r = install_timer();
     if (r > -1) {
@@ -720,14 +720,14 @@ bool cGame::setupGame() {
     alfont_init();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
     install_keyboard();
-    keyboard = new cKeyboard();
+    m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
     install_mouse();
-    mouse = new cMouse();
+    m_mouse = new cMouse();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
     /* set up the interrupt routines... */
-    game.TIMER_shake = 0;
+    game.m_TIMER_shake = 0;
 
     LOCK_VARIABLE(allegro_timerUnits);
     LOCK_VARIABLE(allegro_timerGlobal);
@@ -744,10 +744,10 @@ bool cGame::setupGame() {
 
     logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
-    frame_count = fps = 0;
+    m_frameCount = m_fps = 0;
 
 	// set window title
-    auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.version);
+    auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
 	// Set window title
 	set_window_title(title.c_str());
@@ -765,18 +765,18 @@ bool cGame::setupGame() {
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
 
-    if (game.windowed) {
+    if (game.m_windowed) {
         cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
 
         if (isResolutionInGameINIFoundAndSet()) {
             setScreenResolutionFromGameIniSettings();
         }
 
-        r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+        r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.m_screenX, game.m_screenY, game.m_screenX, game.m_screenY);
 
         char msg[255];
-        sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.screen_x,
-                game.screen_y, colorDepth);
+        sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.m_screenX,
+                game.m_screenY, colorDepth);
         logbook(msg);
 
         if (r > -1) {
@@ -793,10 +793,10 @@ bool cGame::setupGame() {
         bool mustAutoDetectResolution = false;
         if (isResolutionInGameINIFoundAndSet()) {
             setScreenResolutionFromGameIniSettings();
-            r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+            r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.m_screenX, game.m_screenY, game.m_screenX, game.m_screenY);
             char msg[255];
             sprintf(msg, "Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d",
-                    game.ini_screen_width, game.ini_screen_height, colorDepth, r);
+                    game.m_iniScreenWidth, game.m_iniScreenHeight, colorDepth, r);
             cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
             mustAutoDetectResolution = r < 0;
         } else {
@@ -874,23 +874,23 @@ bool cGame::setupGame() {
         logbook("Display 'switch to background' mode set");
     }
 
-    if (!bPlaySound) {
-        _soundplayer = std::make_unique<cSoundPlayer>(*_PLInit, 0);
+    if (!m_playSound) {
+        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);
     } else {
-        _soundplayer = std::make_unique<cSoundPlayer>(*_PLInit);
+        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
     }
 
     /***
      * Viewport(s)
      */
-    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x - cSideBar::SidebarWidth,
-                                 game.screen_y - cSideBar::TopBarHeight);
+    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenX - cSideBar::SidebarWidth,
+                                 game.m_screenY - cSideBar::TopBarHeight);
 
     /***
     Bitmap Creation
     ***/
 
-    bmp_screen = create_bitmap(game.screen_x, game.screen_y);
+    bmp_screen = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_screen == nullptr) {
         allegro_message("Failed to create a memory bitmap");
@@ -901,7 +901,7 @@ bool cGame::setupGame() {
         clear(bmp_screen);
     }
 
-    bmp_backgroundMentat = create_bitmap(game.screen_x, game.screen_y);
+    bmp_backgroundMentat = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_backgroundMentat == nullptr) {
         allegro_message("Failed to create a memory bitmap");
@@ -915,9 +915,9 @@ bool cGame::setupGame() {
         clear_to_color(bmp_backgroundMentat, makecol(8, 8, 16));
         bool offsetX = false;
 
-        float horizon = game.screen_y / 2;
-        float centered = game.screen_x / 2;
-        for (int y = 0; y < game.screen_y; y++) {
+        float horizon = game.m_screenY / 2;
+        float centered = game.m_screenX / 2;
+        for (int y = 0; y < game.m_screenY; y++) {
             float diffYToCenter = 1.0f;
             if (y < horizon) {
                 diffYToCenter = y / horizon;
@@ -925,7 +925,7 @@ bool cGame::setupGame() {
                 diffYToCenter = 1 - ((y - horizon) / horizon);
             }
 
-            for (int x = offsetX ? 0 : 1; x < game.screen_x; x += 2) {
+            for (int x = offsetX ? 0 : 1; x < game.m_screenX; x += 2) {
                 float diffXToCenter = 1.0f;
                 if (x < centered) {
                     diffXToCenter = x / centered;
@@ -943,7 +943,7 @@ bool cGame::setupGame() {
         }
     }
 
-    bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
+    bmp_throttle = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_throttle == nullptr) {
         allegro_message("Failed to create a memory bitmap");
@@ -953,7 +953,7 @@ bool cGame::setupGame() {
         logbook("Memory bitmap created: bmp_throttle");
     }
 
-    bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
+    bmp_winlose = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_winlose == nullptr) {
         allegro_message("Failed to create a memory bitmap");
@@ -963,7 +963,7 @@ bool cGame::setupGame() {
         logbook("Memory bitmap created: bmp_winlose");
     }
 
-    bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
+    bmp_fadeout = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_fadeout == nullptr) {
         allegro_message("Failed to create a memory bitmap");
@@ -1030,9 +1030,9 @@ bool cGame::setupGame() {
     logbook(fmt::format("Seed is {}", t));
     srand(t);
 
-    game.bPlaying = true;
-    game.screenshot = 0;
-    game.state = GAME_INITIALIZE;
+    game.m_playing = true;
+    game.m_screenshot = 0;
+    game.m_state = GAME_INITIALIZE;
 
     set_palette(general_palette);
 
@@ -1071,7 +1071,7 @@ bool cGame::setupGame() {
     // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
 
-    game.setup_players();
+    game.setupPlayers();
 
     playMusicByType(MUSIC_MENU);
 
@@ -1084,9 +1084,9 @@ bool cGame::setupGame() {
  * Set up players
  * (Elegible for combat state object initialization)
  */
-void cGame::setup_players() {
-    mouse->setMouseObserver(nullptr);
-    keyboard->setKeyboardObserver(nullptr);
+void cGame::setupPlayers() {
+    m_mouse->setMouseObserver(nullptr);
+    m_keyboard->setKeyboardObserver(nullptr);
 
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
@@ -1104,64 +1104,64 @@ void cGame::setup_players() {
         cOrderProcesser *orderProcesser = new cOrderProcesser(thePlayer);
         thePlayer->setOrderProcesser(orderProcesser);
 
-        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer, this->mouse);
+        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
-        thePlayer->setTechLevel(game.iMission);
+        thePlayer->setTechLevel(game.m_mission);
     }
 
-    delete _interactionManager;
+    delete m_interactionManager;
     cPlayer *humanPlayer = &players[HUMAN];
-    _interactionManager = new cInteractionManager(humanPlayer);
-    mouse->setMouseObserver(_interactionManager);
-    keyboard->setKeyboardObserver(_interactionManager);
+    m_interactionManager = new cInteractionManager(humanPlayer);
+    m_mouse->setMouseObserver(m_interactionManager);
+    m_keyboard->setKeyboardObserver(m_interactionManager);
 }
 
 bool cGame::isState(int thisState) {
-    return (state == thisState);
+    return (m_state == thisState);
 }
 
 void cGame::setState(int newState) {
-    if (newState == state) {
+    if (newState == m_state) {
         // ignore
         return;
     }
 
     char msg[255];
-    sprintf(msg, "Setting state from %d(=%s) to %d(=%s)", state, stateString(state), newState, stateString(newState));
+    sprintf(msg, "Setting state from %d(=%s) to %d(=%s)", m_state, stateString(m_state), newState, stateString(newState));
     logbook(msg);
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
-                               newState != GAME_PLAYING); // don't delete these states, but re-use!
-        if (state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
+                               newState != GAME_PLAYING); // don't delete these m_states, but re-use!
+        if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
             deleteOldState = false; // so we don't lose data when we go back
         }
 
         if (deleteOldState) {
-            delete states[newState];
-            states[newState] = nullptr;
+            delete m_states[newState];
+            m_states[newState] = nullptr;
         }
 
-        cGameState *existingStatePtr = states[newState];
+        cGameState *existingStatePtr = m_states[newState];
         if (existingStatePtr) {
-            if (currentState->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(currentState);
+            if (m_currentState->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
+                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(m_currentState);
 
-                if (missionWasWon) {
+                if (m_missionWasWon) {
                     // we won
-                    if (game.iMission > 1) {
+                    if (game.m_mission > 1) {
                         pState->conquerRegions();
                     }
-                    pState->REGION_SETUP_NEXT_MISSION(game.iMission, players[HUMAN].getHouse());
+                    pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
                 } else {
                     // OR: did not win
                     pState->REGION_SETUP_LOST_MISSION();
                 }
             }
 
-            currentState = existingStatePtr;
+            m_currentState = existingStatePtr;
         } else {
             cGameState *newStatePtr = nullptr;
 
@@ -1171,11 +1171,11 @@ void cGame::setState(int newState) {
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
                 pState->INSTALL_WORLD();
-                if (game.iMission > 1) {
+                if (game.m_mission > 1) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->REGION_SETUP_NEXT_MISSION(game.iMission, players[HUMAN].getHouse());
+                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
 
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
@@ -1186,9 +1186,9 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
             } else if (newState == GAME_OPTIONS) {
-                BITMAP *background = create_bitmap(screen_x, screen_y);
+                BITMAP *background = create_bitmap(m_screenX, m_screenY);
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, background, state);
+                newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
                 // evaluate all players, so we have initial 'alive' values set properly
                 for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -1207,49 +1207,49 @@ void cGame::setState(int newState) {
                 game.onNotifyGameEvent(event);
             }
 
-            states[newState] = newStatePtr;
-            currentState = newStatePtr;
+            m_states[newState] = newStatePtr;
+            m_currentState = newStatePtr;
         }
     }
 
-    state = newState;
+    m_state = newState;
 }
 
 void cGame::think_fading() {
     // Fading of the entire screen
-    if (fadeAction == eFadeAction::FADE_OUT) {
-        fadeAlpha -= 2;
-        if (fadeAlpha < kMinAlpha) {
-            fadeAlpha = kMinAlpha;
-            fadeAction = eFadeAction::FADE_NONE;
+    if (m_fadeAction == eFadeAction::FADE_OUT) {
+        m_fadeAlpha -= 2;
+        if (m_fadeAlpha < kMinAlpha) {
+            m_fadeAlpha = kMinAlpha;
+            m_fadeAction = eFadeAction::FADE_NONE;
         }
-    } else if (fadeAction == eFadeAction::FADE_IN) {
-        fadeAlpha += 2;
-        if (fadeAlpha > kMaxAlpha) {
-            fadeAlpha = kMaxAlpha;
-            fadeAction = eFadeAction::FADE_NONE;
+    } else if (m_fadeAction == eFadeAction::FADE_IN) {
+        m_fadeAlpha += 2;
+        if (m_fadeAlpha > kMaxAlpha) {
+            m_fadeAlpha = kMaxAlpha;
+            m_fadeAction = eFadeAction::FADE_NONE;
         }
     }
 
     // Fading / pulsating of selected stuff
     static constexpr float fadeSelectIncrement = 1 / 256.0f;
-    if (bFadeSelectDir) {
-        fade_select += fadeSelectIncrement;
+    if (m_fadeSelectDir) {
+        m_fadeSelect += fadeSelectIncrement;
 
         // when 255, then fade back
-        if (fade_select > 0.99) {
-            fade_select = 1.0f;
-            bFadeSelectDir = false;
+        if (m_fadeSelect > 0.99) {
+            m_fadeSelect = 1.0f;
+            m_fadeSelectDir = false;
         }
 
         return;
     }
 
-    fade_select -= fadeSelectIncrement;
+    m_fadeSelect -= fadeSelectIncrement;
     // not too dark,
     // 0.03125
-    if (fade_select < 0.3125f) {
-        bFadeSelectDir = true;
+    if (m_fadeSelect < 0.3125f) {
+        m_fadeSelectDir = true;
     }
 }
 
@@ -1263,77 +1263,77 @@ cGame::~cGame() {
 
 void cGame::prepareMentatForPlayer() {
     int house = players[HUMAN].getHouse();
-    if (state == GAME_BRIEFING) {
-        game.mission_init();
-        game.setup_players();
-        INI_Load_scenario(house, iRegion, pMentat);
-        INI_LOAD_BRIEFING(house, iRegion, INI_BRIEFING, pMentat);
-    } else if (state == GAME_WINBRIEF) {
+    if (m_state == GAME_BRIEFING) {
+        game.missionInit();
+        game.setupPlayers();
+        INI_Load_scenario(house, m_region, m_mentat);
+        INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
+    } else if (m_state == GAME_WINBRIEF) {
         if (rnd(100) < 50) {
-            pMentat->loadScene("win01");
+            m_mentat->loadScene("win01");
         } else {
-            pMentat->loadScene("win02");
+            m_mentat->loadScene("win02");
         }
-        INI_LOAD_BRIEFING(house, iRegion, INI_WIN, pMentat);
-    } else if (state == GAME_LOSEBRIEF) {
+        INI_LOAD_BRIEFING(house, m_region, INI_WIN, m_mentat);
+    } else if (m_state == GAME_LOSEBRIEF) {
         if (rnd(100) < 50) {
-            pMentat->loadScene("lose01");
+            m_mentat->loadScene("lose01");
         } else {
-            pMentat->loadScene("lose02");
+            m_mentat->loadScene("lose02");
         }
-        INI_LOAD_BRIEFING(house, iRegion, INI_LOSE, pMentat);
+        INI_LOAD_BRIEFING(house, m_region, INI_LOSE, m_mentat);
     }
 }
 
 void cGame::createAndPrepareMentatForHumanPlayer() {
-    delete pMentat;
+    delete m_mentat;
     int houseIndex = players[0].getHouse();
     if (houseIndex == ATREIDES) {
-        pMentat = new cAtreidesMentat();
+        m_mentat = new cAtreidesMentat();
     } else if (houseIndex == HARKONNEN) {
-        pMentat = new cHarkonnenMentat();
+        m_mentat = new cHarkonnenMentat();
     } else if (houseIndex == ORDOS) {
-        pMentat = new cOrdosMentat();
+        m_mentat = new cOrdosMentat();
     } else {
         // fallback
-        pMentat = new cBeneMentat();
+        m_mentat = new cBeneMentat();
     }
     prepareMentatForPlayer();
-    pMentat->speak();
+    m_mentat->speak();
 }
 
 void cGame::prepareMentatToTellAboutHouse(int house) {
-    delete pMentat;
-    pMentat = new cBeneMentat();
-    pMentat->setHouse(house);
-    // create new stateMentat
+    delete m_mentat;
+    m_mentat = new cBeneMentat();
+    m_mentat->setHouse(house);
+    // create new drawStateMentat
     if (house == ATREIDES) {
-        INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
-        pMentat->loadScene("platr"); // load planet of atreides
+        INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
+        m_mentat->loadScene("platr"); // load planet of atreides
     } else if (house == HARKONNEN) {
-        INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, pMentat);
-        pMentat->loadScene("plhar"); // load planet of harkonnen
+        INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
+        m_mentat->loadScene("plhar"); // load planet of harkonnen
     } else if (house == ORDOS) {
-        INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
-        pMentat->loadScene("plord"); // load planet of ordos
+        INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, m_mentat);
+        m_mentat->loadScene("plord"); // load planet of ordos
     } else {
-        pMentat->setSentence(0, "Looks like you choose an unknown house");
+        m_mentat->setSentence(0, "Looks like you choose an unknown house");
     }
     // todo: Sardaukar, etc? (Super Dune 2 features)
-    pMentat->speak();
+    m_mentat->speak();
 }
 
 void cGame::loadScenario() {
     int iHouse = players[HUMAN].getHouse();
-    INI_Load_scenario(iHouse, game.iRegion, pMentat);
+    INI_Load_scenario(iHouse, game.m_region, m_mentat);
 }
 
 void cGame::thinkFast_state() {
     think_audio();
     think_mentat();
 
-    if (currentState) {
-        currentState->thinkFast();
+    if (m_currentState) {
+        m_currentState->thinkFast();
     }
 
     // THINKING ONLY WHEN PLAYING / COMBAT (no state object yet)
@@ -1416,7 +1416,7 @@ void cGame::thinkFast_combat() {
 }
 
 void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
-    _interactionManager->setPlayerToInteractFor(pPlayer);
+    m_interactionManager->setPlayerToInteractFor(pPlayer);
 }
 
 void cGame::onNotifyGameEvent(const s_GameEvent &event) {
@@ -1475,7 +1475,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
             if (structureId > -1) {
                 cAbstractStructure *pStructure = structure[structureId];
                 if (pStructure && pStructure->isValid()) {
-                    _soundplayer->playSound(SOUND_PLACE);
+                    m_soundPlayer->playSound(SOUND_PLACE);
                     create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
@@ -1524,8 +1524,8 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
 }
 
 void cGame::reduceShaking() {
-    if (TIMER_shake > 0) {
-        TIMER_shake--;
+    if (m_TIMER_shake > 0) {
+        m_TIMER_shake--;
     }
 }
 
@@ -1586,9 +1586,9 @@ void cGame::install_bitmaps() {
 }
 
 int cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag) {
-    int desiredRed = rFlag ? r * fade_select : r;
-    int desiredGreen = gFlag ? g * fade_select : g;
-    int desiredBlue = bFlag ? b * fade_select : b;
+    int desiredRed = rFlag ? r * m_fadeSelect : r;
+    int desiredGreen = gFlag ? g * m_fadeSelect : g;
+    int desiredBlue = bFlag ? b * m_fadeSelect : b;
     return makecol(desiredRed, desiredGreen, desiredBlue);
 }
 
@@ -1611,48 +1611,48 @@ int cGame::getColorPlaceGood() {
 void cGame::setWinFlags(int value) {
     if (DEBUGGING) {
         char msg[255];
-        sprintf(msg, "Changing winFlags from %d to %d", winFlags, value);
+        sprintf(msg, "Changing m_winFlags from %d to %d", m_winFlags, value);
         logbook(msg);
     }
-    winFlags = value;
+    m_winFlags = value;
 }
 
 void cGame::setLoseFlags(int value) {
     if (DEBUGGING) {
         char msg[255];
-        sprintf(msg, "Changing loseFlags from %d to %d", loseFlags, value);
+        sprintf(msg, "Changing m_loseFlags from %d to %d", m_loseFlags, value);
         logbook(msg);
     }
-    loseFlags = value;
+    m_loseFlags = value;
 }
 
 bool cGame::isRunningAtIdealFps() {
-    return fps < IDEAL_FPS;
+    return m_fps > IDEAL_FPS;
 }
 
 void cGame::resetFrameCount() {
-    frame_count = 0;
+    m_frameCount = 0;
 }
 
 void cGame::setFps() {
-    fps = frame_count;
+    m_fps = m_frameCount;
 }
 
 int cGame::getFps() {
-    return fps;
+    return m_fps;
 }
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     // pass through any classes that are interested
-    if (currentState) {
-        currentState->onNotifyMouseEvent(event);
+    if (m_currentState) {
+        m_currentState->onNotifyMouseEvent(event);
     }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     // pass through any classes that are interested
-    if (currentState) {
-        currentState->onNotifyKeyboardEvent(event);
+    if (m_currentState) {
+        m_currentState->onNotifyKeyboardEvent(event);
     }
 
     // take screenshot
@@ -1661,55 +1661,55 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     }
 
     // TODO: this has to be its own state class. Then this if is no longer needed.
-    if (state == GAME_PLAYING) {
+    if (m_state == GAME_PLAYING) {
         onNotifyKeyboardEventGamePlaying(event);
     }
 }
 
 void cGame::transitionStateIfRequired() {
-    if (nextState > -1) {
-        setState(nextState);
+    if (m_nextState > -1) {
+        setState(m_nextState);
 
-        if (nextState == GAME_BRIEFING) {
+        if (m_nextState == GAME_BRIEFING) {
             playMusicByType(MUSIC_BRIEFING);
             game.createAndPrepareMentatForHumanPlayer();
         }
 
-        nextState = -1;
+        m_nextState = -1;
     }
 }
 
 void cGame::setNextStateToTransitionTo(int newState) {
-    nextState = newState;
+    m_nextState = newState;
 }
 
 void cGame::drawCombatMouse() {
-    if (mouse->isBoxSelecting()) {
-        allegroDrawer->drawRectangle(bmp_screen, mouse->getBoxSelectRectangle(),
+    if (m_mouse->isBoxSelecting()) {
+        allegroDrawer->drawRectangle(bmp_screen, m_mouse->getBoxSelectRectangle(),
                                      game.getColorFadeSelected(255, 255, 255));
     }
 
-    if (mouse->isMapScrolling()) {
-        cPoint startPoint = mouse->getDragLineStartPoint();
-        cPoint endPoint = mouse->getDragLineEndPoint();
+    if (m_mouse->isMapScrolling()) {
+        cPoint startPoint = m_mouse->getDragLineStartPoint();
+        cPoint endPoint = m_mouse->getDragLineEndPoint();
         allegroDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y,
                                 game.getColorFadeSelected(255, 255, 255));
     }
 
-    mouse->draw();
+    m_mouse->draw();
 }
 
 void cGame::saveBmpScreenToDisk() {
     char filename[25];
 
-    if (screenshot < 10) {
-        sprintf(filename, "%dx%d_000%d.bmp", screen_x, screen_y, screenshot);
-    } else if (screenshot < 100) {
-        sprintf(filename, "%dx%d_00%d.bmp", screen_x, screen_y, screenshot);
-    } else if (screenshot < 1000) {
-        sprintf(filename, "%dx%d_0%d.bmp", screen_x, screen_y, screenshot);
+    if (m_screenshot < 10) {
+        sprintf(filename, "%dx%d_000%d.bmp", m_screenX, m_screenY, m_screenshot);
+    } else if (m_screenshot < 100) {
+        sprintf(filename, "%dx%d_00%d.bmp", m_screenX, m_screenY, m_screenshot);
+    } else if (m_screenshot < 1000) {
+        sprintf(filename, "%dx%d_0%d.bmp", m_screenX, m_screenY, m_screenshot);
     } else {
-        sprintf(filename, "%dx%d_%d.bmp", screen_x, screen_y, screenshot);
+        sprintf(filename, "%dx%d_%d.bmp", m_screenX, m_screenY, m_screenshot);
     }
 
     save_bmp(filename, bmp_screen, general_palette);
@@ -1719,7 +1719,7 @@ void cGame::saveBmpScreenToDisk() {
     cPlayer &humanPlayer = players[HUMAN];
     humanPlayer.addNotification(fmt::format("Screenshot saved {}.", filename), eNotificationType::NEUTRAL);
 
-    screenshot++;
+    m_screenshot++;
 }
 
 void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
@@ -1766,21 +1766,21 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
 }
 
 void cGame::playSound(int sampleId) {
-    _soundplayer->playSound(sampleId);
+    m_soundPlayer->playSound(sampleId);
 }
 
 void cGame::playSound(int sampleId, int vol) {
-    _soundplayer->playSound(sampleId, vol);
+    m_soundPlayer->playSound(sampleId, vol);
 }
 
 void cGame::playVoice(int sampleId, int house) {
-    _soundplayer->playVoice(sampleId, house);
+    m_soundPlayer->playVoice(sampleId, house);
 }
 
 void cGame::playMusic(int sampleId) {
-    _soundplayer->playMusic(sampleId);
+    m_soundPlayer->playMusic(sampleId);
 }
 
 int cGame::getMaxVolume() {
-    return _soundplayer->getMaxVolume();
+    return m_soundPlayer->getMaxVolume();
 }

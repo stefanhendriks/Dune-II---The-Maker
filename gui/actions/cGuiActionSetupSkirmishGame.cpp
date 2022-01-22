@@ -2,7 +2,7 @@
 
 void cGuiActionSetupSkirmishGame::execute() {
     INI_PRESCAN_SKIRMISH();
-    game.init_skirmish();
+    game.initSkirmish();
     game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-    game.START_FADING_OUT();
+    game.initiateFadingOut();
 }

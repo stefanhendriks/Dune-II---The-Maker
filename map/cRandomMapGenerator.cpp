@@ -94,16 +94,16 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
 
             // blit on screen
             drawProgress(progress);
-            blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+            blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
 
         }
 
         // take screenshot
         if (key[KEY_F11]) {
             char filename[25];
-            sprintf(filename, "%dx%d_%d.bmp", game.screen_x, game.screen_y, game.screenshot);
+            sprintf(filename, "%dx%d_%d.bmp", game.m_screenX, game.m_screenY, game.m_screenshot);
             save_bmp(filename, bmp_screen, general_palette);
-            game.screenshot++;
+            game.m_screenshot++;
         }
 
     }
@@ -113,20 +113,20 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
 
     // blit on screen
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
 
     mapEditor.removeSingleRockSpots();
 
 
     // blit on screen
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
 
     mapEditor.removeSingleRockSpots();
 
     // blit on screen
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
 
     while (a_spice > 0) {
         int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
@@ -135,7 +135,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
         a_spice--;
         // blit on screen
         drawProgress(progress);
-        blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+        blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
     }
 
     while (a_hill > 0) {
@@ -145,7 +145,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
         progress += piece;
         // blit on screen
         drawProgress(progress);
-        blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+        blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
     }
 
 
@@ -161,7 +161,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
     // blit on screen
     progress += 25;
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
 
     clear_to_color(randomMapEntry.terrain, makecol(0, 0, 0));
 
@@ -201,7 +201,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
 
     // blit on screen
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
 }
 
 void cRandomMapGenerator::drawProgress(float progress) const {
