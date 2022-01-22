@@ -9,9 +9,7 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
-
-#ifndef D2TM_UNIT_H
-#define D2TM_UNIT_H
+#pragma once
 
 #include "player/brains/missions/cPlayerBrainMission.h"
 #include "structs.h"
@@ -492,5 +490,3 @@ int UNIT_FREE_AROUND_MOVE(int iUnit);
 void THINK_REINFORCEMENTS();
 void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
 void INIT_REINFORCEMENT();
-
-#endif
