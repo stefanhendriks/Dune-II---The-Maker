@@ -81,7 +81,7 @@ void cUnit::init(int i) {
     // it should wait when moving, etc, etc
 
 
-    iAction = ACTION_GUARD;
+    m_action = eActionType::GUARD;
     intent = INTENT_NONE;
 
     iAttackUnit = -1;      // attacking unit id
@@ -801,7 +801,7 @@ void cUnit::attackCell(int cell) {
 }
 
 void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell) {
-    // basically the same as move, but since we use iAction as ATTACK
+    // basically the same as move, but since we use m_action as ATTACK
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
@@ -820,7 +820,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell) {
         return;
     }
 
-    iAction = ACTION_ATTACK;
+    m_action = eActionType::GUARD;
     this->iGoalCell = goalCell;
     iAttackStructure = structureId;
     iAttackUnit = unitId;
@@ -886,7 +886,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         iNextCell = -1;
     }
 
-    iAction = ACTION_MOVE;
+    m_action = eActionType::MOVE;
     this->intent = intent;
 
     forgetAboutCurrentPathAndPrepareToCreateNewOne();
@@ -1031,7 +1031,7 @@ void cUnit::think() {
     thinkActionAgnostic();
 
     // Think attack style
-    if (iAction == ACTION_ATTACK) {
+    if (m_action == eActionType::ATTACK) {
         think_attack();
     }
 }
@@ -1860,7 +1860,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
         bool unitWhoShotMeIsAirborn = unitWhoShotMe.isAirbornUnit();
 
         // only act when we are doing 'nothing'...
-        if (iAction == ACTION_GUARD) {
+        if (m_action == eActionType::GUARD) {
             // only auto attack back when it is not an airborn unit
             // note: guard state already takes care of scanning for air units and attacking them
             if (!unitWhoShotMeIsAirborn) {
@@ -1878,7 +1878,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 }
 
             } else {
-                if (iAction != ACTION_ATTACK) {
+                if (m_action != eActionType::ATTACK) {
                     if (canSquishInfantry() && unitWhoShotMeIsInfantry) {
                         // AI tries to run over infantry units that attack it
                         move_to(unit[iShotUnit].iCell);
@@ -2010,7 +2010,7 @@ void cUnit::think_attack() {
             iAttackUnit = -1;
             iAttackStructure = -1;
             iGoalCell = iCell;
-            iAction = ACTION_GUARD;
+            m_action = eActionType::GUARD;
             return;
         }
 
@@ -2071,12 +2071,12 @@ void cUnit::think_attack() {
 
                 iAttackUnit = -1;
                 iAttackStructure = -1;
-                iAction = ACTION_MOVE;
+                m_action = eActionType::MOVE;
                 iGoalCell = map.getCellWithMapDimensions(rx, ry);
             }
         } else {
             // stop attacking, move instead?
-            iAction = ACTION_MOVE;
+            m_action = eActionType::MOVE;
             iAttackUnit = -1;
             iAttackStructure = -1;
         }
@@ -2143,7 +2143,7 @@ void cUnit::think_attack_sandworm() {
 }
 
 void cUnit::actionGuard() {
-    iAction = ACTION_GUARD;
+    m_action = eActionType::GUARD;
     iAttackUnit = -1;
     iAttackCell = -1;
     iAttackStructure =-1;
@@ -2156,26 +2156,26 @@ int cUnit::getFaceAngleToCell(int cell) const {
 
 void cUnit::startChasingTarget() {
     if (iAttackStructure > -1) {
-        iAction = ACTION_CHASE;
+        m_action = eActionType::CHASE;
         // a structure does not move, so don't need to re-calculate path?
 //        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     } else if (iAttackUnit > -1) {
         cUnit * attackUnit = &unit[iAttackUnit];
         // chase unit, but only when ground unit
         if (!attackUnit->isSandworm() && !attackUnit->isAirbornUnit()) {
-            iAction = ACTION_CHASE;
+            m_action = eActionType::CHASE;
             // only think of new path when our target moved
             if (attackUnit->getCell() != iGoalCell) {
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
             }
         } else {
             // do not chase sandworms or other air units, very ... inconvenient
-            iAction = ACTION_GUARD;
+            m_action = eActionType::GUARD;
             iGoalCell = iCell;
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
     } else if (iAttackCell > -1) {
-        iAction = ACTION_CHASE;
+        m_action = eActionType::CHASE;
     }
 }
 
@@ -2270,7 +2270,7 @@ void cUnit::thinkFast_move() {
 
     // when there is a valid goal cell (differs), then we go further
     if (iGoalCell == iCell) {
-        iAction = ACTION_GUARD; // do nothing
+        m_action = eActionType::GUARD; // do nothing
         forgetAboutCurrentPathAndPrepareToCreateNewOne();
         return;
     }
@@ -2721,9 +2721,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     // movement is done, determine what to do with new state.
     if (!isMovingBetweenCells()) {
         // when we are chasing, we now set on attack...
-        if (iAction == ACTION_CHASE) {
+        if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            iAction = ACTION_ATTACK;
+            m_action = eActionType::ATTACK;
             forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
         }
 
@@ -3176,13 +3176,13 @@ void cUnit::thinkFast() {
         thinkFast_move_airUnit();
     } else {
         // move
-        if (iAction == ACTION_MOVE || iAction == ACTION_CHASE || isMovingBetweenCells()) {
+        if (m_action == eActionType::MOVE || m_action == eActionType::ATTACK || isMovingBetweenCells()) {
             thinkFast_move();
         }
     }
 
     // guard
-    if (iAction == ACTION_GUARD) {
+    if (m_action == eActionType::GUARD) {
         thinkFast_guard();
     }
 }
