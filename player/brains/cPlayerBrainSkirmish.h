@@ -52,7 +52,7 @@ namespace brains {
 
         void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        void addBuildOrder(S_buildOrder order);
+        void addBuildOrder(S_buildOrder order) override;
 
         void log(const std::string & txt);
 
