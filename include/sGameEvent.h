@@ -1,10 +1,11 @@
-#ifndef D2TM_SGAMEEVENT_H
-#define D2TM_SGAMEEVENT_H
+#pragma once
 
 #include <string>
 #include "enums.h"
-#include <assert.h>
+#include <cassert>
 #include <utils/common.h>
+
+#include <fmt/core.h>
 
 class cPlayer;
 class cBuildingListItem;
@@ -71,19 +72,16 @@ struct s_GameEvent {
     }
 
     static const std::string toString(const s_GameEvent &event) {
-        char msg[255];
-        sprintf(msg, "cGameEvent [type=%s], [entityType=%s], [entityId=%d], [entitySpecificType=%d =%s], [isReinforce=%s], [atCell=%d], [buildingListItem=%s]",
-                toString(event.eventType),
-                eBuildTypeString(event.entityType),
-                event.entityID,
-                event.entitySpecificType,
-                toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
-                event.isReinforce ? "true" : "false",
-                event.atCell,
-                event.buildingListItem ? "present" : "nullptr"
-                );
-        return std::string(msg);
+        return fmt::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
+                           toString(event.eventType),
+                           eBuildTypeString(event.entityType),
+                           event.entityID,
+                           event.entitySpecificType,
+                           toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
+                           event.isReinforce ? "true" : "false",
+                           event.atCell,
+                           event.buildingListItem ? "present" : "nullptr",
+                           event.originId
+        );
     }
 };
-
-#endif //D2TM_SGAMEEVENT_H
