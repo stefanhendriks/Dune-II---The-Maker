@@ -7,10 +7,11 @@
 
 namespace brains {
 
-    cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) : cPlayerBrain(player) {
-        m_state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
-        m_thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST;
-        // timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
+    cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) :
+        cPlayerBrain(player),
+        m_state(ePlayerBrainState::PLAYERBRAIN_PEACEFUL),
+        m_thinkState(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST) {
+        // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
         // 10*60 -> 1 minute. * 4 -> 4 minutes
         m_TIMER_rest = (10 * 60) * 4;
         if (game.m_noAiRest) {
@@ -53,11 +54,7 @@ namespace brains {
         }
 
         // now do some real stuff
-
-        char msg[255];
-        memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainCampaign::think() - FINISHED");
-        player->log(msg);
+        log("think() - FINISHED");
     }
 
     void cPlayerBrainCampaign::addBuildOrder(S_buildOrder order) {
@@ -81,30 +78,26 @@ namespace brains {
             return lhs.priority > rhs.priority;
         });
 
-        char msg[255];
-        sprintf(msg,
-                "cPlayerBrainCampaign::addBuildOrder() - results into the following build orders:");
-        player->log(msg);
+        log("addBuildOrder() - results into the following build orders:");
 
         int id = 0;
         for (auto &buildOrder : m_buildOrders) {
-            memset(msg, 0, sizeof(msg));
+            std::string msg;
             if (buildOrder.buildType == eBuildType::UNIT) {
-                sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                msg = fmt::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
-                sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
+                msg = fmt::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
                         buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
                         buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
+                msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             }
-            player->log(msg);
-
+            log(msg);
             id++;
         }
     }
@@ -162,11 +155,8 @@ namespace brains {
         }
 
         if (!foundExistingStructureInBase) {
-            char msg[255];
-            sprintf(msg,
-                    "cPlayerBrainCampaign::onNotifyGameEvent() - concluded to add structure %s to base register:",
-                    pStructure->getS_StructuresType().name);
-            player->log(msg);
+            log(fmt::format("onNotifyGameEvent() - concluded to add structure {} to base register",
+                                    pStructure->getS_StructuresType().name));
 
             // new structure placed, update base register
             S_structurePosition position = {
@@ -207,6 +197,22 @@ namespace brains {
                 }
             }
         }
+
+        int unitIdThatAttacks = event.originId;
+        if (unitIdThatAttacks > -1) {
+            // respond to something that attacks us
+            cUnit originUnit = unit[unitIdThatAttacks];
+            if (originUnit.getPlayer()->isSameTeamAs(player)) {
+                // friendly fire, ignore
+                log(fmt::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
+                return;
+            }
+
+            int cell = originUnit.getCell();
+            bool attackerIsAirUnit = originUnit.isAirbornUnit();
+
+            respondToThreat(cell, attackerIsAirUnit);
+        }
     }
 
     void cPlayerBrainCampaign::onMyStructureDecayed(const s_GameEvent &event) {
@@ -222,18 +228,14 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::thinkState_ScanBase() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_ScanBase()");
-        player->log(msg);
+        log("thinkState_ScanBase()");
 
         // reset timer (for the next time we end up here)
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS);
     }
 
     void cPlayerBrainCampaign::thinkState_Missions() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_Missions()");
-        player->log(msg);
+        log("thinkState_Missions()");
 
         // delete any missions which are ended
         m_missions.erase(
@@ -1514,9 +1516,7 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::thinkState_Evaluate() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_Evaluate()");
-        player->log(msg);
+        log("thinkState_Evaluate()");
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
@@ -1541,9 +1541,7 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::thinkState_ProcessBuildOrders() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_ProcessBuildOrders()");
-        player->log(msg);
+        log("thinkState_ProcessBuildOrders()");
 
         // check if we can find a similar build order
         for (auto &buildOrder : m_buildOrders) {
@@ -1603,20 +1601,16 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::changeThinkStateTo(const ePlayerBrainCampaignThinkState& newState) {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::changeThinkStateTo(), from %s to %s",
-                ePlayerBrainCampaignThinkStateString(m_thinkState),
-                ePlayerBrainCampaignThinkStateString(newState));
-        player->log(msg);
+        log(fmt::format("changeThinkStateTo(), from {} to {}",
+                                ePlayerBrainCampaignThinkStateString(m_thinkState),
+                                ePlayerBrainCampaignThinkStateString(newState)));
         this->m_thinkState = newState;
     }
 
     void cPlayerBrainCampaign::thinkState_Rest() {
         if (m_TIMER_rest > 0) {
             m_TIMER_rest--;
-            char msg[255];
-            sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), rest %d", m_TIMER_rest);
-            player->log(msg);
+            log(fmt::format("thinkState_Rest(), rest {}", m_TIMER_rest));
             return;
         }
 
@@ -1690,4 +1684,49 @@ namespace brains {
         }
     }
 
+    void cPlayerBrainCampaign::log(const std::string & txt) {
+        player->log(fmt::format(
+                "cPlayerBrainCampaign [m_state={}, m_TIMER_rest={}] | {}",
+                ePlayerBrainStateString(m_state),
+                this->m_TIMER_rest,
+                txt)
+        );
+    }
+    void cPlayerBrainCampaign::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit) {
+        const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
+        int maxUnitsToOrder = 2 + rnd(4);
+
+        if (attackerIsAirUnit) {
+            int unitsOrdered = 0;
+            // find units that can counter-attack an air unit
+            for (auto & ufd : units) {
+                cUnit &pUnit = unit[ufd.unitId];
+                if (!pUnit.isIdle()) continue;
+                if (!pUnit.canAttackAirUnits()) continue;
+                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+                // move unit to where air unit is/was, so we get close to counter-attack
+                pUnit.move_to(cellOriginOfThreat);
+                unitsOrdered++;
+
+                if (unitsOrdered > maxUnitsToOrder) break;
+            }
+        } else {
+            int unitsOrdered = 0;
+
+            for (auto & ufd : units) {
+                cUnit &pUnit = unit[ufd.unitId];
+                if (!pUnit.isIdle()) continue;
+                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+                // TODO:
+                // we can do more smart things here depending on the kind of unit that attacks us
+                // and thus which unit we should send to counter-attack
+                pUnit.attackAt(cellOriginOfThreat);
+                unitsOrdered++;
+
+                if (unitsOrdered > maxUnitsToOrder) break;
+            }
+        }
+    }
 }

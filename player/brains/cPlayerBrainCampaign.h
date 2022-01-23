@@ -30,6 +30,8 @@ namespace brains {
 
         void addBuildOrder(S_buildOrder order) override;
 
+        void log(const std::string & txt);
+
     private:
         ePlayerBrainState m_state;
 
@@ -119,6 +121,7 @@ namespace brains {
 
         void produceLevel9Missions(int trikeKind, int infantryKind);
 
+        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit);
     };
 
 }
