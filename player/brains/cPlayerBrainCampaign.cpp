@@ -8,30 +8,30 @@
 namespace brains {
 
     cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) : cPlayerBrain(player) {
-        state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
-        thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST;
+        m_state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
+        m_thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST;
         // timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
         // 10*60 -> 1 minute. * 4 -> 4 minutes
-        TIMER_rest = (10 * 60) * 4;
+        m_TIMER_rest = (10 * 60) * 4;
         if (game.m_noAiRest) {
-            TIMER_rest = 10;
+            m_TIMER_rest = 10;
         }
-        myBase = std::vector<S_structurePosition>();
-        buildOrders = std::vector<S_buildOrder>();
-        discoveredEnemyAtCell = std::set<int>();
+        m_myBase = std::vector<S_structurePosition>();
+        m_buildOrders = std::vector<S_buildOrder>();
+        m_discoveredEnemyAtCell = std::set<int>();
     }
 
     cPlayerBrainCampaign::~cPlayerBrainCampaign() {
-        discoveredEnemyAtCell.clear();
-        buildOrders.clear();
-        myBase.clear();
-        missions.clear();
+        m_discoveredEnemyAtCell.clear();
+        m_buildOrders.clear();
+        m_myBase.clear();
+        m_missions.clear();
     }
 
     void cPlayerBrainCampaign::think() {
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.
-        switch (thinkState) {
+        switch (m_thinkState) {
             case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST:
                 thinkState_Rest();
                 return;
@@ -62,7 +62,7 @@ namespace brains {
 
     void cPlayerBrainCampaign::addBuildOrder(S_buildOrder order) {
 //    // check if we can find a similar build order
-//    for (auto & buildOrder : buildOrders) {
+//    for (auto & buildOrder : m_buildOrders) {
 //        if (buildOrder.buildType != order.buildType) continue;
 //        if (buildOrder.buildId != order.buildId) continue;
 //
@@ -74,10 +74,10 @@ namespace brains {
 ////        buildOrder.priority++;
 //        return; // stop
 //    }
-        buildOrders.push_back(order);
+        m_buildOrders.push_back(order);
 
         // re-order based on priority
-        std::sort(buildOrders.begin(), buildOrders.end(), [](const S_buildOrder &lhs, const S_buildOrder &rhs) {
+        std::sort(m_buildOrders.begin(), m_buildOrders.end(), [](const S_buildOrder &lhs, const S_buildOrder &rhs) {
             return lhs.priority > rhs.priority;
         });
 
@@ -87,7 +87,7 @@ namespace brains {
         player->log(msg);
 
         int id = 0;
-        for (auto &buildOrder : buildOrders) {
+        for (auto &buildOrder : m_buildOrders) {
             memset(msg, 0, sizeof(msg));
             if (buildOrder.buildType == eBuildType::UNIT) {
                 sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
@@ -139,7 +139,7 @@ namespace brains {
         }
 
         // notify mission about any kind of event
-        for (auto &mission : missions) {
+        for (auto &mission : m_missions) {
             mission.onNotifyGameEvent(event);
         }
     }
@@ -149,7 +149,7 @@ namespace brains {
         cAbstractStructure *pStructure = structure[event.entityID];
         int placedAtCell = pStructure->getCell();
         bool foundExistingStructureInBase = false;
-        for (auto &structurePosition : myBase) {
+        for (auto &structurePosition : m_myBase) {
             if (!structurePosition.isDestroyed) continue; // not destroyed, hence cannot be rebuilt
 
             if (structurePosition.cell == placedAtCell) {
@@ -175,13 +175,13 @@ namespace brains {
                     .structureId = pStructure->getStructureId(),
                     .isDestroyed = pStructure->isDead()
             };
-            myBase.push_back(position);
+            m_myBase.push_back(position);
         }
     }
 
     void cPlayerBrainCampaign::onMyStructureDestroyed(const s_GameEvent &event) {
         // a structure got destroyed, figure out which one it is in my base plan, and update its state
-        for (auto &structurePosition : myBase) {
+        for (auto &structurePosition : m_myBase) {
             if (structurePosition.structureId == event.entityID) {
                 // this structure got destroyed, so mark it as destroyed in my base plan
                 structurePosition.isDestroyed = true;
@@ -236,15 +236,15 @@ namespace brains {
         player->log(msg);
 
         // delete any missions which are ended
-        missions.erase(
+        m_missions.erase(
                 std::remove_if(
-                        missions.begin(),
-                        missions.end(),
+                        m_missions.begin(),
+                        m_missions.end(),
                         [](cPlayerBrainMission m) { return m.isEnded(); }),
-                missions.end()
+                m_missions.end()
         );
 
-        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
+        if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             // it might send out something to scout?
             if (!hasMission(99)) {
                 // add scouting mission
@@ -258,11 +258,11 @@ namespace brains {
                 });
 
                 cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), 99);
-                missions.push_back(someMission);
+                m_missions.push_back(someMission);
             }
         } else {
             // no longer peaceful
-            if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
+            if (m_state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
                 produceMissions();
             }
         }
@@ -1501,8 +1501,8 @@ namespace brains {
     }
 
     bool cPlayerBrainCampaign::hasMission(const int id) {
-        auto position = std::find_if(missions.begin(), missions.end(), [&id](const cPlayerBrainMission & mission){ return mission.getUniqueId() == id; });
-        bool hasMission = position != missions.end();
+        auto position = std::find_if(m_missions.begin(), m_missions.end(), [&id](const cPlayerBrainMission & mission){ return mission.getUniqueId() == id; });
+        bool hasMission = position != m_missions.end();
         return hasMission;
     }
 
@@ -1510,7 +1510,7 @@ namespace brains {
                                           int initialDelay,
                                           int id) {
         cPlayerBrainMission someMission(player, kind, this, group, initialDelay, id);
-        missions.push_back(someMission);
+        m_missions.push_back(someMission);
     }
 
     void cPlayerBrainCampaign::thinkState_Evaluate() {
@@ -1524,12 +1524,12 @@ namespace brains {
             return;
         }
 
-        // Re-iterate over all (pending) buildOrders - and check if we are still going to do that or we might want to
+        // Re-iterate over all (pending) m_buildOrders - and check if we are still going to do that or we might want to
         // up/downplay some priorities and re-sort?
         // Example: Money is short, Harvester is in build queue, but not high in priority?
 
         // take a little rest, before going into a new loop again?
-        TIMER_rest = cPlayerBrain::RestTime;
+        m_TIMER_rest = cPlayerBrain::RestTime;
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST);
     }
 
@@ -1546,11 +1546,11 @@ namespace brains {
         player->log(msg);
 
         // check if we can find a similar build order
-        for (auto &buildOrder : buildOrders) {
+        for (auto &buildOrder : m_buildOrders) {
             if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME)
                 continue; // only process those which are marked
 
-            assert(buildOrder.buildId > -1 && "(cPlayerBrainCampaign) A build order with no buildId got in the buildOrders list, which is not allowed!");
+            assert(buildOrder.buildId > -1 && "(cPlayerBrainCampaign) A build order with no buildId got in the m_buildOrders list, which is not allowed!");
 
             if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
@@ -1571,18 +1571,18 @@ namespace brains {
             }
         }
 
-        // delete any buildOrders which are flagged to remove
-        buildOrders.erase(
+        // delete any m_buildOrders which are flagged to remove
+        m_buildOrders.erase(
                 std::remove_if(
-                        buildOrders.begin(),
-                        buildOrders.end(),
+                        m_buildOrders.begin(),
+                        m_buildOrders.end(),
                         [](const S_buildOrder &o) { return o.state == buildOrder::eBuildOrderState::REMOVEME; }),
-                buildOrders.end()
+                m_buildOrders.end()
         );
 
         if (player->isBuildingStructureAwaitingPlacement()) {
             int structureType = player->getStructureTypeBeingBuilt();
-            for (auto &buildOrder : buildOrders) {
+            for (auto &buildOrder : m_buildOrders) {
                 if (buildOrder.buildType != eBuildType::STRUCTURE) {
                     continue;
                 }
@@ -1605,17 +1605,17 @@ namespace brains {
     void cPlayerBrainCampaign::changeThinkStateTo(const ePlayerBrainCampaignThinkState& newState) {
         char msg[255];
         sprintf(msg, "cPlayerBrainCampaign::changeThinkStateTo(), from %s to %s",
-                ePlayerBrainCampaignThinkStateString(thinkState),
+                ePlayerBrainCampaignThinkStateString(m_thinkState),
                 ePlayerBrainCampaignThinkStateString(newState));
         player->log(msg);
-        this->thinkState = newState;
+        this->m_thinkState = newState;
     }
 
     void cPlayerBrainCampaign::thinkState_Rest() {
-        if (TIMER_rest > 0) {
-            TIMER_rest--;
+        if (m_TIMER_rest > 0) {
+            m_TIMER_rest--;
             char msg[255];
-            sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), rest %d", TIMER_rest);
+            sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), rest %d", m_TIMER_rest);
             player->log(msg);
             return;
         }
@@ -1625,7 +1625,7 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event) {
-        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
+        if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
             if (!wormsign) {
                 if (event.player == player) {
@@ -1634,17 +1634,17 @@ namespace brains {
                         cUnit &cUnit = unit[event.entityID];
                         if (cUnit.isValid() && !cUnit.getPlayer()->isSameTeamAs(player)) {
                             // found enemy unit
-                            state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                            TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                            discoveredEnemyAtCell.insert(event.atCell);
+                            m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                            m_discoveredEnemyAtCell.insert(event.atCell);
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
                         cAbstractStructure *pStructure = structure[event.entityID];
                         if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                             // found enemy structure
-                            state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                            TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                            discoveredEnemyAtCell.insert(event.atCell);
+                            m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                            m_discoveredEnemyAtCell.insert(event.atCell);
                         }
                     }
                 } else {
@@ -1657,18 +1657,18 @@ namespace brains {
                             // the other player discovered a unit of mine
                             if (cUnit.isValid() && cUnit.getPlayer() == player) {
                                 // found my unit
-                                state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                                TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                                discoveredEnemyAtCell.insert(cUnit.getCell());
+                                m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                                m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                                m_discoveredEnemyAtCell.insert(cUnit.getCell());
                             }
                         } else if (event.entityType == eBuildType::STRUCTURE) {
                             cAbstractStructure *pStructure = structure[event.entityID];
                             // the other player discovered a structure of mine
                             if (pStructure->getPlayer() == player) {
                                 // found my structure
-                                state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                                TIMER_rest = 0; // if we where still 'resting' then stop this now.
-//                                discoveredEnemyAtCell.insert(pStructure.getCell());
+                                m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                                m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+//                                m_discoveredEnemyAtCell.insert(pStructure.getCell());
                                 // TODO: Record we have found an enemy structure...
                             }
                         }
@@ -1685,7 +1685,7 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::thinkFast() {
-        for (auto &mission : missions) {
+        for (auto &mission : m_missions) {
             mission.think();
         }
     }
