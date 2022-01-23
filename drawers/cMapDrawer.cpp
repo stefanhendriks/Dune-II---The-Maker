@@ -250,10 +250,10 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
 
     int tile; // Visible stuff, now check for not visible stuff. When found, assign the proper border
     // of shroud to it.
-    int above = CELL_ABOVE(cll);
-    int under = CELL_UNDER(cll);
-    int left = CELL_LEFT(cll);
-    int right = CELL_RIGHT(cll);
+    int above = map->getCellAbove(cll);
+    int under = map->getCellBelow(cll);
+    int left = map->getCellLeft(cll);
+    int right = map->getCellRight(cll);
 
     bool a, u, l, r;
     a = u = l = r = true;

@@ -206,7 +206,7 @@ int cMapEditor::getDefaultTerrainIndex(bool up, bool down, bool left, bool right
 
 bool cMapEditor::isAboveSpecificTerrainType(int sourceCell, int terrainType) {
     if (sourceCell < 0) return false;
-    int above = CELL_ABOVE(sourceCell);
+    int above = map.getCellAbove(sourceCell);
     return isSpecificTerrainType(above, terrainType);
 }
 
@@ -217,19 +217,19 @@ bool cMapEditor::isSpecificTerrainType(int cell, int terrainType) {
 
 bool cMapEditor::isBelowSpecificTerrainType(int sourceCell, int terrainType) {
     if (sourceCell < 0) return false;
-    int under = CELL_UNDER(sourceCell);
+    int under = map.getCellBelow(sourceCell);
     return isSpecificTerrainType(under, terrainType);
 }
 
 bool cMapEditor::isLeftSpecificTerrainType(int sourceCell, int terrainType) {
     if (sourceCell < 0) return false;
-    int left = CELL_LEFT(sourceCell);
+    int left = map.getCellLeft(sourceCell);
     return isSpecificTerrainType(left, terrainType);
 }
 
 bool cMapEditor::isRightSpecificTerrainType(int sourceCell, int terrainType) {
     if (sourceCell < 0) return false;
-    int right = CELL_RIGHT(sourceCell);
+    int right = map.getCellRight(sourceCell);
     return isSpecificTerrainType(right, terrainType);
 }
 
@@ -363,10 +363,10 @@ void cMapEditor::smoothCell(int cell) {
 }
 
 void cMapEditor::smoothAroundCell(int cell) {
-    int above = CELL_ABOVE(cell);
-    int under = CELL_UNDER(cell);
-    int left = CELL_LEFT(cell);
-    int right = CELL_RIGHT(cell);
+    int above = map.getCellAbove(cell);
+    int under = map.getCellBelow(cell);
+    int left = map.getCellLeft(cell);
+    int right = map.getCellRight(cell);
 
     if (above > -1) smoothCell(above);
     if (under > -1) smoothCell(under);
