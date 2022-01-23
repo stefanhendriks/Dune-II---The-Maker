@@ -46,6 +46,8 @@ namespace brains {
         std::vector<S_structurePosition> m_myBase;
         std::vector<S_buildOrder> m_buildOrders;
 
+        int m_centerOfBaseCell;
+
         void onMyStructureDestroyed(const s_GameEvent &event);
 
         void onMyStructureCreated(const s_GameEvent &event);
