@@ -1790,7 +1790,7 @@ void cGame::playMusicByType(int iType) {
     } else if (iType == MUSIC_MENU) {
         sampleId = MIDI_MENU;
     } else if (iType == MUSIC_CONQUEST) {
-    	sampleId = MIDI_SCENARIO;
+        sampleId = MIDI_SCENARIO;
     } else if (iType == MUSIC_BRIEFING) {
         int houseIndex = players[HUMAN].getHouse();
         if (houseIndex == ATREIDES) {
