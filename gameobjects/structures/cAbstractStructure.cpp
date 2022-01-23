@@ -219,8 +219,7 @@ void cAbstractStructure::die() {
     }
 
     // play sound
-    play_sound_id_with_distance(SOUND_CRUMBLE01 + rnd(2),
-                                distanceBetweenCellAndCenterOfScreen(iCell));
+    game.playSoundWithDistance(SOUND_CRUMBLE01 + rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
     // remove from the playground
     map.remove_id(id, MAPID_STRUCTURES);

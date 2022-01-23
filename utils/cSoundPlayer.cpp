@@ -175,3 +175,7 @@ void cSoundPlayer::playVoice(int sampleId, int house) {
 void cSoundPlayer::playMusic(int sampleId) {
     play_midi(soundData->getMusic(sampleId), kNoLoop);
 }
+
+bool cSoundPlayer::isMusicPlaying() const {
+    return midi_pos > -1;
+}

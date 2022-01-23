@@ -169,8 +169,6 @@
 #define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
 #define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
 
-#define WORD_MP3MUSIC		93			// MP3Music settings in game.ini
-
 #define MAX_LINE_LENGTH     256
 
 #define INI_UNITS_PART_CONTROLLER   0

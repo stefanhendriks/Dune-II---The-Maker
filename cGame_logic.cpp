@@ -39,7 +39,6 @@ cGame::cGame() {
     m_windowed = false;
     m_playSound = true;
     m_playMusic = true;
-    m_mp3 = false;
     // default INI screen width and height is not loaded
     // if not loaded, we will try automatic setup
     m_iniScreenWidth = -1;
@@ -102,14 +101,9 @@ void cGame::init() {
     }
 
     // Units & Structures are already initialized in map.init()
-    if (game.m_mp3 && mp3_music) {
-        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateMouseAndKeyboardStateAndGamePlaying
-    }
 
     // Load properties
     INI_Install_Game(m_gameFilename);
-
-    mp3_music = nullptr;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -393,7 +387,7 @@ void cGame::think_audio() {
     if (m_musicType < 0)
         return;
 
-    if (!isMusicPlaying()) {
+    if (!m_soundPlayer->isMusicPlaying()) {
 
         if (m_musicType == MUSIC_ATTACK) {
             m_musicType = MUSIC_PEACE; // set back to peace
@@ -401,16 +395,6 @@ void cGame::think_audio() {
 
         playMusicByType(m_musicType);
     }
-}
-
-bool cGame::isMusicPlaying() {
-    if (m_mp3 && mp3_music) {
-        int s = almp3_poll_mp3(mp3_music);
-        return !(s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING);
-    }
-
-    // MIDI mode:
-    return MIDI_music_playing();
 }
 
 void cGame::updateMouseAndKeyboardStateAndGamePlaying() {
@@ -645,14 +629,6 @@ void cGame::shutdown() {
     alfont_exit();
 
     logbook("Allegro FONT library shut down.");
-
-    // MP3 Library
-    if (mp3_music) {
-        almp3_stop_autopoll_mp3(mp3_music); // stop auto updateMouseAndKeyboardStateAndGamePlaying
-        almp3_destroy_mp3(mp3_music);
-    }
-
-    logbook("Allegro MP3 library shut down.");
 
     // Release the game dev framework, so that it can do cleanup
     m_PLInit.reset();
@@ -1765,11 +1741,72 @@ void cGame::playSound(int sampleId, int vol) {
     m_soundPlayer->playSound(sampleId, vol);
 }
 
+void cGame::playSoundWithDistance(int sampleId, int iDistance) {
+	if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
+        playSound(sampleId);
+		return;
+	}
+
+	// zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
+	// where when unit is at half map, we can hear it only a bit.
+    float maxDistance = mapCamera->divideByZoomLevel(map.getMaxDistanceInPixels() / 2);
+    float distanceNormalized = 1.0 - (iDistance / maxDistance);
+
+    float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
+
+    // zoom factor influences volume (more zoomed in means louder)
+    float volumeFactor = mapCamera->factorZoomLevel(0.7f);
+    int iVolFactored = volumeFactor * volume;
+
+    if (DEBUGGING) {
+        logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+                iDistance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
+    }
+
+    playSound(sampleId, iVolFactored);
+}
+
+
 void cGame::playVoice(int sampleId, int house) {
     m_soundPlayer->playVoice(sampleId, house);
 }
 
-void cGame::playMusic(int sampleId) {
+void cGame::playMusicByType(int iType) {
+    m_musicType = iType;
+
+    if (!m_playMusic) {
+        return;
+    }
+
+    int sampleId = MIDI_MENU;
+    if (iType == MUSIC_WIN) {
+        sampleId = MIDI_WIN01 + rnd(3);
+    } else if (iType == MUSIC_LOSE) {
+        sampleId = MIDI_LOSE01 + rnd(6);
+    } else if (iType == MUSIC_ATTACK) {
+        sampleId = MIDI_ATTACK01 + rnd(6);
+    } else if (iType == MUSIC_PEACE) {
+        sampleId = MIDI_BUILDING01 + rnd(9);
+    } else if (iType == MUSIC_MENU) {
+        sampleId = MIDI_MENU;
+    } else if (iType == MUSIC_CONQUEST) {
+        sampleId = MIDI_SCENARIO;
+    } else if (iType == MUSIC_BRIEFING) {
+        int houseIndex = players[HUMAN].getHouse();
+        if (houseIndex == ATREIDES) {
+            sampleId = MIDI_MENTAT_ATR;
+        } else if (houseIndex == HARKONNEN) {
+            sampleId = MIDI_MENTAT_HAR;
+        } else if (houseIndex == ORDOS) {
+            sampleId = MIDI_MENTAT_ORD;
+        } else {
+            assert(false && "Undefined house.");
+        }
+    } else {
+        assert(false && "Undefined music type.");
+    }
+
+    // play midi file
     m_soundPlayer->playMusic(sampleId);
 }
 

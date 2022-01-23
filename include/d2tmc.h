@@ -42,7 +42,6 @@ class cTimeManager;
 struct sReinforcement;
 
 struct ALFONT_FONT;
-struct ALMP3_MP3;
 struct BITMAP;
 struct DATAFILE;
 
@@ -79,9 +78,6 @@ extern s_SpecialInfo                sSpecialInfo[MAX_SPECIALTYPES];
 extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
 extern sReinforcement  			    reinforcements[MAX_REINFORCEMENTS];
-
-// MP3 Music support
-extern ALMP3_MP3 *mp3_music;
 
 // PALETTE
 extern PALETTE general_palette;

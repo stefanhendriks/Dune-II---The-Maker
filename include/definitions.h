@@ -30,9 +30,6 @@
 // Font size
 #define GAME_FONTSIZE 8
 
-// Buffer lenght of MP3 playback
-#define MP3_BUFFER_LEN  16384
-
 // Max length of a path (per unit)
 #define MAX_PATH_SIZE    256
 

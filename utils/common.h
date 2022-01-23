@@ -51,14 +51,6 @@ float health_bar(float max_w, int i, int w);
 
 int iFindCloseBorderCell(int iCll);
 
-void mp3_play_file(char filename[255]);
-
-void play_sound_id_with_distance(int s, int iOnScreen);
-
-bool MIDI_music_playing();
-void setMusicVolume(int i);
-
-void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
 int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots);
 

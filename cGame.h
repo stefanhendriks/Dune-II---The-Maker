@@ -68,7 +68,6 @@ public:
     bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
     bool m_noAiRest;                // Campaign AI does not have long initial REST time
     bool m_playMusic;               // play any music?
-    bool m_mp3;                     // use mp3 files instead of midi
 
 	bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
@@ -79,7 +78,7 @@ public:
 
 	int m_pathsCreated;
 
-    int m_musicVolume;              // volume of the mp3 / midi
+    int m_musicVolume;              // volume of the music
     int m_musicType;
 
     cRectangle *m_mapViewport;
@@ -117,8 +116,14 @@ public:
     void playSound(int sampleId); // Maximum volume
     void playSound(int sampleId, int vol);
 
+    /**
+     * Play sound with distance taken into account. iDistance is the distance outside screen.
+     * Meaning <= 1 is ON SCREEN > 1 means distance from screen.
+    */
+    void playSoundWithDistance(int sampleId, int iOnScreen);
+
     void playVoice(int sampleId, int house);
-    void playMusic(int sampleId);
+    void playMusicByType(int iType);
 
     int getMaxVolume();
 
@@ -252,8 +257,6 @@ private:
     cGameState *m_currentState;
 
     cGameState *m_states[GAME_MAX_STATES];
-
-    bool isMusicPlaying();
 
     void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet

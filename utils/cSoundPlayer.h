@@ -24,6 +24,7 @@ class cSoundPlayer {
         void playVoice(int sampleId, int house);
 
         void playMusic(int sampleId);
+        bool isMusicPlaying() const;
 
 		// think about voices, clear voices, etc.
 		void think();

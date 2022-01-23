@@ -67,9 +67,6 @@ ALFONT_FONT *game_font; 	// arrakeen.fon
 ALFONT_FONT *bene_font;		// benegesserit font.
 ALFONT_FONT *small_font;	// small font.
 
-// MP3 STUFF
-ALMP3_MP3   *mp3_music; // pointer to mp3 music
-
 /** Allegro specific timer creation starts here **/
 #ifdef ALLEGRO_H
 	volatile int allegro_timerSecond = 0;

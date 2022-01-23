@@ -134,13 +134,6 @@ void cMainMenuGameState::draw() const {
     // draw version
     textDrawer.drawTextBottomRight(game.m_version.c_str());
 
-    // mp3 addon?
-    if (game.m_mp3) {
-        textDrawer.drawTextBottomLeft("Music: MP3 ADD-ON");
-    } else {
-        textDrawer.drawTextBottomLeft("Music: MIDI");
-    }
-
     if (DEBUGGING) {
         char mouseTxt[255];
         sprintf(mouseTxt, "%d, %d", mouse_x, mouse_y);

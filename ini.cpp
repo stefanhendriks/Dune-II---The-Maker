@@ -596,7 +596,6 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "FullScreen") == 0) return WORD_FULLSCREEN;
         if (strcmp(word, "ScreenWidth") == 0) return WORD_SCREENWIDTH;
         if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
-        if (strcmp(word, "MP3Music") == 0) return WORD_MP3MUSIC;
     }
 
 //  char msg[255];
@@ -2203,9 +2202,6 @@ void INI_Install_Game(std::string filename) {
                         break;
                     case WORD_SCREENHEIGHT:
                         game.m_iniScreenHeight = INI_WordValueINT(linefeed);
-                        break;
-                    case WORD_MP3MUSIC:
-                        game.m_mp3 = INI_WordValueBOOL(linefeed);
                         break;
                 }
             }
