@@ -7,10 +7,11 @@
 
 namespace brains {
 
-    cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) : cPlayerBrain(player) {
-        m_state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
-        m_thinkState = ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST;
-//         timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
+    cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
+        cPlayerBrain(player),
+        m_state(ePlayerBrainState::PLAYERBRAIN_PEACEFUL),
+        m_thinkState(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST) {
+//         timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        m_TIMER_rest = (10 * 60) * 4;
         m_TIMER_rest = rnd(25); // todo: based on difficulty?
@@ -1422,7 +1423,7 @@ namespace brains {
 
     void cPlayerBrainSkirmish::log(const std::string & txt) {
         player->log(fmt::format(
-                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_COUNT_badEconomy={}] | %s",
+                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_COUNT_badEconomy={}] | {}",
                 ePlayerBrainStateString(m_state),
                 ePlayerBrainSkirmishThinkStateString(m_thinkState),
                 ePlayerBrainSkirmishEconomyStateString(m_economyState),
