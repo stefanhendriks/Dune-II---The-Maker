@@ -7,7 +7,7 @@ namespace brains {
     class cPlayerBrainSandworm : public cPlayerBrain {
 
     public:
-        cPlayerBrainSandworm(cPlayer * player);
+        explicit cPlayerBrainSandworm(cPlayer * player);
         ~cPlayerBrainSandworm();
 
         void think() override;

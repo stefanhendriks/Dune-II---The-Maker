@@ -7,7 +7,7 @@ namespace brains {
     class cPlayerBrainEmpty : public brains::cPlayerBrain {
 
     public:
-        cPlayerBrainEmpty(cPlayer *player);
+        explicit cPlayerBrainEmpty(cPlayer *player);
 
         ~cPlayerBrainEmpty();
 

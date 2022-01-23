@@ -42,7 +42,7 @@ namespace brains {
     class cPlayerBrainSkirmish : public cPlayerBrain {
 
     public:
-        cPlayerBrainSkirmish(cPlayer *player);
+        explicit cPlayerBrainSkirmish(cPlayer *player);
 
         ~cPlayerBrainSkirmish();
 

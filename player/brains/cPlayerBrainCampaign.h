@@ -18,7 +18,7 @@ namespace brains {
     const int SPECIAL_MISSION3 = 52;
 
     public:
-        cPlayerBrainCampaign(cPlayer *player);
+        explicit cPlayerBrainCampaign(cPlayer *player);
 
         ~cPlayerBrainCampaign();
 
