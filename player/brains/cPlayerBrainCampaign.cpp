@@ -22,6 +22,7 @@ namespace brains {
         m_myBase = std::vector<S_structurePosition>();
         m_buildOrders = std::vector<S_buildOrder>();
         m_discoveredEnemyAtCell = std::set<int>();
+        m_centerOfBaseCell = 0;
     }
 
     cPlayerBrainCampaign::~cPlayerBrainCampaign() {
@@ -167,6 +168,11 @@ namespace brains {
                     .structureId = pStructure->getStructureId(),
                     .isDestroyed = pStructure->isDead()
             };
+
+            if (pStructure->getType() == CONSTYARD) {
+                m_centerOfBaseCell = pStructure->getCell();
+            }
+
             m_myBase.push_back(position);
         }
     }
@@ -1621,18 +1627,22 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event) {
+        bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
         if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
-            bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
             if (!wormsign) {
                 if (event.player == player) {
                     // i discovered something
                     if (event.entityType == eBuildType::UNIT) {
-                        cUnit &cUnit = unit[event.entityID];
-                        if (cUnit.isValid() && !cUnit.getPlayer()->isSameTeamAs(player)) {
+                        cUnit &pUnit = unit[event.entityID];
+                        if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                             // found enemy unit
                             m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
                             m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
                             m_discoveredEnemyAtCell.insert(event.atCell);
+
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < 20) {
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit());
+                            }
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
                         cAbstractStructure *pStructure = structure[event.entityID];
@@ -1649,13 +1659,13 @@ namespace brains {
                         // ignore anything that the WORM AI player detected.
                     } else if (!event.player->isSameTeamAs(player)) {
                         if (event.entityType == eBuildType::UNIT) {
-                            cUnit &cUnit = unit[event.entityID];
+                            cUnit &pUnit = unit[event.entityID];
                             // the other player discovered a unit of mine
-                            if (cUnit.isValid() && cUnit.getPlayer() == player) {
+                            if (pUnit.isValid() && pUnit.getPlayer() == player) {
                                 // found my unit
                                 m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
                                 m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                                m_discoveredEnemyAtCell.insert(cUnit.getCell());
+                                m_discoveredEnemyAtCell.insert(pUnit.getCell());
                             }
                         } else if (event.entityType == eBuildType::STRUCTURE) {
                             cAbstractStructure *pStructure = structure[event.entityID];
@@ -1676,7 +1686,19 @@ namespace brains {
 
             }
         } else {
-            // non peaceful state, what to do? react? etc.
+            if (!wormsign) {
+                if (event.player == player) {
+                    // i discovered something
+                    if (event.entityType == eBuildType::UNIT) {
+                        cUnit &pUnit = unit[event.entityID];
+                        if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < 20) {
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
