@@ -57,26 +57,26 @@ namespace brains {
         void log(const std::string & txt);
 
     private:
-        ePlayerBrainState state;
+        ePlayerBrainState m_state;
 
-        ePlayerBrainSkirmishThinkState thinkState;
+        ePlayerBrainSkirmishThinkState m_thinkState;
 
-        ePlayerBrainSkirmishEconomyState economyState;
+        ePlayerBrainSkirmishEconomyState m_economyState;
 
-        int COUNT_badEconomy;
+        int m_COUNT_badEconomy;
 
-        int TIMER_rest;
+        int m_TIMER_rest;
 
-        int TIMER_produceMissionCooldown;
+        int m_TIMER_produceMissionCooldown;
 
-        int TIMER_ai;
+        int m_TIMER_ai;
 
         // at which cells did we detect an enemy? Remember those.
-        std::set<int> discoveredEnemyAtCell;
+        std::set<int> m_discoveredEnemyAtCell;
 
-        std::vector<cPlayerBrainMission> missions;
-        std::vector<S_structurePosition> myBase;
-        std::vector<S_buildOrder> buildOrders;
+        std::vector<cPlayerBrainMission> m_missions;
+        std::vector<S_structurePosition> m_myBase;
+        std::vector<S_buildOrder> m_buildOrders;
 
         void onMyStructureDestroyed(const s_GameEvent &event);
 

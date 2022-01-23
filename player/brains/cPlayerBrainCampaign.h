@@ -31,18 +31,18 @@ namespace brains {
         void addBuildOrder(S_buildOrder order) override;
 
     private:
-        ePlayerBrainState state;
+        ePlayerBrainState m_state;
 
-        ePlayerBrainCampaignThinkState thinkState;
+        ePlayerBrainCampaignThinkState m_thinkState;
 
-        int TIMER_rest;
+        int m_TIMER_rest;
 
         // at which cells did we detect an enemy? Remember those.
-        std::set<int> discoveredEnemyAtCell;
+        std::set<int> m_discoveredEnemyAtCell;
 
-        std::vector<cPlayerBrainMission> missions;
-        std::vector<S_structurePosition> myBase;
-        std::vector<S_buildOrder> buildOrders;
+        std::vector<cPlayerBrainMission> m_missions;
+        std::vector<S_structurePosition> m_myBase;
+        std::vector<S_buildOrder> m_buildOrders;
 
         void onMyStructureDestroyed(const s_GameEvent &event);
 
