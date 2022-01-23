@@ -78,7 +78,6 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     alleg
-    almp3dll
     alfontdll
     fmt::fmt
     -static-libgcc

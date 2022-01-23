@@ -57,7 +57,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.m_mission = 9;
         game.m_region = 22;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
-        playMusicByType(MUSIC_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
     }
 
@@ -125,7 +125,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.m_mission = 3;
         game.m_region = 6;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
-        playMusicByType(MUSIC_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
     }
 
@@ -135,7 +135,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.m_mission = 4;
         game.m_region = 10;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
-        playMusicByType(MUSIC_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
     }
     //JUMP TO MISSION 5
@@ -144,7 +144,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.m_mission = 5;
         game.m_region = 13;
         game.setNextStateToTransitionTo(GAME_BRIEFING);
-        playMusicByType(MUSIC_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
     }
 }
