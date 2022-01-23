@@ -809,7 +809,7 @@ bool cGame::setupGame() {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font("data/arakeen.fon");
+    game_font = alfont_load_font("data/arrakeen.fon");
 
     if (game_font != nullptr) {
         logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
