@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINMISSIONKIND_H
-#define D2TM_CPLAYERBRAINMISSIONKIND_H
+#pragma once
 
 #include <observers/cScenarioObserver.h>
 
@@ -104,5 +103,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINMISSIONKIND_H

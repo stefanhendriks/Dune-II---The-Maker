@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINDATA_H
-#define D2TM_CPLAYERBRAINDATA_H
+#pragma once
 
 namespace brains {
 
@@ -127,5 +126,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINDATA_H
