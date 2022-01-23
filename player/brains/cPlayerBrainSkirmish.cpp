@@ -24,6 +24,7 @@ namespace brains {
         m_discoveredEnemyAtCell = std::set<int>();
         m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
         m_COUNT_badEconomy = 0;
+        m_centerOfBaseCell = 0;
     }
 
     cPlayerBrainSkirmish::~cPlayerBrainSkirmish() {
@@ -194,6 +195,11 @@ namespace brains {
                     .structureId = pStructure->getStructureId(),
                     .isDestroyed = pStructure->isDead()
             };
+
+            if (pStructure->getType() == CONSTYARD) {
+                m_centerOfBaseCell = pStructure->getCell();
+            }
+
             m_myBase.push_back(position);
         }
     }
@@ -237,42 +243,47 @@ namespace brains {
                 return;
             }
 
+            int cell = originUnit.getCell();
             bool attackerIsAirUnit = originUnit.isAirbornUnit();
 
-            const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(event.atCell);
-            int maxUnitsToOrder = 2 + rnd(4);
+            respondToThreat(cell, attackerIsAirUnit);
+        }
+    }
 
-            if (attackerIsAirUnit) {
-                int unitsOrdered = 0;
-                // find units that can counter-attack an air unit
-                for (auto & ufd : units) {
-                    cUnit &pUnit = unit[ufd.unitId];
-                    if (!pUnit.isIdle()) continue;
-                    if (!pUnit.canAttackAirUnits()) continue;
-                    if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+    void cPlayerBrainSkirmish::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit) {
+        const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
+        int maxUnitsToOrder = 2 + rnd(4);
 
-                    // move unit to where air unit is/was, so we get close to counter attack
-                    pUnit.move_to(originUnit.getCell());
-                    unitsOrdered++;
+        if (attackerIsAirUnit) {
+            int unitsOrdered = 0;
+            // find units that can counter-attack an air unit
+            for (auto & ufd : units) {
+                cUnit &pUnit = unit[ufd.unitId];
+                if (!pUnit.isIdle()) continue;
+                if (!pUnit.canAttackAirUnits()) continue;
+                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
 
-                    if (unitsOrdered > maxUnitsToOrder) break;
-                }
-            } else {
-                int unitsOrdered = 0;
+                // move unit to where air unit is/was, so we get close to counter-attack
+                pUnit.move_to(cellOriginOfThreat);
+                unitsOrdered++;
 
-                for (auto & ufd : units) {
-                    cUnit &pUnit = unit[ufd.unitId];
-                    if (!pUnit.isIdle()) continue;
-                    if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+                if (unitsOrdered > maxUnitsToOrder) break;
+            }
+        } else {
+            int unitsOrdered = 0;
 
-                    // TODO:
-                    // we can do more smart things here depending on the kind of unit that attacks us
-                    // and thus which unit we should send to counter-attack
-                    pUnit.attackUnit(unitIdThatAttacks);
-                    unitsOrdered++;
+            for (auto & ufd : units) {
+                cUnit &pUnit = unit[ufd.unitId];
+                if (!pUnit.isIdle()) continue;
+                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
 
-                    if (unitsOrdered > maxUnitsToOrder) break;
-                }
+                // TODO:
+                // we can do more smart things here depending on the kind of unit that attacks us
+                // and thus which unit we should send to counter-attack
+                pUnit.attackAt(cellOriginOfThreat);
+                unitsOrdered++;
+
+                if (unitsOrdered > maxUnitsToOrder) break;
             }
         }
     }
@@ -1124,19 +1135,23 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event) {
+        bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
         if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
-            bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
             if (!wormsign) {
                 if (event.player == player) {
                     // i discovered something
                     if (event.entityType == eBuildType::UNIT) {
-                        cUnit &cUnit = unit[event.entityID];
-                        if (cUnit.isValid() && !cUnit.getPlayer()->isSameTeamAs(player)) {
+                        cUnit &pUnit = unit[event.entityID];
+                        if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                             // found enemy unit
                             m_TIMER_produceMissionCooldown = 0;
                             m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                            m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                            m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
                             m_discoveredEnemyAtCell.insert(event.atCell);
+
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < 20) {
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit());
+                            }
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
                         cAbstractStructure *pStructure = structure[event.entityID];
@@ -1144,7 +1159,7 @@ namespace brains {
                             // found enemy structure
                             m_TIMER_produceMissionCooldown = 0;
                             m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                            m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                            m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
                             m_discoveredEnemyAtCell.insert(event.atCell);
                         }
                     }
@@ -1154,14 +1169,14 @@ namespace brains {
                         // ignore anything that the WORM AI player detected.
                     } else if (!event.player->isSameTeamAs(player)) {
                         if (event.entityType == eBuildType::UNIT) {
-                            cUnit &cUnit = unit[event.entityID];
+                            cUnit &pUnit = unit[event.entityID];
                             // the other player discovered a unit of mine
-                            if (cUnit.isValid() && cUnit.getPlayer() == player) {
+                            if (pUnit.isValid() && pUnit.getPlayer() == player) {
                                 // found my unit
                                 m_TIMER_produceMissionCooldown = 0;
                                 m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                                m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                                m_discoveredEnemyAtCell.insert(cUnit.getCell());
+                                m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
+                                m_discoveredEnemyAtCell.insert(pUnit.getCell());
                             }
                         } else if (event.entityType == eBuildType::STRUCTURE) {
                             cAbstractStructure *pStructure = structure[event.entityID];
@@ -1170,7 +1185,7 @@ namespace brains {
                                 // found my structure
                                 m_TIMER_produceMissionCooldown = 0;
                                 m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                                m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                                m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
 //                                m_discoveredEnemyAtCell.insert(pStructure.getCell());
                                 // TODO: Record we have found an enemy structure...
                             }
@@ -1183,7 +1198,19 @@ namespace brains {
 
             }
         } else {
-            // non peaceful state, what to do? react? etc.
+            if (!wormsign) {
+                if (event.player == player) {
+                    // i discovered something
+                    if (event.entityType == eBuildType::UNIT) {
+                        cUnit &pUnit = unit[event.entityID];
+                        if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < 20) {
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
