@@ -2994,14 +2994,14 @@ std::string cUnit::eUnitActionIntentString(eUnitActionIntent intent) {
  * @return
  */
 bool cUnit::isUnableToMove() {
-    if (map.occupied(CELL_LEFT(iCell), iID) &&
-        map.occupied(CELL_RIGHT(iCell), iID) &&
-        map.occupied(CELL_ABOVE(iCell), iID) &&
-        map.occupied(CELL_UNDER(iCell), iID) &&
-        map.occupied(CELL_L_LEFT(iCell), iID) &&
-        map.occupied(CELL_L_RIGHT(iCell), iID) &&
-        map.occupied(CELL_U_RIGHT(iCell), iID) &&
-        map.occupied(CELL_U_LEFT(iCell), iID)) {
+    if (map.occupied(map.getCellLeft(iCell), iID) &&
+        map.occupied(map.getCellRight(iCell), iID) &&
+        map.occupied(map.getCellAbove(iCell), iID) &&
+        map.occupied(map.getCellBelow(iCell), iID) &&
+        map.occupied(map.getCellLowerLeft(iCell), iID) &&
+        map.occupied(map.getCellLowerRight(iCell), iID) &&
+        map.occupied(map.getCellUpperRight(iCell), iID) &&
+        map.occupied(map.getCellUpperLeft(iCell), iID)) {
         return true;
     }
 
@@ -4017,7 +4017,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                     for (int sz = z; sz > 0; sz--) {
                         if (temp_path[sz] > -1) {
 
-                            if (CELL_BORDERS(iPrevCell, temp_path[sz])) {
+                            if (map.isCellAdjacentToOtherCell(iPrevCell, temp_path[sz])) {
                                 iGoodZ = sz;
                             }
                             //if (ABS_length(iCellGiveX(iPrevCell), iCellGiveY(iPrevCell), iCellGiveX(temp_path[sz]), iCellGiveY(temp_path[sz])) <= 1)
@@ -4044,7 +4044,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         // take the closest bordering cell as 'far' away to start with
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
             if (pUnit.iPath[i] > -1) {
-                if (CELL_BORDERS(pUnit.getCell(), pUnit.iPath[i]))
+                if (map.isCellAdjacentToOtherCell(pUnit.getCell(), pUnit.iPath[i]))
                     pUnit.iPathIndex = i;
             }
         }
