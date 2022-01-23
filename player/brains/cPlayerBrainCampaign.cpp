@@ -3,6 +3,8 @@
 #include "cPlayerBrainCampaign.h"
 #include "enums.h"
 
+#include <fmt/core.h>
+
 #include <algorithm>
 
 namespace brains {
