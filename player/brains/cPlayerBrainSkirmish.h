@@ -55,7 +55,7 @@ namespace brains {
 
         void addBuildOrder(S_buildOrder order);
 
-        void log(const char* txt);
+        void log(const std::string & txt);
 
     private:
         ePlayerBrainState state;

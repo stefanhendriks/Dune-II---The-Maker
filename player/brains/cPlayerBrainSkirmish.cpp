@@ -226,6 +226,55 @@ namespace brains {
                 }
             }
         }
+
+        int unitIdThatAttacks = event.originId;
+        if (unitIdThatAttacks > -1) {
+            // respond to something that attacks us
+            cUnit originUnit = unit[unitIdThatAttacks];
+            if (originUnit.getPlayer()->isSameTeamAs(player)) {
+                // friendly fire, ignore
+                log(fmt::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
+                return;
+            }
+
+            bool attackerIsAirUnit = originUnit.isAirbornUnit();
+
+            const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(event.atCell);
+            int maxUnitsToOrder = 2 + rnd(4);
+
+            if (attackerIsAirUnit) {
+                int unitsOrdered = 0;
+                // find units that can counter-attack an air unit
+                for (auto & ufd : units) {
+                    cUnit &pUnit = unit[ufd.unitId];
+                    if (!pUnit.isIdle()) continue;
+                    if (!pUnit.canAttackAirUnits()) continue;
+                    if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+                    // move unit to where air unit is/was, so we get close to counter attack
+                    pUnit.move_to(originUnit.getCell());
+                    unitsOrdered++;
+
+                    if (unitsOrdered > maxUnitsToOrder) break;
+                }
+            } else {
+                int unitsOrdered = 0;
+
+                for (auto & ufd : units) {
+                    cUnit &pUnit = unit[ufd.unitId];
+                    if (!pUnit.isIdle()) continue;
+                    if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+                    // TODO:
+                    // we can do more smart things here depending on the kind of unit that attacks us
+                    // and thus which unit we should send to counter-attack
+                    pUnit.attackUnit(unitIdThatAttacks);
+                    unitsOrdered++;
+
+                    if (unitsOrdered > maxUnitsToOrder) break;
+                }
+            }
+        }
     }
 
     void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event) {
@@ -311,9 +360,7 @@ namespace brains {
         log(msg);
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "Missions - before deleting");
-            log(msg);
+            log("Missions - before deleting");
             logMissions();
         }
 
@@ -327,18 +374,14 @@ namespace brains {
         );
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "Missions - after deleting - before produceMissions()");
-            log(msg);
+            log("Missions - after deleting - before produceMissions()");
             logMissions();
         }
 
         produceMissions();
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "Missions - after produceMissions()");
-            log(msg);
+            log("Missions - after produceMissions()");
             logMissions();
         }
 
@@ -1350,18 +1393,17 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainSkirmish::log(const char *txt) {
-        char msg[1024];
-        sprintf(msg, "cPlayerBrainSkirmish [state=%s, thinkState=%s, economyState=%s, TIMER_rest=%d, TIMER_ai=%d, COUNT_badEconomy=%d] | %s",
+    void cPlayerBrainSkirmish::log(const std::string & txt) {
+        player->log(fmt::format(
+                "cPlayerBrainSkirmish [state={}, thinkState={}, economyState={}, TIMER_rest={}, TIMER_ai={}, COUNT_badEconomy={}] | %s",
                 ePlayerBrainStateString(state),
                 ePlayerBrainSkirmishThinkStateString(thinkState),
                 ePlayerBrainSkirmishEconomyStateString(economyState),
                 this->TIMER_rest,
                 this->TIMER_ai,
                 this->COUNT_badEconomy,
-                txt);
-
-        player->log(msg);
+                txt)
+        );
     }
 
 }
