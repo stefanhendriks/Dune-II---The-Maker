@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAIN_H
-#define D2TM_CPLAYERBRAIN_H
+#pragma once
 
 #include <observers/cScenarioObserver.h>
 #include "cPlayerBrainData.h"
@@ -39,5 +38,3 @@ namespace brains {
 
     };
 }
-
-#endif //D2TM_CPLAYERBRAIN_H

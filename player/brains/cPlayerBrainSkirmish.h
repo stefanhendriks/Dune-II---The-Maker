@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINSKIRMISH_H
-#define D2TM_CPLAYERBRAINSKIRMISH_H
+#pragma once
 
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
@@ -189,5 +188,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINSKIRMISH_H

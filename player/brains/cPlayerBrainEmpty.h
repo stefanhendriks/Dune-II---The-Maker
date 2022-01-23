@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINEMPTY_H
-#define D2TM_CPLAYERBRAINEMPTY_H
+#pragma once
 
 #include "cPlayerBrain.h"
 
@@ -23,5 +22,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINEMPTY_H

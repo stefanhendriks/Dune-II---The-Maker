@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINMISSIONKIND_DEATHHAND_H
-#define D2TM_CPLAYERBRAINMISSIONKIND_DEATHHAND_H
+#pragma once
 
 #include "player/playerh.h"
 #include "cPlayerBrainMissionKind.h"
@@ -44,5 +43,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINMISSIONKIND_DEATHHAND_H

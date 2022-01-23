@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINCAMPAIGN_H
-#define D2TM_CPLAYERBRAINCAMPAIGN_H
+#pragma once
 
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
@@ -123,5 +122,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINCAMPAIGN_H
