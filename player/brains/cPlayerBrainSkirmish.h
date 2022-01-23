@@ -71,6 +71,8 @@ namespace brains {
 
         int m_TIMER_ai;
 
+        int m_centerOfBaseCell;
+
         // at which cells did we detect an enemy? Remember those.
         std::set<int> m_discoveredEnemyAtCell;
 
@@ -185,6 +187,8 @@ namespace brains {
         void produceSuperWeaponMissionsWhenApplicable();
 
         void produceEconomyImprovingMissions();
+
+        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit);
     };
 
 }
