@@ -41,7 +41,7 @@ cAbstractMentat::cAbstractMentat() {
 
     state = INIT;
 
-    font = alfont_load_font("data/arrak.ttf");
+    font = bene_font;
 
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
     offsetX = (game.m_screenX - 640) / 2;
@@ -82,7 +82,7 @@ cAbstractMentat::~cAbstractMentat() {
     delete leftButtonCommand;
     delete rightButtonCommand;
 
-    alfont_destroy_font(font);
+    font = nullptr;
 
 	memset(sentence, 0, sizeof(sentence));
 
