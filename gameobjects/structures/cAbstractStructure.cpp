@@ -441,7 +441,7 @@ void cAbstractStructure::decay(int hp) {
 	When the hitpoints drop below 1, the structure will die / cause destroyed animation and set 'dead' flag
     so that the structure can be cleaned up from memory.
 **/
-void cAbstractStructure::damage(int hp) {
+void cAbstractStructure::damage(int hp, int unitIdWhoDamagedMe) {
 	int damage = hp;
 	if (damage < 0) {
 		logbook("cAbstractStructure::damage() got negative parameter, wrapped");
@@ -469,7 +469,8 @@ void cAbstractStructure::damage(int hp) {
                 .entityType = eBuildType::STRUCTURE,
                 .entityID = getStructureId(),
                 .player = getPlayer(),
-                .entitySpecificType = getType()
+                .entitySpecificType = getType(),
+                .originId = unitIdWhoDamagedMe
         };
 
         game.onNotifyGameEvent(event);
