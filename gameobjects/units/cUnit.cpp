@@ -351,7 +351,7 @@ void cUnit::createExplosionParticle() {
                     if (pStructure->getHitPoints() > 0) {
 
                         int iDamage = 150 + rnd(100);
-                        pStructure->damage(iDamage);
+                        pStructure->damage(iDamage, -1); // no need to pass unit ID, as it is dead anyway
 
                         int iChance = 10;
 
@@ -2583,7 +2583,7 @@ void cUnit::thinkFast_move() {
                     } else if (intent == eUnitActionIntent::INTENT_CAPTURE || intent == eUnitActionIntent::INTENT_MOVE) {
                         if (isSaboteur()) {
                             // the unit will die and inflict damage
-                            pStructure->damage(getUnitInfo().damageOnEnterStructure);
+                            pStructure->damage(getUnitInfo().damageOnEnterStructure, -1); // no need to pass ID of unit, as it is dead
                             die(true, false);
                         } else {
                             if (pStructure->getHitPoints() < pStructure->getCaptureHP()) {
@@ -2593,7 +2593,7 @@ void cUnit::thinkFast_move() {
                             } else {
                                 // the unit will die and inflict damage
                                 die(true, false);
-                                pStructure->damage(getUnitInfo().damageOnEnterStructure);
+                                pStructure->damage(getUnitInfo().damageOnEnterStructure, -1); // no need to pass ID of unit, as it is dead
                             }
                         }
                         return; // unit is dead, no need to go further

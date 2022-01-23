@@ -214,7 +214,7 @@ class cAbstractStructure {
 		void setBuildingFase(int value) { iBuildFase = value; }
 		void setRepairing(bool value);
 
-		void damage(int hp);
+		void damage(int hp, int unitIdWhoDamagedMe);
 		void decay(int hp);
     	float getHealthNormalized();
 

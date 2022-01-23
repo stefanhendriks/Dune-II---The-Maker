@@ -597,7 +597,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
         return; // invalid pointer!
     }
 
-    pStructure->damage(iDamage);
+    pStructure->damage(iDamage, iOwnerUnit);
 
     if (pStructure->isDead()) {
         if (pUnit) {

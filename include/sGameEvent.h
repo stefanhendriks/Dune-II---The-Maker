@@ -35,6 +35,7 @@ struct s_GameEvent {
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
     cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
     cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
+    int originId = -1; // in case damaged event, this is the UNIT id that damaged it
 
     // TODO: figure out a way to have bags of data depending on type of event without the need of expanding this generic GAME_EVENT struct
 
