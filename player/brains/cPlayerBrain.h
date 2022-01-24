@@ -1,11 +1,16 @@
-#ifndef D2TM_CPLAYERBRAIN_H
-#define D2TM_CPLAYERBRAIN_H
+#pragma once
 
 #include <observers/cScenarioObserver.h>
 #include "cPlayerBrainData.h"
 
 class cPlayer;
 class cAbstractStructure;
+
+namespace {
+
+    constexpr int kScanRadius = 20; // hard-coded for now, make player property later?
+
+}
 
 namespace brains {
 
@@ -39,5 +44,3 @@ namespace brains {
 
     };
 }
-
-#endif //D2TM_CPLAYERBRAIN_H

@@ -1,10 +1,11 @@
-#ifndef D2TM_SGAMEEVENT_H
-#define D2TM_SGAMEEVENT_H
+#pragma once
 
 #include <string>
 #include "enums.h"
-#include <assert.h>
+#include <cassert>
 #include <utils/common.h>
+
+#include <fmt/core.h>
 
 class cPlayer;
 class cBuildingListItem;
@@ -35,6 +36,7 @@ struct s_GameEvent {
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
     cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
     cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
+    int originId = -1; // in case damaged event, this is the UNIT id that damaged it
 
     // TODO: figure out a way to have bags of data depending on type of event without the need of expanding this generic GAME_EVENT struct
 
@@ -70,19 +72,16 @@ struct s_GameEvent {
     }
 
     static const std::string toString(const s_GameEvent &event) {
-        char msg[255];
-        sprintf(msg, "cGameEvent [type=%s], [entityType=%s], [entityId=%d], [entitySpecificType=%d =%s], [isReinforce=%s], [atCell=%d], [buildingListItem=%s]",
-                toString(event.eventType),
-                eBuildTypeString(event.entityType),
-                event.entityID,
-                event.entitySpecificType,
-                toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
-                event.isReinforce ? "true" : "false",
-                event.atCell,
-                event.buildingListItem ? "present" : "nullptr"
-                );
-        return std::string(msg);
+        return fmt::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
+                           toString(event.eventType),
+                           eBuildTypeString(event.entityType),
+                           event.entityID,
+                           event.entitySpecificType,
+                           toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
+                           event.isReinforce ? "true" : "false",
+                           event.atCell,
+                           event.buildingListItem ? "present" : "nullptr",
+                           event.originId
+        );
     }
 };
-
-#endif //D2TM_SGAMEEVENT_H

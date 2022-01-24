@@ -3,41 +3,45 @@
 #include "cPlayerBrainSkirmish.h"
 #include "enums.h"
 
+#include <fmt/core.h>
+
 #include <algorithm>
 
 namespace brains {
 
-    cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) : cPlayerBrain(player) {
-        state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
-        thinkState = ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST;
-//         timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
+    cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
+        cPlayerBrain(player),
+        m_state(ePlayerBrainState::PLAYERBRAIN_PEACEFUL),
+        m_thinkState(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST) {
+//         timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
-//        TIMER_rest = (10 * 60) * 4;
-        TIMER_rest = rnd(25); // todo: based on difficulty?
+//        m_TIMER_rest = (10 * 60) * 4;
+        m_TIMER_rest = rnd(25); // todo: based on difficulty?
         if (game.m_noAiRest) {
-            TIMER_rest = 10;
+            m_TIMER_rest = 10;
         }
-        TIMER_produceMissionCooldown = 0;
-        TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
-        myBase = std::vector<S_structurePosition>();
-        buildOrders = std::vector<S_buildOrder>();
-        discoveredEnemyAtCell = std::set<int>();
-        economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
-        COUNT_badEconomy = 0;
+        m_TIMER_produceMissionCooldown = 0;
+        m_TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
+        m_myBase = std::vector<S_structurePosition>();
+        m_buildOrders = std::vector<S_buildOrder>();
+        m_discoveredEnemyAtCell = std::set<int>();
+        m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
+        m_COUNT_badEconomy = 0;
+        m_centerOfBaseCell = 0;
     }
 
     cPlayerBrainSkirmish::~cPlayerBrainSkirmish() {
-        discoveredEnemyAtCell.clear();
-        buildOrders.clear();
-        myBase.clear();
-        missions.clear();
+        m_discoveredEnemyAtCell.clear();
+        m_buildOrders.clear();
+        m_myBase.clear();
+        m_missions.clear();
     }
 
     void cPlayerBrainSkirmish::think() {
-        TIMER_ai++;
+        m_TIMER_ai++;
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.
-        switch (thinkState) {
+        switch (m_thinkState) {
             case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST:
                 thinkState_Rest();
                 return;
@@ -58,18 +62,13 @@ namespace brains {
                 return;
         }
 
-        // now do some real stuff
-
-        char msg[255];
-        memset(msg, 0, sizeof(msg));
-        sprintf(msg, "think() - FINISHED");
-        log(msg);
+        log("think() - FINISHED");
     }
 
     void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order) {
         // check if we can find a similar build order
         if (order.buildType == eBuildType::STRUCTURE) {
-            for (auto &buildOrder : buildOrders) {
+            for (auto &buildOrder : m_buildOrders) {
                 if (buildOrder.buildType != order.buildType) continue;
                 if (buildOrder.buildId != order.buildId) continue;
 
@@ -82,32 +81,30 @@ namespace brains {
                 return; // stop
             }
         }
-        buildOrders.push_back(order);
+        m_buildOrders.push_back(order);
 
         // re-order based on priority
-        std::sort(buildOrders.begin(), buildOrders.end(), [](const S_buildOrder &lhs, const S_buildOrder &rhs) {
+        std::sort(m_buildOrders.begin(), m_buildOrders.end(), [](const S_buildOrder &lhs, const S_buildOrder &rhs) {
             return lhs.priority > rhs.priority;
         });
 
-        char msg[255];
-        sprintf(msg, "addBuildOrder() - results into the following build orders:");
-        log(msg);
+        log("addBuildOrder() - results into the following build orders:");
 
         int id = 0;
-        for (auto &buildOrder : buildOrders) {
-            memset(msg, 0, sizeof(msg));
+        for (auto &buildOrder : m_buildOrders) {
+            std::string msg;
             if (buildOrder.buildType == eBuildType::UNIT) {
-                sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                msg = fmt::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
-                sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
+                msg = fmt::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
                         buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
                         buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
+                msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             }
             log(msg);
@@ -146,7 +143,7 @@ namespace brains {
         }
 
         // notify mission about any kind of event
-        for (auto &mission : missions) {
+        for (auto &mission : m_missions) {
             mission.onNotifyGameEvent(event);
         }
     }
@@ -157,12 +154,12 @@ namespace brains {
 
         if (event.entitySpecificType == PALACE) {
             // built a palace, create super weapon missions asap!
-            TIMER_produceMissionCooldown = 0;
+            m_TIMER_produceMissionCooldown = 0;
         }
 
         int placedAtCell = pStructure->getCell();
         bool foundExistingStructureInBase = false;
-        for (auto &structurePosition : myBase) {
+        for (auto &structurePosition : m_myBase) {
             if (!structurePosition.isDestroyed) continue; // not destroyed, hence cannot be rebuilt
 
             if (structurePosition.cell == placedAtCell) {
@@ -181,11 +178,8 @@ namespace brains {
         }
 
         if (!foundExistingStructureInBase) {
-            char msg[255];
-            sprintf(msg,
-                    "cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure %s to base register:",
-                    pStructure->getS_StructuresType().name);
-            log(msg);
+            log(fmt::format("cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure {} to base register:",
+                            pStructure->getS_StructuresType().name));
 
             // new structure placed, update base register
             S_structurePosition position = {
@@ -194,13 +188,18 @@ namespace brains {
                     .structureId = pStructure->getStructureId(),
                     .isDestroyed = pStructure->isDead()
             };
-            myBase.push_back(position);
+
+            if (pStructure->getType() == CONSTYARD) {
+                m_centerOfBaseCell = pStructure->getCell();
+            }
+
+            m_myBase.push_back(position);
         }
     }
 
     void cPlayerBrainSkirmish::onMyStructureDestroyed(const s_GameEvent &event) {
         // a structure got destroyed, figure out which one it is in my base plan, and update its state
-        for (auto &structurePosition : myBase) {
+        for (auto &structurePosition : m_myBase) {
             if (structurePosition.structureId == event.entityID) {
                 // this structure got destroyed, so mark it as destroyed in my base plan
                 structurePosition.isDestroyed = true;
@@ -226,6 +225,59 @@ namespace brains {
                 }
             }
         }
+
+        int unitIdThatAttacks = event.originId;
+        if (unitIdThatAttacks > -1) {
+            // respond to something that attacks us
+            cUnit originUnit = unit[unitIdThatAttacks];
+            if (originUnit.getPlayer()->isSameTeamAs(player)) {
+                // friendly fire, ignore
+                log(fmt::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
+                return;
+            }
+
+            int cell = originUnit.getCell();
+            bool attackerIsAirUnit = originUnit.isAirbornUnit();
+
+            respondToThreat(cell, attackerIsAirUnit, 2 + rnd(4));
+        }
+    }
+
+    void cPlayerBrainSkirmish::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder) {
+        const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
+
+        if (attackerIsAirUnit) {
+            int unitsOrdered = 0;
+            // find units that can counter-attack an air unit
+            for (auto & ufd : units) {
+                cUnit &pUnit = unit[ufd.unitId];
+                if (!pUnit.isIdle()) continue;
+                if (!pUnit.canAttackAirUnits()) continue;
+                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+                // move unit to where air unit is/was, so we get close to counter-attack
+                pUnit.move_to(cellOriginOfThreat);
+                unitsOrdered++;
+
+                if (unitsOrdered > maxUnitsToOrder) break;
+            }
+        } else {
+            int unitsOrdered = 0;
+
+            for (auto & ufd : units) {
+                cUnit &pUnit = unit[ufd.unitId];
+                if (!pUnit.isIdle()) continue;
+                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+                // TODO:
+                // we can do more smart things here depending on the kind of unit that attacks us
+                // and thus which unit we should send to counter-attack
+                pUnit.attackAt(cellOriginOfThreat);
+                unitsOrdered++;
+
+                if (unitsOrdered > maxUnitsToOrder) break;
+            }
+        }
     }
 
     void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event) {
@@ -241,13 +293,11 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_Base() {
-        char msg[255];
-        sprintf(msg, "thinkState_ScanBase()");
-        log(msg);
+        log("thinkState_ScanBase()");
 
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
-        if (player->hasEnoughCreditsFor(500) && economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+        if (player->hasEnoughCreditsFor(500) && m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
             // we have money to do a (unit) upgrade, structure sUpgradeInfo are done via the "thinkAboutNextStructure" thing
             // which will enforce an upgrade via that path
             if (player->startUpgradingForUnitIfPossible(QUAD)) {
@@ -306,43 +356,35 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_Missions() {
-        char msg[255];
-        sprintf(msg, "thinkState_Missions()");
-        log(msg);
+        log("thinkState_Missions()");
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "Missions - before deleting");
-            log(msg);
+            log("Missions - before deleting");
             logMissions();
         }
 
         // delete any missions which are ended
-        missions.erase(
+        m_missions.erase(
                 std::remove_if(
-                        missions.begin(),
-                        missions.end(),
+                        m_missions.begin(),
+                        m_missions.end(),
                         [](cPlayerBrainMission m) { return m.isEnded(); }),
-                missions.end()
+                m_missions.end()
         );
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "Missions - after deleting - before produceMissions()");
-            log(msg);
+            log("Missions - after deleting - before produceMissions()");
             logMissions();
         }
 
         produceMissions();
 
         if (DEBUGGING) {
-            char msg[255];
-            sprintf(msg, "Missions - after produceMissions()");
-            log(msg);
+            log("Missions - after produceMissions()");
             logMissions();
         }
 
-        if (TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
+        if (m_TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
             if (allMissionsAreDoneGatheringResources()) {
                 // build units, as long as we have some money on the bank.
                 // these units are produced without a mission.
@@ -396,7 +438,7 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::logMissions() {
-        for (auto &mission : missions) {
+        for (auto &mission : m_missions) {
             mission.log("Exists");
         }
     }
@@ -422,29 +464,27 @@ namespace brains {
         produceSuperWeaponMissionsWhenApplicable();
 
         // if cooldown is set, do that, so we don't spam missions in a very short amount of time
-        if (TIMER_produceMissionCooldown > 0) {
-            char msg[255];
-            sprintf(msg, "TIMER_produceMissionCooldown [%d] is in effect.", TIMER_produceMissionCooldown);
-            log(msg);
-            TIMER_produceMissionCooldown--;
+        if (m_TIMER_produceMissionCooldown > 0) {
+            log(fmt::format("m_TIMER_produceMissionCooldown [{}] is in effect.", m_TIMER_produceMissionCooldown));
+            m_TIMER_produceMissionCooldown--;
             return;
         }
 
         int scoutingUnitType = player->getScoutingUnitType();
 
-        if (economyState == ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+        if (m_economyState == ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
             produceEconomyImprovingMissions();
             return; // bail, because we don't want to build additional things that might worsen economy at this point
         }
 
-        if (economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
             log("produceMissions() - aborting because economy state is BAD");
             return; // do nothing for now
         }
 
-        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
+        if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             produceMissionsDuringPeacetime(scoutingUnitType);
-        } else if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
+        } else if (m_state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
             produceAttackingMissions();
         }
     }
@@ -604,9 +644,7 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId) {
-        char msg[255];
-        sprintf(msg, "produceSkirmishGroundAttackMission for mission id %d - called", missionId);
-        log(msg);
+        log(fmt::format("produceSkirmishGroundAttackMission for mission id %d - called", missionId));
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         int smallChance = 15;
         int normalChance = 50;
@@ -718,8 +756,8 @@ namespace brains {
     }
 
     bool cPlayerBrainSkirmish::hasMission(const int id) {
-        auto position = std::find_if(missions.begin(), missions.end(), [&id](const cPlayerBrainMission & mission){ return mission.getUniqueId() == id; });
-        bool hasMission = position != missions.end();
+        auto position = std::find_if(m_missions.begin(), m_missions.end(), [&id](const cPlayerBrainMission & mission){ return mission.getUniqueId() == id; });
+        bool hasMission = position != m_missions.end();
         return hasMission;
     }
 
@@ -731,36 +769,33 @@ namespace brains {
             if (item.buildType == eBuildType::UNIT) {
                 if (!player->canBuildUnitBool(item.type)) {
                     item.required = 0; // set it to required 0, so it won't be built
-                    char msg[255];
-                    sprintf(msg, "addMission - cannot build unit [%s] so setting required to 0, for mission kind [%s].",
-                            toStringBuildTypeSpecificType(eBuildType::UNIT, item.type),
-                            ePlayerBrainMissionKindString(kind)
-                            );
-                    log(msg);
+                    log(fmt::format("addMission - cannot build unit [{}] so setting required to 0, for mission kind [{}].",
+                                    toStringBuildTypeSpecificType(eBuildType::UNIT, item.type),
+                                    ePlayerBrainMissionKindString(kind))
+                        );
                 }
             }
         }
 
         cPlayerBrainMission someMission(player, kind, this, group, initialDelay, id);
-        missions.push_back(someMission);
+        m_missions.push_back(someMission);
 
-        char msg[255];
-        // do note the cooldown is whtin the whole cylce of the AI thinking process. So this means the cooldown
+        // do note the cooldown is within the whole cylce of the AI thinking process. So this means the cooldown
         // here is the amount of 'iterations'. Since 1 iteration has a RestTime to wait, this means a cooldown of 10
         // is cooling down in 10 seconds.
         int cooldown = cPlayerBrain::RestTime;
-        TIMER_produceMissionCooldown += cooldown;
-        sprintf(msg, "addMission - upping cooldown with %d to a total of %d", cooldown, TIMER_produceMissionCooldown);
-        log(msg);
+        m_TIMER_produceMissionCooldown += cooldown;
+        log(fmt::format("addMission - upping cooldown with {} to a total of {}", cooldown, m_TIMER_produceMissionCooldown));
         // rest for a few seconds before producing a new mission)
 
     }
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
-        char msg[255];
-        sprintf(msg, "thinkState_Evaluate() : credits [%d], COUNT_badEconomy [%d], economyState [%s]", player->getCredits(), COUNT_badEconomy,
-                ePlayerBrainSkirmishEconomyStateString(economyState));
-        log(msg);
+        log(fmt::format("thinkState_Evaluate() : credits [{}], m_COUNT_badEconomy [{}], m_economyState [{}]",
+                        player->getCredits(),
+                        m_COUNT_badEconomy,
+                        ePlayerBrainSkirmishEconomyStateString(m_economyState))
+            );
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
@@ -768,7 +803,7 @@ namespace brains {
             return;
         }
 
-        // Re-iterate over all (pending) buildOrders - and check if we are still going to do that or we might want to
+        // Re-iterate over all (pending) m_buildOrders - and check if we are still going to do that or we might want to
         // up/downplay some priorities and re-sort?
         // Example: Money is short, Harvester is in build queue, but not high in priority?
         if (player->hasAtleastOneStructure(REFINERY)) {
@@ -776,38 +811,38 @@ namespace brains {
         }
 
         // take a little rest, before going into a new loop again?
-        TIMER_rest = cPlayerBrain::RestTime;
+        m_TIMER_rest = cPlayerBrain::RestTime;
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST);
     }
 
     void cPlayerBrainSkirmish::evaluateEconomyState() {
-        if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
             if (player->getCredits() < 150) {
                 // count the times we are in this shape, after a certain time we switch to IMPROVE state
-                COUNT_badEconomy++;
-                if (COUNT_badEconomy > 5) {
+                m_COUNT_badEconomy++;
+                if (m_COUNT_badEconomy > 5) {
                     changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
                 }
             }
         } else {
             // reduce economy score when we have more than 150 bucks
             if (player->getCredits() > 150) {
-                COUNT_badEconomy--;
-                if (COUNT_badEconomy < 1) {
-                    COUNT_badEconomy = 0;
+                m_COUNT_badEconomy--;
+                if (m_COUNT_badEconomy < 1) {
+                    m_COUNT_badEconomy = 0;
                     changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_NORMAL);
                 }
             }
 
-            if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
                 // when in 'trying to improve economy state' increase bad economy score when things really go bad?
                 if (player->getCredits() < 75) {
-                    COUNT_badEconomy++;
-                    if (COUNT_badEconomy > 25) {
+                    m_COUNT_badEconomy++;
+                    if (m_COUNT_badEconomy > 25) {
                         changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_BAD);
                     }
                 }
-            } else if (economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+            } else if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
                 // we're in a pinch now - economy wise
             }
         }
@@ -870,16 +905,14 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders() {
-        char msg[255];
-        sprintf(msg, "thinkState_ProcessBuildOrders()");
-        log(msg);
+        log("thinkState_ProcessBuildOrders()");
 
         // check if we can find a similar build order
-        for (auto &buildOrder : buildOrders) {
+        for (auto &buildOrder : m_buildOrders) {
             if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME)
                 continue; // only process those which are marked
 
-            assert(buildOrder.buildId > -1 && "(cPlayerBrainSkirmish) A build order with no buildId got in the buildOrders list, which is not allowed!");
+            assert(buildOrder.buildId > -1 && "(cPlayerBrainSkirmish) A build order with no buildId got in the m_buildOrders list, which is not allowed!");
 
             if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
@@ -949,13 +982,13 @@ namespace brains {
             }
         }
 
-        // delete any buildOrders which are flagged to remove
-        buildOrders.erase(
+        // delete any m_buildOrders which are flagged to remove
+        m_buildOrders.erase(
                 std::remove_if(
-                        buildOrders.begin(),
-                        buildOrders.end(),
+                        m_buildOrders.begin(),
+                        m_buildOrders.end(),
                         [](const S_buildOrder &o) { return o.state == buildOrder::eBuildOrderState::REMOVEME; }),
-                buildOrders.end()
+                m_buildOrders.end()
         );
 
         // TODO: use an event "structure ready for placement" for this?
@@ -963,7 +996,7 @@ namespace brains {
             int structureType = player->getStructureTypeBeingBuilt();
 
             S_buildOrder * matchingOrder = nullptr;
-            for (auto &buildOrder : buildOrders) {
+            for (auto &buildOrder : m_buildOrders) {
                 if (buildOrder.buildType != eBuildType::STRUCTURE) {
                     continue;
                 }
@@ -1050,29 +1083,25 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState) {
-        char msg[255];
-        sprintf(msg, "changeThinkStateTo(), from %s to %s",
-                ePlayerBrainSkirmishThinkStateString(thinkState),
-                ePlayerBrainSkirmishThinkStateString(newState));
-        log(msg);
-        this->thinkState = newState;
+        log(fmt::format("changeThinkStateTo(), from {} to {}",
+                        ePlayerBrainSkirmishThinkStateString(m_thinkState),
+                        ePlayerBrainSkirmishThinkStateString(newState))
+            );
+        this->m_thinkState = newState;
     }
 
     void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState) {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::changeEconomyStateTo(), from %s to %s",
-                ePlayerBrainSkirmishEconomyStateString(economyState),
-                ePlayerBrainSkirmishEconomyStateString(newState));
-        log(msg);
-        this->economyState = newState;
+        log(fmt::format( "cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
+                         ePlayerBrainSkirmishEconomyStateString(m_economyState),
+                         ePlayerBrainSkirmishEconomyStateString(newState))
+            );
+        this->m_economyState = newState;
     }
 
     void cPlayerBrainSkirmish::thinkState_Rest() {
-        if (TIMER_rest > 0) {
-            TIMER_rest--;
-            char msg[255];
-            sprintf(msg, "cPlayerBrainSkirmish::thinkState_Rest(), rest %d", TIMER_rest);
-            log(msg);
+        if (m_TIMER_rest > 0) {
+            m_TIMER_rest--;
+            log(fmt::format("cPlayerBrainSkirmish::thinkState_Rest(), rest {}", m_TIMER_rest));
             return;
         }
 
@@ -1081,28 +1110,32 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event) {
-        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
-            bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
+        bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
+        if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             if (!wormsign) {
                 if (event.player == player) {
                     // i discovered something
                     if (event.entityType == eBuildType::UNIT) {
-                        cUnit &cUnit = unit[event.entityID];
-                        if (cUnit.isValid() && !cUnit.getPlayer()->isSameTeamAs(player)) {
+                        cUnit &pUnit = unit[event.entityID];
+                        if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                             // found enemy unit
-                            TIMER_produceMissionCooldown = 0;
-                            state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                            TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                            discoveredEnemyAtCell.insert(event.atCell);
+                            m_TIMER_produceMissionCooldown = 0;
+                            m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
+                            m_discoveredEnemyAtCell.insert(event.atCell);
+
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit(), 2 + rnd(4));
+                            }
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
                         cAbstractStructure *pStructure = structure[event.entityID];
                         if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                             // found enemy structure
-                            TIMER_produceMissionCooldown = 0;
-                            state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                            TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                            discoveredEnemyAtCell.insert(event.atCell);
+                            m_TIMER_produceMissionCooldown = 0;
+                            m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
+                            m_discoveredEnemyAtCell.insert(event.atCell);
                         }
                     }
                 } else {
@@ -1111,24 +1144,24 @@ namespace brains {
                         // ignore anything that the WORM AI player detected.
                     } else if (!event.player->isSameTeamAs(player)) {
                         if (event.entityType == eBuildType::UNIT) {
-                            cUnit &cUnit = unit[event.entityID];
+                            cUnit &pUnit = unit[event.entityID];
                             // the other player discovered a unit of mine
-                            if (cUnit.isValid() && cUnit.getPlayer() == player) {
+                            if (pUnit.isValid() && pUnit.getPlayer() == player) {
                                 // found my unit
-                                TIMER_produceMissionCooldown = 0;
-                                state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                                TIMER_rest = 0; // if we where still 'resting' then stop this now.
-                                discoveredEnemyAtCell.insert(cUnit.getCell());
+                                m_TIMER_produceMissionCooldown = 0;
+                                m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                                m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
+                                m_discoveredEnemyAtCell.insert(pUnit.getCell());
                             }
                         } else if (event.entityType == eBuildType::STRUCTURE) {
                             cAbstractStructure *pStructure = structure[event.entityID];
                             // the other player discovered a structure of mine
                             if (pStructure->getPlayer() == player) {
                                 // found my structure
-                                TIMER_produceMissionCooldown = 0;
-                                state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
-                                TIMER_rest = 0; // if we where still 'resting' then stop this now.
-//                                discoveredEnemyAtCell.insert(pStructure.getCell());
+                                m_TIMER_produceMissionCooldown = 0;
+                                m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                                m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
+//                                m_discoveredEnemyAtCell.insert(pStructure.getCell());
                                 // TODO: Record we have found an enemy structure...
                             }
                         }
@@ -1140,7 +1173,19 @@ namespace brains {
 
             }
         } else {
-            // non peaceful state, what to do? react? etc.
+            if (!wormsign) {
+                if (event.player == player) {
+                    // i discovered something
+                    if (event.entityType == eBuildType::UNIT) {
+                        cUnit &pUnit = unit[event.entityID];
+                        if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit(), 2 + rnd(4));
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1238,18 +1283,18 @@ namespace brains {
         player->logStructures();
 
         if (!player->hasAtleastOneStructure(REFINERY))      return REFINERY;
-        if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE || economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE || m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
             if (player->getAmountOfStructuresForType(REFINERY) < 3) {
                 return REFINERY;
             }
         }
 
         // don't build anything else for now
-        if (economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
             return -1;
         }
 
-        if (TIMER_ai > MOMENT_CONSIDER_ADDITIONAL_REFINERY) {
+        if (m_TIMER_ai > MOMENT_CONSIDER_ADDITIONAL_REFINERY) {
             // time to think about an additional refinery
             if (rnd(100) < 33 && player->getAmountOfStructuresForType(REFINERY) < 3) {
                 // build one
@@ -1318,7 +1363,7 @@ namespace brains {
     }
 
     bool cPlayerBrainSkirmish::hasBuildOrderQueuedForStructure() {
-        for (auto &buildOrder : buildOrders) {
+        for (auto &buildOrder : m_buildOrders) {
             if (buildOrder.buildType == eBuildType::STRUCTURE && buildOrder.state != buildOrder::REMOVEME) {
                 return true;
             }
@@ -1327,7 +1372,7 @@ namespace brains {
     }
 
     bool cPlayerBrainSkirmish::hasBuildOrderQueuedForUnit(int buildId) {
-        for (auto &buildOrder : buildOrders) {
+        for (auto &buildOrder : m_buildOrders) {
             if (buildOrder.buildType == eBuildType::UNIT && buildOrder.state != buildOrder::REMOVEME && buildOrder.buildId == buildId) {
                 return true;
             }
@@ -1336,7 +1381,7 @@ namespace brains {
     }
 
     bool cPlayerBrainSkirmish::allMissionsAreDoneGatheringResources() {
-        for (auto &mission : missions) {
+        for (auto &mission : m_missions) {
             if (!mission.isDoneGatheringResources()) {
                 return false;
             }
@@ -1345,23 +1390,22 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkFast() {
-        for (auto &mission : missions) {
+        for (auto &mission : m_missions) {
             mission.think();
         }
     }
 
-    void cPlayerBrainSkirmish::log(const char *txt) {
-        char msg[1024];
-        sprintf(msg, "cPlayerBrainSkirmish [state=%s, thinkState=%s, economyState=%s, TIMER_rest=%d, TIMER_ai=%d, COUNT_badEconomy=%d] | %s",
-                ePlayerBrainStateString(state),
-                ePlayerBrainSkirmishThinkStateString(thinkState),
-                ePlayerBrainSkirmishEconomyStateString(economyState),
-                this->TIMER_rest,
-                this->TIMER_ai,
-                this->COUNT_badEconomy,
-                txt);
-
-        player->log(msg);
+    void cPlayerBrainSkirmish::log(const std::string & txt) {
+        player->log(fmt::format(
+                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_COUNT_badEconomy={}] | {}",
+                ePlayerBrainStateString(m_state),
+                ePlayerBrainSkirmishThinkStateString(m_thinkState),
+                ePlayerBrainSkirmishEconomyStateString(m_economyState),
+                this->m_TIMER_rest,
+                this->m_TIMER_ai,
+                this->m_COUNT_badEconomy,
+                txt)
+        );
     }
 
 }
