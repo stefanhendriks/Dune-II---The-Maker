@@ -14,10 +14,13 @@
 
 
   */
-#include <stdlib.h>
-#include <math.h>
+#include "d2tm_math.h"
 
-#include "../include/d2tmh.h"
+#include "definitions.h"
+
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
 
 // returns in fRadians
 float fRadians(int x1, int y1, int x2, int y2)
@@ -26,7 +29,7 @@ float fRadians(int x1, int y1, int x2, int y2)
   float delta_y = (y2-y1);
 
   // calculate fRadians
-  float r = (atan2(delta_y, delta_x));
+  float r = (std::atan2(delta_y, delta_x));
 
   // return in fRadians
   return r;
@@ -72,7 +75,7 @@ float fDegrees(int x1, int y1, int x2, int y2)
   //  note: it works now, so dont touch it yet (dont fix anything that aint broken)
   angle = (atan2(delta_x, delta_y));
 
-  double x = angle / PI * 180.0f;
+  double x = angle / M_PI * 180.0f;
 
   angle = x;
 
@@ -91,10 +94,10 @@ float fDegrees(int x1, int y1, int x2, int y2)
 
   // TOFIX: Somehow delta_x and delta_y need to be twisted here (should be y , x in the atan2 method)
   // should be fixed some day, it works but I feel itchy about this.
-  angle = (atan2(delta_x, delta_y));
+  angle = (std::atan2(delta_x, delta_y));
 
   // convert to fDegrees
-  angle =  angle * (180 / PI);
+  angle =  angle * (180 / M_PI);
 
   angle += 180;
   return angle;
@@ -102,9 +105,9 @@ float fDegrees(int x1, int y1, int x2, int y2)
 
 // for bullets; bullets have twice as many angles (facings) than units. (16)
 int bullet_face_angle(float angle) {
-  int a = (int)angle;
+  int a = angle;
   int chop = (45/2);        // 45/2 fDegrees is one chop now (TODO: Make this configurable)
-  a = abs(a-360);
+  a = std::abs(a-360);
   return (a/chop);
 }
 
@@ -135,7 +138,7 @@ int face_angle(float angle)
 
   // Because 360 is UP, we need to reverse it now
   //a += 180; // make scale to 360 fDegrees
-  a = (abs)(a-360);
+  a = std::abs(a-360);
 
   // we now can return the correct facing, but do note that this value is not how the
   // picture is stored in our 8bit pictures. The drawing routine will fix this up for us
@@ -168,9 +171,7 @@ int convert_angle(int face_angle)
   if (face_angle == FACE_DOWN)        return 6;
   if (face_angle == FACE_DOWNRIGHT)   return 7;
 
-  char msg[255];
-  sprintf(msg, "INVALID: Received face angle [%d], which is unsupported. Returning 0 as result!?", face_angle);
-  logbook(msg);
+  assert(false && "Invalid face angle");
 
   return 0; // theoretically cannot reach here, return 0 in all other cases
 }
@@ -178,7 +179,7 @@ int convert_angle(int face_angle)
 // return random number between 0 and 'max'
 int rnd(int max) {
   if (max < 1) return 0;
-  return (rand() % max);
+  return std::rand() % max;
 }
 
 // returns length between 2 points
@@ -190,7 +191,7 @@ double length(int x1, int y1, int x2, int y2) {
   A *= A;
   B *= B;
 
-  return sqrt((double)(A+B)); // A2 + B2 = C2 :)
+  return std::sqrt(static_cast<double>(A + B)); // A2 + B2 = C2 :)
 }
 
 
@@ -205,51 +206,7 @@ double length(int x1, int y1, int x2, int y2) {
 double ABS_length(int x1, int y1, int x2, int y2) {
   if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
-  int A = abs(x2-x1) * abs(x2-x1);
-  int B = abs(y2-y1) * abs(y2-y1);
-  return sqrt((double)(A+B)); // A2 + B2 = C2 :)
-}
-
-// Above
-int CELL_ABOVE(int c) {
-    return map.getCellAbove(c);
-}
-
-// Under
-int CELL_UNDER(int c) {
-    return map.getCellBelow(c);
-}
-
-// Left
-int CELL_LEFT(int c) {
-    return map.getCellLeft(c);
-}
-
-// Right
-int CELL_RIGHT(int c) {
-    return map.getCellRight(c);
-}
-
-// Up / LEFT
-int CELL_U_LEFT(int c) {
-    return map.getCellUpperLeft(c);
-}
-
-// Up / RIGHT
-int CELL_U_RIGHT(int c) {
-    return map.getCellUpperRight(c);
-}
-
-// Low / LEFT
-int CELL_L_LEFT(int c) {
-    return map.getCellLowerLeft(c);
-}
-
-// Low / RIGHT
-int CELL_L_RIGHT(int c) {
-  return map.getCellLowerRight(c);
-}
-
-bool CELL_BORDERS(int iOrigin, int iCell) {
-    return map.isCellAdjacentToOtherCell(iOrigin, iCell);
+  int A = std::abs(x2 - x1) * std::abs(x2 - x1);
+  int B = std::abs(y2 - y1) * std::abs(y2 - y1);
+  return sqrt(static_cast<double>(A + B)); // A2 + B2 = C2 :)
 }

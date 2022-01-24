@@ -19,6 +19,7 @@
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
+#include "utils/d2tm_math.h"
 
 #include <fmt/core.h>
 
