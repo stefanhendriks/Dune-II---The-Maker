@@ -6,6 +6,8 @@ changelog:
     labels: ["feature", "improvement"]
   - title: "Gameplay"
     labels: ["balancing"]
+  - title: "Dune 2 features"
+    labels: ["missing-dune2-piece"]
   - title: "Experimental"
     labels: ["experimental"]
   - title: "Bug fixes"
