@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINCAMPAIGN_H
-#define D2TM_CPLAYERBRAINCAMPAIGN_H
+#pragma once
 
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
@@ -19,7 +18,7 @@ namespace brains {
     const int SPECIAL_MISSION3 = 52;
 
     public:
-        cPlayerBrainCampaign(cPlayer *player);
+        explicit cPlayerBrainCampaign(cPlayer *player);
 
         ~cPlayerBrainCampaign();
 
@@ -31,19 +30,23 @@ namespace brains {
 
         void addBuildOrder(S_buildOrder order) override;
 
+        void log(const std::string & txt);
+
     private:
-        ePlayerBrainState state;
+        ePlayerBrainState m_state;
 
-        ePlayerBrainCampaignThinkState thinkState;
+        ePlayerBrainCampaignThinkState m_thinkState;
 
-        int TIMER_rest;
+        int m_TIMER_rest;
 
         // at which cells did we detect an enemy? Remember those.
-        std::set<int> discoveredEnemyAtCell;
+        std::set<int> m_discoveredEnemyAtCell;
 
-        std::vector<cPlayerBrainMission> missions;
-        std::vector<S_structurePosition> myBase;
-        std::vector<S_buildOrder> buildOrders;
+        std::vector<cPlayerBrainMission> m_missions;
+        std::vector<S_structurePosition> m_myBase;
+        std::vector<S_buildOrder> m_buildOrders;
+
+        int m_centerOfBaseCell;
 
         void onMyStructureDestroyed(const s_GameEvent &event);
 
@@ -120,8 +123,7 @@ namespace brains {
 
         void produceLevel9Missions(int trikeKind, int infantryKind);
 
+        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder);
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINCAMPAIGN_H

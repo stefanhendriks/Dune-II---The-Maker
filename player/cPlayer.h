@@ -39,6 +39,16 @@
 class cItemBuilder;
 class cBuildingListUpdater;
 
+struct s_UnitForDistance {
+    int distance = 9999;
+    int unitId = -1;
+
+    bool operator<(const s_UnitForDistance& rhs) const
+    {
+        return distance < rhs.distance;
+    }
+};
+
 struct s_PlaceResult {
     bool success = false; // if true, all is ok
 
@@ -225,6 +235,8 @@ public:
 
     int getTeam() { return iTeam; }
 
+
+    std::vector<s_UnitForDistance> getAllMyUnitsOrderClosestToCell(int cell);
 
     std::vector<int> getAllMyUnits();
 

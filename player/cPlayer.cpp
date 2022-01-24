@@ -1894,6 +1894,29 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
 }
 
 /**
+ * Same as getAllMyUnits, but returns units ordered by distance (closest first)
+ * @param cell
+ * @return
+ */
+std::vector<s_UnitForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cell) {
+    const std::vector<int> &ids = getAllMyUnitsForType(-1);
+    std::vector<s_UnitForDistance> result = std::vector<s_UnitForDistance>(0);
+
+    for (auto & unitId : ids) {
+        cUnit aUnit = unit[unitId];
+        double dist = map.distance(aUnit.getCell(), cell);
+        const s_UnitForDistance &entry = s_UnitForDistance{
+            .distance = (int)dist,
+            .unitId = unitId
+        };
+        result.push_back(entry);
+    }
+
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+/**
  * Returns all unit ids belonging to player
  *
  * NOTE: This is a slow method, as it iterates though all possible unit ids

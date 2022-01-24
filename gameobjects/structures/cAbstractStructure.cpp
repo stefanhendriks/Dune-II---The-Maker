@@ -13,11 +13,13 @@
 #include "../../include/d2tmh.h"
 #include "cAbstractStructure.h"
 
+#include <fmt/core.h>
+
 #include "utils/cSoundPlayer.h"
 
 // "default" Constructor
-cAbstractStructure::cAbstractStructure() {
-    flags = std::vector<cFlag *>();
+cAbstractStructure::cAbstractStructure() :
+    flags(std::vector<cFlag *>()) {
     frames = 1;
     iHitPoints=-1;      // default = no hitpoints
     iCell=-1;
@@ -62,18 +64,14 @@ cAbstractStructure::cAbstractStructure() {
     dead = false;
 
     if (DEBUGGING) {
-        char msg[255];
-        sprintf(msg, "(cAbstractStructure)(ID %d) Constructor", this->id);
-        logbook(msg);
+        logbook(fmt::format("(cAbstractStructure)(ID {}) Constructor", this->id));
     }
 }
 
 cAbstractStructure::~cAbstractStructure() {
     // destructor
     if (DEBUGGING) {
-        char msg[255];
-        sprintf(msg, "(~cAbstractStructure)(ID %d) Destructor", this->id);
-        logbook(msg);
+        logbook(fmt::format("(cAbstractStructure)(ID {}) Destructor", this->id));
     }
     iHitPoints = -1;
     iCell = -1;
@@ -442,8 +440,10 @@ void cAbstractStructure::decay(int hp) {
 
 	When the hitpoints drop below 1, the structure will die / cause destroyed animation and set 'dead' flag
     so that the structure can be cleaned up from memory.
+
+    @param originId = ID of unit who damaged me. It can be < 0 meaning unknown unit (or not applicable)
 **/
-void cAbstractStructure::damage(int hp) {
+void cAbstractStructure::damage(int hp, int originId) {
 	int damage = hp;
 	if (damage < 0) {
 		logbook("cAbstractStructure::damage() got negative parameter, wrapped");
@@ -451,9 +451,7 @@ void cAbstractStructure::damage(int hp) {
 	}
 
 	iHitPoints -= damage; // do damage
-    char msg[255];
-    sprintf(msg, "cAbstractStructure::damage() - Structure [%d] received [%d] damage, HP is now [%d]", id, damage, iHitPoints);
-    logbook(msg);
+    logbook(fmt::format("cAbstractStructure::damage() - Structure [{}] received [{}] damage from originId [{}], HP is now [{}]", id, damage, originId, iHitPoints));
 
     if (iHitPoints < 1) {
         // TODO: update statistics? (structure lost)
@@ -473,7 +471,8 @@ void cAbstractStructure::damage(int hp) {
                 .entityType = eBuildType::STRUCTURE,
                 .entityID = getStructureId(),
                 .player = getPlayer(),
-                .entitySpecificType = getType()
+                .entitySpecificType = getType(),
+                .originId = originId
         };
 
         game.onNotifyGameEvent(event);
@@ -488,9 +487,7 @@ void cAbstractStructure::setHitPoints(int hp) {
 	int maxHp = sStructureInfo[getType()].hp;
 
 	if (iHitPoints > maxHp) {
-		char msg[256];
-		sprintf(msg, "setHitpoints(%d) while max is %d; capped at max.", hp, maxHp);
-		logbook(msg);
+		logbook(fmt::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
 
 		// will fail (uncomment to let it be capped)
 		assert(iHitPoints <= maxHp); // may never be more than the maximum of that structure

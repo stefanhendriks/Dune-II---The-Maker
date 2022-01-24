@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINSKIRMISH_H
-#define D2TM_CPLAYERBRAINSKIRMISH_H
+#pragma once
 
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
@@ -43,7 +42,7 @@ namespace brains {
     class cPlayerBrainSkirmish : public cPlayerBrain {
 
     public:
-        cPlayerBrainSkirmish(cPlayer *player);
+        explicit cPlayerBrainSkirmish(cPlayer *player);
 
         ~cPlayerBrainSkirmish();
 
@@ -53,31 +52,33 @@ namespace brains {
 
         void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        void addBuildOrder(S_buildOrder order);
+        void addBuildOrder(S_buildOrder order) override;
 
-        void log(const char* txt);
+        void log(const std::string & txt);
 
     private:
-        ePlayerBrainState state;
+        ePlayerBrainState m_state;
 
-        ePlayerBrainSkirmishThinkState thinkState;
+        ePlayerBrainSkirmishThinkState m_thinkState;
 
-        ePlayerBrainSkirmishEconomyState economyState;
+        ePlayerBrainSkirmishEconomyState m_economyState;
 
-        int COUNT_badEconomy;
+        int m_COUNT_badEconomy;
 
-        int TIMER_rest;
+        int m_TIMER_rest;
 
-        int TIMER_produceMissionCooldown;
+        int m_TIMER_produceMissionCooldown;
 
-        int TIMER_ai;
+        int m_TIMER_ai;
+
+        int m_centerOfBaseCell;
 
         // at which cells did we detect an enemy? Remember those.
-        std::set<int> discoveredEnemyAtCell;
+        std::set<int> m_discoveredEnemyAtCell;
 
-        std::vector<cPlayerBrainMission> missions;
-        std::vector<S_structurePosition> myBase;
-        std::vector<S_buildOrder> buildOrders;
+        std::vector<cPlayerBrainMission> m_missions;
+        std::vector<S_structurePosition> m_myBase;
+        std::vector<S_buildOrder> m_buildOrders;
 
         void onMyStructureDestroyed(const s_GameEvent &event);
 
@@ -186,8 +187,8 @@ namespace brains {
         void produceSuperWeaponMissionsWhenApplicable();
 
         void produceEconomyImprovingMissions();
+
+        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder);
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINSKIRMISH_H

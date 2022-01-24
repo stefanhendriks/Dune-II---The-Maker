@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINMISSION_H
-#define D2TM_CPLAYERBRAINMISSION_H
+#pragma once
 
 #include <vector>
 #include "player/brains/cPlayerBrainData.h"
@@ -189,5 +188,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINMISSION_H

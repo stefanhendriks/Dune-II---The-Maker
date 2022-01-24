@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINSANDWORM_H
-#define D2TM_CPLAYERBRAINSANDWORM_H
+#pragma once
 
 #include "cPlayerBrain.h"
 
@@ -8,7 +7,7 @@ namespace brains {
     class cPlayerBrainSandworm : public cPlayerBrain {
 
     public:
-        cPlayerBrainSandworm(cPlayer * player);
+        explicit cPlayerBrainSandworm(cPlayer * player);
         ~cPlayerBrainSandworm();
 
         void think() override;
@@ -24,4 +23,3 @@ namespace brains {
     };
 
 }
-#endif //D2TM_CPLAYERBRAINSANDWORM_H
