@@ -178,6 +178,7 @@ void install_units() {
         unitInfo.infantry = false;
         unitInfo.free_roam = false;
         unitInfo.fireTwice = false;
+        unitInfo.fireTwiceHpThresholdFactor = 0.5f; // default 50% hp
         unitInfo.squish = true;             // most units can squish (infantry)
         unitInfo.canBeSquished = false;     // most units cannot be squished
         unitInfo.range = -1;
