@@ -1640,7 +1640,7 @@ namespace brains {
                             m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
                             m_discoveredEnemyAtCell.insert(event.atCell);
 
-                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < 20) {
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                                 respondToThreat(event.atCell, pUnit.isAirbornUnit());
                             }
                         }
@@ -1692,7 +1692,7 @@ namespace brains {
                     if (event.entityType == eBuildType::UNIT) {
                         cUnit &pUnit = unit[event.entityID];
                         if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
-                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < 20) {
+                            if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                                 respondToThreat(event.atCell, pUnit.isAirbornUnit());
                             }
                         }
