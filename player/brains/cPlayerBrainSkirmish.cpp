@@ -90,9 +90,9 @@ namespace brains {
 
         log("addBuildOrder() - results into the following build orders:");
 
-        std::string msg;
         int id = 0;
         for (auto &buildOrder : m_buildOrders) {
+            std::string msg;
             if (buildOrder.buildType == eBuildType::UNIT) {
                 msg = fmt::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
