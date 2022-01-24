@@ -625,12 +625,10 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     if (iType == D2TM_PARTICLE_SMOKE) {
         pParticle.TIMER_dead = 1500;
-        int shadowParticleId = create(x + 16, y + 38, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, iUnitID);
 
         // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
         // offset is not in center). So we have to subtract half of the sprite's height
         pParticle.y += pParticle.drawYBmpOffset;
-        pParticle.boundParticleID = shadowParticleId;
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
