@@ -246,7 +246,7 @@ void cUnit::createExplosionParticle() {
         game.playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
 
         if (rnd(100) < 30) {
-            cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
+            cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
         }
     }
 
@@ -269,7 +269,7 @@ void cUnit::createExplosionParticle() {
         }
 
         if (rnd(100) < 30) {
-            cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
+            cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
         }
 
         if (iType == HARVESTER) {
@@ -363,7 +363,7 @@ void cUnit::createExplosionParticle() {
                         if (rnd(100) < iChance) {
                             long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
                             long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
-                            cParticle::create(x, y, D2TM_PARTICLE_SMOKE, -1, -1);
+                            cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                         }
                     }
                 }
@@ -3158,7 +3158,7 @@ void cUnit::takeDamage(int damage) {
                     int particleId = cParticle::create(
                             pos_x_centered(),
                             pos_y_centered(),
-                            D2TM_PARTICLE_SMOKE,
+                            D2TM_PARTICLE_SMOKE, // non-shadow smoke looks better on unit
                             -1,
                             -1,
                             iID
