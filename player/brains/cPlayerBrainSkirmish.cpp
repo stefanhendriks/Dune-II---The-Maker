@@ -62,12 +62,7 @@ namespace brains {
                 return;
         }
 
-        // now do some real stuff
-
-        char msg[255];
-        memset(msg, 0, sizeof(msg));
-        sprintf(msg, "think() - FINISHED");
-        log(msg);
+        log("think() - FINISHED");
     }
 
     void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order) {
@@ -93,25 +88,23 @@ namespace brains {
             return lhs.priority > rhs.priority;
         });
 
-        char msg[255];
-        sprintf(msg, "addBuildOrder() - results into the following build orders:");
-        log(msg);
+        log("addBuildOrder() - results into the following build orders:");
 
+        std::string msg;
         int id = 0;
         for (auto &buildOrder : m_buildOrders) {
-            memset(msg, 0, sizeof(msg));
             if (buildOrder.buildType == eBuildType::UNIT) {
-                sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                msg = fmt::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
-                sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
+                msg = fmt::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
                         buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
                         buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                         sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
+                msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             }
             log(msg);
@@ -185,11 +178,8 @@ namespace brains {
         }
 
         if (!foundExistingStructureInBase) {
-            char msg[255];
-            sprintf(msg,
-                    "cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure %s to base register:",
-                    pStructure->getS_StructuresType().name);
-            log(msg);
+            log(fmt::format("cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure {} to base register:",
+                            pStructure->getS_StructuresType().name));
 
             // new structure placed, update base register
             S_structurePosition position = {
@@ -303,9 +293,7 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_Base() {
-        char msg[255];
-        sprintf(msg, "thinkState_ScanBase()");
-        log(msg);
+        log("thinkState_ScanBase()");
 
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
@@ -368,9 +356,7 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_Missions() {
-        char msg[255];
-        sprintf(msg, "thinkState_Missions()");
-        log(msg);
+        log("thinkState_Missions()");
 
         if (DEBUGGING) {
             log("Missions - before deleting");
@@ -479,9 +465,7 @@ namespace brains {
 
         // if cooldown is set, do that, so we don't spam missions in a very short amount of time
         if (m_TIMER_produceMissionCooldown > 0) {
-            char msg[255];
-            sprintf(msg, "m_TIMER_produceMissionCooldown [%d] is in effect.", m_TIMER_produceMissionCooldown);
-            log(msg);
+            log(fmt::format("m_TIMER_produceMissionCooldown [{}] is in effect.", m_TIMER_produceMissionCooldown));
             m_TIMER_produceMissionCooldown--;
             return;
         }
@@ -660,9 +644,7 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId) {
-        char msg[255];
-        sprintf(msg, "produceSkirmishGroundAttackMission for mission id %d - called", missionId);
-        log(msg);
+        log(fmt::format("produceSkirmishGroundAttackMission for mission id %d - called", missionId));
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         int smallChance = 15;
         int normalChance = 50;
@@ -787,12 +769,10 @@ namespace brains {
             if (item.buildType == eBuildType::UNIT) {
                 if (!player->canBuildUnitBool(item.type)) {
                     item.required = 0; // set it to required 0, so it won't be built
-                    char msg[255];
-                    sprintf(msg, "addMission - cannot build unit [%s] so setting required to 0, for mission kind [%s].",
-                            toStringBuildTypeSpecificType(eBuildType::UNIT, item.type),
-                            ePlayerBrainMissionKindString(kind)
-                            );
-                    log(msg);
+                    log(fmt::format("addMission - cannot build unit [{}] so setting required to 0, for mission kind [{}].",
+                                    toStringBuildTypeSpecificType(eBuildType::UNIT, item.type),
+                                    ePlayerBrainMissionKindString(kind))
+                        );
                 }
             }
         }
@@ -800,23 +780,22 @@ namespace brains {
         cPlayerBrainMission someMission(player, kind, this, group, initialDelay, id);
         m_missions.push_back(someMission);
 
-        char msg[255];
-        // do note the cooldown is whtin the whole cylce of the AI thinking process. So this means the cooldown
+        // do note the cooldown is within the whole cylce of the AI thinking process. So this means the cooldown
         // here is the amount of 'iterations'. Since 1 iteration has a RestTime to wait, this means a cooldown of 10
         // is cooling down in 10 seconds.
         int cooldown = cPlayerBrain::RestTime;
         m_TIMER_produceMissionCooldown += cooldown;
-        sprintf(msg, "addMission - upping cooldown with %d to a total of %d", cooldown, m_TIMER_produceMissionCooldown);
-        log(msg);
+        log(fmt::format("addMission - upping cooldown with {} to a total of {}", cooldown, m_TIMER_produceMissionCooldown));
         // rest for a few seconds before producing a new mission)
 
     }
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
-        char msg[255];
-        sprintf(msg, "thinkState_Evaluate() : credits [%d], m_COUNT_badEconomy [%d], m_economyState [%s]", player->getCredits(), m_COUNT_badEconomy,
-                ePlayerBrainSkirmishEconomyStateString(m_economyState));
-        log(msg);
+        log(fmt::format("thinkState_Evaluate() : credits [{}], m_COUNT_badEconomy [{}], m_economyState [{}]",
+                        player->getCredits(),
+                        m_COUNT_badEconomy,
+                        ePlayerBrainSkirmishEconomyStateString(m_economyState))
+            );
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
@@ -926,9 +905,7 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders() {
-        char msg[255];
-        sprintf(msg, "thinkState_ProcessBuildOrders()");
-        log(msg);
+        log("thinkState_ProcessBuildOrders()");
 
         // check if we can find a similar build order
         for (auto &buildOrder : m_buildOrders) {
@@ -1106,29 +1083,25 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState) {
-        char msg[255];
-        sprintf(msg, "changeThinkStateTo(), from %s to %s",
-                ePlayerBrainSkirmishThinkStateString(m_thinkState),
-                ePlayerBrainSkirmishThinkStateString(newState));
-        log(msg);
+        log(fmt::format("changeThinkStateTo(), from {} to {}",
+                        ePlayerBrainSkirmishThinkStateString(m_thinkState),
+                        ePlayerBrainSkirmishThinkStateString(newState))
+            );
         this->m_thinkState = newState;
     }
 
     void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState) {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::changeEconomyStateTo(), from %s to %s",
-                ePlayerBrainSkirmishEconomyStateString(m_economyState),
-                ePlayerBrainSkirmishEconomyStateString(newState));
-        log(msg);
+        log(fmt::format( "cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
+                         ePlayerBrainSkirmishEconomyStateString(m_economyState),
+                         ePlayerBrainSkirmishEconomyStateString(newState))
+            );
         this->m_economyState = newState;
     }
 
     void cPlayerBrainSkirmish::thinkState_Rest() {
         if (m_TIMER_rest > 0) {
             m_TIMER_rest--;
-            char msg[255];
-            sprintf(msg, "cPlayerBrainSkirmish::thinkState_Rest(), rest %d", m_TIMER_rest);
-            log(msg);
+            log(fmt::format("cPlayerBrainSkirmish::thinkState_Rest(), rest {}", m_TIMER_rest));
             return;
         }
 
