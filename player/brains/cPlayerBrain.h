@@ -6,6 +6,12 @@
 class cPlayer;
 class cAbstractStructure;
 
+namespace {
+
+    constexpr int kScanRadius = 20; // hard-coded for now, make player property later?
+
+}
+
 namespace brains {
 
     class cPlayerBrain : public cScenarioObserver {
