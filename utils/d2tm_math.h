@@ -1,5 +1,4 @@
-#ifndef D2TM_MATH_H_
-#define D2TM_MATH_H_
+#pragma once
 
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);
@@ -16,19 +15,3 @@ int rnd(int max);
 // lenght calculation
 double length(int x1, int y1, int x2, int y2);
 double ABS_length(int x1, int y1, int x2, int y2); // returns only value > -1
-
-/* Functions related to cells */
-int CELL_ABOVE(int c);        // return which cell is above this one
-int CELL_UNDER(int c);        // return which cell is under this one
-int CELL_LEFT(int c);         // return which cell is at the left of it
-int CELL_RIGHT(int c);        // return which cell is at the right of it
-      
-// upper and lower right/lefts
-int CELL_U_LEFT(int c);
-int CELL_U_RIGHT(int c);
-int CELL_L_LEFT(int c);
-int CELL_L_RIGHT(int c);
-
-bool CELL_BORDERS(int iOrigin, int iCell);
-
-#endif

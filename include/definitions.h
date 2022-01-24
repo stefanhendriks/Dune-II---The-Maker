@@ -24,9 +24,6 @@
 
 #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
-// MATH
-#define PI      3.1415926535897932384626433832795   // a definition of PI
-
 // Font size
 #define GAME_FONTSIZE 8
 
