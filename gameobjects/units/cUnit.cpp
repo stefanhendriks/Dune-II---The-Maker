@@ -2235,7 +2235,8 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
                 shoot(shootCell);
             }
 
-            if (unitType.fireTwice == false) {
+            bool canFireTwice = unitType.fireTwice && getHealthNormalized() > unitType.fireTwiceHpThresholdFactor;
+            if (!canFireTwice) {
                 TIMER_attack = 0;
                 return true;
             } else {
@@ -3153,8 +3154,7 @@ void cUnit::takeDamage(int damage) {
     } else {
         if (boundParticleId < 0) {
             if (getUnitInfo().renderSmokeOnUnitWhenThresholdMet) {
-                float hpThreshold = getUnitInfo().smokeHpFactor * getUnitInfo().hp;
-                if (iHitPoints < hpThreshold) {
+                if (getHealthNormalized() < getUnitInfo().smokeHpFactor) {
                     int particleId = cParticle::create(
                             pos_x_centered(),
                             pos_y_centered(),

@@ -53,7 +53,8 @@ struct s_UnitInfo {
   bool infantry;            // legged unit? (infantry)
   bool free_roam;           // (airborn only) - does it free roam?
 
-  bool fireTwice;         // can shoot 2 times?
+  bool fireTwice;           // can shoot 2 times?
+  float fireTwiceHpThresholdFactor; // this threshold has to be met in order to have unit fire twice. Usually same as smokeHpFactor
 
   bool squish;              // can this unit squish infantry?
   bool canBeSquished;       // can this unit be squished (is this a squishable unit)
