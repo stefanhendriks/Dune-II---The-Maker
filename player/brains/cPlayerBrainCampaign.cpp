@@ -219,7 +219,7 @@ namespace brains {
             int cell = originUnit.getCell();
             bool attackerIsAirUnit = originUnit.isAirbornUnit();
 
-            respondToThreat(cell, attackerIsAirUnit);
+            respondToThreat(cell, attackerIsAirUnit, 2 + rnd(4));
         }
     }
 
@@ -1641,7 +1641,7 @@ namespace brains {
                             m_discoveredEnemyAtCell.insert(event.atCell);
 
                             if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                                respondToThreat(event.atCell, pUnit.isAirbornUnit());
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit(), 2 + rnd(4));
                             }
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
@@ -1693,7 +1693,7 @@ namespace brains {
                         cUnit &pUnit = unit[event.entityID];
                         if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                             if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                                respondToThreat(event.atCell, pUnit.isAirbornUnit());
+                                respondToThreat(event.atCell, pUnit.isAirbornUnit(), 2 + rnd(4));
                             }
                         }
                     }
@@ -1716,9 +1716,8 @@ namespace brains {
                 txt)
         );
     }
-    void cPlayerBrainCampaign::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit) {
+    void cPlayerBrainCampaign::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder) {
         const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
-        int maxUnitsToOrder = 2 + rnd(4);
 
         if (attackerIsAirUnit) {
             int unitsOrdered = 0;

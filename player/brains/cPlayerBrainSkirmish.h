@@ -188,7 +188,7 @@ namespace brains {
 
         void produceEconomyImprovingMissions();
 
-        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit);
+        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder);
     };
 
 }
