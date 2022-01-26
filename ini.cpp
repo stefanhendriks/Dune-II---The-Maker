@@ -1330,7 +1330,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
             if (blooms[iB] > -1) {
                 //   map.cell[blooms[iB]].tile = BLOOM;
 
-                if (DEBUGGING) {
+                if (game.isDebugMode()) {
                     logbook(fmt::format("[SCENARIO] Placing spice BLOOM at cell : {}", blooms[iB]));
                 }
 
@@ -1345,7 +1345,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
         for (int iB = 0; iB < 30; iB++) {
             // when
             if (fields[iB] > -1) {
-                if (DEBUGGING) {
+                if (game.isDebugMode()) {
                     logbook(fmt::format("[SCENARIO] Placing spice FIELD at cell : {}", fields[iB]));
                 }
                 mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (rnd(50)));
@@ -1935,7 +1935,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
     auto path = std::string("campaign/briefings/") + filename;
     logbook(path);
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         logbook(fmt::format("Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind));
     }
 

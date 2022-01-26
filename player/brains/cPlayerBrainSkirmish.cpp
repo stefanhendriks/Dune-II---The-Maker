@@ -358,7 +358,7 @@ namespace brains {
     void cPlayerBrainSkirmish::thinkState_Missions() {
         log("thinkState_Missions()");
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             log("Missions - before deleting");
             logMissions();
         }
@@ -372,14 +372,14 @@ namespace brains {
                 m_missions.end()
         );
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             log("Missions - after deleting - before produceMissions()");
             logMissions();
         }
 
         produceMissions();
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             log("Missions - after produceMissions()");
             logMissions();
         }

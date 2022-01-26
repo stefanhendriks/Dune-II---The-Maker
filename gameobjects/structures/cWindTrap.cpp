@@ -2,7 +2,7 @@
 
 // Constructor
 cWindTrap::cWindTrap() {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "(cWindTrap)(ID %d) Constructor", this->id);
         logbook(msg);
@@ -20,7 +20,7 @@ int cWindTrap::getType() const {
 }
 
 cWindTrap::~cWindTrap() {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "(~cWindTrap)(ID %d) Destructor", this->id);
         logbook(msg);

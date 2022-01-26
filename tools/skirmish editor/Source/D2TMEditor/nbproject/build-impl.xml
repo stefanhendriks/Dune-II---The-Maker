@@ -491,7 +491,7 @@ is divided into following sections:
     </target>
     <!--
                 =================
-                DEBUGGING SECTION
+                game.isDebugMode() SECTION
                 =================
             -->
     <target depends="init" if="netbeans.home" name="-debug-start-debugger">
@@ -626,7 +626,7 @@ is divided into following sections:
     <target depends="init,-do-not-recompile,compile-test-single,-pre-test-run-single,-do-test-run-single,-post-test-run-single" description="Run single unit test." name="test-single"/>
     <!--
                 =======================
-                JUNIT DEBUGGING SECTION
+                JUNIT game.isDebugMode() SECTION
                 =======================
             -->
     <target depends="init,compile-test" if="have.tests" name="-debug-start-debuggee-test">
@@ -670,7 +670,7 @@ is divided into following sections:
     </target>
     <!--
                 =========================
-                APPLET DEBUGGING  SECTION
+                APPLET game.isDebugMode()  SECTION
                 =========================
             -->
     <target depends="init,compile-single" if="netbeans.home" name="-debug-start-debuggee-applet">

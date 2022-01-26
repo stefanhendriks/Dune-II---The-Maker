@@ -1,9 +1,6 @@
 #ifndef DEFINITIONS_H_
 #define DEFINITIONS_H_
 
-#define DEBUGGING bDoDebug
-
-
 #define MOUSECELL_TOPBAR  -1
 #define MOUSECELL_MINIMAP -2
 #define MOUSECELL_SIDEBAR -3

@@ -216,10 +216,14 @@ public:
 
     void thinkSlow();
 
+    bool isDebugMode() { return m_debugMode; }
+    void setDebugMode(bool value) { m_debugMode = value; }
+
 private:
     /**
      * Variables start here
      */
+    bool m_debugMode;               // ...
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     cInteractionManager *m_interactionManager;

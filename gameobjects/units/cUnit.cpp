@@ -1292,7 +1292,7 @@ void cUnit::thinkFast_move_airUnit() {
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
-        if (DEBUGGING)
+        if (game.isDebugMode())
             log("ERROR: Unit became invalid somehow, killed it");
         return;
     }
@@ -2143,7 +2143,7 @@ void cUnit::think_attack_sandworm() {
             TIMER_guard = (1000/5) * ((5*unitsEaten) + rnd((20*unitsEaten)));
         }
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             logbook(fmt::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
                                 unitsEaten, TIMER_guard));
         }
@@ -4386,7 +4386,7 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType) {
                         iIndex, iPlyr, players[iPlyr].getHouse(), iTime, iUType));
 
     // DEBUG DEBUG
-    if (!DEBUGGING)
+    if (!game.isDebugMode())
         iTime *= 15;
 
     reinforcements[iIndex].iCell = iCll;
