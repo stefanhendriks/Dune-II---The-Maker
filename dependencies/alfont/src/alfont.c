@@ -4,7 +4,7 @@
             
 /* FreeType 2 is copyright (c) 1996-2000 */
 /* David Turner, Robert Wilhelm, and Werner Lemberg */
-/* AllegroFont is copyright (c) 2001, 2002 Javier Gonz lez */
+/* AllegroFont is copyright (c) 2001, 2002 Javier GonzÃ¡lez */
 /* Enhanced by Chernsha since 2004 year */
 
 /* See FTL.txt (FreeType License) for license */
@@ -840,8 +840,11 @@ void alfont_textout_aa_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int
 
   /* is it under or over or too far to the right of the clipping rect then
      we can assume the string is clipped */
-  if ((y + f->face_h < bmp->ct) || (y > bmp->cb) || (x > bmp->cr))
+  if ((y + f->face_h < bmp->ct) || (y > bmp->cb) || (x > bmp->cr)) {
+    if (s_pointer)
+      free(s_pointer);
     return;
+  }
 
   //build transparency
   if (f->transparency!=255) {
@@ -2003,8 +2006,11 @@ void alfont_textout_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y,
 
   /* is it under or over or too far to the right of the clipping rect then
      we can assume the string is clipped */
-  if ((y + f->face_h < bmp->ct) || (y > bmp->cb) || (x > bmp->cr))
+  if ((y + f->face_h < bmp->ct) || (y > bmp->cb) || (x > bmp->cr)){ 
+    if (s_pointer)
+      free(s_pointer);
     return;
+  }
   
   //build transparency
   if (f->transparency!=255) {
@@ -3535,8 +3541,8 @@ int alfont_ugetx(ALFONT_FONT *f, char **s) {
   int character;
   int curr_uformat;
 
-  char *lpszWS;
-  char *lpszWA;
+  char *lpszWS = NULL;
+  char *lpszWA = NULL;
   int sLen; //length before advances the *s pointer to the next character
   int aLen; //length after advances the *s pointer to the next character
   int lIndex;
@@ -3761,13 +3767,13 @@ int alfont_ugetx(ALFONT_FONT *f, char **s) {
   //advances the *s pointer to the next character
 
   if (f->type==1) {
-  	ugetxc((char**)s);
+  	ugetxc((const char**)s);
 	#ifdef ALFONT_LINUX
 	ugetxc((char**)s);
 	#endif
   }
   else if(f->type==2) {
-	ugetxc(&lpszWS);
+	ugetxc((const char**)&lpszWS);
 	#ifdef ALFONT_LINUX
 	ugetxc(&lpszWS);
 	#endif
@@ -3814,7 +3820,7 @@ int alfont_ugetx(ALFONT_FONT *f, char **s) {
     #ifdef ALFONT_LINUX
 	set_uformat(U_UTF8);
     #endif
-	ugetxc((char**)s);
+	ugetxc((const char**)s);
 	#ifdef ALFONT_LINUX
 	ugetxc((char**)s);
 	#endif
@@ -3851,8 +3857,8 @@ int alfont_ugetxc(ALFONT_FONT *f, const char **s) {
   int character;
   int curr_uformat;
 
-  char *lpszWS;
-  char *lpszWA;
+  char *lpszWS = NULL;
+  char *lpszWA = NULL;
   int sLen; //length before advances the *s pointer to the next character
   int aLen; //length after advances the *s pointer to the next character
   int lIndex;
@@ -4083,7 +4089,7 @@ int alfont_ugetxc(ALFONT_FONT *f, const char **s) {
 	#endif
   }
   else if(f->type==2) {
-	ugetxc(&lpszWS);
+	ugetxc((const char**)&lpszWS);
 	#ifdef ALFONT_LINUX
 	ugetxc(&lpszWS);
 	#endif

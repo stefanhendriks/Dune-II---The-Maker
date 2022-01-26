@@ -31,7 +31,7 @@ set(FREETYPE_SOURCES
     "freetype/src/autofit/autofit.c"
 )
 
-add_library(alfont SHARED
+add_library(alfont STATIC
     "src/alfont.c"
     ${FREETYPE_SOURCES}
 )
@@ -56,15 +56,4 @@ target_compile_options(alfont
     "-fomit-frame-pointer"
     "-finline-functions"
     "-ffast-math"
-)
-target_link_options(alfont
-  PRIVATE
-    "-mwindows"
-)
-
-target_compile_definitions(alfont
-  PRIVATE
-    ALFONT_DLL_EXPORTS=1
-  PUBLIC
-    ALFONT_DLL=1
 )
