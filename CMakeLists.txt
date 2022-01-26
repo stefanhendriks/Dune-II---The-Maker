@@ -77,7 +77,7 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    alleg
+    allegro
     alfont
     fmt::fmt
     -static-libgcc
@@ -88,10 +88,10 @@ target_compile_options(${PROJECT_NAME}
   PRIVATE
     "-Werror"
     "-Wall"
-    "-Wextra"
-    "-Wpedantic"
+    # "-Wextra"
+    # "-Wpedantic"
     "-Wnon-virtual-dtor"
-    "-Wuseless-cast"
+    # "-Wuseless-cast"
     "-Wredundant-tags"
     "-Wzero-as-null-pointer-constant"
     "-Wextra-semi"

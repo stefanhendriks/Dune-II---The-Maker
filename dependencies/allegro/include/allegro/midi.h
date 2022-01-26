@@ -24,6 +24,10 @@
 #ifdef __cplusplus
    extern "C" {
 #endif
+
+struct PACKFILE;
+
+
                                        /* Theoretical maximums: */
 #define MIDI_VOICES           64       /* actual drivers may not be */
 #define MIDI_TRACKS           32       /* able to handle this many */
@@ -61,7 +65,8 @@ typedef struct MIDI_DRIVER             /* driver for playing midi music */
    AL_METHOD(int,  detect, (int input));
    AL_METHOD(int,  init, (int input, int voices));
    AL_METHOD(void, exit, (int input));
-   AL_METHOD(int,  mixer_volume, (int volume));
+   AL_METHOD(int,  set_mixer_volume, (int volume));
+   AL_METHOD(int,  get_mixer_volume, (void));
 
    /* raw MIDI output to MPU-401, etc. */
    AL_METHOD(void, raw_midi, (int data));
@@ -115,6 +120,7 @@ AL_VAR(long, midi_loop_end);           /* loop when we hit this position */
 AL_FUNC(int, detect_midi_driver, (int driver_id));
 
 AL_FUNC(MIDI *, load_midi, (AL_CONST char *filename));
+AL_FUNC(MIDI *, load_midi_pf, (struct PACKFILE *f));
 AL_FUNC(void, destroy_midi, (MIDI *midi));
 AL_FUNC(int, play_midi, (MIDI *midi, int loop));
 AL_FUNC(int, play_looped_midi, (MIDI *midi, int loop_start, int loop_end));
