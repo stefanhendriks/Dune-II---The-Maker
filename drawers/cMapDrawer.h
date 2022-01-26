@@ -11,7 +11,7 @@ class cMapDrawer {
 		void drawTerrain();
 		void drawShroud();
 
-        void setDrawDebugMode(bool value);
+        void setDrawWithoutShroudTiles(bool value) { m_drawWithoutShroudTiles = value; }
 
 	protected:
 
@@ -24,7 +24,7 @@ class cMapDrawer {
 		// bitmap for drawing tiles, and possibly stretching (depending on zoom level)
         BITMAP *m_BmpTemp;
 
-        bool m_drawDebugMode;
+        bool m_drawWithoutShroudTiles;
 
         int determineWhichShroudTileToDraw(int cll, int playerId) const;
 

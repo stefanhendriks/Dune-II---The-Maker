@@ -23,7 +23,7 @@ public:
 
     eKeyEventType eventType = eKeyEventType::NONE;
 
-    inline const std::string toString(const cKeyboardEvent &event) {
+    inline const std::string toString(const cKeyboardEvent &event) const {
         std::string str;
         char partOne[64];
         sprintf(partOne, "cKeyboardEvent [type=%s], keys: ",
@@ -33,10 +33,9 @@ public:
         str.append(partOne);
         str.append("[");
         for (auto key : event.keys) {
-            str.append(std::to_string(key));
-            str.append("=");
-            str.append(std::to_string(scancode_to_ascii(key)));
-            str.append(" ");
+            char msg[10];
+            sprintf(msg, "%s,", scancode_to_name(key));
+            str.append(msg);
         }
         str.append("]");
 
@@ -45,6 +44,26 @@ public:
 
     bool hasKey(int scanCode) const {
         return keys.find(scanCode) != keys.end();
+    }
+
+    /**
+     * Returns true when both scancodes are present in this event
+     * @param firstScanCode
+     * @param secondScanCode
+     * @return
+     */
+    bool hasKeys(int firstScanCode, int secondScanCode) const {
+        return hasKey(firstScanCode) && hasKey(secondScanCode);
+    }
+
+    /**
+     * Returns true when one of both scancodes are present in this event
+     * @param firstScanCode
+     * @param secondScanCode
+     * @return
+     */
+    bool hasEitherKey(int firstScanCode, int secondScanCode) const {
+        return hasKey(firstScanCode) || hasKey(secondScanCode);
     }
 
     bool isType(eKeyEventType type) const {
@@ -58,7 +77,7 @@ public:
     int getGroupNumber() const;
 
 private:
-    inline const char* toStringKeyboardEventType(const eKeyEventType &type) {
+    inline const char* toStringKeyboardEventType(const eKeyEventType &type) const {
         switch (type) {
             case eKeyEventType::NONE: return "NONE";
             case eKeyEventType::HOLD: return "HOLD";

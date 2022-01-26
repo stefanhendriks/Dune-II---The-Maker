@@ -292,6 +292,41 @@ void cDrawManager::init() {
     miniMapDrawer->init();
 }
 
+void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &) {
+    // NOOP
+}
+
+void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    switch (event.eventType) {
+        case eKeyEventType::HOLD:
+            onKeyDown(event);
+            break;
+        case eKeyEventType::PRESSED:
+            onKeyPressed(event);
+            break;
+        default:
+            break;
+    }
+}
+
+void cDrawManager::onKeyDown(const cKeyboardEvent &event) {
+    if (game.isDebugMode()) {
+        if (event.hasKeys(KEY_TAB, KEY_D)) {
+            mapDrawer->setDrawWithoutShroudTiles(true);
+        }
+    }
+}
+
+void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
+    if (game.isDebugMode()) {
+        // one of these we're pressed, that's enough info to revert back as it breaks the
+        // mandatory 'both keys must be pressed' state:
+        if (event.hasEitherKey(KEY_TAB, KEY_D)) {
+            mapDrawer->setDrawWithoutShroudTiles(false);
+        }
+    }
+}
+
 
 //int points[] =
 //{
