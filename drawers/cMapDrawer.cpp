@@ -8,7 +8,8 @@ cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
         m_player(player),
         m_camera(camera),
         m_BmpTemp(nullptr),
-        m_drawWithoutShroudTiles(false) {
+        m_drawWithoutShroudTiles(false),
+        m_drawGrid(false) {
     assert(map);
     assert(camera);
 }
@@ -174,7 +175,7 @@ void cMapDrawer::drawTerrain() {
                     }
                 }
 
-                if (key[KEY_G]) {
+                if (m_drawGrid) {
                     rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, makecol(128, 128, 128));
                 }
             }

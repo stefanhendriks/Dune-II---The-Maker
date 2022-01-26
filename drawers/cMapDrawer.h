@@ -12,6 +12,7 @@ class cMapDrawer {
 		void drawShroud();
 
         void setDrawWithoutShroudTiles(bool value) { m_drawWithoutShroudTiles = value; }
+        void setDrawGrid(bool value) { m_drawGrid = value; }
 
 	protected:
 
@@ -25,6 +26,7 @@ class cMapDrawer {
         BITMAP *m_BmpTemp;
 
         bool m_drawWithoutShroudTiles;
+        bool m_drawGrid;
 
         int determineWhichShroudTileToDraw(int cll, int playerId) const;
 
