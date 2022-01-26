@@ -1693,6 +1693,8 @@ void cGame::saveBmpScreenToDisk() {
 }
 
 void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
+    drawManager->onNotifyKeyboardEvent(event);
+
     switch (event.eventType) {
         case eKeyEventType::HOLD:
             onKeyDownGamePlaying(event);
@@ -1716,7 +1718,6 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
             humanPlayer->markUnitsForGroup(iGroup);
         }
     }
-
 }
 
 void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {

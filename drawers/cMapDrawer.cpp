@@ -4,11 +4,11 @@
 
 
 cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
-    m_map(map),
-    m_player(player),
-    m_camera(camera),
-    m_BmpTemp(nullptr),
-    m_drawDebugMode(false) {
+        m_map(map),
+        m_player(player),
+        m_camera(camera),
+        m_BmpTemp(nullptr),
+        m_drawWithoutShroudTiles(false) {
     assert(map);
     assert(camera);
 }
@@ -50,7 +50,7 @@ void cMapDrawer::drawShroud() {
             int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
-            if (game.isDebugMode() && key[KEY_D] && key[KEY_TAB]) {
+            if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
                 } else {
@@ -180,9 +180,8 @@ void cMapDrawer::drawTerrain() {
             }
 
             // Draw more debugging information
-            if (game.isDebugMode() && key[KEY_D]) {
+            if (m_drawWithoutShroudTiles) {
                 drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
-//                textDrawer.drawText(fDrawX, fDrawY, "%d", cell->type);
             }
         }
     }
