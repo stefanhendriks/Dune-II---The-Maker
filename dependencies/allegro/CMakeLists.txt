@@ -227,7 +227,7 @@ option(STRICT_WARN "Halt at warnings" off)
 if(CMAKE_COMPILER_IS_GNUCC)
     set(COMPILER_GCC 1)
     set(ALLEGRO_GCC 1)
-    set(WFLAGS "-W -Wall -Wno-unused-parameter")
+    set(WFLAGS "-W -Wno-unused-parameter") # Removed: -Wall
     set(WFLAGS_C_ONLY "-Wdeclaration-after-statement")
     if(STRICT_WARN)
         set(WFLAGS "${WFLAGS} -Werror -Wpointer-arith")
@@ -593,8 +593,10 @@ endif(WANT_LINUX_CONSOLE AND CMAKE_SYSTEM_NAME STREQUAL Linux)
 # -- Windows --
 
 if(WIN32)
-    set(HINT_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../dx80_mgw/include)
-    set(HINT_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../dx80_mgw/lib)
+    if(MINGW)
+        set(HINT_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../dx80_mgw/include)
+        set(HINT_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../dx80_mgw/lib)
+    endif(MINGW)
     find_package(DDraw)
     find_package(DInput)
     find_package(DSound)
@@ -632,6 +634,13 @@ if(WIN32)
         winmm
         ${DSOUND_LIBRARIES}
         )
+    if(MINGW)
+        # Prevents copying of some .dlls out of the mingw installation
+        if(COMPILER_GCC)
+            list(APPEND PLATFORM_LIBS "-static-libgcc")
+        endif(COMPILER_GCC)
+        list(APPEND PLATFORM_LIBS "-static" "pthread")
+    endif(MINGW)
 endif(WIN32)
 
 # -- Haiku/BeOS --
@@ -812,12 +821,13 @@ endif(WIN32)
 
 set_our_framework_properties(allegro Allegro)
 
-set(link_with ${PLATFORM_LIBS})
 if(ALLEGRO_WITH_MODULES)
-    list(APPEND link_with ${PLATFORM_LIBS_MODULES})
+    set(link_with ${PLATFORM_LIBS_MODULES})
 else()
-    list(APPEND link_with ${PLATFORM_LIBS_NON_MODULES})
+    set(link_with ${PLATFORM_LIBS_NON_MODULES})
 endif()
+# Platform libs last, because they may have the -static argument
+list(APPEND link_with ${PLATFORM_LIBS})
 target_link_libraries(allegro ${link_with})
 
 sanitize_cmake_link_flags(static_link_with ${link_with})
