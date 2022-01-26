@@ -310,7 +310,7 @@ void cBullet::arrivedAtDestinationLogic() {
                                                distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
                 if (rnd(100) < 20) {
-                    cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE, -1, -1);
+                    cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                 }
             }
 

@@ -200,7 +200,7 @@ void cAbstractStructure::die() {
                     int randomX = -8 + rnd(16);
                     int randomY = -8 + rnd(16);
 
-                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE, -1, -1);
+                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                 }
 
                 // create fire
@@ -463,7 +463,7 @@ void cAbstractStructure::damage(int hp, int originId) {
         if (rnd(100) < iChance) {
             long x = getRandomPosX();
             long y = getRandomPosY();
-            cParticle::create(x, y, D2TM_PARTICLE_SMOKE, -1, -1);
+            cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
         }
 
         s_GameEvent event {
