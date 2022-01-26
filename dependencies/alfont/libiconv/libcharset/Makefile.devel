@@ -1,0 +1,28 @@
+# This is the developer's makefile, not the user's makefile.
+# Don't use it unless you know exactly what you do!
+
+SHELL = /bin/sh
+MAKE = make
+CP = cp
+RM = rm -f
+
+all : configures config.h.msvc include/libcharset.h.msvc-shared
+
+autoconf/aclocal.m4 : $(wildcard m4/*.m4)
+	aclocal --acdir=m4 --output=$@
+
+configures : configure config.h.in
+
+configure : configure.in autoconf/aclocal.m4
+	autoconf -l autoconf
+
+config.h.in : configure.in autoconf/aclocal.m4
+	autoheader -l autoconf
+
+config.h.msvc : config.h.in
+	sed -e 's/#undef HAVE_SETLOCALE/#define HAVE_SETLOCALE 1/' -e 's/#undef HAVE_STDDEF_H/#define HAVE_STDDEF_H 1/' -e 's/#undef HAVE_STDLIB_H/#define HAVE_STDLIB_H 1/' -e 's/#undef HAVE_STRING_H/#define HAVE_STRING_H 1/' < $< > $@
+
+include/libcharset.h.msvc-shared : include/libcharset.h.in windows/dllexport.h
+	sed -e 's/extern \([^"]\)/extern LIBCHARSET_DLL_EXPORTED \1/' -e '/#define _LIBCHARSET_H/r windows/dllexport.h' < $< > $@
+
+force :

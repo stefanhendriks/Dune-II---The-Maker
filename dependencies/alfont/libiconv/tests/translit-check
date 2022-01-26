@@ -1,0 +1,19 @@
+#!/bin/sh
+# Simple check of transliteration facilities.
+# Usage: check-translit SRCDIR FILE FROMCODE TOCODE
+srcdir="$1"
+file="$2"
+fromcode="$3"
+tocode="$4"
+set -e
+# For systems that distinguish between text and binary I/O
+# the binary mode of iconv must be selected.
+UNAME=${UNAME-`uname 2>/dev/null`}
+case X$UNAME in
+  *-DOS) MODE='--binary' ;;
+  *)     MODE='' ;;
+esac
+../src/iconv $MODE -f "$fromcode" -t "$tocode"//TRANSLIT < "${srcdir}"/"$file"."$fromcode" > tmp
+cmp "${srcdir}"/"$file"."$tocode" tmp
+rm -f tmp
+exit 0

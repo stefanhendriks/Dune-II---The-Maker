@@ -1,0 +1,77 @@
+# Makefile for libiconv/src
+
+#### Start of system configuration section. ####
+
+# Directories used by "make":
+srcdir = @srcdir@
+
+# Directories used by "make install":
+prefix = @prefix@
+local_prefix = /usr/local
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+# Programs used by "make":
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+INCLUDES = -I. -I$(srcdir) -I../include -I$(srcdir)/../include
+LIBTOOL = @LIBTOOL@
+LIBTOOL_COMPILE = $(LIBTOOL) --mode=compile
+LIBTOOL_LINK = $(LIBTOOL) --mode=link
+LIBTOOL_INSTALL = $(LIBTOOL) --mode=install
+LIBTOOL_UNINSTALL = $(LIBTOOL) --mode=uninstall
+RM = rm -f
+@SET_MAKE@
+
+# Programs used by "make install":
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+#### End of system configuration section. ####
+
+SHELL = /bin/sh
+
+# Needed by $(LIBTOOL).
+top_builddir = ..
+
+all : iconv
+
+iconv : $(srcdir)/iconv.c ../lib/libiconv.la
+	$(LIBTOOL_LINK) $(CC) $(LDFLAGS) $(INCLUDES) -I../lib $(CFLAGS) $(CPPFLAGS) $(srcdir)/iconv.c ../lib/libiconv.la -o $@
+
+# The following rule is necessary to avoid a toplevel "make -n check" failure.
+../lib/libiconv.la :
+	cd ../lib && $(MAKE) libiconv.la
+
+install : all force
+	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+	if [ ! -d $(DESTDIR)$(bindir) ] ; then mkdir $(DESTDIR)$(bindir) ; fi
+	$(LIBTOOL_INSTALL) $(INSTALL_PROGRAM) iconv $(DESTDIR)$(bindir)/iconv
+
+installdirs : force
+	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+	if [ ! -d $(DESTDIR)$(bindir) ] ; then mkdir $(DESTDIR)$(bindir) ; fi
+
+uninstall : force
+	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(bindir)/iconv
+
+check : all
+
+mostlyclean : clean
+
+clean : force
+	$(RM) *.o *.lo iconv core
+	$(RM) -r .libs _libs
+
+distclean : clean
+	$(RM) Makefile
+
+maintainer-clean : distclean
+
+force :
+

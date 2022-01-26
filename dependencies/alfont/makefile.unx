@@ -1,0 +1,62 @@
+# Makefile for AllegroFont using FreeType 2
+CC=gcc
+LFLAGS=
+LIBIMP=
+TARGETFLAGS=-Wall -O2 -march=pentium -fomit-frame-pointer -finline-functions -ffast-math
+OBJDIR=obj/linux/static
+LIBDEST=lib/linux/libalfont.a
+
+# setting object files, paths and compiler flags
+vpath %.c freetype/src/autofit
+vpath %.c freetype/src/base
+vpath %.c freetype/src/cache
+vpath %.c freetype/src/cff
+vpath %.c freetype/src/cid
+vpath %.c freetype/src/lzw
+vpath %.c freetype/src/otvalid
+vpath %.c freetype/src/pcf
+vpath %.c freetype/src/psaux
+vpath %.c freetype/src/psnames
+vpath %.c freetype/src/pshinter
+vpath %.c freetype/src/raster
+vpath %.c freetype/src/sfnt
+vpath %.c freetype/src/smooth
+vpath %.c freetype/src/truetype
+vpath %.c freetype/src/type1
+vpath %.c freetype/src/type42
+vpath %.c freetype/src/gzip
+vpath %.c freetype/src/bdf
+vpath %.c freetype/src/pfr
+vpath %.c freetype/src/winfonts
+
+vpath %.c src
+vpath %.o $(OBJDIR)
+
+CFLAGS=$(TARGETFLAGS) -Iinclude -I/usr/include/freetype2
+OBJECTS=alfont.o
+OBJECTS2=$(addprefix $(OBJDIR)/,$(OBJECTS))
+
+
+
+# making of the library
+
+# MINGW32_DLL
+ifeq ($(TARGET),MINGW32_DLL)
+$(LIBDEST): $(OBJECTS)
+	$(CC) -o $@ $(OBJECTS2) $(LFLAGS) $(CFLAGS) -Wl,--out-implib=$(LIBIMP) -lalleg
+
+# others
+else
+$(LIBDEST): $(OBJECTS)
+	ar rs $(LIBDEST) $(OBJECTS2)
+endif
+
+
+# compiling of the library
+%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $(OBJDIR)/$@
+
+
+clean:
+	rm -f $(OBJECTS2) $(LIBDEST) $(LIBIMP)
+
