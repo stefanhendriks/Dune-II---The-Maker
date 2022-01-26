@@ -684,6 +684,10 @@ void install_particles() {
     sParticleInfo[D2TM_PARTICLE_SMOKE].frameWidth = 32;
     sParticleInfo[D2TM_PARTICLE_SMOKE].frameHeight = 48;
 
+    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].bmpIndex = D2TM_BITMAP_PARTICLE_SMOKE;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].startAlpha = 0;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameWidth = 32;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameHeight = 48;
 
     sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = D2TM_BITMAP_PARTICLE_SMOKE_SHADOW;
     sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].startAlpha = 0;
