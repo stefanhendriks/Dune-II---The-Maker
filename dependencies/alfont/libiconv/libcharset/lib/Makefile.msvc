@@ -1,0 +1,130 @@
+# Makefile for libcharset/lib
+
+#### Start of system configuration section. ####
+
+# Flags that can be set on the nmake command line:
+#   DLL=1     for compiling a .dll with a stub .lib (default is a static .lib)
+#             Note that this works only with MFLAGS=-MD.
+#   MFLAGS={-ML|-MT|-MD} for defining the compilation model
+#     MFLAGS=-ML (the default)  Single-threaded, statically linked - libc.lib
+#     MFLAGS=-MT                Multi-threaded, statically linked  - libcmt.lib
+#     MFLAGS=-MD                Multi-threaded, dynamically linked - msvcrt.lib
+#   DEBUG=1   for compiling with debugging information
+# Note that nmake command line flags are automatically passed to subdirectory
+# Makefiles. Therefore we don't need to pass them explicitly to subdirectory
+# Makefiles, but the subdirectory Makefiles need to have the same defaults.
+!if !defined(DLL)
+DLL=0
+!endif
+!if !defined(DEBUG)
+DEBUG=0
+!endif
+!if !defined(MFLAGS)
+!if !$(DLL)
+MFLAGS=
+!else
+MFLAGS=-MD
+!endif
+!endif
+
+# Directories used by "make":
+srcdir = .
+
+# Directories used by "make install":
+prefix = /usr/local
+local_prefix = /usr/local
+exec_prefix = $(prefix)
+libdir = $(exec_prefix)/lib
+
+# Programs used by "make":
+
+CC = cl
+
+# Set to -W3 if you want to see maximum amount of warnings, including stupid
+# ones. Set to -W1 to avoid warnings about signed/unsigned combinations.
+WARN_CFLAGS = -W1
+
+!if !$(DLL)
+PICFLAGS =
+!else
+# "-GD" (msvc5) optimizes for DLL.
+# mscv4 doesn't know about this flag and ignores it.
+PICFLAGS = -GD
+!endif
+
+!if $(DEBUG)
+OPTIMFLAGS = -Od -Z7
+!else
+# Some people prefer -O2 -G6 instead of -O1, but -O2 is not reliable in MSVC5.
+OPTIMFLAGS = -D_NDEBUG -O1
+!endif
+
+# -DBUILDING_LIBCHARSET: Change expansion of LIBCHARSET_DLL_EXPORTED macro.
+CFLAGS = $(MFLAGS) $(WARN_CFLAGS) $(PICFLAGS) $(OPTIMFLAGS) -DHAVE_CONFIG_H -DBUILDING_LIBCHARSET
+
+INCLUDES = -I. -I$(srcdir) -I.. -I$(srcdir)/..
+
+AR = lib
+AR_FLAGS = /out:
+
+LN = copy
+RM = del
+
+# Programs used by "make install":
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+#### End of system configuration section. ####
+
+SHELL = /bin/sh
+
+SOURCES = $(srcdir)/localcharset.c
+
+OBJECTS = localcharset.obj
+
+# Set to charset.res in order to include the resources information.
+RESOURCES =
+# RESOURCES = charset.res
+
+all : charset.lib
+
+localcharset.obj : $(srcdir)/localcharset.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $(srcdir)/localcharset.c
+
+!if !$(DLL)
+
+charset.lib : $(OBJECTS)
+	-$(RM) charset.lib
+	$(AR) $(AR_FLAGS)charset.lib $(OBJECTS)
+
+!else
+
+# charset.dll and iconv.lib are created together.
+charset.lib : $(OBJECTS) $(RESOURCES)
+	$(CC) $(MFLAGS) -LD $(OBJECTS) $(RESOURCES)
+
+#charset.res : $(srcdir)/../windows/charset.rc
+#	rc -Fo charset.res $(srcdir)/../windows/charset.rc
+
+!endif
+
+check : all
+
+mostlyclean : clean
+
+clean : force
+	$(RM) *.obj
+	$(RM) *.lib
+	$(RM) *.exp
+	$(RM) *.dll
+	$(RM) charset.res
+	$(RM) charset.alias
+	$(RM) core
+
+distclean : clean
+
+maintainer-clean : distclean
+
+force :
+

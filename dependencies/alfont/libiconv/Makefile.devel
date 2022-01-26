@@ -1,0 +1,108 @@
+# This is the developer's makefile, not the user's makefile.
+# Don't use it unless you know exactly what you do!
+
+SHELL = /bin/sh
+MAKE = make
+GPERF = gperf
+CC = gcc
+CFLAGS = -O
+MAN2HTML = groff -mandoc -Thtml
+CP = cp
+RM = rm -f
+
+
+all : configures lib/config.h.msvc include/iconv.h.msvc-static include/iconv.h.msvc-shared lib/aliases.h lib/aliases_aix.h lib/aliases_osf1.h lib/aliases_dos.h lib/flags.h lib/translit.h man/iconv.1.html man/iconv.3.html man/iconv_close.3.html man/iconv_open.3.html force
+	cd libcharset && $(MAKE) -f Makefile.devel all
+
+
+# Before making a new release:
+# - check that the encoding lists in README and man/iconv_open.3 are up to date,
+# - increment the version number in
+#     include/iconv.h.in
+#     README
+#     windows/iconv.rc
+#     djgpp/README
+#     djgpp/fnchange.lst
+#     libcharset/djgpp/README
+#     libcharset/djgpp/fnchange.lst
+# - update the version info in lib/Makefile.in,
+# - do "make -f Makefile.devel".
+
+
+CONFIGURES = configure
+CONFIGURES_IN = configure.in
+
+CLISP_DIR = ..
+ACLOCAL = $(CLISP_DIR)/src/autoconf/aclocal.m4
+ACSELECT = $(CLISP_DIR)/src/autoconf/acselect
+OTHERMACROS = libcharset/m4/libtool.m4 autoconf/mbstate_t.m4
+
+autoconf/aclocal.m4 : $(ACLOCAL)
+	($(ACSELECT) `cat $(CONFIGURES_IN) | grep '^[A-Z][A-Z]_' | sed 's,[^A-Z_].*$$,,g' | sort | uniq` < $(ACLOCAL) ; cat $(OTHERMACROS) | sed -e 's,AC_CANONICAL_HOST,CL_CANONICAL_HOST,g' -e 's,AC_PROG_RANLIB,CL_PROG_RANLIB,g' -e 's,AC_PROG_LN_S,CL_PROG_LN_S,g') > autoconf/aclocal.m4
+
+configures : $(CONFIGURES)
+
+AUTOCONF_FILES = autoconf/aclocal.m4 autoconf/acgeneral.m4 autoconf/acspecific.m4
+
+configure : configure.in $(AUTOCONF_FILES)
+	autoconf/autoconf -m autoconf
+
+check-configures : $(CONFIGURES)
+	set -e; for f in $(CONFIGURES); do bash -x -n $$f; done
+
+
+lib/config.h.msvc : lib/config.h.in
+	sed -e 's/#undef WORDS_LITTLEENDIAN$$/#define WORDS_LITTLEENDIAN 1/' < $< > $@
+
+include/iconv.h.msvc-static : include/iconv.h.in
+	sed -e 's/@ICONV_CONST@/const/g' < $< > $@
+
+include/iconv.h.msvc-shared : include/iconv.h.in windows/dllexport.h
+	sed -e 's/@ICONV_CONST@/const/g' -e 's/extern \([^"]\)/extern LIBICONV_DLL_EXPORTED \1/' -e '/_LIBICONV_VERSION/r windows/dllexport.h' < $< > $@
+
+
+# We use "-7" to make a smaller table, but use "unsigned char" array indices
+# to avoid gcc warning.
+lib/aliases.h : lib/aliases.gperf
+	$(GPERF) -t -L ANSI-C -H aliases_hash -N aliases_lookup -7 -C -k '1,3-11,$$' -i 1 lib/aliases.gperf | sed -e 's/\[str/\[(unsigned char) str/' > tmp.h
+	$(CP) tmp.h lib/aliases.h
+	$(RM) tmp.h
+
+lib/aliases.gperf : lib/encodings.def lib/encodings_local.def lib/genaliases.c
+	$(CC) $(CFLAGS) lib/genaliases.c -o genaliases
+	./genaliases > lib/aliases.gperf
+	$(RM) genaliases
+
+lib/aliases_aix.h : lib/encodings_aix.def lib/genaliases2.c
+	$(CC) $(CFLAGS) -DUSE_AIX lib/genaliases2.c -o genaliases
+	./genaliases > lib/aliases_aix.h
+	$(RM) genaliases
+
+lib/aliases_osf1.h : lib/encodings_osf1.def lib/genaliases2.c
+	$(CC) $(CFLAGS) -DUSE_OSF1 lib/genaliases2.c -o genaliases
+	./genaliases > lib/aliases_osf1.h
+	$(RM) genaliases
+
+lib/aliases_dos.h : lib/encodings_dos.def lib/genaliases2.c
+	$(CC) $(CFLAGS) -DUSE_DOS lib/genaliases2.c -o genaliases
+	./genaliases > lib/aliases_dos.h
+	$(RM) genaliases
+
+
+lib/flags.h : lib/encodings.def lib/encodings_aix.def lib/encodings_osf1.def lib/encodings_dos.def lib/converters.h lib/genflags.c
+	$(CC) $(CFLAGS) lib/genflags.c -o genflags
+	./genflags > lib/flags.h
+	$(RM) genflags
+
+
+lib/translit.h : lib/translit.def lib/gentranslit.c
+	$(CC) $(CFLAGS) lib/gentranslit.c -o gentranslit
+	./gentranslit < lib/translit.def > lib/translit.h
+	$(RM) gentranslit
+
+
+man/%.html : man/%
+	$(MAN2HTML) $< > $@
+
+
+force :

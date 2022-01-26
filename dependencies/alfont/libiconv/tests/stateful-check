@@ -1,0 +1,23 @@
+#!/bin/sh
+# Simple check of a stateful encoding.
+# Usage: check-stateful SRCDIR CHARSET
+srcdir="$1"
+charset="$2"
+set -e
+# For systems that distinguish between text and binary I/O
+# the binary mode of iconv must be selected and for
+# systems with severe filename restrictions allow for
+# an alternate filename.
+UNAME=${UNAME-`uname 2>/dev/null`}
+case X$UNAME in
+  *-DOS) MODE='--binary'
+         filename=`echo "$charset" | sed "s|ISO-|ISO/|;s|2022-|2022|"` ;;
+  *)     MODE=''
+         filename="$charset" ;;
+esac
+../src/iconv $MODE -f "$charset" -t UTF-8 < "${srcdir}"/"$filename"-snippet > tmp-snippet
+cmp "${srcdir}"/"$filename"-snippet.UTF-8 tmp-snippet
+../src/iconv $MODE -f UTF-8 -t "$charset" < "${srcdir}"/"$filename"-snippet.UTF-8 > tmp-snippet
+cmp "${srcdir}"/"$filename"-snippet tmp-snippet
+rm -f tmp-snippet
+exit 0

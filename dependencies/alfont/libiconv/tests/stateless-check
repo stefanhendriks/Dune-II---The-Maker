@@ -1,0 +1,36 @@
+#!/bin/sh
+# Complete check of a stateless encoding.
+# Usage: check-stateless SRCDIR CHARSET
+srcdir="$1"
+charset="$2"
+set -e
+# For systems with severe filename restrictions
+# allow for an alternate filename.
+UNAME=${UNAME-`uname 2>/dev/null`}
+case X$UNAME in
+  *-DOS) filename=`echo "$charset" | sed "s|ISO-|ISO/|; \
+                                          s|Mac|Mac/|; \
+                                          s|Georgian-|Georgian/|"`
+         tmp_filename=`echo "$filename" | sed "s|/|/tmp-|"`
+         tmp_orig_filename=`echo "$filename" | sed "s|/|/tmp-orig-|"` ;;
+  *)     filename="$charset"
+         tmp_filename="$charset"
+         tmp_orig_filename="$charset" ;;
+esac
+./table-from "$charset" > "${srcdir}"/"$tmp_filename".TXT
+./table-to "$charset" | sort > "${srcdir}"/"$tmp_filename".INVERSE-TXT
+cmp "${srcdir}"/"$filename".TXT "${srcdir}"/"$tmp_filename".TXT 2> /dev/null
+if test -f "${srcdir}"/"$filename".IRREVERSIBLE-TXT; then
+  cat "${srcdir}"/"$filename".TXT "${srcdir}"/"$filename".IRREVERSIBLE-TXT | sort | uniq -u > tmp-orig-"$charset".INVERSE-TXT
+  cmp tmp-orig-"$charset".INVERSE-TXT "${srcdir}"/"$tmp_filename".INVERSE-TXT 2> /dev/null
+else
+  cmp "${srcdir}"/"$filename".TXT "${srcdir}"/"$tmp_filename".INVERSE-TXT 2> /dev/null
+fi
+rm -f "${srcdir}"/"$tmp_filename".TXT "${srcdir}"/"$tmp_filename".INVERSE-TXT tmp-orig-"$charset".INVERSE-TXT
+exit 0
+# For a new encoding:
+# You can create the "$charset".TXT like this:
+#   ./table-from "$charset" > "$charset".TXT
+# You can create the "$charset".IRREVERSIBLE-TXT like this:
+#   ./table-to "$charset" | sort > "$charset".INVERSE-TXT
+#   diff "$charset".TXT "$charset".INVERSE-TXT | grep '^[<>]' | sed -e 's,^. ,,' > "$charset".IRREVERSIBLE-TXT
