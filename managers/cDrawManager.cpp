@@ -262,7 +262,7 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
 void cDrawManager::drawOptionBar() {
     // upper bar
     rectfill(bmp_screen, 0, 0, game.m_screenX, cSideBar::TopBarHeight, makecol(0, 0, 0));
-    if (optionsBar == NULL) {
+    if (optionsBar == nullptr) {
         optionsBar = create_bitmap(game.m_screenX, 40);
         clear_to_color(optionsBar, sidebarColor);
 
