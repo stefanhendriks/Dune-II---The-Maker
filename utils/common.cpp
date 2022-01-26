@@ -25,11 +25,11 @@ namespace
 }
 
 /**
- * Default printing in logs. Only will be done if DEBUGGING is true.
+ * Default printing in logs. Only will be done if game.isDebugMode() is true.
  * @param txt
  */
 void logbook(const std::string& txt) {
-  if (DEBUGGING) {
+  if (game.isDebugMode()) {
     cLogger *logger = cLogger::getInstance();
     logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
   }
@@ -1282,7 +1282,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
-    if (!DEBUGGING) {
+    if (!game.isDebugMode()) {
         sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
     strcpy(sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
@@ -1299,7 +1299,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
-    if (!DEBUGGING) {
+    if (!game.isDebugMode()) {
         sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
     strcpy(sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");

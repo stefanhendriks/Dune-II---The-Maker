@@ -118,7 +118,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     // calculate actual health
     float fHealth = hp * fPercent;
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg2[255];
         sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%f]", iStructureType, hp, fHealth);
         logbook(msg2);

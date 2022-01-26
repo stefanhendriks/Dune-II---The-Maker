@@ -48,7 +48,7 @@ void cMapDrawer::drawShroud() {
             int absoluteYCoordinateOnMap = map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
-            if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
+            if (game.isDebugMode() && key[KEY_D] && key[KEY_TAB]) {
                 if (map->isVisible(iCell, iPl)) {
                     // do nothing
                 } else {
@@ -159,7 +159,7 @@ void cMapDrawer::drawTerrain() {
             allegroDrawer->stretchBlit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             // Draw debugging information
-            if (DEBUGGING) {
+            if (game.isDebugMode()) {
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
@@ -178,14 +178,14 @@ void cMapDrawer::drawTerrain() {
             }
 
             // Draw more debugging information
-            if (DEBUGGING && key[KEY_D]) {
+            if (game.isDebugMode() && key[KEY_D]) {
                 drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
 //                textDrawer.drawText(fDrawX, fDrawY, "%d", cell->type);
             }
         }
     }
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
 //        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
 //        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);

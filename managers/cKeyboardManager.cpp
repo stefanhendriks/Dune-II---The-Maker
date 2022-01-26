@@ -26,7 +26,7 @@ void cKeyboardManager::interact() {
     }
 
     /* Handle here keys that are only active when debugging */
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
 
         if (key[KEY_F4]) {
             if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {

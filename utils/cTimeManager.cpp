@@ -21,7 +21,7 @@ cTimeManager::cTimeManager() {
 
 void cTimeManager::capTimers() {
     if (timerUnits > 10) {
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             char msg[255];
             sprintf(msg, "WARNING: Exeptional high unit timer (%d); capped at 10", timerUnits);
             logbook(msg);
@@ -30,7 +30,7 @@ void cTimeManager::capTimers() {
     }
 
     if (timerGlobal > 40) {
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             char msg[255];
             sprintf(msg, "WARNING: Exeptional high global timer (%d); capped at 40", timerGlobal);
             logbook(msg);
@@ -40,7 +40,7 @@ void cTimeManager::capTimers() {
 
     /* Taking 10 seconds to render a frame? i hope not **/
     if (timerSecond > 10) {
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             char msg[255];
             sprintf(msg, "WARNING: Exeptional high timer second (%d); capped at 40", timerSecond);
             logbook(msg);

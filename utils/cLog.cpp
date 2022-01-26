@@ -131,7 +131,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId) {
     if (level == LOG_TRACE) {
-        if (!DEBUGGING) {
+        if (!m_debugMode) {
             // trace level is only in debug mode
             return;
         }

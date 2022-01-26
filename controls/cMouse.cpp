@@ -279,7 +279,7 @@ void cMouse::draw() {
         } else {
         }
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             if (key[KEY_TAB]) {
                 cTextDrawer textDrawer(bene_font);
                 int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/

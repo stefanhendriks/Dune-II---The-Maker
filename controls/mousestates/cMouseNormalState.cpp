@@ -208,7 +208,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
 }
 
 void cMouseNormalState::setState(eMouseNormalState newState) {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "Setting state from %s to %s", mouseNormalStateString(state), mouseNormalStateString(newState));
         logbook(msg);

@@ -92,7 +92,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureT
 
 	int playerId = pPlayer->getId();
 
-	if (DEBUGGING) {
+	if (game.isDebugMode()) {
 		char msg[255];
 		sprintf(msg, "Looking for primary building (type %d, name %s, pPlayer %d)", structureType, sStructureInfo[structureType].name, playerId);
 		logbook(msg);

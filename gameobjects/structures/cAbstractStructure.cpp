@@ -63,14 +63,14 @@ cAbstractStructure::cAbstractStructure() :
 
     dead = false;
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         logbook(fmt::format("(cAbstractStructure)(ID {}) Constructor", this->id));
     }
 }
 
 cAbstractStructure::~cAbstractStructure() {
     // destructor
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         logbook(fmt::format("(cAbstractStructure)(ID {}) Destructor", this->id));
     }
     iHitPoints = -1;

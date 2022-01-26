@@ -563,7 +563,7 @@ void cMap::draw_units_2nd() {
             pUnit.draw();
             // TODO: Only human players?
             pUnit.draw_health();
-            if (DEBUGGING) {
+            if (game.isDebugMode()) {
                 drawUnitDebug(pUnit);
             }
         }
@@ -1476,7 +1476,7 @@ void cMap::evaluateIfWeShouldSetTimerToRespawnWorm() {
         // we spawned a worm and got to the total amount, so set timer to -1
         // until a worm has been destroyed (either by enemy units or by withdrawal of worm)
         m_iTIMER_respawnSandworms = -1;
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             char msg[255];
             sprintf(msg,
                     "cMap::evaluateIfWeShouldSetTimerToRespawnWorm set m_iTIMER_respawnSandworms to -1, because current amount sandworms (%d) == desired amount (%d)",
@@ -1496,13 +1496,13 @@ void cMap::setSandwormRespawnTimer() {
         // give at least a minute (max 3) without that sandworm
         m_iTIMER_respawnSandworms = (1000 / 5) * (60 + rnd(180));
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             char msg[255];
             sprintf(msg, "cMap::setSandwormRespawnTimer set timer to %d", this->m_iTIMER_respawnSandworms);
             logbook(msg);
         }
     } else {
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             char msg[255];
             sprintf(msg,
                     "cMap::setSandwormRespawnTimer did not change value because timer was already set (value = %d)",
@@ -1513,7 +1513,7 @@ void cMap::setSandwormRespawnTimer() {
 }
 
 void cMap::setDesiredAmountOfWorms(int value) {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "cMap::setDesiredAmountOfWorms changed value from %d to %d", this->m_iDesiredAmountOfWorms, value);
         logbook(msg);

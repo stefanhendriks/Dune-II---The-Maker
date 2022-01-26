@@ -662,6 +662,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 */
 bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
+    logger->setDebugMode(m_debugMode);
 
     game.init(); // Must be first!
 
@@ -735,7 +736,7 @@ bool cGame::setupGame() {
 
     char colorDepthMsg[255];
     sprintf(colorDepthMsg, "Desktop color dept is %d.", colorDepth);
-    cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
 
 
     // TODO: read/write rest value so it does not have to 'fine-tune'
@@ -743,7 +744,7 @@ bool cGame::setupGame() {
     // can specify how much CPU this game may use?
 
     if (game.m_windowed) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
 
         if (isResolutionInGameINIFoundAndSet()) {
             setScreenResolutionFromGameIniSettings();
@@ -774,10 +775,10 @@ bool cGame::setupGame() {
             char msg[255];
             sprintf(msg, "Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d",
                     game.m_iniScreenWidth, game.m_iniScreenHeight, colorDepth, r);
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
+            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
             mustAutoDetectResolution = r < 0;
         } else {
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
+            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
                                         "No resolution defined in ini file.");
             mustAutoDetectResolution = true;
         }
@@ -786,7 +787,7 @@ bool cGame::setupGame() {
         if (mustAutoDetectResolution) {
             char msg[255];
             sprintf(msg, "Autodetecting resolutions at color depth %d", colorDepth);
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
+            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
             // find best possible resolution
             cBestScreenResolutionFinder bestScreenResolutionFinder(colorDepth);
             bestScreenResolutionFinder.checkResolutions();
@@ -1586,7 +1587,7 @@ int cGame::getColorPlaceGood() {
 }
 
 void cGame::setWinFlags(int value) {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "Changing m_winFlags from %d to %d", m_winFlags, value);
         logbook(msg);
@@ -1595,7 +1596,7 @@ void cGame::setWinFlags(int value) {
 }
 
 void cGame::setLoseFlags(int value) {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "Changing m_loseFlags from %d to %d", m_loseFlags, value);
         logbook(msg);
@@ -1759,7 +1760,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
     float volumeFactor = mapCamera->factorZoomLevel(0.7f);
     int iVolFactored = volumeFactor * volume;
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
                 iDistance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
     }

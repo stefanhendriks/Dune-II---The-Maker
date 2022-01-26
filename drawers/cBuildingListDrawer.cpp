@@ -272,7 +272,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             textDrawer->drawText(textX, textY, msg);
 		}
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             if (key[KEY_TAB] && key[KEY_D]) {
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
