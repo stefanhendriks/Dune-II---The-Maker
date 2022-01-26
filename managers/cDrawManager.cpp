@@ -314,6 +314,9 @@ void cDrawManager::onKeyDown(const cKeyboardEvent &event) {
         if (event.hasKeys(KEY_TAB, KEY_D)) {
             mapDrawer->setDrawWithoutShroudTiles(true);
         }
+        if (event.hasKey(KEY_G)) {
+            mapDrawer->setDrawGrid(true);
+        }
     }
 }
 
@@ -323,6 +326,9 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
         // mandatory 'both keys must be pressed' state:
         if (event.hasEitherKey(KEY_TAB, KEY_D)) {
             mapDrawer->setDrawWithoutShroudTiles(false);
+        }
+        if (event.hasKey(KEY_G)) {
+            mapDrawer->setDrawGrid(false);
         }
     }
 }
