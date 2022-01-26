@@ -1,0 +1,181 @@
+Changes
+-------
+ v2.0.9
+   - Added the function alfont_set_font_fixed_width to set the selected font as 
+    fixed width
+   - Added the function alfont_char_length to get the length of char value
+ v2.0.8
+   - Added the function alfont_ugetx and alfont_ugetxc to return the character 
+    pointered by `s' in the current encoding format, and advances the pointer to 
+    the next character after the one just returned
+   - Added the function alfont_get_string to get the converted string pointered 
+    by `s' in the current encoding format
+ v2.0.7
+   - new maintainer: Martijn van Iersel <amarillion@yahoo.com>
+   - fix for build problems
+   - new makefile for use when freetype already exists on system
+ v2.0.6
+   - supplement the autofix for alfont_text_length, alfont_text_count
+    and alfont_ugetc function
+   - Added the function alfont_need_uconvert to return TRUE if unicode 
+    conversion is required or FALSE otherwise
+ v2.0.5
+   - Fixed a bug that generated crashes when setting font as italic style font 
+    and then calling the alfont_text_length function
+ v2.0.4
+  - Added the function alfont_get_font_style to return the style of the selected 
+    font
+  - Added the function alfont_get_font_underline to return if the selected font 
+    have been set as underline
+  - Added the function alfont_get_font_underline_right to return if the selected 
+    font have been set as extend right underline
+  - Added the function alfont_get_font_underline_left to return if the selected 
+    font have been set as extend left underline
+  - Added the function alfont_get_font_background to return if the selected font 
+    have been set to show the background color
+  - Added the function alfont_get_font_transparency to return the selected font 
+    transparency
+  - Added the function alfont_get_autofix to return if the selected font have 
+    been set as autofix
+  - Added the function alfont_get_font_outline_top to return the top outline 
+    width of the selected font
+  - Added the function alfont_get_font_outline_bottom to return the bottom 
+    outline width of the selected font
+  - Added the function alfont_get_font_outline_left to return the left outline 
+    width of the selected font
+  - Added the function alfont_get_font_outline_right to return the right outline 
+    width of the selected font
+  - Added the function alfont_get_font_outline_color to return the outline color 
+    of the selected font
+  - Added the function alfont_get_font_outline_hollow to return if the selected 
+    font have been set as hollow
+
+ v2.0.3
+  - Updated FreeType lib to v2.1.10
+  - Added the function alfont_set_autofix to autofix the shortcutted character 
+    while trying to convert ASCII encoding format to Unicode encoding format
+    The shortcutted character will be appended to the next string
+    After the shortcutted chatacter showed with the next string, 
+    the shortcutted character value will be set as 0
+	- Added the function alfont_get_precedingchar to return 
+    the shortcutted character value that will be appended to the next string
+    If there are not the shortcutted character that will be appended to the next 
+    string, the return value of the alfont_get_precedingchar function will be 0
+	- Added the function alfont_set_precedingchar 
+    to set the shortcutted character value
+    The shortcutted characterthe will be showed in the front of the next string
+
+ v2.0.2
+  - Updated FreeType lib to v2.1.9
+  - Added the function alfont_get_language to return the language parameter
+  - Added the function alfont_get_convert to return the code convert parameter
+  - Added the function alfont_ugetc to return the character pointered by `s' 
+    in the current encoding format
+
+ v2.0.1
+  - change the function name alfont_set_font_outline_auto 
+    as alfont_set_font_outline_hollow
+  - Fixed a bug that can't reset transparency to 0 when calling the function 
+    alfont_set_font_transparency 
+
+ v2.0.0
+  - Added the support for Multilanguage
+    alfont_set_language() function
+    visit the Language Strings in alfont.h file(it is different in DOS, Windows 
+    and Linux OS)
+  - Added the font style(Standard,Italic,Bold and BoldItalic style font)
+  - Added the special efficacy for font(underline,hollow and self-define outline)
+  - Added the counter for font
+    alfont_text_count() function
+  - Added the transparency for font
+  - Added the function alfont_set_font_background to set if the selected font 
+    show the background color.
+
+ v1.9.2
+  - Updated FreeType lib to v2.1.4 
+
+ v1.9.1
+  - Fixed a nasty bug introduced on the transparent antialiased mode
+
+ v1.9.0
+  - Improved a 25-30% the drawing speed of all modes thanks to Doug Eleveld
+  - Improved a 50% the drawing speed of antialiased transparent
+    thanks to a tip of Doug Eleveld
+  - Updated FreeType lib to v2.1.3, which brings better quality font
+    rendering, mostly in antialised mode
+
+
+ v1.8.2
+  - Fixed some calls to malloc(0) when a character didn't have an image
+    attached (for example, usually the space character)
+  - Added _ex versions of textout that take the background parameter directly
+
+ v1.8.1
+  - Henrik Schmidt found a bug in the antialiased opaque rendered giving
+    non accurate results, now fixed
+
+ v1.8.0
+  - Henrik Schmidt found a bug, that alfont_is_scalable_font() and
+    alfont_is_fixed_font() returned 1 on true instead of TRUE
+  - Henrik Schmidt found another bug related with the fonts showing
+    very very far from the top point, fixed too
+  - Had to change the size change system, now it will only accept heights
+  - Made the height more accurate to the given parameters (the resulting
+    font of height x was usually bigger than asked)
+  - Improved the fixed font handling and loading of bitmap fonts without
+    antialiasing (now it shouldn't have errors or memory leaks when using
+    old fonts like PDF)
+  - Added functions to modify the character spacing
+  - Changed the version scheme, now it uses x.y.z being 'x' used for big
+    changes, 'y' used for normal changes and 'z' for small changes like
+    bugfixes
+
+ v1.7
+  - Changed the license from LGPL to the FreeType Project License (a lot
+    less restrictive)
+  - Added options to create the lib as a DLL, please read the README.txt
+    file again for further instructions. Deleted the ML and MT models in
+    MSVC, since this lib needs Allegro and Allegro is only built in MD
+    mode.
+  - Added some more compability with fixed sized fonts and some functions
+    to manage them like alfont_get_available_fixed_sizes() and more (check
+    the docs)
+
+ v1.6
+  - Awesome speed increase (even a 1700% in some cases!!!)
+
+ v1.5
+  - Updated FreeType lib to v2.0.9
+  - Added a check in alfont_set_font_size() to not reload the glyphs
+    if the font is already with the desired size and alfont_get_width()
+    and alfont_get_font_height() as suggested by Marcin Jakubowski
+  - Added a simple cache system so the load and resize of fonts work a
+    whole lot faster
+  - Added an example inside the examples directory (example1)
+
+ v1.4
+  - Updated FreeType lib to v2.0.8
+  - Changed the makefiles to make it compatible with gcc 3.0.x
+
+ v1.3
+  - Fixed a big bug that generated some random crashes when loading
+    a font from memory
+  - Added define ALFONT_ERROR and changed the return value of the
+    alfont_set_font_size() function
+  - Fixed a little typo in the typedef in the header
+  - Updated FreeType lib to v2.0.6
+
+ v1.2
+  - Updated FreeType lib to v2.0.5 (that fixed some bugs)
+  - Fixed some little typos on the documentation
+  - Removed the old alfont_init() and changed the function from
+    alfont_init_unusing_atexit() to alfont_init()
+
+ v1.1
+  - Made it compatible with Allegro Unicode
+  - Fixed a bug in alfont_load_font_from_memory()
+  - Added BIG optimizations to the code
+  - Added alfont_init_unusing_atexit() function
+
+ v1.0
+  - First public release

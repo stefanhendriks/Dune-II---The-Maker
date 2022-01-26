@@ -1,0 +1,879 @@
+diff -acprNC5 libiconv-1.7.orig/configure.in libiconv-1.7.djgpp/configure.in
+*** libiconv-1.7.orig/configure.in	Mon Mar 19 20:24:14 2001
+--- libiconv-1.7.djgpp/configure.in	Sat Jul  7 16:58:12 2001
+*************** AC_OBJEXT
+*** 50,59 ****
+--- 50,60 ----
+  AC_EXEEXT
+  
+  dnl           check for build configuration
+  
+  PACKAGE=libiconv
++ VERSION=1.7
+  AM_DISABLE_STATIC
+  AM_PROG_LIBTOOL
+  
+  dnl           checks for header files
+  
+diff -acprNC5 libiconv-1.7.orig/djgpp/config.bat libiconv-1.7.djgpp/djgpp/config.bat
+*** libiconv-1.7.orig/djgpp/config.bat	Fri Jun  8 22:01:18 2001
+--- libiconv-1.7.djgpp/djgpp/config.bat	Sun Jul 15 19:20:30 2001
+*************** test -f %XSRC%/lib/cns/11643.orig
+*** 93,102 ****
+--- 93,108 ----
+  if errorlevel 1 update %XSRC%/lib/cns/11643.h %XSRC%/lib/cns/11643.orig
+  sed -f %XSRC%/djgpp/sources.sed %XSRC%/lib/cns/11643.h > 11643.tmp
+  if errorlevel 1 goto SedError
+  update 11643.tmp %XSRC%/lib/cns/11643.h
+  rm 11643.tmp
++ test -f %XSRC%/lib/cns/11643_4.orig
++ if errorlevel 1 update %XSRC%/lib/cns/11643_4.h %XSRC%/lib/cns/11643_4.orig
++ sed -f %XSRC%/djgpp/sources.sed %XSRC%/lib/cns/11643_4.h > 11643_4.tmp
++ if errorlevel 1 goto SedError
++ update 11643_4.tmp %XSRC%/lib/cns/11643_4.h
++ rm 11643_4.tmp
+  test -f %XSRC%/lib/iso/ir165.orig
+  if errorlevel 1 update %XSRC%/lib/iso/ir165.h %XSRC%/lib/iso/ir165.orig
+  sed -f %XSRC%/djgpp/sources.sed %XSRC%/lib/iso/ir165.h > ir165.tmp
+  if errorlevel 1 goto SedError
+  update ir165.tmp %XSRC%/lib/iso/ir165.h
+*************** if not "%_HOSTNAME%" == "%HOSTNAME%, %OS
+*** 168,179 ****
+  set HOSTNAME=%_HOSTNAME%
+  :hostdone
+  set _HOSTNAME=
+  set OS=
+  
+  echo Running the ./configure script...
+! sh ./configure --src=%XSRC%
+  if errorlevel 1 goto CfgError
+  echo Done.
+  goto End
+  
+  :SedError
+--- 174,188 ----
+  set HOSTNAME=%_HOSTNAME%
+  :hostdone
+  set _HOSTNAME=
+  set OS=
+  
++ Rem With libtool 1.4 -fPIC is the default. This completely breaks compilations
++ Rem with djgpp, so we will always use --disable-shared to inhibit the usage of
++ Rem -fPIC and -DPIC flags in libtool.
+  echo Running the ./configure script...
+! sh ./configure --enable-static --disable-shared --src=%XSRC%
+  if errorlevel 1 goto CfgError
+  echo Done.
+  goto End
+  
+  :SedError
+diff -acprNC5 libiconv-1.7.orig/djgpp/config.sed libiconv-1.7.djgpp/djgpp/config.sed
+*** libiconv-1.7.orig/djgpp/config.sed	Tue Feb 27 18:12:56 2001
+--- libiconv-1.7.djgpp/djgpp/config.sed	Mon Jul 16 11:07:04 2001
+***************
+*** 1,18 ****
+  # Additional editing of Makefiles
+! /ac_given_INSTALL=/,/^CEOF/ {
+    /^CEOF$/ i\
+  # DJGPP specific Makefile changes.\
+    /^aliaspath *	*=/s,:,";",g\
+    /^lispdir *	*=/ c\\\\\
+  lispdir = \\$(prefix)/gnu/emacs/site-lisp\
+    /TEXINPUTS=/s,:,";",g\
+    /PATH=/s,:,";",g\
+    s,config\\.h\\.in,config.h-in,g\
+    s,\\.tab\\.c,_tab.c,g\
+    s,\\.tab\\.h,_tab.h,g\
+    s,\\.old\\.,_old.,g\
+    s,libcharset\\.h\\.in,libcharset.h-in,g\
+    s,Makefile\\.in\\.in,Makefile.in-in,g\
+    s,Makefile\\.am\\.in,Makefile.am-in,g\
+    /^install-info-am:/,/^$/ s,file-\\[0-9\\]\\[0-9\\],& \\$\\$file[0-9] \\$\\$file[0-9][0-9],\
+    /^\\.y\\.c:/,/^$/ {\
+--- 1,23 ----
+  # Additional editing of Makefiles
+! /extrasub/,/^CEOF/ {
+    /^CEOF$/ i\
+  # DJGPP specific Makefile changes.\
+    /^aliaspath *	*=/s,:,";",g\
+    /^lispdir *	*=/ c\\\\\
+  lispdir = \\$(prefix)/gnu/emacs/site-lisp\
++   /^docdir *	*=/s,/doc/,/gnudocs/,g\
+    /TEXINPUTS=/s,:,";",g\
+    /PATH=/s,:,";",g\
++   /CFLAGS[ 	]*=/s,=,= -O2 -g,g\
+    s,config\\.h\\.in,config.h-in,g\
+    s,\\.tab\\.c,_tab.c,g\
+    s,\\.tab\\.h,_tab.h,g\
+    s,\\.old\\.,_old.,g\
++   s,\\.\\([1-9]\\)\\.html,.\\1-html,g\
++   s,\\.html,-html,g\
++   s,/doc,/gnudocs,g\
+    s,libcharset\\.h\\.in,libcharset.h-in,g\
+    s,Makefile\\.in\\.in,Makefile.in-in,g\
+    s,Makefile\\.am\\.in,Makefile.am-in,g\
+    /^install-info-am:/,/^$/ s,file-\\[0-9\\]\\[0-9\\],& \\$\\$file[0-9] \\$\\$file[0-9][0-9],\
+    /^\\.y\\.c:/,/^$/ {\
+*************** lispdir = \\$(prefix)/gnu/emacs/site-lis
+*** 38,51 ****
+  }
+  
+  # Replace (command) > /dev/null with `command > /dev/null`, since
+  # parenthesized commands always return zero status in the ported Bash,
+  # even if the named command doesn't exist
+! /if ([^|;]*null/{
+!   s,(,`,
+!   s,),,
+!   s,;  *then,`; then,
+  }
+  
+  # DOS-style absolute file names should be supported as well
+  /\*) srcdir=/s,/\*,[\\\\/]* | [A-z]:[\\\\/]*,
+  /\$]\*) INSTALL=/s,\[/\$\]\*,[\\\\/$]* | [A-z]:[\\\\/]*,
+--- 43,67 ----
+  }
+  
+  # Replace (command) > /dev/null with `command > /dev/null`, since
+  # parenthesized commands always return zero status in the ported Bash,
+  # even if the named command doesn't exist
+! # This does no longer work with autoconf 2.5, libtool 1.4 and automake 1.5.
+! # /if ([^|;]*null/{
+! #   s,(,`,
+! #   s,),,
+! #   s,;  *then,`; then,
+! # }
+! 
+! # Replace (command) > /dev/null with `command > /dev/null`, since
+! # parenthesized commands always return zero status in the ported Bash,
+! # even if the named command doesn't exist
+! /if [^{].*null/,/ then/ {
+!   /test .*null/ {
+!     s,(,,
+!     s,),,
+!   }
+  }
+  
+  # DOS-style absolute file names should be supported as well
+  /\*) srcdir=/s,/\*,[\\\\/]* | [A-z]:[\\\\/]*,
+  /\$]\*) INSTALL=/s,\[/\$\]\*,[\\\\/$]* | [A-z]:[\\\\/]*,
+*************** lispdir = \\$(prefix)/gnu/emacs/site-lis
+*** 81,85 ****
+--- 97,104 ----
+  #  2) We need links across partitions,
+  #     so we will use "cp -pf" instead of "ln".
+  /# Make a symlink if possible; otherwise try a hard link./,/EOF/ {
+    s,;.*then, 2>/dev/null || cp -pf \$srcdir/\$ac_source \$ac_dest&,
+  }
++ 
++ # Let libtool use _libs all the time.
++ /objdir=/s,\.libs,_libs,
+diff -acprNC5 libiconv-1.7.orig/djgpp/config.site libiconv-1.7.djgpp/djgpp/config.site
+*** libiconv-1.7.orig/djgpp/config.site	Tue Feb 27 18:12:56 2001
+--- libiconv-1.7.djgpp/djgpp/config.site	Sun Jul  8 13:09:04 2001
+*************** ac_cv_path_EMACS=${EMACS='/dev/env/DJDIR
+*** 34,43 ****
+--- 34,44 ----
+  # These are set here so the generated libtool will be good
+  # for every DJGPP installation, not only the one where the
+  # package was configured.
+  NM=${NM='/dev/env/DJDIR/bin/nm'}
+  LD=${LD='/dev/env/DJDIR/bin/ld'}
++ STRIP=${STRIP='/dev/env/DJDIR/bin/strip'}
+  
+  # Force the test for 'ln -s' to report no.
+  ac_cv_prog_LN_S='cp -p'
+  cl_cv_prog_LN_S='cp -p'
+  cl_cv_prog_LN='cp -p'
+diff -acprNC5 libiconv-1.7.orig/djgpp/fnchange.in libiconv-1.7.djgpp/djgpp/fnchange.in
+*** libiconv-1.7.orig/djgpp/fnchange.in	Thu Jan  1 00:00:00 1970
+--- libiconv-1.7.djgpp/djgpp/fnchange.in	Sun Jul 15 18:47:52 2001
+***************
+*** 0 ****
+--- 1,148 ----
++ @V@/include/iconv.h.in                           @V@/include/iconv.h-in
++ @V@/include/iconv.h.msvc-static                  @V@/include/iconv_h.static-msvc
++ @V@/include/iconv.h.msvc-shared                  @V@/include/iconv_h.shared-msvc
++ @V@/man/iconv.1.html                             @V@/man/iconv.1-html
++ @V@/man/iconv.3.html                             @V@/man/iconv.3-html
++ @V@/man/iconv_close.3.html                       @V@/man/iconv_close.3-html
++ @V@/man/iconv_open.3.html                        @V@/man/iconv_open.3-html
++ @V@/tests/Georgian-PS.TXT                        @V@/tests/Georgian/PS.TXT
++ @V@/tests/ARMSCII-8.IRREVERSIBLE.TXT             @V@/tests/ARMSCII-8.IRREVERSIBLE-TXT
++ @V@/tests/CP932.IRREVERSIBLE.TXT                 @V@/tests/CP932.IRREVERSIBLE-TXT
++ @V@/tests/CP950.IRREVERSIBLE.TXT                 @V@/tests/CP950.IRREVERSIBLE-TXT
++ @V@/tests/EUC-TW.IRREVERSIBLE.TXT                @V@/tests/EUC-TW.IRREVERSIBLE-TXT
++ @V@/tests/ISO-2022-CN-EXT-snippet                @V@/tests/ISO/2022CN-EXT-snippet
++ @V@/tests/Georgian-Academy.TXT                   @V@/tests/Georgian/Academy.TXT
++ @V@/tests/ISO-2022-CN-EXT-snippet.UTF-8          @V@/tests/ISO/2022CN-EXT-snippet.UTF-8
++ @V@/tests/ISO-2022-CN-snippet                    @V@/tests/ISO/2022CN-snippet
++ @V@/tests/ISO-2022-CN-snippet.UTF-8              @V@/tests/ISO/2022CN-snippet.UTF-8
++ @V@/tests/ISO-2022-JP-1-snippet                  @V@/tests/ISO/2022JP-1-snippet
++ @V@/tests/ISO-2022-JP-1-snippet.UTF-8            @V@/tests/ISO/2022JP-1-snippet.UTF-8
++ @V@/tests/ISO-2022-JP-2-snippet                  @V@/tests/ISO/2022JP-2-snippet
++ @V@/tests/ISO-2022-JP-2-snippet.UTF-8            @V@/tests/ISO/2022JP-2-snippet.UTF-8
++ @V@/tests/ISO-2022-JP-snippet                    @V@/tests/ISO/2022JP-snippet
++ @V@/tests/ISO-2022-JP-snippet.UTF-8              @V@/tests/ISO/2022JP-snippet.UTF-8
++ @V@/tests/ISO-2022-KR-snippet                    @V@/tests/ISO/2022KR-snippet
++ @V@/tests/ISO-2022-KR-snippet.UTF-8              @V@/tests/ISO/2022KR-snippet.UTF-8
++ @V@/tests/ISO-8859-1.TXT                         @V@/tests/ISO/8859-1.TXT
++ @V@/tests/ISO-8859-10.TXT                        @V@/tests/ISO/8859-10.TXT
++ @V@/tests/ISO-8859-13.TXT                        @V@/tests/ISO/8859-13.TXT
++ @V@/tests/ISO-8859-14.TXT                        @V@/tests/ISO/8859-14.TXT
++ @V@/tests/ISO-8859-15.TXT                        @V@/tests/ISO/8859-15.TXT
++ @V@/tests/ISO-8859-16.TXT                        @V@/tests/ISO/8859-16.TXT
++ @V@/tests/ISO-8859-2.TXT                         @V@/tests/ISO/8859-2.TXT
++ @V@/tests/ISO-8859-3.TXT                         @V@/tests/ISO/8859-3.TXT
++ @V@/tests/ISO-8859-4.TXT                         @V@/tests/ISO/8859-4.TXT
++ @V@/tests/ISO-8859-5.TXT                         @V@/tests/ISO/8859-5.TXT
++ @V@/tests/ISO-8859-6.TXT                         @V@/tests/ISO/8859-6.TXT
++ @V@/tests/ISO-8859-7.TXT                         @V@/tests/ISO/8859-7.TXT
++ @V@/tests/ISO-8859-8.TXT                         @V@/tests/ISO/8859-8.TXT
++ @V@/tests/ISO-8859-9.TXT                         @V@/tests/ISO/8859-9.TXT
++ @V@/tests/ISO-IR-165.IRREVERSIBLE.TXT            @V@/tests/ISO/IR-165.IRREVERSIBLE-TXT
++ @V@/tests/ISO-IR-165.TXT                         @V@/tests/ISO/IR-165.TXT
++ @V@/tests/MacArabic.TXT                          @V@/tests/Mac/Arabic.TXT
++ @V@/tests/MacCentralEurope.TXT                   @V@/tests/Mac/CentralEurope.TXT
++ @V@/tests/MacCroatian.TXT                        @V@/tests/Mac/Croatian.TXT
++ @V@/tests/MacCyrillic.TXT                        @V@/tests/Mac/Cyrillic.TXT
++ @V@/tests/MacGreek.TXT                           @V@/tests/Mac/Greek.TXT
++ @V@/tests/MacHebrew.TXT                          @V@/tests/Mac/Hebrew.TXT
++ @V@/tests/MacIceland.TXT                         @V@/tests/Mac/Iceland.TXT
++ @V@/tests/MacRoman.TXT                           @V@/tests/Mac/Roman.TXT
++ @V@/tests/MacRomania.TXT                         @V@/tests/Mac/Romania.TXT
++ @V@/tests/MacThai.TXT                            @V@/tests/Mac/Thai.TXT
++ @V@/tests/MacTurkish.TXT                         @V@/tests/Mac/Turkish.TXT
++ @V@/tests/MacUkraine.TXT                         @V@/tests/Mac/Ukraine.TXT
++ @V@/tests/check-stateful                         @V@/tests/stateful-check
++ @V@/tests/check-stateless                        @V@/tests/stateless-check
++ @V@/tests/check-translit                         @V@/tests/translit-check
++ @V@/tests/check-translit.bat                     @V@/tests/translit-check.bat
++ @V@/tests/check-stateless.bat                    @V@/tests/stateless-check.bat
++ @V@/tests/check-stateful.bat                     @V@/tests/stateful-check.bat
++ @V@/tests/check-stateful.cmd                     @V@/tests/stateful-check.cmd
++ @V@/tests/check-stateless.cmd                    @V@/tests/stateless-check.cmd
++ @V@/tests/check-translit.cmd                     @V@/tests/translit-check.cmd
++ @V@/tests/BIG5-HKSCS.IRREVERSIBLE.TXT            @V@/tests/BIG5-HKSCS.IRREVERSIBLE-TXT
++ @V@/tests/CP1258.IRREVERSIBLE.TXT                @V@/tests/CP1258.IRREVERSIBLE-TXT
++ @V@/tests/TCVN.IRREVERSIBLE.TXT                  @V@/tests/TCVN.IRREVERSIBLE-TXT
++ @V@/tests/CP1255.IRREVERSIBLE.TXT                @V@/tests/CP1255.IRREVERSIBLE-TXT
++ @V@/libcharset/tools/aix-3.2.5                   @V@/libcharset/tools/aix-3.2-5
++ @V@/libcharset/tools/aix-4.1.5                   @V@/libcharset/tools/aix-4.1-5
++ @V@/libcharset/tools/aix-4.2.0                   @V@/libcharset/tools/aix-4.2-0
++ @V@/libcharset/tools/aix-4.3.2                   @V@/libcharset/tools/aix-4.3-2
++ @V@/libcharset/tools/glibc-2.1.3                 @V@/libcharset/tools/glibc-2.1-3
++ @V@/libcharset/tools/glibc-2.1.90                @V@/libcharset/tools/glibc-2.1-90
++ @V@/libcharset/tools/locale_charmap              @V@/libcharset/tools/locale_charmap
++ @V@/libcharset/tools/locale_charset.c            @V@/libcharset/tools/charset_locale.c
++ @V@/libcharset/tools/locale_codeset.c            @V@/libcharset/tools/codeset_locale.c
++ @V@/libcharset/tools/solaris-2.5.1               @V@/libcharset/tools/solaris-2.5-1
++ @V@/libcharset/tools/sunos-4.1.4                 @V@/libcharset/tools/sunos-4.1-4
++ @V@/libcharset/tools/all-charsets-X11            @V@/libcharset/tools/all-charsets.X11
++ @V@/libcharset/tools/glibc-2.2-XF86-3.3.6        @V@/libcharset/tools/glibc22XF86-3.3-6
++ @V@/libcharset/tools/glibc-2.2-XF86-4.0.1f       @V@/libcharset/tools/glibc22XF86-4.0-1f
++ @V@/libcharset/tools/locale_x11encoding.c        @V@/libcharset/tools/x11encoding_locale.c
++ @V@/libcharset/include/libcharset.h.in           @V@/libcharset/include/libcharset.h-in
++ @V@/libcharset/include/libcharset.h.msvc-shared  @V@/libcharset/include/libcharset.h-msvc-shared
++ @V@/libcharset/config.h.in                       @V@/libcharset/config.h-in
++ @V@/libcharset/config.h.msvc                     @V@/libcharset/config.h-msvc
++ @V@/lib/aliases.gperf                            @V@/lib/aliases/aliases.gperf
++ @V@/lib/aliases.h                                @V@/lib/aliases/aliases.h
++ @V@/lib/aliases_aix.h                            @V@/lib/aliases/aix.h
++ @V@/lib/cns11643.h                               @V@/lib/cns/11643.h
++ @V@/lib/cns11643_1.h                             @V@/lib/cns/11643_1.h
++ @V@/lib/cns11643_2.h                             @V@/lib/cns/11643_2.h
++ @V@/lib/cns11643_3.h                             @V@/lib/cns/11643_3.h
++ @V@/lib/cns11643_inv.h                           @V@/lib/cns/11643_inv.h
++ @V@/lib/config.h.in                              @V@/lib/config.h-in
++ @V@/lib/config.h.msvc                            @V@/lib/config.h-msvc
++ @V@/lib/encodings.def                            @V@/lib/encodings/encodings.def
++ @V@/lib/encodings_aix.def                        @V@/lib/encodings/aix.def
++ @V@/lib/encodings_local.def                      @V@/lib/encodings/local.def
++ @V@/lib/genaliases2.c                            @V@/lib/2genaliases.c
++ @V@/lib/georgian_academy.h                       @V@/lib/georgian/academy.h
++ @V@/lib/georgian_ps.h                            @V@/lib/georgian/ps.h
++ @V@/lib/iso2022_cn.h                             @V@/lib/iso/2022_cn.h
++ @V@/lib/iso2022_cnext.h                          @V@/lib/iso/2022_cnext.h
++ @V@/lib/iso2022_jp.h                             @V@/lib/iso/2022_jp.h
++ @V@/lib/iso2022_jp1.h                            @V@/lib/iso/2022_jp1.h
++ @V@/lib/iso2022_jp2.h                            @V@/lib/iso/2022_jp2.h
++ @V@/lib/iso2022_kr.h                             @V@/lib/iso/2022_kr.h
++ @V@/lib/iso646_cn.h                              @V@/lib/iso/646_cn.h
++ @V@/lib/iso646_jp.h                              @V@/lib/iso/646_jp.h
++ @V@/lib/iso8859_1.h                              @V@/lib/iso/8859_1.h
++ @V@/lib/iso8859_10.h                             @V@/lib/iso/8859_10.h
++ @V@/lib/iso8859_13.h                             @V@/lib/iso/8859_13.h
++ @V@/lib/iso8859_14.h                             @V@/lib/iso/8859_14.h
++ @V@/lib/iso8859_15.h                             @V@/lib/iso/8859_15.h
++ @V@/lib/iso8859_16.h                             @V@/lib/iso/8859_16.h
++ @V@/lib/iso8859_2.h                              @V@/lib/iso/8859_2.h
++ @V@/lib/iso8859_3.h                              @V@/lib/iso/8859_3.h
++ @V@/lib/iso8859_4.h                              @V@/lib/iso/8859_4.h
++ @V@/lib/iso8859_5.h                              @V@/lib/iso/8859_5.h
++ @V@/lib/iso8859_6.h                              @V@/lib/iso/8859_6.h
++ @V@/lib/iso8859_7.h                              @V@/lib/iso/8859_7.h
++ @V@/lib/iso8859_8.h                              @V@/lib/iso/8859_8.h
++ @V@/lib/iso8859_9.h                              @V@/lib/iso/8859_9.h
++ @V@/lib/isoir165.h                               @V@/lib/iso/ir165.h
++ @V@/lib/isoir165ext.h                            @V@/lib/iso/ir165ext.h
++ @V@/lib/mac_arabic.h                             @V@/lib/mac/arabic.h
++ @V@/lib/mac_centraleurope.h                      @V@/lib/mac/centraleurope.h
++ @V@/lib/mac_croatian.h                           @V@/lib/mac/croatian.h
++ @V@/lib/mac_cyrillic.h                           @V@/lib/mac/cyrillic.h
++ @V@/lib/mac_greek.h                              @V@/lib/mac/greek.h
++ @V@/lib/mac_hebrew.h                             @V@/lib/mac/hebrew.h
++ @V@/lib/mac_iceland.h                            @V@/lib/mac/iceland.h
++ @V@/lib/mac_roman.h                              @V@/lib/mac/roman.h
++ @V@/lib/mac_romania.h                            @V@/lib/mac/romania.h
++ @V@/lib/mac_thai.h                               @V@/lib/mac/thai.h
++ @V@/lib/mac_turkish.h                            @V@/lib/mac/turkish.h
++ @V@/lib/mac_ukraine.h                            @V@/lib/mac/ukraine.h
++ @V@/lib/encodings_dos.def                        @V@/lib/encodings/dos.def
++ @V@/lib/aliases_dos.h                            @V@/lib/aliases/dos.h
++ @V@/lib/aliases_osf1.h                           @V@/lib/aliases/osf1.h
++ @V@/lib/encodings_osf1.def                       @V@/lib/encodings/osf1.def
++ @V@/lib/cns11643_15.h                            @V@/lib/cns/11643_15.h
++ @V@/lib/cns11643_4.h                             @V@/lib/cns/11643_4.h
++ @V@/lib/cns11643_4a.h                            @V@/lib/cns/11643_4a.h
++ @V@/lib/cns11643_4b.h                            @V@/lib/cns/11643_4b.h
++ @V@/lib/cns11643_5.h                             @V@/lib/cns/11643_5.h
++ @V@/lib/cns11643_6.h                             @V@/lib/cns/11643_6.h
++ @V@/lib/cns11643_7.h                             @V@/lib/cns/11643_7.h
+diff -acprNC5 libiconv-1.7.orig/djgpp/Makefile.maint libiconv-1.7.djgpp/djgpp/Makefile.maint
+*** libiconv-1.7.orig/djgpp/Makefile.maint	Thu Jan  1 00:00:00 1970
+--- libiconv-1.7.djgpp/djgpp/Makefile.maint	Sat Jul  7 16:58:12 2001
+***************
+*** 0 ****
+--- 1,30 ----
++ # Maintainer's Makefile                                         -*-Makefile-*-
++ 
++ top_srcdir = ..
++ srcdir = .
++ 
++ SHELL = /bin/sh
++ 
++ all: README fnchange.lst
++ 
++ fnchange.lst: fnchange.in $(top_srcdir)/configure.in
++ 	PACKAGE=`grep "^PACKAGE=" $(top_srcdir)/configure.in | sed -e 's/^PACKAGE=//'`; \
++ 	VERSION=`grep "^VERSION=" $(top_srcdir)/configure.in | sed -e 's/^VERSION=//'`; \
++ 	sed \
++ 	    -e '/^#/d' \
++ 	    -e "s/@V@/$${PACKAGE}-$${VERSION}/g" \
++ 	  $(srcdir)/fnchange.in > t-$@
++ 	mv t-$@ $@
++ 
++ README: README.in $(top_srcdir)/configure.in
++ 	PACKAGE=`grep "^PACKAGE=" $(top_srcdir)/configure.in | sed -e 's/^PACKAGE=//'`; \
++ 	VERSION=`grep "^VERSION=" $(top_srcdir)/configure.in | sed -e 's/^VERSION=//'`; \
++ 	packageversion=`echo "$${VERSION}" | sed 's/\.//g'`; \
++ 	treeversion=`echo "$${VERSION}" | sed 's/\.//g'`; \
++ 	sed \
++ 	    -e "s/@V@/$${PACKAGE}-$${VERSION}/g" \
++ 	    -e "s/@VER@/$${VERSION}/g" \
++ 	    -e "s/@packageversion@/$$packageversion/g" \
++ 	    -e "s/@treeversion@/$$treeversion/g" \
++ 	  $(srcdir)/README.in > t-$@
++ 	mv t-$@ $@
+diff -acprNC5 libiconv-1.7.orig/djgpp/makefile.sed libiconv-1.7.djgpp/djgpp/makefile.sed
+*** libiconv-1.7.orig/djgpp/makefile.sed	Tue Mar  6 13:47:24 2001
+--- libiconv-1.7.djgpp/djgpp/makefile.sed	Sun Jul 15 20:54:12 2001
+*************** s|aliases_dos\.h|aliases/dos\.h|g
+*** 10,18 ****
+  s|aliases_osf1\.h|aliases/osf1\.h|g
+  s|aliases_local\.h|aliases/local\.h|g
+  
+  
+  # Fixes for tests/Makefile.in
+! /^check[ 	]*:.*table-from[ 	]*table-to/,/^$/ s,^	\+\$(srcdir)/,	$(SHELL) $(srcdir)/,
+! s/check-stateless/stateless-check/g
+! s/check-stateful/stateful-check/g
+! s/check-translit/translit-check/g
+--- 10,17 ----
+  s|aliases_osf1\.h|aliases/osf1\.h|g
+  s|aliases_local\.h|aliases/local\.h|g
+  
+  
+  # Fixes for tests/Makefile.in
+! s|\$(srcdir)/check-stateless|$(SHELL) $(srcdir)/stateless-check|
+! s|\$(srcdir)/check-stateful|$(SHELL) $(srcdir)/stateful-check|
+! s|\$(srcdir)/check-translit|$(SHELL) $(srcdir)/translit-check|
+diff -acprNC5 libiconv-1.7.orig/djgpp/README.in libiconv-1.7.djgpp/djgpp/README.in
+*** libiconv-1.7.orig/djgpp/README.in	Thu Jan  1 00:00:00 1970
+--- libiconv-1.7.djgpp/djgpp/README.in	Sun Jul 15 18:30:36 2001
+***************
+*** 0 ****
+--- 1,124 ----
++ This is a port of GNU Libiconv @VER@ to MSDOS/DJGPP.
++ 
++ 1.:     DJGPP specific changes.
++         =======================
++         There are no DJGPP specific changes. This package should
++         configure and compile out-of-the-box.
++         Please read the documentation to become familiar with this
++         product.
++ 
++ 
++ 2.:     Installing the binary package.
++         ==============================
++ 
++ 2.1.:   Copy the binary distribution into the top DJGPP installation
++         directory and unzip the binary distribution running *ONE* of
++         the following commands:
++           unzip32 licv@packageversion@b.zip      or
++           djtarx licv@packageversion@b.zip       or
++           pkunzip -d licv@packageversion@b.zip
++ 
++ 
++ 
++ 3.:     Building the binaries from sources.
++         ===================================
++ 
++ 3.1.:   To build the binaries you will need the following binary packages:
++           djdev203.zip, bsh204b.zip, gcc2953b.zip,
++           bnu2112b.zip, mak3791b.zip, fil40b.zip,
++           shl112b.zip, txt20b.zip, txi40b.zip,
++           grep24b.zip and sed302b.zip
++ 
++         If you want to run the check you will need also:
++           dif272b.zip
++ 
++         All this packages can be found in the v2gnu directory of any
++         Simtel.NET mirror.
++         You will need bsh204b.zip and *NOT* a prior version or the build will fail.
++         The same applies to djdev203.zip. You *MUST* use the updated version of
++         shl112b.zip (date: 2000-08-11). This updated version has been recompiled
++         with djdev203.zip and know about the "/dev/env" functionality introduced
++         with djdev203.zip. All the other packages are the ones I have used to
++         build the binaries from this sources.
++         Previuos and/or later versions of these packages may do the job as well
++         but I have not tested this.
++ 
++ 3.2.:   Create a temporary directory and copy the source package: licv@packageversion@s.zip
++         into the temporary directory. If you download the source distribution
++         from one of the DJGPP archives, just unzip it preserving the directory
++         structure, runnig ONE of the following commands:
++           unzip32 licv@packageversion@s.zip      or
++           djtarx licv@packageversion@s.zip       or
++           pkunzip -d licv@packageversion@s.zip
++ 
++         Source distributions downloaded from one of the GNU FTP sites need
++         some more work to unpack.  First, you MUST use the `djtar' program
++         to unzip the package. That's because some file names in the official
++         distributions need to be changed to avoid problems on the various
++         platforms supported by DJGPP. `djtar' can rename files on the fly
++         given a file with name mappings. The distribution includes a file
++         `djgpp/fnchange.lst' with the necessary mappings. So you need first
++         to retrieve that file, and then invoke `djtar' to unpack the
++         distribution. Here's how:
++ 
++           djtar -x -p -o @V@/djgpp/fnchange.lst @V@.tar.gz > lst
++           djtar -x -n lst @V@.tar.gz
++ 
++         (The name of the distribution archive and the top-level directory will
++         be different for versions other than @VER@.)
++ 
++ 3.3.:   The package is preconfigured for djdev203. To build the products you
++         should run the following command:
++           make
++ 
++         After the compilation has finished, you can check the products
++         running the command:
++           make check
++ 
++         To install the products run the command:
++           make install
++ 
++         This will install the products (iconv.exe iconv.h libcharset.h libconv.a
++         libcharset.a iconv.1 iconv.3 iconv_open.3 iconv_close.3) into your DJGPP
++         installation tree. As usual, prefix is defined as "/dev/env/DJDIR".
++         If you prefer to install into same other directory run the command:
++           make install prefix=z:/some/other/dir
++ 
++         Of course, you should replace "z:/some/other/dir" by an appropriate path
++         that will meet your requeriments.
++ 
++ 3.4.:   If you need/want to reconfigure the package you will have to run the
++         following commands:
++           make distclean
++           djgpp\config
++ 
++         Please note that you *MUST* use the "distclean" option or the config.cache
++         file will *NOT* be deleted. In this case you are *NOT* reconfiguring
++         because the configuration informations is read from the cache file instead
++         of being newly computed.
++         To build the programs in a directory other than where the sources are,
++         you must add the parameter that specifies the source directory,
++         e.g:
++           x:\src\gnu\libiconv.@treeversion@\djgpp\config x:/src/gnu/libiconv.@treeversion@
++ 
++         Lets assume you want to build the binaries in a directory placed on a 
++         different drive (z:\build in this case) from where the sources are,
++         then you will run the following commands:
++           z:
++           md \build
++           cd \build
++           x:\src\gnu\libiconv.@treeversion@\djgpp\config x:/src/gnu/libiconv.@treeversion@
++ 
++         You *MUST* use forward slashes to specify the source directory.
++         After having configured the package run the folowing commands to create
++         the binaries and docs and install them:
++           make
++           make check
++           make install
++ 
++         Send suggestions and bug reports concerning the DJGPP port to
++         comp.os.msdos.djgpp or djgpp@delorie.com. Libiconv specific bugs
++         must be reported to Bruno Haible <haible@clisp.cons.org>.
++ 
++ 
++           Guerrero, Juan Manuel <st001906@hrz1.hrz.tu-darmstadt.de>
+diff -acprNC5 libiconv-1.7.orig/djgpp/sources.sed libiconv-1.7.djgpp/djgpp/sources.sed
+*** libiconv-1.7.orig/djgpp/sources.sed	Tue Mar  6 13:47:02 2001
+--- libiconv-1.7.djgpp/djgpp/sources.sed	Sun Jul 15 18:59:08 2001
+***************
+*** 9,19 ****
+  /^#[ 	]*include/ s|"aliases_aix\.h|"aliases/aix.h|
+  /^#[ 	]*include/ s|"aliases_dos\.h|"aliases/dos.h|
+  /^#[ 	]*include/ s|"aliases_osf1\.h|"aliases/osf1.h|
+  /^#[ 	]*include/ s|"aliases_local\.h|"aliases/local.h|
+  
+! # Fixes for lib/converters\.h.
+  # All cns, iso, georgian and mac files recide in their respective dirs now.
+  /^#[ 	]*include/ s|"cns|&/|
+  /^#[ 	]*include/ s|"iso|&/|
+  /^#[ 	]*include/ s|"georgian_|"georgian/|
+  /^#[ 	]*include/ s|"mac_|"mac/|
+--- 9,19 ----
+  /^#[ 	]*include/ s|"aliases_aix\.h|"aliases/aix.h|
+  /^#[ 	]*include/ s|"aliases_dos\.h|"aliases/dos.h|
+  /^#[ 	]*include/ s|"aliases_osf1\.h|"aliases/osf1.h|
+  /^#[ 	]*include/ s|"aliases_local\.h|"aliases/local.h|
+  
+! # Fixes for lib/converters.h, cns11643??.h and iso?????.h files.
+  # All cns, iso, georgian and mac files recide in their respective dirs now.
+  /^#[ 	]*include/ s|"cns|&/|
+  /^#[ 	]*include/ s|"iso|&/|
+  /^#[ 	]*include/ s|"georgian_|"georgian/|
+  /^#[ 	]*include/ s|"mac_|"mac/|
+diff -acprNC5 libiconv-1.7.orig/libcharset/djgpp/config.bat libiconv-1.7.djgpp/libcharset/djgpp/config.bat
+*** libiconv-1.7.orig/libcharset/djgpp/config.bat	Fri Jun  8 22:00:58 2001
+--- libiconv-1.7.djgpp/libcharset/djgpp/config.bat	Sun Jul 15 19:20:28 2001
+*************** if not "%_HOSTNAME%" == "%HOSTNAME%, %OS
+*** 74,85 ****
+  set HOSTNAME=%_HOSTNAME%
+  :hostdone
+  set _HOSTNAME=
+  set OS=
+  
+  echo Running the ./configure script...
+! sh ./configure --src=%XSRC%
+  if errorlevel 1 goto CfgError
+  echo Done.
+  goto End
+  
+  :SedError
+--- 74,88 ----
+  set HOSTNAME=%_HOSTNAME%
+  :hostdone
+  set _HOSTNAME=
+  set OS=
+  
++ Rem With libtool 1.4 -fPIC is the default. This completely breaks compilations
++ Rem with djgpp, so we will always use --disable-shared to inhibit the usage of
++ Rem -fPIC and -DPIC flags in libtool.
+  echo Running the ./configure script...
+! sh ./configure --enable-static --disable-shared --src=%XSRC%
+  if errorlevel 1 goto CfgError
+  echo Done.
+  goto End
+  
+  :SedError
+diff -acprNC5 libiconv-1.7.orig/libcharset/djgpp/config.sed libiconv-1.7.djgpp/libcharset/djgpp/config.sed
+*** libiconv-1.7.orig/libcharset/djgpp/config.sed	Tue Feb 27 18:14:04 2001
+--- libiconv-1.7.djgpp/libcharset/djgpp/config.sed	Mon Jul 16 10:19:28 2001
+***************
+*** 1,12 ****
+  # Additional editing of Makefiles
+! /ac_given_INSTALL=/,/^CEOF/ {
+    /^CEOF$/ i\
+  # DJGPP specific Makefile changes.\
+    /^aliaspath *	*=/s,:,";",g\
+    /^lispdir *	*=/ c\\\\\
+  lispdir = \\$(prefix)/gnu/emacs/site-lisp\
+    /TEXINPUTS=/s,:,";",g\
+    /PATH=/s,:,";",g\
+    s,config\\.h\\.in,config.h-in,g\
+    s,\\.tab\\.c,_tab.c,g\
+    s,\\.tab\\.h,_tab.h,g\
+--- 1,13 ----
+  # Additional editing of Makefiles
+! /extrasub/,/^CEOF/ {
+    /^CEOF$/ i\
+  # DJGPP specific Makefile changes.\
+    /^aliaspath *	*=/s,:,";",g\
+    /^lispdir *	*=/ c\\\\\
+  lispdir = \\$(prefix)/gnu/emacs/site-lisp\
++   /^docdir *	*=/s,/doc/,/gnudocs/,g\
+    /TEXINPUTS=/s,:,";",g\
+    /PATH=/s,:,";",g\
+    s,config\\.h\\.in,config.h-in,g\
+    s,\\.tab\\.c,_tab.c,g\
+    s,\\.tab\\.h,_tab.h,g\
+*************** lispdir = \\$(prefix)/gnu/emacs/site-lis
+*** 38,51 ****
+  }
+  
+  # Replace (command) > /dev/null with `command > /dev/null`, since
+  # parenthesized commands always return zero status in the ported Bash,
+  # even if the named command doesn't exist
+! /if ([^|;]*null/{
+!   s,(,`,
+!   s,),,
+!   s,;  *then,`; then,
+  }
+  
+  # DOS-style absolute file names should be supported as well
+  /\*) srcdir=/s,/\*,[\\\\/]* | [A-z]:[\\\\/]*,
+  /\$]\*) INSTALL=/s,\[/\$\]\*,[\\\\/$]* | [A-z]:[\\\\/]*,
+--- 39,63 ----
+  }
+  
+  # Replace (command) > /dev/null with `command > /dev/null`, since
+  # parenthesized commands always return zero status in the ported Bash,
+  # even if the named command doesn't exist
+! # This does no longer work with autoconf 2.5, libtool 1.4 and automake 1.5.
+! # /if ([^|;]*null/{
+! #   s,(,`,
+! #   s,),,
+! #   s,;  *then,`; then,
+! # }
+! 
+! # Replace (command) > /dev/null with `command > /dev/null`, since
+! # parenthesized commands always return zero status in the ported Bash,
+! # even if the named command doesn't exist
+! /if [^{].*null/,/ then/ {
+!   /test .*null/ {
+!     s,(,,
+!     s,),,
+!   }
+  }
+  
+  # DOS-style absolute file names should be supported as well
+  /\*) srcdir=/s,/\*,[\\\\/]* | [A-z]:[\\\\/]*,
+  /\$]\*) INSTALL=/s,\[/\$\]\*,[\\\\/$]* | [A-z]:[\\\\/]*,
+*************** lispdir = \\$(prefix)/gnu/emacs/site-lis
+*** 81,85 ****
+--- 93,100 ----
+  #  2) We need links across partitions,
+  #     so we will use "cp -pf" instead of "ln".
+  /# Make a symlink if possible; otherwise try a hard link./,/EOF/ {
+    s,;.*then, 2>/dev/null || cp -pf \$srcdir/\$ac_source \$ac_dest&,
+  }
++ 
++ # Let libtool use _libs all the time.
++ /objdir=/s,\.libs,_libs,
+diff -acprNC5 libiconv-1.7.orig/libcharset/djgpp/config.site libiconv-1.7.djgpp/libcharset/djgpp/config.site
+*** libiconv-1.7.orig/libcharset/djgpp/config.site	Tue Feb 27 18:14:04 2001
+--- libiconv-1.7.djgpp/libcharset/djgpp/config.site	Sun Jul  8 13:09:02 2001
+*************** ac_cv_path_EMACS=${EMACS='/dev/env/DJDIR
+*** 34,43 ****
+--- 34,44 ----
+  # These are set here so the generated libtool will be good
+  # for every DJGPP installation, not only the one where the
+  # package was configured.
+  NM=${NM='/dev/env/DJDIR/bin/nm'}
+  LD=${LD='/dev/env/DJDIR/bin/ld'}
++ STRIP=${STRIP='/dev/env/DJDIR/bin/strip'}
+  
+  # Force the test for 'ln -s' to report no.
+  ac_cv_prog_LN_S='cp -p'
+  cl_cv_prog_LN_S='cp -p'
+  cl_cv_prog_LN='cp -p'
+diff -acprNC5 libiconv-1.7.orig/libcharset/djgpp/fnchange.in libiconv-1.7.djgpp/libcharset/djgpp/fnchange.in
+*** libiconv-1.7.orig/libcharset/djgpp/fnchange.in	Thu Jan  1 00:00:00 1970
+--- libiconv-1.7.djgpp/libcharset/djgpp/fnchange.in	Sun Jul 15 18:50:14 2001
+***************
+*** 0 ****
+--- 1,19 ----
++ @V@/tools/aix-3.2.5                   @V@/tools/aix-3.2-5
++ @V@/tools/aix-4.1.5                   @V@/tools/aix-4.1-5
++ @V@/tools/aix-4.2.0                   @V@/tools/aix-4.2-0
++ @V@/tools/aix-4.3.2                   @V@/tools/aix-4.3-2
++ @V@/tools/glibc-2.1.3                 @V@/tools/glibc-2.1-3
++ @V@/tools/glibc-2.1.90                @V@/tools/glibc-2.1-90
++ @V@/tools/locale_charmap              @V@/tools/locale_charmap
++ @V@/tools/locale_charset.c            @V@/tools/charset_locale.c
++ @V@/tools/locale_codeset.c            @V@/tools/codeset_locale.c
++ @V@/tools/solaris-2.5.1               @V@/tools/solaris-2.5-1
++ @V@/tools/sunos-4.1.4                 @V@/tools/sunos-4.1-4
++ @V@/tools/all-charsets-X11            @V@/tools/all-charsets.X11
++ @V@/tools/glibc-2.2-XF86-3.3.6        @V@/tools/glibc22XF86-3.3-6
++ @V@/tools/glibc-2.2-XF86-4.0.1f       @V@/tools/glibc22XF86-4.0-1f
++ @V@/tools/locale_x11encoding.c        @V@/tools/x11encoding_locale.c
++ @V@/include/libcharset.h.in           @V@/include/libcharset.h-in
++ @V@/include/libcharset.h.msvc-shared  @V@/include/libcharset.h-msvc-shared
++ @V@/config.h.in                       @V@/config.h-in
++ @V@/config.h.msvc                     @V@/config.h-msvc
+diff -acprNC5 libiconv-1.7.orig/libcharset/djgpp/Makefile.maint libiconv-1.7.djgpp/libcharset/djgpp/Makefile.maint
+*** libiconv-1.7.orig/libcharset/djgpp/Makefile.maint	Thu Jan  1 00:00:00 1970
+--- libiconv-1.7.djgpp/libcharset/djgpp/Makefile.maint	Sat Jul  7 16:58:12 2001
+***************
+*** 0 ****
+--- 1,30 ----
++ # Maintainer's Makefile                                         -*-Makefile-*-
++ 
++ top_srcdir = ..
++ srcdir = .
++ 
++ SHELL = /bin/sh
++ 
++ all: README fnchange.lst
++ 
++ fnchange.lst: fnchange.in $(top_srcdir)/configure.in
++ 	PACKAGE=`grep "^PACKAGE=" $(top_srcdir)/configure.in | sed -e 's/^PACKAGE=//'`; \
++ 	VERSION=`grep "^VERSION=" $(top_srcdir)/configure.in | sed -e 's/^VERSION=//'`; \
++ 	sed \
++ 	    -e '/^#/d' \
++ 	    -e "s/@V@/$${PACKAGE}-$${VERSION}/g" \
++ 	  $(srcdir)/fnchange.in > t-$@
++ 	mv t-$@ $@
++ 
++ README: README.in $(top_srcdir)/configure.in
++ 	PACKAGE=`grep "^PACKAGE=" $(top_srcdir)/configure.in | sed -e 's/^PACKAGE=//'`; \
++ 	VERSION=`grep "^VERSION=" $(top_srcdir)/configure.in | sed -e 's/^VERSION=//'`; \
++ 	packageversion=`echo "$${VERSION}" | sed 's/\.//g'`; \
++ 	treeversion=`echo "$${VERSION}" | sed 's/\.//g'`; \
++ 	sed \
++ 	    -e "s/@V@/$${PACKAGE}-$${VERSION}/g" \
++ 	    -e "s/@VER@/$${VERSION}/g" \
++ 	    -e "s/@packageversion@/$$packageversion/g" \
++ 	    -e "s/@treeversion@/$$treeversion/g" \
++ 	  $(srcdir)/README.in > t-$@
++ 	mv t-$@ $@
+diff -acprNC5 libiconv-1.7.orig/libcharset/djgpp/README.in libiconv-1.7.djgpp/libcharset/djgpp/README.in
+*** libiconv-1.7.orig/libcharset/djgpp/README.in	Thu Jan  1 00:00:00 1970
+--- libiconv-1.7.djgpp/libcharset/djgpp/README.in	Sun Jul 15 18:30:36 2001
+***************
+*** 0 ****
+--- 1,121 ----
++ This is a port of GNU Libcharset @VER@ to MSDOS/DJGPP.
++ 
++ 1.:     DJGPP specific changes.
++         =======================
++         There are no DJGPP specific changes. This package should
++         configure and compile out-of-the-box.
++         Please read the documentation to become familiar with this
++         product.
++ 
++ 
++ 2.:     Installing the binary package.
++         ==============================
++ 
++ 2.1.:   Copy the binary distribution into the top DJGPP installation
++         directory and unzip the binary distribution running *ONE* of
++         the following commands:
++           unzip32 lcset@packageversion@b.zip      or
++           djtarx lcset@packageversion@b.zip       or
++           pkunzip -d lcset@packageversion@b.zip
++ 
++ 
++ 
++ 3.:     Building the binaries from sources.
++         ===================================
++ 
++ 3.1.:   To build the binaries you will need the following binary packages:
++           djdev203.zip, bsh204b.zip, gcc2953b.zip,
++           bnu2112b.zip, mak3791b.zip, fil40b.zip,
++           shl112b.zip, txt20b.zip, txi40b.zip,
++           grep24b.zip and sed302b.zip
++ 
++ 
++         All this packages can be found in the v2gnu directory of any
++         Simtel.NET mirror.
++         You will need bsh204b.zip and *NOT* a prior version or the build will fail.
++         The same applies to djdev203.zip. You *MUST* use the updated version of
++         shl112b.zip (date: 2000-08-11). This updated versions has been recompiled
++         with djdev203.zip and know about the "/dev/env" functionality introduced
++         with djdev203.zip. All the other packages are the ones I have used to
++         build the binaries from this sources. Previuos and/or later versions of
++         these packages may do the job as well but I have not tested this.
++ 
++ 3.2.:   Create a temporary directory and copy the source package: lcset@packageversion@s.zip
++         into the temporary directory. If you download the source distribution
++         from one of the DJGPP archives, just unzip it preserving the directory
++         structure, runnig ONE of the following commands:
++           unzip32 lcset@packageversion@s.zip      or
++           djtarx lcset@packageversion@s.zip       or
++           pkunzip -d lcset@packageversion@s.zip
++ 
++         Source distributions downloaded from one of the GNU FTP sites need
++         some more work to unpack.  First, you MUST use the `djtar' program
++         to unzip the package. That's because some file names in the official
++         distributions need to be changed to avoid problems on the various
++         platforms supported by DJGPP. `djtar' can rename files on the fly
++         given a file with name mappings. The distribution includes a file
++         `djgpp/fnchange.lst' with the necessary mappings. So you need first
++         to retrieve that file, and then invoke `djtar' to unpack the
++         distribution. Here's how:
++ 
++           djtar -x -p -o @V@/djgpp/fnchange.lst @V@.tar.gz > lst
++           djtar -x -n lst @V@.tar.gz
++ 
++         (The name of the distribution archive and the top-level directory will
++         be different for versions other than @VER@.)
++ 
++ 
++ 3.3.:   The package is preconfigured for djdev203. To build the products you
++         should run the following command:
++           make
++ 
++         After the compilation has finished, you can check the products
++         running the command:
++           make check
++ 
++         To install the products run the command:
++           make install
++ 
++         This will install the products (libcharset.h, libcharset.a) into your
++         DJGPP installation tree. As usual, prefix is defined as "/dev/env/DJDIR".
++         If you prefer to install into same other directory, run the command:
++           make install prefix=z:/some/other/dir
++ 
++         Of course, you should replace "z:/some/other/dir" by an appropriate path
++         that will meet your requeriments.
++ 
++ 3.4.:   If you need/want to reconfigure the package you will have to run the
++         following commands:
++           make distclean
++           djgpp\config
++ 
++         Please note that you *MUST* use the "distclean" option or the config.cache
++         file will *NOT* be deleted. In this case you are *NOT* reconfiguring
++         because the configuration informations is read from the cache file instead
++         of being newly computed.
++         To build the programs in a directory other than where the sources are,
++         you must add the parameter that specifies the source directory,
++         e.g:
++           x:\src\gnu\libchset.@treeversion@\djgpp\config x:/src/gnu/libchset.@treeversion@
++ 
++         Lets assume you want to build the binaries in a directory placed on a 
++         different drive (z:\build in this case) from where the sources are,
++         then you will run the following commands:
++           z:
++           md \build
++           cd \build
++           x:\src\gnu\libchset.@treeversion@\djgpp\config x:/src/gnu/libchset.@treeversion@
++ 
++         You *MUST* use forward slashes to specify the source directory.
++         After having configured the package run the folowing commands to create
++         the binaries and docs and install them:
++           make
++           make check
++           make install
++ 
++         Send suggestions and bug reports concerning the DJGPP port to
++         comp.os.msdos.djgpp or djgpp@delorie.com. Libcharset specific
++         bugs must be reported to Bruno Haible <haible@clisp.cons.org>.
++ 
++ 
++           Guerrero, Juan Manuel <st001906@hrz1.hrz.tu-darmstadt.de>

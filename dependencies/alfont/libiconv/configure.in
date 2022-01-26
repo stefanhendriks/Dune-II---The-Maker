@@ -1,0 +1,103 @@
+dnl Copyright (C) 1999-2001 Free Software Foundation, Inc.
+dnl This file is part of the GNU LIBICONV Library.
+dnl
+dnl The GNU LIBICONV Library is free software; you can redistribute it
+dnl and/or modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either version 2
+dnl of the License, or (at your option) any later version.
+dnl
+dnl The GNU LIBICONV Library is distributed in the hope that it will be
+dnl useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with the GNU LIBICONV Library; see the file COPYING.LIB.
+dnl If not, write to the Free Software Foundation, Inc., 59 Temple Place -
+dnl Suite 330, Boston, MA 02111-1307, USA.  */
+
+AC_PREREQ(2.13)
+
+AC_INIT(lib/iconv.c)
+AC_CONFIG_AUX_DIR(autoconf)
+AC_CONFIG_HEADER(lib/config.h)
+AC_PROG_MAKE_SET
+
+dnl           checks for programs
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_GCC_TRADITIONAL
+CL_PROG_RANLIB
+CL_PROG_INSTALL
+CL_PROG_CP
+CL_PROG_LN
+CL_PROG_LN_S
+
+dnl           check for host type
+
+CL_CANONICAL_HOST(autoconf)
+
+dnl           checks for UNIX variants that set DEFS
+
+AC_AIX
+AC_MINIX
+AC_ISC_POSIX
+
+dnl           checks for compiler output filename suffixes
+
+AC_OBJEXT
+AC_EXEEXT
+
+dnl           check for build configuration
+
+PACKAGE=libiconv
+AM_DISABLE_STATIC
+AM_PROG_LIBTOOL
+
+dnl           checks for header files
+
+AC_CHECK_HEADERS(locale.h)
+
+dnl           checks for typedefs
+
+AC_MBSTATE_T
+
+dnl           checks for functions and declarations
+
+CL_ICONV
+if test $cl_cv_func_iconv = yes -a -z "$cl_cv_proto_iconv_arg1"; then
+  ICONV_CONST=""
+else
+  ICONV_CONST="const"
+fi
+AC_SUBST(ICONV_CONST)
+
+AC_CHECK_FUNCS(mbrtowc wcrtomb setlocale)
+
+CL_WORDS_LITTLEENDIAN
+
+dnl           check whether OS supports plug libraries
+
+OS=""
+case "$host_os" in
+  linux*)   OS="linux" ;;
+  solaris*) OS="solaris" ;;
+  osf*)     OS="osf" ;;
+esac
+if test -n "$OS"; then
+  AC_SUBST(OS)
+  AC_SUBST(GCC)
+  PLUGLIB="libiconv_plug.so"
+else
+  PLUGLIB=""
+fi
+AC_SUBST(PLUGLIB)
+
+if test -d "${srcdir}/tests"; then
+  TESTS_MAKEFILE=tests/Makefile
+else
+  TESTS_MAKEFILE=""
+fi
+AC_OUTPUT(Makefile lib/Makefile src/Makefile man/Makefile ${TESTS_MAKEFILE} include/iconv.h)
+AC_OUTPUT_SUBDIRS(libcharset)
