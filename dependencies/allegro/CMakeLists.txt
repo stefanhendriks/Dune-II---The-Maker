@@ -28,15 +28,15 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-      "Choose the type of build, options are:
-        None Debug Release RelWithDebInfo MinSizeRel Profile."
-      FORCE)
-endif()
+# if(NOT CMAKE_BUILD_TYPE)
+#   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
+#       "Choose the type of build, options are:
+#         None Debug Release RelWithDebInfo MinSizeRel Profile."
+#       FORCE)
+# endif()
 # Restrict configuration types to the selected build type.
 # Note: This needs to be done before the project command
-set(CMAKE_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}" CACHE INTERNAL "internal")
+# set(CMAKE_CONFIGURATION_TYPES "${CMAKE_BUILD_TYPE}" CACHE INTERNAL "internal")
 
 #-----------------------------------------------------------------------------#
 #
