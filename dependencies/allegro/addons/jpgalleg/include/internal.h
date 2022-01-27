@@ -183,7 +183,7 @@ extern int _jpeg_getc(void);
 extern int _jpeg_putc(int);
 extern int _jpeg_getw(void);
 extern int _jpeg_putw(int);
-extern INLINE int _jpeg_get_bit(void);
+extern int _jpeg_get_bit(void);
 extern int _jpeg_put_bit(int);
 extern void _jpeg_flush_bits(void);
 extern void _jpeg_open_chunk(void);

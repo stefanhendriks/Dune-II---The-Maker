@@ -228,7 +228,7 @@ option(STRICT_WARN "Halt at warnings" off)
 if(CMAKE_COMPILER_IS_GNUCC)
     set(COMPILER_GCC 1)
     set(ALLEGRO_GCC 1)
-    set(WFLAGS "-W -Wno-unused-parameter") # Removed: -Wall
+    set(WFLAGS "-Wno-unused-parameter") # Removed: -Wall -Wextra
     set(WFLAGS_C_ONLY "-Wdeclaration-after-statement")
     if(STRICT_WARN)
         set(WFLAGS "${WFLAGS} -Werror -Wpointer-arith")
@@ -782,9 +782,10 @@ add_our_library(allegro
     ${ALLEGRO_SRC_C_FILES}
     ${PLATFORM_SOURCES}
     ${ALLEGRO_PUBLIC_HEADERS}
-    )
-
-target_include_directories(allegro PUBLIC "include" "${CMAKE_CURRENT_BINARY_DIR}/include")
+)
+target_include_directories(allegro PRIVATE "include" "${CMAKE_CURRENT_BINARY_DIR}/include")
+# Set Allegro includes as "system" headers to prevent warnings triggered on them
+target_include_directories(allegro SYSTEM INTERFACE "include" "${CMAKE_CURRENT_BINARY_DIR}/include")
 
 if(WIN32 AND SHARED)
     set(allegro_OUTPUT_NAME alleg${ALLEGRO_DLL_SHORTVER})
