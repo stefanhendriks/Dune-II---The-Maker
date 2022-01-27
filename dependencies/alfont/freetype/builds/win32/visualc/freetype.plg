@@ -1,0 +1,146 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: freetype - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1527.tmp" with contents
+[
+/MD /Za /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /Fo"..\..\..\objs\release/" /Fd"..\..\..\objs\release/" /FD /c 
+"D:\Works\freetype-2.1.10\src\bdf\bdf.c"
+"D:\Works\freetype-2.1.10\src\cff\cff.c"
+"D:\Works\freetype-2.1.10\src\base\ftbase.c"
+"D:\Works\freetype-2.1.10\src\cache\ftcache.c"
+"D:\Works\freetype-2.1.10\src\base\ftglyph.c"
+"D:\Works\freetype-2.1.10\src\gzip\ftgzip.c"
+"D:\Works\freetype-2.1.10\src\lzw\ftlzw.c"
+"D:\Works\freetype-2.1.10\src\base\ftinit.c"
+"D:\Works\freetype-2.1.10\src\base\ftmm.c"
+"D:\Works\freetype-2.1.10\src\base\ftsystem.c"
+"D:\Works\freetype-2.1.10\src\pcf\pcf.c"
+"D:\Works\freetype-2.1.10\src\pfr\pfr.c"
+"D:\Works\freetype-2.1.10\src\psaux\psaux.c"
+"D:\Works\freetype-2.1.10\src\pshinter\pshinter.c"
+"D:\Works\freetype-2.1.10\src\psnames\psmodule.c"
+"D:\Works\freetype-2.1.10\src\raster\raster.c"
+"D:\Works\freetype-2.1.10\src\sfnt\sfnt.c"
+"D:\Works\freetype-2.1.10\src\smooth\smooth.c"
+"D:\Works\freetype-2.1.10\src\truetype\truetype.c"
+"D:\Works\freetype-2.1.10\src\type1\type1.c"
+"D:\Works\freetype-2.1.10\src\cid\type1cid.c"
+"D:\Works\freetype-2.1.10\src\type42\type42.c"
+"D:\Works\freetype-2.1.10\src\winfonts\winfnt.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1527.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1528.tmp" with contents
+[
+/MD /Ze /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /Fo"..\..\..\objs\release/" /Fd"..\..\..\objs\release/" /FD /c 
+"D:\Works\freetype-2.1.10\builds\win32\ftdebug.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1528.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1529.tmp" with contents
+[
+/nologo /out:"..\..\..\objs\freetype2110.lib" 
+"\Works\freetype-2.1.10\objs\release\bdf.obj"
+"\Works\freetype-2.1.10\objs\release\cff.obj"
+"\Works\freetype-2.1.10\objs\release\ftbase.obj"
+"\Works\freetype-2.1.10\objs\release\ftcache.obj"
+"\Works\freetype-2.1.10\objs\release\ftdebug.obj"
+"\Works\freetype-2.1.10\objs\release\ftglyph.obj"
+"\Works\freetype-2.1.10\objs\release\ftgzip.obj"
+"\Works\freetype-2.1.10\objs\release\ftlzw.obj"
+"\Works\freetype-2.1.10\objs\release\ftinit.obj"
+"\Works\freetype-2.1.10\objs\release\ftmm.obj"
+"\Works\freetype-2.1.10\objs\release\ftsystem.obj"
+"\Works\freetype-2.1.10\objs\release\pcf.obj"
+"\Works\freetype-2.1.10\objs\release\pfr.obj"
+"\Works\freetype-2.1.10\objs\release\psaux.obj"
+"\Works\freetype-2.1.10\objs\release\pshinter.obj"
+"\Works\freetype-2.1.10\objs\release\psmodule.obj"
+"\Works\freetype-2.1.10\objs\release\raster.obj"
+"\Works\freetype-2.1.10\objs\release\sfnt.obj"
+"\Works\freetype-2.1.10\objs\release\smooth.obj"
+"\Works\freetype-2.1.10\objs\release\truetype.obj"
+"\Works\freetype-2.1.10\objs\release\type1.obj"
+"\Works\freetype-2.1.10\objs\release\type1cid.obj"
+"\Works\freetype-2.1.10\objs\release\type42.obj"
+"\Works\freetype-2.1.10\objs\release\winfnt.obj"
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP1529.tmp"
+<h3>Output Window</h3>
+Compiling...
+Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 12.00.8168 for 80x86
+Copyright (C) Microsoft Corp 1984-1998. All rights reserved.
+
+cl /MD /Za /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /Fo"..\..\..\objs\release/" /Fd"..\..\..\objs\release/" /FD /c 
+   "D:\Works\freetype-2.1.10\src\bdf\bdf.c"
+   "D:\Works\freetype-2.1.10\src\cff\cff.c"
+   "D:\Works\freetype-2.1.10\src\base\ftbase.c"
+   "D:\Works\freetype-2.1.10\src\cache\ftcache.c"
+   "D:\Works\freetype-2.1.10\src\base\ftglyph.c"
+   "D:\Works\freetype-2.1.10\src\gzip\ftgzip.c"
+   "D:\Works\freetype-2.1.10\src\lzw\ftlzw.c"
+   "D:\Works\freetype-2.1.10\src\base\ftinit.c"
+   "D:\Works\freetype-2.1.10\src\base\ftmm.c"
+   "D:\Works\freetype-2.1.10\src\base\ftsystem.c"
+   "D:\Works\freetype-2.1.10\src\pcf\pcf.c"
+   "D:\Works\freetype-2.1.10\src\pfr\pfr.c"
+   "D:\Works\freetype-2.1.10\src\psaux\psaux.c"
+   "D:\Works\freetype-2.1.10\src\pshinter\pshinter.c"
+   "D:\Works\freetype-2.1.10\src\psnames\psmodule.c"
+   "D:\Works\freetype-2.1.10\src\raster\raster.c"
+   "D:\Works\freetype-2.1.10\src\sfnt\sfnt.c"
+   "D:\Works\freetype-2.1.10\src\smooth\smooth.c"
+   "D:\Works\freetype-2.1.10\src\truetype\truetype.c"
+   "D:\Works\freetype-2.1.10\src\type1\type1.c"
+   "D:\Works\freetype-2.1.10\src\cid\type1cid.c"
+   "D:\Works\freetype-2.1.10\src\type42\type42.c"
+   "D:\Works\freetype-2.1.10\src\winfonts\winfnt.c"
+
+bdf.c
+cff.c
+ftbase.c
+ftcache.c
+ftglyph.c
+ftgzip.c
+ftlzw.c
+ftinit.c
+ftmm.c
+ftsystem.c
+pcf.c
+pfr.c
+psaux.c
+pshinter.c
+psmodule.c
+raster.c
+sfnt.c
+D:\Works\freetype-2.1.10\src\sfnt\sfdriver.c(322) : warning C4054: 'type cast' : from function pointer 'void *(*)(struct TT_FaceRec_ *,int )' to data pointer 'void *'
+D:\Works\freetype-2.1.10\src\sfnt\sfdriver.c(325) : warning C4054: 'type cast' : from function pointer 'int (*)(struct TT_FaceRec_ *,unsigned long ,long ,unsigned char *,unsigned long *)' to data pointer 'void *'
+smooth.c
+truetype.c
+type1.c
+Generating Code...
+Compiling...
+type1cid.c
+type42.c
+winfnt.c
+Generating Code...
+Compiling...
+Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 12.00.8168 for 80x86
+Copyright (C) Microsoft Corp 1984-1998. All rights reserved.
+
+cl /MD /Ze /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /Fo"..\..\..\objs\release/" /Fd"..\..\..\objs\release/" /FD /c 
+   "D:\Works\freetype-2.1.10\builds\win32\ftdebug.c"
+
+ftdebug.c
+Creating library...
+
+
+
+<h3>Results</h3>
+freetype2110.lib - 0 error(s), 2 warning(s)
+</pre>
+</body>
+</html>

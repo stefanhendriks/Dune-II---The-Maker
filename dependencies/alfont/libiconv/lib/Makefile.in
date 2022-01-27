@@ -1,0 +1,119 @@
+# Makefile for libiconv/lib
+
+#### Start of system configuration section. ####
+
+# Directories used by "make":
+srcdir = @srcdir@
+
+# Directories used by "make install":
+prefix = @prefix@
+local_prefix = /usr/local
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+
+# Programs used by "make":
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+INCLUDES = -I. -I$(srcdir) -I../include -I$(srcdir)/../include
+LIBTOOL = @LIBTOOL@
+LIBTOOL_COMPILE = $(LIBTOOL) --mode=compile
+LIBTOOL_LINK = $(LIBTOOL) --mode=link
+LIBTOOL_INSTALL = $(LIBTOOL) --mode=install
+LIBTOOL_UNINSTALL = $(LIBTOOL) --mode=uninstall
+CP = cp
+MV = mv
+LN = @LN@
+LN_S = @LN_S@
+RM = rm -f
+
+# Programs used by "make install":
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+#### End of system configuration section. ####
+
+SHELL = /bin/sh
+
+# Before making a release, change this according to the libtool documentation,
+# section "Library interface versions".
+LIBICONV_VERSION_INFO = 2:4:0
+
+# Needed by $(LIBTOOL).
+top_builddir = ..
+
+SOURCES = $(srcdir)/iconv.c
+
+OBJECTS = iconv.lo
+
+LIBCHARSET_OBJECTS = ../libcharset/lib/localcharset.lo
+
+all : @PLUGLIB@ libiconv.la
+
+libiconv.la : $(OBJECTS)
+	$(LIBTOOL_LINK) $(CC) $(LDFLAGS) -o libiconv.la -rpath $(libdir) -version-info $(LIBICONV_VERSION_INFO) -no-undefined $(OBJECTS) $(LIBCHARSET_OBJECTS)
+
+libiconv_plug.so : libiconv_plug_@OS@.so
+	$(RM) libiconv_plug.so
+	$(LN_S) libiconv_plug_@OS@.so libiconv_plug.so
+
+libiconv_plug_linux.so : $(SOURCES)
+	$(LIBTOOL_LINK) $(CC) $(LDFLAGS) $(INCLUDES) $(CFLAGS) $(CPPFLAGS) -fPIC -DPIC -DLIBICONV_PLUG $(SOURCES) $(LIBCHARSET_OBJECTS) -shared -o libiconv_plug_linux.so
+
+libiconv_plug_solaris.so : $(SOURCES)
+	if test -n "@GCC@"; then \
+	  $(LIBTOOL_LINK) $(CC) $(LDFLAGS) $(INCLUDES) $(CFLAGS) $(CPPFLAGS) -fPIC -DPIC -DLIBICONV_PLUG $(SOURCES) $(LIBCHARSET_OBJECTS) -G -o libiconv_plug_solaris.so; \
+	else \
+	  $(LIBTOOL_LINK) $(CC) $(LDFLAGS) $(INCLUDES) $(CFLAGS) $(CPPFLAGS) -KPIC -DPIC -DLIBICONV_PLUG $(SOURCES) $(LIBCHARSET_OBJECTS) -G -o libiconv_plug_solaris.so; \
+	fi
+
+libiconv_plug_osf.so : $(SOURCES)
+	if test -n "@GCC@"; then \
+	  $(LIBTOOL_LINK) $(CC) $(LDFLAGS) $(INCLUDES) $(CFLAGS) $(CPPFLAGS) -fPIC -DPIC -DLIBICONV_PLUG $(SOURCES) $(LIBCHARSET_OBJECTS) -shared -o libiconv_plug_osf.so; \
+	else \
+	  $(LIBTOOL_LINK) $(CC) $(LDFLAGS) $(INCLUDES) $(CFLAGS) $(CPPFLAGS) -DPIC -DLIBICONV_PLUG $(SOURCES) $(LIBCHARSET_OBJECTS) -c -o iconv_plug.o; \
+	  /bin/ld -shared -expect_unresolved \* -o libiconv_plug_osf.so iconv_plug.o; \
+	fi
+
+iconv.lo : $(srcdir)/iconv.c $(srcdir)/converters.h $(srcdir)/encodings/encodings.def $(srcdir)/encodings/aix.def $(srcdir)/encodings/osf1.def $(srcdir)/encodings/dos.def $(srcdir)/encodings/local.def $(srcdir)/aliases/aliases.h $(srcdir)/aliases/aix.h $(srcdir)/aliases/osf1.h $(srcdir)/aliases/dos.h $(srcdir)/flags.h
+	$(LIBTOOL_COMPILE) $(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/iconv.c
+
+# Installs the library and include files only. Typically called with only
+# $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+install-lib : all force
+	if [ ! -d $(libdir) ] ; then mkdir $(libdir) ; fi
+	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libiconv.la $(libdir)/libiconv.la
+
+install : all force
+	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libiconv.la $(DESTDIR)$(libdir)/libiconv.la
+	if test -n "@PLUGLIB@"; then $(INSTALL_DATA) @PLUGLIB@ $(DESTDIR)$(libdir)/@PLUGLIB@.new && mv $(DESTDIR)$(libdir)/@PLUGLIB@.new $(DESTDIR)$(libdir)/@PLUGLIB@ ; fi
+
+installdirs : force
+	if [ ! -d $(DESTDIR)$(prefix) ] ; then mkdir $(DESTDIR)$(prefix) ; fi
+	if [ ! -d $(DESTDIR)$(exec_prefix) ] ; then mkdir $(DESTDIR)$(exec_prefix) ; fi
+	if [ ! -d $(DESTDIR)$(libdir) ] ; then mkdir $(DESTDIR)$(libdir) ; fi
+
+uninstall : force
+	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(libdir)/libiconv.la
+	if test -n "@PLUGLIB@"; then $(RM) $(DESTDIR)$(libdir)/@PLUGLIB@ ; fi
+
+check : all
+
+mostlyclean : clean
+
+clean : force
+	$(RM) *.o *.lo *.a *.la libiconv_plug* core so_locations
+	$(RM) -r .libs _libs
+
+distclean : clean
+	$(RM) Makefile config.h libtool
+
+maintainer-clean : distclean
+
+force :
+

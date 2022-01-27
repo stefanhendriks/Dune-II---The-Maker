@@ -1,0 +1,110 @@
+2001-06-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.in (clean): Remove also *.o.lock, left there by libtool
+	on IRIX.
+
+2001-06-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.in (localcharset.lo): Mention $(INCLUDES) before $(CFLAGS)
+	and $(CPPFLAGS).
+	* Makefile.msvc (localcharset.obj): Likewise.
+
+2001-06-24  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Change canonical name of BIG5HKSCS to BIG5-HKSCS.
+	Change canonical name of SJIS to SHIFT_JIS.
+
+2001-05-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.msvc (charset.lib): Allow the 'del' command to fail.
+
+2001-05-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.in (CPPFLAGS, LDFLAGS): New variables.
+	(libcharset.la): Use LDFLAGS.
+	(localcharset.lo): Use CPPFLAGS.
+
+2001-04-30  Bruno Haible  <haible@clisp.cons.org>
+
+	Silence "gcc -Wall -Wwrite-strings" warnings.
+	* localcharset.c (charset_aliases): Change type to 'const char *'.
+	(get_charset_aliases): Change type of 'cp' to 'const char *'.
+
+2001-03-10  Bruno Haible  <haible@clisp.cons.org>
+
+	* localcharset.c (locale_charset): Allow wildcard syntax. Also resolve
+	alias if codeset is empty.
+	* config.charset (BeOS): Use wildcard syntax.
+
+	* Makefile.in (libcharset.la): Pass flag -no-undefined. Needed on
+	platforms like BeOS.
+
+	* Makefile.in (RM): New variable.
+
+2001-01-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* localcharset.c (volatile): Define to empty if not using ANSI C.
+
+2001-03-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Update for OSF/1 5.1.
+
+2001-03-01  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: For DOS/DJGPP, add CP775.
+
+2001-02-24  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Add support for DOS/DJGPP.
+
+2001-02-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* localcharset.c (locale_charset): Don't return NULL.
+
+2001-02-24  Bruno Haible  <haible@clisp.cons.org>
+
+	* localcharset.c (locale_charset): Don't use setlocale(LC_CTYPE,NULL).
+
+2001-01-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Update for FreeBSD 4.2.
+
+2000-12-19  Jim Meyering  <jim@meyering.net>
+
+	* localcharset.c: Improve WIN32 macrology.
+	(locale_charset): Increase size of buffer.
+
+2000-12-18  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Add support for BeOS.
+
+2000-12-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.in (ref-add.sed, ref-del.sed): Don't use $<, not understood
+	by Solaris "make". Reported by Toshimitsu Fujiwara.
+
+2000-12-08  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.in (exec_prefix): Use configure's --exec-prefix argument.
+
+2000-12-02  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.msvc: Replace STATIC with its opposite flag, DLL.
+
+2000-11-21  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.msvc (MFLAGS): New variable.
+	(CFLAGS, charset.lib): Use it.
+	(INCLUDES): Use "..", not "..\include".
+
+2000-10-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.msvc: New file.
+
+2000-10-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Add ISO-8859-3, BIG5HKSCS, GB18030, JOHAB, VISCII,
+	CP874, CP949, CP950, CP1250, CP1253, CP1254, CP1255, CP1256, CP1257
+	to the list of canonical encodings. Rename EUC-CN to GB2312.
+	* localcharset.c (locale_charset): Add support for Win32.
+

@@ -1,0 +1,23 @@
+#!/bin/sh
+# Complete check of a stateless encoding.
+# Usage: check-stateless SRCDIR CHARSET
+srcdir="$1"
+charset="$2"
+set -e
+./table-from "$charset" > tmp-"$charset".TXT
+./table-to "$charset" | sort > tmp-"$charset".INVERSE.TXT
+cmp "${srcdir}"/"$charset".TXT tmp-"$charset".TXT 2> /dev/null
+if test -f "${srcdir}"/"$charset".IRREVERSIBLE.TXT; then
+  cat "${srcdir}"/"$charset".TXT "${srcdir}"/"$charset".IRREVERSIBLE.TXT | sort | uniq -u > tmp-orig-"$charset".INVERSE.TXT
+  cmp tmp-orig-"$charset".INVERSE.TXT tmp-"$charset".INVERSE.TXT 2> /dev/null
+else
+  cmp "${srcdir}"/"$charset".TXT tmp-"$charset".INVERSE.TXT 2> /dev/null
+fi
+rm -f tmp-"$charset".TXT tmp-"$charset".INVERSE.TXT tmp-orig-"$charset".INVERSE.TXT
+exit 0
+# For a new encoding:
+# You can create the "$charset".TXT like this:
+#   ./table-from "$charset" > "$charset".TXT
+# You can create the "$charset".IRREVERSIBLE.TXT like this:
+#   ./table-to "$charset" | sort > "$charset".INVERSE.TXT
+#   diff "$charset".TXT "$charset".INVERSE.TXT | grep '^[<>]' | sed -e 's,^. ,,' > "$charset".IRREVERSIBLE.TXT
