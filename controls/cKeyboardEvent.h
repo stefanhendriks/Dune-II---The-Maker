@@ -7,7 +7,6 @@
 #include "enums.h"
 #include "utils/common.h"
 
-#define HAVE_STDINT_H
 #include <allegro/keyboard.h>
 
 enum class eKeyEventType {

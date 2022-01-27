@@ -38,8 +38,8 @@
 
 /* these are available in OpenWatcom 1.3 (12.3) */
 #if __WATCOMC__ >= 1230
-   #define HAVE_INTTYPES_H
-   #define HAVE_STDINT_H
+   #define ALLEGRO_HAVE_INTTYPES_H	1
+   #define ALLEGRO_HAVE_STDINT_H	1
 #else
    #define ALLEGRO_GUESS_INTTYPES_OK
 #endif
@@ -56,6 +56,10 @@
 #define ALLEGRO_LFN  0
 
 #define LONG_LONG    long long
+#ifdef ALLEGRO_GUESS_INTTYPES_OK
+   #define int64_t   signed long long
+   #define uint64_t  unsigned long long
+#endif
 
 #if __WATCOMC__ >= 1100
    #define ALLEGRO_MMX
