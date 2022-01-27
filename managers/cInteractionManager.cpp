@@ -19,10 +19,6 @@ cInteractionManager::~cInteractionManager() {
 	miniMapDrawer = nullptr;
 }
 
-void cInteractionManager::interactWithKeyboard(){
-    keyboardManager.interact();
-}
-
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     this->sidebar = thePlayer->getSideBar();
     this->player = thePlayer;

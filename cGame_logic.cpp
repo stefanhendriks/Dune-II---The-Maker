@@ -33,6 +33,7 @@ constexpr auto kMaxAlpha = 255;
 cGame::cGame() {
     memset(m_states, 0, sizeof(cGameState *));
 
+    m_drawFps = false;
     m_nextState = -1;
     m_currentState = nullptr;
     m_screenX = 800;
@@ -52,6 +53,7 @@ cGame::cGame() {
 
 
 void cGame::init() {
+    m_drawFps = false;
     m_nextState = -1;
     m_missionWasWon = false;
     m_currentState = nullptr;
@@ -415,6 +417,10 @@ void cGame::updateMouseAndKeyboardStateAndGamePlaying() {
 
 void cGame::drawStateCombat() {
     drawManager->drawCombatState();
+    if (m_drawFps) {
+        alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(),
+                          iRest);
+    }
 }
 
 // drawStateMentat logic + drawing mouth/eyes
@@ -540,7 +546,6 @@ void cGame::run() {
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
-        m_interactionManager->interactWithKeyboard(); // generic interaction
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
         m_frameCount++;
     }
@@ -1718,10 +1723,50 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
             humanPlayer->markUnitsForGroup(iGroup);
         }
     }
+
+    if (isDebugMode() && event.hasKey(KEY_TAB)) {
+        onKeyDownDebugMode(event);
+    } else {
+        if (event.hasKey(KEY_Z)) {
+            mapCamera->resetZoom();
+        }
+
+        cPlayer &humanPlayer = players[HUMAN];
+
+        if (event.hasKey(KEY_H)) {
+            mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        }
+
+        // Center on the selected structure
+        if (event.hasKey(KEY_C)) {
+            cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+            if (selectedStructure) {
+                mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            }
+        }
+
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_OPTIONS);
+        }
+    }
+
+    if (isDebugMode() && event.hasKey(KEY_F4)) {
+        if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+            map.clearShroud(players[HUMAN].getGameControlsContext()->getMouseCell(), 6, HUMAN);
+        }
+    }
+
+    if (event.hasKey(KEY_F)) {
+        m_drawFps = true;
+    }
 }
 
 void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
     cPlayer &humanPlayer = players[HUMAN];
+
+    if (event.hasKey(KEY_F)) {
+        m_drawFps = false;
+    }
 
     if (event.hasKey(KEY_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
@@ -1901,5 +1946,119 @@ void cGame::thinkSlow_reinforcements() {
                 reinforcements[i].iCell = -1;
             }
         }
+    }
+}
+
+void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
+    if (event.hasKey(KEY_0)) {
+        drawManager->setPlayerToDraw(&players[0]);
+        game.setPlayerToInteractFor(&players[0]);
+    } else if (event.hasKey(KEY_1)) {
+        drawManager->setPlayerToDraw(&players[1]);
+        game.setPlayerToInteractFor(&players[1]);
+    } else if (event.hasKey(KEY_2)) {
+        drawManager->setPlayerToDraw(&players[2]);
+        game.setPlayerToInteractFor(&players[2]);
+    } else if (event.hasKey(KEY_3)) {
+        drawManager->setPlayerToDraw(&players[3]);
+        game.setPlayerToInteractFor(&players[3]);
+    }
+
+    //JUMP TO MISSION 9
+    if (event.hasKey(KEY_F1)) {
+        game.missionInit();
+        game.m_mission = 9;
+        game.m_region = 22;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
+    }
+
+    // WIN MISSION
+    if (event.hasKey(KEY_F2)) {
+        game.setMissionWon();
+    }
+
+    // LOSE MISSION
+    if (event.hasKey(KEY_F3)) {
+        game.setMissionLost();
+    }
+
+    // GIVE CREDITS TO ALL PLAYERS
+    if (event.hasKey(KEY_F4)) {
+        for (int i = 0; i < AI_WORM; i++) {
+            players[i].setCredits(5000);
+        }
+    }
+
+    //DESTROY UNIT OR BUILDING
+    if (event.hasKeys(KEY_F4, KEY_LSHIFT)) {
+        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        if (mc > -1) {
+            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(true, false);
+            }
+
+            int idOfStructureAtCell = map.getCellIdStructuresLayer(mc);
+            if (idOfStructureAtCell > -1) {
+                structure[idOfStructureAtCell]->die();
+            }
+
+            idOfUnitAtCell = map.getCellIdWormsLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(false, false);
+            }
+        }
+    }
+
+    //DESTROY UNIT OR BUILDING
+    if (event.hasKeys(KEY_F5, KEY_LSHIFT)) {
+        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        if (mc > -1) {
+            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                cUnit &pUnit = unit[idOfUnitAtCell];
+                int damageToTake = pUnit.getHitPoints() - 25;
+                if (damageToTake > 0) {
+                    pUnit.takeDamage(damageToTake);
+                }
+            }
+        }
+    } else {
+        // REVEAL  MAP
+        if (event.hasKey(KEY_F5)) {
+            map.clear_all(HUMAN);
+        }
+    }
+
+    //JUMP TO MISSION 3
+    if (event.hasKey(KEY_F6)) {
+        game.missionInit();
+        game.m_mission = 3;
+        game.m_region = 6;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
+    }
+
+    //JUMP TO MISSION 4
+    if (event.hasKey(KEY_F7)) {
+        game.missionInit();
+        game.m_mission = 4;
+        game.m_region = 10;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
+    }
+
+    //JUMP TO MISSION 5
+    if (event.hasKey(KEY_F8)) {
+        game.missionInit();
+        game.m_mission = 5;
+        game.m_region = 13;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
     }
 }

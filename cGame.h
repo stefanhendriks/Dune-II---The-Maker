@@ -243,6 +243,8 @@ private:
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
 
+    bool m_drawFps;
+
     // screen shaking
     int m_shakeX;
     int m_shakeY;
@@ -314,4 +316,6 @@ private:
 
     void thinkSlow_state();
     void thinkSlow_reinforcements();
+
+    void onKeyDownDebugMode(const cKeyboardEvent &event);
 };
