@@ -4,11 +4,11 @@
 #
 
 find_package(Vorbis)
-if(NOT VORBIS_FOUND)
+if(NOT Vorbis_FOUND)
     return()
 endif()
 
-include_directories(SYSTEM ${OGG_INCLUDE_DIR} ${VORBIS_INCLUDE_DIR})
+include_directories(SYSTEM ${OGG_INCLUDE_DIR} ${Vorbis_INCLUDE_DIR})
 
 set(LOGG_SOURCES
     logg.c
@@ -37,9 +37,9 @@ set_target_properties(logg
 
 set_our_framework_properties(logg logg)
 
-target_link_libraries(logg allegro ${VORBIS_LIBRARIES})
+target_link_libraries(logg allegro ${Vorbis_LIBRARIES})
 
-sanitize_cmake_link_flags(static_link_with ${VORBIS_LIBRARIES})
+sanitize_cmake_link_flags(static_link_with ${Vorbis_LIBRARIES})
 set_target_properties(logg
     PROPERTIES
     static_link_with "${static_link_with}"

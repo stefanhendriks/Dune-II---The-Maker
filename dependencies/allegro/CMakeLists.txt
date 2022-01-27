@@ -22,7 +22,8 @@
 # CMake setup
 #
 
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+# This was 2.6, but we really want to write more modern CMake
+cmake_minimum_required(VERSION 3.10)
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
@@ -602,7 +603,7 @@ if(WIN32)
     find_package(DSound)
     find_package(DXGuid)
 
-    if(NOT DDRAW_FOUND OR NOT DINPUT_FOUND OR NOT DSOUND_FOUND OR NOT DXGUID_FOUND)
+    if(NOT DDraw_FOUND OR NOT DInput_FOUND OR NOT DSound_FOUND OR NOT DXGuid_FOUND)
         if(MSVC)
             message(FATAL_ERROR
                 "DirectX required for Windows port. You might need to add DirectX include and lib directories to your INCLUDE and LIB environment variables.
@@ -616,10 +617,10 @@ if(WIN32)
     endif()
 
     include_directories(SYSTEM
-        ${DDRAW_INCLUDE_DIR}
-        ${DINPUT_INCLUDE_DIR}
-        ${DSOUND_INCLUDE_DIR}
-        ${DXGUID_INCLUDE_DIR}
+        ${DDraw_INCLUDE_DIR}
+        ${DInput_INCLUDE_DIR}
+        ${DSound_INCLUDE_DIR}
+        ${DXGuid_INCLUDE_DIR}
         )
     list(APPEND PLATFORM_SOURCES ${ALLEGRO_SRC_WIN_FILES})
     list(APPEND PLATFORM_LIBS
@@ -628,11 +629,11 @@ if(WIN32)
         gdi32
         comdlg32
         ole32
-        ${DINPUT_LIBRARIES}
-        ${DDRAW_LIBRARIES}
-        ${DXGUID_LIBRARIES}
+        ${DInput_LIBRARIES}
+        ${DDraw_LIBRARIES}
+        ${DXGuid_LIBRARIES}
         winmm
-        ${DSOUND_LIBRARIES}
+        ${DSound_LIBRARIES}
         )
     if(MINGW)
         # Prevents copying of some .dlls out of the mingw installation
