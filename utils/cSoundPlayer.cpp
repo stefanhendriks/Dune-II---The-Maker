@@ -7,10 +7,13 @@
 
 #include "cSoundPlayer.h"
 
-#include "allegroh.h"
 #include "definitions.h"
 #include "utils/cLog.h"
 
+#include <allegro/datafile.h>
+#include <allegro/digi.h>
+#include <allegro/midi.h>
+#include <allegro/sound.h>
 #include <fmt/core.h>
 
 #include <algorithm>

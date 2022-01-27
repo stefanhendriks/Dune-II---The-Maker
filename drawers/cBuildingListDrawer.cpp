@@ -1,5 +1,6 @@
 #include "../include/d2tmh.h"
 
+#include <allegro.h>
 
 cBuildingListDrawer::cBuildingListDrawer(cPlayer *thePlayer) : player(thePlayer) {
     textDrawer = new cTextDrawer(game_font);

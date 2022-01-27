@@ -19,6 +19,7 @@
  *      See readme.txt for copyright information.
  */
 
+#include <stdarg.h>
 
 #include "allegro.h"
 #include "allegro/internal/aintern.h"

@@ -3,6 +3,8 @@
 
 #include "utils/cSoundPlayer.h"
 
+#include <allegro.h>
+
 CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : player(thePlayer){
 	assert(thePlayer);
 	bmp = NULL;

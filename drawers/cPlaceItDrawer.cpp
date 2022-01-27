@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <allegro.h>
+
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
 }
 

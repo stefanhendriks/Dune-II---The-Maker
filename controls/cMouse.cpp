@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <allegro.h>
+
 cMouse::cMouse() : coords(cPoint(0,0)) {
 	z=0;
 	leftButtonPressed=false;

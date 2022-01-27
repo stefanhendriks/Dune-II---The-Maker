@@ -13,6 +13,7 @@
 #include "../include/d2tmh.h"
 #include "cMap.h"
 
+#include <allegro.h>
 
 #include <math.h>
 

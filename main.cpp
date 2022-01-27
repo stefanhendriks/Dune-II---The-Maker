@@ -68,11 +68,9 @@ ALFONT_FONT *bene_font;		// benegesserit font.
 ALFONT_FONT *small_font;	// small font.
 
 /** Allegro specific timer creation starts here **/
-#ifdef ALLEGRO_H
-	volatile int allegro_timerSecond = 0;
-	volatile int allegro_timerGlobal = 0;
-	volatile int allegro_timerUnits = 0;
-#endif
+volatile int allegro_timerSecond = 0;
+volatile int allegro_timerGlobal = 0;
+volatile int allegro_timerUnits = 0;
 
 int handleArguments(int argc, char *argv[]) {
     game.m_disableAI = false;

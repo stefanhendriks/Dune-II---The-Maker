@@ -20,16 +20,6 @@
 #ifndef ALLEGRO_BASE_H
 #define ALLEGRO_BASE_H
 
-#ifndef ALLEGRO_NO_STD_HEADERS
-   #include <errno.h>
-   #include <limits.h>
-   #include <stdarg.h>
-   #include <stddef.h>
-   #include <stdlib.h>
-   #include <time.h>
-   #include <string.h>
-#endif
-
 #if (defined DEBUGMODE) && (defined FORTIFY)
    #include <fortify/fortify.h>
 #endif

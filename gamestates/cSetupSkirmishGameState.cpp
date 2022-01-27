@@ -1,8 +1,11 @@
-#include <algorithm>
 #include "d2tmh.h"
 #include "cSetupSkirmishGameState.h"
 
 #include "utils/cLog.h"
+
+#include <allegro.h>
+
+#include <algorithm>
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
