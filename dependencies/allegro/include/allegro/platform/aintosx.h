@@ -65,7 +65,8 @@
 - (void)applicationDidFinishLaunching: (NSNotification *)aNotification;
 - (void)applicationDidChangeScreenParameters: (NSNotification *)aNotification;
 + (void)app_main: (id)arg;
-- (void)app_quit: (id)sender;
+- (NSApplicationTerminateReply) applicationShouldTerminate: (id)sender;
+- (void) quitAction: (id) sender;
 @end
 
 
@@ -170,6 +171,8 @@ AL_VAR(NSCursor *, osx_cursor);
 AL_VAR(AllegroWindow *, osx_window);
 AL_ARRAY(char, osx_window_title);
 AL_VAR(int, osx_window_first_expose);
+AL_VAR(int, osx_skip_events_processing);
+AL_VAR(void *, osx_skip_events_processing_mutex);
 AL_VAR(CGDirectPaletteRef, osx_palette);
 AL_VAR(int, osx_palette_dirty);
 AL_VAR(int, osx_mouse_warped);
