@@ -43,8 +43,9 @@ If you use `ninja` you can use `cmake .. -G Ninja` instead.
 Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
 
 ## Running
-Easiest is to run the executable from the root. Shared libraries that are required are: alfont.dll, alleg42.dll, libwinpthread-1.dll and mscvr70.dll.
-The required libraries (Allegro 4, ALFont) are in the [dll folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/dll/mingw32).
+Easiest is to run the executable from the root. Shared libraries that are required are: libalfont.dll, alleg42.dll, libwinpthread-1.dll and mscvr70.dll.
+The required pre-built library (Allegro 4) is in the [dll folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/dll/mingw32).
+The library that is built with the project (AlFont) is copied to the build directory.
 libwinpthread-1.dll Could be on your MinGW path. If it is not on the path, copy it from your mingw32 installation.
 
 ## Project status

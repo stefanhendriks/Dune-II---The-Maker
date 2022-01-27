@@ -1,0 +1,36 @@
+Installation on Win32 (WinNT, Win95/98):
+
+- Requires MS Visual C/C++ 4.0 or 5.0 or 6.0.
+
+- Cannot build in a separate directory.
+
+- Build instructions:
+
+   Make sure that the MSVC4.0 or MSVC5.0 or MSVC6.0 utilities ("cl" etc.) are
+   found in PATH.
+
+   For shared library (DLL):
+
+        nmake -f Makefile.msvc DLL=1 MFLAGS=-MD
+   or
+        nmake -f Makefile.msvc DLL=1 MFLAGS=-MD check
+                                                   [This runs the testsuite.]
+
+   For static library:
+
+        nmake -f Makefile.msvc
+   or
+        nmake -f Makefile.msvc check               [This runs the testsuite.]
+
+   If you want to build both the shared and static library, you have to
+   unpack the libiconv sources twice in different directories. Don't mix
+   the two formats; you cannot use the iconv.h generated for the static
+   library together with the shared library or vice versa.
+
+- Installation:
+
+   Copy include/iconv.h to your header file repository.
+   Copy lib/iconv.lib to your library repository.
+   If you built for shared library, also copy lib/iconv.dll into one of the
+   directories listed in your PATH, or into the directory containing the
+   executable which shall make use of libiconv.

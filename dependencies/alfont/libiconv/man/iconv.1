@@ -1,0 +1,28 @@
+.\" Copyright (c) Bruno Haible <haible@clisp.cons.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" References consulted:
+.\"   OpenGroup's Single Unix specification http://www.UNIX-systems.org/online.html
+.\"
+.TH ICONV 1  "February 20, 2001" "GNU" "Linux Programmer's Manual"
+.SH NAME
+iconv \- character set conversion
+.SH SYNOPSIS
+iconv [\fB-f\fP \fIencoding\fP] [\fB-t\fP \fIencoding\fP] [\fIinputfile\fP ...]
+.SH DESCRIPTION
+The \fBiconv\fP program converts text from one encoding to another encoding.
+More precisely, it converts \fBfrom\fP the encoding given for the \fB-f\fP
+option \fBto\fP the encoding given for the \fB-t\fP option. Either of these
+encodings defaults to the encoding of the current locale. All the
+\fIinputfile\fPs are read and converted in turn; if no \fIinputfile\fP is
+given, the standard input is used. The converted text is printed to standard
+output.
+.PP
+The encodings permitted are system dependent. For the libiconv implementation,
+they are listed in the iconv_open(3) manual page.
+.SH "SEE ALSO"
+.BR iconv_open "(3), " locale (7)

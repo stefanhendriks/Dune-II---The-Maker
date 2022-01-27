@@ -1,0 +1,133 @@
+# Makefile for libiconv/lib
+
+#### Start of system configuration section. ####
+
+# Flags that can be set on the nmake command line:
+#   DLL=1     for compiling a .dll with a stub .lib (default is a static .lib)
+#             Note that this works only with MFLAGS=-MD.
+#   MFLAGS={-ML|-MT|-MD} for defining the compilation model
+#     MFLAGS=-ML (the default)  Single-threaded, statically linked - libc.lib
+#     MFLAGS=-MT                Multi-threaded, statically linked  - libcmt.lib
+#     MFLAGS=-MD                Multi-threaded, dynamically linked - msvcrt.lib
+#   DEBUG=1   for compiling with debugging information
+!if !defined(DLL)
+DLL=0
+!endif
+!if !defined(DEBUG)
+DEBUG=0
+!endif
+!if !defined(MFLAGS)
+!if !$(DLL)
+MFLAGS=
+!else
+MFLAGS=-MD
+!endif
+!endif
+
+# Directories used by "make":
+srcdir = .
+
+# Directories used by "make install":
+prefix = /usr/local
+local_prefix = /usr/local
+exec_prefix = $(prefix)
+libdir = $(exec_prefix)/lib
+
+# Programs used by "make":
+
+CC = cl
+
+# Set to -W3 if you want to see maximum amount of warnings, including stupid
+# ones. Set to -W1 to avoid warnings about signed/unsigned combinations.
+WARN_CFLAGS = -W1
+
+!if !$(DLL)
+PICFLAGS =
+!else
+# "-GD" (msvc5) optimizes for DLL.
+# mscv4 doesn't know about this flag and ignores it.
+PICFLAGS = -GD
+!endif
+
+!if $(DEBUG)
+OPTIMFLAGS = -Od -Z7
+!else
+# Some people prefer -O2 -G6 instead of -O1, but -O2 is not reliable in MSVC5.
+OPTIMFLAGS = -D_NDEBUG -O1
+!endif
+
+# -DBUILDING_LIBICONV: Change expansion of LIBICONV_DLL_EXPORTED macro.
+CFLAGS = $(MFLAGS) $(WARN_CFLAGS) $(PICFLAGS) $(OPTIMFLAGS) -DBUILDING_LIBICONV
+
+INCLUDES = -I. -I$(srcdir) -I../include -I$(srcdir)/../include
+
+AR = lib
+AR_FLAGS = /out:
+
+LN = copy
+RM = del
+
+# Programs used by "make install":
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+#### End of system configuration section. ####
+
+SHELL = /bin/sh
+
+SOURCES = $(srcdir)/iconv.c
+
+OBJECTS = iconv.obj
+
+LIBCHARSET_OBJECTS = ..\libcharset\lib\localcharset.obj
+
+# Set to iconv.res in order to include the resources information.
+RESOURCES =
+# RESOURCES = iconv.res
+
+all : iconv.lib
+
+config.h : config.h.msvc
+	-$(RM) config.h
+	$(LN) config.h.msvc config.h
+
+iconv.obj : $(srcdir)/iconv.c $(srcdir)/encodings.def $(srcdir)/encodings_local.def $(srcdir)/aliases.h config.h
+	$(CC) $(INCLUDES) $(CFLAGS) -c $(srcdir)/iconv.c
+
+!if !$(DLL)
+
+iconv.lib : $(OBJECTS)
+	-$(RM) iconv.lib
+	$(AR) $(AR_FLAGS)iconv.lib $(OBJECTS) $(LIBCHARSET_OBJECTS)
+
+!else
+
+# iconv.dll and iconv.lib are created together.
+iconv.lib : $(OBJECTS) $(RESOURCES)
+	$(CC) $(MFLAGS) -LD $(OBJECTS) $(LIBCHARSET_OBJECTS) $(RESOURCES)
+
+iconv.res : $(srcdir)/../windows/iconv.rc
+	rc -Fo iconv.res $(srcdir)/../windows/iconv.rc
+
+!endif
+
+check : all
+
+mostlyclean : clean
+
+clean : force
+	$(RM) *.obj
+	$(RM) *.lib
+	$(RM) *.exp
+	$(RM) *.dll
+	$(RM) iconv.res
+	$(RM) core
+
+distclean : clean
+	$(RM) config.h
+
+maintainer-clean : distclean
+
+force :
+
