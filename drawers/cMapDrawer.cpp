@@ -2,6 +2,7 @@
 #include "../include/d2tmh.h"
 #include "cMapDrawer.h"
 
+#include <allegro.h>
 
 cMapDrawer::cMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theCamera) : player(thePlayer) {
     assert(theMap);

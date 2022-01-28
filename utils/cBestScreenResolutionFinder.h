@@ -3,6 +3,8 @@
 
 #define MAX_SCREEN_RESOLUTIONS      15
 
+struct GFX_MODE_LIST;
+
 class cBestScreenResolutionFinder {
 	public:
 		cBestScreenResolutionFinder(int desiredColorDepth);

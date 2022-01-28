@@ -1,7 +1,8 @@
 #include "cPlayerNotification.h"
 
-#include "allegroh.h"
 #include "d2tmc.h"
+
+#include <allegro/color.h>
 
 std::string eNotificationTypeString(const eNotificationType &type) {
     switch (type) {

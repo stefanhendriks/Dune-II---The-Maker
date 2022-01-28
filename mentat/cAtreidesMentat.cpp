@@ -1,5 +1,7 @@
 #include "d2tmh.h"
 
+#include <allegro.h>
+
 cAtreidesMentat::cAtreidesMentat() {
     iBackgroundFrame = MENTATA;
     buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);

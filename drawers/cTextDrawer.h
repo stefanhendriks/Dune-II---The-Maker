@@ -5,8 +5,11 @@
  *      Author: Stefan
  */
 
-#ifndef TEXTDRAWER_H_
-#define TEXTDRAWER_H_
+#pragma once
+
+#include "utils/cRectangle.h"
+
+struct ALFONT_FONT;
 
 class cTextDrawer {
 	public:
@@ -74,5 +77,3 @@ class cTextDrawer {
 
         int textColor;
 };
-
-#endif /* TEXTDRAWER_H_ */

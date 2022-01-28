@@ -2,6 +2,8 @@
 
 #include "d2tmc.h"
 
+#include <allegro.h>
+
 #include <memory>
 
 cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {

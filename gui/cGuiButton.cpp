@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cGuiButton.h"
 
+#include <allegro/color.h>
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string & btnText)
   : rect(rect)

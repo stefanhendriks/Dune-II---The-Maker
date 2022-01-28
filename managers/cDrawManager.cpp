@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cDrawManager.h"
 
+#include <allegro.h>
 
 cDrawManager::cDrawManager(cPlayer * thePlayer) : player(thePlayer) {
 	assert(&thePlayer);

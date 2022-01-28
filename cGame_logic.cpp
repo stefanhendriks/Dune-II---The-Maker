@@ -10,9 +10,6 @@
 
 */
 
-#include <vector>
-#include <algorithm>
-#include <random>
 #include "include/d2tmh.h"
 #include "cGame.h"
 #include "timers.h"
@@ -21,7 +18,13 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 
+#include <allegro.h>
+#include <alfont.h>
 #include <fmt/core.h>
+
+#include <algorithm>
+#include <random>
+#include <vector>
 
 namespace {
 

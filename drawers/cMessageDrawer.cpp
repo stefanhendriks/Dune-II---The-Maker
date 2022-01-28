@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <alfont.h>
+#include <allegro.h>
 
 cMessageDrawer::cMessageDrawer() {
     bmpBar = nullptr;

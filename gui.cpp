@@ -2,6 +2,9 @@
 
 #include "include/d2tmh.h"
 
+#include <alfont.h>
+#include <allegro.h>
+
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
     // fill it up
     rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));

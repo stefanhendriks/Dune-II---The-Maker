@@ -1,5 +1,8 @@
 #include "../include/d2tmh.h"
 
+#include <alfont.h>
+#include <allegro/color.h>
+
 cKeyboardManager::cKeyboardManager() {
 }
 

@@ -7,6 +7,8 @@
 
 #include "../include/d2tmh.h"
 
+#include <allegro.h>
+
 cRandomMapGenerator::cRandomMapGenerator() {
 }
 

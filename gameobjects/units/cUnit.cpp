@@ -15,9 +15,10 @@
 
 #include "utils/cSoundPlayer.h"
 
-#include <fmt/core.h>
-
 #include <cmath>
+
+#include <alfont.h>
+#include <fmt/core.h>
 
 // Path creation definitions / var
 #define CLOSED        -1

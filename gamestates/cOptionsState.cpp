@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cOptionsState.h"
 
+#include <allegro/gfx.h>
 
 cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
   : cGameState(theGame)
