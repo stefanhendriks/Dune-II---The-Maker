@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <allegro.h>
+
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
 }
 
@@ -16,7 +18,7 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell) {
 		return;
 	}
 
-	drawStructureIdAtCell(itemToPlace, mouseCell);
+	drawStructureIdAtMousePos(itemToPlace);
 	drawStatusOfStructureAtCell(itemToPlace, mouseCell);
 }
 
@@ -149,9 +151,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	destroy_bitmap(temp);
 }
 
-void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell) {
+void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace) {
 	assert(itemToPlace);
-	assert(cell >= 0);
 
 	int structureId = itemToPlace->getBuildId();
 

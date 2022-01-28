@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <alfont.h>
+#include <allegro/color.h>
 
 cTextDrawer::cTextDrawer(ALFONT_FONT *theFont) {
 	assert(theFont);

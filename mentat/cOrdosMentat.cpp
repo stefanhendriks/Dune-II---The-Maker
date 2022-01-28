@@ -1,5 +1,7 @@
 #include "d2tmh.h"
 
+#include <allegro.h>
+
 cOrdosMentat::cOrdosMentat() {
     iBackgroundFrame = MENTATO;
     buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);

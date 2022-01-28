@@ -5,11 +5,15 @@
  *      Author: Stefan
  */
 
-#ifndef CTEXTWRITER_H_
-#define CTEXTWRITER_H_
+#pragma once
+
+#include "drawers/cTextDrawer.h"
+
+struct ALFONT_FONT;
 
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
 // every new command it will start on a new line.
+
 
 class cTextWriter {
 	public:
@@ -33,5 +37,3 @@ class cTextWriter {
 		int drawY;
 		int drawX;
 };
-
-#endif /* CTEXTWRITER_H_ */

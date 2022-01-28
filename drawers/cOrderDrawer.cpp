@@ -1,12 +1,13 @@
 #include "cOrderDrawer.h"
 
-#include "allegroh.h"
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/cAllegroDrawer.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
+
+#include <allegro.h>
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;

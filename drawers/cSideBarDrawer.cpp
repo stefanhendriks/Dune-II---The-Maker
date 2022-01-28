@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include <allegro.h>
+
 #include <algorithm>
 
 cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : player(thePlayer) {

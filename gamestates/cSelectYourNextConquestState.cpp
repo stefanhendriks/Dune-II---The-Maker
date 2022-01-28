@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cSelectYourNextConquestState.h"
 
+#include <allegro.h>
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame) {
     state = eRegionState::REGSTATE_INIT;
@@ -37,7 +38,7 @@ void cSelectYourNextConquestState::thinkFast() {
         // temp bitmap to read from
         regionClickMapBmp = create_bitmap_ex(8, 640, 480); // 8 bit bitmap
         select_palette(general_palette); // default palette
-        clear(regionClickMapBmp); // clear bitmap
+        clear_bitmap(regionClickMapBmp); // clear bitmap
 
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate

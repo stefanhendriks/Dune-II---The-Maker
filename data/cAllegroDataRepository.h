@@ -1,7 +1,6 @@
-#ifndef D2TM_CALLEGRODATAREPOSITORY_H
-#define D2TM_CALLEGRODATAREPOSITORY_H
+#pragma once
 
-#include "allegroh.h"
+struct BITMAP;
 
 struct sBitmap {
     BITMAP  *bitmap;    // loaded from Allegro
@@ -37,6 +36,3 @@ private:
 
     sBitmap m_data[MAX_BITMAPS];
 };
-
-
-#endif //D2TM_CALLEGRODATAREPOSITORY_H

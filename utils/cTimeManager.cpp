@@ -98,18 +98,14 @@ void cTimeManager::handleTimerUnits() {
     is now not the case.
 */
 void cTimeManager::processTime() {
-#ifdef ALLEGRO_H
     syncFromAllegroTimers();
-#endif
 
     capTimers();
     handleTimerAllegroTimerSeconds();
     handleTimerUnits();
     handleTimerGameTime();
 
-#ifdef ALLEGRO_H
     syncAllegroTimers();
-#endif
 }
 
 /** allegro specific routine **/

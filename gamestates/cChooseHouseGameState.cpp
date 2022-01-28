@@ -4,6 +4,8 @@
 
 #include "utils/cSoundPlayer.h"
 
+#include <allegro.h>
+
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     cGameState(theGame),
     textDrawer(cTextDrawer(bene_font)) {

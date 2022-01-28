@@ -1,6 +1,8 @@
 #include "d2tmh.h"
 #include "cMainMenuGameState.h"
 
+#include <alfont.h>
+#include <allegro.h>
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)) {
     bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;

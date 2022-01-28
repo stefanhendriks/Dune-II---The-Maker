@@ -7,6 +7,8 @@
 
 #include "../include/d2tmh.h"
 
+#include <allegro/mouse.h>
+
 cMapCamera::cMapCamera(cMap * theMap) : pMap(theMap) {
     viewportStartX = viewportStartY = 32;
 	TIMER_move=0;

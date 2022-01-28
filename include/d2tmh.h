@@ -2,7 +2,6 @@
 // right order
 #pragma once
 
-#include "allegroh.h"
 #include "data.h"
 #include "definitions.h"
 #include "structs.h"

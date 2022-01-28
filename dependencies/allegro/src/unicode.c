@@ -23,7 +23,7 @@
  *      See readme.txt for copyright information.
  */
 
-
+#include <stdarg.h>
 #include <limits.h>
 #include <string.h>
 #include <stdio.h>

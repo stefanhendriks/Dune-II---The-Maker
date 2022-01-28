@@ -1,9 +1,12 @@
 #include "cMouseUnitsSelectedState.h"
 
-#include <algorithm>
 #include "d2tmh.h"
 
 #include "utils/cSoundPlayer.h"
+
+#include <allegro/mouse.h>
+
+#include <algorithm>
 
 cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse),
