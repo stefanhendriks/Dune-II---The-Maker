@@ -1,5 +1,7 @@
 #include "d2tmh.h"
 
+#include <allegro.h>
+
 cHarkonnenMentat::cHarkonnenMentat() {
     iBackgroundFrame = MENTATH;
     buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);

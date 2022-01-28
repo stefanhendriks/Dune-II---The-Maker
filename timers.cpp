@@ -1,6 +1,6 @@
 #include "timers.h"
 
-#include <allegro.h>
+#include <allegro/base.h>
 /**
 	Timers lib specific implementations
 **/

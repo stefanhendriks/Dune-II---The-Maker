@@ -3,12 +3,6 @@
 
 #include "enums.h"
 
-//// Don't know why I have to do this explicitly!?, if I do this via allegro/gfx, it breaks
-//#define HAVE_STDINT_H // and this is weird, because it will probably break for non-mingw setups
-//#include "allegro/platform/astdint.h"
-//
-//#include "allegro/gfx.h"
-
 #include <vector>
 
 struct BITMAP;

@@ -1,6 +1,9 @@
 #include "d2tmh.h"
 #include "cAllegroDataRepository.h"
 
+#include <allegro/datafile.h>
+#include <allegro/gfx.h>
+
 cAllegroDataRepository::cAllegroDataRepository() {
     for (int i = 0; i < MAX_BITMAPS; i++) {
         m_data[i].bitmap = nullptr;

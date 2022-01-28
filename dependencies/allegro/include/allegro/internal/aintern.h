@@ -50,6 +50,27 @@ enum {
 AL_VAR(int, _screensaver_policy);
 
 
+AL_FUNCPTR(int, _al_trace_handler, (AL_CONST char *msg));
+
+
+/* malloc wrappers */
+/* The 4.3 branch uses the following macro names to allow the user to customise
+ * the memory management routines.  We don't have that feature in 4.2, but we
+ * use the same macros names in order to reduce divergence of the codebases.
+ */
+#define _AL_MALLOC(SIZE)         (_al_malloc(SIZE))
+#define _AL_MALLOC_ATOMIC(SIZE)  (_al_malloc(SIZE))
+#define _AL_FREE(PTR)            (_al_free(PTR))
+#define _AL_REALLOC(PTR, SIZE)   (_al_realloc(PTR, SIZE))
+
+AL_FUNC(void *, _al_malloc, (size_t size));
+AL_FUNC(void, _al_free, (void *mem));
+AL_FUNC(void *, _al_realloc, (void *mem, size_t size));
+AL_FUNC(char *, _al_strdup, (AL_CONST char *string));
+AL_FUNC(char *, _al_ustrdup, (AL_CONST char *string));
+
+
+
 /* some Allegro functions need a block of scratch memory */
 AL_VAR(void *, _scratch_mem);
 AL_VAR(int, _scratch_mem_size);
@@ -59,16 +80,10 @@ AL_INLINE(void, _grow_scratch_mem, (int size),
 {
    if (size > _scratch_mem_size) {
       size = (size+1023) & 0xFFFFFC00;
-      _scratch_mem = realloc(_scratch_mem, size);
+      _scratch_mem = _AL_REALLOC(_scratch_mem, size);
       _scratch_mem_size = size;
    }
 })
-
-
-/* malloc wrappers for DLL <-> application shared memory */
-AL_FUNC(void *, _al_malloc, (int size));
-AL_FUNC(void, _al_free, (void *mem));
-AL_FUNC(void *, _al_realloc, (void *mem, int size));
 
 
 /* list of functions to call at program cleanup */
@@ -98,11 +113,16 @@ AL_FUNC(UTYPE_INFO *, _find_utype, (int type));
 
 /* wrappers for implementing disk I/O on different platforms */
 AL_FUNC(int, _al_file_isok, (AL_CONST char *filename));
-AL_FUNC(long, _al_file_size, (AL_CONST char *filename));
+AL_FUNC(uint64_t, _al_file_size_ex, (AL_CONST char *filename));
 AL_FUNC(time_t, _al_file_time, (AL_CONST char *filename));
 AL_FUNC(int, _al_drive_exists, (int drive));
 AL_FUNC(int, _al_getdrive, (void));
 AL_FUNC(void, _al_getdcwd, (int drive, char *buf, int size));
+
+AL_FUNC(void, _al_detect_filename_encoding, (void));
+
+/* obsolete; only exists for binary compatibility with 4.2.0 */
+AL_FUNC(long, _al_file_size, (AL_CONST char *filename));
 
 
 /* packfile stuff */
@@ -110,6 +130,8 @@ AL_VAR(int, _packfile_filesize);
 AL_VAR(int, _packfile_datasize);
 AL_VAR(int, _packfile_type);
 AL_FUNC(PACKFILE *, _pack_fdopen, (int fd, AL_CONST char *mode));
+
+AL_FUNC(int, _al_lzss_incomplete_state, (AL_CONST LZSS_UNPACK_DATA *dat));
 
 
 /* config stuff */
@@ -122,6 +144,7 @@ AL_FUNC(void, _handle_mouse_input, (void));
 AL_VAR(int, _mouse_x);
 AL_VAR(int, _mouse_y);
 AL_VAR(int, _mouse_z);
+AL_VAR(int, _mouse_w);
 AL_VAR(int, _mouse_b);
 AL_VAR(int, _mouse_on);
 
@@ -168,7 +191,7 @@ AL_VAR(volatile int, _key_shifts);
 
 
 #if (defined ALLEGRO_DOS) || (defined ALLEGRO_DJGPP) || (defined ALLEGRO_WATCOM) || \
-    (defined ALLEGRO_QNX) || (defined ALLEGRO_BEOS)
+    (defined ALLEGRO_QNX) || (defined ALLEGRO_BEOS)  || (defined ALLEGRO_HAIKU)
 
 AL_ARRAY(char *, _pckeys_names);
 
@@ -204,6 +227,22 @@ AL_VAR(int, _key_accent4_flag);
 AL_VAR(int, _key_standard_kb);
 
 AL_VAR(char *, _keyboard_layout);
+
+#endif
+
+#if (defined ALLEGRO_WINDOWS)
+
+   AL_FUNC(int, _al_win_open, (const char *filename, int mode, int perm));
+   AL_FUNC(int, _al_win_unlink, (const char *filename));
+
+
+   #define _al_open(filename, mode, perm)   _al_win_open(filename, mode, perm)
+   #define _al_unlink(filename)             _al_win_unlink(filename)
+
+#else
+
+   #define _al_open(filename, mode, perm)   open(filename, mode, perm)
+   #define _al_unlink(filename)             unlink(filename)
 
 #endif
 
@@ -252,6 +291,8 @@ AL_VAR(FONT_VTABLE, _font_vtable_mono);
 AL_VAR(FONT_VTABLE *, font_vtable_mono);
 AL_VAR(FONT_VTABLE, _font_vtable_color);
 AL_VAR(FONT_VTABLE *, font_vtable_color);
+AL_VAR(FONT_VTABLE, _font_vtable_trans);
+AL_VAR(FONT_VTABLE *, font_vtable_trans);
 
 AL_FUNC(FONT_GLYPH *, _mono_find_glyph, (AL_CONST FONT *f, int ch));
 AL_FUNC(BITMAP *, _color_find_glyph, (AL_CONST FONT *f, int ch));
@@ -282,7 +323,7 @@ AL_FUNC(uintptr_t, _stub_bank_switch, (BITMAP *bmp, int lyne));
 AL_FUNC(void, _stub_unbank_switch, (BITMAP *bmp));
 AL_FUNC(void, _stub_bank_switch_end, (void));
 
-#ifdef GFX_HAS_VGA
+#ifdef ALLEGRO_GFX_HAS_VGA
 
 AL_FUNC(uintptr_t, _x_bank_switch, (BITMAP *bmp, int lyne));
 AL_FUNC(void, _x_unbank_switch, (BITMAP *bmp));
@@ -290,7 +331,7 @@ AL_FUNC(void, _x_bank_switch_end, (void));
 
 #endif
 
-#ifdef GFX_HAS_VBEAF
+#ifdef ALLEGRO_GFX_HAS_VBEAF
 
 AL_FUNC(void, _accel_bank_stub, (void));
 AL_FUNC(void, _accel_bank_stub_end, (void));
@@ -352,6 +393,7 @@ AL_VAR(int, _color_conv);
 
 AL_FUNC(BITMAP *, _fixup_loaded_bitmap, (BITMAP *bmp, PALETTE pal, int bpp));
 
+AL_FUNC(int, _bitmap_has_alpha, (BITMAP *bmp));
 
 /* default truecolor pixel format */
 #define DEFAULT_RGB_R_SHIFT_15  0
@@ -492,6 +534,7 @@ AL_FUNC(void, _linear_putpixel8, (BITMAP *bmp, int x, int y, int color));
 AL_FUNC(void, _linear_vline8, (BITMAP *bmp, int x, int y_1, int y2, int color));
 AL_FUNC(void, _linear_hline8, (BITMAP *bmp, int x1, int y, int x2, int color));
 AL_FUNC(void, _linear_draw_sprite8, (BITMAP *bmp, BITMAP *sprite, int x, int y));
+AL_FUNC(void, _linear_draw_sprite_ex8, (BITMAP *bmp, BITMAP *sprite, int x, int y, int mode, int flip));
 AL_FUNC(void, _linear_draw_sprite_v_flip8, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_h_flip8, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_vh_flip8, (BITMAP *bmp, BITMAP *sprite, int x, int y));
@@ -527,6 +570,7 @@ AL_FUNC(void, _linear_putpixel16, (BITMAP *bmp, int x, int y, int color));
 AL_FUNC(void, _linear_vline16, (BITMAP *bmp, int x, int y_1, int y2, int color));
 AL_FUNC(void, _linear_hline16, (BITMAP *bmp, int x1, int y, int x2, int color));
 AL_FUNC(void, _linear_draw_sprite16, (BITMAP *bmp, BITMAP *sprite, int x, int y));
+AL_FUNC(void, _linear_draw_sprite_ex16, (BITMAP *bmp, BITMAP *sprite, int x, int y, int mode, int flip));
 AL_FUNC(void, _linear_draw_256_sprite16, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_v_flip16, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_h_flip16, (BITMAP *bmp, BITMAP *sprite, int x, int y));
@@ -554,6 +598,7 @@ AL_FUNC(void, _linear_putpixel24, (BITMAP *bmp, int x, int y, int color));
 AL_FUNC(void, _linear_vline24, (BITMAP *bmp, int x, int y_1, int y2, int color));
 AL_FUNC(void, _linear_hline24, (BITMAP *bmp, int x1, int y, int x2, int color));
 AL_FUNC(void, _linear_draw_sprite24, (BITMAP *bmp, BITMAP *sprite, int x, int y));
+AL_FUNC(void, _linear_draw_sprite_ex24, (BITMAP *bmp, BITMAP *sprite, int x, int y, int mode, int flip));
 AL_FUNC(void, _linear_draw_256_sprite24, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_v_flip24, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_h_flip24, (BITMAP *bmp, BITMAP *sprite, int x, int y));
@@ -581,6 +626,7 @@ AL_FUNC(void, _linear_putpixel32, (BITMAP *bmp, int x, int y, int color));
 AL_FUNC(void, _linear_vline32, (BITMAP *bmp, int x, int y_1, int y2, int color));
 AL_FUNC(void, _linear_hline32, (BITMAP *bmp, int x1, int y, int x2, int color));
 AL_FUNC(void, _linear_draw_sprite32, (BITMAP *bmp, BITMAP *sprite, int x, int y));
+AL_FUNC(void, _linear_draw_sprite_ex32, (BITMAP *bmp, BITMAP *sprite, int x, int y, int mode, int flip));
 AL_FUNC(void, _linear_draw_256_sprite32, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_v_flip32, (BITMAP *bmp, BITMAP *sprite, int x, int y));
 AL_FUNC(void, _linear_draw_sprite_h_flip32, (BITMAP *bmp, BITMAP *sprite, int x, int y));
@@ -599,7 +645,7 @@ AL_FUNC(void, _linear_clear_to_color32, (BITMAP *bitmap, int color));
 
 #endif
 
-#ifdef GFX_HAS_VGA
+#ifdef ALLEGRO_GFX_HAS_VGA
 
 AL_FUNC(int,  _x_getpixel, (BITMAP *bmp, int x, int y));
 AL_FUNC(void, _x_putpixel, (BITMAP *bmp, int x, int y, int color));

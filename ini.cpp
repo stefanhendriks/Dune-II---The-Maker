@@ -14,6 +14,7 @@
 
 #include "utils/cLog.h"
 
+#include <allegro.h>
 #include <fmt/core.h>
 
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
@@ -2290,7 +2291,7 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
                     if (section == INI_MAP) {
                         if (previewMap.terrain == NULL) {
                             previewMap.terrain = create_bitmap(128, 128);
-                            clear(previewMap.terrain);
+                            clear_bitmap(previewMap.terrain);
                             //clear_to_color(PreviewMap[iNew].terrain, makecol(255,255,255));
                         }
                         continue; // skip

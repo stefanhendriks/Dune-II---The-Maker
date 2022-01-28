@@ -5,6 +5,7 @@
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 
+#include <allegro.h>
 #include <fmt/format.h>
 
 #include <vector>

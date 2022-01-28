@@ -47,8 +47,8 @@ FT_BEGIN_HEADER
 
   typedef void
   (*FT_Glyph_TransformFunc)( FT_Glyph    glyph,
-                             FT_Matrix*  matrix,
-                             FT_Vector*  delta );
+                             const FT_Matrix*  matrix,
+                             const FT_Vector*  delta );
 
   typedef void
   (*FT_Glyph_GetBBoxFunc)( FT_Glyph  glyph,

@@ -1,5 +1,8 @@
 #include "d2tmh.h"
 
+#include <alfont.h>
+#include <allegro.h>
+
 cBeneMentat::cBeneMentat() {
     iBackgroundFrame = MENTATM;
     buildLeftButton((BITMAP *) gfxmentat[BTN_NO].dat, 293, 423);

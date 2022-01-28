@@ -24,7 +24,7 @@
 #endif
 
 
-#ifndef ALLEGRO_LIB_BUILD
+#ifndef ALLEGRO_SRC
 
    #ifndef ALLEGRO_NO_CLEAR_BITMAP_ALIAS
       #if (defined ALLEGRO_GCC)
@@ -40,25 +40,7 @@
       #endif
    #endif
 
-   #ifndef ALLEGRO_NO_FIX_ALIASES
-      AL_ALIAS(fixed fadd(fixed x, fixed y), fixadd(x, y))
-      AL_ALIAS(fixed fsub(fixed x, fixed y), fixsub(x, y))
-      AL_ALIAS(fixed fmul(fixed x, fixed y), fixmul(x, y))
-      AL_ALIAS(fixed fdiv(fixed x, fixed y), fixdiv(x, y))
-      AL_ALIAS(int fceil(fixed x), fixceil(x))
-      AL_ALIAS(int ffloor(fixed x), fixfloor(x))
-      AL_ALIAS(fixed fcos(fixed x), fixcos(x))
-      AL_ALIAS(fixed fsin(fixed x), fixsin(x))
-      AL_ALIAS(fixed ftan(fixed x), fixtan(x))
-      AL_ALIAS(fixed facos(fixed x), fixacos(x))
-      AL_ALIAS(fixed fasin(fixed x), fixasin(x))
-      AL_ALIAS(fixed fatan(fixed x), fixatan(x))
-      AL_ALIAS(fixed fatan2(fixed y, fixed x), fixatan2(y, x))
-      AL_ALIAS(fixed fsqrt(fixed x), fixsqrt(x))
-      AL_ALIAS(fixed fhypot(fixed x, fixed y), fixhypot(x, y))
-   #endif
-
-#endif  /* !defined ALLEGRO_LIB_BUILD */
+#endif  /* !defined ALLEGRO_SRC */
 
 
 #define KB_NORMAL       1
@@ -146,6 +128,8 @@ AL_INLINE_DEPRECATED(int, file_select, (AL_CONST char *message, char *path, AL_C
 
 /* the old (and broken!) file enumeration function */
 AL_FUNC_DEPRECATED(int, for_each_file, (AL_CONST char *name, int attrib, AL_METHOD(void, callback, (AL_CONST char *filename, int attrib, int param)), int param));
+/* long is 32-bit only on some systems, and we want to list DVDs! */
+AL_FUNC_DEPRECATED(long, file_size, (AL_CONST char *filename));
 
 
 /* the old state-based textout functions */
@@ -218,7 +202,21 @@ AL_INLINE_DEPRECATED(void, yield_timeslice, (void),
 /* DOS-ish monitor retrace ideas that don't work elsewhere */
 AL_FUNCPTR(void, retrace_proc, (void));
 
-#ifdef ALLEGRO_LIB_BUILD
+
+/* Those were never documented, but we need to keep them for DLL compatibility,
+ * and to be on the safe side also let's keep them work regardless.
+ */
+AL_INLINE_DEPRECATED(void, set_file_encoding, (int encoding),
+{
+   set_filename_encoding(encoding);
+})
+AL_INLINE_DEPRECATED(int, get_file_encoding, (void),
+{
+   return get_filename_encoding();
+})
+
+
+#ifdef ALLEGRO_SRC
    AL_FUNC(int,  timer_can_simulate_retrace, (void));
    AL_FUNC(void, timer_simulate_retrace, (int enable));
 #else

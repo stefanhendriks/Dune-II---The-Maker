@@ -18,10 +18,13 @@
 	There is only one stateMentat in-game shown to the player. Therefore a good creation/deletion of it (when switching
 	houses) is essential.
 */
-#ifndef CABSTRACTMENTAT_H
-#define CABSTRACTMENTAT_H
+#pragma once
 
 class cButtonCommand;
+
+struct ALFONT_FONT;
+struct DATAFILE;
+struct BITMAP;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)
@@ -110,5 +113,3 @@ public:
 
     void resetSpeak();
 };
-
-#endif

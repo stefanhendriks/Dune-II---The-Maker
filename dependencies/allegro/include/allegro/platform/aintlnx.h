@@ -31,7 +31,7 @@ extern _DRIVER_INFO _linux_gfx_driver_list[];
 extern _DRIVER_INFO _linux_keyboard_driver_list[];
 extern _DRIVER_INFO _linux_mouse_driver_list[];
 extern _DRIVER_INFO _linux_timer_driver_list[];
-extern _DRIVER_INFO _linux_joystick_driver_list[];
+/* _linux_joystick_driver_list is in aintunix.h */
 
 
 /****************************************/
@@ -148,8 +148,8 @@ extern int __al_linux_got_text_message;
 extern struct termios __al_linux_startup_termio;
 extern struct termios __al_linux_work_termio;
 
-int __al_linux_init_console (void);
-int __al_linux_done_console (void);
+int __al_linux_use_console (void);
+int __al_linux_leave_console (void);
 
 int __al_linux_console_graphics (void);
 int __al_linux_console_text (void);
@@ -246,6 +246,12 @@ void __al_linux_mouse_handler (int x, int y, int z, int b);
 #ifdef ALLEGRO_LINUX_VGA
    #include "allegro/internal/aintern.h"
    #include "allegro/internal/aintvga.h"
+#endif
+
+/* Functions for querying the framebuffer, for the fbcon driver */
+#if (defined ALLEGRO_LINUX_FBCON) && (!defined ALLEGRO_WITH_MODULES)
+   extern int __al_linux_get_fb_color_depth(void);
+   extern int __al_linux_get_fb_resolution(int *width, int *height);
 #endif
 
 #endif /* ifndef AINTLNX_H */

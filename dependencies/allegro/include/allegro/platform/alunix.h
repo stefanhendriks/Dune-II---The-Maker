@@ -49,7 +49,7 @@ extern char **__crt0_argv;
 #define TIMERDRV_UNIX_SIGALRM    AL_ID('A','L','R','M')
 
 
-#ifdef HAVE_LIBPTHREAD
+#ifdef ALLEGRO_HAVE_LIBPTHREAD
 AL_VAR(TIMER_DRIVER, timerdrv_unix_pthreads);
 #else
 AL_VAR(TIMER_DRIVER, timerdrv_unix_sigalrm);
@@ -178,6 +178,7 @@ AL_VAR(GFX_DRIVER, gfx_xdga2_soft);
 #define MOUSEDRV_LINUX_MS        AL_ID('M','S',' ',' ')
 #define MOUSEDRV_LINUX_IMS       AL_ID('I','M','S',' ')
 #define MOUSEDRV_LINUX_EVDEV     AL_ID('E','V',' ',' ')
+#define MOUSEDRV_LINUX_TSLIB     AL_ID('T','S','L','I')
 
 #define JOY_TYPE_LINUX_ANALOGUE  AL_ID('L','N','X','A')
 
@@ -189,7 +190,7 @@ AL_VAR(SYSTEM_DRIVER, system_linux);
 #ifdef ALLEGRO_LINUX_VGA
    AL_VAR(GFX_DRIVER, gfx_vga);
    AL_VAR(GFX_DRIVER, gfx_modex);
-   #define GFX_HAS_VGA
+   #define ALLEGRO_GFX_HAS_VGA
 #endif
 
 #ifndef ALLEGRO_WITH_MODULES
@@ -205,7 +206,7 @@ AL_VAR(SYSTEM_DRIVER, system_linux);
 
 #ifdef ALLEGRO_LINUX_VBEAF
    AL_VAR(GFX_DRIVER, gfx_vbeaf);
-   #define GFX_HAS_VBEAF
+   #define ALLEGRO_GFX_HAS_VBEAF
 #endif
 
 AL_VAR(MOUSE_DRIVER, mousedrv_linux_ps2);
@@ -214,6 +215,7 @@ AL_VAR(MOUSE_DRIVER, mousedrv_linux_gpmdata);
 AL_VAR(MOUSE_DRIVER, mousedrv_linux_ms);
 AL_VAR(MOUSE_DRIVER, mousedrv_linux_ims);
 AL_VAR(MOUSE_DRIVER, mousedrv_linux_evdev);
+AL_VAR(MOUSE_DRIVER, mousedrv_linux_tslib);
 
 AL_FUNC_DEPRECATED(void, split_modex_screen, (int lyne));
 
