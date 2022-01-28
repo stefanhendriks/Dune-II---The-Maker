@@ -3,6 +3,8 @@
 
 #include "utils/cSoundPlayer.h"
 
+#include <allegro.h>
+
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
         m_isMouseOver(false),
         map(theMap),

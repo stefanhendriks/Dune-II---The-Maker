@@ -42,10 +42,14 @@
       #include "allegro/platform/alwatcom.h"
    #elif defined ALLEGRO_MINGW32
       #include "allegro/platform/almngw32.h"
+   #elif defined ALLEGRO_DMC
+      #include "allegro/platform/aldmc.h"
    #elif defined ALLEGRO_BCC32
       #include "allegro/platform/albcc32.h"
    #elif defined ALLEGRO_MSVC
       #include "allegro/platform/almsvc.h"
+   #elif defined ALLEGRO_HAIKU
+      #include "allegro/platform/albecfg.h"
    #elif defined ALLEGRO_BEOS
       #include "allegro/platform/albecfg.h"
    #elif defined ALLEGRO_MPW
@@ -56,6 +60,8 @@
       #include "allegro/platform/alqnxcfg.h"
    #elif defined ALLEGRO_UNIX
       #include "allegro/platform/alucfg.h"
+   #elif defined ALLEGRO_PSP
+      #include "allegro/platform/alpspcfg.h"
    #else
       #error platform not supported
    #endif
@@ -75,6 +81,14 @@
          #define AL_INLINE(type, name, args, code)    \
             static inline type name args;             \
             static inline type name args code
+      /* Needed if this header is included by C99 user code, as
+       * "extern __inline__" is defined differently in C99 (it exports
+       * a new global function symbol).
+       */
+      #elif __GNUC_STDC_INLINE__
+         #define AL_INLINE(type, name, args, code)    \
+            extern __inline__ __attribute__((__gnu_inline__)) type name args;         \
+            extern __inline__ __attribute__((__gnu_inline__)) type name args code
       #else
          #define AL_INLINE(type, name, args, code)    \
             extern __inline__ type name args;         \
@@ -109,16 +123,28 @@
    
    #ifndef LONG_LONG
       #define LONG_LONG       long long
+      #ifdef ALLEGRO_GUESS_INTTYPES_OK
+         #define int64_t      signed long long
+         #define uint64_t     unsigned long long
+      #endif
    #endif
 
    #ifdef __i386__
       #define ALLEGRO_I386
-      #define _AL_SINCOS(x, s, c)  __asm__ ("fsincos" : "=t" (c), "=u" (s) : "0" (x))
+      #ifndef ALLEGRO_NO_ASM
+         #define _AL_SINCOS(x, s, c)  __asm__ ("fsincos" : "=t" (c), "=u" (s) : "0" (x))
+      #endif
    #endif
 
    #ifdef __amd64__
       #define ALLEGRO_AMD64
-      #define _AL_SINCOS(x, s, c)  __asm__ ("fsincos" : "=t" (c), "=u" (s) : "0" (x))
+      #ifndef ALLEGRO_NO_ASM
+         #define _AL_SINCOS(x, s, c)  __asm__ ("fsincos" : "=t" (c), "=u" (s) : "0" (x))
+      #endif
+   #endif
+   
+   #ifdef __arm__
+      #define ALLEGRO_ARM
    #endif
 
    #ifndef AL_CONST
@@ -345,6 +371,11 @@
    #define WRITE3BYTES(p,c)  ((*(unsigned char *)(p) = (c) >> 16),       \
                               (*((unsigned char *)(p) + 1) = (c) >> 8),  \
                               (*((unsigned char *)(p) + 2) = (c)))
+
+#elif defined SCAN_DEPEND
+
+   #define READ3BYTES(p)
+   #define WRITE3BYTES(p,c)
 
 #else
    #error endianess not defined

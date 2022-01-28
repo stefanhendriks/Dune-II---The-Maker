@@ -1,6 +1,8 @@
 #include "../include/d2tmh.h"
 #include "cMouseDrawer.h"
 
+#include <allegro.h>
+
 #include <algorithm>
 
 cMouseDrawer::cMouseDrawer(cPlayer * thePlayer) : player(thePlayer) {

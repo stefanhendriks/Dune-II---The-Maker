@@ -11,6 +11,8 @@
 
 #include "include/d2tmh.h"
 
+#include <allegro.h>
+
 // Fading between menu items
 void cGame::initiateFadingOut() {
     // set state to fade out

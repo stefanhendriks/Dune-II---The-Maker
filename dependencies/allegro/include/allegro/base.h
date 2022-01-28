@@ -20,15 +20,6 @@
 #ifndef ALLEGRO_BASE_H
 #define ALLEGRO_BASE_H
 
-#ifndef ALLEGRO_NO_STD_HEADERS
-   #include <errno.h>
-   #include <limits.h>
-   #include <stdarg.h>
-   #include <stddef.h>
-   #include <stdlib.h>
-   #include <time.h>
-#endif
-
 #if (defined DEBUGMODE) && (defined FORTIFY)
    #include <fortify/fortify.h>
 #endif
@@ -44,15 +35,21 @@
 #endif
 
 #define ALLEGRO_VERSION          4
-#define ALLEGRO_SUB_VERSION      2
-#define ALLEGRO_WIP_VERSION      0
-#define ALLEGRO_VERSION_STR      "4.2.0"
-#define ALLEGRO_DATE_STR         "2005"
-#define ALLEGRO_DATE             20051105    /* yyyymmdd */
+#define ALLEGRO_SUB_VERSION      4
+#define ALLEGRO_WIP_VERSION      3
+#define ALLEGRO_VERSION_STR      "4.4.3"
+#define ALLEGRO_DATE_STR         "2019"
+#define ALLEGRO_DATE             20190303    /* yyyymmdd */
 
 /*******************************************/
 /************ Some global stuff ************/
 /*******************************************/
+
+
+/* Asm build disabled as of 4.3.10+. */
+#ifndef ALLEGRO_NO_ASM
+   #define ALLEGRO_NO_ASM
+#endif
 
 #ifndef TRUE 
    #define TRUE         -1
@@ -65,7 +62,14 @@
      
 #define MIN(x,y)     (((x) < (y)) ? (x) : (y))
 #define MAX(x,y)     (((x) > (y)) ? (x) : (y))
-#define MID(x,y,z)   MAX((x), MIN((y), (z)))
+
+/* Returns the median of x, y, z */
+#define MID(x,y,z)   ((x) > (y) ? ((y) > (z) ? (y) : ((x) > (z) ?    \
+                       (z) : (x))) : ((y) > (z) ? ((z) > (x) ? (z) : \
+                       (x)): (y)))
+
+/* Optimized version of MID for when x <= z. */
+#define CLAMP(x,y,z) MAX((x), MIN((y), (z)))
      
 #undef ABS
 #define ABS(x)       (((x) >= 0) ? (x) : (-(x)))

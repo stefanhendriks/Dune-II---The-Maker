@@ -45,6 +45,9 @@ AL_ARRAY(char, allegro_error);
 #define OSTYPE_WINNT       AL_ID('W','N','T',' ')
 #define OSTYPE_WIN2000     AL_ID('W','2','K',' ')
 #define OSTYPE_WINXP       AL_ID('W','X','P',' ')
+#define OSTYPE_WIN2003     AL_ID('W','2','K','3')
+#define OSTYPE_WINVISTA    AL_ID('W','V','S','T')
+#define OSTYPE_WIN7        AL_ID('W','I','N','7')
 #define OSTYPE_OS2         AL_ID('O','S','2',' ')
 #define OSTYPE_WARP        AL_ID('W','A','R','P')
 #define OSTYPE_DOSEMU      AL_ID('D','E','M','U')
@@ -53,13 +56,16 @@ AL_ARRAY(char, allegro_error);
 #define OSTYPE_SUNOS       AL_ID('S','U','N',' ')
 #define OSTYPE_FREEBSD     AL_ID('F','B','S','D')
 #define OSTYPE_NETBSD      AL_ID('N','B','S','D')
+#define OSTYPE_OPENBSD     AL_ID('O','B','S','D')
 #define OSTYPE_IRIX        AL_ID('I','R','I','X')
 #define OSTYPE_DARWIN      AL_ID('D','A','R','W')
 #define OSTYPE_QNX         AL_ID('Q','N','X',' ')
 #define OSTYPE_UNIX        AL_ID('U','N','I','X')
 #define OSTYPE_BEOS        AL_ID('B','E','O','S')
+#define OSTYPE_HAIKU       AL_ID('H','A','I','K')
 #define OSTYPE_MACOS       AL_ID('M','A','C',' ')
 #define OSTYPE_MACOSX      AL_ID('M','A','C','X')
+#define OSTYPE_PSP         AL_ID('K','P','S','P')
 
 AL_VAR(int, os_type);
 AL_VAR(int, os_version);
@@ -69,26 +75,22 @@ AL_VAR(int, os_multitasking);
 #define SYSTEM_AUTODETECT  0
 #define SYSTEM_NONE        AL_ID('N','O','N','E')
 
-#if (ALLEGRO_SUB_VERSION&1)
 #define MAKE_VERSION(a, b, c) (((a)<<16)|((b)<<8)|(c))
-#else
-#define MAKE_VERSION(a, b, c) (((a)<<16)|((b)<<8))
-#endif
 
-AL_FUNC(int, _get_allegro_version, (void));
-AL_FUNC(int, _install_allegro, (int system_id, int *errno_ptr, AL_METHOD(int, atexit_ptr, (AL_METHOD(void, func, (void))))));
+AL_FUNC(int, _install_allegro_version_check, (int system_id, int *errno_ptr,
+   AL_METHOD(int, atexit_ptr, (AL_METHOD(void, func, (void)))), int version));
 
-AL_INLINE(int, install_allegro, (int system_id, int *errno_ptr, AL_METHOD(int, atexit_ptr, (AL_METHOD(void, func, (void))))),
+AL_INLINE(int, install_allegro, (int system_id, int *errno_ptr,
+   AL_METHOD(int, atexit_ptr, (AL_METHOD(void, func, (void))))),
 {
-   if (MAKE_VERSION(ALLEGRO_VERSION, ALLEGRO_SUB_VERSION, ALLEGRO_WIP_VERSION) !=
-       _get_allegro_version()) {
-      ustrzcpy(allegro_error, ALLEGRO_ERROR_SIZE, get_config_text("Library version mismatch"));
-      return !0;
-   }
-
-   return _install_allegro(system_id, errno_ptr, atexit_ptr);
+   return _install_allegro_version_check(system_id, errno_ptr, atexit_ptr, \
+      MAKE_VERSION(ALLEGRO_VERSION, ALLEGRO_SUB_VERSION, ALLEGRO_WIP_VERSION));
 })
-#define allegro_init()  install_allegro(SYSTEM_AUTODETECT, &errno, (int (*)(void (*)(void)))atexit)
+
+#define allegro_init()  _install_allegro_version_check(SYSTEM_AUTODETECT, &errno, \
+   (int (*)(void (*)(void)))atexit, \
+   MAKE_VERSION(ALLEGRO_VERSION, ALLEGRO_SUB_VERSION, ALLEGRO_WIP_VERSION))
+
 AL_FUNC(void, allegro_exit, (void));
 
 AL_PRINTFUNC(void, allegro_message, (AL_CONST char *msg, ...), 1, 2);
@@ -111,6 +113,9 @@ AL_FUNC(void, check_cpu, (void));
 #define CPU_AMD64    0x0200
 #define CPU_IA64     0x0400
 #define CPU_SSE3     0x0800
+#define CPU_SSSE3    0x1000
+#define CPU_SSE41    0x2000
+#define CPU_SSE42    0x4000
 
 /* CPU families - PC */
 #define CPU_FAMILY_UNKNOWN  0

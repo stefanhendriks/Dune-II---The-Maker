@@ -10,7 +10,7 @@ public:
     void draw(cBuildingListItem *itemToPlace, int mouseCell);
 
 protected:
-    void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
+    void drawStructureIdAtMousePos(cBuildingListItem *itemToPlace);
 
     void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 

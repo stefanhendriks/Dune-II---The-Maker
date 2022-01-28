@@ -1,5 +1,6 @@
 #include "d2tmh.h"
 
+#include <allegro/gfx.h>
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
   : absCoords(absCoords)

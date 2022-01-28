@@ -45,7 +45,7 @@ target_include_directories(alfont
 
 target_link_libraries(alfont
   PUBLIC
-    alleg
+    allegro
 )
 
 # Compile & link options are taken from the Makefile. 

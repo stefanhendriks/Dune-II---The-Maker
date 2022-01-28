@@ -1,7 +1,9 @@
 #include "cPlatformLayerInit.h"
 
-#include "allegroh.h"
 #include "utils/cLog.h"
+
+#include <allegro/config.h>
+#include <allegro/system.h>
 
 #include <cstring>
 #include <stdexcept>

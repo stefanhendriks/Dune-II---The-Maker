@@ -15,6 +15,8 @@
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 
+#include <allegro.h>
+
 #include <math.h>
 
 namespace

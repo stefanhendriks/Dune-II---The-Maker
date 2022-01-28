@@ -13,9 +13,10 @@
 #include "../../include/d2tmh.h"
 #include "cAbstractStructure.h"
 
-#include <fmt/core.h>
-
 #include "utils/cSoundPlayer.h"
+
+#include <allegro.h>
+#include <fmt/core.h>
 
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() :

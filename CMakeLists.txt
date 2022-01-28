@@ -77,15 +77,25 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    alleg
+    allegro
     alfont
     fmt::fmt
     -static-libgcc
     -static-libstdc++
 )
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  set(D2TM_OPTMIZATION "-O0")
+else()
+  set(D2TM_OPTMIZATION "-O3")
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    INTERPROCEDURAL_OPTIMIZATION TRUE
+  )
+endif()
+
 target_compile_options(${PROJECT_NAME}
   PRIVATE
+    ${D2TM_OPTMIZATION}
     "-Werror"
     "-Wall"
     "-Wextra"

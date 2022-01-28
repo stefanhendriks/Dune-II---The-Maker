@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_LIBPTHREAD
+#ifdef ALLEGRO_HAVE_LIBPTHREAD
    /* Synchronization routines using POSIX threads */
    AL_FUNC(void *, _unix_create_mutex, (void));
    AL_FUNC(void, _unix_destroy_mutex, (void *handle));
@@ -74,11 +74,14 @@ extern "C" {
    AL_FUNC(void, _unix_register_digi_driver, (int id, DIGI_DRIVER *driver, int autodetect, int priority));
    AL_FUNC(void, _unix_register_midi_driver, (int id, MIDI_DRIVER *driver, int autodetect, int priority));
 
+   /* Get size of a memory page in bytes */
+   AL_FUNC(size_t, _unix_get_page_size, (void));
+
 
 #ifdef ALLEGRO_WITH_XWINDOWS
    AL_FUNCPTR(void, _xwin_keyboard_interrupt, (int pressed, int code));
    AL_FUNCPTR(void, _xwin_keyboard_focused, (int focused, int state));
-   AL_FUNCPTR(void, _xwin_mouse_interrupt, (int x, int y, int z, int buttons));
+   AL_FUNCPTR(void, _xwin_mouse_interrupt, (int x, int y, int z, int w, int buttons));
    AL_FUNCPTR(void, _xwin_timer_interrupt, (unsigned long interval));
 
    AL_ARRAY(_DRIVER_INFO, _xwin_gfx_driver_list);
@@ -177,6 +180,8 @@ extern struct bg_manager _bg_man_pthreads;
 extern struct bg_manager _bg_man_sigalrm;
 
 extern struct bg_manager *_unix_bg_man;
+
+extern _DRIVER_INFO _linux_joystick_driver_list[]; /* also in aintlnx.h */
 
 
 #ifdef __cplusplus

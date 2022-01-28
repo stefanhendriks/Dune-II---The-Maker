@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cGuiWindow.h"
 
+#include <allegro/color.h>
 
 cGuiWindow::cGuiWindow(cRectangle rect) {
     this->rect = rect;

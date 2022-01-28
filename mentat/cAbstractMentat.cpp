@@ -12,6 +12,9 @@
 
 #include "include/d2tmh.h"
 
+#include <alfont.h>
+#include <allegro.h>
+
 // "default" Constructor
 cAbstractMentat::cAbstractMentat() {
 	iMentatSentence = -1;
