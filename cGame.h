@@ -68,7 +68,8 @@ public:
     bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
     bool m_noAiRest;                // Campaign AI does not have long initial REST time
     bool m_playMusic;               // play any music?
-    float m_cameraMoveSpeed;        // speed of camera when moving (default = 0.5f)
+    float m_cameraDragMoveSpeed;          // speed of camera when dragging mouse (default = 0.5f)
+    float m_cameraBorderOrKeyMoveSpeed;   // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
 
 	bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not

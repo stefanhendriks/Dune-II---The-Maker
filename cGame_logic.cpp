@@ -94,6 +94,9 @@ void cGame::init() {
 
     m_musicType = MUSIC_MENU;
 
+    m_cameraDragMoveSpeed=0.5f;
+    m_cameraBorderOrKeyMoveSpeed=0.5;
+
     map.init(64, 64);
 
     initPlayers(false);
@@ -1043,7 +1046,7 @@ bool cGame::setupGame() {
     install_particles();
 
     delete mapCamera;
-    mapCamera = new cMapCamera(&map, game.m_cameraMoveSpeed);
+    mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed);
 
     delete drawManager;
     drawManager = new cDrawManager(&players[HUMAN]);
