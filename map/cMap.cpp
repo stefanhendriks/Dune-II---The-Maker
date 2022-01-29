@@ -574,11 +574,6 @@ void cMap::draw_units_2nd() {
     set_trans_blender(0, 0, 0, 128);
 }
 
-// TODO: Remove this, in favor of having mapCamera respond to keyboard and mouse events
-void cMap::thinkInteraction() {
-    mapCamera->thinkInteraction();
-}
-
 int cMap::mouse_draw_x() {
     if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();

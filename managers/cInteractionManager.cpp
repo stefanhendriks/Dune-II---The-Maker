@@ -75,7 +75,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
         pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
         sidebar->onNotifyMouseEvent(mouseEvent);
-        mapCamera->onNotify(mouseEvent);
+        mapCamera->onNotifyMouseEvent(mouseEvent);
         miniMapDrawer->onNotifyMouseEvent(mouseEvent);
         orderDrawer->onNotify(mouseEvent);
     }
@@ -92,6 +92,8 @@ void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     if (game.isState(GAME_PLAYING)) {
         cGameControlsContext *pContext = player->getGameControlsContext();
         pContext->onNotifyKeyboardEvent(event);
+
+        mapCamera->onNotifyKeyboardEvent(event);
     }
 
     game.onNotifyKeyboardEvent(event);
