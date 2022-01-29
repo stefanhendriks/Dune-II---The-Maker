@@ -599,6 +599,7 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
         if (strcmp(word, "CameraDragMoveSpeed") == 0) return WORD_CAMERADRAGMOVESPEED;
         if (strcmp(word, "CameraBorderOrKeyMoveSpeed") == 0) return WORD_CAMERABORDERORKEYMOVESPEED;
+        if (strcmp(word, "CameraEdgeMove") == 0) return WORD_CAMERAEDGEMOVE;
         assert(false && "Unknown word in [SETTINGS]");
     }
 
@@ -2264,6 +2265,9 @@ void INI_Install_Game(std::string filename) {
                         break;
                     case WORD_CAMERABORDERORKEYMOVESPEED:
                         game.m_cameraBorderOrKeyMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
+                        break;
+                    case WORD_CAMERAEDGEMOVE:
+                        game.m_cameraEdgeMove = INI_WordValueBOOL(linefeed);
                         break;
                 }
             }

@@ -70,6 +70,7 @@ public:
     bool m_playMusic;               // play any music?
     float m_cameraDragMoveSpeed;          // speed of camera when dragging mouse (default = 0.5f)
     float m_cameraBorderOrKeyMoveSpeed;   // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
+    bool m_cameraEdgeMove;              // should move map camera when hitting edges of screen
 
 	bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not

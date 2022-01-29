@@ -18,7 +18,7 @@
 class cMapCamera : cInputObserver {
 
 public:
-    cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedKeys);
+    cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedKeys, bool cameraEdgeMove);
 
     ~cMapCamera();
 
@@ -168,6 +168,8 @@ private:
     float m_moveY;
     float m_moveSpeedDrag;
     float m_moveSpeedBorderOrKeys;
+    bool m_cameraEdgeMove;
+
     bool m_keyPressedUp;
     bool m_keyPressedDown;
     bool m_keyPressedLeft;

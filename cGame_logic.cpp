@@ -96,6 +96,7 @@ void cGame::init() {
 
     m_cameraDragMoveSpeed=0.5f;
     m_cameraBorderOrKeyMoveSpeed=0.5;
+    m_cameraEdgeMove = true;
 
     map.init(64, 64);
 
@@ -1046,7 +1047,7 @@ bool cGame::setupGame() {
     install_particles();
 
     delete mapCamera;
-    mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed);
+    mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     delete drawManager;
     drawManager = new cDrawManager(&players[HUMAN]);
