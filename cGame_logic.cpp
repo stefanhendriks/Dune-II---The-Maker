@@ -672,7 +672,7 @@ bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
 
-    game.init(); // Must be first!
+    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
@@ -1043,7 +1043,7 @@ bool cGame::setupGame() {
     install_particles();
 
     delete mapCamera;
-    mapCamera = new cMapCamera(&map);
+    mapCamera = new cMapCamera(&map, game.m_cameraMoveSpeed);
 
     delete drawManager;
     drawManager = new cDrawManager(&players[HUMAN]);
@@ -1346,13 +1346,14 @@ void cGame::thinkFast_state() {
 }
 
 void cGame::thinkFast_combat() {
+    mapCamera->thinkFast();
+
     for (cPlayer &pPlayer : players) {
         pPlayer.thinkFast();
     }
 
     // structures think
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = structure[i];
+    for (cAbstractStructure *pStructure : structure) {
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
             pStructure->thinkFast();           // think about actions going on
@@ -1365,20 +1366,14 @@ void cGame::thinkFast_combat() {
         }
     }
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        cItemBuilder *itemBuilder = players[i].getItemBuilder();
+    for (cPlayer &pPlayer : players) {
+        cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
         if (itemBuilder) {
             itemBuilder->think();
         }
     }
 
-    map.increaseScrollTimer();
     map.thinkFast();
-
-    if (map.isTimeToScroll()) {
-        map.thinkInteraction();
-        map.resetScrollTimer();
-    }
 
     game.reduceShaking();
 
@@ -1394,7 +1389,7 @@ void cGame::thinkFast_combat() {
     }
 
     // when not drawing the options, the game does all it needs to do
-// bullets think
+    // bullets think
     for (cBullet &cBullet : bullet) {
         if (!cBullet.bAlive) continue;
         cBullet.thinkFast();
@@ -1810,7 +1805,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
     int iVolFactored = volumeFactor * volume;
 
     if (game.isDebugMode()) {
-        logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+        logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
                 iDistance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
     }
 

@@ -597,6 +597,7 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "FullScreen") == 0) return WORD_FULLSCREEN;
         if (strcmp(word, "ScreenWidth") == 0) return WORD_SCREENWIDTH;
         if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
+        if (strcmp(word, "CameraMoveSpeed") == 0) return WORD_CAMERAMOVESPEED;
     }
 
 //  char msg[255];
@@ -703,15 +704,70 @@ int INI_SectionType(char section[30], int last) {
         return INI_UNITS;
 
     if (strcmp(section, "STRUCTURES") == 0) {
-        alert("Structure Section found", section, "", "OK", NULL, 13, 0);
+        alert("Structure Section found", section, "", "OK", nullptr, 13, 0);
         return INI_STRUCTURES;
     }
 
-    alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", NULL, 13, 0);
+    alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", nullptr, 13, 0);
 
     // When nothing found; we assume its just a new ID tag for some unit or structure
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
     return last;
+}
+
+// Reads out 'result' and will return the value after the '='. Returns float.
+// UGLY COPY/PASTE OF INI_WORDVALUEINT function, because we will completely
+// rewrite this ini parsing abomination somewhere in the future.
+float INI_WordValueFloat(char result[MAX_LINE_LENGTH], float defaultValue) {
+    int pos = 0;
+    int is_pos = -1;
+
+    while (pos < (MAX_LINE_LENGTH - 1)) {
+        if (result[pos] == '=') {
+            is_pos = pos;
+            break;
+        }
+        pos++;
+    }
+
+    if (is_pos > -1) {
+        // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
+        // space.
+        int end_pos = -1;
+
+        while (pos < (MAX_LINE_LENGTH - 1)) {
+            if (result[pos] == '\0') {
+                end_pos = pos;
+                break;
+            }
+            pos++;
+        }
+
+        // End position found!
+        if (end_pos > -1) {
+            // We know the END position. We will use that piece of string to read out a number.
+            char number[10];
+
+            // clear out entire string
+            for (int i = 0; i < 10; i++)
+                number[i] = '\0';
+
+            // Copy the part to 'number', Make sure we won't get outside the array of the character.
+            int cp = is_pos + 1;
+            int c = 0;
+            while (cp < end_pos) {
+                number[c] = result[cp];
+                c++;
+                cp++;
+                if (c > 9)
+                    break;
+            }
+            return atof(number);
+        }
+        // nothing here, so we return nullptr at the end
+    }
+
+    return defaultValue; // no value found, return this
 }
 
 // Reads out 'result' and will return the value after the '='. Returns integer.
@@ -762,7 +818,7 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH]) {
             }
             return atoi(number);
         }
-        // nothing here, so we return NULL at the end
+        // nothing here, so we return nullptr at the end
     }
 
     return 0; // No value, return 0
@@ -893,7 +949,7 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256]) {
 
 
 // Reads out 'result' and will return TRUE when its 'TRUE' or FALSE when its 'FALSE' , else
-// returns NULL
+// returns nullptr
 bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH]) {
     // use INI_WordValueCHAR to know if its 'true'
     char val[256];
@@ -1031,7 +1087,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
     int iRegionConquer = -1;
 
     // open file
-    if ((stream = fopen(filename.c_str(), "r+t")) != NULL) {
+    if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
 
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
@@ -1239,7 +1295,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
     memset(iPl_house, -1, sizeof(iPl_house));
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
-    if ((stream = fopen(filename.c_str(), "r+t")) != NULL) {
+    if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
         char linesection[30];
@@ -1650,7 +1706,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
     int iIS = -1;
 
     // check if this is a 'gen'
-    if (strstr(linefeed, "GEN") != NULL) bGen = true;
+    if (strstr(linefeed, "GEN") != nullptr) bGen = true;
 
     for (int c = 0; c < MAX_LINE_LENGTH; c++) {
         // clear chunk
@@ -2013,7 +2069,7 @@ void INI_Install_Game(std::string filename) {
 
     logbook(fmt::format("Opening game settings from : {}", filename));
 
-    if ((stream = fopen(filename.c_str(), "r+t")) != NULL) {
+    if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
         char linesection[30];
@@ -2051,7 +2107,7 @@ void INI_Install_Game(std::string filename) {
 
                 if (section == INI_TEAMS) {
                     // check if we found a new [TEAM part!
-                    if (strstr(linefeed, "[TEAM:") != NULL) {
+                    if (strstr(linefeed, "[TEAM:") != nullptr) {
                         id++; // New ID
                         if (id > MAX_HOUSES) {
                           id--;
@@ -2062,7 +2118,7 @@ void INI_Install_Game(std::string filename) {
                 // New unit type
                 if (section == INI_UNITS) {
                     // check if we found a new [UNIT part!
-                    if (strstr(linefeed, "[UNIT:") != NULL) {
+                    if (strstr(linefeed, "[UNIT:") != nullptr) {
                         // Get the name of the unit:
                         // [UNIT: <NAME>]
                         // 1234567890123...]
@@ -2093,7 +2149,7 @@ void INI_Install_Game(std::string filename) {
                 // New structure type
                 if (section == INI_STRUCTURES) {
                     // check if we found a new [STRUCTURE: part!
-                    if (strstr(linefeed, "[STRUCTURE:") != NULL) {
+                    if (strstr(linefeed, "[STRUCTURE:") != nullptr) {
                         // Get the name of the unit:
                         // [STRUCTURE: <NAME>]
                         // 123456789012345678]
@@ -2195,14 +2251,14 @@ void INI_Install_Game(std::string filename) {
 
             if (section == INI_SETTINGS) {
                 switch (wordtype) {
-//			  case WORD_FULLSCREEN:
-//				  game.windowed = (INI_WordValueBOOL(linefeed) == false);
-//				  break;
                     case WORD_SCREENWIDTH:
                         game.m_iniScreenWidth = INI_WordValueINT(linefeed);
                         break;
                     case WORD_SCREENHEIGHT:
                         game.m_iniScreenHeight = INI_WordValueINT(linefeed);
+                        break;
+                    case WORD_CAMERAMOVESPEED:
+                        game.m_cameraMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
                         break;
                 }
             }
@@ -2258,7 +2314,7 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
 
     std::vector<std::string> mapLines = std::vector<std::string>();
 
-    if ((stream = fopen(filename, "r+t")) != NULL) {
+    if ((stream = fopen(filename, "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
         char linesection[30];
@@ -2289,7 +2345,7 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
                 // section found
                 if (iOld != section) {
                     if (section == INI_MAP) {
-                        if (previewMap.terrain == NULL) {
+                        if (previewMap.terrain == nullptr) {
                             previewMap.terrain = create_bitmap(128, 128);
                             clear_bitmap(previewMap.terrain);
                             //clear_to_color(PreviewMap[iNew].terrain, makecol(255,255,255));

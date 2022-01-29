@@ -81,6 +81,7 @@ int handleArguments(int argc, char *argv[]) {
     game.m_oneAi = false;
     game.m_windowed = false;
     game.m_noAiRest = false;
+    game.m_cameraMoveSpeed = 0.5f;
     game.setDebugMode(false);
 
 	if (argc > 1) {
