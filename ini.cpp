@@ -101,12 +101,12 @@ void INI_Section(char input[MAX_LINE_LENGTH], char section[30]) {
 // Reads out INPUT and will check for an '=' Everything at the left of the
 // '=' IS a word and will be put in 'word[]'. Use function INI_WordType(char word[25]) to get
 // the correct ID tag.
-void INI_Word(char input[MAX_LINE_LENGTH], char word[25]) {
+void INI_Word(char input[MAX_LINE_LENGTH], char word[30]) {
     int word_pos = INI_GetPositionOfCharacter(input, '=');
 
     memset(word, '\0', strlen(word));
 
-    if (word_pos > -1 && word_pos < 23) {
+    if (word_pos > -1 && word_pos < 28) {
         for (int wc = 0; wc < word_pos; wc++) {
             word[wc] = input[wc];
         }
@@ -597,7 +597,9 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "FullScreen") == 0) return WORD_FULLSCREEN;
         if (strcmp(word, "ScreenWidth") == 0) return WORD_SCREENWIDTH;
         if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
-        if (strcmp(word, "CameraMoveSpeed") == 0) return WORD_CAMERAMOVESPEED;
+        if (strcmp(word, "CameraDragMoveSpeed") == 0) return WORD_CAMERADRAGMOVESPEED;
+        if (strcmp(word, "CameraBorderOrKeyMoveSpeed") == 0) return WORD_CAMERABORDERORKEYMOVESPEED;
+        assert(false && "Unknown word in [SETTINGS]");
     }
 
 //  char msg[255];
@@ -1090,7 +1092,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
 
         char linefeed[MAX_LINE_LENGTH];
-        char lineword[25];
+        char lineword[30];
         char linesection[30];
 
         memset(lineword, '\0', sizeof(lineword));
@@ -1297,7 +1299,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
-        char lineword[25];
+        char lineword[30];
         char linesection[30];
 
         memset(lineword, '\0', sizeof(lineword));
@@ -2002,7 +2004,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
 
     if ((stream = fopen(path.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
-        char lineword[25];
+        char lineword[30];
         char linesection[30];
 
         while (!feof(stream)) {
@@ -2071,7 +2073,7 @@ void INI_Install_Game(std::string filename) {
 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
-        char lineword[25];
+        char lineword[30];
         char linesection[30];
 
         // infinite loop baby
@@ -2257,8 +2259,11 @@ void INI_Install_Game(std::string filename) {
                     case WORD_SCREENHEIGHT:
                         game.m_iniScreenHeight = INI_WordValueINT(linefeed);
                         break;
-                    case WORD_CAMERAMOVESPEED:
-                        game.m_cameraMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
+                    case WORD_CAMERADRAGMOVESPEED:
+                        game.m_cameraDragMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
+                        break;
+                    case WORD_CAMERABORDERORKEYMOVESPEED:
+                        game.m_cameraBorderOrKeyMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
                         break;
                 }
             }
@@ -2316,14 +2321,12 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
 
     if ((stream = fopen(filename, "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
-        char lineword[25];
+        char lineword[30];
         char linesection[30];
 
-        for (int iCl = 0; iCl < MAX_LINE_LENGTH; iCl++) {
-            linefeed[iCl] = '\0';
-            if (iCl < 25) lineword[iCl] = '\0';
-            if (iCl < 30) linesection[iCl] = '\0';
-        }
+        memset(lineword, '\0', sizeof(lineword));
+        memset(linesection, '\0', sizeof(linesection));
+        memset(linefeed, '\0', sizeof(linefeed));
 
         // infinite loop baby
         while (!feof(stream)) {

@@ -8,7 +8,10 @@ namespace {
     constexpr auto kMapBoundaryScrollSpeed = 5.0f;
 }
 
-cMapCamera::cMapCamera(cMap * theMap, float moveSpeed) : m_moveSpeed(moveSpeed), m_pMap(theMap) {
+cMapCamera::cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys) :
+    m_moveSpeedDrag(moveSpeedDrag),
+    m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
+    m_pMap(theMap) {
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 
@@ -23,6 +26,11 @@ cMapCamera::cMapCamera(cMap * theMap, float moveSpeed) : m_moveSpeed(moveSpeed),
 
     m_moveX = 0.0f;
     m_moveY = 0.0f;
+
+    m_keyPressedDown = false;
+    m_keyPressedUp = false;
+    m_keyPressedLeft = false;
+    m_keyPressedRight = false;
 
     calibrate();
 }
@@ -170,27 +178,35 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event) {
 void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
     cMouse *pMouse = game.getMouse();
 
-    int mouseX = event.coords.x;
-    int mouseY = event.coords.y;
+    // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
+    if (!pMouse->isMapScrolling()) {
 
-    if (mouseX <= 1) {
-        setMoveX(-kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_LEFT);
-    }
+        int mouseX = event.coords.x;
+        int mouseY = event.coords.y;
 
-    if (mouseY <= 1) {
-        setMoveY(-kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_UP);
-    }
+        if (mouseX <= 2) {
+            setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_LEFT);
+        } else if (mouseX >= (game.m_screenX - 2)) {
+            setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_RIGHT);
+        } else {
+            if (!m_keyPressedLeft && !m_keyPressedRight) {
+                setMoveX(0.0f, m_moveSpeedBorderOrKeys);
+            }
+        }
 
-    if (mouseX >= (game.m_screenX - 2)) {
-        setMoveX(kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_RIGHT);
-    }
-
-    if (mouseY >= (game.m_screenY - 2)) {
-        setMoveY(kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_DOWN);
+        if (mouseY <= 2) {
+            setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_UP);
+        } else if (mouseY >= (game.m_screenY - 2)) {
+            setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_DOWN);
+        } else {
+            if (!m_keyPressedUp && !m_keyPressedDown) {
+                setMoveY(0.0f, m_moveSpeedBorderOrKeys);
+            }
+        }
     }
 }
 
@@ -234,59 +250,77 @@ void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &) {
         float resultX = diffX * factorX;
         float resultY = diffY * factorY;
 
-        setMoveX(resultX);
-        setMoveY(resultY);
+        setMoveX(resultX, m_moveSpeedDrag);
+        setMoveY(resultY, m_moveSpeedDrag);
+
+        // reset keyboard state, as this supersedes keyboard movement
+        m_keyPressedDown = false;
+        m_keyPressedUp = false;
+        m_keyPressedLeft = false;
+        m_keyPressedRight = false;
+
         return;
     }
 }
 
-void cMapCamera::setMoveX(float x) {
-    m_moveX = x * m_moveSpeed;
+void cMapCamera::setMoveX(float x, float moveSpeed) {
+    m_moveX = x * moveSpeed;
 }
 
-void cMapCamera::setMoveY(float y) {
-    m_moveY = y * m_moveSpeed;
+void cMapCamera::setMoveY(float y, float moveSpeed) {
+    m_moveY = y * moveSpeed;
 }
 
 void cMapCamera::onKeyHold(const cKeyboardEvent &event) {
     cMouse *pMouse = game.getMouse();
 
-    if (event.hasKey(KEY_LEFT)) {
-        setMoveX(-kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_LEFT);
-    }
+    // mouse is 'moving by pressing right mouse button', this supersedes reacting to keypress
+    if (!pMouse->isMapScrolling()) {
+        if (event.hasKey(KEY_LEFT)) {
+            setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_LEFT);
+            m_keyPressedLeft = true;
+        }
 
-    if (event.hasKey(KEY_UP)) {
-        setMoveY(-kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_UP);
-    }
+        if (event.hasKey(KEY_UP)) {
+            setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_UP);
+            m_keyPressedUp = true;
+        }
 
-    if (event.hasKey(KEY_RIGHT)) {
-        setMoveX(kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_RIGHT);
-    }
+        if (event.hasKey(KEY_RIGHT)) {
+            setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_RIGHT);
+            m_keyPressedRight = true;
+        }
 
-    if (event.hasKey(KEY_DOWN)) {
-        setMoveY(kMapBoundaryScrollSpeed);
-        pMouse->setTile(MOUSE_DOWN);
+        if (event.hasKey(KEY_DOWN)) {
+            setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
+            pMouse->setTile(MOUSE_DOWN);
+            m_keyPressedDown = true;
+        }
     }
 }
 
 void cMapCamera::onKeyPressed(const cKeyboardEvent &event) {
     if (event.hasKey(KEY_LEFT)) {
-        setMoveX(0.0f);
+        setMoveX(0.0f, m_moveSpeedBorderOrKeys);
+        m_keyPressedLeft = false;
     }
 
     if (event.hasKey(KEY_UP)) {
-        setMoveY(0.0f);
+        setMoveY(0.0f, m_moveSpeedBorderOrKeys);
+        m_keyPressedUp = false;
     }
 
     if (event.hasKey(KEY_RIGHT)) {
-        setMoveX(0.0f);
+        setMoveX(0.0f, m_moveSpeedBorderOrKeys);
+        m_keyPressedRight = false;
     }
 
     if (event.hasKey(KEY_DOWN)) {
-        setMoveY(0.0f);
+        setMoveY(0.0f, m_moveSpeedBorderOrKeys);
+        m_keyPressedDown = false;
     }
 }
 

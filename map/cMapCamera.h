@@ -18,7 +18,7 @@
 class cMapCamera : cInputObserver {
 
 public:
-    cMapCamera(cMap * theMap, float moveSpeed);
+    cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedKeys);
 
     ~cMapCamera();
 
@@ -166,7 +166,12 @@ private:
     // used for moving
     float m_moveX;
     float m_moveY;
-    float m_moveSpeed;
+    float m_moveSpeedDrag;
+    float m_moveSpeedBorderOrKeys;
+    bool m_keyPressedUp;
+    bool m_keyPressedDown;
+    bool m_keyPressedLeft;
+    bool m_keyPressedRight;
 
     int m_heightOfTopBar;
     int m_windowWidth;
@@ -197,8 +202,8 @@ private:
     void onMouseRightButtonClicked(const s_MouseEvent &event);
     void onMouseRightButtonPressed(const s_MouseEvent &event);
 
-    void setMoveX(float x);
-    void setMoveY(float y);
+    void setMoveX(float x, float moveSpeed);
+    void setMoveY(float y, float moveSpeed);
 
     void onKeyHold(const cKeyboardEvent &event);
     void onKeyPressed(const cKeyboardEvent &event);
