@@ -8,9 +8,10 @@ namespace {
     constexpr auto kMapBoundaryScrollSpeed = 5.0f;
 }
 
-cMapCamera::cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys) :
+cMapCamera::cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys, bool cameraEdgeMove) :
     m_moveSpeedDrag(moveSpeedDrag),
     m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
+    m_cameraEdgeMove(cameraEdgeMove),
     m_pMap(theMap) {
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
@@ -178,8 +179,8 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event) {
 void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
     cMouse *pMouse = game.getMouse();
 
-    // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
-    if (!pMouse->isMapScrolling()) {
+    // mouse is 'moving by pressing right mouse button', this supersedes behavior with edges
+    if (!pMouse->isMapScrolling() && m_cameraEdgeMove) {
 
         int mouseX = event.coords.x;
         int mouseY = event.coords.y;
