@@ -325,8 +325,14 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event) {
             if (iGroup > 0) {
                 // select all units for group
                 player->deselectAllUnits();
-                player->selectUnitsFromGroup(iGroup);
-                selectedUnits = player->getSelectedUnits();
+                bool anyUnitSelected = player->selectUnitsFromGroup(iGroup);
+                if (anyUnitSelected) {
+                    selectedUnits = player->getSelectedUnits();
+                } else {
+                    // we get in a state where no units are selected,
+                    // so get back into "select" state.
+                    player->setContextMouseState(MOUSESTATE_SELECT);
+                }
             }
         }
     }
