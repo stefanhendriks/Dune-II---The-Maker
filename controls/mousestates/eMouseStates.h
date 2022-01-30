@@ -5,11 +5,16 @@
 
 // states, apply to battlefield only
 enum eMouseState {
-    MOUSESTATE_SELECT, // mouse is in 'normal' mode, it is able to select units
-    MOUSESTATE_UNITS_SELECTED, // mouse has selected units
-    MOUSESTATE_REPAIR, // mouse is in repair state
-    MOUSESTATE_PLACE, // mouse is going to place a structure
-    MOUSESTATE_DEPLOY, // mouse is going to deploy something
+    // mouse is in 'normal' mode, it is able to select units
+    MOUSESTATE_SELECT,
+    // mouse has selected units
+    MOUSESTATE_UNITS_SELECTED,
+    // mouse is in repair state
+    MOUSESTATE_REPAIR,
+    // mouse is going to place a structure
+    MOUSESTATE_PLACE,
+    // mouse is going to deploy something
+    MOUSESTATE_DEPLOY,
 };
 
 inline std::string mouseStateString(eMouseState state) {
