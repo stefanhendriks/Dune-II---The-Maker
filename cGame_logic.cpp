@@ -1176,25 +1176,31 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
             } else if (newState == GAME_OPTIONS) {
+                m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
-                // evaluate all players, so we have initial 'alive' values set properly
-                for (int i = 1; i < MAX_PLAYERS; i++) {
-                    cPlayer &player = players[i];
-                    player.evaluateStillAlive();
+                if (m_state == GAME_OPTIONS) {
+                    // we came from options menu
+                    players[HUMAN].getGameControlsContext()->onFocusMouseStateEvent();
+                } else {
+                    // evaluate all players, so we have initial 'alive' values set properly
+                    for (int i = 1; i < MAX_PLAYERS; i++) {
+                        cPlayer &player = players[i];
+                        player.evaluateStillAlive();
+                    }
+
+                    // in-between solution until we have a proper combat state object
+                    drawManager->init();
+
+                    // handle update
+                    s_GameEvent event{
+                            .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                    };
+                    // the game is about to begin!
+                    game.onNotifyGameEvent(event);
                 }
-
-                // in-between solution until we have a proper combat state object
-                drawManager->init();
-
-                // handle update
-                s_GameEvent event{
-                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
-                };
-                // the game is about to begin!
-                game.onNotifyGameEvent(event);
             }
 
             m_states[newState] = newStatePtr;
@@ -1277,7 +1283,7 @@ void cGame::prepareMentatForPlayer() {
 
 void cGame::createAndPrepareMentatForHumanPlayer() {
     delete m_mentat;
-    int houseIndex = players[0].getHouse();
+    int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
         m_mentat = new cAtreidesMentat();
     } else if (houseIndex == HARKONNEN) {
