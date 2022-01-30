@@ -1120,6 +1120,9 @@ void cGame::setState(int newState) {
         if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
             deleteOldState = false; // so we don't lose data when we go back
         }
+        if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
+            deleteOldState = false; // don't delete credits, so we keep the crawler info
+        }
 
         if (deleteOldState) {
             delete m_states[newState];
