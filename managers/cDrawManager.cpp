@@ -44,11 +44,7 @@ void cDrawManager::drawCombatState() {
 	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenY);
     mapDrawer->drawTerrain();
 
-	// Only draw units/structures, etc, when we do NOT press D
-	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-    if (!key[KEY_D] || !key[KEY_TAB]) {
-        structureDrawer->drawStructuresFirstLayer();
-    }
+    structureDrawer->drawStructuresFirstLayer();
 
 	// draw layer 1 (beneath units, on top of terrain)
     particleDrawer->determineParticlesToDraw();
@@ -293,11 +289,13 @@ void cDrawManager::init() {
     miniMapDrawer->init();
 }
 
-void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &) {
-    // NOOP
+void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &event) {
+    sidebarDrawer->onNotifyMouseEvent(event);
 }
 
 void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    sidebarDrawer->onNotifyKeyboardEvent(event);
+
     switch (event.eventType) {
         case eKeyEventType::HOLD:
             onKeyDown(event);
