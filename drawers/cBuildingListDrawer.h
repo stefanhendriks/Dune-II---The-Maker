@@ -1,12 +1,17 @@
 #pragma once
 
-class cBuildingListDrawer {
+#include "observers/cInputObserver.h"
+
+class cBuildingListDrawer : cInputObserver {
 
 public:
-	cBuildingListDrawer(cPlayer *thePlayer);
-	~cBuildingListDrawer();
+	explicit cBuildingListDrawer(cPlayer *player);
+	~cBuildingListDrawer() override;
 
-	void drawList(cBuildingList *list, int listIDToDraw);
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+
+    void drawList(cBuildingList *list, int listIDToDraw);
     void drawButtonHoverRectangle(cBuildingList *list);
 	void drawButton(cBuildingList *list, bool pressed);
 
@@ -15,20 +20,26 @@ public:
     int getDrawX();
     int getDrawY();
 
-    void setPlayer(cPlayer * thePlayer);
+    void setPlayer(cPlayer * player);
 
 protected:
 
 private:
-	void drawStructureSize(int structureId, int x, int y);
-	void drawList(cBuildingList *list, bool shouldDrawStructureSize);
-	void drawListWithStructures(cBuildingList *list);		// used for const yard
-	void drawListWithUnitsOrAbilities(cBuildingList *list); // used for units or palace / starport
-
-	bool isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY);
-
 	// the list to draw
-	cTextDrawer *textDrawer;
+	cTextDrawer *m_textDrawer;
 
-	cPlayer * player;
+	cPlayer * m_player;
+
+    bool m_renderListIds;
+
+    void drawStructureSize(int structureId, int x, int y);
+    void drawList(cBuildingList *list, bool shouldDrawStructureSize);
+    void drawListWithStructures(cBuildingList *list);		// used for const yard
+    void drawListWithUnitsOrAbilities(cBuildingList *list); // used for units or palace / starport
+
+    bool isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY);
+
+    void onKeyHold(const cKeyboardEvent &event);
+
+    void onKeyPressed(const cKeyboardEvent &event);
 };
