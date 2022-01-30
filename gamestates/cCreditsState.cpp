@@ -5,7 +5,7 @@
 #include <allegro.h>
 
 cCreditsState::cCreditsState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)) {
-    moveSpeed = 0.25f;
+    moveSpeed = 0.15f;
 
     bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;
     bmp_Dune = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
@@ -29,6 +29,11 @@ cCreditsState::cCreditsState(cGame &theGame) : cGameState(theGame), textDrawer(c
 void cCreditsState::prepareCrawlerLines() {
     int colorYellow = makecol(255, 207, 41);
     int colorWhite = makecol(255, 255, 255);
+    int colorGreen = makecol(0, 255, 0);
+    int colorRed = makecol(255, 0, 0);
+
+    int colorHeadlines = colorGreen;
+
     int fontHeightWithALittlePadding = textDrawer.getFontHeight() + 4;
     int spacerAfterHeadline = fontHeightWithALittlePadding + textDrawer.getFontHeight();
     auto spacer = s_CreditLine {
@@ -55,7 +60,7 @@ void cCreditsState::prepareCrawlerLines() {
     });
     lines.push_back(s_CreditLine {
         .txt = "Dune 2 - The Building of a Dynasty (by Westwood Studios)",
-        .color = makecol(255, 0, 0),
+        .color = colorRed,
         .height = spacerAfterHeadline
     });
 
@@ -63,7 +68,7 @@ void cCreditsState::prepareCrawlerLines() {
 
     lines.push_back(s_CreditLine {
             .txt = "--- CONTRIBUTORS ---",
-            .color = colorWhite,
+            .color = colorHeadlines,
             .height = spacerAfterHeadline,
     });
     lines.push_back(s_CreditLine {
@@ -72,7 +77,7 @@ void cCreditsState::prepareCrawlerLines() {
             .height = fontHeightWithALittlePadding
     });
     lines.push_back(s_CreditLine {
-            .txt = "Arjen - Developer",
+            .txt = "Arjen - Developer & Sparring partner",
             .color = colorWhite,
             .height = fontHeightWithALittlePadding
     });
@@ -87,17 +92,27 @@ void cCreditsState::prepareCrawlerLines() {
             .height = fontHeightWithALittlePadding
     });
     lines.push_back(s_CreditLine {
+            .txt = "Vidiware - Graphics",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
             .txt = "Timenn - Graphics",
             .color = colorWhite,
             .height = fontHeightWithALittlePadding
     });
     lines.push_back(s_CreditLine {
-            .txt = "Ripps - Testing & Skirmish Maps",
+            .txt = "MrFlibble - Graphics",
             .color = colorWhite,
             .height = fontHeightWithALittlePadding
     });
     lines.push_back(s_CreditLine {
-            .txt = "Bruno Antunes ",
+            .txt = "Ripps - Support at Discord, testing & Skirmish Maps",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Bruno - For your lifelong support & valuable feedback",
             .color = colorWhite,
             .height = fontHeightWithALittlePadding
     });
@@ -106,7 +121,7 @@ void cCreditsState::prepareCrawlerLines() {
 
     lines.push_back(s_CreditLine {
             .txt = "--- ACKNOWLEDGEMENTS ---",
-            .color = colorWhite,
+            .color = colorHeadlines,
             .height = spacerAfterHeadline
     });
     lines.push_back(s_CreditLine {
@@ -125,7 +140,7 @@ void cCreditsState::prepareCrawlerLines() {
             .height = fontHeightWithALittlePadding
     });
     lines.push_back(s_CreditLine {
-            .txt = "...",
+            .txt = "Dune Legacy, Dune Dynasty and Dune The Golden Path",
             .color = colorWhite,
             .height = fontHeightWithALittlePadding
     });
@@ -134,7 +149,7 @@ void cCreditsState::prepareCrawlerLines() {
 
     lines.push_back(s_CreditLine {
             .txt = "--- KO-FI SUPPORTERS ---",
-            .color = colorWhite,
+            .color = colorHeadlines,
             .height = spacerAfterHeadline
     });
     lines.push_back(s_CreditLine {
@@ -153,9 +168,65 @@ void cCreditsState::prepareCrawlerLines() {
             .height = spacerAfterHeadline
     });
     lines.push_back(spacer);
+
     lines.push_back(s_CreditLine {
-            .txt = "https://ko-fi.com/dune2themaker",
+            .txt = "--- SPECIAL THANKS TO ---",
+            .color = colorHeadlines,
+            .height = spacerAfterHeadline
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Gobalopper - for Dune2K, and hosting arrakis.dune2k.com",
             .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Jpexs - for help with the Dune 2 Seed Generator",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Rene - for the D2TM Java Map Editor",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Guillaume Lavoie",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Dennis Stansert",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Ash",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "Ruurd Nijdam",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "rphl",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+    lines.push_back(s_CreditLine {
+            .txt = "All those at the dune2k arrakis forums, for the good times",
+            .color = colorWhite,
+            .height = fontHeightWithALittlePadding
+    });
+
+    // spacer
+    // and finally a thank you for the player
+    lines.push_back(spacer);
+
+    lines.push_back(s_CreditLine {
+            .txt = "Thank you for playing Dune 2 - The Maker",
+            .color = colorHeadlines,
             .height = spacerAfterHeadline
     });
 }
@@ -203,7 +274,7 @@ void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event) {
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED) {
         moveSpeed = 1.0f; // speed up
     } else if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
-        moveSpeed = 0.25f; // restore
+        moveSpeed = 0.15f; // restore
     }
 }
 
