@@ -27,21 +27,21 @@ public:
     eGameStateType getType() override;
 
 private:
-    int logoX;
-    float crawlerY;
-    float moveSpeed;
-    int logoHeight;
+    int m_titleX;
+    float m_crawlerY;
 
-    const cTextDrawer textDrawer;
+    float m_moveSpeed;
+    int m_titleHeight;
 
-    std::vector<s_CreditLine> lines;
+    const cTextDrawer m_textDrawer;
 
-    cPoint coords_Dune;
-    BITMAP *bmp_Dune;
-    BITMAP *bmp_D2TM_Title;
+    std::vector<s_CreditLine> m_lines;
+
+    cPoint m_duneCoordinates;
+    BITMAP *m_duneBmp;
+    BITMAP *m_titleBmp;
 
     void resetCrawler();
-
     void prepareCrawlerLines();
 };
 
