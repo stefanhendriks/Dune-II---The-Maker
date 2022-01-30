@@ -26,6 +26,7 @@ cGameControlsContext::~cGameControlsContext() {
     delete mouseUnitsSelectedState;
     delete mouseRepairState;
     delete mousePlaceState;
+    delete mouseDeployState;
 }
 
 
@@ -150,32 +151,6 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
         mouse->setTile(MOUSE_NORMAL);
     }
 
-//    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
-//    cGameControlsContext *context = player.getGameControlsContext();
-//    bool bOrderingUnits=false;
-//
-//    if (player.isNotPlacingSomething() && player.isNotDeployingSomething()) {
-//        combat_mouse_normalCombatInteraction(player, bOrderingUnits, context->getMouseCell());
-//    }
-//
-//    switch (event.eventType) {
-//        case MOUSE_RIGHT_BUTTON_PRESSED:
-//            onCombatMouseEventRightButtonClicked(event);
-//            break;
-//        case MOUSE_MOVED_TO:
-//            onCombatMouseEventMovedTo(event);
-//            break;
-//        case MOUSE_LEFT_BUTTON_CLICKED:
-//            if (context->isMouseOnBattleField()) {
-//                onCombatMouseEventLeftButtonClicked(event);
-//            }
-//            break;
-//        default:
-//            // set to -1 only when it was > -1
-//            mouse->resetDragViewportInteraction();
-//            break;
-//    }
-
 }
 
 void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
@@ -218,41 +193,6 @@ void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
             mouseDeployState->onNotifyKeyboardEvent(event);
             break;
     }
-
-//    const cPlayer *humanPlayer = &players[HUMAN];
-//    const cGameControlsContext *pContext = humanPlayer->getGameControlsContext();
-//    const int hoverUnitId = pContext->getIdOfUnitWhereMouseHovers();
-//    const int hoverStructureId = pContext->getIdOfStructureWhereMouseHovers();
-//
-//    if (event.eventType == KEY_HOLD) {
-//        if (event.key == KEY_R) {
-//            // Mouse is hovering above a unit
-//            if (hoverUnitId > -1) {
-//                cUnit &hoverUnit = unit[hoverUnitId];
-//                if (hoverUnit.iPlayer == HUMAN) {
-//                    mouse->setTile(MOUSE_PICK);
-//
-//                    // wanting to repair this unit, check if it is allowed, if so, change mouse tile
-//                    if (humanPlayer->hasAtleastOneStructure(REPAIR)) {
-//                        if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit()) {
-//                            mouse->setTile(MOUSE_REPAIR);
-//                        }
-//                    }
-//                }
-//            } else if (hoverStructureId > -1) {
-//                cAbstractStructure *pStructure = structure[hoverStructureId];
-//                if (pStructure && pStructure->belongsTo(humanPlayer) && pStructure->isDamaged()) {
-//                    mouse->setTile(MOUSE_REPAIR);
-//                }
-//            }
-//        }
-//    } else if (event.eventType == KEY_PRESSED) {
-//        // also "released"
-//        if (event.key == KEY_R) {
-//            int mouseTile = getMouseTile(humanPlayer);
-//            mouse->setTile(mouseTile);
-//        }
-//    }
 }
 
 void cGameControlsContext::setMouseState(eMouseState newState) {
