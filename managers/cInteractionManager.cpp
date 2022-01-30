@@ -78,6 +78,10 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
         mapCamera->onNotifyMouseEvent(mouseEvent);
         miniMapDrawer->onNotifyMouseEvent(mouseEvent);
         orderDrawer->onNotify(mouseEvent);
+        cItemBuilder *pBuilder = player->getItemBuilder();
+        if (pBuilder) {
+            pBuilder->onNotifyMouseEvent(mouseEvent);
+        }
     }
 
     mouseDrawer->onNotify(mouseEvent);
@@ -94,6 +98,10 @@ void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
         pContext->onNotifyKeyboardEvent(event);
 
         mapCamera->onNotifyKeyboardEvent(event);
+        cItemBuilder *pBuilder = player->getItemBuilder();
+        if (pBuilder) {
+            pBuilder->onNotifyKeyboardEvent(event);
+        }
     }
 
     game.onNotifyKeyboardEvent(event);
