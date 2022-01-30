@@ -18,6 +18,8 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 
+#include "gamestates/cCreditsState.h"
+
 #include <allegro.h>
 #include <alfont.h>
 #include <fmt/core.h>
@@ -1161,6 +1163,8 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
                 newStatePtr = new cSetupSkirmishGameState(*this);
+//            } else if (newState == GAME_CREDITS) {
+//                newStatePtr = new cCreditsState(*this);
             } else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuGameState(*this);
             } else if (newState == GAME_SELECT_HOUSE) {
