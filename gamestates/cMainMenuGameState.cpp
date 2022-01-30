@@ -26,6 +26,28 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     logoY = mainMenuFrameY - (logoHeight)*1.2f;
 
+    const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
+
+//    /////////////////////////////////
+//    //// Credits (top)
+//    ////////////////////////////////
+    int buttonWidth = alfont_text_length(bene_font, "CREDITS") / 2;
+    int buttonHeight = textDrawer.getFontHeight();
+//
+//    int creditsX = (game.m_screenX / 2) - buttonWidth;
+//    GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
+//    const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
+//    gui_btn_credits = new cGuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
+//    gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
+//    gui_btn_credits->setOnLeftMouseButtonClickedAction(new cGuiActionToGameState(GAME_CREDITS, true));
+
+
+    /////////////////////////////////
+    //// Main Menu
+    //// Beneath title
+    ////////////////////////////////
+
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
 
@@ -35,14 +57,10 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // PLAY
     int playY = 323;
 
-    int buttonHeight = textDrawer.getFontHeight();
-    int buttonWidth = mainMenuWidth - 8;
+    buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = new cGuiWindow(window);
-
-    const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
 
@@ -106,6 +124,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
 cMainMenuGameState::~cMainMenuGameState() {
     delete gui_window;
+//    delete gui_btn_credits;
 }
 
 void cMainMenuGameState::thinkFast() {
@@ -129,9 +148,7 @@ void cMainMenuGameState::draw() const {
 
     gui_window->draw();
 
-    int creditsX = (game.m_screenX / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
-    GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
-
+//    gui_btn_credits->draw();
 
     // draw version
     textDrawer.drawTextBottomRight(game.m_version.c_str());
@@ -152,6 +169,7 @@ void cMainMenuGameState::draw() const {
 
 void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
     gui_window->onNotifyMouseEvent(event);
+//    gui_btn_credits->onNotifyMouseEvent(event);
 }
 
 eGameStateType cMainMenuGameState::getType() {
