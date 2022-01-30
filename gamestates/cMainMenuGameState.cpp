@@ -145,9 +145,6 @@ void cMainMenuGameState::draw() const {
     // MOUSE
     game.getMouse()->draw();
 
-    if (key[KEY_ESC]) {
-        game.m_playing=false;
-    }
 }
 
 void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
@@ -158,5 +155,10 @@ eGameStateType cMainMenuGameState::getType() {
     return GAMESTATE_MAIN_MENU;
 }
 
-void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.eventType == eKeyEventType::PRESSED) {
+        if (event.hasKey(KEY_ESC)) {
+            game.m_playing=false;
+        }
+    }
 }

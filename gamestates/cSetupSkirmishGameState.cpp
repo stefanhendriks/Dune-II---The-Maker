@@ -261,10 +261,6 @@ void cSetupSkirmishGameState::draw() const {
 
     // MOUSE
     mouse->draw();
-
-    if (game.isDebugMode() && key[KEY_TAB]) {
-        textDrawer.drawTextWithTwoIntegers(mouse_x + 16, mouse_y + 16, "%d,%d", mouse_x, mouse_y);
-    }
 }
 
 void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const {

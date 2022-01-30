@@ -3383,6 +3383,7 @@ int cUnit::findNearbyStructureToAttack(int range) {
 void cUnit::think_MVC() {
     cPlayer *pPlayer = getPlayer();
     if (pPlayer->isHuman()) {
+        // TODO: React upon keypress and then issue a command to deploy MCV instead of using this hacky via think function
         if (bSelected) {
             if (key[KEY_D]) {
                 bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
@@ -3408,6 +3409,7 @@ int cUnit::getTurnSpeed() {
 void cUnit::think_harvester() {
     bool bFindRefinery = false;
 
+    // TODO: Respond to keypress and then order unit to find refinery, etc (not via think function!)
     if (iCredits > 0 && bSelected && key[KEY_D]) {
         bFindRefinery = true;
     }
