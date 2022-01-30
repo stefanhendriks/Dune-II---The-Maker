@@ -101,7 +101,7 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 /**
  * Called every 5 ms
  */
-void cItemBuilder::think() {
+void cItemBuilder::thinkFast() {
 	// go through all the items and increase progress counters...
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);

@@ -16,8 +16,8 @@ class cItemBuilder {
 		cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater);
 		virtual ~cItemBuilder();
 
-		// think about the progress being made (time based thinker)
-		void think();
+		// think about the progress being made, called every 5 ms
+		void thinkFast();
 
 		cBuildingListItem * getItem(int position); // return icon from list
 

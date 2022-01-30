@@ -1373,7 +1373,7 @@ void cGame::thinkFast_combat() {
     for (cPlayer &pPlayer : players) {
         cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
         if (itemBuilder) {
-            itemBuilder->think();
+            itemBuilder->thinkFast();
         }
     }
 
