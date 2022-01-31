@@ -181,6 +181,7 @@ public:
             case GAME_LOSEBRIEF: return "GAME_LOSEBRIEF";
             case GAME_LOSING: return "GAME_LOSING";
             case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
+            case GAME_CREDITS: return "GAME_CREDITS";
             default:
                 assert(false);
                 break;

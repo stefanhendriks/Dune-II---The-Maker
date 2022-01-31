@@ -249,12 +249,19 @@ enum eBuildingListItemState {
 
 enum eMouseEventType {
 	MOUSE_NONE,
+    // Mouse moved to a position on screen
 	MOUSE_MOVED_TO,
+    // When mouse button has been pressed down, and released; it becomes a "click"
 	MOUSE_RIGHT_BUTTON_CLICKED,
+    // When mouse button has been pressed down, and released; it becomes a "click"
 	MOUSE_LEFT_BUTTON_CLICKED,
+    // If a mouse button has been pressed (held down)
 	MOUSE_RIGHT_BUTTON_PRESSED,
+    // If a mouse button has been pressed (held down)
 	MOUSE_LEFT_BUTTON_PRESSED,
+    // Mouse scroll wheel moved up
 	MOUSE_SCROLLED_UP,
+    // Mouse scroll wheel moved down
 	MOUSE_SCROLLED_DOWN
 };
 
