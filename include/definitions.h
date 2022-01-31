@@ -88,7 +88,8 @@
 #define GAME_LOSING      14      // when losing, do something cool
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
-#define GAME_MAX_STATES 17
+#define GAME_CREDITS     17    // credits
+#define GAME_MAX_STATES 18
 
 // FOR OPTIONS:
 
