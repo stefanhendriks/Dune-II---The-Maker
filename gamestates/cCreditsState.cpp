@@ -192,6 +192,48 @@ void cCreditsState::prepareCrawlerLines() {
         .color = colorWhite,
         .height = spacerAfterHeadline
     });
+    m_lines.push_back(s_CreditLine {
+        .name = "Bastian",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "Florian",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "Aleksandar",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "Bruno",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "Dan Greene",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "Sergio Muad'Dib",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "saif3r",
+        .txt = "",
+        .color = colorWhite,
+        .height = spacerAfterHeadline
+    });
     m_lines.push_back(spacer);
 
     m_lines.push_back(s_CreditLine {
