@@ -22,19 +22,17 @@ public:
 
     eKeyEventType eventType = eKeyEventType::NONE;
 
-    inline const std::string toString(const cKeyboardEvent &event) const {
+    inline const std::string toString() const {
         std::string str;
         char partOne[64];
         sprintf(partOne, "cKeyboardEvent [type=%s], keys: ",
-                toStringKeyboardEventType(event.eventType)
+                toStringKeyboardEventType(eventType)
         );
 
         str.append(partOne);
         str.append("[");
-        for (auto key : event.keys) {
-            char msg[10];
-            sprintf(msg, "%s,", scancode_to_name(key));
-            str.append(msg);
+        for (auto aKey : keys) {
+            str.append(scancode_to_name(aKey));
         }
         str.append("]");
 
