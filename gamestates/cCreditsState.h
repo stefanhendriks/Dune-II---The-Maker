@@ -7,6 +7,7 @@ class cGame;
 #include "cGameState.h"
 
 struct s_CreditLine {
+    std::string name;
     std::string txt;
     int color;
     int height;
