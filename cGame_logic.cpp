@@ -38,6 +38,7 @@ constexpr auto kMaxAlpha = 255;
 cGame::cGame() {
     memset(m_states, 0, sizeof(cGameState *));
 
+    m_drawFps = false;
     m_nextState = -1;
     m_currentState = nullptr;
     m_screenX = 800;
@@ -57,6 +58,7 @@ cGame::cGame() {
 
 
 void cGame::init() {
+    m_drawFps = false;
     m_nextState = -1;
     m_missionWasWon = false;
     m_currentState = nullptr;
@@ -93,6 +95,10 @@ void cGame::init() {
     m_TIMER_shake = 0;
 
     m_musicType = MUSIC_MENU;
+
+    m_cameraDragMoveSpeed=0.5f;
+    m_cameraBorderOrKeyMoveSpeed=0.5;
+    m_cameraEdgeMove = true;
 
     map.init(64, 64);
 
@@ -420,6 +426,10 @@ void cGame::updateMouseAndKeyboardStateAndGamePlaying() {
 
 void cGame::drawStateCombat() {
     drawManager->drawCombatState();
+    if (m_drawFps) {
+        alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(),
+                          iRest);
+    }
 }
 
 // drawStateMentat logic + drawing mouth/eyes
@@ -545,7 +555,6 @@ void cGame::run() {
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
-        m_interactionManager->interactWithKeyboard(); // generic interaction
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
         m_frameCount++;
     }
@@ -667,8 +676,9 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 */
 bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
+    logger->setDebugMode(m_debugMode);
 
-    game.init(); // Must be first!
+    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
@@ -740,7 +750,7 @@ bool cGame::setupGame() {
 
     char colorDepthMsg[255];
     sprintf(colorDepthMsg, "Desktop color dept is %d.", colorDepth);
-    cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
 
 
     // TODO: read/write rest value so it does not have to 'fine-tune'
@@ -748,7 +758,7 @@ bool cGame::setupGame() {
     // can specify how much CPU this game may use?
 
     if (game.m_windowed) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
 
         if (isResolutionInGameINIFoundAndSet()) {
             setScreenResolutionFromGameIniSettings();
@@ -779,10 +789,10 @@ bool cGame::setupGame() {
             char msg[255];
             sprintf(msg, "Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d",
                     game.m_iniScreenWidth, game.m_iniScreenHeight, colorDepth, r);
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
+            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
             mustAutoDetectResolution = r < 0;
         } else {
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
+            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
                                         "No resolution defined in ini file.");
             mustAutoDetectResolution = true;
         }
@@ -791,7 +801,7 @@ bool cGame::setupGame() {
         if (mustAutoDetectResolution) {
             char msg[255];
             sprintf(msg, "Autodetecting resolutions at color depth %d", colorDepth);
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
+            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
             // find best possible resolution
             cBestScreenResolutionFinder bestScreenResolutionFinder(colorDepth);
             bestScreenResolutionFinder.checkResolutions();
@@ -1039,7 +1049,7 @@ bool cGame::setupGame() {
     install_particles();
 
     delete mapCamera;
-    mapCamera = new cMapCamera(&map);
+    mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     delete drawManager;
     drawManager = new cDrawManager(&players[HUMAN]);
@@ -1173,25 +1183,31 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
             } else if (newState == GAME_OPTIONS) {
+                m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
-                // evaluate all players, so we have initial 'alive' values set properly
-                for (int i = 1; i < MAX_PLAYERS; i++) {
-                    cPlayer &player = players[i];
-                    player.evaluateStillAlive();
+                if (m_state == GAME_OPTIONS) {
+                    // we came from options menu
+                    players[HUMAN].getGameControlsContext()->onFocusMouseStateEvent();
+                } else {
+                    // evaluate all players, so we have initial 'alive' values set properly
+                    for (int i = 1; i < MAX_PLAYERS; i++) {
+                        cPlayer &player = players[i];
+                        player.evaluateStillAlive();
+                    }
+
+                    // in-between solution until we have a proper combat state object
+                    drawManager->init();
+
+                    // handle update
+                    s_GameEvent event{
+                            .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                    };
+                    // the game is about to begin!
+                    game.onNotifyGameEvent(event);
                 }
-
-                // in-between solution until we have a proper combat state object
-                drawManager->init();
-
-                // handle update
-                s_GameEvent event{
-                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
-                };
-                // the game is about to begin!
-                game.onNotifyGameEvent(event);
             }
 
             m_states[newState] = newStatePtr;
@@ -1274,7 +1290,7 @@ void cGame::prepareMentatForPlayer() {
 
 void cGame::createAndPrepareMentatForHumanPlayer() {
     delete m_mentat;
-    int houseIndex = players[0].getHouse();
+    int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
         m_mentat = new cAtreidesMentat();
     } else if (houseIndex == HARKONNEN) {
@@ -1347,13 +1363,14 @@ void cGame::thinkFast_state() {
 }
 
 void cGame::thinkFast_combat() {
+    mapCamera->thinkFast();
+
     for (cPlayer &pPlayer : players) {
         pPlayer.thinkFast();
     }
 
     // structures think
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = structure[i];
+    for (cAbstractStructure *pStructure : structure) {
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
             pStructure->thinkFast();           // think about actions going on
@@ -1366,20 +1383,14 @@ void cGame::thinkFast_combat() {
         }
     }
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        cItemBuilder *itemBuilder = players[i].getItemBuilder();
+    for (cPlayer &pPlayer : players) {
+        cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
         if (itemBuilder) {
-            itemBuilder->think();
+            itemBuilder->thinkFast();
         }
     }
 
-    map.increaseScrollTimer();
     map.thinkFast();
-
-    if (map.isTimeToScroll()) {
-        map.thinkInteraction();
-        map.resetScrollTimer();
-    }
 
     game.reduceShaking();
 
@@ -1395,7 +1406,7 @@ void cGame::thinkFast_combat() {
     }
 
     // when not drawing the options, the game does all it needs to do
-// bullets think
+    // bullets think
     for (cBullet &cBullet : bullet) {
         if (!cBullet.bAlive) continue;
         cBullet.thinkFast();
@@ -1596,7 +1607,7 @@ int cGame::getColorPlaceGood() {
 }
 
 void cGame::setWinFlags(int value) {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "Changing m_winFlags from %d to %d", m_winFlags, value);
         logbook(msg);
@@ -1605,7 +1616,7 @@ void cGame::setWinFlags(int value) {
 }
 
 void cGame::setLoseFlags(int value) {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "Changing m_loseFlags from %d to %d", m_loseFlags, value);
         logbook(msg);
@@ -1702,6 +1713,10 @@ void cGame::saveBmpScreenToDisk() {
 }
 
 void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
+    logbook(event.toString());
+
+    drawManager->onNotifyKeyboardEvent(event);
+
     switch (event.eventType) {
         case eKeyEventType::HOLD:
             onKeyDownGamePlaying(event);
@@ -1726,10 +1741,49 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
         }
     }
 
+    if (isDebugMode() && event.hasKey(KEY_TAB)) {
+        onKeyDownDebugMode(event);
+    } else {
+        if (event.hasKey(KEY_Z)) {
+            mapCamera->resetZoom();
+        }
+
+        cPlayer &humanPlayer = players[HUMAN];
+
+        if (event.hasKey(KEY_H)) {
+            mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        }
+
+        // Center on the selected structure
+        if (event.hasKey(KEY_C)) {
+            cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+            if (selectedStructure) {
+                mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            }
+        }
+
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_OPTIONS);
+        }
+    }
+
+    if (isDebugMode() && event.hasKey(KEY_F4)) {
+        if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+            map.clearShroud(players[HUMAN].getGameControlsContext()->getMouseCell(), 6, HUMAN);
+        }
+    }
+
+    if (event.hasKey(KEY_F)) {
+        m_drawFps = true;
+    }
 }
 
 void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
     cPlayer &humanPlayer = players[HUMAN];
+
+    if (event.hasKey(KEY_F)) {
+        m_drawFps = false;
+    }
 
     if (event.hasKey(KEY_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
@@ -1769,8 +1823,8 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
     float volumeFactor = mapCamera->factorZoomLevel(0.7f);
     int iVolFactored = volumeFactor * volume;
 
-    if (DEBUGGING) {
-        logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+    if (game.isDebugMode()) {
+        logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
                 iDistance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
     }
 
@@ -1909,5 +1963,119 @@ void cGame::thinkSlow_reinforcements() {
                 reinforcements[i].iCell = -1;
             }
         }
+    }
+}
+
+void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
+    if (event.hasKey(KEY_0)) {
+        drawManager->setPlayerToDraw(&players[0]);
+        game.setPlayerToInteractFor(&players[0]);
+    } else if (event.hasKey(KEY_1)) {
+        drawManager->setPlayerToDraw(&players[1]);
+        game.setPlayerToInteractFor(&players[1]);
+    } else if (event.hasKey(KEY_2)) {
+        drawManager->setPlayerToDraw(&players[2]);
+        game.setPlayerToInteractFor(&players[2]);
+    } else if (event.hasKey(KEY_3)) {
+        drawManager->setPlayerToDraw(&players[3]);
+        game.setPlayerToInteractFor(&players[3]);
+    }
+
+    //JUMP TO MISSION 9
+    if (event.hasKey(KEY_F1)) {
+        game.missionInit();
+        game.m_mission = 9;
+        game.m_region = 22;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
+    }
+
+    // WIN MISSION
+    if (event.hasKey(KEY_F2)) {
+        game.setMissionWon();
+    }
+
+    // LOSE MISSION
+    if (event.hasKey(KEY_F3)) {
+        game.setMissionLost();
+    }
+
+    // GIVE CREDITS TO ALL PLAYERS
+    if (event.hasKey(KEY_F4)) {
+        for (int i = 0; i < AI_WORM; i++) {
+            players[i].setCredits(5000);
+        }
+    }
+
+    //DESTROY UNIT OR BUILDING
+    if (event.hasKeys(KEY_F4, KEY_LSHIFT)) {
+        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        if (mc > -1) {
+            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(true, false);
+            }
+
+            int idOfStructureAtCell = map.getCellIdStructuresLayer(mc);
+            if (idOfStructureAtCell > -1) {
+                structure[idOfStructureAtCell]->die();
+            }
+
+            idOfUnitAtCell = map.getCellIdWormsLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(false, false);
+            }
+        }
+    }
+
+    //DESTROY UNIT OR BUILDING
+    if (event.hasKeys(KEY_F5, KEY_LSHIFT)) {
+        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        if (mc > -1) {
+            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                cUnit &pUnit = unit[idOfUnitAtCell];
+                int damageToTake = pUnit.getHitPoints() - 25;
+                if (damageToTake > 0) {
+                    pUnit.takeDamage(damageToTake);
+                }
+            }
+        }
+    } else {
+        // REVEAL  MAP
+        if (event.hasKey(KEY_F5)) {
+            map.clear_all(HUMAN);
+        }
+    }
+
+    //JUMP TO MISSION 3
+    if (event.hasKey(KEY_F6)) {
+        game.missionInit();
+        game.m_mission = 3;
+        game.m_region = 6;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
+    }
+
+    //JUMP TO MISSION 4
+    if (event.hasKey(KEY_F7)) {
+        game.missionInit();
+        game.m_mission = 4;
+        game.m_region = 10;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
+    }
+
+    //JUMP TO MISSION 5
+    if (event.hasKey(KEY_F8)) {
+        game.missionInit();
+        game.m_mission = 5;
+        game.m_region = 13;
+        game.setNextStateToTransitionTo(GAME_BRIEFING);
+        game.playMusicByType(MUSIC_BRIEFING);
+        game.createAndPrepareMentatForHumanPlayer();
     }
 }

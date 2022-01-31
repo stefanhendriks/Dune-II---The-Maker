@@ -44,11 +44,7 @@ void cDrawManager::drawCombatState() {
 	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenY);
     mapDrawer->drawTerrain();
 
-	// Only draw units/structures, etc, when we do NOT press D
-	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-    if (!key[KEY_D] || !key[KEY_TAB]) {
-        structureDrawer->drawStructuresFirstLayer();
-    }
+    structureDrawer->drawStructuresFirstLayer();
 
 	// draw layer 1 (beneath units, on top of terrain)
     particleDrawer->determineParticlesToDraw();
@@ -263,7 +259,7 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
 void cDrawManager::drawOptionBar() {
     // upper bar
     rectfill(bmp_screen, 0, 0, game.m_screenX, cSideBar::TopBarHeight, makecol(0, 0, 0));
-    if (optionsBar == NULL) {
+    if (optionsBar == nullptr) {
         optionsBar = create_bitmap(game.m_screenX, 40);
         clear_to_color(optionsBar, sidebarColor);
 
@@ -291,6 +287,49 @@ void cDrawManager::think() {
 
 void cDrawManager::init() {
     miniMapDrawer->init();
+}
+
+void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &event) {
+    sidebarDrawer->onNotifyMouseEvent(event);
+}
+
+void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    sidebarDrawer->onNotifyKeyboardEvent(event);
+
+    switch (event.eventType) {
+        case eKeyEventType::HOLD:
+            onKeyDown(event);
+            break;
+        case eKeyEventType::PRESSED:
+            onKeyPressed(event);
+            break;
+        default:
+            break;
+    }
+}
+
+void cDrawManager::onKeyDown(const cKeyboardEvent &event) {
+    if (game.isDebugMode()) {
+        if (event.hasKeys(KEY_TAB, KEY_D)) {
+            mapDrawer->setDrawWithoutShroudTiles(true);
+        }
+        if (event.hasKey(KEY_G)) {
+            mapDrawer->setDrawGrid(true);
+        }
+    }
+}
+
+void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
+    if (game.isDebugMode()) {
+        // one of these we're pressed, that's enough info to revert back as it breaks the
+        // mandatory 'both keys must be pressed' state:
+        if (event.hasEitherKey(KEY_TAB, KEY_D)) {
+            mapDrawer->setDrawWithoutShroudTiles(false);
+        }
+        if (event.hasKey(KEY_G)) {
+            mapDrawer->setDrawGrid(false);
+        }
+    }
 }
 
 

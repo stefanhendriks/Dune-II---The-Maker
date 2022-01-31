@@ -41,6 +41,7 @@ void cKeyboard::updateState() {
     if (key[KEY_LCONTROL]) newKeysPressed.insert(KEY_LCONTROL);
     if (key[KEY_RSHIFT]) newKeysPressed.insert(KEY_RSHIFT);
     if (key[KEY_LSHIFT]) newKeysPressed.insert(KEY_LSHIFT);
+    if (key[KEY_TAB]) newKeysPressed.insert(KEY_TAB);
 
     if (!newKeysPressed.empty()) {
         _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, newKeysPressed));

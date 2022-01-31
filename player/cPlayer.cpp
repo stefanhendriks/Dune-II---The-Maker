@@ -85,7 +85,7 @@ void cPlayer::setFocusCell(int cll) {
 void cPlayer::clearUnitTypeBitmaps() {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
-            if (DEBUGGING) {
+            if (game.isDebugMode()) {
 //                char msg[255];
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
 //                log(msg);
@@ -95,7 +95,7 @@ void cPlayer::clearUnitTypeBitmaps() {
         bmp_unit[i] = nullptr;
 
         if (bmp_unit_top[i]) {
-            if (DEBUGGING) {
+            if (game.isDebugMode()) {
 //                char msg[255];
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
 //                log(msg);
@@ -967,7 +967,7 @@ bool cPlayer::startBuildingUnit(int iUnitType) const {
     eListType listType = unitType.listType;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUnitType);
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to build unit [{}] iUnitType = [{}], with listType[{}] - {}",
                         unitType.name, iUnitType, listType, result));
@@ -980,7 +980,7 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
 
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iStructureType);
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to build structure [{}] iStructureType = [{}], with listType[{}] - {}",
                         sStructureInfo[iStructureType].name, iStructureType, listType, startedBuilding));
@@ -993,7 +993,7 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
 
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iSpecialType);
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to build special [{}] iSpecialType = [{}], with listType[{}] - {}",
                         sSpecialInfo[iSpecialType].description, iSpecialType, listType, result));
@@ -1005,7 +1005,7 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
     eListType listType = eListType::LIST_UPGRADES;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUpgradeType);
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
                     sUpgradeInfo[iUpgradeType].description, iUpgradeType, listType, result));
@@ -1277,7 +1277,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
 
         bool isVisibleForPlayer = map.isVisible(cUnit.getCell(), this);
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             log(fmt::format("Visible = {}", isVisibleForPlayer));
         }
 
@@ -1291,7 +1291,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
         }
     }
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         log(fmt::format("Targets {}", maxTargets));
     }
 
@@ -1318,7 +1318,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
                         break;
                 }
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         log(fmt::format("STR] Targets {}", iT));
     }
 
@@ -1696,7 +1696,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 }
 
 void cPlayer::log(const std::string& txt) const {
-  if (DEBUGGING) {
+  if (game.isDebugMode()) {
     logbook(fmt::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
   }
 }
@@ -1994,7 +1994,7 @@ void cPlayer::addNotification(const std::string& msg, eNotificationType type) {
     std::sort(notifications.begin(), notifications.end(), [](const cPlayerNotification &lhs, const cPlayerNotification &rhs) {
         return lhs.getTimer() > rhs.getTimer();
     });
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         log(fmt::format("addNotification : type {} - {}", eNotificationTypeString(type), msg));
     }
 }

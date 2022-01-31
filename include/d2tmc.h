@@ -46,7 +46,6 @@ struct BITMAP;
 struct DATAFILE;
 
 // Process 'extern' stuff, so we can access our classes
-extern bool		bDoDebug;
 extern int		iRest;	// rest value
 
 // game

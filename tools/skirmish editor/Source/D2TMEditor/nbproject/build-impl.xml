@@ -670,7 +670,7 @@ is divided into following sections:
     </target>
     <!--
                 =========================
-                APPLET DEBUGGING  SECTION
+                APPLET game.isDebugMode()  SECTION
                 =========================
             -->
     <target depends="init,compile-single" if="netbeans.home" name="-debug-start-debuggee-applet">

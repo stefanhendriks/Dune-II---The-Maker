@@ -27,7 +27,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     TIMER_progressFrame = 0.0f;
     TIMER_flashing = 500;
 
-    timerCap = DEBUGGING ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    timerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
@@ -36,7 +36,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
         creditsPerProgressTime = (float)this->cost / (float)totalBuildTime;
     }
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "cBuildingListItem constructor [%s], cost = %d, totalBuildTime = %d, creditsPerProgressTime = %f",
                 getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime);

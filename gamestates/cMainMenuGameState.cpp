@@ -132,7 +132,7 @@ void cMainMenuGameState::thinkFast() {
 }
 
 void cMainMenuGameState::draw() const {
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenX; x += 60) {
             for (int y = 0; y < game.m_screenY; y += 20) {
                 rect(bmp_screen, x, y, x + 50, y + 10, makecol(64, 64, 64));
@@ -153,7 +153,7 @@ void cMainMenuGameState::draw() const {
     // draw version
     textDrawer.drawTextBottomRight(game.m_version.c_str());
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char mouseTxt[255];
         sprintf(mouseTxt, "%d, %d", mouse_x, mouse_y);
         textDrawer.drawText(0, 0, mouseTxt);
@@ -162,9 +162,6 @@ void cMainMenuGameState::draw() const {
     // MOUSE
     game.getMouse()->draw();
 
-    if (key[KEY_ESC]) {
-        game.m_playing=false;
-    }
 }
 
 void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
@@ -176,5 +173,10 @@ eGameStateType cMainMenuGameState::getType() {
     return GAMESTATE_MAIN_MENU;
 }
 
-void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.eventType == eKeyEventType::PRESSED) {
+        if (event.hasKey(KEY_ESC)) {
+            game.m_playing=false;
+        }
+    }
 }

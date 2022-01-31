@@ -68,6 +68,9 @@ public:
     bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
     bool m_noAiRest;                // Campaign AI does not have long initial REST time
     bool m_playMusic;               // play any music?
+    float m_cameraDragMoveSpeed;          // speed of camera when dragging mouse (default = 0.5f)
+    float m_cameraBorderOrKeyMoveSpeed;   // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
+    bool m_cameraEdgeMove;              // should move map camera when hitting edges of screen
 
 	bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
@@ -217,10 +220,14 @@ public:
 
     void thinkSlow();
 
+    bool isDebugMode() { return m_debugMode; }
+    void setDebugMode(bool value) { m_debugMode = value; }
+
 private:
     /**
      * Variables start here
      */
+    bool m_debugMode;               // ...
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     cInteractionManager *m_interactionManager;
@@ -239,6 +246,8 @@ private:
 
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
+
+    bool m_drawFps;
 
     // screen shaking
     int m_shakeX;
@@ -311,4 +320,6 @@ private:
 
     void thinkSlow_state();
     void thinkSlow_reinforcements();
+
+    void onKeyDownDebugMode(const cKeyboardEvent &event);
 };
