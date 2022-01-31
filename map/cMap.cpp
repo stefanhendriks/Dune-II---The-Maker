@@ -835,12 +835,12 @@ int cMap::makeCell(int x, int y) {
     assert(y < height && "makeCell y must be < height");
 
     // create cell
-    int cell = getCellWithMapDimensions(x, y);
+    int result = getCellWithMapDimensions(x, y);
 
-    assert(cell < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
-    assert(cell > -1); // may never be < 0
+    assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
+    assert(result > -1); // may never be < 0
 
-    return cell;
+    return result;
 }
 
 double cMap::distance(int cell1, int cell2) {

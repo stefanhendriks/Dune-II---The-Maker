@@ -2418,7 +2418,6 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
             const char *mapLine = mapLines[iY].c_str();
             for (int iX = 0; iX < maxWidth; iX++) {
                 char letter[1];
-                letter[0] = '\0';
                 letter[0] = mapLine[iX];
 
                 int iCll = map.makeCell((iX + 1), (iY + 1));
