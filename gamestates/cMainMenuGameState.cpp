@@ -33,7 +33,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 //    //// Credits (top)
 //    ////////////////////////////////
     int buttonWidth = alfont_text_length(bene_font, "CREDITS") / 2;
-    int buttonHeight = textDrawer.getFontHeight();
+    int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
     int creditsX = (game.m_screenX / 2) - buttonWidth;
     GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
