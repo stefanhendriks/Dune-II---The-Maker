@@ -12,7 +12,6 @@
 
 #include "include/d2tmh.h"
 
-bool bDoDebug = false;
 int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
@@ -73,6 +72,8 @@ volatile int allegro_timerGlobal = 0;
 volatile int allegro_timerUnits = 0;
 
 int handleArguments(int argc, char *argv[]) {
+    // TODO: return a Config object based on arguments passed down, and use that config object instead of the Game
+    // object...
     game.m_disableAI = false;
     game.m_disableReinforcements = false;
     game.m_drawUsages = false;
@@ -80,6 +81,7 @@ int handleArguments(int argc, char *argv[]) {
     game.m_oneAi = false;
     game.m_windowed = false;
     game.m_noAiRest = false;
+    game.setDebugMode(false);
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
@@ -100,7 +102,7 @@ int handleArguments(int argc, char *argv[]) {
 				game.m_playSound = false;
 			} else if (command.compare("-debug") == 0) {
 			    // generic debugging enabled
-                bDoDebug = true;
+                game.setDebugMode(true);
 			} else if (command.compare("-debug-units") == 0) {
                 // unit debugging enabled
                 game.m_drawUnitDebug = true;

@@ -1,40 +1,42 @@
-#ifndef CSIDEBARDRAWER_H_
-#define CSIDEBARDRAWER_H_
+#pragma once
 
-class cSideBarDrawer {
+#include "observers/cInputObserver.h"
+
+class cSideBarDrawer : cInputObserver {
 	public:
-		cSideBarDrawer(cPlayer * thePlayer);
-		virtual ~cSideBarDrawer();
+		explicit cSideBarDrawer(cPlayer * player);
+		~cSideBarDrawer() override;
+
+        void onNotifyMouseEvent(const s_MouseEvent &event) override;
+        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
 		void draw();
 
-		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
+		cBuildingListDrawer * getBuildingListDrawer() { return m_buildingListDrawer; }
 
-    void setPlayer(cPlayer *pPlayer);
+        void setPlayer(cPlayer *pPlayer);
 
-protected:
-		void drawHouseGui();
+    protected:
 		void drawBuildingLists();
 		void drawCapacities();
 
 		void drawCandybar();
 
 		void drawMinimap();
+
 	private:
-        cPlayer * player;
-		cBuildingListDrawer * buildingListDrawer;
-		cSideBar * sidebar;
+        cPlayer * m_player;
+		cBuildingListDrawer * m_buildingListDrawer;
+		cSideBar * m_sidebar;
 
-		// the 'candybar' is the bar with the ball at the top. Colored with the house color.
-		BITMAP *candybar;
-		cTextDrawer *textDrawer;
+		// the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
+		BITMAP *m_candybar;
+		cTextDrawer *m_textDrawer;
 
-		int sidebarColor;
+		int m_sidebarColor;
 
         void createCandyBar();
 
         void drawPowerUsage() const;
         void drawCreditsUsage();
 };
-
-#endif /* CSIDEBARDRAWER_H_ */

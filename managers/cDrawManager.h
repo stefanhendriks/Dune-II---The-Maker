@@ -1,14 +1,16 @@
 #ifndef CDRAWMANAGER_H_
 #define CDRAWMANAGER_H_
 
-class cDrawManager {
+class cDrawManager : cInputObserver {
 
 public:
     cDrawManager(cPlayer *thePlayer);
-
     ~cDrawManager();
 
     void drawCombatState();
+
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
 
@@ -81,6 +83,10 @@ private:
     BITMAP *topBarBmp;
 
     cTextDrawer *textDrawer;
+
+    void onKeyDown(const cKeyboardEvent &event);
+
+    void onKeyPressed(const cKeyboardEvent &event);
 };
 
 #endif

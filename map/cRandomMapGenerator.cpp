@@ -97,15 +97,6 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
             // blit on screen
             drawProgress(progress);
             blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
-
-        }
-
-        // take screenshot
-        if (key[KEY_F11]) {
-            char filename[25];
-            sprintf(filename, "%dx%d_%d.bmp", game.m_screenX, game.m_screenY, game.m_screenshot);
-            save_bmp(filename, bmp_screen, general_palette);
-            game.m_screenshot++;
         }
 
     }

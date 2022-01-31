@@ -159,10 +159,12 @@ void cGuiButton::onMouseMovedTo(const s_MouseEvent &event) {
 }
 
 void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &) {
-    if (key[KEY_LSHIFT]) {
-        if (focus) toggleTextAlignHorizontal();
-    } else {
-        if (focus) nextRenderKind();
+    if (game.isDebugMode()) {
+        if (key[KEY_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
+            if (focus) toggleTextAlignHorizontal();
+        } else {
+            if (focus) nextRenderKind();
+        }
     }
 }
 
@@ -189,6 +191,7 @@ void cGuiButton::setEnabled(bool value) {
 }
 
 void cGuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+
 }
 
 //

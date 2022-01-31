@@ -57,7 +57,9 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 
         bool isState(eMouseState other);
 
-	protected:
+        void onFocusMouseStateEvent();
+
+    protected:
 		void determineToolTip();
 		void determineHoveringOverStructureId();
 		void determineHoveringOverUnitId();
@@ -95,7 +97,6 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 
 		// mouse state
 		void onNotifyMouseStateEvent(const s_MouseEvent &event);
-		void onFocusMouseStateEvent();
 		void onBlurMouseStateEvent();
 
 		cMouse *mouse;

@@ -178,8 +178,6 @@ public:
 
     void thinkFast();
 
-    void thinkInteraction();
-
     void clear_all(int playerId);
 
     /**
@@ -414,10 +412,6 @@ public:
     void cellInit(int cellNr);
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
-
-    void increaseScrollTimer() { TIMER_scroll++; }
-    void resetScrollTimer() { TIMER_scroll=0; }
-    bool isTimeToScroll() { return (TIMER_scroll > iScrollSpeed); }
 
     bool isVisible(int iCell, int iPlayer) {
         if (!isValidCell(iCell)) return false;

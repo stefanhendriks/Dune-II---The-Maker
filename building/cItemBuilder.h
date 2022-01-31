@@ -4,20 +4,25 @@
 #include "definitions.h"
 #include "enums.h"
 
+#include "observers/cInputObserver.h"
+
 #include "sidebar/cBuildingListItem.h"
 #include "sidebar/cBuildingListUpdater.h"
 
 class cPlayer;
 class cBuildingListUpdater;
 
-class cItemBuilder {
+class cItemBuilder : cInputObserver {
 
 	public:
 		cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater);
 		virtual ~cItemBuilder();
 
-		// think about the progress being made (time based thinker)
-		void think();
+		// think about the progress being made, called every 5 ms
+		void thinkFast();
+
+        void onNotifyMouseEvent(const s_MouseEvent &event) override;
+        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
 		cBuildingListItem * getItem(int position); // return icon from list
 
@@ -42,16 +47,18 @@ class cItemBuilder {
         cBuildingListItem *getListItemWhichIsAwaitingPlacement(eListType listType, int sublistType);
         cBuildingListItem *getListItemWhichIsAwaitingDeployment(eListType listType, int sublistType);
 
-        cPlayer * getPlayer() { return player; }
+        cPlayer * getPlayer() { return m_player; }
 
 	private:
-        cBuildingListItem *items[MAX_ITEMS];
+        cBuildingListItem *m_items[MAX_ITEMS];
+
+        cPlayer * m_player; // the player context for this builder
+        cBuildingListUpdater * m_buildingListUpdater;
+
+		int m_timers[MAX_ITEMS];
+        bool m_buildItemMultiplierEnabled;
+
         int getFreeSlot();
-
-        cPlayer * player; // the player context for this builder
-        cBuildingListUpdater * buildingListUpdater;
-
-		int timers[MAX_ITEMS];
 
 		int getTimerCap(cBuildingListItem *item);
 		bool isItemInList(cBuildingListItem *item);
@@ -62,7 +69,11 @@ class cItemBuilder {
 
         void deployUnit(cBuildingListItem *item, int buildId) const;
 
-    void itemIsDoneBuildingLogic(cBuildingListItem *item);
+        void itemIsDoneBuildingLogic(cBuildingListItem *item);
+
+        void onKeyHold(const cKeyboardEvent &event);
+
+        void onKeyPressed(const cKeyboardEvent &event);
 };
 
 #endif /* CITEMBUILDER_H_ */

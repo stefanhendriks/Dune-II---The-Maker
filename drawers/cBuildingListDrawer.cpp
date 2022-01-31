@@ -1,13 +1,17 @@
 #include "../include/d2tmh.h"
+#include "cBuildingListDrawer.h"
+
 
 #include <allegro.h>
 
-cBuildingListDrawer::cBuildingListDrawer(cPlayer *thePlayer) : player(thePlayer) {
-    textDrawer = new cTextDrawer(game_font);
+cBuildingListDrawer::cBuildingListDrawer(cPlayer *player) :
+    m_textDrawer(new cTextDrawer(game_font)),
+    m_player(player),
+    m_renderListIds(false) {
 }
 
 cBuildingListDrawer::~cBuildingListDrawer() {
-    delete textDrawer;
+    delete m_textDrawer;
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
@@ -27,7 +31,7 @@ void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list) {
 }
 
 void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
-    assert(list != NULL);
+    assert(list != nullptr);
 
     int x = list->getButtonDrawX();
     int y = list->getButtonDrawY();
@@ -36,7 +40,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
     int width = 33;
     int height = ((BITMAP *)gfxinter[id].dat)->h;
 
-    int color = player->getSelectFadingColor();
+    int color = m_player->getSelectFadingColor();
 
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
@@ -44,7 +48,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
 }
 
 void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
-	assert(list != NULL);
+	assert(list != nullptr);
 
 	int x = list->getButtonDrawX();
 	int y = list->getButtonDrawY();
@@ -79,7 +83,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
     if (pressed) {
         list->stopFlashing();
 
-        int color = player->getHouseFadingColor();
+        int color = m_player->getHouseFadingColor();
 
         allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
         allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
@@ -113,7 +117,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
-    int selectFadingColor = player->getSelectFadingColor();
+    int selectFadingColor = m_player->getSelectFadingColor();
 
     int end = MAX_ITEMS;
 
@@ -137,7 +141,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         int iDrawYEnd = iDrawY + heightOfIcon;
 
         // asumes drawing for human player
-        bool cannotPayIt = !player->hasEnoughCreditsFor(item->getBuildCost());
+        bool cannotPayIt = !m_player->hasEnoughCreditsFor(item->getBuildCost());
 
         // icon id must be set , assert it.
 		assert(item->getIconId() > -1);
@@ -161,7 +165,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 			    if (item->shouldPlaceIt()) {
                     // TODO: draw white/red (flicker)
                     int icon = READY01;
-                    if (player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
+                    if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
                     draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
@@ -169,7 +173,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     // TODO: draw white/red (flicker)
                     // TODO: draw DEPLOY
                     int icon = READY01;
-                    if (player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
+                    if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
                     draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
@@ -199,31 +203,31 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
 				// Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
 				if (item->isPendingUpgrading()) {
-                    int errorFadingColor = player->getErrorFadingColor();
+                    int errorFadingColor = m_player->getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
-				    textDrawer->setFont(small_font);
-				    textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
-				    textDrawer->setFont(game_font);
+				    m_textDrawer->setFont(small_font);
+				    m_textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
+				    m_textDrawer->setFont(game_font);
 				}
 
 				// Pending building (ie: a build is progressing, blocking the upgrade)
 				if (item->isPendingBuilding()) {
-                    int errorFadingColor = player->getErrorFadingColor();
+                    int errorFadingColor = m_player->getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
-				    textDrawer->setFont(small_font);
+				    m_textDrawer->setFont(small_font);
                     int height = heightOfIcon / 3;
-                    textDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
-                    textDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY+height, withOfIcon, height, red);
-                    textDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY+(height*2), withOfIcon, height, red);
-				    textDrawer->setFont(game_font);
+                    m_textDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
+                    m_textDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, red);
+                    m_textDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, red);
+				    m_textDrawer->setFont(game_font);
 				}
 			}
 
@@ -233,7 +237,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 				if (cannotPayIt) {
 					set_trans_blender(0, 0, 0, 64);
           draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
-					int errorFadingColor = player->getErrorFadingColor();
+					int errorFadingColor = m_player->getErrorFadingColor();
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
@@ -270,15 +274,15 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 			// draw
 			char msg[10];
 			sprintf(msg, "%d", amountToShow);
-            textDrawer->drawText(textX, textY, msg);
+            m_textDrawer->drawText(textX, textY, msg);
 		}
 
-        if (DEBUGGING) {
-            if (key[KEY_TAB] && key[KEY_D]) {
+        if (game.isDebugMode()) {
+            if (m_renderListIds) {
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
 
-                textDrawer->drawTextWithOneInteger(textX, textY, "%d", item->getSubList());
+                m_textDrawer->drawTextWithOneInteger(textX, textY, "%d", item->getSubList());
             }
         }
 
@@ -358,7 +362,7 @@ bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX,
 }
 
 cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *list, int x, int y) {
-	assert(list != NULL);
+	assert(list != nullptr);
 	// starting draw coordinates
 
 //	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
@@ -371,7 +375,7 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
     int rowNr = 0;
 	for (int i = 0; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
-		if (item == NULL) break;
+		if (item == nullptr) break;
 
 		if (isOverItemCoordinates_Boolean(x, y, iDrawX, iDrawY)) {
 			return item;
@@ -387,9 +391,38 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
         }
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void cBuildingListDrawer::setPlayer(cPlayer *thePlayer) {
-    this->player = thePlayer;
+void cBuildingListDrawer::setPlayer(cPlayer *player) {
+    this->m_player = player;
+}
+
+void cBuildingListDrawer::onNotifyMouseEvent(const s_MouseEvent &) {
+    // NOOP
+}
+
+void cBuildingListDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    switch (event.eventType) {
+        case eKeyEventType::HOLD:
+            onKeyHold(event);
+            break;
+        case eKeyEventType::PRESSED:
+            onKeyPressed(event);
+            break;
+        default:
+            break;
+    }
+}
+
+void cBuildingListDrawer::onKeyHold(const cKeyboardEvent &event) {
+    if (event.hasKeys(KEY_TAB, KEY_D)) {
+        m_renderListIds = true;
+    }
+}
+
+void cBuildingListDrawer::onKeyPressed(const cKeyboardEvent &event) {
+    if (event.hasEitherKey(KEY_TAB, KEY_D)) {
+        m_renderListIds = false;
+    }
 }

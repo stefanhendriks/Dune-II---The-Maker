@@ -261,10 +261,6 @@ void cSetupSkirmishGameState::draw() const {
 
     // MOUSE
     mouse->draw();
-
-    if (DEBUGGING && key[KEY_TAB]) {
-        textDrawer.drawTextWithTwoIntegers(mouse_x + 16, mouse_y + 16, "%d,%d", mouse_x, mouse_y);
-    }
 }
 
 void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const {
@@ -419,7 +415,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
     mapEditor.smoothMap();
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             char msg[255];
@@ -431,7 +427,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     logbook("Shuffling starting positions");
     std::random_shuffle(iStartPositions.begin(), iStartPositions.end());
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             char msg[255];

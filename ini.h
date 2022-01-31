@@ -168,6 +168,9 @@
 #define WORD_FULLSCREEN	    90			// fullscreen settings in game.ini
 #define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
 #define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
+#define WORD_CAMERADRAGMOVESPEED	93	    // camera drag move speed
+#define WORD_CAMERABORDERORKEYMOVESPEED	94	// camera border or key move speed
+#define WORD_CAMERAEDGEMOVE	95	        // allow camera movement by hitting edges of screen
 
 #define MAX_LINE_LENGTH     256
 

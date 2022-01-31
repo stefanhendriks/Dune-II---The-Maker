@@ -46,6 +46,8 @@ class cLogger {
   public:
       static cLogger* getInstance();
 
+      void setDebugMode(bool value) { m_debugMode = value; }
+
       void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message);
       void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId);
       void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome);
@@ -61,6 +63,8 @@ class cLogger {
       std::FILE* file;
 
       long startTime; // start time of logging in miliseconds
+
+      bool m_debugMode;
 
       long getTimeInMilisDifference() const;
 };

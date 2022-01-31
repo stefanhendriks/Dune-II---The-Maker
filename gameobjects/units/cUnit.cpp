@@ -1293,7 +1293,7 @@ void cUnit::thinkFast_move_airUnit() {
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
-        if (DEBUGGING)
+        if (game.isDebugMode())
             log("ERROR: Unit became invalid somehow, killed it");
         return;
     }
@@ -2144,7 +2144,7 @@ void cUnit::think_attack_sandworm() {
             TIMER_guard = (1000/5) * ((5*unitsEaten) + rnd((20*unitsEaten)));
         }
 
-        if (DEBUGGING) {
+        if (game.isDebugMode()) {
             logbook(fmt::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
                                 unitsEaten, TIMER_guard));
         }
@@ -3383,6 +3383,7 @@ int cUnit::findNearbyStructureToAttack(int range) {
 void cUnit::think_MVC() {
     cPlayer *pPlayer = getPlayer();
     if (pPlayer->isHuman()) {
+        // TODO: React upon keypress and then issue a command to deploy MCV instead of using this hacky via think function
         if (bSelected) {
             if (key[KEY_D]) {
                 bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
@@ -3408,6 +3409,7 @@ int cUnit::getTurnSpeed() {
 void cUnit::think_harvester() {
     bool bFindRefinery = false;
 
+    // TODO: Respond to keypress and then order unit to find refinery, etc (not via think function!)
     if (iCredits > 0 && bSelected && key[KEY_D]) {
         bFindRefinery = true;
     }
@@ -4387,7 +4389,7 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType) {
                         iIndex, iPlyr, players[iPlyr].getHouse(), iTime, iUType));
 
     // DEBUG DEBUG
-    if (!DEBUGGING)
+    if (!game.isDebugMode())
         iTime *= 15;
 
     reinforcements[iIndex].iCell = iCll;

@@ -19,10 +19,6 @@ cInteractionManager::~cInteractionManager() {
 	miniMapDrawer = nullptr;
 }
 
-void cInteractionManager::interactWithKeyboard(){
-    keyboardManager.interact();
-}
-
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     this->sidebar = thePlayer->getSideBar();
     this->player = thePlayer;
@@ -79,9 +75,13 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
         pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
         sidebar->onNotifyMouseEvent(mouseEvent);
-        mapCamera->onNotify(mouseEvent);
+        mapCamera->onNotifyMouseEvent(mouseEvent);
         miniMapDrawer->onNotifyMouseEvent(mouseEvent);
         orderDrawer->onNotify(mouseEvent);
+        cItemBuilder *pBuilder = player->getItemBuilder();
+        if (pBuilder) {
+            pBuilder->onNotifyMouseEvent(mouseEvent);
+        }
     }
 
     mouseDrawer->onNotify(mouseEvent);
@@ -96,6 +96,12 @@ void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     if (game.isState(GAME_PLAYING)) {
         cGameControlsContext *pContext = player->getGameControlsContext();
         pContext->onNotifyKeyboardEvent(event);
+
+        mapCamera->onNotifyKeyboardEvent(event);
+        cItemBuilder *pBuilder = player->getItemBuilder();
+        if (pBuilder) {
+            pBuilder->onNotifyKeyboardEvent(event);
+        }
     }
 
     game.onNotifyKeyboardEvent(event);

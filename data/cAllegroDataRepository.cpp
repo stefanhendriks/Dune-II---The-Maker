@@ -74,7 +74,7 @@ bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
         return false;
     }
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "cAllegroDataRepository::loadBitmapAt() Loaded bitmap %s at index %d", file, index);
         logbook(msg);
@@ -106,7 +106,7 @@ bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
         return false;
     }
 
-    if (DEBUGGING) {
+    if (game.isDebugMode()) {
         char msg[255];
         sprintf(msg, "cAllegroDataRepository::loadBitmapFromDataFileAt() Loaded bitmap from pointer at index %d", index);
         logbook(msg);

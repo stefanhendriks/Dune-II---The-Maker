@@ -281,11 +281,11 @@ void cMouse::draw() {
         } else {
         }
 
-        if (DEBUGGING) {
-            if (key[KEY_TAB]) {
+        if (game.isDebugMode()) {
+            if (game.isState(GAME_PLAYING)) {
                 cTextDrawer textDrawer(bene_font);
                 int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
-                textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", mouseCell);
+                textDrawer.drawTextWithOneInteger(0, cSideBar::TopBarHeight + 1, "MouseCell %d", mouseCell);
             }
         }
     }
