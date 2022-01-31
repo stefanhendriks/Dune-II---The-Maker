@@ -1713,6 +1713,8 @@ void cGame::saveBmpScreenToDisk() {
 }
 
 void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
+    logbook(event.toString());
+
     drawManager->onNotifyKeyboardEvent(event);
 
     switch (event.eventType) {
