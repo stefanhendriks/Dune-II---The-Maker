@@ -127,6 +127,14 @@ namespace brains {
                     default:
                         break;
                 }
+            } else if (event.entityType == eBuildType::UNIT) {
+                switch (event.eventType) {
+                    case eGameEventType::GAME_EVENT_DAMAGED:
+                        onMyUnitAttacked(event);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -192,6 +200,15 @@ namespace brains {
                         .state = buildOrder::PROCESSME,
                 });
             }
+        }
+    }
+
+    void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event) {
+        cUnit &pUnit = unit[event.entityID];
+        if (pUnit.isHarvester()) {
+            // return to refinery
+            // retaliate
+            respondToThreat(event.atCell, false, 2 + rnd(4));
         }
     }
 
