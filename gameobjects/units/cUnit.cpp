@@ -3173,6 +3173,17 @@ void cUnit::takeDamage(int damage) {
             iHitPoints = 0; // to make it appear 'dead' for the rest of the code
             // unit does not explode in this case, simply vanishes
             die(false, false);
+        } else {
+            s_GameEvent event {
+                    .eventType = eGameEventType::GAME_EVENT_DAMAGED,
+                    .entityType = eBuildType::UNIT,
+                    .entityID = iID,
+                    .player = getPlayer(),
+                    .entitySpecificType = getType(),
+                    .originId = -1 // for now we don't know
+            };
+
+            game.onNotifyGameEvent(event);
         }
     }
 }
