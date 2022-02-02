@@ -206,8 +206,9 @@ namespace brains {
     void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event) {
         cUnit &pUnit = unit[event.entityID];
         if (pUnit.isHarvester()) {
-            // return to refinery
-            // retaliate
+            if (pUnit.isIdle()) {
+                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+            }
             respondToThreat(event.atCell, false, 2 + rnd(4));
         }
     }
