@@ -17,6 +17,7 @@
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
+#include "utils/cTimeManager.h"
 
 #include <memory>
 #include <string>
@@ -239,6 +240,8 @@ private:
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
+
+    cTimeManager m_timeManager;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

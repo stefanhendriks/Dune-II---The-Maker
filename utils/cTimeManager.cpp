@@ -1,14 +1,18 @@
-#include "../include/d2tmh.h"
+#include "cTimeManager.h"
 
+#include "cGame.h"
 #include "timers.h"
 #include "utils/cSoundPlayer.h"
+#include "utils/cLog.h"
 
-cTimeManager::cTimeManager() {
-    timerUnits = 0;
-    timerGlobal = 0;
-    timerSecond = 0;
+#include <fmt/core.h>
 
-    gameTime = 0;
+cTimeManager::cTimeManager(cGame& game)
+    : m_timerUnits(0)
+    , m_timerSecond(0)
+    , m_timerGlobal(0)
+    , m_game(game)
+    , m_gameTime(0) {
 }
 
 /**
@@ -16,35 +20,30 @@ cTimeManager::cTimeManager() {
 	makes sure the computer will not cause a chainreaction (getting extremely high timers
 	and doing a lot of loops, sucking mure cpu power).
 
-	In most coses this is not nescesary.
+	In most cases this is not nescesary.
 **/
-
 void cTimeManager::capTimers() {
-    if (timerUnits > 10) {
-        if (game.isDebugMode()) {
-            char msg[255];
-            sprintf(msg, "WARNING: Exeptional high unit timer (%d); capped at 10", timerUnits);
-            logbook(msg);
-            timerUnits = 10;
+    auto logger = cLogger::getInstance();
+
+    if (m_timerUnits > 10) {
+        if (m_game.isDebugMode()) {
+            logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits));
+            m_timerUnits = 10;
         }
     }
 
-    if (timerGlobal > 40) {
-        if (game.isDebugMode()) {
-            char msg[255];
-            sprintf(msg, "WARNING: Exeptional high global timer (%d); capped at 40", timerGlobal);
-            logbook(msg);
-            timerGlobal = 40;
+    if (m_timerGlobal > 40) {
+        if (m_game.isDebugMode()) {
+            logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGlobal));
+            m_timerGlobal = 40;
         }
     }
 
     /* Taking 10 seconds to render a frame? i hope not **/
-    if (timerSecond > 10) {
-        if (game.isDebugMode()) {
-            char msg[255];
-            sprintf(msg, "WARNING: Exeptional high timer second (%d); capped at 40", timerSecond);
-            logbook(msg);
-            timerSecond = 10;
+    if (m_timerSecond > 10) {
+        if (m_game.isDebugMode()) {
+            logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond));
+            m_timerSecond = 10;
         }
     }
 }
@@ -53,10 +52,10 @@ void cTimeManager::capTimers() {
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
 void cTimeManager::handleTimerAllegroTimerSeconds() {
-    while (timerSecond > 0) {
-        gameTime++;
-        game.thinkSlow();
-        timerSecond--; // done!
+    while (m_timerSecond > 0) {
+        m_gameTime++;
+        m_game.thinkSlow();
+        m_timerSecond--; // done!
     }
 
 }
@@ -66,11 +65,11 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
  */
 void cTimeManager::handleTimerGameTime() {
     // keep up with time cycles
-    while (timerGlobal > 0) {
-        game.think_fading();
-        game.thinkFast_state();
+    while (m_timerGlobal > 0) {
+        m_game.think_fading();
+        m_game.thinkFast_state();
 
-        timerGlobal--;
+        m_timerGlobal--;
     }
 }
 
@@ -78,9 +77,9 @@ void cTimeManager::handleTimerGameTime() {
  * units timer is called every 100 ms, try to keep up with that.
  */
 void cTimeManager::handleTimerUnits() {
-    while (timerUnits > 0) {
-        game.think_state();
-        timerUnits--;
+    while (m_timerUnits > 0) {
+        m_game.think_state();
+        m_timerUnits--;
     }
 }
 
@@ -110,14 +109,14 @@ void cTimeManager::processTime() {
 
 /** allegro specific routine **/
 void cTimeManager::syncFromAllegroTimers() {
-    timerSecond = allegro_timerSecond;
-    timerGlobal = allegro_timerGlobal;
-    timerUnits = allegro_timerUnits;
+    m_timerSecond = allegro_timerSecond;
+    m_timerGlobal = allegro_timerGlobal;
+    m_timerUnits = allegro_timerUnits;
 }
 
 /** allegro specific routine **/
 void cTimeManager::syncAllegroTimers() {
-    allegro_timerSecond = timerSecond;
-    allegro_timerGlobal = timerGlobal;
-    allegro_timerUnits = timerUnits;
+    allegro_timerSecond = m_timerSecond;
+    allegro_timerGlobal = m_timerGlobal;
+    allegro_timerUnits = m_timerUnits;
 }

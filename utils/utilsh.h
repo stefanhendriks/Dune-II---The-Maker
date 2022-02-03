@@ -6,5 +6,3 @@
 #include "cSeedMap.h"
 #include "cSeedMapGenerator.h"
 #include "cStructureUtils.h"
-
-#include "cTimeManager.h"

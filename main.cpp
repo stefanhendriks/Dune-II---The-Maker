@@ -17,7 +17,6 @@ int	iRest = 1;	// default rest value
 // the ultimate game variable(s)
 cGame          				game;
 
-cTimeManager   				TimeManager;
 cStructureUtils 			structureUtils;
 cMap           				map;
 cMapEditor	  				mapEditor;
