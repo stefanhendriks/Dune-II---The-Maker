@@ -37,7 +37,6 @@ class cUnit;
 class cParticle;
 class cPlayer;
 class cRegion;
-class cTimeManager;
 
 struct sReinforcement;
 
@@ -62,7 +61,6 @@ extern cPlayer        players[MAX_PLAYERS];
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
-extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
 extern cAllegroDrawer      *allegroDrawer;
