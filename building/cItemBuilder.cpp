@@ -301,7 +301,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                                     break;
                             }
                             // change cell
-                            FIX_POS(x, y);
+                            map.fixCoordinatesToBeWithinMap(x, y);
 
                             iCll = map.makeCell(x, y);
                         }

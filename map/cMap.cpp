@@ -1139,9 +1139,16 @@ bool cMap::isAtMapBoundaries(int cell) {
     return false;
 }
 
-void cMap::fixCoordinatesToBeWithinPlayableMap(int &x, int &y) {
-    FIX_BORDER_POS(x, y);
+void cMap::fixCoordinatesToBeWithinPlayableMap(int &x, int &y) const {
+    x = std::clamp(x, 1, getWidth() - 2);
+    y = std::clamp(y, 1, getHeight() - 2);
 }
+
+void cMap::fixCoordinatesToBeWithinMap(int &x, int&y) const {
+    x = std::clamp(x, 0, getWidth() - 1);
+    y = std::clamp(y, 0, getHeight() - 1);
+}
+
 
 int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop) {
 

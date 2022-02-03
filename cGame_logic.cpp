@@ -1383,7 +1383,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
 
             int posX = mouseCellX + rnd((precision * 2) + 1);
             int posY = mouseCellY + rnd((precision * 2) + 1);
-            FIX_POS(posX, posY);
+            map.fixCoordinatesToBeWithinMap(posX, posY);
 
             char msg[255];
             sprintf(msg,
