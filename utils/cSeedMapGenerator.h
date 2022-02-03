@@ -71,5 +71,5 @@ public:
 	cSeedMapGenerator();
 	explicit cSeedMapGenerator(unsigned long value);
 
-	cSeedMap *generateSeedMap();
+	cSeedMap generateSeedMap();
 };

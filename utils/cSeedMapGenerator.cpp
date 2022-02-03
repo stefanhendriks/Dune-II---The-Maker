@@ -83,7 +83,7 @@ cSeedMapGenerator::cSeedMapGenerator(unsigned long value) {
 }
 
 short cSeedMapGenerator::random() {
-   unsigned char *s = (unsigned char *)&seed, a, b, x, y;
+   unsigned char * s = reinterpret_cast<unsigned char *>(&seed), a, b, x, y;
 
    a = *(s+0);
    x = (a & 0x2) >> 1;
@@ -519,7 +519,7 @@ void cSeedMapGenerator::addNoise2(char *matrix)
  *
  * @return
  */
-cSeedMap *cSeedMapGenerator::generateSeedMap() {
+cSeedMap cSeedMapGenerator::generateSeedMap() {
 	   /* creates the shape of the map */
 	   createMatrix(matrix);
 	   addNoise1(matrix);
@@ -537,10 +537,10 @@ cSeedMap *cSeedMapGenerator::generateSeedMap() {
 //	   /* prints map on the screen */
 //	   printMap(map);
 
-	   cSeedMap * seedmap = new cSeedMap();
+	   cSeedMap seedmap;
 
-	   for (int x = 0; x < 64; x++) {
-		   for (int y = 0; y < 64; y++) {
+	   for (int y = 0; y < cSeedMap::kMapHeight; y++) {
+    	   for (int x = 0; x < cSeedMap::kMapWidth; x++) {
 			   // read out the map, and convert it into the seedmap array
 			   int type = map[y][x].w; // w = type
 			   int d2tmType = TERRAIN_SAND;
@@ -554,7 +554,7 @@ cSeedMap *cSeedMapGenerator::generateSeedMap() {
 				   case SMG_MUCHSPICE: d2tmType = TERRAIN_SPICEHILL; break;
 				}
 
-			   seedmap->setCellType(x, y, d2tmType);
+			   seedmap.setCellType(x, y, d2tmType);
 		   }
 	   }
 
