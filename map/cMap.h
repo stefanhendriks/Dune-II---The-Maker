@@ -529,13 +529,8 @@ public:
 
     bool isAtMapBoundaries(int cell);
 
-    /**
-     * Put in x, y and they will be evaluated (and fixed).
-     * @param x
-     * @param y
-     */
-    void fixCoordinatesToBeWithinPlayableMap(int &x, int &y) const;
-    void fixCoordinatesToBeWithinMap(int &x, int&y) const;
+    cPoint fixCoordinatesToBeWithinPlayableMap(int x, int y) const;
+    cPoint fixCoordinatesToBeWithinMap(int x, int y) const;
 
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);

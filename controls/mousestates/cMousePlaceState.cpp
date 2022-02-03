@@ -82,8 +82,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    map.fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    map.fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = map.fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = map.fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX = iStartX; iX < iEndX; iX++) {
