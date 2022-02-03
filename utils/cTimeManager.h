@@ -14,15 +14,17 @@
 	Time management is done in this class
 */
 
-#ifndef CTIMEMANAGER_H
+#pragma once
+
+class cGame;
 
 class cTimeManager {
 
 private:
 
-	int timerUnits;		/** !!Specificly!! used for units **/
-	int timerSecond;
-	int timerGlobal;
+	int m_timerUnits;		/** !!Specificly!! used for units **/
+	int m_timerSecond;
+	int m_timerGlobal;
 
 	void handleTimerUnits();
 	void handleTimerAllegroTimerSeconds();
@@ -36,11 +38,10 @@ private:
 
 public:
 
-	cTimeManager();
+	explicit cTimeManager(cGame& game);
 
-	int gameTime;		/** Definition of game time (= in seconds) **/
+    cGame& m_game;
+	int m_gameTime;		/** Definition of game time (= in seconds) **/
 
 	void processTime();
 };
-
-#endif

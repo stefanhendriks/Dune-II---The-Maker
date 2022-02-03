@@ -36,7 +36,7 @@ constexpr auto kMaxAlpha = 255;
 
 }
 
-cGame::cGame() {
+cGame::cGame() : m_timeManager(*this) {
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;
@@ -551,7 +551,7 @@ void cGame::run() {
     set_trans_blender(0, 0, 0, 128);
 
     while (m_playing) {
-        TimeManager.processTime();
+        m_timeManager.processTime();
         updateMouseAndKeyboardStateAndGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
