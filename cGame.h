@@ -28,6 +28,7 @@ class cInteractionManager;
 class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
+class cScreenInit;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -230,6 +231,7 @@ private:
     bool m_debugMode;               // ...
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
+    std::unique_ptr<cScreenInit> m_Screen;
     cInteractionManager *m_interactionManager;
     cAllegroDataRepository *m_dataRepository;
 

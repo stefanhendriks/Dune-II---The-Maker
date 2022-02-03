@@ -60,6 +60,11 @@ class cLogger {
       cLogger();
       ~cLogger();
 
+      cLogger& operator=(const cLogger&) = delete;
+      cLogger& operator=(cLogger&&) = delete;
+      cLogger(const cLogger&) = delete;
+      cLogger(cLogger&&) = delete;
+
       std::FILE* file;
 
       long startTime; // start time of logging in miliseconds
