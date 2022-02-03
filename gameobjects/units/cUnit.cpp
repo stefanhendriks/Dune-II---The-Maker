@@ -3770,8 +3770,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         ey = cy + 1;
 
         // boundaries
-        map.fixCoordinatesToBeWithinPlayableMap(sx, sy);
-        map.fixCoordinatesToBeWithinPlayableMap(ex, ey);
+        cPoint::split(sx, sy) = map.fixCoordinatesToBeWithinPlayableMap(sx, sy);
+        cPoint::split(ex, ey) = map.fixCoordinatesToBeWithinPlayableMap(ex, ey);
 
 //        if (ex <= cx)
 //            pUnit.log("CX = EX");
@@ -4111,8 +4111,8 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
         iEndY = map.getCellY(iCll) + iSize;
 
         // Fix boundaries
-        map.fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
-        map.fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
+        cPoint::split(iStartX, iStartY) = map.fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
+        cPoint::split(iEndX, iEndY) = map.fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
 
         // search
         for (int iSX = iStartX; iSX < iEndX; iSX++)

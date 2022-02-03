@@ -1,6 +1,4 @@
-#ifndef D2TM_CPOINT_H
-#define D2TM_CPOINT_H
-
+#pragma once
 // forward declr
 class cRectangle;
 
@@ -17,7 +15,15 @@ public:
     int y;
 
     bool isWithinRectangle(const cRectangle *pRectangle) const;
+
+    struct split {
+        split(int& x, int&y) : m_x(x), m_y(y) {}
+
+        void operator=(cPoint p) {
+            m_x = p.x;
+            m_y = p.y;
+        }
+
+        int& m_x, m_y;
+    };
 };
-
-
-#endif //D2TM_CPOINT_H

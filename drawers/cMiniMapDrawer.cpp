@@ -281,7 +281,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
         mouseMiniMapY /= 2;
     }
 
-    map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+    cPoint::split(mouseMiniMapX, mouseMiniMapY) = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     // the mouse is the center of the screen, so substract half of the viewport coordinates
     int newX = mouseMiniMapX;
