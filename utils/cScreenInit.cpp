@@ -26,7 +26,7 @@ constexpr int kNonMagicVideoDriver = GFX_XWINDOWS_FULLSCREEN;
 // tries them in this order (1st come first serve)
 // do note, when DPI is > 100% in OS (atleast in Windows) things seem to get wonky.
 // see also: https://github.com/stefanhendriks/Dune-II---The-Maker/issues/314
-std::array<ScreenResolution, 9> kResolutionsToTry = {
+constexpr std::array<ScreenResolution, 9> kResolutionsToTry = {
     ScreenResolution{3840, 2160}, // 4k
     ScreenResolution{2048, 1536}, // 4:3 aspect ratio
     ScreenResolution{1920, 1080}, // Full HD
@@ -48,8 +48,7 @@ const GFX_MODE* FindGfxMode(const GFX_MODE_LIST& list, ScreenResolution res, int
     return nullptr;
 }
 
-template <std::size_t N>
-std::optional<ScreenResolution> TryAndSetFirstValidResolution(std::span<ScreenResolution, N> resolutionsToTry) {
+std::optional<ScreenResolution> TryAndSetFirstValidResolution(std::span<const ScreenResolution> resolutionsToTry) {
     auto logger = cLogger::getInstance();
 
     for (ScreenResolution res : resolutionsToTry) {
@@ -89,18 +88,18 @@ std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth) {
 
         destroy_gfx_mode_list(modeList);
 
-        return TryAndSetFirstValidResolution(std::span(supportedResolutions));
+        return TryAndSetFirstValidResolution(supportedResolutions);
     } else {
         logger->log(LOG_WARN, COMP_ALLEGRO, "Screen auto init",
                     "Allegro could not determine suppored resolutions. Trying out several of them.");
-        return TryAndSetFirstValidResolution(std::span(kResolutionsToTry));
+        return TryAndSetFirstValidResolution(kResolutionsToTry);
     }
 }
 
 }
 
-cScreenInit::cScreenInit(const cPlatformLayerInit& platform, const std::string& window_title, bool windowed, int width, int height) {
-    TitleAndColorDepthInit(platform, window_title);
+cScreenInit::cScreenInit(const cPlatformLayerInit& platform, bool windowed, int width, int height) {
+    TitleAndColorDepthInit(platform);
 
     auto logger = cLogger::getInstance();
 
@@ -138,16 +137,13 @@ cScreenInit::cScreenInit(const cPlatformLayerInit& platform, const std::string& 
     }
 }
 
-cScreenInit::cScreenInit(const cPlatformLayerInit& platform, const std::string& window_title) {
-    TitleAndColorDepthInit(platform, window_title);
+cScreenInit::cScreenInit(const cPlatformLayerInit& platform) {
+    TitleAndColorDepthInit(platform);
     AutoDetectFullScreen();
 }
 
-void cScreenInit::TitleAndColorDepthInit(const cPlatformLayerInit&, const std::string& window_title) {
+void cScreenInit::TitleAndColorDepthInit(const cPlatformLayerInit&) {
     auto logger = cLogger::getInstance();
-
-	set_window_title(window_title.c_str());
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
 
     m_colorDepth = desktop_color_depth();
     set_color_depth(m_colorDepth);

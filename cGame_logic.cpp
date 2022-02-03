@@ -690,9 +690,11 @@ bool cGame::setupGame() {
 
     // TODO: load eventual game settings (resolution, etc)
 
+    const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
+
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.
-    m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg");
+    m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg", title);
 
     int r = install_timer();
     if (r > -1) {
@@ -732,21 +734,18 @@ bool cGame::setupGame() {
 
     m_frameCount = m_fps = 0;
 
-	// set window title
-    auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
-
     // TODO: read/write rest value so it does not have to 'fine-tune'
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
 
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
-        m_Screen = make_unique<cScreenInit>(*m_PLInit, title, m_windowed, m_screenX, m_screenY);
+        m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
         if (m_windowed) {
             logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
         }
-        m_Screen = make_unique<cScreenInit>(*m_PLInit, title);
+        m_Screen = std::make_unique<cScreenInit>(*m_PLInit);
     }
     m_screenX = m_Screen->Width();
     m_screenY = m_Screen->Height();

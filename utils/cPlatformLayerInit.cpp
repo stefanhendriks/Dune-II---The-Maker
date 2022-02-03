@@ -11,7 +11,7 @@
 
 static bool allegroInitialized = false;
 
-cPlatformLayerInit::cPlatformLayerInit(const std::string& path_to_config_file) {
+cPlatformLayerInit::cPlatformLayerInit(const std::string& path_to_config_file, const std::string& window_title) {
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("Allegro");
 
@@ -31,6 +31,9 @@ cPlatformLayerInit::cPlatformLayerInit(const std::string& path_to_config_file) {
     }
 
     logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
+
+	set_window_title(window_title.c_str());
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
 }
 
 cPlatformLayerInit::~cPlatformLayerInit() {
