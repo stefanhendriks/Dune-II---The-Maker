@@ -431,6 +431,13 @@ void cGame::drawStateCombat() {
         alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(),
                           iRest);
     }
+
+    // for now, call this on game class.
+    // TODO: move this "combat" state into own game state class
+    drawCombatMouse();
+
+	// MOUSE
+    drawManager->drawCombatMouse();
 }
 
 // drawStateMentat logic + drawing mouth/eyes
@@ -1114,6 +1121,7 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                drawManager->drawCombatState(); // TODO: draw combat state directly on background bitmap
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
