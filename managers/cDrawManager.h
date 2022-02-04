@@ -28,6 +28,8 @@ public:
 
     void drawMouse();
 
+    void drawCombatMouse();
+
     void destroy();
 
     void setPlayerToDraw(cPlayer *playerToDraw);
@@ -44,8 +46,6 @@ protected:
     void drawStructurePlacing();
 
     void drawMessage();
-
-    void drawCombatMouse();
 
     void drawRallyPoint();
 
