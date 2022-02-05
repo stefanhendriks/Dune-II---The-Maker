@@ -1,13 +1,14 @@
-#ifndef D2TM_CGUIWINDOW_H
-#define D2TM_CGUIWINDOW_H
+#pragma once
 
-#include <vector>
 #include "cGuiObject.h"
-#include "../observers/cInputObserver.h"
+#include "drawers/cTextDrawer.h"
+
+#include <string>
+#include <vector>
 
 class cGuiWindow : cGuiObject {
 public:
-    cGuiWindow(cRectangle rect);
+    explicit cGuiWindow(const cRectangle& rect);
     ~cGuiWindow();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -27,5 +28,3 @@ private:
     cTextDrawer textDrawer;
 };
 
-
-#endif //D2TM_CGUIWINDOW_H
