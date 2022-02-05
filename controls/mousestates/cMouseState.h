@@ -1,5 +1,4 @@
-#ifndef D2TM_CMOUSESTATE_H
-#define D2TM_CMOUSESTATE_H
+#pragma once
 
 #include "observers/cInputObserver.h"
 #include "observers/cScenarioObserver.h"
@@ -22,13 +21,10 @@ public:
     virtual void onBlur() = 0; // called when state loses focus
 
 protected:
-    cPlayer * player;
-    cGameControlsContext * context;
-    cMouse * mouse;
+    cPlayer * m_player;
+    cGameControlsContext * m_context;
+    cMouse * m_mouse;
 
     int mouseTile;
 
 };
-
-
-#endif //D2TM_CMOUSESTATE_H
