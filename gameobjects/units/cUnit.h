@@ -33,7 +33,7 @@ enum class eActionType {
 
 enum class eFindBestStructureResultReason {
     FREE_STRUCTURE,                             // nobody is heading towards this structure, so we can freely occupy it
-    OTHER_UNIT_ALSO_HEADS_TOWARDS_STRUCTURE,    // the structure is found is also being chased by another unit
+    OTHER_UNIT_ALSO_HEADS_TOWARDS_STRUCTURE,    // the structure found is also being chased by another unit
     OCCUPIED,                                   // structure is occupied (last resort, hoping it will become free soon)
     NO_RESULT,                                  // nothing found...
 };
