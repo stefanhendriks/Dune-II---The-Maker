@@ -207,7 +207,7 @@ namespace brains {
         cUnit &pUnit = unit[event.entityID];
         if (pUnit.isHarvester()) {
             if (pUnit.isIdle()) {
-                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
             }
             respondToThreat(event.atCell, false, 2 + rnd(4));
         }
