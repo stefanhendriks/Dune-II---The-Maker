@@ -82,7 +82,9 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 
         // the state to direct events to
         eMouseState state;
-        eMouseState prevState; // in case we want to switch from repair mode (back and forth)
+        eMouseState prevState;             // used to switch back previous state (ie from Place, or Repair mode)
+        eMouseState prevStateBeforeRepair; // the state before repair mode only, used when Place/Repair mode is used
+                                           // in conjunction
 
         // the states, initialized once to save a lot of construct/destructs (and make it possible
         // to switch between states without needing to restore 'state' within the state object)
