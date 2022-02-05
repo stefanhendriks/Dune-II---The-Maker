@@ -3173,6 +3173,17 @@ void cUnit::takeDamage(int damage) {
             iHitPoints = 0; // to make it appear 'dead' for the rest of the code
             // unit does not explode in this case, simply vanishes
             die(false, false);
+        } else {
+            s_GameEvent event {
+                    .eventType = eGameEventType::GAME_EVENT_DAMAGED,
+                    .entityType = eBuildType::UNIT,
+                    .entityID = iID,
+                    .player = getPlayer(),
+                    .entitySpecificType = getType(),
+                    .originId = -1 // for now we don't know
+            };
+
+            game.onNotifyGameEvent(event);
         }
     }
 }
@@ -3421,11 +3432,11 @@ void cUnit::think_harvester() {
         if (cellType == TERRAIN_SPICE ||
             cellType == TERRAIN_SPICEHILL) {
             // do timer stuff
-            if (iCredits < sUnitInfo[iType].credit_capacity)
+            if (iCredits < getUnitInfo().credit_capacity)
                 TIMER_harvest++;
         } else {
             // not on spice, find a new location
-            if (iCredits < sUnitInfo[iType].credit_capacity) {
+            if (iCredits < getUnitInfo().credit_capacity) {
                 // find harvest cell
                 move_to(UNIT_find_harvest_spot(iID), -1, -1);
             } else {
@@ -3435,13 +3446,13 @@ void cUnit::think_harvester() {
             }
         }
 
-        if (iCredits >= sUnitInfo[iType].credit_capacity)
+        if (iCredits >= getUnitInfo().credit_capacity)
             bFindRefinery = true;
 
         // when we should harvest...
         cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
         if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
-            iCredits < sUnitInfo[iType].credit_capacity) {
+            iCredits < getUnitInfo().credit_capacity) {
             TIMER_harvest = 1;
 
             iFrame++;
