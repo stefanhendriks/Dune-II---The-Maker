@@ -38,7 +38,7 @@ void cMouseRepairState::onMouseLeftButtonClicked() {
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
         if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
-            pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
+            pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
         }
     }
 

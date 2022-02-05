@@ -1420,7 +1420,13 @@ namespace brains {
         cUnit &pUnit = unit[event.entityID];
         if (pUnit.isHarvester()) {
             if (pUnit.isIdle()) {
-                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+                eHeadTowardsStructureResult result = pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY,
+                                                                                                            true,
+                                                                                                            INTENT_UNLOAD_SPICE);
+
+                if (result == eHeadTowardsStructureResult::FAILED_NO_STRUCTURE_AVAILABLE) {
+                    // do things
+                }
             }
             respondToThreat(event.atCell, false, 2 + rnd(4));
         }
