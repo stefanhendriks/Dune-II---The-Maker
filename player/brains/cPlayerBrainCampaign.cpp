@@ -207,7 +207,13 @@ namespace brains {
         cUnit &pUnit = unit[event.entityID];
         if (pUnit.isHarvester()) {
             if (pUnit.isIdle()) {
-                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
+                eHeadTowardsStructureResult result = pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY,
+                                                                                                            true,
+                                                                                                            INTENT_UNLOAD_SPICE);
+
+                if (result == eHeadTowardsStructureResult::FAILED_NO_STRUCTURE_AVAILABLE) {
+                    pUnit.retreatToNearbyBase();
+                }
             }
             respondToThreat(event.atCell, false, 2 + rnd(4));
         }
@@ -1735,13 +1741,13 @@ namespace brains {
         );
     }
     void cPlayerBrainCampaign::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder) {
-        const std::vector<s_UnitForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
+        const std::vector<sEntityForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
 
         if (attackerIsAirUnit) {
             int unitsOrdered = 0;
             // find units that can counter-attack an air unit
             for (auto & ufd : units) {
-                cUnit &pUnit = unit[ufd.unitId];
+                cUnit &pUnit = unit[ufd.entityId];
                 if (!pUnit.isIdle()) continue;
                 if (!pUnit.canAttackAirUnits()) continue;
                 if (pUnit.isAirbornUnit()) continue; // you cannot order air units
@@ -1756,7 +1762,7 @@ namespace brains {
             int unitsOrdered = 0;
 
             for (auto & ufd : units) {
-                cUnit &pUnit = unit[ufd.unitId];
+                cUnit &pUnit = unit[ufd.entityId];
                 if (!pUnit.isIdle()) continue;
                 if (pUnit.isAirbornUnit()) continue; // you cannot order air units
 

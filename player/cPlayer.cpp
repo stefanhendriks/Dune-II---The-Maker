@@ -1899,16 +1899,34 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
  * @param cell
  * @return
  */
-std::vector<s_UnitForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cell) {
+std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cell) {
     const std::vector<int> &ids = getAllMyUnitsForType(-1);
-    std::vector<s_UnitForDistance> result = std::vector<s_UnitForDistance>(0);
+    std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
     for (auto & unitId : ids) {
         cUnit aUnit = unit[unitId];
         double dist = map.distance(aUnit.getCell(), cell);
-        const s_UnitForDistance &entry = s_UnitForDistance{
+        const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
-            .unitId = unitId
+            .entityId = unitId
+        };
+        result.push_back(entry);
+    }
+
+    std::sort(result.begin(), result.end());
+    return result;
+}
+
+std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(int cell) {
+    const std::vector<int> &ids = getAllMyStructuresAsId();
+    std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
+
+    for (auto & structureId : ids) {
+        cAbstractStructure *pStructure = structure[structureId];
+        double dist = map.distance(pStructure->getCell(), cell);
+        const sEntityForDistance &entry = sEntityForDistance{
+            .distance = (int)dist,
+            .entityId = structureId
         };
         result.push_back(entry);
     }
