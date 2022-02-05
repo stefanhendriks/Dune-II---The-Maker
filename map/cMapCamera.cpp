@@ -1,8 +1,12 @@
-#include "../include/d2tmh.h"
 #include "cMapCamera.h"
 
+#include "data/gfxdata.h"
+#include "d2tmc.h"
+#include "sidebar/cSideBar.h"
 
 #include <allegro/mouse.h>
+
+#include <algorithm>
 
 namespace {
     constexpr auto kMapBoundaryScrollSpeed = 5.0f;
@@ -245,8 +249,8 @@ void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &) {
         // values. If we don't do this, the scrolling is too fast. Also take m_zoomLevel into account so when we
         // zoom in, it won't go faster. And if we have zoomed out, it will be faster, but relatively the same speed as
         // zoom factor 1.0
-        diffX = divideByZoomLevel(keepBetween(diffX, -24, 24));
-        diffY = divideByZoomLevel(keepBetween(diffY, -24, 24));
+        diffX = divideByZoomLevel(std::clamp(diffX, -24, 24));
+        diffY = divideByZoomLevel(std::clamp(diffY, -24, 24));
 
         float resultX = diffX * factorX;
         float resultY = diffY * factorY;

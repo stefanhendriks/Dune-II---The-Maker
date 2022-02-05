@@ -4,6 +4,7 @@
 
 #include <allegro.h>
 
+#include <algorithm>
 #include <memory>
 
 cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {
@@ -229,10 +230,10 @@ cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
 }
 
 void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha) {
-    set_trans_blender(BETWEEN(red, 0, 255),
-                      BETWEEN(green, 0, 255),
-                      BETWEEN(blue, 0, 255),
-                      BETWEEN(alpha, 0, 255));
+    set_trans_blender(std::clamp(red, 0, 255),
+                      std::clamp(green, 0, 255),
+                      std::clamp(blue, 0, 255),
+                      std::clamp(alpha, 0, 255));
 }
 
 void cAllegroDrawer::drawSprite(BITMAP *dest, BITMAP *src, int x, int y) {

@@ -5,6 +5,8 @@
 
 #include <allegro.h>
 
+#include <cassert>
+
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
         m_isMouseOver(false),
         map(theMap),
@@ -273,6 +275,8 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
+    assert(map->getHeight() <= 64);
+    assert(map->getWidth() <= 64);
     if (map->getHeight() > 64 || map->getWidth() > 64) {
         // do nothing (assume, 1 cell = 1 pixel)
     } else {
@@ -281,13 +285,9 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
         mouseMiniMapY /= 2;
     }
 
-    map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+    auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
-    // the mouse is the center of the screen, so substract half of the viewport coordinates
-    int newX = mouseMiniMapX;
-    int newY = mouseMiniMapY;
-
-    return map->getCellWithMapBorders(newX, newY);
+    return map->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
 
 // TODO: Respond to game events instead of using the "think" function (tell, don't ask)
