@@ -1,66 +1,68 @@
-#include "d2tmh.h"
 #include "cGuiButton.h"
+
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <allegro/color.h>
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string & btnText)
-  : rect(rect)
-  , textDrawer(textDrawer)
-  , btnText(btnText)
-  , renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
-  , textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
-  , onLeftMouseButtonClicked_action(nullptr)
-  , focus(false)
-  , gui_colorButton(makecol(176, 176, 196))
-  , gui_colorBorderLight(makecol(252, 252, 252))
-  , gui_colorBorderDark(makecol(84, 84, 120))
-  , text_color(makecol(255, 255, 255)) // default white color
-  , text_colorHover(makecol(255, 0, 0))
-  , pressed(false)
-  , enabled(true) { // by default always enabled
+  : cGuiObject(rect)
+  , m_textDrawer(textDrawer)
+  , m_buttonText(btnText)
+  , m_renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
+  , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
+  , m_onLeftMouseButtonClickedAction(nullptr)
+  , m_focus(false)
+  , m_guiColorButton(makecol(176, 176, 196))
+  , m_guiColorBorderLight(makecol(252, 252, 252))
+  , m_guiColorBorderDark(makecol(84, 84, 120))
+  , m_textColor(makecol(255, 255, 255)) // default white color
+  , m_textColorHover(makecol(255, 0, 0))
+  , m_pressed(false)
+  , m_enabled(true) { // by default always enabled
  }
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
                        eGuiButtonRenderKind renderKind)
   : cGuiButton(textDrawer, rect, btnText) {
-    this->renderKind = renderKind;
+    m_renderKind = renderKind;
 }
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, int gui_colorButton,
                        int gui_colorBorderLight, int gui_colorBorderDark)
   : cGuiButton(textDrawer, rect, btnText) {
-    this->gui_colorButton = gui_colorButton;
-    this->gui_colorBorderLight = gui_colorBorderLight;
-    this->gui_colorBorderDark = gui_colorBorderDark;
+    m_guiColorButton = gui_colorButton;
+    m_guiColorBorderLight = gui_colorBorderLight;
+    m_guiColorBorderDark = gui_colorBorderDark;
 }
 
 cGuiButton::~cGuiButton() {
-    delete onLeftMouseButtonClicked_action;
+    delete m_onLeftMouseButtonClickedAction;
 }
 
 void cGuiButton::draw() const {
-    switch (renderKind) {
+    switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            allegroDrawer->drawRectangleFilled(bmp_screen, rect, gui_colorButton);
+            allegroDrawer->drawRectangleFilled(bmp_screen, m_rect, m_guiColorButton);
             drawText();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            allegroDrawer->drawRectangleFilled(bmp_screen, rect, gui_colorButton);
-            if (pressed) {
-                allegroDrawer->gui_DrawRectBorder(bmp_screen, rect, gui_colorBorderDark, gui_colorBorderLight);
+            allegroDrawer->drawRectangleFilled(bmp_screen, m_rect, m_guiColorButton);
+            if (m_pressed) {
+                allegroDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderDark, m_guiColorBorderLight);
             } else {
-                allegroDrawer->gui_DrawRectBorder(bmp_screen, rect, gui_colorBorderLight, gui_colorBorderDark);
+                allegroDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderLight, m_guiColorBorderDark);
             }
             drawText();
             break;
         case TRANSPARENT_WITH_BORDER:
-            if (pressed) {
-                allegroDrawer->gui_DrawRectBorder(bmp_screen, rect, gui_colorBorderDark, gui_colorBorderLight);
+            if (m_pressed) {
+                allegroDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderDark, m_guiColorBorderLight);
             } else {
-                allegroDrawer->gui_DrawRectBorder(bmp_screen, rect, gui_colorBorderLight, gui_colorBorderDark);
+                allegroDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderLight, m_guiColorBorderDark);
             }
             drawText();
             break;
@@ -68,71 +70,71 @@ void cGuiButton::draw() const {
 }
 
 bool cGuiButton::hasFocus() {
-    return focus;
+    return m_focus;
 }
 
 void cGuiButton::setTextAlignHorizontal(eGuiTextAlignHorizontal value) {
-    textAlignHorizontal = value;
+    m_textAlignHorizontal = value;
 }
 
 void cGuiButton::setRenderKind(eGuiButtonRenderKind value) {
-    renderKind = value;
+    m_renderKind = value;
 }
 
 void cGuiButton::drawText() const {
-    int textColor = focus ? text_colorHover : text_color;
-    if (!enabled) {
-        textColor = focus ? gui_colorBorderDark : gui_colorBorderLight;
+    int textColor = m_focus ? m_textColorHover : m_textColor;
+    if (!m_enabled) {
+        textColor = m_focus ? m_guiColorBorderDark : m_guiColorBorderLight;
     }
 
-    switch (textAlignHorizontal) {
+    switch (m_textAlignHorizontal) {
         case eGuiTextAlignHorizontal::CENTER:
-            if (pressed) {
-                textDrawer.drawTextCenteredInBox(btnText.c_str(), rect, textColor, 1, 1);
+            if (m_pressed) {
+                m_textDrawer.drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor, 1, 1);
             } else {
-                textDrawer.drawTextCenteredInBox(btnText.c_str(), rect, textColor);
+                m_textDrawer.drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor);
             }
             break;
         case eGuiTextAlignHorizontal::LEFT:
-            if (pressed) {
-                textDrawer.drawText(rect.getX() + 1, rect.getY() + 1, textColor, btnText.c_str());
+            if (m_pressed) {
+                m_textDrawer.drawText(m_rect.getX() + 1, m_rect.getY() + 1, textColor, m_buttonText.c_str());
             } else {
-                textDrawer.drawText(rect.getX(), rect.getY(), textColor, btnText.c_str());
+                m_textDrawer.drawText(m_rect.getX(), m_rect.getY(), textColor, m_buttonText.c_str());
             }
             break;
     }
 }
 
 void cGuiButton::nextRenderKind() {
-    if (renderKind == eGuiButtonRenderKind::OPAQUE_WITH_BORDER) {
-        renderKind = eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER;
-    } else if (renderKind == eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER) {
-        renderKind = eGuiButtonRenderKind::TRANSPARENT_WITH_BORDER;
-    } else if (renderKind == eGuiButtonRenderKind::TRANSPARENT_WITH_BORDER) {
-        renderKind = eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER;
-    } else if (renderKind == eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER) {
-        renderKind = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
+    if (m_renderKind == eGuiButtonRenderKind::OPAQUE_WITH_BORDER) {
+        m_renderKind = eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER;
+    } else if (m_renderKind == eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER) {
+        m_renderKind = eGuiButtonRenderKind::TRANSPARENT_WITH_BORDER;
+    } else if (m_renderKind == eGuiButtonRenderKind::TRANSPARENT_WITH_BORDER) {
+        m_renderKind = eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    } else if (m_renderKind == eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER) {
+        m_renderKind = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
     }
 }
 
 void cGuiButton::toggleTextAlignHorizontal() {
-    if (textAlignHorizontal == eGuiTextAlignHorizontal::CENTER) {
-        textAlignHorizontal = eGuiTextAlignHorizontal::LEFT;
+    if (m_textAlignHorizontal == eGuiTextAlignHorizontal::CENTER) {
+        m_textAlignHorizontal = eGuiTextAlignHorizontal::LEFT;
     } else {
-        textAlignHorizontal = eGuiTextAlignHorizontal::CENTER;
+        m_textAlignHorizontal = eGuiTextAlignHorizontal::CENTER;
     }
 }
 
 void cGuiButton::setGui_ColorButton(int value) {
-    gui_colorButton = value;
+    m_guiColorButton = value;
 }
 
 void cGuiButton::setTextColor(int value) {
-    text_color = value;
+    m_textColor = value;
 }
 
 void cGuiButton::setTextColorHover(int value) {
-    text_colorHover = value;
+    m_textColorHover = value;
 }
 
 void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event) {
@@ -155,86 +157,41 @@ void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event) {
 }
 
 void cGuiButton::onMouseMovedTo(const s_MouseEvent &event) {
-    focus = rect.isPointWithin(event.coords);
+    m_focus = m_rect.isPointWithin(event.coords);
 }
 
 void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &) {
     if (game.isDebugMode()) {
         if (key[KEY_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
-            if (focus) toggleTextAlignHorizontal();
+            if (m_focus) toggleTextAlignHorizontal();
         } else {
-            if (focus) nextRenderKind();
+            if (m_focus) nextRenderKind();
         }
     }
 }
 
 void cGuiButton::onMouseLeftButtonPressed(const s_MouseEvent &) {
-    if (enabled) {
-        pressed = focus;
+    if (m_enabled) {
+        m_pressed = m_focus;
     }
 }
 
 void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &) {
-    if (focus) {
-        if (enabled && onLeftMouseButtonClicked_action) {
-            onLeftMouseButtonClicked_action->execute();
+    if (m_focus) {
+        if (m_enabled && m_onLeftMouseButtonClickedAction) {
+            m_onLeftMouseButtonClickedAction->execute();
         }
     }
 }
 
 void cGuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action) {
-    this->onLeftMouseButtonClicked_action = action;
+    m_onLeftMouseButtonClickedAction = action;
 }
 
 void cGuiButton::setEnabled(bool value) {
-    enabled = value;
+    m_enabled = value;
 }
 
 void cGuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 
 }
-
-//
-//cGuiButton::cGuiButton(const cGuiButton &src) :
-//        rect(src.rect),
-//        textDrawer(src.textDrawer),
-//        btnText(src.btnText),
-//        renderKind(src.renderKind),
-//        textAlignHorizontal(src.textAlignHorizontal),
-//        onLeftMouseButtonClicked_action(src.onLeftMouseButtonClicked_action),
-//        focus(src.focus),
-//        gui_colorButton(src.gui_colorButton),
-//        gui_colorBorderLight(src.gui_colorBorderLight),
-//        gui_colorBorderDark(src.gui_colorBorderDark),
-//        text_color(src.text_color),
-//        text_colorHover(src.text_colorHover),
-//        pressed(src.pressed) {
-//
-//}
-
-//cGuiButton &cGuiButton::operator=(const cGuiButton &rhs) {
-//    // Guard self assignment
-//    if (this == &rhs)
-//        return *this;
-//
-//    this->rect = rhs.rect;
-//    this->textDrawer = rhs.textDrawer;
-//    this->btnText = rhs.btnText;
-//    this->renderKind = rhs.renderKind;
-//    this->textAlignHorizontal = rhs.textAlignHorizontal;
-////    if (rhs.onLeftMouseButtonClicked_action) {
-////        this->missionKind = rhs.missionKind->clone(player, this);
-////    } else {
-////        this->missionKind = nullptr;
-////    }
-//    // onLeftMouseButtonClicked_action... want, delete wordt uitgevoerd bij resizen vector ofzo meen ik
-//    this->focus = rhs.focus;
-//    this->gui_colorButton = rhs.gui_colorButton;
-//    this->gui_colorBorderLight = rhs.gui_colorBorderLight;
-//    this->gui_colorBorderDark = rhs.gui_colorBorderDark;
-//    this->text_color = rhs.text_color;
-//    this->text_colorHover = rhs.text_colorHover;
-//    this->pressed = rhs.pressed;
-//
-//    return *this;
-//}

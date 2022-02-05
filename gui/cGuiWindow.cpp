@@ -1,10 +1,11 @@
-#include "d2tmh.h"
 #include "cGuiWindow.h"
+
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <allegro/color.h>
 
-cGuiWindow::cGuiWindow(cRectangle rect) {
-    this->rect = rect;
+cGuiWindow::cGuiWindow(const cRectangle& rect) : cGuiObject(rect) {
     this->title = "";
     gui_objects = std::vector<cGuiObject*>(0);
     this->textDrawer = cTextDrawer(bene_font);
@@ -21,14 +22,14 @@ cGuiWindow::~cGuiWindow() noexcept {
 void cGuiWindow::draw() const {
     int colorYellow = makecol(255, 207, 41);
     // draw window itself...
-    allegroDrawer->gui_DrawRect(bmp_screen, rect);
+    allegroDrawer->gui_DrawRect(bmp_screen, m_rect);
 
     for (auto & guiObject : gui_objects) {
         guiObject->draw();
     }
 
     // draw title
-    textDrawer.drawTextCentered(title.c_str(), rect.getX(), rect.getWidth(), rect.getY() + 2, colorYellow);
+    textDrawer.drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, colorYellow);
 }
 
 void cGuiWindow::addGuiObject(cGuiObject *guiObject) {
@@ -43,8 +44,7 @@ void cGuiWindow::onNotifyMouseEvent(const s_MouseEvent &event) {
 }
 
 cRectangle cGuiWindow::getRelativeRect(int x, int y, int width, int height) {
-    cRectangle result = cRectangle(x + rect.getX(), y + rect.getY(), width, height);
-    return result;
+    return cRectangle(x + m_rect.getX(), y + m_rect.getY(), width, height);
 }
 
 void cGuiWindow::onNotifyKeyboardEvent(const cKeyboardEvent &) {
