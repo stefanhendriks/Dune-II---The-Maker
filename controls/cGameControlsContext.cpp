@@ -11,6 +11,7 @@ cGameControlsContext::cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse)
     mouseHoveringOverStructureId = -1;
     state = MOUSESTATE_SELECT;
     prevState = MOUSESTATE_SELECT;
+    prevStateBeforeRepair = MOUSESTATE_SELECT;
     mouse = theMouse;
     mouseNormalState = new cMouseNormalState(thePlayer, this, mouse);
     mouseUnitsSelectedState = new cMouseUnitsSelectedState(thePlayer, this, mouse);
@@ -197,11 +198,24 @@ void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
 
 void cGameControlsContext::setMouseState(eMouseState newState) {
     if (newState != state) {
-        this->prevState = state;
-        this->state = newState;
-        char msg[255];
-        sprintf(msg, "Changed mouseState from [%s] to [%s]", mouseStateString(prevState).c_str(), mouseStateString(state).c_str());
-        logbook(msg);
+        // Remember previous state as long as it is not the PLACE state, since we can't go back to that state
+        if (state != eMouseState::MOUSESTATE_PLACE) {
+            prevState = state;
+            if (newState == eMouseState::MOUSESTATE_REPAIR) {
+                prevStateBeforeRepair = state;
+            }
+        }
+
+        // we might get into a situation where our previous state was repair state, and we get into
+        // repair state again (ie, Repair->Place->Repair state). In that case, we override the 'prevState'
+        // with the 'prevStateBeforeRepair'.
+        // since we don't have a real 'history' or 'stack' of mouse states, this is for now good enough.
+        if (newState == prevState && newState == eMouseState::MOUSESTATE_REPAIR) {
+            prevState = prevStateBeforeRepair;
+        }
+
+        logbook(fmt::format("setMouseState() : changing state from [{}] to [{}] (prevState=[{}], prevStateBeforeRepair=[{}])", mouseStateString(state), mouseStateString(newState), mouseStateString(prevState), mouseStateString(prevStateBeforeRepair)));
+        state = newState;
         switch (state) {
             case MOUSESTATE_SELECT:
                 mouseNormalState->onStateSet();
