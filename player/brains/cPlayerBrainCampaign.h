@@ -56,6 +56,8 @@ namespace brains {
 
         void onMyStructureDecayed(const s_GameEvent &event);
 
+        void onMyUnitAttacked(const s_GameEvent &event);
+
         void thinkState_ScanBase();
 
         void thinkState_Missions();
