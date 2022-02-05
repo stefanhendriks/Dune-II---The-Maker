@@ -3524,9 +3524,19 @@ void cUnit::setAction(eActionType action) {
     m_action = action;
 }
 
+void cUnit::retreatToNearbyBase() {
+    const std::vector<sEntityForDistance> &result = getPlayer()->getAllMyStructuresOrderClosestToCell(iCell);
+    if (result.empty()) {
+        // don't know where to retreat to :/
+        return;
+    }
+    const sEntityForDistance &closest = result[0];
+    cAbstractStructure *pStructure = structure[closest.entityId];
+    // use the 'drop location' function, as it will circle around a given cell until a valid cell is found
+    int cellToRetreatTo = findNewDropLocation(iType, pStructure->getCell());
 
-
-
+    move_to(cellToRetreatTo); // intent retreat?
+}
 
 
 // return new valid ID

@@ -39,11 +39,11 @@
 class cItemBuilder;
 class cBuildingListUpdater;
 
-struct s_UnitForDistance {
+struct sEntityForDistance {
     int distance = 9999;
-    int unitId = -1;
+    int entityId = -1;
 
-    bool operator<(const s_UnitForDistance& rhs) const
+    bool operator<(const sEntityForDistance& rhs) const
     {
         return distance < rhs.distance;
     }
@@ -236,7 +236,21 @@ public:
     int getTeam() { return iTeam; }
 
 
-    std::vector<s_UnitForDistance> getAllMyUnitsOrderClosestToCell(int cell);
+    /**
+     * Returns all my units, but ordered by distance from cell param to unit location. (closest first)
+     *
+     * @param cell
+     * @return
+     */
+    std::vector<sEntityForDistance> getAllMyUnitsOrderClosestToCell(int cell);
+
+    /**
+     * Returns all my structures, but ordered by distance from cell param to structure location. (closest first)
+     *
+     * @param cell
+     * @return
+     */
+    std::vector<sEntityForDistance> getAllMyStructuresOrderClosestToCell(int cell);
 
     std::vector<int> getAllMyUnits();
 

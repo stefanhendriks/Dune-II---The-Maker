@@ -144,6 +144,8 @@ public:
     bool bSelected;     // selected or not?
     bool bHovered;      // mouse hovers over this unit or not?
 
+    void retreatToNearbyBase();
+
 	float fExpDamage();	// experience damage by bullet (extra damage that is)
 
     bool isWithinViewport(cRectangle *viewport) const;
