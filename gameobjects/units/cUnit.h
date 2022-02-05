@@ -31,6 +31,27 @@ enum class eActionType {
     ATTACK,                             // attacking (not moving), will revert to GUARD when target is out of range
 };
 
+enum class eFindBestStructureResultReason {
+    FREE_STRUCTURE,                             // nobody is heading towards this structure, so we can freely occupy it
+    OTHER_UNIT_ALSO_HEADS_TOWARDS_STRUCTURE,    // the structure found is also being chased by another unit
+    OCCUPIED,                                   // structure is occupied (last resort, hoping it will become free soon)
+    NO_RESULT,                                  // nothing found...
+};
+
+/**
+ * A result when finding a best structure.
+ */
+struct sFindBestStructureResult {
+    cAbstractStructure * structure;
+    eFindBestStructureResultReason reason;
+};
+
+enum class eHeadTowardsStructureResult {
+    FAILED_NO_STRUCTURE_AVAILABLE,
+    SUCCESS_AWAITING_CARRYALL,
+    SUCCESS_RETURNING,
+};
+
 // Reinforcement data (loaded from ini file)
 struct sReinforcement
 {
@@ -123,6 +144,8 @@ public:
     bool bSelected;     // selected or not?
     bool bHovered;      // mouse hovers over this unit or not?
 
+    void retreatToNearbyBase();
+
 	float fExpDamage();	// experience damage by bullet (extra damage that is)
 
     bool isWithinViewport(cRectangle *viewport) const;
@@ -175,8 +198,36 @@ public:
     void move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent);
     void move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup);
 
-    cAbstractStructure * findBestStructureCandidateToHeadTo(int structureType);
-    void findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, bool allowCarryallTransfer);
+    /**
+     * Finds best structure type. This is based on distance and on availability.
+     *
+     * This function:
+     * - checks if there is any structure that no unit is heading towards to
+     * if failed:
+     * - checks if there is any structure with no unit in it
+     * if failed:
+     * - checks if there is any structure of structure type (closest)
+     *
+     * Returns pointer to found structure.
+     * @param structureType
+     * @return
+     */
+    sFindBestStructureResult findBestStructureCandidateToHeadTo(int structureType);
+
+    /**
+     * Finds structureType, and if found it will move unit towards it with the action intent given.
+     * If allowCarryallTransfer is given, this function will also check if there is a free carry-all and let the
+     * unit be transported via that way to the structure.
+     *
+     * Best structure candidate is based on distance towards unit. (closest == best)
+     *
+     * @param structureType
+     * @param allowCarryallTransfer
+     * @param actionIntent
+     * @return
+     */
+    eHeadTowardsStructureResult findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, bool allowCarryallTransfer,
+                                                                                 eUnitActionIntent actionIntent);
 
     cAbstractStructure * findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType);
     cAbstractStructure * findClosestAvailableStructureType(int structureType);

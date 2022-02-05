@@ -2466,8 +2466,10 @@ void cUnit::thinkFast_move() {
 
                         if (findAlternativeStructure) {
                             // find alternative structure type nearby
-                            cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(pStructure->getType());
+                            const sFindBestStructureResult &result = findBestStructureCandidateToHeadTo(
+                                    pStructure->getType());
 
+                            cAbstractStructure *candidate = result.structure;
                             if (candidate && candidate->getStructureId() != iStructureID) {
                                 // founder an alternative
                                 move_to_enter_structure(candidate, intent);
@@ -3029,7 +3031,7 @@ void cUnit::move_to_enter_structure(cAbstractStructure *pStructure, eUnitActionI
     move_to(pStructure->getRandomStructureCell(), pStructure->getStructureId(), -1, intent);
 }
 
-cAbstractStructure *cUnit::findBestStructureCandidateToHeadTo(int structureType) {
+sFindBestStructureResult cUnit::findBestStructureCandidateToHeadTo(int structureType) {
     cAbstractStructure * candidate = findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(structureType);
     // TODO: we could do this even better, by scanning the structures once. Remembering distance and a 'state'
     // so to speak, ie "AVAILABLE, NOT AVAILABLE, ALREADY_HEADING", etc. That way we only need to scan once, and don't
@@ -3037,50 +3039,75 @@ cAbstractStructure *cUnit::findBestStructureCandidateToHeadTo(int structureType)
     // but for now settle with this - as I want 0.6.0 get done at some point. So deliberately deferring the optimisation
     // in favor of getting things done.
     if (candidate) {
-        return candidate;
+        return sFindBestStructureResult {
+            .structure = candidate,
+            .reason = eFindBestStructureResultReason::FREE_STRUCTURE
+        };
     }
 
     candidate = findClosestAvailableStructureType(structureType);
     if (candidate) {
-        return candidate;
+        // a structure is found that is free, but another unit is heading towards it.
+        return sFindBestStructureResult {
+            .structure = candidate,
+            .reason = eFindBestStructureResultReason::OTHER_UNIT_ALSO_HEADS_TOWARDS_STRUCTURE
+        };
     }
 
-    return findClosestStructureType(structureType);
+    candidate = findClosestStructureType(structureType);
+
+    // a structure is found, but it is occupied
+    if (candidate) {
+        return sFindBestStructureResult {
+            .structure = candidate,
+            .reason = eFindBestStructureResultReason::OCCUPIED
+        };
+    }
+
+    return sFindBestStructureResult {
+            .structure = nullptr,
+            .reason = eFindBestStructureResultReason::NO_RESULT
+    };
 }
 
-void cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, bool allowCarryallTransfer) {
+eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(
+        int structureType,
+        bool allowCarryallTransfer,
+        eUnitActionIntent actionIntent) {
     iFrame = 0; // stop animating
     assert(structureType > -1);
 
     log(fmt::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
                     sStructureInfo[structureType].name));
 
-    cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(structureType);
+    const sFindBestStructureResult &result = findBestStructureCandidateToHeadTo(structureType);
 
-    if (!candidate) {
-        // none found, wait
+    // No structure found, so bail
+    if (result.reason == eFindBestStructureResultReason::NO_RESULT) {
         TIMER_thinkwait = 10;
-        return;
+        return eHeadTowardsStructureResult::FAILED_NO_STRUCTURE_AVAILABLE;
     }
 
-    if (!allowCarryallTransfer) {
-        move_to_enter_structure(candidate, INTENT_UNLOAD_SPICE);
-        TIMER_movewait = 0;
-        return;
-    }
+    cAbstractStructure *pStructure = result.structure;
+    assert(pStructure && "Expected to have a valid pStructure pointer here");
 
-    int destCell = candidate->getCell() + 2;
+    if (allowCarryallTransfer) {
+        // TODO: Don't use cell based, but abs coordinates (pixel based) and use center
+        int destCell = pStructure->getCell() + 2; // + 2 because refinery 'pad' is there.
 
-    // try to get a carry-all to help when a bit bigger distance
-    if (map.distance(iCell, destCell) > 4) {
-        if (findAndOrderCarryAllToBringMeToStructureAtCell(candidate, destCell)) {
-            return;
+        // try to get a carry-all to help when a bit bigger distance
+        int distanceWeAllowDriving = 4;
+        if (map.distance(iCell, destCell) > distanceWeAllowDriving) {
+            if (findAndOrderCarryAllToBringMeToStructureAtCell(pStructure, destCell)) {
+                return eHeadTowardsStructureResult::SUCCESS_AWAITING_CARRYALL;
+            }
         }
     }
 
-    // no Carry-all found, or distance too short
-    move_to_enter_structure(candidate, INTENT_UNLOAD_SPICE);
+    // no Carry-all found/required, or we are so close so we drive
+    move_to_enter_structure(pStructure, actionIntent);
     TIMER_movewait = 0;
+    return eHeadTowardsStructureResult::SUCCESS_RETURNING;
 }
 
 bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell) {
@@ -3481,7 +3508,7 @@ void cUnit::think_harvester() {
 
         // refinery required, go find one that is available
         if (bFindRefinery) {
-            findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+            findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
             return;
         }
     } else {
@@ -3497,9 +3524,19 @@ void cUnit::setAction(eActionType action) {
     m_action = action;
 }
 
+void cUnit::retreatToNearbyBase() {
+    const std::vector<sEntityForDistance> &result = getPlayer()->getAllMyStructuresOrderClosestToCell(iCell);
+    if (result.empty()) {
+        // don't know where to retreat to :/
+        return;
+    }
+    const sEntityForDistance &closest = result[0];
+    cAbstractStructure *pStructure = structure[closest.entityId];
+    // use the 'drop location' function, as it will circle around a given cell until a valid cell is found
+    int cellToRetreatTo = findNewDropLocation(iType, pStructure->getCell());
 
-
-
+    move_to(cellToRetreatTo); // intent retreat?
+}
 
 
 // return new valid ID
