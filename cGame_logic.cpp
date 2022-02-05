@@ -16,6 +16,7 @@
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
+#include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 
 #include "gamestates/cCreditsState.h"
@@ -35,7 +36,7 @@ constexpr auto kMaxAlpha = 255;
 
 }
 
-cGame::cGame() {
+cGame::cGame() : m_timeManager(*this) {
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;
@@ -430,6 +431,13 @@ void cGame::drawStateCombat() {
         alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(),
                           iRest);
     }
+
+    // for now, call this on game class.
+    // TODO: move this "combat" state into own game state class
+    drawCombatMouse();
+
+	// MOUSE
+    drawManager->drawCombatMouse();
 }
 
 // drawStateMentat logic + drawing mouth/eyes
@@ -550,7 +558,7 @@ void cGame::run() {
     set_trans_blender(0, 0, 0, 128);
 
     while (m_playing) {
-        TimeManager.processTime();
+        m_timeManager.processTime();
         updateMouseAndKeyboardStateAndGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
@@ -666,7 +674,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     game.m_screenY = game.m_iniScreenHeight;
     char msg[255];
     sprintf(msg, "Resolution %dx%d loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight);
-    cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Resolution from ini file", msg);
+    cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", msg);
 }
 
 /**
@@ -687,18 +695,13 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
-    // init game
-    if (game.m_windowed) {
-        logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
-    } else {
-        logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
-    }
-
     // TODO: load eventual game settings (resolution, etc)
+
+    const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.
-    m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg");
+    m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg", title);
 
     int r = install_timer();
     if (r > -1) {
@@ -738,88 +741,21 @@ bool cGame::setupGame() {
 
     m_frameCount = m_fps = 0;
 
-	// set window title
-    auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
-
-	// Set window title
-	set_window_title(title.c_str());
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
-
-    int colorDepth = desktop_color_depth();
-    set_color_depth(colorDepth);
-
-    char colorDepthMsg[255];
-    sprintf(colorDepthMsg, "Desktop color dept is %d.", colorDepth);
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
-
-
     // TODO: read/write rest value so it does not have to 'fine-tune'
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
 
-    if (game.m_windowed) {
-        logger->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
-
-        if (isResolutionInGameINIFoundAndSet()) {
-            setScreenResolutionFromGameIniSettings();
-        }
-
-        r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.m_screenX, game.m_screenY, game.m_screenX, game.m_screenY);
-
-        char msg[255];
-        sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.m_screenX,
-                game.m_screenY, colorDepth);
-        logbook(msg);
-
-        if (r > -1) {
-            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
-        } else {
-            allegro_message("Failed to initialize graphics mode");
-            return false;
-        }
+    if (isResolutionInGameINIFoundAndSet()) {
+        setScreenResolutionFromGameIniSettings();
+        m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
-        /**
-         * Fullscreen mode
-        */
-
-        bool mustAutoDetectResolution = false;
-        if (isResolutionInGameINIFoundAndSet()) {
-            setScreenResolutionFromGameIniSettings();
-            r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.m_screenX, game.m_screenY, game.m_screenX, game.m_screenY);
-            char msg[255];
-            sprintf(msg, "Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d",
-                    game.m_iniScreenWidth, game.m_iniScreenHeight, colorDepth, r);
-            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
-            mustAutoDetectResolution = r < 0;
-        } else {
-            logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.",
-                                        "No resolution defined in ini file.");
-            mustAutoDetectResolution = true;
+        if (m_windowed) {
+            logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
         }
-
-        // find best possible resolution
-        if (mustAutoDetectResolution) {
-            char msg[255];
-            sprintf(msg, "Autodetecting resolutions at color depth %d", colorDepth);
-            logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
-            // find best possible resolution
-            cBestScreenResolutionFinder bestScreenResolutionFinder(colorDepth);
-            bestScreenResolutionFinder.checkResolutions();
-            bool result = bestScreenResolutionFinder.acquireBestScreenResolutionFullScreen();
-
-            // success
-            if (result) {
-                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)",
-                            "Succesfully initialized graphics mode.", OUTC_SUCCESS);
-            } else {
-                logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)",
-                            "Failed to initializ graphics mode.", OUTC_FAILED);
-                allegro_message(
-                        "Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
-                return false;
-            }
-        }
+        m_Screen = std::make_unique<cScreenInit>(*m_PLInit);
     }
+    m_screenX = m_Screen->Width();
+    m_screenY = m_Screen->Height();
 
     alfont_text_mode(-1);
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
@@ -1185,6 +1121,7 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                drawManager->drawCombatState(); // TODO: draw combat state directly on background bitmap
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
@@ -1454,7 +1391,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
 
             int posX = mouseCellX + rnd((precision * 2) + 1);
             int posY = mouseCellY + rnd((precision * 2) + 1);
-            FIX_POS(posX, posY);
+            cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
 
             char msg[255];
             sprintf(msg,

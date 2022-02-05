@@ -10,21 +10,20 @@
 
   */
 
-#include "../include/d2tmh.h"
+#include "common.h"
 
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
+#include "d2tmc.h"
+#include "gameobjects/projectiles/bullet.h"
+#include "map/cMapCamera.h"
+#include "sidebar/cSideBar.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 
 #include <allegro.h>
 
-#include <math.h>
-
-namespace
-{
-    constexpr int PAN_CENTER = 128;
-    constexpr int VOLUME_MAX = 255;
-    constexpr int BUFFER_SIZE = 32768;
-}
+#include <cmath>
 
 /**
  * Default printing in logs. Only will be done if game.isDebugMode() is true.
@@ -52,60 +51,6 @@ int fastThinkMsToTicks(int desiredMs) {
     // "fast" thinking, is 1 tick == 5ms
     return desiredMs / 5;
 }
-
-/**
- * Returns true if x,y is within the playable map boundaries
- * @param x
- * @param y
- * @return
- */
-
-/**
- * Returns value within MIN/MAX provided
- * @param val
- * @param min
- * @param max
- * @return
- */
-int BETWEEN(int val, int min, int max) {
-  if (val < min) return min;
-  if (val > max) return max;
-  return val;
-}
-
-// fixes the positions according to the PLAYABLE size of the map (for unit
-// dumping, etc)
-void FIX_BORDER_POS(int &x, int &y) {
-    if (x < 1) {
-        x = 1;
-    }
-    if (x > (map.getWidth() - 2)) {
-        x = (map.getWidth() - 2);
-    }
-
-    if (y < 1) {
-        y = 1;
-    }
-    if (y > (map.getHeight() - 2)) {
-        y = (map.getHeight() - 2);
-    }
-}
-
-// Will make sure the X and Y don't get out of their boundaries
-void FIX_POS(int &x, int &y) {
-    // filled in
-    if (x) {
-        if (x < 0) x = 0;
-        if (x >= map.getWidth()) x = (map.getWidth()-1);
-    }
-
-    // filled in
-    if (y) {
-        if (y < 0) y = 0;
-        if (y >= map.getHeight()) y = (map.getHeight() -1);
-    }
-}
-
 
 /********************************
  House Rules
@@ -1375,7 +1320,7 @@ void install_structures() {
     // Description  : <none>
     sStructureInfo[WINDTRAP].bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat;
     sStructureInfo[WINDTRAP].shadow = (BITMAP *) gfxdata[BUILD_WINDTRAP_SHADOW].dat; // shadow
-    sStructureInfo[WINDTRAP].fadecol = PAN_CENTER;
+    sStructureInfo[WINDTRAP].fadecol = 128;
     sStructureInfo[WINDTRAP].fademax = 134;
     sStructureInfo[WINDTRAP].icon = ICON_STR_WINDTRAP;
     sStructureInfo[WINDTRAP].configured = true;
@@ -1661,20 +1606,6 @@ float health_bar(float max_w, int i, int w) {
   auto health = flHP / flMAX;
 
   return (health * max_w);
-}
-
-/**
- * Given value v, and a MIN and MAX. Make sure v is between MIN and MAX. Ie, if v < MIN, it returns MIN. if v > MAX
- * it returns MAX. Else returns v.
- * @param value
- * @param min
- * @param max
- * @return
- */
-int keepBetween(int value, int min, int max) {
-    if (value < min) return min;
-    if (value > max) return max;
-    return value;
 }
 
 // return a border cell, close to iCll

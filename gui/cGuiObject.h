@@ -1,30 +1,16 @@
-#ifndef D2TM_CGUIOBJECT_H
-#define D2TM_CGUIOBJECT_H
+#pragma once
 
+#include "observers/cInputObserver.h"
 #include "utils/cRectangle.h"
-#include "../observers/cInputObserver.h"
-#include "cGuiAction.h"
 
-class cGuiObject : cInputObserver {
-public:
+class cGuiObject : public cInputObserver {
+  public:
     virtual ~cGuiObject() = default;
 
-    virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
-    virtual void onNotifyKeyboardEvent(const cKeyboardEvent &event) override = 0;
+    virtual void draw() const = 0;
 
-    // cGuiObject specific
-    virtual void draw() const = 0; // pure virtual function
-
-    cRectangle &getRect() { return rect; }
-    void setRect(const cRectangle &newRect) { rect = newRect; }
-
-protected:
+  protected:
+    explicit cGuiObject(const cRectangle& rect) : m_rect(rect) {}
     // any gui object has a position and size. Hence its always a 'rect'.
-    cRectangle rect;
-
-private:
-
+    cRectangle m_rect;
 };
-
-
-#endif //D2TM_CGUIOBJECT_H
