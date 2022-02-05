@@ -11,6 +11,7 @@
   */
 #pragma once
 
+#include "definitions.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
 #include "map/cCell.h"
@@ -446,13 +447,13 @@ public:
      * Get height of map in cells
      * @return
      */
-    int getHeight() { return height; }
+    int getHeight() const { return height; }
 
     /**
      * Get width of map in cells
      * @return
      */
-    int getWidth() { return width; }
+    int getWidth() const { return width; }
 
     int getMaxDistanceInPixels() {
         int tileWidth = 32;
@@ -528,12 +529,8 @@ public:
 
     bool isAtMapBoundaries(int cell);
 
-    /**
-     * Put in x, y and they will be evaluated (and fixed).
-     * @param x
-     * @param y
-     */
-    void fixCoordinatesToBeWithinPlayableMap(int &x, int &y);
+    cPoint fixCoordinatesToBeWithinPlayableMap(int x, int y) const;
+    cPoint fixCoordinatesToBeWithinMap(int x, int y) const;
 
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);

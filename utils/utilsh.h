@@ -4,5 +4,3 @@
 #include "../ini.h"			// INI loading
 
 #include "cStructureUtils.h"
-
-#include "cTimeManager.h"

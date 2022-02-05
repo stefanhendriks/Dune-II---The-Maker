@@ -9,10 +9,12 @@
  *
  */
 
-#ifndef CMAPCAMERA_H_
-#define CMAPCAMERA_H_
+#pragma once
+
+#include "cMap.h"
 
 #include "observers/cInputObserver.h"
+
 #include <cmath>
 
 class cMapCamera : cInputObserver {
@@ -210,5 +212,3 @@ private:
     void onKeyHold(const cKeyboardEvent &event);
     void onKeyPressed(const cKeyboardEvent &event);
 };
-
-#endif /* CMAPCAMERA_H_ */

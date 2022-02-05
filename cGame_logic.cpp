@@ -36,7 +36,7 @@ constexpr auto kMaxAlpha = 255;
 
 }
 
-cGame::cGame() {
+cGame::cGame() : m_timeManager(*this) {
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;
@@ -431,6 +431,13 @@ void cGame::drawStateCombat() {
         alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(),
                           iRest);
     }
+
+    // for now, call this on game class.
+    // TODO: move this "combat" state into own game state class
+    drawCombatMouse();
+
+	// MOUSE
+    drawManager->drawCombatMouse();
 }
 
 // drawStateMentat logic + drawing mouth/eyes
@@ -551,7 +558,7 @@ void cGame::run() {
     set_trans_blender(0, 0, 0, 128);
 
     while (m_playing) {
-        TimeManager.processTime();
+        m_timeManager.processTime();
         updateMouseAndKeyboardStateAndGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
@@ -1114,6 +1121,7 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                drawManager->drawCombatState(); // TODO: draw combat state directly on background bitmap
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
@@ -1383,7 +1391,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
 
             int posX = mouseCellX + rnd((precision * 2) + 1);
             int posY = mouseCellY + rnd((precision * 2) + 1);
-            FIX_POS(posX, posY);
+            cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
 
             char msg[255];
             sprintf(msg,
