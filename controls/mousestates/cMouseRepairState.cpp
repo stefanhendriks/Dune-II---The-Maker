@@ -28,38 +28,38 @@ void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     // ... so set it here
-    if (context->isState(MOUSESTATE_REPAIR)) { // if , required in case we switched state
-        mouse->setTile(mouseTile);
+    if (m_context->isState(MOUSESTATE_REPAIR)) { // if , required in case we switched state
+        m_mouse->setTile(mouseTile);
     }
 }
 
 void cMouseRepairState::onMouseLeftButtonClicked() {
-    int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+    int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
-        if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
+        if (pUnit.isValid() && pUnit.belongsTo(m_player) && pUnit.isEligibleForRepair()) {
             pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
         }
     }
 
-    cAbstractStructure *pStructure = context->getStructurePointerWhereMouseHovers();
+    cAbstractStructure *pStructure = m_context->getStructurePointerWhereMouseHovers();
     if (pStructure && pStructure->isValid()) {
-        if (pStructure->belongsTo(player) && pStructure->isDamaged()) {
+        if (pStructure->belongsTo(m_player) && pStructure->isDamaged()) {
             pStructure->setRepairing(!pStructure->isRepairing());
         }
     }
 }
 
 void cMouseRepairState::onMouseRightButtonPressed() {
-    mouse->dragViewportInteraction();
+    m_mouse->dragViewportInteraction();
 }
 
 void cMouseRepairState::onMouseRightButtonClicked() {
-    if (!mouse->isMapScrolling()) {
-        context->toPreviousState();
+    if (!m_mouse->isMapScrolling()) {
+        m_context->toPreviousState();
     }
 
-    mouse->resetDragViewportInteraction();
+    m_mouse->resetDragViewportInteraction();
 }
 
 void cMouseRepairState::onMouseMovedTo() {
@@ -68,28 +68,28 @@ void cMouseRepairState::onMouseMovedTo() {
 
 void cMouseRepairState::onStateSet() {
     mouseTile = getMouseTileForRepairState();
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }
 
 
 void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_R)) {
-        context->toPreviousState();
+        m_context->toPreviousState();
     }
 }
 
 int cMouseRepairState::getMouseTileForRepairState() {
-    int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+    int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
-        if (pUnit.isValid() && pUnit.belongsTo(player) && pUnit.isEligibleForRepair()) {
+        if (pUnit.isValid() && pUnit.belongsTo(m_player) && pUnit.isEligibleForRepair()) {
             return MOUSE_REPAIR;
         }
     }
 
-    cAbstractStructure *pStructure = context->getStructurePointerWhereMouseHovers();
+    cAbstractStructure *pStructure = m_context->getStructurePointerWhereMouseHovers();
     if (pStructure && pStructure->isValid()) {
-        if (pStructure->belongsTo(player) && pStructure->isDamaged()) {
+        if (pStructure->belongsTo(m_player) && pStructure->isDamaged()) {
             return MOUSE_REPAIR;
         }
     }
@@ -98,5 +98,5 @@ int cMouseRepairState::getMouseTileForRepairState() {
 }
 
 void cMouseRepairState::onFocus() {
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }

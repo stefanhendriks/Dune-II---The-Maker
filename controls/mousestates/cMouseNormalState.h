@@ -43,6 +43,8 @@ public:
     void onBlur() override {}
 
 private:
+    eMouseNormalState m_state;
+
     void onMouseLeftButtonClicked();
 
     void onMouseRightButtonPressed();
@@ -56,8 +58,6 @@ private:
     void onKeyPressed(const cKeyboardEvent &event);
 
     void setState(eMouseNormalState newState);
-
-    eMouseNormalState state;
 
     int getMouseTileForNormalState() const;
 };

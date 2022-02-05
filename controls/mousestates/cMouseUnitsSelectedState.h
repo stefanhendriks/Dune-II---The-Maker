@@ -56,6 +56,21 @@ public:
     void onBlur() override {}
 
 private:
+    // A list of unit id's that we have selected
+    std::vector<int> m_selectedUnits;
+
+    // when move to refinery, it will only be applicable to harvesters.
+    bool m_harvestersSelected;
+
+    // todo: when we want to capture structures, it will only send out the infantry
+    bool m_infantrySelected;
+
+    // when sending to repair facility, only repairable units go to that
+    bool m_repairableUnitsSelected;
+
+    eMouseUnitsSelectedState m_state;
+    eMouseUnitsSelectedState m_prevState;
+
     void onMouseLeftButtonClicked();
 
     void onMouseRightButtonPressed();
@@ -64,26 +79,11 @@ private:
 
     void onMouseMovedTo();
 
-    // A list of unit id's that we have selected
-    std::vector<int> selectedUnits;
-
-    // when move to refinery, it will only be applicable to harvesters.
-    bool harvestersSelected;
-
-    // todo: when we want to capture structures, it will only send out the infantry
-    bool infantrySelected;
-
-    // when sending to repair facility, only repairable units go to that
-    bool repairableUnitsSelected;
-
     void updateSelectedUnitsState();
 
     void evaluateSelectedUnits();
 
     void setState(eMouseUnitsSelectedState newState);
-
-    eMouseUnitsSelectedState state;
-    eMouseUnitsSelectedState prevState;
 
     void onKeyDown(const cKeyboardEvent &event);
 
