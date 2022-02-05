@@ -1,9 +1,11 @@
-#ifndef D2TM_CGUIBUTTON_H
-#define D2TM_CGUIBUTTON_H
+#pragma once
 
-#include <utils/cRectangle.h>
-#include <observers/cInputObserver.h>
+#include "cGuiAction.h"
 #include "cGuiObject.h"
+#include "utils/cRectangle.h"
+#include "drawers/cTextDrawer.h"
+
+#include <string>
 
 enum eGuiButtonRenderKind {
     OPAQUE_WITH_BORDER = 0,
@@ -29,22 +31,11 @@ public:
 
     ~cGuiButton();
 
-//    /**
-//     * Copy constructor
-//     * @param src
-//    */
-//    cGuiButton(const cGuiButton &src);
-//
-//    /**
-//     * Assignment operator
-//     * @param rhs
-//     * @return
-//     */
-//    cGuiButton &operator=(const cGuiButton &rhs);
-
+    // From cInputObserver
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
+    // From cGuiObject
     void draw() const override;
 
     bool hasFocus();
@@ -68,26 +59,25 @@ public:
     void setEnabled(bool value);
 
 private:
-    cRectangle rect;
-    cTextDrawer textDrawer;
-    std::string btnText;
-    eGuiButtonRenderKind renderKind;
-    eGuiTextAlignHorizontal textAlignHorizontal;
-    cGuiAction *onLeftMouseButtonClicked_action;
+    cTextDrawer m_textDrawer;
+    std::string m_buttonText;
+    eGuiButtonRenderKind m_renderKind;
+    eGuiTextAlignHorizontal m_textAlignHorizontal;
+    cGuiAction *m_onLeftMouseButtonClickedAction;
 
-    bool focus;
+    bool m_focus;
 
-    int gui_colorButton;
-    int gui_colorBorderLight;
-    int gui_colorBorderDark;
+    int m_guiColorButton;
+    int m_guiColorBorderLight;
+    int m_guiColorBorderDark;
 
-    int text_color;
-    int text_colorHover;
+    int m_textColor;
+    int m_textColorHover;
 
     // pressed state
-    bool pressed;
+    bool m_pressed;
 
-    bool enabled;
+    bool m_enabled;
 
     // Functions
     void drawText() const;
@@ -100,6 +90,3 @@ private:
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
-
-
-#endif //D2TM_CGUIBUTTON_H

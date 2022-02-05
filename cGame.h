@@ -17,6 +17,7 @@
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
+#include "utils/cTimeManager.h"
 
 #include <memory>
 #include <string>
@@ -28,6 +29,7 @@ class cInteractionManager;
 class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
+class cScreenInit;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -230,6 +232,7 @@ private:
     bool m_debugMode;               // ...
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
+    std::unique_ptr<cScreenInit> m_Screen;
     cInteractionManager *m_interactionManager;
     cAllegroDataRepository *m_dataRepository;
 
@@ -237,6 +240,8 @@ private:
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
+
+    cTimeManager m_timeManager;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

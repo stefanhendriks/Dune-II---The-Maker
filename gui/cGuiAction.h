@@ -1,11 +1,7 @@
-#ifndef D2TM_CGUIACTION_H
-#define D2TM_CGUIACTION_H
+#pragma once
 
 class cGuiAction {
-public:
+  public:
     virtual ~cGuiAction() = default;
     virtual void execute() = 0;
 };
-
-
-#endif //D2TM_CGUIACTION_H
