@@ -100,7 +100,7 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size) {
                 break;
         }
 
-        FIX_POS(x, y);
+        cPoint::split(x, y) = map.fixCoordinatesToBeWithinMap(x, y);
     }
 
     smoothMap();
