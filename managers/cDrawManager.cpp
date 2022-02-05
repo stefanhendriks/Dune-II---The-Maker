@@ -83,19 +83,12 @@ void cDrawManager::drawCombatState() {
 
     drawNotifications();
 
-    // for now, call this on game class.
-    // TODO: move this "combat" state into own game state class
-    game.drawCombatMouse();
-
     allegroDrawer->resetClippingFor(bmp_screen);
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
         particleDrawer->drawDebugInfo();
     }
-
-	// MOUSE
-    drawCombatMouse();
 }
 
 void cDrawManager::drawDebugInfoUsages() const {
