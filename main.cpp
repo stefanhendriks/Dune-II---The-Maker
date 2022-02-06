@@ -12,6 +12,7 @@
 
 #include "d2tmh.h"
 
+#include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
 
 int	iRest = 1;	// default rest value
