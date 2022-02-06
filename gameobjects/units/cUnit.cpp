@@ -13,6 +13,7 @@
 #include "d2tmh.h"
 #include "cUnit.h"
 
+#include "map/cMapEditor.h"
 #include "utils/cSoundPlayer.h"
 
 #include <cmath>
@@ -240,6 +241,8 @@ void cUnit::createSquishedParticle() {
 void cUnit::createExplosionParticle() {
     int iDieX = pos_x_centered();
     int iDieY = pos_y_centered();
+
+    auto mapEditor = cMapEditor(map);
 
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
@@ -3502,7 +3505,7 @@ void cUnit::think_harvester() {
 
                 move_to(UNIT_find_harvest_spot(iID), -1, -1);
 
-                mapEditor.smoothAroundCell(iCell);
+                cMapEditor(map).smoothAroundCell(iCell);
             }
         }
 

@@ -10,7 +10,9 @@
 
   */
 
-#include "include/d2tmh.h"
+#include "d2tmh.h"
+
+#include "map/cRandomMapGenerator.h"
 
 int	iRest = 1;	// default rest value
 
@@ -19,7 +21,6 @@ cGame          				game;
 
 cStructureUtils 			structureUtils;
 cMap           				map;
-cMapEditor	  				mapEditor;
 cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     	*	structure[MAX_STRUCTURES];
