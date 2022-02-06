@@ -30,28 +30,28 @@ void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     // ... so set it here
-    if (context->isState(MOUSESTATE_PLACE)) { // if , required in case we switched state
-        mouse->setTile(mouseTile);
+    if (m_context->isState(MOUSESTATE_PLACE)) { // if , required in case we switched state
+        m_mouse->setTile(mouseTile);
     }
 }
 
 void cMousePlaceState::onMouseLeftButtonClicked() {
-    // this assumes the context has been updated beforehand...
-    int mouseCell = context->getMouseCell();
+    // this assumes the m_context has been updated beforehand...
+    int mouseCell = m_context->getMouseCell();
 
     if (mouseCell < 0) {
         return;
     }
 
-    cBuildingListItem *itemToPlace = player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
+    cBuildingListItem *itemToPlace = m_player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) {
         return;
     }
 
-    if (mayPlaceIt(itemToPlace, context->getMouseCell())) {
+    if (mayPlaceIt(itemToPlace, m_context->getMouseCell())) {
         game.playSound(SOUND_PLACE);
-        player->placeItem(mouseCell, itemToPlace);
-        context->toPreviousState();
+        m_player->placeItem(mouseCell, itemToPlace);
+        m_context->toPreviousState();
     }
 }
 
@@ -154,14 +154,14 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 }
 
 void cMousePlaceState::onMouseRightButtonPressed() {
-    mouse->dragViewportInteraction();
+    m_mouse->dragViewportInteraction();
 }
 
 void cMousePlaceState::onMouseRightButtonClicked() {
-    if (mouse->isMapScrolling()) {
-        mouse->resetDragViewportInteraction();
+    if (m_mouse->isMapScrolling()) {
+        m_mouse->resetDragViewportInteraction();
     } else {
-        context->toPreviousState();
+        m_context->toPreviousState();
     }
 }
 
@@ -172,7 +172,7 @@ void cMousePlaceState::onMouseMovedTo() {
 
 void cMousePlaceState::onStateSet() {
     mouseTile = MOUSE_NORMAL;
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }
 
 
@@ -180,5 +180,5 @@ void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }
 
 void cMousePlaceState::onFocus() {
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }

@@ -24,26 +24,26 @@
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
 	public:
-		cGameControlsContext(cPlayer *thePlayer, cMouse *theMouse);
-		~cGameControlsContext();
+		explicit cGameControlsContext(cPlayer *player, cMouse *mouse);
+		~cGameControlsContext() override;
 
-		int getIdOfStructureWhereMouseHovers() const { return mouseHoveringOverStructureId; }
-		int getIdOfUnitWhereMouseHovers() const { return mouseHoveringOverUnitId; }
+		int getIdOfStructureWhereMouseHovers() const { return m_mouseHoveringOverStructureId; }
+		int getIdOfUnitWhereMouseHovers() const { return m_mouseHoveringOverUnitId; }
 
-		int getMouseCell() const { return mouseCell; }
+		int getMouseCell() const { return m_mouseCell; }
 
-		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
-		bool isMouseOverUnit() { return mouseHoveringOverUnitId > -1; }
+		bool isMouseOverStructure() const { return m_mouseHoveringOverStructureId > -1; }
+		bool isMouseOverUnit() const { return m_mouseHoveringOverUnitId > -1; }
 
-		bool isMouseOnSidebar() { return mouseCell == MOUSECELL_SIDEBAR; }
-		bool isMouseOnTopBar() { return mouseCell == MOUSECELL_TOPBAR; }
-		bool isMouseOnMiniMap() { return mouseCell == MOUSECELL_MINIMAP; }
-        bool isMouseOnSidebarOrMinimap() { return isMouseOnSidebar() || isMouseOnMiniMap(); }
-		bool isMouseOnBattleField() { return mouseCell > -1; }
+		bool isMouseOnSidebar() const { return m_mouseCell == MOUSECELL_SIDEBAR; }
+		bool isMouseOnTopBar() const { return m_mouseCell == MOUSECELL_TOPBAR; }
+		bool isMouseOnMiniMap() const { return m_mouseCell == MOUSECELL_MINIMAP; }
+        bool isMouseOnSidebarOrMinimap() const { return isMouseOnSidebar() || isMouseOnMiniMap(); }
+		bool isMouseOnBattleField() const { return m_mouseCell > -1; }
 
-		bool shouldDrawToolTip() { return drawToolTip; }
+		bool shouldDrawToolTip() const { return m_drawToolTip; }
 
-		cAbstractStructure * getStructurePointerWhereMouseHovers();
+		cAbstractStructure * getStructurePointerWhereMouseHovers() const;
 
 		int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
@@ -55,7 +55,7 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 
         void toPreviousState();
 
-        bool isState(eMouseState other);
+        bool isState(eMouseState other) const;
 
         void onFocusMouseStateEvent();
 
@@ -65,39 +65,39 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 		void determineHoveringOverUnitId();
 
 	private:
-        void onMouseMovedTo(const s_MouseEvent &event);
+		int m_mouseHoveringOverStructureId;
+		int m_mouseHoveringOverUnitId;
 
-        void updateMouseCell(const cPoint &coords);
-
-		int mouseHoveringOverStructureId;
-		int mouseHoveringOverUnitId;
-
-		bool drawToolTip;
+		bool m_drawToolTip;
 
 		// on what cell is the mouse hovering
-		int mouseCell;
+		int m_mouseCell;
 
 		// context belongs to specific player
-		cPlayer * player;
+		cPlayer * m_player;
 
         // the state to direct events to
-        eMouseState state;
-        eMouseState prevState; // in case we want to switch from repair mode (back and forth)
+        eMouseState m_state;
+        eMouseState m_prevState;             // used to switch back previous state (ie from Place, or Repair mode)
+        eMouseState m_prevStateBeforeRepair; // the state before repair mode only, used when Place/Repair mode is used
+                                           // in conjunction
+
+        cMouse *m_mouse;
 
         // the states, initialized once to save a lot of construct/destructs (and make it possible
         // to switch between states without needing to restore 'state' within the state object)
-        cMouseNormalState * mouseNormalState;
-        cMouseUnitsSelectedState * mouseUnitsSelectedState;
-        cMouseRepairState * mouseRepairState;
-		cMousePlaceState * mousePlaceState;
-		cMouseDeployState * mouseDeployState;
+        cMouseNormalState * m_mouseNormalState;
+        cMouseUnitsSelectedState * m_mouseUnitsSelectedState;
+        cMouseRepairState * m_mouseRepairState;
+		cMousePlaceState * m_mousePlaceState;
+		cMouseDeployState * m_mouseDeployState;
 
 		//
-		bool prevTickMouseAtBattleField;
+		bool m_prevTickMouseAtBattleField;
 
-		// mouse state
-		void onNotifyMouseStateEvent(const s_MouseEvent &event);
-		void onBlurMouseStateEvent();
-
-		cMouse *mouse;
+        // mouse state
+        void onNotifyMouseStateEvent(const s_MouseEvent &event);
+        void onBlurMouseStateEvent();
+        void onMouseMovedTo(const s_MouseEvent &event);
+        void updateMouseCell(const cPoint &coords);
 };

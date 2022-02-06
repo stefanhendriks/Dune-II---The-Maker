@@ -3,9 +3,9 @@
 #include "../../data/gfxdata.h"
 
 cMouseState::cMouseState(cPlayer * player, cGameControlsContext *context, cMouse *mouse) :
-        player(player),
-        context(context),
-        mouse(mouse),
+        m_player(player),
+        m_context(context),
+        m_mouse(mouse),
         mouseTile(MOUSE_NORMAL) {
 
 }
