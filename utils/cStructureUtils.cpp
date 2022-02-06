@@ -1,5 +1,6 @@
 #include "../include/d2tmh.h"
 
+#include "map/cMapCamera.h"
 
 cStructureUtils::cStructureUtils() {
 }

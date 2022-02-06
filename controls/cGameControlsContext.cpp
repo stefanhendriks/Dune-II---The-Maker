@@ -1,6 +1,8 @@
 #include "cGameControlsContext.h"
 
-#include "../include/d2tmh.h"
+#include "data/gfxdata.h"
+#include "d2tmc.h"
+#include "managers/cDrawManager.h"
 
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
         m_mouseHoveringOverStructureId(-1),

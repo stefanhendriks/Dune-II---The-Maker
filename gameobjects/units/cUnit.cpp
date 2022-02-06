@@ -13,6 +13,7 @@
 #include "d2tmh.h"
 #include "cUnit.h"
 
+#include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "utils/cSoundPlayer.h"
 

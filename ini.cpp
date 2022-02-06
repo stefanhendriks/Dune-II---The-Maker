@@ -13,6 +13,7 @@
 #include "include/d2tmh.h"
 
 #include "map/cMapEditor.h"
+#include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
 #include "utils/cLog.h"
 #include "utils/cSeedMapGenerator.h"
 
