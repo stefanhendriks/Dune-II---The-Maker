@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-cSeedMap::cSeedMap() : map{kMapWidth*kMapHeight, TERRAIN_SAND} {
+cSeedMap::cSeedMap() : map(kMapWidth*kMapHeight, TERRAIN_SAND) {
 }
 
 void cSeedMap::setCellType(int x, int y, int type) {
