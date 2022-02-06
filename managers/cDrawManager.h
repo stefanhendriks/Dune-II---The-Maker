@@ -4,7 +4,7 @@
 class cDrawManager : cInputObserver {
 
 public:
-    cDrawManager(cPlayer *thePlayer);
+    explicit cDrawManager(cPlayer *thePlayer);
     ~cDrawManager();
 
     void drawCombatState();
