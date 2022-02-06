@@ -1,35 +1,18 @@
-/*
- * cGameObject.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
+#pragma once
+
+#include "utils/cPoint.h"
 
 // a game object is the most super class of all game objects
 // it has the bare bones that all other objects (structures, units, bullets, etc) use.
-
-#ifndef CGAMEOBJECT_H_
-#define CGAMEOBJECT_H_
-
 class cGameObject {
-
 	public:
 		cGameObject();
-		~cGameObject();
 
-		void setX(int value) { x = value; }
-		void setY(int value) { y = value; }
+		void setLocation(cPoint location) { m_location = location; }
 
-		int getX() { return x; }
-		int getY() { return y; }
-
-	protected:
+		cPoint getLocation() const { return m_location; }
 
 	private:
-		int x;
-		int y;
-
-		int frame; // the frame to draw
+        cPoint m_location;
+		int m_frame; // the frame to draw
 };
-
-#endif /* CGAMEOBJECT_H_ */
