@@ -98,7 +98,7 @@ void cParticle::draw() {
     clear_to_color(temp, makecol(255, 0, 255));
 
     // now blit it
-    if (iHousePal > 0) {
+    if (iHousePal > -1) {
         cPlayer &player = players[iHousePal];
         select_palette(player.pal);
     }
