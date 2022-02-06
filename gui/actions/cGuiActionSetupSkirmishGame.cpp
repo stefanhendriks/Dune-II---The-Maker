@@ -1,4 +1,7 @@
-#include "d2tmh.h"
+#include "cGuiActionSetupSkirmishGame.h"
+
+#include "d2tmc.h"
+#include "ini.h"
 
 void cGuiActionSetupSkirmishGame::execute() {
     INI_PRESCAN_SKIRMISH();
