@@ -1,6 +1,9 @@
-#include "../include/d2tmh.h"
 #include "CreditsDrawer.h"
 
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
 #include <allegro.h>

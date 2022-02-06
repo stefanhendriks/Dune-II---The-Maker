@@ -1,11 +1,9 @@
-#ifndef CPARTICLEDRAWER_H_
-#define CPARTICLEDRAWER_H_
+#pragma once
+
+#include <vector>
 
 class cParticleDrawer {
 	public:
-		cParticleDrawer();
-		~cParticleDrawer();
-
 		void drawLowerLayer();
 		void drawTopLayer();
         void drawDebugInfo();
@@ -16,5 +14,3 @@ class cParticleDrawer {
         std::vector<int> particlesLowerLayer;
         std::vector<int> particlesTopLayer;
 };
-
-#endif /* CPARTICLEDRAWER_H_ */

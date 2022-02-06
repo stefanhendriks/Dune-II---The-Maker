@@ -1,17 +1,16 @@
-#include "../include/d2tmh.h"
 #include "cBuildingListDrawer.h"
 
+#include "cAllegroDrawer.h"
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
 
 cBuildingListDrawer::cBuildingListDrawer(cPlayer *player) :
-    m_textDrawer(new cTextDrawer(game_font)),
+    m_textDrawer(game_font),
     m_player(player),
     m_renderListIds(false) {
-}
-
-cBuildingListDrawer::~cBuildingListDrawer() {
-    delete m_textDrawer;
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
@@ -209,9 +208,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
-				    m_textDrawer->setFont(small_font);
-				    m_textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
-				    m_textDrawer->setFont(game_font);
+				    m_textDrawer.setFont(small_font);
+				    m_textDrawer.drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
+				    m_textDrawer.setFont(game_font);
 				}
 
 				// Pending building (ie: a build is progressing, blocking the upgrade)
@@ -222,12 +221,12 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
-				    m_textDrawer->setFont(small_font);
+				    m_textDrawer.setFont(small_font);
                     int height = heightOfIcon / 3;
-                    m_textDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
-                    m_textDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, red);
-                    m_textDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, red);
-				    m_textDrawer->setFont(game_font);
+                    m_textDrawer.drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
+                    m_textDrawer.drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, red);
+                    m_textDrawer.drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, red);
+				    m_textDrawer.setFont(game_font);
 				}
 			}
 
@@ -274,7 +273,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 			// draw
 			char msg[10];
 			sprintf(msg, "%d", amountToShow);
-            m_textDrawer->drawText(textX, textY, msg);
+            m_textDrawer.drawText(textX, textY, msg);
 		}
 
         if (game.isDebugMode()) {
@@ -282,7 +281,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
 
-                m_textDrawer->drawTextWithOneInteger(textX, textY, "%d", item->getSubList());
+                m_textDrawer.drawTextWithOneInteger(textX, textY, "%d", item->getSubList());
             }
         }
 

@@ -17,14 +17,8 @@
   */
 #pragma once
 
-#include <vector>
 #include "gameobjects/cFlag.h"
-#include "include/structs.h"
-
-#include <vector>
-
 #include "structs.h"
-#include "gameobjects/cFlag.h"
 
 #include <vector>
 

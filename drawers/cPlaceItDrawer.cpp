@@ -1,6 +1,14 @@
-#include "../include/d2tmh.h"
+#include "cPlaceItDrawer.h"
+
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "drawers/cAllegroDrawer.h"
+#include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
+
+#include <cassert>
 
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
 }

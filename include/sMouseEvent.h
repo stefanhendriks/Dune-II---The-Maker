@@ -1,9 +1,10 @@
-#ifndef D2TM_SMOUSEEVENT_H
-#define D2TM_SMOUSEEVENT_H
+#pragma once
 
-#include <string>
-#include "../utils/cPoint.h"
 #include "enums.h"
+#include "utils/cPoint.h"
+
+#include <cassert>
+#include <string>
 
 // Rename to GUI_EVENT? Might be more appropriate
 struct s_MouseEvent {
@@ -39,5 +40,3 @@ struct s_MouseEvent {
         return "";
     }
 };
-
-#endif //D2TM_SMOUSEEVENT_H

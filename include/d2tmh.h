@@ -14,8 +14,9 @@
 #include "../player/playerh.h"
 
 #include "gui.h"
-#include "drawers.h"
-#include "../managers/managers.h"
+#include "drawers/cAllegroDrawer.h"
+#include "managers/cDrawManager.h"
+#include "managers/cInteractionManager.h"
 
 // Extern references & variable declarations
 #include "d2tmc.h"

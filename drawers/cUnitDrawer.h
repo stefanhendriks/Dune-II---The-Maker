@@ -12,27 +12,20 @@
 
 // This class is solely responsible for drawing a unit on the screen.
 
-#ifndef CUNIT_DRAWER
-#define CUNIT_DRAWER
+#pragma once
+
+#include "gameobjects/units/cAbstractUnit.h"
 
 class cUnitDrawer {
-
-private:
-	static cUnitDrawer *instance;
-
-protected:
+  private:
 	cUnitDrawer();
 
-public:
+  public:
+	static const cUnitDrawer& getInstance();
 
-	static cUnitDrawer *getInstance();
-
-	void draw(cAbstractUnit *unit);
+	void draw(cAbstractUnit *unit) const;
 
 	// get draw coordinates, taking the abstractUnit as param
-	int getDrawX(cAbstractUnit *unit);
-	int getDrawY(cAbstractUnit *unit);
-
+	int getDrawX(cAbstractUnit *unit) const;
+	int getDrawY(cAbstractUnit *unit) const;
 };
-
-#endif

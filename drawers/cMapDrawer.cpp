@@ -1,8 +1,15 @@
-#include <cmath>
-#include "../include/d2tmh.h"
 #include "cMapDrawer.h"
 
+#include "controls/cGameControlsContext.h"
+#include "data/gfxdata.h"
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
+#include "drawers/cTextDrawer.h"
+#include "player/cPlayer.h"
+
 #include <allegro.h>
+
+#include <cmath>
 
 cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
         m_map(map),

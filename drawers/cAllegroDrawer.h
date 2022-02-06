@@ -1,14 +1,13 @@
 #pragma once
 
+#include "data/cAllegroDataRepository.h"
 #include "utils/cRectangle.h"
 
 #include <map>
 #include <memory>
 
 // Forward declarations to prevent including Allegro headers
-class cAllegroDataRepository;
 struct BITMAP;
-struct sBitmap;
 
 class cAllegroDrawer {
 	public:

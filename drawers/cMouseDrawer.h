@@ -1,10 +1,16 @@
-#ifndef CMOUSEDRAWER_H
-#define	CMOUSEDRAWER_H
+#pragma once
+
+#include "sMouseEvent.h"
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "gui/cMouseToolTip.h"
+#include "gui/cTextWriter.h"
+
+class cPlayer;
+class cWindTrap;
 
 class cMouseDrawer {
 	public:
-		cMouseDrawer(cPlayer * thePlayer);
-		virtual ~cMouseDrawer();
+		explicit cMouseDrawer(cPlayer * thePlayer);
 
 		void draw();
 
@@ -14,10 +20,10 @@ class cMouseDrawer {
 
 protected:
 		void drawToolTipBackground();
-		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
-		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter);
-		void drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
-		void drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
+		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter& textWriter);
+		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter& textWriter);
+		void drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter& textWriter);
+		void drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter& textWriter);
 
 		int getDrawXToolTip(int width);
 		int getDrawYToolTip(int height);
@@ -27,10 +33,8 @@ protected:
 	private:
         void onMouseAt(const s_MouseEvent &event);
 
-		cMouseToolTip * mouseToolTip;
+		cMouseToolTip m_mouseToolTip;
 		cPlayer * player;
 		int mouseX, mouseY;
 };
-
-#endif	/* CMOUSEDRAWER_H */
 
