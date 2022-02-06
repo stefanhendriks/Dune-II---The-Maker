@@ -27,27 +27,27 @@ void cMouseDeployState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     // ... so set it here
-    if (context->isState(MOUSESTATE_DEPLOY)) { // if , required in case we switched state
-        mouse->setTile(mouseTile);
+    if (m_context->isState(MOUSESTATE_DEPLOY)) { // if , required in case we switched state
+        m_mouse->setTile(mouseTile);
     }
 }
 
 void cMouseDeployState::onMouseLeftButtonClicked() {
-    // this assumes the context has been updated beforehand...
-    int mouseCell = context->getMouseCell();
+    // this assumes the m_context has been updated beforehand...
+    int mouseCell = m_context->getMouseCell();
 
     if (mouseCell < 0) {
         return;
     }
 
-    cBuildingListItem *itemToDeploy = player->getSideBar()->getList(eListType::LIST_PALACE)->getItemToDeploy();
+    cBuildingListItem *itemToDeploy = m_player->getSideBar()->getList(eListType::LIST_PALACE)->getItemToDeploy();
     if (itemToDeploy == nullptr) return;
 
     s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCH,
             .entityType = eBuildType::SPECIAL,
             .entityID = -1,
-            .player = player,
+            .player = m_player,
             .entitySpecificType = itemToDeploy->getBuildId(),
             .atCell = mouseCell,
             .isReinforce = false,
@@ -57,14 +57,14 @@ void cMouseDeployState::onMouseLeftButtonClicked() {
 }
 
 void cMouseDeployState::onMouseRightButtonPressed() {
-    mouse->dragViewportInteraction();
+    m_mouse->dragViewportInteraction();
 }
 
 void cMouseDeployState::onMouseRightButtonClicked() {
-    if (mouse->isMapScrolling()) {
-        mouse->resetDragViewportInteraction();
+    if (m_mouse->isMapScrolling()) {
+        m_mouse->resetDragViewportInteraction();
     } else {
-        context->toPreviousState();
+        m_context->toPreviousState();
     }
 }
 
@@ -75,7 +75,7 @@ void cMouseDeployState::onMouseMovedTo() {
 
 void cMouseDeployState::onStateSet() {
     mouseTile = MOUSE_ATTACK; // TODO: have other cursor for this? based on thing to deploy?
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }
 
 
@@ -83,9 +83,9 @@ void cMouseDeployState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 }
 
 void cMouseDeployState::onFocus() {
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }
 
 void cMouseDeployState::onNotifyGameEvent(const s_GameEvent &) {
-    context->toPreviousState();
+    m_context->toPreviousState();
 }

@@ -15,8 +15,8 @@
 #include <algorithm>
 
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
-    cMouseState(player, context, mouse),
-    state(SELECT_STATE_NORMAL) {
+        cMouseState(player, context, mouse),
+        m_state(SELECT_STATE_NORMAL) {
 }
 
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
@@ -24,7 +24,7 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_PRESSED:
-            mouse->boxSelectLogic(context->getMouseCell());
+            m_mouse->boxSelectLogic(m_context->getMouseCell());
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked();
@@ -43,34 +43,34 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     // ... so set it here
-    if (context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
-        mouse->setTile(mouseTile);
+    if (m_context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
+        m_mouse->setTile(mouseTile);
     }
 }
 
 void cMouseNormalState::onMouseLeftButtonClicked() {
     bool selectedUnits = false;
-    if (mouse->isBoxSelecting()) {
-        player->deselectAllUnits();
+    if (m_mouse->isBoxSelecting()) {
+        m_player->deselectAllUnits();
 
         // remember, these are screen coordinates
         // TODO: Make it use absolute coordinates? (so we could have a rectangle bigger than the screen at one point?)
-        cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
+        cRectangle boxSelectRectangle = m_mouse->getBoxSelectRectangle();
 
-        const std::vector<int> &ids = player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
-        selectedUnits = player->selectUnits(ids);
+        const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
+        selectedUnits = m_player->selectUnits(ids);
     } else {
         bool infantrySelected = false;
         bool unitSelected = false;
 
-        if (state == SELECT_STATE_NORMAL) {
+        if (m_state == SELECT_STATE_NORMAL) {
             // single click, no box select
-            int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+            int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
-                player->deselectAllUnits();
+                m_player->deselectAllUnits();
 
                 cUnit &pUnit = unit[hoverUnitId];
-                if (pUnit.isValid() && pUnit.belongsTo(player) && !pUnit.bSelected) {
+                if (pUnit.isValid() && pUnit.belongsTo(m_player) && !pUnit.bSelected) {
                     pUnit.bSelected = true;
                     if (pUnit.isInfantryUnit()) {
                         infantrySelected = true;
@@ -80,24 +80,24 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                 }
             }
 
-            int hoverStructureId = context->getIdOfStructureWhereMouseHovers();
+            int hoverStructureId = m_context->getIdOfStructureWhereMouseHovers();
             if (hoverStructureId > -1) {
-                player->selected_structure = hoverStructureId;
-                cAbstractStructure *pStructure = player->getSelectedStructure();
-                if (pStructure && pStructure->isValid() && pStructure->belongsTo(player)) {
+                m_player->selected_structure = hoverStructureId;
+                cAbstractStructure *pStructure = m_player->getSelectedStructure();
+                if (pStructure && pStructure->isValid() && pStructure->belongsTo(m_player)) {
                     eListType listId = pStructure->getAssociatedListID();
                     if (listId != eListType::LIST_NONE) {
-                        player->getSideBar()->setSelectedListId(listId);
+                        m_player->getSideBar()->setSelectedListId(listId);
                     }
                 } else {
-                    player->selected_structure = -1;
+                    m_player->selected_structure = -1;
                 }
             }
-        } else if (state == SELECT_STATE_RALLY) {
+        } else if (m_state == SELECT_STATE_RALLY) {
             // setting a rally point!
-            cAbstractStructure *pStructure = player->getSelectedStructure();
+            cAbstractStructure *pStructure = m_player->getSelectedStructure();
             if (pStructure && pStructure->isValid()) {
-                pStructure->setRallyPoint(context->getMouseCell());
+                pStructure->setRallyPoint(m_context->getMouseCell());
             }
         }
 
@@ -113,33 +113,33 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
     }
 
     if (selectedUnits) {
-        context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
 
-    mouse->resetBoxSelect();
+    m_mouse->resetBoxSelect();
 }
 
 void cMouseNormalState::onMouseRightButtonPressed() {
-    mouse->dragViewportInteraction();
+    m_mouse->dragViewportInteraction();
 }
 
 void cMouseNormalState::onMouseRightButtonClicked() {
-    mouse->resetDragViewportInteraction();
+    m_mouse->resetDragViewportInteraction();
 }
 
 void cMouseNormalState::onMouseMovedTo() {
-    if (state == SELECT_STATE_NORMAL) {
+    if (m_state == SELECT_STATE_NORMAL) {
         mouseTile = getMouseTileForNormalState();
-    } else if (state == SELECT_STATE_RALLY) {
+    } else if (m_state == SELECT_STATE_RALLY) {
         mouseTile = MOUSE_RALLY;
     }
 }
 
 int cMouseNormalState::getMouseTileForNormalState() const {
-    int hoverUnitId = context->getIdOfUnitWhereMouseHovers();
+    int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
-        if (pUnit.isValid() && pUnit.belongsTo(player)) {
+        if (pUnit.isValid() && pUnit.belongsTo(m_player)) {
             // only show this for units
             return MOUSE_PICK;
         }
@@ -151,7 +151,7 @@ int cMouseNormalState::getMouseTileForNormalState() const {
 
 void cMouseNormalState::onStateSet() {
     mouseTile = MOUSE_NORMAL;
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }
 
 void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
@@ -168,16 +168,16 @@ void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     }
 
     // ... so set it here
-    if (context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
-        mouse->setTile(mouseTile);
+    if (m_context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
+        m_mouse->setTile(mouseTile);
     }
 }
 
 void cMouseNormalState::onKeyDown(const cKeyboardEvent &event) {
     if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
-        cAbstractStructure *pSelectedStructure = player->getSelectedStructure();
+        cAbstractStructure *pSelectedStructure = m_player->getSelectedStructure();
         // when selecting a structure
-        if (pSelectedStructure && pSelectedStructure->belongsTo(player) && pSelectedStructure->canSpawnUnits()) {
+        if (pSelectedStructure && pSelectedStructure->belongsTo(m_player) && pSelectedStructure->canSpawnUnits()) {
             setState(SELECT_STATE_RALLY);
             mouseTile = MOUSE_RALLY;
         }
@@ -196,28 +196,28 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
 
         if (iGroup > 0) {
             // select all units for group
-            player->deselectAllUnits();
-            bool anyUnitSelected = player->selectUnitsFromGroup(iGroup);
+            m_player->deselectAllUnits();
+            bool anyUnitSelected = m_player->selectUnitsFromGroup(iGroup);
             if (anyUnitSelected) {
-                player->setContextMouseState(MOUSESTATE_UNITS_SELECTED);
+                m_player->setContextMouseState(MOUSESTATE_UNITS_SELECTED);
             }
         }
     }
 
     if (event.hasKey(KEY_R)) {
-        context->setMouseState(MOUSESTATE_REPAIR);
+        m_context->setMouseState(MOUSESTATE_REPAIR);
     }
 }
 
 void cMouseNormalState::setState(eMouseNormalState newState) {
     if (game.isDebugMode()) {
         char msg[255];
-        sprintf(msg, "Setting state from %s to %s", mouseNormalStateString(state), mouseNormalStateString(newState));
+        sprintf(msg, "Setting state from %s to %s", mouseNormalStateString(m_state), mouseNormalStateString(newState));
         logbook(msg);
     }
-    state = newState;
+    m_state = newState;
 }
 
 void cMouseNormalState::onFocus() {
-    mouse->setTile(mouseTile);
+    m_mouse->setTile(mouseTile);
 }
