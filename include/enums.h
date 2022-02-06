@@ -1,7 +1,6 @@
-#ifndef ENUMS_H_
-#define ENUMS_H_
+#pragma once
 
-#include <assert.h>
+#include <cassert>
 
 enum eAnimationDirection {
     ANIM_NONE, // not animating
@@ -320,5 +319,3 @@ enum eFadeAction {
     FADE_IN,    // fade in
     FADE_OUT    // fade out
 };
-
-#endif /* ENUMS_H_ */

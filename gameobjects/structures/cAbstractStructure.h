@@ -93,7 +93,6 @@ class cAbstractStructure {
 		// TIMERS that all structures use
 		int TIMER_repair;   // repairing timer
 		int TIMER_flag;     // flag animation
-		int TIMER_fade;     // fading timer
 
 		int TIMER_decay;   // damaging stuff
 		int TIMER_prebuild; // prebuild timer

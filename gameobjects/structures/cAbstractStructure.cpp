@@ -55,7 +55,6 @@ cAbstractStructure::cAbstractStructure() :
     // TIMERS
     TIMER_repair=-1;
     TIMER_flag=-1;
-    TIMER_fade=-1;
 
     TIMER_decay=0;   // damaging stuff
     TIMER_prebuild=0;

@@ -65,9 +65,9 @@ class cLogger {
       cLogger(const cLogger&) = delete;
       cLogger(cLogger&&) = delete;
 
-      std::FILE* file;
+      std::FILE* m_file;
 
-      long startTime; // start time of logging in miliseconds
+      long m_startTime; // start time of logging in miliseconds
 
       bool m_debugMode;
 
