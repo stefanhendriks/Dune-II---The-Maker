@@ -2,6 +2,13 @@
 
 #include "data/gfxdata.h"
 
+#define SMG_SAND      0
+#define SMG_DUNES     2
+#define SMG_ROCK      4
+#define SMG_MOUNTAINS 6
+#define SMG_SPICE     8
+#define SMG_MUCHSPICE 9
+
 // static initialize
 short cSeedMapGenerator::offsets2[SMG_OFFSET2_SIZE] =
 {
@@ -71,12 +78,6 @@ unsigned char cSeedMapGenerator::spicemap2[256] = {
 0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7b,0x7c,0x7d,0x7d,0x7e,0x7e,0x7e,0x7e,0x7e
 };
 
-
-// constructors
-cSeedMapGenerator::cSeedMapGenerator() {
-	// constructor
-	seed = 0;
-}
 
 cSeedMapGenerator::cSeedMapGenerator(unsigned long value) {
 	seed = value;
@@ -382,7 +383,7 @@ void cSeedMapGenerator::balanceMap(cell map[64][64]) {
               r = currln[x + 1];
 
               if (y < 63) rd = map[y + 1][x + 1].w;
-              if (y > 63) ld = map[y + 1][x - 1].w;
+              if (y < 63) ld = map[y + 1][x - 1].w;
           }
 
           if (y > 1 && y < 63) {
@@ -521,11 +522,13 @@ void cSeedMapGenerator::addNoise2(char *matrix)
  */
 cSeedMap cSeedMapGenerator::generateSeedMap() {
 	   /* creates the shape of the map */
+       char matrix[16*17+1];
 	   createMatrix(matrix);
 	   addNoise1(matrix);
 	   addNoise2(matrix);
 
 	   /* copies the matrix on the map and spreads the numbers */
+       cell map[65][64];
 	   copyMatrix(matrix, map);
 	   spreadMatrix(map);
 	   /* makes the map more smooth */
