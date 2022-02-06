@@ -19,7 +19,8 @@ cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
         m_mouseDeployState(new cMouseDeployState(player, this, m_mouse)),
         m_prevTickMouseAtBattleField(false)
 {
-    assert(player);
+    assert(player && "Expected player in cGameControlsContext constructor");
+    assert(mouse && "Expected mouse in cGameControlsContext constructor");
 }
 
 cGameControlsContext::~cGameControlsContext() {
