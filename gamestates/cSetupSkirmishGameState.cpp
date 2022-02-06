@@ -957,7 +957,14 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 }
 
 void cSetupSkirmishGameState::generateRandomMap() {
-    randomMapGenerator.generateRandomMap(iStartingPoints);
+    // x = 160, y = 180
+    draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GENERATING].dat, 160, 180);
+
+    cRandomMapGenerator(map, PreviewMap[0]).generateRandomMap(iStartingPoints, [this](float progress) {
+        const int iProgress = progress * 211;
+        rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+        blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenX, game.m_screenY);
+    });
     spawnWorms = map.isBigMap() ? 4 : 2;
 }
 

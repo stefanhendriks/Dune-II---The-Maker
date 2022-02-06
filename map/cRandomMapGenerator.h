@@ -1,23 +1,17 @@
-/*
- * cRandomMapGenerator.h
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
+#pragma once
 
-#ifndef CRANDOMMAPGENERATOR_H_
-#define CRANDOMMAPGENERATOR_H_
+#include "cMap.h"
+#include "structs.h"
+
+#include <functional>
 
 class cRandomMapGenerator {
-	public:
-		cRandomMapGenerator();
-		virtual ~cRandomMapGenerator();
+  public:
+	cRandomMapGenerator(cMap& map, s_PreviewMap& preview);
 
-		void generateRandomMap(int startingPoints);
+	void generateRandomMap(int startingPoints, std::function<void(float)> onProgress);
 
-	private:
-
-    void drawProgress(float progress) const;
+  private:
+    cMap& m_map;
+    s_PreviewMap& m_preview;
 };
-
-#endif /* CRANDOMMAPGENERATOR_H_ */

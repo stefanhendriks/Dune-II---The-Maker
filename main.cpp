@@ -20,7 +20,6 @@ cGame          				game;
 cStructureUtils 			structureUtils;
 cMap           				map;
 cMapEditor	  				mapEditor;
-cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     	*	structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
