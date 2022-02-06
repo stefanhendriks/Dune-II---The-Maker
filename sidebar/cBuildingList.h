@@ -1,3 +1,14 @@
+#pragma once
+
+#include "cSideBar.h"
+#include "definitions.h"
+
+#include "sidebar/cBuildingListItem.h"
+
+#include <array>
+
+class cItemBuilder;
+
 /**
  *
  * This is a class, representing a list of icons that can be selected and built.
@@ -9,18 +20,6 @@
  * ID of the unpressed icon picture, and also the coordinates for this icon.
  *
  */
-
-#include <array>
-#include "cSideBar.h"
-
-#ifndef CBUILDINGLIST
-#define CBUILDINGLIST
-
-#include "sidebar/cBuildingListItem.h"
-
-// forward declr..
-class cItemBuilder;
-
 class cBuildingList {
 public:
     cBuildingList(eListType listType);
@@ -147,5 +146,3 @@ private:
 
     eListType typeOfList;
 };
-
-#endif

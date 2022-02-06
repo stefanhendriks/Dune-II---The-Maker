@@ -1,6 +1,12 @@
 #pragma once
 
+#include "cBuildingListDrawer.h"
+#include "cTextDrawer.h"
+#include "controls/cKeyboardEvent.h"
 #include "observers/cInputObserver.h"
+#include "sMouseEvent.h"
+
+class cPlayer;
 
 class cSideBarDrawer : cInputObserver {
 	public:
@@ -12,7 +18,7 @@ class cSideBarDrawer : cInputObserver {
 
 		void draw();
 
-		cBuildingListDrawer * getBuildingListDrawer() { return m_buildingListDrawer; }
+		cBuildingListDrawer * getBuildingListDrawer() { return &m_buildingListDrawer; }
 
         void setPlayer(cPlayer *pPlayer);
 
@@ -26,12 +32,12 @@ class cSideBarDrawer : cInputObserver {
 
 	private:
         cPlayer * m_player;
-		cBuildingListDrawer * m_buildingListDrawer;
+		cBuildingListDrawer m_buildingListDrawer;
 		cSideBar * m_sidebar;
 
 		// the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
 		BITMAP *m_candybar;
-		cTextDrawer *m_textDrawer;
+		cTextDrawer m_textDrawer;
 
 		int m_sidebarColor;
 

@@ -5,8 +5,9 @@
  *      Author: Stefan
  */
 
-#ifndef CMOUSETOOLTIP_H_
-#define CMOUSETOOLTIP_H_
+#pragma once
+
+class cPlayer;
 
 class cMouseToolTip {
 	public:
@@ -20,4 +21,3 @@ class cMouseToolTip {
 
 };
 
-#endif /* CMOUSETOOLTIP_H_ */

@@ -1,9 +1,13 @@
-#ifndef CPLACEITDRAWER_H_
-#define CPLACEITDRAWER_H_
+#pragma once
+
+#include "sidebar/cBuildingListItem.h"
+#include "utils/cStructureUtils.h"
+
+class cPlayer;
 
 class cPlaceItDrawer {
 public:
-    cPlaceItDrawer(cPlayer *thePlayer);
+    explicit cPlaceItDrawer(cPlayer *thePlayer);
 
     ~cPlaceItDrawer();
 
@@ -19,5 +23,3 @@ private:
 
     cPlayer *player;
 };
-
-#endif /* CPLACEITDRAWER_H_ */

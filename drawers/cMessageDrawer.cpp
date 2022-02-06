@@ -1,4 +1,9 @@
-#include "../include/d2tmh.h"
+#include "cMessageDrawer.h"
+
+#include "data/gfxinter.h"
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
+#include "sidebar/cSideBar.h"
 
 #include <alfont.h>
 #include <allegro.h>

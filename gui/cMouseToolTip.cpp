@@ -5,7 +5,9 @@
  *      Author: Stefan
  */
 
-#include "../include/d2tmh.h"
+#include "cMouseToolTip.h"
+
+#include <cassert>
 
 cMouseToolTip::cMouseToolTip(cPlayer *thePlayer) {
 	assert(thePlayer);

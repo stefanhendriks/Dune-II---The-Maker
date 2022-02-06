@@ -10,9 +10,15 @@
 
   */
 
-#include "../../include/d2tmh.h"
 #include "cAbstractStructure.h"
 
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gameobjects/particles/cParticle.h"
+#include "map/cMapCamera.h"
+#include "map/cMapEditor.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
 #include <allegro.h>
