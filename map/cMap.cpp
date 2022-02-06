@@ -13,6 +13,7 @@
 #include "../include/d2tmh.h"
 #include "cMap.h"
 
+#include "cMapCamera.h"
 #include "cMapEditor.h"
 
 #include <allegro.h>

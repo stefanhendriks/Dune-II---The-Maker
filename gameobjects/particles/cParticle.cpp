@@ -11,6 +11,8 @@
 
 #include "../../include/d2tmh.h"
 
+#include "map/cMapCamera.h"
+
 #include <allegro.h>
 
 cParticle::cParticle() {

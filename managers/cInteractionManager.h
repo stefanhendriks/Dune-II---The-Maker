@@ -6,20 +6,22 @@
 
 #pragma once
 
-class cPlayer;
-class cSideBar;
+#include "controls/cKeyboardEvent.h"
+#include "observers/cInputObserver.h"
+#include "observers/cScenarioObserver.h"
+#include "sGameEvent.h"
+#include "sMouseEvent.h"
+
 class cMiniMapDrawer;
 class cMouseDrawer;
 class cPlaceItDrawer;
+class cPlayer;
 class cOrderDrawer;
-struct s_MouseEvent;
-
-#include "../observers/cInputObserver.h"
-#include "../observers/cScenarioObserver.h"
+class cSideBar;
 
 class cInteractionManager : public cInputObserver, cScenarioObserver {
 	public:
-		cInteractionManager(cPlayer * thePlayer);
+		explicit cInteractionManager(cPlayer * thePlayer);
 		~cInteractionManager();
 
 		void onNotifyMouseEvent(const s_MouseEvent &mouseEvent) override;

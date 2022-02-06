@@ -1,11 +1,16 @@
-#ifndef D2TM_CSETUPSKIRMISHGAMESTATE_H
-#define D2TM_CSETUPSKIRMISHGAMESTATE_H
+#pragma once
 
-class cGame;
-
-#include <drawers/cTextDrawer.h>
-#include "gui/cGuiButton.h"
 #include "cGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "definitions.h"
+#include "drawers/cTextDrawer.h"
+#include "gui/cGuiButton.h"
+#include "sMouseEvent.h"
+#include "utils/cRectangle.h"
+
+class BITMAP;
+class cGame;
+class cMouse;
 
 struct s_SkirmishPlayer {
     bool bHuman;
@@ -19,7 +24,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishGameState : public cGameState {
 
 public:
-    cSetupSkirmishGameState(cGame& theGame);
+    explicit cSetupSkirmishGameState(cGame& theGame);
     ~cSetupSkirmishGameState() override;
 
     void thinkFast() override;
@@ -133,5 +138,3 @@ private:
 
     void onMouseLeftButtonClickedAtPlayerList();
 };
-
-#endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
