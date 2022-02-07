@@ -13,6 +13,7 @@
 #include "include/d2tmh.h"
 
 #include "utils/cLog.h"
+#include "utils/cSeedMapGenerator.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
@@ -1026,21 +1027,18 @@ void INI_Load_seed(int seed) {
 
     logbook(fmt::format("Generating seed map with seed {}.", seed));
 
-    cSeedMapGenerator *seedGenerator = new cSeedMapGenerator(seed);
+    auto seedGenerator = cSeedMapGenerator(seed);
 
-    cSeedMap *seedMap = seedGenerator->generateSeedMap();
+    auto seedMap = seedGenerator.generateSeedMap();
     logbook("Seedmap generated");
 
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
-            int type = seedMap->getCellType(mapX, mapY);
+            int type = seedMap.getCellType(mapX, mapY);
             int iCell = map.makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
-
-    delete seedMap;
-    delete seedGenerator;
 
     logbook("Seedmap converted into D2TM map.");
 }

@@ -1,25 +1,28 @@
-#include "../include/d2tmh.h"
+#include "cSeedMap.h"
 
-cSeedMap::cSeedMap() {
-	memset(map, TERRAIN_SAND, sizeof(map));
+#include "data/gfxdata.h"
+
+#include <cassert>
+
+cSeedMap::cSeedMap() : map(kMapWidth*kMapHeight, TERRAIN_SAND) {
 }
 
 void cSeedMap::setCellType(int x, int y, int type) {
 	assert(x > -1);
-	assert(x < 64);
+	assert(x < kMapWidth);
 	assert(y > -1);
-	assert(y < 64);
+	assert(y < kMapHeight);
 	assert(type > -1);
 	assert(type < TERRAIN_WALL);
-	map[x][y] = type;
+	map[x + kMapWidth * y] = type;
 }
 
 int cSeedMap::getCellType(int x, int y) {
 	assert(x > -1);
-	assert(x < 64);
+	assert(x < kMapWidth);
 	assert(y > -1);
-	assert(y < 64);
-	return map[x][y];
+	assert(y < kMapHeight);
+	return map[x + kMapWidth * y];
 }
 
 char cSeedMap::getCellTypeCharacter(int x, int y) {
