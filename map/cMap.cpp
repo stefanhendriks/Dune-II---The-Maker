@@ -877,7 +877,7 @@ int cMap::getCellWithMapDimensions(int x, int y) {
     return (y * mapWidth) + x;
 }
 
-bool cMap::isValidCell(int c) {
+bool cMap::isValidCell(int c) const {
     return !(c < 0 || c >= maxCells);
 }
 

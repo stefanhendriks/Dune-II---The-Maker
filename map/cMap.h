@@ -484,11 +484,11 @@ public:
      * @param c
      * @return
      */
-    bool isValidCell(int c);
+    bool isValidCell(int c) const;
 
     int getRandomCell();
 
-    int getMaxCells() {
+    int getMaxCells() const {
         return maxCells;
     }
 

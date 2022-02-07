@@ -6,8 +6,6 @@
 #include <ctime>
 #include <system_error>
 
-extern bool	bDoDebug;
-
 namespace {
 
 std::string getLogLevelString(eLogLevel level) {
@@ -130,11 +128,9 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId) {
-    if (level == LOG_TRACE) {
-        if (!m_debugMode) {
-            // trace level is only in debug mode
-            return;
-        }
+    if (level == LOG_TRACE && !m_debugMode) {
+        // trace level is only in debug mode
+        return;
     }
 
     auto diffTime = getTimeInMilisDifference();
@@ -169,12 +165,12 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 
     logline += event;
 
-    fprintf(file, "%s\n", logline.c_str()); // print the text into the file
-    fflush(file);
+    fprintf(m_file, "%s\n", logline.c_str()); // print the text into the file
+    fflush(m_file);
 }
 
 void cLogger::logCommentLine(const std::string& txt) {
-    fprintf(file, "\\\\%s\n", txt.c_str()); // print the text into the file
+    fprintf(m_file, "\\\\%s\n", txt.c_str()); // print the text into the file
 }
 
 void cLogger::logHeader(const std::string& txt) {
@@ -187,8 +183,8 @@ void cLogger::logHeader(const std::string& txt) {
 }
 
 
-cLogger::cLogger() : file(std::fopen("log.txt", "wt")), startTime(std::clock()) {
-    if (file == nullptr) {
+cLogger::cLogger() : m_file(std::fopen("log.txt", "wt")), m_startTime(std::clock()), m_debugMode(false) {
+    if (m_file == nullptr) {
         // This translates the POSIX error number into a C++ exception
         throw std::system_error(errno, std::generic_category());
     }
@@ -196,11 +192,11 @@ cLogger::cLogger() : file(std::fopen("log.txt", "wt")), startTime(std::clock()) 
 
 cLogger::~cLogger() {
     log(eLogLevel::LOG_INFO, eLogComponent::COMP_NONE, "Logger shut down", "Thanks for playing.");
-    fclose(file);
+    fclose(m_file);
 }
 
 /* From 1970-01-01T00:00:00 */
 long cLogger::getTimeInMilisDifference() const {
-    long time_taken_millis = (std::clock() - startTime) * 1E3 / CLOCKS_PER_SEC;
+    long time_taken_millis = (std::clock() - m_startTime) * 1E3 / CLOCKS_PER_SEC;
     return time_taken_millis;
 }
