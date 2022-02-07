@@ -349,6 +349,7 @@ void cUnit::createExplosionParticle() {
                     int id = idOfStructureAtCell;
 
                     cAbstractStructure *pStructure = structure[id];
+                    assert(pStructure);
                     if (pStructure->getHitPoints() > 0) {
 
                         int iDamage = 150 + rnd(100);
@@ -356,8 +357,7 @@ void cUnit::createExplosionParticle() {
 
                         int iChance = 10;
 
-                        if (pStructure &&
-                            pStructure->getHitPoints() < (sStructureInfo[pStructure->getType()].hp / 2)) {
+                        if (pStructure->getHitPoints() < (sStructureInfo[pStructure->getType()].hp / 2)) {
                             iChance = 30;
                         }
 

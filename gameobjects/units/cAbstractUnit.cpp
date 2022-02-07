@@ -1,18 +1,13 @@
-#include "../../include/d2tmh.h"
+#include "cAbstractUnit.h"
 
-/**
-	Constructor
-**/
-cAbstractUnit::cAbstractUnit() {
-	bSelected = false;
-	fExperience = 0.0f;
-	iCellX = 0;
-	iCellY = 0;
-	iOffsetX = 0;
-	iOffsetY = 0;
-}
-
-
-void cAbstractUnit::think () {
-
+cAbstractUnit::cAbstractUnit()
+	    : fExperience(0.0f)
+	    , bSelected(false)
+        , iCell(-1)
+	    , iPlayer(-1)
+	    , iGroup(-1)
+	    , iCellX(0)
+	    , iCellY(0)
+	    , iOffsetX(0)
+	    , iOffsetY(0) {
 }

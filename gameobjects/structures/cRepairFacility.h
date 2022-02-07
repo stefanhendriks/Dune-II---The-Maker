@@ -11,8 +11,6 @@ private:
 public:
     cRepairFacility();
 
-    ~cRepairFacility();
-
     // overloaded functions    
     void thinkFast() override;
 

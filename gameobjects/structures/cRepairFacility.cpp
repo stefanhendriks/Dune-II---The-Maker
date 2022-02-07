@@ -2,20 +2,14 @@
 
 
 // Constructor
-cRepairFacility::cRepairFacility() {
-
-    // other variables (class specific)
-    TIMER_repairunit = 0;
+cRepairFacility::cRepairFacility()
+        : TIMER_repairunit(0)
+        , animDir(ANIM_NONE) {
 }
 
 int cRepairFacility::getType() const {
     return REPAIR;
 }
-
-cRepairFacility::~cRepairFacility() {
-
-}
-
 
 void cRepairFacility::thinkFast() {
 
