@@ -2,6 +2,13 @@
 
 #include "data/gfxdata.h"
 
+#define SMG_SAND      0
+#define SMG_DUNES     2
+#define SMG_ROCK      4
+#define SMG_MOUNTAINS 6
+#define SMG_SPICE     8
+#define SMG_MUCHSPICE 9
+
 // static initialize
 short cSeedMapGenerator::offsets2[SMG_OFFSET2_SIZE] =
 {
@@ -72,18 +79,12 @@ unsigned char cSeedMapGenerator::spicemap2[256] = {
 };
 
 
-// constructors
-cSeedMapGenerator::cSeedMapGenerator() {
-	// constructor
-	seed = 0;
-}
-
 cSeedMapGenerator::cSeedMapGenerator(unsigned long value) {
 	seed = value;
 }
 
 short cSeedMapGenerator::random() {
-   unsigned char *s = (unsigned char *)&seed, a, b, x, y;
+   unsigned char * s = reinterpret_cast<unsigned char *>(&seed), a, b, x, y;
 
    a = *(s+0);
    x = (a & 0x2) >> 1;
@@ -382,7 +383,7 @@ void cSeedMapGenerator::balanceMap(cell map[64][64]) {
               r = currln[x + 1];
 
               if (y < 63) rd = map[y + 1][x + 1].w;
-              if (y > 63) ld = map[y + 1][x - 1].w;
+              if (y < 63) ld = map[y + 1][x - 1].w;
           }
 
           if (y > 1 && y < 63) {
@@ -519,13 +520,15 @@ void cSeedMapGenerator::addNoise2(char *matrix)
  *
  * @return
  */
-cSeedMap *cSeedMapGenerator::generateSeedMap() {
+cSeedMap cSeedMapGenerator::generateSeedMap() {
 	   /* creates the shape of the map */
+       char matrix[16*17+1];
 	   createMatrix(matrix);
 	   addNoise1(matrix);
 	   addNoise2(matrix);
 
 	   /* copies the matrix on the map and spreads the numbers */
+       cell map[65][64];
 	   copyMatrix(matrix, map);
 	   spreadMatrix(map);
 	   /* makes the map more smooth */
@@ -537,10 +540,10 @@ cSeedMap *cSeedMapGenerator::generateSeedMap() {
 //	   /* prints map on the screen */
 //	   printMap(map);
 
-	   cSeedMap * seedmap = new cSeedMap();
+	   cSeedMap seedmap;
 
-	   for (int x = 0; x < 64; x++) {
-		   for (int y = 0; y < 64; y++) {
+	   for (int y = 0; y < cSeedMap::kMapHeight; y++) {
+    	   for (int x = 0; x < cSeedMap::kMapWidth; x++) {
 			   // read out the map, and convert it into the seedmap array
 			   int type = map[y][x].w; // w = type
 			   int d2tmType = TERRAIN_SAND;
@@ -554,7 +557,7 @@ cSeedMap *cSeedMapGenerator::generateSeedMap() {
 				   case SMG_MUCHSPICE: d2tmType = TERRAIN_SPICEHILL; break;
 				}
 
-			   seedmap->setCellType(x, y, d2tmType);
+			   seedmap.setCellType(x, y, d2tmType);
 		   }
 	   }
 

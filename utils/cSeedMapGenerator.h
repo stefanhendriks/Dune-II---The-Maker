@@ -7,13 +7,6 @@ struct cell
    short w, a, b;
 };
 
-#define SMG_SAND      0
-#define SMG_DUNES     2
-#define SMG_ROCK      4
-#define SMG_MOUNTAINS 6
-#define SMG_SPICE     8
-#define SMG_MUCHSPICE 9
-
 // needed for offset2
 #define  SMG_A  0,0
 #define  SMG_B  2,0
@@ -50,10 +43,6 @@ private:
 	static unsigned char spicemap[256];
 	static unsigned char spicemap2[256];
 
-	char matrix[16*17+1];
-	cell map[65][64];
-	short compact[64][64];
-
 	// methods needed to generate seedmap
 	void convertMap (cell map[64][64], short *iconmap);
 	void addSpice(cell map[64][64]);
@@ -68,8 +57,7 @@ private:
 	void addSpiceAt(cell map[64][64],short x,short y);
 
 public:
-	cSeedMapGenerator();
 	explicit cSeedMapGenerator(unsigned long value);
 
-	cSeedMap *generateSeedMap();
+	cSeedMap generateSeedMap();
 };
