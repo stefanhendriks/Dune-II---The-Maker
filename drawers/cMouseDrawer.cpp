@@ -175,8 +175,8 @@ void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructur
 		textWriter.writeWithOneInteger("Sight : %d", theStructure->getSight());
 		textWriter.writeWithOneInteger("Range : %d", theStructure->getRange());
 	} else {
-		textWriter.write("Range : Unknown");
 		textWriter.write("Sight : Unknown");
+		textWriter.write("Range : Unknown");
 	}
 }
 
