@@ -33,7 +33,7 @@ namespace brains {
         }
 
         char msg[255];
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - found %d idle unit(s) to attack with.",
+        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - found %ld idle unit(s) to attack with.",
                 player->getId(), ids.size());
         logbook(msg);
 
