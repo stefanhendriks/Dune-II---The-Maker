@@ -4,7 +4,7 @@
 #include <allegro.h>
 
 cDrawManager::cDrawManager(cPlayer * thePlayer) : player(thePlayer) {
-	assert(&thePlayer);
+	//assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer(thePlayer);
 	orderDrawer = new cOrderDrawer(thePlayer);
