@@ -45,14 +45,14 @@ target_include_directories(alfont
 
 target_link_libraries(alfont
   PUBLIC
-    allegro
+    alleg
 )
 
 # Compile & link options are taken from the Makefile. 
 target_compile_options(alfont
   PRIVATE
     "-O2"
-    "-march=pentium"
+#    "-march=pentium"
     "-fomit-frame-pointer"
     "-finline-functions"
     "-ffast-math"

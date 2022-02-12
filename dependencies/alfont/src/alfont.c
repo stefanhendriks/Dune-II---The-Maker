@@ -17,6 +17,9 @@
 #include <alfont.h>
 #include <ft2build.h>
 
+//uncomment this to compile on linux
+#define ALFONT_LINUX 1
+
 #ifdef ALFONT_DOS	//run in DOS
 #include <iconv.h>
 #else			//run in Other
@@ -24,6 +27,8 @@
 #endif
 #ifdef ALFONT_LINUX	//run in LINUX
 #include <wchar.h>
+#include <malloc.h>
+#define _msize malloc_usable_size
 #endif
 
 #include FT_FREETYPE_H
