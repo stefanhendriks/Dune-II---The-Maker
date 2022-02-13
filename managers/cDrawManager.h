@@ -90,8 +90,6 @@ private:
 
     int m_sidebarColor;
 
-    // TODO: unitDrawer
-
     // TODO: bullet/projectile drawer
 
     cPlayer *m_player;
