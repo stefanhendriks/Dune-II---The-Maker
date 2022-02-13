@@ -1,66 +1,69 @@
-#include "../include/d2tmh.h"
 #include "cDrawManager.h"
+
+#include "controls/cGameControlsContext.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
 
-cDrawManager::cDrawManager(cPlayer * thePlayer) : player(thePlayer) {
-	assert(&thePlayer);
-	creditsDrawer = new CreditsDrawer(thePlayer);
-	sidebarDrawer = new cSideBarDrawer(thePlayer);
-	orderDrawer = new cOrderDrawer(thePlayer);
-	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
-	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
-	particleDrawer = new cParticleDrawer();
-	messageDrawer = new cMessageDrawer();
-	placeitDrawer = new cPlaceItDrawer(thePlayer);
-	structureDrawer = new cStructureDrawer();
-	mouseDrawer = new cMouseDrawer(thePlayer);
-    topBarBmp = nullptr;
-    optionsBar = nullptr;
-    sidebarColor = makecol(214, 149, 20);
-    textDrawer = new cTextDrawer(game_font);
+#include <cassert>
+
+cDrawManager::cDrawManager(cPlayer * thePlayer)
+        : m_sidebarDrawer(thePlayer)
+        , m_creditsDrawer(thePlayer)
+        , m_orderDrawer(thePlayer)
+        , m_mapDrawer(&map, thePlayer, mapCamera)
+        , miniMapDrawer(&map, thePlayer, mapCamera)
+        , m_particleDrawer()
+        , m_messageDrawer()
+        , m_placeitDrawer(thePlayer)
+        , m_structureDrawer()
+        , m_mouseDrawer(thePlayer)
+        , m_optionsBar(nullptr)
+        , m_sidebarColor(makecol(214, 149, 20))
+        , m_player(thePlayer)
+        , m_topBarBmp(nullptr)
+        , m_textDrawer(game_font)
+{
+	assert(thePlayer);
 }
 
 cDrawManager::~cDrawManager() {
-    delete creditsDrawer;
-    delete sidebarDrawer;
-    delete orderDrawer;
-	delete mapDrawer;
-	delete miniMapDrawer;
-	delete particleDrawer;
-	delete messageDrawer;
-	delete placeitDrawer;
-	delete structureDrawer;
-	delete mouseDrawer;
-    if (optionsBar) {
-        destroy_bitmap(optionsBar);
+    if (m_optionsBar) {
+        destroy_bitmap(m_optionsBar);
     }
-    delete textDrawer;
+    if (m_topBarBmp) {
+        destroy_bitmap(m_topBarBmp);
+    }
 }
 
 void cDrawManager::drawCombatState() {
     // MAP
-	assert(mapDrawer);
 	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenY);
-    mapDrawer->drawTerrain();
+    m_mapDrawer.drawTerrain();
 
-    structureDrawer->drawStructuresFirstLayer();
+    m_structureDrawer.drawStructuresFirstLayer();
 
 	// draw layer 1 (beneath units, on top of terrain)
-    particleDrawer->determineParticlesToDraw();
-	particleDrawer->drawLowerLayer();
+    m_particleDrawer.determineParticlesToDraw();
+	m_particleDrawer.drawLowerLayer();
 
 	map.draw_units();
 
 	map.draw_bullets();
 
-	structureDrawer->drawStructuresSecondLayer();
-	structureDrawer->drawStructuresHealthBars();
+	m_structureDrawer.drawStructuresSecondLayer();
+	m_structureDrawer.drawStructuresHealthBars();
 
 	map.draw_units_2nd();
 
-    particleDrawer->drawTopLayer();
-	mapDrawer->drawShroud();
+    m_particleDrawer.drawTopLayer();
+	m_mapDrawer.drawShroud();
 
 	drawRallyPoint();
 
@@ -87,7 +90,7 @@ void cDrawManager::drawCombatState() {
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
-        particleDrawer->drawDebugInfo();
+        m_particleDrawer.drawDebugInfo();
     }
 }
 
@@ -125,15 +128,14 @@ void cDrawManager::drawDebugInfoUsages() const {
 
     int startY = 74;
     int height = 14;
-    textDrawer->drawTextWithTwoIntegers(0, startY, "Units %d/%d", unitsUsed, MAX_UNITS);
-    textDrawer->drawTextWithTwoIntegers(0, startY + 1*height, "Structures %d/%d", structuresUsed, MAX_STRUCTURES);
-    textDrawer->drawTextWithTwoIntegers(0, startY + 2*height, "Bullets %d/%d", bulletsUsed, MAX_BULLETS);
-    textDrawer->drawTextWithTwoIntegers(0, startY + 3*height, "Particles %d/%d", particlesUsed, MAX_PARTICLES);
+    m_textDrawer.drawTextWithTwoIntegers(0, startY, "Units %d/%d", unitsUsed, MAX_UNITS);
+    m_textDrawer.drawTextWithTwoIntegers(0, startY + 1*height, "Structures %d/%d", structuresUsed, MAX_STRUCTURES);
+    m_textDrawer.drawTextWithTwoIntegers(0, startY + 2*height, "Bullets %d/%d", bulletsUsed, MAX_BULLETS);
+    m_textDrawer.drawTextWithTwoIntegers(0, startY + 3*height, "Particles %d/%d", particlesUsed, MAX_PARTICLES);
 }
 
 void cDrawManager::drawCredits() {
-	assert(creditsDrawer);
-	creditsDrawer->draw();
+	m_creditsDrawer.draw();
 }
 
 void cDrawManager::drawRallyPoint() {
@@ -169,8 +171,8 @@ void cDrawManager::drawRallyPoint() {
 
 void cDrawManager::drawSidebar() {
     allegroDrawer->setClippingFor(bmp_screen, game.m_screenX - cSideBar::SidebarWidth, 0, game.m_screenX, game.m_screenY);
-    sidebarDrawer->draw();
-    miniMapDrawer->draw();
+    m_sidebarDrawer.draw();
+    miniMapDrawer.draw();
     allegroDrawer->resetClippingFor(bmp_screen);
 }
 
@@ -179,19 +181,17 @@ void cDrawManager::drawSidebar() {
  */
 void cDrawManager::drawStructurePlacing() {
     // TODO: move drawing this into mouse state draw function ??
-    if (player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) return;
-    if (!player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
+    if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) return;
+    if (!m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) return;
 
-    cBuildingListItem *itemToPlace = player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
+    cBuildingListItem *itemToPlace = m_player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
 
-    assert(placeitDrawer);
-    placeitDrawer->draw(itemToPlace, player->getGameControlsContext()->getMouseCell());
+    m_placeitDrawer.draw(itemToPlace, m_player->getGameControlsContext()->getMouseCell());
 }
 
 void cDrawManager::drawMessage() {
-	assert(messageDrawer);
-	messageDrawer->draw();
+	m_messageDrawer.draw();
 
 	// TODO: replace messageDrawer with drawMessageBar?
 	// messageBarDrawer->drawMessageBar();
@@ -200,32 +200,31 @@ void cDrawManager::drawMessage() {
 void cDrawManager::drawCombatMouse() {
     drawMouse();
 
-    cGameControlsContext *context = player->getGameControlsContext();
+    cGameControlsContext *context = m_player->getGameControlsContext();
     if (context->shouldDrawToolTip()) {
-        mouseDrawer->drawToolTip();
+        m_mouseDrawer.drawToolTip();
     }
 }
 
 void cDrawManager::drawMouse() {
-	assert(mouseDrawer);
     select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
-	mouseDrawer->draw();
+	m_mouseDrawer.draw();
 }
 
 void cDrawManager::drawTopBarBackground() {
-    if (topBarBmp == nullptr) {
-        topBarBmp = create_bitmap(game.m_screenX, 30);
+    if (m_topBarBmp == nullptr) {
+        m_topBarBmp = create_bitmap(game.m_screenX, 30);
         BITMAP *topbarPiece = (BITMAP *)gfxinter[BMP_TOPBAR_BACKGROUND].dat;
         for (int x = 0; x < game.m_screenX; x+= topbarPiece->w) {
-            allegroDrawer->drawSprite(topBarBmp, topbarPiece, x, 0);
+            allegroDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
         }
 
-        set_palette(player->pal);
+        set_palette(m_player->pal);
 
-        allegroDrawer->drawSprite(topBarBmp, (BITMAP *)gfxinter[BTN_OPTIONS].dat, 1, 0);
+        allegroDrawer->drawSprite(m_topBarBmp, (BITMAP *)gfxinter[BTN_OPTIONS].dat, 1, 0);
     }
 
-    allegroDrawer->drawSprite(bmp_screen, topBarBmp, 0, 0);
+    allegroDrawer->drawSprite(bmp_screen, m_topBarBmp, 0, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -234,60 +233,54 @@ void cDrawManager::drawTopBarBackground() {
     }
 }
 
-void cDrawManager::destroy() {
-    if (topBarBmp != nullptr) {
-        destroy_bitmap(topBarBmp);
-    }
-}
-
 void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
-    this->player = playerToDraw;
-    this->creditsDrawer->setPlayer(playerToDraw);
-    this->sidebarDrawer->setPlayer(playerToDraw);
-    this->orderDrawer->setPlayer(playerToDraw);
-    this->miniMapDrawer->setPlayer(playerToDraw);
-    this->mapDrawer->setPlayer(playerToDraw);
+    m_player = playerToDraw;
+    m_creditsDrawer.setPlayer(playerToDraw);
+    m_sidebarDrawer.setPlayer(playerToDraw);
+    m_orderDrawer.setPlayer(playerToDraw);
+    miniMapDrawer.setPlayer(playerToDraw);
+    m_mapDrawer.setPlayer(playerToDraw);
 }
 
 void cDrawManager::drawOptionBar() {
     // upper bar
     rectfill(bmp_screen, 0, 0, game.m_screenX, cSideBar::TopBarHeight, makecol(0, 0, 0));
-    if (optionsBar == nullptr) {
-        optionsBar = create_bitmap(game.m_screenX, 40);
-        clear_to_color(optionsBar, sidebarColor);
+    if (m_optionsBar == nullptr) {
+        m_optionsBar = create_bitmap(game.m_screenX, 40);
+        clear_to_color(m_optionsBar, m_sidebarColor);
 
         for (int w = 0; w < (game.m_screenX + 800); w += 789) {
-            draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
+            draw_sprite(m_optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
         }
     }
 
-    draw_sprite(bmp_screen, optionsBar, 0, 0);
+    draw_sprite(bmp_screen, m_optionsBar, 0, 0);
 }
 
 void cDrawManager::drawNotifications() {
-    std::vector<cPlayerNotification> &notifications = player->getNotifications();
+    std::vector<cPlayerNotification> &notifications = m_player->getNotifications();
 //    int y = cSideBar::TopBarHeight + 14; // 12 pixels
     int y = game.m_screenY - 11;
     for (auto &notification : notifications) {
-        textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
+        m_textDrawer.drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;
     }
 }
 
 void cDrawManager::think() {
-    miniMapDrawer->think();
+    miniMapDrawer.think();
 }
 
 void cDrawManager::init() {
-    miniMapDrawer->init();
+    miniMapDrawer.init();
 }
 
 void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &event) {
-    sidebarDrawer->onNotifyMouseEvent(event);
+    m_sidebarDrawer.onNotifyMouseEvent(event);
 }
 
 void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
-    sidebarDrawer->onNotifyKeyboardEvent(event);
+    m_sidebarDrawer.onNotifyKeyboardEvent(event);
 
     switch (event.eventType) {
         case eKeyEventType::HOLD:
@@ -304,10 +297,10 @@ void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
 void cDrawManager::onKeyDown(const cKeyboardEvent &event) {
     if (game.isDebugMode()) {
         if (event.hasKeys(KEY_TAB, KEY_D)) {
-            mapDrawer->setDrawWithoutShroudTiles(true);
+            m_mapDrawer.setDrawWithoutShroudTiles(true);
         }
         if (event.hasKey(KEY_G)) {
-            mapDrawer->setDrawGrid(true);
+            m_mapDrawer.setDrawGrid(true);
         }
     }
 }
@@ -317,10 +310,10 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
         // one of these we're pressed, that's enough info to revert back as it breaks the
         // mandatory 'both keys must be pressed' state:
         if (event.hasEitherKey(KEY_TAB, KEY_D)) {
-            mapDrawer->setDrawWithoutShroudTiles(false);
+            m_mapDrawer.setDrawWithoutShroudTiles(false);
         }
         if (event.hasKey(KEY_G)) {
-            mapDrawer->setDrawGrid(false);
+            m_mapDrawer.setDrawGrid(false);
         }
     }
 }

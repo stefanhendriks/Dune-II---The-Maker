@@ -11,8 +11,12 @@
  *      Author: Stefan
  */
 
-#ifndef CSIDEBAR_H_
-#define CSIDEBAR_H_
+#pragma once
+
+#include "cBuildingList.h"
+#include "cBuildingListItem.h"
+#include "sGameEvent.h"
+#include "sMouseEvent.h"
 
 class cPlayer;
 
@@ -46,7 +50,7 @@ class cPlayer;
 class cSideBar {
 
 public:
-    cSideBar(cPlayer *thePlayer);
+    explicit cSideBar(cPlayer *thePlayer);
 
     ~cSideBar();
 
@@ -122,5 +126,3 @@ private:
 
     void onListItemReadyToPlaceEvent(const s_GameEvent &event) const;
 };
-
-#endif /* CSIDEBAR_H_ */

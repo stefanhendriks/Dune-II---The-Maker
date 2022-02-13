@@ -5,8 +5,13 @@
  *      Author: Stefan
  */
 
-#ifndef CMINIMAPDRAWER_H_
-#define CMINIMAPDRAWER_H_
+#pragma once
+
+#include "map/cMap.h"
+#include "map/cMapCamera.h"
+#include "utils/cRectangle.h"
+
+class cPlayer;
 
 // the BuildingListItemState
 enum eMinimapStatus {
@@ -72,5 +77,3 @@ protected:
 
         bool isBigMap;
 };
-
-#endif /* CMINIMAPDRAWER_H_ */

@@ -3,6 +3,8 @@
 #include "observers/cInputObserver.h"
 #include "utils/cPoint.h"
 
+#include <string>
+
 class cRectangle;
 
 class cMouse {

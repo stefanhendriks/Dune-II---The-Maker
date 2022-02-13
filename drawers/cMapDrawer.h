@@ -1,5 +1,10 @@
-#ifndef CMAPDRAWER_H_
-#define CMAPDRAWER_H_
+#pragma once
+
+#include "map/cMap.h"
+#include "map/cMapCamera.h"
+
+class BITMAP;
+class cPlayer;
 
 class cMapDrawer {
 	public:
@@ -32,5 +37,3 @@ class cMapDrawer {
 
         void drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY);
 };
-
-#endif /* CMAPDRAWER_H_ */

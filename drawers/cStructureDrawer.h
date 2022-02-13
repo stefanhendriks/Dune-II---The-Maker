@@ -7,15 +7,13 @@
  *  Responsible for drawing structures
  *
  */
+#pragma once
 
-#ifndef CSTRUCTUREDRAWER_H_
-#define CSTRUCTUREDRAWER_H_
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "utils/cStructureUtils.h"
 
 class cStructureDrawer {
 	public:
-		cStructureDrawer();
-		~cStructureDrawer();
-
 		void drawStructuresFirstLayer();
 		void drawStructuresSecondLayer();
 		void drawStructuresHealthBars();
@@ -41,5 +39,3 @@ class cStructureDrawer {
 
     void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;
 };
-
-#endif /* CSTRUCTUREDRAWER_H_ */

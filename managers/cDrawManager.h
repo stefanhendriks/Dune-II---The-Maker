@@ -1,5 +1,23 @@
-#ifndef CDRAWMANAGER_H_
-#define CDRAWMANAGER_H_
+#pragma once
+
+#include "controls/cKeyboardEvent.h"
+#include "drawers/cBuildingListDrawer.h"
+#include "drawers/cMapDrawer.h"
+#include "drawers/cMessageDrawer.h"
+#include "drawers/cMiniMapDrawer.h"
+#include "drawers/cMouseDrawer.h"
+#include "drawers/cOrderDrawer.h"
+#include "drawers/cParticleDrawer.h"
+#include "drawers/cPlaceItDrawer.h"
+#include "drawers/CreditsDrawer.h"
+#include "drawers/cSideBarDrawer.h"
+#include "drawers/cStructureDrawer.h"
+
+#include "observers/cInputObserver.h"
+#include "sMouseEvent.h"
+
+class cPlayer;
+class BITMAP;
 
 class cDrawManager : cInputObserver {
 
@@ -12,25 +30,23 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
+    CreditsDrawer *getCreditsDrawer() { return &m_creditsDrawer; }
 
-    cMessageDrawer *getMessageDrawer() { return messageDrawer; }
+    cMessageDrawer *getMessageDrawer() { return &m_messageDrawer; }
 
-    cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
+    cMiniMapDrawer *getMiniMapDrawer() { return &miniMapDrawer; }
 
-    cOrderDrawer *getOrderDrawer() { return orderDrawer; }
+    cOrderDrawer *getOrderDrawer() { return &m_orderDrawer; }
 
-    cMouseDrawer *getMouseDrawer() { return mouseDrawer; }
+    cMouseDrawer *getMouseDrawer() { return &m_mouseDrawer; }
 
-    cPlaceItDrawer *getPlaceItDrawer() { return placeitDrawer; }
+    cPlaceItDrawer *getPlaceItDrawer() { return &m_placeitDrawer; }
 
-    cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
+    cBuildingListDrawer *getBuildingListDrawer() { return m_sidebarDrawer.getBuildingListDrawer(); }
 
     void drawMouse();
 
     void drawCombatMouse();
-
-    void destroy();
 
     void setPlayerToDraw(cPlayer *playerToDraw);
 
@@ -59,34 +75,30 @@ private:
     void drawNotifications();
 
     // Properties:
-    cSideBarDrawer *sidebarDrawer;
-    CreditsDrawer *creditsDrawer;
-    cOrderDrawer *orderDrawer;
-    cMapDrawer *mapDrawer;
-    cMiniMapDrawer *miniMapDrawer;
-    cParticleDrawer *particleDrawer;
-    cMessageDrawer *messageDrawer;
-    cPlaceItDrawer *placeitDrawer;
-    cStructureDrawer *structureDrawer;
-    cMouseDrawer *mouseDrawer;
+    cSideBarDrawer m_sidebarDrawer;
+    CreditsDrawer m_creditsDrawer;
+    cOrderDrawer m_orderDrawer;
+    cMapDrawer m_mapDrawer;
+    cMiniMapDrawer miniMapDrawer;
+    cParticleDrawer m_particleDrawer;
+    cMessageDrawer m_messageDrawer;
+    cPlaceItDrawer m_placeitDrawer;
+    cStructureDrawer m_structureDrawer;
+    cMouseDrawer m_mouseDrawer;
 
-    BITMAP *optionsBar;
+    BITMAP *m_optionsBar;
 
-    int sidebarColor;
-
-    // TODO: unitDrawer
+    int m_sidebarColor;
 
     // TODO: bullet/projectile drawer
 
-    cPlayer *player;
+    cPlayer *m_player;
 
-    BITMAP *topBarBmp;
+    BITMAP *m_topBarBmp;
 
-    cTextDrawer *textDrawer;
+    cTextDrawer m_textDrawer;
 
     void onKeyDown(const cKeyboardEvent &event);
 
     void onKeyPressed(const cKeyboardEvent &event);
 };
-
-#endif
