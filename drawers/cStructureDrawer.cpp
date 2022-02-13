@@ -185,7 +185,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
 	}
 	assert(iHeadFacing > -1);
 
-	structure->setFrame(convert_angle(iHeadFacing));
+	structure->setFrame(convertAngleToDrawIndex(iHeadFacing));
 
     // :-/
     if (game.isDebugMode()) {
@@ -211,8 +211,8 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
             float degreesInverted = invertDegrees(degrees);
 
-            int faceAngle = face_angle(degrees);
-            int frame = convert_angle(faceAngle);
+            int faceAngle = faceAngle(degrees);
+            int frame = convertAngleToDrawIndex(faceAngle);
 
             pMouse->addDebugLine(fmt::format("degrees = {}, inverted = {}, faceAngle = {}, frame = {}", degrees, degreesInverted, faceAngle, frame));
 

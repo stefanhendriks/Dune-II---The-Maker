@@ -58,7 +58,7 @@ void cGunTurret::think_attack() {
         int iTargetY = map.getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
-        int f = face_angle(d); // get the angle
+        int f = faceAngle(d); // get the angle
 
         // set facing
         iShouldHeadFacing = f;
@@ -93,7 +93,7 @@ void cGunTurret::think_attack() {
                         int half = 16;
                         int iShootX = pos_x() + half;
                         int iShootY = pos_y() + half;
-                        int bmp_head = convert_angle(iHeadFacing);
+                        int bmp_head = convertAngleToDrawIndex(iHeadFacing);
                         cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
                     }
                 }
