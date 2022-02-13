@@ -1,16 +1,8 @@
-#include "../include/d2tmh.h"
 #include "cParticleDrawer.h"
 
-
-cParticleDrawer::cParticleDrawer() {
-    particlesTopLayer = std::vector<int>();
-    particlesLowerLayer = std::vector<int>();
-}
-
-cParticleDrawer::~cParticleDrawer() {
-    particlesLowerLayer.clear();
-    particlesTopLayer.clear();
-}
+#include "d2tmc.h"
+#include "drawers/cTextDrawer.h"
+#include "gameobjects/particles/cParticle.h"
 
 void cParticleDrawer::determineParticlesToDraw() {
     particlesLowerLayer.clear();

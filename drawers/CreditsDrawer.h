@@ -5,14 +5,16 @@
  *      Author: Stefan
  */
 
-#ifndef CREDITSDRAWER_H_
-#define CREDITSDRAWER_H_
+#pragma once
+
+class cPlayer;
+class BITMAP;
 
 // the credits drawer takes state of a player, and draws the credits accordingly
 
 class CreditsDrawer {
 public:
-	CreditsDrawer(cPlayer * thePlayer);
+	explicit CreditsDrawer(cPlayer * thePlayer);
 	virtual ~CreditsDrawer();
 
 	void think(); // set animation counters and such, time based. Also make sound when needed.
@@ -58,5 +60,3 @@ private:
 	// topleft position of credits-bar bmp
 	int drawX, drawY;
 };
-
-#endif /* CREDITSDRAWER_H_ */

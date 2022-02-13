@@ -5,8 +5,12 @@
  *      Author: Stefan
  */
 
-#ifndef CSTRUCTUREUTILS_H_
-#define CSTRUCTUREUTILS_H_
+#pragma once
+
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "sidebar/cBuildingListItem.h"
+
+class cPlayer;
 
 class cStructureUtils {
 public:
@@ -42,5 +46,3 @@ public:
 
     int getStructureTypeByUnitBuildId(int unitBuildId) const;
 };
-
-#endif /* CSTRUCTUREUTILS_H_ */

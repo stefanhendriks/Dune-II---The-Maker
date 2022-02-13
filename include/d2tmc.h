@@ -15,8 +15,7 @@
 	be moved to their respective context/classes. Ie, the game bitmap should be either in a Screen
 	class which is eventually used in a Game class.
 **/
-
-#ifndef D2TMC_H
+#pragma once
 
 #include "cGame.h"
 #include "definitions.h"
@@ -96,7 +95,5 @@ extern BITMAP *bmp_backgroundMentat;
 extern BITMAP *bmp_fadeout;
 extern BITMAP *bmp_throttle;
 extern BITMAP *bmp_winlose;
-
-#endif
 
 

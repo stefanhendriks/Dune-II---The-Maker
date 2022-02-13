@@ -1,4 +1,11 @@
-#include "../include/d2tmh.h"
+#include "cSideBarDrawer.h"
+
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
+#include "drawers/cOrderDrawer.h"
+#include "managers/cDrawManager.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
 
@@ -6,20 +13,18 @@
 
 cSideBarDrawer::cSideBarDrawer(cPlayer * player) :
     m_player(player),
-    m_buildingListDrawer(new cBuildingListDrawer(player)),
+    m_buildingListDrawer(player),
     m_sidebar(nullptr),
     m_candybar(nullptr),
-    m_textDrawer(new cTextDrawer(bene_font)),
+    m_textDrawer(bene_font),
     m_sidebarColor(makecol(214, 149, 20)) {
     assert(player);
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
-	delete m_buildingListDrawer;
 	if (m_candybar) {
 		destroy_bitmap(m_candybar);
 	}
-	delete m_textDrawer;
     m_sidebar = nullptr;
 }
 
@@ -85,7 +90,7 @@ void cSideBarDrawer::drawBuildingLists() {
 	for (int listId = startPos; listId < cSideBar::LIST_MAX; listId++) {
 		cBuildingList *list = m_sidebar->getList(listId);
 		bool isListIdSelectedList = (selectedListId == listId);
-		m_buildingListDrawer->drawButton(list, isListIdSelectedList);
+		m_buildingListDrawer.drawButton(list, isListIdSelectedList);
 	}
 
     // draw background of buildlist
@@ -105,8 +110,8 @@ void cSideBarDrawer::drawBuildingLists() {
     // draw the 'lines' between the icons    // draw the buildlist itself (take scrolling into account)
 	cBuildingList *selectedList = nullptr;
 
-    int iDrawX = m_buildingListDrawer->getDrawX();
-    int iDrawY = m_buildingListDrawer->getDrawY();
+    int iDrawX = m_buildingListDrawer.getDrawX();
+    int iDrawY = m_buildingListDrawer.getDrawY();
 
     BITMAP *horBar = (BITMAP *) gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat;
     draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-38); // above sublist buttons
@@ -150,7 +155,7 @@ void cSideBarDrawer::drawBuildingLists() {
     // END drawing icons grid
 
     if (selectedList) {
-        m_buildingListDrawer->drawList(selectedList, selectedListId);
+        m_buildingListDrawer.drawList(selectedList, selectedListId);
 	}
 
     // button interaction
@@ -162,7 +167,7 @@ void cSideBarDrawer::drawBuildingLists() {
 
         // render hover over border
         if (list->isOverButton(mouse_x, mouse_y)) {
-            m_buildingListDrawer->drawButtonHoverRectangle(list);
+            m_buildingListDrawer.drawButtonHoverRectangle(list);
         }
     }
 
@@ -245,9 +250,9 @@ void cSideBarDrawer::drawCreditsUsage() {
     line(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
     line(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
-    m_textDrawer->drawText(barX - 1, barY - 21, makecol(0, 0, 0), "$");
-    m_textDrawer->drawText(barX + 1, barY - 19, makecol(0, 0, 0), "$");
-    m_textDrawer->drawText(barX, barY - 20, "$");
+    m_textDrawer.drawText(barX - 1, barY - 21, makecol(0, 0, 0), "$");
+    m_textDrawer.drawText(barX + 1, barY - 19, makecol(0, 0, 0), "$");
+    m_textDrawer.drawText(barX, barY - 20, "$");
 }
 
 void cSideBarDrawer::drawPowerUsage() const {
@@ -358,14 +363,14 @@ void cSideBarDrawer::drawMinimap() {
 }
 
 void cSideBarDrawer::setPlayer(cPlayer *pPlayer) {
-    this->m_player = pPlayer;
-    this->m_buildingListDrawer->setPlayer(pPlayer);
+    m_player = pPlayer;
+    m_buildingListDrawer.setPlayer(pPlayer);
 }
 
 void cSideBarDrawer::onNotifyMouseEvent(const s_MouseEvent &event) {
-    m_buildingListDrawer->onNotifyMouseEvent(event);
+    m_buildingListDrawer.onNotifyMouseEvent(event);
 }
 
 void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
-    m_buildingListDrawer->onNotifyKeyboardEvent(event);
+    m_buildingListDrawer.onNotifyKeyboardEvent(event);
 }

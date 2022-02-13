@@ -1,12 +1,17 @@
-#include "../include/d2tmh.h"
+#include "cStructureDrawer.h"
+
+#include "cAllegroDrawer.h"
+#include "controls/cGameControlsContext.h"
+#include "data/gfxdata.h"
+#include "d2tmc.h"
+#include "gameobjects/structures/cGunTurret.h"
+#include "gameobjects/structures/cRepairFacility.h"
+#include "gameobjects/structures/cRocketTurret.h"
+#include "gameobjects/structures/cWindTrap.h"
+#include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
-
-cStructureDrawer::cStructureDrawer() {
-}
-
-cStructureDrawer::~cStructureDrawer() {
-}
 
 void cStructureDrawer::drawStructuresFirstLayer() {
 	drawStructuresForLayer(0);
@@ -119,8 +124,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 	assert(structure->getType() == WINDTRAP);
 
 	cWindTrap * windtrap = dynamic_cast<cWindTrap*>(structure);
-
-	assert(structure);
+	assert(windtrap);
 
 	int pixelWidth = structure->getWidthInPixels();
 	int pixelHeight = structure->getHeightInPixels();
@@ -260,6 +264,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const {
     cRepairFacility * repairFacility = dynamic_cast<cRepairFacility*>(structure);
+    assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
     cUnit &pUnit = unit[unitId];
     int iconId = pUnit.getUnitInfo().icon;

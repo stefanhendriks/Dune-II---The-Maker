@@ -9,9 +9,10 @@
   2001 - 2022 (c) code by Stefan Hendriks
 
 */
-
-#include "include/d2tmh.h"
 #include "cGame.h"
+
+#include "d2tmh.h"
+#include "drawers/cAllegroDrawer.h"
 #include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
@@ -610,7 +611,6 @@ void cGame::shutdown() {
     delete m_mentat;
     delete m_mapViewport;
 
-    drawManager->destroy();
     delete drawManager;
 
     delete mapCamera;

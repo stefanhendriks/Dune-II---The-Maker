@@ -1,4 +1,13 @@
-#include "../include/d2tmh.h"
+#include "cMouse.h"
+
+#include "controls/cGameControlsContext.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "drawers/cAllegroDrawer.h"
+#include "drawers/cTextDrawer.h"
+#include "player/cPlayer.h"
+#include "sidebar/cSideBar.h"
+#include "utils/d2tm_math.h"
 
 #include <allegro.h>
 

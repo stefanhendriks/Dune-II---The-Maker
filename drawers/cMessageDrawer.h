@@ -1,5 +1,6 @@
-#ifndef CMESSAGEDRAWER_H_
-#define CMESSAGEDRAWER_H_
+#pragma once
+
+class BITMAP;
 
 namespace messages {
     enum eMessageDrawerState {
@@ -53,5 +54,3 @@ class cMessageDrawer {
 
         void createMessageBarBmp(int desiredWidth);
 };
-
-#endif /* CMESSAGEDRAWER_H_ */

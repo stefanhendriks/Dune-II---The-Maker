@@ -1,12 +1,15 @@
 #pragma once
 
+#include "cTextDrawer.h"
 #include "observers/cInputObserver.h"
+#include "sidebar/cBuildingList.h"
+
+class cPlayer;
 
 class cBuildingListDrawer : cInputObserver {
 
 public:
 	explicit cBuildingListDrawer(cPlayer *player);
-	~cBuildingListDrawer() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -26,9 +29,9 @@ protected:
 
 private:
 	// the list to draw
-	cTextDrawer *m_textDrawer;
+	cTextDrawer m_textDrawer;
 
-	cPlayer * m_player;
+	cPlayer* m_player;
 
     bool m_renderListIds;
 
