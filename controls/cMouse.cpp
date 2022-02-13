@@ -11,7 +11,7 @@
 
 #include <allegro.h>
 
-cMouse::cMouse() : m_textDrawer(cTextDrawer(bene_font)), coords(cPoint(0,0)) {
+cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0)) {
 	z=0;
 	leftButtonPressed=false;
 	rightButtonPressed=false;
