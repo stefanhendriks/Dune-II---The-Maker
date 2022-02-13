@@ -1,7 +1,9 @@
 #pragma once
 
+#include <vector>
 #include "observers/cInputObserver.h"
 #include "utils/cPoint.h"
+#include "drawers/cTextDrawer.h"
 
 #include <string>
 
@@ -49,11 +51,6 @@ public:
 
     bool isBoxSelecting();
 
-    /**
-     * Sets tile of gfx
-     * TODO: should become "state" so it decouples drawing and game mechanic
-     * @param value
-     */
     void setTile(int value);
 
     void resetDragViewportInteraction();
@@ -80,8 +77,12 @@ public:
 
     cPoint getDragLineEndPoint();
 
+    void addDebugLine(std::string basicString);
+
 private:
     cInputObserver *_mouseObserver;
+
+    cTextDrawer m_textDrawer;
 
     bool leftButtonPressed;
     bool rightButtonPressed;
@@ -111,5 +112,9 @@ private:
     int mouse_mv_y2;        // dragging viewport
 
     int mouse_tile;       // mouse picture in gfxdata
+
+    std::vector<std::string> debugLines;
+
     std::string mouseTileName(int tile);
+
 };
