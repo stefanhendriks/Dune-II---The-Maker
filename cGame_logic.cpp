@@ -718,7 +718,6 @@ bool cGame::setupGame() {
     m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
     install_mouse();
-    m_mouse = new cMouse();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
     /* set up the interrupt routines... */
@@ -807,6 +806,9 @@ bool cGame::setupGame() {
     } else {
         m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
     }
+
+    // do it here, because it depends on fonts to be loaded
+    m_mouse = new cMouse();
 
     /***
      * Viewport(s)
@@ -952,6 +954,8 @@ bool cGame::setupGame() {
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
     allegroDrawer = new cAllegroDrawer(m_dataRepository);
+
+
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
