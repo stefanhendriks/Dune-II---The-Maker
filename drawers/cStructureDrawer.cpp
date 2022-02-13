@@ -31,7 +31,7 @@ void cStructureDrawer::drawStructuresHealthBars() {
     }
 }
 
-void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure, int color) {
+void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure * theStructure, int color) {
 	assert(theStructure);
 	int drawX = theStructure->iDrawX();
 	int drawY = theStructure->iDrawY();
@@ -187,7 +187,41 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
 
 	structure->setFrame(convert_angle(iHeadFacing));
 
-	drawStructureAnimation(structure);
+    // :-/
+    if (game.isDebugMode()) {
+        cPlayer &humanPlayer = players[HUMAN];
+        cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
+        if (pStructure && pStructure == structure) {
+            cMouse *pMouse = game.getMouse();
+            cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
+
+            int x1 = pMouse->getX();
+            int y1 = pMouse->getY();
+            int x2 = mapCamera->getWindowXPosition(structure->pos_x() + 16);
+            int y2 = mapCamera->getWindowYPosition(structure->pos_y() + 16);
+
+            allegroDrawer->drawLine(bmp_screen, x1, y1, x2, y2, makecol(255, 255, 255));
+
+            int mouseCellX = map.getCellX(pContext->getMouseCell());
+            int mouseCellY = map.getCellY(pContext->getMouseCell());
+
+            int cellX = map.getCellX(structure->getCell());
+            int cellY = map.getCellY(structure->getCell());
+
+            float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
+            float degreesInverted = invertDegrees(degrees);
+
+            int faceAngle = face_angle(degrees);
+            int frame = convert_angle(faceAngle);
+
+            pMouse->addDebugLine(fmt::format("degrees = {}, inverted = {}, faceAngle = {}, frame = {}", degrees, degreesInverted, faceAngle, frame));
+
+            // override frame
+            structure->setFrame(frame);
+        }
+    }
+
+    drawStructureAnimation(structure);
 }
 
 void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure * structure) {
@@ -324,12 +358,12 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
             cPlayer &player = players[HUMAN]; // TODO: Pass it as variable? (instead of getting it from here)
             // regardless if selected, render this so you know from which structure things will come?
             if (player.isPrimaryStructureForStructureType(theStructure->getType(), i)) {
-                drawRectangeOfStructure(theStructure, player.getPrimaryBuildingFadingColor());
+                drawRectangleOfStructure(theStructure, player.getPrimaryBuildingFadingColor());
                 continue;
             }
 
             if (i == player.selected_structure) {
-                drawRectangeOfStructure(theStructure, player.getSelectFadingColor());
+                drawRectangleOfStructure(theStructure, player.getSelectFadingColor());
             }
         }
 	}

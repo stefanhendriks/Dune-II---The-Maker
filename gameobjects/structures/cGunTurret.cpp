@@ -1,5 +1,8 @@
 #include "../../include/d2tmh.h"
 
+namespace {
+    constexpr auto kTurretFacings = 8;
+}
 
 // Constructor
 cGunTurret::cGunTurret() {
@@ -120,17 +123,17 @@ void cGunTurret::think_attack() {
 void cGunTurret::think_turning() {
     TIMER_turn++;
 
-    int iSlowDown = 125;
+    int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
 
     if (TIMER_turn > iSlowDown) {
         TIMER_turn = 0;
 
         int d = 1;
 
-        int toleft = (iHeadFacing + 8) - iShouldHeadFacing;
-        if (toleft > 7) toleft -= 8;
+        int toleft = (iHeadFacing + kTurretFacings) - iShouldHeadFacing;
+        if (toleft > 7) toleft -= kTurretFacings;
 
-        int toright = abs(toleft - 8);
+        int toright = abs(toleft - kTurretFacings);
 
         if (toright == toleft) d = -1 + (rnd(2));
         if (toleft > toright) d = 1;
@@ -139,9 +142,9 @@ void cGunTurret::think_turning() {
         iHeadFacing += d;
 
         if (iHeadFacing < 0)
-            iHeadFacing = 7;
+            iHeadFacing = (kTurretFacings - 1);
 
-        if (iHeadFacing > 7)
+        if (iHeadFacing > (kTurretFacings - 1))
             iHeadFacing = 0;
     } // turning
 }
