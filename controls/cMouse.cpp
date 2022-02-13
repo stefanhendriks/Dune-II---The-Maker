@@ -11,7 +11,7 @@
 
 #include <allegro.h>
 
-cMouse::cMouse() : coords(cPoint(0,0)) {
+cMouse::cMouse() : m_textDrawer(cTextDrawer(bene_font)), coords(cPoint(0,0)) {
 	z=0;
 	leftButtonPressed=false;
 	rightButtonPressed=false;
@@ -23,6 +23,7 @@ cMouse::cMouse() : coords(cPoint(0,0)) {
 	mouseScrolledDown=false;
 	zValuePreviousFrame = mouse_z;
 	_mouseObserver = nullptr; // set later
+    debugLines = std::vector<std::string>();
 
     init();
 }
@@ -43,9 +44,13 @@ void cMouse::init() {
     mouse_mv_y1 = -1;
     mouse_mv_x2 = -1;
     mouse_mv_y2 = -1;
+
+    debugLines.clear();
 }
 
 void cMouse::updateState() {
+    debugLines.clear();
+
     bool didMouseMove = coords.x != mouse_x || coords.y != mouse_y;
     coords.x = mouse_x;
     coords.y = mouse_y;
@@ -292,14 +297,21 @@ void cMouse::draw() {
 
         if (game.isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
-                cTextDrawer textDrawer(bene_font);
                 int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
-                textDrawer.drawTextWithOneInteger(0, cSideBar::TopBarHeight + 1, "MouseCell %d", mouseCell);
+                m_textDrawer.drawTextWithOneInteger(0, cSideBar::TopBarHeight + 1, "MouseCell %d", mouseCell);
             }
         }
     }
 
     allegroDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
+
+    if (game.isDebugMode()) {
+        int y = mouseDrawY;
+        for (auto line: debugLines) {
+            m_textDrawer.drawText(mouseDrawX + 32, y, line.c_str());
+            y += m_textDrawer.getFontHeight() + 2;
+        }
+    }
 }
 
 bool cMouse::isNormalRightClick() {
@@ -352,4 +364,8 @@ std::string cMouse::mouseTileName(int tile) {
         return "MOUSE_REPAIR";
     }
     return "UNKNOWN";
+}
+
+void cMouse::addDebugLine(std::string basicString) {
+    this->debugLines.push_back(basicString);
 }

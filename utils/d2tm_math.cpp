@@ -16,7 +16,10 @@
   */
 #include "d2tm_math.h"
 
+#include <fmt/format.h>
+
 #include "definitions.h"
+#include "common.h"
 
 #include <cassert>
 #include <cmath>
@@ -36,11 +39,27 @@ float fRadians(int x1, int y1, int x2, int y2)
 }
 
 
-// return fDegrees between 2 given x,y positions
-float fDegrees(int x1, int y1, int x2, int y2)
-{
+/**
+ * Returns the amount of degrees (0-360) between two x,y positions.
+ *
+ * x1,y1 can be seen as 'from' and x2,y2 as 'to' (destination).
+ * Given those terms, the amount degrees returned is:
+ * When 'to' is perfectly left of 'from': 90.
+ * When 'to' is straight above 'from': 360 (0).
+ * When 'to' is perfectly right of 'from': 270.
+ * When 'to' is straight below 'from': 180.
+ *
+ * This basically means, compared to an arrow of the clock. When a handle points upwards, we are at 360 degrees.
+ * When the handle is below we are at 360 (or 0) degrees.
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @return
+ */
+float fDegrees(int x1, int y1, int x2, int y2) {
   /***
-   calculation between two 2D positions, returning the angle.
+   calculation between two 2D positions, returning the angle in degrees (1-360 degrees).
 
    Method used:
 
@@ -56,7 +75,7 @@ float fDegrees(int x1, int y1, int x2, int y2)
                 C
 
 
-   Using tanges to calculate the angle.
+   Using tan to calculate the angle.
 
   tan = AB/BC
 
@@ -65,36 +84,12 @@ float fDegrees(int x1, int y1, int x2, int y2)
   be > 0 due the ABS command.
   ***/
 
-  /*** original - working , old code
-  double angle    = -1;         // the angle we will return later on
-
-  int delta_x = (x2-x1);
-  int delta_y = (y2-y1);
-
-  // tofix: delta_x and delta_y should be swapped, and some other stuff with the angle
-  //  note: it works now, so dont touch it yet (dont fix anything that aint broken)
-  angle = (atan2(delta_x, delta_y));
-
-  double x = angle / M_PI * 180.0f;
-
-  angle = x;
-
-  // a little bit more modification to make it right
-
-  // TODO: Read this entire thing over and write a better and cleaner function!!!!!
-
-  angle += 180;
-
-  return angle;
-  ***/
-  float angle    = -1;         // the angle we will return later on
-
   float delta_x = (x2-x1);
   float delta_y = (y2-y1);
 
-  // TOFIX: Somehow delta_x and delta_y need to be twisted here (should be y , x in the atan2 method)
-  // should be fixed some day, it works but I feel itchy about this.
-  angle = (std::atan2(delta_x, delta_y));
+  // this makes the 'circle' start at the top. If we use delta_y, delta_x as you would expect, the 'circle' (360 degrees)
+  // starts at the left
+  float angle = (std::atan2(delta_x, delta_y));
 
   // convert to fDegrees
   angle =  angle * (180 / M_PI);
@@ -111,47 +106,102 @@ int bullet_face_angle(float angle) {
   return (a/chop);
 }
 
-// Give correct facing angle, used in MAIN.H
-// note: Not to be used with drawing yet, use convert_angle() with this result first then
-// - face angle is for units only
-int face_angle(float angle)
-{
-  int a = (int)angle;
+/**
+ * This function inverts degrees so that 360 becomes 0. 260 becomes 100, etc.
+ * By basically substracting 360 from the given input (while keeping it an
+ * absolute number).
+ *
+ * @param degrees
+ * @return
+ */
+float invertDegrees(float degrees) {
+    // fDegrees return values:
+    // 360 is UP, (0 is also UP)
+    // 270 = RIGHT,
+    // 180 = DOWN,
+    // 90 = LEFT
+    return std::fabs(degrees-360);
+}
 
-  // since the original results are:
-  // 180 = UP           (-90)
-  // 90  = RIGHT        (-90)
-  // 0   = DOWN         (-90)
-  // -90 = LEFT         (-90 (-180 becomes 180 again))
+float wrapDegrees(float value) {
+    if (value < 0) {
+        return value + 360;
+    }
+    if (value > 360) {
+        return value - 360;
+    }
+    return value;
+}
 
-  // we have to make it a scale of 0 to 360 in order to chop it correctly.
-  // the new results should be:
-  //
+/**
+ * Is degrees(angle) within angle1 and angle2? (taking care of wrapping around)
+ * Taken from: https://stackoverflow.com/a/11412077/214597
+ * @param degrees
+ * @param angle1
+ * @param angle2
+ * @return
+ */
+bool isAngleBetween(int degrees, int angle1, int angle2) {
+    // make the angle from angle1 to angle2 to be <= 180 degrees
+    int rAngle = ((angle2 - angle1) % 360 + 360) % 360;
+    if (rAngle >= 180)
+        std::swap(angle1, angle2);
 
-  // chop 360 fDegrees in 8 pieces
-  int chop = 45;        // 45 fDegrees is one chop
+    // check if it passes through zero
+    if (angle1 <= angle2)
+        return degrees >= angle1 && degrees <= angle2;
+    else
+        return degrees >= angle1 || degrees <= angle2;
+}
 
-  // 360 fDegrees is UP, 270 = RIGHT, 180 = DOWN, 90 = LEFT, 0 is also UP
-  // when deviding 360 / 45 you will get results like:
-  // 360 = down
-  // 0 = up, etc
+/**
+ * This is an intermediate function that returns a "face angle" based on
+ * the fDegrees() result.
+ *
+ * The "face angle" is a clock-wise rotation angle. In order
+ * to calculate the correct 'facing angle' we require the degrees to
+ * be inverted (?).
+ * @param angle
+ * @return
+ */
+int face_angle(float angle, int angles) {
+  int degreesPerFacing = (360 / angles);
+  float invertedDegrees = invertDegrees(angle);
 
-  // Because 360 is UP, we need to reverse it now
-  //a += 180; // make scale to 360 fDegrees
-  a = std::abs(a-360);
+  // face angles are determined
+  // by having boundaries of degrees
+  // ie, face angle of 0, (UP) is when degrees is
+  // between 330 and 30 (or something)
+  // we need to build up that table, depending
+  // on the amount of degreesPerFacing we have
 
-  // we now can return the correct facing, but do note that this value is not how the
-  // picture is stored in our 8bit pictures. The drawing routine will fix this up for us
-  // its a pain in the ass but i hate the unlogical order which Westwood used to put their
-  // units in and i dont want to recode stuff here now.
+  float halfDegreesFacing = degreesPerFacing / 2;
 
-  return (a/chop);
+  // 0 = UP
+  float startDegreesFacing = wrapDegrees(0 - halfDegreesFacing); // -22 becomes (360 - 22) = 338
+  int facingIndex = 0;
+
+  // 360 - 22 =
+  float start = wrapDegrees(startDegreesFacing); // ie 338
+  float end = wrapDegrees(start + degreesPerFacing); // ie 338 + 45 = 383 - 360 = 23
+
+  // max 8 facings for now, can we do this faster??
+  while (facingIndex < 8) {
+      if (isAngleBetween(invertedDegrees, start, end)) {
+          // found it!
+          break;
+      }
+      start = wrapDegrees(start + degreesPerFacing);
+      end = wrapDegrees(end + degreesPerFacing);
+
+      facingIndex++;
+  }
+    return facingIndex;
 }
 
 // Converts the face_angle produced with the function above, into a correct number for drawing
 // correctly.
-int convert_angle(int face_angle)
-{
+int convert_angle(int face_angle) {
   // Drawing works like this:
   // The unit looks at the RIGHT at the 1st picture. So you start at position 0,0 and copy the
   // correct part of that unit (using the properties given by the unit structure database). When
@@ -171,9 +221,11 @@ int convert_angle(int face_angle)
   if (face_angle == FACE_DOWN)        return 6;
   if (face_angle == FACE_DOWNRIGHT)   return 7;
 
-  assert(false && "Invalid face angle");
-
-  return 0; // theoretically cannot reach here, return 0 in all other cases
+  return 0; // BLEH
+//
+//  assert(false && "Invalid face angle");
+//
+//  return 0; // theoretically cannot reach here, return 0 in all other cases
 }
 
 // return random number between 0 and 'max'
@@ -181,19 +233,6 @@ int rnd(int max) {
   if (max < 1) return 0;
   return std::rand() % max;
 }
-
-// returns length between 2 points
-double length(int x1, int y1, int x2, int y2) {
-
-  int A = x2-x1;
-  int B = y2-y1;
-
-  A *= A;
-  B *= B;
-
-  return std::sqrt(static_cast<double>(A + B)); // A2 + B2 = C2 :)
-}
-
 
 /**
  * returns length between 2 points, always > 0. If x and y match, distance is 1.
