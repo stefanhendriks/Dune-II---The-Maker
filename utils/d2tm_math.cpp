@@ -164,7 +164,7 @@ bool isAngleBetween(int degrees, int angle1, int angle2) {
  * @param angle
  * @return
  */
-int face_angle(float angle, int angles) {
+int faceAngle(float angle, int angles) {
   int degreesPerFacing = (360 / angles);
   float invertedDegrees = invertDegrees(angle);
 
@@ -199,33 +199,25 @@ int face_angle(float angle, int angles) {
     return facingIndex;
 }
 
-// Converts the face_angle produced with the function above, into a correct number for drawing
+// Converts the faceAngle produced with the function above, into a correct number for drawing
 // correctly.
-int convert_angle(int face_angle) {
-  // Drawing works like this:
-  // The unit looks at the RIGHT at the 1st picture. So you start at position 0,0 and copy the
-  // correct part of that unit (using the properties given by the unit structure database). When
-  // a unit looks a different way, you use this number to multiply by the width of a frame in
-  // order to start at the correct positions.
+int convertAngleToDrawIndex(int faceAngle) {
+    int offset = 2; // determine, which draw angle matches the UP facing (which is 2nd picture for D2TM for now)
 
-  // Due the fact that we use 0 as UP , and since WW uses 0 as RIGHT, we have to convert.
-  // another problem is that we go clockwise and WW does NOT.
+    // Now both are 'face angles' and we *substract* because we go counter-clockwise here
+    int angle = offset - faceAngle;
 
-  // How the real facing is................ and what it should be for drawing...
-  if (face_angle == FACE_RIGHT)       return 0;
-  if (face_angle == FACE_UPRIGHT)     return 1;
-  if (face_angle == FACE_UP)          return 2;
-  if (face_angle == FACE_UPLEFT)      return 3;
-  if (face_angle == FACE_LEFT)        return 4;
-  if (face_angle == FACE_DOWNLEFT)    return 5;
-  if (face_angle == FACE_DOWN)        return 6;
-  if (face_angle == FACE_DOWNRIGHT)   return 7;
+    // and finally make sure we wrap around
+    if (angle < 0) {
+        angle += 8; // there are 8 facings, so wrap around when we get below 7
+    }
 
-  return 0; // BLEH
-//
-//  assert(false && "Invalid face angle");
-//
-//  return 0; // theoretically cannot reach here, return 0 in all other cases
+    // TODO:
+    // when we have > 8 facings, we have a different offset
+    // we could have BMP's where units go clock-wise, we could also support that then by not substracting, but adding
+    // the value and wrap around the other way.
+
+    return angle;
 }
 
 // return random number between 0 and 'max'
