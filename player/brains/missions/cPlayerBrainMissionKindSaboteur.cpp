@@ -2,6 +2,8 @@
 
 #include "cPlayerBrainMissionKindSaboteur.h"
 
+#include <fmt/core.h>
+
 namespace brains {
 
     cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
@@ -63,9 +65,7 @@ namespace brains {
     void cPlayerBrainMissionKindSaboteur::onNotifyGameEvent(const s_GameEvent &event) {
         cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotifyGameEvent() -> %s", event.toString(event.eventType));
-        log(msg);
+        log(fmt::format("cPlayerBrainMissionKindSaboteur::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
         if (event.eventType == GAME_EVENT_DESTROYED) {
           onEventDestroyed(event);
