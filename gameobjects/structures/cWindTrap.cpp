@@ -4,7 +4,7 @@
 // Constructor
 cWindTrap::cWindTrap() {
     if (game.isDebugMode()) {
-        logbook(fmt::format("(cWindTrap)(ID %d) Constructor", this->id));
+        logbook(fmt::format("(cWindTrap)(ID {}) Constructor", this->id));
     }
     // other variables (class specific)
     iFade = rnd(63);
@@ -20,7 +20,7 @@ int cWindTrap::getType() const {
 
 cWindTrap::~cWindTrap() {
     if (game.isDebugMode()) {
-        logbook(fmt::format("(~cWindTrap)(ID %d) Destructor", this->id));
+        logbook(fmt::format("(~cWindTrap)(ID {}) Destructor", this->id));
     }
 }
 
