@@ -16,6 +16,7 @@
 #include "map/cMapEditor.h"
 #include "utils/cSoundPlayer.h"
 
+#include <fmt/core.h>
 #include <math.h>
 
 void cBullet::init() {
@@ -281,9 +282,9 @@ void cBullet::arrivedAtDestinationLogic() {
             int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
             int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
-            char msg[255];
-            sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, x=%d, y=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor);
-            logbook(msg);
+            logbook(fmt::format(
+                "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
+                iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor));
 
             // when air layer is hit, it won't damage ground things
             if (!damageAirUnit(cellToDamage, factor)) {                // inflict damage on air unit (if rocket)
