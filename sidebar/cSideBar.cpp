@@ -4,6 +4,8 @@
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 
+#include <fmt/core.h>
+
 cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
 	selectedListID = -1; // nothing is selected
@@ -85,9 +87,8 @@ bool cSideBar::startBuildingItemIfOk(eListType listType, int buildId) const {
     if (pItem) {
         return startBuildingItemIfOk(pItem);
     } else {
-        char msg[255];
-        sprintf(msg, "ERROR: startBuildingItemIfOk with listType[%d] and buildId[%d] did not find an item to build!", eListTypeAsInt(listType), buildId);
-        logbook(msg);
+        logbook(fmt::format("ERROR: startBuildingItemIfOk with listType[{}] and buildId[{}] did not find an item to build!",
+        eListTypeAsInt(listType), buildId ));
     }
     return false;
 }
@@ -341,9 +342,7 @@ cBuildingList *cSideBar::getSelectedList() const {
 }
 
 void cSideBar::findFirstActiveListAndSelectIt() {
-    char msg[255];
-    sprintf(msg, "cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [%d]", selectedListID);
-    logbook(msg);
+    logbook(fmt::format("cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [{}]", selectedListID));
     for (int i = 0; i < LIST_MAX; i++) {
         cBuildingList *pList = lists[i];
         if (pList && pList->isAvailable()) {
@@ -351,16 +350,12 @@ void cSideBar::findFirstActiveListAndSelectIt() {
             break;
         }
     }
-    memset(msg, 0, sizeof(msg));
-    sprintf(msg, "cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [%d]", selectedListID);
-    logbook(msg);
+    logbook(fmt::format("cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [{}]", selectedListID));
 }
 
 void cSideBar::setSelectedListId(eListType value) {
-    char msg[255];
-    sprintf(msg, "cSideBar::setSelectedListId -  m_PlayerId = [%d] - old value [%d], new [%d]", player->getId(), selectedListID,
-            eListTypeAsInt(value));
-    logbook(msg);
+    logbook(fmt::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]", 
+        player->getId(), selectedListID, eListTypeAsInt(value)));
 
     int oldListId = selectedListID;
     selectedListID = eListTypeAsInt(value);
