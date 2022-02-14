@@ -1,5 +1,6 @@
 #include "../include/d2tmh.h"
 
+#include <fmt/core.h>
 
 cStructureUtils::cStructureUtils() {
 }
@@ -93,9 +94,8 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureT
 	int playerId = pPlayer->getId();
 
 	if (game.isDebugMode()) {
-		char msg[255];
-		sprintf(msg, "Looking for primary building (type %d, name %s, pPlayer %d)", structureType, sStructureInfo[structureType].name, playerId);
-		logbook(msg);
+		logbook(fmt::format(
+			"Looking for primary building (type {}, name {}, pPlayer {})", structureType, sStructureInfo[structureType].name, playerId));
 	}
 
 	// check primary building first if set
@@ -190,9 +190,7 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const {
         case CARRYALL:
             return HIGHTECH;
         default:
-            char msg[255];
-            sprintf(msg, "Item buildId is [%d], which is not mapped", unitBuildId);
-            logbook(msg);
+            logbook(fmt::format("Item buildId is [{}], which is not mapped", unitBuildId));
             assert(false);
             return -1;
 	}
