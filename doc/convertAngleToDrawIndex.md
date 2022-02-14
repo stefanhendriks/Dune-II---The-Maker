@@ -1,5 +1,11 @@
-# Angles, D2TM angles and converting to drawing index
+# Angles in D2TM. How to calculate & draw
+This document describes a bit how the angles work in D2TM, especially
+when comparing two things and how an entity (ie a unit) should face another
+entity.
 
+In summary d2tm angles are clock-wise, starting from the top. You calculate
+the degrees using `fDegrees`, and with that you can calculate a `facing angle`.
+From the `facing angle` you can calculate a `drawing index` to be used for a bitmap.
 
 # Degrees between two points
 D2TM considers 2 'points', a 'from' (the center of an imaginary cirlce) and
@@ -9,6 +15,8 @@ Given these two points you get a `degrees`. You get this by calling `fDegrees`.
 
 It takes `x1,y1` and `x2,y2`. Where `x1,y1` is always considered to be the 'from', ie
 center of the 'circle'.
+
+![Angles video?](angles.mp4)
 
 # Determining 'facing angle'
 Once we have this degrees value you can convert this to "angles", which

@@ -209,12 +209,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
             int cellY = map.getCellY(structure->getCell());
 
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
-            float degreesInverted = invertDegrees(degrees);
 
-            int faceAngle = faceAngle(degrees);
-            int frame = convertAngleToDrawIndex(faceAngle);
+            int facingAngle = faceAngle(degrees);
+            int frame = convertAngleToDrawIndex(facingAngle);
 
-            pMouse->addDebugLine(fmt::format("degrees = {}, inverted = {}, faceAngle = {}, frame = {}", degrees, degreesInverted, faceAngle, frame));
+            pMouse->addDebugLine(fmt::format("degrees = {}, faceAngle = {}, frame = {}", degrees, facingAngle, frame));
 
             // override frame
             structure->setFrame(frame);

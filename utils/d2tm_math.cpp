@@ -58,44 +58,50 @@ float fRadians(int x1, int y1, int x2, int y2)
  * @return
  */
 float fDegrees(int x1, int y1, int x2, int y2) {
-  /***
-   calculation between two 2D positions, returning the angle in degrees (1-360 degrees).
+    /***
+     calculation between two 2D positions, returning the angle in degrees (1-360 degrees).
 
-   Method used:
+     Method used:
 
-   x1,y1 is always center of our 'fictional triangle'.
-   Example:
-
-
-    A           B
-   x1,y1--------
-   \           |
-    ----       |
-        \------+x2,y2
-                C
+     x1,y1 is always center of our 'fictional triangle'.
+     Example:
 
 
-   Using tan to calculate the angle.
+      A           B
+     x1,y1--------
+     \           |
+      ----       |
+          \------+x2,y2
+                  C
 
-  tan = AB/BC
+
+     Using tan to calculate the angle.
+
+    tan = AB/BC
 
 
-  the distances between A and B , B and C are calculated by delta_x and delta_y. Those will always
-  be > 0 due the ABS command.
-  ***/
+    the distances between A and B , B and C are calculated by delta_x and delta_y. Those will always
+    be > 0 due the ABS command.
+    ***/
 
-  float delta_x = (x2-x1);
-  float delta_y = (y2-y1);
+    float delta_x = (x2 - x1);
+    float delta_y = (y2 - y1);
 
-  // this makes the 'circle' start at the top. If we use delta_y, delta_x as you would expect, the 'circle' (360 degrees)
-  // starts at the left
-  float angle = (std::atan2(delta_x, delta_y));
+    // this makes the 'circle' start at the top. If we use delta_y, delta_x as you would expect, the 'circle' (360 degrees)
+    // starts at the left
+    float angle = (std::atan2(delta_x, delta_y));
 
-  // convert to fDegrees
-  angle =  angle * (180 / M_PI);
+    // convert to fDegrees
+    angle = angle * (180 / M_PI);
 
-  angle += 180;
-  return angle;
+    angle += 180;
+
+    // angle is now as following:
+    // 360 is UP, (0 is also UP)
+    // 270 = RIGHT,
+    // 180 = DOWN,
+    // 90 = LEFT
+    return std::fabs(angle - 360);
 }
 
 // for bullets; bullets have twice as many angles (facings) than units. (16)
@@ -104,23 +110,6 @@ int bullet_face_angle(float angle) {
   int chop = (45/2);        // 45/2 fDegrees is one chop now (TODO: Make this configurable)
   a = std::abs(a-360);
   return (a/chop);
-}
-
-/**
- * This function inverts degrees so that 360 becomes 0. 260 becomes 100, etc.
- * By basically substracting 360 from the given input (while keeping it an
- * absolute number).
- *
- * @param degrees
- * @return
- */
-float invertDegrees(float degrees) {
-    // fDegrees return values:
-    // 360 is UP, (0 is also UP)
-    // 270 = RIGHT,
-    // 180 = DOWN,
-    // 90 = LEFT
-    return std::fabs(degrees-360);
 }
 
 float wrapDegrees(float value) {
@@ -166,7 +155,6 @@ bool isAngleBetween(int degrees, int angle1, int angle2) {
  */
 int faceAngle(float angle, int angles) {
   int degreesPerFacing = (360 / angles);
-  float invertedDegrees = invertDegrees(angle);
 
   // face angles are determined
   // by having boundaries of degrees
@@ -187,7 +175,7 @@ int faceAngle(float angle, int angles) {
 
   // max 8 facings for now, can we do this faster??
   while (facingIndex < 8) {
-      if (isAngleBetween(invertedDegrees, start, end)) {
+      if (isAngleBetween(angle, start, end)) {
           // found it!
           break;
       }
