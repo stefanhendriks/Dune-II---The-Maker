@@ -672,9 +672,10 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     }
     game.m_screenX = game.m_iniScreenWidth;
     game.m_screenY = game.m_iniScreenHeight;
-    char msg[255];
-    sprintf(msg, "Resolution %dx%d loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight);
-    cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", msg);
+
+    cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", 
+        fmt::format("Resolution {}x{} loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight)
+    );
 }
 
 /**
@@ -1060,9 +1061,7 @@ void cGame::setState(int newState) {
         return;
     }
 
-    char msg[255];
-    sprintf(msg, "Setting state from %d(=%s) to %d(=%s)", m_state, stateString(m_state), newState, stateString(newState));
-    logbook(msg);
+    logbook(fmt::format("Setting state from {}(={}) to {}(={})", m_state, stateString(m_state), newState, stateString(newState)));
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
@@ -1397,12 +1396,10 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
             int posY = mouseCellY + rnd((precision * 2) + 1);
             cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
 
-            char msg[255];
-            sprintf(msg,
-                    "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = %d,%d - target pos =%d,%d - precision %d",
-                    mouseCellY, mouseCellY, posX, posY,
-                    precision);
-            logbook(msg);
+            logbook(fmt::format(
+                    "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
+                    mouseCellY, mouseCellY, posX, posY,precision)
+            );
 
             deployCell = map.makeCell(posX, posY);
         }
@@ -1549,18 +1546,14 @@ int cGame::getColorPlaceGood() {
 
 void cGame::setWinFlags(int value) {
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "Changing m_winFlags from %d to %d", m_winFlags, value);
-        logbook(msg);
+        logbook(fmt::format("Changing m_winFlags from {} to {}", m_winFlags, value));
     }
     m_winFlags = value;
 }
 
 void cGame::setLoseFlags(int value) {
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "Changing m_loseFlags from %d to %d", m_loseFlags, value);
-        logbook(msg);
+        logbook(fmt::format("Changing m_loseFlags from {} to {}", m_loseFlags, value));
     }
     m_loseFlags = value;
 }
