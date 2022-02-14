@@ -31,6 +31,10 @@ set(FREETYPE_SOURCES
     "freetype/src/autofit/autofit.c"
 )
 
+if (UNIX)
+  add_definitions(-DALFONT_LINUX)
+endif()
+
 add_library(alfont STATIC
     "src/alfont.c"
     ${FREETYPE_SOURCES}
