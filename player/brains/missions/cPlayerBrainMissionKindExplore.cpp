@@ -2,6 +2,8 @@
 
 #include "cPlayerBrainMissionKindExplore.h"
 
+#include <fmt/core.h>
+
 namespace brains {
 
     cPlayerBrainMissionKindExplore::cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
@@ -42,9 +44,7 @@ namespace brains {
 
     void cPlayerBrainMissionKindExplore::onNotifyGameEvent(const s_GameEvent &event) {
         cPlayerBrainMissionKind::onNotifyGameEvent(event);
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindExplore::onNotifyGameEvent() -> %s", event.toString(event.eventType));
-        log(msg);
+        log(fmt::format("cPlayerBrainMissionKindExplore::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
     }
 
     cPlayerBrainMissionKind *cPlayerBrainMissionKindExplore::clone(cPlayer *player, cPlayerBrainMission * mission) {
