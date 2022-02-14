@@ -1,5 +1,6 @@
 #include "../include/d2tmh.h"
 #include "cBuildingListItem.h"
+#include <fmt/core.h>
 
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable) {
@@ -37,10 +38,9 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     }
 
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "cBuildingListItem constructor [%s], cost = %d, totalBuildTime = %d, creditsPerProgressTime = %f",
-                getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime);
-        logbook(msg);
+        logbook(fmt::format("cBuildingListItem constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
+                getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
+        
     }
 
 }
@@ -344,7 +344,7 @@ bool cBuildingListItem::isAutoBuild() {
 }
 
 std::string cBuildingListItem::getInfo() {
-    char msg[255];
+    std::string msg;
     int seconds = getTotalBuildTimeInMs() / 1000;
     if (isBuilding()) {
         int secondsInProgress = getProgressBuildTimeInMs() / 1000;
@@ -353,24 +353,24 @@ std::string cBuildingListItem::getInfo() {
 
     if (isTypeStructure()) {
         s_StructureInfo structureType = getStructureInfo();
-        sprintf(msg, "$%d | %s | %d Power | %d Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+        msg = fmt::format("${} | {} | {} Power | {} Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
     } else if (isTypeUnit()) {
         s_UnitInfo unitType = getUnitInfo();
         if (getBuildCost() > 0) {
-            sprintf(msg, "$%d | %s | %d Secs", getBuildCost(), unitType.name, seconds);
+            msg = fmt::format("${} | {} | {} Secs", getBuildCost(), unitType.name, seconds);
         } else {
-            sprintf(msg, "%s | %d Secs", sUnitInfo[getBuildId()].name, seconds);
+            msg = fmt::format("{} | {} Secs", sUnitInfo[getBuildId()].name, seconds);
         }
     } else if (isTypeUpgrade()){
         s_UpgradeInfo upgrade = getUpgradeInfo();
-        sprintf(msg, "UPGRADE: $%d | %s | %d Secs", getBuildCost(), upgrade.description, seconds);
+        msg = fmt::format("UPGRADE: ${} | {} | {} Secs", getBuildCost(), upgrade.description, seconds);
     } else if (isTypeSpecial()) {
         s_SpecialInfo special = getSpecialInfo();
-        sprintf(msg, "$%d | %s | %d Secs", getBuildCost(), special.description, seconds);
+        msg = fmt::format("${} | {} | {} Secs", getBuildCost(), special.description, seconds);
     } else {
-        sprintf(msg, "ERROR: UNKNOWN BUILD TYPE");
+        msg = "ERROR: UNKNOWN BUILD TYPE";
     }
-    return std::string(msg);
+    return msg;
 }
 
 bool cBuildingListItem::isFlashing() {
