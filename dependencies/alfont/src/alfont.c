@@ -24,6 +24,8 @@
 #endif
 #ifdef ALFONT_LINUX	//run in LINUX
 #include <wchar.h>
+#include <malloc.h>
+#define _msize malloc_usable_size
 #endif
 
 #include FT_FREETYPE_H
