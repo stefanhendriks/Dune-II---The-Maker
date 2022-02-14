@@ -61,7 +61,7 @@ target_compile_options(alfont
   PRIVATE
     "-D${ALFONT_PLATFORM}"
     "-O2"
-    "-march=pentium"
+    #"-march=pentium"
     "-fomit-frame-pointer"
     "-finline-functions"
     "-ffast-math"
