@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cAllegroDataRepository.h"
 
+#include <fmt/core.h>
 #include <allegro/datafile.h>
 #include <allegro/gfx.h>
 
@@ -57,9 +58,8 @@ bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
     if (index >= MAX_BITMAPS) return false;
 
     if (m_data[index].bitmap) {
-        char msg[255];
-        sprintf(msg, "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap at %s index %d, because it has already been taken.", file, index);
-        logbook(msg);
+        logbook(fmt::format(
+            "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap at {} index {}, because it has already been taken.", file, index));
 
         // already taken!
         return false;
@@ -67,17 +67,14 @@ bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
 
     BITMAP *pBitmap = load_bitmap(file, nullptr);
     if (!pBitmap) {
-        char msg[255];
-        sprintf(msg, "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap %s at index %d, cannot find it or invalid format.", file, index);
-        logbook(msg);
+        logbook(fmt::format(
+            "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap {} at index {}, cannot find it or invalid format.", file, index));
         // unable to load
         return false;
     }
 
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "cAllegroDataRepository::loadBitmapAt() Loaded bitmap %s at index %d", file, index);
-        logbook(msg);
+        logbook(fmt::format("cAllegroDataRepository::loadBitmapAt() Loaded bitmap {} at index {}", file, index));
     }
 
     m_data[index].bitmap = pBitmap;
@@ -90,25 +87,23 @@ bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
     if (index >= MAX_BITMAPS) return false;
 
     if (m_data[index].bitmap) {
-        char msg[255];
-        sprintf(msg, "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index %d, because it has already been taken.", index);
-        logbook(msg);
+        logbook(fmt::format(
+            "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, because it has already been taken.", index));
 
         // already taken!
         return false;
     }
 
     if (!bmp) {
-        char msg[255];
-        sprintf(msg, "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index %d, the provided bmp is null!", index);
-        logbook(msg);
+        logbook(fmt::format(
+            "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, the provided bmp is null!", index));
         // unable to load
         return false;
     }
 
     if (game.isDebugMode()) {
         logbook(fmt::format(
-            "cAllegroDataRepository::loadBitmapFromDataFileAt() Loaded bitmap from pointer at index {}", index));
+            "cAllegroDataRepository::loadBitmapFromDataFileAt() Loaded bitmap from pointer at index %d", index));
     }
 
     m_data[index].bitmap = bmp;
