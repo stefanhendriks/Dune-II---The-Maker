@@ -47,10 +47,17 @@ target_include_directories(alfont
     "include"
 )
 
+if (UNIX)
+target_link_libraries(alfont
+  PUBLIC
+    alleg
+)
+else()
 target_link_libraries(alfont
   PUBLIC
     allegro
 )
+endif()
 
 # Compile & link options are taken from the Makefile. 
 target_compile_options(alfont
