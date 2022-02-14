@@ -1,3 +1,5 @@
 add_subdirectory(alfont)
-add_subdirectory(allegro)
+if (NOT UNIX)
+    add_subdirectory(allegro)
+endif()
 add_subdirectory(fmt)

@@ -47,10 +47,17 @@ target_include_directories(alfont
     "include"
 )
 
+if (UNIX)
+target_link_libraries(alfont
+  PUBLIC
+    alleg
+)
+else()
 target_link_libraries(alfont
   PUBLIC
     allegro
 )
+endif()
 
 # Alfont has DOS and Linux specific fixes. Building for DOS is not supported for d2tm, but for
 # Linux, we enable these fixes here.

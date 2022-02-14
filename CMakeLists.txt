@@ -77,14 +77,23 @@ target_include_directories(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(${PROJECT_NAME}
+if (UNIX)
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+      alleg
+      alfont
+      fmt::fmt
+  )
+else()
+  target_link_libraries(${PROJECT_NAME}
   PRIVATE
     allegro
     alfont
     fmt::fmt
     -static-libgcc
     -static-libstdc++
-)
+  )
+endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(D2TM_OPTMIZATION "-O0")
@@ -109,9 +118,11 @@ target_compile_options(${PROJECT_NAME}
     "-Wextra-semi"
 )
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
-  COMMAND_EXPAND_LISTS
-)
+if (NOT UNIX)
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    COMMAND_EXPAND_LISTS
+  )
+endif()
 
 add_subdirectory(dependencies)
