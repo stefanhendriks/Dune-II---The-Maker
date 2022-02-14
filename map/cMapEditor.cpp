@@ -1,4 +1,5 @@
 #include "../include/d2tmh.h"
+#include <fmt/core.h>
 
 cMapEditor::cMapEditor() {
 
@@ -350,9 +351,7 @@ void cMapEditor::smoothCell(int cell) {
     } else if (terrainType == TERRAIN_SAND || terrainType == TERRAIN_BLOOM || terrainType == TERRAIN_SLAB) {
         tile = 0; // always the same
     } else {
-        char msg[255];
-        sprintf(msg, "Unknown terrain type [%d] .", terrainType);
-        logbook(msg);
+        logbook(fmt::format("Unknown terrain type [{}] .", terrainType));
         map.cellChangeType(cell, TERRAIN_SAND);
         map.cellChangeTile(cell, 0);
         return;
