@@ -338,11 +338,8 @@ cPoint cMouse::getDragLineEndPoint() {
 
 void cMouse::setTile(int value) {
     if (value != mouse_tile) {
-        char msg[255];
-        sprintf(msg, "cMouse::setTile(): Changing mouse tile from %d (%s) to %d (%s)", mouse_tile,
-                mouseTileName(mouse_tile).c_str(), value,
-                mouseTileName(value).c_str());
-        logbook(msg);
+        logbook(fmt::format("cMouse::setTile(): Changing mouse tile from {} ({}) to {} ({})", mouse_tile,
+            mouseTileName(mouse_tile).c_str(), value, mouseTileName(value).c_str()));
         mouse_tile = value;
     }
 }
