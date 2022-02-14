@@ -2,6 +2,8 @@
 
 #include "cPlayerBrainMissionKindAttack.h"
 
+#include <fmt/core.h>
+
 namespace brains {
 
     cPlayerBrainMissionKindAttack::cPlayerBrainMissionKindAttack(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
@@ -102,9 +104,7 @@ namespace brains {
     void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event) {
         cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindAttack::onNotifyGameEvent() -> %s", event.toString(event.eventType));
-        log(msg);
+        log(fmt::format("cPlayerBrainMissionKindAttack::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
         switch(event.eventType) {
             case GAME_EVENT_DESTROYED:
