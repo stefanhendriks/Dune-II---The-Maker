@@ -6,6 +6,7 @@
 #include "player/cPlayer.h"
 
 #include <allegro.h>
+#include <fmt/core.h>
 
 cBuildingListDrawer::cBuildingListDrawer(cPlayer *player) :
     m_textDrawer(game_font),
@@ -271,9 +272,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 			}
 
 			// draw
-			char msg[10];
-			sprintf(msg, "%d", amountToShow);
-            m_textDrawer.drawText(textX, textY, msg);
+            m_textDrawer.drawText(textX, textY, fmt::format("{}",amountToShow).c_str());
 		}
 
         if (game.isDebugMode()) {
