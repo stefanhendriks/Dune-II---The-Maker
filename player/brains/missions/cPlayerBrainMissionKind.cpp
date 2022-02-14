@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cPlayerBrainMissionKind.h"
 
+#include <fmt/core.h>
 
 namespace brains {
 
@@ -45,15 +46,11 @@ namespace brains {
      * @param txt
      */
     void cPlayerBrainMissionKind::log(const char *txt) {
-        char msg[1024];
-        sprintf(msg, "cPlayerBrainMissionKind | %s", txt);
-        mission->log(txt);
+        mission->log(fmt::format("cPlayerBrainMissionKind | {}", txt).c_str());
     }
 
     void cPlayerBrainMissionKind::onNotifyGameEvent(const s_GameEvent &event) {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKind::onNotifyGameEvent() -> %s", event.toString(event.eventType));
-        log(msg);
+        log(fmt::format("cPlayerBrainMissionKind::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
         if (event.player == specificPlayerForEventToGoToSelectTargetState) {
             if (specificEventTypeToGoToSelectTargetState != eGameEventType::GAME_EVENT_NONE) {
