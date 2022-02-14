@@ -2,6 +2,8 @@
 
 #include "cPlayerBrainMissionKindDeathHand.h"
 
+#include <fmt/core.h>
+
 namespace brains {
 
     cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
@@ -80,9 +82,7 @@ namespace brains {
     void cPlayerBrainMissionKindDeathHand::onNotifyGameEvent(const s_GameEvent &event) {
         cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotifyGameEvent() -> %s", event.toString(event.eventType));
-        log(msg);
+        log(fmt::format("cPlayerBrainMissionKindDeathHand::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
         if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED) {
             onBuildItemCancelled(event);
