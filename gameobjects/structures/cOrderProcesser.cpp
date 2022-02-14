@@ -4,6 +4,8 @@
  *  Created on: 8-aug-2010
  *      Author: Stefan
  */
+
+#include <fmt/core.h>
 #include "../../include/d2tmh.h"
 
 #include "utils/cSoundPlayer.h"
@@ -87,8 +89,6 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 void cOrderProcesser::think() {
 	if (secondsUntilArrival > 0) {
 		secondsUntilArrival--;
-		char msg[255];
-		sprintf(msg, "T-%d before Frigate arrival.", secondsUntilArrival);
 
 		if (secondsUntilArrival <= 5 && player->getId() == HUMAN) {
 			playTMinusSound(secondsUntilArrival);
@@ -99,7 +99,7 @@ void cOrderProcesser::think() {
 			sendFrigate();
 			messageDrawer->setMessage("Frigate is arriving...");
 		} else {
-			messageDrawer->setMessage(msg);
+			messageDrawer->setMessage(fmt::format("T-{} before Frigate arrival.", secondsUntilArrival).c_str());
 		}
 	}
 
