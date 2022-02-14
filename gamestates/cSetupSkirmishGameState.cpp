@@ -4,7 +4,7 @@
 #include "utils/cLog.h"
 
 #include <allegro.h>
-
+#include <fmt/core.h>
 #include <algorithm>
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
@@ -418,9 +418,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     if (game.isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-            char msg[255];
-            sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
-            logbook(msg);
+            logbook(fmt::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
         }
     }
 
@@ -430,9 +428,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     if (game.isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-            char msg[255];
-            sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
-            logbook(msg);
+            logbook(fmt::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
         }
     }
 
@@ -580,10 +576,9 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
             UNIT_CREATE(cell, iPlayerUnitType, p, true);
 
-            char msg[255];
-            sprintf(msg, "Wants %d amount of units; amount created %d", pSkirmishPlayer.startingUnits, u);
-            cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p,
-                                        pPlayer.getHouse());
+            cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
+                fmt::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
+                OUTC_NONE, p, pPlayer.getHouse());
         }
 
         u++;
@@ -630,10 +625,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         int maxDistance = worms * 32; // 128 / 4
         int wormCell = map.getRandomCell();
         int failures = 0;
-        char msg[255];
-        sprintf(msg, "Skirmish game with %d sandworms, minDistance %d, maxDistance %d", worms, minDistance,
-                maxDistance);
-        logbook(msg);
+        logbook(fmt::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
             int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                                                                                SANDWORM);
@@ -647,9 +639,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
                 }
                 continue;
             }
-            char msg[255];
-            sprintf(msg, "Spawning sandworm at %d", cell);
-            logbook(msg);
+            logbook(fmt::format("Spawning sandworm at {}", cell));
             UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
             wormCell = cell; // start from here to spawn new worm
             worms--;
