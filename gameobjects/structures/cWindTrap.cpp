@@ -1,11 +1,10 @@
 #include "../../include/d2tmh.h"
+#include <fmt/core.h>
 
 // Constructor
 cWindTrap::cWindTrap() {
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "(cWindTrap)(ID %d) Constructor", this->id);
-        logbook(msg);
+        logbook(fmt::format("(cWindTrap)(ID %d) Constructor", this->id));
     }
     // other variables (class specific)
     iFade = rnd(63);
@@ -21,9 +20,7 @@ int cWindTrap::getType() const {
 
 cWindTrap::~cWindTrap() {
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "(~cWindTrap)(ID %d) Destructor", this->id);
-        logbook(msg);
+        logbook(fmt::format("(~cWindTrap)(ID %d) Destructor", this->id));
     }
 }
 
