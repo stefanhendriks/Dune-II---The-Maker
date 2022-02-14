@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(d2tm)
 
+SET(OpenGL_GL_PREFERENCE "GLVND")
+
 file(GLOB d2tm_SRC
         "*.h"
         "*.cpp"
