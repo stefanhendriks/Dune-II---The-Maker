@@ -52,7 +52,7 @@ target_link_libraries(alfont
 target_compile_options(alfont
   PRIVATE
     "-O2"
-    "-march=pentium"
+    #"-march=pentium"
     "-fomit-frame-pointer"
     "-finline-functions"
     "-ffast-math"
