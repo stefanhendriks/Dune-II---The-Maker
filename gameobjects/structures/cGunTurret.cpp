@@ -1,7 +1,7 @@
 #include "../../include/d2tmh.h"
 
 namespace {
-    constexpr auto kTurretFacings = 16;
+    constexpr auto kTurretFacings = 8;
 }
 
 // Constructor
@@ -82,8 +82,10 @@ bool cGunTurret::isFacingTarget() const {
 void cGunTurret::think_turning() {
     TIMER_turn++;
 
-//    int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
-    int iSlowDown = 65; // for 16 facings , TODO: make it configurable (turnSpeed)
+    int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
+    if (kTurretFacings > 8) {
+        iSlowDown = 65; // for 16 facings , TODO: make it configurable (turnSpeed)
+    }
 
     if (TIMER_turn > iSlowDown) {
         TIMER_turn = 0;
@@ -251,6 +253,10 @@ void cGunTurret::think_guard() {
             }
         }
     }
+}
+
+int cGunTurret::getFacingAngles() {
+    return kTurretFacings;
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
