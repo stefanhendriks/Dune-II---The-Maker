@@ -10,6 +10,7 @@
 
 */
 #include "cGame.h"
+#include "config.h"
 
 #include "d2tmh.h"
 #include "drawers/cAllegroDrawer.h"
@@ -53,7 +54,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_iniScreenWidth = -1;
     m_iniScreenHeight = -1;
 
-    m_version = "0.6.x";
+    m_version = D2TM_VERSION;
 
     m_mentat = nullptr;
 }
@@ -689,16 +690,16 @@ bool cGame::setupGame() {
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
-    logger->logHeader("Dune II - The Maker");
+    logger->logHeader(D2TM_APP_NAME);
     logger->logCommentLine(""); // whitespace
 
 	logger->logHeader("Version information");
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
-              fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
+              fmt::format("Version {}, Compiled at {} , {}, {}", game.m_version, __DATE__, __TIME__, D2TM_OS));
 
     // TODO: load eventual game settings (resolution, etc)
 
-    const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
+    const auto title = fmt::format("{} [{}] - (by Stefan Hendriks)", D2TM_APP_NAME, game.m_version);
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.
