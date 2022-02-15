@@ -105,11 +105,10 @@ float fDegrees(int x1, int y1, int x2, int y2) {
 }
 
 // for bullets; bullets have twice as many angles (facings) than units. (16)
+// also, bullets have a clock-wise rotation on the drawing bitmap
 int bullet_face_angle(float angle) {
-  int a = angle;
-  int chop = (45/2);        // 45/2 fDegrees is one chop now (TODO: Make this configurable)
-  a = std::abs(a-360);
-  return (a/chop);
+    int facingAngle = faceAngle(angle, 16);
+    return convertAngleToDrawIndex(facingAngle, true, 0, 16);
 }
 
 float wrapDegrees(float value) {
@@ -173,8 +172,7 @@ int faceAngle(float angle, int angles) {
   float start = wrapDegrees(startDegreesFacing); // ie 338
   float end = wrapDegrees(start + degreesPerFacing); // ie 338 + 45 = 383 - 360 = 23
 
-  // max 8 facings for now, can we do this faster??
-  while (facingIndex < 8) {
+  while (facingIndex < angles) {
       if (isAngleBetween(angle, start, end)) {
           // found it!
           break;
@@ -189,23 +187,29 @@ int faceAngle(float angle, int angles) {
 
 // Converts the faceAngle produced with the function above, into a correct number for drawing
 // correctly.
-int convertAngleToDrawIndex(int faceAngle) {
-    int offset = 2; // determine, which draw angle matches the UP facing (which is 2nd picture for D2TM for now)
+int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int maxFacings) {
+    if (clockWiseBitmap) {
+        // assume drawing bitmap has a clockwise direction (from left to right).
+        // in that case, the offset is *added* to the faceAngle
+        int angle = offset + faceAngle;
 
-    // Now both are 'face angles' and we *substract* because we go counter-clockwise here
-    int angle = offset - faceAngle;
+        // and finally make sure we wrap around
+        if (angle > (maxFacings - 1)) {
+            angle -= maxFacings;
+        }
+        return angle;
+    } else {
+        // assume drawing bitmap has a counter-clockwise direction (going from left to right).
+        // we need to substract the faceAngle from the offset here.
 
-    // and finally make sure we wrap around
-    if (angle < 0) {
-        angle += 8; // there are 8 facings, so wrap around when we get below 7
+        int angle = offset - faceAngle;
+
+        // and finally make sure we wrap around
+        if (angle < 0) {
+            angle += maxFacings;
+        }
+        return angle;
     }
-
-    // TODO:
-    // when we have > 8 facings, we have a different offset
-    // we could have BMP's where units go clock-wise, we could also support that then by not substracting, but adding
-    // the value and wrap around the other way.
-
-    return angle;
 }
 
 // return random number between 0 and 'max'
