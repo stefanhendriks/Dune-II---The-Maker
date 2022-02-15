@@ -1,14 +1,14 @@
 #include "../../include/d2tmh.h"
 
 namespace {
-    constexpr auto kTurretFacings = 8;
+    constexpr auto kTurretFacings = 16;
 }
 
 // Constructor
 cGunTurret::cGunTurret() {
  // other variables (class specific)
- iHeadFacing=FACE_UP;        // (for turrets only) what is this structure facing at?
- iShouldHeadFacing=FACE_UP;  // where should we look face at?
+ iHeadFacing=0;        // (for turrets only) what is this structure facing at?
+ iShouldHeadFacing=0;  // where should we look face at?
  iTargetID=-1;           // target id
 
  TIMER_fire=0;
@@ -37,7 +37,11 @@ void cGunTurret::thinkFast() {
         think_attack();
     }
 
-	// last but not least, think like our abstraction
+    if (!isFacingTarget()) {
+        think_turning();
+    }
+
+    // last but not least, think like our abstraction
     cAbstractStructure::thinkFast();
 }
 
@@ -58,95 +62,112 @@ void cGunTurret::think_attack() {
         int iTargetY = map.getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
-        int f = faceAngle(d); // get the angle
+        int facingAngle = faceAngle(d, kTurretFacings); // get the angle
 
         // set facing
-        iShouldHeadFacing = f;
+        setShouldHeadFacing(facingAngle);
 
-        // if attacking an airunit, then don't care about facing (we use homing missiles)
-        bool isFacingTarget = iShouldHeadFacing == iHeadFacing;
-
-        if (isFacingTarget) {
-            TIMER_fire++;
-
-            int iDistance = map.distance(getCell(), unitCell);
-
-            if (iDistance > getSight()) {
-                iTargetID = -1;
-                // went out of sight, unfortunately
-                return;
-            }
-
-            // TODO: Move to property 'fireRate' ?
-            int iSlowDown = 200; // fire-rate of turret
-            if (TIMER_fire > iSlowDown) {
-                int iTargetCell = unitTarget.getCell();
-
-                int bulletType = BULLET_TURRET; // short range bullet
-                if (unitTarget.isAirbornUnit()) {
-                    bulletType = ROCKET_RTURRET;
-                } else {
-                    // TODO: move '3' to property (distanceForSecondaryFire?)
-                    if (getType() == RTURRET && iDistance > 3) {
-                        bulletType = ROCKET_RTURRET; // long-range bullet,
-                    } else {
-                        int half = 16;
-                        int iShootX = pos_x() + half;
-                        int iShootY = pos_y() + half;
-                        int bmp_head = convertAngleToDrawIndex(iHeadFacing);
-                        cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
-                    }
-                }
-
-                int iBull = create_bullet(bulletType, getCell(), iTargetCell, -1, id);
-
-                // only rockets are homing
-                if (unitTarget.isAirbornUnit()) {
-                    if (iBull > -1 && bulletType == ROCKET_RTURRET) {
-                        // it is a homing missile!
-                        bullet[iBull].iHoming = iTargetID;
-                        // TODO: property for homing?
-                        bullet[iBull].TIMER_homing = 200;
-                    }
-                }
-
-                TIMER_fire = 0;
-            }
-        } else { // not yet facing target
-            think_turning();
+        if (isFacingTarget()) {
+            think_fire();
         }
     } else {
         iTargetID = -1;
     }
 }
 
+bool cGunTurret::isFacingTarget() const {
+    return iShouldHeadFacing == iHeadFacing;
+}
+
 void cGunTurret::think_turning() {
     TIMER_turn++;
 
-    int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
+//    int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
+    int iSlowDown = 65; // for 16 facings , TODO: make it configurable (turnSpeed)
 
     if (TIMER_turn > iSlowDown) {
         TIMER_turn = 0;
+        int facingsZeroBased = kTurretFacings - 1;
 
-        int d = 1;
+        // incrementing means going clockwise (to the 'right' so to speak)
+        int increment = 1;
 
-        int toleft = (iHeadFacing + kTurretFacings) - iShouldHeadFacing;
-        if (toleft > 7) toleft -= kTurretFacings;
+        // check difference when we go over 'left' (counter-clockwise)
+        int counterClockwiseSteps = (iHeadFacing + kTurretFacings) - iShouldHeadFacing;
+        if (counterClockwiseSteps > facingsZeroBased) counterClockwiseSteps -= kTurretFacings;
 
-        int toright = abs(toleft - kTurretFacings);
+        // and difference going clockwise
+        int clockwiseSteps = abs(counterClockwiseSteps - kTurretFacings);
 
-        if (toright == toleft) d = -1 + (rnd(2));
-        if (toleft > toright) d = 1;
-        if (toright > toleft) d = -1;
+        // it does not matter which way we go, so pick random direction
+        if (clockwiseSteps == counterClockwiseSteps) increment = -1 + (rnd(2));
 
-        iHeadFacing += d;
+        // counterClockwise is longer than clockwise, so go clockwise (+1)
+        if (counterClockwiseSteps > clockwiseSteps) increment = 1;
+        // clockwise is taking longer than counter-clockwise so go counter-clockwise
+        if (clockwiseSteps > counterClockwiseSteps) increment = -1;
 
-        if (iHeadFacing < 0)
-            iHeadFacing = (kTurretFacings - 1);
+        iHeadFacing += increment;
 
-        if (iHeadFacing > (kTurretFacings - 1))
+        // deal with going around (index < 0 becomes max, and vice versa)
+        if (iHeadFacing < 0) {
+            iHeadFacing = facingsZeroBased;
+        }
+        if (iHeadFacing > facingsZeroBased) {
             iHeadFacing = 0;
+        }
     } // turning
+}
+
+void cGunTurret::think_fire() {
+    cUnit &unitTarget = unit[iTargetID];
+    if (unitTarget.isValid() && !unitTarget.isDead()) {
+        TIMER_fire++;
+
+        int iDistance = map.distance(getCell(), unitTarget.getCell());
+
+        if (iDistance > getSight()) {
+            iTargetID = -1;
+            // went out of sight, unfortunately
+            return;
+        }
+
+        // TODO: Move to property 'fireRate' ?
+        int iSlowDown = 200; // fire-rate of turret
+        if (TIMER_fire > iSlowDown) {
+            int iTargetCell = unitTarget.getCell();
+
+            int bulletType = BULLET_TURRET; // short range bullet
+            if (unitTarget.isAirbornUnit()) {
+                bulletType = ROCKET_RTURRET;
+            } else {
+                // TODO: move '3' to property (distanceForSecondaryFire?)
+                if (getType() == RTURRET && iDistance > 3) {
+                    bulletType = ROCKET_RTURRET; // long-range bullet,
+                } else {
+                    int half = 16;
+                    int iShootX = pos_x() + half;
+                    int iShootY = pos_y() + half;
+                    int bmp_head = convertAngleToDrawIndex(iHeadFacing);
+                    cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
+                }
+            }
+
+            int iBull = create_bullet(bulletType, getCell(), iTargetCell, -1, id);
+
+            // only rockets are homing
+            if (unitTarget.isAirbornUnit()) {
+                if (iBull > -1 && bulletType == ROCKET_RTURRET) {
+                    // it is a homing missile!
+                    bullet[iBull].iHoming = iTargetID;
+                    // TODO: property for homing?
+                    bullet[iBull].TIMER_homing = 200;
+                }
+            }
+
+            TIMER_fire = 0;
+        }
+    }
 }
 
 void cGunTurret::think_guard() {

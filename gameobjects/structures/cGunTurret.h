@@ -25,7 +25,11 @@ public:
 
     void think_guard() override;
 
+    void think_fire();
+
     void think_attack();
+
+    void setShouldHeadFacing(int value) { iShouldHeadFacing = value; }
 
     void startAnimating() override {}
 
@@ -36,5 +40,7 @@ public:
     int getHeadFacing() { return iHeadFacing; }
 
     void think_turning();
+
+    bool isFacingTarget() const;
 };
 
