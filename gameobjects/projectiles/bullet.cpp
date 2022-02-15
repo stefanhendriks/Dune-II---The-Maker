@@ -12,6 +12,7 @@
 
 #include "../../include/d2tmh.h"
 
+#include "map/cMapEditor.h"
 #include "utils/cSoundPlayer.h"
 
 #include <math.h>
@@ -345,7 +346,7 @@ void cBullet::damageTerrain(int cell, double factor) const {
         // change into rock, get destroyed. But only when we did not hit a structure.
         if (idOfStructureAtCell < 0) {
             map.cellChangeType(cell, TERRAIN_ROCK);
-            mapEditor.smoothAroundCell(cell);
+            cMapEditor(map).smoothAroundCell(cell);
         }
     }
 }
@@ -508,6 +509,7 @@ void cBullet::damageWall(int cell, double factor) const {
 
     if (map.getCellHealth(cell) < 0) {
         // remove wall, turn into smudge:
+        auto mapEditor = cMapEditor(map);
         mapEditor.createCell(cell, TERRAIN_ROCK, 0);
         mapEditor.smoothAroundCell(cell);
         map.smudge_increase(SMUDGE_WALL, cell);
