@@ -29,6 +29,8 @@ public:
 
     void think_attack();
 
+    int getFacingAngles();
+
     void setShouldHeadFacing(int value) { iShouldHeadFacing = value; }
 
     void startAnimating() override {}
