@@ -16,7 +16,9 @@ Given these two points you get a `degrees`. You get this by calling `fDegrees`.
 It takes `x1,y1` and `x2,y2`. Where `x1,y1` is always considered to be the 'from', ie
 center of the 'circle'.
 
-![Angles video?](angles.mp4)
+
+https://user-images.githubusercontent.com/1332066/154132193-3d7eeb5b-79bb-4221-967f-4c14f3981059.mp4
+
 
 # Determining 'facing angle'
 Once we have this degrees value you can convert this to "angles", which
