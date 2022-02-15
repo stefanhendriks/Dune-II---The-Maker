@@ -59,9 +59,18 @@ target_link_libraries(alfont
 )
 endif()
 
+# Alfont has DOS and Linux specific fixes. Building for DOS is not supported for d2tm, but for
+# Linux, we enable these fixes here.
+if(UNIX)
+  set(ALFONT_PLATFORM "ALFONT_LINUX")
+else() # Default to "Windows" (no fixes)
+  set(ALFONT_PLATFORM "ALFONT_WINDOWS")
+endif()
+
 # Compile & link options are taken from the Makefile. 
 target_compile_options(alfont
   PRIVATE
+    "-D${ALFONT_PLATFORM}"
     "-O2"
     #"-march=pentium"
     "-fomit-frame-pointer"

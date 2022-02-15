@@ -2,6 +2,7 @@
 #include "../../include/d2tmh.h"
 #include "cStructureFactory.h"
 
+#include "map/cMapEditor.h"
 #include "utils/cLog.h"
 
 cStructureFactory *cStructureFactory::instance = NULL;
@@ -175,6 +176,8 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
     cPlayer &cPlayer = players[iPlayer];
     cPlayer.increaseStructureAmount(iStructureType);
 
+    auto mapEditor = cMapEditor(map);
+
 	if (iStructureType == SLAB1) {
 		mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
 		return; // done
@@ -320,12 +323,13 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 
 	int endCellX = cellX + width;
 	int endCellY = cellY + height;
-	for (int x = cellX; x < endCellX; x++) {
-		for (int y = cellY; y < endCellY; y++) {
-			int cell = map.getCellWithMapDimensions(x, y);
-			mapEditor.createCell(cell, TERRAIN_SLAB, 0);
-		}
-	}
+    auto mapEditor = cMapEditor(map);
+	for (int y = cellY; y < endCellY; y++) {
+        for (int x = cellX; x < endCellX; x++) {
+            int cell = map.getCellWithMapDimensions(x, y);
+            mapEditor.createCell(cell, TERRAIN_SLAB, 0);
+        }
+    }
 }
 
 void cStructureFactory::deleteAllExistingStructures() {

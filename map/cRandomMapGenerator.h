@@ -1,17 +1,8 @@
-/*
- * cRandomMapGenerator.h
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
-
-#ifndef CRANDOMMAPGENERATOR_H_
-#define CRANDOMMAPGENERATOR_H_
+#pragma once
 
 class cRandomMapGenerator {
 	public:
 		cRandomMapGenerator();
-		virtual ~cRandomMapGenerator();
 
 		void generateRandomMap(int startingPoints);
 
@@ -19,5 +10,3 @@ class cRandomMapGenerator {
 
     void drawProgress(float progress) const;
 };
-
-#endif /* CRANDOMMAPGENERATOR_H_ */

@@ -1,19 +1,11 @@
-/*
- * cMapEditor.h
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
+#pragma once
+
+#include "cMap.h"
 
 // the map editor is able to change map charactaristics
-
-#ifndef CMAPEDITOR_H_
-#define CMAPEDITOR_H_
-
 class cMapEditor {
 	public:
-		cMapEditor();
-		virtual ~cMapEditor();
+		explicit cMapEditor(cMap& map);
 
 		void smoothCell(int cell);		// smooth a specific cell
 		void smoothMap();				// smooth the entire map
@@ -50,7 +42,5 @@ class cMapEditor {
 		int smoothWallCell(int cell);
 
 	private:
-
+        cMap& m_map;
 };
-
-#endif /* CMAPEDITOR_H_ */

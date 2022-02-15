@@ -2,6 +2,7 @@
 
 #include "d2tmh.h"
 
+#include "map/cMapCamera.h"
 #include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>

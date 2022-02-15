@@ -1,6 +1,7 @@
 #include "../include/d2tmh.h"
 #include "cSideBar.h"
 
+#include "managers/cDrawManager.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 

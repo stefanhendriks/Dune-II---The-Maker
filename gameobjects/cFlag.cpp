@@ -1,5 +1,7 @@
 #include "d2tmh.h"
 
+#include "map/cMapCamera.h"
+
 #include <allegro/gfx.h>
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)

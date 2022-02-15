@@ -8,6 +8,7 @@
 #include <fmt/core.h>
 #include "../../include/d2tmh.h"
 
+#include "managers/cDrawManager.h"
 #include "utils/cSoundPlayer.h"
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {

@@ -1,5 +1,7 @@
 #include "../../include/d2tmh.h"
 
+#include "map/cMapCamera.h"
+
 // Constructor
 cHeavyFactory::cHeavyFactory() {
     // other variables (class specific)

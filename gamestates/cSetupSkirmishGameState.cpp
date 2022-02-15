@@ -1,6 +1,16 @@
-#include "d2tmh.h"
 #include "cSetupSkirmishGameState.h"
 
+#include "map/cRandomMapGenerator.h"
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gui.h"
+#include "gui/actions/cGuiActionToGameState.h"
+#include "managers/cDrawManager.h"
+#include "map/cMapCamera.h"
+#include "map/cMapEditor.h"
+#include "map/cRandomMapGenerator.h"
+#include "player/playerh.h"
 #include "utils/cLog.h"
 
 #include <allegro.h>
@@ -409,10 +419,10 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     // REGENERATE MAP DATA FROM INFO
     map.init(selectedMap.width, selectedMap.height);
 
+    auto mapEditor = cMapEditor(map);
     for (int c = 0; c < map.getMaxCells(); c++) {
         mapEditor.createCell(c, selectedMap.mapdata[c], 0);
     }
-
     mapEditor.smoothMap();
 
     if (game.isDebugMode()) {

@@ -185,7 +185,7 @@ void cAbstractStructure::die() {
             iCll= map.makeCell(iCX + w, iCY + h);
 
 			map.cellChangeType(iCll, TERRAIN_ROCK);
-			mapEditor.smoothAroundCell(iCll);
+			cMapEditor(map).smoothAroundCell(iCll);
 
             int half = 16;
             int posX = map.getAbsoluteXPositionFromCell(iCll);

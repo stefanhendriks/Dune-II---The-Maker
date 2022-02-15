@@ -12,6 +12,8 @@
 
 #include "include/d2tmh.h"
 
+#include "map/cMapEditor.h"
+#include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
 #include "utils/cLog.h"
 #include "utils/cSeedMapGenerator.h"
 
@@ -1032,6 +1034,7 @@ void INI_Load_seed(int seed) {
     auto seedMap = seedGenerator.generateSeedMap();
     logbook("Seedmap generated");
 
+    auto mapEditor = cMapEditor(map);
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
@@ -1295,6 +1298,8 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
     memset(iPl_credits, 0, sizeof(iPl_credits));
     memset(iPl_house, -1, sizeof(iPl_house));
     memset(iPl_quota, 0, sizeof(iPl_quota));
+
+    auto mapEditor = cMapEditor(map);
 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];

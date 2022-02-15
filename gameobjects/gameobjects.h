@@ -6,9 +6,6 @@
 // GAME
 #include "../cGame.h"
 
-// MAP
-#include "../map/maph.h"							// map data
-
 #include "structures/structuresh.h"
 
 // units

@@ -1,7 +1,10 @@
-#ifndef D2TM_CGAMESTATE_H
-#define D2TM_CGAMESTATE_H
+#pragma once
 
-#include "../observers/cInputObserver.h"
+#include "controls/cKeyboardEvent.h"
+#include "observers/cInputObserver.h"
+#include "sMouseEvent.h"
+
+class cGame;
 
 enum eGameStateType {
     GAMESTATE_MAIN_MENU,
@@ -15,8 +18,8 @@ enum eGameStateType {
 class cGameState : cInputObserver {
 
 public:
-    cGameState(cGame& theGame);
-    virtual ~cGameState();
+    explicit cGameState(cGame& theGame);
+    virtual ~cGameState() = default;
 
     virtual void thinkFast() = 0;
     virtual void draw() const = 0;
@@ -35,5 +38,3 @@ private:
 
 };
 
-
-#endif //D2TM_CGAMESTATE_H

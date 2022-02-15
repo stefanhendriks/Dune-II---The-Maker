@@ -1,7 +1,12 @@
-#include "../include/d2tmh.h"
 #include "cInteractionManager.h"
 #include <fmt/core.h>
 
+#include "building/cItemBuilder.h"
+#include "cDrawManager.h"
+#include "controls/cGameControlsContext.h"
+#include "d2tmc.h"
+#include "drawers/cMiniMapDrawer.h"
+#include "player/cPlayer.h"
 
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cInputObserver() {
 	assert(thePlayer);

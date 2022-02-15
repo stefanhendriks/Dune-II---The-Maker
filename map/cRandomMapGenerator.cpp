@@ -1,24 +1,20 @@
-/*
- * cRandomMapGenerator.cpp
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
+#include "cRandomMapGenerator.h"
 
-#include "../include/d2tmh.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
+#include "map/cMap.h"
+#include "map/cMapEditor.h"
 
 #include <allegro.h>
 
 cRandomMapGenerator::cRandomMapGenerator() {
 }
 
-cRandomMapGenerator::~cRandomMapGenerator() {
-
-}
-
 void cRandomMapGenerator::generateRandomMap(int startingPoints) {
     // create random map
     map.init(128, 128);
+    auto mapEditor = cMapEditor(map);
 
     int a_spice = rnd((startingPoints * 8)) + (startingPoints * 12);
     int a_rock = 32 + rnd(startingPoints * 3);

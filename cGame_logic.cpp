@@ -14,6 +14,8 @@
 
 #include "d2tmh.h"
 #include "drawers/cAllegroDrawer.h"
+#include "managers/cDrawManager.h"
+#include "managers/cInteractionManager.h"
 #include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
@@ -615,8 +617,6 @@ void cGame::shutdown() {
     delete drawManager;
 
     delete mapCamera;
-    delete m_interactionManager;
-
 
     cStructureFactory::destroy();
     cSideBarFactory::destroy();
@@ -1045,11 +1045,10 @@ void cGame::setupPlayers() {
         thePlayer->setTechLevel(game.m_mission);
     }
 
-    delete m_interactionManager;
     cPlayer *humanPlayer = &players[HUMAN];
-    m_interactionManager = new cInteractionManager(humanPlayer);
-    m_mouse->setMouseObserver(m_interactionManager);
-    m_keyboard->setKeyboardObserver(m_interactionManager);
+    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
+    m_mouse->setMouseObserver(m_interactionManager.get());
+    m_keyboard->setKeyboardObserver(m_interactionManager.get());
 }
 
 bool cGame::isState(int thisState) const {
