@@ -30,7 +30,6 @@ class cAllegroDrawer;
 class cBullet;
 class cDrawManager;
 class cMapCamera;
-class cMapEditor;
 class cRandomMapGenerator;
 class cUnit;
 class cParticle;
@@ -50,7 +49,6 @@ extern int		iRest;	// rest value
 extern cGame		  game;
 
 extern cMap           map;
-extern cMapEditor	  mapEditor;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
