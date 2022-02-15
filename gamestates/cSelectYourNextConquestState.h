@@ -1,9 +1,10 @@
-#ifndef D2TM_CSELECTYOURNEXTCONQUESTSTATE_H
-#define D2TM_CSELECTYOURNEXTCONQUESTSTATE_H
-
-class cGame;
+#pragma once
 
 #include "cGameState.h"
+#include "definitions.h"
+
+class cGame;
+class BITMAP;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
@@ -119,5 +120,3 @@ private:
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 
 };
-
-#endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

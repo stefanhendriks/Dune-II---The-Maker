@@ -1,5 +1,7 @@
-#include "d2tmh.h"
 #include "cSelectYourNextConquestState.h"
+
+#include "d2tmh.h"
+#include "managers/cDrawManager.h"
 
 #include <allegro.h>
 
