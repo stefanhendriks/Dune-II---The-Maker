@@ -233,7 +233,7 @@ private:
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
-    cInteractionManager *m_interactionManager;
+    std::unique_ptr<cInteractionManager> m_interactionManager;
     cAllegroDataRepository *m_dataRepository;
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;

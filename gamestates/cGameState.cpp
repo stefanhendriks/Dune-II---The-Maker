@@ -1,8 +1,4 @@
-#include "d2tmh.h"
-
-cGameState::~cGameState() {
-
-}
+#include "cGameState.h"
 
 cGameState::cGameState(cGame& theGame) : game(theGame) {
 

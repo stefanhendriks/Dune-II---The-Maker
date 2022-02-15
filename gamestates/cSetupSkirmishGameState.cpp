@@ -1,8 +1,16 @@
-#include "d2tmh.h"
 #include "cSetupSkirmishGameState.h"
 
+#include "map/cRandomMapGenerator.h"
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gui.h"
+#include "gui/actions/cGuiActionToGameState.h"
+#include "managers/cDrawManager.h"
+#include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
+#include "player/playerh.h"
 #include "utils/cLog.h"
 
 #include <allegro.h>

@@ -1,5 +1,7 @@
 #include "d2tmh.h"
 
+#include "managers/cDrawManager.h"
+
 void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
