@@ -185,7 +185,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
 	}
 	assert(iHeadFacing > -1);
 
-	structure->setFrame(convertAngleToDrawIndex(iHeadFacing));
+	structure->setFrame(convertAngleToDrawIndex(iHeadFacing, false, 4, 16));
 
     // :-/
     if (game.isDebugMode()) {
@@ -210,13 +210,22 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
 
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
 
-            int facingAngle = faceAngle(degrees);
-            int frame = convertAngleToDrawIndex(facingAngle);
-
-            pMouse->addDebugLine(fmt::format("degrees = {}, faceAngle = {}, frame = {}", degrees, facingAngle, frame));
+            int facingAngle = faceAngle(degrees, 16);
+//            int frame = convertAngleToDrawIndex(facingAngle, false, 4, 16);
+//
+//            pMouse->addDebugLine(fmt::format("degrees = {}, faceAngle = {}, frame = {}", degrees, facingAngle, frame));
 
             // override frame
-            structure->setFrame(frame);
+//            structure->setFrame(frame);
+
+            if (structure->getType() == TURRET) {
+                cGunTurret * gunTurret = dynamic_cast<cGunTurret *>(structure);
+                gunTurret->setShouldHeadFacing(facingAngle);
+            } else if (structure->getType() == RTURRET) {
+                cRocketTurret * rocketTurret = dynamic_cast<cRocketTurret *>(structure);
+                rocketTurret->setShouldHeadFacing(facingAngle);
+            }
+
         }
     }
 
