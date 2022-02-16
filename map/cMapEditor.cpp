@@ -1,4 +1,3 @@
-#include "../include/d2tmh.h"
 #include <fmt/core.h>
 #include "cMapEditor.h"
 
