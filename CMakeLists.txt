@@ -2,27 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 set(CMAKE_CXX_STANDARD 20)
 
-message("---------------------------------------------")
-message(" Project d2tm")
-message("---------------------------------------------")
-
 project(d2tm)
-SET(D2TM_MAJOR "0")
-SET(D2TM_MINOR "6")
-SET(D2TM_DAYLY "X")
-SET(D2TM_VERSION "${D2TM_MAJOR}.${D2TM_MINOR}.${D2TM_DAYLY}")
-SET(D2TM_APP_NAME "Dune II - The Maker")
-if (UNIX)
-  SET(D2TM_OS "Linux OS")
-else()
-  SET(D2TM_OS "Windows OS")
-endif()
-SET(PACKAGE d2tm)
-
-CONFIGURE_FILE (
-  "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/config.h"
-)
 
 SET(OpenGL_GL_PREFERENCE "GLVND")
 
