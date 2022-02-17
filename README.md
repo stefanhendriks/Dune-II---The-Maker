@@ -25,10 +25,18 @@ Report bugs via Discord, Twitter or add one in Github.
 Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for more information about startup params, controls, and more.
 
 ## Compiling
-This project uses `CMake`, you need atleast version 3.21. It currently depends
-on MinGW32. Make sure you can run `make` (or `ninja`) from command line.
 
-Then:
+### Prerequisites
+- `CMake` version 3.21 or higher
+- `GCC` version 11 or higher
+
+Make sure you can run `make` (or `ninja`) from command line.
+
+### Windows (MinGW)
+It currently depends on MinGW32. Make sure you also have GCC 11 installed,
+which you can do via MSYS2 (using `pacman`). GCC 11 is not installed by
+default in MinGW32!
+
 - git clone this project
 - create a `build` dir
 ```
@@ -41,6 +49,17 @@ Then:
 If you use `ninja` you can use `cmake .. -G Ninja` instead.
 
 Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
+
+### Ubuntu
+- git clone this project
+- run `./install_dependencies_ubuntu.sh` (only required once)
+- create a `build` dir
+```
+    mkdir build
+    cd build
+    cmake ..
+    make -j4
+```
 
 ## Running
 Easiest is to run the executable from the root. Shared libraries that are required are: libalfont.dll, alleg42.dll, libwinpthread-1.dll and mscvr70.dll.
