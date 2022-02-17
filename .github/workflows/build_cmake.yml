@@ -35,3 +35,32 @@ jobs:
         run: |
           cd "${{ github.workspace }}\build"
           cmake --build . --target all -- -j -l 3
+  Ubuntu:
+    name: Ubuntu
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 11
+#          platform: x64
+          platform: x86
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          cd "${{ github.workspace }}"
+          chmod +x install_dependencies_ubuntu.sh
+          ./install_dependencies_ubuntu.sh
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
