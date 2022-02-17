@@ -1,3 +1,4 @@
+#include <fmt/core.h>
 #include "../../include/d2tmh.h"
 #include "cStructureFactory.h"
 
@@ -120,9 +121,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     float fHealth = hp * fPercent;
 
     if (game.isDebugMode()) {
-        char msg2[255];
-        sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%f]", iStructureType, hp, fHealth);
-        logbook(msg2);
+        logbook(fmt::format("Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth));
     }
 
     int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;

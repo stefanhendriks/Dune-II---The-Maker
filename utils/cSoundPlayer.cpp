@@ -97,7 +97,7 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
             break;
         }
 
-        auto msg = fmt::format("Failed reserving %d voices. Will try %d.", nr_voices, (nr_voices / 2));
+        auto msg = fmt::format("Failed reserving {} voices. Will try {}.", nr_voices, (nr_voices / 2));
         logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
 
         nr_voices /= 2;

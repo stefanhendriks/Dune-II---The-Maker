@@ -5,8 +5,8 @@
 #include "map/cMapCamera.h"
 #include "utils/cSoundPlayer.h"
 
+#include <fmt/core.h>
 #include <allegro/mouse.h>
-
 #include <algorithm>
 
 cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
@@ -266,10 +266,8 @@ void cMouseUnitsSelectedState::evaluateSelectedUnits() {
 
 void cMouseUnitsSelectedState::setState(eMouseUnitsSelectedState newState) {
     if (newState != m_state) {
-        char msg[255];
-        sprintf(msg, "cMouseUnitsSelectedState: Changed state from [%s] to [%s]", mouseUnitsSelectedStateString(m_state),
-                mouseUnitsSelectedStateString(newState));
-        logbook(msg);
+        logbook(fmt::format("cMouseUnitsSelectedState: Changed state from [{}] to [{}]", mouseUnitsSelectedStateString(m_state),
+                mouseUnitsSelectedStateString(newState)));
         this->m_prevState = this->m_state;
         this->m_state = newState;
     }

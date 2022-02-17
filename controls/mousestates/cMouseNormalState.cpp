@@ -12,6 +12,7 @@
 
 #include "data/gfxdata.h"
 
+#include <fmt/core.h>
 #include <algorithm>
 
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
@@ -211,9 +212,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
 
 void cMouseNormalState::setState(eMouseNormalState newState) {
     if (game.isDebugMode()) {
-        char msg[255];
-        sprintf(msg, "Setting state from %s to %s", mouseNormalStateString(m_state), mouseNormalStateString(newState));
-        logbook(msg);
+        logbook(fmt::format("Setting state from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
     }
     m_state = newState;
 }
