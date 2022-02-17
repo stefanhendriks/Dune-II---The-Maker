@@ -64,9 +64,7 @@ namespace brains {
             }
         }
 
-        memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() - cellToAttack = %d", cellToAttack);
-        player->log(msg);
+        player->log(fmt::format("cPlayerBrainFremenSuperWeapon::think() - cellToAttack = {}", cellToAttack));
 
         // order units to attack!
         for (auto &id : ids) {
@@ -75,9 +73,7 @@ namespace brains {
             pUnit.attackAt(cellToAttack);
         }
 
-        memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() - FINISHED");
-        player->log(msg);
+        player->log("cPlayerBrainFremenSuperWeapon::think() - FINISHED");
     }
 
     void cPlayerBrainFremenSuperWeapon::onNotifyGameEvent(const s_GameEvent &) {
