@@ -184,13 +184,13 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructu
 	assert(theStructure);
 	const s_StructureInfo &structureType = theStructure->getS_StructuresType();
 
-	char description[255];
+	std::string description;
 	if (theStructure->isPrimary()) {
-		sprintf(description, "%s (PRIMARY)", structureType.name);
+		description=fmt::format("{} (PRIMARY)", structureType.name);
 	} else {
-		sprintf(description, "%s", structureType.name);
+		description=fmt::format("{}", structureType.name);
 	}
-	textWriter.write(description, makecol(255, 255, 0));
+	textWriter.write(description.c_str(), makecol(255, 255, 0));
 	textWriter.writeWithTwoIntegers("Hitpoints : %d/%d", theStructure->getHitPoints(), theStructure->getMaxHP());
 	textWriter.writeWithOneInteger("Armor : %d", theStructure->getArmor());
 	textWriter.writeWithOneInteger("Protected : %d%%", (100-theStructure->getPercentageNotPaved()));
