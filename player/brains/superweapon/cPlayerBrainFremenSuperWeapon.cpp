@@ -26,16 +26,11 @@ namespace brains {
         }
 
         if (!foundIdleUnit) {
-//        char msg[255];
-//        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - NO idle unit(s) to attack with.", player->getId());
-//        logbook(msg);
             return;
         }
 
-        char msg[255];
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - found %d idle unit(s) to attack with.",
-                player->getId(), ids.size());
-        logbook(msg);
+        logbook(fmt::format("cPlayerBrainFremenSuperWeapon::think() AI[{}] - found {} idle unit(s) to attack with.",
+                            player->getId(), ids.size()));
 
         // attack things!
         int cellToAttack = -1;
