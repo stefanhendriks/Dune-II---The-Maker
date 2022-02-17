@@ -39,14 +39,14 @@ jobs:
     name: Ubuntu
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Install dependencies
-        run: |
-          cd "${{ github.workspace }}"
-          ./install_dependencies_ubuntu.sh
       - name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: Install dependencies
+        run: |
+          cd "${{ github.workspace }}"
+          ./install_dependencies_ubuntu.sh
       - name: Configure
         run: |
           cd "${{ github.workspace }}"
