@@ -46,6 +46,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd "${{ github.workspace }}"
+          chmod +x install_dependencies_ubuntu.sh
           ./install_dependencies_ubuntu.sh
       - name: Configure
         run: |
