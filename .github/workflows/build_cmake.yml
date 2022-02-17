@@ -35,3 +35,25 @@ jobs:
         run: |
           cd "${{ github.workspace }}\build"
           cmake --build . --target all -- -j -l 3
+  Ubuntu:
+    name: Ubuntu
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Install dependencies
+        run: |
+          cd "${{ github.workspace }}"
+          ./install_dependencies_ubuntu.sh
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
