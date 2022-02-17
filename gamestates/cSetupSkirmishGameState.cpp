@@ -1,6 +1,5 @@
 #include "cSetupSkirmishGameState.h"
 
-#include "map/cRandomMapGenerator.h"
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/cAllegroDrawer.h"

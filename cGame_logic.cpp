@@ -13,6 +13,8 @@
 
 #include "d2tmh.h"
 #include "drawers/cAllegroDrawer.h"
+#include "gamestates/cCreditsState.h"
+#include "ini.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
 #include "timers.h"
@@ -21,8 +23,6 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
-
-#include "gamestates/cCreditsState.h"
 
 #include <allegro.h>
 #include <alfont.h>

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "definitions.h"
 #include "cGameState.h"
 #include "definitions.h"
 
