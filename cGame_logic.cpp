@@ -1624,7 +1624,7 @@ void cGame::drawCombatMouse() {
 
 void cGame::saveBmpScreenToDisk() {
 
-    std::string filename = fmt::format("{}x{}_{:0^4}.bmp", m_screenX, m_screenY, m_screenshot);
+    std::string filename = fmt::format("{}x{}_{:0>4}.bmp", m_screenX, m_screenY, m_screenshot);
 
     save_bmp(filename.c_str(), bmp_screen, general_palette);
 
