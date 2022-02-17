@@ -1,6 +1,7 @@
 #include "d2tmh.h"
 #include "cMainMenuGameState.h"
 
+#include <fmt/core.h>
 #include <alfont.h>
 #include <allegro.h>
 
@@ -154,9 +155,7 @@ void cMainMenuGameState::draw() const {
     textDrawer.drawTextBottomRight(game.m_version.c_str());
 
     if (game.isDebugMode()) {
-        char mouseTxt[255];
-        sprintf(mouseTxt, "%d, %d", mouse_x, mouse_y);
-        textDrawer.drawText(0, 0, mouseTxt);
+        textDrawer.drawText(0, 0, fmt::format("{}, {}", mouse_x, mouse_y).c_str());
     }
 
     // MOUSE

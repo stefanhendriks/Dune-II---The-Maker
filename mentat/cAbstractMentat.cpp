@@ -14,6 +14,7 @@
 
 #include <alfont.h>
 #include <allegro.h>
+#include <fmt/core.h>
 
 // "default" Constructor
 cAbstractMentat::cAbstractMentat() {
@@ -313,9 +314,7 @@ void cAbstractMentat::initSentences() {
 
 void cAbstractMentat::setSentence(int i, const char *text) {
     sprintf(sentence[i], "%s", text);
-    char msg[512];
-    sprintf(msg, "Sentence[%d]=%s", i, text);
-    logbook(msg);
+    logbook(fmt::format("Sentence[{}]={}", i, text));
 }
 
 void cAbstractMentat::loadScene(const std::string& scene) {
@@ -330,16 +329,12 @@ void cAbstractMentat::loadScene(const std::string& scene) {
     iMovieFrame=0;
 
     if (gfxmovie != nullptr) {
-        char msg[255];
-        sprintf(msg, "Successful loaded scene [%s]", filename);
-        logbook(msg);
+        logbook(fmt::format("Successful loaded scene [{}]", filename));
         return;
     }
 
     gfxmovie=nullptr;
-    char msg[255];
-    sprintf(msg, "Failed to load scene [%s]", filename);
-    logbook(msg);
+    logbook(fmt::format("Failed to load scene [{}]", filename));
 }
 
 void cAbstractMentat::speak() {

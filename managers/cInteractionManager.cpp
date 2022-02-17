@@ -1,4 +1,5 @@
 #include "cInteractionManager.h"
+#include <fmt/core.h>
 
 #include "building/cItemBuilder.h"
 #include "cDrawManager.h"
@@ -27,9 +28,7 @@ cInteractionManager::~cInteractionManager() {
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     this->sidebar = thePlayer->getSideBar();
     this->player = thePlayer;
-    char msg[255];
-    sprintf(msg, "cInteractionManager::setPlayerToInteractFor for player [%d] [%s]", thePlayer->getId(), thePlayer->getHouseName().c_str());
-    logbook(msg);
+    logbook(fmt::format("cInteractionManager::setPlayerToInteractFor for player [{}] [{}]", thePlayer->getId(), thePlayer->getHouseName()));
 }
 
 void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &) {
