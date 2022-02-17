@@ -4,8 +4,7 @@
 
 echo  ---------------------------------
 echo  ---                           ---
-echo  ---      D2TM	            ---
-echo  ---  Installing dependancies  ---
+echo  ---  Installing dependencies  ---
 echo  ---                           ---
 echo  ---------------------------------
 
