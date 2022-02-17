@@ -1623,19 +1623,10 @@ void cGame::drawCombatMouse() {
 }
 
 void cGame::saveBmpScreenToDisk() {
-    char filename[25];
 
-    if (m_screenshot < 10) {
-        sprintf(filename, "%dx%d_000%d.bmp", m_screenX, m_screenY, m_screenshot);
-    } else if (m_screenshot < 100) {
-        sprintf(filename, "%dx%d_00%d.bmp", m_screenX, m_screenY, m_screenshot);
-    } else if (m_screenshot < 1000) {
-        sprintf(filename, "%dx%d_0%d.bmp", m_screenX, m_screenY, m_screenshot);
-    } else {
-        sprintf(filename, "%dx%d_%d.bmp", m_screenX, m_screenY, m_screenshot);
-    }
+    std::string filename = fmt::format("{}x{}_{:0^4}.bmp", m_screenX, m_screenY, m_screenshot);
 
-    save_bmp(filename, bmp_screen, general_palette);
+    save_bmp(filename.c_str(), bmp_screen, general_palette);
 
     // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
     // a Quake console perhaps?
