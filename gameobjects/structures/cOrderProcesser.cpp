@@ -221,7 +221,7 @@ void cOrderProcesser::sendFrigate() {
             int cy = map.getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
-            int f = face_angle(d); // get the angle
+            int f = faceAngle(d); // get the angle
 
             unit[unitId].iBodyShouldFace = f;
             unit[unitId].iBodyFacing = f;

@@ -56,3 +56,9 @@ You have various options:
 - Grab the [latest release from Github](https://github.com/stefanhendriks/Dune-II---The-Maker/releases)
 - Grab a version from [D2TM's homepage](https://www.dune2themaker.com)
 - Compile this project yourself
+
+## Topics
+In the code there are several known concepts; see below for extra information
+about them:
+
+- [Angles: how to calculate and use them to draw things](doc/convertAngleToDrawIndex.md)

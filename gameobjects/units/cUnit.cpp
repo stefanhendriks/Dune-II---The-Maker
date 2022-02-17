@@ -693,8 +693,8 @@ void cUnit::draw() {
     const int bmp_height = unitType.bmp_height;
 
     // the multiplier we will use to draw the unit
-    const int bmp_head = convert_angle(iHeadFacing);
-    const int bmp_body = convert_angle(iBodyFacing);
+    const int bmp_head = convertAngleToDrawIndex(iHeadFacing);
+    const int bmp_body = convertAngleToDrawIndex(iBodyFacing);
 
     // draw body first
     int start_x = bmp_body * bmp_width;
@@ -1615,8 +1615,8 @@ void cUnit::thinkFast_move_airUnit() {
 
     // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
     int d = fDegrees(iCellX, iCellY, goalCellX, goalCellY);
-    int idealAngle = face_angle(d);
-    int f = face_angle(d); // get the angle
+    int idealAngle = faceAngle(d);
+    int f = faceAngle(d); // get the angle
     float angle = 0;
 
     iBodyShouldFace = idealAngle;
@@ -1793,7 +1793,7 @@ void cUnit::shoot(int iTargetCell) {
     // particles are rendered at the center, so do it here as well
     int iShootX = pos_x() + (getBmpWidth() / 2);
     int iShootY = pos_y() + (getBmpHeight() / 2);
-    int bmp_head = convert_angle(iHeadFacing);
+    int bmp_head = convertAngleToDrawIndex(iHeadFacing);
 
     // TODO: add this in sUnitInfo
     if (iType == TANK) {
@@ -2174,7 +2174,7 @@ void cUnit::actionGuard() {
 
 int cUnit::getFaceAngleToCell(int cell) const {
     int d = fDegrees(iCellX, iCellY, map.getCellX(cell), map.getCellY(cell));
-    return face_angle(d); // get the angle
+    return faceAngle(d); // get the angle
 }
 
 void cUnit::startChasingTarget() {
@@ -4346,7 +4346,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
     int cy = map.getCellY(iCll);
 
     int d = fDegrees(iCellX, iCellY, cx, cy);
-    int f = face_angle(d); // get the angle
+    int f = faceAngle(d); // get the angle
 
     unit[iUnit].iBodyShouldFace = f;
     unit[iUnit].iBodyFacing = f;
