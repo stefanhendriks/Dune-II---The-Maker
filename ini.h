@@ -9,6 +9,12 @@
   2001 - 2022 (c) code by Stefan Hendriks
 
   */
+#pragma once
+
+#include <string>
+
+class cAbstractMentat;
+class cSelectYourNextConquestState;
 
 // Sections
 #define INI_NONE       -1

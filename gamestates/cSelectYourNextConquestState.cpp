@@ -1,7 +1,14 @@
 #include "cSelectYourNextConquestState.h"
 
-#include "d2tmh.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
+#include "data/gfxworld.h"
+#include "drawers/cAllegroDrawer.h"
+#include "drawers/cMessageDrawer.h"
+#include "ini.h"
 #include "managers/cDrawManager.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
 

@@ -10,11 +10,19 @@
 
   */
 
-#include "include/d2tmh.h"
+#include "ini.h"
 
-#include "map/cMapEditor.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "definitions.h"
+#include "gamestates/cSelectYourNextConquestState.h"
 #include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
+#include "map/cMapCamera.h"
+#include "map/cMapEditor.h"
+#include "mentat/cAbstractMentat.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
+#include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
 
 #include <allegro.h>
