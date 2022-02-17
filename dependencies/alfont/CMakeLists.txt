@@ -31,6 +31,10 @@ set(FREETYPE_SOURCES
     "freetype/src/autofit/autofit.c"
 )
 
+if (UNIX)
+  add_definitions(-DALFONT_LINUX)
+endif()
+
 add_library(alfont STATIC
     "src/alfont.c"
     ${FREETYPE_SOURCES}
@@ -43,10 +47,17 @@ target_include_directories(alfont
     "include"
 )
 
+if (UNIX)
+target_link_libraries(alfont
+  PUBLIC
+    alleg
+)
+else()
 target_link_libraries(alfont
   PUBLIC
     allegro
 )
+endif()
 
 # Alfont has DOS and Linux specific fixes. Building for DOS is not supported for d2tm, but for
 # Linux, we enable these fixes here.
@@ -61,7 +72,7 @@ target_compile_options(alfont
   PRIVATE
     "-D${ALFONT_PLATFORM}"
     "-O2"
-    "-march=pentium"
+    #"-march=pentium"
     "-fomit-frame-pointer"
     "-finline-functions"
     "-ffast-math"
