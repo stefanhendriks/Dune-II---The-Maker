@@ -39,6 +39,12 @@ jobs:
     name: Ubuntu
     runs-on: [ ubuntu-latest ]
     steps:
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: latest
+#          platform: x64
+          platform: x86
       - name: Checkout
         uses: actions/checkout@v2
         with:
