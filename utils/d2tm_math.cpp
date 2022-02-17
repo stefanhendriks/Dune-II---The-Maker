@@ -58,69 +58,57 @@ float fRadians(int x1, int y1, int x2, int y2)
  * @return
  */
 float fDegrees(int x1, int y1, int x2, int y2) {
-  /***
-   calculation between two 2D positions, returning the angle in degrees (1-360 degrees).
+    /***
+     calculation between two 2D positions, returning the angle in degrees (1-360 degrees).
 
-   Method used:
+     Method used:
 
-   x1,y1 is always center of our 'fictional triangle'.
-   Example:
-
-
-    A           B
-   x1,y1--------
-   \           |
-    ----       |
-        \------+x2,y2
-                C
+     x1,y1 is always center of our 'fictional triangle'.
+     Example:
 
 
-   Using tan to calculate the angle.
+      A           B
+     x1,y1--------
+     \           |
+      ----       |
+          \------+x2,y2
+                  C
 
-  tan = AB/BC
+
+     Using tan to calculate the angle.
+
+    tan = AB/BC
 
 
-  the distances between A and B , B and C are calculated by delta_x and delta_y. Those will always
-  be > 0 due the ABS command.
-  ***/
+    the distances between A and B , B and C are calculated by delta_x and delta_y. Those will always
+    be > 0 due the ABS command.
+    ***/
 
-  float delta_x = (x2-x1);
-  float delta_y = (y2-y1);
+    float delta_x = (x2 - x1);
+    float delta_y = (y2 - y1);
 
-  // this makes the 'circle' start at the top. If we use delta_y, delta_x as you would expect, the 'circle' (360 degrees)
-  // starts at the left
-  float angle = (std::atan2(delta_x, delta_y));
+    // this makes the 'circle' start at the top. If we use delta_y, delta_x as you would expect, the 'circle' (360 degrees)
+    // starts at the left
+    float angle = (std::atan2(delta_x, delta_y));
 
-  // convert to fDegrees
-  angle =  angle * (180 / M_PI);
+    // convert to fDegrees
+    angle = angle * (180 / M_PI);
 
-  angle += 180;
-  return angle;
-}
+    angle += 180;
 
-// for bullets; bullets have twice as many angles (facings) than units. (16)
-int bullet_face_angle(float angle) {
-  int a = angle;
-  int chop = (45/2);        // 45/2 fDegrees is one chop now (TODO: Make this configurable)
-  a = std::abs(a-360);
-  return (a/chop);
-}
-
-/**
- * This function inverts degrees so that 360 becomes 0. 260 becomes 100, etc.
- * By basically substracting 360 from the given input (while keeping it an
- * absolute number).
- *
- * @param degrees
- * @return
- */
-float invertDegrees(float degrees) {
-    // fDegrees return values:
+    // angle is now as following:
     // 360 is UP, (0 is also UP)
     // 270 = RIGHT,
     // 180 = DOWN,
     // 90 = LEFT
-    return std::fabs(degrees-360);
+    return std::fabs(angle - 360);
+}
+
+// for bullets; bullets have twice as many angles (facings) than units. (16)
+// also, bullets have a clock-wise rotation on the drawing bitmap
+int bullet_face_angle(float angle) {
+    int facingAngle = faceAngle(angle, 16);
+    return convertAngleToDrawIndex(facingAngle, true, 0, 16);
 }
 
 float wrapDegrees(float value) {
@@ -164,9 +152,8 @@ bool isAngleBetween(int degrees, int angle1, int angle2) {
  * @param angle
  * @return
  */
-int face_angle(float angle, int angles) {
+int faceAngle(float angle, int angles) {
   int degreesPerFacing = (360 / angles);
-  float invertedDegrees = invertDegrees(angle);
 
   // face angles are determined
   // by having boundaries of degrees
@@ -185,9 +172,8 @@ int face_angle(float angle, int angles) {
   float start = wrapDegrees(startDegreesFacing); // ie 338
   float end = wrapDegrees(start + degreesPerFacing); // ie 338 + 45 = 383 - 360 = 23
 
-  // max 8 facings for now, can we do this faster??
-  while (facingIndex < 8) {
-      if (isAngleBetween(invertedDegrees, start, end)) {
+  while (facingIndex < angles) {
+      if (isAngleBetween(angle, start, end)) {
           // found it!
           break;
       }
@@ -199,33 +185,31 @@ int face_angle(float angle, int angles) {
     return facingIndex;
 }
 
-// Converts the face_angle produced with the function above, into a correct number for drawing
+// Converts the faceAngle produced with the function above, into a correct number for drawing
 // correctly.
-int convert_angle(int face_angle) {
-  // Drawing works like this:
-  // The unit looks at the RIGHT at the 1st picture. So you start at position 0,0 and copy the
-  // correct part of that unit (using the properties given by the unit structure database). When
-  // a unit looks a different way, you use this number to multiply by the width of a frame in
-  // order to start at the correct positions.
+int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int maxFacings) {
+    if (clockWiseBitmap) {
+        // assume drawing bitmap has a clockwise direction (from left to right).
+        // in that case, the offset is *added* to the faceAngle
+        int angle = offset + faceAngle;
 
-  // Due the fact that we use 0 as UP , and since WW uses 0 as RIGHT, we have to convert.
-  // another problem is that we go clockwise and WW does NOT.
+        // and finally make sure we wrap around
+        if (angle > (maxFacings - 1)) {
+            angle -= maxFacings;
+        }
+        return angle;
+    } else {
+        // assume drawing bitmap has a counter-clockwise direction (going from left to right).
+        // we need to substract the faceAngle from the offset here.
 
-  // How the real facing is................ and what it should be for drawing...
-  if (face_angle == FACE_RIGHT)       return 0;
-  if (face_angle == FACE_UPRIGHT)     return 1;
-  if (face_angle == FACE_UP)          return 2;
-  if (face_angle == FACE_UPLEFT)      return 3;
-  if (face_angle == FACE_LEFT)        return 4;
-  if (face_angle == FACE_DOWNLEFT)    return 5;
-  if (face_angle == FACE_DOWN)        return 6;
-  if (face_angle == FACE_DOWNRIGHT)   return 7;
+        int angle = offset - faceAngle;
 
-  return 0; // BLEH
-//
-//  assert(false && "Invalid face angle");
-//
-//  return 0; // theoretically cannot reach here, return 0 in all other cases
+        // and finally make sure we wrap around
+        if (angle < 0) {
+            angle += maxFacings;
+        }
+        return angle;
+    }
 }
 
 // return random number between 0 and 'max'
