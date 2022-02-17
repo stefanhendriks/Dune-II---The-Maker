@@ -2,7 +2,7 @@
 
 #include "definitions.h"
 
-#include <cstdio>
+//#include <cstdio>
 #include <ctime>
 #include <system_error>
 
@@ -165,12 +165,12 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 
     logline += event;
 
-    fprintf(m_file, "%s\n", logline.c_str()); // print the text into the file
-    fflush(m_file);
+    logCommentLine(logline);
 }
 
 void cLogger::logCommentLine(const std::string& txt) {
-    fprintf(m_file, "\\\\%s\n", txt.c_str()); // print the text into the file
+    m_file << txt << std::endl;
+    m_file.flush();
 }
 
 void cLogger::logHeader(const std::string& txt) {
@@ -183,8 +183,9 @@ void cLogger::logHeader(const std::string& txt) {
 }
 
 
-cLogger::cLogger() : m_file(std::fopen("log.txt", "wt")), m_startTime(std::clock()), m_debugMode(false) {
-    if (m_file == nullptr) {
+cLogger::cLogger() : m_startTime(std::clock()), m_debugMode(false) {
+    m_file.open ("log.txt", std::ofstream::out | std::ofstream::trunc);
+    if (!m_file.is_open()) {
         // This translates the POSIX error number into a C++ exception
         throw std::system_error(errno, std::generic_category());
     }
@@ -192,7 +193,7 @@ cLogger::cLogger() : m_file(std::fopen("log.txt", "wt")), m_startTime(std::clock
 
 cLogger::~cLogger() {
     log(eLogLevel::LOG_INFO, eLogComponent::COMP_NONE, "Logger shut down", "Thanks for playing.");
-    fclose(m_file);
+    m_file.close();
 }
 
 /* From 1970-01-01T00:00:00 */
