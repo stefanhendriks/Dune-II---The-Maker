@@ -652,9 +652,10 @@ void cGame::shutdown() {
     }
 
     // Destroy font of Allegro FONT library
+#ifdef D2TM_DEFAULTS
     alfont_destroy_font(game_font);
     alfont_destroy_font(bene_font);
-
+#endif
     // Exit the font library (must be first)
     alfont_exit();
 
