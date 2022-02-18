@@ -39,6 +39,13 @@ constexpr auto kMaxAlpha = 255;
 
 }
 
+#ifdef D2TM_LINUX	//run in LINUX
+    #define OS_PLATFORM "Linux OS"
+#endif
+#ifdef D2TM_DEFAULTS	//run in Defaults
+    #define OS_PLATFORM "Default OS"
+#endif
+
 cGame::cGame() : m_timeManager(*this) {
     memset(m_states, 0, sizeof(cGameState *));
 

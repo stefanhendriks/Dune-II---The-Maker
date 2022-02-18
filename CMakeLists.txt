@@ -95,6 +95,12 @@ else()
   )
 endif()
 
+if(UNIX)
+  set(D2TM_PLATFORM "D2TM_LINUX")
+else() # Default to "Windows" (no fixes)
+  set(D2TM_PLATFORM "D2TM_DEFAULTS")
+endif()
+
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(D2TM_OPTMIZATION "-O0")
 else()
@@ -107,6 +113,7 @@ endif()
 target_compile_options(${PROJECT_NAME}
   PRIVATE
     ${D2TM_OPTMIZATION}
+    "-D${D2TM_PLATFORM}"
     "-Werror"
     "-Wall"
     "-Wextra"
