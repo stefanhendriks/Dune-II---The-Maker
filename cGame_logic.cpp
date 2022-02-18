@@ -40,9 +40,9 @@ constexpr auto kMaxAlpha = 255;
 }
 
 #ifdef D2TM_LINUX	//run in LINUX
-    #define OS_PLATFORM "Linux OS"
+    constexpr auto OS_PLATFORM = "Linux OS" ;
 #else //#ifdef D2TM_DEFAULTS	//run in Defaults
-    #define OS_PLATFORM "Default OS"
+    constexpr auto OS_PLATFORM = "Default OS"; 
 #endif
 
 cGame::cGame() : m_timeManager(*this) {
