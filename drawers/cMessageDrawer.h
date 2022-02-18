@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class BITMAP;
 
 namespace messages {
@@ -32,15 +34,15 @@ class cMessageDrawer {
 
 		void initCombatPosition();
 
-		void setMessage(const char msg[255]); // set a new message
-		char * getMessage() { return &cMessage[0]; }
-		bool hasMessage() { return cMessage[0] != '\0'; }
+		void setMessage(const std::string &msg);  // set a new message
+		const std::string& getMessage() { return cMessage; }
+		bool hasMessage() { return (!cMessage.empty()); }
 
 	protected:
 
 	private:
 		// MESSAGING / HELPER
-		char cMessage[255];
+		std::string cMessage;
 		int iMessageAlpha;
 		int TIMER_message;
 		int x, y;	// draw positions

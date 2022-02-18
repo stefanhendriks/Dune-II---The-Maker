@@ -43,7 +43,7 @@ void cSideBar::think() {
 }
 
 void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const {
-    drawManager->getMessageDrawer()->setMessage(item->getInfo().c_str());
+    drawManager->getMessageDrawer()->setMessage(item->getInfo());
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {

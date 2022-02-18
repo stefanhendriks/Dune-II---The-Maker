@@ -111,10 +111,8 @@ void cSelectYourNextConquestState::thinkFast() {
         }
 
         cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
-        char *cMessage = pDrawer->getMessage();
-
         isFinishedConqueringRegions = true;
-        bool isNotDisplayingMessage = cMessage[0] == '\0';
+        bool isNotDisplayingMessage = pDrawer->hasMessage();
 
         for (int i = 0; i < MAX_REGIONS; i++) {
             if (iRegionConquer[i] < 0) continue;
@@ -281,9 +279,7 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const { // draw dun
 
     // Animate here (so add regions that are conquered)
     cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
-    char *cMessage = pDrawer->getMessage();
-
-    bool isNotDisplayingMessage = cMessage[0] == '\0';
+    bool isNotDisplayingMessage = pDrawer->hasMessage();
 
     if (isFinishedConqueringRegions && isNotDisplayingMessage) {
         pDrawer->setMessage("Select your next region.");

@@ -100,7 +100,7 @@ void cOrderProcesser::think() {
 			sendFrigate();
 			messageDrawer->setMessage("Frigate is arriving...");
 		} else {
-			messageDrawer->setMessage(msg.c_str());
+			messageDrawer->setMessage(msg);
 		}
 	}
 

@@ -21,7 +21,6 @@ cMessageDrawer::~cMessageDrawer() {
 
 void cMessageDrawer::destroy() {
     iMessageAlpha = -1;
-    memset(cMessage, 0, sizeof(cMessage));
     TIMER_message = 0;
 
     destroy_bitmap(bmpBar);
@@ -33,7 +32,7 @@ void cMessageDrawer::init() {
     fadeState = messages::eMessageDrawerFadingState::FADE_IN;
     keepMessage = false;
     iMessageAlpha = -1;
-	memset(cMessage, 0, sizeof(cMessage));
+    cMessage.clear();
 	TIMER_message = 0;
 	initCombatPosition();
 }
@@ -99,7 +98,7 @@ void cMessageDrawer::thinkFast() {
 
     // clear message
     if (iMessageAlpha < 1) {
-        memset(cMessage, 0, sizeof(cMessage));
+        cMessage.clear();
     }
     TIMER_message=0;
 }
@@ -110,11 +109,10 @@ void cMessageDrawer::thinkFast() {
  *
  * @param msg
  */
-void cMessageDrawer::setMessage(const char msg[255]) {
+void cMessageDrawer::setMessage(const std::string &msg) {
 	TIMER_message=0;
     fadeState = messages::eMessageDrawerFadingState::FADE_IN;
-	memset(cMessage, 0, sizeof(cMessage));
-	sprintf(cMessage, "%s", msg);
+    cMessage = msg;
 }
 
 void cMessageDrawer::draw() {
@@ -130,7 +128,7 @@ void cMessageDrawer::draw() {
 		draw_sprite(temp, bmpBar, 0,0);
 
 		// draw message
-		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
+		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage.c_str());
 
 		// draw temp
 		draw_trans_sprite(bmp_screen, temp, x, y);
