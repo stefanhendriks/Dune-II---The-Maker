@@ -1,5 +1,6 @@
-#include "d2tmh.h"
+#include "cProceedButtonCommand.h"
 
+#include "d2tmc.h"
 #include "managers/cDrawManager.h"
 
 void cProceedButtonCommand::execute(cAbstractMentat &mentat) {

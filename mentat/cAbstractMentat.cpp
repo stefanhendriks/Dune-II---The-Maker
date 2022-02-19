@@ -10,24 +10,28 @@
 
   */
 
-#include "include/d2tmh.h"
+#include "cAbstractMentat.h"
+
+#include "cButtonCommand.h"
+#include "d2tmc.h"
+#include "definitions.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <alfont.h>
 #include <allegro.h>
 #include <fmt/core.h>
 
-// "default" Constructor
 cAbstractMentat::cAbstractMentat() {
-	iMentatSentence = -1;
+	  iMentatSentence = -1;
 
-	TIMER_Speaking = -1;
-	TIMER_Mouth = 0;
-	TIMER_Eyes = 0;
-	TIMER_Other = 0;
+	  TIMER_Speaking = -1;
+	  TIMER_Mouth = 0;
+	  TIMER_Eyes = 0;
+	  TIMER_Other = 0;
     TIMER_movie = 0;
 
-	iMentatMouth = 3;
-	iMentatEyes = 3;
+	  iMentatMouth = 3;
+	  iMentatEyes = 3;
     iMovieFrame=-1;
 
     iBackgroundFrame = -1;
@@ -51,33 +55,17 @@ cAbstractMentat::cAbstractMentat() {
     offsetX = (game.m_screenX - 640) / 2;
     offsetY = (game.m_screenY - 480) / 2; // same goes for offsetY (but then for 480 height).
 
-	memset(sentence, 0, sizeof(sentence));
-	logbook("cAbstractMentat::cAbstractMentat()");
+	  memset(sentence, 0, sizeof(sentence));
+	  logbook("cAbstractMentat::cAbstractMentat()");
 }
 
 cAbstractMentat::~cAbstractMentat() {
-	iMentatSentence = -1;
-
-	TIMER_Speaking = -1;
-	TIMER_Mouth = 0;
-	TIMER_Eyes = 0;
-	TIMER_Other = 0;
-    TIMER_movie = 0;
-
-	iMentatMouth = 3;
-	iMentatEyes = 3;
-    iMovieFrame=-1;
-
-    state = INIT;
-
-    iBackgroundFrame = -1;
-
     // we can do this because Mentats are created/deleted before allegro gets destroyed
     if (gfxmovie) {
         unload_datafile(gfxmovie);
     }
-
     gfxmovie = nullptr;
+
     delete leftButton;
     delete rightButton;
     leftButtonBmp = nullptr;
@@ -85,10 +73,6 @@ cAbstractMentat::~cAbstractMentat() {
 
     delete leftButtonCommand;
     delete rightButtonCommand;
-
-    font = nullptr;
-
-	memset(sentence, 0, sizeof(sentence));
 
     logbook("cAbstractMentat::~cAbstractMentat()");
 }

@@ -1,12 +1,9 @@
-#ifndef D2TM_CORDOSMENTAT_H
-#define D2TM_CORDOSMENTAT_H
+#pragma once
 
 #include "cAbstractMentat.h"
 
 class cOrdosMentat : public cAbstractMentat {
-
-private:
-
+  private:
     void draw_mouth();
     void draw_eyes();
     void draw_other();
@@ -15,10 +12,6 @@ private:
 
 public:
     cOrdosMentat();
-    ~cOrdosMentat();
 
     void think();
 };
-
-
-#endif //D2TM_CORDOSMENTAT_H

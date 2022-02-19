@@ -1,14 +1,15 @@
 #pragma once
 
-#include <string>
 #include "enums.h"
-#include <cassert>
-#include <utils/common.h>
+#include "sidebar/cBuildingListItem.h"
+#include "utils/common.h"
 
 #include <fmt/core.h>
 
+#include <cassert>
+#include <string>
+
 class cPlayer;
-class cBuildingListItem;
 class cBuildingList;
 
 struct s_GameEvent {
