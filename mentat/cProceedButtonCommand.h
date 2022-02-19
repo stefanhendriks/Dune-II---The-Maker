@@ -1,5 +1,4 @@
-#ifndef D2TM_CPROCEEDBUTTONCOMMAND_H
-#define D2TM_CPROCEEDBUTTONCOMMAND_H
+#pragma once
 
 class cAbstractMentat;
 
@@ -14,6 +13,3 @@ public:
     void execute(cAbstractMentat& mentat) override;
 
 };
-
-
-#endif //D2TM_CPROCEEDBUTTONCOMMAND_H

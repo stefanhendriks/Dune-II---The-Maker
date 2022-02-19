@@ -1,4 +1,9 @@
-#include "d2tmh.h"
+#include "cAtreidesMentat.h"
+
+#include "cProceedButtonCommand.h"
+#include "cRepeatButtonCommand.h"
+#include "d2tmc.h"
+#include "data/gfxmentat.h"
 
 #include <allegro.h>
 
@@ -9,8 +14,6 @@ cAtreidesMentat::cAtreidesMentat() {
     leftButtonCommand = new cRepeatButtonCommand();
     rightButtonCommand = new cProceedButtonCommand();
 }
-
-cAtreidesMentat::~cAtreidesMentat() = default;
 
 void cAtreidesMentat::think() {
     // think like base class

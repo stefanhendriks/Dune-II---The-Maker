@@ -1,9 +1,10 @@
-#include "d2tmh.h"
 #include "cAllegroDataRepository.h"
 
-#include <fmt/core.h>
+#include "d2tmc.h"
+
 #include <allegro/datafile.h>
 #include <allegro/gfx.h>
+#include <fmt/core.h>
 
 cAllegroDataRepository::cAllegroDataRepository() {
     for (int i = 0; i < MAX_BITMAPS; i++) {
