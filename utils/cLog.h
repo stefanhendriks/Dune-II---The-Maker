@@ -1,6 +1,5 @@
 #pragma once
 
-//#include <cstdio>
 #include <iostream>
 #include <fstream>
 
@@ -68,7 +67,6 @@ class cLogger {
       cLogger(const cLogger&) = delete;
       cLogger(cLogger&&) = delete;
 
-      //std::FILE* m_file;
       std::ofstream m_file;
 
       long m_startTime; // start time of logging in miliseconds
