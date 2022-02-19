@@ -164,11 +164,12 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 
     logline += event;
 
-    logCommentLine(logline);
+    m_file << logline << std::endl;
+    m_file.flush();
 }
 
 void cLogger::logCommentLine(const std::string& txt) {
-    m_file << txt << std::endl;
+    m_file << "\\\\" << txt << std::endl;
     m_file.flush();
 }
 
