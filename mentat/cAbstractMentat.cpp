@@ -320,10 +320,9 @@ void cAbstractMentat::setSentence(int i, const char *text) {
 void cAbstractMentat::loadScene(const std::string& scene) {
     gfxmovie = nullptr;
 
-    char filename[255];
-    sprintf(filename, "data/scenes/%s.dat", scene.c_str());
+    std::string filename = fmt::format("data/scenes/{}.dat", scene);
 
-    gfxmovie = load_datafile(filename);
+    gfxmovie = load_datafile(filename.c_str());
 
     TIMER_movie = 0;
     iMovieFrame=0;
