@@ -12,20 +12,13 @@
 
 #pragma once
 
-#include <set>
+#include "cAbstractStructure.h"
 
 class cStructureFactory {
-
-
-private:
-    static cStructureFactory *instance;
-
-protected:
+  protected:
     cStructureFactory();
 
-    ~cStructureFactory();
-
-public:
+  public:
 
     static cStructureFactory *getInstance();
 

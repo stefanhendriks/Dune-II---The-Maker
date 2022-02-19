@@ -1,17 +1,19 @@
 #pragma once
 
-class cRepairFacility : public cAbstractStructure {
+#include "cAbstractStructure.h"
+#include "enums.h"
 
-private:
+class cRepairFacility : public cAbstractStructure {
+  private:
     void think_animation_unitDeploy();
 
     int TIMER_repairunit;
 
     eAnimationDirection animDir;
-public:
+
+  public:
     cRepairFacility();
 
-    // overloaded functions    
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -27,6 +29,4 @@ public:
     void startAnimating() override;
 
     void draw() override { drawWithShadow(); }
-
 };
-

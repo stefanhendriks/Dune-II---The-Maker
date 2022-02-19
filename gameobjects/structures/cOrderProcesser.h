@@ -1,13 +1,15 @@
 #pragma once
 
-class cBuildingListItem;
+#include "sidebar/cBuildingListItem.h"
 
-#define MAX_ITEMS_TO_ORDER    8
+class cPlayer;
 
 class cOrderProcesser {
+  private:
+    static constexpr auto kMaxItemsToOrder = 8;
 
-public:
-    cOrderProcesser(cPlayer *thePlayer);
+  public:
+    explicit cOrderProcesser(cPlayer *thePlayer);
 
     ~cOrderProcesser();
 
@@ -62,8 +64,8 @@ protected:
     int getRandomizedSecondsToWait();
 
 private:
-    cBuildingListItem *orderedItems[MAX_ITEMS_TO_ORDER];
-    int pricePaidForItem[MAX_ITEMS_TO_ORDER];
+    cBuildingListItem *orderedItems[kMaxItemsToOrder];
+    int pricePaidForItem[kMaxItemsToOrder];
 
     cPlayer *player;
 

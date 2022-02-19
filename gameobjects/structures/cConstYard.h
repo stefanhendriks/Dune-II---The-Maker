@@ -1,12 +1,11 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cConstYard : public cAbstractStructure {
 public:
     cConstYard();
 
-    ~cConstYard();
-
-    // overloaded functions    
     void thinkFast() override;
 
     void thinkSlow() override {}

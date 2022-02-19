@@ -13,6 +13,7 @@
 
 #include "d2tmh.h"
 #include "drawers/cAllegroDrawer.h"
+#include "gameobjects/structures/cStructureFactory.h"
 #include "gamestates/cCreditsState.h"
 #include "ini.h"
 #include "managers/cDrawManager.h"

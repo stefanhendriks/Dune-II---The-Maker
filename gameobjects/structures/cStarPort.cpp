@@ -1,8 +1,11 @@
-#include "../../include/d2tmh.h"
+#include "cStarPort.h"
 
+#include "cOrderProcesser.h"
+#include "d2tmc.h"
+#include "definitions.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
-// Constructor
 cStarPort::cStarPort() {
     // other variables (class specific)
     TIMER_deploy = 0;
@@ -13,14 +16,9 @@ int cStarPort::getType() const {
     return STARPORT;
 }
 
-cStarPort::~cStarPort() {
-
-}
-
 void cStarPort::thinkFast() {
     // think like base class
     cAbstractStructure::thinkFast();
-
 }
 
 // think about units deployment animation
@@ -108,5 +106,3 @@ void cStarPort::think_deploy() {
 void cStarPort::think_guard() {
     return; // starport has no guard function
 }
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */

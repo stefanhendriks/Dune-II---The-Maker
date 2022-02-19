@@ -1,16 +1,11 @@
-#include "../../include/d2tmh.h"
-
-cUnitFactory *cUnitFactory::instance = nullptr;
+#include "cUnitFactory.h"
 
 cUnitFactory::cUnitFactory() {
 }
 
-cUnitFactory *cUnitFactory::getInstance() {
-	if (instance == NULL) {
-		instance = new cUnitFactory();
-	}
-
-	return instance;
+cUnitFactory& cUnitFactory::getInstance() {
+  static cUnitFactory unitFactory;
+	return unitFactory;
 }
 
 cAbstractUnit *cUnitFactory::createUnit(int /*type*/) {

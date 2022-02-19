@@ -1,4 +1,6 @@
-#include "../../include/d2tmh.h"
+#include "cIx.h"
+
+#include "definitions.h"
 
 // Constructor
 cIx::cIx() {
@@ -7,10 +9,6 @@ cIx::cIx() {
 
 int cIx::getType() const {
     return IX;
-}
-
-cIx::~cIx() {
-
 }
 
 void cIx::thinkFast() {
@@ -26,5 +24,3 @@ void cIx::think_animation() {
 void cIx::think_guard() {
 
 }
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */

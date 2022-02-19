@@ -1,8 +1,7 @@
-#include "../../include/d2tmh.h"
 #include "cHighTech.h"
 
+#include "definitions.h"
 
-// Constructor
 cHighTech::cHighTech() {
     // other variables (class specific)
     animDir = eAnimationDirection::ANIM_NONE;
@@ -11,11 +10,6 @@ cHighTech::cHighTech() {
 int cHighTech::getType() const {
     return HIGHTECH;
 }
-
-cHighTech::~cHighTech() {
-
-}
-
 
 void cHighTech::thinkFast() {
     // last but not least, think like our abstraction
@@ -69,6 +63,3 @@ void cHighTech::think_guard() {
 void cHighTech::startAnimating() {
     animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
 }
-
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */

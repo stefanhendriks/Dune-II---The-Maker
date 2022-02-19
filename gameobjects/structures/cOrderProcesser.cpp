@@ -4,14 +4,16 @@
  *  Created on: 8-aug-2010
  *      Author: Stefan
  */
-#include "../../include/d2tmh.h"
+#include "cOrderProcesser.h"
 
+#include "d2tmc.h"
 #include "managers/cDrawManager.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
-    player = thePlayer;
+  player = thePlayer;
 	orderPlaced = false;
 	frigateSent = false;
 	secondsUntilArrival = -1;
@@ -28,7 +30,7 @@ cOrderProcesser::~cOrderProcesser() {
 }
 
 cBuildingListItem * cOrderProcesser::getItemToDeploy() {
-	for (int i = 0; i < MAX_ITEMS_TO_ORDER; i++) {
+	for (int i = 0; i < kMaxItemsToOrder; i++) {
 		if (orderedItems[i] != nullptr) {
 			return orderedItems[i];
 		}
@@ -146,7 +148,7 @@ void cOrderProcesser::removeOrder(cBuildingListItem *item) {
 }
 
 int cOrderProcesser::getFreeSlot() {
-	for (int i = 0; i < MAX_ITEMS_TO_ORDER; i++) {
+	for (int i = 0; i < kMaxItemsToOrder; i++) {
 		if (orderedItems[i] == nullptr) {
 			return i;
 		}
@@ -155,7 +157,7 @@ int cOrderProcesser::getFreeSlot() {
 }
 
 int cOrderProcesser::getSlotForItem(cBuildingListItem *item) {
-	for (int i = 0; i < MAX_ITEMS_TO_ORDER; i++) {
+	for (int i = 0; i < kMaxItemsToOrder; i++) {
 		if (orderedItems[i] == item) {
 			return i;
 		}
@@ -164,14 +166,14 @@ int cOrderProcesser::getSlotForItem(cBuildingListItem *item) {
 }
 
 void cOrderProcesser::removeAllItems() {
-	for (int i = 0; i < MAX_ITEMS_TO_ORDER; i++) {
+	for (int i = 0; i < kMaxItemsToOrder; i++) {
 		removeItem(i);
 	}
 }
 
 void cOrderProcesser::removeItem(int slot) {
 	assert(slot >= 0);
-	assert(slot < MAX_ITEMS_TO_ORDER);
+	assert(slot < kMaxItemsToOrder);
 	orderedItems[slot] = nullptr;
 	// give money back to player
 	if (pricePaidForItem[slot] > 0) {

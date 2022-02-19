@@ -1,10 +1,16 @@
-#include "../../include/d2tmh.h"
+#include "cGunTurret.h"
+
+#include "d2tmc.h"
+#include "definitions.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/units/cUnit.h"
+#include "player/cPlayer.h"
 
 namespace {
     constexpr auto kTurretFacings = 8;
 }
 
-// Constructor
 cGunTurret::cGunTurret() {
  // other variables (class specific)
  iHeadFacing=0;        // (for turrets only) what is this structure facing at?
@@ -19,12 +25,6 @@ cGunTurret::cGunTurret() {
 
 int cGunTurret::getType() const {
 	return TURRET;
-}
-
-
-cGunTurret::~cGunTurret()
-{
-
 }
 
 void cGunTurret::thinkFast() {
