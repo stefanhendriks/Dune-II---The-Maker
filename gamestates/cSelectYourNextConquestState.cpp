@@ -112,7 +112,7 @@ void cSelectYourNextConquestState::thinkFast() {
 
         cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
         isFinishedConqueringRegions = true;
-        bool isNotDisplayingMessage = pDrawer->hasMessage();
+        bool isNotDisplayingMessage = !pDrawer->hasMessage();
 
         for (int i = 0; i < MAX_REGIONS; i++) {
             if (iRegionConquer[i] < 0) continue;
