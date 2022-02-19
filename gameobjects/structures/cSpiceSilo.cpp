@@ -1,6 +1,8 @@
-#include "../../include/d2tmh.h"
+#include "cSpiceSilo.h"
 
-// Constructor
+#include "d2tmc.h"
+#include "definitions.h"
+
 cSpiceSilo::cSpiceSilo() {
     // other variables (class specific)
 
@@ -11,15 +13,9 @@ int cSpiceSilo::getType() const {
 }
 
 
-cSpiceSilo::~cSpiceSilo() {
-
-}
-
-
 void cSpiceSilo::thinkFast() {
     // think like base class
     cAbstractStructure::thinkFast();
-
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)

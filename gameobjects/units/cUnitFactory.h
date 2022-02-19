@@ -10,23 +10,18 @@
 
   */
 
-#ifndef UNIT_FACTORY
-#define UNIT_FACTORY
+#pragma once
+
+#include "cAbstractUnit.h"
+
 class cUnitFactory {
+  protected:
+	  cUnitFactory();
 
-private:
-	static cUnitFactory *instance;
+  public:
+    static cUnitFactory& getInstance();
 
-protected:
-	cUnitFactory();
-
-public:
-
-	static cUnitFactory *getInstance();
-
-	void deleteUnit(cAbstractUnit *unit);
-	cAbstractUnit *createUnit(int type);
-
+	  void deleteUnit(cAbstractUnit *unit);
+	  cAbstractUnit *createUnit(int type);
 };
 
-#endif

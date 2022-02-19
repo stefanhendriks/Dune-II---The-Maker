@@ -10,17 +10,23 @@
 
   */
 
-#include "d2tmh.h"
 #include "cUnit.h"
 
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/structures/cStarPort.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
-
-#include <cmath>
 
 #include <alfont.h>
 #include <fmt/core.h>
+
+#include <cmath>
 
 // Path creation definitions / var
 #define CLOSED        -1
@@ -1492,7 +1498,7 @@ void cUnit::thinkFast_move_airUnit() {
 
                     structure[iStrucId]->setFrame(4); // show package on this structure
                     structure[iStrucId]->setAnimating(true); // keep animating
-                    ((cStarPort *) structure[iStrucId])->setFrigateDroppedPackage(true);
+                    dynamic_cast<cStarPort*>(structure[iStrucId])->setFrigateDroppedPackage(true);
                 } else {
                     // we don't expect this to go wrong :/
                     cAbstractStructure *starport = findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(STARPORT);

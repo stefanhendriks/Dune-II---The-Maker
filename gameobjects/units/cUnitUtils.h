@@ -10,23 +10,15 @@
 
   */
 
-#ifndef UNIT_UTILS
-#define UNIT_UTILS
+#pragma once
+
 class cUnitUtils {
+  protected:
+  	cUnitUtils();
 
-private:
-	static cUnitUtils *instance;
+  public:
+	  static cUnitUtils& getInstance();
 
-protected:
-	cUnitUtils();
-
-public:
-
-	static cUnitUtils *getInstance();
-
-	int findUnit(int type, int iPlayerId); // find the first unit of type belonging to player Id.
-	int findUnit(int type, int iPlayerId, int iIgnoreUnitId);
-
+	  int findUnit(int type, int iPlayerId); // find the first unit of type belonging to player Id.
+	  int findUnit(int type, int iPlayerId, int iIgnoreUnitId);
 };
-
-#endif

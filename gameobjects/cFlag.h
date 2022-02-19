@@ -1,5 +1,4 @@
-#ifndef D2TM_CFLAG_H
-#define D2TM_CFLAG_H
+#pragma once
 
 #include <utils/cPoint.h>
 
@@ -34,6 +33,3 @@ private:
     int frame;  // frame to draw
 
 };
-
-
-#endif //D2TM_CFLAG_H

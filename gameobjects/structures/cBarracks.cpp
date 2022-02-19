@@ -1,10 +1,8 @@
-#include "../../include/d2tmh.h"
+#include "cBarracks.h"
 
-// Constructor
+#include "definitions.h"
+
 cBarracks::cBarracks() {
-}
-
-cBarracks::~cBarracks() {
 }
 
 void cBarracks::thinkFast() {

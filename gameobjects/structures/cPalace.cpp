@@ -1,6 +1,7 @@
-#include "../../include/d2tmh.h"
+#include "cPalace.h"
 
-// Constructor
+#include "definitions.h"
+
 cPalace::cPalace() {
     // other variables (class specific)
 
@@ -8,10 +9,6 @@ cPalace::cPalace() {
 
 int cPalace::getType() const {
     return PALACE;
-}
-
-cPalace::~cPalace() {
-
 }
 
 void cPalace::thinkFast() {
@@ -30,5 +27,3 @@ void cPalace::think_animation() {
 void cPalace::think_guard() {
 
 }
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */

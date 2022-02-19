@@ -25,6 +25,7 @@
 
 #include "allegro/palette.h"
 
+#include "controls/cGameControlsContext.h"
 #include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
 #include "definitions.h"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cHeavyFactory : public cAbstractStructure {
 private:
     void think_animation_unitDeploy();
@@ -11,8 +13,6 @@ private:
 
 public:
     cHeavyFactory();
-
-    ~cHeavyFactory();
 
     // overloaded functions    
     void thinkFast() override;

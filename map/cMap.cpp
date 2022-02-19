@@ -15,10 +15,12 @@
 
 #include "cMapCamera.h"
 #include "cMapEditor.h"
+#include "gameobjects/structures/cStructureFactory.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
-#include <math.h>
+
+#include <cmath>
 
 cMap::cMap() {
     TIMER_scroll = 0;

@@ -10,8 +10,11 @@
 
   */
 
-#ifndef CPARTICLE_H_
-#define CPARTICLE_H_
+#pragma once
+
+#include "data/cAllegroDataRepository.h"
+#include "structs.h"
+#include "utils/cRectangle.h"
 
 class cParticle {
 public:
@@ -94,5 +97,3 @@ private:
 
     void recreateDimensions();
 };
-
-#endif

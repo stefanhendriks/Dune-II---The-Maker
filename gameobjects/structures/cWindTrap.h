@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cWindTrap : public cAbstractStructure {
 private:
     int iFade;          // Fading progress (windtraps)
@@ -16,7 +18,6 @@ public:
 
     ~cWindTrap();
 
-    // overloaded functions
     void thinkFast() override;
 
     void thinkSlow() override {}

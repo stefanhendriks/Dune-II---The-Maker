@@ -1,7 +1,9 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cStarPort : public cAbstractStructure {
-private:
+  private:
     void think_deployment();
 
     bool frigateDroppedPackage;
@@ -11,10 +13,8 @@ private:
 
     void think_deploy();            // starport uses this to deploy unit
 
-public:
+  public:
     cStarPort();
-
-    ~cStarPort();
 
     // overloaded functions
     void thinkFast() override;
@@ -32,6 +32,5 @@ public:
     void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
-
 };
 

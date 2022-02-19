@@ -1,6 +1,10 @@
-#include "../../include/d2tmh.h"
+#include "cLightFactory.h"
 
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
+#include "definitions.h"
 #include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
 // Constructor
 cLightFactory::cLightFactory() {
@@ -12,11 +16,6 @@ cLightFactory::cLightFactory() {
 int cLightFactory::getType() const {
     return LIGHTFACTORY;
 }
-
-cLightFactory::~cLightFactory() {
-
-}
-
 
 void cLightFactory::thinkFast() {
     // last but not least, think like our abstraction
@@ -70,7 +69,7 @@ void cLightFactory::draw() {
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-        BITMAP *bitmapToDraw = this->getPlayer()->getStructureBitmapFlash(getType());
+        BITMAP *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         allegroDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                          drawX, drawY, scaledWidth, scaledHeight);
     }

@@ -1,19 +1,14 @@
-#include "../../include/d2tmh.h"
+#include "cOutPost.h"
 
-// Constructor
+#include "definitions.h"
+
 cOutPost::cOutPost() {
     // other variables (class specific)
-
 }
 
 int cOutPost::getType() const {
     return RADAR;
 }
-
-cOutPost::~cOutPost() {
-
-}
-
 
 void cOutPost::thinkFast() {
     // last but not least, think like our abstraction

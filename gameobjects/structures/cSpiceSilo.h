@@ -1,16 +1,11 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cSpiceSilo : public cAbstractStructure {
-
-private:
-
-
-public:
+  public:
     cSpiceSilo();
 
-    ~cSpiceSilo();
-
-    // overloaded functions
     void thinkFast() override;
 
     void thinkSlow() override {}

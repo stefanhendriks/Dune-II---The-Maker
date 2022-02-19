@@ -10,14 +10,21 @@
 
   */
 
-#include "../../include/d2tmh.h"
+#include "bullet.h"
 
+#include "data/gfxdata.h"
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
-#include <math.h>
+#include <cmath>
+
+static constexpr auto ANIMATION_SPEED = 12;
 
 void cBullet::init() {
     bAlive = false;

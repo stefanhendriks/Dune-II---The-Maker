@@ -1,5 +1,8 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+#include "enums.h"
+
 class cHighTech : public cAbstractStructure {
 private:
     void think_animation_unitDeploy();
@@ -8,8 +11,6 @@ private:
 
 public:
     cHighTech();
-
-    ~cHighTech();
 
     // overloaded functions    
     void thinkFast() override;

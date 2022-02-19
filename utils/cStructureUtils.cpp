@@ -1,7 +1,11 @@
 #include "../include/d2tmh.h"
 
-#include <fmt/core.h>
+#include "gameobjects/structures/cRefinery.h"
+#include "gameobjects/structures/cSpiceSilo.h"
+#include "gameobjects/structures/cWindTrap.h"
 #include "map/cMapCamera.h"
+
+#include <fmt/core.h>
 
 cStructureUtils::cStructureUtils() {
 }

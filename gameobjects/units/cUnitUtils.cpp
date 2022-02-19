@@ -1,17 +1,14 @@
-#include "../../include/d2tmh.h"
+#include "cUnitUtils.h"
 
-cUnitUtils *cUnitUtils::instance = nullptr;
+#include "d2tmc.h"
+#include "definitions.h"
 
 cUnitUtils::cUnitUtils() {
 }
 
-
-cUnitUtils *cUnitUtils::getInstance() {
-	if (instance == NULL) {
-		instance = new cUnitUtils();
-	}
-
-	return instance;
+cUnitUtils& cUnitUtils::getInstance() {
+  static cUnitUtils unitUtils;
+	return unitUtils;
 }
 
 // find the first unit of type belonging to player Id.

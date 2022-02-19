@@ -1,15 +1,11 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cBarracks : public cAbstractStructure {
-private:
-
-
-public:
+  public:
     cBarracks();
 
-    ~cBarracks();
-
-    // overloaded functions    
     void thinkFast() override;
 
     void thinkSlow() override {}

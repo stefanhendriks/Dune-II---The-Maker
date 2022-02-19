@@ -1,6 +1,9 @@
-#include "d2tmh.h"
+#include "cFlag.h"
 
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
 #include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
 #include <allegro/gfx.h>
 

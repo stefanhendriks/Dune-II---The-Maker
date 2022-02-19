@@ -1,23 +1,35 @@
-#include <fmt/core.h>
-#include "../../include/d2tmh.h"
 #include "cStructureFactory.h"
 
+#include "cBarracks.h"
+#include "cConstYard.h"
+#include "cGunTurret.h"
+#include "cHeavyFactory.h"
+#include "cHighTech.h"
+#include "cIx.h"
+#include "cLightFactory.h"
+#include "cOutPost.h"
+#include "cPalace.h"
+#include "cRefinery.h"
+#include "cRepairFacility.h"
+#include "cRocketTurret.h"
+#include "cSpiceSilo.h"
+#include "cStarPort.h"
+#include "cWindTrap.h"
+#include "cWor.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
 #include "map/cMapEditor.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
 
-cStructureFactory *cStructureFactory::instance = NULL;
+#include <fmt/core.h>
 
 cStructureFactory::cStructureFactory() {
 }
 
-cStructureFactory::~cStructureFactory() {
-}
-
 cStructureFactory *cStructureFactory::getInstance() {
-	if (instance == nullptr) {
-		instance = new cStructureFactory();
-	}
-	return instance;
+  static cStructureFactory structureFactory;
+	return &structureFactory;
 }
 
 cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
@@ -47,7 +59,6 @@ void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure) 
     structure[pStructure->getStructureId()] = nullptr;
     delete pStructure;
 }
-
 
 /**
 	Shorter version, creates structure at full health.
@@ -346,9 +357,6 @@ void cStructureFactory::deleteAllExistingStructures() {
 
 void cStructureFactory::destroy() {
     cStructureFactory::getInstance()->deleteAllExistingStructures();
-    if (instance) {
-        delete instance;
-    }
 }
 
 
