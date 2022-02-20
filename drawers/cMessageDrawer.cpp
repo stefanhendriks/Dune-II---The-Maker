@@ -16,6 +16,7 @@ cMessageDrawer::cMessageDrawer() {
     m_bmpBar = nullptr;
     m_temp = nullptr;
     m_keepMessage = false;
+    m_timeMessageIsVisible = 10;
 	init();
 }
 
@@ -65,46 +66,34 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
 }
 
 void cMessageDrawer::thinkFast() {
-    if (m_message[0] != '\0') {
-        // no message, bail
-    }
-
-    if (m_fadeState == messages::eMessageDrawerFadingState::FADE_IN)
-	{
+    if (m_fadeState == messages::eMessageDrawerFadingState::FADE_IN) {
         m_TIMER_message++;
 
-        int iLimit=250;
-
-        if (game.isState(GAME_REGION)) {
-            iLimit=600;
-        }
-
-		// and clear message after shown
-		if (m_TIMER_message > iLimit) {
+        if (m_TIMER_message > m_timeMessageIsVisible) {
             if (!m_keepMessage) {
                 m_fadeState = messages::eMessageDrawerFadingState::FADE_OUT;
             }
-		}
+        }
 
-        m_alpha+=3;
-		// fade in, with a max...
-		if (m_alpha > 254) {
+        m_alpha += 3;
+        // fade in, with a max...
+        if (m_alpha > 254) {
             m_alpha = 255;
-		}
+        }
         return;
-	}
+    }
 
     // fade out
-    m_alpha-=6;
+    m_alpha -= 6;
     if (m_alpha < 0) {
-        m_alpha=-1;
+        m_alpha = -1;
     }
 
     // clear message
     if (m_alpha < 1) {
         m_message.clear();
     }
-    m_TIMER_message=0;
+    m_TIMER_message = 0;
 }
 
 /**
@@ -133,7 +122,9 @@ void cMessageDrawer::draw() {
 		draw_sprite(m_temp, m_bmpBar, 0, 0);
 
 		// draw message
+        allegroDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
 		alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
+        allegroDrawer->resetClippingFor(m_temp);
 
 		// draw temp
 		draw_trans_sprite(bmp_screen, m_temp, m_position.x, m_position.y);
@@ -143,6 +134,7 @@ void cMessageDrawer::draw() {
 void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
     m_state = messages::eMessageDrawerState::NEXT_CONQUEST;
     m_keepMessage = false;
+    m_timeMessageIsVisible = 650; // sensible default
 
     int desiredWidth = 480;
 
@@ -156,12 +148,12 @@ void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
 void cMessageDrawer::initCombatPosition() {
     m_state = messages::eMessageDrawerState::COMBAT;
     m_keepMessage = false;
+    m_timeMessageIsVisible = 450; // sensible default
 
     int margin = 4;
     int widthOfOptionsButton = 160 + margin;
     int desiredWidth = game.m_screenX - (cSideBar::SidebarWidth + widthOfOptionsButton);
     createMessageBarBmp(desiredWidth);
-
     // default positions in-game (battle mode)
     m_position.x = widthOfOptionsButton;
 //    y = 42;
