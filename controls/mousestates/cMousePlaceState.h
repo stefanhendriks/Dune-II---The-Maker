@@ -1,8 +1,14 @@
 #pragma once
 
+#include "controls/cKeyboardEvent.h"
+#include "controls/cMouse.h"
 #include "cMouseState.h"
+#include "sGameEvent.h"
+#include "sidebar/cBuildingListItem.h"
+#include "sMouseEvent.h"
 
-class cBuildingListItem;
+class cGameControlsContext;
+class cPlayer;
 
 /**
  * Mouse placing structure at battlefield

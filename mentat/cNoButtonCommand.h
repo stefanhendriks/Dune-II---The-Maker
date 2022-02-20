@@ -1,5 +1,4 @@
-#ifndef D2TM_CNOBUTTONCOMMAND_H
-#define D2TM_CNOBUTTONCOMMAND_H
+#pragma once
 
 class cAbstractMentat;
 
@@ -13,6 +12,3 @@ class cNoButtonCommand : public cButtonCommand {
 public:
     void execute(cAbstractMentat& mentat) override;
 };
-
-
-#endif //D2TM_CNOBUTTONCOMMAND_H

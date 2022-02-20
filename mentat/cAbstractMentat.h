@@ -20,6 +20,10 @@
 */
 #pragma once
 
+#include "utils/cRectangle.h"
+
+#include <string>
+
 class cButtonCommand;
 
 struct ALFONT_FONT;
@@ -42,11 +46,11 @@ protected:
 
     void draw_movie();
 
-	// Timed animation
-	int TIMER_Mouth;
-	int TIMER_Eyes;
-	int TIMER_Other;
-	int TIMER_Speaking;
+	  // Timed animation
+	  int TIMER_Mouth;
+	  int TIMER_Eyes;
+	  int TIMER_Other;
+	  int TIMER_Speaking;
 
     // Movie playback (scene's from datafile)
     int TIMER_movie;
@@ -54,13 +58,13 @@ protected:
 
     int iBackgroundFrame;
 
-	// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
-	char sentence[10][255];
+	  // draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
+	  char sentence[10][255];
 
-	int iMentatSentence;			// = sentence to draw and speak with (-1 = not ready)
+	  int iMentatSentence;  // = sentence to draw and speak with (-1 = not ready)
 
-	int iMentatMouth;
-	int iMentatEyes;
+  	int iMentatMouth;
+	  int iMentatEyes;
 
     DATAFILE *gfxmovie;
     ALFONT_FONT *font;
@@ -86,14 +90,14 @@ protected:
     int offsetY;
 
 public:
-	virtual void draw()=0;
+	  virtual void draw()=0;
     virtual void think()=0;
     virtual void interact()=0;
 
     void loadScene(const std::string& scene);
 
-	cAbstractMentat();
-	virtual ~cAbstractMentat();
+	  cAbstractMentat();
+	  virtual ~cAbstractMentat();
 
     BITMAP *getBackgroundBitmap() const;
 

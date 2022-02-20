@@ -1,7 +1,11 @@
 #include "cMouseDeployState.h"
 
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "controls/cGameControlsContext.h"
+#include "player/cPlayer.h"
+
 #include <algorithm>
-#include "d2tmh.h"
 
 cMouseDeployState::cMouseDeployState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse) {

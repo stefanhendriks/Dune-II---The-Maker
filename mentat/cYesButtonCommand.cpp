@@ -1,4 +1,7 @@
-#include "d2tmh.h"
+#include "cYesButtonCommand.h"
+
+#include "d2tmc.h"
+#include "player/cPlayer.h"
 
 void cYesButtonCommand::execute(cAbstractMentat& mentat) {
     logbook("cYesButtonCommand::execute()");
