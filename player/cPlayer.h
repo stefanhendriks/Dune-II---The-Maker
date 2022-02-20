@@ -102,7 +102,7 @@ public:
 
     // focus cell
     void setFocusCell(int cll);
-    int getFocusCell() { return focusCell_; }
+    int getFocusCell() const { return focusCell_; }
 
     // house
     std::string getHouseName() const;
