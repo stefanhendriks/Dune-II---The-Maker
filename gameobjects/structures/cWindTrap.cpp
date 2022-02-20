@@ -1,4 +1,8 @@
-#include "../../include/d2tmh.h"
+#include "cWindTrap.h"
+
+#include "d2tmc.h"
+#include "definitions.h"
+
 #include <fmt/core.h>
 
 // Constructor
@@ -23,7 +27,6 @@ cWindTrap::~cWindTrap() {
         logbook(fmt::format("(~cWindTrap)(ID {}) Destructor", this->id));
     }
 }
-
 
 void cWindTrap::thinkFast() {
     // think like base class

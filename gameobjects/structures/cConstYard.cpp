@@ -1,11 +1,9 @@
-#include "../../include/d2tmh.h"
+#include "cConstYard.h"
 
-// Constructor
+#include "definitions.h"
+
 cConstYard::cConstYard() {
     frames = 0;
-}
-
-cConstYard::~cConstYard() {
 }
 
 int cConstYard::getType() const {

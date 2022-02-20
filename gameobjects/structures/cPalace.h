@@ -1,14 +1,11 @@
 #pragma once
 
-class cPalace : public cAbstractStructure {
-private:
+#include "cAbstractStructure.h"
 
-public:
+class cPalace : public cAbstractStructure {
+  public:
     cPalace();
 
-    ~cPalace();
-
-    // overloaded functions    
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -22,6 +19,5 @@ public:
     void draw() override { drawWithShadow(); }
 
     int getType() const override;
-
 };
 

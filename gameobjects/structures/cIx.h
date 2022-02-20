@@ -1,15 +1,11 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cIx : public cAbstractStructure {
-private:
-
-
-public:
+  public:
     cIx();
 
-    ~cIx();
-
-    // overloaded functions    
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -23,6 +19,5 @@ public:
     void draw() override { drawWithShadow(); }
 
     int getType() const override;
-
 };
 

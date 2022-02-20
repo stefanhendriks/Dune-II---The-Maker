@@ -1,8 +1,11 @@
-#include "../../include/d2tmh.h"
+#include "cRefinery.h"
 
+#include "d2tmc.h"
+#include "definitions.h"
+#include "gameobjects/units/cUnit.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
-// Constructor
 cRefinery::cRefinery() {
 
     // other variables (class specific)
@@ -13,14 +16,6 @@ int cRefinery::getType() const {
     return REFINERY;
 }
 
-cRefinery::~cRefinery() {
-
-}
-
-
-/*  OVERLOADED FUNCTIONS  */
-
-// Specific Construction Yard thinking
 void cRefinery::thinkFast() {
 
     if (hasUnitWithin()) { // unit has entered structure

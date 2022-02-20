@@ -1,12 +1,11 @@
 #pragma once
 
+#include "cGunTurret.h"
+
 class cRocketTurret : public cGunTurret {
-public:
+  public:
     cRocketTurret();
 
-    ~cRocketTurret();
-
     int getType() const;
-
 };
 

@@ -1,6 +1,7 @@
-#include "../../include/d2tmh.h"
+#include "cRocketTurret.h"
 
-// Constructor
+#include "definitions.h"
+
 cRocketTurret::cRocketTurret() {
 
 }
@@ -8,10 +9,3 @@ cRocketTurret::cRocketTurret() {
 int cRocketTurret::getType() const {
 	return RTURRET;
 }
-
-cRocketTurret::~cRocketTurret()
-{
-
-}
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */

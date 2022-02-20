@@ -1,5 +1,7 @@
 #pragma once
 
+#include "enums.h"
+
 namespace brains {
 
     enum ePlayerBrainState {

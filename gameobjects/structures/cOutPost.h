@@ -1,15 +1,11 @@
 #pragma once
 
-class cOutPost : public cAbstractStructure {
-private:
-    // outpost does not use any variables in p
+#include "cAbstractStructure.h"
 
-public:
+class cOutPost : public cAbstractStructure {
+  public:
     cOutPost();
 
-    ~cOutPost();
-
-    // overloaded functions
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -23,6 +19,5 @@ public:
     void draw() override { drawWithShadow(); }
 
     int getType() const override;
-
 };
 
