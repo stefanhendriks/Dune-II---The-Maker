@@ -44,7 +44,7 @@ void CreditsDrawer::setCredits(int amount) {
 }
 
 // timer based method
-void CreditsDrawer::think() {
+void CreditsDrawer::thinkFast() {
 
 	if (hasDrawnCurrentCredits() || initial) {
 		soundsMade = 0;

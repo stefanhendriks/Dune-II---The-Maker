@@ -17,7 +17,7 @@ public:
 	explicit CreditsDrawer(cPlayer * thePlayer);
 	virtual ~CreditsDrawer();
 
-	void think(); // set animation counters and such, time based. Also make sound when needed.
+	void thinkFast(); // set animation counters and such, time based. Also make sound when needed.
 
 	void draw();
 	void setCredits(int amount);

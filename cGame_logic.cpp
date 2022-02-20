@@ -154,7 +154,7 @@ void cGame::missionInit() {
 
     initPlayers(true);
 
-    drawManager->getCreditsDrawer()->setCredits();
+    drawManager->missionInit();
 }
 
 void cGame::initPlayers(bool rememberHouse) const {
@@ -1290,24 +1290,12 @@ void cGame::thinkFast_state() {
 
     // THINKING ONLY WHEN PLAYING / COMBAT (no state object yet)
     if (isState(GAME_PLAYING)) {
-        if (drawManager) {
-            if (drawManager->getCreditsDrawer()) {
-                drawManager->getCreditsDrawer()->think();
-            }
-        }
-
+        drawManager->thinkFast_statePlaying();
         thinkFast_combat();
     }
 
-
     if (drawManager) {
-        // the messageDrawer is used in playing state, but also during "select your next conquest"(next mission)
-        // state.
-        // TODO: this should be all moved to state specific think/update functions
-        cMessageDrawer *pMessageDrawer = drawManager->getMessageDrawer();
-        if (pMessageDrawer) {
-            pMessageDrawer->thinkFast();
-        }
+        drawManager->thinkFast();
     }
 }
 
