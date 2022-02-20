@@ -84,7 +84,10 @@ cSeedMapGenerator::cSeedMapGenerator(unsigned long value) {
 }
 
 short cSeedMapGenerator::random() {
-   unsigned char * s = reinterpret_cast<unsigned char *>(&seed), a, b, x, y;
+    static_assert(sizeof(seed) == 4);
+    unsigned char * s = reinterpret_cast<unsigned char *>(&seed);
+    short a, b, x, y;
+    static_assert(sizeof(a) == 2);
 
    a = *(s+0);
    x = (a & 0x2) >> 1;
