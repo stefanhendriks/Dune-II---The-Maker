@@ -15,6 +15,7 @@
 #include "controls/cKeyboard.h"
 #include "data/cAllegroDataRepository.h"
 #include "definitions.h"
+#include "mentat/cAbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 #include "utils/cTimeManager.h"
@@ -22,7 +23,6 @@
 #include <memory>
 #include <string>
 
-class cAbstractMentat;
 class cGameControlsContext;
 class cGameState;
 class cInteractionManager;

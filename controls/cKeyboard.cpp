@@ -2,16 +2,11 @@
 #include "cKeyboardEvent.h"
 
 #include <algorithm>
-#include "../include/d2tmh.h"
-
 
 cKeyboard::cKeyboard() :
     _keyboardObserver(nullptr),
     keysPressed() {
 
-}
-
-cKeyboard::~cKeyboard() {
 }
 
 void cKeyboard::updateState() {

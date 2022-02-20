@@ -1,13 +1,39 @@
 #include "cMouseUnitsSelectedState.h"
 
-#include "d2tmh.h"
-
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "controls/cGameControlsContext.h"
+#include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
 #include <allegro/mouse.h>
+
 #include <algorithm>
+#include <string>
+
+namespace {
+
+std::string mouseUnitsSelectedStateString(eMouseUnitsSelectedState state) {
+    switch (state) {
+        case SELECTED_STATE_MOVE: return "SELECTED_STATE_MOVE";
+        case SELECTED_STATE_SELECT: return "SELECTED_STATE_SELECT";
+        case SELECTED_STATE_ADD_TO_SELECTION: return "SELECTED_STATE_ADD_TO_SELECTION";
+        case SELECTED_STATE_ATTACK: return "SELECTED_STATE_ATTACK";
+        case SELECTED_STATE_FORCE_ATTACK: return "SELECTED_STATE_FORCE_ATTACK";
+        case SELECTED_STATE_REPAIR: return "SELECTED_STATE_REPAIR";
+        case SELECTED_STATE_CAPTURE: return "SELECTED_STATE_CAPTURE";
+        case SELECTED_STATE_REFINERY: return "SELECTED_STATE_REFINERY";
+        default:
+            assert(false);
+            break;
+    }
+    return {};
+}
+
+}
 
 cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
         cMouseState(player, context, mouse),
