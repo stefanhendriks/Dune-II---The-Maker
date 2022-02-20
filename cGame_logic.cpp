@@ -1083,19 +1083,27 @@ void cGame::setState(int newState) {
         }
 
         cGameState *existingStatePtr = m_states[newState];
-        if (existingStatePtr) {
-            if (m_currentState->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(m_currentState);
 
-                if (m_missionWasWon) {
-                    // we won
+        if (existingStatePtr) {
+            // no need for re-creating state
+
+            if (newState == GAME_REGION) {
+                // came from a win/lose brief state, so make sure to set up the next state
+                if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
+                    // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
+                    cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
+
                     if (game.m_mission > 1) {
                         pState->conquerRegions();
                     }
-                    pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
-                } else {
-                    // OR: did not win
-                    pState->REGION_SETUP_LOST_MISSION();
+
+                    if (m_missionWasWon) {
+                        // we won
+                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                    } else {
+                        // OR: did not win
+                        pState->REGION_SETUP_LOST_MISSION();
+                    }
                 }
             }
 
