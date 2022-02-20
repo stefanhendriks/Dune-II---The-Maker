@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "utils/cRectangle.h"
 
 class cParticleDrawer {
 	public:
@@ -8,7 +9,7 @@ class cParticleDrawer {
 		void drawTopLayer();
         void drawDebugInfo();
 
-        void determineParticlesToDraw();
+        void determineParticlesToDraw(const cRectangle &viewport);
 
 	private:
         std::vector<int> particlesLowerLayer;

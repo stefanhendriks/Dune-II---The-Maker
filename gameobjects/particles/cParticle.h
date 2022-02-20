@@ -31,7 +31,7 @@ public:
 
     void draw();
 
-    bool isWithinViewport(cRectangle *viewport);
+    bool isWithinViewport(const cRectangle &viewport);
 
     void thinkFast();
 

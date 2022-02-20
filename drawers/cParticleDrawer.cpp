@@ -4,13 +4,13 @@
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/particles/cParticle.h"
 
-void cParticleDrawer::determineParticlesToDraw() {
+void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport) {
     particlesLowerLayer.clear();
     particlesTopLayer.clear();
     for (int i=0; i < MAX_PARTICLES; i++) {
         cParticle &pParticle = particle[i];
         if (!pParticle.isValid()) continue;
-        if (!pParticle.isWithinViewport(game.m_mapViewport)) continue;
+        if (!pParticle.isWithinViewport(viewport)) continue;
 
         if (pParticle.getLayer() == D2TM_RENDER_LAYER_PARTICLE_BOTTOM) {
             particlesLowerLayer.push_back(i);
