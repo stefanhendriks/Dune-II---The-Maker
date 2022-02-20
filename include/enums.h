@@ -109,7 +109,8 @@ enum eBuildType {
     UNIT,      // 1
     UPGRADE,   // 2
     SPECIAL,   // 3
-    BULLET     // 4 (ie, used for super weapon)
+    BULLET,    // 4 (ie, used for super weapon)
+    UNKNOWN    // 5 -> use for unknown
 };
 
 inline const char* eBuildTypeString(const eBuildType &buildType) {
@@ -119,8 +120,9 @@ inline const char* eBuildTypeString(const eBuildType &buildType) {
         case eBuildType::STRUCTURE: return "STRUCTURE";
         case eBuildType::BULLET: return "BULLET";
         case eBuildType::UPGRADE: return "UPGRADE";
+        case eBuildType::UNKNOWN: return "UNKNOWN";
         default:
-            assert(false && "Unknown buildType?");
+            assert(false && "Undefined buildType?");
             break;
     }
     return "";

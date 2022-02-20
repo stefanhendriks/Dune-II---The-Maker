@@ -478,7 +478,8 @@ void cAbstractStructure::damage(int hp, int originId) {
                 .entityID = getStructureId(),
                 .player = getPlayer(),
                 .entitySpecificType = getType(),
-                .originId = originId
+                .originId = originId,
+                .originType = eBuildType::UNIT // TODO: What if another structure damaged me!?
         };
 
         game.onNotifyGameEvent(event);

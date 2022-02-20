@@ -18,8 +18,9 @@ struct s_GameEvent {
     /**
      * kind of entity this applies to.
      * In case of eventType == DISCOVERED, this is the entityType being discovered
+     * In case of eventType == GAME_EVENT_DAMAGED, this is the entityType being damaged
      */
-    eBuildType entityType = eBuildType::SPECIAL;
+    eBuildType entityType = eBuildType::UNKNOWN;
 
     /**
      * which entity? (ID),
@@ -37,7 +38,9 @@ struct s_GameEvent {
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
     cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
     cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
-    int originId = -1; // in case damaged event, this is the UNIT id that damaged it
+
+    int originId = -1; // in case GAME_EVENT_DAMAGED, this is the id that inflicted damage
+    eBuildType originType = eBuildType::UNKNOWN; // in case GAME_EVENT_DAMAGED, this is the kind of entity that inflicted damage
 
     // TODO: figure out a way to have bags of data depending on type of event without the need of expanding this generic GAME_EVENT struct
 
