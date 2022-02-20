@@ -26,5 +26,7 @@ class cRefinery : public cAbstractStructure {
     int getType() const override;
 
     int getSpiceSiloCapacity();
+
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
 };
 
