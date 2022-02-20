@@ -1668,14 +1668,14 @@ void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event) {
 }
 
 void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
-    const cPlayer *humanPlayer = &players[HUMAN];
+    const cPlayer &humanPlayer = players[HUMAN];
 
     bool createGroup = event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL);
     if (createGroup) {
         int iGroup = event.getGroupNumber();
 
         if (iGroup > 0) {
-            humanPlayer->markUnitsForGroup(iGroup);
+            humanPlayer.markUnitsForGroup(iGroup);
         }
     }
 
@@ -1686,7 +1686,6 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
             mapCamera->resetZoom();
         }
 
-        cPlayer &humanPlayer = players[HUMAN];
 
         if (event.hasKey(KEY_H)) {
             mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
@@ -1706,8 +1705,9 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
     }
 
     if (isDebugMode() && event.hasKey(KEY_F4)) {
-        if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-            map.clearShroud(players[HUMAN].getGameControlsContext()->getMouseCell(), 6, HUMAN);
+        int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
+        if (mouseCell > -1) {
+            map.clearShroud(mouseCell, 6, HUMAN);
         }
     }
 
@@ -1717,7 +1717,7 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
 }
 
 void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
-    cPlayer &humanPlayer = players[HUMAN];
+    const cPlayer &humanPlayer = players[HUMAN];
 
     if (event.hasKey(KEY_F)) {
         m_drawFps = false;
