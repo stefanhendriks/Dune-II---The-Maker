@@ -131,7 +131,7 @@ void install_units() {
         unitInfo.range = -1;
         unitInfo.sight = -1;
         unitInfo.queuable = true;
-        unitInfo.dieWhenLowerThanHP = -1;
+        unitInfo.dieWhenLowerThanHP = 1; // lower than 1 means dead
         unitInfo.appetite = -1;
 
         // harvester properties
