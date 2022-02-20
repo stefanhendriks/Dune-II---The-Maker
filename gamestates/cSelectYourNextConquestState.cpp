@@ -305,6 +305,17 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
     for (int i = 0; i < 27; i++) {
         REGION_DRAW(world[i]);
     }
+
+    // Animate here (so add regions that are conquered)
+    cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
+    char *cMessage = pDrawer->getMessage();
+
+    bool isNotDisplayingMessage = cMessage[0] == '\0';
+
+    if (isFinishedConqueringRegions && isNotDisplayingMessage) {
+        pDrawer->setMessage("Select your next region.");
+        pDrawer->setKeepMessage(true);
+    }
 }
 
 void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {// Calculate mission from region:
