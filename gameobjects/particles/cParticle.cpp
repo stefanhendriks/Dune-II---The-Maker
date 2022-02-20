@@ -156,8 +156,7 @@ bool cParticle::isUsingAlphaChannel() const {
     return iAlpha > -1 && iAlpha < 255;
 }
 
-bool cParticle::isWithinViewport(cRectangle *viewport) {
-    if (viewport == nullptr) return false;
+bool cParticle::isWithinViewport(const cRectangle &viewport) {
     return dimensions->isOverlapping(viewport);
 }
 

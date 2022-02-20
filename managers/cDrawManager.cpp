@@ -50,7 +50,7 @@ void cDrawManager::drawCombatState() {
     m_structureDrawer.drawStructuresFirstLayer();
 
 	// draw layer 1 (beneath units, on top of terrain)
-    m_particleDrawer.determineParticlesToDraw();
+    m_particleDrawer.determineParticlesToDraw(*game.m_mapViewport);
 	m_particleDrawer.drawLowerLayer();
 
 	map.draw_units();
