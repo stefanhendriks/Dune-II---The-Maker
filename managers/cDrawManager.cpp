@@ -50,7 +50,7 @@ void cDrawManager::drawCombatState() {
     m_structureDrawer.drawStructuresFirstLayer();
 
 	// draw layer 1 (beneath units, on top of terrain)
-    m_particleDrawer.determineParticlesToDraw();
+    m_particleDrawer.determineParticlesToDraw(*game.m_mapViewport);
 	m_particleDrawer.drawLowerLayer();
 
 	map.draw_units();
@@ -316,6 +316,18 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
             m_mapDrawer.setDrawGrid(false);
         }
     }
+}
+
+void cDrawManager::missionInit() {
+    m_creditsDrawer.setCredits();
+}
+
+void cDrawManager::thinkFast_statePlaying() {
+    m_creditsDrawer.thinkFast();
+}
+
+void cDrawManager::thinkFast() {
+    m_messageDrawer.thinkFast();
 }
 
 

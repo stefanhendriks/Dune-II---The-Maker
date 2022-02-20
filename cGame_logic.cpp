@@ -154,7 +154,7 @@ void cGame::missionInit() {
 
     initPlayers(true);
 
-    drawManager->getCreditsDrawer()->setCredits();
+    drawManager->missionInit();
 }
 
 void cGame::initPlayers(bool rememberHouse) const {
@@ -1070,6 +1070,7 @@ void cGame::setState(int newState) {
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
                                newState != GAME_PLAYING); // don't delete these m_states, but re-use!
+
         if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
             deleteOldState = false; // so we don't lose data when we go back
         }
@@ -1149,9 +1150,13 @@ void cGame::setState(int newState) {
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
-                    // we came from options menu
+                    // we came from options menu, notify mouse
                     players[HUMAN].getGameControlsContext()->onFocusMouseStateEvent();
                 } else {
+                    // re-create drawManager
+                    delete drawManager;
+                    drawManager = new cDrawManager(&players[HUMAN]);
+
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
                         cPlayer &player = players[i];
@@ -1301,24 +1306,12 @@ void cGame::thinkFast_state() {
 
     // THINKING ONLY WHEN PLAYING / COMBAT (no state object yet)
     if (isState(GAME_PLAYING)) {
-        if (drawManager) {
-            if (drawManager->getCreditsDrawer()) {
-                drawManager->getCreditsDrawer()->think();
-            }
-        }
-
+        drawManager->thinkFast_statePlaying();
         thinkFast_combat();
     }
 
-
     if (drawManager) {
-        // the messageDrawer is used in playing state, but also during "select your next conquest"(next mission)
-        // state.
-        // TODO: this should be all moved to state specific think/update functions
-        cMessageDrawer *pMessageDrawer = drawManager->getMessageDrawer();
-        if (pMessageDrawer) {
-            pMessageDrawer->thinkFast();
-        }
+        drawManager->thinkFast();
     }
 }
 

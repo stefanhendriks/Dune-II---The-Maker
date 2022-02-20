@@ -19,6 +19,10 @@
 class cPlayer;
 class BITMAP;
 
+/**
+ * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
+ * message bar is re-used there)
+ */
 class cDrawManager : cInputObserver {
 
 public:
@@ -29,8 +33,6 @@ public:
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-
-    CreditsDrawer *getCreditsDrawer() { return &m_creditsDrawer; }
 
     cMessageDrawer *getMessageDrawer() { return &m_messageDrawer; }
 
@@ -53,6 +55,12 @@ public:
     void think();
 
     void init();
+
+    void missionInit();
+
+    void thinkFast_statePlaying();
+
+    void thinkFast();
 
 protected:
     void drawSidebar();

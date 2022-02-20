@@ -1946,9 +1946,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 }
 
                 assert(drawManager);
-                if (drawManager->getCreditsDrawer()) {
-                    drawManager->getCreditsDrawer()->setCredits();
-                }
+                drawManager->missionInit();
 
                 if (quota > 0) {
                     players[HUMAN].setQuota(quota);
