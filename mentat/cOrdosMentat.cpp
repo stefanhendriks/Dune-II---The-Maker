@@ -1,4 +1,9 @@
-#include "d2tmh.h"
+#include "cOrdosMentat.h"
+
+#include "cProceedButtonCommand.h"
+#include "cRepeatButtonCommand.h"
+#include "d2tmc.h"
+#include "data/gfxmentat.h"
 
 #include <allegro.h>
 
@@ -9,8 +14,6 @@ cOrdosMentat::cOrdosMentat() {
     leftButtonCommand = new cRepeatButtonCommand();
     rightButtonCommand = new cProceedButtonCommand();
 }
-
-cOrdosMentat::~cOrdosMentat() = default;
 
 void cOrdosMentat::think() {
     // think like base class
