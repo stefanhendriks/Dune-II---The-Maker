@@ -1986,7 +1986,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
                 cUnit &pUnit = unit[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
-                    pUnit.takeDamage(damageToTake);
+                    pUnit.takeDamage(damageToTake, -1, -1);
                 }
             }
         }

@@ -3185,7 +3185,7 @@ void cUnit::draw_debug() {
     }
 }
 
-void cUnit::takeDamage(int damage) {
+void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDealsDamage) {
     iHitPoints -= damage;
     if (isDead()) {
         die(true, false);
@@ -3211,13 +3211,23 @@ void cUnit::takeDamage(int damage) {
             // unit does not explode in this case, simply vanishes
             die(false, false);
         } else {
+            auto originType = eBuildType::UNKNOWN;
+            auto originId = -1;
+            if (unitWhoDealsDamage > -1) {
+                originType = eBuildType::UNIT;
+                originId = unitWhoDealsDamage;
+            } else if (structureWhoDealsDamage > -1) {
+                originId = structureWhoDealsDamage;
+                originType = eBuildType::STRUCTURE;
+            }
             s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DAMAGED,
                     .entityType = eBuildType::UNIT,
                     .entityID = iID,
                     .player = getPlayer(),
                     .entitySpecificType = getType(),
-                    .originId = -1 // for now we don't know
+                    .originId = originId,
+                    .originType = originType,
             };
 
             game.onNotifyGameEvent(event);
@@ -3527,7 +3537,6 @@ void cUnit::think_harvester() {
     }
 }
 
-
 void cUnit::setAction(eActionType action) {
     log(fmt::format("setAction() from current action {} to new action {}", eActionTypeString(m_action),
                         eActionTypeString(action)));
@@ -3565,6 +3574,9 @@ std::string cUnit::getUnitStatusForMessageBar() {
 
 }
 
+void cUnit::takeDamage(int damage) {
+    takeDamage(damage, -1, -1);
+}
 
 // return new valid ID
 int UNIT_NEW() {
