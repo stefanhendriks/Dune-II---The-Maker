@@ -1076,6 +1076,9 @@ void cGame::setState(int newState) {
         if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
             deleteOldState = false; // don't delete credits, so we keep the crawler info
         }
+        if (newState == GAME_OPTIONS) {
+            deleteOldState = true; // delete old options state everytime
+        }
 
         if (deleteOldState) {
             delete m_states[newState];
@@ -1136,7 +1139,12 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
-                drawManager->drawCombatState(); // TODO: draw combat state directly on background bitmap
+                if (m_state == GAME_PLAYING) {
+                    // so we don't draw mouse cursor
+                    drawManager->drawCombatState();
+                } else {
+                    // we fall back what was on screen, (which includes mouse cursor for now)
+                }
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
