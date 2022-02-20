@@ -43,7 +43,7 @@ void cSideBar::think() {
 }
 
 void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const {
-    drawManager->getMessageDrawer()->setMessage(item->getInfo().c_str());
+    drawManager->setMessage(item->getInfo());
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
@@ -116,7 +116,7 @@ void cSideBar::thinkProgressAnimation() {
 
 void cSideBar::onMouseAt(const s_MouseEvent &event) {
     isMouseOverSidebarValue = event.coords.x > (game.m_screenX - cSideBar::SidebarWidth);
-    drawManager->getMessageDrawer()->setKeepMessage(isMouseOverSidebarValue);
+    drawManager->setKeepMessage(isMouseOverSidebarValue);
 
     if (selectedListID < 0) return;
 
