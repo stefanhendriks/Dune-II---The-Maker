@@ -1,8 +1,11 @@
-#include "../../include/d2tmh.h"
+#include "cHeavyFactory.h"
 
+#include "d2tmc.h"
+#include "definitions.h"
+#include "drawers/cAllegroDrawer.h"
 #include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
-// Constructor
 cHeavyFactory::cHeavyFactory() {
     // other variables (class specific)
     drawFlash = false;
@@ -13,11 +16,6 @@ cHeavyFactory::cHeavyFactory() {
 int cHeavyFactory::getType() const {
     return HEAVYFACTORY;
 }
-
-cHeavyFactory::~cHeavyFactory() {
-
-}
-
 
 void cHeavyFactory::thinkFast() {
     // last but not least, think like our abstraction
@@ -85,7 +83,7 @@ void cHeavyFactory::draw() {
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-        BITMAP *bitmapToDraw = this->getPlayer()->getStructureBitmapFlash(getType());
+        BITMAP *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         allegroDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                          drawX, drawY, scaledWidth, scaledHeight);
     }

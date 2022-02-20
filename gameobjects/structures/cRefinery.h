@@ -1,15 +1,14 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cRefinery : public cAbstractStructure {
-private:
+  private:
     void think_harvester_deploy();
 
-public:
+  public:
     cRefinery();
 
-    ~cRefinery();
-
-    // overloaded functions
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -27,6 +26,5 @@ public:
     int getType() const override;
 
     int getSpiceSiloCapacity();
-
 };
 

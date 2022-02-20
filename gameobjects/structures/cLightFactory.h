@@ -1,18 +1,17 @@
 #pragma once
 
+#include "cAbstractStructure.h"
+
 class cLightFactory : public cAbstractStructure {
-private:
+  private:
     void think_animation_unitDeploy();
 
     bool drawFlash;
     int flashes;
 
-public:
+  public:
     cLightFactory();
 
-    ~cLightFactory();
-
-    // overloaded functions    
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -26,6 +25,5 @@ public:
     void draw() override;
 
     int getType() const override;
-
 };
 

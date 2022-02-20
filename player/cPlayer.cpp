@@ -1,7 +1,8 @@
-#include "d2tmh.h"
-
 #include "cPlayer.h"
 
+#include "d2tmh.h"
+#include "d2tmc.h"
+#include "gameobjects/structures/cStructureFactory.h"
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 

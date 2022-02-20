@@ -1,8 +1,9 @@
 #pragma once
 
-class cGunTurret : public cAbstractStructure {
+#include "cAbstractStructure.h"
 
-private:
+class cGunTurret : public cAbstractStructure {
+  private:
     int iHeadFacing;        // (for turrets only) what is this structure facing at?
     int iShouldHeadFacing;  // where should we look face at?
     int iTargetID;           // target id (assumes is always a unit)
@@ -11,10 +12,8 @@ private:
     int TIMER_turn;
     int TIMER_guard;         // timed 'area scanning'
 
-public:
+  public:
     cGunTurret();
-
-    ~cGunTurret();
 
     // overloaded functions    
     void thinkFast() override;

@@ -1,22 +1,10 @@
-#include <player/cPlayerDifficultySettings.h>
+#pragma once
 
-static const int ANIMATION_SPEED = 12;
+#include "gameobjects/units/cUnit.h"
+#include "player/cPlayerDifficultySettings.h"
+#include "structs.h"
 
-/*
-
-  Dune II - The Maker
-
-  Author : Stefan Hendriks
-  Contact: stefan@fundynamic.com
-  Website: http://dune2themaker.fundynamic.com
-
-  2001 - 2022 (c) code by Stefan Hendriks
-
-  */
-
-#ifndef CBULLET_H_
-#define CBULLET_H_
-
+class cPlayer;
 
 class cBullet {
 
@@ -116,5 +104,3 @@ private:
 
     bool canDamageGround() const;
 };
-
-#endif

@@ -9,9 +9,12 @@
   2001 - 2022 (c) code by Stefan Hendriks
 */
 
-#include "../../include/d2tmh.h"
+#include "cParticle.h"
 
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
 #include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
 

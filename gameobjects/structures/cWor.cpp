@@ -1,6 +1,7 @@
-#include "../../include/d2tmh.h"
+#include "cWor.h"
 
-// Constructor
+#include "definitions.h"
+
 cWor::cWor() {
     // other variables (class specific)
 }
@@ -9,14 +10,9 @@ int cWor::getType() const {
     return WOR;
 }
 
-cWor::~cWor() {
-
-}
-
 void cWor::thinkFast() {
     // think like base class
     cAbstractStructure::thinkFast();
-
 }
 
 void cWor::think_animation() {
@@ -32,7 +28,3 @@ void cWor::think_animation() {
 void cWor::think_guard() {
 
 }
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-
