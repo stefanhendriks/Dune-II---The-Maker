@@ -318,6 +318,18 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
     }
 }
 
+void cDrawManager::missionInit() {
+    m_creditsDrawer.setCredits();
+}
+
+void cDrawManager::thinkFast_statePlaying() {
+    m_creditsDrawer.thinkFast();
+}
+
+void cDrawManager::thinkFast() {
+    m_messageDrawer.thinkFast();
+}
+
 
 //int points[] =
 //{
