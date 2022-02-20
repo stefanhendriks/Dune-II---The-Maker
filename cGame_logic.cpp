@@ -650,8 +650,9 @@ void cGame::shutdown() {
     }
 
     // Destroy font of Allegro FONT library
-    alfont_destroy_font(game_font);
-    alfont_destroy_font(bene_font);
+    // Commented because it crash on Linux. As alfont is deprecated, i didn't try to understand. Replacing Alfont will avoid this possible memory leak. @Mira
+    //alfont_destroy_font(game_font);
+    //alfont_destroy_font(bene_font);
 
     // Exit the font library (must be first)
     alfont_exit();
