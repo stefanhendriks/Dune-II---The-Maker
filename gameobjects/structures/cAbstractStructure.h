@@ -21,6 +21,7 @@
 #include "structs.h"
 
 #include <vector>
+#include <string>
 
 class cPlayer;
 
@@ -134,7 +135,7 @@ class cAbstractStructure {
 		// convenience get method, which should eventually only be used in rare cases as all properties should be
 		// TODO: copied from this struct to this class, so each structure can change the properties without
 		// changing the entire game rules.
-		s_StructureInfo getS_StructuresType() const;
+		s_StructureInfo getStructureInfo() const;
 		cPlayer * getPlayer();
 
 		// Really sure you need this? You can use getPlayer() ?
@@ -153,7 +154,7 @@ class cAbstractStructure {
 		int getHeight() { return iHeight; }
 		int getWidthInPixels();
 		int getHeightInPixels();
-		int getHitPoints() { return iHitPoints; }
+		int getHitPoints() const { return iHitPoints; }
 		int getCell() { return iCell; }
 		int getOwner() { return iPlayer; } // return the player id who owns this structure
 		int getRallyPoint() { return iRallyPoint; }
@@ -190,8 +191,8 @@ class cAbstractStructure {
 		void setUnitIdEntering(int unitId);
 
 		bool isValid();
-		bool canAttackAirUnits() const { return getS_StructuresType().canAttackAirUnits; }
-		bool canAttackGroundUnits() const { return getS_StructuresType().canAttackGroundUnits; }
+		bool canAttackAirUnits() const { return getStructureInfo().canAttackAirUnits; }
+		bool canAttackGroundUnits() const { return getStructureInfo().canAttackGroundUnits; }
 
 		void setHeight(int height);
 		void setWidth(int width);
@@ -209,7 +210,7 @@ class cAbstractStructure {
 
 		void damage(int hp, int originId);
 		void decay(int hp);
-    	float getHealthNormalized();
+    	float getHealthNormalized() const;
 
     	bool isDamaged();
 
@@ -251,4 +252,8 @@ class cAbstractStructure {
         bool canSpawnUnits() const;
 
         eListType getAssociatedListID() const;
+
+        std::string getDefaultStatusMessageBar() const;
+
+        virtual std::string getStatusForMessageBar() const = 0;
 };

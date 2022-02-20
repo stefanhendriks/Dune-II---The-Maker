@@ -32,5 +32,8 @@ class cStarPort : public cAbstractStructure {
     void startAnimating() override {}
 
     void draw() override { drawWithShadow(); }
+
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+
 };
 

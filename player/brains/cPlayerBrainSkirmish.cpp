@@ -187,7 +187,7 @@ namespace brains {
 
         if (!foundExistingStructureInBase) {
             log(fmt::format("cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure {} to base register:",
-                            pStructure->getS_StructuresType().name));
+                            pStructure->getStructureInfo().name));
 
             // new structure placed, update base register
             S_structurePosition position = {

@@ -29,5 +29,6 @@ public:
 
     int getType() const override;
 
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
 };
 

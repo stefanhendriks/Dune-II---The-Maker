@@ -113,7 +113,7 @@ BITMAP * cAbstractStructure::getBitmap() {
 }
 
 BITMAP * cAbstractStructure::getShadowBitmap() {
-	s_StructureInfo structureType = getS_StructuresType();
+	s_StructureInfo structureType = getStructureInfo();
 	return structureType.shadow;
 }
 
@@ -377,7 +377,7 @@ void cAbstractStructure::think_decay() {
 
     // chance based (so it does not decay all the time)
     if (rnd(100) < getPercentageNotPaved()) {
-        if (iHitPoints > (getS_StructuresType().hp / 2)) {
+        if (iHitPoints > (getStructureInfo().hp / 2)) {
             decay(1);
         }
     }
@@ -519,7 +519,7 @@ void cAbstractStructure::setOwner(int player) {
 void cAbstractStructure::thinkFast() {
     think_decay();
     think_repair();
-    if (getS_StructuresType().flags.empty()) {
+    if (getStructureInfo().flags.empty()) {
         think_flag();
     } else {
         think_flag_new();
@@ -549,7 +549,7 @@ void cAbstractStructure::think_repair() {
 	}
 }
 
-s_StructureInfo cAbstractStructure::getS_StructuresType() const {
+s_StructureInfo cAbstractStructure::getStructureInfo() const {
 	return sStructureInfo[getType()];
 }
 
@@ -562,7 +562,7 @@ bool cAbstractStructure::isPrimary() {
 }
 
 int cAbstractStructure::getPowerUsage() {
-	return getS_StructuresType().power_drain;
+	return getStructureInfo().power_drain;
 }
 
 bool cAbstractStructure::isValid() {
@@ -578,18 +578,18 @@ bool cAbstractStructure::isValid() {
     return true;
 }
 
-float cAbstractStructure::getHealthNormalized() {
-    const s_StructureInfo &structureType = getS_StructuresType();
+float cAbstractStructure::getHealthNormalized() const {
+    const s_StructureInfo &structureType = getStructureInfo();
     float flMAX  = structureType.hp;
     return (iHitPoints / flMAX);
 }
 
 int cAbstractStructure::getWidthInPixels() {
-    return getS_StructuresType().bmp_width;
+    return getStructureInfo().bmp_width;
 }
 
 int cAbstractStructure::getHeightInPixels() {
-    return getS_StructuresType().bmp_height;
+    return getStructureInfo().bmp_height;
 }
 
 bool cAbstractStructure::isDamaged() {
@@ -859,4 +859,10 @@ eListType cAbstractStructure::getAssociatedListID() const {
         default:
             return eListType::LIST_NONE;
     }
+}
+
+std::string cAbstractStructure::getDefaultStatusMessageBar() const {
+    s_StructureInfo info = getStructureInfo();
+    int health = getHealthNormalized() * 100;
+    return fmt::format("{} at {} percent health", info.name, health);
 }

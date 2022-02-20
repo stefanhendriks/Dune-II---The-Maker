@@ -32,10 +32,12 @@ public:
 
     int getType() const override;
 
-    int getPowerOut();
+    int getPowerOut() const;
 
-    int getMaxPowerOut();
+    int getMaxPowerOut() const;
 
     int getFade() { return iFade; }
+
+    std::string getStatusForMessageBar() const override;
 };
 

@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "definitions.h"
+#include "player/cPlayer.h"
 
 #include <fmt/core.h>
 
@@ -77,11 +78,16 @@ void cWindTrap::think_guard() {
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 
-int cWindTrap::getPowerOut() {
+int cWindTrap::getPowerOut() const {
     float percentage = ((float) getHitPoints() / (float) sStructureInfo[getType()].hp);
     return getMaxPowerOut() * percentage;
 }
 
-int cWindTrap::getMaxPowerOut() {
-    return getS_StructuresType().power_give;
+int cWindTrap::getMaxPowerOut() const {
+    return getStructureInfo().power_give;
+}
+
+std::string cWindTrap::getStatusForMessageBar() const {
+    int powerProduction = ((float)getPowerOut() / (float)getMaxPowerOut()) * (float)100;
+    return fmt::format("{} and producing at {} percent capacity", cAbstractStructure::getDefaultStatusMessageBar(), powerProduction);
 }

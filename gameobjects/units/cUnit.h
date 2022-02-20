@@ -412,6 +412,9 @@ public:
 
     void thinkFast();
 
+    std::string getUnitStatusForMessageBar();
+    std::string getHarvesterStatusForMessageBar();
+
 private:
     eActionType m_action;
     eUnitActionIntent intent;
