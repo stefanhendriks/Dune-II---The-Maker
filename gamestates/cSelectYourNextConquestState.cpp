@@ -318,16 +318,17 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
     }
 }
 
-void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {// Calculate mission from region:
-// region 1 = mission 1
-// region 2, 3, 4 = mission 2
-// region 5, 6, 7 = mission 3
-// region 8, 9, 10 = mission 4
-// region 11,12,13 = mission 5
-// region 14,15,16 = mission 6
-// region 17,18,19 = mission 7
-// region 20,21    = mission 8
-// region 22 = mission 9
+void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {
+    // Calculate mission from region:
+    // region 1 = mission 1
+    // region 2, 3, 4 = mission 2
+    // region 5, 6, 7 = mission 3
+    // region 8, 9, 10 = mission 4
+    // region 11,12,13 = mission 5
+    // region 14,15,16 = mission 6
+    // region 17,18,19 = mission 7
+    // region 20,21    = mission 8
+    // region 22 = mission 9
 
     // calculate region stuff, and add it up
     int iNewReg = 0;
