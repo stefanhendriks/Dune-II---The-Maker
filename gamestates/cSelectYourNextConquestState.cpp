@@ -622,5 +622,10 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
     }
 }
 
-void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.eventType == eKeyEventType::PRESSED) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_OPTIONS);
+        }
+    }
 }
