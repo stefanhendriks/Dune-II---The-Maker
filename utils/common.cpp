@@ -145,6 +145,7 @@ void install_units() {
 
         // attack related
         unitInfo.canAttackAirUnits = false;
+        unitInfo.canAttackUnits = false;
 
         // capturing / damage upon entering structure related
         unitInfo.canEnterAndDamageStructure = false;
@@ -210,6 +211,7 @@ void install_units() {
     sUnitInfo[DEVASTATOR].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[DEVASTATOR].smokeHpFactor = 0.5f;
     sUnitInfo[DEVASTATOR].canGuard = true;
+    sUnitInfo[DEVASTATOR].canAttackUnits = true;
     strcpy(sUnitInfo[DEVASTATOR].name, "Devastator");
 
     // Unit        : Harvester
@@ -245,6 +247,7 @@ void install_units() {
     sUnitInfo[TANK].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[TANK].smokeHpFactor = 0.5f;
     sUnitInfo[TANK].canGuard = true;
+    sUnitInfo[TANK].canAttackUnits = true;
     strcpy(sUnitInfo[TANK].name, "Tank");
 
 
@@ -265,6 +268,7 @@ void install_units() {
     sUnitInfo[SIEGETANK].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[SIEGETANK].smokeHpFactor = 0.5f;
     sUnitInfo[SIEGETANK].canGuard = true;
+    sUnitInfo[SIEGETANK].canAttackUnits = true;
     strcpy(sUnitInfo[SIEGETANK].name, "Siege Tank");
 
     // Unit        : MCV
@@ -297,6 +301,7 @@ void install_units() {
     sUnitInfo[DEVIATOR].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[DEVIATOR].smokeHpFactor = 0.5f;
     sUnitInfo[DEVIATOR].canGuard = true;
+    sUnitInfo[DEVIATOR].canAttackUnits = true;
     strcpy(sUnitInfo[DEVIATOR].name, "Deviator");
 
     // Unit        : Launcher
@@ -317,6 +322,7 @@ void install_units() {
     sUnitInfo[LAUNCHER].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[LAUNCHER].smokeHpFactor = 0.5f;
     sUnitInfo[LAUNCHER].canGuard = true;
+    sUnitInfo[LAUNCHER].canAttackUnits = true;
     strcpy(sUnitInfo[LAUNCHER].name, "Launcher");
 
     // Unit        : Quad
@@ -336,6 +342,7 @@ void install_units() {
     sUnitInfo[QUAD].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[QUAD].smokeHpFactor = 0.5f;
     sUnitInfo[QUAD].canGuard = true;
+    sUnitInfo[QUAD].canAttackUnits = true;
     strcpy(sUnitInfo[QUAD].name, "Quad");
 
 
@@ -355,6 +362,7 @@ void install_units() {
     sUnitInfo[TRIKE].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[TRIKE].smokeHpFactor = 0.5f;
     sUnitInfo[TRIKE].canGuard = true;
+    sUnitInfo[TRIKE].canAttackUnits = true;
     strcpy(sUnitInfo[TRIKE].name, "Trike");
 
     // Unit        : Raider Trike (Ordos trike)
@@ -374,6 +382,7 @@ void install_units() {
     sUnitInfo[RAIDER].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[RAIDER].smokeHpFactor = 0.5f;
     sUnitInfo[RAIDER].canGuard = true;
+    sUnitInfo[RAIDER].canAttackUnits = true;
 
     // Unit        : Frigate
     // Description : Frigate
@@ -417,6 +426,7 @@ void install_units() {
     sUnitInfo[SONICTANK].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[SONICTANK].smokeHpFactor = 0.5f;
     sUnitInfo[SONICTANK].canGuard = true;
+    sUnitInfo[SONICTANK].canAttackUnits = true;
 
     strcpy(sUnitInfo[SONICTANK].name, "Sonic Tank");
 
@@ -439,6 +449,7 @@ void install_units() {
     sUnitInfo[SOLDIER].attackIsEnterStructure = false;
     sUnitInfo[SOLDIER].damageOnEnterStructure = 10.0f;
     sUnitInfo[SOLDIER].canGuard = true;
+    sUnitInfo[SOLDIER].canAttackUnits = true;
     strcpy(sUnitInfo[SOLDIER].name, "Soldier");
 
 
@@ -462,6 +473,7 @@ void install_units() {
     sUnitInfo[INFANTRY].attackIsEnterStructure = false;
     sUnitInfo[INFANTRY].damageOnEnterStructure = 25.0f;
     sUnitInfo[INFANTRY].canGuard = true;
+    sUnitInfo[INFANTRY].canAttackUnits = true;
     strcpy(sUnitInfo[INFANTRY].name, "Light Infantry");
 
     // Unit        : Single Trooper
@@ -486,6 +498,7 @@ void install_units() {
     sUnitInfo[TROOPER].bulletTypeSecondary = BULLET_SMALL;
     sUnitInfo[TROOPER].fireSecondaryWithinRange = 2;
     sUnitInfo[TROOPER].canGuard = true;
+    sUnitInfo[TROOPER].canAttackUnits = true;
 
     // Unit        : Group Trooper
     // Description : 3 troopers
@@ -510,6 +523,7 @@ void install_units() {
     sUnitInfo[TROOPERS].bulletTypeSecondary = BULLET_SMALL;
     sUnitInfo[TROOPERS].fireSecondaryWithinRange = 2;
     sUnitInfo[TROOPERS].canGuard = true;
+    sUnitInfo[TROOPERS].canAttackUnits = true;
 
     // Unit        : Fremen
     // Description : A single fremen
@@ -527,6 +541,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_ONE].canBeSquished = true;
     sUnitInfo[UNIT_FREMEN_ONE].canAttackAirUnits = true;
     sUnitInfo[UNIT_FREMEN_ONE].canGuard = true;
+    sUnitInfo[UNIT_FREMEN_ONE].canAttackUnits = true;
 
 //  units[UNIT_FREMEN_ONE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_ONE].subListId=0;
@@ -547,6 +562,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_THREE].canBeSquished = true;
     sUnitInfo[UNIT_FREMEN_THREE].canAttackAirUnits = true;
     sUnitInfo[UNIT_FREMEN_THREE].canGuard = true;
+    sUnitInfo[UNIT_FREMEN_THREE].canAttackUnits = true;
 //  units[UNIT_FREMEN_THREE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_THREE].subListId=0;
 
@@ -590,6 +606,7 @@ void install_units() {
     sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
     sUnitInfo[SANDWORM].squish = false;
     sUnitInfo[SANDWORM].canGuard = true;
+    sUnitInfo[SANDWORM].canAttackUnits = true;
 
 
     // Unit        : <name>
