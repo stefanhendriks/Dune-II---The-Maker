@@ -245,46 +245,58 @@ namespace brains {
             }
 
             int cell = originUnit.getCell();
-            bool attackerIsAirUnit = originUnit.isAirbornUnit();
 
-            respondToThreat(cell, attackerIsAirUnit, 2 + rnd(4));
+            respondToThreat(nullptr, cell, &originUnit, 2 + rnd(4));
         }
     }
 
-    void cPlayerBrainSkirmish::respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder) {
+    void cPlayerBrainSkirmish::respondToThreat(cUnit * victim, int cellOriginOfThreat, cUnit * threat, int maxUnitsToOrder) {
         const std::vector<sEntityForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
-
-        if (attackerIsAirUnit) {
-            int unitsOrdered = 0;
-            // find units that can counter-attack an air unit
-            for (auto & ufd : units) {
-                cUnit &pUnit = unit[ufd.entityId];
-                if (!pUnit.isIdle()) continue;
-                if (!pUnit.canAttackAirUnits()) continue;
-                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
-
-                // move unit to where air unit is/was, so we get close to counter-attack
-                pUnit.move_to(cellOriginOfThreat);
-                unitsOrdered++;
-
-                if (unitsOrdered > maxUnitsToOrder) break;
+        int skipThisUnit = -1;
+        if (victim) {
+            if (!threat->isInfantryUnit() && victim->isHarvester()) {
+                // do not engage
+                skipThisUnit = victim->iID;
             }
-        } else {
-            int unitsOrdered = 0;
+        }
 
-            for (auto & ufd : units) {
-                cUnit &pUnit = unit[ufd.entityId];
-                if (!pUnit.isIdle()) continue;
-                if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+        if (threat) {
+            if (threat->isAirbornUnit()) {
+                int unitsOrdered = 0;
+                // find units that can counter-attack an air unit
+                for (auto &ufd: units) {
+                    cUnit &pUnit = unit[ufd.entityId];
+                    if (pUnit.iID == skipThisUnit) continue;
+                    if (!pUnit.isIdle()) continue;
+                    if (!pUnit.canAttackAirUnits()) continue;
+                    if (pUnit.isHarvester()) continue; // harvesters cannot attack air units
+                    if (pUnit.isAirbornUnit()) continue; // you cannot order air units
 
-                // TODO:
-                // we can do more smart things here depending on the kind of unit that attacks us
-                // and thus which unit we should send to counter-attack
-                pUnit.attackAt(cellOriginOfThreat);
-                unitsOrdered++;
+                    // move unit to where air unit is/was, so we get close to counter-attack
+                    pUnit.move_to(cellOriginOfThreat);
+                    unitsOrdered++;
 
-                if (unitsOrdered > maxUnitsToOrder) break;
+                    if (unitsOrdered > maxUnitsToOrder) break;
+                }
             }
+            return;
+        }
+        int unitsOrdered = 0;
+
+        for (auto & ufd : units) {
+            cUnit &pUnit = unit[ufd.entityId];
+            if (pUnit.iID == skipThisUnit) continue;
+            if (!pUnit.isIdle()) continue;
+            if (!pUnit.isAttackingUnit()) continue; // is a unit that is used generally for attacking
+            if (pUnit.isAirbornUnit()) continue; // you cannot order air units
+
+            // TODO:
+            // we can do more smart things here depending on the kind of unit that attacks us
+            // and thus which unit we should send to counter-attack
+            pUnit.attackAt(cellOriginOfThreat);
+            unitsOrdered++;
+
+            if (unitsOrdered > maxUnitsToOrder) break;
         }
     }
 
@@ -1133,7 +1145,7 @@ namespace brains {
                             m_discoveredEnemyAtCell.insert(event.atCell);
 
                             if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                                respondToThreat(event.atCell, pUnit.isAirbornUnit(), 2 + rnd(4));
+                                respondToThreat(nullptr, event.atCell, &pUnit, 2 + rnd(4));
                             }
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
@@ -1188,7 +1200,7 @@ namespace brains {
                         cUnit &pUnit = unit[event.entityID];
                         if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                             if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                                respondToThreat(event.atCell, pUnit.isAirbornUnit(), 2 + rnd(4));
+                                respondToThreat(nullptr, event.atCell, &pUnit, 2 + rnd(4));
                             }
                         }
                     }
@@ -1417,18 +1429,29 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::onMyUnitAttacked(const s_GameEvent &event) {
-        cUnit &pUnit = unit[event.entityID];
-        if (pUnit.isHarvester()) {
-            if (pUnit.isIdle()) {
-                eHeadTowardsStructureResult result = pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY,
-                                                                                                            true,
-                                                                                                            INTENT_UNLOAD_SPICE);
+        if (event.originType == eBuildType::UNKNOWN) {
+            // don't know who attacked us; ignore
+            return;
+        }
+
+        cUnit *threat = nullptr;
+        if (event.originType == eBuildType::UNIT) {
+            assert(event.originId > -1);
+            threat = &unit[event.originId];
+        }
+
+        cUnit &victim = unit[event.entityID];
+        if (victim.isHarvester()) {
+            if (victim.isIdle()) {
+                eHeadTowardsStructureResult result = victim.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY,
+                                                                                                             true,
+                                                                                                             INTENT_UNLOAD_SPICE);
 
                 if (result == eHeadTowardsStructureResult::FAILED_NO_STRUCTURE_AVAILABLE) {
-                    pUnit.retreatToNearbyBase();
+                    victim.retreatToNearbyBase();
                 }
             }
-            respondToThreat(event.atCell, false, 2 + rnd(4));
+            respondToThreat(&victim, event.atCell, threat, 2 + rnd(4));
         }
     }
 

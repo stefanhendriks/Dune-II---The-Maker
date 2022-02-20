@@ -3574,6 +3574,10 @@ std::string cUnit::getUnitStatusForMessageBar() {
 
 }
 
+bool cUnit::isAttackingUnit() {
+    return getUnitInfo().canAttackAirUnits || getUnitInfo().canAttackUnits;
+}
+
 void cUnit::takeDamage(int damage) {
     takeDamage(damage, -1, -1);
 }

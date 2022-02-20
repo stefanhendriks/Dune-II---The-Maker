@@ -412,6 +412,8 @@ public:
 
     void thinkFast();
 
+    bool isAttackingUnit();
+
     std::string getUnitStatusForMessageBar();
     std::string getHarvesterStatusForMessageBar();
 
