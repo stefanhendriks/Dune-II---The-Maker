@@ -400,7 +400,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
 	int draw_x = theStructure->iDrawX() - 1;
 	int draw_y = theStructure->iDrawY() - 5;
 
-	int widthBmp = mapCamera->factorZoomLevel(theStructure->getS_StructuresType().bmp_width);
+	int widthBmp = mapCamera->factorZoomLevel(theStructure->getStructureInfo().bmp_width);
 	int width_x = widthBmp - 1;
 
 	int height_y = 4;

@@ -4,6 +4,7 @@
 
 #include "utils/cRectangle.h"
 #include "utils/cSoundPlayer.h"
+#include "managers/cDrawManager.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "player/cPlayer.h"
@@ -60,6 +61,15 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
 
         const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
         selectedUnits = m_player->selectUnits(ids);
+
+        if (!ids.empty()) {
+            if (ids.size() > 1) {
+                drawManager->setMessage(fmt::format("{} units selected", ids.size()));
+            } else {
+                cUnit &pUnit = unit[ids[0]];
+                drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+            }
+        }
     } else {
         bool infantrySelected = false;
         bool unitSelected = false;
@@ -78,6 +88,7 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                     } else {
                         unitSelected = true;
                     }
+                    drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
                 }
             }
 
@@ -92,6 +103,10 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                     }
                 } else {
                     m_player->selected_structure = -1;
+                }
+
+                if (pStructure && pStructure->isValid()) {
+                    drawManager->setMessage(pStructure->getStatusForMessageBar());
                 }
             }
         } else if (m_state == SELECT_STATE_RALLY) {

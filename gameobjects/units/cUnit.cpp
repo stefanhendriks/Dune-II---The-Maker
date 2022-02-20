@@ -3548,6 +3548,23 @@ void cUnit::retreatToNearbyBase() {
     move_to(cellToRetreatTo); // intent retreat?
 }
 
+std::string cUnit::getHarvesterStatusForMessageBar() {
+    s_UnitInfo &info = getUnitInfo();
+    int harvested = ((float)iCredits/info.credit_capacity)*100;
+    return fmt::format("{} at {} percent health and {} percent harvested", info.name, getHealthNormalized()*100, harvested);
+}
+
+std::string cUnit::getUnitStatusForMessageBar() {
+    s_UnitInfo &info = getUnitInfo();
+    switch (getType()) {
+        case HARVESTER:
+            return getHarvesterStatusForMessageBar();
+        default:
+            return fmt::format("{} at {} percent health", info.name, getHealthNormalized()*100);
+    }
+
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
