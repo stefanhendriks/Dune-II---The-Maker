@@ -51,6 +51,8 @@ class cMessageDrawer {
 		BITMAP *m_bmpBar;
 		BITMAP *m_temp;
 
+        int m_timeMessageIsVisible;
+
         messages::eMessageDrawerState m_state;
         messages::eMessageDrawerFadingState m_fadeState;
 
