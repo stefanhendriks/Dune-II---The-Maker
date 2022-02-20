@@ -31,10 +31,6 @@ set(FREETYPE_SOURCES
     "freetype/src/autofit/autofit.c"
 )
 
-if (UNIX)
-  add_definitions(-DALFONT_LINUX)
-endif()
-
 add_library(alfont STATIC
     "src/alfont.c"
     ${FREETYPE_SOURCES}
@@ -47,25 +43,22 @@ target_include_directories(alfont
     "include"
 )
 
-if (UNIX)
-target_link_libraries(alfont
-  PUBLIC
-    alleg
-)
-else()
-target_link_libraries(alfont
-  PUBLIC
-    allegro
-)
-endif()
-
 # Alfont has DOS and Linux specific fixes. Building for DOS is not supported for d2tm, but for
 # Linux, we enable these fixes here.
+# Also, on Linux we expect Allegro to be installed on the system, which has a different lib name.
 if(UNIX)
   set(ALFONT_PLATFORM "ALFONT_LINUX")
-else() # Default to "Windows" (no fixes)
+  set(ALLEGRO_LIBRARY_NAME "alleg")
+else() # Default to "Windows" (no fixes) and in-source Allegro build
   set(ALFONT_PLATFORM "ALFONT_WINDOWS")
+  set(ALLEGRO_LIBRARY_NAME "allegro")
 endif()
+
+
+target_link_libraries(alfont
+  PUBLIC
+    ${ALLEGRO_LIBRARY_NAME}
+)
 
 # Compile & link options are taken from the Makefile. 
 target_compile_options(alfont
