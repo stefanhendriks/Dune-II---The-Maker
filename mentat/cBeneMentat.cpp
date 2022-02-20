@@ -1,4 +1,10 @@
-#include "d2tmh.h"
+#include "cBeneMentat.h"
+
+#include "cNoButtonCommand.h"
+#include "cYesButtonCommand.h"
+#include "data/gfxmentat.h"
+#include "d2tmc.h"
+#include "player/cPlayer.h"
 
 #include <alfont.h>
 #include <allegro.h>
@@ -10,8 +16,6 @@ cBeneMentat::cBeneMentat() {
     leftButtonCommand = new cNoButtonCommand();
     rightButtonCommand = new cYesButtonCommand();
 }
-
-cBeneMentat::~cBeneMentat() = default;
 
 void cBeneMentat::think() {
     // think like base class

@@ -1,7 +1,15 @@
 #pragma once
 
-#include <vector>
+#include "controls/cKeyboardEvent.h"
+#include "controls/cMouse.h"
 #include "cMouseState.h"
+#include "sGameEvent.h"
+#include "sMouseEvent.h"
+
+#include <vector>
+
+class cGameControlsContext;
+class cPlayer;
 
 enum eMouseUnitsSelectedState {
     SELECTED_STATE_MOVE, // move selected units to location
@@ -13,23 +21,6 @@ enum eMouseUnitsSelectedState {
     SELECTED_STATE_CAPTURE, // enter structure to capture it
     SELECTED_STATE_REFINERY, // enter refinery to dump spice / collect credits
 };
-
-inline const char* mouseUnitsSelectedStateString(const eMouseUnitsSelectedState &state) {
-    switch (state) {
-        case SELECTED_STATE_MOVE: return "SELECTED_STATE_MOVE";
-        case SELECTED_STATE_SELECT: return "SELECTED_STATE_SELECT";
-        case SELECTED_STATE_ADD_TO_SELECTION: return "SELECTED_STATE_ADD_TO_SELECTION";
-        case SELECTED_STATE_ATTACK: return "SELECTED_STATE_ATTACK";
-        case SELECTED_STATE_FORCE_ATTACK: return "SELECTED_STATE_FORCE_ATTACK";
-        case SELECTED_STATE_REPAIR: return "SELECTED_STATE_REPAIR";
-        case SELECTED_STATE_CAPTURE: return "SELECTED_STATE_CAPTURE";
-        case SELECTED_STATE_REFINERY: return "SELECTED_STATE_REFINERY";
-        default:
-            assert(false);
-            break;
-    }
-    return "";
-}
 
 /**
  * A mouse "units selected" state is at the battlefield, and it is active when units have been selected (box, or single).

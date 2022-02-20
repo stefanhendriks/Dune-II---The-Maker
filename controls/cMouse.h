@@ -1,11 +1,11 @@
 #pragma once
 
-#include <vector>
+#include "drawers/cTextDrawer.h"
 #include "observers/cInputObserver.h"
 #include "utils/cPoint.h"
-#include "drawers/cTextDrawer.h"
 
 #include <string>
+#include <vector>
 
 class cRectangle;
 

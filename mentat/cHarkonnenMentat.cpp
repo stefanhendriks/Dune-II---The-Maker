@@ -1,4 +1,9 @@
-#include "d2tmh.h"
+#include "cHarkonnenMentat.h"
+
+#include "cProceedButtonCommand.h"
+#include "cRepeatButtonCommand.h"
+#include "d2tmc.h"
+#include "data/gfxmentat.h"
 
 #include <allegro.h>
 
@@ -9,8 +14,6 @@ cHarkonnenMentat::cHarkonnenMentat() {
     leftButtonCommand = new cRepeatButtonCommand();
     rightButtonCommand = new cProceedButtonCommand();
 }
-
-cHarkonnenMentat::~cHarkonnenMentat() = default;
 
 void cHarkonnenMentat::think() {
     // think like base class
