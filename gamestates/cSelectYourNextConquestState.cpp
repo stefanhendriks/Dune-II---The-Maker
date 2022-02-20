@@ -69,20 +69,20 @@ void cSelectYourNextConquestState::thinkFast() {
         int iHouse = players[0].getHouse();
         int iMission = game.m_mission;
 
+        bool hasMessage = drawManager->hasMessage();
+
         if (regionSceneState == SCENE_INIT) {
             REGION_SETUP_NEXT_MISSION(iMission, iHouse);
-            drawManager->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
+            drawManager->setMessage("3 Houses have come to Dune.");
             transitionToNextRegionSceneState(SCENE_THREE_HOUSES_COME_FOR_DUNE);
         } else if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
-            bool hasMessage = drawManager->getMessageDrawer()->hasMessage();
             if (!hasMessage && iRegionSceneAlpha >= 255) {
-                drawManager->getMessageDrawer()->setMessage("To take control of the land.");
+                drawManager->setMessage("To take control of the land.");
                 transitionToNextRegionSceneState(SCENE_TO_TAKE_CONTROL_OF_THE_LAND);
             }
         } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-            bool hasMessage = drawManager->getMessageDrawer()->hasMessage();
             if (!hasMessage && iRegionSceneAlpha >= 255) {
-                drawManager->getMessageDrawer()->setMessage("That has become divided.");
+                drawManager->setMessage("That has become divided.");
                 transitionToNextRegionSceneState(SCENE_THAT_HAS_BECOME_DIVIDED);
             }
         } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
@@ -110,11 +110,7 @@ void cSelectYourNextConquestState::thinkFast() {
             }
         }
 
-        cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
-        char *cMessage = pDrawer->getMessage();
-
         isFinishedConqueringRegions = true;
-        bool isNotDisplayingMessage = cMessage[0] == '\0';
 
         for (int i = 0; i < MAX_REGIONS; i++) {
             if (iRegionConquer[i] < 0) continue;
@@ -131,14 +127,14 @@ void cSelectYourNextConquestState::thinkFast() {
                 bool isRegionTextGiven = regionTextString[0] != '\0';
                 bool isRegionTextEmpty = regionTextString[0] == '\0';
 
-                if ((isRegionTextGiven && isNotDisplayingMessage) ||
+                if ((isRegionTextGiven && !drawManager->hasMessage()) ||
                     isRegionTextEmpty) {
                     // set this up
                     region.iHouse = houseThatConquersTheRegion;
                     region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
 
                     if (isRegionTextGiven) {
-                        drawManager->getMessageDrawer()->setMessage(regionTextString);
+                        drawManager->setMessage(regionTextString);
                     }
                     isFinishedConqueringRegions = false;
                     break;
@@ -220,7 +216,7 @@ void cSelectYourNextConquestState::draw() const {
     // Draw this last
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
-    drawManager->getMessageDrawer()->draw();
+    drawManager->drawMessageBar();
 
     drawManager->drawMouse();
 }
@@ -280,14 +276,8 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const { // draw dun
     }
 
     // Animate here (so add regions that are conquered)
-    cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
-    char *cMessage = pDrawer->getMessage();
-
-    bool isNotDisplayingMessage = cMessage[0] == '\0';
-
-    if (isFinishedConqueringRegions && isNotDisplayingMessage) {
-        pDrawer->setMessage("Select your next region.");
-        pDrawer->setKeepMessage(true);
+    if (isFinishedConqueringRegions && !drawManager->hasMessage()) {
+        drawManager->setMessage("Select your next region.", true);
     }
 }
 
@@ -307,14 +297,8 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
     }
 
     // Animate here (so add regions that are conquered)
-    cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
-    char *cMessage = pDrawer->getMessage();
-
-    bool isNotDisplayingMessage = cMessage[0] == '\0';
-
-    if (isFinishedConqueringRegions && isNotDisplayingMessage) {
-        pDrawer->setMessage("Select your next region.");
-        pDrawer->setKeepMessage(true);
+    if (isFinishedConqueringRegions && !drawManager->hasMessage()) {
+        drawManager->setMessage("Select your next region.", true);
     }
 }
 
@@ -386,7 +370,7 @@ cRegion * cSelectYourNextConquestState::getRegionMouseIsOver() const {
 }
 
 void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION() {
-    drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
+    drawManager->regionInit(offsetX, offsetY);
 
     selectNextConquestAlpha = 1;
 
@@ -403,7 +387,7 @@ void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int i
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. That's what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
-    drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
+    drawManager->regionInit(offsetX, offsetY);
 
     // make world pieces not selectable
     for (int i = 0; i < MAX_REGIONS; i++) {

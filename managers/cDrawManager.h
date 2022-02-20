@@ -34,8 +34,6 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    cMessageDrawer *getMessageDrawer() { return &m_messageDrawer; }
-
     cMiniMapDrawer *getMiniMapDrawer() { return &miniMapDrawer; }
 
     cOrderDrawer *getOrderDrawer() { return &m_orderDrawer; }
@@ -61,6 +59,16 @@ public:
     void thinkFast_statePlaying();
 
     void thinkFast();
+
+    void drawMessageBar();
+
+    void setMessage(std::string msg, bool keepMessage = false);
+
+    void setKeepMessage(bool value);
+
+    void regionInit(int offsetX, int offsetY);
+
+    bool hasMessage();
 
 protected:
     void drawSidebar();

@@ -320,6 +320,7 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event) {
 
 void cDrawManager::missionInit() {
     m_creditsDrawer.setCredits();
+    m_messageDrawer.initCombatPosition();
 }
 
 void cDrawManager::thinkFast_statePlaying() {
@@ -328,6 +329,26 @@ void cDrawManager::thinkFast_statePlaying() {
 
 void cDrawManager::thinkFast() {
     m_messageDrawer.thinkFast();
+}
+
+void cDrawManager::drawMessageBar() {
+    m_messageDrawer.draw();
+}
+
+void cDrawManager::setMessage(std::string msg, bool keepMessage) {
+    m_messageDrawer.setMessage(msg, keepMessage);
+}
+
+void cDrawManager::setKeepMessage(bool value) {
+    m_messageDrawer.setKeepMessage(value);
+}
+
+void cDrawManager::regionInit(int offsetX, int offsetY) {
+    m_messageDrawer.initRegionPosition(offsetX, offsetY);
+}
+
+bool cDrawManager::hasMessage() {
+    return m_messageDrawer.hasMessage();
 }
 
 
