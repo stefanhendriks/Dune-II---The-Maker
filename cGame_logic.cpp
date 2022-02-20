@@ -1076,6 +1076,9 @@ void cGame::setState(int newState) {
         if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
             deleteOldState = false; // don't delete credits, so we keep the crawler info
         }
+        if (newState == GAME_OPTIONS) {
+            deleteOldState = true; // delete old options state everytime
+        }
 
         if (deleteOldState) {
             delete m_states[newState];
@@ -1083,19 +1086,27 @@ void cGame::setState(int newState) {
         }
 
         cGameState *existingStatePtr = m_states[newState];
-        if (existingStatePtr) {
-            if (m_currentState->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(m_currentState);
 
-                if (m_missionWasWon) {
-                    // we won
+        if (existingStatePtr) {
+            // no need for re-creating state
+
+            if (newState == GAME_REGION) {
+                // came from a win/lose brief state, so make sure to set up the next state
+                if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
+                    // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
+                    cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
+
                     if (game.m_mission > 1) {
                         pState->conquerRegions();
                     }
-                    pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
-                } else {
-                    // OR: did not win
-                    pState->REGION_SETUP_LOST_MISSION();
+
+                    if (m_missionWasWon) {
+                        // we won
+                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                    } else {
+                        // OR: did not win
+                        pState->REGION_SETUP_LOST_MISSION();
+                    }
                 }
             }
 
@@ -1128,7 +1139,12 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
-                drawManager->drawCombatState(); // TODO: draw combat state directly on background bitmap
+                if (m_state == GAME_PLAYING) {
+                    // so we don't draw mouse cursor
+                    drawManager->drawCombatState();
+                } else {
+                    // we fall back what was on screen, (which includes mouse cursor for now)
+                }
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {

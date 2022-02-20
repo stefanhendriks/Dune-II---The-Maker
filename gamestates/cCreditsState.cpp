@@ -381,5 +381,6 @@ eGameStateType cCreditsState::getType() {
 void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_ESC)) {
         game.setNextStateToTransitionTo(GAME_MENU);
+        game.initiateFadingOut();
     }
 }

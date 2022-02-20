@@ -305,18 +305,30 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
     for (int i = 0; i < 27; i++) {
         REGION_DRAW(world[i]);
     }
+
+    // Animate here (so add regions that are conquered)
+    cMessageDrawer *pDrawer = drawManager->getMessageDrawer();
+    char *cMessage = pDrawer->getMessage();
+
+    bool isNotDisplayingMessage = cMessage[0] == '\0';
+
+    if (isFinishedConqueringRegions && isNotDisplayingMessage) {
+        pDrawer->setMessage("Select your next region.");
+        pDrawer->setKeepMessage(true);
+    }
 }
 
-void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {// Calculate mission from region:
-// region 1 = mission 1
-// region 2, 3, 4 = mission 2
-// region 5, 6, 7 = mission 3
-// region 8, 9, 10 = mission 4
-// region 11,12,13 = mission 5
-// region 14,15,16 = mission 6
-// region 17,18,19 = mission 7
-// region 20,21    = mission 8
-// region 22 = mission 9
+void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {
+    // Calculate mission from region:
+    // region 1 = mission 1
+    // region 2, 3, 4 = mission 2
+    // region 5, 6, 7 = mission 3
+    // region 8, 9, 10 = mission 4
+    // region 11,12,13 = mission 5
+    // region 14,15,16 = mission 6
+    // region 17,18,19 = mission 7
+    // region 20,21    = mission 8
+    // region 22 = mission 9
 
     // calculate region stuff, and add it up
     int iNewReg = 0;
@@ -610,5 +622,10 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
     }
 }
 
-void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.eventType == eKeyEventType::PRESSED) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_OPTIONS);
+        }
+    }
 }
