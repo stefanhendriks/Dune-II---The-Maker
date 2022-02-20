@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include "utils/cPoint.h"
+
 class BITMAP;
 
 namespace messages {
@@ -32,25 +35,26 @@ class cMessageDrawer {
 
 		void initCombatPosition();
 
-		void setMessage(const char msg[255]); // set a new message
-		char * getMessage() { return &cMessage[0]; }
-		bool hasMessage() { return cMessage[0] != '\0'; }
+		void setMessage(const std::string & msg, bool keepMessage = false);
+		std::string getMessage() { return m_message; }
+		bool hasMessage() { return !m_message.empty(); }
 
 	protected:
 
 	private:
-		// MESSAGING / HELPER
-		char cMessage[255];
-		int iMessageAlpha;
-		int TIMER_message;
-		int x, y;	// draw positions
-		BITMAP *bmpBar;
-		BITMAP *temp;
+		std::string m_message;
+        bool m_keepMessage;
+		int m_TIMER_message;
+        int m_alpha;
 
-        messages::eMessageDrawerState state;
-        messages::eMessageDrawerFadingState fadeState;
+        cPoint m_position; // draw positions
+		BITMAP *m_bmpBar;
+		BITMAP *m_temp;
 
-        bool keepMessage;
+        int m_timeMessageIsVisible;
+
+        messages::eMessageDrawerState m_state;
+        messages::eMessageDrawerFadingState m_fadeState;
 
         void createMessageBarBmp(int desiredWidth);
 };

@@ -7,7 +7,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
         game.setNextStateToTransitionTo(GAME_PLAYING);
-        drawManager->getMessageDrawer()->initCombatPosition();
+        drawManager->missionInit();
 
         // CENTER MOUSE
         game.getMouse()->positionMouseCursor(game.m_screenX / 2, game.m_screenY / 2);
