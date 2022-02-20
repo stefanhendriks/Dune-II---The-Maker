@@ -1,11 +1,15 @@
 #include "cRectangle.h"
 
+bool cRectangle::isOverlapping(const cRectangle &other) const {
+    return isOverlapping(&other);
+}
+
 /**
  * scans each edge of the rectangle if it is within the other rectangle, returns true if so, or false if not.
  * @param other
  * @return
  */
-bool cRectangle::isOverlapping(cRectangle *other) const {
+bool cRectangle::isOverlapping(const cRectangle *other) const {
     if (other == nullptr) return false;
 
     if (other->isPointWithin(getX(), getY())) return true;

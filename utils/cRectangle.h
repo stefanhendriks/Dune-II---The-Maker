@@ -18,7 +18,9 @@ public:
                (pointY >= y && pointY <= (y + height));
     }
 
-    bool isOverlapping(cRectangle *other) const;
+    bool isOverlapping(const cRectangle *other) const;
+
+    bool isOverlapping(const cRectangle &other) const;
 
     bool isPointWithin(int x, int y) const;
 
