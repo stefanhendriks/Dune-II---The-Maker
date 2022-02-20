@@ -53,7 +53,7 @@ struct s_UnitInfo {
   bool squish;              // can this unit squish infantry?
   bool canBeSquished;       // can this unit be squished (is this a squishable unit)
 
-  int dieWhenLowerThanHP;   // A unit that 'dies'(disappears) when health < this value. By default this is -1;
+  int dieWhenLowerThanHP;   // A unit that 'dies'(disappears) when health < this value. By default this is 1;
   int appetite;     // Amount of units this can eat, before 'dying'
 
   char name[64];            // name of unit
