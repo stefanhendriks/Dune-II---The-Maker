@@ -25,5 +25,7 @@ class cLightFactory : public cAbstractStructure {
     void draw() override;
 
     int getType() const override;
+
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
 };
 

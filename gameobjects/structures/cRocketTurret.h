@@ -6,6 +6,8 @@ class cRocketTurret : public cGunTurret {
   public:
     cRocketTurret();
 
-    int getType() const;
+    int getType() const override;
+
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
 };
 

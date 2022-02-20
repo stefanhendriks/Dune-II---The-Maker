@@ -182,7 +182,7 @@ void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructur
 
 void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter& textWriter) {
 	assert(theStructure);
-	const s_StructureInfo &structureType = theStructure->getS_StructuresType();
+	const s_StructureInfo &structureType = theStructure->getStructureInfo();
 
 	char description[255];
 	if (theStructure->isPrimary()) {

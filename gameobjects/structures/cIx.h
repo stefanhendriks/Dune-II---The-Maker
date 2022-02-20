@@ -19,5 +19,7 @@ class cIx : public cAbstractStructure {
     void draw() override { drawWithShadow(); }
 
     int getType() const override;
+
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
 };
 

@@ -21,5 +21,8 @@ class cSpiceSilo : public cAbstractStructure {
     void draw() override { drawWithShadow(); }
 
     int getSpiceSiloCapacity();
+
+    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+
 };
 
