@@ -16,7 +16,6 @@
 #include <allegro/keyboard.h>
 
 #include <cassert>
-#include <string.h>
 
 cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) :
         m_player(thePlayer),

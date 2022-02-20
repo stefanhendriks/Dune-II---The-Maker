@@ -658,7 +658,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         logbook("Skirmish game without sandworms");
     }
 
-    drawManager->getMessageDrawer()->initCombatPosition();
+    drawManager->missionInit();
 
     game.initiateFadingOut();
     game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
