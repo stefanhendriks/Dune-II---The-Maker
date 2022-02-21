@@ -63,7 +63,7 @@ namespace brains {
 
         ePlayerBrainSkirmishEconomyState m_economyState;
 
-        int m_COUNT_badEconomy;
+        int m_economyScore;
 
         int m_TIMER_rest;
 
@@ -125,6 +125,7 @@ namespace brains {
             switch (state) {
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL: return "PLAYERBRAIN_ECONOMY_STATE_NORMAL";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE: return "PLAYERBRAIN_ECONOMY_STATE_IMPROVE";
+                case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_GOOD: return "PLAYERBRAIN_ECONOMY_STATE_GOOD";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_BAD: return "PLAYERBRAIN_ECONOMY_STATE_BAD";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH: return "PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH";
                 default:

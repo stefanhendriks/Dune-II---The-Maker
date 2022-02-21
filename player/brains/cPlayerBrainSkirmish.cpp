@@ -28,7 +28,7 @@ namespace brains {
         m_buildOrders = std::vector<S_buildOrder>();
         m_discoveredEnemyAtCell = std::set<int>();
         m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
-        m_COUNT_badEconomy = 0;
+        m_economyScore = 0;
         m_centerOfBaseCell = 0;
     }
 
@@ -364,7 +364,15 @@ namespace brains {
         }
 
         if (m_TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
-            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+                // build additional harvesters and carryalls
+                if (player->getAmountOfUnitsForType(HARVESTER) < 3) {
+                    buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                }
+                if (player->getAmountOfUnitsForType(CARRYALL) < 1) {
+                    buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                }
+            } else if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
                 // build additional harvesters and carryalls
                 if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
                     buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
@@ -374,49 +382,48 @@ namespace brains {
                 }
             } else {
                 if (allMissionsAreDoneGatheringResources()) {
+                    int chance = m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD ? 25 : 10;
                     // build units, as long as we have some money on the bank.
                     // these units are produced without a mission.
-                    if (player->getCredits() > 800) {
-                        if (rnd(100) < 15) {
-                            // when the player has it, it will be build
-                            buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
-                            buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
-                            buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
+                    if (rnd(100) < chance) {
+                        // when the player has it, it will be build
+                        buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
+                        buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
+                        buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
+                            buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
                         }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
-                                buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
-                            }
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
+                            buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
                         }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
-                                buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
-                            }
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(QUAD) < 5) {
+                            buildUnitIfICanAndNotAlreadyQueued(QUAD);
                         }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(QUAD) < 5) {
-                                buildUnitIfICanAndNotAlreadyQueued(QUAD);
-                            }
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(TANK) < 4) {
+                            buildUnitIfICanAndNotAlreadyQueued(TANK);
                         }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(TANK) < 4) {
-                                buildUnitIfICanAndNotAlreadyQueued(TANK);
-                            }
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
+                            buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
                         }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
-                                buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
-                            }
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                            buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
                         }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
-                                buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
-                            }
-                        }
-                        if (rnd(100) < 15) {
-                            if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
-                                buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
-                            }
+                    }
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                            buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
                         }
                     }
                 }
@@ -780,9 +787,9 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
-        log(fmt::format("thinkState_Evaluate() : credits [{}], m_COUNT_badEconomy [{}], m_economyState [{}]",
+        log(fmt::format("thinkState_Evaluate() : credits [{}], m_economyScore [{}], m_economyState [{}]",
                         player->getCredits(),
-                        m_COUNT_badEconomy,
+                        m_economyScore,
                         ePlayerBrainSkirmishEconomyStateString(m_economyState))
             );
 
@@ -805,7 +812,9 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::evaluateEconomyState() {
-        changeEconomyStateTo(determineEconomyState());
+        ePlayerBrainSkirmishEconomyState state = determineEconomyState();
+        log(fmt::format("evaluateEconomyState: {} credits - {} score --> {}", player->getCredits(), m_economyScore, ePlayerBrainSkirmishEconomyStateString(m_economyState)));
+        changeEconomyStateTo(state);
     }
 
     ePlayerBrainSkirmishEconomyState cPlayerBrainSkirmish::determineEconomyState() {
@@ -813,33 +822,58 @@ namespace brains {
         int maxThreshHold = thresholdBadEconomy + 5;
         int thresholdImproveEconomy = 10;
 
-        int moneyThresholdForGoodOrBadEconomy = 100;
+        int moneyThresholdForBadEconomy = 150;
+        int moneyThresholdForOkEconomy = 1000;
+        int moneyThresholdForGoodEconomy = 2000;
 
         // positive development...
         int credits = player->getCredits();
-        log(fmt::format("determineEconomyState -> {} credits. Money threshold {}, economyCount {}, badEconomy = {}, imprEconomy = {}", credits, moneyThresholdForGoodOrBadEconomy,
-                        m_COUNT_badEconomy, thresholdBadEconomy, thresholdImproveEconomy));
 
-        if (credits > moneyThresholdForGoodOrBadEconomy) {
-            m_COUNT_badEconomy--;
-            // don't go below 0
-            if (m_COUNT_badEconomy < 0) {
-                m_COUNT_badEconomy = 0;
-            }
-        } else if (credits < moneyThresholdForGoodOrBadEconomy) {
-            m_COUNT_badEconomy++;
-            // don't go over max threshold
-            if (m_COUNT_badEconomy > maxThreshHold) {
-                m_COUNT_badEconomy = maxThreshHold;
-            }
+        // at first, decrease badness of economy by default
+        int economyScoreDelta = -1;
+
+        // now scoring is as following:
+        // < bad threshold, we decrease
+        //
+
+        // Stefan: future me: this does not work now, get some sleep
+        // what you kinda want is to have it give a 'good score' when the economy is booming. Have a so-so scoring
+        // (not good, nor negative) when it is in the safe-zone. And only get into a bad/improve state when things
+        // run low on cash.
+        // and when running low on cash for a longer time then the state gets into 'BAD' ? (or maybe we should
+        // just ditch IMPROVE/BAD ? all the same?
+        //
+        
+        if (credits < moneyThresholdForBadEconomy) {
+            economyScoreDelta = 2; // increase fast to bad economy state
+        } else if (credits > moneyThresholdForBadEconomy && credits < moneyThresholdForOkEconomy) {
+            economyScoreDelta = -1; // decrease slowly
+        } else if (credits > moneyThresholdForGoodEconomy) {
+            economyScoreDelta = -2; // decrease fast, its going well now
         }
 
-        if (m_COUNT_badEconomy > thresholdBadEconomy) {
+        m_economyScore += economyScoreDelta;
+        // don't go below -5
+        if (m_economyScore < -5) {
+            m_economyScore = -5;
+        }
+
+        // don't go over max threshold
+        if (m_economyScore > maxThreshHold) {
+            m_economyScore = maxThreshHold;
+        }
+
+        // Evaluate economy score
+        if (m_economyScore > thresholdBadEconomy) {
             return PLAYERBRAIN_ECONOMY_STATE_BAD;
         }
-        if (m_COUNT_badEconomy > thresholdImproveEconomy) {
+        if (m_economyScore > thresholdImproveEconomy) {
             return PLAYERBRAIN_ECONOMY_STATE_IMPROVE;
         }
+        if (m_economyScore < 0) {
+            return PLAYERBRAIN_ECONOMY_STATE_GOOD;
+        }
+
         return PLAYERBRAIN_ECONOMY_STATE_NORMAL;
     }
 
@@ -1441,13 +1475,13 @@ namespace brains {
 
     void cPlayerBrainSkirmish::log(const std::string & txt) {
         player->log(fmt::format(
-                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_COUNT_badEconomy={}] | {}",
+                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_economyScore={}] | {}",
                 ePlayerBrainStateString(m_state),
                 ePlayerBrainSkirmishThinkStateString(m_thinkState),
                 ePlayerBrainSkirmishEconomyStateString(m_economyState),
                 this->m_TIMER_rest,
                 this->m_TIMER_ai,
-                this->m_COUNT_badEconomy,
+                this->m_economyScore,
                 txt)
         );
     }
