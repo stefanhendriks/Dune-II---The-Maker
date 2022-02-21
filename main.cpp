@@ -90,10 +90,7 @@ int handleArguments(int argc, char *argv[]) {
 			if (command.compare("-game") == 0) {
 				if ((i + 1) < argc) {
 					i++;
-					game.m_gameFilename = std::string(argv[i]);
-				}
-			} else if (command.compare("-windowed") == 0) {
-				// Windowed flag passed, so use that
+					    game.setGameFilename(std::string(argv[i]));
 				game.m_windowed = true;
 			} else if (command.compare("-nomusic") == 0) {
 				game.m_playMusic = false;
@@ -128,7 +125,7 @@ int handleArguments(int argc, char *argv[]) {
 	Entry point of the game
 */
 int main(int argc, char **argv) {
-	game.m_gameFilename = "game.ini";
+	game.setGameFilename("game.ini");
 
     if (handleArguments(argc, argv) > 0) {
         return 0;
