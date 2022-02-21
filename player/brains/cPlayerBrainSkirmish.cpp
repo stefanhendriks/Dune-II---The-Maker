@@ -278,9 +278,10 @@ namespace brains {
 
                     if (unitsOrdered > maxUnitsToOrder) break;
                 }
+                return;
             }
-            return;
         }
+
         int unitsOrdered = 0;
 
         for (auto & ufd : units) {
