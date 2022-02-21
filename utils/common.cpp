@@ -1837,8 +1837,10 @@ const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int
             return sBulletInfo[specificTypeId].description;
         case eBuildType::UPGRADE:
             return sUpgradeInfo[specificTypeId].description;
+        case eBuildType::UNKNOWN:
+            return "Unknown";
         default:
-            assert(false && "Unknown buildType?");
+            assert(false && "Undefined buildType?");
             break;
     }
     return "";
