@@ -47,7 +47,9 @@ public:
 	cGame();
 	~cGame();
 
-	std::string m_gameFilename;
+    void setGameFilename(const std::string& filename) {
+        m_gameFilename = filename;
+    }
 
 	bool m_windowed;			    // windowed
 	std::string m_version;          // version number, or name.
@@ -230,6 +232,7 @@ private:
      * Variables start here
      */
     bool m_debugMode;               // ...
+	std::string m_gameFilename;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
