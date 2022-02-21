@@ -48,6 +48,8 @@ file(GLOB d2tm_SRC
         "player/*.cpp"
         "player/brains/*.h"
         "player/brains/*.cpp"
+        "player/brains/actions/*.h"
+        "player/brains/actions/*.cpp"
         "player/brains/missions/*.h"
         "player/brains/missions/*.cpp"
         "player/brains/missions/campaign/*.h"

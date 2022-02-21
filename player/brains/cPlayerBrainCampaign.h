@@ -125,7 +125,7 @@ namespace brains {
 
         void produceLevel9Missions(int trikeKind, int infantryKind);
 
-        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder);
+        void respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
     };
 
 }

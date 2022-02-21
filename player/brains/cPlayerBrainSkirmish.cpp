@@ -1,5 +1,7 @@
 #include "include/d2tmh.h"
 
+#include "actions/cRespondToThreatAction.h"
+
 #include "cPlayerBrainSkirmish.h"
 #include "enums.h"
 
@@ -246,59 +248,15 @@ namespace brains {
 
             int cell = originUnit.getCell();
 
-            respondToThreat(nullptr, cell, &originUnit, 2 + rnd(4));
+            respondToThreat(&originUnit, nullptr, cell, 2 + rnd(4));
         }
     }
 
-    void cPlayerBrainSkirmish::respondToThreat(cUnit * victim, int cellOriginOfThreat, cUnit * threat, int maxUnitsToOrder) {
-        const std::vector<sEntityForDistance> &units = player->getAllMyUnitsOrderClosestToCell(cellOriginOfThreat);
-        int skipThisUnit = -1;
-        if (victim) {
-            if (!threat->isInfantryUnit() && victim->isHarvester()) {
-                // do not engage
-                skipThisUnit = victim->iID;
-            }
-        }
+    void cPlayerBrainSkirmish::respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder) {
+        // when we pass in a cell here by accident, it gets easily > 20
+        assert(maxUnitsToOrder < 20 && "Are you sure you used the correct parameter here?");
 
-        if (threat) {
-            if (threat->isAirbornUnit()) {
-                int unitsOrdered = 0;
-                // find units that can counter-attack an air unit
-                for (auto &ufd: units) {
-                    cUnit &pUnit = unit[ufd.entityId];
-                    if (pUnit.iID == skipThisUnit) continue;
-                    if (!pUnit.isIdle()) continue;
-                    if (!pUnit.canAttackAirUnits()) continue;
-                    if (pUnit.isHarvester()) continue; // harvesters cannot attack air units
-                    if (pUnit.isAirbornUnit()) continue; // you cannot order air units
-
-                    // move unit to where air unit is/was, so we get close to counter-attack
-                    pUnit.move_to(cellOriginOfThreat);
-                    unitsOrdered++;
-
-                    if (unitsOrdered > maxUnitsToOrder) break;
-                }
-                return;
-            }
-        }
-
-        int unitsOrdered = 0;
-
-        for (auto & ufd : units) {
-            cUnit &pUnit = unit[ufd.entityId];
-            if (pUnit.iID == skipThisUnit) continue;
-            if (!pUnit.isIdle()) continue;
-            if (!pUnit.isAttackingUnit()) continue; // is a unit that is used generally for attacking
-            if (pUnit.isAirbornUnit()) continue; // you cannot order air units
-
-            // TODO:
-            // we can do more smart things here depending on the kind of unit that attacks us
-            // and thus which unit we should send to counter-attack
-            pUnit.attackAt(cellOriginOfThreat);
-            unitsOrdered++;
-
-            if (unitsOrdered > maxUnitsToOrder) break;
-        }
+        cRespondToThreatAction(this->player, threat, victim, cellOriginOfThreat, maxUnitsToOrder).execute();
     }
 
     void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event) {
@@ -1146,7 +1104,7 @@ namespace brains {
                             m_discoveredEnemyAtCell.insert(event.atCell);
 
                             if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                                respondToThreat(nullptr, event.atCell, &pUnit, 2 + rnd(4));
+                                respondToThreat(&pUnit, nullptr, event.atCell, 2 + rnd(4));
                             }
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
@@ -1201,7 +1159,7 @@ namespace brains {
                         cUnit &pUnit = unit[event.entityID];
                         if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                             if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                                respondToThreat(nullptr, event.atCell, &pUnit, 2 + rnd(4));
+                                respondToThreat(&pUnit, nullptr, event.atCell, 2 + rnd(4));
                             }
                         }
                     }
@@ -1443,16 +1401,7 @@ namespace brains {
 
         cUnit &victim = unit[event.entityID];
         if (victim.isHarvester()) {
-            if (victim.isIdle()) {
-                eHeadTowardsStructureResult result = victim.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY,
-                                                                                                             true,
-                                                                                                             INTENT_UNLOAD_SPICE);
-
-                if (result == eHeadTowardsStructureResult::FAILED_NO_STRUCTURE_AVAILABLE) {
-                    victim.retreatToNearbyBase();
-                }
-            }
-            respondToThreat(&victim, event.atCell, threat, 2 + rnd(4));
+            respondToThreat(threat, &victim, event.atCell, 2 + rnd(4));
         }
     }
 

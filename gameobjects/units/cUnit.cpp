@@ -3213,12 +3213,15 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
         } else {
             auto originType = eBuildType::UNKNOWN;
             auto originId = -1;
+            auto originCell = -1;
             if (unitWhoDealsDamage > -1) {
                 originType = eBuildType::UNIT;
                 originId = unitWhoDealsDamage;
+                originCell = unit[unitWhoDealsDamage].iCell;
             } else if (structureWhoDealsDamage > -1) {
                 originId = structureWhoDealsDamage;
                 originType = eBuildType::STRUCTURE;
+                originCell = structure[structureWhoDealsDamage]->getCell();
             }
             s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DAMAGED,
@@ -3226,6 +3229,7 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                     .entityID = iID,
                     .player = getPlayer(),
                     .entitySpecificType = getType(),
+                    .atCell = originCell,
                     .originId = originId,
                     .originType = originType,
             };
