@@ -75,6 +75,7 @@ struct s_UnitInfo {
 
   // attack related
   bool canAttackAirUnits;   // ie for rocket typed units
+  bool canAttackUnits;   // a unit used for attacking other units? (ie, mvc or harvester is no)
 
   bool canEnterAndDamageStructure;  // can this unit enter a structure and damage it? (and eventually capture?)
   bool attackIsEnterStructure;      // for saboteur only really
