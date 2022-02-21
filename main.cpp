@@ -10,10 +10,15 @@
 
   */
 
-#include "d2tmh.h"
-
+#include "d2tmc.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
+#include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
+#include "player/cPlayer.h"
+
+#include <string>
 
 int	iRest = 1;	// default rest value
 

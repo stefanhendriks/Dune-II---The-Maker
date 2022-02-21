@@ -9,7 +9,10 @@
   2001 - 2022 (c) code by Stefan Hendriks
 */
 
-#include "include/d2tmh.h"
+#include "cGame.h"
+
+#include "d2tmc.h"
+#include "data/gfxdata.h"
 
 #include <allegro.h>
 

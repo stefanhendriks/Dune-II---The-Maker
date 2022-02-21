@@ -1,11 +1,8 @@
-/*
- * cTextWriter.cpp
- *
- *  Created on: 1-nov-2010
- *      Author: Stefan
- */
+#include "cTextWriter.h"
 
-#include "../include/d2tmh.h"
+#include <alfont.h>
+
+#include <cassert>
 
 cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize) {
 	assert(theFont);

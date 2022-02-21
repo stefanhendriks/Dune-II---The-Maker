@@ -19,12 +19,6 @@
   */
 #pragma once
 
-#include <set>
-#include <string>
-#include <vector>
-
-#include "allegro/palette.h"
-
 #include "controls/cGameControlsContext.h"
 #include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
@@ -35,8 +29,12 @@
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
 
+#include <allegro/palette.h>
 
-// all kinds of forward declarations to make a compiler happy when not using d2tmh.h
+#include <set>
+#include <string>
+#include <vector>
+
 class cItemBuilder;
 class cBuildingListUpdater;
 

@@ -1,15 +1,17 @@
-#ifndef D2TM_CCHOOSEHOUSEGAMESTATE_H
-#define D2TM_CCHOOSEHOUSEGAMESTATE_H
+#pragma once
 
+#include "cGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "drawers/cTextDrawer.h"
+#include "sMouseEvent.h"
+#include "utils/cRectangle.h"
+
+struct BITMAP;
 class cGame;
 
-#include <drawers/cTextDrawer.h>
-#include "cGameState.h"
-
 class cChooseHouseGameState : public cGameState {
-
-public:
-    cChooseHouseGameState(cGame& theGame);
+  public:
+    explicit cChooseHouseGameState(cGame& theGame);
     ~cChooseHouseGameState() override;
 
     void thinkFast() override;
@@ -20,7 +22,7 @@ public:
 
     eGameStateType getType() override;
 
-private:
+  private:
     cTextDrawer textDrawer;
     cRectangle *backButtonRect;
 
@@ -48,5 +50,3 @@ private:
 
     void onMouseMoved(const s_MouseEvent &event);
 };
-
-#endif //D2TM_CCHOOSEHOUSEGAMESTATE_H

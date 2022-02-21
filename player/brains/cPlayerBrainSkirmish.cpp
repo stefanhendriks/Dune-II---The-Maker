@@ -1,9 +1,9 @@
-#include "include/d2tmh.h"
+#include "cPlayerBrainSkirmish.h"
 
 #include "actions/cRespondToThreatAction.h"
-
-#include "cPlayerBrainSkirmish.h"
 #include "enums.h"
+#include "d2tmc.h"
+#include "player/cPlayer.h"
 
 #include <fmt/core.h>
 

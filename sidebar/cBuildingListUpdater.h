@@ -1,10 +1,12 @@
 #pragma once
 
+#include "cBuildingListItem.h"
+
 class cPlayer;
 
 class cBuildingListUpdater {
 	public:
-		cBuildingListUpdater(cPlayer * thePlayer);
+		explicit cBuildingListUpdater(cPlayer * thePlayer);
 
 		// update methods are event based. Ie, when structure is created,
 		// when structure is destroyed, etc
