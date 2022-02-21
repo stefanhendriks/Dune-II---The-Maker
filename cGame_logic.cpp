@@ -125,6 +125,7 @@ void cGame::init() {
 
     // Load properties
     INI_Install_Game(m_gameFilename);
+    // override by handleArguments
 }
 
 // TODO: Bad smell (duplicate code)
@@ -1001,7 +1002,7 @@ bool cGame::setupGame() {
     delete drawManager;
     drawManager = new cDrawManager(&players[HUMAN]);
 
-    game.init(); // AGAIN!?
+    INI_Install_Game(m_gameFilename);
 
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
