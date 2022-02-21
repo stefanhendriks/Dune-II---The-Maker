@@ -364,49 +364,59 @@ namespace brains {
         }
 
         if (m_TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
-            if (allMissionsAreDoneGatheringResources()) {
-                // build units, as long as we have some money on the bank.
-                // these units are produced without a mission.
-                if (player->getCredits() > 800) {
-                    if (rnd(100) < 15) {
-                        // when the player has it, it will be build
-                        buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
-                        buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
-                        buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
-                            buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
+            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+                // build additional harvesters and carryalls
+                if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                    buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                }
+                if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                    buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                }
+            } else {
+                if (allMissionsAreDoneGatheringResources()) {
+                    // build units, as long as we have some money on the bank.
+                    // these units are produced without a mission.
+                    if (player->getCredits() > 800) {
+                        if (rnd(100) < 15) {
+                            // when the player has it, it will be build
+                            buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
+                            buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
+                            buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
                         }
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
-                            buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
+                                buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
+                            }
                         }
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(QUAD) < 5) {
-                            buildUnitIfICanAndNotAlreadyQueued(QUAD);
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
+                                buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
+                            }
                         }
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(TANK) < 4) {
-                            buildUnitIfICanAndNotAlreadyQueued(TANK);
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(QUAD) < 5) {
+                                buildUnitIfICanAndNotAlreadyQueued(QUAD);
+                            }
                         }
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
-                            buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(TANK) < 4) {
+                                buildUnitIfICanAndNotAlreadyQueued(TANK);
+                            }
                         }
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
-                            buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
+                                buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
+                            }
                         }
-                    }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
-                            buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                                buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                            }
+                        }
+                        if (rnd(100) < 15) {
+                            if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                                buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                            }
                         }
                     }
                 }
@@ -799,7 +809,7 @@ namespace brains {
             if (player->getCredits() < 150) {
                 // count the times we are in this shape, after a certain time we switch to IMPROVE state
                 m_COUNT_badEconomy++;
-                if (m_COUNT_badEconomy > 5) {
+                if (m_COUNT_badEconomy > 4) {
                     changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
                 }
             }
@@ -1287,49 +1297,96 @@ namespace brains {
 
         // play around with the order... (depending on difficulty, or type of ai, etc?)
         if (!player->hasAtleastOneStructure(LIGHTFACTORY))  return LIGHTFACTORY;
-        if (!player->hasAtleastOneStructure(RADAR))  return RADAR;
-        if (player->isStructureTypeAvailableForConstruction(WOR)) {
-            if (!player->hasAtleastOneStructure(WOR)) return WOR;
+
+        // randomize the order a bit, but do make sure that we have both before continueing
+        if (!player->hasAtleastOneStructure(RADAR) && !player->hasAtleastOneStructure(HEAVYFACTORY)) {
+            if (rnd(100) < 50) {
+                return RADAR;
+            } else {
+                return HEAVYFACTORY;
+            }
+        } else {
+            if (!player->hasAtleastOneStructure(RADAR)) return RADAR;
+            if (!player->hasAtleastOneStructure(HEAVYFACTORY)) return HEAVYFACTORY;
         }
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 5)  return PALACE;
-
-        if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
-            if (!player->hasAtleastOneStructure(BARRACKS)) return BARRACKS;
+        if (rnd(100) < 15) {
+            if (player->isStructureTypeAvailableForConstruction(WOR)) {
+                if (!player->hasAtleastOneStructure(WOR)) return WOR;
+            }
+            if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
+                if (!player->hasAtleastOneStructure(BARRACKS)) return BARRACKS;
+            }
         }
 
-        if (!player->hasAtleastOneStructure(HEAVYFACTORY))  return HEAVYFACTORY;
-        if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
+        // low chance on early palace (could be a specific "build profile" property?)
+        if (rnd(100) < 5) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
+
+        if (rnd(100) < 35) {
+            if (player->getAmountOfStructuresForType(TURRET) < 2) {
+                return TURRET;
+            }
+        }
+
+        if (rnd(100) < 40) {
+            if (player->isStructureTypeAvailableForConstruction(HIGHTECH)) {
+                if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
+            }
+        }
+
+        int chanceToBuildRocketTurrets = 60 - (player->getAmountOfStructuresForType(RTURRET) * 10);
+        if (rnd(100) < chanceToBuildRocketTurrets) {
+            return RTURRET;
+        }
+
+        int chanceToBuildTurrets = 40 - (player->getAmountOfStructuresForType(TURRET) * 5);
+        if (rnd(100) < chanceToBuildTurrets)  {
+            return TURRET;
+        }
+
         if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
+        if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
-
-        if (player->getAmountOfStructuresForType(TURRET) < 2)  return TURRET;
+        if (rnd(100) < 15) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
 
         if (!player->hasAtleastOneStructure(IX))  return IX;
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
+        // take a shot at building the palace
+        if (rnd(100) < 15) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
 
-        if (player->getAmountOfStructuresForType(RTURRET) < 6)  return RTURRET;
+        if (player->getAmountOfStructuresForType(RTURRET) < 8)  return RTURRET;
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
+        // take another shot at building the palace
+        if (rnd(100) < 15) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
 
         if (!player->hasAtleastOneStructure(REPAIR))  return REPAIR;
 
-        if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2 && rnd(100) < 15) return HEAVYFACTORY;
+        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+            if (rnd(100) < 30) {
+                if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
+            }
 
-        if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
 
-        if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
+            if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
 
-        if (player->getAmountOfStructuresForType(LIGHTFACTORY) < 2) return LIGHTFACTORY;
+            if (player->getAmountOfStructuresForType(LIGHTFACTORY) < 2) return LIGHTFACTORY;
 
-        if (player->isStructureTypeAvailableForConstruction(WOR)) {
-            if (player->getAmountOfStructuresForType(WOR) < 2) return WOR;
-        }
+            if (player->isStructureTypeAvailableForConstruction(WOR)) {
+                if (player->getAmountOfStructuresForType(WOR) < 2) return WOR;
+            }
 
-        if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
-            if (player->getAmountOfStructuresForType(BARRACKS) < 2) return BARRACKS;
+            if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
+                if (player->getAmountOfStructuresForType(BARRACKS) < 2) return BARRACKS;
+            }
         }
 
         // already has everything, this makes more sense now
