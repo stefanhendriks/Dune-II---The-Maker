@@ -54,7 +54,10 @@ namespace brains {
     };
 
     enum ePlayerBrainSkirmishEconomyState {
-        // Everything is in order
+        // Good economy
+        PLAYERBRAIN_ECONOMY_STATE_GOOD,
+
+        // Normal economy
         PLAYERBRAIN_ECONOMY_STATE_NORMAL,
 
         // We need to improve our economy
