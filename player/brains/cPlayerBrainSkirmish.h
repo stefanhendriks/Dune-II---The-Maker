@@ -191,6 +191,8 @@ namespace brains {
         void produceEconomyImprovingMissions();
 
         void respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
+
+        ePlayerBrainSkirmishEconomyState determineEconomyState();
     };
 
 }

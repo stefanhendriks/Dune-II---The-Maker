@@ -805,36 +805,42 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::evaluateEconomyState() {
-        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
-            if (player->getCredits() < 150) {
-                // count the times we are in this shape, after a certain time we switch to IMPROVE state
-                m_COUNT_badEconomy++;
-                if (m_COUNT_badEconomy > 4) {
-                    changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
-                }
-            }
-        } else {
-            // reduce economy score when we have more than 150 bucks
-            if (player->getCredits() > 150) {
-                m_COUNT_badEconomy--;
-                if (m_COUNT_badEconomy < 1) {
-                    m_COUNT_badEconomy = 0;
-                    changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_NORMAL);
-                }
-            }
+        changeEconomyStateTo(determineEconomyState());
+    }
 
-            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
-                // when in 'trying to improve economy state' increase bad economy score when things really go bad?
-                if (player->getCredits() < 75) {
-                    m_COUNT_badEconomy++;
-                    if (m_COUNT_badEconomy > 25) {
-                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_BAD);
-                    }
-                }
-            } else if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
-                // we're in a pinch now - economy wise
+    ePlayerBrainSkirmishEconomyState cPlayerBrainSkirmish::determineEconomyState() {
+        int thresholdBadEconomy = 20;
+        int maxThreshHold = thresholdBadEconomy + 5;
+        int thresholdImproveEconomy = 10;
+
+        int moneyThresholdForGoodOrBadEconomy = 100;
+
+        // positive development...
+        int credits = player->getCredits();
+        log(fmt::format("determineEconomyState -> {} credits. Money threshold {}, economyCount {}, badEconomy = {}, imprEconomy = {}", credits, moneyThresholdForGoodOrBadEconomy,
+                        m_COUNT_badEconomy, thresholdBadEconomy, thresholdImproveEconomy));
+
+        if (credits > moneyThresholdForGoodOrBadEconomy) {
+            m_COUNT_badEconomy--;
+            // don't go below 0
+            if (m_COUNT_badEconomy < 0) {
+                m_COUNT_badEconomy = 0;
+            }
+        } else if (credits < moneyThresholdForGoodOrBadEconomy) {
+            m_COUNT_badEconomy++;
+            // don't go over max threshold
+            if (m_COUNT_badEconomy > maxThreshHold) {
+                m_COUNT_badEconomy = maxThreshHold;
             }
         }
+
+        if (m_COUNT_badEconomy > thresholdBadEconomy) {
+            return PLAYERBRAIN_ECONOMY_STATE_BAD;
+        }
+        if (m_COUNT_badEconomy > thresholdImproveEconomy) {
+            return PLAYERBRAIN_ECONOMY_STATE_IMPROVE;
+        }
+        return PLAYERBRAIN_ECONOMY_STATE_NORMAL;
     }
 
     void cPlayerBrainSkirmish::thinkState_EndGame() {
@@ -1080,11 +1086,13 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState) {
-        log(fmt::format( "cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
-                         ePlayerBrainSkirmishEconomyStateString(m_economyState),
-                         ePlayerBrainSkirmishEconomyStateString(newState))
+        if (newState != m_economyState) {
+            log(fmt::format("cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
+                            ePlayerBrainSkirmishEconomyStateString(m_economyState),
+                            ePlayerBrainSkirmishEconomyStateString(newState))
             );
-        this->m_economyState = newState;
+            m_economyState = newState;
+        }
     }
 
     void cPlayerBrainSkirmish::thinkState_Rest() {
