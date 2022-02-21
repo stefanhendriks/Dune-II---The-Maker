@@ -1,5 +1,4 @@
-#ifndef STRUCTS_H_
-#define STRUCTS_H_
+#pragma once
 
 #include "enums.h"
 
@@ -269,5 +268,3 @@ struct s_PreviewMap {
      int iStartCell[5];      // starting locations
      char name[80];          // name
 };
-
-#endif /* STRUCTS_H_ */

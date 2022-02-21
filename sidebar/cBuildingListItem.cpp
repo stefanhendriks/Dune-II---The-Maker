@@ -1,7 +1,9 @@
-#include "../include/d2tmh.h"
 #include "cBuildingListItem.h"
-#include <fmt/core.h>
 
+#include "d2tmc.h"
+#include "sidebar/cBuildingList.h"
+
+#include <fmt/core.h>
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable) {
     assert(buildId >= 0);

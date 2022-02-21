@@ -1,8 +1,13 @@
-#include "include/d2tmh.h"
 #include "cBuildingListUpdater.h"
 
+#include "building/cItemBuilder.h"
+#include "d2tmc.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
+
 #include <fmt/core.h>
+
+#include <cassert>
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 	assert(thePlayer);

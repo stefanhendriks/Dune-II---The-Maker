@@ -1,6 +1,4 @@
-#include <algorithm>
-#include <fmt/core.h>
-#include "include/d2tmh.h"
+#include "cPlayerBrainMission.h"
 
 // these are kinds of missions we can execute (has more elaborate logic here)
 #include "cPlayerBrainMissionKindAttack.h"
@@ -8,7 +6,12 @@
 #include "cPlayerBrainMissionKindDeathHand.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
 #include "cPlayerBrainMissionKindFremen.h"
-#include "cPlayerBrainMission.h"
+
+#include "d2tmc.h"
+
+#include <fmt/core.h>
+
+#include <algorithm>
 
 namespace brains {
 
