@@ -382,7 +382,7 @@ bool cBullet::damageAirUnit(int cell, double factor) const {
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     cUnit &airUnit = unit[id];
-    airUnit.takeDamage(iDamage);
+    airUnit.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
     return true;
 }
 
@@ -400,7 +400,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
     cUnit &groundUnitTakingDamage = unit[id];
 
     float iDamage = getDamageToInflictToUnit(groundUnitTakingDamage) * factor;
-    groundUnitTakingDamage.takeDamage(iDamage);
+    groundUnitTakingDamage.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
 
     // this unit will think what to do now (he got hit ouchy!)
     groundUnitTakingDamage.think_hit(iOwnerUnit, iOwnerStructure);
@@ -492,7 +492,7 @@ void cBullet::damageSandworm(int cell, double factor) const {
 
     cUnit &worm = unit[id];
     float damage = getDamageToInflictToNonInfantry() * factor;
-    worm.takeDamage(damage);
+    worm.takeDamage(damage, iOwnerUnit, iOwnerStructure);
 }
 
 bool cBullet::isAtDestination() const {
