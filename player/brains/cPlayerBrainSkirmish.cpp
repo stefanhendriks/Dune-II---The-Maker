@@ -1275,7 +1275,7 @@ namespace brains {
 
         if (m_TIMER_ai > MOMENT_CONSIDER_ADDITIONAL_REFINERY) {
             // time to think about an additional refinery
-            if (rnd(100) < 33 && player->getAmountOfStructuresForType(REFINERY) < 3) {
+            if (rnd(100) < 50 && player->getAmountOfStructuresForType(REFINERY) < 3) {
                 // build one
                 return REFINERY;
             }

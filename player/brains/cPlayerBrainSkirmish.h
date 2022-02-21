@@ -27,9 +27,9 @@ namespace brains {
     // 10 ticks = 1 second.
     // 100 ticks = 10 seconds.
     // 600 ticks = 60 seconds (1 minute)
-    const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
+    const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 300; // after 30 seconds consider building 2nd refinery
 
-    const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 3000; // after 5 minutes consider building additional units
+    const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 1800; // after 3 minutes consider building additional units
 
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;
