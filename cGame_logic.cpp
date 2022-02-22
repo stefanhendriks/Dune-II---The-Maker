@@ -760,6 +760,7 @@ bool cGame::setupGame() {
     // can specify how much CPU this game may use?
 
     m_handleArgument->applyArguments();
+    m_handleArgument.reset();
 
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
