@@ -28,6 +28,6 @@ private:
         { "-usages", Options::USAGES }
     };
 
-    cGame *game;
+    cGame *game = nullptr;
     std::map<Options, bool> optionToHandleAfter;
 };
