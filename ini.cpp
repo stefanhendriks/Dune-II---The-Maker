@@ -2278,6 +2278,9 @@ void INI_Install_Game(std::string filename) {
                     case WORD_CAMERAEDGEMOVE:
                         game.m_cameraEdgeMove = INI_WordValueBOOL(linefeed);
                         break;
+                    case WORD_FULLSCREEN:
+                        game.m_windowed = !INI_WordValueBOOL(linefeed);
+                        break;
                 }
             }
         } // while
