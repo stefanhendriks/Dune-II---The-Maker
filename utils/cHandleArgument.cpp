@@ -38,7 +38,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
 					    game->setGameFilename(std::string(argv[i]));
                         } break;
             case    Options::WINDOWED:  // Windowed flag passed, so use that
-                        game->m_windowed = true;
+                        optionToHandleAfter[Options::WINDOWED] = true;
                         break;
             case    Options::NOMUSIC:
                         game->m_playMusic = false;
@@ -72,4 +72,13 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
         }
 	} // arguments passed
 	return 0;
+}
+
+void cHandleArgument::applyArguments(){
+    for (const auto& [key, value] : optionToHandleAfter) {
+        switch (key) {
+            case    Options::WINDOWED:  game->m_windowed = value;   break;
+            default:    break;
+        }
+    }
 }

@@ -759,6 +759,8 @@ bool cGame::setupGame() {
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
 
+    m_handleArgument->applyArguments();
+
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
