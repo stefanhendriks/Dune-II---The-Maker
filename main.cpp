@@ -74,86 +74,6 @@ volatile int allegro_timerSecond = 0;
 volatile int allegro_timerGlobal = 0;
 volatile int allegro_timerUnits = 0;
 
-int handleArguments(int argc, char *argv[]) {
-    // TODO: return a Config object based on arguments passed down, and use that config object instead of the Game
-    // object...
-    game.m_disableAI = false;
-    game.m_disableReinforcements = false;
-    game.m_drawUsages = false;
-    game.m_drawUnitDebug = false;
-    game.m_oneAi = false;
-    game.m_windowed = false;
-    game.m_noAiRest = false;
-    game.setDebugMode(false);
-
-    enum class Options : char {GAME, WINDOWED, NOMUSIC, NOSOUND, DEBUG, DEBUG_UNITS, NOAI, ONEAI, NOREINFORCEMENTS, NOAIREST, USAGES};
-    static const std::map<std::string, Options> optionStrings {
-        { "-game", Options::GAME },
-        { "-windowed", Options::WINDOWED },
-        { "-nomusic", Options::NOMUSIC },
-        { "-nosound", Options::NOSOUND },
-        { "-debug", Options::DEBUG },
-        { "-debug-units", Options::DEBUG_UNITS },
-        { "-noai", Options::NOAI },
-        { "-oneai", Options::ONEAI },
-        { "-noreinforcements", Options::NOREINFORCEMENTS },
-        { "-noairest", Options::NOAIREST },
-        { "-usages", Options::USAGES }
-    };
-
-	if (argc <2) {
-        return 0;
-    }
-
-    for (int i = 1; i < argc; i++) {
-        std::string command = argv[i];
-        auto itr = optionStrings.find(command);
-        if( itr == optionStrings.end() ) {
-            std::cerr << "Unknown option, check with -usages" << std::endl;
-            return -1;
-        }
-
-        switch (itr->second) {
-            case    Options::GAME :  if ((i + 1) < argc) {
-					    i++;
-					    game.setGameFilename(std::string(argv[i]));
-                        } break;
-            case    Options::WINDOWED:  // Windowed flag passed, so use that
-                        game.m_windowed = true;
-                        break;
-            case    Options::NOMUSIC:
-                        game.m_playMusic = false;
-                        break;
-            case    Options::NOSOUND:   // disable all sound effects
-			        	game.m_playMusic = false;
-			        	game.m_playSound = false;
-                        break;
-            case    Options::DEBUG:   // generic debugging enabled
-			        	game.setDebugMode(true);
-                        break;
-            case    Options::DEBUG_UNITS:   // unit debugging enabled
-			        	game.m_drawUnitDebug = true;
-                        break;
-            case    Options::NOAI:
-			        	game.m_disableAI = true;
-                        break;
-            case    Options::ONEAI:
-			        	game.m_oneAi = true;
-                        break;
-            case    Options::NOREINFORCEMENTS:
-			        	game.m_disableReinforcements = true;
-                        break;
-            case    Options::NOAIREST:
-			        	game.m_noAiRest = true;
-                        break;
-            case    Options::USAGES:
-			default : 
-                    game.m_drawUsages = true;
-                    break;
-        }
-	} // arguments passed
-	return 0;
-}
 
 /**
 	Entry point of the game
@@ -161,7 +81,7 @@ int handleArguments(int argc, char *argv[]) {
 int main(int argc, char **argv) {
 	game.setGameFilename("game.ini");
 
-    if (handleArguments(argc, argv) > 0) {
+    if (game.handleArguments(argc, argv) > 0) {
         return 0;
     }
 

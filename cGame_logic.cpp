@@ -28,6 +28,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+#include "utils/cHandleArgument.hpp"
 
 #include <allegro.h>
 #include <alfont.h>
@@ -63,6 +64,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_version = "0.6.x";
 
     m_mentat = nullptr;
+    m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
 
 
@@ -157,6 +159,11 @@ void cGame::missionInit() {
 
     drawManager->missionInit();
 }
+
+int cGame::handleArguments(int argc, char **argv) {
+    return m_handleArgument->handleArguments(argc,argv);
+}
+
 
 void cGame::initPlayers(bool rememberHouse) const {
     int maxThinkingAIs = MAX_PLAYERS;
