@@ -29,5 +29,5 @@ private:
     };
 
     cGame *game;
-    std::map<Options, bool> optionToHandle;
+    std::map<Options, bool> optionToHandleAfter;
 };
