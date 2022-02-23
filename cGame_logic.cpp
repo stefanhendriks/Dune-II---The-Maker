@@ -28,6 +28,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+#include "utils/cFileNameSettings.hpp"
 
 #include <allegro.h>
 #include <alfont.h>
@@ -692,6 +693,12 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
+
+    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>("data");
+    if (!m_fileName->fileExists()) {
+        logger->logHeader("file location error");
+        return false;
+    }
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
