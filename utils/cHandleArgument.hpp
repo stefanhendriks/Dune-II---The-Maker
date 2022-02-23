@@ -13,7 +13,7 @@ public:
     int handleArguments(int argc, char *argv[]);
     void applyArguments();
 private:
-    enum class Options : char {GAME, WINDOWED, NOMUSIC, NOSOUND, DEBUG, DEBUG_UNITS, NOAI, ONEAI, NOREINFORCEMENTS, NOAIREST, USAGES};
+    enum class Options : char {GAME, WINDOWED, NOMUSIC, NOSOUND, DEBUG, DEBUG_UNITS, NOAI, ONEAI, NOREINFORCEMENTS, NOAIREST, USAGES, SCREENX, SCREENY};
     const std::map<std::string, Options> optionStrings {
         { "-game", Options::GAME },
         { "-windowed", Options::WINDOWED },
@@ -25,9 +25,12 @@ private:
         { "-oneai", Options::ONEAI },
         { "-noreinforcements", Options::NOREINFORCEMENTS },
         { "-noairest", Options::NOAIREST },
+        { "-screenWidth", Options::SCREENX},
+        { "-screenHeight", Options::SCREENY},
         { "-usages", Options::USAGES }
     };
 
     cGame *game = nullptr;
     std::map<Options, bool> optionToHandleAfter;
+    int ArgumentScreenX, ArgumentScreenY;
 };

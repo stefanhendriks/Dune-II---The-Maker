@@ -65,6 +65,18 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
             case    Options::NOAIREST:
 			        	game->m_noAiRest = true;
                         break;
+            case    Options::SCREENX:
+                        if ((i + 1) < argc) {
+					        i++;
+					        optionToHandleAfter[Options::SCREENX] = true;
+                            ArgumentScreenX = atoi(argv[i]);
+                        } break;
+            case    Options::SCREENY:
+                        if ((i + 1) < argc) {
+					        i++;
+					        optionToHandleAfter[Options::SCREENY] = true;
+                            ArgumentScreenY = atoi(argv[i]);
+                        } break;
             case    Options::USAGES:
 			default : 
                     game->m_drawUsages = true;
@@ -78,6 +90,8 @@ void cHandleArgument::applyArguments(){
     for (const auto& [key, value] : optionToHandleAfter) {
         switch (key) {
             case    Options::WINDOWED:  game->m_windowed = value;   break;
+            case    Options::SCREENX:   game->m_screenX = ArgumentScreenX; break;
+            case    Options::SCREENY:   game->m_screenY = ArgumentScreenY; break;
             default:    break;
         }
     }
