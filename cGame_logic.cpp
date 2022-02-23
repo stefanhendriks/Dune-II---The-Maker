@@ -758,12 +758,11 @@ bool cGame::setupGame() {
     // TODO: read/write rest value so it does not have to 'fine-tune'
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
-
-    m_handleArgument->applyArguments();
-    m_handleArgument.reset();
-
+        
+    //m_handleArgument->applyArguments(); //Apply command line arguments
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
+        m_handleArgument->applyArguments(); //Apply command line arguments
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
         if (m_windowed) {
@@ -1013,7 +1012,8 @@ bool cGame::setupGame() {
     drawManager = new cDrawManager(&players[HUMAN]);
 
     INI_Install_Game(m_gameFilename);
-
+    m_handleArgument->applyArguments(); //Apply command line arguments
+    m_handleArgument.reset();
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
