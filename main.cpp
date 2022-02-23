@@ -81,12 +81,12 @@ volatile int allegro_timerUnits = 0;
 int main(int argc, char **argv) {
 	game.setGameFilename("game.ini");
 
-    if (game.handleArguments(argc, argv) > 0) {
-        return 0;
-    }
+  if (!(game.handleArguments(argc, argv) > 0)) {
+    return 0;
+  }
 
-    if (game.setupGame()) {
-		game.run();
+  if (game.setupGame()) {
+	  game.run();
 	}
 
 	game.shutdown();
