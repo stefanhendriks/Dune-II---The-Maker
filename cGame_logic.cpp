@@ -124,8 +124,10 @@ void cGame::init() {
     }
 
     // Units & Structures are already initialized in map.init()
+
     // Load properties
     INI_Install_Game(m_gameFilename);
+    // override by handleArguments
 }
 
 // TODO: Bad smell (duplicate code)
@@ -757,6 +759,7 @@ bool cGame::setupGame() {
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
         
+    //m_handleArgument->applyArguments(); //Apply command line arguments
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
         m_handleArgument->applyArguments(); //Apply command line arguments
