@@ -1798,7 +1798,7 @@ void INIT_PREVIEWS() {
         previewMap.terrain = nullptr;
 
         // clear out name
-        memset(previewMap.name, 0, sizeof(previewMap.name));
+        previewMap.name.clear();
 
         // clear out map data
         if (i == 0) { // first entry/random map
@@ -1821,7 +1821,7 @@ void INIT_PREVIEWS() {
         previewMap.iStartCell[4] = -1;
     }
 
-    sprintf(PreviewMap[0].name, "RANDOM MAP");
+    PreviewMap[0].name = "RANDOM MAP";
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
     PreviewMap[0].terrain = create_bitmap(128, 128);
 }
