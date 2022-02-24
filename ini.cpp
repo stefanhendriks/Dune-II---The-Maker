@@ -30,6 +30,12 @@
 #include <filesystem>
 namespace fs=std::filesystem;
 
+int INI_SectionType(char section[30], int last);
+void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
+int getHouseFromChar(char chunk[25]);
+int getUnitTypeFromChar(char chunk[25]);
+int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
+
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                 const int *iPl_quota, const char *linefeed);
 
@@ -2517,9 +2523,9 @@ void INI_PRESCAN_SKIRMISH() {
     for (auto const& file : std::filesystem::directory_iterator{pathfile}) 
     {
         auto fullname = file.path().string();
-            logbook(fmt::format("Loading skirmish map: {}", fullname));
+        logbook(fmt::format("Loading skirmish map: {}", fullname));
         if (file.path().extension()==".ini") {
             INI_LOAD_SKIRMISH(fullname.c_str());
+        }
     }
-}
 }
