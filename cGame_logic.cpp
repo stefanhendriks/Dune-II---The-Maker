@@ -28,6 +28,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+#include "map/cPreviewMaps.h"
 
 #include <allegro.h>
 #include <alfont.h>
@@ -77,6 +78,7 @@ void cGame::init() {
     m_TIMER_evaluatePlayerStatus = 5;
 
     m_skirmish = false;
+    m_PreviewMaps = std::make_shared<cPreviewMaps>();
 
     // Alpha (for fading in/out)
     m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
@@ -468,6 +470,11 @@ void cGame::drawStateMenu() {
 void cGame::initSkirmish() const {
     game.missionInit();
 }
+
+void cGame::prescanSkirmish() const {
+    m_PreviewMaps->prescanSkirmish();
+}
+
 
 void cGame::handleTimeSlicing() {
     if (iRest > 0) {
