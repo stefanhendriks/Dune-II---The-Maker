@@ -27,6 +27,8 @@
 
 #include <allegro.h>
 #include <fmt/core.h>
+#include <filesystem>
+namespace fs=std::filesystem;
 
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                 const int *iPl_quota, const char *linefeed);
@@ -2511,23 +2513,13 @@ void INI_PRESCAN_SKIRMISH() {
     // scans for all ini files
     INIT_PREVIEWS(); // clear all of them
 
-    al_ffblk file;
-    if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-        do {
-            auto fullname = fmt::format("skirmish/{}", file.name);
+    const std::filesystem::path pathfile{"skirmish"};
+    for (auto const& file : std::filesystem::directory_iterator{pathfile}) 
+    {
+        auto fullname = file.path().string();
             logbook(fmt::format("Loading skirmish map: {}", fullname));
+        if (file.path().extension()==".ini") {
             INI_LOAD_SKIRMISH(fullname.c_str());
-        } while (!al_findnext(&file));
-    } else {
-        logbook("No skirmish maps found in skirmish directory.");
     }
-    al_findclose(&file);
-
 }
-
-// this code should make it possible to read any ini file in the skirmish
-// directory. However, Allegro 4.2.0 somehow gives weird results.
-// when upgrading to Allegro 4.2.2, the method works. But FBLEND crashes, even
-// after recompiling it against Allegro 4.2.2...
-//
-// See: http://www.allegro.cc/forums/thread/600998
+}
