@@ -7,14 +7,14 @@ namespace fs = std::filesystem;
 cFileNameSettings::cFileNameSettings(const std::string &_path)
 {
     path = _path;
-    m_EnumToString[ENUMFILENAME::arrakeen] = "arrakeen.fon";
-    m_EnumToString[ENUMFILENAME::benegess] = "benegess.fon";
-    m_EnumToString[ENUMFILENAME::small] = "small.ttf";
-    m_EnumToString[ENUMFILENAME::gfxdata] = "gfxdata.dat";
-    m_EnumToString[ENUMFILENAME::gfxinter] = "gfxinter.dat";
-    m_EnumToString[ENUMFILENAME::gfxworld] = "gfxworld.dat";
-    m_EnumToString[ENUMFILENAME::gfxmentat] = "gfxmentat.dat";
-    m_EnumToString[ENUMFILENAME::gfxaudio] = "gfxaudio.dat";
+    m_EnumToString[ENUMFILENAME::ARRAKEEN] = "arrakeen.fon";
+    m_EnumToString[ENUMFILENAME::BENEGESS] = "benegess.fon";
+    m_EnumToString[ENUMFILENAME::SMALL] = "small.ttf";
+    m_EnumToString[ENUMFILENAME::GFXDATA] = "gfxdata.dat";
+    m_EnumToString[ENUMFILENAME::GFXINTER] = "gfxinter.dat";
+    m_EnumToString[ENUMFILENAME::GFXWORLD] = "gfxworld.dat";
+    m_EnumToString[ENUMFILENAME::GFXMENTAT] = "gfxmentat.dat";
+    m_EnumToString[ENUMFILENAME::GFXAUDIO] = "gfxaudio.dat";
 }
 
 cFileNameSettings::~cFileNameSettings()
