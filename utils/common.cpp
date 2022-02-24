@@ -1794,8 +1794,11 @@ void Shimmer(int r, int x, int y) {
 void INIT_PREVIEWS() {
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
+
+        if (previewMap.terrain != nullptr) {
         destroy_bitmap(previewMap.terrain);
         previewMap.terrain = nullptr;
+        }
 
         // clear out name
         previewMap.name.clear();
