@@ -774,36 +774,36 @@ bool cGame::setupGame() {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font(m_fileName->getFullName(ENUMFILENAME::arrakeen).c_str());
+    game_font = alfont_load_font(m_fileName->getFullName(ENUMFILENAME::ARRAKEEN).c_str());
 
     if (game_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(ENUMFILENAME::arrakeen), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(ENUMFILENAME::ARRAKEEN), OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(ENUMFILENAME::arrakeen), OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(ENUMFILENAME::ARRAKEEN), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
         return false;
     }
 
 
-    bene_font = alfont_load_font(m_fileName->getFullName(ENUMFILENAME::benegess).c_str());
+    bene_font = alfont_load_font(m_fileName->getFullName(ENUMFILENAME::BENEGESS).c_str());
 
     if (bene_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(ENUMFILENAME::benegess), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(ENUMFILENAME::BENEGESS), OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(ENUMFILENAME::benegess) , OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(ENUMFILENAME::BENEGESS) , OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
         return false;
     }
 
-    small_font = alfont_load_font(m_fileName->getFullName(ENUMFILENAME::small).c_str());
+    small_font = alfont_load_font(m_fileName->getFullName(ENUMFILENAME::SMALL).c_str());
 
     if (small_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getFullName(ENUMFILENAME::small), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getFullName(ENUMFILENAME::SMALL), OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getFullName(ENUMFILENAME::small), OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getFullName(ENUMFILENAME::SMALL), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
         return false;
     }
@@ -932,37 +932,37 @@ bool cGame::setupGame() {
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = load_datafile(m_fileName->getFullName(ENUMFILENAME::gfxdata).c_str());
+    gfxdata = load_datafile(m_fileName->getFullName(ENUMFILENAME::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::gfxdata));
+        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::GFXDATA));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::gfxdata));
+        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::GFXDATA));
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
-    gfxinter = load_datafile(m_fileName->getFullName(ENUMFILENAME::gfxinter).c_str());
+    gfxinter = load_datafile(m_fileName->getFullName(ENUMFILENAME::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::gfxinter));
+        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::GFXINTER));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::gfxinter));
+        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::GFXINTER));
     }
 
-    gfxworld = load_datafile(m_fileName->getFullName(ENUMFILENAME::gfxworld).c_str());
+    gfxworld = load_datafile(m_fileName->getFullName(ENUMFILENAME::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::gfxworld));
+        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::GFXWORLD));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::gfxworld));
+        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::GFXWORLD));
     }
 
-    gfxmentat = load_datafile(m_fileName->getFullName(ENUMFILENAME::gfxmentat).c_str());
+    gfxmentat = load_datafile(m_fileName->getFullName(ENUMFILENAME::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::gfxmentat));
+        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(ENUMFILENAME::GFXMENTAT));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::gfxmentat));
+        logbook("Datafile hooked: "+m_fileName->getName(ENUMFILENAME::GFXMENTAT));
     }
 
     // finally the data repository and drawer interface can be initialized

@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-enum class ENUMFILENAME {arrakeen, benegess, small, gfxdata, gfxinter, gfxworld, gfxmentat, gfxaudio};
+enum class ENUMFILENAME {ARRAKEEN, BENEGESS, SMALL, GFXDATA, GFXINTER, GFXWORLD, GFXMENTAT, GFXAUDIO};
 
 class cFileNameSettings
 {
