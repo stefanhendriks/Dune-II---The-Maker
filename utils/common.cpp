@@ -1796,21 +1796,15 @@ void INIT_PREVIEWS() {
         s_PreviewMap &previewMap = PreviewMap[i];
 
         if (previewMap.terrain != nullptr) {
-        destroy_bitmap(previewMap.terrain);
-        previewMap.terrain = nullptr;
+            destroy_bitmap(previewMap.terrain);
+            previewMap.terrain = nullptr;
         }
 
         // clear out name
         previewMap.name.clear();
 
         // clear out map data
-        if (i == 0) { // first entry/random map
-            int maxCells = 128*128;
-            previewMap.mapdata = std::vector<int>(maxCells, -1);
-        } else {
-//            int maxCells = 4096; // 64x64 map
-            previewMap.mapdata = std::vector<int>();
-        }
+        previewMap.mapdata.clear();
 
         previewMap.iPlayers = 0;
 
@@ -1824,7 +1818,9 @@ void INIT_PREVIEWS() {
         previewMap.iStartCell[4] = -1;
     }
 
-    PreviewMap[0].name = "RANDOM MAP";
+    int maxCells = 128*128;
+    PreviewMap[0].mapdata = std::vector<int>(maxCells, -1);
+    PreviewMap[0].name = "Random map";
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
     PreviewMap[0].terrain = create_bitmap(128, 128);
 }
