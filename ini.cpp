@@ -2523,9 +2523,9 @@ void INI_PRESCAN_SKIRMISH() {
     for (auto const& file : std::filesystem::directory_iterator{pathfile}) 
     {
         auto fullname = file.path().string();
-        logbook(fmt::format("Loading skirmish map: {}", fullname));
         if (file.path().extension()==".ini") {
             INI_LOAD_SKIRMISH(fullname.c_str());
+            logbook(fmt::format("Loading skirmish map: {}", fullname));
         }
     }
 }
