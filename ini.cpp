@@ -2390,7 +2390,9 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
 
             if (section == INI_SKIRMISH) {
                 if (wordtype == WORD_MAPNAME) {
-                    INI_WordValueSENTENCE(linefeed, previewMap.name);
+                    char mes[256];
+                    INI_WordValueSENTENCE(linefeed, mes);
+                    previewMap.name = std::string(mes);
                     //logbook(PreviewMap[iNew].name);
                 }
 

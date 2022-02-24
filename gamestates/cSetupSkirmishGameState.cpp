@@ -950,7 +950,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
                 }
             }
 
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
         }
     }
 }
@@ -987,7 +987,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
                 GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
             }
 
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
         }
     }
 }
