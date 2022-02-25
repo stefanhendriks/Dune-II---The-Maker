@@ -30,7 +30,6 @@ class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
 class cScreenInit;
-class cPreviewMaps;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -96,7 +95,6 @@ public:
     bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
-    void prescanSkirmish() const;
     void createAndPrepareMentatForHumanPlayer();
     void loadScenario();
 
@@ -239,8 +237,6 @@ private:
     cAllegroDataRepository *m_dataRepository;
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
-
-    std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
