@@ -31,22 +31,27 @@ int main(int argc, char ** argv)
     // load texture
     //SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
 
-    char* bitmap = new char[1228938];
+    char* bitmap = new char[1536276];
     // load into memory
-    SDL_RWops *rwf = SDL_RWFromFile("test.bmp","rb");
+    SDL_RWops *rwf = SDL_RWFromFile("test.pak","rb");
     if (rwf != NULL) {
-        SDL_RWread(rwf, bitmap, 1228938, 1);
+        SDL_RWread(rwf, bitmap, 1536276, 1);
         SDL_RWclose(rwf);
+        std::cout << "Load pak into memory" << std::endl;
+    } else {
+        std::cout << "Failed to load pak : " << SDL_GetError() << std::endl;
     }
 
     // read from memory
-    SDL_RWops *rwm = SDL_RWFromMem(bitmap, 1228938);
+    SDL_RWops *rwm = SDL_RWFromMem(&bitmap[1228938], 307338);
     /* "rb" will "read binary" files */
     // SDL_RWops *file = SDL_RWFromFile("test.bmp", "rb");
     /* freesrc is true so the file automatically closes */
     SDL_Surface *surface = SDL_LoadBMP_RW(rwm, SDL_TRUE);
     if (!surface) {
         std::cout << "Failed to load image : " << SDL_GetError() << std::endl;
+    }else {
+        std::cout << "Load image" << std::endl;
     }
 
     delete bitmap;
