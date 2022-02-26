@@ -45,7 +45,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
-#include "utils/cHandleArgument.hpp"
+#include "utils/cHandleArgument.h"
 
 #include <allegro.h>
 #include <alfont.h>

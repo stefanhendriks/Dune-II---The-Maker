@@ -249,7 +249,7 @@ private:
 
     cTimeManager m_timeManager;
 
-    std::unique_ptr<cHandleArgument>  m_handleArgument;
+    std::unique_ptr<cHandleArgument> m_handleArgument;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
