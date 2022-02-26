@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
  
 #include <string>
+#include <iostream>
 
 class ReaderPack
 {
@@ -28,7 +29,16 @@ int main(int argc, char ** argv)
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
 
     // load texture
-    SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
+    //SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
+
+    /* "rb" will "read binary" files */
+    SDL_RWops *file = SDL_RWFromFile("test.bmp", "rb");
+    /* freesrc is true so the file automatically closes */
+    SDL_Surface *surface = SDL_LoadBMP_RW(file, SDL_TRUE);
+    if (!surface) {
+        std::cout << "Failed to load image : " << SDL_GetError() << std::endl;
+    }
+
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);    // GPU memory
     SDL_FreeSurface(surface);
 
