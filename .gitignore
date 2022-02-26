@@ -11,6 +11,7 @@ Dune 2.vcxproj
 .settings/org.eclipse.cdt.managedbuilder.core.prefs
 .idea/
 .vs/
+.vscode/
 
 # build directories
 build

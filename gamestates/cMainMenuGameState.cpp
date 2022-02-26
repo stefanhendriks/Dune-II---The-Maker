@@ -1,9 +1,18 @@
-#include "d2tmh.h"
 #include "cMainMenuGameState.h"
 
-#include <fmt/core.h>
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "gui.h"
+#include "gui/actions/cGuiActionExitGame.h"
+#include "gui/actions/cGuiActionFadeOutOnly.h"
+#include "gui/actions/cGuiActionSelectHouse.h"
+#include "gui/actions/cGuiActionSetupSkirmishGame.h"
+#include "gui/actions/cGuiActionShowOptions.h"
+#include "gui/actions/cGuiActionToGameState.h"
+
 #include <alfont.h>
 #include <allegro.h>
+#include <fmt/core.h>
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)) {
     bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;

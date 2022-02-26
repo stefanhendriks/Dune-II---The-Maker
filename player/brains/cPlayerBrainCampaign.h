@@ -1,8 +1,10 @@
 #pragma once
 
+#include "gameobjects/units/cUnit.h"
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
 #include "player/brains/missions/cPlayerBrainMission.h"
+
 #include <set>
 
 namespace brains {
@@ -125,7 +127,7 @@ namespace brains {
 
         void produceLevel9Missions(int trikeKind, int infantryKind);
 
-        void respondToThreat(int cellOriginOfThreat, bool attackerIsAirUnit, int maxUnitsToOrder);
+        void respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
     };
 
 }

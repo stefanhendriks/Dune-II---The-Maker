@@ -1,5 +1,4 @@
-#ifndef STRUCTS_H_
-#define STRUCTS_H_
+#pragma once
 
 #include "enums.h"
 
@@ -75,6 +74,7 @@ struct s_UnitInfo {
 
   // attack related
   bool canAttackAirUnits;   // ie for rocket typed units
+  bool canAttackUnits;   // a unit used for attacking other units? (ie, mvc or harvester is no)
 
   bool canEnterAndDamageStructure;  // can this unit enter a structure and damage it? (and eventually capture?)
   bool attackIsEnterStructure;      // for saboteur only really
@@ -268,5 +268,3 @@ struct s_PreviewMap {
      int iStartCell[5];      // starting locations
      char name[80];          // name
 };
-
-#endif /* STRUCTS_H_ */

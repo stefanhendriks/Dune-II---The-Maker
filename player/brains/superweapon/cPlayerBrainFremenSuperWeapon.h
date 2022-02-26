@@ -1,5 +1,4 @@
-#ifndef D2TM_CPLAYERBRAINFREMENSUPERWEAPON_H
-#define D2TM_CPLAYERBRAINFREMENSUPERWEAPON_H
+#pragma once
 
 #include "player/brains/cPlayerBrain.h"
 
@@ -8,9 +7,7 @@ namespace brains {
     class cPlayerBrainFremenSuperWeapon : public cPlayerBrain {
 
     public:
-        cPlayerBrainFremenSuperWeapon(cPlayer *player);
-
-        ~cPlayerBrainFremenSuperWeapon();
+        explicit cPlayerBrainFremenSuperWeapon(cPlayer *player);
 
         void think() override;
 
@@ -23,5 +20,3 @@ namespace brains {
     };
 
 }
-
-#endif //D2TM_CPLAYERBRAINFREMENSUPERWEAPON_H

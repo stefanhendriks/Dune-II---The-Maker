@@ -1,6 +1,7 @@
-// GUI functions
+#include "gui.h"
 
-#include "include/d2tmh.h"
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <alfont.h>
 #include <allegro.h>
