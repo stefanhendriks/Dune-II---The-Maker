@@ -1,5 +1,11 @@
-#include "d2tmh.h"
 #include "cOptionsState.h"
+
+#include "d2tmc.h"
+#include "drawers/cAllegroDrawer.h"
+#include "gui/actions/cGuiActionExitGame.h"
+#include "gui/actions/cGuiActionToGameState.h"
+#include "gui/cGuiButton.h"
+#include "gui/cGuiWindow.h"
 
 #include <allegro/gfx.h>
 

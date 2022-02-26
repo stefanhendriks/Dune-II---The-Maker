@@ -9,7 +9,10 @@
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
-#include "player/playerh.h"
+#include "player/brains/cPlayerBrainSandworm.h"
+#include "player/brains/cPlayerBrainSkirmish.h"
+#include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
 
 #include <allegro.h>

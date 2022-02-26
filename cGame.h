@@ -30,6 +30,7 @@ class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
 class cScreenInit;
+class cHandleArgument;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -47,7 +48,11 @@ public:
 	cGame();
 	~cGame();
 
-	std::string m_gameFilename;
+    void setGameFilename(const std::string& filename) {
+        m_gameFilename = filename;
+    }
+
+    int handleArguments(int argc, char **argv);
 
 	bool m_windowed;			    // windowed
 	std::string m_version;          // version number, or name.
@@ -230,6 +235,7 @@ private:
      * Variables start here
      */
     bool m_debugMode;               // ...
+	std::string m_gameFilename;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
@@ -242,6 +248,8 @@ private:
     cKeyboard *m_keyboard;
 
     cTimeManager m_timeManager;
+
+    std::unique_ptr<cHandleArgument> m_handleArgument;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

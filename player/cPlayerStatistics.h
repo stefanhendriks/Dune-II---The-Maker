@@ -1,17 +1,8 @@
-/*
- * cPlayerStatistics.h
- *
- *  Created on: 1-aug-2010
- *      Author: Stefan
- */
-
-#ifndef CPLAYERSTATISTICS_H_
-#define CPLAYERSTATISTICS_H_
+#pragma once
 
 class cPlayerStatistics {
 	public:
 		cPlayerStatistics();
-		~cPlayerStatistics();
 
 		// set methods
 		void setEnemyUnitsDestroyed(int theEnemyUnitsDestroyed) { enemyUnitsDestroyed = theEnemyUnitsDestroyed; }
@@ -35,8 +26,6 @@ class cPlayerStatistics {
 		int getUnitsConstructed() { return unitsConstructed; }
 		int getSuperWeaponsUsed() { return superWeaponsUsed; }
 
-	protected:
-
 	private:
 		// enemy units and structures destroyed
 		int enemyUnitsDestroyed;
@@ -53,5 +42,3 @@ class cPlayerStatistics {
 		int unitsConstructed; // total amount of units constructed
 		int superWeaponsUsed; // total amount of super weapons used
 };
-
-#endif /* CPLAYERSTATISTICS_H_ */
