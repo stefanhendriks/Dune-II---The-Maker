@@ -31,13 +31,25 @@ int main(int argc, char ** argv)
     // load texture
     //SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
 
+    char* bitmap = new char[1228938];
+    // load into memory
+    SDL_RWops *rwf = SDL_RWFromFile("test.bmp","rb");
+    if (rwf != NULL) {
+        SDL_RWread(rwf, bitmap, 1228938, 1);
+        SDL_RWclose(rwf);
+    }
+
+    // read from memory
+    SDL_RWops *rwm = SDL_RWFromMem(bitmap, 1228938);
     /* "rb" will "read binary" files */
-    SDL_RWops *file = SDL_RWFromFile("test.bmp", "rb");
+    // SDL_RWops *file = SDL_RWFromFile("test.bmp", "rb");
     /* freesrc is true so the file automatically closes */
-    SDL_Surface *surface = SDL_LoadBMP_RW(file, SDL_TRUE);
+    SDL_Surface *surface = SDL_LoadBMP_RW(rwm, SDL_TRUE);
     if (!surface) {
         std::cout << "Failed to load image : " << SDL_GetError() << std::endl;
     }
+
+    delete bitmap;
 
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);    // GPU memory
     SDL_FreeSurface(surface);
