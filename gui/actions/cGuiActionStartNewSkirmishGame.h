@@ -1,17 +1,13 @@
-#ifndef D2TM_CGUIACTIONSTARTNEWSKIRMISHGAME_H
-#define D2TM_CGUIACTIONSTARTNEWSKIRMISHGAME_H
+#pragma once
 
-#include "../../gamestates/cSetupSkirmishGameState.h"
-#include "../cGuiAction.h"
+#include "gamestates/cSetupSkirmishGameState.h"
+#include "gui/cGuiAction.h"
 
 class cGuiActionStartNewSkirmishGame : public cGuiAction {
-public:
-    cGuiActionStartNewSkirmishGame(cSetupSkirmishGameState * skirmishGameState);
+  public:
+    explicit cGuiActionStartNewSkirmishGame(cSetupSkirmishGameState * skirmishGameState);
     void execute() override;
 
-private:
+  private:
     cSetupSkirmishGameState * skirmishGameState;
 };
-
-
-#endif //D2TM_CGUIACTIONSTARTNEWSKIRMISHGAME_H

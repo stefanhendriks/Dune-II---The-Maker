@@ -1,7 +1,8 @@
 #include "cPlayer.h"
 
-#include "d2tmh.h"
+#include "building/cItemBuilder.h"
 #include "d2tmc.h"
+#include "data/gfxdata.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"

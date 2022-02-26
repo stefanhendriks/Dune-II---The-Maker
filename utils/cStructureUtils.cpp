@@ -1,9 +1,11 @@
-#include "../include/d2tmh.h"
+#include "cStructureUtils.h"
 
+#include "d2tmc.h"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
 #include "gameobjects/structures/cWindTrap.h"
 #include "map/cMapCamera.h"
+#include "player/cPlayer.h"
 
 #include <fmt/core.h>
 
