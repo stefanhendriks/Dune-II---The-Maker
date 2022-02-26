@@ -30,7 +30,8 @@ private:
         NOAIREST,
         USAGES,
         SCREENX,
-        SCREENY
+        SCREENY,
+        HELP
     };
 
     const std::map<std::string, Options> optionStrings{
@@ -46,7 +47,8 @@ private:
             {"-noairest",         Options::NOAIREST},
             {"-screenWidth",      Options::SCREENX},
             {"-screenHeight",     Options::SCREENY},
-            {"-usages",           Options::USAGES}
+            {"-usages",           Options::USAGES},
+            {"--help",            Options::HELP}
     };
 
     cGame *m_game = nullptr;
@@ -54,4 +56,6 @@ private:
     std::map<Options, bool> m_optionToHandleAfter;
 
     int m_argumentScreenX, m_argumentScreenY;
+
+    void printInstructions() const;
 };
