@@ -1,9 +1,10 @@
 #pragma once
 
-#include <string>
 #include "utils/cPoint.h"
 
-class BITMAP;
+#include <string>
+
+struct BITMAP;
 
 namespace messages {
     enum eMessageDrawerState {

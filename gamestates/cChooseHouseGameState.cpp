@@ -1,10 +1,13 @@
-#include <algorithm>
-#include "d2tmh.h"
 #include "cChooseHouseGameState.h"
 
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
 #include "utils/cSoundPlayer.h"
 
 #include <allegro.h>
+
+#include <algorithm>
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     cGameState(theGame),

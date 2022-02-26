@@ -8,7 +8,7 @@
 #pragma once
 
 class cPlayer;
-class BITMAP;
+struct BITMAP;
 
 // the credits drawer takes state of a player, and draws the credits accordingly
 

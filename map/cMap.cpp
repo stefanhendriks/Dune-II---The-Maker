@@ -10,16 +10,21 @@
 
   */
 
-#include "../include/d2tmh.h"
 #include "cMap.h"
 
 #include "cMapCamera.h"
 #include "cMapEditor.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "player/cPlayer.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
 
+#include <algorithm>
 #include <cmath>
 
 cMap::cMap() {

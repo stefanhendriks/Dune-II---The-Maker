@@ -1,14 +1,9 @@
-#include "include/d2tmh.h"
 #include "cPlayerBrainEmpty.h"
 
 
 namespace brains {
 
     cPlayerBrainEmpty::cPlayerBrainEmpty(cPlayer *player) : cPlayerBrain(player) {
-
-    }
-
-    cPlayerBrainEmpty::~cPlayerBrainEmpty() {
 
     }
 

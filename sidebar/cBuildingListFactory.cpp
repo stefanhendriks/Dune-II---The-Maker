@@ -1,22 +1,12 @@
-/*
- * cBuildingListFactory.cpp
- *
- *  Created on: Aug 2, 2009
- *      Author: Stefan
- */
-
-#include "../include/d2tmh.h"
 #include "cBuildingListFactory.h"
 
+#include "d2tmc.h"
+#include "data/gfxinter.h"
 
 cBuildingListFactory *cBuildingListFactory::instance = NULL;
 
 cBuildingListFactory::cBuildingListFactory() {
 }
-
-cBuildingListFactory::~cBuildingListFactory() {
-}
-
 
 cBuildingListFactory *cBuildingListFactory::getInstance() {
 	if (instance == nullptr) {

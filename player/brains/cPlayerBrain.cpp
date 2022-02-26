@@ -6,8 +6,4 @@ namespace brains {
 
     }
 
-    cPlayerBrain::~cPlayerBrain() {
-
-    }
-
 }
