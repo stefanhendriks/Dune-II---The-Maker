@@ -1,10 +1,11 @@
 CC=g++
 CFLAGS= -lSDL2
+DFLAGS= -g
 DEPS = *.h
 OBJ = main.o
 
 %.o: %.c $(DEPS)
-	$(CC) -c -g -o $@ $< $(CFLAGS)
+	$(CC) -c $@ $< $(DFLAGS)
 
 main: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
