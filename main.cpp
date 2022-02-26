@@ -96,6 +96,7 @@ int main(int argc, char **argv) {
 
     game.shutdown();
 
+    std::cout << fmt::format("Thank you for playing Dune 2 - The Maker\n");
     return 0;
 }
 END_OF_MAIN()
