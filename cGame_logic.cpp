@@ -45,6 +45,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+#include "utils/cHandleArgument.h"
 
 #include <allegro.h>
 #include <alfont.h>
@@ -80,6 +81,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_version = "0.6.x";
 
     m_mentat = nullptr;
+    m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
 
 
@@ -139,7 +141,6 @@ void cGame::init() {
     }
 
     // Units & Structures are already initialized in map.init()
-
     // Load properties
     INI_Install_Game(m_gameFilename);
 }
@@ -173,6 +174,11 @@ void cGame::missionInit() {
 
     drawManager->missionInit();
 }
+
+int cGame::handleArguments(int argc, char **argv) {
+    return m_handleArgument->handleArguments(argc,argv);
+}
+
 
 void cGame::initPlayers(bool rememberHouse) const {
     int maxThinkingAIs = MAX_PLAYERS;
@@ -767,9 +773,9 @@ bool cGame::setupGame() {
     // TODO: read/write rest value so it does not have to 'fine-tune'
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
-
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
+        m_handleArgument->applyArguments(); //Apply command line arguments
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
         if (m_windowed) {
@@ -1018,8 +1024,9 @@ bool cGame::setupGame() {
     delete drawManager;
     drawManager = new cDrawManager(&players[HUMAN]);
 
-    game.init(); // AGAIN!?
-
+    INI_Install_Game(m_gameFilename);
+    m_handleArgument->applyArguments(); //Apply command line arguments
+    m_handleArgument.reset();
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
