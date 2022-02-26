@@ -22,7 +22,7 @@ class cItemBuilder;
  */
 class cBuildingList {
 public:
-    cBuildingList(eListType listType);
+    explicit cBuildingList(eListType listType);
 
     ~cBuildingList();
 

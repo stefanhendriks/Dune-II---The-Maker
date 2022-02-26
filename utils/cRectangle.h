@@ -1,5 +1,4 @@
-#ifndef D2TM_CRECTANGLE_H
-#define D2TM_CRECTANGLE_H
+#pragma once
 
 #include "cPoint.h"
 
@@ -59,6 +58,3 @@ private:
     int height;
 
 };
-
-
-#endif //D2TM_CRECTANGLE_H

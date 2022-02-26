@@ -1,10 +1,13 @@
 #pragma once
 
-class cGame;
-
-#include "gui/cGuiButton.h"
-#include "gui/cGuiWindow.h"
 #include "cGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "drawers/cTextDrawer.h"
+#include "gui/cGuiWindow.h"
+#include "sMouseEvent.h"
+
+struct BITMAP;
+class cGame;
 
 class cOptionsState : public cGameState {
   public:

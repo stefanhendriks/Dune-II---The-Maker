@@ -320,7 +320,7 @@ public:
         return m_action == eActionType::GUARD;
     }
 
-    void takeDamage(int damage);
+    void takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDealsDamage);
 
     void setHp(int hp) {
         // debug purposes only
@@ -412,6 +412,8 @@ public:
 
     void thinkFast();
 
+    bool isAttackingUnit();
+
     std::string getUnitStatusForMessageBar();
     std::string getHarvesterStatusForMessageBar();
 
@@ -436,6 +438,8 @@ private:
 
     void forgetAboutCurrentPathAndPrepareToCreateNewOne();
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait);
+
+    void takeDamage(int damage);
 
     int iCell;          // cell of unit
 

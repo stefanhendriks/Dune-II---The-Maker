@@ -11,10 +11,20 @@
 */
 #include "cGame.h"
 
-#include "d2tmh.h"
+#include "building/cItemBuilder.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
 #include "drawers/cAllegroDrawer.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
+#include "gamestates/cMainMenuGameState.h"
+#include "gamestates/cOptionsState.h"
+#include "gamestates/cSelectYourNextConquestState.h"
+#include "gamestates/cSetupSkirmishGameState.h"
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
@@ -22,6 +32,13 @@
 #include "mentat/cBeneMentat.h"
 #include "mentat/cHarkonnenMentat.h"
 #include "mentat/cOrdosMentat.h"
+#include "player/cPlayer.h"
+#include "player/brains/cPlayerBrainCampaign.h"
+#include "player/brains/cPlayerBrainSandworm.h"
+#include "player/brains/cPlayerBrainSkirmish.h"
+#include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
+#include "sidebar/cBuildingListFactory.h"
+#include "sidebar/cSideBarFactory.h"
 #include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
@@ -1993,7 +2010,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
                 cUnit &pUnit = unit[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
-                    pUnit.takeDamage(damageToTake);
+                    pUnit.takeDamage(damageToTake, -1, -1);
                 }
             }
         }
