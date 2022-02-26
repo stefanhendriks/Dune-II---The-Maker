@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <map>
 
 class ReaderPack
 {
@@ -14,6 +15,23 @@ public:
 private:
     bool readIndex();
 
+};
+
+class WriterPack
+{
+public:
+    WriterPack(const std::string &packName);
+    ~WriterPack();
+    bool addFile(const std::string &fileName);
+    bool writePackFile();
+    void listpackFile();
+private:
+    void writeHeader();
+    void writeFileLine();
+    void copyFile();
+    int numberFile = 0;
+    SDL_RWops *wfp;  //wfp as writeFilePack
+    std::map<std::string, int> mNameSize;
 };
 
 void writeHeader(SDL_RWops *file, Uint16 _nbFiles)
