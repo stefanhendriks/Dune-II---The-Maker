@@ -39,11 +39,14 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
         std::string command = argv[i];
         auto itr = optionStrings.find(command);
         if (itr == optionStrings.end()) {
-            std::cerr << "Unknown option \"" << command << "\", check with -usages" << std::endl;
+            std::cerr << fmt::format("Unknown option {}, use --help for instructions", command);
             return -1;
         }
 
         switch (itr->second) {
+            case Options::HELP:
+                printInstructions();
+                return -2;
             case Options::GAME :
                 if ((i + 1) < argc) {
                     i++;
@@ -99,6 +102,44 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
         }
     } // arguments passed
     return 0;
+}
+
+void cHandleArgument::printInstructions() const {
+    std::cout << fmt::format("\n");
+    std::cout << fmt::format("Usage: d2tm[.exe] [-windowed] [-screenWidth <width>] ...\n\n");
+    std::cout << fmt::format("Graphics\n");
+    std::cout << fmt::format("--------\n\n");
+    std::cout << fmt::format("-windowed              - Run game in window instead of fullscreen\n");
+    std::cout << fmt::format("-screenWidth <value>   - Width of screen / window (minimum 800)\n");
+    std::cout << fmt::format("-screenHeight <value>  - Height of screen / window (minimum 600)\n");
+    std::cout << fmt::format("\n\n");
+    std::cout << fmt::format("Sound/Music\n");
+    std::cout << fmt::format("-----------\n\n");
+    std::cout << fmt::format("-no-sound              - Run game without any sounds or music\n");
+    std::cout << fmt::format("-no-music              - Use sound effects only, no music\n");
+    std::cout << fmt::format("\n\n");
+    std::cout << fmt::format("Experimental\n");
+    std::cout << fmt::format("------------\n\n");
+    std::cout << fmt::format("-game <filename>       - Specify which file to use instead of game.ini\n");
+    std::cout << fmt::format("\n\n");
+    std::cout << fmt::format("Debugging\n");
+    std::cout << fmt::format("---------\n\n");
+    std::cout << fmt::format("-debug                 - Run in debug mode\n");
+    std::cout << fmt::format("-debug-units           - Draw additional debug info about units\n");
+    std::cout << fmt::format("-noai                  - Disable AI's\n");
+    std::cout << fmt::format("-oneai                 - Disable all but one AI\n");
+    std::cout << fmt::format("-noreinforcements      - Disable reinforcements (Campaign mode)\n");
+    std::cout << fmt::format("-noairest              - Disable initial resting of AI before becoming active\n");
+    std::cout << fmt::format("-usages                - Draw used units, structures, particles, etc.\n");
+    std::cout << fmt::format("\n\n");
+    std::cout << fmt::format("Examples (Windows)\n");
+    std::cout << fmt::format("------------------\n\n");
+    std::cout << fmt::format("Run windowed with resolution 1024x768:\n");
+    std::cout << fmt::format("d2tm.exe -windowed -screenWidth 1024 -screenHeight 768\n");
+    std::cout << fmt::format("\n\n");
+    std::cout << fmt::format("Run without any sounds and debugging enabled:\n");
+    std::cout << fmt::format("d2tm.exe -nosound -debug\n");
+    std::cout << fmt::format("\n\n");
 }
 
 void cHandleArgument::applyArguments() {
