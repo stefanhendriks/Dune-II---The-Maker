@@ -1,7 +1,6 @@
-#ifndef D2TM_CSCENARIOBSERVER_H
-#define D2TM_CSCENARIOBSERVER_H
+#pragma once
 
-#include "../include/sGameEvent.h"
+#include "sGameEvent.h"
 
 class cScenarioObserver {
 public:
@@ -9,6 +8,3 @@ public:
 
     virtual void onNotifyGameEvent(const s_GameEvent &event) = 0;
 };
-
-
-#endif //D2TM_CSCENARIOBSERVER_H

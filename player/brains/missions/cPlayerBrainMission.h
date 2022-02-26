@@ -1,10 +1,10 @@
 #pragma once
 
-#include <vector>
-#include "player/brains/cPlayerBrainData.h"
 #include "cPlayerBrainMissionKind.h"
+#include "observers/cScenarioObserver.h"
+#include "player/brains/cPlayerBrainData.h"
 
-#include <observers/cScenarioObserver.h>
+#include <vector>
 
 namespace brains {
 

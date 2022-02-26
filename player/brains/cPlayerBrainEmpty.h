@@ -9,8 +9,6 @@ namespace brains {
     public:
         explicit cPlayerBrainEmpty(cPlayer *player);
 
-        ~cPlayerBrainEmpty();
-
         void think() override;
 
         void thinkFast() override;
