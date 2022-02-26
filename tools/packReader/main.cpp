@@ -16,7 +16,7 @@ private:
 
 };
 
-void writeCartouche(SDL_RWops *file, Uint16 _nbFiles)
+void writeHeader(SDL_RWops *file, Uint16 _nbFiles)
 {
 	const char *str = "D2TM";
     size_t len = SDL_strlen(str);
@@ -28,7 +28,7 @@ void writeCartouche(SDL_RWops *file, Uint16 _nbFiles)
 }
 
 
-void wrileLine(SDL_RWops *file, const char *name, uint32_t _offset, uint32_t _fileSize)
+void wrileFileLine(SDL_RWops *file, const char *name, uint32_t _offset, uint32_t _fileSize)
 {
     char fileID[40]{'\0'};
     strcpy(fileID,name);
@@ -66,11 +66,11 @@ if (1) {
     //
 	SDL_RWops *wf = SDL_RWFromFile("test1.pak","wb");
     //
-    writeCartouche(wf,3);
+    writeHeader(wf,3);
     //
-    wrileLine(wf, "test1", 0, 1228938);
-    wrileLine(wf, "test2", 1228938, 307338);
-    wrileLine(wf, "test3", 1228938+307338, 691338);
+    wrileFileLine(wf, "test1", 0, 1228938);
+    wrileFileLine(wf, "test2", 1228938, 307338);
+    wrileFileLine(wf, "test3", 1228938+307338, 691338);
 
     copyFile(wf,"test1.bmp");
     copyFile(wf,"test2.bmp");
