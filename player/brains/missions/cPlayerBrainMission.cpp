@@ -84,7 +84,7 @@ namespace brains {
     /**
      * Called every 5 ms.
      */
-    void cPlayerBrainMission::think() {
+    void cPlayerBrainMission::thinkFast() {
         switch (state) {
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY:
                 thinkState_InitialDelay();

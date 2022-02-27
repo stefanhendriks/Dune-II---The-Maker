@@ -1730,7 +1730,7 @@ namespace brains {
 
     void cPlayerBrainCampaign::thinkFast() {
         for (auto &mission : m_missions) {
-            mission.think();
+            mission.thinkFast();
         }
     }
 
