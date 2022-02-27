@@ -28,7 +28,7 @@ namespace brains {
         m_buildOrders = std::vector<S_buildOrder>();
         m_discoveredEnemyAtCell = std::set<int>();
         m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
-        m_economyScore = 0;
+        m_economyScore = 50;
         m_centerOfBaseCell = 0;
     }
 
@@ -818,59 +818,34 @@ namespace brains {
     }
 
     ePlayerBrainSkirmishEconomyState cPlayerBrainSkirmish::determineEconomyState() {
-        int thresholdBadEconomy = 20;
-        int maxThreshHold = thresholdBadEconomy + 5;
-        int thresholdImproveEconomy = 10;
-
-        int moneyThresholdForBadEconomy = 150;
-        int moneyThresholdForOkEconomy = 1000;
-        int moneyThresholdForGoodEconomy = 2000;
-
         // positive development...
         int credits = player->getCredits();
 
+        int idealMoneyCount = 1000;
+        int economyStateBasedOnMoney = ((credits / (float)idealMoneyCount)*100);
+        if (economyStateBasedOnMoney > 100) {
+            economyStateBasedOnMoney = 100;
+        }
+
         // at first, decrease badness of economy by default
-        int economyScoreDelta = -1;
-
-        // now scoring is as following:
-        // < bad threshold, we decrease
-        //
-
-        // Stefan: future me: this does not work now, get some sleep
-        // what you kinda want is to have it give a 'good score' when the economy is booming. Have a so-so scoring
-        // (not good, nor negative) when it is in the safe-zone. And only get into a bad/improve state when things
-        // run low on cash.
-        // and when running low on cash for a longer time then the state gets into 'BAD' ? (or maybe we should
-        // just ditch IMPROVE/BAD ? all the same?
-        //
-        
-        if (credits < moneyThresholdForBadEconomy) {
-            economyScoreDelta = 2; // increase fast to bad economy state
-        } else if (credits > moneyThresholdForBadEconomy && credits < moneyThresholdForOkEconomy) {
-            economyScoreDelta = -1; // decrease slowly
-        } else if (credits > moneyThresholdForGoodEconomy) {
-            economyScoreDelta = -2; // decrease fast, its going well now
+        if (m_economyScore < economyStateBasedOnMoney) {
+            m_economyScore += 3;
+        }
+        if (m_economyScore > economyStateBasedOnMoney) {
+            m_economyScore--;
         }
 
-        m_economyScore += economyScoreDelta;
-        // don't go below -5
-        if (m_economyScore < -5) {
-            m_economyScore = -5;
-        }
-
-        // don't go over max threshold
-        if (m_economyScore > maxThreshHold) {
-            m_economyScore = maxThreshHold;
-        }
+        log(fmt::format("determineEconomyState -> ideal = {}, current = {}, moneyScore = {}, m_economyScore = {}",
+                        idealMoneyCount, credits, economyStateBasedOnMoney, m_economyScore));
 
         // Evaluate economy score
-        if (m_economyScore > thresholdBadEconomy) {
+        if (m_economyScore < 15) {
             return PLAYERBRAIN_ECONOMY_STATE_BAD;
         }
-        if (m_economyScore > thresholdImproveEconomy) {
+        if (m_economyScore < 30) {
             return PLAYERBRAIN_ECONOMY_STATE_IMPROVE;
         }
-        if (m_economyScore < 0) {
+        if (m_economyScore > 70) {
             return PLAYERBRAIN_ECONOMY_STATE_GOOD;
         }
 

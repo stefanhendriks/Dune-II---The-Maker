@@ -66,6 +66,10 @@ namespace brains {
 
         ePlayerBrainSkirmishEconomyState m_economyState;
 
+        /**
+         * A score between 0 (BAD) and 100 (GOOD) economy
+         * A neutral economy score is between 30-70
+         */
         int m_economyScore;
 
         int m_TIMER_rest;
