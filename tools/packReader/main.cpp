@@ -20,13 +20,20 @@ public:
     ReaderPack(const std::string &filename);
     ~ReaderPack();
     SDL_RWops * getData(int index);
+    int getIndexFromName(const std::string &filename);
     void listpackFile();
 private:
-    std::vector<SDL_RWops*> getIndex;
-    std::vector<std::string> getName;
+    std::vector<std::pair<uint32_t, uint32_t>> getIndex;  //alone for performency 
+    std::vector<std::pair<std::string, uint32_t>> getName;
     bool readHeader();
     void readFileLines();
+    void readDataIntoMemory();
     char *fileInMemory = nullptr;
+    SDL_RWops *rfp;  //wfp as readFilePack
+    std::string fpName;
+    int fileInPak = 0;
+    uint64_t sizeInMemory =0;
+    const int fileNameSize = 40;
 };
 
 
