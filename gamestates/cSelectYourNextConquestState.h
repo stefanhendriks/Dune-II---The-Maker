@@ -5,7 +5,7 @@
 #include "definitions.h"
 
 class cGame;
-class BITMAP;
+struct BITMAP;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization

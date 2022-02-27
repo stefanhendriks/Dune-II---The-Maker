@@ -1,10 +1,13 @@
 #pragma once
 
+#include "gameobjects/units/cUnit.h"
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
 #include "player/brains/missions/cPlayerBrainMission.h"
+
 #include <set>
-#include <player/cPlayer.h>
+
+struct s_PlaceResult;
 
 namespace brains {
 

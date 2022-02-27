@@ -1,7 +1,7 @@
 #pragma once
 
-#include <observers/cScenarioObserver.h>
 #include "cPlayerBrainData.h"
+#include "observers/cScenarioObserver.h"
 
 class cPlayer;
 class cAbstractStructure;
@@ -20,9 +20,9 @@ namespace brains {
         // AI brain tick is every 100ms, so rest-time of 10 means resting 1 second.
         const static int RestTime = 10;
 
-        cPlayerBrain(cPlayer *player);
+        explicit cPlayerBrain(cPlayer *player);
 
-        virtual ~cPlayerBrain() = 0;
+        virtual ~cPlayerBrain() = default;
 
         /**
          * called, every 100 ms
