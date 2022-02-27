@@ -36,12 +36,88 @@ private:
     const int fileNameSize = 40;
 };
 
+ReaderPack::ReaderPack(const std::string &filename)
+{
+    fpName = filename;
+    if (readHeader()){
 
+        //we know the buffer size : 40+4+4 per file with fileInPak file
+        sizeInMemory = SDL_RWsize(rfp) - 4 - (40+4+4)*fileInPak;
+        fileInMemory = new char[sizeInMemory];
+        readFileLines();
+    }
+    readDataIntoMemory();
+}
+
+ReaderPack::~ReaderPack()
+{
+    getIndex.clear();
+    getName.clear();
+    SDL_RWclose(rfp);
+    delete[] fileInMemory;
+}
+
+void ReaderPack::readFileLines()
+{
+    for(int i=0; i<fileInPak; i++ ) {
+        //nom
+        char fileID[fileNameSize]{'\0'};
+        SDL_RWread(rfp, fileID, fileNameSize, 1);
+        // index offset
+        uint32_t offsetFile;
+        SDL_RWread(rfp, reinterpret_cast<char*>(&offsetFile), sizeof(offsetFile), 1);
+        // index size
+        uint32_t sizeFile;
+        SDL_RWread(rfp, reinterpret_cast<char*>(&sizeFile), sizeof(sizeFile), 1);
+
+        getName.push_back(std::pair(std::string(fileID), sizeFile));
+        getIndex.push_back(std::pair(offsetFile, sizeFile));
+    }
+}
+
+bool ReaderPack::readHeader()
+{
+    rfp= SDL_RWFromFile(fpName.c_str(),"rb");
+    char title[4];
+    SDL_RWread(rfp, &title, 4, 1);
+    if (strcmp(title,"D2TM") !=0) {
+        return false;
+    } else {
+        uint16_t nbrFiles;
+        SDL_RWread(rfp, reinterpret_cast<char*>(&nbrFiles), sizeof(nbrFiles), 1);
+        fileInPak = nbrFiles;
+        //SDL_RWwrite    SDL_RWread(rw, buf, sizeof (buf), 1);
+        //std::cout << "Il y a " << nbrFiles << std::endl;
+        return true;    
+    }
+}
+
+int ReaderPack::getIndexFromName(const std::string &filename) {
+    auto it = std::find_if( getName.begin(), getName.end(),
+    [&filename](const std::pair<std::string, int>& element){ return element.first == filename;} );
+    if (it != getName.end())
+        return std::distance(getName.begin(), it);
+    else
+        return -1;
+}
 
 SDL_RWops* ReaderPack::getData(int index) {
-    return getIndex[index];
+    return SDL_RWFromMem( &fileInMemory[getIndex[index].first], getIndex[index].second);
 };
 
+void ReaderPack::listpackFile() {
+    assert(getIndex.size() == getName.size() );
+    for (auto i=0; i<getIndex.size(); i++ ) {
+        std::cout << '[' << getName[i].first << "] = " << getName[i].second << std::endl;
+    }
+}
+
+void ReaderPack::readDataIntoMemory()
+{
+    uint16_t firstData = 6 + (40+4+4) * fileInPak;
+    SDL_RWseek(rfp, firstData, RW_SEEK_SET );
+    SDL_RWread(rfp, fileInMemory , sizeInMemory, 1);
+}
 
 // **********************
 //
