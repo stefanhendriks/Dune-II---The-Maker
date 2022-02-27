@@ -227,21 +227,19 @@ bool WriterPack::writePackFiles()
 
 int main(int argc, char ** argv)
 {
-if (0) {
-	//
-    // write pak file.
-    //
-	WriterPack test("test1.pak");
-    //
-    test.addFile("test1.bmp");
-    test.addFile("test2.bmp");
-    test.addFile("test3.bmp");
-    //
-    test.listpackFile();
-    //
-    test.writePackFiles();
-}    
-	
+    if (1) {
+        // write pak file.
+    	WriterPack test("test1.pak");
+        //
+        test.addFile("test1.bmp");
+        test.addFile("test2.bmp");
+        test.addFile("test3.bmp");
+        //
+        test.listpackFile();
+        //
+        test.writePackFiles();
+    }    
+
     bool quit = false;
     SDL_Event event;
  
@@ -250,28 +248,17 @@ if (0) {
     SDL_Window * window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // load texture
+    // load texture normal mode
     //SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
 
-    char* bitmap = new char[1228938+307338+691338];
-    // load into memory
-    SDL_RWops *rwf = SDL_RWFromFile("test1.pak","rb");
-    if (rwf != NULL) {
-        SDL_RWseek(rwf,150,RW_SEEK_SET);
-        SDL_RWread(rwf, bitmap, 2227614, 1);
-        SDL_RWclose(rwf);
-        std::cout << "Load pak into memory" << std::endl;
-    } else {
-        std::cout << "Failed to load pak : " << SDL_GetError() << std::endl;
-    }
+    //load with pack
+    ReaderPack testR("test1.pak");
 
-    // // read from memory
-    SDL_RWops *rwm1 = SDL_RWFromMem(&bitmap[0], 1228938);
-    SDL_RWops *rwm2 = SDL_RWFromMem(&bitmap[1228938], 307338);
-    SDL_RWops *rwm3 = SDL_RWFromMem(&bitmap[1228938+307338], 691338);
-    /* "rb" will "read binary" files */
-    // SDL_RWops *file = SDL_RWFromFile("test.bmp", "rb");
-    /* freesrc is true so the file automatically closes */
+    SDL_RWops *rwm1 = testR.getData(0);
+    SDL_RWops *rwm2 = testR.getData(1);
+    SDL_RWops *rwm3 = testR.getData(2);
+
+    // convert file to SDL_Surface
     SDL_Surface *surface1 = SDL_LoadBMP_RW(rwm1, SDL_TRUE);
     if (!surface1) {
     printf("Failed to load image 1 : %s\n", SDL_GetError());
@@ -284,8 +271,8 @@ if (0) {
     if (!surface3) {
     printf("Failed to load image 3 : %s\n", SDL_GetError());
     }
-    delete bitmap;
 
+    //convert SDL_Surface to SDL_Texture
     SDL_Texture * texture1 = SDL_CreateTextureFromSurface(renderer, surface1);    // GPU memory
     SDL_Texture * texture2 = SDL_CreateTextureFromSurface(renderer, surface2);    // GPU memory
     SDL_Texture * texture3 = SDL_CreateTextureFromSurface(renderer, surface3);    // GPU memory
@@ -295,7 +282,7 @@ if (0) {
 
     SDL_Color color = { 255, 255, 255 };
     
-    SDL_Texture * texture = texture3;
+    SDL_Texture * texture = texture1;
 
     while (!quit)
     {
@@ -320,7 +307,6 @@ if (0) {
         }
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);
-        SDL_Delay(5);
     }
 
     SDL_DestroyRenderer(renderer);
