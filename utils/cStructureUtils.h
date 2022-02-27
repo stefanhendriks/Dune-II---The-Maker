@@ -1,10 +1,3 @@
-/*
- * cStructureUtils.h
- *
- *  Created on: 2-aug-2010
- *      Author: Stefan
- */
-
 #pragma once
 
 #include "gameobjects/structures/cAbstractStructure.h"

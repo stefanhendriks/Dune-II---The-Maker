@@ -40,11 +40,15 @@ Consider this QUAD image:
 
 ![](quad_face_angles.png)
 
-The numbers (in yellow) are the D2TM face angles.
+The numbers (in yellow) are the D2TM face angles. Notice that the third picture of the Quad, facing up, has `facing angle` of `0`. The third picture of the Quad is called a `drawing index`. These go from left to right from `0` and upwards. The first `drawing index` (`0`) is the Quad facing to the right. 
 
-The drawing index starts from left to right, meaning the first quad picture means `drawing index 0`. As you can see, it has a `face index` of `2`.
+## Rotation
+As we move from left to right on the bitmap, the Quad's facing angle is going into a counter-clockwise direction. All D2TM bitmaps of units have this. However, rockets have a clockwise rotation (and 16 angles, instead of 8).
 
-In order to convert between a `faceAngle` to a `drawIndex` on the bitmap you use `convertAngleToDrawIndex`
+## Converting `face angle` to `drawing index`
+There are 2 things required to determine the `drawing index` on the Quad picture, to make it correspond with the `facing angle` we described above. Facing angle `0` means `up`, meaning it should correspond with `drawing index` nr `2`. Then as we go to the right on the Quad's bitmap, our facing angle is going backwards.
+
+In code, in order to convert between a `faceAngle` to a `drawIndex` on the bitmap you use `convertAngleToDrawIndex`
 
 ```
 float degrees = fDegrees(fromX, fromY, toX, toY);
@@ -52,11 +56,11 @@ int facingAngle = faceAngle(degrees);
 int drawIndex = convertAngleToDrawIndex(facingAngle);
 ```
 
-Without any extra parameters `convertAngleToDrawIndex` assumes that
-the bitmap is using pictures going into a counter-clockwise direction (like the QUAD above).
-Meaning, when the drawing index goes to the left it will correspond with the facing angle.
+Without any extra parameters `convertAngleToDrawIndex` assumes that the bitmap is using pictures going into a counter-clockwise direction (like the QUAD above).
 
-To make it even more concrete:
+When the drawing index goes to the left it will correspond with the facing angle.
+
+Putting it all together, this is the result:
 
 | Facing angle | QUAD draw index |
 |--------------|-----------------|
@@ -70,9 +74,8 @@ To make it even more concrete:
 | 7            | 3               |
 
 As you can see, the left column, the d2tm facing angle goes from 0 to 7.
-The QUAD index goes down (from 7 to 0), but it *also* has a different
-starting point. The 2nd picture has a QUAD facing upwards. This is called an offset.
+The QUAD index goes down (from 7 to 0), but it *also* has a different starting point. The 2nd picture has a QUAD facing upwards. This is called an offset.
 
-By default `convertAngleToDrawIndex` assumes an offset of `2`, and that
-the bitmap uses counter-clockwise rotation. You can overrule that if you want.
+By default `convertAngleToDrawIndex` assumes an offset of `2`, and that the bitmap uses counter-clockwise rotation. You can overrule that if you want.
 
+Projectiles (rockets) have a starting point of `0` and a clock-wise rotation.

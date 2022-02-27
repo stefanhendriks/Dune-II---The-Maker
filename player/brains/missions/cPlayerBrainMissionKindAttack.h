@@ -1,6 +1,5 @@
 #pragma once
 
-#include "player/playerh.h"
 #include "cPlayerBrainMissionKind.h"
 
 namespace brains {

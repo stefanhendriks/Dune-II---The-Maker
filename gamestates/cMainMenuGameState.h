@@ -1,16 +1,18 @@
-#ifndef D2TM_CMAINMENUGAMESTATE_H
-#define D2TM_CMAINMENUGAMESTATE_H
+#pragma once
 
+#include "cGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "drawers/cTextDrawer.h"
+#include "gui/cGuiButton.h"
+#include "gui/cGuiWindow.h"
+#include "sMouseEvent.h"
+
+struct BITMAP;
 class cGame;
 
-#include <gui/cGuiButton.h>
-#include <gui/cGuiWindow.h>
-#include "cGameState.h"
-
 class cMainMenuGameState : public cGameState {
-
-public:
-    cMainMenuGameState(cGame& theGame);
+  public:
+    explicit cMainMenuGameState(cGame& theGame);
     ~cMainMenuGameState() override;
 
     void thinkFast() override;
@@ -21,7 +23,7 @@ public:
 
     eGameStateType getType() override;
 
-private:
+  private:
     int logoX;
     int logoY;
 
@@ -37,6 +39,3 @@ private:
 
     BITMAP *bmp_D2TM_Title;
 };
-
-
-#endif //D2TM_CMAINMENUGAMESTATE_H
