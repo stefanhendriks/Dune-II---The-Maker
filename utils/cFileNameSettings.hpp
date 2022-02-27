@@ -3,18 +3,19 @@
 #include <string>
 #include <map>
 
-enum class ENUMFILENAME {ARRAKEEN, BENEGESS, SMALL, GFXDATA, GFXINTER, GFXWORLD, GFXMENTAT, GFXAUDIO};
+enum class EFILENAME {ARRAKEEN, BENEGESS, SMALL, GFXDATA, GFXINTER, GFXWORLD, GFXMENTAT, GFXAUDIO};
 
 class cFileNameSettings
 {
 public:
     cFileNameSettings(const std::string &_path);
+    void addRessources(std::map<EFILENAME, std::string> _transfertMap);
     ~cFileNameSettings();
     bool fileExists();
-    const std::string getName(ENUMFILENAME fileName);
-    const std::string getFullName(ENUMFILENAME fileName);
+    const std::string getName(EFILENAME fileName);
+    const std::string getFullName(EFILENAME fileName);
 
 private:
     std::string path;
-    std::map<ENUMFILENAME, std::string> m_EnumToString;
+    std::map<EFILENAME, std::string> m_EnumToString;
 };

@@ -7,14 +7,18 @@ namespace fs = std::filesystem;
 cFileNameSettings::cFileNameSettings(const std::string &_path)
 {
     path = _path;
-    m_EnumToString[ENUMFILENAME::ARRAKEEN] = "arrakeen.fon";
-    m_EnumToString[ENUMFILENAME::BENEGESS] = "benegess.fon";
-    m_EnumToString[ENUMFILENAME::SMALL] = "small.ttf";
-    m_EnumToString[ENUMFILENAME::GFXDATA] = "gfxdata.dat";
-    m_EnumToString[ENUMFILENAME::GFXINTER] = "gfxinter.dat";
-    m_EnumToString[ENUMFILENAME::GFXWORLD] = "gfxworld.dat";
-    m_EnumToString[ENUMFILENAME::GFXMENTAT] = "gfxmentat.dat";
-    m_EnumToString[ENUMFILENAME::GFXAUDIO] = "gfxaudio.dat";
+    // m_EnumToString[EFILENAME::ARRAKEEN] = "arrakeen.fon";
+    // m_EnumToString[EFILENAME::BENEGESS] = "benegess.fon";
+    // m_EnumToString[EFILENAME::SMALL] = "small.ttf";
+    // m_EnumToString[EFILENAME::GFXDATA] = "gfxdata.dat";
+    // m_EnumToString[EFILENAME::GFXINTER] = "gfxinter.dat";
+    // m_EnumToString[EFILENAME::GFXWORLD] = "gfxworld.dat";
+    // m_EnumToString[EFILENAME::GFXMENTAT] = "gfxmentat.dat";
+    // m_EnumToString[EFILENAME::GFXAUDIO] = "gfxaudio.dat";
+}
+void cFileNameSettings::addRessources(std::map<EFILENAME, std::string> _transfertMap)
+{
+    m_EnumToString = _transfertMap;
 }
 
 cFileNameSettings::~cFileNameSettings()
@@ -41,12 +45,12 @@ bool cFileNameSettings::fileExists()
     return true;
 }
 
-const std::string cFileNameSettings::getName(ENUMFILENAME fileName)
+const std::string cFileNameSettings::getName(EFILENAME fileName)
 {
     return m_EnumToString[fileName];
 }
 
-const std::string cFileNameSettings::getFullName(ENUMFILENAME fileName)
+const std::string cFileNameSettings::getFullName(EFILENAME fileName)
 {
     return path + "/" + m_EnumToString[fileName];
 }
