@@ -23,11 +23,11 @@ public:
     WriterPack(const std::string &packName);
     ~WriterPack();
     bool addFile(const std::string &fileName);
-    bool writePackFile();
+    bool writePackFiles();
     void listpackFile();
 private:
     void writeHeader();
-    void writeFileLine();
+    void writeFileLines();
     void copyFile();
     int numberFile = 0;
     SDL_RWops *wfp;  //wfp as writeFilePack
@@ -69,7 +69,7 @@ void WriterPack::writeHeader()
 }
 
 
-void WriterPack::writeFileLine()
+void WriterPack::writeFileLines()
 {
     uint32_t offset = 0;
     for (const auto& [key, value] : mNameSize) {
@@ -109,10 +109,10 @@ void WriterPack::copyFile()
     }
 }
 
-bool WriterPack::writePackFile()
+bool WriterPack::writePackFiles()
 {
     writeHeader();
-    writeFileLine();
+    writeFileLines();
     copyFile();
     return true;
 }
@@ -132,7 +132,7 @@ if (1) {
     //
     test.listpackFile();
     //
-    test.writePackFile();
+    test.writePackFiles();
 }    
 	
     bool quit = false;
