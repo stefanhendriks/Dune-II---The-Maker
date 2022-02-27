@@ -32,69 +32,107 @@ private:
     int numberFile = 0;
     SDL_RWops *wfp;  //wfp as writeFilePack
     std::map<std::string, uint32_t> mNameSize;
+    const int fileNameSize = 40;
 };
 
-void writeHeader(SDL_RWops *file, Uint16 _nbFiles)
+WriterPack::WriterPack(const std::string &packName)
+{
+    wfp = SDL_RWFromFile(packName.c_str(),"wb");
+}
+
+WriterPack::~WriterPack()
+{
+    SDL_RWclose(wfp);
+    mNameSize.clear();
+}
+
+bool WriterPack::addFile(const std::string &fileName)
+{
+    SDL_RWops *file = SDL_RWFromFile(fileName.c_str(),"rb");
+    if (file!=nullptr) {
+        mNameSize[fileName] = SDL_RWsize(file);
+        SDL_RWclose(file);
+        return true;
+    } else
+        return false;
+}
+
+void WriterPack::writeHeader()
 {
 	const char *str = "D2TM";
     size_t len = SDL_strlen(str);
-    if (SDL_RWwrite(file, str, 1, len) != len) {
+    if (SDL_RWwrite(wfp, str, 1, len) != len) {
         printf("Couldn't fully write string\n");
     }
-    Uint16 nbFiles = _nbFiles;
-    SDL_RWwrite(file, reinterpret_cast<const char*>(&nbFiles), sizeof(u_int16_t), 1);
+    u_int16_t nbFiles = mNameSize.size();
+    SDL_RWwrite(wfp, reinterpret_cast<const char*>(&nbFiles), sizeof(u_int16_t), 1);
 }
 
 
-void wrileFileLine(SDL_RWops *file, const char *name, uint32_t _offset, uint32_t _fileSize)
+void WriterPack::writeFileLine()
 {
-    char fileID[40]{'\0'};
-    strcpy(fileID,name);
-    if (SDL_RWwrite(file, fileID, 1, 40) != 40) {
-        printf("Couldn't fully write string\n");
-    }
-    uint32_t offset = _offset;
-    SDL_RWwrite(file, reinterpret_cast<const char*>(&offset), sizeof(uint32_t), 1);
-    uint32_t fileSize = _fileSize;
-    SDL_RWwrite(file, reinterpret_cast<const char*>(&fileSize), sizeof(uint32_t), 1); 
-}
-
-
-void copyFile(SDL_RWops *file, const char *fileName)
-{
-    SDL_RWops *wf = SDL_RWFromFile(fileName,"rb");
-    Sint64 res_size = SDL_RWsize(wf);
-    char* res = (char*)malloc(res_size + 1);
-
-    Sint64 nb_read_total = 0, nb_read = 1;
-    char* buf = res;
-    while (nb_read_total < res_size && nb_read != 0) {
-        nb_read = SDL_RWread(wf, buf, 1, (res_size - nb_read_total));
-        SDL_RWwrite(file,buf,1,(res_size - nb_read_total));
-        nb_read_total += nb_read;
-        buf += nb_read;
+    uint32_t offset = 0;
+    for (const auto& [key, value] : mNameSize) {
+        char fileID[fileNameSize]{'\0'};
+        strcpy(fileID,key.c_str());
+        SDL_RWwrite(wfp, fileID, 1, fileNameSize) != fileNameSize;
+        // position du fichier dans les datas
+        SDL_RWwrite(wfp, reinterpret_cast<const char*>(&offset), sizeof(uint32_t), 1);
+        offset += value;
+        // taille du fichier dans les datas
+        SDL_RWwrite(wfp, reinterpret_cast<const char*>(&value), sizeof(uint32_t), 1);     
     }
 }
+
+void WriterPack::listpackFile()
+{
+    for (const auto& [key, value] : mNameSize) {
+        std::cout << '[' << key << "] = " << value << std::endl;
+    }
+}
+
+void WriterPack::copyFile()
+{
+    for (const auto& [key, value] : mNameSize) {
+        SDL_RWops *wf = SDL_RWFromFile(key.c_str(),"rb");
+        Sint64 res_size = SDL_RWsize(wf);
+        char* res = (char*)malloc(res_size + 1);
+
+        Sint64 nb_read_total = 0, nb_read = 1;
+        char* buf = res;
+        while (nb_read_total < res_size && nb_read != 0) {
+            nb_read = SDL_RWread(wf, buf, 1, (res_size - nb_read_total));
+            SDL_RWwrite(wfp,buf,1,(res_size - nb_read_total));
+            nb_read_total += nb_read;
+            buf += nb_read;
+        }
+    }
+}
+
+bool WriterPack::writePackFile()
+{
+    writeHeader();
+    writeFileLine();
+    copyFile();
+    return true;
+}
+
 
 int main(int argc, char ** argv)
 {
 if (1) {
 	//
-    // hand write pak file.
+    // write pak file.
     //
-	SDL_RWops *wf = SDL_RWFromFile("test1.pak","wb");
+	WriterPack test("test1.pak");
     //
-    writeHeader(wf,3);
+    test.addFile("test1.bmp");
+    test.addFile("test2.bmp");
+    test.addFile("test3.bmp");
     //
-    wrileFileLine(wf, "test1", 0, 1228938);
-    wrileFileLine(wf, "test2", 1228938, 307338);
-    wrileFileLine(wf, "test3", 1228938+307338, 691338);
-
-    copyFile(wf,"test1.bmp");
-    copyFile(wf,"test2.bmp");
-    copyFile(wf,"test3.bmp");
-    SDL_RWclose(wf);
-    // hand write pak file.
+    test.listpackFile();
+    //
+    test.writePackFile();
 }    
 	
     bool quit = false;
