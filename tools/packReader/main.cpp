@@ -31,7 +31,7 @@ private:
     void copyFile();
     int numberFile = 0;
     SDL_RWops *wfp;  //wfp as writeFilePack
-    std::map<std::string, int> mNameSize;
+    std::map<std::string, uint32_t> mNameSize;
 };
 
 void writeHeader(SDL_RWops *file, Uint16 _nbFiles)
