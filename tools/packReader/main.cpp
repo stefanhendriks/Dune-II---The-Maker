@@ -1,10 +1,19 @@
-#include <SDL2/SDL.h>
 
+#include <assert.h>
+
+
+#include <SDL2/SDL.h>
 #include <string>
 #include <iostream>
 #include <map>
 #include <vector>
+#include <algorithm>
 
+// **********************
+//
+// ReaderPack
+//
+// **********************
 class ReaderPack
 {
 public:
@@ -26,6 +35,12 @@ SDL_RWops* ReaderPack::getData(int index) {
     return getIndex[index];
 };
 
+
+// **********************
+//
+// WriterPack
+//
+// **********************
 class WriterPack
 {
 public:
@@ -129,7 +144,7 @@ bool WriterPack::writePackFiles()
 
 int main(int argc, char ** argv)
 {
-if (1) {
+if (0) {
 	//
     // write pak file.
     //
