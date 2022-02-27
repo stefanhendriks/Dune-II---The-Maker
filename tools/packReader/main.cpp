@@ -3,18 +3,27 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <vector>
 
 class ReaderPack
 {
 public:
-    ReaderPack(const std::string &filename){};
-    ~ReaderPack(){};
-
-    SDL_Surface* loadBitmap(int index);
-   
+    ReaderPack(const std::string &filename);
+    ~ReaderPack();
+    SDL_RWops * getData(int index);
+    void listpackFile();
 private:
-    bool readIndex();
+    std::vector<SDL_RWops*> getIndex;
+    std::vector<std::string> getName;
+    bool readHeader();
+    void readFileLines();
+    char *fileInMemory = nullptr;
+};
 
+
+
+SDL_RWops* ReaderPack::getData(int index) {
+    return getIndex[index];
 };
 
 class WriterPack
