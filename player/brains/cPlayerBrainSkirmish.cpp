@@ -24,6 +24,10 @@ namespace brains {
         }
         m_TIMER_produceMissionCooldown = 0;
         m_TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
+        int randomizer = -400 + (rnd(800)); // TODO: base this on difficulty
+        m_TIMER_mayBuildAdditionalUnits = MOMENT_PRODUCE_ADDITIONAL_UNITS + randomizer;
+        m_TIMER_additionalUnitsCooldown = 0;        
+        m_eagernessToBuildRandomUnits = 15; // TODO: base this on difficulty setting?
         m_myBase = std::vector<S_structurePosition>();
         m_buildOrders = std::vector<S_buildOrder>();
         m_discoveredEnemyAtCell = std::set<int>();
@@ -363,7 +367,7 @@ namespace brains {
             logMissions();
         }
 
-        if (m_TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
+        if (m_TIMER_ai > m_TIMER_mayBuildAdditionalUnits) {
             if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
                 // build additional harvesters and carryalls
                 if (player->getAmountOfUnitsForType(HARVESTER) < 3) {
@@ -381,8 +385,14 @@ namespace brains {
                     buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
                 }
             } else {
-                if (allMissionsAreDoneGatheringResources()) {
-                    int chance = m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD ? 25 : 10;
+                if (mayBuildAdditionalResources()) {
+                    int chance = m_eagernessToBuildRandomUnits + (m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD ? 15 : 5);
+
+                    // time to try again... randomized (TODO: Can be difficulty setting?)
+                    m_TIMER_additionalUnitsCooldown += rnd(15);
+
+                    log(fmt::format("mayBuildAdditionalResources(): Will attempt to build additional resources. Chance = {}, new coolDown = {}", chance, m_TIMER_additionalUnitsCooldown));
+
                     // build units, as long as we have some money on the bank.
                     // these units are produced without a mission.
                     if (rnd(100) < chance) {
@@ -481,7 +491,7 @@ namespace brains {
         if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             produceMissionsDuringPeacetime(scoutingUnitType);
         } else if (m_state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-            produceAttackingMissions();
+            produceMissionsWhenEnemyDetected();
         }
     }
 
@@ -547,7 +557,7 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainSkirmish::produceAttackingMissions() {
+    void cPlayerBrainSkirmish::produceMissionsWhenEnemyDetected() {
         if (!hasMission(MISSION_ATTACK1)) {
             produceSkirmishGroundAttackMission(MISSION_ATTACK1);
         } else if (!hasMission(MISSION_ATTACK2)) {
@@ -556,6 +566,26 @@ namespace brains {
             produceSkirmishGroundAttackMission(MISSION_ATTACK3);
         } else if (!hasMission(MISSION_ATTACK4)) {
             produceSkirmishGroundAttackMission(MISSION_ATTACK4);
+        }
+
+        if (!hasMission(MISSION_GUARDFORCE) && player->canBuildUnitBool(QUAD) && player->canBuildUnitBool(TANK)) {
+            // add a minimum defending force
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = QUAD,
+                    .required = 1,
+                    .ordered = 0,
+                    .produced = 0,
+            });
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = TANK,
+                    .required = 2,
+                    .ordered = 0,
+                    .produced = 0,
+            });
+            addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
         }
 
         // separate mission for air attacks
@@ -817,26 +847,38 @@ namespace brains {
         changeEconomyStateTo(state);
     }
 
+    int cPlayerBrainSkirmish::calculateEconomyScore() {
+        int credits = player->getCredits();
+        int idealMoneyCount = 1500;
+        int economyScore = ((credits / (float)idealMoneyCount) * 100);
+        if (economyScore > 100) {
+            economyScore = 100;
+        }
+
+        log(fmt::format("calculateEconomyScore -> ideal = {}, current = {}, moneyScore = {}, m_economyScore = {}",
+                        idealMoneyCount, credits, economyScore, m_economyScore));
+
+        return economyScore;
+    }
     ePlayerBrainSkirmishEconomyState cPlayerBrainSkirmish::determineEconomyState() {
         // positive development...
-        int credits = player->getCredits();
+        int economyScore = calculateEconomyScore();
 
-        int idealMoneyCount = 1000;
-        int economyStateBasedOnMoney = ((credits / (float)idealMoneyCount)*100);
-        if (economyStateBasedOnMoney > 100) {
-            economyStateBasedOnMoney = 100;
-        }
+        // first check how 'far' the desired score is from the current score
+        int distance = abs(m_economyScore - economyScore);
+
+        int delta = distance/5;
+        if (delta < 1) delta = 1;
 
         // at first, decrease badness of economy by default
-        if (m_economyScore < economyStateBasedOnMoney) {
-            m_economyScore += 3;
+        if (m_economyScore < economyScore) {
+            m_economyScore += delta;
         }
-        if (m_economyScore > economyStateBasedOnMoney) {
-            m_economyScore--;
+        if (m_economyScore > economyScore) {
+            m_economyScore -= delta;
         }
 
-        log(fmt::format("determineEconomyState -> ideal = {}, current = {}, moneyScore = {}, m_economyScore = {}",
-                        idealMoneyCount, credits, economyStateBasedOnMoney, m_economyScore));
+        log(fmt::format("determineEconomyState -> economyScore = {}, m_economyScore = {}, distance = {}, delta = {}", economyScore, m_economyScore, distance, delta));
 
         // Evaluate economy score
         if (m_economyScore < 15) {
@@ -853,11 +895,6 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_EndGame() {
-        // ...
-//    char msg[255];
-//    sprintf(msg, "cPlayerBrainSkirmish::thinkState_EndGame(), for player [%d]", player->getId());
-//    logbook(msg);
-
         bool foundIdleUnit = false;
         std::vector<int> ids = player->getAllMyUnits();
         for (auto &id : ids) {
@@ -1433,18 +1470,22 @@ namespace brains {
         return false;
     }
 
-    bool cPlayerBrainSkirmish::allMissionsAreDoneGatheringResources() {
-        for (auto &mission : m_missions) {
-            if (!mission.isDoneGatheringResources()) {
-                return false;
-            }
+    bool cPlayerBrainSkirmish::mayBuildAdditionalResources() {
+        if (m_TIMER_additionalUnitsCooldown > 0) {
+            m_TIMER_additionalUnitsCooldown--;
+            log(fmt::format("mayBuildAdditionalResources() cooldown in effect ({})", m_TIMER_additionalUnitsCooldown));
+            return false;
         }
-        return true;
+
+        bool goodEconomy = m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL ||
+                m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD;
+
+        return goodEconomy && rnd(100) < m_eagernessToBuildRandomUnits;
     }
 
     void cPlayerBrainSkirmish::thinkFast() {
         for (auto &mission : m_missions) {
-            mission.think();
+            mission.thinkFast();
         }
     }
 

@@ -78,6 +78,12 @@ namespace brains {
 
         int m_TIMER_ai;
 
+        int m_TIMER_mayBuildAdditionalUnits;
+
+        int m_TIMER_additionalUnitsCooldown;
+
+        int m_eagernessToBuildRandomUnits;
+
         int m_centerOfBaseCell;
 
         // at which cells did we detect an enemy? Remember those.
@@ -111,7 +117,7 @@ namespace brains {
 
         void changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState& newState);
 
-        bool allMissionsAreDoneGatheringResources();
+        bool mayBuildAdditionalResources();
 
         static const char* ePlayerBrainSkirmishThinkStateString(const ePlayerBrainSkirmishThinkState &state) {
             switch (state) {
@@ -192,7 +198,7 @@ namespace brains {
 
         void produceMissionsDuringPeacetime(int scoutingUnitType);
 
-        void produceAttackingMissions();
+        void produceMissionsWhenEnemyDetected();
 
         void produceSuperWeaponMissionsWhenApplicable();
 
@@ -201,6 +207,8 @@ namespace brains {
         void respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
 
         ePlayerBrainSkirmishEconomyState determineEconomyState();
+
+        int calculateEconomyScore();
     };
 
 }
