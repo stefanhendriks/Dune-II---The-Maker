@@ -60,6 +60,16 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
     cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
     gui_btn_Back->setOnLeftMouseButtonClickedAction(action);
     gui_window->addGuiObject(gui_btn_Back);
+
+    // EXIT
+    rows = 3;
+    int toMissionSelect = mainMenuHeight - ((buttonHeight*rows)+(margin*rows));// 424
+    const cRectangle &toMissionSelectRect = gui_window->getRelativeRect(margin, toMissionSelect, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select", buttonKinds);
+    gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
+    cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+    gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action3);
+    gui_window->addGuiObject(gui_btn_toMissionSelect);
 }
 
 cOptionsState::~cOptionsState() {

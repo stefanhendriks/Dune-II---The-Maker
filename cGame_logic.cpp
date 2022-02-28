@@ -22,6 +22,7 @@
 #include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cMainMenuGameState.h"
+#include "gamestates/cSelectMissionState.h"
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishGameState.h"
@@ -1102,7 +1103,7 @@ void cGame::setState(int newState) {
         if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
             deleteOldState = false; // don't delete credits, so we keep the crawler info
         }
-        if (newState == GAME_OPTIONS) {
+        if (newState == GAME_OPTIONS || newState == GAME_MISSIONSELECT) {
             deleteOldState = true; // delete old options state everytime
         }
 
@@ -1162,6 +1163,11 @@ void cGame::setState(int newState) {
                 newStatePtr = new cMainMenuGameState(*this);
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
+            } else if (newState == GAME_MISSIONSELECT) {
+                m_mouse->setTile(MOUSE_NORMAL);
+                BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
+                newStatePtr = new cSelectMissionState(*this, background, GAME_OPTIONS);
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
@@ -1171,8 +1177,16 @@ void cGame::setState(int newState) {
                 } else {
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
+
+                int previousState = m_state;
+
+                cGameState *pState = m_states[GAME_PLAYING];
+                if (pState) {
+                    previousState = GAME_PLAYING;
+                }
+
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, background, m_state);
+                newStatePtr = new cOptionsState(*this, background, previousState);
             } else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
                     // we came from options menu, notify mouse

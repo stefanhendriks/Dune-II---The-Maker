@@ -13,6 +13,7 @@ enum eGameStateType {
     GAMESTATE_SELECT_YOUR_NEXT_CONQUEST,
     GAMESTATE_OPTIONS,
     GAMESTATE_SETUP_SKIRMISH_GAME,
+    GAMESTATE_MISSION_SELECT,
 };
 
 class cGameState : cInputObserver {
