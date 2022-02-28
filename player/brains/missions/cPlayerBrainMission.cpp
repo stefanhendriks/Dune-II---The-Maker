@@ -180,7 +180,8 @@ namespace brains {
         // since we are assembling resources, listen to these events.
         if (event.player == player) {
             // it is an event about my own stuff
-            if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
+            if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES ||
+                state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
                 // unit got created, not reinforced
                 if (event.entityType == UNIT && !event.isReinforce) {
                     cUnit &entityUnit = unit[event.entityID];
