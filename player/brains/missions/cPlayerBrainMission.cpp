@@ -581,9 +581,16 @@ namespace brains {
      * @return
      */
     bool cPlayerBrainMission::isDoneGatheringResources() {
-        return state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES &&
-                state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY &&
-                state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES;
+        if (kind == PLAYERBRAINMISSION_IMPROVE_ECONOMY ||
+            kind == PLAYERBRAINMISSION_KIND_ATTACK ||
+            kind == PLAYERBRAINMISSION_KIND_DEFEND ||
+            kind == PLAYERBRAINMISSION_KIND_HARASS) {
+            return state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES &&
+                   state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY &&
+                   state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES;
+        }
+        // by default a missions is "done"
+        return true;
     }
 
     void cPlayerBrainMission::log(const char *txt) {
