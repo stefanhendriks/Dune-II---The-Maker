@@ -78,6 +78,8 @@ namespace brains {
 
         int m_TIMER_ai;
 
+        int m_MOMENT_whenToBuildAdditionalRefinery;
+
         int m_TIMER_mayBuildAdditionalUnits;
 
         int m_TIMER_additionalUnitsCooldown;
@@ -85,6 +87,11 @@ namespace brains {
         int m_eagernessToBuildRandomUnits;
 
         int m_centerOfBaseCell;
+
+        int m_idealRefineriesCount;
+        int m_idealHarvesterCount;
+        int m_idealCarryallCount;
+        int m_idealOrnisCount;
 
         // at which cells did we detect an enemy? Remember those.
         std::set<int> m_discoveredEnemyAtCell;

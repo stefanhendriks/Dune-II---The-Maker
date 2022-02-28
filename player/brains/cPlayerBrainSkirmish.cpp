@@ -24,10 +24,19 @@ namespace brains {
         }
         m_TIMER_produceMissionCooldown = 0;
         m_TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
-        int randomizer = -400 + (rnd(800)); // TODO: base this on difficulty
+
+        // These are all kinds of things we can use to influence AI's behavior
+        int multiplier = 1 + rnd(3); // TODO: base this on difficulty setting?
+        m_MOMENT_whenToBuildAdditionalRefinery = MOMENT_CONSIDER_ADDITIONAL_REFINERY * multiplier;
+        int randomizer = -400 + (rnd(800)); // TODO: base this on difficulty setting?
         m_TIMER_mayBuildAdditionalUnits = MOMENT_PRODUCE_ADDITIONAL_UNITS + randomizer;
         m_TIMER_additionalUnitsCooldown = 0;        
         m_eagernessToBuildRandomUnits = 15; // TODO: base this on difficulty setting?
+        m_idealRefineriesCount = 2 + rnd(2); // TODO: base this on difficulty setting?
+        m_idealHarvesterCount = m_idealRefineriesCount * 2 + rnd(2); // TODO: base this on difficulty setting?
+        m_idealCarryallCount = 2 + rnd(2); // TODO: base this on difficulty setting?
+        m_idealOrnisCount = rnd(5); // TODO: base this on difficulty setting?
+
         m_myBase = std::vector<S_structurePosition>();
         m_buildOrders = std::vector<S_buildOrder>();
         m_discoveredEnemyAtCell = std::set<int>();
@@ -370,7 +379,7 @@ namespace brains {
         if (m_TIMER_ai > m_TIMER_mayBuildAdditionalUnits) {
             if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
                 // build additional harvesters and carryalls
-                if (player->getAmountOfUnitsForType(HARVESTER) < 3) {
+                if (player->getAmountOfUnitsForType(HARVESTER) < 2) {
                     buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
                 }
                 if (player->getAmountOfUnitsForType(CARRYALL) < 1) {
@@ -378,10 +387,10 @@ namespace brains {
                 }
             } else if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
                 // build additional harvesters and carryalls
-                if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                if (player->getAmountOfUnitsForType(HARVESTER) < m_idealHarvesterCount) {
                     buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
                 }
-                if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                if (player->getAmountOfUnitsForType(CARRYALL) < m_idealCarryallCount) {
                     buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
                 }
             } else {
@@ -422,17 +431,17 @@ namespace brains {
                         }
                     }
                     if (rnd(100) < chance) {
-                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
+                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < m_idealOrnisCount) {
                             buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
                         }
                     }
                     if (rnd(100) < chance) {
-                        if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                        if (player->getAmountOfUnitsForType(HARVESTER) < m_idealHarvesterCount) {
                             buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
                         }
                     }
                     if (rnd(100) < chance) {
-                        if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                        if (player->getAmountOfUnitsForType(CARRYALL) < m_idealCarryallCount) {
                             buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
                         }
                     }
@@ -1327,7 +1336,7 @@ namespace brains {
 
         if (!player->hasAtleastOneStructure(REFINERY))      return REFINERY;
         if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE || m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
-            if (player->getAmountOfStructuresForType(REFINERY) < 3) {
+            if (player->getAmountOfStructuresForType(REFINERY) < 2) {
                 return REFINERY;
             }
         }
@@ -1337,9 +1346,9 @@ namespace brains {
             return -1;
         }
 
-        if (m_TIMER_ai > MOMENT_CONSIDER_ADDITIONAL_REFINERY) {
+        if (m_TIMER_ai > m_MOMENT_whenToBuildAdditionalRefinery) {
             // time to think about an additional refinery
-            if (rnd(100) < 50 && player->getAmountOfStructuresForType(REFINERY) < 3) {
+            if (rnd(100) < 50 && player->getAmountOfStructuresForType(REFINERY) < m_idealRefineriesCount) {
                 // build one
                 return REFINERY;
             }
