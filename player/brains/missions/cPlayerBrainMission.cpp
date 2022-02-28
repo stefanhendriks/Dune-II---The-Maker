@@ -37,6 +37,7 @@ namespace brains {
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
                 missionKind = new cPlayerBrainMissionKindSaboteur(player, this);
                 specialEventMakesStateSwitchToSelectTarget = true;
+                missionWithUnits = false; // saboteur is like fremen
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND:
                 missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
