@@ -506,15 +506,21 @@ namespace brains {
         } else {
             log("Done with waiting for resources.");
             // we're done waiting...
-            if (units.empty()) {
-                log("No units attached to mission, setting to ENDED state.");
-                // end mission, when we have no units to work with
-                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
+            if (missionWithUnits) {
+                if (units.empty()) {
+                    log("No units attached to mission, setting to ENDED state.");
+                    // end mission, when we have no units to work with
+                    changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
+                } else {
+                    log("Units are attached to mission (see log lines after this), setting to PLAYERBRAINMISSION_STATE_SELECT_TARGET state.");
+                    logUnits();
+                    // execute missions with what we have, so just select a target and go!
+                    changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+                }
             } else {
-                log("Units are attached to mission (see log lines after this), setting to PLAYERBRAINMISSION_STATE_SELECT_TARGET state.");
-                logUnits();
-                // execute missions with what we have, so just select a target and go!
-                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+                // wait for 10 minutes again (arbitrary) - will proceed based on events anyway
+                int msForOneMinute = 1000 * 60;
+                TIMER_awaitingGatheringResoures += fastThinkMsToTicks(msForOneMinute*10);
             }
         }
     }
