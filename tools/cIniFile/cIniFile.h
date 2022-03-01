@@ -16,6 +16,7 @@ public:
     bool IsEmpty() const { return m_sectionConf.empty(); }
     //std::string getName() const { return m_sectionName; }
     std::string getValue(const std::string& key) const;
+    std::string getData() const;    
     std::list<std::string> getAllKey() const;
     bool addValue(const std::string& key, const std::string& value);
     bool addData(const std::string& data);
@@ -32,16 +33,16 @@ public:
     explicit cIniFile(const std::string& configFileName);
     ~cIniFile();
     bool load(const std::string& configFileName);
-    bool save(const std::string& savepath);
+    //bool save(const std::string& savepath);
     std::string getStr(const std::string& section, const std::string& key) const;
     int getInt(const std::string& section, const std::string& key) const;
     double getDouble(const std::string& section, const std::string& key) const;
     bool getBoolean(const std::string& section, const std::string& key) const;
 
-    std::list<std::string> getKeyFromSection(const std::string& section ) const; 
-    std::list<std::string> getSectionsFromIni() const;
+    // std::list<std::string> getKeyFromSection(const std::string& section ) const; 
+    // std::list<std::string> getSectionsFromIni() const;
 private:
-    template<typename T> T FromString(const std::string& section, const std::string& key) const;
+    template<typename T> T FromString(const std::string& value) const;
     std::string getSectionName(std::string inputLine);
 
     bool isSectionName(std::string inputLine);
