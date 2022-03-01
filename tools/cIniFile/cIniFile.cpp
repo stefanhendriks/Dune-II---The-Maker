@@ -101,7 +101,7 @@ bool cIniFile::load(const std::string& config)
         }
 
         //none from forward so string is a data from section
-        if (m_actualSection.empty()) {
+        if (!m_actualSection.empty()) {
             m_mapConfig[m_actualSection].addData(line);
             continue;
         }
