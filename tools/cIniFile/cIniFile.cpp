@@ -3,14 +3,11 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
-
 
 static void Trim(std::string& str)
 {
     str.erase(str.find_last_not_of(" \t")+1);         //suffixing spaces
     str.erase(0, str.find_first_not_of(" \t"));       //prefixing spaces
-   // return str;
 }
 
 
@@ -33,7 +30,7 @@ cSection::cSection(const std::string& secName) : m_sectionName(secName)
 bool cSection::addValue(const std::string& key, const std::string& value)
 {
     if (m_sectionConf.find(value) != m_sectionConf.end()) {
-        std::cout << "Key already exist" << std::endl;
+        std::cout << "Key " << key << " already exist on section " << m_sectionName << std::endl;
         return false;
     }
     m_sectionConf[key] = value;
@@ -53,8 +50,8 @@ std::string cSection::getValue(const std::string& key) const
     if (m_sectionConf.find(key) != m_sectionConf.end()) {
         return m_sectionConf.at(key);
     } else {
-        std::cout << "key didn't exist" << std::endl;
-        return string();
+        std::cout << "key " << key << " didn't exist on section " << m_sectionName << std::endl;
+        return std::string();
     }
 }
 
@@ -70,12 +67,12 @@ cIniFile::cIniFile(const std::string &configFileName)
 cIniFile::~cIniFile(void) { }
 
 
-bool cIniFile::load(const string& config)
+bool cIniFile::load(const std::string& config)
 {
     m_fileName = config;
     std::ifstream in(m_fileName.c_str());
     if (!in) {
-        std::cout << "unable to open file" << std::endl;
+        std::cout << "unable to open file " << m_fileName << std::endl;
         return false;
     }
     std::string line, secName, lastSecName;
@@ -91,7 +88,7 @@ bool cIniFile::load(const string& config)
         if (isSectionName(line) && !m_actualSection.empty()) {
             // test if already exist
             if (m_mapConfig.find(m_actualSection) != m_mapConfig.end()) {
-                std::cout << "section already exist" << std::endl;
+                std::cout << "section " << m_actualSection << " already exist" << std::endl;
                 continue;
             }
             m_mapConfig[m_actualSection] = cSection(m_actualSection);
@@ -118,11 +115,11 @@ bool cIniFile::load(const string& config)
 bool cIniFile::isSectionName(std::string inputLine)
 {
     size_t sec_begin_pos = inputLine.find('[');
-    if (sec_begin_pos == string::npos || sec_begin_pos != 0){
+    if (sec_begin_pos == std::string::npos || sec_begin_pos != 0){
         return false;
     }
     size_t sec_end_pos = inputLine.find(']', sec_begin_pos);
-    if (sec_end_pos == string::npos){
+    if (sec_end_pos == std::string::npos){
         return false;
     }
 
@@ -131,19 +128,19 @@ bool cIniFile::isSectionName(std::string inputLine)
     return true;
 }
 
-bool cIniFile::isKeyValue(string inputLine)
+bool cIniFile::isKeyValue(std::string inputLine)
 {
     size_t keyPos = inputLine.find('=');
-    if (keyPos == string::npos || keyPos == 0 || keyPos == inputLine.length()-1 ){
+    if (keyPos == std::string::npos || keyPos == 0 || keyPos == inputLine.length()-1 ){
         m_actualKey.clear();
         m_actualValue.clear();
         return false;
     }
-    string key = inputLine.substr(0, keyPos);
+    std::string key = inputLine.substr(0, keyPos);
     Trim(key);
     m_actualKey = key;
 
-    string value = inputLine.substr(keyPos+1);
+    std::string value = inputLine.substr(keyPos+1);
     Trim(value);
     m_actualValue = value;
 
@@ -160,8 +157,8 @@ std::string cIniFile::getStr(const std::string& section, const std::string& key)
     if (m_mapConfig.find(section) != m_mapConfig.end()) {
         return m_mapConfig.at(section).getValue(key);
     } else {
-        std::cout << "section didn't exist" << std::endl;
-        return string();
+        std::cout << " getStr section " << section << " didn't exist" << std::endl;
+        return std::string();
     }
 }
 
