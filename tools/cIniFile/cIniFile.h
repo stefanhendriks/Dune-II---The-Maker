@@ -14,7 +14,6 @@ public:
     cSection(const std::string& secName);
     ~cSection();
     bool IsEmpty() const { return m_sectionConf.empty(); }
-    //std::string getName() const { return m_sectionName; }
     std::string getValue(const std::string& key) const;
     std::string getData() const;    
     std::list<std::string> getAllKey() const;
