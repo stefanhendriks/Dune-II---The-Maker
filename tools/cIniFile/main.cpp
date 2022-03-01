@@ -22,5 +22,15 @@ int main()
     std::cout << "param3 " << str4 << std::endl;
     std::cout << "param4 as int " << str5 << std::endl;
 
+    std::list keyList = cini.getSectionsFromIni();
+    for(list<std::string>::reverse_iterator it = keyList.rbegin(); it != keyList.rend(); it++){
+		cout << *it << endl;
+	}
+
+    std::list keySettings = cini.getKeyFromSection("SETTINGS");
+    for(list<std::string>::reverse_iterator it = keySettings.rbegin(); it != keySettings.rend(); it++){
+		cout << " --> " << *it << endl;
+	}
+
     return 0;  
-}  
+}
