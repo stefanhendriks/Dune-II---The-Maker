@@ -1,6 +1,7 @@
 #include "cIniFile.h"
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -154,48 +155,6 @@ bool cIniFile::isKeyValue(string inputLine)
     return true;
 }
 
-bool cIniFile::save(const std::string& savepath)
-{
-    ofstream ou;
-    if (savepath.empty()) {
-        ou.open(m_fileName.c_str());
-    }
-    else {
-        ou.open(savepath.c_str());
-    }
-    ou.clear();
-    /*for (std::string i: m_order_sec)
-        std::cout << i << ' ';
-	for (int i = 0; i < m_order_sec.size(); i++){
-		std::string secname = m_order_sec[i];
-		Section& sec = m_mapConfig[secname];
-		ou << "[" << secname << "]" << endl;
-		map<string, KeyVal> data = sec.GetData();
-
-		for (int j = 0; j < sec.m_key_order.size(); j++) {
-			std::string key = sec.m_key_order[j];
-
-			std::vector<std::string> vprcomm = sec.m_pre_comment[key];
-			std::vector<std::string> vnextcomm = sec.m_next_comment[key];
-			if (vprcomm.size() > 0 ) {
-				for (int k = 0; k < vprcomm.size(); k++){
-					ou << vprcomm[k] << std::endl;
-				}
-			}
-			ou << key << " = " << data[key].Get() << endl;
-			if (vnextcomm.size() > 0 ) {
-				for (int k = 0; k < vnextcomm.size(); k++){
-					ou << vnextcomm[k] << std::endl;
-				}
-			}
-		}
-		ou << endl;
-	}*/
-    ou.close();
-    return true;
-}
-
-
 std::string cIniFile::getStr(const std::string& section, const std::string& key) const
 {
     if (m_mapConfig.find(section) != m_mapConfig.end()) {
@@ -204,4 +163,32 @@ std::string cIniFile::getStr(const std::string& section, const std::string& key)
         std::cout << "section didn't exist" << std::endl;
         return string();
     }
+}
+
+template<typename T> T cIniFile::FromString(const std::string& value) const
+{
+    std::istringstream ss(value);
+    T res;
+    ss >> res;
+    return res;
+}
+
+int cIniFile::getInt(const std::string& section, const std::string& key) const
+{
+    return FromString<int>(getStr(section, key));
+}
+
+double cIniFile::getDouble(const std::string& section, const std::string& key) const
+{
+    return FromString<double>(getStr(section, key));
+}
+
+bool cIniFile::getBoolean(const std::string& section, const std::string& key) const
+{
+    std::string value = getStr(section, key);
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c){ return std::tolower(c); });
+    if (value == "on" || value== "1" || value == "true")
+        return true;
+
+    return false;    
 }
