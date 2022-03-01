@@ -38,8 +38,8 @@ public:
     double getDouble(const std::string& section, const std::string& key) const;
     bool getBoolean(const std::string& section, const std::string& key) const;
 
-    // std::list<std::string> getKeyFromSection(const std::string& section ) const; 
-    // std::list<std::string> getSectionsFromIni() const;
+    std::list<std::string> getKeyFromSection(const std::string& section ) const; 
+    std::list<std::string> getSectionsFromIni() const;
 private:
     template<typename T> T FromString(const std::string& value) const;
     std::string getSectionName(std::string inputLine);

@@ -55,6 +55,16 @@ std::string cSection::getValue(const std::string& key) const
     }
 }
 
+std::list<std::string> cSection::getAllKey() const
+{
+    std::list<std::string> mList;
+    for (auto& x: m_sectionConf) {
+        mList.push_back(x.first);
+    }
+    return mList;
+}
+
+
 //
 // cIniFile class
 //
@@ -188,4 +198,22 @@ bool cIniFile::getBoolean(const std::string& section, const std::string& key) co
         return true;
 
     return false;    
+}
+
+std::list<std::string> cIniFile::getSectionsFromIni() const
+{
+    std::list<std::string> mList;
+    for (auto& x: m_mapConfig) {
+        mList.push_back(x.first);
+    }
+    return mList;
+}
+
+
+std::list<std::string> cIniFile::getKeyFromSection(const std::string& section ) const
+{
+    std::list<std::string> mList;
+    if (m_mapConfig.find(section) != m_mapConfig.end())
+        mList = m_mapConfig.at(section).getAllKey();
+    return mList;    
 }
