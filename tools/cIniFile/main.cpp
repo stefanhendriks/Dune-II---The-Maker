@@ -6,14 +6,14 @@ using namespace std;
   
 int main()  
 {  
-    cIniFile cini("./test.ini");  
+    cIniFile cini("./game.ini");  
   
-    std::string str1 = cini.getStr("system","param1");
-    std::string str2 = cini.getStr("system","param2");
-    std::string str3 = cini.getStr("system","param3");
+    std::string str1 = cini.getStr("UNIT: SANDWORM","Appetite");
+    std::string str2 = cini.getStr("UNIT: RAIDER","AttackFrequency");
+    std::string str3 = cini.getStr("STRUCTURE: 4SLAB","Cost");
     
-    std::string str4 = cini.getStr("config","param3");
-    int str5 = cini.getInt("config","param4");
+    std::string str4 = cini.getStr("SETTINGS","ScreenWidth");
+    int str5 = cini.getInt("SETTINGS","ScreenHeight");
 
     std::cout << "param1 " << str1 << std::endl;
     std::cout << "param2 " << str2 << std::endl;
