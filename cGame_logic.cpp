@@ -48,6 +48,7 @@
 
 #include "utils/cFileNameSettings.hpp"
 #include "utils/cHandleArgument.h"
+#include "utils/cIniFile.h"
 
 
 #include <allegro.h>
@@ -719,17 +720,20 @@ bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
 
-    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>("data");
-    {   // not harcoded here but extract from ini file ...
+    std::unique_ptr<cIniFile> conf = std::make_unique<cIniFile>("settings.ini");
+
+    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(conf->getStr("SETTINGS","dataRepertory"));
+    {
         std::map<EFILENAME, std::string> m_transfertMap;
-        m_transfertMap[EFILENAME::ARRAKEEN] = "arrakeen.fon";
-        m_transfertMap[EFILENAME::BENEGESS] = "benegess.fon";
-        m_transfertMap[EFILENAME::SMALL] = "small.ttf";
-        m_transfertMap[EFILENAME::GFXDATA] = "gfxdata.dat";
-        m_transfertMap[EFILENAME::GFXINTER] = "gfxinter.dat";
-        m_transfertMap[EFILENAME::GFXWORLD] = "gfxworld.dat";
-        m_transfertMap[EFILENAME::GFXMENTAT] = "gfxmentat.dat";
-        m_transfertMap[EFILENAME::GFXAUDIO] = "gfxaudio.dat";
+        m_transfertMap[EFILENAME::ARRAKEEN] = conf->getStr("FONT","ARRAKEEN"); 
+        m_transfertMap[EFILENAME::BENEGESS] = conf->getStr("FONT","BENEGESS");
+        m_transfertMap[EFILENAME::SMALL] = conf->getStr("FONT","SMALL");
+        
+        m_transfertMap[EFILENAME::GFXDATA] = conf->getStr("DATAFILE", "GFXDATA");
+        m_transfertMap[EFILENAME::GFXINTER] = conf->getStr("DATAFILE", "GFXINTER");
+        m_transfertMap[EFILENAME::GFXWORLD] = conf->getStr("DATAFILE", "GFXWORLD");
+        m_transfertMap[EFILENAME::GFXMENTAT] = conf->getStr("DATAFILE", "GFXMENTAT");
+        m_transfertMap[EFILENAME::GFXAUDIO] = conf->getStr("DATAFILE", "GFXAUDIO");
         m_fileName->addRessources(std::move(m_transfertMap));
     }
     if (!m_fileName->fileExists()) {
