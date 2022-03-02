@@ -28,7 +28,7 @@ private:
 class cIniFile
 {
 public:
-    cIniFile(){};
+    cIniFile();
     explicit cIniFile(const std::string& configFileName);
     ~cIniFile();
     bool load(const std::string& configFileName);

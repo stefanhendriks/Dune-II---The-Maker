@@ -74,7 +74,7 @@ cIniFile::cIniFile(const std::string &configFileName)
     load(m_fileName);
 }
 
-cIniFile::~cIniFile(void) { }
+cIniFile::~cIniFile() { }
 
 
 bool cIniFile::load(const std::string& config)
