@@ -9,6 +9,8 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
+#include "gui/actions/cGuiActionToGameState.h"
+#include "gui/cGuiButton.h"
 
 #include <allegro.h>
 
@@ -28,6 +30,22 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
 
     regionMouseIsHoveringOver = -1;
     isFinishedConqueringRegions = true;
+
+    // the quick-way to get to a mission select window
+    const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
+    const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
+
+    cTextDrawer textDrawer(bene_font);
+    int length = textDrawer.textLength("Mission select");
+    const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenX - length,
+                                                                       game.m_screenY - textDrawer.getFontHeight(),
+                                                                       "Mission select");
+    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
+                                                         buttonKind);
+    gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
+    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+    gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
+    m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 
 void cSelectYourNextConquestState::calculateOffset() {
@@ -38,6 +56,7 @@ void cSelectYourNextConquestState::calculateOffset() {
 cSelectYourNextConquestState::~cSelectYourNextConquestState() {
     destroy_bitmap(regionClickMapBmp);
     destroy();
+    delete m_guiBtnToMissionSelect;
 }
 
 void cSelectYourNextConquestState::thinkFast() {
@@ -53,7 +72,7 @@ void cSelectYourNextConquestState::thinkFast() {
         // we substract the offset from mouse coordinates to compensate
         draw_sprite(regionClickMapBmp, (BITMAP *) gfxworld[WORLD_DUNE_CLICK].dat, 16, 73);
 
-        state = eRegionState::REGSTATE_INTRODUCTION;
+        state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
         return;
     }
 
@@ -217,6 +236,8 @@ void cSelectYourNextConquestState::draw() const {
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
     drawManager->drawMessageBar();
+
+    m_guiBtnToMissionSelect->draw();
 
     drawManager->drawMouse();
 }
@@ -401,7 +422,6 @@ void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int i
 
     // Per mission assign:
     // Every house has a different campaign, so...
-
     INI_Load_Regionfile(iHouse, iMission, this);
 
     selectNextConquestAlpha = 1;
@@ -553,6 +573,7 @@ eGameStateType cSelectYourNextConquestState::getType() {
 }
 
 void cSelectYourNextConquestState::conquerRegions() {
+    fastForward = false;
     state = REGSTATE_CONQUER_REGIONS;
 }
 
@@ -581,6 +602,9 @@ void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
         default:
             break;
     }
+    // WARNING: m_guiBtnToMissionSelect can trigger fast-forward. That will destroy this state object,
+    // so it will crash if you do anything beyond here with this object!!
+    m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
 }
 
 void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event) {
@@ -610,6 +634,28 @@ void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &e
     if (event.eventType == eKeyEventType::PRESSED) {
         if (event.hasKey(KEY_ESC)) {
             game.setNextStateToTransitionTo(GAME_OPTIONS);
+        }
+    }
+}
+
+void cSelectYourNextConquestState::fastForwardUntilMission(int missionNr, int house) {
+    fastForward = true;
+    for (int m = 1; m < missionNr; m++) {
+        REGION_SETUP_NEXT_MISSION(m, house);
+
+        for (int i = 0; i < MAX_REGIONS; i++) {
+            if (iRegionConquer[i] < 0) continue;
+            int houseThatConquersTheRegion = iRegionHouse[i];
+            if (houseThatConquersTheRegion < 0) continue;
+
+            int iRegNr = iRegionConquer[i];
+
+            cRegion &region = world[iRegNr];
+
+            region.iAlpha = 255;
+            region.iHouse = houseThatConquersTheRegion;
+
+            iRegionConquer[i] = -1;
         }
     }
 }

@@ -48,6 +48,8 @@ public:
 	cGame();
 	~cGame();
 
+    void jumpToSelectYourNextConquestMission(int missionNr);
+
     void setGameFilename(const std::string& filename) {
         m_gameFilename = filename;
     }
