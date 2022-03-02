@@ -5,6 +5,7 @@
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/cGuiButton.h"
 #include "gui/cGuiWindow.h"
+#include "gui/actions/cGuiActionSelectMission.h"
 
 #include <allegro/gfx.h>
 
@@ -39,12 +40,13 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, BITMAP *background, int
     int width = buttonWidth;
 
     int y = 40;
-    for (int i = 1; i <= 9; i++) {
+    for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
-        cGuiButton *gui_btn_Quit = new cGuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
-        gui_btn_Quit->setTextAlignHorizontal(buttonTextAlignment);
-    //    gui_btn_Quit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
-        gui_window->addGuiObject(gui_btn_Quit);
+        cGuiButton *btnMission = new cGuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
+        btnMission->setTextAlignHorizontal(buttonTextAlignment);
+        btnMission->setOnLeftMouseButtonClickedAction(new cGuiActionSelectMission(i));
+        gui_window->addGuiObject(btnMission);
+
         y += buttonHeight + margin;
     }
 

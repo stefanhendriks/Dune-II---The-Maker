@@ -1085,6 +1085,30 @@ bool cGame::isState(int thisState) const {
     return (m_state == thisState);
 }
 
+void cGame::jumpToSelectYourNextConquestMission(int missionNr) {
+    cGameState *existingStatePtr = m_states[GAME_REGION];
+    if (existingStatePtr) {
+        delete existingStatePtr;
+        m_states[GAME_REGION] = nullptr;
+    }
+
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+    m_states[GAME_REGION] = pState;
+
+    pState->calculateOffset();
+    pState->INSTALL_WORLD();
+
+    cPlayer &humanPlayer = players[HUMAN];
+    int missionZeroBased = missionNr - 1;
+    m_mission = missionZeroBased;
+
+    // a 'missionX.ini' file is from 1 til (including) 8
+    // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
+    // meaning we have to use the 'zero based' value here
+    pState->fastForwardUntilMission(missionZeroBased, humanPlayer.getHouse());
+    pState->REGION_SETUP_NEXT_MISSION(missionZeroBased, humanPlayer.getHouse());
+}
+
 void cGame::setState(int newState) {
     if (newState == m_state) {
         // ignore
@@ -1098,15 +1122,13 @@ void cGame::setState(int newState) {
                                newState != GAME_PLAYING &&
                                newState != GAME_OPTIONS); // don't delete these m_states, but re-use!
 
-//        if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
-//            deleteOldState = false; // so we don't lose data when we go back
-//        }
-//
-//        if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
-//            deleteOldState = false; // don't delete credits, so we keep the crawler info
-//        }
-
         if (newState == GAME_PLAYING) {
+            // make sure to delete options menu now
+            delete m_states[GAME_OPTIONS];
+            m_states[GAME_OPTIONS] = nullptr;
+        }
+
+        if (newState == GAME_REGION) {
             // make sure to delete options menu now
             delete m_states[GAME_OPTIONS];
             m_states[GAME_OPTIONS] = nullptr;
