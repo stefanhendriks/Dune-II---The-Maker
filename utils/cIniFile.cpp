@@ -10,6 +10,10 @@ static void Trim(std::string& str)
     str.erase(0, str.find_first_not_of(" \t"));       //prefixing spaces
 }
 
+// static std::string strToLower(std::string &value) {
+//     std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c){ return std::tolower(c); });
+//     return value;
+// }
 
 //
 // cSection class
