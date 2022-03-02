@@ -11,7 +11,7 @@ class cGame;
 
 class cOptionsState : public cGameState {
   public:
-    cOptionsState(cGame& theGame, BITMAP *background, int prevState);
+    explicit cOptionsState(cGame& theGame, BITMAP *background, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -22,12 +22,17 @@ class cOptionsState : public cGameState {
 
     eGameStateType getType() override;
 
+    void setPrevState(int prevState);
+    void refresh();
+
   private:
-    BITMAP *background;
+    BITMAP *m_background;
 
-    int prevState;
+    const cTextDrawer m_textDrawer;
 
-    const cTextDrawer textDrawer;
+    int m_prevState;
 
-    cGuiWindow * gui_window;
+    cGuiWindow * m_guiWindow;
+
+    void constructWindow(int prevState);
 };

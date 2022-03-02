@@ -1095,15 +1095,24 @@ void cGame::setState(int newState) {
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
-                               newState != GAME_PLAYING); // don't delete these m_states, but re-use!
+                               newState != GAME_PLAYING &&
+                               newState != GAME_OPTIONS); // don't delete these m_states, but re-use!
 
-        if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
-            deleteOldState = false; // so we don't lose data when we go back
+//        if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
+//            deleteOldState = false; // so we don't lose data when we go back
+//        }
+//
+//        if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
+//            deleteOldState = false; // don't delete credits, so we keep the crawler info
+//        }
+
+        if (newState == GAME_PLAYING) {
+            // make sure to delete options menu now
+            delete m_states[GAME_OPTIONS];
+            m_states[GAME_OPTIONS] = nullptr;
         }
-        if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
-            deleteOldState = false; // don't delete credits, so we keep the crawler info
-        }
-        if (newState == GAME_OPTIONS || newState == GAME_MISSIONSELECT) {
+
+        if (newState == GAME_MISSIONSELECT) {
             deleteOldState = true; // delete old options state everytime
         }
 
@@ -1111,6 +1120,8 @@ void cGame::setState(int newState) {
             delete m_states[newState];
             m_states[newState] = nullptr;
         }
+
+        cPlayer &humanPlayer = players[HUMAN];
 
         cGameState *existingStatePtr = m_states[newState];
 
@@ -1121,7 +1132,7 @@ void cGame::setState(int newState) {
                 // came from a win/lose brief state, so make sure to set up the next state
                 if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
-                    cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
+                    auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
                     if (game.m_mission > 1) {
                         pState->conquerRegions();
@@ -1129,11 +1140,23 @@ void cGame::setState(int newState) {
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
                     } else {
                         // OR: did not win
                         pState->REGION_SETUP_LOST_MISSION();
                     }
+                }
+            } else if (newState == GAME_OPTIONS) {
+                // This feels awkward. For now, I'll keep it (if it works), but this will change
+                // once we have a proper game playing state and we need to transition properly between
+                // states
+
+                auto *pState = dynamic_cast<cOptionsState *>(existingStatePtr);
+                // you cannot 'go back' to mission select
+                if (m_state != GAME_MISSIONSELECT) {
+                    pState->setPrevState(m_state);
+                } else {
+                    pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
 
@@ -1151,7 +1174,7 @@ void cGame::setState(int newState) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
 
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
@@ -1178,23 +1201,16 @@ void cGame::setState(int newState) {
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
 
-                int previousState = m_state;
-
-                cGameState *pState = m_states[GAME_PLAYING];
-                if (pState) {
-                    previousState = GAME_PLAYING;
-                }
-
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, background, previousState);
+                newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
                     // we came from options menu, notify mouse
-                    players[HUMAN].getGameControlsContext()->onFocusMouseStateEvent();
+                    humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
                 } else {
                     // re-create drawManager
                     delete drawManager;
-                    drawManager = new cDrawManager(&players[HUMAN]);
+                    drawManager = new cDrawManager(&humanPlayer);
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
