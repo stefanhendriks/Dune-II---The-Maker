@@ -67,7 +67,7 @@ void cOptionsState::constructWindow(int prevState) {
     m_guiWindow->addGuiObject(gui_btn_Back);
 
     // Mission select from options menu, only when playing the game
-    if (m_prevState != GAME_PLAYING) {
+    if (m_prevState == GAME_PLAYING) {
         rows = 3;
         int toMissionSelect = mainMenuHeight - ((buttonHeight * rows) + (margin * rows));// 424
         const cRectangle &toMissionSelectRect = m_guiWindow->getRelativeRect(margin, toMissionSelect, buttonWidth,
