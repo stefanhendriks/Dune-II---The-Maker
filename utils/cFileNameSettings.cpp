@@ -36,6 +36,10 @@ bool cFileNameSettings::fileExists()
     }
     // test each files
     for (const auto& [key, value] : m_EnumToString) {
+        if (value.empty()) {
+            std::cerr << "file has no name." << std::endl;
+            return false;
+        }
         if (!fs::exists(path + "/" + value)) {
             std::cerr << "file " << value << " not found." << std::endl;
             return false;
