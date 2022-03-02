@@ -1190,7 +1190,7 @@ void cGame::setState(int newState) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cSelectMissionState(*this, background, GAME_OPTIONS);
+                newStatePtr = new cSelectMissionState(*this, background, m_state);
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
@@ -1638,6 +1638,13 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     // pass through any classes that are interested
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
+    }
+
+    if (m_state == GAME_BRIEFING ||
+        m_state == GAME_WINNING ||
+        m_state == GAME_LOSING
+      ) {
+        m_mentat->onNotifyMouseEvent(event);
     }
 }
 

@@ -2,6 +2,9 @@
 
 #include "cAbstractMentat.h"
 
+/**
+ * This seems to be similar to cGuiAction?
+ */
 class cButtonCommand {
     public:
         virtual ~cButtonCommand() = default;
