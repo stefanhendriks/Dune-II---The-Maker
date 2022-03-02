@@ -149,6 +149,16 @@ void cGame::init() {
     INI_Install_Game(m_gameFilename);
 }
 
+void cGame::loadSettings(std::shared_ptr<cIniFile> conf)
+{
+    game.m_iniScreenWidth = conf->getInt("SETTINGS","ScreenWidth");
+    game.m_iniScreenHeight = conf->getInt("SETTINGS","ScreenHeight");
+    game.m_cameraDragMoveSpeed = conf->getDouble("SETTINGS","CameraDragMoveSpeed");
+    game.m_cameraBorderOrKeyMoveSpeed = conf->getDouble("SETTINGS","CameraBorderOrKeyMoveSpeed");
+    game.m_cameraEdgeMove = conf->getBoolean("SETTINGS","CameraEdgeMove");
+    game.m_windowed = !conf->getBoolean("SETTINGS","FullScreen");
+}
+
 // TODO: Bad smell (duplicate code)
 // initialize for missions
 void cGame::missionInit() {
@@ -720,7 +730,7 @@ bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
 
-    std::unique_ptr<cIniFile> conf = std::make_unique<cIniFile>("settings.ini");
+    std::shared_ptr<cIniFile> conf = std::make_shared<cIniFile>("settings.ini");
 
     std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(conf->getStr("SETTINGS","dataRepertory"));
     {
@@ -742,7 +752,7 @@ bool cGame::setupGame() {
     }
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-
+    game.loadSettings(conf);
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
 
