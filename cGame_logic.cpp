@@ -811,6 +811,7 @@ bool cGame::setupGame() {
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
         m_handleArgument->applyArguments(); //Apply command line arguments
+        m_handleArgument.reset();
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
         if (m_windowed) {
@@ -1060,8 +1061,8 @@ bool cGame::setupGame() {
     drawManager = new cDrawManager(&players[HUMAN]);
 
     INI_Install_Game(m_gameFilename);
-    m_handleArgument->applyArguments(); //Apply command line arguments
-    m_handleArgument.reset();
+    // m_handleArgument->applyArguments(); //Apply command line arguments
+    // m_handleArgument.reset();
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
