@@ -31,6 +31,8 @@ int fastThinkMsToTicks(int desiredMs);
 
 void logbook(const std::string& txt);
 
+int makeColFromString(std::string colorStr);
+
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
 
