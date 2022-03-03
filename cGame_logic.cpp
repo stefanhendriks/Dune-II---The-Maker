@@ -737,6 +737,7 @@ bool cGame::setupGame() {
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
     std::shared_ptr<cIniFile> conf = std::make_shared<cIniFile>("settings.ini");
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini");
 
     std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(conf->getStr("SETTINGS","dataRepertory"));
     {
@@ -1043,7 +1044,7 @@ bool cGame::setupGame() {
     logbook("Setup:  BITMAPS");
     install_bitmaps();
     logbook("Setup:  HOUSES");
-    INSTALL_HOUSES();
+    INSTALL_HOUSES(gamesCfg);
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
