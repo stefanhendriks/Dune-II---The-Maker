@@ -34,6 +34,7 @@ class cScreenInit;
 class cHandleArgument;
 class cHousesInfo;
 class cReinforcements;
+class cPreviewMaps;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -108,6 +109,7 @@ public:
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
     void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
+    void prescanSkirmish() const;
     void loadScenario();
 
     void run();			            // run the game (MAIN LOOP)
@@ -265,6 +267,8 @@ private:
     cAllegroDataRepository *m_dataRepository;
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
+
+    std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     std::shared_ptr<cReinforcements> m_reinforcements;
 
