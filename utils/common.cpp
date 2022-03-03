@@ -52,6 +52,15 @@ int fastThinkMsToTicks(int desiredMs) {
     return desiredMs / 5;
 }
 
+
+int makeColFromString(std::string colorStr)
+{
+    int r=0, g=0, b=0;
+    // c version
+    sscanf(colorStr.c_str(),"%i,%i,%i",&r, &g, &b);
+    return makecol(r,g,b);
+}
+
 /********************************
  House Rules
  ********************************/
