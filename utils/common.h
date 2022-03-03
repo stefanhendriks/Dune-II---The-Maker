@@ -14,6 +14,10 @@
 #include "enums.h"
 
 #include <string>
+#include <array>
+#include <memory>
+
+class cIniFile;
 
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
@@ -34,7 +38,7 @@ void logbook(const std::string& txt);
 int makeColFromString(std::string colorStr);
 
 // Installment of properties/settings in the game.
-void INSTALL_HOUSES();
+void INSTALL_HOUSES(std::shared_ptr<cIniFile> gamesCfg);
 
 void INIT_PREVIEWS();
 
