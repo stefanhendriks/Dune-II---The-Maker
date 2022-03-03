@@ -1,7 +1,9 @@
 #include "cIniFile.h"
+#include "cLog.h"
 #include <fstream>
-#include <iostream>
+//#include <iostream>
 #include <algorithm>
+#include <fmt/core.h>
 
 
 static void Trim(std::string& str)
@@ -34,7 +36,9 @@ cSection::cSection(const std::string& secName) : m_sectionName(secName)
 bool cSection::addValue(const std::string& key, const std::string& value)
 {
     if (m_sectionConf.find(value) != m_sectionConf.end()) {
-        std::cout << "Key " << key << " already exist on section " << m_sectionName << std::endl;
+        //std::cout << "Key " << key << " already exist on section " << m_sectionName << std::endl;
+        cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)", fmt::format("Key {} already exist on section {}", key , m_sectionName));
         return false;
     }
     m_sectionConf[key] = value;
@@ -54,7 +58,9 @@ std::string cSection::getValue(const std::string& key) const
     if (m_sectionConf.find(key) != m_sectionConf.end()) {
         return m_sectionConf.at(key);
     } else {
-        std::cout << "key " << key << " didn't exist on section " << m_sectionName << std::endl;
+        //std::cout << "key " << key << " didn't exist on section " << m_sectionName << std::endl;
+        cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)", fmt::format("Key {} didn't exist on section {}", key , m_sectionName));
         return std::string();
     }
 }
@@ -83,10 +89,14 @@ cIniFile::~cIniFile() { }
 
 bool cIniFile::load(const std::string& config)
 {
+    cLogger *logger = cLogger::getInstance();
     m_fileName = config;
+    logger->log(LOG_INFO, COMP_GAMEINI, "(cIniFile)", fmt::format("Load file {}", m_fileName));
     std::ifstream in(m_fileName.c_str());
     if (!in) {
-        std::cout << "unable to open file " << m_fileName << std::endl;
+        // std::cout << "unable to open file " << m_fileName << std::endl;
+        //cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", fmt::format("Unable to open file Key {}", m_fileName));
         return false;
     }
     std::string line, secName, lastSecName;
@@ -102,7 +112,9 @@ bool cIniFile::load(const std::string& config)
         if (isSectionName(line) && !m_actualSection.empty()) {
             // test if already exist
             if (m_mapConfig.find(m_actualSection) != m_mapConfig.end()) {
-                std::cout << "section " << m_actualSection << " already exist" << std::endl;
+                //std::cout << "section " << m_actualSection << " already exist" << std::endl;
+                //cLogger *logger = cLogger::getInstance();
+                logger->log(LOG_WARN, COMP_GAMEINI, "(cIniFile)", fmt::format("section {} already exist", m_actualSection));
                 continue;
             }
             m_mapConfig[m_actualSection] = cSection(m_actualSection);
@@ -121,7 +133,9 @@ bool cIniFile::load(const std::string& config)
         }
 
         //all tests are wrong
-        std::cout << "error " << line << " or no section found" << std::endl;
+        // std::cout << "error " << line << " or no section found" << std::endl;
+        //cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_WARN, COMP_GAMEINI, "(cIniFile)", fmt::format("Error {} or no section found", line));
     }
     return true;
 }
@@ -171,7 +185,10 @@ std::string cIniFile::getStr(const std::string& section, const std::string& key)
     if (m_mapConfig.find(section) != m_mapConfig.end()) {
         return m_mapConfig.at(section).getValue(key);
     } else {
-        std::cout << " getStr section " << section << " didn't exist" << std::endl;
+        // std::cout << " getStr section " << section << " didn't exist" << std::endl;
+        cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", fmt::format(" getStr section {} didn't exist", section));
+
         return std::string();
     }
 }
