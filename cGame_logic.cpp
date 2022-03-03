@@ -729,6 +729,12 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
+    logger->logHeader("Dune II - The Maker");
+    logger->logCommentLine(""); // whitespace
+
+	logger->logHeader("Version information");
+	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
+              fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
     std::shared_ptr<cIniFile> conf = std::make_shared<cIniFile>("settings.ini");
 
@@ -753,12 +759,7 @@ bool cGame::setupGame() {
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
     game.loadSettings(conf);
-    logger->logHeader("Dune II - The Maker");
-    logger->logCommentLine(""); // whitespace
 
-	logger->logHeader("Version information");
-	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
-              fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
     // TODO: load eventual game settings (resolution, etc)
 
