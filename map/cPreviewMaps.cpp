@@ -71,27 +71,25 @@ void cPreviewMaps::INI_LOAD_SKIRMISH(const std::string& filename) {
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
         for (int iX = 0; iX < maxWidth; iX++) {
-            char letter[1];
-            letter[0] = mapLine[iX];
-
+            char letter = mapLine[iX];
             int iCll = map.makeCell((iX + 1), (iY + 1));
 
             int iColor = makecol(194, 125, 60);
             // rock
-            if (letter[0] == '%') iColor = makecol(80, 80, 60);
-            if (letter[0] == '^') iColor = makecol(80, 80, 60);
-            if (letter[0] == '&') iColor = makecol(80, 80, 60);
-            if (letter[0] == '(') iColor = makecol(80, 80, 60);
+            if (letter == '%') iColor = makecol(80, 80, 60);
+            if (letter == '^') iColor = makecol(80, 80, 60);
+            if (letter == '&') iColor = makecol(80, 80, 60);
+            if (letter == '(') iColor = makecol(80, 80, 60);
             // mountain
-            if (letter[0] == 'R') iColor = makecol(48, 48, 36);
-            if (letter[0] == 'r') iColor = makecol(48, 48, 36);
+            if (letter == 'R') iColor = makecol(48, 48, 36);
+            if (letter == 'r') iColor = makecol(48, 48, 36);
             // spicehill
-            if (letter[0] == '+') iColor = makecol(180, 90, 25); // bit darker
+            if (letter == '+') iColor = makecol(180, 90, 25); // bit darker
             // spice
-            if (letter[0] == '-') iColor = makecol(186, 93, 32);
+            if (letter == '-') iColor = makecol(186, 93, 32);
             // HILLS (NEW)
-            if (letter[0] == 'H') iColor = makecol(188, 115, 50);
-            if (letter[0] == 'h') iColor = makecol(188, 115, 50);
+            if (letter == 'H') iColor = makecol(188, 115, 50);
+            if (letter == 'h') iColor = makecol(188, 115, 50);
 
             if (iCll > -1) {
                 if (iColor == makecol(194, 125, 60)) {
@@ -108,7 +106,7 @@ void cPreviewMaps::INI_LOAD_SKIRMISH(const std::string& filename) {
                     PreviewMap[iNew].mapdata[iCll] = TERRAIN_HILL;
                 } else {
                     logbook(fmt::format("iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
-                            letter[0]));
+                            letter));
                     PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
                     iColor = makecol(255, 255, 255);
                 }
