@@ -14,6 +14,13 @@ cPreviewMaps::~cPreviewMaps()
 {}
 
 void cPreviewMaps::prescanSkirmish()
+{
+    INI_PRESCAN_SKIRMISH();
+}
+
+void cPreviewMaps::INI_LOAD_SKIRMISH(const char filename[80]) {
+    std::cout << filename << std::endl;
+}
 
 /*
 Pre-scanning of skirmish maps:
