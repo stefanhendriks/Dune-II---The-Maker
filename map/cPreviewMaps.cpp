@@ -68,77 +68,69 @@ void cPreviewMaps::INI_LOAD_SKIRMISH(const char filename[80]) {
     PreviewMap[iNew].terrain = create_bitmap(128, 128);
     clear_bitmap(PreviewMap[iNew].terrain);
 
-        for (int iY = 0; iY < maxHeight; iY++) {
-            const char *mapLine = vecmap[iY].c_str();
-            for (int iX = 0; iX < maxWidth; iX++) {
-                char letter[1];
-                letter[0] = mapLine[iX];
+    for (int iY = 0; iY < maxHeight; iY++) {
+        const char *mapLine = vecmap[iY].c_str();
+        for (int iX = 0; iX < maxWidth; iX++) {
+            char letter[1];
+            letter[0] = mapLine[iX];
 
-                int iCll = map.makeCell((iX + 1), (iY + 1));
+            int iCll = map.makeCell((iX + 1), (iY + 1));
 
-                //std::cout << iX << "x" << iY << " -> " << iCll <<std::endl;
+            int iColor = makecol(194, 125, 60);
+            // rock
+            if (letter[0] == '%') iColor = makecol(80, 80, 60);
+            if (letter[0] == '^') iColor = makecol(80, 80, 60);
+            if (letter[0] == '&') iColor = makecol(80, 80, 60);
+            if (letter[0] == '(') iColor = makecol(80, 80, 60);
+            // mountain
+            if (letter[0] == 'R') iColor = makecol(48, 48, 36);
+            if (letter[0] == 'r') iColor = makecol(48, 48, 36);
+            // spicehill
+            if (letter[0] == '+') iColor = makecol(180, 90, 25); // bit darker
+            // spice
+            if (letter[0] == '-') iColor = makecol(186, 93, 32);
+            // HILLS (NEW)
+            if (letter[0] == 'H') iColor = makecol(188, 115, 50);
+            if (letter[0] == 'h') iColor = makecol(188, 115, 50);
 
-                int iColor = makecol(194, 125, 60);
-
-                // rock
-                if (letter[0] == '%') iColor = makecol(80, 80, 60);
-                if (letter[0] == '^') iColor = makecol(80, 80, 60);
-                if (letter[0] == '&') iColor = makecol(80, 80, 60);
-                if (letter[0] == '(') iColor = makecol(80, 80, 60);
-
-                // mountain
-                if (letter[0] == 'R') iColor = makecol(48, 48, 36);
-                if (letter[0] == 'r') iColor = makecol(48, 48, 36);
-
-                // spicehill
-                if (letter[0] == '+') iColor = makecol(180, 90, 25); // bit darker
-
-                // spice
-                if (letter[0] == '-') iColor = makecol(186, 93, 32);
-
-                // HILLS (NEW)
-                if (letter[0] == 'H') iColor = makecol(188, 115, 50);
-                if (letter[0] == 'h') iColor = makecol(188, 115, 50);
-
-                if (iCll > -1) {
-                    if (iColor == makecol(194, 125, 60)) {
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
-                    } else if (iColor == makecol(80, 80, 60)) {
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_ROCK;
-                    } else if (iColor == makecol(48, 48, 36)) {
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_MOUNTAIN;
-                    } else if (iColor == makecol(180, 90, 25)) {
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICEHILL;
-                    } else if (iColor == makecol(186, 93, 32)) {
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICE;
-                    } else if (iColor == makecol(188, 115, 50)) {
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_HILL;
-                    } else {
-                        logbook(fmt::format("iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
-                                letter[0]));
-                        PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
-                        iColor = makecol(255, 255, 255);
-                    }
+            if (iCll > -1) {
+                if (iColor == makecol(194, 125, 60)) {
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
+                } else if (iColor == makecol(80, 80, 60)) {
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_ROCK;
+                } else if (iColor == makecol(48, 48, 36)) {
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_MOUNTAIN;
+                } else if (iColor == makecol(180, 90, 25)) {
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICEHILL;
+                } else if (iColor == makecol(186, 93, 32)) {
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICE;
+                } else if (iColor == makecol(188, 115, 50)) {
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_HILL;
+                } else {
+                    logbook(fmt::format("iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
+                            letter[0]));
+                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
+                    iColor = makecol(255, 255, 255);
                 }
-                putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-                putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-                putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-                putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
             }
+            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
+            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
+            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
+            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
         }
+    }
 
-        // starting points
-        for (int i = 0; i < 5; i++) {
-            if (PreviewMap[iNew].iStartCell[i] > -1) {
-                int x = map.getCellX(PreviewMap[iNew].iStartCell[i]);
-                int y = map.getCellY(PreviewMap[iNew].iStartCell[i]);
-
-                putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
-                putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));
-                putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, makecol(255, 255, 255));
-                putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2) + 1, makecol(255, 255, 255));
-            }
+    // starting points
+    for (int i = 0; i < 5; i++) {
+        if (PreviewMap[iNew].iStartCell[i] > -1) {
+            int x = map.getCellX(PreviewMap[iNew].iStartCell[i]);
+            int y = map.getCellY(PreviewMap[iNew].iStartCell[i]);
+            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
+            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));
+            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, makecol(255, 255, 255));
+            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2) + 1, makecol(255, 255, 255));
         }
+    }
 }
 
 /*
