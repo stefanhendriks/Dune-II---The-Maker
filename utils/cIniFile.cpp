@@ -4,9 +4,11 @@
 #include <fmt/core.h>
 #include <algorithm>
 
-static void Trim(std::string &str) {
-    str.erase(str.find_last_not_of(" \t") + 1);       // suffixing spaces
-    str.erase(0, str.find_first_not_of(" \t"));       // prefixing spaces
+
+static void Trim(std::string& str)
+{
+    str.erase(str.find_last_not_of(" \t\"")+1);         //suffixing spaces
+    str.erase(0, str.find_first_not_of(" \t\""));       //prefixing spaces
 }
 
 //
