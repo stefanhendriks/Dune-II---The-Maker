@@ -16,12 +16,7 @@ cPreviewMaps::cPreviewMaps()
 cPreviewMaps::~cPreviewMaps()
 {}
 
-void cPreviewMaps::prescanSkirmish()
-{
-    INI_PRESCAN_SKIRMISH();
-}
-
-void cPreviewMaps::INI_LOAD_SKIRMISH(const std::string& filename) {
+void cPreviewMaps::loadSkirmish(const std::string& filename) {
     // std::cout << filename << std::endl;
 
     int iNew = -1;
@@ -138,23 +133,24 @@ Pre-scanning of skirmish maps:
 - read [SKIRMISH] data (name of map, startcells, etc)
 - create preview of map in BITMAP (minimap preview)
 */
-void cPreviewMaps::INI_PRESCAN_SKIRMISH() {
+void cPreviewMaps::prescanSkirmish()
+{
     // scans for all ini files
-    INIT_PREVIEWS(); // clear all of them
+    initPreviews(); // clear all of them
 
     const std::filesystem::path pathfile{"skirmish"};
     for (auto const& file : std::filesystem::directory_iterator{pathfile}) 
     {
         auto fullname = file.path().string();
         if (file.path().extension()==".ini") {
-            INI_LOAD_SKIRMISH(fullname);
+            loadSkirmish(fullname);
             logbook(fmt::format("Loading skirmish map: {}", fullname));
         }
     }
 }
 
 // Skirmish map initialization
-void cPreviewMaps::INIT_PREVIEWS() {
+void cPreviewMaps::initPreviews() {
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
 

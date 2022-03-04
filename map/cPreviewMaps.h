@@ -21,10 +21,9 @@ public:
     cPreviewMaps();
     ~cPreviewMaps();
     void prescanSkirmish();
-    void INI_PRESCAN_SKIRMISH();
     s_PreviewMap& getMap(int i)  { if (i > MAX_SKIRMISHMAPS) return PreviewMap[0]; return PreviewMap[i]; }
-    void INI_LOAD_SKIRMISH(const std::string& filename);
-    void INIT_PREVIEWS();
 private:
+    void loadSkirmish(const std::string& filename);
+    void initPreviews();
     s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];
 };
