@@ -64,6 +64,7 @@
 #define MAX_BULLETS      300     // max of bullets in the game at once
 #define MAX_PARTICLES    600	 // max of particles in the game at once
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
+// #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 //#define HOUSE_SLOTS       10      // amount of House 'types'
 
 // Game states (state machine)

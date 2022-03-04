@@ -44,7 +44,6 @@ cDrawManager   			*	drawManager = nullptr;
 cAllegroDrawer          *   allegroDrawer = nullptr;
 
 // Structs of all kinds of objects (*info)
-s_PreviewMap     			    PreviewMap[MAX_SKIRMISHMAPS];
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
 s_UnitInfo         			    sUnitInfo[MAX_UNITTYPES];
 s_UpgradeInfo                   sUpgradeInfo[MAX_UPGRADETYPES];
