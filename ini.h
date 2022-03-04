@@ -167,7 +167,5 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinfo
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);
-//void LOAD_BRIEFING(char filename[35]);
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat);
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
-//void INI_PRESCAN_SKIRMISH();
