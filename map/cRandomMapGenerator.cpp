@@ -11,7 +11,7 @@
 cRandomMapGenerator::cRandomMapGenerator() {
 }
 
-void cRandomMapGenerator::generateRandomMap(int startingPoints) {
+void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry) {
     // create random map
     map.init(128, 128);
     auto mapEditor = cMapEditor(map);
@@ -32,7 +32,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
     int iSpot = 0;
     int iFails = 0;
 
-    s_PreviewMap &randomMapEntry = PreviewMap[0];
+    //s_PreviewMap &randomMapEntry = PreviewMap[0];
     randomMapEntry.width = 128;
     randomMapEntry.height = 128;
     memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));

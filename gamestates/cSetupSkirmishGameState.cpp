@@ -9,6 +9,7 @@
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
+#include "map/cPreviewMaps.h"
 #include "player/brains/cPlayerBrainSandworm.h"
 #include "player/brains/cPlayerBrainSkirmish.h"
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
@@ -19,7 +20,9 @@
 #include <fmt/core.h>
 #include <algorithm>
 
-cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
+
+cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> _PreviewMaps) : cGameState(theGame) {
+    PreviewMaps = _PreviewMaps;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.
@@ -343,7 +346,7 @@ void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
 
 void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const {
     if (iSkirmishMap > -1) {
-        s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+        s_PreviewMap &selectedMap = PreviewMaps->getMap(iSkirmishMap);
         // Render skirmish map as-is (pre-loaded map)
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
@@ -396,7 +399,7 @@ void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
 }
 
 void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap) {
-    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+    s_PreviewMap &selectedMap = PreviewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
     game.m_mission = 9; // high tech level (TODO: make this customizable)
@@ -931,7 +934,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
-        if (PreviewMap[i].name[0] != '\0') {
+        if (PreviewMaps->getMap(i).name[0] != '\0') {
             int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
             bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
@@ -944,7 +947,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
                 if (i == 0) {
                     generateRandomMap();
                 } else {
-                    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+                    s_PreviewMap &selectedMap = PreviewMaps->getMap(iSkirmishMap);
                     if (selectedMap.name[0] != '\0') {
                         iStartingPoints = 0;
                         // count starting points
@@ -956,14 +959,13 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
                     }
                 }
             }
-
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMaps->getMap(i).name.c_str());
         }
     }
 }
 
 void cSetupSkirmishGameState::generateRandomMap() {
-    randomMapGenerator.generateRandomMap(iStartingPoints);
+    randomMapGenerator.generateRandomMap(iStartingPoints, PreviewMaps->getMap(0) );
     spawnWorms = map.isBigMap() ? 4 : 2;
 }
 
@@ -978,7 +980,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
-        if (PreviewMap[i].name[0] != '\0') {
+        if (PreviewMaps->getMap(i).name[0] != '\0') {
             int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
             bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
@@ -994,7 +996,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
                 GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
             }
 
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMaps->getMap(i).name.c_str());
         }
     }
 }
