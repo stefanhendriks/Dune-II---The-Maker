@@ -1298,7 +1298,7 @@ void cGame::setState(int newState) {
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
-                newStatePtr = new cSetupSkirmishGameState(*this);
+                newStatePtr = new cSetupSkirmishGameState(*this, m_PreviewMaps);
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this);
