@@ -1,6 +1,7 @@
 #include "cIniFile.h"
 #include "cLog.h"
 #include <fstream>
+#include <algorithm>
 #include <fmt/core.h>
 #include <algorithm>
 
@@ -53,7 +54,6 @@ std::string cSection::getStringValue(const std::string &key) const {
     if (m_sectionConf.find(key) != m_sectionConf.end()) {
         return m_sectionConf.at(key);
     } else {
-        //std::cout << "key " << key << " didn't exist on section " << m_sectionName << std::endl;
         cLogger *logger = cLogger::getInstance();
         logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)",
                     fmt::format("Key {} didn't exist on section {}", key, m_sectionName));
@@ -118,8 +118,6 @@ bool cIniFile::load(const std::string &config) {
     logger->log(LOG_INFO, COMP_GAMEINI, "(cIniFile)", fmt::format("Load file {}", m_fileName));
     std::ifstream in(m_fileName.c_str());
     if (!in) {
-        // std::cout << "unable to open file " << m_fileName << std::endl;
-        //cLogger *logger = cLogger::getInstance();
         logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", fmt::format("Unable to open file Key {}", m_fileName));
         return false;
     }

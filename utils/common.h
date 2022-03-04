@@ -37,8 +37,6 @@ void logbook(const std::string& txt);
 
 int makeColFromString(std::string colorStr);
 
-void INIT_PREVIEWS();
-
 void install_structures();
 void install_units();
 void install_bullets();
