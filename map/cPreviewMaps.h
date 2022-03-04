@@ -23,7 +23,7 @@ public:
     void prescanSkirmish();
     void INI_PRESCAN_SKIRMISH();
     s_PreviewMap& getMap(int i)  { if (i > MAX_SKIRMISHMAPS) return PreviewMap[0]; return PreviewMap[i]; }
-    void INI_LOAD_SKIRMISH(const char filename[80]);
+    void INI_LOAD_SKIRMISH(const std::string& filename);
     void INIT_PREVIEWS();
 private:
     s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];

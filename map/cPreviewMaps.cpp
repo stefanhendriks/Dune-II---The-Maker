@@ -21,7 +21,7 @@ void cPreviewMaps::prescanSkirmish()
     INI_PRESCAN_SKIRMISH();
 }
 
-void cPreviewMaps::INI_LOAD_SKIRMISH(const char filename[80]) {
+void cPreviewMaps::INI_LOAD_SKIRMISH(const std::string& filename) {
     // std::cout << filename << std::endl;
 
     int iNew = -1;
@@ -149,7 +149,7 @@ void cPreviewMaps::INI_PRESCAN_SKIRMISH() {
     {
         auto fullname = file.path().string();
         if (file.path().extension()==".ini") {
-            INI_LOAD_SKIRMISH(fullname.c_str());
+            INI_LOAD_SKIRMISH(fullname);
             logbook(fmt::format("Loading skirmish map: {}", fullname));
         }
     }
