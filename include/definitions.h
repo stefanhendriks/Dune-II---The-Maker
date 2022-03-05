@@ -104,7 +104,7 @@
 #define MAX_PLAYERS       7
 
 // HOUSES stuff
-#define MAX_HOUSES        12      // 12 different type of houses
+// #define MAX_HOUSES        12      // 12 different type of houses
 
 // UNITS stuff
 #define MAX_UNITTYPES       50    // maximum of unit types

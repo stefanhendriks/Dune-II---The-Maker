@@ -62,7 +62,7 @@ extern cAllegroDrawer      *allegroDrawer;
 
 // kinds of entities (sHouseInfo, structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_PreviewMap     		    PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
-extern s_HouseInfo         			sHouseInfo[MAX_HOUSES];
+//extern s_HouseInfo         			sHouseInfo[MAX_HOUSES];
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 extern s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 extern s_UpgradeInfo                sUpgradeInfo[MAX_UPGRADETYPES];
