@@ -7,6 +7,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
+#include "player/cHousesInfo.h"
 
 #include <allegro.h>
 #include <fmt/format.h>
@@ -235,8 +236,8 @@ void cPlayer::setHouse(int iHouse) {
         logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 
         // now set the different colors based upon house
-        if (sHouseInfo[house].swap_color > -1) {
-            int start = sHouseInfo[house].swap_color;
+        if (m_HousesInfo->getSwapColor(house) > -1) {
+            int start = m_HousesInfo->getSwapColor(house);
             int s = 144;                // original position (harkonnen)
             logbook(fmt::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
             for (int j = start; j < (start + 7); j++) {
@@ -246,7 +247,7 @@ void cPlayer::setHouse(int iHouse) {
             }
         }
 
-        minimapColor = sHouseInfo[house].minimap_color;
+        minimapColor = m_HousesInfo->getMinimapColor(house);
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();

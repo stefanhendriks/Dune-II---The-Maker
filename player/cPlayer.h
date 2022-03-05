@@ -34,9 +34,11 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <memory>
 
 class cItemBuilder;
 class cBuildingListUpdater;
+class cHousesInfo;
 
 struct sEntityForDistance {
     int distance = 9999;
@@ -80,6 +82,10 @@ public:
     void init(int id, brains::cPlayerBrain *brain);
 
     void setBrain(brains::cPlayerBrain *brain);
+
+    void setHousesInfo(std::shared_ptr<cHousesInfo> housesInfo) {
+        m_HousesInfo = housesInfo;
+    }
 
     void setAutoSlabStructures(bool value);
 
@@ -482,6 +488,7 @@ private:
 
     cBuildingListUpdater *buildingListUpdater; // modifies list of sidebar on upgrades
     cOrderProcesser *orderProcesser; // process orders for starport
+    std::shared_ptr<cHousesInfo> m_HousesInfo;
 
     cGameControlsContext *gameControlsContext;
 
