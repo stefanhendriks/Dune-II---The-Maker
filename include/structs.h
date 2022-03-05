@@ -213,11 +213,11 @@ struct s_SpecialInfo {
     int subListId;
 };
 
-// House properties
-struct s_HouseInfo {
-  int swap_color;           // color index to start swapping with.
-  int minimap_color;        // rgb value on minimap
-};
+// // House properties
+// struct s_HouseInfo {
+//   int swap_color;           // color index to start swapping with.
+//   int minimap_color;        // rgb value on minimap
+// };
 
 /**
  * Particle info

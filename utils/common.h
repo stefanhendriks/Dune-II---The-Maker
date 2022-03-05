@@ -15,7 +15,7 @@
 
 #include <string>
 #include <array>
-#include <memory>
+//#include <memory>
 
 class cIniFile;
 
@@ -38,8 +38,8 @@ void logbook(const std::string& txt);
 
 int makeColFromString(std::string colorStr);
 
-// Installment of properties/gameCfg in the game.
-void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
+// Installment of properties/settings in the game.
+//void INSTALL_HOUSES(std::shared_ptr<cIniFile> gamesCfg);
 
 void INIT_PREVIEWS();
 
