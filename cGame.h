@@ -32,7 +32,7 @@ class cPlayer;
 class cSoundPlayer;
 class cScreenInit;
 class cHandleArgument;
-
+class cHousesInfo;
 class cReinforcements;
 
 // Naming thoughts:
@@ -274,6 +274,7 @@ private:
     cTimeManager m_timeManager;
 
     std::unique_ptr<cHandleArgument> m_handleArgument;
+    std::shared_ptr<cHousesInfo> m_Houses;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

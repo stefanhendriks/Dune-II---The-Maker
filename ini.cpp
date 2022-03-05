@@ -21,6 +21,7 @@
 #include "map/cMapEditor.h"
 #include "mentat/cAbstractMentat.h"
 #include "player/cPlayer.h"
+#include "player/cHousesInfo.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
