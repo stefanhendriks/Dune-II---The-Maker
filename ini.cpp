@@ -21,7 +21,7 @@
 #include "map/cMapEditor.h"
 #include "mentat/cAbstractMentat.h"
 #include "player/cPlayer.h"
-#include "player/cHousesInfo.h"
+//#include "player/cHousesInfo.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
@@ -534,24 +534,25 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "MaxCredits") == 0) return WORD_HARVESTLIMIT;
         if (strcmp(word, "HarvestSpeed") == 0) return WORD_HARVESTSPEED;
         if (strcmp(word, "HarvestAmount") == 0) return WORD_HARVESTAMOUNT;
-    } else if (section == INI_TEAMS) {
-        // SwapColor
-        if (strcmp(word, "SwapColor") == 0)
-            return WORD_SWAPCOLOR;
-
-        // Red MiniMap value
-        if (strcmp(word, "MapColorRed") == 0)
-            return WORD_HOUSE_RED;
-
-        // Green MiniMap value
-        if (strcmp(word, "MapColorGreen") == 0)
-            return WORD_HOUSE_GREEN;
-
-        // Blue MiniMap value
-        if (strcmp(word, "MapColorBlue") == 0)
-            return WORD_HOUSE_BLUE;
-
     }
+    //  else if (section == INI_TEAMS) {
+    //     // SwapColor
+    //     if (strcmp(word, "SwapColor") == 0)
+    //         return WORD_SWAPCOLOR;
+
+    //     // Red MiniMap value
+    //     if (strcmp(word, "MapColorRed") == 0)
+    //         return WORD_HOUSE_RED;
+
+    //     // Green MiniMap value
+    //     if (strcmp(word, "MapColorGreen") == 0)
+    //         return WORD_HOUSE_GREEN;
+
+    //     // Blue MiniMap value
+    //     if (strcmp(word, "MapColorBlue") == 0)
+    //         return WORD_HOUSE_BLUE;
+
+    // }
         /*
         else if (section == INI_ICONS)
         {
@@ -2134,15 +2135,15 @@ void INI_Install_Game(std::string filename) {
                     if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
                 }
 
-                if (section == INI_TEAMS) {
-                    // check if we found a new [TEAM part!
-                    if (strstr(linefeed, "[TEAM:") != nullptr) {
-                        id++; // New ID
-                        if (id > MAX_HOUSES) {
-                          id--;
-                        }
-                    }
-                }
+                // if (section == INI_TEAMS) {
+                //     // check if we found a new [TEAM part!
+                //     if (strstr(linefeed, "[TEAM:") != nullptr) {
+                //         id++; // New ID
+                //         if (id > MAX_HOUSES) {
+                //           id--;
+                //         }
+                //     }
+                // }
 
                 // New unit type
                 if (section == INI_UNITS) {
