@@ -54,14 +54,6 @@ enum class eHeadTowardsStructureResult {
     SUCCESS_RETURNING,
 };
 
-// Reinforcement data (loaded from ini file)
-struct sReinforcement
-{
-    int iSeconds;       // FPS based, every second this decreases (0 = deliver)
-    int iUnitType;      // what unit?
-    int iPlayer;         // to who?
-    int iCell;          // Where to?
-};
 
 inline std::string eActionTypeString(eActionType actionType) {
     switch (actionType) {
@@ -575,6 +567,3 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);
 int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);
-
-void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
-void INIT_REINFORCEMENT();

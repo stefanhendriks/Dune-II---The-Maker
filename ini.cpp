@@ -24,9 +24,12 @@
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
+#include "gameobjects/units/cReinforcements.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
+
+class cReinforcements;
 
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                 const int *iPl_quota, const char *linefeed);
@@ -34,7 +37,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
 bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                      const int *iPl_quota, char *linefeed);
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed);
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements* reinforcements);
 
 void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed);
 
@@ -1277,7 +1280,7 @@ std::string INI_GetScenarioFileName(int iHouse, int iRegion) {
 }
 
 
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinforcements* reinforcements) {
     game.m_skirmish = false;
     game.missionInit();
 
@@ -1386,7 +1389,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
             } else if (section == INI_STRUCTURES) {
                 bSetUpPlayers = INI_Scenario_Section_Structures(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
             } else if (section == INI_REINFORCEMENTS) {
-                INI_Scenario_Section_Reinforcements(iHouse, linefeed);
+                INI_Scenario_Section_Reinforcements(iHouse, linefeed, reinforcements);
             }
             wordtype = WORD_NONE;
         }
@@ -1600,7 +1603,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
     }
 }
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements* reinforcements) {
     logbook("[SCENARIO] -> REINFORCEMENTS");
 
     int iPart = -1; /*
@@ -1677,7 +1680,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
             } else if (iPart == 3) {
                 int iGenCell = atoi(chunk);
                 iTime = iGenCell;
-                SET_REINFORCEMENT(iCell, iController, iTime, iType);
+                reinforcements->SET_REINFORCEMENT(iCell, iController, iTime, iType);
                 break;
             }
 

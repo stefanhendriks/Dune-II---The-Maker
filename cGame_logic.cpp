@@ -19,6 +19,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/units/cReinforcements.h"
 #include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cMainMenuGameState.h"
@@ -757,7 +758,8 @@ bool cGame::setupGame() {
         logger->logHeader("file location error");
         return false;
     }
-
+    m_reinforcements = std::make_shared<cReinforcements>();
+    map.setReinforcements(m_reinforcements);
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
     game.loadSettings(conf);
 
@@ -1297,7 +1299,7 @@ void cGame::prepareMentatForPlayer() {
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        INI_Load_scenario(house, m_region, m_mentat);
+        INI_Load_scenario(house, m_region, m_mentat, m_reinforcements.get());
         INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
     } else if (m_state == GAME_WINBRIEF) {
         if (rnd(100) < 50) {
@@ -1356,7 +1358,7 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
 
 void cGame::loadScenario() {
     int iHouse = players[HUMAN].getHouse();
-    INI_Load_scenario(iHouse, game.m_region, m_mentat);
+    INI_Load_scenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
 }
 
 void cGame::thinkFast_state() {
