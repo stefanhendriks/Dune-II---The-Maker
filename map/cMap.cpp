@@ -20,6 +20,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "player/cPlayer.h"
+#include "gameobjects/units/cReinforcements.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
@@ -48,8 +49,12 @@ cMap::~cMap() {
     }
 }
 
+void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements) {
+    m_reinforcements = reinforcements;
+}
+
 void cMap::init(int width, int height) {
-    INIT_REINFORCEMENT();
+    m_reinforcements->INIT_REINFORCEMENT();
 
     m_bAutoDetonateSpiceBlooms = false;
     m_bAutoSpawnSpiceBlooms = true;

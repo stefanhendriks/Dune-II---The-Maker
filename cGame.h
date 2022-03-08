@@ -33,6 +33,8 @@ class cSoundPlayer;
 class cScreenInit;
 class cHandleArgument;
 
+class cReinforcements;
+
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -244,6 +246,8 @@ private:
     cAllegroDataRepository *m_dataRepository;
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
+
+    std::shared_ptr<cReinforcements> m_reinforcements;
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
