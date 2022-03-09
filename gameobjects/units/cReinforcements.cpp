@@ -30,7 +30,7 @@ int cReinforcements::NEXT_REINFORCEMENT() {
 }
 
 // set reinforcement
-void cReinforcements::SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType) {
+void cReinforcements::SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType, int iPlyrGetHouse) {
     int iIndex = this->NEXT_REINFORCEMENT();
 
     // do not allow falsy indexes.
@@ -57,8 +57,8 @@ void cReinforcements::SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUTy
         return;
     }
 
-    // logbook(fmt::format("[{}] Reinforcement: Controller = {}, House {}, Time {}, Type = {}",
-    //                     iIndex, iPlyr, players[iPlyr].getHouse(), iTime, iUType));
+    logbook(fmt::format("[{}] Reinforcement: Controller = {}, House {}, Time {}, Type = {}",
+                        iIndex, iPlyr, iPlyrGetHouse, iTime, iUType));
 
     reinforcements[iIndex].iCell = iCll;
     reinforcements[iIndex].iPlayer = iPlyr;
