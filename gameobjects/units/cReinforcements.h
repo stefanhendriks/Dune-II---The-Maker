@@ -18,6 +18,9 @@ public:
     void INIT_REINFORCEMENT();
     int NEXT_REINFORCEMENT();
     void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
+    void spendASecond();
+    bool hasReinforcement();
+    void getReinforcementAndDestroy(int &iCll, int &iPlyr, int &iTime, int &iUType);
 private:
     sReinforcement reinforcements[MAX_REINFORCEMENTS];
 };

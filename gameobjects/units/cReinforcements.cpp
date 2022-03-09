@@ -70,3 +70,37 @@ void cReinforcements::SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUTy
     reinforcements[iIndex].iSeconds = iTime;
 }
 
+void cReinforcements::spendASecond()
+{
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        if (reinforcements[i].iCell > 0)
+            reinforcements[i].iSeconds = reinforcements[i].iSeconds-1;            
+    } 
+}
+
+bool cReinforcements::hasReinforcement()
+{
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        if (reinforcements[i].iCell > 0 && reinforcements[i].iSeconds < 0)
+            return true;            
+    }
+    return false;
+}
+
+void cReinforcements::getReinforcementAndDestroy(int &iCll, int &iPlyr, int &iTime, int &iUType)
+{
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        if (reinforcements[i].iCell > 0 && reinforcements[i].iSeconds < 0) {
+            iCll = reinforcements[i].iCell;
+            iPlyr = reinforcements[i].iPlayer;
+            iUType = reinforcements[i].iUnitType;
+            iTime = reinforcements[i].iSeconds;
+            // we destroy it because it's be use.
+            reinforcements[i].iCell = -1;
+            reinforcements[i].iPlayer = -1;
+            reinforcements[i].iSeconds = -1;
+            reinforcements[i].iUnitType = -1;
+        }
+        return ;            
+    }
+}
