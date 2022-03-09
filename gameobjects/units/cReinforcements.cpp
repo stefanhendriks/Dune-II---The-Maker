@@ -60,10 +60,6 @@ void cReinforcements::SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUTy
     // logbook(fmt::format("[{}] Reinforcement: Controller = {}, House {}, Time {}, Type = {}",
     //                     iIndex, iPlyr, players[iPlyr].getHouse(), iTime, iUType));
 
-    // DEBUG DEBUG
-    // if (!game.isDebugMode())
-    //     iTime *= 15;
-
     reinforcements[iIndex].iCell = iCll;
     reinforcements[iIndex].iPlayer = iPlyr;
     reinforcements[iIndex].iUnitType = iUType;
