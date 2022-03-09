@@ -1961,20 +1961,11 @@ void cGame::thinkSlow_state() {
 }
 
 void cGame::thinkSlow_reinforcements() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        if (reinforcements[i].iCell > -1) {
-            if (reinforcements[i].iSeconds > 0) {
-                reinforcements[i].iSeconds--;
-                continue; // next one
-            } else {
-                // deliver
-                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          players[reinforcements[i].iPlayer].getFocusCell());
-
-                // and make this unvalid
-                reinforcements[i].iCell = -1;
-            }
-        }
+    m_reinforcements->spendASecond();
+    while (m_reinforcements->hasReinforcement()) {
+        int iCll, iPlyr, iTime, iUType;
+        m_reinforcements->getReinforcementAndDestroy(iCll, iPlyr, iTime, iUType);
+        REINFORCE(iPlyr, iUType, iCll, players[iPlyr].getFocusCell());
     }
 }
 
