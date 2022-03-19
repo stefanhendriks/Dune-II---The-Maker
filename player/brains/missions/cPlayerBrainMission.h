@@ -100,7 +100,7 @@ namespace brains {
          */
         cPlayerBrainMission& operator=(const cPlayerBrainMission &rhs);
 
-        void think();
+        void thinkFast();
 
         void onNotifyGameEvent(const s_GameEvent &event);
 

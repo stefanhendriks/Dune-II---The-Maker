@@ -49,6 +49,8 @@ public:
 	cGame();
 	~cGame();
 
+    void jumpToSelectYourNextConquestMission(int missionNr);
+
     void setGameFilename(const std::string& filename) {
         m_gameFilename = filename;
     }
@@ -190,6 +192,7 @@ public:
             case GAME_LOSING: return "GAME_LOSING";
             case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
             case GAME_CREDITS: return "GAME_CREDITS";
+            case GAME_MISSIONSELECT: return "GAME_MISSIONSELECT";
             default:
                 assert(false);
                 break;

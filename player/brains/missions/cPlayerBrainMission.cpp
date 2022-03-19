@@ -37,6 +37,7 @@ namespace brains {
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
                 missionKind = new cPlayerBrainMissionKindSaboteur(player, this);
                 specialEventMakesStateSwitchToSelectTarget = true;
+                missionWithUnits = false; // saboteur is like fremen
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND:
                 missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
@@ -84,7 +85,7 @@ namespace brains {
     /**
      * Called every 5 ms.
      */
-    void cPlayerBrainMission::think() {
+    void cPlayerBrainMission::thinkFast() {
         switch (state) {
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY:
                 thinkState_InitialDelay();
@@ -179,7 +180,8 @@ namespace brains {
         // since we are assembling resources, listen to these events.
         if (event.player == player) {
             // it is an event about my own stuff
-            if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
+            if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES ||
+                state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
                 // unit got created, not reinforced
                 if (event.entityType == UNIT && !event.isReinforce) {
                     cUnit &entityUnit = unit[event.entityID];
@@ -505,15 +507,21 @@ namespace brains {
         } else {
             log("Done with waiting for resources.");
             // we're done waiting...
-            if (units.empty()) {
-                log("No units attached to mission, setting to ENDED state.");
-                // end mission, when we have no units to work with
-                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
+            if (missionWithUnits) {
+                if (units.empty()) {
+                    log("No units attached to mission, setting to ENDED state.");
+                    // end mission, when we have no units to work with
+                    changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
+                } else {
+                    log("Units are attached to mission (see log lines after this), setting to PLAYERBRAINMISSION_STATE_SELECT_TARGET state.");
+                    logUnits();
+                    // execute missions with what we have, so just select a target and go!
+                    changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+                }
             } else {
-                log("Units are attached to mission (see log lines after this), setting to PLAYERBRAINMISSION_STATE_SELECT_TARGET state.");
-                logUnits();
-                // execute missions with what we have, so just select a target and go!
-                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+                // wait for 10 minutes again (arbitrary) - will proceed based on events anyway
+                int msForOneMinute = 1000 * 60;
+                TIMER_awaitingGatheringResoures += fastThinkMsToTicks(msForOneMinute*10);
             }
         }
     }
@@ -581,9 +589,16 @@ namespace brains {
      * @return
      */
     bool cPlayerBrainMission::isDoneGatheringResources() {
-        return state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES &&
-                state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY &&
-                state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES;
+        if (kind == PLAYERBRAINMISSION_IMPROVE_ECONOMY ||
+            kind == PLAYERBRAINMISSION_KIND_ATTACK ||
+            kind == PLAYERBRAINMISSION_KIND_DEFEND ||
+            kind == PLAYERBRAINMISSION_KIND_HARASS) {
+            return state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES &&
+                   state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY &&
+                   state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES;
+        }
+        // by default a missions is "done"
+        return true;
     }
 
     void cPlayerBrainMission::log(const char *txt) {

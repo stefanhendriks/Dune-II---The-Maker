@@ -30,9 +30,9 @@ namespace brains {
     // 10 ticks = 1 second.
     // 100 ticks = 10 seconds.
     // 600 ticks = 60 seconds (1 minute)
-    const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
+    const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 300; // after 30 seconds consider building 2nd refinery
 
-    const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 3000; // after 5 minutes consider building additional units
+    const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 1800; // after 3 minutes consider building additional units
 
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;
@@ -66,7 +66,11 @@ namespace brains {
 
         ePlayerBrainSkirmishEconomyState m_economyState;
 
-        int m_COUNT_badEconomy;
+        /**
+         * A score between 0 (BAD) and 100 (GOOD) economy
+         * A neutral economy score is between 30-70
+         */
+        int m_economyScore;
 
         int m_TIMER_rest;
 
@@ -74,7 +78,20 @@ namespace brains {
 
         int m_TIMER_ai;
 
+        int m_MOMENT_whenToBuildAdditionalRefinery;
+
+        int m_TIMER_mayBuildAdditionalUnits;
+
+        int m_TIMER_additionalUnitsCooldown;
+
+        int m_eagernessToBuildRandomUnits;
+
         int m_centerOfBaseCell;
+
+        int m_idealRefineriesCount;
+        int m_idealHarvesterCount;
+        int m_idealCarryallCount;
+        int m_idealOrnisCount;
 
         // at which cells did we detect an enemy? Remember those.
         std::set<int> m_discoveredEnemyAtCell;
@@ -107,7 +124,7 @@ namespace brains {
 
         void changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState& newState);
 
-        bool allMissionsAreDoneGatheringResources();
+        bool mayBuildAdditionalResources();
 
         static const char* ePlayerBrainSkirmishThinkStateString(const ePlayerBrainSkirmishThinkState &state) {
             switch (state) {
@@ -128,6 +145,7 @@ namespace brains {
             switch (state) {
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL: return "PLAYERBRAIN_ECONOMY_STATE_NORMAL";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE: return "PLAYERBRAIN_ECONOMY_STATE_IMPROVE";
+                case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_GOOD: return "PLAYERBRAIN_ECONOMY_STATE_GOOD";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_BAD: return "PLAYERBRAIN_ECONOMY_STATE_BAD";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH: return "PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH";
                 default:
@@ -187,13 +205,17 @@ namespace brains {
 
         void produceMissionsDuringPeacetime(int scoutingUnitType);
 
-        void produceAttackingMissions();
+        void produceMissionsWhenEnemyDetected();
 
         void produceSuperWeaponMissionsWhenApplicable();
 
         void produceEconomyImprovingMissions();
 
         void respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
+
+        ePlayerBrainSkirmishEconomyState determineEconomyState();
+
+        int calculateEconomyScore();
     };
 
 }
