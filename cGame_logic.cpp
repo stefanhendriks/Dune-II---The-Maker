@@ -59,6 +59,7 @@
 #include <algorithm>
 #include <random>
 #include <vector>
+#include <iostream>
 
 namespace {
 
@@ -150,7 +151,12 @@ void cGame::init() {
     INI_Install_Game(m_gameFilename);
 }
 
-void cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
+bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
+    if (!settings->hasSection(SECTION_SETTINGS)) {
+        std::cerr << "No [SETTINGS] section found in settings.ini file" << std::endl;
+        return false;
+    }
+
     const cSection &section = settings->getSection(SECTION_SETTINGS);
     game.m_iniScreenWidth = section.getInt("ScreenWidth");
     game.m_iniScreenHeight = section.getInt("ScreenHeight");
@@ -158,6 +164,8 @@ void cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
     game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     game.m_windowed = !section.getBoolean("FullScreen");
+
+    return true;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -737,8 +745,15 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
+    // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
-    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
+
+    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
+    bool loadSettingsResult = game.loadSettings(settings);
+    if (!loadSettingsResult) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
+        return false;
+    }
 
     const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
     std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
@@ -747,7 +762,7 @@ bool cGame::setupGame() {
         m_transfertMap[eGameDirFileName::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
         m_transfertMap[eGameDirFileName::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
         m_transfertMap[eGameDirFileName::SMALL] = settings->getStringValue("FONT", "SMALL");
-        
+
         m_transfertMap[eGameDirFileName::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
         m_transfertMap[eGameDirFileName::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
         m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
@@ -760,12 +775,13 @@ bool cGame::setupGame() {
     eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
 
     if (!settingsValidator->fileExists()) {
-        logger->logHeader("file location error");
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
+        std::cerr << "One or more validations failed with resources defined in settings.ini" << std::endl;
         return false;
     }
 
-    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-    game.loadSettings(settings);
+    // GAME.INI
+    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
     const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 

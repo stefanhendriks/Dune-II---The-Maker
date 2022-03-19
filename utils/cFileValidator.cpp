@@ -29,7 +29,7 @@ bool cFileValidator::fileExists() {
     // check if directory exists first
     fs::directory_entry entry_sandbox{m_path};
     if (!entry_sandbox.exists()) {
-        std::cerr << "Error: " << m_path << " directory not found" << std::endl;
+        std::cerr << "Error: '" << m_path << "' directory not found" << std::endl;
         return false;
     }
 
