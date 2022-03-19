@@ -26,6 +26,8 @@
 
 #include <cmath>
 
+static const std::string SECTION_HOUSES = "HOUSES";
+
 /**
  * Default printing in logs. Only will be done if game.isDebugMode() is true.
  * @param txt
@@ -65,39 +67,39 @@ int makeColFromString(std::string colorStr)
 /********************************
  House Rules
  ********************************/
-void INSTALL_HOUSES(std::shared_ptr<cIniFile> gamesCfg) {
+void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg) {
     // General / Default / No House
-    sHouseInfo[GENERALHOUSE].swap_color = gamesCfg->getInt("HOUSES","GENERAL_SWAPCOLOR");
-    sHouseInfo[GENERALHOUSE].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","GENERAL_MINIMAPCOLOR"));
+    sHouseInfo[GENERALHOUSE].swap_color = gameCfg->getInt(SECTION_HOUSES, "GENERAL_SWAPCOLOR");
+    sHouseInfo[GENERALHOUSE].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "GENERAL_MINIMAPCOLOR"));
 
     // Harkonnen
-    sHouseInfo[HARKONNEN].swap_color = gamesCfg->getInt("HOUSES","HARKONNEN_SWAPCOLOR");
-    sHouseInfo[HARKONNEN].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","HARKONNEN_MINIMAPCOLOR"));
+    sHouseInfo[HARKONNEN].swap_color = gameCfg->getInt(SECTION_HOUSES, "HARKONNEN_SWAPCOLOR");
+    sHouseInfo[HARKONNEN].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "HARKONNEN_MINIMAPCOLOR"));
 
     // Atreides
-    sHouseInfo[ATREIDES].swap_color = gamesCfg->getInt("HOUSES","ATREIDES_SWAPCOLOR");
-    sHouseInfo[ATREIDES].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","ATREIDES_MINIMAPCOLOR"));
+    sHouseInfo[ATREIDES].swap_color = gameCfg->getInt(SECTION_HOUSES, "ATREIDES_SWAPCOLOR");
+    sHouseInfo[ATREIDES].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "ATREIDES_MINIMAPCOLOR"));
 
     // Ordos
-    sHouseInfo[ORDOS].swap_color = gamesCfg->getInt("HOUSES","ORDOS_SWAPCOLOR");
-    sHouseInfo[ORDOS].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","ORDOS_MINIMAPCOLOR"));
+    sHouseInfo[ORDOS].swap_color = gameCfg->getInt(SECTION_HOUSES, "ORDOS_SWAPCOLOR");
+    sHouseInfo[ORDOS].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "ORDOS_MINIMAPCOLOR"));
 
     // Mercenary
-    sHouseInfo[MERCENARY].swap_color = gamesCfg->getInt("HOUSES","MERCENARY_SWAPCOLOR");
-    sHouseInfo[MERCENARY].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","MERCENARY_MINIMAPCOLOR"));
+    sHouseInfo[MERCENARY].swap_color = gameCfg->getInt(SECTION_HOUSES, "MERCENARY_SWAPCOLOR");
+    sHouseInfo[MERCENARY].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "MERCENARY_MINIMAPCOLOR"));
 
     // Sardaukar
-    sHouseInfo[SARDAUKAR].swap_color = gamesCfg->getInt("HOUSES","SARDAUKAR_SWAPCOLOR");
-    sHouseInfo[SARDAUKAR].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","SARDAUKAR_MINIMAPCOLOR"));
+    sHouseInfo[SARDAUKAR].swap_color = gameCfg->getInt(SECTION_HOUSES, "SARDAUKAR_SWAPCOLOR");
+    sHouseInfo[SARDAUKAR].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "SARDAUKAR_MINIMAPCOLOR"));
 
     // Fremen
-    sHouseInfo[FREMEN].swap_color = gamesCfg->getInt("HOUSES","FREMEN_SWAPCOLOR");
-    sHouseInfo[FREMEN].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","FREMEN_MINIMAPCOLOR"));
+    sHouseInfo[FREMEN].swap_color = gameCfg->getInt(SECTION_HOUSES, "FREMEN_SWAPCOLOR");
+    sHouseInfo[FREMEN].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "FREMEN_MINIMAPCOLOR"));
 
     // GREY
     // ???
-    sHouseInfo[CORRINO].swap_color = gamesCfg->getInt("HOUSES","CORRINO_SWAPCOLOR");
-    sHouseInfo[CORRINO].minimap_color = makeColFromString(gamesCfg->getStr("HOUSES","CORRINO_MINIMAPCOLOR"));
+    sHouseInfo[CORRINO].swap_color = gameCfg->getInt(SECTION_HOUSES, "CORRINO_SWAPCOLOR");
+    sHouseInfo[CORRINO].minimap_color = makeColFromString(gameCfg->getStringValue(SECTION_HOUSES, "CORRINO_MINIMAPCOLOR"));
 }
 
 /*****************************
