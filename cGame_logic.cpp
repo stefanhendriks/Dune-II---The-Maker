@@ -150,14 +150,14 @@ void cGame::init() {
     INI_Install_Game(m_gameFilename);
 }
 
-void cGame::loadSettings(std::shared_ptr<cIniFile> conf)
-{
-    game.m_iniScreenWidth = conf->getInt("SETTINGS","ScreenWidth");
-    game.m_iniScreenHeight = conf->getInt("SETTINGS","ScreenHeight");
-    game.m_cameraDragMoveSpeed = conf->getDouble("SETTINGS","CameraDragMoveSpeed");
-    game.m_cameraBorderOrKeyMoveSpeed = conf->getDouble("SETTINGS","CameraBorderOrKeyMoveSpeed");
-    game.m_cameraEdgeMove = conf->getBoolean("SETTINGS","CameraEdgeMove");
-    game.m_windowed = !conf->getBoolean("SETTINGS","FullScreen");
+void cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
+    const cSection &section = settings->getSection(SECTION_SETTINGS);
+    game.m_iniScreenWidth = section.getInt("ScreenWidth");
+    game.m_iniScreenHeight = section.getInt("ScreenHeight");
+    game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    game.m_windowed = !section.getBoolean("FullScreen");
 }
 
 // TODO: Bad smell (duplicate code)
@@ -740,7 +740,7 @@ bool cGame::setupGame() {
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
     std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
-    const std::string &gameDir = settings->getStringValue("SETTINGS", "gameDir");
+    const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
     std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
     {
         std::map<eGameDirFileName, std::string> m_transfertMap;
@@ -766,9 +766,6 @@ bool cGame::setupGame() {
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
     game.loadSettings(settings);
-
-
-    // TODO: load eventual game settings (resolution, etc)
 
     const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
