@@ -86,7 +86,8 @@
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
 #define GAME_CREDITS     17    // credits
-#define GAME_MAX_STATES 18
+#define GAME_MISSIONSELECT  18    // mission select
+#define GAME_MAX_STATES 19
 
 // FOR OPTIONS:
 

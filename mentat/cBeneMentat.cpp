@@ -9,7 +9,7 @@
 #include <alfont.h>
 #include <allegro.h>
 
-cBeneMentat::cBeneMentat() {
+cBeneMentat::cBeneMentat() : cAbstractMentat(false) {
     iBackgroundFrame = MENTATM;
     buildLeftButton((BITMAP *) gfxmentat[BTN_NO].dat, 293, 423);
     buildRightButton((BITMAP *) gfxmentat[BTN_YES].dat, 466, 423);
