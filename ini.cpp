@@ -603,15 +603,6 @@ int INI_WordType(char word[25], int section) {
 
         if (strcmp(word, "DumpSpeed") == 0)
             return WORD_DUMPSPEED;
-
-    // } else if (section == INI_SETTINGS) {
-    //     if (strcmp(word, "FullScreen") == 0) return WORD_FULLSCREEN;
-    //     if (strcmp(word, "ScreenWidth") == 0) return WORD_SCREENWIDTH;
-    //     if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
-    //     if (strcmp(word, "CameraDragMoveSpeed") == 0) return WORD_CAMERADRAGMOVESPEED;
-    //     if (strcmp(word, "CameraBorderOrKeyMoveSpeed") == 0) return WORD_CAMERABORDERORKEYMOVESPEED;
-    //     if (strcmp(word, "CameraEdgeMove") == 0) return WORD_CAMERAEDGEMOVE;
-    //     assert(false && "Unknown word in [SETTINGS]");
     }
 
 //  char msg[255];
@@ -670,9 +661,6 @@ int GAME_INI_SectionType(char section[30], int last) {
 
 // if (strcmp(section, "BULLETS") == 0)
 //   return INI_BULLETS;
-
-    // if (strcmp(section, "SETTINGS") == 0)
-    //     return INI_SETTINGS;
 
     if (strcmp(section, "UNITS") == 0)
         return INI_UNITS;
@@ -2114,7 +2102,6 @@ void INI_Install_Game(std::string filename) {
                     // Show in log file we entered a new section
                     if (section == INI_UNITS) logbook("[GAME.INI] -> [UNITS]");
                     if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
-                    // if (section == INI_SETTINGS) logbook("[GAME.INI] -> [SETTINGS]");
                 }
 
                 if (section == INI_TEAMS) {
@@ -2258,31 +2245,7 @@ void INI_Install_Game(std::string filename) {
 
                 if (wordtype == WORD_COST) sStructureInfo[id].cost = INI_WordValueINT(linefeed);
                 if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = INI_WordValueINT(linefeed);
-
             }
-
-            // if (section == INI_SETTINGS) {
-            //     switch (wordtype) {
-            //         case WORD_SCREENWIDTH:
-            //             game.m_iniScreenWidth = INI_WordValueINT(linefeed);
-            //             break;
-            //         case WORD_SCREENHEIGHT:
-            //             game.m_iniScreenHeight = INI_WordValueINT(linefeed);
-            //             break;
-            //         case WORD_CAMERADRAGMOVESPEED:
-            //             game.m_cameraDragMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
-            //             break;
-            //         case WORD_CAMERABORDERORKEYMOVESPEED:
-            //             game.m_cameraBorderOrKeyMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
-            //             break;
-            //         case WORD_CAMERAEDGEMOVE:
-            //             game.m_cameraEdgeMove = INI_WordValueBOOL(linefeed);
-            //             break;
-            //         case WORD_FULLSCREEN:
-            //             game.m_windowed = !INI_WordValueBOOL(linefeed);
-            //             break;
-            //     }
-            // }
         } // while
 
         fclose(stream);
