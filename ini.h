@@ -55,7 +55,6 @@ class cSelectYourNextConquestState;
 #define INI_WIN         31
 #define INI_LOSE        32
 #define INI_DESCRIPTION 33
-#define INI_SETTINGS    34
 
 #define SEC_REGION		198
 
@@ -168,15 +167,6 @@ class cSelectYourNextConquestState;
 
 #define WORD_MAPNAME        86
 #define WORD_STARTCELL      87
-
-// SETTINGS SPECIFIC
-
-#define WORD_FULLSCREEN	  90			// fullscreen settings in game.ini
-#define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
-#define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
-#define WORD_CAMERADRAGMOVESPEED	93	    // camera drag move speed
-#define WORD_CAMERABORDERORKEYMOVESPEED	94	// camera border or key move speed
-#define WORD_CAMERAEDGEMOVE	95	        // allow camera movement by hitting edges of screen
 
 #define MAX_LINE_LENGTH     256
 
