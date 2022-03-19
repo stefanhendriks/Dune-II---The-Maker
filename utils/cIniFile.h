@@ -52,13 +52,13 @@ public:
 
     cSection getSection(const std::string &section) const;
 
+    bool hasSection(const std::string &section) const;
+
 private:
 
     bool isSectionName(std::string inputLine);
 
     bool isKeyValue(std::string inputLine);
-
-    bool hasSection(const std::string &section) const;
 
     std::string m_fileName;
     std::map<std::string, cSection> m_mapConfig;
