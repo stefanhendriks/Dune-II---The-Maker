@@ -46,7 +46,11 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+
+#include "utils/cFileValidator.h"
 #include "utils/cHandleArgument.h"
+#include "utils/cIniFile.h"
+
 
 #include <allegro.h>
 #include <alfont.h>
@@ -55,6 +59,7 @@
 #include <algorithm>
 #include <random>
 #include <vector>
+#include <iostream>
 
 namespace {
 
@@ -144,6 +149,23 @@ void cGame::init() {
     // Units & Structures are already initialized in map.init()
     // Load properties
     INI_Install_Game(m_gameFilename);
+}
+
+bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
+    if (!settings->hasSection(SECTION_SETTINGS)) {
+        std::cerr << "No [SETTINGS] section found in settings.ini file" << std::endl;
+        return false;
+    }
+
+    const cSection &section = settings->getSection(SECTION_SETTINGS);
+    game.m_iniScreenWidth = section.getInt("ScreenWidth");
+    game.m_iniScreenHeight = section.getInt("ScreenHeight");
+    game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    game.m_windowed = !section.getBoolean("FullScreen");
+
+    return true;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -716,9 +738,6 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
-
-    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
 
@@ -726,7 +745,43 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
-    // TODO: load eventual game settings (resolution, etc)
+    // SETTINGS.INI
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
+
+    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
+    bool loadSettingsResult = game.loadSettings(settings);
+    if (!loadSettingsResult) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
+        return false;
+    }
+
+    const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
+    std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
+    {
+        std::map<eGameDirFileName, std::string> m_transfertMap;
+        m_transfertMap[eGameDirFileName::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
+        m_transfertMap[eGameDirFileName::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
+        m_transfertMap[eGameDirFileName::SMALL] = settings->getStringValue("FONT", "SMALL");
+
+        m_transfertMap[eGameDirFileName::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
+        m_transfertMap[eGameDirFileName::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
+        m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
+        m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
+        m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
+        settingsValidator->addRessources(std::move(m_transfertMap));
+    }
+
+    // circumvent: -Werror=unused-function :/
+    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
+
+    if (!settingsValidator->fileExists()) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
+        std::cerr << "One or more validations failed with resources defined in settings.ini" << std::endl;
+        return false;
+    }
+
+    // GAME.INI
+    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
     const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
@@ -777,6 +832,7 @@ bool cGame::setupGame() {
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
         m_handleArgument->applyArguments(); //Apply command line arguments
+        m_handleArgument.reset();
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
         if (m_windowed) {
@@ -791,36 +847,36 @@ bool cGame::setupGame() {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font("data/arrakeen.fon");
+    game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
 
     if (game_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
         return false;
     }
 
 
-    bene_font = alfont_load_font("data/benegess.fon");
+    bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
 
     if (bene_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
         return false;
     }
 
-    small_font = alfont_load_font("data/small.ttf");
+    small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
 
     if (small_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
         return false;
     }
@@ -949,37 +1005,37 @@ bool cGame::setupGame() {
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = load_datafile("data/gfxdata.dat");
+    gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
         return false;
     } else {
-        logbook("Datafile hooked: gfxdata.dat");
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
-    gfxinter = load_datafile("data/gfxinter.dat");
+    gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
         return false;
     } else {
-        logbook("Datafile hooked: gfxinter.dat");
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
     }
 
-    gfxworld = load_datafile("data/gfxworld.dat");
+    gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
         return false;
     } else {
-        logbook("Datafile hooked: gfxworld.dat");
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
     }
 
-    gfxmentat = load_datafile("data/gfxmentat.dat");
+    gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
         return false;
     } else {
-        logbook("Datafile hooked: gfxmentat.dat");
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
     }
 
     // finally the data repository and drawer interface can be initialized
@@ -1007,7 +1063,7 @@ bool cGame::setupGame() {
     logbook("Setup:  BITMAPS");
     install_bitmaps();
     logbook("Setup:  HOUSES");
-    INSTALL_HOUSES();
+    INSTALL_HOUSES(rules);
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
@@ -1026,8 +1082,8 @@ bool cGame::setupGame() {
     drawManager = new cDrawManager(&players[HUMAN]);
 
     INI_Install_Game(m_gameFilename);
-    m_handleArgument->applyArguments(); //Apply command line arguments
-    m_handleArgument.reset();
+    // m_handleArgument->applyArguments(); //Apply command line arguments
+    // m_handleArgument.reset();
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
