@@ -737,30 +737,32 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
-    std::shared_ptr<cIniFile> conf = std::make_shared<cIniFile>("settings.ini");
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini");
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
+    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
-    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(conf->getStr("SETTINGS","dataRepertory"));
+    const std::string &dataLocation = settings->getStringValue("SETTINGS", "dataRepertory");
+    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(dataLocation);
     {
         std::map<EFILENAME, std::string> m_transfertMap;
-        m_transfertMap[EFILENAME::ARRAKEEN] = conf->getStr("FONT","ARRAKEEN"); 
-        m_transfertMap[EFILENAME::BENEGESS] = conf->getStr("FONT","BENEGESS");
-        m_transfertMap[EFILENAME::SMALL] = conf->getStr("FONT","SMALL");
+        m_transfertMap[EFILENAME::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
+        m_transfertMap[EFILENAME::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
+        m_transfertMap[EFILENAME::SMALL] = settings->getStringValue("FONT", "SMALL");
         
-        m_transfertMap[EFILENAME::GFXDATA] = conf->getStr("DATAFILE", "GFXDATA");
-        m_transfertMap[EFILENAME::GFXINTER] = conf->getStr("DATAFILE", "GFXINTER");
-        m_transfertMap[EFILENAME::GFXWORLD] = conf->getStr("DATAFILE", "GFXWORLD");
-        m_transfertMap[EFILENAME::GFXMENTAT] = conf->getStr("DATAFILE", "GFXMENTAT");
-        m_transfertMap[EFILENAME::GFXAUDIO] = conf->getStr("DATAFILE", "GFXAUDIO");
+        m_transfertMap[EFILENAME::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
+        m_transfertMap[EFILENAME::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
+        m_transfertMap[EFILENAME::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
+        m_transfertMap[EFILENAME::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
+        m_transfertMap[EFILENAME::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
         m_fileName->addRessources(std::move(m_transfertMap));
     }
+
     if (!m_fileName->fileExists()) {
         logger->logHeader("file location error");
         return false;
     }
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-    game.loadSettings(conf);
+    game.loadSettings(settings);
 
 
     // TODO: load eventual game settings (resolution, etc)
@@ -1045,7 +1047,7 @@ bool cGame::setupGame() {
     logbook("Setup:  BITMAPS");
     install_bitmaps();
     logbook("Setup:  HOUSES");
-    INSTALL_HOUSES(gamesCfg);
+    INSTALL_HOUSES(rules);
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
