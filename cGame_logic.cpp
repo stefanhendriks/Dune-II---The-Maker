@@ -47,7 +47,7 @@
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 
-#include "utils/cFileNameSettings.hpp"
+#include "utils/cFileValidator.h"
 #include "utils/cHandleArgument.h"
 #include "utils/cIniFile.h"
 
@@ -740,23 +740,26 @@ bool cGame::setupGame() {
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
     std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
-    const std::string &dataLocation = settings->getStringValue("SETTINGS", "dataRepertory");
-    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(dataLocation);
+    const std::string &gameDir = settings->getStringValue("SETTINGS", "gameDir");
+    std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
     {
-        std::map<EFILENAME, std::string> m_transfertMap;
-        m_transfertMap[EFILENAME::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
-        m_transfertMap[EFILENAME::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
-        m_transfertMap[EFILENAME::SMALL] = settings->getStringValue("FONT", "SMALL");
+        std::map<eGameDirFileName, std::string> m_transfertMap;
+        m_transfertMap[eGameDirFileName::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
+        m_transfertMap[eGameDirFileName::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
+        m_transfertMap[eGameDirFileName::SMALL] = settings->getStringValue("FONT", "SMALL");
         
-        m_transfertMap[EFILENAME::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
-        m_transfertMap[EFILENAME::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
-        m_transfertMap[EFILENAME::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
-        m_transfertMap[EFILENAME::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
-        m_transfertMap[EFILENAME::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
-        m_fileName->addRessources(std::move(m_transfertMap));
+        m_transfertMap[eGameDirFileName::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
+        m_transfertMap[eGameDirFileName::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
+        m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
+        m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
+        m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
+        settingsValidator->addRessources(std::move(m_transfertMap));
     }
 
-    if (!m_fileName->fileExists()) {
+    // circumvent: -Werror=unused-function :/
+    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
+
+    if (!settingsValidator->fileExists()) {
         logger->logHeader("file location error");
         return false;
     }
@@ -831,36 +834,36 @@ bool cGame::setupGame() {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font(m_fileName->getFullName(EFILENAME::ARRAKEEN).c_str());
+    game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
 
     if (game_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(EFILENAME::ARRAKEEN), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(EFILENAME::ARRAKEEN), OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
         return false;
     }
 
 
-    bene_font = alfont_load_font(m_fileName->getFullName(EFILENAME::BENEGESS).c_str());
+    bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
 
     if (bene_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(EFILENAME::BENEGESS), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(EFILENAME::BENEGESS) , OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
         return false;
     }
 
-    small_font = alfont_load_font(m_fileName->getFullName(EFILENAME::SMALL).c_str());
+    small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
 
     if (small_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getFullName(EFILENAME::SMALL), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getFullName(EFILENAME::SMALL), OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
         return false;
     }
@@ -989,37 +992,37 @@ bool cGame::setupGame() {
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = load_datafile(m_fileName->getFullName(EFILENAME::GFXDATA).c_str());
+    gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXDATA));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXDATA));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
-    gfxinter = load_datafile(m_fileName->getFullName(EFILENAME::GFXINTER).c_str());
+    gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXINTER));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXINTER));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
     }
 
-    gfxworld = load_datafile(m_fileName->getFullName(EFILENAME::GFXWORLD).c_str());
+    gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXWORLD));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXWORLD));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
     }
 
-    gfxmentat = load_datafile(m_fileName->getFullName(EFILENAME::GFXMENTAT).c_str());
+    gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXMENTAT));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXMENTAT));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
     }
 
     // finally the data repository and drawer interface can be initialized
