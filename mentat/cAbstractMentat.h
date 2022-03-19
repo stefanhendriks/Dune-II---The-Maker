@@ -21,10 +21,12 @@
 #pragma once
 
 #include "utils/cRectangle.h"
+#include "observers/cInputObserver.h"
 
 #include <string>
 
 class cButtonCommand;
+class cGuiButton;
 
 struct ALFONT_FONT;
 struct DATAFILE;
@@ -37,20 +39,22 @@ enum eMentatState {
     DESTROY,            // the mentat became 'invalid' (BeneGeserit-><house> transition)
 };
 
-class cAbstractMentat {
+class cAbstractMentat : public cInputObserver {
 
 protected:
-    virtual void draw_mouth()=0;
-    virtual void draw_eyes()=0;
-    virtual void draw_other()=0;
+    virtual void draw_mouth() = 0;
+
+    virtual void draw_eyes() = 0;
+
+    virtual void draw_other() = 0;
 
     void draw_movie();
 
-	  // Timed animation
-	  int TIMER_Mouth;
-	  int TIMER_Eyes;
-	  int TIMER_Other;
-	  int TIMER_Speaking;
+    // Timed animation
+    int TIMER_Mouth;
+    int TIMER_Eyes;
+    int TIMER_Other;
+    int TIMER_Speaking;
 
     // Movie playback (scene's from datafile)
     int TIMER_movie;
@@ -58,13 +62,13 @@ protected:
 
     int iBackgroundFrame;
 
-	  // draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
-	  char sentence[10][255];
+    // draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
+    char sentence[10][255];
 
-	  int iMentatSentence;  // = sentence to draw and speak with (-1 = not ready)
+    int iMentatSentence;  // = sentence to draw and speak with (-1 = not ready)
 
-  	int iMentatMouth;
-	  int iMentatEyes;
+    int iMentatMouth;
+    int iMentatEyes;
 
     DATAFILE *gfxmovie;
     ALFONT_FONT *font;
@@ -74,10 +78,11 @@ protected:
     cRectangle *leftButton;
     cRectangle *rightButton;
 
-    BITMAP * leftButtonBmp;
-    BITMAP * rightButtonBmp;
+    BITMAP *leftButtonBmp;
+    BITMAP *rightButtonBmp;
 
     void buildLeftButton(BITMAP *bmp, int x, int y);
+
     void buildRightButton(BITMAP *bmp, int x, int y);
 
     cButtonCommand *leftButtonCommand;
@@ -90,18 +95,25 @@ protected:
     int offsetY;
 
 public:
-	  virtual void draw()=0;
-    virtual void think()=0;
-    virtual void interact()=0;
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    void loadScene(const std::string& scene);
+    virtual void draw() = 0;
 
-	  cAbstractMentat();
-	  virtual ~cAbstractMentat();
+    virtual void think() = 0;
+
+    virtual void interact() = 0;
+
+    void loadScene(const std::string &scene);
+
+    cAbstractMentat(bool canMissionSelect);
+
+    virtual ~cAbstractMentat();
 
     BITMAP *getBackgroundBitmap() const;
 
     void initSentences();
+
     void speak();
 
     void setSentence(int i, const char text[256]);
@@ -113,7 +125,10 @@ public:
     void thinkMovie();
 
     void setHouse(int value) { house = value; }
+
     int getHouse() { return house; }
 
     void resetSpeak();
+
+    cGuiButton * m_guiBtnToMissionSelect;
 };
