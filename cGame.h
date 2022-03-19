@@ -285,7 +285,7 @@ private:
 
     cGameState *m_states[GAME_MAX_STATES];
 
-    void loadSettings(std::shared_ptr<cIniFile> conf);
+    void loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
