@@ -19,6 +19,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/units/cReinforcements.h"
 #include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cMainMenuGameState.h"
@@ -77,6 +78,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_screenX = 800;
     m_screenY = 600;
     m_windowed = false;
+    m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
     // default INI screen width and height is not loaded
@@ -164,6 +166,7 @@ bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
     game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     game.m_windowed = !section.getBoolean("FullScreen");
+    game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
 
     return true;
 }
@@ -748,7 +751,11 @@ bool cGame::setupGame() {
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
 
+    m_reinforcements = std::make_shared<cReinforcements>();
+    map.setReinforcements(m_reinforcements);
+
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
+
     bool loadSettingsResult = game.loadSettings(settings);
     if (!loadSettingsResult) {
         logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
@@ -1367,7 +1374,7 @@ void cGame::prepareMentatForPlayer() {
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        INI_Load_scenario(house, m_region, m_mentat);
+        INI_Load_scenario(house, m_region, m_mentat, m_reinforcements.get());
         INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
     } else if (m_state == GAME_WINBRIEF) {
         if (rnd(100) < 50) {
@@ -1426,7 +1433,7 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
 
 void cGame::loadScenario() {
     int iHouse = players[HUMAN].getHouse();
-    INI_Load_scenario(iHouse, game.m_region, m_mentat);
+    INI_Load_scenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
 }
 
 void cGame::thinkFast_state() {
@@ -2015,7 +2022,7 @@ void cGame::thinkSlow_state() {
         m_pathsCreated = 0;
 
         if (!m_disableReinforcements) {
-            thinkSlow_reinforcements();
+            m_reinforcements->thinkSlow();
         }
 
         // starports think per second for deployment (if any)
@@ -2033,24 +2040,6 @@ void cGame::thinkSlow_state() {
 
     } // game specific stuff
 
-}
-
-void cGame::thinkSlow_reinforcements() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        if (reinforcements[i].iCell > -1) {
-            if (reinforcements[i].iSeconds > 0) {
-                reinforcements[i].iSeconds--;
-                continue; // next one
-            } else {
-                // deliver
-                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          players[reinforcements[i].iPlayer].getFocusCell());
-
-                // and make this unvalid
-                reinforcements[i].iCell = -1;
-            }
-        }
-    }
 }
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {

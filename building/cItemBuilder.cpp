@@ -3,6 +3,7 @@
 #include "d2tmc.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
+#include "gameobjects/units/cReinforcements.h"
 #include "player/cPlayer.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sGameEvent.h"

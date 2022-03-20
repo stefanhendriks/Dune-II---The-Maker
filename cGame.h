@@ -33,6 +33,8 @@ class cSoundPlayer;
 class cScreenInit;
 class cHandleArgument;
 
+class cReinforcements;
+
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -58,6 +60,7 @@ public:
     int handleArguments(int argc, char **argv);
 
 	bool m_windowed;			    // windowed
+    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 	std::string m_version;          // version number, or name.
 
     // Alpha (for fading in/out)
@@ -248,6 +251,8 @@ private:
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
 
+    std::shared_ptr<cReinforcements> m_reinforcements;
+
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
 
@@ -337,7 +342,6 @@ private:
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 
     void thinkSlow_state();
-    void thinkSlow_reinforcements();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 };

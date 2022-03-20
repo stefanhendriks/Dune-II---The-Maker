@@ -51,7 +51,6 @@ s_UpgradeInfo                   sUpgradeInfo[MAX_UPGRADETYPES];
 s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
 s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
-sReinforcement  			    reinforcements[MAX_REINFORCEMENTS];
 
 // palette
 PALETTE general_palette;
