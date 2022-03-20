@@ -62,6 +62,8 @@ namespace brains {
             if (pUnit.getPlayer() == player) continue; // skip self
             if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
             if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+            if (pUnit.isSandworm() || pUnit.isAirbornUnit()) continue; // don't attack air units or sandworms
+
             // enemy unit
             target = i;
             if (rnd(100) < 5) {
