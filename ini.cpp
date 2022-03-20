@@ -1675,8 +1675,9 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             } else if (iPart == 3) {
                 int iGenCell = atoi(chunk);
                 iTime = iGenCell;
-//                iTime *= 15;
-                reinforcements->addReinforcement(iCell, iController, iTime, iType, false);
+                iTime *= 15;
+                bool repeat = game.m_allowRepeatingReinforcements && plusDetected;
+                reinforcements->addReinforcement(iCell, iController, iTime, iType, repeat);
                 break;
             }
 
