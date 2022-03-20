@@ -1668,10 +1668,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             } else if (iPart == 3) {
                 int iGenCell = atoi(chunk);
                 iTime = iGenCell;
-                
-                // DEBUG DEBUG
-                if (!game.isDebugMode())
-                    iTime *= 15;
+                iTime *= 15;
                 reinforcements->SET_REINFORCEMENT(iCell, iController, iTime, iType, players[iController].getHouse());
                 break;
             }
