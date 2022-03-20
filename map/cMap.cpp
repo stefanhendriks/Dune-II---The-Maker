@@ -54,7 +54,7 @@ void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements) {
 }
 
 void cMap::init(int width, int height) {
-    m_reinforcements->INIT_REINFORCEMENT();
+    m_reinforcements->init();
 
     m_bAutoDetonateSpiceBlooms = false;
     m_bAutoSpawnSpiceBlooms = true;

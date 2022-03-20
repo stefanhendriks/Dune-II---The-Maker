@@ -546,19 +546,6 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
 
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
-
-/**
- * Allows overriding reinforcement flag, ie used when a unit is reinforced by construction or other way, rather
- * than a 'real' reinforcement.
- * @param iPlr
- * @param iTpe
- * @param iCll
- * @param iStart
- * @param isReinforcement
- */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
-
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 int UNIT_find_harvest_spot(int id);

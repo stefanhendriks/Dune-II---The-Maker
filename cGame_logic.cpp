@@ -749,7 +749,11 @@ bool cGame::setupGame() {
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
 
+    m_reinforcements = std::make_shared<cReinforcements>();
+    map.setReinforcements(m_reinforcements);
+
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
+
     bool loadSettingsResult = game.loadSettings(settings);
     if (!loadSettingsResult) {
         logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
@@ -771,11 +775,6 @@ bool cGame::setupGame() {
         m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
         settingsValidator->addRessources(std::move(m_transfertMap));
     }
-
-    m_reinforcements = std::make_shared<cReinforcements>();
-    map.setReinforcements(m_reinforcements);
-
-    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
     // circumvent: -Werror=unused-function :/
     eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
@@ -2021,7 +2020,7 @@ void cGame::thinkSlow_state() {
         m_pathsCreated = 0;
 
         if (!m_disableReinforcements) {
-            thinkSlow_reinforcements();
+            m_reinforcements->thinkSlow();
         }
 
         // starports think per second for deployment (if any)
@@ -2039,15 +2038,6 @@ void cGame::thinkSlow_state() {
 
     } // game specific stuff
 
-}
-
-void cGame::thinkSlow_reinforcements() {
-    m_reinforcements->spendASecond();
-    while (m_reinforcements->hasReinforcement()) {
-        int iCll, iPlyr, iTime, iUType;
-        m_reinforcements->getReinforcementAndDestroy(iCll, iPlyr, iTime, iUType);
-        REINFORCE(iPlyr, iUType, iCll, players[iPlyr].getFocusCell());
-    }
 }
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
