@@ -28,6 +28,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
     m_game->m_drawUnitDebug = false;
     m_game->m_oneAi = false;
     m_game->m_windowed = false;
+    m_game->m_allowRepeatingReinforcements = false;
     m_game->m_noAiRest = false;
     m_game->setDebugMode(false);
 
