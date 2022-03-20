@@ -1591,7 +1591,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
     }
 }
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements* reinforcements) {
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements * reinforcements) {
     logbook("[SCENARIO] -> REINFORCEMENTS");
 
     int iPart = -1; /*
@@ -1627,7 +1627,15 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
         }
 
         // , means next part. A ' ' means end
-        if (linefeed[c] == ',' || linefeed[c] == '\0' || linefeed[c] == '+') {
+
+        // Example:
+        // 1=Harkonnen,Troopers,Enemybase,11
+        // <ID>=<House>,<UnitType>,<DropLocation>,<Time>
+        // <Time> may be postfixed with a '+' meaning it should repeat infinitely. Unfortunately Dune II
+        // has a bug ignoring the '+'. (but we can fix this)
+
+        bool plusDetected = (linefeed[c] == '+'); // plus has special meaning
+        if (linefeed[c] == ',' || linefeed[c] == '\0' || plusDetected) {
             iPart++;
 
             if (iPart == 0) {
@@ -1644,7 +1652,6 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
                 }
             } else if (iPart == 1) {
                 iType = getUnitTypeFromChar(chunk);
-
             } else if (iPart == 2) {
                 // Homebase is home of that house
                 if (strcmp(chunk, "Homebase") == 0) {
@@ -1668,8 +1675,8 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             } else if (iPart == 3) {
                 int iGenCell = atoi(chunk);
                 iTime = iGenCell;
-                iTime *= 15;
-                reinforcements->SET_REINFORCEMENT(iCell, iController, iTime, iType, players[iController].getHouse());
+//                iTime *= 15;
+                reinforcements->addReinforcement(iCell, iController, iTime, iType, false);
                 break;
             }
 

@@ -2,119 +2,114 @@
 #include "cReinforcements.h"
 #include "utils/common.h"
 #include "player/cPlayer.h"
-
+#include <algorithm>
 
 #include <fmt/core.h>
+
+
+/// Reinforcement class
+cReinforcement::cReinforcement(int delayInSeconds, int unitType, int playerId, int targetCell, bool repeat) :
+        m_delayInSeconds(delayInSeconds),
+        m_unitType(unitType),
+        m_playerId(playerId),
+        m_cell(targetCell),
+        m_repeat(repeat),
+        m_originalDelay(delayInSeconds)
+{
+
+}
+
+cReinforcement::cReinforcement() :
+        m_delayInSeconds(-1),
+        m_unitType(-1),
+        m_playerId(-1),
+        m_cell(-1)
+{
+    // default constructor creates invalid reinforcement
+}
+
+void cReinforcement::substractSecondIfApplicable() {
+    if (m_delayInSeconds > -1) {
+        m_delayInSeconds--;
+    }
+}
+
+bool cReinforcement::isValid() const {
+    return m_cell > 0;
+}
+
+void cReinforcement::invalidateOrRepeat() {
+    if (m_repeat) {
+        m_delayInSeconds = m_originalDelay;
+    } else {
+        // invalidate
+        m_cell = -1;
+    }
+}
+
+bool cReinforcement::isReady() const {
+    if (!isValid()) {
+        return false;
+    }
+    return m_delayInSeconds < 0;
+}
+
+void cReinforcement::execute() const {
+    int focusCell = players[m_playerId].getFocusCell();
+    REINFORCE(m_playerId, m_unitType, m_cell, focusCell, true);
+}
+
+/// Reinforcements container class
+
 
 cReinforcements::cReinforcements() {
     init();
 }
 
 void cReinforcements::init() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        sReinforcement &reinforcement = reinforcements[i];
-        reinforcement.iCell = -1;
-        reinforcement.iPlayer = -1;
-        reinforcement.iSeconds = -1;
-        reinforcement.iUnitType = -1;
-    }
+    reinforcements.clear();
 }
 
-// returns next free reinforcement index
-int cReinforcements::findNextUnusedId() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        // new one yey
-        if (reinforcements[i].iCell < 0)
-            return i;
-    }
+void cReinforcements::addReinforcement(int targetCell, int playerId, int delayInSeconds, int unitType, bool repeat) {
+    logbook(fmt::format("Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat));
 
-    return -1;
-}
-
-// set reinforcement
-void cReinforcements::SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType, int iPlyrGetHouse) {
-    int iIndex = findNextUnusedId();
-
-    // do not allow falsy indexes.
-    if (iIndex < 0)
-        return;
-
-    if (iCll < 0) {
-        logbook("REINFORCEMENT: Cannot set; invalid cell given");
-        return;
-    }
-
-    if (iPlyr < 0) {
-        logbook("REINFORCEMENT: Cannot set; invalid plyr");
-        return;
-    }
-
-    if (iTime < 0) {
-        logbook("REINFORCEMENT: Cannot set; invalid time given");
-        return;
-    }
-
-    if (iUType < 0) {
-        logbook("REINFORCEMENT: Cannot set; invalid unit type given");
-        return;
-    }
-
-    logbook(fmt::format("[{}] Reinforcement: Controller = {}, House {}, Time {}, Type = {}",
-                        iIndex, iPlyr, iPlyrGetHouse, iTime, iUType));
-
-    sReinforcement &reinforcement = reinforcements[iIndex];
-
-    reinforcement.iCell = iCll;
-    reinforcement.iPlayer = iPlyr;
-    reinforcement.iUnitType = iUType;
-    reinforcement.iSeconds = iTime;
+    cReinforcement reinforcement(delayInSeconds, unitType, playerId, targetCell, repeat);
+    reinforcements.push_back(reinforcement);
 }
 
 void cReinforcements::substractSecondFromValidReinforcements() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        sReinforcement &reinforcement = reinforcements[i];
-        // valid reinforcement
-        if (reinforcement.iCell > 0 && reinforcement.iSeconds > -1) {
-            reinforcement.iSeconds = reinforcement.iSeconds - 1;
-        }
+    for (auto & reinforcement : reinforcements) {
+        reinforcement.substractSecondIfApplicable();
     }
 }
 
 void cReinforcements::thinkSlow() {
     substractSecondFromValidReinforcements();
-    const sReinforcement &reinforcement = getReinforcementAndDestroy();
-    REINFORCE(reinforcement);
+    const cReinforcement &reinforcement = getReinforcementAndDestroy();
+    if (reinforcement.isValid()) {
+        REINFORCE(reinforcement);
+    }
 }
 
-//bool cReinforcements::hasReinforcement() {
-//    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-//        sReinforcement &reinforcement = reinforcements[i];
-//        if (reinforcement.iCell > 0 && reinforcement.iSeconds < 0) {
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
-sReinforcement cReinforcements::getReinforcementAndDestroy() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        sReinforcement &reinforcement = reinforcements[i];
-
-        // valid reinforcement & no need to wait anymore
-        if (reinforcement.iCell > 0 && reinforcement.iSeconds < 0) {
-            sReinforcement copy = reinforcements[i]; // remember
-
-            // make invalid
-            reinforcement.iCell = -1;
-            reinforcement.iPlayer = -1;
-            reinforcement.iSeconds = -1;
-            reinforcement.iUnitType = -1;
-            return copy;
+cReinforcement cReinforcements::getReinforcementAndDestroy() {
+    cReinforcement result;
+    for (auto & reinforcement : reinforcements) {
+        if (reinforcement.isReady()) {
+            result = reinforcement; // copy
+            reinforcement.invalidateOrRepeat(); // mark invalid, for deletion
         }
     }
 
-    sReinforcement invalid;
-    return invalid;
+    // delete invalid reinforcements
+    reinforcements.erase(
+            std::remove_if(
+                    reinforcements.begin(),
+                    reinforcements.end(),
+                    [](cReinforcement r) { return !r.isValid(); }),
+            reinforcements.end()
+    );
+
+    return result;
 }
 
 
@@ -137,11 +132,9 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
  * Same as above REINFORCE function, but takes sReinforcement. if iCell is < 0 then it will do nothing.
  * @param reinforcement
  */
-void REINFORCE(const sReinforcement &reinforcement) {
-    if (reinforcement.iCell < 0) return; // bail, invalid reinforcement given
-
-    int focusCell = players[reinforcement.iPlayer].getFocusCell();
-    REINFORCE(reinforcement.iPlayer, reinforcement.iUnitType, reinforcement.iCell, focusCell, true);
+void REINFORCE(const cReinforcement &reinforcement) {
+    if (!reinforcement.isValid()) return; // bail, invalid reinforcement given
+    reinforcement.execute();
 }
 
 /**
