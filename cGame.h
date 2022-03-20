@@ -51,6 +51,8 @@ public:
 	cGame();
 	~cGame();
 
+    void jumpToSelectYourNextConquestMission(int missionNr);
+
     void setGameFilename(const std::string& filename) {
         m_gameFilename = filename;
     }
@@ -192,6 +194,7 @@ public:
             case GAME_LOSING: return "GAME_LOSING";
             case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
             case GAME_CREDITS: return "GAME_CREDITS";
+            case GAME_MISSIONSELECT: return "GAME_MISSIONSELECT";
             default:
                 assert(false);
                 break;
@@ -286,7 +289,7 @@ private:
 
     cGameState *m_states[GAME_MAX_STATES];
 
-    void loadSettings(std::shared_ptr<cIniFile> conf);
+    bool loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game

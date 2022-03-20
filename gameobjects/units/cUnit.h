@@ -524,6 +524,7 @@ private:
     void think_harvester();
 
     void setAction(eActionType action);
+    void setGoalCell(int goalCell);
 };
 
 

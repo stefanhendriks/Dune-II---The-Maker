@@ -37,8 +37,8 @@ void logbook(const std::string& txt);
 
 int makeColFromString(std::string colorStr);
 
-// Installment of properties/settings in the game.
-void INSTALL_HOUSES(std::shared_ptr<cIniFile> gamesCfg);
+// Installment of properties/gameCfg in the game.
+void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
 
 void INIT_PREVIEWS();
 

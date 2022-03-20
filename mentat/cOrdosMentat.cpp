@@ -7,7 +7,7 @@
 
 #include <allegro.h>
 
-cOrdosMentat::cOrdosMentat() {
+cOrdosMentat::cOrdosMentat() : cAbstractMentat(true) {
     iBackgroundFrame = MENTATO;
     buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);
     buildRightButton((BITMAP *) gfxmentat[BTN_PROCEED].dat, 466, 423);

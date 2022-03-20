@@ -23,6 +23,7 @@
 #include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cMainMenuGameState.h"
+#include "gamestates/cSelectMissionState.h"
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishGameState.h"
@@ -47,7 +48,7 @@
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 
-#include "utils/cFileNameSettings.hpp"
+#include "utils/cFileValidator.h"
 #include "utils/cHandleArgument.h"
 #include "utils/cIniFile.h"
 
@@ -59,6 +60,7 @@
 #include <algorithm>
 #include <random>
 #include <vector>
+#include <iostream>
 
 namespace {
 
@@ -150,14 +152,21 @@ void cGame::init() {
     INI_Install_Game(m_gameFilename);
 }
 
-void cGame::loadSettings(std::shared_ptr<cIniFile> conf)
-{
-    game.m_iniScreenWidth = conf->getInt("SETTINGS","ScreenWidth");
-    game.m_iniScreenHeight = conf->getInt("SETTINGS","ScreenHeight");
-    game.m_cameraDragMoveSpeed = conf->getDouble("SETTINGS","CameraDragMoveSpeed");
-    game.m_cameraBorderOrKeyMoveSpeed = conf->getDouble("SETTINGS","CameraBorderOrKeyMoveSpeed");
-    game.m_cameraEdgeMove = conf->getBoolean("SETTINGS","CameraEdgeMove");
-    game.m_windowed = !conf->getBoolean("SETTINGS","FullScreen");
+bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
+    if (!settings->hasSection(SECTION_SETTINGS)) {
+        std::cerr << "No [SETTINGS] section found in settings.ini file" << std::endl;
+        return false;
+    }
+
+    const cSection &section = settings->getSection(SECTION_SETTINGS);
+    game.m_iniScreenWidth = section.getInt("ScreenWidth");
+    game.m_iniScreenHeight = section.getInt("ScreenHeight");
+    game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    game.m_windowed = !section.getBoolean("FullScreen");
+
+    return true;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -737,34 +746,48 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
-    std::shared_ptr<cIniFile> conf = std::make_shared<cIniFile>("settings.ini");
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini");
+    // SETTINGS.INI
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
 
-    std::unique_ptr<cFileNameSettings> m_fileName= std::make_unique<cFileNameSettings>(conf->getStr("SETTINGS","dataRepertory"));
-    {
-        std::map<EFILENAME, std::string> m_transfertMap;
-        m_transfertMap[EFILENAME::ARRAKEEN] = conf->getStr("FONT","ARRAKEEN"); 
-        m_transfertMap[EFILENAME::BENEGESS] = conf->getStr("FONT","BENEGESS");
-        m_transfertMap[EFILENAME::SMALL] = conf->getStr("FONT","SMALL");
-        
-        m_transfertMap[EFILENAME::GFXDATA] = conf->getStr("DATAFILE", "GFXDATA");
-        m_transfertMap[EFILENAME::GFXINTER] = conf->getStr("DATAFILE", "GFXINTER");
-        m_transfertMap[EFILENAME::GFXWORLD] = conf->getStr("DATAFILE", "GFXWORLD");
-        m_transfertMap[EFILENAME::GFXMENTAT] = conf->getStr("DATAFILE", "GFXMENTAT");
-        m_transfertMap[EFILENAME::GFXAUDIO] = conf->getStr("DATAFILE", "GFXAUDIO");
-        m_fileName->addRessources(std::move(m_transfertMap));
-    }
-    if (!m_fileName->fileExists()) {
-        logger->logHeader("file location error");
+    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
+    bool loadSettingsResult = game.loadSettings(settings);
+    if (!loadSettingsResult) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
         return false;
     }
+
+    const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
+    std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
+    {
+        std::map<eGameDirFileName, std::string> m_transfertMap;
+        m_transfertMap[eGameDirFileName::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
+        m_transfertMap[eGameDirFileName::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
+        m_transfertMap[eGameDirFileName::SMALL] = settings->getStringValue("FONT", "SMALL");
+
+        m_transfertMap[eGameDirFileName::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
+        m_transfertMap[eGameDirFileName::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
+        m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
+        m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
+        m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
+        settingsValidator->addRessources(std::move(m_transfertMap));
+    }
+
     m_reinforcements = std::make_shared<cReinforcements>();
     map.setReinforcements(m_reinforcements);
+
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-    game.loadSettings(conf);
 
+    // circumvent: -Werror=unused-function :/
+    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
 
-    // TODO: load eventual game settings (resolution, etc)
+    if (!settingsValidator->fileExists()) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
+        std::cerr << "One or more validations failed with resources defined in settings.ini" << std::endl;
+        return false;
+    }
+
+    // GAME.INI
+    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
     const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
@@ -830,36 +853,36 @@ bool cGame::setupGame() {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font(m_fileName->getFullName(EFILENAME::ARRAKEEN).c_str());
+    game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
 
     if (game_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(EFILENAME::ARRAKEEN), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(EFILENAME::ARRAKEEN), OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
         return false;
     }
 
 
-    bene_font = alfont_load_font(m_fileName->getFullName(EFILENAME::BENEGESS).c_str());
+    bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
 
     if (bene_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getName(EFILENAME::BENEGESS), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getName(EFILENAME::BENEGESS) , OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
         return false;
     }
 
-    small_font = alfont_load_font(m_fileName->getFullName(EFILENAME::SMALL).c_str());
+    small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
 
     if (small_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded "+m_fileName->getFullName(EFILENAME::SMALL), OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load "+m_fileName->getFullName(EFILENAME::SMALL), OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
         return false;
     }
@@ -988,37 +1011,37 @@ bool cGame::setupGame() {
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = load_datafile(m_fileName->getFullName(EFILENAME::GFXDATA).c_str());
+    gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXDATA));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXDATA));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
-    gfxinter = load_datafile(m_fileName->getFullName(EFILENAME::GFXINTER).c_str());
+    gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXINTER));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXINTER));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
     }
 
-    gfxworld = load_datafile(m_fileName->getFullName(EFILENAME::GFXWORLD).c_str());
+    gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXWORLD));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXWORLD));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
     }
 
-    gfxmentat = load_datafile(m_fileName->getFullName(EFILENAME::GFXMENTAT).c_str());
+    gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: "+m_fileName->getName(EFILENAME::GFXMENTAT));
+        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
         return false;
     } else {
-        logbook("Datafile hooked: "+m_fileName->getName(EFILENAME::GFXMENTAT));
+        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
     }
 
     // finally the data repository and drawer interface can be initialized
@@ -1046,7 +1069,7 @@ bool cGame::setupGame() {
     logbook("Setup:  BITMAPS");
     install_bitmaps();
     logbook("Setup:  HOUSES");
-    INSTALL_HOUSES(gamesCfg);
+    INSTALL_HOUSES(rules);
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
@@ -1124,6 +1147,30 @@ bool cGame::isState(int thisState) const {
     return (m_state == thisState);
 }
 
+void cGame::jumpToSelectYourNextConquestMission(int missionNr) {
+    cGameState *existingStatePtr = m_states[GAME_REGION];
+    if (existingStatePtr) {
+        delete existingStatePtr;
+        m_states[GAME_REGION] = nullptr;
+    }
+
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+    m_states[GAME_REGION] = pState;
+
+    pState->calculateOffset();
+    pState->INSTALL_WORLD();
+
+    cPlayer &humanPlayer = players[HUMAN];
+    int missionZeroBased = missionNr - 1;
+    m_mission = missionZeroBased;
+
+    // a 'missionX.ini' file is from 1 til (including) 8
+    // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
+    // meaning we have to use the 'zero based' value here
+    pState->fastForwardUntilMission(missionZeroBased, humanPlayer.getHouse());
+    pState->REGION_SETUP_NEXT_MISSION(missionZeroBased, humanPlayer.getHouse());
+}
+
 void cGame::setState(int newState) {
     if (newState == m_state) {
         // ignore
@@ -1134,15 +1181,22 @@ void cGame::setState(int newState) {
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
-                               newState != GAME_PLAYING); // don't delete these m_states, but re-use!
+                               newState != GAME_PLAYING &&
+                               newState != GAME_OPTIONS); // don't delete these m_states, but re-use!
 
-        if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
-            deleteOldState = false; // so we don't lose data when we go back
+        if (newState == GAME_PLAYING) {
+            // make sure to delete options menu now
+            delete m_states[GAME_OPTIONS];
+            m_states[GAME_OPTIONS] = nullptr;
         }
-        if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
-            deleteOldState = false; // don't delete credits, so we keep the crawler info
+
+        if (newState == GAME_REGION) {
+            // make sure to delete options menu now
+            delete m_states[GAME_OPTIONS];
+            m_states[GAME_OPTIONS] = nullptr;
         }
-        if (newState == GAME_OPTIONS) {
+
+        if (newState == GAME_MISSIONSELECT) {
             deleteOldState = true; // delete old options state everytime
         }
 
@@ -1150,6 +1204,8 @@ void cGame::setState(int newState) {
             delete m_states[newState];
             m_states[newState] = nullptr;
         }
+
+        cPlayer &humanPlayer = players[HUMAN];
 
         cGameState *existingStatePtr = m_states[newState];
 
@@ -1160,7 +1216,7 @@ void cGame::setState(int newState) {
                 // came from a win/lose brief state, so make sure to set up the next state
                 if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
-                    cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
+                    auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
                     if (game.m_mission > 1) {
                         pState->conquerRegions();
@@ -1168,11 +1224,23 @@ void cGame::setState(int newState) {
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
                     } else {
                         // OR: did not win
                         pState->REGION_SETUP_LOST_MISSION();
                     }
+                }
+            } else if (newState == GAME_OPTIONS) {
+                // This feels awkward. For now, I'll keep it (if it works), but this will change
+                // once we have a proper game playing state and we need to transition properly between
+                // states
+
+                auto *pState = dynamic_cast<cOptionsState *>(existingStatePtr);
+                // you cannot 'go back' to mission select
+                if (m_state != GAME_MISSIONSELECT) {
+                    pState->setPrevState(m_state);
+                } else {
+                    pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
 
@@ -1190,7 +1258,7 @@ void cGame::setState(int newState) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
 
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
@@ -1202,6 +1270,11 @@ void cGame::setState(int newState) {
                 newStatePtr = new cMainMenuGameState(*this);
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
+            } else if (newState == GAME_MISSIONSELECT) {
+                m_mouse->setTile(MOUSE_NORMAL);
+                BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
+                newStatePtr = new cSelectMissionState(*this, background, m_state);
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
@@ -1211,16 +1284,17 @@ void cGame::setState(int newState) {
                 } else {
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
+
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
                     // we came from options menu, notify mouse
-                    players[HUMAN].getGameControlsContext()->onFocusMouseStateEvent();
+                    humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
                 } else {
                     // re-create drawManager
                     delete drawManager;
-                    drawManager = new cDrawManager(&players[HUMAN]);
+                    drawManager = new cDrawManager(&humanPlayer);
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -1648,6 +1722,13 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     // pass through any classes that are interested
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
+    }
+
+    if (m_state == GAME_BRIEFING ||
+        m_state == GAME_WINNING ||
+        m_state == GAME_LOSING
+      ) {
+        m_mentat->onNotifyMouseEvent(event);
     }
 }
 
