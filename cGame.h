@@ -341,7 +341,6 @@ private:
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 
     void thinkSlow_state();
-    void thinkSlow_reinforcements();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 };
