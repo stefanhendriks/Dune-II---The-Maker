@@ -78,6 +78,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_screenX = 800;
     m_screenY = 600;
     m_windowed = false;
+    m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
     // default INI screen width and height is not loaded
@@ -165,6 +166,7 @@ bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
     game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     game.m_windowed = !section.getBoolean("FullScreen");
+    game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
 
     return true;
 }
