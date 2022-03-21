@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdio>
 #include <string>
+#include <iostream>
+#include <fstream>
 
 enum eLogLevel {
     LOG_INFO,
@@ -65,7 +66,7 @@ class cLogger {
       cLogger(const cLogger&) = delete;
       cLogger(cLogger&&) = delete;
 
-      std::FILE* m_file;
+      std::ofstream m_file;
 
       long m_startTime; // start time of logging in miliseconds
 
