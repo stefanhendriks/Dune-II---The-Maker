@@ -21,7 +21,6 @@ std::string getLogLevelString(eLogLevel level) {
         case LOG_INFO:
             return "INFO";
     }
-
     return "UNIDENTIFIED";
 }
 
@@ -68,8 +67,7 @@ std::string getLogComponentString(eLogComponent component) {
         case COMP_REGIONINI:
             return "REGIONINI";
     }
-
-    return std::string("UNIDENTIFIED");
+    return "UNIDENTIFIED";
 }
 
 std::string getLogOutcomeString(eLogOutcome outcome) {
@@ -85,7 +83,6 @@ std::string getLogOutcomeString(eLogOutcome outcome) {
         case OUTC_IGNOREME:
             return "IGNOREME";
     }
-
     return "UNIDENTIFIED";
 }
 
