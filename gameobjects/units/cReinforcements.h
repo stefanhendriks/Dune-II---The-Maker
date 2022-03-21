@@ -29,7 +29,7 @@ public:
 
     void init();
 
-    void addReinforcement(int targetCell, int playerId, int delayInSeconds, int unitType, bool repeat);
+    void addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat);
 
     void thinkSlow();
 

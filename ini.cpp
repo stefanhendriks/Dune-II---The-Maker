@@ -1602,8 +1602,8 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
                 */
 
     // Skip ID= part. It is just for fun there.
-    int iController, iType, iTime, iCell;
-    iController = iType = iTime = iCell = -1;
+    int playerId, unitType, delayInMinutes, targetCell;
+    playerId = unitType = delayInMinutes = targetCell = -1;
 
     char chunk[25];
     bool bClearChunk = true;
@@ -1645,39 +1645,39 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
                         if (players[i].getHouse() == iHouse) {
-                            iController = i; // set controller here.. phew
+                            playerId = i; // set controller here.. phew
                             break;
                         }
                     }
                 }
             } else if (iPart == 1) {
-                iType = getUnitTypeFromChar(chunk);
+                unitType = getUnitTypeFromChar(chunk);
             } else if (iPart == 2) {
                 // Homebase is home of that house
                 if (strcmp(chunk, "Homebase") == 0) {
-                    iCell = players[iController].getFocusCell();
+                    targetCell = players[playerId].getFocusCell();
                 } else {
                     // enemy base
 
-                    if (iController == 0) {
+                    if (playerId == 0) {
                         // Find corresponding house and get controller
                         for (int i = 0; i < MAX_PLAYERS; i++)
-                            if (players[i].getHouse() == iHouse && i != iController) {
-                                iCell = players[i].getFocusCell();
+                            if (players[i].getHouse() == iHouse && i != playerId) {
+                                targetCell = players[i].getFocusCell();
                                 break;
                             }
                     } else {
                         // computer player must find enemy = human
-                        iCell = players[0].getFocusCell();
+                        targetCell = players[0].getFocusCell();
                     }
                 }
 
             } else if (iPart == 3) {
-                int iGenCell = atoi(chunk);
-                iTime = iGenCell;
-                iTime *= 15;
+                delayInMinutes = atoi(chunk);
                 bool repeat = game.m_allowRepeatingReinforcements && plusDetected;
-                reinforcements->addReinforcement(iCell, iController, iTime, iType, repeat);
+                int reinforcementMultiplier = 60; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
+                int delayInSeconds = delayInMinutes * reinforcementMultiplier;
+                reinforcements->addReinforcement(playerId, unitType, targetCell, delayInSeconds, repeat);
                 break;
             }
 

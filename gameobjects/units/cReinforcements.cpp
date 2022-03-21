@@ -70,7 +70,7 @@ void cReinforcements::init() {
     reinforcements.clear();
 }
 
-void cReinforcements::addReinforcement(int targetCell, int playerId, int delayInSeconds, int unitType, bool repeat) {
+void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat) {
     logbook(fmt::format("Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat));
 
     cReinforcement reinforcement(delayInSeconds, unitType, playerId, targetCell, repeat);
