@@ -10,6 +10,11 @@
 #include <algorithm>
 #include <memory>
 
+const int fileNameSize = 40;
+const int titleSize = 4;
+const int offsetSize = 4+4; // two uint32_t 
+const int nbrFilesSize = 2; // one uint16_t
+
 // **********************
 //
 // ReaderPack
@@ -34,7 +39,6 @@ private:
     std::string fpName;
     int fileInPak = 0;
     uint64_t sizeInMemory =0;
-    const int fileNameSize = 40;
 };
 
 ReaderPack::ReaderPack(const std::string &filename)
@@ -43,7 +47,7 @@ ReaderPack::ReaderPack(const std::string &filename)
     if (readHeader()){
 
         //we know the buffer size : 40+4+4 per file with fileInPak file
-        sizeInMemory = SDL_RWsize(rfp) - 4 - (40+4+4)*fileInPak;
+        sizeInMemory = SDL_RWsize(rfp) - titleSize - nbrFilesSize - (fileNameSize+offsetSize)*fileInPak;
         fileInMemory = new char[sizeInMemory];
         readFileLines();
     }
@@ -115,7 +119,7 @@ void ReaderPack::listpackFile() {
 
 void ReaderPack::readDataIntoMemory()
 {
-    uint16_t firstData = 6 + (40+4+4) * fileInPak;
+    uint16_t firstData = titleSize + nbrFilesSize + (fileNameSize+offsetSize) * fileInPak;
     SDL_RWseek(rfp, firstData, RW_SEEK_SET );
     SDL_RWread(rfp, fileInMemory , sizeInMemory, 1);
 }
@@ -140,7 +144,6 @@ private:
     int numberFile = 0;
     SDL_RWops *wfp;  //wfp as writeFilePack
     std::map<std::string, uint32_t> mNameSize;
-    const int fileNameSize = 40;
 };
 
 WriterPack::WriterPack(const std::string &packName)
