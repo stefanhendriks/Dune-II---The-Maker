@@ -138,8 +138,8 @@ public:
     */
     void playSoundWithDistance(int sampleId, int iOnScreen);
 
-    void playVoice(int sampleId, int house);
-    void playMusicByType(int iType);
+    void playVoice(int sampleId, int playerId);
+    bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 
     int getMaxVolume();
 
@@ -263,6 +263,9 @@ private:
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
 	int m_state;
+
+    int m_newMusicSample;
+    int m_newMusicCountdown;
 
 	cAbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
 

@@ -94,6 +94,9 @@ cGame::cGame() : m_timeManager(*this) {
 
 
 void cGame::init() {
+    m_newMusicSample = MUSIC_MENU;
+    m_newMusicCountdown = 0;
+
     m_drawFps = false;
     m_nextState = -1;
     m_missionWasWon = false;
@@ -130,7 +133,7 @@ void cGame::init() {
     m_shakeY = 0;
     m_TIMER_shake = 0;
 
-    m_musicType = MUSIC_MENU;
+    m_musicType = -1;
 
     m_cameraDragMoveSpeed=0.5f;
     m_cameraBorderOrKeyMoveSpeed=0.5;
@@ -457,13 +460,23 @@ void cGame::think_audio() {
     if (m_musicType < 0)
         return;
 
-    if (!m_soundPlayer->isMusicPlaying()) {
+    if (m_newMusicCountdown > 0) {
+        m_newMusicCountdown--;
+    }
 
-        if (m_musicType == MUSIC_ATTACK) {
-            m_musicType = MUSIC_PEACE; // set back to peace
+    if (m_newMusicCountdown == 0) {
+        m_soundPlayer->playMusic(m_newMusicSample);
+        m_newMusicCountdown--; // so we don't keep re-starting music
+    }
+
+    if (m_newMusicCountdown < 0) {
+        if (!m_soundPlayer->isMusicPlaying()) {
+            int desiredMusicType = m_musicType;
+            if (m_musicType == MUSIC_ATTACK) {
+                desiredMusicType = MUSIC_PEACE; // set back to peace
+            }
+            playMusicByType(desiredMusicType);
         }
-
-        playMusicByType(m_musicType);
     }
 }
 
@@ -1926,16 +1939,37 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
 }
 
 
-void cGame::playVoice(int sampleId, int house) {
-    m_soundPlayer->playVoice(sampleId, house);
+void cGame::playVoice(int sampleId, int playerId) {
+    m_soundPlayer->playVoice(sampleId, players[playerId].getHouse());
 }
 
-void cGame::playMusicByType(int iType) {
+bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice) {
+    if (playerId != HUMAN){
+        // skip music we want to play for non human player
+        return false;
+    }
+
+    logbook(fmt::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
+
+    if (triggerWithVoice) {
+        if (iType == m_musicType) {
+            logbook(fmt::format("m_musicType = {}, iType is {}, so bailing", m_musicType, iType));
+            return false;
+        }
+    }
+
     m_musicType = iType;
+    logbook(fmt::format("m_musicType = {}", m_musicType));
 
     if (!m_playMusic) {
-        return;
+        return false; // todo: have a 'no-sound soundplayer' instead of doing this :/
     }
+
+    if (m_newMusicCountdown > 0) {
+        // do not interfere with previous 'change to music' thing?
+        return false;
+    }
+
 
     int sampleId = MIDI_MENU;
     if (iType == MUSIC_WIN) {
@@ -1965,8 +1999,21 @@ void cGame::playMusicByType(int iType) {
         assert(false && "Undefined music type.");
     }
 
-    // play midi file
-    m_soundPlayer->playMusic(sampleId);
+    if (triggerWithVoice) {
+        // voice triggered music (ie "Enemy unit approaching"), so have music stop a bit
+        if (isState(GAME_PLAYING)) {
+            m_newMusicCountdown = 400; // wait a bit longer
+        } else {
+            m_newMusicCountdown = 0;
+        }
+        m_soundPlayer->stopMusic();
+    } else {
+        // instant switch
+        m_newMusicCountdown = 0;
+    }
+
+    m_newMusicSample = sampleId;
+    return true;
 }
 
 int cGame::getMaxVolume() {
