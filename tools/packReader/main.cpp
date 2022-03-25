@@ -226,6 +226,49 @@ bool WriterPack::writePackFiles()
 }
 
 
+// **********************
+//
+// DataPack
+//
+// **********************
+class DataPack
+{
+public:
+    DataPack(const std::string &packName);
+    ~DataPack();
+    SDL_Surface *getSurface(int index);
+    SDL_Surface *getSurface(const std::string &name);
+private:
+    std::unique_ptr<ReaderPack> reader;
+};
+
+DataPack::DataPack(const std::string &packName)
+{
+    reader = std::make_unique<ReaderPack>(packName);
+}
+
+DataPack::~DataPack()
+{
+    reader.reset();
+}
+
+SDL_Surface *DataPack::getSurface(int index)
+{
+    SDL_RWops *tmp = reader->getData(index);
+    SDL_Surface *out = SDL_LoadBMP_RW(tmp, SDL_TRUE);
+    if (!out) {
+        printf("Failed to load image %i : %s\n", index, SDL_GetError());
+    }
+    return out;
+}
+
+SDL_Surface *DataPack::getSurface(const std::string &name)
+{
+    int index = reader->getIndexFromName(name);
+    return this->getSurface(index);
+}
+
+
 int main(int argc, char ** argv)
 {
     if (1) {
