@@ -213,6 +213,7 @@ void WriterPack::copyFile()
             nb_read_total += nb_read;
             buf += nb_read;
         }
+        SDL_RWclose(wf);
     }
 }
 
