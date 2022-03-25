@@ -194,7 +194,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
         // play voice when placeIt is false`
         if (!item->shouldPlaceIt()) {
             if (m_player->isHuman()) {
-                game.playVoice(SOUND_VOICE_01_ATR, m_player->getHouse()); // "Construction Complete"
+                game.playVoice(SOUND_VOICE_01_ATR, m_player->getId()); // "Construction Complete"
             }
             item->setPlaceIt(true);
 
