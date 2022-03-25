@@ -182,3 +182,7 @@ void cSoundPlayer::playMusic(int sampleId) {
 bool cSoundPlayer::isMusicPlaying() const {
     return midi_pos > -1;
 }
+
+void cSoundPlayer::stopMusic() {
+    stop_midi();
+}
