@@ -8,7 +8,7 @@
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 
-class BITMAP;
+struct BITMAP;
 class cGame;
 class cMouse;
 

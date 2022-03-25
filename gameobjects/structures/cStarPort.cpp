@@ -5,6 +5,7 @@
 #include "definitions.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
+#include "gameobjects/units/cReinforcements.h"
 
 cStarPort::cStarPort() {
     // other variables (class specific)

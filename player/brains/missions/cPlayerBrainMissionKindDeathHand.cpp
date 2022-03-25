@@ -1,6 +1,8 @@
-#include "include/d2tmh.h"
-
 #include "cPlayerBrainMissionKindDeathHand.h"
+
+#include "d2tmc.h"
+#include "definitions.h"
+#include "player/cPlayer.h"
 
 #include <fmt/core.h>
 

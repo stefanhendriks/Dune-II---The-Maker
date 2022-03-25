@@ -1,11 +1,12 @@
-#include "include/d2tmh.h"
-
 #include "cPlayerBrainMissionKindFremen.h"
+
+#include "d2tmc.h"
+#include "player/cPlayer.h"
 
 namespace brains {
 
     cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
-        specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
+        specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
         specificBuildTypeToGoToSelectTargetState = sSpecialInfo[SPECIAL_FREMEN].providesType;
         specificBuildIdToGoToSelectTargetState = sSpecialInfo[SPECIAL_FREMEN].providesTypeId;
         specificPlayerForEventToGoToSelectTargetState = &players[AI_CPU5];

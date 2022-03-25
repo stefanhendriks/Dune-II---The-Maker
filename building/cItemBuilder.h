@@ -1,5 +1,4 @@
-#ifndef CITEMBUILDER_H_
-#define CITEMBUILDER_H_
+#pragma once
 
 #include "definitions.h"
 #include "enums.h"
@@ -75,5 +74,3 @@ class cItemBuilder : cInputObserver {
 
         void onKeyPressed(const cKeyboardEvent &event);
 };
-
-#endif /* CITEMBUILDER_H_ */

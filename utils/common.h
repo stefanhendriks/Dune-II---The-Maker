@@ -14,6 +14,10 @@
 #include "enums.h"
 
 #include <string>
+#include <array>
+#include <memory>
+
+class cIniFile;
 
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
@@ -31,8 +35,10 @@ int fastThinkMsToTicks(int desiredMs);
 
 void logbook(const std::string& txt);
 
-// Installment of properties/settings in the game.
-void INSTALL_HOUSES();
+int makeColFromString(std::string colorStr);
+
+// Installment of properties/gameCfg in the game.
+void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
 
 void INIT_PREVIEWS();
 

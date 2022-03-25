@@ -54,14 +54,6 @@ enum class eHeadTowardsStructureResult {
     SUCCESS_RETURNING,
 };
 
-// Reinforcement data (loaded from ini file)
-struct sReinforcement
-{
-    int iSeconds;       // FPS based, every second this decreases (0 = deliver)
-    int iUnitType;      // what unit?
-    int iPlayer;         // to who?
-    int iCell;          // Where to?
-};
 
 inline std::string eActionTypeString(eActionType actionType) {
     switch (actionType) {
@@ -532,6 +524,7 @@ private:
     void think_harvester();
 
     void setAction(eActionType action);
+    void setGoalCell(int goalCell);
 };
 
 
@@ -553,19 +546,6 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
 
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
-
-/**
- * Allows overriding reinforcement flag, ie used when a unit is reinforced by construction or other way, rather
- * than a 'real' reinforcement.
- * @param iPlr
- * @param iTpe
- * @param iCll
- * @param iStart
- * @param isReinforcement
- */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
-
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 int UNIT_find_harvest_spot(int id);
@@ -575,6 +555,3 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);
 int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);
-
-void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
-void INIT_REINFORCEMENT();
