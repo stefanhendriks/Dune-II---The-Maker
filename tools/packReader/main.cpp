@@ -17,6 +17,18 @@ const int nbrFilesSize = 2; // one uint16_t
 
 // **********************
 //
+// struct fileInPack
+//
+// **********************
+struct FileInPack {
+    std::string name;
+    uint32_t fileSize;
+    uint32_t fileOffset;
+};
+
+
+// **********************
+//
 // ReaderPack
 //
 // **********************
@@ -29,8 +41,9 @@ public:
     int getIndexFromName(const std::string &filename);
     void listpackFile();
 private:
-    std::vector<std::pair<uint32_t, uint32_t>> getIndex;  //alone for performency 
-    std::vector<std::pair<std::string, uint32_t>> getName;
+    // std::vector<std::pair<uint32_t, uint32_t>> getIndex;  //alone for performency 
+    // std::vector<std::pair<std::string, uint32_t>> getName;
+    std::vector<FileInPack> fileInPack;
     bool readHeader();
     void readFileLines();
     void readDataIntoMemory();
@@ -56,8 +69,9 @@ ReaderPack::ReaderPack(const std::string &filename)
 
 ReaderPack::~ReaderPack()
 {
-    getIndex.clear();
-    getName.clear();
+    // getIndex.clear();
+    // getName.clear();
+    fileInPack.clear();
     SDL_RWclose(rfp);
     delete[] fileInMemory;
 }
@@ -75,8 +89,14 @@ void ReaderPack::readFileLines()
         uint32_t sizeFile;
         SDL_RWread(rfp, reinterpret_cast<char*>(&sizeFile), sizeof(sizeFile), 1);
 
-        getName.push_back(std::pair(std::string(fileID), sizeFile));
-        getIndex.push_back(std::pair(offsetFile, sizeFile));
+        FileInPack tmp;
+        tmp.name = std::string(fileID);
+        tmp.fileSize = sizeFile;
+        tmp.fileOffset = offsetFile;
+        fileInPack.push_back(tmp);
+
+        // getName.push_back(std::pair(std::string(fileID), sizeFile));
+        // getIndex.push_back(std::pair(offsetFile, sizeFile));
     }
 }
 
@@ -98,22 +118,21 @@ bool ReaderPack::readHeader()
 }
 
 int ReaderPack::getIndexFromName(const std::string &filename) {
-    auto it = std::find_if( getName.begin(), getName.end(),
-        [&filename](const std::pair<std::string, int>& element){ return element.first == filename;} );
-    if (it != getName.end())
-        return std::distance(getName.begin(), it);
+    auto it = std::find_if( fileInPack.begin(), fileInPack.end(),
+        [&filename](const FileInPack& element){ return element.name == filename;} );
+    if (it != fileInPack.end())
+        return std::distance(fileInPack.begin(), it);
     else
         return -1;
 }
 
 SDL_RWops* ReaderPack::getData(int index) {
-    return SDL_RWFromMem( &fileInMemory[getIndex[index].first], getIndex[index].second);
+    return SDL_RWFromMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
 };
 
 void ReaderPack::listpackFile() {
-    assert(getIndex.size() == getName.size() );
-    for (auto i=0; i<getIndex.size(); i++ ) {
-        std::cout << '[' << getName[i].first << "] = " << getName[i].second << std::endl;
+    for (auto i=0; i<fileInPack.size(); i++ ) {
+        std::cout << '[' << fileInPack[i].name << "] = " << fileInPack[i].fileSize << std::endl;
     }
 }
 
