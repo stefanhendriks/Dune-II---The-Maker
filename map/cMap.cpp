@@ -10,16 +10,22 @@
 
   */
 
-#include "../include/d2tmh.h"
 #include "cMap.h"
 
 #include "cMapCamera.h"
 #include "cMapEditor.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "player/cPlayer.h"
+#include "gameobjects/units/cReinforcements.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
 
+#include <algorithm>
 #include <cmath>
 
 cMap::cMap() {
@@ -43,8 +49,12 @@ cMap::~cMap() {
     }
 }
 
+void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements) {
+    m_reinforcements = reinforcements;
+}
+
 void cMap::init(int width, int height) {
-    INIT_REINFORCEMENT();
+    m_reinforcements->init();
 
     m_bAutoDetonateSpiceBlooms = false;
     m_bAutoSpawnSpiceBlooms = true;

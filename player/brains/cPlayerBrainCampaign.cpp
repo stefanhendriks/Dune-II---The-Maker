@@ -1,9 +1,9 @@
-#include "include/d2tmh.h"
-
 #include "cPlayerBrainCampaign.h"
-#include "actions/cRespondToThreatAction.h"
 
+#include "actions/cRespondToThreatAction.h"
+#include "d2tmc.h"
 #include "enums.h"
+#include "player/cPlayer.h"
 
 #include <fmt/core.h>
 
@@ -1730,7 +1730,7 @@ namespace brains {
 
     void cPlayerBrainCampaign::thinkFast() {
         for (auto &mission : m_missions) {
-            mission.think();
+            mission.thinkFast();
         }
     }
 

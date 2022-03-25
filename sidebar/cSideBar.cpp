@@ -1,11 +1,15 @@
-#include "../include/d2tmh.h"
 #include "cSideBar.h"
 
+#include "building/cItemBuilder.h"
+#include "d2tmc.h"
 #include "managers/cDrawManager.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
+
+#include <cassert>
 
 cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");

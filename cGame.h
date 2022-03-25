@@ -19,6 +19,7 @@
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 #include "utils/cTimeManager.h"
+#include "utils/cIniFile.h"
 
 #include <memory>
 #include <string>
@@ -30,6 +31,9 @@ class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
 class cScreenInit;
+class cHandleArgument;
+
+class cReinforcements;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -47,9 +51,16 @@ public:
 	cGame();
 	~cGame();
 
-	std::string m_gameFilename;
+    void jumpToSelectYourNextConquestMission(int missionNr);
+
+    void setGameFilename(const std::string& filename) {
+        m_gameFilename = filename;
+    }
+
+    int handleArguments(int argc, char **argv);
 
 	bool m_windowed;			    // windowed
+    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 	std::string m_version;          // version number, or name.
 
     // Alpha (for fading in/out)
@@ -184,6 +195,7 @@ public:
             case GAME_LOSING: return "GAME_LOSING";
             case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
             case GAME_CREDITS: return "GAME_CREDITS";
+            case GAME_MISSIONSELECT: return "GAME_MISSIONSELECT";
             default:
                 assert(false);
                 break;
@@ -230,6 +242,7 @@ private:
      * Variables start here
      */
     bool m_debugMode;               // ...
+	std::string m_gameFilename;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
@@ -238,10 +251,14 @@ private:
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
 
+    std::shared_ptr<cReinforcements> m_reinforcements;
+
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
 
     cTimeManager m_timeManager;
+
+    std::unique_ptr<cHandleArgument> m_handleArgument;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
@@ -273,6 +290,7 @@ private:
 
     cGameState *m_states[GAME_MAX_STATES];
 
+    bool loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
@@ -324,7 +342,6 @@ private:
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 
     void thinkSlow_state();
-    void thinkSlow_reinforcements();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 };

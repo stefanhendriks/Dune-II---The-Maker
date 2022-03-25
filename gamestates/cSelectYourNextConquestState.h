@@ -5,7 +5,8 @@
 #include "definitions.h"
 
 class cGame;
-class BITMAP;
+class cGuiButton;
+struct BITMAP;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
@@ -38,7 +39,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    cSelectYourNextConquestState(cGame& theGame);
+    explicit cSelectYourNextConquestState(cGame& theGame);
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;
@@ -72,6 +73,8 @@ public:
 
     void calculateOffset();
 
+    void fastForwardUntilMission(int missionNr, int house);
+
 private:
     eRegionState state;
 
@@ -93,6 +96,10 @@ private:
     BITMAP *regionClickMapBmp;  // this is the bmp that
 
     bool isFinishedConqueringRegions = true;
+
+    bool fastForward = false;
+
+    cGuiButton * m_guiBtnToMissionSelect;
 
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;

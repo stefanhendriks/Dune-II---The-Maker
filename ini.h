@@ -13,6 +13,7 @@
 
 #include <string>
 
+class cReinforcements;
 class cAbstractMentat;
 class cSelectYourNextConquestState;
 
@@ -55,7 +56,6 @@ class cSelectYourNextConquestState;
 #define INI_WIN         31
 #define INI_LOSE        32
 #define INI_DESCRIPTION 33
-#define INI_SETTINGS    34
 
 #define SEC_REGION		198
 
@@ -169,15 +169,6 @@ class cSelectYourNextConquestState;
 #define WORD_MAPNAME        86
 #define WORD_STARTCELL      87
 
-// SETTINGS SPECIFIC
-
-#define WORD_FULLSCREEN	    90			// fullscreen settings in game.ini
-#define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
-#define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
-#define WORD_CAMERADRAGMOVESPEED	93	    // camera drag move speed
-#define WORD_CAMERABORDERORKEYMOVESPEED	94	// camera border or key move speed
-#define WORD_CAMERAEDGEMOVE	95	        // allow camera movement by hitting edges of screen
-
 #define MAX_LINE_LENGTH     256
 
 #define INI_UNITS_PART_CONTROLLER   0
@@ -189,7 +180,7 @@ class cSelectYourNextConquestState;
 
 // Scenario loading
 //void INI_Load_scenario(bool bOrDune, char filename[30] );
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat);
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinforcements* reinforcements);
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);

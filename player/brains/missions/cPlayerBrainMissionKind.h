@@ -1,6 +1,8 @@
 #pragma once
 
-#include <observers/cScenarioObserver.h>
+#include "observers/cScenarioObserver.h"
+
+class cPlayer;
 
 namespace brains {
 

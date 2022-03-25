@@ -63,7 +63,6 @@
 #define MAX_STRUCTURES   200     // max of structures in the game
 #define MAX_BULLETS      300     // max of bullets in the game at once
 #define MAX_PARTICLES    600	 // max of particles in the game at once
-#define MAX_REINFORCEMENTS 50    // max of 50 reinforcements
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 //#define HOUSE_SLOTS       10      // amount of House 'types'
 
@@ -86,7 +85,8 @@
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
 #define GAME_CREDITS     17    // credits
-#define GAME_MAX_STATES 18
+#define GAME_MISSIONSELECT  18    // mission select
+#define GAME_MAX_STATES 19
 
 // FOR OPTIONS:
 

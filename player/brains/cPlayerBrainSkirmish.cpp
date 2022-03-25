@@ -1,9 +1,9 @@
-#include "include/d2tmh.h"
+#include "cPlayerBrainSkirmish.h"
 
 #include "actions/cRespondToThreatAction.h"
-
-#include "cPlayerBrainSkirmish.h"
 #include "enums.h"
+#include "d2tmc.h"
+#include "player/cPlayer.h"
 
 #include <fmt/core.h>
 
@@ -24,11 +24,24 @@ namespace brains {
         }
         m_TIMER_produceMissionCooldown = 0;
         m_TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
+
+        // These are all kinds of things we can use to influence AI's behavior
+        int multiplier = 1 + rnd(3); // TODO: base this on difficulty setting?
+        m_MOMENT_whenToBuildAdditionalRefinery = MOMENT_CONSIDER_ADDITIONAL_REFINERY * multiplier;
+        int randomizer = -400 + (rnd(800)); // TODO: base this on difficulty setting?
+        m_TIMER_mayBuildAdditionalUnits = MOMENT_PRODUCE_ADDITIONAL_UNITS + randomizer;
+        m_TIMER_additionalUnitsCooldown = 0;        
+        m_eagernessToBuildRandomUnits = 15; // TODO: base this on difficulty setting?
+        m_idealRefineriesCount = 2 + rnd(2); // TODO: base this on difficulty setting?
+        m_idealHarvesterCount = m_idealRefineriesCount * 2 + rnd(2); // TODO: base this on difficulty setting?
+        m_idealCarryallCount = 2 + rnd(2); // TODO: base this on difficulty setting?
+        m_idealOrnisCount = rnd(5); // TODO: base this on difficulty setting?
+
         m_myBase = std::vector<S_structurePosition>();
         m_buildOrders = std::vector<S_buildOrder>();
         m_discoveredEnemyAtCell = std::set<int>();
         m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
-        m_COUNT_badEconomy = 0;
+        m_economyScore = 50;
         m_centerOfBaseCell = 0;
     }
 
@@ -363,49 +376,72 @@ namespace brains {
             logMissions();
         }
 
-        if (m_TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
-            if (allMissionsAreDoneGatheringResources()) {
-                // build units, as long as we have some money on the bank.
-                // these units are produced without a mission.
-                if (player->getCredits() > 800) {
-                    if (rnd(100) < 15) {
+        if (m_TIMER_ai > m_TIMER_mayBuildAdditionalUnits) {
+            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+                // build additional harvesters and carryalls
+                if (player->getAmountOfUnitsForType(HARVESTER) < 2) {
+                    buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                }
+                if (player->getAmountOfUnitsForType(CARRYALL) < 1) {
+                    buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                }
+            } else if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+                // build additional harvesters and carryalls
+                if (player->getAmountOfUnitsForType(HARVESTER) < m_idealHarvesterCount) {
+                    buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                }
+                if (player->getAmountOfUnitsForType(CARRYALL) < m_idealCarryallCount) {
+                    buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                }
+            } else {
+                if (mayBuildAdditionalResources()) {
+                    int chance = m_eagernessToBuildRandomUnits + (m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD ? 15 : 5);
+
+                    // time to try again... randomized (TODO: Can be difficulty setting?)
+                    m_TIMER_additionalUnitsCooldown += rnd(15);
+
+                    log(fmt::format("mayBuildAdditionalResources(): Will attempt to build additional resources. Chance = {}, new coolDown = {}", chance, m_TIMER_additionalUnitsCooldown));
+
+                    // build units, as long as we have some money on the bank.
+                    // these units are produced without a mission.
+                    if (rnd(100) < chance) {
                         // when the player has it, it will be build
                         buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
                         buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
                         buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
                     }
-                    if (rnd(100) < 15) {
+                    if (rnd(100) < chance) {
                         if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
                             buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
                         }
                     }
-                    if (rnd(100) < 15) {
+                    if (rnd(100) < chance) {
                         if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
                             buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
                         }
                     }
-                    if (rnd(100) < 15) {
+                    if (rnd(100) < chance) {
                         if (player->getAmountOfUnitsForType(QUAD) < 5) {
                             buildUnitIfICanAndNotAlreadyQueued(QUAD);
                         }
                     }
-                    if (rnd(100) < 15) {
+                    if (rnd(100) < chance) {
                         if (player->getAmountOfUnitsForType(TANK) < 4) {
                             buildUnitIfICanAndNotAlreadyQueued(TANK);
                         }
                     }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < m_idealOrnisCount) {
                             buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
                         }
                     }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(HARVESTER) < m_idealHarvesterCount) {
                             buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
                         }
                     }
-                    if (rnd(100) < 15) {
-                        if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                    if (rnd(100) < chance) {
+                        if (player->getAmountOfUnitsForType(CARRYALL) < m_idealCarryallCount) {
                             buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
                         }
                     }
@@ -464,7 +500,7 @@ namespace brains {
         if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             produceMissionsDuringPeacetime(scoutingUnitType);
         } else if (m_state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-            produceAttackingMissions();
+            produceMissionsWhenEnemyDetected();
         }
     }
 
@@ -530,7 +566,7 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainSkirmish::produceAttackingMissions() {
+    void cPlayerBrainSkirmish::produceMissionsWhenEnemyDetected() {
         if (!hasMission(MISSION_ATTACK1)) {
             produceSkirmishGroundAttackMission(MISSION_ATTACK1);
         } else if (!hasMission(MISSION_ATTACK2)) {
@@ -539,6 +575,26 @@ namespace brains {
             produceSkirmishGroundAttackMission(MISSION_ATTACK3);
         } else if (!hasMission(MISSION_ATTACK4)) {
             produceSkirmishGroundAttackMission(MISSION_ATTACK4);
+        }
+
+        if (!hasMission(MISSION_GUARDFORCE) && player->canBuildUnitBool(QUAD) && player->canBuildUnitBool(TANK)) {
+            // add a minimum defending force
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = QUAD,
+                    .required = 1,
+                    .ordered = 0,
+                    .produced = 0,
+            });
+            group.push_back(S_groupKind{
+                    .buildType = UNIT,
+                    .type = TANK,
+                    .required = 2,
+                    .ordered = 0,
+                    .produced = 0,
+            });
+            addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
         }
 
         // separate mission for air attacks
@@ -770,9 +826,9 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
-        log(fmt::format("thinkState_Evaluate() : credits [{}], m_COUNT_badEconomy [{}], m_economyState [{}]",
+        log(fmt::format("thinkState_Evaluate() : credits [{}], m_economyScore [{}], m_economyState [{}]",
                         player->getCredits(),
-                        m_COUNT_badEconomy,
+                        m_economyScore,
                         ePlayerBrainSkirmishEconomyStateString(m_economyState))
             );
 
@@ -795,44 +851,59 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::evaluateEconomyState() {
-        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
-            if (player->getCredits() < 150) {
-                // count the times we are in this shape, after a certain time we switch to IMPROVE state
-                m_COUNT_badEconomy++;
-                if (m_COUNT_badEconomy > 5) {
-                    changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
-                }
-            }
-        } else {
-            // reduce economy score when we have more than 150 bucks
-            if (player->getCredits() > 150) {
-                m_COUNT_badEconomy--;
-                if (m_COUNT_badEconomy < 1) {
-                    m_COUNT_badEconomy = 0;
-                    changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_NORMAL);
-                }
-            }
+        ePlayerBrainSkirmishEconomyState state = determineEconomyState();
+        log(fmt::format("evaluateEconomyState: {} credits - {} score --> {}", player->getCredits(), m_economyScore, ePlayerBrainSkirmishEconomyStateString(m_economyState)));
+        changeEconomyStateTo(state);
+    }
 
-            if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
-                // when in 'trying to improve economy state' increase bad economy score when things really go bad?
-                if (player->getCredits() < 75) {
-                    m_COUNT_badEconomy++;
-                    if (m_COUNT_badEconomy > 25) {
-                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_BAD);
-                    }
-                }
-            } else if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
-                // we're in a pinch now - economy wise
-            }
+    int cPlayerBrainSkirmish::calculateEconomyScore() {
+        int credits = player->getCredits();
+        int idealMoneyCount = 1500;
+        int economyScore = ((credits / (float)idealMoneyCount) * 100);
+        if (economyScore > 100) {
+            economyScore = 100;
         }
+
+        log(fmt::format("calculateEconomyScore -> ideal = {}, current = {}, moneyScore = {}, m_economyScore = {}",
+                        idealMoneyCount, credits, economyScore, m_economyScore));
+
+        return economyScore;
+    }
+    ePlayerBrainSkirmishEconomyState cPlayerBrainSkirmish::determineEconomyState() {
+        // positive development...
+        int economyScore = calculateEconomyScore();
+
+        // first check how 'far' the desired score is from the current score
+        int distance = abs(m_economyScore - economyScore);
+
+        int delta = distance/5;
+        if (delta < 1) delta = 1;
+
+        // at first, decrease badness of economy by default
+        if (m_economyScore < economyScore) {
+            m_economyScore += delta;
+        }
+        if (m_economyScore > economyScore) {
+            m_economyScore -= delta;
+        }
+
+        log(fmt::format("determineEconomyState -> economyScore = {}, m_economyScore = {}, distance = {}, delta = {}", economyScore, m_economyScore, distance, delta));
+
+        // Evaluate economy score
+        if (m_economyScore < 15) {
+            return PLAYERBRAIN_ECONOMY_STATE_BAD;
+        }
+        if (m_economyScore < 30) {
+            return PLAYERBRAIN_ECONOMY_STATE_IMPROVE;
+        }
+        if (m_economyScore > 70) {
+            return PLAYERBRAIN_ECONOMY_STATE_GOOD;
+        }
+
+        return PLAYERBRAIN_ECONOMY_STATE_NORMAL;
     }
 
     void cPlayerBrainSkirmish::thinkState_EndGame() {
-        // ...
-//    char msg[255];
-//    sprintf(msg, "cPlayerBrainSkirmish::thinkState_EndGame(), for player [%d]", player->getId());
-//    logbook(msg);
-
         bool foundIdleUnit = false;
         std::vector<int> ids = player->getAllMyUnits();
         for (auto &id : ids) {
@@ -1070,11 +1141,13 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState) {
-        log(fmt::format( "cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
-                         ePlayerBrainSkirmishEconomyStateString(m_economyState),
-                         ePlayerBrainSkirmishEconomyStateString(newState))
+        if (newState != m_economyState) {
+            log(fmt::format("cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
+                            ePlayerBrainSkirmishEconomyStateString(m_economyState),
+                            ePlayerBrainSkirmishEconomyStateString(newState))
             );
-        this->m_economyState = newState;
+            m_economyState = newState;
+        }
     }
 
     void cPlayerBrainSkirmish::thinkState_Rest() {
@@ -1263,7 +1336,7 @@ namespace brains {
 
         if (!player->hasAtleastOneStructure(REFINERY))      return REFINERY;
         if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE || m_economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
-            if (player->getAmountOfStructuresForType(REFINERY) < 3) {
+            if (player->getAmountOfStructuresForType(REFINERY) < 2) {
                 return REFINERY;
             }
         }
@@ -1273,9 +1346,9 @@ namespace brains {
             return -1;
         }
 
-        if (m_TIMER_ai > MOMENT_CONSIDER_ADDITIONAL_REFINERY) {
+        if (m_TIMER_ai > m_MOMENT_whenToBuildAdditionalRefinery) {
             // time to think about an additional refinery
-            if (rnd(100) < 33 && player->getAmountOfStructuresForType(REFINERY) < 3) {
+            if (rnd(100) < 50 && player->getAmountOfStructuresForType(REFINERY) < m_idealRefineriesCount) {
                 // build one
                 return REFINERY;
             }
@@ -1287,49 +1360,96 @@ namespace brains {
 
         // play around with the order... (depending on difficulty, or type of ai, etc?)
         if (!player->hasAtleastOneStructure(LIGHTFACTORY))  return LIGHTFACTORY;
-        if (!player->hasAtleastOneStructure(RADAR))  return RADAR;
-        if (player->isStructureTypeAvailableForConstruction(WOR)) {
-            if (!player->hasAtleastOneStructure(WOR)) return WOR;
+
+        // randomize the order a bit, but do make sure that we have both before continueing
+        if (!player->hasAtleastOneStructure(RADAR) && !player->hasAtleastOneStructure(HEAVYFACTORY)) {
+            if (rnd(100) < 50) {
+                return RADAR;
+            } else {
+                return HEAVYFACTORY;
+            }
+        } else {
+            if (!player->hasAtleastOneStructure(RADAR)) return RADAR;
+            if (!player->hasAtleastOneStructure(HEAVYFACTORY)) return HEAVYFACTORY;
         }
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 5)  return PALACE;
-
-        if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
-            if (!player->hasAtleastOneStructure(BARRACKS)) return BARRACKS;
+        if (rnd(100) < 15) {
+            if (player->isStructureTypeAvailableForConstruction(WOR)) {
+                if (!player->hasAtleastOneStructure(WOR)) return WOR;
+            }
+            if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
+                if (!player->hasAtleastOneStructure(BARRACKS)) return BARRACKS;
+            }
         }
 
-        if (!player->hasAtleastOneStructure(HEAVYFACTORY))  return HEAVYFACTORY;
-        if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
+        // low chance on early palace (could be a specific "build profile" property?)
+        if (rnd(100) < 5) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
+
+        if (rnd(100) < 35) {
+            if (player->getAmountOfStructuresForType(TURRET) < 2) {
+                return TURRET;
+            }
+        }
+
+        if (rnd(100) < 40) {
+            if (player->isStructureTypeAvailableForConstruction(HIGHTECH)) {
+                if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
+            }
+        }
+
+        int chanceToBuildRocketTurrets = 60 - (player->getAmountOfStructuresForType(RTURRET) * 10);
+        if (rnd(100) < chanceToBuildRocketTurrets) {
+            return RTURRET;
+        }
+
+        int chanceToBuildTurrets = 40 - (player->getAmountOfStructuresForType(TURRET) * 5);
+        if (rnd(100) < chanceToBuildTurrets)  {
+            return TURRET;
+        }
+
         if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
+        if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
-
-        if (player->getAmountOfStructuresForType(TURRET) < 2)  return TURRET;
+        if (rnd(100) < 15) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
 
         if (!player->hasAtleastOneStructure(IX))  return IX;
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
+        // take a shot at building the palace
+        if (rnd(100) < 15) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
 
-        if (player->getAmountOfStructuresForType(RTURRET) < 6)  return RTURRET;
+        if (player->getAmountOfStructuresForType(RTURRET) < 8)  return RTURRET;
 
-        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
+        // take another shot at building the palace
+        if (rnd(100) < 15) {
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
+        }
 
         if (!player->hasAtleastOneStructure(REPAIR))  return REPAIR;
 
-        if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2 && rnd(100) < 15) return HEAVYFACTORY;
+        if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+            if (rnd(100) < 30) {
+                if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
+            }
 
-        if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
+            if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
 
-        if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
+            if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
 
-        if (player->getAmountOfStructuresForType(LIGHTFACTORY) < 2) return LIGHTFACTORY;
+            if (player->getAmountOfStructuresForType(LIGHTFACTORY) < 2) return LIGHTFACTORY;
 
-        if (player->isStructureTypeAvailableForConstruction(WOR)) {
-            if (player->getAmountOfStructuresForType(WOR) < 2) return WOR;
-        }
+            if (player->isStructureTypeAvailableForConstruction(WOR)) {
+                if (player->getAmountOfStructuresForType(WOR) < 2) return WOR;
+            }
 
-        if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
-            if (player->getAmountOfStructuresForType(BARRACKS) < 2) return BARRACKS;
+            if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
+                if (player->getAmountOfStructuresForType(BARRACKS) < 2) return BARRACKS;
+            }
         }
 
         // already has everything, this makes more sense now
@@ -1359,30 +1479,34 @@ namespace brains {
         return false;
     }
 
-    bool cPlayerBrainSkirmish::allMissionsAreDoneGatheringResources() {
-        for (auto &mission : m_missions) {
-            if (!mission.isDoneGatheringResources()) {
-                return false;
-            }
+    bool cPlayerBrainSkirmish::mayBuildAdditionalResources() {
+        if (m_TIMER_additionalUnitsCooldown > 0) {
+            m_TIMER_additionalUnitsCooldown--;
+            log(fmt::format("mayBuildAdditionalResources() cooldown in effect ({})", m_TIMER_additionalUnitsCooldown));
+            return false;
         }
-        return true;
+
+        bool goodEconomy = m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL ||
+                m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD;
+
+        return goodEconomy && rnd(100) < m_eagernessToBuildRandomUnits;
     }
 
     void cPlayerBrainSkirmish::thinkFast() {
         for (auto &mission : m_missions) {
-            mission.think();
+            mission.thinkFast();
         }
     }
 
     void cPlayerBrainSkirmish::log(const std::string & txt) {
         player->log(fmt::format(
-                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_COUNT_badEconomy={}] | {}",
+                "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_economyScore={}] | {}",
                 ePlayerBrainStateString(m_state),
                 ePlayerBrainSkirmishThinkStateString(m_thinkState),
                 ePlayerBrainSkirmishEconomyStateString(m_economyState),
                 this->m_TIMER_rest,
                 this->m_TIMER_ai,
-                this->m_COUNT_badEconomy,
+                this->m_economyScore,
                 txt)
         );
     }
