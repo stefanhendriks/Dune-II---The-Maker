@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 // **********************
 //
@@ -94,7 +95,7 @@ bool ReaderPack::readHeader()
 
 int ReaderPack::getIndexFromName(const std::string &filename) {
     auto it = std::find_if( getName.begin(), getName.end(),
-    [&filename](const std::pair<std::string, int>& element){ return element.first == filename;} );
+        [&filename](const std::pair<std::string, int>& element){ return element.first == filename;} );
     if (it != getName.end())
         return std::distance(getName.begin(), it);
     else
@@ -271,6 +272,7 @@ SDL_Surface *DataPack::getSurface(const std::string &name)
 
 int main(int argc, char ** argv)
 {
+    // First we create a pak file from scratch
     if (1) {
         // write pak file.
     	WriterPack test("test1.pak");
@@ -295,8 +297,10 @@ int main(int argc, char ** argv)
     // load texture normal mode
     //SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
 
+    //-----------------------------------------------------------------
     //load with pack
-    ReaderPack testR("test1.pak");
+    //-----------------------------------------------------------------
+    /*ReaderPack testR("test1.pak");
 
     SDL_RWops *rwm1 = testR.getData(0);
     SDL_RWops *rwm2 = testR.getData(1);
@@ -314,7 +318,18 @@ int main(int argc, char ** argv)
     SDL_Surface *surface3 = SDL_LoadBMP_RW(rwm3, SDL_TRUE);
     if (!surface3) {
     printf("Failed to load image 3 : %s\n", SDL_GetError());
-    }
+    }*/
+    //-----------------------------------------------------------------
+
+    //-----------------------------------------------------------------
+    //load with DataPack
+    //-----------------------------------------------------------------
+
+    DataPack dataRead("test1.pak");
+    SDL_Surface *surface1 = dataRead.getSurface(0);
+    SDL_Surface *surface2 = dataRead.getSurface("test2.bmp");
+    SDL_Surface *surface3 = dataRead.getSurface(2);
+    //-----------------------------------------------------------------
 
     //convert SDL_Surface to SDL_Texture
     SDL_Texture * texture1 = SDL_CreateTextureFromSurface(renderer, surface1);    // GPU memory
