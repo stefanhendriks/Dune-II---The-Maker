@@ -22,8 +22,9 @@ const int nbrFilesSize = 2; // one uint16_t
 // **********************
 struct FileInPack {
     std::string name;
-    uint32_t fileSize;
+    std::string fileId;
     uint32_t fileOffset;
+    uint32_t fileSize;
 };
 
 
@@ -38,7 +39,7 @@ public:
     ReaderPack(const std::string &filename);
     ~ReaderPack();
     SDL_RWops * getData(int index);
-    int getIndexFromName(const std::string &filename);
+    int getIndexFromName(const std::string &fileId);
     void listpackFile();
 private:
     // std::vector<std::pair<uint32_t, uint32_t>> getIndex;  //alone for performency 
@@ -91,6 +92,7 @@ void ReaderPack::readFileLines()
 
         FileInPack tmp;
         tmp.name = std::string(fileID);
+        tmp.fileId = std::string(fileID); 
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
         fileInPack.push_back(tmp);
@@ -117,9 +119,9 @@ bool ReaderPack::readHeader()
     }
 }
 
-int ReaderPack::getIndexFromName(const std::string &filename) {
+int ReaderPack::getIndexFromName(const std::string &fileId) {
     auto it = std::find_if( fileInPack.begin(), fileInPack.end(),
-        [&filename](const FileInPack& element){ return element.name == filename;} );
+        [&fileId](const FileInPack& element){ return element.fileId == fileId;} );
     if (it != fileInPack.end())
         return std::distance(fileInPack.begin(), it);
     else
@@ -132,7 +134,7 @@ SDL_RWops* ReaderPack::getData(int index) {
 
 void ReaderPack::listpackFile() {
     for (auto i=0; i<fileInPack.size(); i++ ) {
-        std::cout << '[' << fileInPack[i].name << "] = " << fileInPack[i].fileSize << std::endl;
+        std::cout << '[' << fileInPack[i].fileId << "] = " << fileInPack[i].fileSize << std::endl;
     }
 }
 
@@ -153,7 +155,7 @@ class WriterPack
 public:
     WriterPack(const std::string &packName);
     ~WriterPack();
-    bool addFile(const std::string &fileName);
+    bool addFile(const std::string &fileName, const std::string &fileId);
     bool writePackFiles();
     void listpackFile();
 private:
@@ -162,7 +164,9 @@ private:
     void copyFile();
     int numberFile = 0;
     SDL_RWops *wfp;  //wfp as writeFilePack
-    std::map<std::string, uint32_t> mNameSize;
+    //std::map<std::string, uint32_t> mNameSize;
+    std::vector<FileInPack> fileInPack;
+
 };
 
 WriterPack::WriterPack(const std::string &packName)
@@ -173,14 +177,23 @@ WriterPack::WriterPack(const std::string &packName)
 WriterPack::~WriterPack()
 {
     SDL_RWclose(wfp);
-    mNameSize.clear();
+    // mNameSize.clear();
+    fileInPack.clear();
 }
 
-bool WriterPack::addFile(const std::string &fileName)
+bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
 {
     SDL_RWops *file = SDL_RWFromFile(fileName.c_str(),"rb");
     if (file!=nullptr) {
-        mNameSize[fileName] = SDL_RWsize(file);
+        // mNameSize[fileName] = SDL_RWsize(file);
+        
+        FileInPack tmp;
+        tmp.name = fileName;
+        tmp.fileId = fileId; 
+        tmp.fileSize = SDL_RWsize(file);
+        tmp.fileOffset = 0;
+        fileInPack.push_back(tmp);
+
         SDL_RWclose(file);
         return true;
     } else
@@ -194,7 +207,8 @@ void WriterPack::writeHeader()
     if (SDL_RWwrite(wfp, str, 1, len) != len) {
         printf("Couldn't fully write string\n");
     }
-    u_int16_t nbFiles = mNameSize.size();
+    //u_int16_t nbFiles = mNameSize.size();
+    u_int16_t nbFiles = fileInPack.size();
     SDL_RWwrite(wfp, reinterpret_cast<const char*>(&nbFiles), sizeof(u_int16_t), 1);
 }
 
@@ -202,29 +216,34 @@ void WriterPack::writeHeader()
 void WriterPack::writeFileLines()
 {
     uint32_t offset = 0;
-    for (const auto& [key, value] : mNameSize) {
+    // for (const auto& [key, value] : mNameSize) {
+    for (const auto& tmp : fileInPack) {
         char fileID[fileNameSize]{'\0'};
-        strcpy(fileID,key.c_str());
+        strcpy(fileID,tmp.fileId.c_str());
         SDL_RWwrite(wfp, fileID, 1, fileNameSize) != fileNameSize;
         // position du fichier dans les datas
         SDL_RWwrite(wfp, reinterpret_cast<const char*>(&offset), sizeof(uint32_t), 1);
-        offset += value;
+        offset += tmp.fileSize;
         // taille du fichier dans les datas
-        SDL_RWwrite(wfp, reinterpret_cast<const char*>(&value), sizeof(uint32_t), 1);     
+        SDL_RWwrite(wfp, reinterpret_cast<const char*>(&tmp.fileSize), sizeof(uint32_t), 1);     
     }
 }
 
 void WriterPack::listpackFile()
 {
-    for (const auto& [key, value] : mNameSize) {
-        std::cout << '[' << key << "] = " << value << std::endl;
+    // for (const auto& [key, value] : mNameSize) {
+    //     std::cout << '[' << key << "] = " << value << std::endl;
+    // }
+    for (const auto& tmp : fileInPack) {
+        std::cout << '[' << tmp.fileId << "] = " << tmp.fileSize << std::endl;
     }
 }
 
 void WriterPack::copyFile()
 {
-    for (const auto& [key, value] : mNameSize) {
-        SDL_RWops *wf = SDL_RWFromFile(key.c_str(),"rb");
+    // for (const auto& [key, value] : mNameSize) {
+    for (const auto& tmp : fileInPack) {
+        SDL_RWops *wf = SDL_RWFromFile(tmp.name.c_str(),"rb");
         Sint64 res_size = SDL_RWsize(wf);
         char* res = (char*)malloc(res_size + 1);
 
@@ -299,9 +318,9 @@ int main(int argc, char ** argv)
         // write pak file.
     	WriterPack test("test1.pak");
         //
-        test.addFile("test1.bmp");
-        test.addFile("test2.bmp");
-        test.addFile("test3.bmp");
+        test.addFile("test1.bmp","test1");
+        test.addFile("test2.bmp","test2");
+        test.addFile("test3.bmp","test3");
         //
         test.listpackFile();
         //
@@ -349,7 +368,7 @@ int main(int argc, char ** argv)
 
     DataPack dataRead("test1.pak");
     SDL_Surface *surface1 = dataRead.getSurface(0);
-    SDL_Surface *surface2 = dataRead.getSurface("test2.bmp");
+    SDL_Surface *surface2 = dataRead.getSurface("test2");
     SDL_Surface *surface3 = dataRead.getSurface(2);
     //-----------------------------------------------------------------
 
