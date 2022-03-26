@@ -403,6 +403,9 @@ int main(int argc, char ** argv)
                 if (event.key.keysym.sym == SDLK_e){
                     texture = texture3;
 		        }
+                if (event.key.keysym.sym == SDLK_ESCAPE){
+                    quit = true;
+		        }
                 break;
         }
         SDL_RenderCopy(renderer, texture, NULL, NULL);
