@@ -36,10 +36,15 @@ struct FileInPack {
 class ReaderPack
 {
 public:
+    //! Create and read PackFile archive filename
     ReaderPack(const std::string &filename);
     ~ReaderPack();
+    //! get raw ressources from PackFile by this index in the archive
     SDL_RWops * getData(int index);
+    //! get index from ressource nemed fileId
     int getIndexFromName(const std::string &fileId);
+    //! print all files in Pack
+    //! @todo get a vector for other traitement
     void listpackFile();
 private:
     std::vector<FileInPack> fileInPack;
@@ -142,12 +147,15 @@ void ReaderPack::readDataIntoMemory()
 class WriterPack
 {
 public:
+    //! Create the archive skeleton
     WriterPack(const std::string &packName);
     ~WriterPack();
+    //! add individual file fileName in archive and rename it by fileId 
     bool addFile(const std::string &fileName, const std::string &fileId);
-    bool writePackFiles();
-    void listpackFile();
+    //! Create PackFile after add all files in archive
+    bool writePackFilesOnDisk();
 private:
+    void listpackFile();
     void writeHeader();
     void writeFileLines();
     void copyFile();
@@ -214,9 +222,13 @@ void WriterPack::writeFileLines()
 
 void WriterPack::listpackFile()
 {
+    std::cout << "------------------------------" << std::endl;
+    std::cout << "File(s) stored in archive " << std::endl;
+    std::cout << "------------------------------" << std::endl;
     for (const auto& tmp : fileInPack) {
-        std::cout << '[' << tmp.fileId << "] = " << tmp.fileSize << std::endl;
+        std::cout << "\t[" << tmp.fileId << "] -> " << tmp.fileSize << std::endl;
     }
+    std::cout << "------------------------------" << std::endl;
 }
 
 void WriterPack::copyFile()
@@ -238,11 +250,12 @@ void WriterPack::copyFile()
     }
 }
 
-bool WriterPack::writePackFiles()
+bool WriterPack::writePackFilesOnDisk()
 {
     writeHeader();
     writeFileLines();
     copyFile();
+    listpackFile();
     return true;
 }
 
@@ -250,6 +263,23 @@ bool WriterPack::writePackFiles()
 // **********************
 //
 // DataPack
+//
+// A DataPack is composed by an header and data 
+//
+// The header is organized like this
+// - title: on 4 bytes
+// - number of files: on 2 bytes (uint16_t)
+// One line for each file that contains
+// - its identifier on 40 bytes
+// - its position in the data : offset on 4 bytes (uint32_t)
+// - the size of the file : sizeFile on 4 bytes (uint32_t) 
+//
+// Data are organized like this
+// file0 offset 0          to    0+sizeFile0 <-- offset1
+// file1 offset offset1    to    offset1 + sizeFile1 <--- offset2
+// file2 offset offset2    to    offset2 + sizeFile2 <--- offset3
+// file3 offset offset3    to    offset3 + sizeFile3 <--- offset4
+// ...
 //
 // **********************
 class DataPack
@@ -301,9 +331,7 @@ int main(int argc, char ** argv)
         test.addFile("test2.bmp","test2");
         test.addFile("test3.bmp","test3");
         //
-        test.listpackFile();
-        //
-        test.writePackFiles();
+        test.writePackFilesOnDisk();
     }    
 
     bool quit = false;
