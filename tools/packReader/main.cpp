@@ -11,7 +11,7 @@
 #include <memory>
 
 const int fileNameSize = 40;
-const int titleSize = 4;
+const int titleSize = 4;    // "D2TM"
 const int offsetSize = 4+4; // two uint32_t 
 const int nbrFilesSize = 2; // one uint16_t
 
@@ -42,8 +42,6 @@ public:
     int getIndexFromName(const std::string &fileId);
     void listpackFile();
 private:
-    // std::vector<std::pair<uint32_t, uint32_t>> getIndex;  //alone for performency 
-    // std::vector<std::pair<std::string, uint32_t>> getName;
     std::vector<FileInPack> fileInPack;
     bool readHeader();
     void readFileLines();
@@ -59,8 +57,6 @@ ReaderPack::ReaderPack(const std::string &filename)
 {
     fpName = filename;
     if (readHeader()){
-
-        //we know the buffer size : 40+4+4 per file with fileInPak file
         sizeInMemory = SDL_RWsize(rfp) - titleSize - nbrFilesSize - (fileNameSize+offsetSize)*fileInPak;
         fileInMemory = new char[sizeInMemory];
         readFileLines();
@@ -70,8 +66,6 @@ ReaderPack::ReaderPack(const std::string &filename)
 
 ReaderPack::~ReaderPack()
 {
-    // getIndex.clear();
-    // getName.clear();
     fileInPack.clear();
     SDL_RWclose(rfp);
     delete[] fileInMemory;
@@ -96,9 +90,6 @@ void ReaderPack::readFileLines()
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
         fileInPack.push_back(tmp);
-
-        // getName.push_back(std::pair(std::string(fileID), sizeFile));
-        // getIndex.push_back(std::pair(offsetFile, sizeFile));
     }
 }
 
@@ -113,8 +104,6 @@ bool ReaderPack::readHeader()
         uint16_t nbrFiles;
         SDL_RWread(rfp, reinterpret_cast<char*>(&nbrFiles), sizeof(nbrFiles), 1);
         fileInPak = nbrFiles;
-        //SDL_RWwrite    SDL_RWread(rw, buf, sizeof (buf), 1);
-        //std::cout << "Il y a " << nbrFiles << std::endl;
         return true;    
     }
 }
@@ -164,9 +153,7 @@ private:
     void copyFile();
     int numberFile = 0;
     SDL_RWops *wfp;  //wfp as writeFilePack
-    //std::map<std::string, uint32_t> mNameSize;
     std::vector<FileInPack> fileInPack;
-
 };
 
 WriterPack::WriterPack(const std::string &packName)
@@ -177,7 +164,6 @@ WriterPack::WriterPack(const std::string &packName)
 WriterPack::~WriterPack()
 {
     SDL_RWclose(wfp);
-    // mNameSize.clear();
     fileInPack.clear();
 }
 
@@ -185,8 +171,7 @@ bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
 {
     SDL_RWops *file = SDL_RWFromFile(fileName.c_str(),"rb");
     if (file!=nullptr) {
-        // mNameSize[fileName] = SDL_RWsize(file);
-        
+       
         FileInPack tmp;
         tmp.name = fileName;
         tmp.fileId = fileId; 
@@ -207,7 +192,6 @@ void WriterPack::writeHeader()
     if (SDL_RWwrite(wfp, str, 1, len) != len) {
         printf("Couldn't fully write string\n");
     }
-    //u_int16_t nbFiles = mNameSize.size();
     u_int16_t nbFiles = fileInPack.size();
     SDL_RWwrite(wfp, reinterpret_cast<const char*>(&nbFiles), sizeof(u_int16_t), 1);
 }
@@ -216,7 +200,6 @@ void WriterPack::writeHeader()
 void WriterPack::writeFileLines()
 {
     uint32_t offset = 0;
-    // for (const auto& [key, value] : mNameSize) {
     for (const auto& tmp : fileInPack) {
         char fileID[fileNameSize]{'\0'};
         strcpy(fileID,tmp.fileId.c_str());
@@ -231,9 +214,6 @@ void WriterPack::writeFileLines()
 
 void WriterPack::listpackFile()
 {
-    // for (const auto& [key, value] : mNameSize) {
-    //     std::cout << '[' << key << "] = " << value << std::endl;
-    // }
     for (const auto& tmp : fileInPack) {
         std::cout << '[' << tmp.fileId << "] = " << tmp.fileSize << std::endl;
     }
@@ -241,7 +221,6 @@ void WriterPack::listpackFile()
 
 void WriterPack::copyFile()
 {
-    // for (const auto& [key, value] : mNameSize) {
     for (const auto& tmp : fileInPack) {
         SDL_RWops *wf = SDL_RWFromFile(tmp.name.c_str(),"rb");
         Sint64 res_size = SDL_RWsize(wf);
@@ -335,37 +314,9 @@ int main(int argc, char ** argv)
     SDL_Window * window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // load texture normal mode
-    //SDL_Surface * surface = SDL_LoadBMP("test.bmp");                            // CPU memory
-
-    //-----------------------------------------------------------------
-    //load with pack
-    //-----------------------------------------------------------------
-    /*ReaderPack testR("test1.pak");
-
-    SDL_RWops *rwm1 = testR.getData(0);
-    SDL_RWops *rwm2 = testR.getData(1);
-    SDL_RWops *rwm3 = testR.getData(2);
-
-    // convert file to SDL_Surface
-    SDL_Surface *surface1 = SDL_LoadBMP_RW(rwm1, SDL_TRUE);
-    if (!surface1) {
-    printf("Failed to load image 1 : %s\n", SDL_GetError());
-    }
-    SDL_Surface *surface2 = SDL_LoadBMP_RW(rwm2, SDL_TRUE);
-    if (!surface2) {
-    printf("Failed to load image 2 : %s\n", SDL_GetError());
-    }
-    SDL_Surface *surface3 = SDL_LoadBMP_RW(rwm3, SDL_TRUE);
-    if (!surface3) {
-    printf("Failed to load image 3 : %s\n", SDL_GetError());
-    }*/
-    //-----------------------------------------------------------------
-
     //-----------------------------------------------------------------
     //load with DataPack
     //-----------------------------------------------------------------
-
     DataPack dataRead("test1.pak");
     SDL_Surface *surface1 = dataRead.getSurface(0);
     SDL_Surface *surface2 = dataRead.getSurface("test2");
