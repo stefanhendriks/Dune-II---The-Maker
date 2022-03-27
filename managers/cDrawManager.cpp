@@ -58,12 +58,13 @@ void cDrawManager::drawCombatState() {
 	map.draw_bullets();
 
 	m_structureDrawer.drawStructuresSecondLayer();
-	m_structureDrawer.drawStructuresHealthBars();
 
 	map.draw_units_2nd();
 
     m_particleDrawer.drawTopLayer();
-	m_mapDrawer.drawShroud();
+    m_structureDrawer.drawStructuresHealthBars();
+
+    m_mapDrawer.drawShroud();
 
 	drawRallyPoint();
 
