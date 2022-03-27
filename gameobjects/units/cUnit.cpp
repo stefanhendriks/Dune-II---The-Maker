@@ -3220,9 +3220,12 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                 originId = unitWhoDealsDamage;
                 originCell = unit[unitWhoDealsDamage].iCell;
             } else if (structureWhoDealsDamage > -1) {
-                originId = structureWhoDealsDamage;
-                originType = eBuildType::STRUCTURE;
-                originCell = structure[structureWhoDealsDamage]->getCell();
+                cAbstractStructure *pStructure = structure[structureWhoDealsDamage];
+                if (pStructure) { // can be NULL (destroyed after firing this bullet)
+                    originId = structureWhoDealsDamage;
+                    originType = eBuildType::STRUCTURE;
+                    originCell = pStructure->getCell();
+                }
             }
             s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DAMAGED,
