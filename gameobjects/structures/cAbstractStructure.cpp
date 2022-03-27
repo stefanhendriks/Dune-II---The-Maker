@@ -530,15 +530,18 @@ void cAbstractStructure::thinkFast() {
 void cAbstractStructure::think_repair() {
     // REPAIRING
     if (bRepair) {
-		if (players[iPlayer].hasEnoughCreditsFor(1.0f)) {
+        cPlayer &player = players[iPlayer];
+        float costToRepair = 1.0f;
+        s_StructureInfo &structureInfo = sStructureInfo[getType()];
+        if (player.hasEnoughCreditsFor(costToRepair)) {
 			TIMER_repair++;
 
-			if (TIMER_repair > 7)
-			{
-				TIMER_repair=0;
-				iHitPoints += sStructureInfo[getType()].fixhp;
-				players[iPlayer].substractCredits(1);
-			}
+            int repairDelay = 7;
+            if (TIMER_repair > repairDelay) {
+                TIMER_repair = 0;
+                iHitPoints += structureInfo.fixhp;
+                player.substractCredits(costToRepair);
+            }
 
 			// done repairing
 			if (iHitPoints >= getMaxHP()) {
@@ -546,7 +549,7 @@ void cAbstractStructure::think_repair() {
 				bRepair=false;
 			}
 		}
-		assert(iHitPoints <= sStructureInfo[getType()].hp);
+		assert(iHitPoints <= structureInfo.hp);
 	}
 }
 
