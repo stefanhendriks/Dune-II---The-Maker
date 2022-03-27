@@ -85,15 +85,17 @@ class cAbstractStructure {
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
 
+        int m_smokeParticlesCreated;
+
 		// TIMERS that all structures use
 		int TIMER_repair;   // repairing timer
 		int TIMER_flag;     // flag animation
+        int TIMER_reduceSmoke; // reduce smoke created counter
 
 		int TIMER_decay;   // damaging stuff
 		int TIMER_prebuild; // prebuild timer
 
 		// -------------
-
 
 
 		// Filled in by derived classes

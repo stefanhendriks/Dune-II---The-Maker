@@ -32,6 +32,7 @@ int slowThinkMsToTicks(int desiredMs);
  * @return
  */
 int fastThinkMsToTicks(int desiredMs);
+int fastThinkTicksToMs(int ticks);
 
 void logbook(const std::string& txt);
 
