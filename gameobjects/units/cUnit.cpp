@@ -3216,9 +3216,12 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
             auto originId = -1;
             auto originCell = -1;
             if (unitWhoDealsDamage > -1) {
-                originType = eBuildType::UNIT;
-                originId = unitWhoDealsDamage;
-                originCell = unit[unitWhoDealsDamage].iCell;
+                cUnit &pUnit = unit[unitWhoDealsDamage];
+                if (pUnit.isValid()) {
+                    originType = eBuildType::UNIT;
+                    originId = unitWhoDealsDamage;
+                    originCell = pUnit.iCell;
+                }
             } else if (structureWhoDealsDamage > -1) {
                 cAbstractStructure *pStructure = structure[structureWhoDealsDamage];
                 if (pStructure) { // can be NULL (destroyed after firing this bullet)
