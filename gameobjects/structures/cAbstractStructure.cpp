@@ -528,7 +528,7 @@ void cAbstractStructure::thinkFast() {
 }
 
 void cAbstractStructure::think_repair() {
-    // REPAIRING
+    // REPAIRING (from think_fast, so called every 5 ms).
     if (bRepair) {
         cPlayer &player = players[iPlayer];
         float costToRepair = 1.0f;
@@ -536,7 +536,7 @@ void cAbstractStructure::think_repair() {
         if (player.hasEnoughCreditsFor(costToRepair)) {
 			TIMER_repair++;
 
-            int repairDelay = 7;
+            int repairDelay = fastThinkMsToTicks(150);
             if (TIMER_repair > repairDelay) {
                 TIMER_repair = 0;
                 iHitPoints += structureInfo.fixhp;
