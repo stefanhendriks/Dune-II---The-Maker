@@ -858,6 +858,8 @@ bool cAbstractStructure::canSpawnUnits() const {
     return getType() == REFINERY ||
             getType() == HEAVYFACTORY ||
             getType() == LIGHTFACTORY ||
+            getType() == WOR ||
+            getType() == BARRACKS ||
             /*getType() == PALACE ||*/
             getType() == STARPORT ||
             getType() == HIGHTECH ||
