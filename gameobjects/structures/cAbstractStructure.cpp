@@ -30,6 +30,7 @@ cAbstractStructure::cAbstractStructure() :
     frames = 1;
     iHitPoints=-1;      // default = no hitpoints
     iCell=-1;
+    m_smokeParticlesCreated = 0;
 
     armor = 1;
 
@@ -61,6 +62,7 @@ cAbstractStructure::cAbstractStructure() :
     // TIMERS
     TIMER_repair=-1;
     TIMER_flag=-1;
+    TIMER_reduceSmoke=-1;
 
     TIMER_decay=0;   // damaging stuff
     TIMER_prebuild=0;
@@ -469,7 +471,11 @@ void cAbstractStructure::damage(int hp, int originId) {
         if (rnd(100) < iChance) {
             long x = getRandomPosX();
             long y = getRandomPosY();
-            cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
+            int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
+            if (particleIndex > -1) {
+                TIMER_reduceSmoke = particle[particleIndex].getTimerDeadInTicks();
+                m_smokeParticlesCreated++;
+            }
         }
 
         s_GameEvent event {
@@ -520,6 +526,17 @@ void cAbstractStructure::setOwner(int player) {
 void cAbstractStructure::thinkFast() {
     think_decay();
     think_repair();
+
+    if (TIMER_reduceSmoke > 0) {
+        TIMER_reduceSmoke--;
+        if (TIMER_reduceSmoke == 0) {
+            m_smokeParticlesCreated--;
+            if (m_smokeParticlesCreated > 0) {
+                TIMER_reduceSmoke = 500;
+            }
+        }
+    }
+
     if (getStructureInfo().flags.empty()) {
         think_flag();
     } else {
@@ -607,10 +624,16 @@ bool cAbstractStructure::isDamaged() {
  */
 int cAbstractStructure::getSmokeChance() {
     if (getHitPoints() < (getMaxHP() / 2)) {
-        return 15;
+        if (m_smokeParticlesCreated > 2) {
+            return 1;
+        }
+        if (m_smokeParticlesCreated > 1) {
+            return 3;
+        }
+        return 5;
     }
 
-    return 5;
+    return 1;
 }
 
 bool cAbstractStructure::belongsTo(int playerId) const {
