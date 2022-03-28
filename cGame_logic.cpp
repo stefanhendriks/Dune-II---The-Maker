@@ -742,7 +742,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     game.m_screenY = game.m_iniScreenHeight;
 
     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", 
-        fmt::format("Resolution {}x{} loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight)
+        fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_iniScreenWidth, game.m_iniScreenHeight)
     );
 }
 
