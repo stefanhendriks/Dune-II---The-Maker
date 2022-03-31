@@ -1742,7 +1742,9 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
         m_state == GAME_WINNING ||
         m_state == GAME_LOSING
       ) {
-        m_mentat->onNotifyMouseEvent(event);
+        if (m_mentat) {
+            m_mentat->onNotifyMouseEvent(event);
+        }
     }
 }
 
