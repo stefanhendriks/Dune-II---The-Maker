@@ -192,7 +192,7 @@ cLogger::cLogger() : m_file(std::fopen("log.txt", "wt")), m_startTime(std::clock
 
 cLogger::~cLogger() {
     log(eLogLevel::LOG_INFO, eLogComponent::COMP_NONE, "Logger shut down", "Thanks for playing.");
-    fclose(m_file);
+    std::fclose(m_file);
 }
 
 /* From 1970-01-01T00:00:00 */
