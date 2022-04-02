@@ -29,9 +29,13 @@
 cStructureFactory::cStructureFactory() {
 }
 
+cStructureFactory::~cStructureFactory() {
+    destroy();
+}
+
 cStructureFactory *cStructureFactory::getInstance() {
   static cStructureFactory structureFactory;
-	return &structureFactory;
+  return &structureFactory;
 }
 
 cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
