@@ -280,8 +280,6 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
-    assert(map->getHeight() <= 64);
-    assert(map->getWidth() <= 64);
     if (map->getHeight() > 64 || map->getWidth() > 64) {
         // do nothing (assume, 1 cell = 1 pixel)
     } else {
