@@ -60,7 +60,7 @@ std::string cSection::getStringValue(const std::string &key) const {
 }
 
 template<typename T>
-T cSection::FromString(const std::string &value) const {
+T cSection::FromString(std::string value) const {
     std::istringstream ss(value);
     T res;
     ss >> res;
