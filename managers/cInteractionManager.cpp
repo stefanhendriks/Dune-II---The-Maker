@@ -13,16 +13,13 @@ cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cInputObserver()
 	// does not own these things!
 	player = thePlayer;
     sidebar = thePlayer->getSideBar();
-	miniMapDrawer = drawManager->getMiniMapDrawer();
-	mouseDrawer = drawManager->getMouseDrawer();
-	placeItDrawer = drawManager->getPlaceItDrawer();
-	orderDrawer = drawManager->getOrderDrawer();
+    logbook("cInteractionManager constructor");
 }
 
 cInteractionManager::~cInteractionManager() {
     player = nullptr;
 	sidebar = nullptr;
-	miniMapDrawer = nullptr;
+    logbook("cInteractionManager destructor");
 }
 
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
@@ -80,15 +77,18 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 
         sidebar->onNotifyMouseEvent(mouseEvent);
         mapCamera->onNotifyMouseEvent(mouseEvent);
-        miniMapDrawer->onNotifyMouseEvent(mouseEvent);
-        orderDrawer->onNotify(mouseEvent);
+
+        // do like this because drawManager gets deleted/recreated
+        drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
+        drawManager->getOrderDrawer()->onNotify(mouseEvent);
         cItemBuilder *pBuilder = player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyMouseEvent(mouseEvent);
         }
     }
 
-    mouseDrawer->onNotify(mouseEvent);
+    // do like this because drawManager gets deleted/recreated
+    drawManager->getMouseDrawer()->onNotify(mouseEvent);
 
     // LAST FOR NOW, as this can change states and thus break things. Hence, if you put this
     // somewhere above this function, the lines after this onNotifyGameEvent might end up pointing to invalid memory addresses
