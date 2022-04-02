@@ -1098,9 +1098,6 @@ bool cGame::setupGame() {
     delete mapCamera;
     mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
-    delete drawManager;
-    drawManager = new cDrawManager(&players[HUMAN]);
-
     INI_Install_Game(m_gameFilename);
     // m_handleArgument->applyArguments(); //Apply command line arguments
     // m_handleArgument.reset();
@@ -1111,11 +1108,25 @@ bool cGame::setupGame() {
     // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
 
+    m_mouse->setMouseObserver(nullptr);
+    m_keyboard->setKeyboardObserver(nullptr);
+
+    cPlayer *humanPlayer = &players[HUMAN];
+
+    delete drawManager;
+    drawManager = new cDrawManager(humanPlayer);
+
+    // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
+    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
+
     game.setupPlayers();
 
     playMusicByType(MUSIC_MENU);
 
-    // all has installed well. Lets rock and roll.
+    m_mouse->setMouseObserver(m_interactionManager.get());
+    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+
+    // all has installed well. Let's rock and roll.
     return true;
 
 }
@@ -1125,36 +1136,29 @@ bool cGame::setupGame() {
  * (Elegible for combat state object initialization)
  */
 void cGame::setupPlayers() {
-    m_mouse->setMouseObserver(nullptr);
-    m_keyboard->setKeyboardObserver(nullptr);
-
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
         cPlayer *thePlayer = &players[i];
 
-        cBuildingListUpdater *buildingListUpdater = new cBuildingListUpdater(thePlayer);
+        auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
         thePlayer->setBuildingListUpdater(buildingListUpdater);
 
-        cItemBuilder *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
+        auto *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-        cSideBar *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
+        auto *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
         thePlayer->setSideBar(sidebar);
 
-        cOrderProcesser *orderProcesser = new cOrderProcesser(thePlayer);
+        auto *orderProcesser = new cOrderProcesser(thePlayer);
         thePlayer->setOrderProcesser(orderProcesser);
 
-        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
+        auto *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
         thePlayer->setTechLevel(game.m_mission);
     }
-
-    cPlayer *humanPlayer = &players[HUMAN];
-    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
-    m_mouse->setMouseObserver(m_interactionManager.get());
-    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+    setPlayerToInteractFor(&players[0]);
 }
 
 bool cGame::isState(int thisState) const {
