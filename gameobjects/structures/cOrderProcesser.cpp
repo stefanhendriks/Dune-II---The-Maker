@@ -13,7 +13,7 @@
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
-  player = thePlayer;
+    player = thePlayer;
 	orderPlaced = false;
 	frigateSent = false;
 	secondsUntilArrival = -1;
