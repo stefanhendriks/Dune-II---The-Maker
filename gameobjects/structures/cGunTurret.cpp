@@ -28,9 +28,11 @@ int cGunTurret::getType() const {
 }
 
 void cGunTurret::thinkFast() {
-	if (!getPlayer()->bEnoughPower()) {
+    bool lowPower = !getPlayer()->bEnoughPower();
+    if (lowPower && game.isTurretsDownOnLowPower()) {
+        // don't do anything when low power and this flag is set
         return;
-	}
+    }
 
     // turning & shooting
     if (iTargetID > -1) {
@@ -122,6 +124,8 @@ void cGunTurret::think_turning() {
 }
 
 void cGunTurret::think_fire() {
+    bool lowPower = !getPlayer()->bEnoughPower();
+
     cUnit &unitTarget = unit[iTargetID];
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         TIMER_fire++;
@@ -134,17 +138,26 @@ void cGunTurret::think_fire() {
             return;
         }
 
+        if (lowPower) {
+            if (unitTarget.isAirbornUnit()) {
+                // no longer able, forget it
+                iTargetID = -1;
+                return;
+            }
+        }
+
         // TODO: Move to property 'fireRate' ?
         int iSlowDown = 200; // fire-rate of turret
         if (TIMER_fire > iSlowDown) {
             int iTargetCell = unitTarget.getCell();
 
             int bulletType = BULLET_TURRET; // short range bullet
+
             if (unitTarget.isAirbornUnit()) {
                 bulletType = ROCKET_RTURRET;
             } else {
                 // TODO: move '3' to property (distanceForSecondaryFire?)
-                if (getType() == RTURRET && iDistance > 3) {
+                if (!lowPower && getType() == RTURRET && iDistance > 3) {
                     bulletType = ROCKET_RTURRET; // long-range bullet,
                 } else {
                     int half = 16;
@@ -173,7 +186,9 @@ void cGunTurret::think_fire() {
 }
 
 void cGunTurret::think_guard() {
-    if (!getPlayer()->bEnoughPower()) {
+    bool lowPower = !getPlayer()->bEnoughPower();
+    if (lowPower && game.isTurretsDownOnLowPower()) {
+        // don't do anything when low power and this flag is set
         return;
     }
 
@@ -208,6 +223,14 @@ void cGunTurret::think_guard() {
             if (!canAttackAirUnits()) {
                 if (cUnit.isAirbornUnit()) {
                     continue; // it was airborn, and turrets which can't attack air units cannot hit this, so skip
+                }
+            } else {
+                // we can attack air units, but we are low on power, hence we don't attack them
+                if (lowPower && game.isRocketTurretsDownOnLowPower()) {
+                    // do not aim for air units when low power
+                    if (cUnit.isAirbornUnit()) {
+                        continue; // it was airborn, and this turret is down on power, so don't fire air units
+                    }
                 }
             }
 

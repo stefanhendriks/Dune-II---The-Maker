@@ -1111,7 +1111,7 @@ int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) {
  * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
  *
  * @param pStructure
- * @param thePlayer
+ * @param thePlayer (for who it should be visible)
  * @return
  */
 bool cMap::isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer) {

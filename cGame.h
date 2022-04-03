@@ -234,6 +234,12 @@ public:
 
     void thinkSlow();
 
+    bool isTurretsDownOnLowPower() { return m_turretsDownOnLowPower; }
+    void setTurretsDownOnLowPower(bool value) { m_turretsDownOnLowPower = value; }
+
+    bool isRocketTurretsDownOnLowPower() { return m_rocketTurretsDownOnLowPower; }
+    void setRocketTurretsDownOnLowPower(bool value) { m_rocketTurretsDownOnLowPower = value; }
+
     bool isDebugMode() { return m_debugMode; }
     void setDebugMode(bool value) { m_debugMode = value; }
 
@@ -242,6 +248,13 @@ private:
      * Variables start here
      */
     bool m_debugMode;               // ...
+
+    // if true, then turrets won't do anything on low power (both gun and rocket turrets)
+    bool m_turretsDownOnLowPower;
+
+    // if true, rocket turrets will not fire rockets when low power
+    bool m_rocketTurretsDownOnLowPower;
+
 	std::string m_gameFilename;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;

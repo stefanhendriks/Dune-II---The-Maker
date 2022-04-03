@@ -31,6 +31,8 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
     m_game->m_allowRepeatingReinforcements = false;
     m_game->m_noAiRest = false;
     m_game->setDebugMode(false);
+    m_game->setTurretsDownOnLowPower(false);
+    m_game->setRocketTurretsDownOnLowPower(true);
 
     if (argc < 2) {
         return 0;

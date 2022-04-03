@@ -170,6 +170,8 @@ bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     game.m_windowed = !section.getBoolean("FullScreen");
     game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+    game.m_turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+    game.m_rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
 
     return true;
 }
