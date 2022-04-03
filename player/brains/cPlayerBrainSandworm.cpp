@@ -13,9 +13,6 @@ namespace brains {
     }
 
     void cPlayerBrainSandworm::think() {
-//        char msg[255];
-//        sprintf(msg, "cPlayerBrainSandworm::think()");
-//        log(msg);
         TIMER_think++;
         if (TIMER_think < 5) {
             return;
@@ -30,19 +27,23 @@ namespace brains {
             // when on guard
             bool allowedToMove = pSandWorm.TIMER_movewait < 1;
             if (pSandWorm.isIdle() && allowedToMove) {
-                // find new spot to go to
-                for (int iTries = 0; iTries < 5; iTries++) {
-                    int iMoveTo = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
-
-                    if (map.isCellPassableForWorm(iMoveTo)) {
-                        pSandWorm.move_to(iMoveTo);
-                        // found a spot, break out of this 'tries' loop
-                        break;
-                    }
-                }
+                findRandomValidLocationToMoveToAndGoThere(pSandWorm);
             }
         }
 
+    }
+
+    void cPlayerBrainSandworm::findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const {
+        // find new spot to go to
+        for (int iTries = 0; iTries < 5; iTries++) {
+            int iMoveTo = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+
+            if (map.isCellPassableForWorm(iMoveTo)) {
+                pSandWorm.move_to(iMoveTo);
+                // found a spot, break out of this 'tries' loop
+                break;
+            }
+        }
     }
 
     void cPlayerBrainSandworm::onNotifyGameEvent(const s_GameEvent &) {
