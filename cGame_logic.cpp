@@ -1410,15 +1410,15 @@ void cGame::prepareMentatForPlayer() {
     }
 }
 
-void cGame::createAndPrepareMentatForHumanPlayer() {
+void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect) {
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new cAtreidesMentat();
+        m_mentat = new cAtreidesMentat(allowMissionSelect);
     } else if (houseIndex == HARKONNEN) {
-        m_mentat = new cHarkonnenMentat();
+        m_mentat = new cHarkonnenMentat(allowMissionSelect);
     } else if (houseIndex == ORDOS) {
-        m_mentat = new cOrdosMentat();
+        m_mentat = new cOrdosMentat(allowMissionSelect);
     } else {
         // fallback
         m_mentat = new cBeneMentat();
