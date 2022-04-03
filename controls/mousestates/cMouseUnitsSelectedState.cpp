@@ -284,7 +284,7 @@ void cMouseUnitsSelectedState::evaluateSelectedUnits() {
                     [this](int id) {
                         return !unit[id].isValid() || // no (longer) valid
                                !unit[id].belongsTo(m_player) || // no longer belongs to player
-                               unit[id].iTempHitPoints > -1; // hidden (entered structure, etc). Forget it then.
+                               unit[id].isHidden(); // hidden (entered structure, etc). Forget it then.
                     }),
             m_selectedUnits.end()
     );

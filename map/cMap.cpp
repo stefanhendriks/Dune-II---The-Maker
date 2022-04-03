@@ -563,7 +563,7 @@ void cMap::draw_units_2nd() {
         if (!pUnit.isValid()) continue;
         if (!pUnit.bHovered && !pUnit.bSelected) continue;
         if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
-        if (pUnit.iTempHitPoints > -1) continue;
+        if (pUnit.isHidden()) continue;
 
         pUnit.draw_health();
         pUnit.draw_experience();

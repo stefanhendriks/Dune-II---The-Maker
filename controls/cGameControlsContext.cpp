@@ -100,7 +100,7 @@ void cGameControlsContext::determineHoveringOverUnitId() {
     if (cellOfMouse->id[MAPID_UNITS] > -1) {
         int iUnitId = cellOfMouse->id[MAPID_UNITS];
 
-        if (unit[iUnitId].iTempHitPoints < 0) {
+        if (!unit[iUnitId].isHidden()) {
             m_mouseHoveringOverUnitId = iUnitId;
         }
 

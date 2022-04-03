@@ -84,8 +84,6 @@ public:
 
     int iGroup;         // belongs to group...
 
-    int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
-
     int iPlayer;        // belongs to player
 
     // Movement
@@ -409,9 +407,17 @@ public:
     std::string getUnitStatusForMessageBar();
     std::string getHarvesterStatusForMessageBar();
 
+    bool isHidden();
+
+    bool requiresRepairing();
+
+    void repair(int hp);
+
 private:
     eActionType m_action;
     eUnitActionIntent intent;
+
+    int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
     bool bPickedUp;     // did this unit pick up a unit? (this unit is a carry-all or frigate)
