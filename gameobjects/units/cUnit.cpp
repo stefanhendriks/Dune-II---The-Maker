@@ -857,7 +857,8 @@ void cUnit::attackAt(int cell) {
 
     int unitId = map.getCellIdUnitLayer(cell);
     int structureId = map.getCellIdStructuresLayer(cell);
-    log(fmt::format("attackAt() : cell target is [{}], structureId [{}], unitId [{}]", cell, structureId, unitId));
+    int wormId = map.getCellIdWormsLayer(cell);
+    log(fmt::format("attackAt() : cell target is [{}], structureId [{}], unitId [{}], wormId [{}]", cell, structureId, unitId, wormId));
 
     if (structureId > -1) {
         attackStructure(structureId);
@@ -866,6 +867,11 @@ void cUnit::attackAt(int cell) {
 
     if (unitId > -1) {
         attackUnit(unitId);
+        return;
+    }
+
+    if (wormId > -1) {
+        attackUnit(wormId);
         return;
     }
 
@@ -2204,14 +2210,14 @@ void cUnit::startChasingTarget() {
     } else if (iAttackUnit > -1) {
         cUnit * attackUnit = &unit[iAttackUnit];
         // chase unit, but only when ground unit
-        if (!attackUnit->isSandworm() && !attackUnit->isAirbornUnit()) {
+        if (!attackUnit->isAirbornUnit()) {
             setAction(eActionType::CHASE);
             // only think of new path when our target moved
             if (attackUnit->getCell() != iGoalCell) {
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
             }
         } else {
-            // do not chase sandworms or other air units, very ... inconvenient
+            // do not chase air units, very ... inconvenient
             setAction(eActionType::GUARD);
             setGoalCell(iCell);
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
