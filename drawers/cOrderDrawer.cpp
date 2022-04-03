@@ -68,10 +68,9 @@ void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
 }
 
 void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &) {
-    cOrderProcesser * orderProcesser = player->getOrderProcesser();
-
     // handle "order" button interaction
     if (_isMouseOverOrderButton) {
+        cOrderProcesser * orderProcesser = player->getOrderProcesser();
         if (orderProcesser->canPlaceOrder()) {
             orderProcesser->placeOrder();
         }

@@ -32,8 +32,10 @@ cMap::cMap() {
     TIMER_scroll = 0;
     iScrollSpeed = 1;
     maxCells = 0;
+    m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
+    init(64, 64);
 }
 
 cMap::~cMap() {
@@ -54,13 +56,16 @@ void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements) {
 }
 
 void cMap::init(int width, int height) {
-    m_reinforcements->init();
+    if (m_reinforcements) {
+        m_reinforcements->init();
+    }
 
     m_bAutoDetonateSpiceBlooms = false;
     m_bAutoSpawnSpiceBlooms = true;
 
     m_iTIMER_blooms = 200;
     m_mBloomTimers = std::map<int, int>();
+    m_mBloomTimers.clear();
 
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;

@@ -14,7 +14,6 @@
 
 class cMiniMapDrawer;
 class cMouseDrawer;
-class cPlaceItDrawer;
 class cPlayer;
 class cOrderDrawer;
 class cSideBar;
@@ -32,11 +31,7 @@ class cInteractionManager : public cInputObserver, cScenarioObserver {
 
 	private:
 		cSideBar * sidebar;
-		cMiniMapDrawer * miniMapDrawer;
 		cPlayer * player;
-		cMouseDrawer * mouseDrawer;
-		cPlaceItDrawer * placeItDrawer;
-		cOrderDrawer * orderDrawer;
 
         void onMouseAt(const s_MouseEvent &mouseEvent);
         void onMouseClickedLeft(const s_MouseEvent &mouseEvent);

@@ -280,8 +280,6 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
-    assert(map->getHeight() <= 64);
-    assert(map->getWidth() <= 64);
     if (map->getHeight() > 64 || map->getWidth() > 64) {
         // do nothing (assume, 1 cell = 1 pixel)
     } else {
@@ -315,7 +313,7 @@ void cMiniMapDrawer::think() {
             // go to state power down (not enough power)
             status = eMinimapStatus::POWERDOWN;
             // "Radar de-activated""
-            game.playVoice(SOUND_VOICE_04_ATR, player->getHouse());
+            game.playVoice(SOUND_VOICE_04_ATR, player->getId());
         }
     }
 
@@ -326,7 +324,7 @@ void cMiniMapDrawer::think() {
             status = eMinimapStatus::POWERUP;
             game.playSound(SOUND_RADAR);
             // "Radar activated"
-            game.playVoice(SOUND_VOICE_03_ATR, player->getHouse());
+            game.playVoice(SOUND_VOICE_03_ATR, player->getId());
         }
     }
 

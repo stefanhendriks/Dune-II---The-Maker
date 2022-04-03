@@ -1726,6 +1726,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
 //        // do nothing
 //        return;
 //    }
+
     if (game.m_musicType != MUSIC_PEACE) {
         // nothing to do here music-wise
         return;
@@ -1742,13 +1743,14 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
         bool detectedEntityIsHuman = pUnit.getPlayer()->isHuman();
 
         // unit discovered is NOT the same team, so enemy detected / music trigger
+//        if (detectedEntityIsHuman || (isHuman() && !detectedEntityIsHuman)) {
         if (detectedEntityIsHuman || isHuman()) {
             if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pUnit.getPlayer())) {
                 triggerMusic = true;
                 if (pUnit.iType == SANDWORM) {
-                    voiceId = SOUND_VOICE_10_ATR;
+                    voiceId = SOUND_VOICE_10_ATR; // wormsign
                 } else {
-                    voiceId = SOUND_VOICE_09_ATR;
+                    voiceId = SOUND_VOICE_09_ATR; // enemy unit approaching
                 }
             }
         } else {
@@ -1760,6 +1762,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
         bool detectedEntityIsHuman = pStructure->getPlayer()->isHuman();
 
         // structure discovered is NOT the same team, so enemy detected / music trigger
+//        if (detectedEntityIsHuman || (isHuman() && !detectedEntityIsHuman)) {
         if (detectedEntityIsHuman || isHuman()) {
             if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pStructure->getPlayer())) {
                 // only things that can harm us will trigger attack music?
@@ -1773,12 +1776,19 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
         }
     }
 
+    bool hasVoiceToPlay = isHuman() && voiceId > -1; // don't warn when already in "attack music mode"
+
+    bool mayPlayVoice = true;
     if (triggerMusic) {
-        game.playMusicByType(MUSIC_ATTACK);
+        if (game.m_musicType != MUSIC_ATTACK) {
+            mayPlayVoice = game.playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
+        } else {
+            mayPlayVoice = false;
+        }
     }
 
-    if (voiceId > -1) {
-        game.playVoice(voiceId, getHouse());
+    if (mayPlayVoice && hasVoiceToPlay) {
+        game.playVoice(voiceId, getId());
     }
 }
 
