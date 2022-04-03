@@ -11,7 +11,7 @@ class cAtreidesMentat : public cAbstractMentat {
     void interact() override;
 
   public:
-    cAtreidesMentat();
+    cAtreidesMentat(bool allowMissionSelect);
 
     void think() override;
 };
