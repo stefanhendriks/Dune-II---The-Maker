@@ -676,7 +676,7 @@ void cUnit::draw_path() const {
 }
 
 void cUnit::draw() {
-    if (iTempHitPoints > -1) {
+    if (isHidden()) {
         // temp hitpoints filled, meaning it is not visible (but not dead). Ie, it is being repaired, or transfered
         // by carry-all
         return;
@@ -1064,6 +1064,18 @@ void cUnit::thinkActionAgnostic() {
         think_MVC();
     }
 
+    if (isSandworm()) {
+        // add a worm trail behind worm randomly for now (just not every frame, or else this spams a great
+        // deal of particles overlapping eachother.
+        TIMER_wormtrail++;
+        if (TIMER_wormtrail > 2) {
+            long x = pos_x_centered();
+            long y = pos_y_centered();
+            cParticle::create(x, y, D2TM_PARTICLE_WORMTRAIL, -1, -1);
+            TIMER_wormtrail = 0;
+        }
+    }
+
     // HEAD is not facing correctly
     if (!isAirbornUnit()) {
         if (iBodyFacing == iBodyShouldFace) {
@@ -1092,7 +1104,7 @@ void cUnit::thinkActionAgnostic() {
         return;
     }
 
-    if (iTempHitPoints > -1)
+    if (isHidden())
         return;
 
     // when any non-airborn, non-sandworm unit is on a spice bloom, it dies
@@ -1288,7 +1300,7 @@ int cUnit::determineNewFacing(int currentFacing, int desiredFacing) {
 
 // aircraft specific thinking
 void cUnit::thinkFast_move_airUnit() {
-    if (iTempHitPoints > -1) {
+    if (isHidden()) {
         return;
     }
 
@@ -2290,7 +2302,7 @@ void cUnit::thinkFast_move() {
 
     // it is a unit that is temporarily not available on the map (picked up by carry-all for instance, or
     // within a structure)
-    if (iTempHitPoints > -1) {
+    if (isHidden()) {
         return;
     }
 
@@ -2666,16 +2678,6 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         map.cellSetIdForLayer(iNextCell, MAPID_UNITS, iID);
     } else {
         map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
-
-        // add a worm trail behind worm randomly for now (just not every frame, or else this spams a great
-        // deal of particles overlapping eachother.
-        TIMER_wormtrail++;
-        if (TIMER_wormtrail > 4) {
-            long x = pos_x_centered();
-            long y = pos_y_centered();
-            cParticle::create(x, y, D2TM_PARTICLE_WORMTRAIL, -1, -1);
-            TIMER_wormtrail = 0;
-        }
     }
 
     // 100% on cell, no offset
@@ -2892,7 +2894,7 @@ void cUnit::restoreFromTempHitPoints() {
     if (iHitPoints > maxHp) {
         iHitPoints = maxHp;
     }
-    iTempHitPoints = -1; // get rid of this hack
+    iTempHitPoints = -1; // TODO: get rid of this hack
 }
 
 void cUnit::setMaxHitPoints() {
@@ -3595,6 +3597,20 @@ bool cUnit::isAttackingUnit() {
 
 void cUnit::takeDamage(int damage) {
     takeDamage(damage, -1, -1);
+}
+
+bool cUnit::isHidden() {
+    // hidden (entered structure, etc).
+    return iTempHitPoints > -1;
+}
+
+// Hacky function that checks temp hitpoints (if it requires repairing)
+bool cUnit::requiresRepairing() {
+    return iTempHitPoints < getUnitInfo().hp;
+}
+
+void cUnit::repair(int hp) {
+    iTempHitPoints += hp;
 }
 
 // return new valid ID
