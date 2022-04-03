@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cPlayerBrain.h"
+#include "gameobjects/units/cUnit.h"
 
 namespace brains {
 
@@ -20,6 +21,8 @@ namespace brains {
 
     private:
         int TIMER_think;
+
+        void findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const;
     };
 
 }
