@@ -17,6 +17,7 @@
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
 #include "player/cPlayer.h"
+#include "utils/cLog.h"
 
 #include <string>
 
@@ -89,11 +90,16 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    if (game.setupGame()) {
-        game.run();
-    }
+    try {
+        if (game.setupGame()) {
+            game.run();
+        }
 
-    game.shutdown();
+        game.shutdown();
+    } catch (std::runtime_error &e) {
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_NONE, "Unknown", fmt::format("Error: {}", e.what()));
+        std::cerr << fmt::format("Error: {}\n\n", e.what());
+    }
 
     std::cout << fmt::format("Thank you for playing Dune 2 - The Maker\n");
     return 0;
