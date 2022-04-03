@@ -788,7 +788,7 @@ bool cGame::setupGame() {
         m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
         m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
         m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
-        settingsValidator->addRessources(std::move(m_transfertMap));
+        settingsValidator->addResources(std::move(m_transfertMap));
     }
 
     // circumvent: -Werror=unused-function :/
