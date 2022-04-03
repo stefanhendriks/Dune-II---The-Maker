@@ -78,11 +78,17 @@ void cMiniMapDrawer::drawViewPortRectangle() {
 
 int cMiniMapDrawer::getMapWidthInPixels() {
     // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
+    if (map->isBigMap()) {
+        return map->getWidth();
+    }
     return map->getWidth() * 2; // double pixel size
 }
 
 int cMiniMapDrawer::getMapHeightInPixels() {
     // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
+    if (map->isBigMap()) {
+        return map->getHeight();
+    }
     return map->getHeight() * 2;
 }
 
