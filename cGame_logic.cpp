@@ -94,6 +94,9 @@ cGame::cGame() : m_timeManager(*this) {
 
 
 void cGame::init() {
+    m_newMusicSample = MUSIC_MENU;
+    m_newMusicCountdown = 0;
+
     m_drawFps = false;
     m_nextState = -1;
     m_missionWasWon = false;
@@ -130,7 +133,7 @@ void cGame::init() {
     m_shakeY = 0;
     m_TIMER_shake = 0;
 
-    m_musicType = MUSIC_MENU;
+    m_musicType = -1;
 
     m_cameraDragMoveSpeed=0.5f;
     m_cameraBorderOrKeyMoveSpeed=0.5;
@@ -457,13 +460,23 @@ void cGame::think_audio() {
     if (m_musicType < 0)
         return;
 
-    if (!m_soundPlayer->isMusicPlaying()) {
+    if (m_newMusicCountdown > 0) {
+        m_newMusicCountdown--;
+    }
 
-        if (m_musicType == MUSIC_ATTACK) {
-            m_musicType = MUSIC_PEACE; // set back to peace
+    if (m_newMusicCountdown == 0) {
+        m_soundPlayer->playMusic(m_newMusicSample);
+        m_newMusicCountdown--; // so we don't keep re-starting music
+    }
+
+    if (m_newMusicCountdown < 0) {
+        if (!m_soundPlayer->isMusicPlaying()) {
+            int desiredMusicType = m_musicType;
+            if (m_musicType == MUSIC_ATTACK) {
+                desiredMusicType = MUSIC_PEACE; // set back to peace
+            }
+            playMusicByType(desiredMusicType);
         }
-
-        playMusicByType(m_musicType);
     }
 }
 
@@ -729,7 +742,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     game.m_screenY = game.m_iniScreenHeight;
 
     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", 
-        fmt::format("Resolution {}x{} loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight)
+        fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_iniScreenWidth, game.m_iniScreenHeight)
     );
 }
 
@@ -1085,9 +1098,6 @@ bool cGame::setupGame() {
     delete mapCamera;
     mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
-    delete drawManager;
-    drawManager = new cDrawManager(&players[HUMAN]);
-
     INI_Install_Game(m_gameFilename);
     // m_handleArgument->applyArguments(); //Apply command line arguments
     // m_handleArgument.reset();
@@ -1098,11 +1108,25 @@ bool cGame::setupGame() {
     // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
 
+    m_mouse->setMouseObserver(nullptr);
+    m_keyboard->setKeyboardObserver(nullptr);
+
+    cPlayer *humanPlayer = &players[HUMAN];
+
+    delete drawManager;
+    drawManager = new cDrawManager(humanPlayer);
+
+    // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
+    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
+
     game.setupPlayers();
 
     playMusicByType(MUSIC_MENU);
 
-    // all has installed well. Lets rock and roll.
+    m_mouse->setMouseObserver(m_interactionManager.get());
+    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+
+    // all has installed well. Let's rock and roll.
     return true;
 
 }
@@ -1112,36 +1136,29 @@ bool cGame::setupGame() {
  * (Elegible for combat state object initialization)
  */
 void cGame::setupPlayers() {
-    m_mouse->setMouseObserver(nullptr);
-    m_keyboard->setKeyboardObserver(nullptr);
-
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
         cPlayer *thePlayer = &players[i];
 
-        cBuildingListUpdater *buildingListUpdater = new cBuildingListUpdater(thePlayer);
+        auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
         thePlayer->setBuildingListUpdater(buildingListUpdater);
 
-        cItemBuilder *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
+        auto *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-        cSideBar *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
+        auto *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
         thePlayer->setSideBar(sidebar);
 
-        cOrderProcesser *orderProcesser = new cOrderProcesser(thePlayer);
+        auto *orderProcesser = new cOrderProcesser(thePlayer);
         thePlayer->setOrderProcesser(orderProcesser);
 
-        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
+        auto *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
         thePlayer->setTechLevel(game.m_mission);
     }
-
-    cPlayer *humanPlayer = &players[HUMAN];
-    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
-    m_mouse->setMouseObserver(m_interactionManager.get());
-    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+    setPlayerToInteractFor(&players[0]);
 }
 
 bool cGame::isState(int thisState) const {
@@ -1729,7 +1746,9 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
         m_state == GAME_WINNING ||
         m_state == GAME_LOSING
       ) {
-        m_mentat->onNotifyMouseEvent(event);
+        if (m_mentat) {
+            m_mentat->onNotifyMouseEvent(event);
+        }
     }
 }
 
@@ -1926,16 +1945,37 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
 }
 
 
-void cGame::playVoice(int sampleId, int house) {
-    m_soundPlayer->playVoice(sampleId, house);
+void cGame::playVoice(int sampleId, int playerId) {
+    m_soundPlayer->playVoice(sampleId, players[playerId].getHouse());
 }
 
-void cGame::playMusicByType(int iType) {
+bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice) {
+    if (playerId != HUMAN){
+        // skip music we want to play for non human player
+        return false;
+    }
+
+    logbook(fmt::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
+
+    if (triggerWithVoice) {
+        if (iType == m_musicType) {
+            logbook(fmt::format("m_musicType = {}, iType is {}, so bailing", m_musicType, iType));
+            return false;
+        }
+    }
+
     m_musicType = iType;
+    logbook(fmt::format("m_musicType = {}", m_musicType));
 
     if (!m_playMusic) {
-        return;
+        return false; // todo: have a 'no-sound soundplayer' instead of doing this :/
     }
+
+    if (m_newMusicCountdown > 0) {
+        // do not interfere with previous 'change to music' thing?
+        return false;
+    }
+
 
     int sampleId = MIDI_MENU;
     if (iType == MUSIC_WIN) {
@@ -1965,8 +2005,21 @@ void cGame::playMusicByType(int iType) {
         assert(false && "Undefined music type.");
     }
 
-    // play midi file
-    m_soundPlayer->playMusic(sampleId);
+    if (triggerWithVoice) {
+        // voice triggered music (ie "Enemy unit approaching"), so have music stop a bit
+        if (isState(GAME_PLAYING)) {
+            m_newMusicCountdown = 400; // wait a bit longer
+        } else {
+            m_newMusicCountdown = 0;
+        }
+        m_soundPlayer->stopMusic();
+    } else {
+        // instant switch
+        m_newMusicCountdown = 0;
+    }
+
+    m_newMusicSample = sampleId;
+    return true;
 }
 
 int cGame::getMaxVolume() {

@@ -30,7 +30,7 @@ public:
     [[nodiscard]] bool getBoolean(const std::string &key) const;
 
     template<typename T>
-    T FromString(const std::string &value) const;
+    T FromString(std::string value) const;
 
 private:
     std::string m_sectionName;

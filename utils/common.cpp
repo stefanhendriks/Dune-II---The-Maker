@@ -45,6 +45,11 @@ int slowThinkMsToTicks(int desiredMs) {
     return desiredMs / 100;
 }
 
+int fastThinkTicksToMs(int ticks) {
+    // "fast" thinking, is 1 tick == 5ms
+    return ticks * 5;
+}
+
 int fastThinkMsToTicks(int desiredMs) {
     if (desiredMs < 5) {
         return 1; // fastest thinking is 1 tick (5 ms)
