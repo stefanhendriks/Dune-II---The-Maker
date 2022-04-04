@@ -2114,16 +2114,6 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
         game.setPlayerToInteractFor(&players[3]);
     }
 
-    //JUMP TO MISSION 9
-    if (event.hasKey(KEY_F1)) {
-        game.missionInit();
-        game.m_mission = 9;
-        game.m_region = 22;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
     // WIN MISSION
     if (event.hasKey(KEY_F2)) {
         game.setMissionWon();
@@ -2176,39 +2166,10 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
             }
         }
     } else {
-        // REVEAL  MAP
+        // REVEAL MAP
         if (event.hasKey(KEY_F5)) {
             map.clear_all(HUMAN);
         }
     }
 
-    //JUMP TO MISSION 3
-    if (event.hasKey(KEY_F6)) {
-        game.missionInit();
-        game.m_mission = 3;
-        game.m_region = 6;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
-    //JUMP TO MISSION 4
-    if (event.hasKey(KEY_F7)) {
-        game.missionInit();
-        game.m_mission = 4;
-        game.m_region = 10;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
-    //JUMP TO MISSION 5
-    if (event.hasKey(KEY_F8)) {
-        game.missionInit();
-        game.m_mission = 5;
-        game.m_region = 13;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
 }
