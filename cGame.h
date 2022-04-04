@@ -140,6 +140,7 @@ public:
     void playSoundWithDistance(int sampleId, int iOnScreen);
 
     void playVoice(int sampleId, int playerId);
+    void playMusicByTypeForStateTransition(int iType);
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 
     int getMaxVolume();
