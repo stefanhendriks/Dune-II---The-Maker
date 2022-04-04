@@ -2056,8 +2056,8 @@ std::vector<int> cPlayer::getSelectedUnits() const {
 
 void cPlayer::deselectAllUnits() {
     const std::vector<int> &ids = getAllMyUnits();
-    for (auto i : ids) {
-        unit[i].bSelected = false;
+    for (const auto & i : ids) {
+        deselectUnit(i);
     }
 }
 
@@ -2132,4 +2132,8 @@ void cPlayer::thinkSlow() {
     if (orderProcesser) {
         orderProcesser->think();
     }
+}
+
+void cPlayer::deselectUnit(const int & unitId) {
+    unit[unitId].bSelected = false;
 }
