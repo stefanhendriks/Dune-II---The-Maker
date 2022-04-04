@@ -240,7 +240,9 @@ void cGame::initPlayers(bool rememberHouse) const {
         } else if (i == AI_CPU5) {
             brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
         } else if (i == AI_CPU6) {
-            brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            if (!game.m_disableWormAi) {
+                brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            }
         }
 
         pPlayer.init(i, brain);
