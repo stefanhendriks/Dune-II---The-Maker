@@ -7,6 +7,7 @@
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
         m_mouseHoveringOverStructureId(-1),
         m_mouseHoveringOverUnitId(-1),
+        m_mouseOnBattleField(false),
         m_drawToolTip(false),
         m_mouseCell(-99),
         m_player(player),
@@ -42,19 +43,22 @@ cGameControlsContext::~cGameControlsContext() {
 void cGameControlsContext::updateMouseCell(const cPoint &coords) {
     if (coords.y < cSideBar::TopBarHeight) {
         m_mouseCell = MOUSECELL_TOPBAR; // at the top bar or higher, so no mouse cell id.
+        m_mouseOnBattleField = false;
         return;
     }
 
     if (drawManager->getMiniMapDrawer()->isMouseOver()) {
         m_mouseCell = MOUSECELL_MINIMAP; // on minimap
+        m_mouseOnBattleField = false;
         return;
     }
 
     if (coords.x > (game.m_screenX - cSideBar::SidebarWidth)) {
         m_mouseCell = MOUSECELL_SIDEBAR; // on sidebar
+        m_mouseOnBattleField = false;
         return;
     }
-
+    m_mouseOnBattleField = true;
     m_mouseCell = getMouseCellFromScreen(coords.x, coords.y);
 }
 
@@ -162,6 +166,10 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
 
 }
 
+bool cGameControlsContext::isMouseOnBattleField() const {
+    return m_mouseOnBattleField;
+}
+
 void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
     if (isMouseOnBattleField()) {
         switch (m_state) {
@@ -181,6 +189,8 @@ void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
                 m_mouseDeployState->onNotifyMouseEvent(event);
                 break;
         }
+    } else {
+        // if
     }
 }
 
