@@ -413,6 +413,8 @@ public:
 
     void repair(int hp);
 
+    bool canUnload();
+
 private:
     eActionType m_action;
     eUnitActionIntent intent;
