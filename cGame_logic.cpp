@@ -1125,7 +1125,7 @@ bool cGame::setupGame() {
 
     game.setupPlayers();
 
-    playMusicByType(MUSIC_MENU);
+    playMusicByTypeForStateTransition(MUSIC_MENU);
 
     m_mouse->setMouseObserver(m_interactionManager.get());
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
@@ -1233,8 +1233,9 @@ void cGame::setState(int newState) {
 
         if (existingStatePtr) {
             // no need for re-creating state
-
             if (newState == GAME_REGION) {
+                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+
                 // came from a win/lose brief state, so make sure to set up the next state
                 if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
@@ -1282,14 +1283,18 @@ void cGame::setState(int newState) {
                 // first creation
                 pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
 
+                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
                 newStatePtr = new cSetupSkirmishGameState(*this);
+                playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this);
             } else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuGameState(*this);
+                playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
             } else if (newState == GAME_MISSIONSELECT) {
@@ -1951,6 +1956,13 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
 
 void cGame::playVoice(int sampleId, int playerId) {
     m_soundPlayer->playVoice(sampleId, players[playerId].getHouse());
+}
+
+void cGame::playMusicByTypeForStateTransition(int iType) {
+    if (m_musicType != iType) {
+        m_newMusicCountdown = 0;
+        playMusicByType(iType, HUMAN, false);
+    }
 }
 
 bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice) {
