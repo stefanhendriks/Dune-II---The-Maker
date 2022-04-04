@@ -3486,11 +3486,6 @@ int cUnit::getTurnSpeed() {
 void cUnit::think_harvester() {
     bool bFindRefinery = false;
 
-    // TODO: Respond to keypress and then order unit to find refinery, etc (not via think function!)
-    if (iCredits > 0 && bSelected && key[KEY_D]) {
-        bFindRefinery = true;
-    }
-
     // cell = goal cell (doing nothing)
     if (iCell == iGoalCell) {
         int cellType = map.getCellType(iCell);
@@ -3617,6 +3612,10 @@ bool cUnit::requiresRepairing() {
 
 void cUnit::repair(int hp) {
     iTempHitPoints += hp;
+}
+
+bool cUnit::canUnload() {
+    return iCredits > 0;
 }
 
 // return new valid ID

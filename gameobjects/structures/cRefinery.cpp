@@ -43,7 +43,7 @@ void cRefinery::think_unit_occupation() {
     cUnit.TIMER_harvest = 0;
 
     // dump credits
-    if (cUnit.iCredits > 0) {
+    if (cUnit.canUnload()) {
         int iAmount = 5;
 
         // cap at max

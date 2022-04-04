@@ -379,6 +379,17 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event) {
     if (event.hasKey(KEY_R)) {
         m_context->setMouseState(MOUSESTATE_REPAIR);
     }
+    
+    // order any selected harvester to return to refinery
+    if (event.hasKey(KEY_D)) {
+        const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
+        for (auto & id : selectedUnits) {
+            cUnit &pUnit = unit[id];
+            if (pUnit.isHarvester() && pUnit.canUnload()) {
+                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
+            }
+        }
+    }
 
     // force move?
 }
