@@ -446,6 +446,8 @@ public:
 
     void thinkSlow();
 
+    void deselectUnit(const int & unitId);
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 

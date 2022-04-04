@@ -94,6 +94,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
 
         bool infantryAcknowledged = false;
         bool unitAcknowledged = false;
+
         if (m_state == SELECTED_STATE_SELECT) {
             int hoverStructureId = m_context->getIdOfStructureWhereMouseHovers();
             if (hoverStructureId > -1) {
@@ -104,8 +105,19 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
                 } else {
                     m_player->selected_structure = -1;
                 }
+            } else {
+                int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
+                if (hoverUnitId > -1) {
+                    m_player->deselectAllUnits();
+                    m_selectedUnits.clear();
+
+                    auto ids = std::vector<int>();
+                    ids.push_back(hoverUnitId);
+
+                    m_player->selectUnits(ids);
+                }
             }
-        } else  if (m_state == SELECTED_STATE_REPAIR ||
+        } else if (m_state == SELECTED_STATE_REPAIR ||
                     m_state == SELECTED_STATE_REFINERY ||
                     m_state == SELECTED_STATE_MOVE) {
 
@@ -147,6 +159,19 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
             }
 
             spawnParticle(D2TM_PARTICLE_ATTACK);
+        } else if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
+            const int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
+            if (hoverUnitId > -1) {
+                auto ids = m_player->getSelectedUnits();
+                auto position = std::find(ids.begin(), ids.end(), hoverUnitId);
+                if (position != ids.end()) {
+                    m_player->deselectUnit(hoverUnitId);
+                } else{
+                    // id not found, add it to the list
+                    ids.push_back(hoverUnitId); // add this unit
+                    m_player->selectUnits(ids);
+                }
+            }
         }
 
         if (infantryAcknowledged) {
@@ -186,7 +211,11 @@ void cMouseUnitsSelectedState::onMouseMovedTo() {
     if (m_state == SELECTED_STATE_FORCE_ATTACK) {
         mouseTile = MOUSE_ATTACK;
     } if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
-        mouseTile = MOUSE_NORMAL;
+        if (m_mouse->isBoxSelecting()) {
+            mouseTile = MOUSE_NORMAL;
+        } else {
+            mouseTile = MOUSE_PICK;
+        }
     } else {
         evaluateMouseMoveState();
     }
@@ -233,9 +262,15 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState() {
     if (unitsWhichCanAttackSelected) {
         int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
         if (hoverUnitId > -1) {
-            if (unit[hoverUnitId].isValid() && !unit[hoverUnitId].getPlayer()->isSameTeamAs(m_player)) {
-                mouseTile = MOUSE_ATTACK;
-                setState(SELECTED_STATE_ATTACK);
+            cUnit &pUnit = unit[hoverUnitId];
+            if (pUnit.isValid()) {
+                if (!pUnit.getPlayer()->isSameTeamAs(m_player)) {
+                    mouseTile = MOUSE_ATTACK;
+                    setState(SELECTED_STATE_ATTACK);
+                } else if (pUnit.getPlayer() == m_player) {
+                    mouseTile = MOUSE_PICK;
+                    setState(SELECTED_STATE_SELECT); // allow selecting of my unit
+                }
             }
         }
     }
@@ -331,6 +366,16 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event) {
     if (appendingSelectionToGroup) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
         mouseTile = MOUSE_NORMAL;
+
+        if (!m_mouse->isBoxSelecting()) {
+            int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
+            if (hoverUnitId > -1) {
+                cUnit &pUnit = unit[hoverUnitId];
+                if (pUnit.getPlayer() == m_player) {
+                    mouseTile = MOUSE_PICK;
+                }
+            }
+        }
 
         int iGroup = event.getGroupNumber();
 
