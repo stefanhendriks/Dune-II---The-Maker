@@ -1321,8 +1321,10 @@ void cUnit::thinkFast_move_airUnit() {
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
-        if (game.isDebugMode())
-            log("ERROR: Unit became invalid somehow, killed it");
+        if (game.isDebugMode()) {
+            log("Air unit got out of bounds; and thus got killed.");
+        }
+
         return;
     }
 
