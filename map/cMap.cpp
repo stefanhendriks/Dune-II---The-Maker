@@ -1189,6 +1189,7 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
+            if (!map.isWithinBoundaries(cl)) continue;
 
             if (map.canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
                 return cl;
