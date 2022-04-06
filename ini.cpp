@@ -497,8 +497,8 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "IsHarvester") == 0)
             return WORD_ISHARVESTER;
 
-        if (strcmp(word, "SecondShot") == 0)
-            return WORD_SECONDSHOT;
+        if (strcmp(word, "FireTwice") == 0)
+            return WORD_FIRETWICE;
 
         if (strcmp(word, "IsInfantry") == 0)
             return WORD_ISINFANTRY;
@@ -2228,7 +2228,7 @@ void INI_Install_Game(std::string filename) {
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);

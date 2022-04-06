@@ -110,7 +110,7 @@ class cSelectYourNextConquestState;
 #define WORD_TURNSPEED    47    // game.ini (turn speed)
 #define WORD_SOUND        48    // game.ini (sound)
 #define WORD_ISHARVESTER  49    // game.ini (IsHarvester, is it a harvester or not?)
-#define WORD_SECONDSHOT   50    // game.ini (SecondShot, makes unit shoot twice?)
+#define WORD_FIRETWICE   50    // game.ini (SecondShot, makes unit shoot twice?)
 #define WORD_ISAIRBORN    51    // game.ini (Unit is airborn?)
 #define WORD_ABLETOCARRY  52    // game.ini (Able to transport units, aka CarryAll)
 #define WORD_FREEROAM     53    // game.ini (Will freely roam around the map?)
