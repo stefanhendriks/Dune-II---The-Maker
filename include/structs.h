@@ -115,7 +115,6 @@ struct s_StructureInfo {
 
   int buildTime;      // how long it takes for building this structure
 
-
   int power_drain;       // the power that this building drains...
   int power_give;        // the power that this building gives...
 
@@ -134,8 +133,11 @@ struct s_StructureInfo {
 
   bool configured;     // is this structure configured? (poor man solution)
 
-  bool canAttackAirUnits;    // for turrets
-  bool canAttackGroundUnits; // for turrets
+  // Turret specific:
+  bool canAttackAirUnits;
+  bool canAttackGroundUnits;
+  int fireRate;         // delay before firing
+
 };
 
 /**

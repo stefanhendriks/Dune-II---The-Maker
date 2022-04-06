@@ -146,8 +146,7 @@ void cGunTurret::think_fire() {
             }
         }
 
-        // TODO: Move to property 'fireRate' ?
-        int iSlowDown = 200; // fire-rate of turret
+        int iSlowDown = getStructureInfo().fireRate;
         if (TIMER_fire > iSlowDown) {
             int iTargetCell = unitTarget.getCell();
 

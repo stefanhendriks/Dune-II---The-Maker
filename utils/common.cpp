@@ -1600,6 +1600,7 @@ void install_structures() {
     sStructureInfo[TURRET].sight = 7;
     sStructureInfo[TURRET].configured = true;
     sStructureInfo[TURRET].canAttackGroundUnits = true;
+    sStructureInfo[TURRET].fireRate = 275;
     strcpy(sStructureInfo[TURRET].name, "Gun Turret");
 
     // Structure    : Rocket Turret
@@ -1614,6 +1615,7 @@ void install_structures() {
     sStructureInfo[RTURRET].configured = true;
     sStructureInfo[RTURRET].canAttackAirUnits = true;
     sStructureInfo[RTURRET].canAttackGroundUnits = true;
+    sStructureInfo[RTURRET].fireRate = 350;
     strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
 
     // Structure    : Windtrap
