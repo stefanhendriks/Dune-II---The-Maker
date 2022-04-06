@@ -26,6 +26,8 @@ struct s_UnitInfo {
   int    speed;          // speed (0 being super fast, the higher the number, the slower).
   int    turnspeed;
   int    attack_frequency;  // timer for attacking
+  int    next_attack_frequency;  // in case a second shot is fired, this is the delay used. (-1 by default, if
+                                 // not specified, this will be 1/4th of attack_frequency)
 
   int    buildTime;        // how long it takes for building this thing
 

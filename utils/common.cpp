@@ -136,6 +136,7 @@ void install_units() {
         unitInfo.bulletTypeSecondary = -1;
         unitInfo.fireSecondaryWithinRange = -1;
         unitInfo.attack_frequency = -1;
+        unitInfo.next_attack_frequency = -1;
         unitInfo.buildTime = -1;
         unitInfo.airborn = false;
         unitInfo.infantry = false;
