@@ -1031,42 +1031,40 @@ bool cGame::setupGame() {
     // load datafiles
     gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
     gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
     }
 
     gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
     }
 
     gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
     }
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
     allegroDrawer = new cAllegroDrawer(m_dataRepository);
-
-
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
