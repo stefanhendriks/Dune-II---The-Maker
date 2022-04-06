@@ -162,14 +162,17 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked() {
         } else if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
             const int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
-                auto ids = m_player->getSelectedUnits();
-                auto position = std::find(ids.begin(), ids.end(), hoverUnitId);
-                if (position != ids.end()) {
-                    m_player->deselectUnit(hoverUnitId);
-                } else{
-                    // id not found, add it to the list
-                    ids.push_back(hoverUnitId); // add this unit
-                    m_player->selectUnits(ids);
+                cUnit &pUnit = unit[hoverUnitId];
+                if (pUnit.getPlayer() == m_player) {
+                    auto ids = m_player->getSelectedUnits();
+                    auto position = std::find(ids.begin(), ids.end(), hoverUnitId);
+                    if (position != ids.end()) {
+                        m_player->deselectUnit(hoverUnitId);
+                    } else{
+                        // id not found, add it to the list
+                        ids.push_back(hoverUnitId); // add this unit
+                        m_player->selectUnits(ids);
+                    }
                 }
             }
         }
