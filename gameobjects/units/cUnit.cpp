@@ -2250,13 +2250,13 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
                     int dx = map.getCellX(shootCell);
                     int dy = map.getCellY(shootCell);
 
-                    int dif = (unitType.range - distance) / 2;
+                    int inaccuracy = ((unitType.range - distance) / 3) + 1; // at 'perfect' range, we always have a inaccuracy of 1 at minimum
 
-                    dx -= (dif);
-                    dx += rnd(dif * 2);
+                    dx -= inaccuracy;
+                    dx += rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
-                    dy -= (dif);
-                    dy += rnd(dif * 2);
+                    dy -= inaccuracy;
+                    dy += rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
                     shootCell = map.getCellWithMapDimensions(dx, dy);
                 }
