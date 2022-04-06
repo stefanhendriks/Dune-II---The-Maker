@@ -469,9 +469,13 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "TurnSpeed") == 0)
             return WORD_TURNSPEED;
 
-        // Attack frequency
+        // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
         if (strcmp(word, "AttackFrequency") == 0)
             return WORD_ATTACKFREQ;
+
+        // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
+        if (strcmp(word, "NextAttackFrequency") == 0)
+            return WORD_NEXTATTACKFREQ;
 
         // Sight
         if (strcmp(word, "Sight") == 0)
@@ -2209,6 +2213,7 @@ void INI_Install_Game(std::string filename) {
                     if (wordtype == WORD_MOVESPEED) unitInfo.speed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
 

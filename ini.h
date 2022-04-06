@@ -118,6 +118,7 @@ class cSelectYourNextConquestState;
 #define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
+#define WORD_NEXTATTACKFREQ   59   // game.ini (next attack frequency)
 #define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
 #define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
 #define WORD_CANSQUISH    190    // game.ini (Can squish unit?)

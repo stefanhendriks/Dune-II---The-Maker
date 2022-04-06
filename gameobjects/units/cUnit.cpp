@@ -2272,7 +2272,11 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
                 TIMER_attack = 0;
                 return true;
             } else {
-                int secondShotTimeLimit = unitType.attack_frequency + (unitType.attack_frequency / 4);
+                int secondShotTimeLimit = unitType.next_attack_frequency < 0 ?
+                    unitType.attack_frequency + (unitType.attack_frequency / 4)
+                :
+                    unitType.attack_frequency + unitType.next_attack_frequency;
+
                 if (TIMER_attack > secondShotTimeLimit) {
                     shoot(shootCell);
                     TIMER_attack = 0;
