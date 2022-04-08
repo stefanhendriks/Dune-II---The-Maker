@@ -14,6 +14,7 @@ cReinforcement::cReinforcement(int delayInSeconds, int unitType, int playerId, i
         m_playerId(playerId),
         m_cell(targetCell),
         m_repeat(repeat),
+        m_removeMe(false),
         m_originalDelay(delayInSeconds)
 {
 
@@ -23,7 +24,8 @@ cReinforcement::cReinforcement() :
         m_delayInSeconds(-1),
         m_unitType(-1),
         m_playerId(-1),
-        m_cell(-1)
+        m_cell(-1),
+        m_removeMe(false)
 {
     // default constructor creates invalid reinforcement
 }
@@ -38,19 +40,19 @@ bool cReinforcement::isValid() const {
     return m_cell > 0;
 }
 
-void cReinforcement::invalidateOrRepeat() {
+bool cReinforcement::canBeRemoved() const {
+    return m_removeMe;
+}
+
+void cReinforcement::repeatOrMarkForDeletion() {
     if (m_repeat) {
         m_delayInSeconds = m_originalDelay;
     } else {
-        // invalidate
-        m_cell = -1;
+        m_removeMe = true;
     }
 }
 
 bool cReinforcement::isReady() const {
-    if (!isValid()) {
-        return false;
-    }
     return m_delayInSeconds < 0;
 }
 
@@ -85,18 +87,10 @@ void cReinforcements::substractSecondFromValidReinforcements() {
 
 void cReinforcements::thinkSlow() {
     substractSecondFromValidReinforcements();
-    const cReinforcement &reinforcement = getReinforcementAndDestroy();
-    if (reinforcement.isValid()) {
-        REINFORCE(reinforcement);
-    }
-}
-
-cReinforcement cReinforcements::getReinforcementAndDestroy() {
-    cReinforcement result;
     for (auto & reinforcement : reinforcements) {
         if (reinforcement.isReady()) {
-            result = reinforcement; // copy
-            reinforcement.invalidateOrRepeat(); // mark invalid, for deletion
+            reinforcement.repeatOrMarkForDeletion();
+            REINFORCE(reinforcement);
         }
     }
 
@@ -105,13 +99,10 @@ cReinforcement cReinforcements::getReinforcementAndDestroy() {
             std::remove_if(
                     reinforcements.begin(),
                     reinforcements.end(),
-                    [](cReinforcement r) { return !r.isValid(); }),
+                    [](cReinforcement r) { return r.canBeRemoved(); }),
             reinforcements.end()
     );
-
-    return result;
 }
-
 
 /**
  * Reinforce:
