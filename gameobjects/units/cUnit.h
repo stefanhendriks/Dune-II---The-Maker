@@ -52,6 +52,7 @@ enum class eHeadTowardsStructureResult {
     FAILED_NO_STRUCTURE_AVAILABLE,
     SUCCESS_AWAITING_CARRYALL,
     SUCCESS_RETURNING,
+    NOOP_ALREADY_BUSY,
 };
 
 
