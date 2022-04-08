@@ -1679,9 +1679,11 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             } else if (iPart == 3) {
                 delayInMinutes = atoi(chunk);
                 bool repeat = game.m_allowRepeatingReinforcements && plusDetected;
-                int reinforcementMultiplier = 30; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
+                int reinforcementMultiplier = 20; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
                 // D2TM does not interpret the delay as minutes, as doing so takes a very long time for reinforcements
                 // to arrive. So I guess delay is not really 1 minute in game-time in Dune 2.
+                // Stefan: 08/04/2022 -> I reduced the multiplier again to 20, as it still takes a very long time;
+                // this feels better.
                 int delayD2TM = delayInMinutes * reinforcementMultiplier;
                 reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
                 break;
