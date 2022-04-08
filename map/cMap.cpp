@@ -128,7 +128,7 @@ void cMap::smudge_increase(int iType, int iCell) {
  * @param iCell
  * @return
  */
-bool cMap::occupiedByType(int iCell) {
+bool cMap::occupiedByWallOrMountain(int iCell) {
     if (iCell < 0 || iCell >= maxCells) return false;
 
     if (map.getCellType(iCell) == TERRAIN_WALL) return true;
@@ -144,6 +144,10 @@ bool cMap::occupiedInDimension(int iCell, int dimension) {
     return map.cell[iCell].id[dimension] > -1;
 }
 
+bool cMap::occupiedByUnit(int iCell) {
+    return occupiedInDimension(iCell, MAPID_UNITS);
+}
+
 /**
  * Is the specific cell occupied by any dimension?
  *
@@ -156,7 +160,7 @@ bool cMap::occupied(int iCell) {
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
     if (occupiedInDimension(iCell, MAPID_STRUCTURES)) return true;
-    if (occupiedByType(iCell)) return true;
+    if (occupiedByWallOrMountain(iCell)) return true;
 
     return false;
 }

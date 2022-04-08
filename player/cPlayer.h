@@ -514,7 +514,7 @@ private:
 
     brains::cPlayerBrain *brain_;
 
-    bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
+    bool m_autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
     // A condition to win the mission
     int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
