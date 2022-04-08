@@ -1792,7 +1792,6 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
         bPickedUp = false;
         // DONE!
     } else if (transferType == eTransferType::PICKUP && iuID > -1) {
-
         // the carryall must pickup the unit, and then bring it to the iBring stuff
         cUnit &pUnit = unit[iuID];
         if (pUnit.isValid()) {
@@ -1810,6 +1809,7 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
 
             // which unit do we intent to pick up?
             iUnitID = iuID;
+
             // let the unit know we intent to pick it up
             pUnit.willBePickedUpBy = iID;
         }
@@ -3102,6 +3102,11 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     iFrame = 0; // stop animating
     assert(structureType > -1);
 
+    if (intent == actionIntent) {
+        // same intent, so ignore?
+        return eHeadTowardsStructureResult::NOOP_ALREADY_BUSY;
+    }
+
     log(fmt::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
                     sStructureInfo[structureType].name));
 
@@ -3129,7 +3134,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
         }
     }
 
-    // no Carry-all found/required, or we are so close so we drive
+    // no Carry-all found/required, or we are close enough to drive
     move_to_enter_structure(pStructure, actionIntent);
     TIMER_movewait = 0;
     return eHeadTowardsStructureResult::SUCCESS_RETURNING;
@@ -3156,8 +3161,8 @@ void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell) {
 }
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate) {
-    TIMER_movewait = 500; // wait for pickup!
-    TIMER_thinkwait = 500;
+    TIMER_movewait = 650; // wait for pickup!
+    TIMER_thinkwait = 650;
     if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
         candidate->unitHeadsTowardsStructure(iID);
         iStructureID = candidate->getStructureId();
