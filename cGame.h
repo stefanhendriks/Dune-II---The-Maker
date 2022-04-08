@@ -344,7 +344,7 @@ private:
 
     [[nodiscard]] bool hasWinConditionAIShouldLoseEverything() const;
 
-    [[nodiscard]] bool allAIPlayersAreDestroyed() const;
+    [[nodiscard]] bool allEnemyAIPlayersAreDestroyed() const;
 
     [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
 
