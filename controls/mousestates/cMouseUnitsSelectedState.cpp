@@ -455,3 +455,8 @@ void cMouseUnitsSelectedState::spawnParticle(const int type) {
 void cMouseUnitsSelectedState::onFocus() {
     m_mouse->setTile(mouseTile);
 }
+
+void cMouseUnitsSelectedState::onBlur() {
+    m_mouse->resetBoxSelect();
+    m_mouse->resetDragViewportInteraction();
+}

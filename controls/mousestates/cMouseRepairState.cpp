@@ -104,3 +104,8 @@ int cMouseRepairState::getMouseTileForRepairState() {
 void cMouseRepairState::onFocus() {
     m_mouse->setTile(mouseTile);
 }
+
+void cMouseRepairState::onBlur() {
+    m_mouse->resetBoxSelect();
+    m_mouse->resetDragViewportInteraction();
+}
