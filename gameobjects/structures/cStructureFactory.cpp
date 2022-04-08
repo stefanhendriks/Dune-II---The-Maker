@@ -201,28 +201,28 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 	}
 
     if (iStructureType == SLAB4) {
-		if (map.occupied(iCell) == false) {
+		if (map.occupiedByUnit(iCell) == false) {
 			if (map.getCellType(iCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
 			}
 		}
 
         int cellRight = map.getCellRight(iCell);
-        if (map.occupied(cellRight) == false) {
+        if (map.occupiedByUnit(cellRight) == false) {
 			if (map.getCellType(cellRight) == TERRAIN_ROCK) {
 				mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
 			}
 		}
 
         int oneRowBelowCell = map.getCellBelow(iCell);
-        if (map.occupied(oneRowBelowCell) == false) {
+        if (map.occupiedByUnit(oneRowBelowCell) == false) {
 			if (map.getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
 			}
 		}
 
         int rightToRowBelowCell = map.getCellRight(oneRowBelowCell);
-        if (map.occupied(rightToRowBelowCell) == false) {
+        if (map.occupiedByUnit(rightToRowBelowCell) == false) {
 			if (map.getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
 			}

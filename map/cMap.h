@@ -39,10 +39,11 @@ public:
 
     bool canDeployUnitAtCell(int iCell, int iUnitId);
 	bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
+    bool occupiedByUnit(int iCell);
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);
-	bool occupiedByType(int iCell);
+	bool occupiedByWallOrMountain(int iCell);
 
 	/**
 	 * Returns cell , taking given map width/height into account. This includes the invisible border around the map.

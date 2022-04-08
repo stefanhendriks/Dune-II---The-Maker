@@ -29,7 +29,7 @@ cPlayer::cPlayer() {
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
     brain_ = nullptr;
-    autoSlabStructures = false;
+    m_autoSlabStructures = false;
 }
 
 cPlayer::~cPlayer() {
@@ -1396,7 +1396,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
         return nullptr;
     }
 
-    if (autoSlabStructures) {
+    if (m_autoSlabStructures) {
         pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
     }
 
@@ -1490,7 +1490,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
 }
 
 void cPlayer::setAutoSlabStructures(bool value) {
-    autoSlabStructures = value;
+    m_autoSlabStructures = value;
 }
 
 int cPlayer::getScoutingUnitType() {
