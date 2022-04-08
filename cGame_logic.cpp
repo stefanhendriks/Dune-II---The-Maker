@@ -389,13 +389,13 @@ bool cGame::isMissionWon() const {
         }
 
         if (hasWinConditionAIShouldLoseEverything()) {
-            if (allAIPlayersAreDestroyed()) {
+            if (allEnemyAIPlayersAreDestroyed()) {
                 return true;
             }
         }
     } else if (hasGameOverConditionAIHasNoBuildings()) {
         if (hasWinConditionAIShouldLoseEverything()) {
-            if (allAIPlayersAreDestroyed()) {
+            if (allEnemyAIPlayersAreDestroyed()) {
                 return true;
             }
         }
@@ -403,11 +403,13 @@ bool cGame::isMissionWon() const {
     return false;
 }
 
-bool cGame::allAIPlayersAreDestroyed() const {
+bool cGame::allEnemyAIPlayersAreDestroyed() const {
+    cPlayer &humanPlayer = players[HUMAN];
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer &player = players[i];
-        if (!player.isAlive()) continue;
+        cPlayer *player = &players[i];
+        if (!player->isAlive()) continue;
+        if (humanPlayer.isSameTeamAs(player)) continue; // skip allied AI players
         return false;
     }
     return true;
