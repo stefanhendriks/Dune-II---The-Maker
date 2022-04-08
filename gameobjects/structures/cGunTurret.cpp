@@ -146,6 +146,8 @@ void cGunTurret::think_fire() {
             }
         }
 
+        // TODO: move '3' to property (distanceForSecondaryFire?)
+        int distanceForSecondaryFire = 3;
         int iSlowDown = getStructureInfo().fireRate;
         if (TIMER_fire > iSlowDown) {
             int iTargetCell = unitTarget.getCell();
@@ -155,8 +157,7 @@ void cGunTurret::think_fire() {
             if (unitTarget.isAirbornUnit()) {
                 bulletType = ROCKET_RTURRET;
             } else {
-                // TODO: move '3' to property (distanceForSecondaryFire?)
-                if (!lowPower && getType() == RTURRET && iDistance > 3) {
+                if (!lowPower && getType() == RTURRET && iDistance > distanceForSecondaryFire) {
                     bulletType = ROCKET_RTURRET; // long-range bullet,
                 } else {
                     int half = 16;
@@ -210,6 +211,11 @@ void cGunTurret::think_guard() {
 
         iTargetID=-1;       // no target
 
+        int distanceForAttacking = getSight();
+        if (lowPower && getType() == RTURRET) {
+            distanceForAttacking = sStructureInfo[TURRET].sight; // HACK HACK: way to reduce distance for rturret on low power
+        }
+
         // scan area for units
         for (int i = 0; i < MAX_UNITS; i++) {
             // is valid
@@ -236,7 +242,7 @@ void cGunTurret::think_guard() {
             int c1 = cUnit.getCell();
             int distance = ABS_length(iCellX, iCellY, map.getCellX(c1), map.getCellY(c1));
 
-            if (distance <= getSight()) {
+            if (distance <= distanceForAttacking) {
                 if (cUnit.isAttackableAirUnit()) {
                     iAir = i;
                 } else if (cUnit.isSandworm()) {
