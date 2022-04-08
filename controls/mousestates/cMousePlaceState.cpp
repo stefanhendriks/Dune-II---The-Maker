@@ -188,3 +188,8 @@ void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 void cMousePlaceState::onFocus() {
     m_mouse->setTile(mouseTile);
 }
+
+void cMousePlaceState::onBlur() {
+    m_mouse->resetBoxSelect();
+    m_mouse->resetDragViewportInteraction();
+}
