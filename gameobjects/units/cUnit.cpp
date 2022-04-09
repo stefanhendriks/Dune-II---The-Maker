@@ -971,7 +971,7 @@ void cUnit::thinkFast_guard() {
 
     updateCellXAndY();
 
-    if (isSandworm()) {
+    if (isSandworm() && !game.m_disableWormAi) {
         thinkFast_guard_sandworm();
         return;
     }
