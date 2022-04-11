@@ -3811,7 +3811,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     }
 
     cUnit &pUnit = unit[iUnitId];
-    if (!pUnit.isValid()) {
+    if (!pUnit.isValid() || pUnit.isDead()) {
         return -99; // for now...
     }
 
@@ -3869,21 +3869,20 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     // set very first... our start cell
     temp_map[iCell].cost = ABS_length(cx, cy, map.getCellX(goal_cell), map.getCellY(goal_cell));
     temp_map[iCell].parent = -1;
-    temp_map[iCell].state = CLOSED;
+    temp_map[iCell].state = OPEN; // this one is opened by default
 
     bool valid = true;
-    bool succes = false;
-    bool found_one = false;
+    bool success = false;
 
     int sx, sy;
     double cost = -1;
 
     // WHILE VALID TO RUN THIS LOOP
     while (valid) {
-        // iCell reached Goal Cell
+        // iCell reached Goal Cell. We should have bailed out sooner.
         if (iCell == goal_cell) {
             valid = false;
-            succes = true;
+            success = true;
             break;
         }
 
@@ -3891,7 +3890,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         if (pUnit.iStructureID > -1) {
             if (idOfStructureAtCell == pUnit.iStructureID) {
                 valid = false;
-                succes = true;
+                success = true;
                 pUnit.log("Found structure ID");
                 break;
             }
@@ -3900,7 +3899,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         if (pUnit.iAttackStructure > -1) {
             if (idOfStructureAtCell == pUnit.iAttackStructure) {
                 valid = false;
-                succes = true;
+                success = true;
                 pUnit.log("Found attack structure ID");
                 break;
             }
@@ -3928,7 +3927,6 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
         cost = 999999999;
         the_cll = -1;
-        found_one = false;
 
         // go around the cell we are checking!
         bool bail_out = false;
@@ -3947,6 +3945,10 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                 // DO NOT CHECK SELF
                 if (cll == iCell)
                     continue;
+
+//                if (cll == startCell) {
+//                    continue; // don't evaluate start position (in case you get around)
+//                }
 
                 // Determine if it is a good cell to use or not:
                 bool good = false; // not good by default
@@ -3980,7 +3982,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
                     }
 
-                    // blocked by other then our own unit
+                    // blocked by other than our own unit
                     if (idOfUnitAtCell > -1) {
                         // occupied by a different unit than ourselves
                         if (idOfUnitAtCell != iUnitId) {
@@ -3988,12 +3990,9 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
                             if (iPathCountUnits != 0) {
                                 if (iPathCountUnits <= 0) {
+                                    // other units block our path
                                     good = false;
-//                                    char msg[255];
-//                                    sprintf(msg,
-//                                            "CREATE_PATH(unitId=%d) - iPathCountUnits < 0 - variable 'good' becomes 'false'",
-//                                            iUnitId);
-//                                    pUnit.log(msg);
+                                    pUnit.log("iPathCountUnits < 0 - variable 'good' becomes 'false'");
                                 }
                             }
 
@@ -4031,50 +4030,61 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                     good = map.isCellPassableForWorm(cll);
                 }
 
+                if (!good) {
+                    continue;
+                }
+
+//                pUnit.log(fmt::format("CREATE_PATH: cll [{}] != [{}] && temp_map[cll].state [{}] and good [{}]",
+//                                      cll, iCell, temp_map[cll].state, good));
+
                 // it is the goal cell
-                if (cll == goal_cell && good) {
+                if (cll == goal_cell) {
                     the_cll = cll;
                     cost = 0;
-                    succes = true;
-                    found_one = true;
                     bail_out = true;
-                    pUnit.log("CREATE_PATH: Found the goal cell, succes, bailing out");
+                    pUnit.log("CREATE_PATH: Found the goal cell, success, bailing out");
                     break;
                 }
 
+                bool isClosed = temp_map[cll].state == CLOSED;
+
                 // when the cell (the attached one) is NOT the cell we are on and
                 // the cell is CLOSED (not checked yet)
-                if (cll != iCell &&                            // not checking on our own
-                    temp_map[cll].state == CLOSED &&          // and is closed (else its not valid to check)
-                    good) // and its not occupied (but may be occupied by own id!
+                if (cll != iCell &&         // not checking on our own
+                    isClosed)              // and is closed (else it's not valid to check)
                 {
                     int gcx = map.getCellX(goal_cell);
                     int gcy = map.getCellY(goal_cell);
 
                     // calculate the cost
-                    double d_cost = ABS_length(cx, cy, gcx, gcy) + temp_map[cll].cost;
+                    int tempCost = temp_map[cll].cost;
+                    double distanceCost = map.distance(cx, cy, gcx, gcy);
+                    double newCost = distanceCost + tempCost;
+//                        pUnit.log(fmt::format(
+//                                "CREATE_PATH: tempCost [{}] + distanceCost [{}] = newCost = [{}] vs current cost [{}]",
+//                                tempCost, distanceCost, newCost, cost));
 
-                    // when the cost is lower then we had before
-                    if (d_cost < cost) {
-                        // when the cost is lower then the previous cost, then we set the new cost and we set the cell
+                    // when the cost is lower than we had before
+                    if (newCost < cost) {
+                        // when the cost is lower than the previous cost, then we set the new cost and we set the cell
                         the_cll = cll;
-                        cost = d_cost;
+                        cost = newCost;
                         // found a new cell, now decrease ipathcountunits
                         iPathCountUnits--;
+//                            pUnit.log(fmt::format(
+//                                    "CREATE_PATH: Waypoint found : cell {} - goalcell = {}, iPathCountUnits = {}", cll,
+//                                    goal_cell, iPathCountUnits));
+                    } else {
+//                            pUnit.log(fmt::format(
+//                                    "CREATE_PATH: Waypoint found : cell {} - goalcell = {}, iPathCountUnits = {}", cll,
+//                                    goal_cell, iPathCountUnits));
                     }
-
-
-/*
-                 char msg[255];
-                 sprintf(msg, "Waypoint found : cell %d - goalcell = %d", cll, goal_cell);
-                 log(msg);*/
-
                 } // END OF LOOP #2
             } // Y thingy
 
             // bail out
             if (bail_out) {
-                //log("BAIL");
+                pUnit.log("CREATE_PATH: BAIL");
                 break;
             }
 
@@ -4082,46 +4092,61 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
         // When found a new c(e)ll;
         if (the_cll > -1) {
+            pUnit.log(fmt::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
             // Open this one, so we do not check it again
             temp_map[the_cll].state = OPEN;
             temp_map[the_cll].parent = iCell;
             temp_map[the_cll].cost = cost;
 
+            int halfTile = 16;
+            int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
+            int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
+
+            int iDx = mapCamera->getWindowXPositionFromCellWithOffset(the_cll, halfTile);
+            int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
+
+            line(screen, iPrevX, iPrevY, iDx, iDy, makecol(0, 255, 0));
+
             // Now set c to the cll
             iCell = the_cll;
-            found_one = true;
-
-            // DEBUG:
-            // draws a SLAB when the cell is assigned for our path
-            //map.cell[c].type = TERRAIN_SPICE;
-            //map.cell[c].tile = 0;
-
             if (iCell == goal_cell) {
                 valid = false;
-                succes = true;
+                success = true;
             }
-        }
 
-        if (found_one == false) {
-            valid = false;
-            succes = false;
-            pUnit.log("FAILED TO CREATE PATH - nothing found to continue");
-            break;
+        } else {
+            int prevCell = temp_map[iCell].parent;
+
+            if (prevCell > -1 ) {
+                int halfTile = 16;
+                int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
+                int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
+
+                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
+                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
+
+                line(screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
+                iCell = prevCell; // back track
+            } else {
+                pUnit.log(fmt::format("Failed to find new cell, backtracking failed!"));
+                valid = false;
+                success = false;
+                pUnit.log("FAILED TO CREATE PATH - nothing found to continue");
+                break;
+            }
         }
 
     } // valid to run loop (and try to create a path)
 
     pUnit.log("CREATE_PATH -- valid loop finished");
 
-    if (succes) {
-        pUnit.log("CREATE_PATH -- success");
+    if (success) {
+        pUnit.log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
         // read path!
         int temp_path[MAX_PATH_SIZE];
 
-        //log("NEW PATH FOUND");
         memset(temp_path, -1, sizeof(temp_path));
-        //for (int copy=0; copy < PATH_MAX; copy++)
-        // temp_path[copy] = -1;
 
         bool cp = true;
 
@@ -4131,21 +4156,27 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         temp_path[pi] = sc;
         pi++;
 
+        pUnit.log(fmt::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
+
         // while we should create a path
         while (cp) {
             int tmp = temp_map[sc].parent;
+            pUnit.log(fmt::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
             if (tmp > -1) {
                 // found terminator (PARENT=CURRENT)
                 if (tmp == sc) {
+                    pUnit.log("found terminator, stop!");
                     cp = false;
                     continue;
                 } else {
                     temp_path[pi] = tmp;
                     sc = temp_map[sc].parent;
                     pi++;
+                    pUnit.log(fmt::format("Backtraced. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
                 }
-            } else
+            } else {
                 cp = false;
+            }
 
             if (pi >= MAX_PATH_SIZE)
                 cp = false;
@@ -4200,27 +4231,20 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             }
         }
 
-
-
-        /*
         // debug debug
-        for (int i=0; i <	MAX_PATH_SIZE; i++)
-        {
-           if (unit[iUnitId].iPath[i] > -1)
-           {
-               char msg[256];
-               sprintf(msg, "WAYPOINT %d = %d ", iUnitId, i, unit[iUnitId].iPath[i]);
-               unit[iUnitId].log(msg);
-           }
-        }*/
-
+        for (int i = 0; i < MAX_PATH_SIZE; i++) {
+            int pathCell = pUnit.iPath[i];
+            if (pathCell > -1) {
+                pUnit.log(fmt::format("WAYPOINT {} = {} ", i, pathCell));
+            }
+        }
 
         pUnit.updateCellXAndY();
         pUnit.bCalculateNewPath = false;
 
 
         //log("SUCCES");
-        return 0; // succes!
+        return 0; // success!
 
     } else {
         pUnit.log("CREATE_PATH -- not valid");
