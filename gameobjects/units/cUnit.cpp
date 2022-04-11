@@ -883,8 +883,14 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup) {
 }
 
 void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent) {
+    if (isSandworm() && game.m_disableWormAi) {
+        // don't do anything
+        return;
+    }
+
     log(fmt::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
                     iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
+
     setGoalCell(iCll);
     if (iStructureID > -1) {
         unitWillNoLongerBeInteractingWithStructure();
@@ -2305,6 +2311,10 @@ s_UnitInfo &cUnit::getUnitInfo() const {
 void cUnit::thinkFast_move() {
     if (!isValid()) {
         assert(false && "Expected to have a valid unit calling thinkFast_move()");
+    }
+
+    if (isSandworm() && game.m_disableWormAi) {
+        return; // skip
     }
 
     // this is about non-aircraft only, so bail for aircraft units
