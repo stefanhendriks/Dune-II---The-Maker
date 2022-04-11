@@ -1,10 +1,3 @@
-/*
- * cSoundPlayer.cpp
- *
- *  Created on: 6-aug-2010
- *      Author: Stefan
- */
-
 #include "cSoundPlayer.h"
 
 #include "definitions.h"
@@ -143,6 +136,11 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
     if (vol <= 0) {
         return;
     }
+
+    if (voices.size() < kMinNrVoices) {
+        return;
+    }
+
 
     auto voice = std::find(voices.begin(), voices.end(), kNoVoice);
     if (voice == voices.end()) {
