@@ -41,7 +41,7 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
         bailoutCounter++;
         std::shared_ptr<cPathNode> currentNode = openSet[0]; // by default the current is the 1st in the list
 
-        if (bailoutCounter > 1000) {
+        if (bailoutCounter > 5000) {
             break; // bail to safe ourselves from hanging (need to find out why it happens though)
         }
         // unless we have a better candidate in our open set
@@ -68,6 +68,21 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
 
         for (const auto & neighbourCell : neighbours) {
 
+            std::shared_ptr<cPathNode> neighbourNode = getPathNodeFromMapCell(neighbourCell);
+            const std::set<std::shared_ptr<cPathNode>>::iterator &iterClosed = std::find_if(closedSet.begin(), closedSet.end(),
+                                                                                         [&](const std::shared_ptr<cPathNode> &pathNode) {
+                                                                                             return pathNode->isAt(
+                                                                                                     neighbourNode.get());
+                                                                                         });
+
+            auto nodeInClosedSet = iterClosed != closedSet.end();
+//            if (closedSet.contains(neighbourNode)) {
+            if (nodeInClosedSet) {
+                // skip nodes we have already 'closed'
+                continue;
+            }
+
+            // else, check if it is blocked/walkable
             if (pUnit.isSandworm()) {
 
             } else {
@@ -128,22 +143,31 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
                 }
             }
 
-            std::shared_ptr<cPathNode> neighbourNode = getPathNodeFromMapCell(neighbourCell);
-            if (closedSet.contains(neighbourNode)) {
-                // skip nodes we have already 'closed'
-                continue;
-            }
-
             int newMovementCost = currentNode->gCost + getDistance(currentNode.get(), neighbourNode.get());
-            bool nodeInOpenSet = std::find(openSet.begin(), openSet.end(), neighbourNode) != openSet.end();
+            const std::vector<std::shared_ptr<cPathNode>>::iterator &iter = std::find_if(openSet.begin(), openSet.end(),
+                                                                                         [&](const std::shared_ptr<cPathNode> &pathNode) {
+                                                                                             return pathNode->isAt(
+                                                                                                     neighbourNode.get());
+                                                                                         });
+            auto nodeInOpenSet = iter != openSet.end();
+//            bool nodeInOpenSet = std::find(openSet.begin(), openSet.end(), neighbourNode.isAt()) != openSet.end();
             if (!nodeInOpenSet ||  // not in set , so put it in there
                 newMovementCost < neighbourNode->gCost // Or it is there, and it is less costly
                 ) {
-                neighbourNode->gCost = newMovementCost;
-                neighbourNode->hCost = getDistance(neighbourNode.get(), targetNode.get());
-                neighbourNode->parent = currentNode;
+                if (nodeInOpenSet) {
+                    // replace current
+                    cPathNode *pNode = iter->get();
+                    pNode->gCost = newMovementCost;
+                    pNode->hCost = getDistance(neighbourNode.get(), targetNode.get());
+                    pNode->parent = currentNode;
+                } else {
+                    // add
+                    neighbourNode->gCost = newMovementCost;
+                    neighbourNode->hCost = getDistance(neighbourNode.get(), targetNode.get());
+                    neighbourNode->parent = currentNode;
 
-                openSet.emplace_back(neighbourNode);
+                    openSet.push_back(neighbourNode);
+                }
             }
         }
 
