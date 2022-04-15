@@ -1,0 +1,192 @@
+#include "cPathFinder.h"
+
+#include "player/cPlayer.h"
+#include "gameobjects/units/cUnit.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+
+cPathNode::cPathNode(int _x, int _y) {
+    x = _x;
+    y = _y;
+    parent = nullptr;
+    hCost = 0;
+    gCost = 0;
+}
+
+cPathFinder::cPathFinder(cMap *map) :
+    m_map(map)
+{
+}
+
+/**
+ * Returns a path between start and target cell. When no path can be found, the returned vector will be empty.
+ *
+ * @param startCell
+ * @param targetCell
+ * @return
+ */
+std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
+    std::shared_ptr<cPathNode> startNode = getPathNodeFromMapCell(startCell);
+    std::shared_ptr<cPathNode> targetNode = getPathNodeFromMapCell(targetCell);
+
+    // used for finding a path
+    std::vector<std::shared_ptr<cPathNode>> openSet = std::vector<std::shared_ptr<cPathNode>>();
+    std::set<std::shared_ptr<cPathNode>> closedSet = std::set<std::shared_ptr<cPathNode>>();
+    openSet.push_back(startNode);
+
+    std::shared_ptr<cPathNode> backTrackPathNode = nullptr;
+
+    int bailoutCounter = 0;
+    while (!openSet.empty()) {
+        bailoutCounter++;
+        std::shared_ptr<cPathNode> currentNode = openSet[0]; // by default the current is the 1st in the list
+
+        if (bailoutCounter > 1000) {
+            break; // bail to safe ourselves from hanging (need to find out why it happens though)
+        }
+        // unless we have a better candidate in our open set
+        for (unsigned int i = 1; i < openSet.size(); i++) {
+            std::shared_ptr<cPathNode> other = openSet[i];
+            if (other->fCost() < currentNode->fCost() || (other->fCost() == currentNode->fCost() && other->hCost < currentNode->hCost)) {
+                currentNode = other;
+            }
+        }
+
+        // put it into our closedSet first
+        closedSet.insert(currentNode);
+
+        // remove current node from openSet
+        openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
+
+        if (currentNode->isAt(targetNode.get())) {
+            // found target; start tracing back our path from closedSet
+            backTrackPathNode = currentNode;
+            break;
+        }
+
+        const std::vector<int> &neighbours = m_map->getNeighbours(currentNode->x, currentNode->y);
+
+        for (const auto & neighbourCell : neighbours) {
+
+            if (pUnit.isSandworm()) {
+
+            } else {
+                int idOfStructureAtCell = m_map->cellGetIdFromLayer(neighbourCell, MAPID_STRUCTURES);
+                int idOfUnitAtCell = m_map->getCellIdUnitLayer(neighbourCell);
+
+                if (idOfStructureAtCell > -1) {
+                    // when the cell is a structure, and it is the structure we want to attack, it is good
+                    if (pUnit.iStructureID > -1) {
+                        if (idOfStructureAtCell != pUnit.iStructureID) {
+                            // not allowed
+                            continue;
+                        }
+                    } else if (pUnit.iAttackStructure > -1) {
+                        if (idOfStructureAtCell != pUnit.iAttackStructure) {
+                            continue;
+                        }
+                    } else {
+                        continue; // by default blocked by structures
+                    }
+                }
+
+                // blocked by other than our own unit
+                if (idOfUnitAtCell > -1) {
+                    // occupied by a different unit than ourselves
+                    if (idOfUnitAtCell != pUnit.iID) {
+                        int iUID = idOfUnitAtCell;
+
+                        cUnit &unitAtCell = unit[iUID];
+                        if (!unitAtCell.getPlayer()->isSameTeamAs(pUnit.getPlayer())) {
+                            // allow running over enemy infantry/squishable units
+                            if (unitAtCell.isInfantryUnit() &&
+                                !pUnit.canSquishInfantry()) // and the current unit cannot squish
+                            {
+                                continue; // not allowed
+                            }
+                        } else {
+                            continue; // not allowed (blocked by own units)
+                        }
+                        // it is not good, other unit blocks
+                    }
+                }
+
+                // is not visible, always good (since we don't know yet if its blocked!)
+                if (map.isVisible(neighbourCell, pUnit.iPlayer)) {
+                    // walls stop us
+                    int cellType = map.getCellType(neighbourCell);
+                    if (cellType == TERRAIN_WALL) {
+                        continue;
+                    }
+
+                    // When we are infantry, we move through mountains. However, normal units do not
+                    if (!pUnit.isInfantryUnit()) {
+                        if (cellType == TERRAIN_MOUNTAIN) {
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            std::shared_ptr<cPathNode> neighbourNode = getPathNodeFromMapCell(neighbourCell);
+            if (closedSet.contains(neighbourNode)) {
+                // skip nodes we have already 'closed'
+                continue;
+            }
+
+            int newMovementCost = currentNode->gCost + getDistance(currentNode.get(), neighbourNode.get());
+            bool nodeInOpenSet = std::find(openSet.begin(), openSet.end(), neighbourNode) != openSet.end();
+            if (!nodeInOpenSet ||  // not in set , so put it in there
+                newMovementCost < neighbourNode->gCost // Or it is there, and it is less costly
+                ) {
+                neighbourNode->gCost = newMovementCost;
+                neighbourNode->hCost = getDistance(neighbourNode.get(), targetNode.get());
+                neighbourNode->parent = currentNode;
+
+                openSet.emplace_back(neighbourNode);
+            }
+        }
+
+    }
+
+    if (backTrackPathNode != nullptr) {
+        auto path = std::vector<int>();
+
+        std::shared_ptr<cPathNode> currentNode = backTrackPathNode;
+        while (currentNode != startNode) {
+            path.push_back(m_map->makeCell(currentNode->x, currentNode->y));
+            currentNode = currentNode->parent;
+        }
+        std::reverse(path.begin(), path.end());
+        return path;
+    }
+
+    // nothing found
+    return {};
+}
+
+/**
+ * Returns distance by looking at 'nodes' (ie, cells). Each movement up/down/left/right has a score of 10. Diagonal
+ * is considered more 'expensive' and counts as a distance of 14.
+ *
+ * @param from
+ * @param to
+ * @return
+ */
+int cPathFinder::getDistance(const cPathNode * from, const cPathNode * to) const {
+    int distanceX = std::abs(from->x - to->x);
+    int distanceY = std::abs(from->y - to->y);
+
+    if (distanceX > distanceY) {
+        return 14 * distanceY + (10 * (distanceX - distanceY));
+    }
+
+    return 14 * distanceX + (10 * (distanceY - distanceX));
+}
+
+std::shared_ptr<cPathNode> cPathFinder::getPathNodeFromMapCell(int cell) {
+    int x = m_map->getCellX(cell);
+    int y = m_map->getCellY(cell);
+
+    return std::make_shared<cPathNode>(x, y);
+}

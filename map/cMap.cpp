@@ -1548,3 +1548,16 @@ void cMap::onEntityDestroyed(const s_GameEvent &event) {
 cPoint cMap::getAbsolutePositionFromCell(int cell) {
     return cPoint(getAbsoluteXPositionFromCell(cell), getAbsoluteYPositionFromCell(cell));
 }
+
+std::vector<int> cMap::getNeighbours(int centerX, int centerY) {
+    std::vector<int> result = std::vector<int>();
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            if (x == 0 && y == 0) {
+                continue; // this results in same value as centerX and centerY, which is self == not neighbour
+            }
+            result.push_back(getCellWithMapBorders(centerX + x, centerY + y));
+        }
+    }
+    return result;
+}

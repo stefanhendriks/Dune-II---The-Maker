@@ -557,6 +557,9 @@ public:
     cPoint getAbsolutePositionFromCell(int cell);
 
     void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
+
+    std::vector<int> getNeighbours(int centerX, int centerY);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
