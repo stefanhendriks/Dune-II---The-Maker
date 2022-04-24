@@ -2780,8 +2780,13 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         // when we are chasing, we now set on attack...
         if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            setAction(eActionType::ATTACK_CHASE);
-            forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
+            cUnit * attackUnit = &unit[iAttackUnit];
+            if (attackUnit && attackUnit->isValid()) {
+                setAction(eActionType::ATTACK_CHASE);
+                if (attackUnit->getCell() != iGoalCell) {
+                    forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
+                }
+            }
         }
 
         // movement to cell complete
@@ -4105,7 +4110,9 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             int iDx = mapCamera->getWindowXPositionFromCellWithOffset(the_cll, halfTile);
             int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
-            line(screen, iPrevX, iPrevY, iDx, iDy, makecol(0, 255, 0));
+            if (game.m_drawUnitDebug) {
+                line(screen, iPrevX, iPrevY, iDx, iDy, makecol(0, 255, 0));
+            }
 
             // Now set c to the cll
             iCell = the_cll;
@@ -4115,26 +4122,26 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             }
 
         } else {
-            int prevCell = temp_map[iCell].parent;
+//            int prevCell = temp_map[iCell].parent;
 
-            if (prevCell > -1 ) {
-                int halfTile = 16;
-                int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
-                int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
-
-                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
-                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
-
-                line(screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
-                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
-                iCell = prevCell; // back track
-            } else {
+//            if (prevCell > -1 ) {
+//                int halfTile = 16;
+//                int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
+//                int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
+//
+//                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
+//                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
+//
+//                line(screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+//                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
+//                iCell = prevCell; // back track
+//            } else {
                 pUnit.log(fmt::format("Failed to find new cell, backtracking failed!"));
                 valid = false;
                 success = false;
                 pUnit.log("FAILED TO CREATE PATH - nothing found to continue");
                 break;
-            }
+//            }
         }
 
     } // valid to run loop (and try to create a path)
