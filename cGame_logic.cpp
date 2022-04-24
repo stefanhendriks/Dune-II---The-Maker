@@ -86,7 +86,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_iniScreenWidth = -1;
     m_iniScreenHeight = -1;
 
-    m_version = "0.6.x";
+    m_version = "0.7.0-RC";
 
     m_mentat = nullptr;
     m_handleArgument = std::make_unique<cHandleArgument>(this);
