@@ -1027,6 +1027,12 @@ void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &) {
 
 }
 
-void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.isType(eKeyEventType::PRESSED)) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_MENU);
+            game.initiateFadingOut();
+        }
+    }
 }
 
