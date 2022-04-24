@@ -122,5 +122,11 @@ void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event) {
     hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
 }
 
-void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.isType(eKeyEventType::PRESSED)) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_MENU);
+            game.initiateFadingOut();
+        }
+    }
 }
