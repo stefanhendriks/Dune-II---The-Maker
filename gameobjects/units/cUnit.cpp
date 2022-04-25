@@ -1915,19 +1915,31 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
         }
 
         if (!getPlayer()->isHuman()) {
+            int unitCellWhichShotMe = unit[iShotUnit].iCell;
             if (isHarvester()) {
                 if (unit[iShotUnit].isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
-                    move_to(unit[iShotUnit].iCell);
+                    move_to(unitCellWhichShotMe);
                 } else {
                     // under attack, retreat to base? find nearby units to help out?
                 }
 
             } else {
-                if (m_action != eActionType::ATTACK_CHASE && m_action != eActionType::ATTACK) {
+                bool notAttacking = m_action != eActionType::ATTACK_CHASE && m_action != eActionType::ATTACK;
+                if (notAttacking) {
                     if (canSquishInfantry() && unitWhoShotMeIsInfantry) {
-                        // AI tries to run over infantry units that attack it
-                        move_to(unit[iShotUnit].iCell);
+                        if (iGoalCell != unitCellWhichShotMe) {
+                            double distance = 9999;
+                            if (iGoalCell != iCell && m_action == eActionType::MOVE) {
+                                // moving towards a goal already
+                                distance = map.distance(iCell, unitCellWhichShotMe);
+                            }
+                            // found a unit closer to squish, so move towards it
+                            if (distance < map.distance(iCell, iGoalCell)) {
+                                // AI tries to run over infantry units that attack it
+                                move_to(unitCellWhichShotMe);
+                            }
+                        }
                     } else {
                         if (!unitWhoShotMeIsAirborn) {
                             if (isSandworm()) {
@@ -1958,14 +1970,13 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                             }
                         }
 
-                        if (ABS_length(iCellX, iCellY, map.getCellX(iDestCell), map.getCellY(iDestCell)) <
-                            sUnitInfo[iType].range) {
+                        if (map.distance(iCell, iDestCell) < getRange()) {
                             // within range, don't move (just prepare retaliation fire)
                         } else {
                             // out of range unit, attack it
                             if (canSquishInfantry() && unitWhoShotMeIsInfantry) {
                                 // AI tries to run over infantry units that attack it
-                                move_to(unit[iShotUnit].iCell);
+                                move_to(unitCellWhichShotMe);
                             } else {
                                 // else simply shoot it
                                 if (!unitWhoShotMeIsAirborn) {
