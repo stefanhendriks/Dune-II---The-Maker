@@ -4243,17 +4243,21 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
         // take the closest bordering cell as 'far' away to start with
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
-            if (pUnit.iPath[i] > -1) {
-                if (map.isCellAdjacentToOtherCell(pUnit.getCell(), pUnit.iPath[i]))
+            int pathCell = pUnit.iPath[i];
+            if (pathCell > -1) {
+                if (map.isCellAdjacentToOtherCell(pUnit.getCell(), pathCell)) {
                     pUnit.iPathIndex = i;
+                }
             }
         }
 
         // debug debug
-        for (int i = 0; i < MAX_PATH_SIZE; i++) {
-            int pathCell = pUnit.iPath[i];
-            if (pathCell > -1) {
-                pUnit.log(fmt::format("WAYPOINT {} = {} ", i, pathCell));
+        if (game.isDebugMode()) {
+            for (int i = 0; i < MAX_PATH_SIZE; i++) {
+                int pathCell = pUnit.iPath[i];
+                if (pathCell > -1) {
+                    pUnit.log(fmt::format("WAYPOINT {} = {} ", i, pathCell));
+                }
             }
         }
 
