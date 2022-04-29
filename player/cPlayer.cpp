@@ -208,6 +208,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     powerProduce_ = 0;
 
     iTeam = -1;
+    notifications.clear();
 }
 
 /**
