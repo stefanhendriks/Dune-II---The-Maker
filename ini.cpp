@@ -1943,6 +1943,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 players[HUMAN].setCredits(creditsPlayer);
                 players[HUMAN].setHouse(houseForPlayer);
                 players[HUMAN].setTeam(0);
+                players[HUMAN].setAutoSlabStructures(false);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
@@ -1959,6 +1960,8 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 }
 
             } else {
+                players[iCPUId].setAutoSlabStructures(true);
+
                 if (quota > 0) {
                     players[iCPUId].setQuota(quota);
                 }
