@@ -219,6 +219,7 @@ void cGame::initPlayers(bool rememberHouse) const {
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer &pPlayer = players[i];
+
         int h = pPlayer.getHouse();
 
         brains::cPlayerBrain *brain = nullptr;
