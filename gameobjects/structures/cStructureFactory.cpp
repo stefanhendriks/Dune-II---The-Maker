@@ -76,7 +76,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 /**
 	Create a structure, place it and return a reference to this created class.
 
-	This method will return NULL when either an error occurred, or the creation
+	This method will return nullptr when either an error occurred, or the creation
 	of a non-structure type (ie SLAB/WALL) is done.
 **/
 cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
@@ -107,15 +107,15 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     // fail
     if (iNewId < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning nullptr");
         return nullptr;
     }
 
     cAbstractStructure *str = createStructureInstance(iStructureType);
 
-	if (str == NULL) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
-		return NULL; // fail
+	if (str == nullptr) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned nullptr");
+		return nullptr; // fail
 	}
 
     cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
@@ -245,7 +245,7 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 	Clear fog around structure, using a cAbstractStructure class.
 **/
 void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *str) {
-	if (str == NULL) {
+	if (str == nullptr) {
 		return;
 	}
 
