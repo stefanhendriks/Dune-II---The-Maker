@@ -105,11 +105,13 @@ public:
 
     // WHEN ATTACKING
     int iAttackUnit;      // attacking unit id
+    // TODO: Merge iStructureId and iAttackStructure
     int iAttackStructure; // attack structure id
     int iAttackCell;      // attacking a cell (which is force attack)
 
     // Action given code
     int iUnitID;        // Unit ID to attack/pickup, etc
+    // TODO: Merge iStructureId and iAttackStructure
     int iStructureID;   // structure ID to attack/bring to (refinery)/capture
 
     // Harvester specific
@@ -339,7 +341,7 @@ public:
     int getCellX() { return iCellX; }
     int getCellY() { return iCellY; }
 
-    cPlayer *getPlayer();
+    cPlayer *getPlayer() const;
 
     void assignMission(int aMission);
     void unAssignMission();
@@ -375,13 +377,13 @@ public:
      * Can squish infantry units
      * @return
      */
-    bool canSquishInfantry();
+    bool canSquishInfantry() const;
 
     /**
      * Returns true if this unit can be squished by other units
      * @return
      */
-    bool canBeSquished();
+    bool canBeSquished() const;
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 

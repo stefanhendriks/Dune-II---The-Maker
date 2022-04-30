@@ -2940,15 +2940,15 @@ void cUnit::setMaxHitPoints() {
     iHitPoints = getUnitInfo().hp;
 }
 
-bool cUnit::canSquishInfantry() {
+bool cUnit::canSquishInfantry() const {
     return getUnitInfo().squish;
 }
 
-bool cUnit::canBeSquished() {
+bool cUnit::canBeSquished() const {
     return getUnitInfo().canBeSquished;
 }
 
-cPlayer *cUnit::getPlayer() {
+cPlayer *cUnit::getPlayer() const {
     return &players[iPlayer];
 }
 
