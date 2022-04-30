@@ -71,6 +71,7 @@ void cMap::init(int width, int height) {
     m_iTIMER_respawnSandworms = -1;
 
     maxCells = width * height;
+    cell.clear();
     cell = std::vector<tCell>(maxCells, tCell());
 
     // clear out all cells
@@ -741,7 +742,12 @@ int cMap::getCellY(int c) {
         return -1;
     }
 
-    return (c / width);
+    tCell *pCell = getCell(c);
+    if (pCell->y < 0) {
+        pCell->y = (c / width);
+    }
+
+    return pCell->y;
 }
 
 int cMap::getCellX(int c) {
@@ -749,8 +755,12 @@ int cMap::getCellX(int c) {
         return -1;
     }
 
-    int cellX = c - ((c / width) * width);
-    return cellX;
+    tCell *pCell = getCell(c);
+    if (pCell->x < 0) {
+        pCell->x = c - ((c / width) * width);
+    }
+
+    return pCell->x;
 }
 
 bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell) {

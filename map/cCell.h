@@ -13,6 +13,9 @@ struct tCell {
 
     bool iVisible[MAX_PLAYERS];      // visibility for <player>
 
+    int x=-1;        // x and y coordinate of the cell (so no need to recalculate everytime)
+    int y=-1;
+
     // there are 4 'dimensions' of this cell. Each represents the perspective of
     // an entity that is either a unit, structure, the 'worms' dimension and the 'air' dimension.
     int id[4];          // ID of
