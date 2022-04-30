@@ -37,16 +37,16 @@ cPathFinder::cPathFinder(cMap *map) :
  * @param targetCell
  * @return
  */
-std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
-    std::shared_ptr<cPathNode> startNode = getPathNodeFromMapCell(startCell);
-    std::shared_ptr<cPathNode> targetNode = getPathNodeFromMapCell(targetCell);
+cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
+    node_ptr startNode = getPathNodeFromMapCell(startCell);
+    node_ptr targetNode = getPathNodeFromMapCell(targetCell);
+
+    startNode->hCost = getDistance(startNode.get(), targetNode.get());
 
     // used for finding a path
-    std::vector<std::shared_ptr<cPathNode>> openSet = std::vector<std::shared_ptr<cPathNode>>();
-    std::set<std::shared_ptr<cPathNode>> closedSet = std::set<std::shared_ptr<cPathNode>>();
+    std::vector<node_ptr> openSet = std::vector<node_ptr>();
+    std::set<node_ptr> closedSet = std::set<node_ptr>();
     openSet.push_back(startNode);
-
-    std::shared_ptr<cPathNode> backTrackPathNode = nullptr;
 
     // thoughts:
     // do not use shared_ptr, but cell nrs?
@@ -61,20 +61,23 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
     timestamp_t t0 = get_timestamp();
     timestamp_t t_findingBestFCostNode = 0;
     timestamp_t t_totalFindingNeighborNodes = 0;
+
+    node_ptr closestPathNode = startNode;
+
     while (!openSet.empty()) {
         bailoutCounter++;
-        std::shared_ptr<cPathNode> currentNode = openSet[0]; // by default the current is the 1st in the list
+        node_ptr bestNextNode = openSet[0]; // by default the current is the 1st in the list
 
-        if (bailoutCounter > 5000) {
-            break; // bail to safe ourselves from hanging (need to find out why it happens though)
-        }
+//        if (bailoutCounter > 5000) {
+//            break; // bail to safe ourselves from hanging (need to find out why it happens though)
+//        }
 
         timestamp_t t0 = get_timestamp();
         // unless we have a better candidate in our open set
         for (unsigned int i = 1; i < openSet.size(); i++) {
             std::shared_ptr<cPathNode> other = openSet[i];
-            if (other->fCost() < currentNode->fCost() || (other->fCost() == currentNode->fCost() && other->hCost < currentNode->hCost)) {
-                currentNode = other;
+            if (other->fCost() < bestNextNode->fCost() || (other->fCost() == bestNextNode->fCost() && other->hCost < bestNextNode->hCost)) {
+                bestNextNode = other;
             }
         }
         timestamp_t t1 = get_timestamp();
@@ -84,18 +87,23 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
 
 
         // put it into our closedSet first
-        closedSet.insert(currentNode);
+        closedSet.insert(bestNextNode);
 
         // remove current node from openSet
-        openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
+        openSet.erase(std::remove(openSet.begin(), openSet.end(), bestNextNode), openSet.end());
 
-        if (currentNode->isAt(targetNode.get())) {
+        if (bestNextNode->isAt(targetNode.get())) {
             // found target; start tracing back our path from closedSet
-            backTrackPathNode = currentNode;
+            closestPathNode = bestNextNode;
             break;
         }
 
-        const std::vector<int> &neighbours = m_map->getNeighbours(currentNode->x, currentNode->y);
+        // closest node for cases when target cannot be reached
+        if (bestNextNode->hCost < closestPathNode->hCost) {
+            closestPathNode = bestNextNode;
+        }
+
+        const std::vector<int> &neighbours = m_map->getNeighbours(bestNextNode->x, bestNextNode->y);
 
         t0 = get_timestamp();
 
@@ -182,7 +190,7 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
                 }
             }
 
-            int newMovementCost = currentNode->gCost + getDistance(currentNode.get(), neighbourNode.get());
+            int newMovementCost = bestNextNode->gCost + getDistance(bestNextNode.get(), neighbourNode.get());
             const std::vector<std::shared_ptr<cPathNode>>::iterator &iter = std::find_if(openSet.begin(), openSet.end(),
                                                                                          [&](const std::shared_ptr<cPathNode> &pathNode) {
                                                                                              return pathNode->isAt(
@@ -193,17 +201,24 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
             if (!nodeInOpenSet ||  // not in set , so put it in there
                 newMovementCost < neighbourNode->gCost // Or it is there, and it is less costly
                 ) {
+                int hCost = getDistance(neighbourNode.get(), targetNode.get());
+
+                if (hCost > closestPathNode->hCost * 3) {
+                    // don't keep evaluating endlessly the entire map
+                    continue;
+                }
+
                 if (nodeInOpenSet) {
                     // replace current
                     cPathNode *pNode = iter->get();
                     pNode->gCost = newMovementCost;
-                    pNode->hCost = getDistance(neighbourNode.get(), targetNode.get());
-                    pNode->parent = currentNode;
+                    pNode->hCost = hCost;
+                    pNode->parent = bestNextNode;
                 } else {
                     // add
                     neighbourNode->gCost = newMovementCost;
-                    neighbourNode->hCost = getDistance(neighbourNode.get(), targetNode.get());
-                    neighbourNode->parent = currentNode;
+                    neighbourNode->hCost = hCost;
+                    neighbourNode->parent = bestNextNode;
 
                     openSet.push_back(neighbourNode);
                 }
@@ -215,23 +230,23 @@ std::vector<int> cPathFinder::findPath(int startCell, int targetCell, cUnit & pU
     timestamp_t t1 = get_timestamp();
     logbook(fmt::format("Performance 'create path' = {}, spent {} on sorting and {} find neighboursInClosedLists", (t1-t0), t_findingBestFCostNode, t_totalFindingNeighborNodes));
 
-    if (backTrackPathNode != nullptr) {
-        timestamp_t t0 = get_timestamp();
-        auto path = std::vector<int>();
+    t0 = get_timestamp();
+    auto path = std::vector<int>();
 
-        std::shared_ptr<cPathNode> currentNode = backTrackPathNode;
-        while (currentNode != startNode) {
-            path.push_back(m_map->makeCell(currentNode->x, currentNode->y));
-            currentNode = currentNode->parent;
-        }
-        std::reverse(path.begin(), path.end());
-        timestamp_t t1 = get_timestamp();
-        logbook(fmt::format("Performance 'backtrack path' {} - {} = {}", t0, t1, (t1-t0)));
-        return path;
+    std::shared_ptr<cPathNode> currentNode = closestPathNode;
+    while (currentNode != startNode) {
+        path.push_back(m_map->makeCell(currentNode->x, currentNode->y));
+        currentNode = currentNode->parent;
     }
+    std::reverse(path.begin(), path.end());
+    t1 = get_timestamp();
 
-    // nothing found
-    return {};
+    logbook(fmt::format("Performance 'backtrack path' {} - {} = {}", t0, t1, (t1-t0)));
+
+
+    cPath result;
+    result.waypoints = path;
+    return result;
 }
 
 /**
@@ -253,9 +268,13 @@ int cPathFinder::getDistance(const cPathNode * from, const cPathNode * to) const
     return 14 * distanceX + (10 * (distanceY - distanceX));
 }
 
-std::shared_ptr<cPathNode> cPathFinder::getPathNodeFromMapCell(int cell) {
+node_ptr cPathFinder::getPathNodeFromMapCell(int cell) {
     int x = m_map->getCellX(cell);
     int y = m_map->getCellY(cell);
 
     return std::make_shared<cPathNode>(x, y);
+}
+
+bool cPath::success() const {
+    return !waypoints.empty();
 }

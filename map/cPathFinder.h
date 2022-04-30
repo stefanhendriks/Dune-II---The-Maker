@@ -1,11 +1,21 @@
-#ifndef D2TM_CPATHFINDER_H
-#define D2TM_CPATHFINDER_H
+#pragma once
 
 #include "cMap.h"
 
 #include <set>
 #include <vector>
 #include <memory>
+
+class cPathNode;
+
+using node_ptr = std::shared_ptr<cPathNode>;
+
+class cPath {
+public:
+    std::vector<int> waypoints;
+
+    bool success() const;
+};
 
 class cPathNode {
 
@@ -18,7 +28,7 @@ public:
         return gCost + hCost;
     }
 
-    std::shared_ptr<cPathNode> parent;
+    node_ptr parent;
 
     int hCost, gCost;
 
@@ -33,16 +43,14 @@ class cPathFinder {
     public:
         explicit cPathFinder(cMap *map);
 
-        std::vector<int> findPath(int startCell, int targetCell, cUnit & pUnit);
+        cPath findPath(int startCell, int targetCell, cUnit & pUnit);
 
     private:
         cMap *m_map;
 
-        std::shared_ptr<cPathNode> getPathNodeFromMapCell(int cell);
+        node_ptr getPathNodeFromMapCell(int cell);
 
         int getDistance(const cPathNode * from, const cPathNode * to) const;
 
 };
 
-
-#endif //D2TM_CPATHFINDER_H

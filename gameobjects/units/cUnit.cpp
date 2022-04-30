@@ -3866,9 +3866,10 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     // Now start create path
 
     cPathFinder pathFinder(&map);
-    const std::vector<int> &path = pathFinder.findPath(iCell, pUnit.iGoalCell, pUnit);
+    const cPath &foundPath = pathFinder.findPath(iCell, pUnit.iGoalCell, pUnit);
+    const std::vector<int> &path = foundPath.waypoints;
 
-    if (!path.empty()) {
+    if (foundPath.success()) {
         memset(pUnit.iPath, -1, sizeof(pUnit.iPath));
 
         int index = 0;
