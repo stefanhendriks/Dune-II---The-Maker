@@ -898,15 +898,12 @@ int cMap::getCellWithMapBorders(int x, int y) {
 }
 
 int cMap::getCellWithMapDimensions(int x, int y) {
-    int mapWidth = width;
-    int mapHeight = height;
-    // (over the) boundaries result in cell -1
-    if (x < 0) return -1;
-    if (x >= mapWidth) return -1;
-    if (y < 0) return -1;
-    if (y >= mapHeight) return -1;
+    if (x < 0) x = 0;
+    if (x >= width) x = width-1;
+    if (y < 0) y = 0;
+    if (y >= height) y = height-1;
 
-    return (y * mapWidth) + x;
+    return (y * width) + x;
 }
 
 bool cMap::isValidCell(int c) const {
