@@ -123,13 +123,16 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
             t_totalFindingNeighborNodes += (t11 - t00);
 
             auto nodeInClosedSet = iterClosed != closedSet.end();
-//            if (closedSet.contains(neighbourNode)) {
             if (nodeInClosedSet) {
                 // skip nodes we have already 'closed'
                 continue;
             }
 
             // else, check if it is blocked/walkable
+            if (isBlocked(pUnit, neighbourCell)) {
+                continue;
+            }
+
             if (pUnit.isSandworm()) {
 
             } else {
@@ -273,6 +276,72 @@ node_ptr cPathFinder::getPathNodeFromMapCell(int cell) {
     int y = m_map->getCellY(cell);
 
     return std::make_shared<cPathNode>(x, y);
+}
+
+bool cPathFinder::isBlocked(const cUnit &pUnit, const int cell) const {
+    if (pUnit.isSandworm()) {
+        return m_map->isCellPassableForWorm(cell);
+    }
+
+    int idOfStructureAtCell = m_map->getCellIdStructuresLayer(cell);
+    int idOfUnitAtCell = m_map->getCellIdUnitLayer(cell);
+
+    if (idOfStructureAtCell > -1) {
+        // when the cell is a structure, but it is not our target structure, then we're blocked
+        if (pUnit.iStructureID > -1) { // structureId when we want to enter a structure
+            if (idOfStructureAtCell != pUnit.iStructureID) { // not same structure
+                return true; // so .. blocked
+            }
+        } else if (pUnit.iAttackStructure > -1) { // structure we want to attack
+            if (idOfStructureAtCell != pUnit.iAttackStructure) { // other than our target
+                return true; // so .. blocked
+            }
+        }
+
+        // by default blocked by structures
+        // TODO: what about infantry?
+        return true;
+    }
+
+    // blocked by other than our own pUnit
+    if (idOfUnitAtCell > -1) {
+        // occupied by a different pUnit than ourselves
+        if (idOfUnitAtCell != pUnit.iID) {
+            int iUID = idOfUnitAtCell;
+
+            cUnit &unitAtCell = unit[iUID];
+            if (!unitAtCell.getPlayer()->isSameTeamAs(pUnit.getPlayer())) {
+                // allow running over enemy infantry/squishable units
+                if (unitAtCell.isInfantryUnit() &&
+                    !pUnit.canSquishInfantry()) // and the current pUnit cannot squish
+                {
+                    return true; // not allowed
+                }
+            }
+
+            return true; // not allowed (blocked by own units)
+            // it is not good, other pUnit blocks
+        }
+    }
+
+    // is not visible, always good (since we don't know yet if its blocked!)
+    if (map.isVisible(cell, pUnit.iPlayer)) {
+        // walls stop us
+        int cellType = map.getCellType(cell);
+        if (cellType == TERRAIN_WALL) {
+            return true;
+        }
+
+        // When we are infantry, we move through mountains. However, normal units do not
+        if (!pUnit.isInfantryUnit()) {
+            if (cellType == TERRAIN_MOUNTAIN) {
+                return true;
+            }
+        }
+    }
+
+    // not blocked
+    return false;
 }
 
 bool cPath::success() const {

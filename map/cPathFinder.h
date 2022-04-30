@@ -52,5 +52,6 @@ class cPathFinder {
 
         int getDistance(const cPathNode * from, const cPathNode * to) const;
 
+        bool isBlocked(const cUnit &pUnit, const int cell) const;
 };
 
