@@ -1566,7 +1566,10 @@ std::vector<int> cMap::getNeighbours(int centerX, int centerY) {
             if (x == 0 && y == 0) {
                 continue; // this results in same value as centerX and centerY, which is self == not neighbour
             }
-            result.push_back(getCellWithMapBorders(centerX + x, centerY + y));
+            int cll = getCellWithMapBorders(centerX + x, centerY + y);
+            if (cll > -1) {
+                result.push_back(cll);
+            }
         }
     }
     return result;
