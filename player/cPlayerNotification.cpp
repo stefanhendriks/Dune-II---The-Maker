@@ -9,6 +9,7 @@ std::string eNotificationTypeString(const eNotificationType &type) {
         case eNotificationType::NEUTRAL: return "NEUTRAL";
         case eNotificationType::PRIORITY: return "PRIORITY";
         case eNotificationType::BAD: return "BAD";
+        case eNotificationType::DEBUG: return "DEBUG";
         default:
             assert(false && "Unknown eNotificationType?");
             break;
@@ -40,6 +41,8 @@ int cPlayerNotification::getColor() const {
             return justStarted ? game.getColorFadeSelected(priorityColor) : priorityColor;
         case BAD:
             return justStarted ? game.getColorFadeSelected(badColor) : badColor;
+        case DEBUG:
+            return neutralColor;
     }
     return 0;
 }

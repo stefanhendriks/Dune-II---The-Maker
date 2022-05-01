@@ -424,6 +424,8 @@ public:
 
     std::vector<cPlayerNotification> & getNotifications();
 
+    void clearNotifications();
+
     void addNotification(const std::string& msg, eNotificationType type);
 
     // properties (for now public, should become private)

@@ -1,5 +1,7 @@
 #include "cPathFinder.h"
 
+#include "utils/cProfiler.h"
+
 #include "player/cPlayer.h"
 #include "gameobjects/units/cUnit.h"
 #include "d2tmc.h"
@@ -8,12 +10,12 @@
 #include <sys/time.h>
 typedef unsigned long long timestamp_t;
 
-static timestamp_t get_timestamp () {
-//    struct timeval now;
-    timeval now;
-    gettimeofday (&now, nullptr);
-    return now.tv_usec + (timestamp_t)now.tv_sec * 1000;
-}
+//static timestamp_t get_timestamp () {
+////    struct timeval now;
+//    timeval now;
+//    gettimeofday (&now, nullptr);
+//    return now.tv_usec + (timestamp_t)now.tv_sec * 1000;
+//}
 
 //double secs = (t1 - t0) / 1000000.0L;
 
@@ -26,8 +28,23 @@ cPathNode::cPathNode(int _x, int _y) {
 }
 
 cPathFinder::cPathFinder(cMap *map) :
-    m_map(map)
+    m_map(map),
+    grid(m_map->getWidth(), m_map->getHeight())
 {
+    int maxCells = m_map->getWidth() * m_map->getHeight();
+    for (int cell = 0; cell < maxCells; cell++) {
+        int x = m_map->getCellX(cell);
+        int y = m_map->getCellY(cell);
+
+        grid.grid[cell] = std::make_shared<cPathNode>(x, y);
+    }
+}
+
+cPathNodeGrid::cPathNodeGrid(int width, int height)
+{
+    int maxCells = width * height;
+    grid.clear();
+    grid = std::vector<node_ptr>(maxCells);
 }
 
 /**
@@ -38,6 +55,12 @@ cPathFinder::cPathFinder(cMap *map) :
  * @return
  */
 cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
+    cProfiler *profiler = cProfiler::getInstance();
+    profiler->reset();
+
+//    timestamp_t tStartCreatePath = get_timestamp();
+    profiler->start("findPath");
+
     node_ptr startNode = getPathNodeFromMapCell(startCell);
     node_ptr targetNode = getPathNodeFromMapCell(targetCell);
 
@@ -58,9 +81,8 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     // build own 'set' or something, to quickly find the lowest fcost? (with the binary search thingy?)
 
     int bailoutCounter = 0;
-    timestamp_t t0 = get_timestamp();
-    timestamp_t t_findingBestFCostNode = 0;
-    timestamp_t t_totalFindingNeighborNodes = 0;
+//    timestamp_t t_findingBestFCostNode = 0;
+//    timestamp_t t_totalFindingNeighborNodes = 0;
 
     node_ptr closestPathNode = startNode;
 
@@ -72,18 +94,21 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
 //            break; // bail to safe ourselves from hanging (need to find out why it happens though)
 //        }
 
-        timestamp_t t0 = get_timestamp();
+//        timestamp_t t0 = get_timestamp();
         // unless we have a better candidate in our open set
+        profiler->start("findingBestFCostNode");
         for (unsigned int i = 1; i < openSet.size(); i++) {
             std::shared_ptr<cPathNode> other = openSet[i];
             if (other->fCost() < bestNextNode->fCost() || (other->fCost() == bestNextNode->fCost() && other->hCost < bestNextNode->hCost)) {
                 bestNextNode = other;
             }
         }
-        timestamp_t t1 = get_timestamp();
-        t_findingBestFCostNode += (t1-t0);
+//        timestamp_t t1 = get_timestamp();
+        profiler->sample("findingBestFCostNode");
 
-        logbook(fmt::format("Performance 'unless we have a better candidate in our open set' {} - {} = {}", t0, t1, (t1-t0)));
+//        t_findingBestFCostNode += (t1-t0);
+
+//        logbook(fmt::format("Performance 'unless we have a better candidate in our open set' {} - {} = {}", t0, t1, (t1-t0)));
 
 
         // put it into our closedSet first
@@ -105,22 +130,15 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
 
         const std::vector<int> &neighbours = m_map->getNeighbours(bestNextNode->x, bestNextNode->y);
 
-        t0 = get_timestamp();
-
-        timestamp_t t00;
-        timestamp_t tFindingNeighborNodeInClosedList = 0;
+        profiler->start("totalFindingNeighborNodes");
         for (const auto & neighbourCell : neighbours) {
             std::shared_ptr<cPathNode> neighbourNode = getPathNodeFromMapCell(neighbourCell);
-            t00 = get_timestamp();
             const std::set<std::shared_ptr<cPathNode>>::iterator &iterClosed = std::find_if(closedSet.begin(), closedSet.end(),
                                                                                          [&](const std::shared_ptr<cPathNode> &pathNode) {
                                                                                              return pathNode->isAt(
                                                                                                      neighbourNode.get());
                                                                                          });
-
-            timestamp_t t11 = get_timestamp();
-            tFindingNeighborNodeInClosedList += (t11 - t00);
-            t_totalFindingNeighborNodes += (t11 - t00);
+//            timestamp_t t11 = get_timestamp();
 
             auto nodeInClosedSet = iterClosed != closedSet.end();
             if (nodeInClosedSet) {
@@ -131,66 +149,6 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
             // else, check if it is blocked/walkable
             if (isBlocked(pUnit, neighbourCell)) {
                 continue;
-            }
-
-            if (pUnit.isSandworm()) {
-
-            } else {
-                int idOfStructureAtCell = m_map->cellGetIdFromLayer(neighbourCell, MAPID_STRUCTURES);
-                int idOfUnitAtCell = m_map->getCellIdUnitLayer(neighbourCell);
-
-                if (idOfStructureAtCell > -1) {
-                    // when the cell is a structure, and it is the structure we want to attack, it is good
-                    if (pUnit.iStructureID > -1) {
-                        if (idOfStructureAtCell != pUnit.iStructureID) {
-                            // not allowed
-                            continue;
-                        }
-                    } else if (pUnit.iAttackStructure > -1) {
-                        if (idOfStructureAtCell != pUnit.iAttackStructure) {
-                            continue;
-                        }
-                    } else {
-                        continue; // by default blocked by structures
-                    }
-                }
-
-                // blocked by other than our own unit
-                if (idOfUnitAtCell > -1) {
-                    // occupied by a different unit than ourselves
-                    if (idOfUnitAtCell != pUnit.iID) {
-                        int iUID = idOfUnitAtCell;
-
-                        cUnit &unitAtCell = unit[iUID];
-                        if (!unitAtCell.getPlayer()->isSameTeamAs(pUnit.getPlayer())) {
-                            // allow running over enemy infantry/squishable units
-                            if (unitAtCell.isInfantryUnit() &&
-                                !pUnit.canSquishInfantry()) // and the current unit cannot squish
-                            {
-                                continue; // not allowed
-                            }
-                        } else {
-                            continue; // not allowed (blocked by own units)
-                        }
-                        // it is not good, other unit blocks
-                    }
-                }
-
-                // is not visible, always good (since we don't know yet if its blocked!)
-                if (map.isVisible(neighbourCell, pUnit.iPlayer)) {
-                    // walls stop us
-                    int cellType = map.getCellType(neighbourCell);
-                    if (cellType == TERRAIN_WALL) {
-                        continue;
-                    }
-
-                    // When we are infantry, we move through mountains. However, normal units do not
-                    if (!pUnit.isInfantryUnit()) {
-                        if (cellType == TERRAIN_MOUNTAIN) {
-                            continue;
-                        }
-                    }
-                }
             }
 
             int newMovementCost = bestNextNode->gCost + getDistance(bestNextNode.get(), neighbourNode.get());
@@ -227,13 +185,9 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
                 }
             }
         }
-        t1 = get_timestamp();
-        logbook(fmt::format("Performance 'evaluating neighbours' {} - {} = {}, finding stuff = {}", t0, t1, (t1-t0), tFindingNeighborNodeInClosedList));
+        profiler->sample("totalFindingNeighborNodes");
     }
-    timestamp_t t1 = get_timestamp();
-    logbook(fmt::format("Performance 'create path' = {}, spent {} on sorting and {} find neighboursInClosedLists", (t1-t0), t_findingBestFCostNode, t_totalFindingNeighborNodes));
-
-    t0 = get_timestamp();
+//    timestamp_t t0 = get_timestamp();
     auto path = std::vector<int>();
 
     std::shared_ptr<cPathNode> currentNode = closestPathNode;
@@ -242,10 +196,9 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
         currentNode = currentNode->parent;
     }
     std::reverse(path.begin(), path.end());
-    t1 = get_timestamp();
 
-    logbook(fmt::format("Performance 'backtrack path' {} - {} = {}", t0, t1, (t1-t0)));
-
+    profiler->sample("findPath");
+    profiler->printResults();
 
     cPath result;
     result.waypoints = path;
@@ -272,10 +225,7 @@ int cPathFinder::getDistance(const cPathNode * from, const cPathNode * to) const
 }
 
 node_ptr cPathFinder::getPathNodeFromMapCell(int cell) {
-    int x = m_map->getCellX(cell);
-    int y = m_map->getCellY(cell);
-
-    return std::make_shared<cPathNode>(x, y);
+    return grid.grid[cell];
 }
 
 bool cPathFinder::isBlocked(const cUnit &pUnit, const int cell) const {

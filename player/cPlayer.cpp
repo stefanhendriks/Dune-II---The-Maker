@@ -2026,6 +2026,10 @@ std::vector<cPlayerNotification> &cPlayer::getNotifications() {
     return notifications;
 }
 
+void cPlayer::clearNotifications() {
+    notifications.clear();
+}
+
 void cPlayer::addNotification(const std::string& msg, eNotificationType type) {
     notifications.push_back(cPlayerNotification(msg, type));
     std::sort(notifications.begin(), notifications.end(), [](const cPlayerNotification &lhs, const cPlayerNotification &rhs) {

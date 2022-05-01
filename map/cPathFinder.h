@@ -38,6 +38,15 @@ public:
 
 };
 
+class cPathNodeGrid {
+
+public:
+    cPathNodeGrid(int width, int height);
+
+    std::vector<node_ptr> grid;
+
+};
+
 class cPathFinder {
 
     public:
@@ -47,6 +56,7 @@ class cPathFinder {
 
     private:
         cMap *m_map;
+        cPathNodeGrid grid;
 
         node_ptr getPathNodeFromMapCell(int cell);
 
