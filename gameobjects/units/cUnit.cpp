@@ -3839,9 +3839,9 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 }
 
 cPathFinder pathFinder(&map);
+
 int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
     logbook("CREATE_PATH -- START");
-    profiler.start("part 1");
     if (iUnitId < 0) {
         logbook("CREATE_PATH -- END 1");
         return -99; // Wut!?
@@ -3882,7 +3882,6 @@ int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
         pUnit.TIMER_movewait = 30 + rnd(50);
         return -2;
     }
-    profiler.stop("part 1");
 
     // Now start create path
     profiler.start("cPathFinder");
@@ -3891,7 +3890,6 @@ int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
     const std::vector<int> &path = foundPath.waypoints;
 
     if (foundPath.success()) {
-        profiler.start("foundPath");
         memset(pUnit.iPath, -1, sizeof(pUnit.iPath));
 
         int index = 0;
@@ -3916,7 +3914,6 @@ int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
 
 
         //log("SUCCES");
-        profiler.stop("foundPath");
         return 0; // success!
     } else {
         pUnit.log("CREATE_PATH -- not valid");

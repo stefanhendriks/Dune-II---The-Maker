@@ -9,34 +9,58 @@
 
 #include <thread>
 #include <sys/time.h>
-
-cPathNode::cPathNode(int _x, int _y, int _cell) {
-    x = _x;
-    y = _y;
-    parent = nullptr;
-    hCost = 0;
-    gCost = 0;
-    cell = _cell;
-}
+#include <cmath>
 
 cPathFinder::cPathFinder(cMap *map) :
-    m_map(map),
-    grid(m_map->getWidth(), m_map->getHeight())
+    m_map(map)
 {
-    int maxCells = m_map->getWidth() * m_map->getHeight();
-    for (int cell = 0; cell < maxCells; cell++) {
-        int x = m_map->getCellX(cell);
-        int y = m_map->getCellY(cell);
+    int width = map->getWidth();
+    int height = map->getHeight();
+    int maxCells = width * height;
+    grid = new cPathNode[maxCells];
 
-        grid.grid[cell] = std::make_shared<cPathNode>(x, y, cell);
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            int cell = (y * width) + x; // duplicated logic (also in cMap::make_cell)
+            cPathNode &node = grid[cell];
+            node.x = x;
+            node.y = y;
+            node.cell = cell;
+            node.visited = false;
+            node.parent = nullptr;
+        }
+    }
+
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            int cell = (y * width) + x; // duplicated logic (also in cMap::make_cell)
+            cPathNode &node = grid[cell];
+
+            if (y > 1)
+                node.neighbours.push_back(&grid[(y - 1) * width + (x + 0)]);
+            if (y < height - 2)
+                node.neighbours.push_back(&grid[(y + 1) * width + (x + 0)]);
+            if (x > 1)
+                node.neighbours.push_back(&grid[(y + 0) * width + (x - 1)]);
+            if (x < width - 2)
+                node.neighbours.push_back(&grid[(y + 0) * width + (x + 1)]);
+
+            // We can also connect diagonally
+            if (y>1 && x>1)
+                node.neighbours.push_back(&grid[(y - 1) * width + (x - 1)]);
+            if (y<height-2 && x>1)
+                node.neighbours.push_back(&grid[(y + 1) * width + (x - 1)]);
+            if (y>1 && x<width-2)
+                node.neighbours.push_back(&grid[(y - 1) * width + (x + 1)]);
+            if (y<height - 2 && x<width-2)
+                node.neighbours.push_back(&grid[(y + 1) * width + (x + 1)]);
+        }
     }
 }
 
-cPathNodeGrid::cPathNodeGrid(int width, int height)
-{
-    int maxCells = width * height;
-    grid.clear();
-    grid = std::vector<node_ptr>(maxCells);
+
+cPathFinder::~cPathFinder() {
+    delete[] grid;
 }
 
 cProfiler pathProfiler;
@@ -49,20 +73,23 @@ cProfiler pathProfiler;
  * @return
  */
 cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
-    pathProfiler.reset();
-    pathProfiler.start("findPath");
+    for (int c = 0; c < m_map->getMaxCells(); c++) {
+        cPathNode &node = grid[c];
+        node.visited = false;
+        node.fGlobalGoal = INT32_MAX;
+        node.fLocalGoal = INT32_MAX;
+        node.parent = nullptr;
+    }
 
-    bool *visited = new bool[m_map->getMaxCells()] {false};
+    cPathNode *startNode = &grid[startCell];
+    cPathNode *targetNode = &grid[targetCell];
 
-    node_ptr startNode = getPathNodeFromMapCell(startCell);
-    node_ptr targetNode = getPathNodeFromMapCell(targetCell);
-
-    startNode->hCost = getDistance(startNode.get(), targetNode.get());
+    startNode->fGlobalGoal = 0;
+    startNode->fLocalGoal = getDistance(startNode, targetNode);
 
     // used for finding a path
-    std::vector<node_ptr> openSet = std::vector<node_ptr>();
-    std::set<node_ptr> closedSet = std::set<node_ptr>();
-    openSet.push_back(startNode);
+    std::list<cPathNode *> notTestedNodes;
+    notTestedNodes.push_back(startNode);
 
     // thoughts:
     // do not use shared_ptr, but cell nrs?
@@ -73,126 +100,60 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     // get rid of as much loops as needed
     // build own 'set' or something, to quickly find the lowest fcost? (with the binary search thingy?)
 
-    int bailoutCounter = 0;
+    cPathNode *closestPathNode = startNode;
+    cPathNode *currentNode = startNode;
 
-    node_ptr closestPathNode = startNode;
-
-    while (!openSet.empty()) {
-        bailoutCounter++;
-        node_ptr bestNextNode = openSet[0]; // by default the current is the 1st in the list
-
-        if (bailoutCounter > 5000) {
-            break; // bail to safe ourselves from hanging (need to find out why it happens though)
-        }
-
+    while (!notTestedNodes.empty() && currentNode != targetNode) {
         // unless we have a better candidate in our open set
-        pathProfiler.start("findingBestFCostNode");
-        for (unsigned int i = 1; i < openSet.size(); i++) {
-            std::shared_ptr<cPathNode> other = openSet[i];
-            if (other->fCost() < bestNextNode->fCost() || (other->fCost() == bestNextNode->fCost() && other->hCost < bestNextNode->hCost)) {
-                bestNextNode = other;
-            }
+        notTestedNodes.sort([](const cPathNode* lhs, const cPathNode* rhs){ return lhs->fLocalGoal < rhs->fLocalGoal; } );
+
+        while(!notTestedNodes.empty() && notTestedNodes.front()->visited) {
+            notTestedNodes.pop_front();
         }
-        pathProfiler.sample("findingBestFCostNode");
 
-        // put it into our closedSet first
-        closedSet.insert(bestNextNode);
-        int cell = bestNextNode->cell;
-        visited[cell] = true;
+        if (notTestedNodes.empty())
+            break;
 
-        // remove current node from openSet
-        openSet.erase(std::remove(openSet.begin(), openSet.end(), bestNextNode), openSet.end());
+        currentNode = notTestedNodes.front();
+        currentNode->visited = true; // We only explore a node once
 
-        if (bestNextNode->isAt(targetNode.get())) {
-            // found target; start tracing back our path from closedSet
-            closestPathNode = bestNextNode;
+        // closest node for cases when target cannot be reached
+        if (currentNode->fGlobalGoal < closestPathNode->fGlobalGoal) {
+            closestPathNode = currentNode;
+        }
+
+        if (currentNode == targetNode) {
+            closestPathNode = currentNode;
             break;
         }
 
-        // closest node for cases when target cannot be reached
-        if (bestNextNode->hCost < closestPathNode->hCost) {
-            closestPathNode = bestNextNode;
-        }
+        for (auto nodeNeighbour: currentNode->neighbours) {
+            if (!nodeNeighbour->visited && !isBlocked(pUnit, nodeNeighbour->cell))
+                notTestedNodes.push_back(nodeNeighbour);
 
-        pathProfiler.start("find neighbours");
-        const std::vector<int> &neighbours = m_map->getNeighbours(bestNextNode->x, bestNextNode->y);
-        pathProfiler.sample("find neighbours");
+            float fPossiblyLowerFCost = currentNode->fLocalGoal + getDistance(currentNode, nodeNeighbour);
 
-        pathProfiler.start("iterate neighbours");
-        for (const auto & neighbourCell : neighbours) {
-            bool nodeInClosedSet = visited[neighbourCell];
-            if (nodeInClosedSet) {
-                // skip nodes we have already 'closed'
-                continue;
-            }
+            if (fPossiblyLowerFCost < nodeNeighbour->fLocalGoal) {
+                nodeNeighbour->parent = currentNode;
+                nodeNeighbour->fLocalGoal = fPossiblyLowerFCost;
 
-            pathProfiler.start("iterate neighbours - is blocked");
-            // else, check if it is blocked/walkable
-            if (isBlocked(pUnit, neighbourCell)) {
-                continue;
-            }
-            pathProfiler.sample("iterate neighbours - is blocked");
-
-            pathProfiler.start("iterate neighbours - get path node from map cell");
-            std::shared_ptr<cPathNode> neighbourNode = grid.grid[neighbourCell];
-            pathProfiler.sample("iterate neighbours - get path node from map cell");
-
-            int newMovementCost = bestNextNode->gCost + getDistance(bestNextNode.get(), neighbourNode.get());
-            pathProfiler.start("iterate neighbours - find neighbour in open set");
-            const std::vector<std::shared_ptr<cPathNode>>::iterator &iter = std::find_if(openSet.begin(), openSet.end(),
-                                                                                         [&](const std::shared_ptr<cPathNode> &pathNode) {
-                                                                                             return pathNode->isAt(
-                                                                                                     neighbourNode.get());
-                                                                                         });
-            auto nodeInOpenSet = iter != openSet.end();
-            pathProfiler.sample("iterate neighbours - find neighbour in open set");
-//            bool nodeInOpenSet = std::find(openSet.begin(), openSet.end(), neighbourNode.isAt()) != openSet.end();
-            if (!nodeInOpenSet ||  // not in set , so put it in there
-                newMovementCost < neighbourNode->gCost // Or it is there, and it is less costly
-                ) {
-                int hCost = getDistance(neighbourNode.get(), targetNode.get());
-
-                if (hCost > closestPathNode->hCost * 3) {
-                    // don't keep evaluating endlessly the entire map
-                    continue;
-                }
-
-                if (nodeInOpenSet) {
-                    // replace current
-                    cPathNode *pNode = iter->get();
-                    pNode->gCost = newMovementCost;
-                    pNode->hCost = hCost;
-                    pNode->parent = bestNextNode;
-                } else {
-                    // add
-                    neighbourNode->gCost = newMovementCost;
-                    neighbourNode->hCost = hCost;
-                    neighbourNode->parent = bestNextNode;
-
-                    openSet.push_back(neighbourNode);
-                }
+                nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + getDistance(nodeNeighbour, targetNode);
             }
         }
-        pathProfiler.sample("iterate neighbours");
     }
-
-    delete[] visited;
 
     auto path = std::vector<int>();
 
-    std::shared_ptr<cPathNode> currentNode = closestPathNode;
-    while (currentNode != startNode) {
-        path.push_back(m_map->makeCell(currentNode->x, currentNode->y));
-        currentNode = currentNode->parent;
+    cPathNode *theCurrentNode = closestPathNode;
+    while (theCurrentNode != startNode) {
+        path.push_back(theCurrentNode->cell);
+        theCurrentNode = theCurrentNode->parent;
     }
     std::reverse(path.begin(), path.end());
 
 
     cPath result;
     result.waypoints = path;
-
-    pathProfiler.stop("findPath");
-    pathProfiler.printResults();
     return result;
 }
 
@@ -217,10 +178,6 @@ int cPathFinder::getDistance(const cPathNode * from, const cPathNode * to) const
     int result = 14 * distanceX + (10 * (distanceY - distanceX));
     pathProfiler.sample("getdistance");
     return result;
-}
-
-node_ptr cPathFinder::getPathNodeFromMapCell(int cell) {
-    return grid.grid[cell];
 }
 
 bool cPathFinder::isBlocked(const cUnit &pUnit, const int cell) const {

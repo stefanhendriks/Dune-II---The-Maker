@@ -17,49 +17,34 @@ public:
     bool success() const;
 };
 
-class cPathNode {
-
-public:
-    cPathNode(int _x, int _y, int _cell);
-
+struct cPathNode {
     int x, y;
     int cell;
 
-    int fCost() const {
-        return gCost + hCost;
-    }
+    int fGlobalGoal; // cost from start node to this node + any other heuristic
+    int fLocalGoal; // cost from this node to target node (fcost)
 
-    node_ptr parent;
+    bool visited = false;
 
-    int hCost, gCost;
+    std::vector<cPathNode*> neighbours;
+    cPathNode *parent;
 
     bool isAt(cPathNode * other) const {
         return x == other->x && y == other->y;
     }
-
-};
-
-class cPathNodeGrid {
-
-public:
-    cPathNodeGrid(int width, int height);
-
-    std::vector<node_ptr> grid;
-
 };
 
 class cPathFinder {
 
     public:
         explicit cPathFinder(cMap *map);
+        ~cPathFinder();
 
         cPath findPath(int startCell, int targetCell, cUnit & pUnit);
 
     private:
         cMap *m_map;
-        cPathNodeGrid grid;
-
-        node_ptr getPathNodeFromMapCell(int cell);
+        cPathNode *grid = nullptr;
 
         int getDistance(const cPathNode * from, const cPathNode * to) const;
 
