@@ -5,18 +5,22 @@
 #include <map>
 #include <chrono>
 
+typedef unsigned long long timestamp_t;
+
 class cProfileMetric {
 public:
     cProfileMetric();
 
-    std::chrono::time_point<std::chrono::system_clock> lastRunMs;
-    std::chrono::duration<double> totalRunMs;
+    bool finished;
+    timestamp_t lastRunMs;
+    double totalRunMs;
     int sampled;
 };
 
 class cProfiler {
 public:
-    static cProfiler *getInstance();
+    cProfiler();
+    ~cProfiler();
 
     void reset();
 
@@ -25,6 +29,8 @@ public:
      * @param name
      */
     void start(std::string name);
+
+    void stop(std::string name);
 
     /**
      * Registers now, diffs with current metric. Accumulates results.
@@ -35,13 +41,6 @@ public:
     void printResults();
 
 private:
-    cProfiler();
-
-    ~cProfiler();
-
-    cProfiler &operator=(const cProfiler &) = delete;
-
-    cProfiler &operator=(cProfiler &&) = delete;
 
     cProfiler(const cProfiler &) = delete;
 
