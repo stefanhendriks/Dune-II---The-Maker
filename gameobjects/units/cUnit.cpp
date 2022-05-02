@@ -23,10 +23,12 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "map/cPathFinder.h"
+#include "utils/cProfiler.h"
 
 #include <alfont.h>
 #include <fmt/core.h>
 
+#include <thread>
 #include <cmath>
 
 // Path creation definitions / var
@@ -38,6 +40,8 @@ struct ASTAR {
     int parent;
     int state;
 };
+
+int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler);
 
 // Temp map
 ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
@@ -3797,6 +3801,8 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     return iNewId;
 }
 
+cProfiler unitProfiler;
+
 /*
   Pathfinder
 
@@ -3820,8 +3826,22 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
   -4 = Offset is not 0 (moving between cells)
   -99= iUnitId is < 0 (invalid input)
   */
+
+
 int CREATE_PATH(int iUnitId, int iPathCountUnits) {
+    unitProfiler.reset();
+    unitProfiler.start("createPath");
+    //
+    int result = createPath(iUnitId, iPathCountUnits, unitProfiler);
+    unitProfiler.stop("createPath");
+    unitProfiler.printResults();
+    return result;
+}
+
+cPathFinder pathFinder(&map);
+int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
     logbook("CREATE_PATH -- START");
+    profiler.start("part 1");
     if (iUnitId < 0) {
         logbook("CREATE_PATH -- END 1");
         return -99; // Wut!?
@@ -3840,7 +3860,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     }
 
     // Too many paths where created , so we wait a little.
-    // make sure not to create too many paths at once
+// make sure not to create too many paths at once
     if (game.m_pathsCreated > 40) {
         pUnit.log("CREATE_PATH -- END 3");
         pUnit.TIMER_movewait = (50 + rnd(50));
@@ -3862,18 +3882,20 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         pUnit.TIMER_movewait = 30 + rnd(50);
         return -2;
     }
+    profiler.stop("part 1");
 
     // Now start create path
-
-    cPathFinder pathFinder(&map);
+    profiler.start("cPathFinder");
     const cPath &foundPath = pathFinder.findPath(iCell, pUnit.iGoalCell, pUnit);
+    profiler.stop("cPathFinder");
     const std::vector<int> &path = foundPath.waypoints;
 
     if (foundPath.success()) {
+        profiler.start("foundPath");
         memset(pUnit.iPath, -1, sizeof(pUnit.iPath));
 
         int index = 0;
-        for (auto & pathCell : path) {
+        for (auto &pathCell: path) {
             pUnit.iPath[index] = pathCell;
             index++;
         }
@@ -3894,12 +3916,10 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
 
         //log("SUCCES");
+        profiler.stop("foundPath");
         return 0; // success!
     } else {
         pUnit.log("CREATE_PATH -- not valid");
-
-        // perhaps we can get closer when we DO take units into account?
-        //path_id=-1;
     }
 
     pUnit.log("CREATE_PATH: Failed to create path!");
