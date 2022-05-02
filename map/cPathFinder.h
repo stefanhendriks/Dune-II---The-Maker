@@ -20,9 +20,10 @@ public:
 class cPathNode {
 
 public:
-    cPathNode(int _x, int _y);
+    cPathNode(int _x, int _y, int _cell);
 
     int x, y;
+    int cell;
 
     int fCost() const {
         return gCost + hCost;
