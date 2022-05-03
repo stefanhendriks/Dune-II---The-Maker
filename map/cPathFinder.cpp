@@ -10,6 +10,7 @@
 #include <thread>
 #include <sys/time.h>
 #include <cmath>
+#include <queue>
 
 cPathFinder::cPathFinder(cMap *map) :
     m_map(map)
@@ -113,8 +114,15 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     startNode->fCost = startNode->hCost;
 
     // used for finding a path
-    std::list<cPathNode *> notTestedNodes;
-    notTestedNodes.push_back(startNode);
+    // So that we have a min priority queue based on the fCost
+    struct compare {
+        bool operator()(cPathNode* l, cPathNode* r) {
+            return l->fCost > r->fCost;
+        }
+    };
+
+    std::priority_queue<cPathNode *, std::vector<cPathNode *>, compare> notTestedNodes;
+    notTestedNodes.push(startNode);
 
     // thoughts:
     // do not use shared_ptr, but cell nrs?
@@ -130,17 +138,21 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     cPathNode *currentNode = startNode;
 
     while (!notTestedNodes.empty()) {
-        // unless we have a better candidate in our open set
-        notTestedNodes.sort([](const cPathNode* lhs, const cPathNode* rhs){ return lhs->fCost < rhs->fCost; } );
 
-        while(!notTestedNodes.empty() && notTestedNodes.front()->visited) {
-            notTestedNodes.pop_front();
+        // remove any visited nodes
+        while(!notTestedNodes.empty()) {
+            cPathNode *topNode = notTestedNodes.top();
+            if (topNode->visited) {
+                notTestedNodes.pop();
+            } else {
+                break;
+            }
         }
 
         if (notTestedNodes.empty())
             break;
 
-        currentNode = notTestedNodes.front();
+        currentNode = notTestedNodes.top();
         currentNode->visited = true; // We only explore a node once
 
         // closest node for cases when target cannot be reached
@@ -160,7 +172,7 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
                     // don't keep evaluating endlessly the entire map
                     continue;
                 }
-                notTestedNodes.push_back(nodeNeighbour);
+                notTestedNodes.push(nodeNeighbour);
             }
 
             float nextMoveCost = currentNode->gCost + getDistance(currentNode, nodeNeighbour);
@@ -168,10 +180,7 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
             if (nextMoveCost < nodeNeighbour->gCost) {
                 nodeNeighbour->parent = currentNode;
                 int hCost = getDistance(nodeNeighbour, targetNode);
-//                if (hCost > closestPathNode->hCost * 3) {
-//                    // don't keep evaluating endlessly the entire map
-//                    continue;
-//                }
+
                 nodeNeighbour->hCost = hCost;
                 nodeNeighbour->gCost = nextMoveCost;
                 nodeNeighbour->fCost = hCost + nextMoveCost;
@@ -179,19 +188,14 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
         }
     }
 
-    auto path = std::vector<int>();
-
+    cPath result;
     cPathNode *theCurrentNode = closestPathNode;
     while (theCurrentNode != startNode) {
-        path.push_back(theCurrentNode->cell);
+        result.waypoints.push_back(theCurrentNode->cell);
         theCurrentNode = theCurrentNode->parent;
     }
-    std::reverse(path.begin(), path.end());
-
-
-    cPath result;
-    result.waypoints = path;
-    this->path = result;
+    std::reverse(result.waypoints.begin(), result.waypoints.end());
+    this->path = result; // copy path result for rendering
     return result;
 }
 
