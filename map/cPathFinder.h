@@ -21,8 +21,9 @@ struct cPathNode {
     int x, y;
     int cell;
 
-    int fGlobalGoal; // cost from start node to this node + any other heuristic
-    int fLocalGoal; // cost from this node to target node (fcost)
+    int gCost;      // cost from start node to this node + any other heuristic
+    int hCost;      // hCost
+    int fCost;      // gCost + hCost;
 
     bool visited = false;
 
@@ -42,9 +43,17 @@ class cPathFinder {
 
         cPath findPath(int startCell, int targetCell, cUnit & pUnit);
 
+        bool isStart(int cell);
+        bool isEnd(int cell);
+        bool isVisited(int cell);
+        bool isPathCell(int cell);
+
     private:
         cMap *m_map;
         cPathNode *grid = nullptr;
+        cPathNode *start;
+        cPathNode *end;
+        cPath path;
 
         int getDistance(const cPathNode * from, const cPathNode * to) const;
 

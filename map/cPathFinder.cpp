@@ -17,6 +17,9 @@ cPathFinder::cPathFinder(cMap *map) :
     int width = map->getWidth();
     int height = map->getHeight();
     int maxCells = width * height;
+    start = nullptr;
+    end = nullptr;
+
     grid = new cPathNode[maxCells];
 
     for (int x = 0; x < width; x++) {
@@ -58,6 +61,23 @@ cPathFinder::cPathFinder(cMap *map) :
     }
 }
 
+bool cPathFinder::isStart(int cell) {
+    if (!start) return false;
+    return start->cell == cell;
+}
+
+bool cPathFinder::isEnd(int cell) {
+    if (!end) return false;
+    return end->cell == cell;
+}
+
+bool cPathFinder::isVisited(int cell) {
+    return grid[cell].visited;
+}
+
+bool cPathFinder::isPathCell(int cell) {
+    return std::find(path.waypoints.begin(), path.waypoints.end(), cell) != path.waypoints.end();
+}
 
 cPathFinder::~cPathFinder() {
     delete[] grid;
@@ -76,16 +96,21 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     for (int c = 0; c < m_map->getMaxCells(); c++) {
         cPathNode &node = grid[c];
         node.visited = false;
-        node.fGlobalGoal = INT32_MAX;
-        node.fLocalGoal = INT32_MAX;
+        node.gCost = INT32_MAX;
+        node.hCost = INT32_MAX;
+        node.fCost = INT32_MAX;
         node.parent = nullptr;
     }
 
     cPathNode *startNode = &grid[startCell];
     cPathNode *targetNode = &grid[targetCell];
 
-    startNode->fGlobalGoal = 0;
-    startNode->fLocalGoal = getDistance(startNode, targetNode);
+    start = startNode;
+    end = targetNode;
+
+    startNode->gCost = 0;
+    startNode->hCost = getDistance(startNode, targetNode);
+    startNode->fCost = startNode->hCost;
 
     // used for finding a path
     std::list<cPathNode *> notTestedNodes;
@@ -99,13 +124,14 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     //              - so we could re-initialize that temp map? (like how we did it in the old implementation?)
     // get rid of as much loops as needed
     // build own 'set' or something, to quickly find the lowest fcost? (with the binary search thingy?)
+    int giveUpThreshold = 4;
 
     cPathNode *closestPathNode = startNode;
     cPathNode *currentNode = startNode;
 
-    while (!notTestedNodes.empty() && currentNode != targetNode) {
+    while (!notTestedNodes.empty()) {
         // unless we have a better candidate in our open set
-        notTestedNodes.sort([](const cPathNode* lhs, const cPathNode* rhs){ return lhs->fLocalGoal < rhs->fLocalGoal; } );
+        notTestedNodes.sort([](const cPathNode* lhs, const cPathNode* rhs){ return lhs->fCost < rhs->fCost; } );
 
         while(!notTestedNodes.empty() && notTestedNodes.front()->visited) {
             notTestedNodes.pop_front();
@@ -118,7 +144,7 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
         currentNode->visited = true; // We only explore a node once
 
         // closest node for cases when target cannot be reached
-        if (currentNode->fGlobalGoal < closestPathNode->fGlobalGoal) {
+        if (currentNode->hCost < closestPathNode->hCost) {
             closestPathNode = currentNode;
         }
 
@@ -128,16 +154,27 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
         }
 
         for (auto nodeNeighbour: currentNode->neighbours) {
-            if (!nodeNeighbour->visited && !isBlocked(pUnit, nodeNeighbour->cell))
+            if (!nodeNeighbour->visited && !isBlocked(pUnit, nodeNeighbour->cell)) {
+                int hCost = getDistance(nodeNeighbour, targetNode);
+                if (hCost > closestPathNode->hCost * giveUpThreshold) {
+                    // don't keep evaluating endlessly the entire map
+                    continue;
+                }
                 notTestedNodes.push_back(nodeNeighbour);
+            }
 
-            float fPossiblyLowerFCost = currentNode->fLocalGoal + getDistance(currentNode, nodeNeighbour);
+            float nextMoveCost = currentNode->gCost + getDistance(currentNode, nodeNeighbour);
 
-            if (fPossiblyLowerFCost < nodeNeighbour->fLocalGoal) {
+            if (nextMoveCost < nodeNeighbour->gCost) {
                 nodeNeighbour->parent = currentNode;
-                nodeNeighbour->fLocalGoal = fPossiblyLowerFCost;
-
-                nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + getDistance(nodeNeighbour, targetNode);
+                int hCost = getDistance(nodeNeighbour, targetNode);
+//                if (hCost > closestPathNode->hCost * 3) {
+//                    // don't keep evaluating endlessly the entire map
+//                    continue;
+//                }
+                nodeNeighbour->hCost = hCost;
+                nodeNeighbour->gCost = nextMoveCost;
+                nodeNeighbour->fCost = hCost + nextMoveCost;
             }
         }
     }
@@ -154,6 +191,7 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
 
     cPath result;
     result.waypoints = path;
+    this->path = result;
     return result;
 }
 

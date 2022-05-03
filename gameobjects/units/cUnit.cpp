@@ -3838,8 +3838,6 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     return result;
 }
 
-cPathFinder pathFinder(&map);
-
 int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
     logbook("CREATE_PATH -- START");
     if (iUnitId < 0) {
@@ -3885,7 +3883,7 @@ int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
 
     // Now start create path
     profiler.start("cPathFinder");
-    const cPath &foundPath = pathFinder.findPath(iCell, pUnit.iGoalCell, pUnit);
+    const cPath &foundPath = game.getPathFinder()->findPath(iCell, pUnit.iGoalCell, pUnit);
     profiler.stop("cPathFinder");
     const std::vector<int> &path = foundPath.waypoints;
 

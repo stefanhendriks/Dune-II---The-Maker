@@ -28,6 +28,7 @@
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishGameState.h"
 #include "ini.h"
+#include "map/cPathFinder.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
 #include "mentat/cAtreidesMentat.h"
@@ -89,6 +90,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_version = "0.7.0";
 
     m_mentat = nullptr;
+    m_pathFinder = nullptr;
     m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
 
@@ -200,6 +202,7 @@ void cGame::missionInit() {
     m_TIMER_shake = 0;
 
     map.init(64, 64);
+    rebuildPathFinder();
 
     initPlayers(true);
 
@@ -1394,6 +1397,12 @@ cGame::~cGame() {
 //    if (drawManager) {
 //        delete drawManager;
 //    }
+    delete m_pathFinder;
+}
+
+void cGame::rebuildPathFinder() {
+    delete m_pathFinder;
+    m_pathFinder = new cPathFinder(&map);
 }
 
 void cGame::prepareMentatForPlayer() {

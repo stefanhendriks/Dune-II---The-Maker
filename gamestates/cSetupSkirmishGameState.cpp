@@ -420,6 +420,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
     // REGENERATE MAP DATA FROM INFO
     map.init(selectedMap.width, selectedMap.height);
+    game.rebuildPathFinder();
 
     auto mapEditor = cMapEditor(map);
     for (int c = 0; c < map.getMaxCells(); c++) {
