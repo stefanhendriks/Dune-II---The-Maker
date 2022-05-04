@@ -160,12 +160,6 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
         for (auto nodeNeighbour: currentNode->neighbours) {
             // only evaluate non-visited nodes
             if (!nodeNeighbour->visited) {
-                int distanceToNeighbor = getDistance(currentNode, nodeNeighbour);
-                // remember currentNode at start is the startNode, hence, this will be
-                // 0 + distanceToNeighbor, which will be lower than the current neighbor gCost, as
-                // that is set to MAX_INT32.
-                int nextMoveCost = currentNode->gCost + distanceToNeighbor;
-
                 int hCost = getDistance(nodeNeighbour, targetNode);
 
                 if (hCost > closestPathNode->hCost * giveUpThreshold) {
@@ -176,6 +170,12 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
                 nodeNeighbour->hCost = hCost;
 
                 if (!isBlocked(pUnit, nodeNeighbour->cell)) {
+                    int distanceToNeighbor = getDistance(currentNode, nodeNeighbour);
+                    // remember currentNode at start is the startNode, hence, this will be
+                    // 0 + distanceToNeighbor, which will be lower than the current neighbor gCost, as
+                    // that is set to MAX_INT32.
+                    int nextMoveCost = currentNode->gCost + distanceToNeighbor;
+
                     // the neighbor gCost initially is MAX_INT32, but could later be updated. Hence, this
                     // will only update if we have found a lower gCost
                     if (nextMoveCost < nodeNeighbour->gCost) {
