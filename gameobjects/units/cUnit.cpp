@@ -31,20 +31,7 @@
 #include <thread>
 #include <cmath>
 
-// Path creation definitions / var
-#define CLOSED        -1
-#define OPEN          0
-
-struct ASTAR {
-    int cost;
-    int parent;
-    int state;
-};
-
-int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler);
-
-// Temp map
-ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
+int createPath(int iUnitId, int iPathCountUnits);
 
 // Class specific on top
 // Globals on bottom
@@ -3801,8 +3788,6 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     return iNewId;
 }
 
-cProfiler unitProfiler;
-
 /*
   Pathfinder
 
@@ -3827,18 +3812,18 @@ cProfiler unitProfiler;
   -99= iUnitId is < 0 (invalid input)
   */
 
-
+cProfiler unitProfiler;
 int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     unitProfiler.reset();
     unitProfiler.start("createPath");
     //
-    int result = createPath(iUnitId, iPathCountUnits, unitProfiler);
+    int result = createPath(iUnitId, iPathCountUnits);
     unitProfiler.stop("createPath");
     unitProfiler.printResults();
     return result;
 }
 
-int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
+int createPath(int iUnitId, int iPathCountUnits) {
     logbook("CREATE_PATH -- START");
     if (iUnitId < 0) {
         logbook("CREATE_PATH -- END 1");
@@ -3882,9 +3867,9 @@ int createPath(int iUnitId, int iPathCountUnits, cProfiler &profiler) {
     }
 
     // Now start create path
-    profiler.start("cPathFinder");
+//    profiler.start("cPathFinder");
     const cPath &foundPath = game.getPathFinder()->findPath(iCell, pUnit.iGoalCell, pUnit);
-    profiler.stop("cPathFinder");
+//    profiler.stop("cPathFinder");
     const std::vector<int> &path = foundPath.waypoints;
 
     if (foundPath.success()) {
