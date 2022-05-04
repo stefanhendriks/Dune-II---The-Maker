@@ -124,18 +124,10 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
     std::priority_queue<cPathNode *, std::vector<cPathNode *>, compare> notTestedNodes;
     notTestedNodes.push(startNode);
 
-    // thoughts:
-    // do not use shared_ptr, but cell nrs?
-    // have some kind of 'map' where we put in the scores and get neighbours from? (so like a one -dimensional array?)
-    // so we can read from there and set the f/h/gcost thing?
-    //  - downside: it would be way more memory intensive? although, path finding is done for each unit
-    //              - so we could re-initialize that temp map? (like how we did it in the old implementation?)
-    // get rid of as much loops as needed
-    // build own 'set' or something, to quickly find the lowest fcost? (with the binary search thingy?)
     int giveUpThreshold = 4;
 
     cPathNode *closestPathNode = startNode;
-    cPathNode *currentNode = startNode;
+    cPathNode *currentNode = nullptr;
 
     while (!notTestedNodes.empty()) {
 
@@ -166,36 +158,47 @@ cPath cPathFinder::findPath(int startCell, int targetCell, cUnit & pUnit) {
         }
 
         for (auto nodeNeighbour: currentNode->neighbours) {
-            if (!nodeNeighbour->visited && !isBlocked(pUnit, nodeNeighbour->cell)) {
+            // only evaluate non-visited nodes
+            if (!nodeNeighbour->visited) {
+                int distanceToNeighbor = getDistance(currentNode, nodeNeighbour);
+                // remember currentNode at start is the startNode, hence, this will be
+                // 0 + distanceToNeighbor, which will be lower than the current neighbor gCost, as
+                // that is set to MAX_INT32.
+                int nextMoveCost = currentNode->gCost + distanceToNeighbor;
+
                 int hCost = getDistance(nodeNeighbour, targetNode);
+
                 if (hCost > closestPathNode->hCost * giveUpThreshold) {
                     // don't keep evaluating endlessly the entire map
                     continue;
                 }
-                notTestedNodes.push(nodeNeighbour);
-            }
-
-            float nextMoveCost = currentNode->gCost + getDistance(currentNode, nodeNeighbour);
-
-            if (nextMoveCost < nodeNeighbour->gCost) {
-                nodeNeighbour->parent = currentNode;
-                int hCost = getDistance(nodeNeighbour, targetNode);
 
                 nodeNeighbour->hCost = hCost;
-                nodeNeighbour->gCost = nextMoveCost;
-                nodeNeighbour->fCost = hCost + nextMoveCost;
+
+                if (!isBlocked(pUnit, nodeNeighbour->cell)) {
+                    // the neighbor gCost initially is MAX_INT32, but could later be updated. Hence, this
+                    // will only update if we have found a lower gCost
+                    if (nextMoveCost < nodeNeighbour->gCost) {
+                        nodeNeighbour->parent = currentNode;
+                        nodeNeighbour->gCost = nextMoveCost;
+                        nodeNeighbour->fCost = hCost + nextMoveCost;
+                    }
+                    notTestedNodes.push(nodeNeighbour);
+                }
             }
         }
     }
 
     cPath result;
-    cPathNode *theCurrentNode = closestPathNode;
-    while (theCurrentNode != startNode) {
-        result.waypoints.push_back(theCurrentNode->cell);
-        theCurrentNode = theCurrentNode->parent;
+    if (closestPathNode) {
+        cPathNode *theCurrentNode = closestPathNode;
+        while (theCurrentNode != startNode) {
+            result.waypoints.push_back(theCurrentNode->cell);
+            theCurrentNode = theCurrentNode->parent;
+        }
+        std::reverse(result.waypoints.begin(), result.waypoints.end());
+        this->path = result; // copy path result for rendering
     }
-    std::reverse(result.waypoints.begin(), result.waypoints.end());
-    this->path = result; // copy path result for rendering
     return result;
 }
 
@@ -225,6 +228,11 @@ int cPathFinder::getDistance(const cPathNode * from, const cPathNode * to) const
 bool cPathFinder::isBlocked(const cUnit &pUnit, const int cell) const {
     if (pUnit.isSandworm()) {
         return m_map->isCellPassableForWorm(cell);
+    }
+
+    if (!map.isVisible(cell, pUnit.iPlayer)) {
+        // regard invisible tiles as passable
+        return false;
     }
 
     int idOfStructureAtCell = m_map->getCellIdStructuresLayer(cell);
@@ -268,19 +276,16 @@ bool cPathFinder::isBlocked(const cUnit &pUnit, const int cell) const {
         }
     }
 
-    // is not visible, always good (since we don't know yet if its blocked!)
-    if (map.isVisible(cell, pUnit.iPlayer)) {
-        // walls stop us
-        int cellType = map.getCellType(cell);
-        if (cellType == TERRAIN_WALL) {
-            return true;
-        }
+    // walls stop us
+    int cellType = map.getCellType(cell);
+    if (cellType == TERRAIN_WALL) {
+        return true;
+    }
 
-        // When we are infantry, we move through mountains. However, normal units do not
-        if (!pUnit.isInfantryUnit()) {
-            if (cellType == TERRAIN_MOUNTAIN) {
-                return true;
-            }
+    // When we are infantry, we move through mountains. However, normal units do not
+    if (!pUnit.isInfantryUnit()) {
+        if (cellType == TERRAIN_MOUNTAIN) {
+            return true;
         }
     }
 

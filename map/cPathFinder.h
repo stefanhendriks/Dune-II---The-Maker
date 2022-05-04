@@ -6,15 +6,11 @@
 #include <vector>
 #include <memory>
 
-class cPathNode;
-
-using node_ptr = std::shared_ptr<cPathNode>;
-
 class cPath {
 public:
     std::vector<int> waypoints;
 
-    bool success() const;
+    [[nodiscard]] bool success() const;
 };
 
 struct cPathNode {
