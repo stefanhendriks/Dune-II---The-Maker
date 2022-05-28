@@ -1839,7 +1839,7 @@ void INIT_PREVIEWS() {
 
     int maxCells = 128*128;
     PreviewMap[0].mapdata = std::vector<int>(maxCells, -1);
-    PreviewMap[0].name = "Random map";
+    PreviewMap[0].name = "RANDOM MAP";
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
     PreviewMap[0].terrain = create_bitmap(128, 128);
 }
