@@ -19,6 +19,7 @@ class cStructureFactory {
     cStructureFactory();
 
   public:
+    ~cStructureFactory();
 
     static cStructureFactory *getInstance();
 

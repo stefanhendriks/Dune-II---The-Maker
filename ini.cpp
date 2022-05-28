@@ -24,6 +24,7 @@
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
+#include "gameobjects/units/cReinforcements.h"
 
 #include <allegro.h>
 #include <fmt/core.h>
@@ -36,13 +37,15 @@ int getHouseFromChar(char chunk[25]);
 int getUnitTypeFromChar(char chunk[25]);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
+class cReinforcements;
+
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                 const int *iPl_quota, const char *linefeed);
 
 bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                      const int *iPl_quota, char *linefeed);
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed);
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements* reinforcements);
 
 void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed);
 
@@ -474,9 +477,13 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "TurnSpeed") == 0)
             return WORD_TURNSPEED;
 
-        // Attack frequency
+        // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
         if (strcmp(word, "AttackFrequency") == 0)
             return WORD_ATTACKFREQ;
+
+        // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
+        if (strcmp(word, "NextAttackFrequency") == 0)
+            return WORD_NEXTATTACKFREQ;
 
         // Sight
         if (strcmp(word, "Sight") == 0)
@@ -498,8 +505,8 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "IsHarvester") == 0)
             return WORD_ISHARVESTER;
 
-        if (strcmp(word, "SecondShot") == 0)
-            return WORD_SECONDSHOT;
+        if (strcmp(word, "FireTwice") == 0)
+            return WORD_FIRETWICE;
 
         if (strcmp(word, "IsInfantry") == 0)
             return WORD_ISINFANTRY;
@@ -611,15 +618,6 @@ int INI_WordType(char word[25], int section) {
 
         if (strcmp(word, "DumpSpeed") == 0)
             return WORD_DUMPSPEED;
-
-    } else if (section == INI_SETTINGS) {
-        if (strcmp(word, "FullScreen") == 0) return WORD_FULLSCREEN;
-        if (strcmp(word, "ScreenWidth") == 0) return WORD_SCREENWIDTH;
-        if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
-        if (strcmp(word, "CameraDragMoveSpeed") == 0) return WORD_CAMERADRAGMOVESPEED;
-        if (strcmp(word, "CameraBorderOrKeyMoveSpeed") == 0) return WORD_CAMERABORDERORKEYMOVESPEED;
-        if (strcmp(word, "CameraEdgeMove") == 0) return WORD_CAMERAEDGEMOVE;
-        assert(false && "Unknown word in [SETTINGS]");
     }
 
 //  char msg[255];
@@ -678,9 +676,6 @@ int GAME_INI_SectionType(char section[30], int last) {
 
 // if (strcmp(section, "BULLETS") == 0)
 //   return INI_BULLETS;
-
-    if (strcmp(section, "SETTINGS") == 0)
-        return INI_SETTINGS;
 
     if (strcmp(section, "UNITS") == 0)
         return INI_UNITS;
@@ -1285,7 +1280,7 @@ std::string INI_GetScenarioFileName(int iHouse, int iRegion) {
 }
 
 
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinforcements* reinforcements) {
     game.m_skirmish = false;
     game.missionInit();
 
@@ -1394,7 +1389,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
             } else if (section == INI_STRUCTURES) {
                 bSetUpPlayers = INI_Scenario_Section_Structures(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
             } else if (section == INI_REINFORCEMENTS) {
-                INI_Scenario_Section_Reinforcements(iHouse, linefeed);
+                INI_Scenario_Section_Reinforcements(iHouse, linefeed, reinforcements);
             }
             wordtype = WORD_NONE;
         }
@@ -1608,7 +1603,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
     }
 }
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements * reinforcements) {
     logbook("[SCENARIO] -> REINFORCEMENTS");
 
     int iPart = -1; /*
@@ -1619,8 +1614,8 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
                 */
 
     // Skip ID= part. It is just for fun there.
-    int iController, iType, iTime, iCell;
-    iController = iType = iTime = iCell = -1;
+    int playerId, unitType, delayInMinutes, targetCell;
+    playerId = unitType = delayInMinutes = targetCell = -1;
 
     char chunk[25];
     bool bClearChunk = true;
@@ -1644,7 +1639,15 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
         }
 
         // , means next part. A ' ' means end
-        if (linefeed[c] == ',' || linefeed[c] == '\0' || linefeed[c] == '+') {
+
+        // Example:
+        // 1=Harkonnen,Troopers,Enemybase,11
+        // <ID>=<House>,<UnitType>,<DropLocation>,<Time>
+        // <Time> may be postfixed with a '+' meaning it should repeat infinitely. Unfortunately Dune II
+        // has a bug ignoring the '+'. (but we can fix this)
+
+        bool plusDetected = (linefeed[c] == '+'); // plus has special meaning
+        if (linefeed[c] == ',' || linefeed[c] == '\0' || plusDetected) {
             iPart++;
 
             if (iPart == 0) {
@@ -1654,38 +1657,43 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
                         if (players[i].getHouse() == iHouse) {
-                            iController = i; // set controller here.. phew
+                            playerId = i; // set controller here.. phew
                             break;
                         }
                     }
                 }
             } else if (iPart == 1) {
-                iType = getUnitTypeFromChar(chunk);
-
+                unitType = getUnitTypeFromChar(chunk);
             } else if (iPart == 2) {
                 // Homebase is home of that house
                 if (strcmp(chunk, "Homebase") == 0) {
-                    iCell = players[iController].getFocusCell();
+                    targetCell = players[playerId].getFocusCell();
                 } else {
                     // enemy base
 
-                    if (iController == 0) {
+                    if (playerId == 0) {
                         // Find corresponding house and get controller
                         for (int i = 0; i < MAX_PLAYERS; i++)
-                            if (players[i].getHouse() == iHouse && i != iController) {
-                                iCell = players[i].getFocusCell();
+                            if (players[i].getHouse() == iHouse && i != playerId) {
+                                targetCell = players[i].getFocusCell();
                                 break;
                             }
                     } else {
                         // computer player must find enemy = human
-                        iCell = players[0].getFocusCell();
+                        targetCell = players[0].getFocusCell();
                     }
                 }
 
             } else if (iPart == 3) {
-                int iGenCell = atoi(chunk);
-                iTime = iGenCell;
-                SET_REINFORCEMENT(iCell, iController, iTime, iType);
+                delayInMinutes = atoi(chunk);
+                bool repeat = game.m_allowRepeatingReinforcements && plusDetected;
+                int reinforcementMultiplier = 20; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
+                // D2TM does not interpret the delay as minutes, as doing so takes a very long time for reinforcements
+                // to arrive. So I guess delay is not really 1 minute in game-time in Dune 2.
+                // Stefan: 08/04/2022 -> I reduced the multiplier again to 20, as it still takes a very long time;
+                // this feels better.
+                int delayD2TM = delayInMinutes * reinforcementMultiplier;
+                reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
                 break;
             }
 
@@ -1696,8 +1704,6 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
         if (linefeed[c] == '=') {
             bSkipped = true;
         }
-
-
     }
 }
 
@@ -1945,6 +1951,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 players[HUMAN].setCredits(creditsPlayer);
                 players[HUMAN].setHouse(houseForPlayer);
                 players[HUMAN].setTeam(0);
+                players[HUMAN].setAutoSlabStructures(false);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
@@ -1961,6 +1968,8 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 }
 
             } else {
+                players[iCPUId].setAutoSlabStructures(true);
+
                 if (quota > 0) {
                     players[iCPUId].setQuota(quota);
                 }
@@ -2122,7 +2131,6 @@ void INI_Install_Game(std::string filename) {
                     // Show in log file we entered a new section
                     if (section == INI_UNITS) logbook("[GAME.INI] -> [UNITS]");
                     if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
-                    if (section == INI_SETTINGS) logbook("[GAME.INI] -> [SETTINGS]");
                 }
 
                 if (section == INI_TEAMS) {
@@ -2218,6 +2226,7 @@ void INI_Install_Game(std::string filename) {
                     if (wordtype == WORD_MOVESPEED) unitInfo.speed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
 
@@ -2232,7 +2241,7 @@ void INI_Install_Game(std::string filename) {
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
@@ -2266,27 +2275,6 @@ void INI_Install_Game(std::string filename) {
 
                 if (wordtype == WORD_COST) sStructureInfo[id].cost = INI_WordValueINT(linefeed);
                 if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = INI_WordValueINT(linefeed);
-
-            }
-
-            if (section == INI_SETTINGS) {
-                switch (wordtype) {
-                    case WORD_SCREENWIDTH:
-                        game.m_iniScreenWidth = INI_WordValueINT(linefeed);
-                        break;
-                    case WORD_SCREENHEIGHT:
-                        game.m_iniScreenHeight = INI_WordValueINT(linefeed);
-                        break;
-                    case WORD_CAMERADRAGMOVESPEED:
-                        game.m_cameraDragMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
-                        break;
-                    case WORD_CAMERABORDERORKEYMOVESPEED:
-                        game.m_cameraBorderOrKeyMoveSpeed = INI_WordValueFloat(linefeed, 0.5f);
-                        break;
-                    case WORD_CAMERAEDGEMOVE:
-                        game.m_cameraEdgeMove = INI_WordValueBOOL(linefeed);
-                        break;
-                }
             }
         } // while
 
@@ -2317,12 +2305,6 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
     // first clear it all out (previewMap always assumes 64x64 data - for now)
     s_PreviewMap &previewMap = PreviewMap[iNew];
     int maxCells = 64*64;
-//    for (int x = 0; x < 64; x++) {
-//        for (int y = 0; y < 64; y++) {
-//            int cll = map.makeCell(x, y); // we initialized so this makes sense
-//            previewMap.mapdata[cll] = -1;
-//        }
-//    }
 
     previewMap.mapdata = std::vector<int>(maxCells, -1);
 

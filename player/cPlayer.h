@@ -19,12 +19,6 @@
   */
 #pragma once
 
-#include <set>
-#include <string>
-#include <vector>
-
-#include "allegro/palette.h"
-
 #include "controls/cGameControlsContext.h"
 #include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
@@ -35,8 +29,12 @@
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
 
+#include <allegro/palette.h>
 
-// all kinds of forward declarations to make a compiler happy when not using d2tmh.h
+#include <set>
+#include <string>
+#include <vector>
+
 class cItemBuilder;
 class cBuildingListUpdater;
 
@@ -448,6 +446,8 @@ public:
 
     void thinkSlow();
 
+    void deselectUnit(const int & unitId);
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -514,7 +514,7 @@ private:
 
     brains::cPlayerBrain *brain_;
 
-    bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
+    bool m_autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
     // A condition to win the mission
     int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)

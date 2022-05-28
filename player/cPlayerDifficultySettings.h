@@ -5,8 +5,7 @@
  *      Author: Stefan
  */
 
-#ifndef CPLAYERDIFFICULTYSETTINGS_H_
-#define CPLAYERDIFFICULTYSETTINGS_H_
+#pragma once
 
 /**
  * This class holds properties for a player which have overall influence on the
@@ -54,12 +53,10 @@ class cPlayerDifficultySettings {
 	protected:
 
 	private:
-        float m_moveSpeedFactor;
+      float m_moveSpeedFactor;
 	    float m_buildSpeedFactor;
 	    float m_harvestSpeedFactor;
 	    float m_dumpSpeedFactor;
 	    float m_inflictDamageFactor;
 
 };
-
-#endif /* CPLAYERDIFFICULTYSETTINGS_H_ */

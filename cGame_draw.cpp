@@ -9,7 +9,10 @@
   2001 - 2022 (c) code by Stefan Hendriks
 */
 
-#include "include/d2tmh.h"
+#include "cGame.h"
+
+#include "d2tmc.h"
+#include "data/gfxdata.h"
 
 #include <allegro.h>
 
@@ -29,14 +32,9 @@ void cGame::drawStateLosing() {
     draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
     if (m_mouse->isLeftButtonClicked()) {
-        // OMG, MENTAT IS NOT HAPPY
         m_state = GAME_LOSEBRIEF;
 
-        if (m_skirmish) {
-            game.missionInit();
-        }
-
-        createAndPrepareMentatForHumanPlayer();
+        createAndPrepareMentatForHumanPlayer(!m_skirmish);
 
         // FADE OUT
         initiateFadingOut();
@@ -53,11 +51,7 @@ void cGame::drawStateWinning() {
         // Mentat will be happy, after that enter "Select your next Conquest"
         m_state = GAME_WINBRIEF;
 
-        if (m_skirmish) {
-            game.missionInit();
-        }
-
-        createAndPrepareMentatForHumanPlayer();
+        createAndPrepareMentatForHumanPlayer(!m_skirmish);
 
         // FADE OUT
         initiateFadingOut();

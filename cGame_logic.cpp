@@ -11,10 +11,22 @@
 */
 #include "cGame.h"
 
-#include "d2tmh.h"
+#include "building/cItemBuilder.h"
+#include "d2tmc.h"
+#include "data/gfxdata.h"
+#include "data/gfxinter.h"
 #include "drawers/cAllegroDrawer.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/units/cReinforcements.h"
+#include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
+#include "gamestates/cMainMenuGameState.h"
+#include "gamestates/cSelectMissionState.h"
+#include "gamestates/cOptionsState.h"
+#include "gamestates/cSelectYourNextConquestState.h"
+#include "gamestates/cSetupSkirmishGameState.h"
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
@@ -22,12 +34,24 @@
 #include "mentat/cBeneMentat.h"
 #include "mentat/cHarkonnenMentat.h"
 #include "mentat/cOrdosMentat.h"
+#include "player/cPlayer.h"
+#include "player/brains/cPlayerBrainCampaign.h"
+#include "player/brains/cPlayerBrainSandworm.h"
+#include "player/brains/cPlayerBrainSkirmish.h"
+#include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
+#include "sidebar/cBuildingListFactory.h"
+#include "sidebar/cSideBarFactory.h"
 #include "timers.h"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+
+#include "utils/cFileValidator.h"
+#include "utils/cHandleArgument.h"
+#include "utils/cIniFile.h"
+
 
 #include <allegro.h>
 #include <alfont.h>
@@ -36,6 +60,7 @@
 #include <algorithm>
 #include <random>
 #include <vector>
+#include <iostream>
 
 namespace {
 
@@ -53,6 +78,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_screenX = 800;
     m_screenY = 600;
     m_windowed = false;
+    m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
     // default INI screen width and height is not loaded
@@ -60,13 +86,17 @@ cGame::cGame() : m_timeManager(*this) {
     m_iniScreenWidth = -1;
     m_iniScreenHeight = -1;
 
-    m_version = "0.6.x";
+    m_version = "0.7.0";
 
     m_mentat = nullptr;
+    m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
 
 
 void cGame::init() {
+    m_newMusicSample = MUSIC_MENU;
+    m_newMusicCountdown = 0;
+
     m_drawFps = false;
     m_nextState = -1;
     m_missionWasWon = false;
@@ -103,7 +133,7 @@ void cGame::init() {
     m_shakeY = 0;
     m_TIMER_shake = 0;
 
-    m_musicType = MUSIC_MENU;
+    m_musicType = -1;
 
     m_cameraDragMoveSpeed=0.5f;
     m_cameraBorderOrKeyMoveSpeed=0.5;
@@ -122,9 +152,28 @@ void cGame::init() {
     }
 
     // Units & Structures are already initialized in map.init()
-
     // Load properties
     INI_Install_Game(m_gameFilename);
+}
+
+bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
+    if (!settings->hasSection(SECTION_SETTINGS)) {
+        std::cerr << "No [SETTINGS] section found in settings.ini file" << std::endl;
+        return false;
+    }
+
+    const cSection &section = settings->getSection(SECTION_SETTINGS);
+    game.m_iniScreenWidth = section.getInt("ScreenWidth");
+    game.m_iniScreenHeight = section.getInt("ScreenHeight");
+    game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    game.m_windowed = !section.getBoolean("FullScreen");
+    game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+    game.m_turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+    game.m_rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+
+    return true;
 }
 
 // TODO: Bad smell (duplicate code)
@@ -157,6 +206,11 @@ void cGame::missionInit() {
     drawManager->missionInit();
 }
 
+int cGame::handleArguments(int argc, char **argv) {
+    return m_handleArgument->handleArguments(argc,argv);
+}
+
+
 void cGame::initPlayers(bool rememberHouse) const {
     int maxThinkingAIs = MAX_PLAYERS;
     if (m_oneAi) {
@@ -165,6 +219,7 @@ void cGame::initPlayers(bool rememberHouse) const {
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer &pPlayer = players[i];
+
         int h = pPlayer.getHouse();
 
         brains::cPlayerBrain *brain = nullptr;
@@ -186,7 +241,9 @@ void cGame::initPlayers(bool rememberHouse) const {
         } else if (i == AI_CPU5) {
             brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
         } else if (i == AI_CPU6) {
-            brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            if (!game.m_disableWormAi) {
+                brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            }
         }
 
         pPlayer.init(i, brain);
@@ -333,13 +390,13 @@ bool cGame::isMissionWon() const {
         }
 
         if (hasWinConditionAIShouldLoseEverything()) {
-            if (allAIPlayersAreDestroyed()) {
+            if (allEnemyAIPlayersAreDestroyed()) {
                 return true;
             }
         }
     } else if (hasGameOverConditionAIHasNoBuildings()) {
         if (hasWinConditionAIShouldLoseEverything()) {
-            if (allAIPlayersAreDestroyed()) {
+            if (allEnemyAIPlayersAreDestroyed()) {
                 return true;
             }
         }
@@ -347,11 +404,13 @@ bool cGame::isMissionWon() const {
     return false;
 }
 
-bool cGame::allAIPlayersAreDestroyed() const {
+bool cGame::allEnemyAIPlayersAreDestroyed() const {
+    cPlayer &humanPlayer = players[HUMAN];
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer &player = players[i];
-        if (!player.isAlive()) continue;
+        cPlayer *player = &players[i];
+        if (!player->isAlive()) continue;
+        if (humanPlayer.isSameTeamAs(player)) continue; // skip allied AI players
         return false;
     }
     return true;
@@ -408,13 +467,23 @@ void cGame::think_audio() {
     if (m_musicType < 0)
         return;
 
-    if (!m_soundPlayer->isMusicPlaying()) {
+    if (m_newMusicCountdown > 0) {
+        m_newMusicCountdown--;
+    }
 
-        if (m_musicType == MUSIC_ATTACK) {
-            m_musicType = MUSIC_PEACE; // set back to peace
+    if (m_newMusicCountdown == 0) {
+        m_soundPlayer->playMusic(m_newMusicSample);
+        m_newMusicCountdown--; // so we don't keep re-starting music
+    }
+
+    if (m_newMusicCountdown < 0) {
+        if (!m_soundPlayer->isMusicPlaying()) {
+            int desiredMusicType = m_musicType;
+            if (m_musicType == MUSIC_ATTACK) {
+                desiredMusicType = MUSIC_PEACE; // set back to peace
+            }
+            playMusicByType(desiredMusicType);
         }
-
-        playMusicByType(m_musicType);
     }
 }
 
@@ -680,7 +749,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     game.m_screenY = game.m_iniScreenHeight;
 
     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", 
-        fmt::format("Resolution {}x{} loaded from ini file.", game.m_iniScreenWidth, game.m_iniScreenHeight)
+        fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_iniScreenWidth, game.m_iniScreenHeight)
     );
 }
 
@@ -692,9 +761,6 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 bool cGame::setupGame() {
     cLogger *logger = cLogger::getInstance();
     logger->setDebugMode(m_debugMode);
-
-    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
 
@@ -702,7 +768,47 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing",
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
-    // TODO: load eventual game settings (resolution, etc)
+    // SETTINGS.INI
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
+
+    m_reinforcements = std::make_shared<cReinforcements>();
+    map.setReinforcements(m_reinforcements);
+
+    game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
+
+    bool loadSettingsResult = game.loadSettings(settings);
+    if (!loadSettingsResult) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
+        return false;
+    }
+
+    const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
+    std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
+    {
+        std::map<eGameDirFileName, std::string> m_transfertMap;
+        m_transfertMap[eGameDirFileName::ARRAKEEN] = settings->getStringValue("FONT", "ARRAKEEN");
+        m_transfertMap[eGameDirFileName::BENEGESS] = settings->getStringValue("FONT", "BENEGESS");
+        m_transfertMap[eGameDirFileName::SMALL] = settings->getStringValue("FONT", "SMALL");
+
+        m_transfertMap[eGameDirFileName::GFXDATA] = settings->getStringValue("DATAFILE", "GFXDATA");
+        m_transfertMap[eGameDirFileName::GFXINTER] = settings->getStringValue("DATAFILE", "GFXINTER");
+        m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
+        m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
+        m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
+        settingsValidator->addResources(std::move(m_transfertMap));
+    }
+
+    // circumvent: -Werror=unused-function :/
+    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
+
+    if (!settingsValidator->fileExists()) {
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
+        std::cerr << "One or more validations failed with resources defined in settings.ini" << std::endl;
+        return false;
+    }
+
+    // GAME.INI
+    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
 
     const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
@@ -750,9 +856,10 @@ bool cGame::setupGame() {
     // TODO: read/write rest value so it does not have to 'fine-tune'
     // but is already set up. Perhaps even offer it in the options screen? So the user
     // can specify how much CPU this game may use?
-
     if (isResolutionInGameINIFoundAndSet()) {
         setScreenResolutionFromGameIniSettings();
+        m_handleArgument->applyArguments(); //Apply command line arguments
+        m_handleArgument.reset();
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
     } else {
         if (m_windowed) {
@@ -767,36 +874,36 @@ bool cGame::setupGame() {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font("data/arrakeen.fon");
+    game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
 
     if (game_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
         alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
         return false;
     }
 
 
-    bene_font = alfont_load_font("data/benegess.fon");
+    bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
 
     if (bene_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
         alfont_set_font_size(bene_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
         return false;
     }
 
-    small_font = alfont_load_font("data/small.ttf");
+    small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
 
     if (small_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
         alfont_set_font_size(small_font, 10); // set size
     } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
+        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
         allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
         return false;
     }
@@ -925,44 +1032,42 @@ bool cGame::setupGame() {
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = load_datafile("data/gfxdata.dat");
+    gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: gfxdata.dat");
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
-    gfxinter = load_datafile("data/gfxinter.dat");
+    gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: gfxinter.dat");
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
     }
 
-    gfxworld = load_datafile("data/gfxworld.dat");
+    gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: gfxworld.dat");
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
     }
 
-    gfxmentat = load_datafile("data/gfxmentat.dat");
+    gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: gfxmentat.dat");
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
     }
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
     allegroDrawer = new cAllegroDrawer(m_dataRepository);
-
-
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
@@ -983,7 +1088,7 @@ bool cGame::setupGame() {
     logbook("Setup:  BITMAPS");
     install_bitmaps();
     logbook("Setup:  HOUSES");
-    INSTALL_HOUSES();
+    INSTALL_HOUSES(rules);
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
@@ -998,11 +1103,9 @@ bool cGame::setupGame() {
     delete mapCamera;
     mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
-    delete drawManager;
-    drawManager = new cDrawManager(&players[HUMAN]);
-
-    game.init(); // AGAIN!?
-
+    INI_Install_Game(m_gameFilename);
+    // m_handleArgument->applyArguments(); //Apply command line arguments
+    // m_handleArgument.reset();
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
@@ -1010,11 +1113,25 @@ bool cGame::setupGame() {
     // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
 
+    m_mouse->setMouseObserver(nullptr);
+    m_keyboard->setKeyboardObserver(nullptr);
+
+    cPlayer *humanPlayer = &players[HUMAN];
+
+    delete drawManager;
+    drawManager = new cDrawManager(humanPlayer);
+
+    // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
+    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
+
     game.setupPlayers();
 
-    playMusicByType(MUSIC_MENU);
+    playMusicByTypeForStateTransition(MUSIC_MENU);
 
-    // all has installed well. Lets rock and roll.
+    m_mouse->setMouseObserver(m_interactionManager.get());
+    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+
+    // all has installed well. Let's rock and roll.
     return true;
 
 }
@@ -1024,40 +1141,57 @@ bool cGame::setupGame() {
  * (Elegible for combat state object initialization)
  */
 void cGame::setupPlayers() {
-    m_mouse->setMouseObserver(nullptr);
-    m_keyboard->setKeyboardObserver(nullptr);
-
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
         cPlayer *thePlayer = &players[i];
 
-        cBuildingListUpdater *buildingListUpdater = new cBuildingListUpdater(thePlayer);
+        auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
         thePlayer->setBuildingListUpdater(buildingListUpdater);
 
-        cItemBuilder *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
+        auto *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-        cSideBar *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
+        auto *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
         thePlayer->setSideBar(sidebar);
 
-        cOrderProcesser *orderProcesser = new cOrderProcesser(thePlayer);
+        auto *orderProcesser = new cOrderProcesser(thePlayer);
         thePlayer->setOrderProcesser(orderProcesser);
 
-        cGameControlsContext *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
+        auto *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
         thePlayer->setTechLevel(game.m_mission);
     }
-
-    cPlayer *humanPlayer = &players[HUMAN];
-    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
-    m_mouse->setMouseObserver(m_interactionManager.get());
-    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+    setPlayerToInteractFor(&players[0]);
 }
 
 bool cGame::isState(int thisState) const {
     return (m_state == thisState);
+}
+
+void cGame::jumpToSelectYourNextConquestMission(int missionNr) {
+    cGameState *existingStatePtr = m_states[GAME_REGION];
+    if (existingStatePtr) {
+        delete existingStatePtr;
+        m_states[GAME_REGION] = nullptr;
+    }
+
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+    m_states[GAME_REGION] = pState;
+
+    pState->calculateOffset();
+    pState->INSTALL_WORLD();
+
+    cPlayer &humanPlayer = players[HUMAN];
+    int missionZeroBased = missionNr - 1;
+    m_mission = missionZeroBased;
+
+    // a 'missionX.ini' file is from 1 til (including) 8
+    // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
+    // meaning we have to use the 'zero based' value here
+    pState->fastForwardUntilMission(missionZeroBased, humanPlayer.getHouse());
+    pState->REGION_SETUP_NEXT_MISSION(missionZeroBased, humanPlayer.getHouse());
 }
 
 void cGame::setState(int newState) {
@@ -1070,15 +1204,22 @@ void cGame::setState(int newState) {
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
-                               newState != GAME_PLAYING); // don't delete these m_states, but re-use!
+                               newState != GAME_PLAYING &&
+                               newState != GAME_OPTIONS); // don't delete these m_states, but re-use!
 
-        if (m_state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
-            deleteOldState = false; // so we don't lose data when we go back
+        if (newState == GAME_PLAYING) {
+            // make sure to delete options menu now
+            delete m_states[GAME_OPTIONS];
+            m_states[GAME_OPTIONS] = nullptr;
         }
-        if (m_state == GAME_OPTIONS && newState == GAME_CREDITS) {
-            deleteOldState = false; // don't delete credits, so we keep the crawler info
+
+        if (newState == GAME_REGION) {
+            // make sure to delete options menu now
+            delete m_states[GAME_OPTIONS];
+            m_states[GAME_OPTIONS] = nullptr;
         }
-        if (newState == GAME_OPTIONS) {
+
+        if (newState == GAME_MISSIONSELECT) {
             deleteOldState = true; // delete old options state everytime
         }
 
@@ -1087,16 +1228,19 @@ void cGame::setState(int newState) {
             m_states[newState] = nullptr;
         }
 
+        cPlayer &humanPlayer = players[HUMAN];
+
         cGameState *existingStatePtr = m_states[newState];
 
         if (existingStatePtr) {
             // no need for re-creating state
-
             if (newState == GAME_REGION) {
+                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+
                 // came from a win/lose brief state, so make sure to set up the next state
                 if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
-                    cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
+                    auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
                     if (game.m_mission > 1) {
                         pState->conquerRegions();
@@ -1104,11 +1248,23 @@ void cGame::setState(int newState) {
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
                     } else {
                         // OR: did not win
                         pState->REGION_SETUP_LOST_MISSION();
                     }
+                }
+            } else if (newState == GAME_OPTIONS) {
+                // This feels awkward. For now, I'll keep it (if it works), but this will change
+                // once we have a proper game playing state and we need to transition properly between
+                // states
+
+                auto *pState = dynamic_cast<cOptionsState *>(existingStatePtr);
+                // you cannot 'go back' to mission select
+                if (m_state != GAME_MISSIONSELECT) {
+                    pState->setPrevState(m_state);
+                } else {
+                    pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
 
@@ -1126,18 +1282,27 @@ void cGame::setState(int newState) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, players[HUMAN].getHouse());
+                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
+
+                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
 
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
                 newStatePtr = new cSetupSkirmishGameState(*this);
+                playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this);
             } else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuGameState(*this);
+                playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
+            } else if (newState == GAME_MISSIONSELECT) {
+                m_mouse->setTile(MOUSE_NORMAL);
+                BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
+                newStatePtr = new cSelectMissionState(*this, background, m_state);
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
@@ -1147,16 +1312,17 @@ void cGame::setState(int newState) {
                 } else {
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
+
                 allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
                     // we came from options menu, notify mouse
-                    players[HUMAN].getGameControlsContext()->onFocusMouseStateEvent();
+                    humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
                 } else {
                     // re-create drawManager
                     delete drawManager;
-                    drawManager = new cDrawManager(&players[HUMAN]);
+                    drawManager = new cDrawManager(&humanPlayer);
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -1235,7 +1401,7 @@ void cGame::prepareMentatForPlayer() {
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        INI_Load_scenario(house, m_region, m_mentat);
+        INI_Load_scenario(house, m_region, m_mentat, m_reinforcements.get());
         INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
     } else if (m_state == GAME_WINBRIEF) {
         if (rnd(100) < 50) {
@@ -1254,15 +1420,15 @@ void cGame::prepareMentatForPlayer() {
     }
 }
 
-void cGame::createAndPrepareMentatForHumanPlayer() {
+void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect) {
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new cAtreidesMentat();
+        m_mentat = new cAtreidesMentat(allowMissionSelect);
     } else if (houseIndex == HARKONNEN) {
-        m_mentat = new cHarkonnenMentat();
+        m_mentat = new cHarkonnenMentat(allowMissionSelect);
     } else if (houseIndex == ORDOS) {
-        m_mentat = new cOrdosMentat();
+        m_mentat = new cOrdosMentat(allowMissionSelect);
     } else {
         // fallback
         m_mentat = new cBeneMentat();
@@ -1294,7 +1460,7 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
 
 void cGame::loadScenario() {
     int iHouse = players[HUMAN].getHouse();
-    INI_Load_scenario(iHouse, game.m_region, m_mentat);
+    INI_Load_scenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
 }
 
 void cGame::thinkFast_state() {
@@ -1585,6 +1751,15 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
     }
+
+    if (m_state == GAME_BRIEFING ||
+        m_state == GAME_WINBRIEF ||
+        m_state == GAME_LOSEBRIEF
+      ) {
+        if (m_mentat) {
+            m_mentat->onNotifyMouseEvent(event);
+        }
+    }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
@@ -1780,16 +1955,44 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance) {
 }
 
 
-void cGame::playVoice(int sampleId, int house) {
-    m_soundPlayer->playVoice(sampleId, house);
+void cGame::playVoice(int sampleId, int playerId) {
+    m_soundPlayer->playVoice(sampleId, players[playerId].getHouse());
 }
 
-void cGame::playMusicByType(int iType) {
+void cGame::playMusicByTypeForStateTransition(int iType) {
+    if (m_musicType != iType) {
+        m_newMusicCountdown = 0;
+        playMusicByType(iType, HUMAN, false);
+    }
+}
+
+bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice) {
+    if (playerId != HUMAN){
+        // skip music we want to play for non human player
+        return false;
+    }
+
+    logbook(fmt::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
+
+    if (triggerWithVoice) {
+        if (iType == m_musicType) {
+            logbook(fmt::format("m_musicType = {}, iType is {}, so bailing", m_musicType, iType));
+            return false;
+        }
+    }
+
     m_musicType = iType;
+    logbook(fmt::format("m_musicType = {}", m_musicType));
 
     if (!m_playMusic) {
-        return;
+        return false; // todo: have a 'no-sound soundplayer' instead of doing this :/
     }
+
+    if (m_newMusicCountdown > 0) {
+        // do not interfere with previous 'change to music' thing?
+        return false;
+    }
+
 
     int sampleId = MIDI_MENU;
     if (iType == MUSIC_WIN) {
@@ -1819,8 +2022,21 @@ void cGame::playMusicByType(int iType) {
         assert(false && "Undefined music type.");
     }
 
-    // play midi file
-    m_soundPlayer->playMusic(sampleId);
+    if (triggerWithVoice) {
+        // voice triggered music (ie "Enemy unit approaching"), so have music stop a bit
+        if (isState(GAME_PLAYING)) {
+            m_newMusicCountdown = 400; // wait a bit longer
+        } else {
+            m_newMusicCountdown = 0;
+        }
+        m_soundPlayer->stopMusic();
+    } else {
+        // instant switch
+        m_newMusicCountdown = 0;
+    }
+
+    m_newMusicSample = sampleId;
+    return true;
 }
 
 int cGame::getMaxVolume() {
@@ -1876,7 +2092,7 @@ void cGame::thinkSlow_state() {
         m_pathsCreated = 0;
 
         if (!m_disableReinforcements) {
-            thinkSlow_reinforcements();
+            m_reinforcements->thinkSlow();
         }
 
         // starports think per second for deployment (if any)
@@ -1896,24 +2112,6 @@ void cGame::thinkSlow_state() {
 
 }
 
-void cGame::thinkSlow_reinforcements() {
-    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
-        if (reinforcements[i].iCell > -1) {
-            if (reinforcements[i].iSeconds > 0) {
-                reinforcements[i].iSeconds--;
-                continue; // next one
-            } else {
-                // deliver
-                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          players[reinforcements[i].iPlayer].getFocusCell());
-
-                // and make this unvalid
-                reinforcements[i].iCell = -1;
-            }
-        }
-    }
-}
-
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
     if (event.hasKey(KEY_0)) {
         drawManager->setPlayerToDraw(&players[0]);
@@ -1927,16 +2125,6 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
     } else if (event.hasKey(KEY_3)) {
         drawManager->setPlayerToDraw(&players[3]);
         game.setPlayerToInteractFor(&players[3]);
-    }
-
-    //JUMP TO MISSION 9
-    if (event.hasKey(KEY_F1)) {
-        game.missionInit();
-        game.m_mission = 9;
-        game.m_region = 22;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
     }
 
     // WIN MISSION
@@ -1991,39 +2179,10 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
             }
         }
     } else {
-        // REVEAL  MAP
+        // REVEAL MAP
         if (event.hasKey(KEY_F5)) {
             map.clear_all(HUMAN);
         }
     }
 
-    //JUMP TO MISSION 3
-    if (event.hasKey(KEY_F6)) {
-        game.missionInit();
-        game.m_mission = 3;
-        game.m_region = 6;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
-    //JUMP TO MISSION 4
-    if (event.hasKey(KEY_F7)) {
-        game.missionInit();
-        game.m_mission = 4;
-        game.m_region = 10;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
-    //JUMP TO MISSION 5
-    if (event.hasKey(KEY_F8)) {
-        game.missionInit();
-        game.m_mission = 5;
-        game.m_region = 13;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
 }

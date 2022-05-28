@@ -1,7 +1,9 @@
-#include <vector>
-#include "../include/d2tmh.h"
 #include "cBuildingList.h"
 
+#include "building/cItemBuilder.h"
+#include "d2tmc.h"
+
+#include <vector>
 
 cBuildingList::cBuildingList(eListType listType) {
 	TIMER_flashing = 0;
@@ -17,16 +19,7 @@ cBuildingList::cBuildingList(eListType listType) {
 }
 
 cBuildingList::~cBuildingList() {
-    TIMER_flashing = 0;
-	lastClickedId = 0;
-	buttonIconIdPressed = 0;	// the button to draw at the left of the list
-	buttonDrawX = 0;
-	buttonDrawY = 0;
 	removeAllItems();
-	memset(items, 0, sizeof(items));
-	maxItems = 0;
-    m_itemBuilder = nullptr;
-    selected = false;
 }
 
 cBuildingListItem * cBuildingList::getItem(int i) {
@@ -52,9 +45,7 @@ int cBuildingList::getFreeSlot() {
 
 void cBuildingList::removeAllItems() {
 	for (int i =0 ; i < MAX_ICONS; i++) {
-        cBuildingListItem * item = getItem(i);
-        if (item == nullptr) continue;
-        delete item;
+        delete items[i];
         items[i] = nullptr;
     }
 }
@@ -132,7 +123,7 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
 //	logbook(msg);
 
     // notify game that the item just has been added!
-    cPlayer *pPlayer = this->m_itemBuilder->getPlayer();
+    cPlayer *pPlayer = m_itemBuilder->getPlayer();
     int buildId = item->getBuildId();
     eBuildType buildType = item->getBuildType();
 

@@ -10,10 +10,18 @@
 
   */
 
-#include "d2tmh.h"
-
+#include "d2tmc.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
+#include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
+#include "player/cPlayer.h"
+#include "utils/cLog.h"
+
+#include <string>
+
+#include <iostream>
 
 int	iRest = 1;	// default rest value
 
@@ -44,7 +52,6 @@ s_UpgradeInfo                   sUpgradeInfo[MAX_UPGRADETYPES];
 s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
 s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
-sReinforcement  			    reinforcements[MAX_REINFORCEMENTS];
 
 // palette
 PALETTE general_palette;
@@ -72,75 +79,30 @@ volatile int allegro_timerSecond = 0;
 volatile int allegro_timerGlobal = 0;
 volatile int allegro_timerUnits = 0;
 
-int handleArguments(int argc, char *argv[]) {
-    // TODO: return a Config object based on arguments passed down, and use that config object instead of the Game
-    // object...
-    game.m_disableAI = false;
-    game.m_disableReinforcements = false;
-    game.m_drawUsages = false;
-    game.m_drawUnitDebug = false;
-    game.m_oneAi = false;
-    game.m_windowed = false;
-    game.m_noAiRest = false;
-    game.setDebugMode(false);
-
-	if (argc > 1) {
-		for (int i = 1; i < argc; i++) {
-            std::string command = argv[i];
-			if (command.compare("-game") == 0) {
-				if ((i + 1) < argc) {
-					i++;
-					game.m_gameFilename = std::string(argv[i]);
-				}
-			} else if (command.compare("-windowed") == 0) {
-				// Windowed flag passed, so use that
-				game.m_windowed = true;
-			} else if (command.compare("-nomusic") == 0) {
-				game.m_playMusic = false;
-			} else if (command.compare("-nosound") == 0) {
-			    // disable all sound effects
-				game.m_playMusic = false;
-				game.m_playSound = false;
-			} else if (command.compare("-debug") == 0) {
-			    // generic debugging enabled
-                game.setDebugMode(true);
-			} else if (command.compare("-debug-units") == 0) {
-                // unit debugging enabled
-                game.m_drawUnitDebug = true;
-			} else if (command.compare("-noai") == 0) {
-                game.m_disableAI = true;
-            } else if (command.compare("-oneai") == 0) {
-                game.m_oneAi = true;
-            } else if (command.compare("-noreinforcements") == 0) {
-                game.m_disableReinforcements = true;
-            } else if (command.compare("-noairest") == 0) {
-                game.m_noAiRest = true;
-            } else if (command.compare("-usages") == 0) {
-                game.m_drawUsages = true;
-            }
-		}
-	} // arguments passed
-
-	return 0;
-}
 
 /**
 	Entry point of the game
 */
 int main(int argc, char **argv) {
-	game.m_gameFilename = "game.ini";
+    game.setGameFilename("game.ini");
 
-    if (handleArguments(argc, argv) > 0) {
+    if (game.handleArguments(argc, argv) < 0) {
         return 0;
     }
 
-    if (game.setupGame()) {
-		game.run();
-	}
+    try {
+        if (game.setupGame()) {
+            game.run();
+        }
 
-	game.shutdown();
+        game.shutdown();
+    } catch (std::runtime_error &e) {
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_NONE, "Unknown", fmt::format("Error: {}", e.what()));
+        std::cerr << fmt::format("Error: {}\n\n", e.what());
+    }
 
-	return 0;
+    std::cout << fmt::format("Thank you for playing Dune 2 - The Maker\n");
+    return 0;
 }
-END_OF_MAIN();
+END_OF_MAIN()
 

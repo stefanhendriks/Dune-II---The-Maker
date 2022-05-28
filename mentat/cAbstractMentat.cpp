@@ -17,22 +17,25 @@
 #include "definitions.h"
 #include "drawers/cAllegroDrawer.h"
 
+#include "gui/cGuiButton.h"
+#include "gui/actions/cGuiActionToGameState.h"
+
 #include <alfont.h>
 #include <allegro.h>
 #include <fmt/core.h>
 
-cAbstractMentat::cAbstractMentat() {
-	  iMentatSentence = -1;
+cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
+    iMentatSentence = -1;
 
-	  TIMER_Speaking = -1;
-	  TIMER_Mouth = 0;
-	  TIMER_Eyes = 0;
-	  TIMER_Other = 0;
+    TIMER_Speaking = -1;
+    TIMER_Mouth = 0;
+    TIMER_Eyes = 0;
+    TIMER_Other = 0;
     TIMER_movie = 0;
 
-	  iMentatMouth = 3;
-	  iMentatEyes = 3;
-    iMovieFrame=-1;
+    iMentatMouth = 3;
+    iMentatEyes = 3;
+    iMovieFrame = -1;
 
     iBackgroundFrame = -1;
 
@@ -47,6 +50,26 @@ cAbstractMentat::cAbstractMentat() {
     leftButtonCommand = nullptr;
     rightButtonCommand = nullptr;
 
+    // the quick-way to get to a mission select window
+    const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
+    const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
+
+    if (canMissionSelect) {
+        cTextDrawer textDrawer(bene_font);
+        int length = textDrawer.textLength("Mission select");
+        const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenX - length,
+                                                                           game.m_screenY - textDrawer.getFontHeight(),
+                                                                           "Mission select");
+        cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
+                                                             buttonKind);
+        gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
+        cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+        gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
+        m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
+    } else {
+        m_guiBtnToMissionSelect = nullptr;
+    }
+
     state = INIT;
 
     font = bene_font;
@@ -55,8 +78,8 @@ cAbstractMentat::cAbstractMentat() {
     offsetX = (game.m_screenX - 640) / 2;
     offsetY = (game.m_screenY - 480) / 2; // same goes for offsetY (but then for 480 height).
 
-	  memset(sentence, 0, sizeof(sentence));
-	  logbook("cAbstractMentat::cAbstractMentat()");
+    memset(sentence, 0, sizeof(sentence));
+    logbook("cAbstractMentat::cAbstractMentat()");
 }
 
 cAbstractMentat::~cAbstractMentat() {
@@ -73,6 +96,8 @@ cAbstractMentat::~cAbstractMentat() {
 
     delete leftButtonCommand;
     delete rightButtonCommand;
+
+    delete m_guiBtnToMissionSelect;
 
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
@@ -249,6 +274,10 @@ void cAbstractMentat::draw() {
         allegroDrawer->blitSprite(leftButtonBmp, bmp_screen, leftButton);
         allegroDrawer->blitSprite(rightButtonBmp, bmp_screen, rightButton);
     }
+
+    if (m_guiBtnToMissionSelect) {
+        m_guiBtnToMissionSelect->draw();
+    }
 }
 
 BITMAP *cAbstractMentat::getBackgroundBitmap() const {
@@ -342,4 +371,16 @@ void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y) {
 
 void cAbstractMentat::resetSpeak() {
     speak();
+}
+
+void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event) {
+    if (m_guiBtnToMissionSelect) {
+        m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
+    }
+}
+
+void cAbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (m_guiBtnToMissionSelect) {
+        m_guiBtnToMissionSelect->onNotifyKeyboardEvent(event);
+    }
 }

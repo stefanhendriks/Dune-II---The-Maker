@@ -1,11 +1,8 @@
-/*
- * cSideBarFactory.cpp
- *
- *  Created on: Aug 2, 2009
- *      Author: Stefan
- */
+#include "cSideBarFactory.h"
 
-#include "../include/d2tmh.h"
+#include "cBuildingListFactory.h"
+
+#include <cassert>
 
 cSideBarFactory *cSideBarFactory::instance = nullptr;
 
@@ -16,7 +13,7 @@ cSideBarFactory::~cSideBarFactory() {
 }
 
 cSideBarFactory *cSideBarFactory::getInstance() {
-	if (instance == NULL) {
+	if (instance == nullptr) {
 		instance = new cSideBarFactory();
 	}
 

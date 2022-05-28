@@ -15,6 +15,7 @@
 #include "data/cAllegroDataRepository.h"
 #include "structs.h"
 #include "utils/cRectangle.h"
+#include "utils/common.h"
 
 class cParticle {
 public:
@@ -44,6 +45,14 @@ public:
 
     void addPosX(float d);
     void addPosY(float d);
+
+    /**
+     * 'fastThink' based. Each tick is 5 ms
+     * @return
+     */
+    int getTimerDeadInTicks() {
+        return TIMER_dead;
+    }
 
 private:
     int getFrameWidth();

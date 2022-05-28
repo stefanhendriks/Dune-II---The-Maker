@@ -1,10 +1,16 @@
 #pragma once
 
-class cGame;
-
-#include <gui/cGuiButton.h>
-#include <gui/cGuiWindow.h>
 #include "cGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "drawers/cTextDrawer.h"
+#include "sMouseEvent.h"
+#include "utils/cPoint.h"
+
+#include <string>
+#include <vector>
+
+struct BITMAP;
+class cGame;
 
 struct s_CreditLine {
     std::string name;

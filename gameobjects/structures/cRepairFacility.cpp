@@ -29,9 +29,9 @@ void cRepairFacility::thinkFast() {
 void cRepairFacility::think_repairUnit() {// must repair...
     int iUnitID = getUnitIdWithin();
     cUnit &unitToRepair = unit[iUnitID];
-    int maxHpForUnitType = sUnitInfo[unitToRepair.iType].hp;
+//    int maxHpForUnitType = sUnitInfo[unitToRepair.iType].hp;
 
-    if (unitToRepair.iTempHitPoints < maxHpForUnitType) {
+    if (unitToRepair.requiresRepairing()) {
         TIMER_repairunit++;
 
         // TODO: move to structure info? (or unit info?)
@@ -48,21 +48,23 @@ void cRepairFacility::think_repairUnit() {// must repair...
             // TODO: Move repair rate per tick (how much hp per tick will be increased?) into unit info?
             int REPAIR_RATE_HP_PER_TICK = 3; // ie, unit with 300 HP, costs 100 to repair
 
-            unitToRepair.iTempHitPoints += REPAIR_RATE_HP_PER_TICK;
+            unitToRepair.repair(REPAIR_RATE_HP_PER_TICK);
 
             // TODO: Move to unit info
             // Cost per tick to repair unit for REPAIR_RATE_HP_PER_TICK amount
             pPlayer->substractCredits(REPAIR_COST_PER_TICK);
         }
-    } else if (unitToRepair.iTempHitPoints >= maxHpForUnitType) {
-        unitToRepair.setMaxHitPoints();
 
-        // dump unit, get rid of it
-        unitLeavesStructure();
-
-        // show door open/close thing
-        setAnimating(true);
+        return;
     }
+
+    unitToRepair.setMaxHitPoints();
+
+    // dump unit, get rid of it
+    unitLeavesStructure();
+
+    // show door open/close thing
+    setAnimating(true);
 }
 
 void cRepairFacility::think_animation() {

@@ -20,10 +20,12 @@
 
 #include <map>
 #include <vector>
+#include <memory>
 
 #define TILESIZE_WIDTH_PIXELS 32
 #define TILESIZE_HEIGHT_PIXELS 32
 
+class cReinforcements;
 class cMap : public cScenarioObserver {
 
 public:
@@ -37,10 +39,11 @@ public:
 
     bool canDeployUnitAtCell(int iCell, int iUnitId);
 	bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
+    bool occupiedByUnit(int iCell);
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);
-	bool occupiedByType(int iCell);
+	bool occupiedByWallOrMountain(int iCell);
 
 	/**
 	 * Returns cell , taking given map width/height into account. This includes the invisible border around the map.
@@ -553,6 +556,7 @@ public:
 
     cPoint getAbsolutePositionFromCell(int cell);
 
+    void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
@@ -564,6 +568,7 @@ private:
     int m_iTIMER_blooms;
     std::map<int, int> m_mBloomTimers;
 
+    std::shared_ptr<cReinforcements> m_reinforcements;
     // Sandworms related
     int m_iDesiredAmountOfWorms;
     int m_iTIMER_respawnSandworms;
