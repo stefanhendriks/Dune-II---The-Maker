@@ -1,12 +1,7 @@
-/*
- * cSideBarFactory.h
- *
- *  Created on: Aug 2, 2009
- *      Author: Stefan
- */
+#pragma once
 
-#ifndef CSIDEBARFACTORY_H_
-#define CSIDEBARFACTORY_H_
+#include "cSideBar.h"
+#include "player/cPlayer.h"
 
 class cSideBarFactory {
 
@@ -21,10 +16,8 @@ public:
 	static cSideBarFactory *getInstance();
 	static void destroy();
 
-
 	cSideBar *createSideBar(cPlayer * thePlayer);
 
 private:
 
 };
-#endif /* CSIDEBARFACTORY_H_ */

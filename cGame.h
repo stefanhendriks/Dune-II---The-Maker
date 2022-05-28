@@ -19,6 +19,7 @@
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 #include "utils/cTimeManager.h"
+#include "utils/cIniFile.h"
 
 #include <memory>
 #include <string>
@@ -30,6 +31,9 @@ class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
 class cScreenInit;
+class cHandleArgument;
+
+class cReinforcements;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -47,9 +51,16 @@ public:
 	cGame();
 	~cGame();
 
-	std::string m_gameFilename;
+    void jumpToSelectYourNextConquestMission(int missionNr);
+
+    void setGameFilename(const std::string& filename) {
+        m_gameFilename = filename;
+    }
+
+    int handleArguments(int argc, char **argv);
 
 	bool m_windowed;			    // windowed
+    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 	std::string m_version;          // version number, or name.
 
     // Alpha (for fading in/out)
@@ -65,6 +76,7 @@ public:
     bool m_playSound;               // play sound?
     bool m_disableAI;               // disable AI thinking?
     bool m_oneAi;                   // disable all but one AI brain? (default == false)
+    bool m_disableWormAi;                // disable worm AI brain? (default == false)
     bool m_disableReinforcements;   // disable any reinforcements from scenario ini file?
     bool m_drawUsages;              // draw the amount of structures/units/bullets used during combat
     bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
@@ -95,7 +107,7 @@ public:
     bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
-    void createAndPrepareMentatForHumanPlayer();
+    void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
     void loadScenario();
 
     void run();			            // run the game (MAIN LOOP)
@@ -127,8 +139,9 @@ public:
     */
     void playSoundWithDistance(int sampleId, int iOnScreen);
 
-    void playVoice(int sampleId, int house);
-    void playMusicByType(int iType);
+    void playVoice(int sampleId, int playerId);
+    void playMusicByTypeForStateTransition(int iType);
+    bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 
     int getMaxVolume();
 
@@ -184,6 +197,7 @@ public:
             case GAME_LOSING: return "GAME_LOSING";
             case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
             case GAME_CREDITS: return "GAME_CREDITS";
+            case GAME_MISSIONSELECT: return "GAME_MISSIONSELECT";
             default:
                 assert(false);
                 break;
@@ -222,6 +236,12 @@ public:
 
     void thinkSlow();
 
+    bool isTurretsDownOnLowPower() { return m_turretsDownOnLowPower; }
+    void setTurretsDownOnLowPower(bool value) { m_turretsDownOnLowPower = value; }
+
+    bool isRocketTurretsDownOnLowPower() { return m_rocketTurretsDownOnLowPower; }
+    void setRocketTurretsDownOnLowPower(bool value) { m_rocketTurretsDownOnLowPower = value; }
+
     bool isDebugMode() { return m_debugMode; }
     void setDebugMode(bool value) { m_debugMode = value; }
 
@@ -231,6 +251,14 @@ private:
      */
     bool m_debugMode;               // ...
 
+    // if true, then turrets won't do anything on low power (both gun and rocket turrets)
+    bool m_turretsDownOnLowPower;
+
+    // if true, rocket turrets will not fire rockets when low power
+    bool m_rocketTurretsDownOnLowPower;
+
+	std::string m_gameFilename;
+
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
     std::unique_ptr<cInteractionManager> m_interactionManager;
@@ -238,14 +266,21 @@ private:
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
 
+    std::shared_ptr<cReinforcements> m_reinforcements;
+
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
 
     cTimeManager m_timeManager;
 
+    std::unique_ptr<cHandleArgument> m_handleArgument;
+
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
 	int m_state;
+
+    int m_newMusicSample;
+    int m_newMusicCountdown;
 
 	cAbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
 
@@ -273,6 +308,7 @@ private:
 
     cGameState *m_states[GAME_MAX_STATES];
 
+    bool loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
@@ -308,7 +344,7 @@ private:
 
     [[nodiscard]] bool hasWinConditionAIShouldLoseEverything() const;
 
-    [[nodiscard]] bool allAIPlayersAreDestroyed() const;
+    [[nodiscard]] bool allEnemyAIPlayersAreDestroyed() const;
 
     [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
 
@@ -324,7 +360,6 @@ private:
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 
     void thinkSlow_state();
-    void thinkSlow_reinforcements();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 };

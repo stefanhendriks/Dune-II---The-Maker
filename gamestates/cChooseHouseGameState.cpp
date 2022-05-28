@@ -1,10 +1,13 @@
-#include <algorithm>
-#include "d2tmh.h"
 #include "cChooseHouseGameState.h"
 
+#include "d2tmc.h"
+#include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
 #include "utils/cSoundPlayer.h"
 
 #include <allegro.h>
+
+#include <algorithm>
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     cGameState(theGame),
@@ -119,5 +122,11 @@ void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event) {
     hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
 }
 
-void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.isType(eKeyEventType::PRESSED)) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_MENU);
+            game.initiateFadingOut();
+        }
+    }
 }

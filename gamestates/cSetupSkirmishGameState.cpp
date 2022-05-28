@@ -9,7 +9,10 @@
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
-#include "player/playerh.h"
+#include "player/brains/cPlayerBrainSandworm.h"
+#include "player/brains/cPlayerBrainSkirmish.h"
+#include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
 
 #include <allegro.h>
@@ -514,7 +517,11 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         } else if (p == AI_CPU5) {
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         } else if (p == AI_CPU6) {
-            pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+            if (!game.m_disableWormAi) {
+                pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+            } else {
+                pPlayer.init(p, nullptr);
+            }
         } else {
             if (maxThinkingAIs > 0) {
                 pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
@@ -1020,6 +1027,12 @@ void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &) {
 
 }
 
-void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.isType(eKeyEventType::PRESSED)) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_MENU);
+            game.initiateFadingOut();
+        }
+    }
 }
 

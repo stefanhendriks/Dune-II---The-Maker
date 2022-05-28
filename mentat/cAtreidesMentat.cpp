@@ -7,7 +7,7 @@
 
 #include <allegro.h>
 
-cAtreidesMentat::cAtreidesMentat() {
+cAtreidesMentat::cAtreidesMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect) {
     iBackgroundFrame = MENTATA;
     buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);
     buildRightButton((BITMAP *) gfxmentat[BTN_PROCEED].dat, 466, 423);

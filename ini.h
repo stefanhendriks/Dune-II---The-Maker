@@ -13,6 +13,7 @@
 
 #include <string>
 
+class cReinforcements;
 class cAbstractMentat;
 class cSelectYourNextConquestState;
 
@@ -55,7 +56,6 @@ class cSelectYourNextConquestState;
 #define INI_WIN         31
 #define INI_LOSE        32
 #define INI_DESCRIPTION 33
-#define INI_SETTINGS    34
 
 #define SEC_REGION		198
 
@@ -110,7 +110,7 @@ class cSelectYourNextConquestState;
 #define WORD_TURNSPEED    47    // game.ini (turn speed)
 #define WORD_SOUND        48    // game.ini (sound)
 #define WORD_ISHARVESTER  49    // game.ini (IsHarvester, is it a harvester or not?)
-#define WORD_SECONDSHOT   50    // game.ini (SecondShot, makes unit shoot twice?)
+#define WORD_FIRETWICE   50    // game.ini (SecondShot, makes unit shoot twice?)
 #define WORD_ISAIRBORN    51    // game.ini (Unit is airborn?)
 #define WORD_ABLETOCARRY  52    // game.ini (Able to transport units, aka CarryAll)
 #define WORD_FREEROAM     53    // game.ini (Will freely roam around the map?)
@@ -118,6 +118,7 @@ class cSelectYourNextConquestState;
 #define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
+#define WORD_NEXTATTACKFREQ   59   // game.ini (next attack frequency)
 #define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
 #define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
 #define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
@@ -169,15 +170,6 @@ class cSelectYourNextConquestState;
 #define WORD_MAPNAME        86
 #define WORD_STARTCELL      87
 
-// SETTINGS SPECIFIC
-
-#define WORD_FULLSCREEN	    90			// fullscreen settings in game.ini
-#define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
-#define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
-#define WORD_CAMERADRAGMOVESPEED	93	    // camera drag move speed
-#define WORD_CAMERABORDERORKEYMOVESPEED	94	// camera border or key move speed
-#define WORD_CAMERAEDGEMOVE	95	        // allow camera movement by hitting edges of screen
-
 #define MAX_LINE_LENGTH     256
 
 #define INI_UNITS_PART_CONTROLLER   0
@@ -189,7 +181,7 @@ class cSelectYourNextConquestState;
 
 // Scenario loading
 //void INI_Load_scenario(bool bOrDune, char filename[30] );
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat);
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinforcements* reinforcements);
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);

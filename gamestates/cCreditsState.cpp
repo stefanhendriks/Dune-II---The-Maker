@@ -1,5 +1,7 @@
-#include "d2tmh.h"
 #include "cCreditsState.h"
+
+#include "d2tmc.h"
+#include "data/gfxinter.h"
 
 #include <alfont.h>
 #include <allegro.h>

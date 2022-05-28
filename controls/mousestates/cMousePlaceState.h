@@ -25,7 +25,7 @@ public:
     void onStateSet() override;
 
     void onFocus() override;
-    void onBlur() override {}
+    void onBlur() override;
 
 private:
     void onMouseLeftButtonClicked();

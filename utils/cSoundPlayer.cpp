@@ -1,10 +1,3 @@
-/*
- * cSoundPlayer.cpp
- *
- *  Created on: 6-aug-2010
- *      Author: Stefan
- */
-
 #include "cSoundPlayer.h"
 
 #include "definitions.h"
@@ -144,6 +137,11 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
         return;
     }
 
+    if (voices.size() < kMinNrVoices) {
+        return;
+    }
+
+
     auto voice = std::find(voices.begin(), voices.end(), kNoVoice);
     if (voice == voices.end()) {
         cLogger::getInstance()->log(eLogLevel::LOG_WARN, eLogComponent::COMP_SOUND, "Playing sound",
@@ -181,4 +179,8 @@ void cSoundPlayer::playMusic(int sampleId) {
 
 bool cSoundPlayer::isMusicPlaying() const {
     return midi_pos > -1;
+}
+
+void cSoundPlayer::stopMusic() {
+    stop_midi();
 }

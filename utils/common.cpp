@@ -20,6 +20,7 @@
 #include "sidebar/cSideBar.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
+#include "utils/cIniFile.h"
 
 #include <allegro.h>
 
@@ -44,6 +45,11 @@ int slowThinkMsToTicks(int desiredMs) {
     return desiredMs / 100;
 }
 
+int fastThinkTicksToMs(int ticks) {
+    // "fast" thinking, is 1 tick == 5ms
+    return ticks * 5;
+}
+
 int fastThinkMsToTicks(int desiredMs) {
     if (desiredMs < 5) {
         return 1; // fastest thinking is 1 tick (5 ms)
@@ -52,43 +58,53 @@ int fastThinkMsToTicks(int desiredMs) {
     return desiredMs / 5;
 }
 
+
+int makeColFromString(std::string colorStr)
+{
+    int r=0, g=0, b=0;
+    // c version
+    sscanf(colorStr.c_str(),"%i,%i,%i",&r, &g, &b);
+    return makecol(r,g,b);
+}
+
 /********************************
  House Rules
  ********************************/
-void INSTALL_HOUSES() {
+void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg) {
+    const cSection &section = gameCfg->getSection(SECTION_HOUSES);
+
     // General / Default / No House
-    sHouseInfo[GENERALHOUSE].swap_color = 128;
-    sHouseInfo[GENERALHOUSE].minimap_color = makecol(128, 128, 128);
+    sHouseInfo[GENERALHOUSE].swap_color = section.getInt("GENERAL_SWAPCOLOR");
+    sHouseInfo[GENERALHOUSE].minimap_color = makeColFromString(section.getStringValue("GENERAL_MINIMAPCOLOR"));
 
     // Harkonnen
-    sHouseInfo[HARKONNEN].swap_color = -1;  // 144
-    sHouseInfo[HARKONNEN].minimap_color = makecol(255, 0, 0);
+    sHouseInfo[HARKONNEN].swap_color = section.getInt("HARKONNEN_SWAPCOLOR");
+    sHouseInfo[HARKONNEN].minimap_color = makeColFromString(section.getStringValue("HARKONNEN_MINIMAPCOLOR"));
 
     // Atreides
-    sHouseInfo[ATREIDES].swap_color = 160;
-    sHouseInfo[ATREIDES].minimap_color = makecol(0, 0, 255);
+    sHouseInfo[ATREIDES].swap_color = section.getInt("ATREIDES_SWAPCOLOR");
+    sHouseInfo[ATREIDES].minimap_color = makeColFromString(section.getStringValue("ATREIDES_MINIMAPCOLOR"));
 
     // Ordos
-    sHouseInfo[ORDOS].swap_color = 176;
-    sHouseInfo[ORDOS].minimap_color = makecol(0, 255, 0);
+    sHouseInfo[ORDOS].swap_color = section.getInt("ORDOS_SWAPCOLOR");
+    sHouseInfo[ORDOS].minimap_color = makeColFromString(section.getStringValue("ORDOS_MINIMAPCOLOR"));
 
     // Mercenary
-    sHouseInfo[MERCENARY].swap_color = 192;
-    sHouseInfo[MERCENARY].minimap_color = makecol(214, 121, 16);
+    sHouseInfo[MERCENARY].swap_color = section.getInt("MERCENARY_SWAPCOLOR");
+    sHouseInfo[MERCENARY].minimap_color = makeColFromString(section.getStringValue("MERCENARY_MINIMAPCOLOR"));
 
     // Sardaukar
-    sHouseInfo[SARDAUKAR].swap_color = 208;
-    sHouseInfo[SARDAUKAR].minimap_color = makecol(255, 0, 255);
+    sHouseInfo[SARDAUKAR].swap_color = section.getInt("SARDAUKAR_SWAPCOLOR");
+    sHouseInfo[SARDAUKAR].minimap_color = makeColFromString(section.getStringValue("SARDAUKAR_MINIMAPCOLOR"));
 
     // Fremen
-    sHouseInfo[FREMEN].swap_color = 224;
-    sHouseInfo[FREMEN].minimap_color = makecol(194, 125, 60); // Fremen is colored as "sand" on the minimap
+    sHouseInfo[FREMEN].swap_color = section.getInt("FREMEN_SWAPCOLOR");
+    sHouseInfo[FREMEN].minimap_color = makeColFromString(section.getStringValue("FREMEN_MINIMAPCOLOR"));
 
     // GREY
-
     // ???
-    sHouseInfo[CORRINO].swap_color = 136;
-    sHouseInfo[CORRINO].minimap_color = makecol(192, 192, 192); // grey
+    sHouseInfo[CORRINO].swap_color = section.getInt("CORRINO_SWAPCOLOR");
+    sHouseInfo[CORRINO].minimap_color = makeColFromString(section.getStringValue("CORRINO_MINIMAPCOLOR"));
 }
 
 /*****************************
@@ -120,6 +136,7 @@ void install_units() {
         unitInfo.bulletTypeSecondary = -1;
         unitInfo.fireSecondaryWithinRange = -1;
         unitInfo.attack_frequency = -1;
+        unitInfo.next_attack_frequency = -1;
         unitInfo.buildTime = -1;
         unitInfo.airborn = false;
         unitInfo.infantry = false;
@@ -1583,6 +1600,7 @@ void install_structures() {
     sStructureInfo[TURRET].sight = 7;
     sStructureInfo[TURRET].configured = true;
     sStructureInfo[TURRET].canAttackGroundUnits = true;
+    sStructureInfo[TURRET].fireRate = 275;
     strcpy(sStructureInfo[TURRET].name, "Gun Turret");
 
     // Structure    : Rocket Turret
@@ -1597,6 +1615,7 @@ void install_structures() {
     sStructureInfo[RTURRET].configured = true;
     sStructureInfo[RTURRET].canAttackAirUnits = true;
     sStructureInfo[RTURRET].canAttackGroundUnits = true;
+    sStructureInfo[RTURRET].fireRate = 350;
     strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
 
     // Structure    : Windtrap

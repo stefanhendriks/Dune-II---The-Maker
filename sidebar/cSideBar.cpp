@@ -1,11 +1,15 @@
-#include "../include/d2tmh.h"
 #include "cSideBar.h"
 
+#include "building/cItemBuilder.h"
+#include "d2tmc.h"
 #include "managers/cDrawManager.h"
+#include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
+
+#include <cassert>
 
 cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
@@ -233,7 +237,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
         item->setDeployIt(false);
 
         if (item->getTimesToBuild() == 0) {
-            cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+            cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
             // only give money back for item that is being built
             if (item->isBuilding()) {
                 // calculate the amount of money back:

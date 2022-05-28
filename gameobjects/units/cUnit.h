@@ -52,16 +52,9 @@ enum class eHeadTowardsStructureResult {
     FAILED_NO_STRUCTURE_AVAILABLE,
     SUCCESS_AWAITING_CARRYALL,
     SUCCESS_RETURNING,
+    NOOP_ALREADY_BUSY,
 };
 
-// Reinforcement data (loaded from ini file)
-struct sReinforcement
-{
-    int iSeconds;       // FPS based, every second this decreases (0 = deliver)
-    int iUnitType;      // what unit?
-    int iPlayer;         // to who?
-    int iCell;          // Where to?
-};
 
 inline std::string eActionTypeString(eActionType actionType) {
     switch (actionType) {
@@ -91,8 +84,6 @@ public:
     int iType;          // type of unit
 
     int iGroup;         // belongs to group...
-
-    int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
     int iPlayer;        // belongs to player
 
@@ -417,9 +408,19 @@ public:
     std::string getUnitStatusForMessageBar();
     std::string getHarvesterStatusForMessageBar();
 
+    bool isHidden();
+
+    bool requiresRepairing();
+
+    void repair(int hp);
+
+    bool canUnload();
+
 private:
     eActionType m_action;
     eUnitActionIntent intent;
+
+    int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
     bool bPickedUp;     // did this unit pick up a unit? (this unit is a carry-all or frigate)
@@ -532,6 +533,7 @@ private:
     void think_harvester();
 
     void setAction(eActionType action);
+    void setGoalCell(int goalCell);
 };
 
 
@@ -553,19 +555,6 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
 
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
-
-/**
- * Allows overriding reinforcement flag, ie used when a unit is reinforced by construction or other way, rather
- * than a 'real' reinforcement.
- * @param iPlr
- * @param iTpe
- * @param iCll
- * @param iStart
- * @param isReinforcement
- */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
-
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 int UNIT_find_harvest_spot(int id);
@@ -575,6 +564,3 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);
 int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);
-
-void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
-void INIT_REINFORCEMENT();

@@ -142,13 +142,16 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 }
             }
 
-            int unitIdOnMap = map.getCellIdUnitLayer(iCll);
-            if (unitIdOnMap > -1) {
-                // temporarily dead units do not block, but alive units (non-dead) do block placement
-                if (!unit[unitIdOnMap].isDead()) {
-                    return false;
+            // non slab 'structures' can be blocked by units
+            if (structureIdToPlace != SLAB4 && structureIdToPlace != SLAB1) {
+                int unitIdOnMap = map.getCellIdUnitLayer(iCll);
+                if (unitIdOnMap > -1) {
+                    // temporarily dead units do not block, but alive units (non-dead) do block placement
+                    if (!unit[unitIdOnMap].isDead()) {
+                        return false;
+                    }
+                    // TODO: Allow placement, let units move aside when clicking before placement?
                 }
-                // TODO: Allow placement, let units move aside when clicking before placement?
             }
         }
     }
@@ -184,4 +187,9 @@ void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
 
 void cMousePlaceState::onFocus() {
     m_mouse->setTile(mouseTile);
+}
+
+void cMousePlaceState::onBlur() {
+    m_mouse->resetBoxSelect();
+    m_mouse->resetDragViewportInteraction();
 }

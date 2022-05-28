@@ -39,7 +39,7 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 		bool isMouseOnTopBar() const { return m_mouseCell == MOUSECELL_TOPBAR; }
 		bool isMouseOnMiniMap() const { return m_mouseCell == MOUSECELL_MINIMAP; }
         bool isMouseOnSidebarOrMinimap() const { return isMouseOnSidebar() || isMouseOnMiniMap(); }
-		bool isMouseOnBattleField() const { return m_mouseCell > -1; }
+		bool isMouseOnBattleField() const;
 
 		bool shouldDrawToolTip() const { return m_drawToolTip; }
 
@@ -67,6 +67,7 @@ class cGameControlsContext : public cInputObserver, cScenarioObserver {
 	private:
 		int m_mouseHoveringOverStructureId;
 		int m_mouseHoveringOverUnitId;
+        bool m_mouseOnBattleField;
 
 		bool m_drawToolTip;
 
