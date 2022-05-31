@@ -28,6 +28,14 @@
 
 #include <allegro.h>
 #include <fmt/core.h>
+#include <filesystem>
+namespace fs=std::filesystem;
+
+int INI_SectionType(char section[30], int last);
+void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
+int getHouseFromChar(char chunk[25]);
+int getUnitTypeFromChar(char chunk[25]);
+int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
 class cReinforcements;
 
@@ -2364,7 +2372,9 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
 
             if (section == INI_SKIRMISH) {
                 if (wordtype == WORD_MAPNAME) {
-                    INI_WordValueSENTENCE(linefeed, previewMap.name);
+                    char mes[256];
+                    INI_WordValueSENTENCE(linefeed, mes);
+                    previewMap.name = std::string(mes);
                     //logbook(PreviewMap[iNew].name);
                 }
 
@@ -2493,23 +2503,13 @@ void INI_PRESCAN_SKIRMISH() {
     // scans for all ini files
     INIT_PREVIEWS(); // clear all of them
 
-    al_ffblk file;
-    if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-        do {
-            auto fullname = fmt::format("skirmish/{}", file.name);
-            logbook(fmt::format("Loading skirmish map: {}", fullname));
+    const std::filesystem::path pathfile{"skirmish"};
+    for (auto const& file : std::filesystem::directory_iterator{pathfile}) 
+    {
+        auto fullname = file.path().string();
+        if (file.path().extension()==".ini") {
             INI_LOAD_SKIRMISH(fullname.c_str());
-        } while (!al_findnext(&file));
-    } else {
-        logbook("No skirmish maps found in skirmish directory.");
+            logbook(fmt::format("Loading skirmish map: {}", fullname));
+        }
     }
-    al_findclose(&file);
-
 }
-
-// this code should make it possible to read any ini file in the skirmish
-// directory. However, Allegro 4.2.0 somehow gives weird results.
-// when upgrading to Allegro 4.2.2, the method works. But FBLEND crashes, even
-// after recompiling it against Allegro 4.2.2...
-//
-// See: http://www.allegro.cc/forums/thread/600998

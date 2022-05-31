@@ -3,6 +3,7 @@
 #include "enums.h"
 
 #include <vector>
+#include <string>
 
 struct BITMAP;
 
@@ -270,5 +271,5 @@ struct s_PreviewMap {
      std::vector<int> mapdata;
      int iPlayers;           // players
      int iStartCell[5];      // starting locations
-     char name[80];          // name
+     std::string name;       // name
 };
