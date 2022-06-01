@@ -21,7 +21,6 @@
 #include "map/cMapEditor.h"
 #include "mentat/cAbstractMentat.h"
 #include "player/cPlayer.h"
-//#include "player/cHousesInfo.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
@@ -535,41 +534,6 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "HarvestSpeed") == 0) return WORD_HARVESTSPEED;
         if (strcmp(word, "HarvestAmount") == 0) return WORD_HARVESTAMOUNT;
     }
-    //  else if (section == INI_TEAMS) {
-    //     // SwapColor
-    //     if (strcmp(word, "SwapColor") == 0)
-    //         return WORD_SWAPCOLOR;
-
-    //     // Red MiniMap value
-    //     if (strcmp(word, "MapColorRed") == 0)
-    //         return WORD_HOUSE_RED;
-
-    //     // Green MiniMap value
-    //     if (strcmp(word, "MapColorGreen") == 0)
-    //         return WORD_HOUSE_GREEN;
-
-    //     // Blue MiniMap value
-    //     if (strcmp(word, "MapColorBlue") == 0)
-    //         return WORD_HOUSE_BLUE;
-
-    // }
-        /*
-        else if (section == INI_ICONS)
-        {
-          // Process all Icons here
-          if (strlen(word) > 1)
-            return WORD_ICONID;
-          else
-            return WORD_NONE;
-        }
-        else if (section == INI_BITMAPS)
-        {
-          // Process all Bitmaps here
-          if (strlen(word) > 1)
-            return WORD_BITMAPID;
-          else
-            return WORD_NONE;
-        }*/
     else if (section == INI_STRUCTURES) {
         if (strlen(word) > 1) {
             // Structure properties
@@ -2134,16 +2098,6 @@ void INI_Install_Game(std::string filename) {
                     if (section == INI_UNITS) logbook("[GAME.INI] -> [UNITS]");
                     if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
                 }
-
-                // if (section == INI_TEAMS) {
-                //     // check if we found a new [TEAM part!
-                //     if (strstr(linefeed, "[TEAM:") != nullptr) {
-                //         id++; // New ID
-                //         if (id > MAX_HOUSES) {
-                //           id--;
-                //         }
-                //     }
-                // }
 
                 // New unit type
                 if (section == INI_UNITS) {
