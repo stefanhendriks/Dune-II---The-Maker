@@ -29,6 +29,8 @@ public:
 
     [[nodiscard]] bool getBoolean(const std::string &key) const;
 
+    std::vector<std::string> getData() const { return m_dataConfs; }
+
     template<typename T>
     T FromString(std::string value) const;
 

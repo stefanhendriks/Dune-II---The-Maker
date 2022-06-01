@@ -32,20 +32,27 @@ void cPreviewMaps::loadSkirmish(const std::string& filename) {
     }
 
     cIniFile conf = cIniFile(filename);
-    PreviewMap[iNew].name = conf.getStr("SKIRMISH","Title");
-    std::vector<std::string> vecmap = conf.getData("MAP");
+    const cSection &section = conf.getSection("SKIRMISH");
+    PreviewMap[iNew].name = section.getStringValue("Title");
 
+    const cSection &mapSection = conf.getSection("MAP");
+    std::vector<std::string> vecmap = mapSection.getData();
 
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
-    for(int i=0;i<5;i++)
-        PreviewMap[iNew].iStartCell[i]=-1;
-    std::stringstream test(conf.getStr("SKIRMISH","StartCell"));
+    for(int i=0;i<5;i++) {
+        PreviewMap[iNew].iStartCell[i] = -1;
+        PreviewMap[iNew].terrain = nullptr;
+    }
+
+    std::stringstream test(section.getStringValue("StartCell"));
     std::string segment;
     std::vector<std::string> seglist;
     while(std::getline(test, segment, ',')) {
         seglist.push_back(segment);
     }
+
     int nbrPlayer = std::min( 5, (int) seglist.size());
+
     for(int i=0;i< nbrPlayer; i++)
         PreviewMap[iNew].iStartCell[i]=std::stoi(seglist[i]);
 
