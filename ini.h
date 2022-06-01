@@ -25,19 +25,10 @@ class cSelectYourNextConquestState;
 #define INI_GENERAL    3
 #define INI_MAP        4
 
-//#define INI_PLAYER     5
-//#define INI_ICONS      6
-//#define INI_BITMAPS    7
 #define INI_NEWID      10
 #define INI_GAME       11       // mod.ini / game.ini
-//#define INI_MOD        12       // mod.ini
-//#define INI_MENU       13       // game.ini
-// #define INI_TEAMS      14       // game.ini
-//#define INI_MOUSE      15       // game.ini
-//#define INI_SIDEBAR    16       // game.ini
 #define INI_BULLETS    17       // game.ini
 #define INI_EXPLOSIONS 18
-//#define INI_TERRAIN	   19
 #define INI_BASIC	   20
 #define INI_SKIRMISH   21
 
@@ -63,13 +54,7 @@ class cSelectYourNextConquestState;
 #define WORD_NONE       -1
 #define WORD_MAPHEIGHT   0
 #define WORD_MAPWIDTH    1
-#define WORD_ICONNAME    2
 #define WORD_DESCRIPTION 3
-// #define WORD_SWAPCOLOR   4
-#define WORD_ICONID      5
-#define WORD_FADECOLOR   6
-#define WORD_FADEMAX     7
-#define WORD_BITMAPID    8
 #define WORD_PREBUILD    9
 #define WORD_POWER       10
 #define WORD_MODID       11     // mod.ini
@@ -86,9 +71,6 @@ class cSelectYourNextConquestState;
 #define WORD_RED          22    // game.ini
 #define WORD_GREEN        23    // game.ini
 #define WORD_BLUE         24    // game.ini
-// #define WORD_HOUSE_RED    25    // game.ini
-// #define WORD_HOUSE_GREEN  26    // game.ini
-// #define WORD_HOUSE_BLUE   27    // game.ini
 #define WORD_BITMAP       28    // game.ini
 #define WORD_BITMAP_WIDTH 29    // game.ini
 #define WORD_BITMAP_HEIGHT 30     // game.ini

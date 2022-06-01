@@ -15,7 +15,6 @@
 
 #include <string>
 #include <array>
-//#include <memory>
 
 class cIniFile;
 
@@ -37,9 +36,6 @@ int fastThinkTicksToMs(int ticks);
 void logbook(const std::string& txt);
 
 int makeColFromString(std::string colorStr);
-
-// Installment of properties/settings in the game.
-//void INSTALL_HOUSES(std::shared_ptr<cIniFile> gamesCfg);
 
 void INIT_PREVIEWS();
 
