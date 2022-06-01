@@ -13,17 +13,17 @@ struct s_HouseInfo {
 
 class cHousesInfo {
 public:
-    cHousesInfo() {}
+    cHousesInfo() = default;
 
-    ~cHousesInfo() {}
+    ~cHousesInfo() = default;
 
-    int getSwapColor(int house) { return sHouseInfo[house].swap_color; }
+    int getSwapColor(int house) { return m_houseInfo[house].swap_color; }
 
-    int getMinimapColor(int house) { return sHouseInfo[house].minimap_color; }
+    int getMinimapColor(int house) { return m_houseInfo[house].minimap_color; }
 
     void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
 
 private:
-    s_HouseInfo sHouseInfo[MAX_HOUSES];
+    s_HouseInfo m_houseInfo[MAX_HOUSES];
 };
 

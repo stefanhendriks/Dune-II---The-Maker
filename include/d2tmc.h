@@ -60,7 +60,7 @@ extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
 extern cAllegroDrawer      *allegroDrawer;
 
-// kinds of entities (sHouseInfo, structures, units, sUpgradeInfo, specials, bullets, reinforcements)
+// kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_PreviewMap     		    PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 extern s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];

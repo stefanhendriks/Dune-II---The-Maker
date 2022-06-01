@@ -601,7 +601,7 @@ int cPlayer::getHouseFadingColor() const {
         color = makecol(0, 255, 0);
     }
 
-    // TODO other sHouseInfo (Sardaukar, etc)
+    // TODO other m_houseInfo (Sardaukar, etc)
     return game.getColorFadeSelected(color);
 }
 
