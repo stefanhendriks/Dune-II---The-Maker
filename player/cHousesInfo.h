@@ -7,18 +7,22 @@
 
 // House properties
 struct s_HouseInfo {
-  int swap_color;           // color index to start swapping with.
-  int minimap_color;        // rgb value on minimap
+    int swap_color;           // color index to start swapping with.
+    int minimap_color;        // rgb value on minimap
 };
 
-class cHousesInfo
-{
+class cHousesInfo {
 public:
-    cHousesInfo(){}
-    ~cHousesInfo(){}
-    int getSwapColor(int house) {return sHouseInfo[house].swap_color;}
-    int getMinimapColor(int house) {return sHouseInfo[house].minimap_color;}
-    void INSTALL_HOUSES(std::shared_ptr<cIniFile> gamesCfg);
+    cHousesInfo() {}
+
+    ~cHousesInfo() {}
+
+    int getSwapColor(int house) { return sHouseInfo[house].swap_color; }
+
+    int getMinimapColor(int house) { return sHouseInfo[house].minimap_color; }
+
+    void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
+
 private:
     s_HouseInfo sHouseInfo[MAX_HOUSES];
 };
