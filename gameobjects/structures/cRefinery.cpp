@@ -43,7 +43,7 @@ void cRefinery::think_unit_occupation() {
     cUnit.TIMER_harvest = 0;
 
     // dump credits
-    if (cUnit.iCredits > 0) {
+    if (cUnit.canUnload()) {
         int iAmount = 5;
 
         // cap at max
@@ -106,7 +106,7 @@ void cRefinery::think_harvester_deploy() {
 
     TIMER_flag++;
 
-    if (TIMER_flag > 30) {
+    if (TIMER_flag > 40) {
         TIMER_flag = 0;
 
         iFrame++;

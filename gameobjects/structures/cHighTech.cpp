@@ -26,6 +26,7 @@ void cHighTech::think_animation_unitDeploy() {
             case eAnimationDirection::ANIM_OPEN:
                 iFrame++;
                 if (iFrame > 5) {
+                    iFrame = 5;
                     animDir = eAnimationDirection::ANIM_SPAWN_UNIT;
                 }
                 break;

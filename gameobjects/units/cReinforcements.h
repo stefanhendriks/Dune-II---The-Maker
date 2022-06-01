@@ -9,7 +9,8 @@ public:
 
     [[nodiscard]] bool isReady() const;
     [[nodiscard]] bool isValid() const;
-    void invalidateOrRepeat();
+    [[nodiscard]] bool canBeRemoved() const;
+    void repeatOrMarkForDeletion();
     void execute() const;
 
 private:
@@ -18,6 +19,7 @@ private:
     int m_playerId = -1;        // for which player?
     int m_cell = -1;          // where should it be delivered?
     bool m_repeat;           // repeat executing this reinforcement?
+    bool m_removeMe;            // if set, it will be removed
     int m_originalDelay = -1; // to remember delay for repeating
 };
 
@@ -25,15 +27,11 @@ class cReinforcements {
 public:
     explicit cReinforcements();
 
-    ~cReinforcements() {}
-
     void init();
 
     void addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat);
 
     void thinkSlow();
-
-    cReinforcement getReinforcementAndDestroy();
 
 private:
     void substractSecondFromValidReinforcements();

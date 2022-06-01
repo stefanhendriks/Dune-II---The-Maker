@@ -3,6 +3,7 @@
 #include "enums.h"
 
 #include <vector>
+#include <string>
 
 struct BITMAP;
 
@@ -26,6 +27,8 @@ struct s_UnitInfo {
   int    speed;          // speed (0 being super fast, the higher the number, the slower).
   int    turnspeed;
   int    attack_frequency;  // timer for attacking
+  int    next_attack_frequency;  // in case a second shot is fired, this is the delay used. (-1 by default, if
+                                 // not specified, this will be 1/4th of attack_frequency)
 
   int    buildTime;        // how long it takes for building this thing
 
@@ -113,7 +116,6 @@ struct s_StructureInfo {
 
   int buildTime;      // how long it takes for building this structure
 
-
   int power_drain;       // the power that this building drains...
   int power_give;        // the power that this building gives...
 
@@ -132,8 +134,11 @@ struct s_StructureInfo {
 
   bool configured;     // is this structure configured? (poor man solution)
 
-  bool canAttackAirUnits;    // for turrets
-  bool canAttackGroundUnits; // for turrets
+  // Turret specific:
+  bool canAttackAirUnits;
+  bool canAttackGroundUnits;
+  int fireRate;         // delay before firing
+
 };
 
 /**
@@ -266,5 +271,5 @@ struct s_PreviewMap {
      std::vector<int> mapdata;
      int iPlayers;           // players
      int iStartCell[5];      // starting locations
-     char name[80];          // name
+     std::string name;       // name
 };

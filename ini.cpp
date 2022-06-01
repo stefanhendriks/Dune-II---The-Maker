@@ -28,6 +28,14 @@
 
 #include <allegro.h>
 #include <fmt/core.h>
+#include <filesystem>
+namespace fs=std::filesystem;
+
+int INI_SectionType(char section[30], int last);
+void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
+int getHouseFromChar(char chunk[25]);
+int getUnitTypeFromChar(char chunk[25]);
+int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
 class cReinforcements;
 
@@ -469,9 +477,13 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "TurnSpeed") == 0)
             return WORD_TURNSPEED;
 
-        // Attack frequency
+        // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
         if (strcmp(word, "AttackFrequency") == 0)
             return WORD_ATTACKFREQ;
+
+        // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
+        if (strcmp(word, "NextAttackFrequency") == 0)
+            return WORD_NEXTATTACKFREQ;
 
         // Sight
         if (strcmp(word, "Sight") == 0)
@@ -493,8 +505,8 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "IsHarvester") == 0)
             return WORD_ISHARVESTER;
 
-        if (strcmp(word, "SecondShot") == 0)
-            return WORD_SECONDSHOT;
+        if (strcmp(word, "FireTwice") == 0)
+            return WORD_FIRETWICE;
 
         if (strcmp(word, "IsInfantry") == 0)
             return WORD_ISINFANTRY;
@@ -1675,9 +1687,11 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             } else if (iPart == 3) {
                 delayInMinutes = atoi(chunk);
                 bool repeat = game.m_allowRepeatingReinforcements && plusDetected;
-                int reinforcementMultiplier = 30; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
+                int reinforcementMultiplier = 20; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
                 // D2TM does not interpret the delay as minutes, as doing so takes a very long time for reinforcements
                 // to arrive. So I guess delay is not really 1 minute in game-time in Dune 2.
+                // Stefan: 08/04/2022 -> I reduced the multiplier again to 20, as it still takes a very long time;
+                // this feels better.
                 int delayD2TM = delayInMinutes * reinforcementMultiplier;
                 reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
                 break;
@@ -1937,6 +1951,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 players[HUMAN].setCredits(creditsPlayer);
                 players[HUMAN].setHouse(houseForPlayer);
                 players[HUMAN].setTeam(0);
+                players[HUMAN].setAutoSlabStructures(false);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
@@ -1953,6 +1968,8 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 }
 
             } else {
+                players[iCPUId].setAutoSlabStructures(true);
+
                 if (quota > 0) {
                     players[iCPUId].setQuota(quota);
                 }
@@ -2209,6 +2226,7 @@ void INI_Install_Game(std::string filename) {
                     if (wordtype == WORD_MOVESPEED) unitInfo.speed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
 
@@ -2223,7 +2241,7 @@ void INI_Install_Game(std::string filename) {
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
@@ -2287,12 +2305,6 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
     // first clear it all out (previewMap always assumes 64x64 data - for now)
     s_PreviewMap &previewMap = PreviewMap[iNew];
     int maxCells = 64*64;
-//    for (int x = 0; x < 64; x++) {
-//        for (int y = 0; y < 64; y++) {
-//            int cll = map.makeCell(x, y); // we initialized so this makes sense
-//            previewMap.mapdata[cll] = -1;
-//        }
-//    }
 
     previewMap.mapdata = std::vector<int>(maxCells, -1);
 
@@ -2360,7 +2372,9 @@ void INI_LOAD_SKIRMISH(const char filename[80]) {
 
             if (section == INI_SKIRMISH) {
                 if (wordtype == WORD_MAPNAME) {
-                    INI_WordValueSENTENCE(linefeed, previewMap.name);
+                    char mes[256];
+                    INI_WordValueSENTENCE(linefeed, mes);
+                    previewMap.name = std::string(mes);
                     //logbook(PreviewMap[iNew].name);
                 }
 
@@ -2489,23 +2503,13 @@ void INI_PRESCAN_SKIRMISH() {
     // scans for all ini files
     INIT_PREVIEWS(); // clear all of them
 
-    al_ffblk file;
-    if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-        do {
-            auto fullname = fmt::format("skirmish/{}", file.name);
-            logbook(fmt::format("Loading skirmish map: {}", fullname));
+    const std::filesystem::path pathfile{"skirmish"};
+    for (auto const& file : std::filesystem::directory_iterator{pathfile}) 
+    {
+        auto fullname = file.path().string();
+        if (file.path().extension()==".ini") {
             INI_LOAD_SKIRMISH(fullname.c_str());
-        } while (!al_findnext(&file));
-    } else {
-        logbook("No skirmish maps found in skirmish directory.");
+            logbook(fmt::format("Loading skirmish map: {}", fullname));
+        }
     }
-    al_findclose(&file);
-
 }
-
-// this code should make it possible to read any ini file in the skirmish
-// directory. However, Allegro 4.2.0 somehow gives weird results.
-// when upgrading to Allegro 4.2.2, the method works. But FBLEND crashes, even
-// after recompiling it against Allegro 4.2.2...
-//
-// See: http://www.allegro.cc/forums/thread/600998

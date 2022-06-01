@@ -86,7 +86,7 @@ cGame::cGame() : m_timeManager(*this) {
     m_iniScreenWidth = -1;
     m_iniScreenHeight = -1;
 
-    m_version = "0.6.x";
+    m_version = "0.7.0";
 
     m_mentat = nullptr;
     m_handleArgument = std::make_unique<cHandleArgument>(this);
@@ -170,6 +170,8 @@ bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     game.m_windowed = !section.getBoolean("FullScreen");
     game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+    game.m_turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+    game.m_rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
 
     return true;
 }
@@ -217,6 +219,7 @@ void cGame::initPlayers(bool rememberHouse) const {
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer &pPlayer = players[i];
+
         int h = pPlayer.getHouse();
 
         brains::cPlayerBrain *brain = nullptr;
@@ -238,7 +241,9 @@ void cGame::initPlayers(bool rememberHouse) const {
         } else if (i == AI_CPU5) {
             brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
         } else if (i == AI_CPU6) {
-            brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            if (!game.m_disableWormAi) {
+                brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            }
         }
 
         pPlayer.init(i, brain);
@@ -385,13 +390,13 @@ bool cGame::isMissionWon() const {
         }
 
         if (hasWinConditionAIShouldLoseEverything()) {
-            if (allAIPlayersAreDestroyed()) {
+            if (allEnemyAIPlayersAreDestroyed()) {
                 return true;
             }
         }
     } else if (hasGameOverConditionAIHasNoBuildings()) {
         if (hasWinConditionAIShouldLoseEverything()) {
-            if (allAIPlayersAreDestroyed()) {
+            if (allEnemyAIPlayersAreDestroyed()) {
                 return true;
             }
         }
@@ -399,11 +404,13 @@ bool cGame::isMissionWon() const {
     return false;
 }
 
-bool cGame::allAIPlayersAreDestroyed() const {
+bool cGame::allEnemyAIPlayersAreDestroyed() const {
+    cPlayer &humanPlayer = players[HUMAN];
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer &player = players[i];
-        if (!player.isAlive()) continue;
+        cPlayer *player = &players[i];
+        if (!player->isAlive()) continue;
+        if (humanPlayer.isSameTeamAs(player)) continue; // skip allied AI players
         return false;
     }
     return true;
@@ -788,7 +795,7 @@ bool cGame::setupGame() {
         m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
         m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
         m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
-        settingsValidator->addRessources(std::move(m_transfertMap));
+        settingsValidator->addResources(std::move(m_transfertMap));
     }
 
     // circumvent: -Werror=unused-function :/
@@ -1027,42 +1034,40 @@ bool cGame::setupGame() {
     // load datafiles
     gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
     if (gfxdata == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
         memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
     gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
     if (gfxinter == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
     }
 
     gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
     }
 
     gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
     if (gfxworld == nullptr) {
-        logbook("ERROR: Could not hook/load datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
+        logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
         return false;
     } else {
-        logbook("Datafile hooked: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
     }
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
     allegroDrawer = new cAllegroDrawer(m_dataRepository);
-
-
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
@@ -1121,7 +1126,7 @@ bool cGame::setupGame() {
 
     game.setupPlayers();
 
-    playMusicByType(MUSIC_MENU);
+    playMusicByTypeForStateTransition(MUSIC_MENU);
 
     m_mouse->setMouseObserver(m_interactionManager.get());
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
@@ -1229,8 +1234,9 @@ void cGame::setState(int newState) {
 
         if (existingStatePtr) {
             // no need for re-creating state
-
             if (newState == GAME_REGION) {
+                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+
                 // came from a win/lose brief state, so make sure to set up the next state
                 if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
@@ -1278,14 +1284,18 @@ void cGame::setState(int newState) {
                 // first creation
                 pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
 
+                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
                 newStatePtr = new cSetupSkirmishGameState(*this);
+                playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this);
             } else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuGameState(*this);
+                playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseGameState(*this);
             } else if (newState == GAME_MISSIONSELECT) {
@@ -1410,15 +1420,15 @@ void cGame::prepareMentatForPlayer() {
     }
 }
 
-void cGame::createAndPrepareMentatForHumanPlayer() {
+void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect) {
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new cAtreidesMentat();
+        m_mentat = new cAtreidesMentat(allowMissionSelect);
     } else if (houseIndex == HARKONNEN) {
-        m_mentat = new cHarkonnenMentat();
+        m_mentat = new cHarkonnenMentat(allowMissionSelect);
     } else if (houseIndex == ORDOS) {
-        m_mentat = new cOrdosMentat();
+        m_mentat = new cOrdosMentat(allowMissionSelect);
     } else {
         // fallback
         m_mentat = new cBeneMentat();
@@ -1743,8 +1753,8 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 
     if (m_state == GAME_BRIEFING ||
-        m_state == GAME_WINNING ||
-        m_state == GAME_LOSING
+        m_state == GAME_WINBRIEF ||
+        m_state == GAME_LOSEBRIEF
       ) {
         if (m_mentat) {
             m_mentat->onNotifyMouseEvent(event);
@@ -1949,6 +1959,13 @@ void cGame::playVoice(int sampleId, int playerId) {
     m_soundPlayer->playVoice(sampleId, players[playerId].getHouse());
 }
 
+void cGame::playMusicByTypeForStateTransition(int iType) {
+    if (m_musicType != iType) {
+        m_newMusicCountdown = 0;
+        playMusicByType(iType, HUMAN, false);
+    }
+}
+
 bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice) {
     if (playerId != HUMAN){
         // skip music we want to play for non human player
@@ -2110,16 +2127,6 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
         game.setPlayerToInteractFor(&players[3]);
     }
 
-    //JUMP TO MISSION 9
-    if (event.hasKey(KEY_F1)) {
-        game.missionInit();
-        game.m_mission = 9;
-        game.m_region = 22;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
     // WIN MISSION
     if (event.hasKey(KEY_F2)) {
         game.setMissionWon();
@@ -2172,39 +2179,10 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
             }
         }
     } else {
-        // REVEAL  MAP
+        // REVEAL MAP
         if (event.hasKey(KEY_F5)) {
             map.clear_all(HUMAN);
         }
     }
 
-    //JUMP TO MISSION 3
-    if (event.hasKey(KEY_F6)) {
-        game.missionInit();
-        game.m_mission = 3;
-        game.m_region = 6;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
-    //JUMP TO MISSION 4
-    if (event.hasKey(KEY_F7)) {
-        game.missionInit();
-        game.m_mission = 4;
-        game.m_region = 10;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
-
-    //JUMP TO MISSION 5
-    if (event.hasKey(KEY_F8)) {
-        game.missionInit();
-        game.m_mission = 5;
-        game.m_region = 13;
-        game.setNextStateToTransitionTo(GAME_BRIEFING);
-        game.playMusicByType(MUSIC_BRIEFING);
-        game.createAndPrepareMentatForHumanPlayer();
-    }
 }

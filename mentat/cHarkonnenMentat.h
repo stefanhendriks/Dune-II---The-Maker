@@ -11,7 +11,7 @@ class cHarkonnenMentat : public cAbstractMentat {
     void interact();
 
 public:
-    cHarkonnenMentat();
+    cHarkonnenMentat(bool allowMissionSelect);
 
     void think();
 };

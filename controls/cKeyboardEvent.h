@@ -11,8 +11,14 @@
 
 enum class eKeyEventType {
     NONE,
-    HOLD,    // key is being pressed down (hold)
-    PRESSED, // key is held, then released. Makes a key "pressed".
+    /**
+     * key is being pressed down (hold)
+     */
+    HOLD,
+    /**
+     * key is held, then released. Makes a key "pressed".
+     */
+    PRESSED,
 };
 
 class cKeyboardEvent {

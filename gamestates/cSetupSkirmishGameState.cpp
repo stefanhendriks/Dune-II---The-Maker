@@ -517,7 +517,11 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         } else if (p == AI_CPU5) {
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         } else if (p == AI_CPU6) {
-            pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+            if (!game.m_disableWormAi) {
+                pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+            } else {
+                pPlayer.init(p, nullptr);
+            }
         } else {
             if (maxThinkingAIs > 0) {
                 pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
@@ -953,7 +957,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
                 }
             }
 
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
         }
     }
 }
@@ -990,7 +994,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
                 GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
             }
 
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
         }
     }
 }
@@ -1023,6 +1027,12 @@ void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &) {
 
 }
 
-void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+    if (event.isType(eKeyEventType::PRESSED)) {
+        if (event.hasKey(KEY_ESC)) {
+            game.setNextStateToTransitionTo(GAME_MENU);
+            game.initiateFadingOut();
+        }
+    }
 }
 

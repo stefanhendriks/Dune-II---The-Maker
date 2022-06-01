@@ -27,10 +27,13 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
     m_game->m_drawUsages = false;
     m_game->m_drawUnitDebug = false;
     m_game->m_oneAi = false;
+    m_game->m_disableWormAi = false;
     m_game->m_windowed = false;
     m_game->m_allowRepeatingReinforcements = false;
     m_game->m_noAiRest = false;
     m_game->setDebugMode(false);
+    m_game->setTurretsDownOnLowPower(false);
+    m_game->setRocketTurretsDownOnLowPower(true);
 
     if (argc < 2) {
         return 0;
@@ -75,6 +78,9 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
                 break;
             case Options::ONEAI:
                 m_game->m_oneAi = true;
+                break;
+            case Options::NOWORMAI:
+                m_game->m_disableWormAi = true;
                 break;
             case Options::NOREINFORCEMENTS:
                 m_game->m_disableReinforcements = true;
@@ -127,10 +133,11 @@ void cHandleArgument::printInstructions() const {
     std::cout << fmt::format("---------\n\n");
     std::cout << fmt::format("-debug                 - Run in debug mode\n");
     std::cout << fmt::format("-debug-units           - Draw additional debug info about units\n");
-    std::cout << fmt::format("-noai                  - Disable AI's\n");
-    std::cout << fmt::format("-oneai                 - Disable all but one AI\n");
+    std::cout << fmt::format("-noai                  - Disable player AI's\n");
+    std::cout << fmt::format("-nowormai              - Disable worm AI\n");
+    std::cout << fmt::format("-oneai                 - Disable all but one player AI\n");
     std::cout << fmt::format("-noreinforcements      - Disable reinforcements (Campaign mode)\n");
-    std::cout << fmt::format("-noairest              - Disable initial resting of AI before becoming active\n");
+    std::cout << fmt::format("-noairest              - Disable initial delay of player AI before becoming active\n");
     std::cout << fmt::format("-usages                - Draw used units, structures, particles, etc.\n");
     std::cout << fmt::format("\n\n");
     std::cout << fmt::format("Examples (Windows)\n");

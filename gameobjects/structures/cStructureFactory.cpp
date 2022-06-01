@@ -76,7 +76,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 /**
 	Create a structure, place it and return a reference to this created class.
 
-	This method will return NULL when either an error occurred, or the creation
+	This method will return nullptr when either an error occurred, or the creation
 	of a non-structure type (ie SLAB/WALL) is done.
 **/
 cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
@@ -107,15 +107,15 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     // fail
     if (iNewId < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning nullptr");
         return nullptr;
     }
 
     cAbstractStructure *str = createStructureInstance(iStructureType);
 
-	if (str == NULL) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
-		return NULL; // fail
+	if (str == nullptr) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned nullptr");
+		return nullptr; // fail
 	}
 
     cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
@@ -201,28 +201,28 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 	}
 
     if (iStructureType == SLAB4) {
-		if (map.occupied(iCell) == false) {
+		if (map.occupiedByUnit(iCell) == false) {
 			if (map.getCellType(iCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
 			}
 		}
 
         int cellRight = map.getCellRight(iCell);
-        if (map.occupied(cellRight) == false) {
+        if (map.occupiedByUnit(cellRight) == false) {
 			if (map.getCellType(cellRight) == TERRAIN_ROCK) {
 				mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
 			}
 		}
 
         int oneRowBelowCell = map.getCellBelow(iCell);
-        if (map.occupied(oneRowBelowCell) == false) {
+        if (map.occupiedByUnit(oneRowBelowCell) == false) {
 			if (map.getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
 			}
 		}
 
         int rightToRowBelowCell = map.getCellRight(oneRowBelowCell);
-        if (map.occupied(rightToRowBelowCell) == false) {
+        if (map.occupiedByUnit(rightToRowBelowCell) == false) {
 			if (map.getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
 			}
@@ -245,7 +245,7 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 	Clear fog around structure, using a cAbstractStructure class.
 **/
 void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *str) {
-	if (str == NULL) {
+	if (str == nullptr) {
 		return;
 	}
 

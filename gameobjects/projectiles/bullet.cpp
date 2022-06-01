@@ -593,7 +593,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {
-        if (&unit[iOwnerUnit] && unit[iOwnerUnit].isValid()) {
+        if (unit[iOwnerUnit].isValid()) {
             pUnit = &unit[iOwnerUnit];
         }
     }
