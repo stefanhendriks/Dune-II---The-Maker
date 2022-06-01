@@ -110,7 +110,7 @@ class cSelectYourNextConquestState;
 #define WORD_TURNSPEED    47    // game.ini (turn speed)
 #define WORD_SOUND        48    // game.ini (sound)
 #define WORD_ISHARVESTER  49    // game.ini (IsHarvester, is it a harvester or not?)
-#define WORD_SECONDSHOT   50    // game.ini (SecondShot, makes unit shoot twice?)
+#define WORD_FIRETWICE   50    // game.ini (SecondShot, makes unit shoot twice?)
 #define WORD_ISAIRBORN    51    // game.ini (Unit is airborn?)
 #define WORD_ABLETOCARRY  52    // game.ini (Able to transport units, aka CarryAll)
 #define WORD_FREEROAM     53    // game.ini (Will freely roam around the map?)
@@ -118,6 +118,7 @@ class cSelectYourNextConquestState;
 #define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
+#define WORD_NEXTATTACKFREQ   59   // game.ini (next attack frequency)
 #define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
 #define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
 #define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
@@ -187,11 +188,4 @@ void INI_Install_Game(std::string filename);
 //void LOAD_BRIEFING(char filename[35]);
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat);
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
-
-int INI_SectionType(char section[30], int last);
-void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 void INI_PRESCAN_SKIRMISH();
-
-int getHouseFromChar(char chunk[25]);
-int getUnitTypeFromChar(char chunk[25]);
-int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);

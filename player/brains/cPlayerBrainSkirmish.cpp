@@ -924,6 +924,7 @@ namespace brains {
                 cUnit &cUnit = unit[i];
                 if (!cUnit.isValid()) continue;
                 if (cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                if (!cUnit.isAttackingUnit()) continue; // skip units that cannot 'attack' stuff
                 // enemy structure
                 cellToAttack = cUnit.getCell();
                 if (rnd(100) < 5) {

@@ -52,6 +52,7 @@ enum class eHeadTowardsStructureResult {
     FAILED_NO_STRUCTURE_AVAILABLE,
     SUCCESS_AWAITING_CARRYALL,
     SUCCESS_RETURNING,
+    NOOP_ALREADY_BUSY,
 };
 
 
@@ -83,8 +84,6 @@ public:
     int iType;          // type of unit
 
     int iGroup;         // belongs to group...
-
-    int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
     int iPlayer;        // belongs to player
 
@@ -409,9 +408,19 @@ public:
     std::string getUnitStatusForMessageBar();
     std::string getHarvesterStatusForMessageBar();
 
+    bool isHidden();
+
+    bool requiresRepairing();
+
+    void repair(int hp);
+
+    bool canUnload();
+
 private:
     eActionType m_action;
     eUnitActionIntent intent;
+
+    int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
     bool bPickedUp;     // did this unit pick up a unit? (this unit is a carry-all or frigate)

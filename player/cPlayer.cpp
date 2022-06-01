@@ -29,7 +29,7 @@ cPlayer::cPlayer() {
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
     brain_ = nullptr;
-    autoSlabStructures = false;
+    m_autoSlabStructures = false;
 }
 
 cPlayer::~cPlayer() {
@@ -208,6 +208,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     powerProduce_ = 0;
 
     iTeam = -1;
+    notifications.clear();
 }
 
 /**
@@ -1378,6 +1379,9 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
     if (!canPlace) {
         return nullptr;
     }
+    if (m_autoSlabStructures) {
+        pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
+    }
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
 }
 
@@ -1396,7 +1400,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
         return nullptr;
     }
 
-    if (autoSlabStructures) {
+    if (m_autoSlabStructures) {
         pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
     }
 
@@ -1490,7 +1494,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
 }
 
 void cPlayer::setAutoSlabStructures(bool value) {
-    autoSlabStructures = value;
+    m_autoSlabStructures = value;
 }
 
 int cPlayer::getScoutingUnitType() {
@@ -1878,12 +1882,14 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
             // check if the player has any harvester left
 
             // if 1, or less
-            if (harvesters < 2) {
+            if (harvesters == 1) {
                 addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
             }
 
             // No harvester found, deliver one
             if (harvesters < 1) {
+                addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
+
                 // deliver
                 cAbstractStructure *refinery = pUnit.findClosestStructureType(REFINERY);
 
@@ -1971,7 +1977,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &pUnit = unit[i];
         if (!pUnit.isValid()) continue;
-        if (pUnit.isDead()) continue;
+        if (pUnit.isDead() && !pUnit.isHidden()) continue; // hidden units play "dead" :/
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
 
@@ -2054,8 +2060,8 @@ std::vector<int> cPlayer::getSelectedUnits() const {
 
 void cPlayer::deselectAllUnits() {
     const std::vector<int> &ids = getAllMyUnits();
-    for (auto i : ids) {
-        unit[i].bSelected = false;
+    for (const auto & i : ids) {
+        deselectUnit(i);
     }
 }
 
@@ -2130,4 +2136,8 @@ void cPlayer::thinkSlow() {
     if (orderProcesser) {
         orderProcesser->think();
     }
+}
+
+void cPlayer::deselectUnit(const int & unitId) {
+    unit[unitId].bSelected = false;
 }

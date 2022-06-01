@@ -76,6 +76,7 @@ public:
     bool m_playSound;               // play sound?
     bool m_disableAI;               // disable AI thinking?
     bool m_oneAi;                   // disable all but one AI brain? (default == false)
+    bool m_disableWormAi;                // disable worm AI brain? (default == false)
     bool m_disableReinforcements;   // disable any reinforcements from scenario ini file?
     bool m_drawUsages;              // draw the amount of structures/units/bullets used during combat
     bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
@@ -106,7 +107,7 @@ public:
     bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
-    void createAndPrepareMentatForHumanPlayer();
+    void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
     void loadScenario();
 
     void run();			            // run the game (MAIN LOOP)
@@ -139,6 +140,7 @@ public:
     void playSoundWithDistance(int sampleId, int iOnScreen);
 
     void playVoice(int sampleId, int playerId);
+    void playMusicByTypeForStateTransition(int iType);
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 
     int getMaxVolume();
@@ -234,6 +236,12 @@ public:
 
     void thinkSlow();
 
+    bool isTurretsDownOnLowPower() { return m_turretsDownOnLowPower; }
+    void setTurretsDownOnLowPower(bool value) { m_turretsDownOnLowPower = value; }
+
+    bool isRocketTurretsDownOnLowPower() { return m_rocketTurretsDownOnLowPower; }
+    void setRocketTurretsDownOnLowPower(bool value) { m_rocketTurretsDownOnLowPower = value; }
+
     bool isDebugMode() { return m_debugMode; }
     void setDebugMode(bool value) { m_debugMode = value; }
 
@@ -242,6 +250,13 @@ private:
      * Variables start here
      */
     bool m_debugMode;               // ...
+
+    // if true, then turrets won't do anything on low power (both gun and rocket turrets)
+    bool m_turretsDownOnLowPower;
+
+    // if true, rocket turrets will not fire rockets when low power
+    bool m_rocketTurretsDownOnLowPower;
+
 	std::string m_gameFilename;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
@@ -329,7 +344,7 @@ private:
 
     [[nodiscard]] bool hasWinConditionAIShouldLoseEverything() const;
 
-    [[nodiscard]] bool allAIPlayersAreDestroyed() const;
+    [[nodiscard]] bool allEnemyAIPlayersAreDestroyed() const;
 
     [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
 

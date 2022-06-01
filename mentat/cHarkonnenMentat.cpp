@@ -7,7 +7,7 @@
 
 #include <allegro.h>
 
-cHarkonnenMentat::cHarkonnenMentat() : cAbstractMentat(true) {
+cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect) {
     iBackgroundFrame = MENTATH;
     buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);
     buildRightButton((BITMAP *) gfxmentat[BTN_PROCEED].dat, 466, 423);

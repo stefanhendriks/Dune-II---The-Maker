@@ -25,17 +25,17 @@
 #include <fmt/core.h>
 
 cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
-	  iMentatSentence = -1;
+    iMentatSentence = -1;
 
-	  TIMER_Speaking = -1;
-	  TIMER_Mouth = 0;
-	  TIMER_Eyes = 0;
-	  TIMER_Other = 0;
+    TIMER_Speaking = -1;
+    TIMER_Mouth = 0;
+    TIMER_Eyes = 0;
+    TIMER_Other = 0;
     TIMER_movie = 0;
 
-	  iMentatMouth = 3;
-	  iMentatEyes = 3;
-    iMovieFrame=-1;
+    iMentatMouth = 3;
+    iMentatEyes = 3;
+    iMovieFrame = -1;
 
     iBackgroundFrame = -1;
 
@@ -78,8 +78,8 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
     offsetX = (game.m_screenX - 640) / 2;
     offsetY = (game.m_screenY - 480) / 2; // same goes for offsetY (but then for 480 height).
 
-	  memset(sentence, 0, sizeof(sentence));
-	  logbook("cAbstractMentat::cAbstractMentat()");
+    memset(sentence, 0, sizeof(sentence));
+    logbook("cAbstractMentat::cAbstractMentat()");
 }
 
 cAbstractMentat::~cAbstractMentat() {

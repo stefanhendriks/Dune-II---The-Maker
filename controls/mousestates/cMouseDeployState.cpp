@@ -93,3 +93,8 @@ void cMouseDeployState::onFocus() {
 void cMouseDeployState::onNotifyGameEvent(const s_GameEvent &) {
     m_context->toPreviousState();
 }
+
+void cMouseDeployState::onBlur() {
+    m_mouse->resetBoxSelect();
+    m_mouse->resetDragViewportInteraction();
+}
