@@ -2,7 +2,6 @@
 
 #include "definitions.h"
 
-#include <cstdio>
 #include <ctime>
 #include <system_error>
 
@@ -22,7 +21,6 @@ std::string getLogLevelString(eLogLevel level) {
         case LOG_INFO:
             return "INFO";
     }
-
     return "UNIDENTIFIED";
 }
 
@@ -69,8 +67,7 @@ std::string getLogComponentString(eLogComponent component) {
         case COMP_REGIONINI:
             return "REGIONINI";
     }
-
-    return std::string("UNIDENTIFIED");
+    return "UNIDENTIFIED";
 }
 
 std::string getLogOutcomeString(eLogOutcome outcome) {
@@ -86,7 +83,6 @@ std::string getLogOutcomeString(eLogOutcome outcome) {
         case OUTC_IGNOREME:
             return "IGNOREME";
     }
-
     return "UNIDENTIFIED";
 }
 
@@ -165,12 +161,13 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 
     logline += event;
 
-    fprintf(m_file, "%s\n", logline.c_str()); // print the text into the file
-    fflush(m_file);
+    m_file << logline << '\n';
+    m_file.flush();
 }
 
 void cLogger::logCommentLine(const std::string& txt) {
-    fprintf(m_file, "\\\\%s\n", txt.c_str()); // print the text into the file
+    m_file << "\\\\" << txt << '\n'; // print the text into the file
+    m_file.flush();
 }
 
 void cLogger::logHeader(const std::string& txt) {
@@ -182,17 +179,16 @@ void cLogger::logHeader(const std::string& txt) {
     logCommentLine(line);
 }
 
-
-cLogger::cLogger() : m_file(std::fopen("log.txt", "wt")), m_startTime(std::clock()), m_debugMode(false) {
-    if (m_file == nullptr) {
-        // This translates the POSIX error number into a C++ exception
+cLogger::cLogger() : m_startTime(std::clock()), m_debugMode(false) {
+    m_file.open ("log.txt", std::ofstream::out | std::ofstream::trunc);
+    if (!m_file.is_open()) {        // This translates the POSIX error number into a C++ exception
         throw std::system_error(errno, std::generic_category());
     }
 }
 
 cLogger::~cLogger() {
     log(eLogLevel::LOG_INFO, eLogComponent::COMP_NONE, "Logger shut down", "Thanks for playing.");
-    std::fclose(m_file);
+    m_file.close();
 }
 
 /* From 1970-01-01T00:00:00 */
