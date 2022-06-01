@@ -9,7 +9,7 @@ struct BITMAP;
 
 // Unit properties
 // the s_UnitInfo struct is holding all properties for a specific unit type.
-// note: The unit properties are actually set in common.cpp , like the sHouseInfo!
+// note: The unit properties are actually set in common.cpp
 // note: Some values are now read via INI.CPP (GAME.INI reader).
 struct s_UnitInfo {
   BITMAP  *bmp;         // each unit has a reference to his 8 bit bitmap.
@@ -211,12 +211,6 @@ struct s_SpecialInfo {
 
     eListType listType;
     int subListId;
-};
-
-// House properties
-struct s_HouseInfo {
-  int swap_color;           // color index to start swapping with.
-  int minimap_color;        // rgb value on minimap
 };
 
 /**

@@ -51,6 +51,7 @@
 #include "utils/cFileValidator.h"
 #include "utils/cHandleArgument.h"
 #include "utils/cIniFile.h"
+#include "player/cHousesInfo.h"
 
 
 #include <allegro.h>
@@ -770,6 +771,7 @@ bool cGame::setupGame() {
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini");
 
     m_reinforcements = std::make_shared<cReinforcements>();
     map.setReinforcements(m_reinforcements);
@@ -808,8 +810,6 @@ bool cGame::setupGame() {
     }
 
     // GAME.INI
-    std::shared_ptr<cIniFile> rules = std::make_shared<cIniFile>("game.ini");
-
     const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
@@ -1080,15 +1080,17 @@ bool cGame::setupGame() {
 
     set_palette(general_palette);
 
+    logbook("Setup:  HOUSES");
+    m_Houses = std::make_shared<cHousesInfo>();
+    m_Houses->INSTALL_HOUSES(gamesCfg);
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].init(i, nullptr);
+        players[i].setHousesInfo(m_Houses);
     }
     logbook("Setup:  BITMAPS");
     install_bitmaps();
-    logbook("Setup:  HOUSES");
-    INSTALL_HOUSES(rules);
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
