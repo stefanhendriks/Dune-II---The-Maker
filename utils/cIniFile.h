@@ -56,11 +56,15 @@ public:
 
     bool hasSection(const std::string &section) const;
 
+    bool isLoadSuccess() const { return m_loadSuccess; }
+
 private:
 
     bool isSectionName(std::string inputLine);
 
     bool isKeyValue(std::string inputLine);
+
+    bool m_loadSuccess;
 
     std::string m_fileName;
     std::map<std::string, cSection> m_mapConfig;

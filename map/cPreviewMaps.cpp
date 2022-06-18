@@ -32,16 +32,25 @@ void cPreviewMaps::loadSkirmish(const std::string& filename) {
     }
 
     cIniFile conf = cIniFile(filename);
+    if (!conf.isLoadSuccess()) {
+        return; // skip this map loading
+    }
+
     const cSection &section = conf.getSection("SKIRMISH");
-    PreviewMap[iNew].name = section.getStringValue("Title");
+    s_PreviewMap &previewMap = PreviewMap[iNew];
+    previewMap.name = section.getStringValue("Title");
 
     const cSection &mapSection = conf.getSection("MAP");
     std::vector<std::string> vecmap = mapSection.getData();
 
+    int maxWidth = vecmap[0].size();
+    int maxHeight = vecmap.size();
+    int maxCells = (maxWidth+1) * (maxHeight+1);
+
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
     for(int i=0;i<5;i++) {
-        PreviewMap[iNew].iStartCell[i] = -1;
-        PreviewMap[iNew].terrain = nullptr;
+        previewMap.iStartCell[i] = -1;
+        previewMap.terrain = nullptr;
     }
 
     std::stringstream test(section.getStringValue("StartCell"));
@@ -53,22 +62,26 @@ void cPreviewMaps::loadSkirmish(const std::string& filename) {
 
     int nbrPlayer = std::min( 5, (int) seglist.size());
 
-    for(int i=0;i< nbrPlayer; i++)
-        PreviewMap[iNew].iStartCell[i]=std::stoi(seglist[i]);
+    for(int i=0;i< nbrPlayer; i++) {
+        int startCell = std::stoi(seglist[i]);
+        if (startCell < 0 || startCell >= maxCells) {
+            // not good
+            int foo = 1;
+            foo = foo + 1;
+        } else {
+            previewMap.iStartCell[i] = startCell;
+        }
+    }
 
-    int maxWidth = vecmap[0].size() ;
-    int maxHeight = vecmap.size() ;
-    int maxCells = (maxWidth+1) * (maxHeight+1);
-
-    PreviewMap[iNew].width = maxWidth+1;
-    PreviewMap[iNew].height = maxHeight+1;
+    previewMap.width = maxWidth + 1;
+    previewMap.height = maxHeight + 1;
 
     cMap map;
     map.init( maxWidth+1, maxHeight+1);
 
-    PreviewMap[iNew].mapdata = std::vector<int>(maxCells, -1);
-    PreviewMap[iNew].terrain = create_bitmap(128, 128);
-    clear_bitmap(PreviewMap[iNew].terrain);
+    previewMap.mapdata = std::vector<int>(maxCells, -1);
+    previewMap.terrain = create_bitmap(128, 128); // need to check if already exists and if so skip this step?
+    clear_bitmap(previewMap.terrain);
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -95,40 +108,40 @@ void cPreviewMaps::loadSkirmish(const std::string& filename) {
 
             if (iCll > -1) {
                 if (iColor == makecol(194, 125, 60)) {
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
+                    previewMap.mapdata[iCll] = TERRAIN_SAND;
                 } else if (iColor == makecol(80, 80, 60)) {
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_ROCK;
+                    previewMap.mapdata[iCll] = TERRAIN_ROCK;
                 } else if (iColor == makecol(48, 48, 36)) {
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_MOUNTAIN;
+                    previewMap.mapdata[iCll] = TERRAIN_MOUNTAIN;
                 } else if (iColor == makecol(180, 90, 25)) {
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICEHILL;
+                    previewMap.mapdata[iCll] = TERRAIN_SPICEHILL;
                 } else if (iColor == makecol(186, 93, 32)) {
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICE;
+                    previewMap.mapdata[iCll] = TERRAIN_SPICE;
                 } else if (iColor == makecol(188, 115, 50)) {
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_HILL;
+                    previewMap.mapdata[iCll] = TERRAIN_HILL;
                 } else {
                     logbook(fmt::format("iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
-                    PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
+                    previewMap.mapdata[iCll] = TERRAIN_SAND;
                     iColor = makecol(255, 255, 255);
                 }
             }
-            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-            putpixel(PreviewMap[iNew].terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
+            putpixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
+            putpixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
+            putpixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
+            putpixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
         }
     }
 
     // starting points
     for (int i = 0; i < 5; i++) {
-        if (PreviewMap[iNew].iStartCell[i] > -1) {
-            int x = map.getCellX(PreviewMap[iNew].iStartCell[i]);
-            int y = map.getCellY(PreviewMap[iNew].iStartCell[i]);
-            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
-            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));
-            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, makecol(255, 255, 255));
-            putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2) + 1, makecol(255, 255, 255));
+        if (previewMap.iStartCell[i] > -1) {
+            int x = map.getCellX(previewMap.iStartCell[i]);
+            int y = map.getCellY(previewMap.iStartCell[i]);
+            putpixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
+            putpixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));
+            putpixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, makecol(255, 255, 255));
+            putpixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, makecol(255, 255, 255));
         }
     }
 }
@@ -185,8 +198,10 @@ void cPreviewMaps::initPreviews() {
     }
 
     int maxCells = 128*128;
-    PreviewMap[0].mapdata = std::vector<int>(maxCells, -1);
-    PreviewMap[0].name = "Random map";
+    s_PreviewMap &firstSkirmishMap = PreviewMap[0];
+
+    firstSkirmishMap.mapdata = std::vector<int>(maxCells, -1);
+    firstSkirmishMap.name = "Random map";
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-    PreviewMap[0].terrain = create_bitmap(128, 128);
+    firstSkirmishMap.terrain = create_bitmap(128, 128);
 }
