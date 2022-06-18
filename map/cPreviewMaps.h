@@ -7,7 +7,7 @@
 #include <string>
 
 struct s_PreviewMap {
-     BITMAP *terrain;        // terrain
+     BITMAP *terrain = nullptr;        // terrain
      int width, height;      // width & height of map
      std::vector<int> mapdata;
      int iPlayers;           // players
