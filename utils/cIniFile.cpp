@@ -105,8 +105,8 @@ double cSection::getDouble(const std::string &key) const {
 //
 
 cIniFile::cIniFile(const std::string &configFileName)
-        : m_fileName(configFileName) {
-    load(m_fileName);
+        : m_loadSuccess(false), m_fileName(configFileName) {
+    m_loadSuccess = load(m_fileName);
 }
 
 cIniFile::~cIniFile() {}
@@ -118,7 +118,14 @@ bool cIniFile::load(const std::string &config) {
     logger->log(LOG_INFO, COMP_GAMEINI, "(cIniFile)", fmt::format("Load file {}", m_fileName));
     std::ifstream in(m_fileName.c_str());
     if (!in) {
-        logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", fmt::format("Unable to open file Key {}", m_fileName));
+        // throw and catch so we can dump more information about why it failed
+        // see also: https://stackoverflow.com/a/51118995/214597
+        try {
+            throw std::system_error(errno, std::system_category(), fmt::format("Unable to open file {}", m_fileName));
+        } catch (std::runtime_error &e) {
+            std::cerr << e.what() << std::endl;
+            logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", e.what());
+        }
         return false;
     }
 
@@ -222,5 +229,9 @@ bool cIniFile::hasSection(const std::string &section) const { return m_mapConfig
 
 
 cSection cIniFile::getSection(const std::string &section) const {
-    return m_mapConfig.at(section);
+    if (hasSection(section)) {
+        return m_mapConfig.at(section);
+    } else {
+        throw std::invalid_argument(fmt::format("Section {} not found in file {}", section, this->m_fileName));
+    }
 }
