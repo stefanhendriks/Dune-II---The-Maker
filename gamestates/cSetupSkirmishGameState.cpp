@@ -934,32 +934,29 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
-        if (m_previewMaps->getMap(i).name[0] != '\0') {
-            int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+        s_PreviewMap &previewMap = m_previewMaps->getMap(i);
+        if (previewMap.name.empty()) continue;
 
-            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-            int textColor = bHover ? colorRed : colorWhite;
-            if (bHover) {
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-                iSkirmishMap = i;
+        bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-                if (i == 0) {
-                    generateRandomMap();
-                } else {
-                    s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
-                    if (selectedMap.name[0] != '\0') {
-                        iStartingPoints = 0;
-                        // count starting points
-                        for (int s: selectedMap.iStartCell) {
-                            if (s > -1) {
-                                iStartingPoints++;
-                            }
+        if (bHover && previewMap.validMap) {
+            iSkirmishMap = i;
+
+            if (i == 0) {
+                generateRandomMap();
+            } else {
+                if (previewMap.name[0] != '\0') {
+                    iStartingPoints = 0;
+                    // count starting points
+                    for (int s: previewMap.iStartCell) {
+                        if (s > -1) {
+                            iStartingPoints++;
                         }
                     }
                 }
             }
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, m_previewMaps->getMap(i).name.c_str());
         }
     }
 }
@@ -980,24 +977,31 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
-        if (m_previewMaps->getMap(i).name[0] != '\0') {
-            int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+        s_PreviewMap &previewMap = m_previewMaps->getMap(i);
+        if (previewMap.name.empty()) continue;
+        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-            int textColor = bHover ? colorRed : colorWhite;
-            if (bHover && mouse->isLeftButtonClicked()) {
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-            }
-
-            // selected map, always render as pressed
-            if (i == iSkirmishMap) {
-                textColor = bHover ? colorDarkerYellow : colorYellow;
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-            }
-
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, m_previewMaps->getMap(i).name.c_str());
+        int textColor = bHover ? colorRed : colorWhite;
+        if (!previewMap.validMap) {
+            textColor = colorDisabled;
         }
+
+        if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
+            GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+
+        // selected map, always render as pressed
+        if (i == iSkirmishMap) {
+            textColor = bHover ? colorDarkerYellow : colorYellow;
+            if (!previewMap.validMap) {
+                textColor = colorDisabled;
+            }
+            GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+
+        textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, previewMap.name.c_str());
     }
 }
 
