@@ -541,8 +541,8 @@ void cGame::initSkirmish() const {
     game.missionInit();
 }
 
-void cGame::prescanSkirmish() const {
-    m_PreviewMaps->prescanSkirmish();
+void cGame::loadSkirmishMaps() const {
+    m_PreviewMaps->loadSkirmishMaps();
 }
 
 
