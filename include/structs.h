@@ -257,13 +257,3 @@ struct s_BulletInfo {
 
     bool canDamageGround; // when true, this bullet can damage ground (ie walls, concrete, etc)
 };
-
-// SKIRMISH MAP PREVIEW DATA
-// struct s_PreviewMap {
-//      BITMAP *terrain;        // terrain
-//      int width, height;      // width & height of map
-//      std::vector<int> mapdata;
-//      int iPlayers;           // players
-//      int iStartCell[5];      // starting locations
-//      std::string name;       // name
-// };
