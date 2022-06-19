@@ -13,28 +13,31 @@ class cSection {
 public:
     cSection();
 
-    explicit cSection(const std::string &secName);
+    explicit cSection(const std::string &secName, bool debugMode);
 
     ~cSection();
 
-    std::string getStringValue(const std::string &key) const;
+    bool addValue(const std::string &key, const std::string &value, int id);
 
-    bool addValue(const std::string &key, const std::string &value);
+    bool hasValue(const std::string &key, int id = 0) const;
 
     bool addData(const std::string &data);
 
-    [[nodiscard]] int getInt(const std::string &key) const;
+    [[nodiscard]] std::string getStringValue(const std::string &key, int id = 0) const;
 
-    [[nodiscard]] double getDouble(const std::string &key) const;
+    [[nodiscard]] int getInt(const std::string &key, int id = 0) const;
 
-    [[nodiscard]] bool getBoolean(const std::string &key) const;
+    [[nodiscard]] double getDouble(const std::string &key, int id = 0) const;
 
-    std::vector<std::string> getData() const { return m_dataConfs; }
+    [[nodiscard]] bool getBoolean(const std::string &key, int id = 0) const;
+
+    [[nodiscard]] std::vector<std::string> getData() const { return m_dataConfs; }
 
     template<typename T>
     T FromString(std::string value) const;
 
 private:
+    bool m_debugMode;
     std::string m_sectionName;
     std::vector<std::string> m_dataConfs;
     std::map<std::string, std::string> m_sectionConf;
@@ -44,7 +47,7 @@ class cIniFile {
 public:
     cIniFile() = default;
 
-    explicit cIniFile(const std::string &configFileName);
+    explicit cIniFile(const std::string &configFileName, bool debugMode);
 
     ~cIniFile();
 
@@ -65,6 +68,7 @@ private:
     bool isKeyValue(std::string inputLine);
 
     bool m_loadSuccess;
+    bool m_debugMode;
 
     std::string m_fileName;
     std::map<std::string, cSection> m_mapConfig;

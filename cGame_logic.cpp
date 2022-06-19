@@ -109,7 +109,7 @@ void cGame::init() {
     m_TIMER_evaluatePlayerStatus = 5;
 
     m_skirmish = false;
-    m_PreviewMaps = std::make_shared<cPreviewMaps>();
+    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_debugMode);
 
     // Alpha (for fading in/out)
     m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
@@ -781,8 +781,8 @@ bool cGame::setupGame() {
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
     // SETTINGS.INI
-    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini");
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini", m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
     map.setReinforcements(m_reinforcements);
