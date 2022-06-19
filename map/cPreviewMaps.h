@@ -22,6 +22,7 @@ public:
     ~cPreviewMaps();
     void prescanSkirmish();
     s_PreviewMap& getMap(int i)  { if (i > MAX_SKIRMISHMAPS) return PreviewMap[0]; return PreviewMap[i]; }
+    void destroy();
 private:
     void loadSkirmish(const std::string& filename);
     void initPreviews();

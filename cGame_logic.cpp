@@ -692,6 +692,10 @@ void cGame::shutdown() {
         }
     }
 
+    if (m_PreviewMaps != nullptr) {
+        m_PreviewMaps->destroy();
+    }
+
     delete m_mentat;
     delete m_mapViewport;
 
