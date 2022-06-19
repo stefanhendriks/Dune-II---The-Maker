@@ -72,6 +72,9 @@ void cPreviewMaps::loadSkirmish(const std::string &filename) {
             int startCell = std::stoi(string);
             if (startCell < 0 || startCell >= maxCells) {
                 previewMap.validMap = false;
+                if (m_debugMode) {
+                    std::cerr << "StartCell [" << startCell << "] invalid. (value must be between range [0-" << maxCells << ")]. For map " << filename << " - marking map as invalid.\n";
+                }
             } else {
                 previewMap.iStartCell[i] = startCell;
             }
