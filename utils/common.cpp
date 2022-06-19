@@ -1773,40 +1773,6 @@ void Shimmer(int r, int x, int y) {
 
 }
 
-// Skirmish map initialization
-void INIT_PREVIEWS() {
-    for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
-        s_PreviewMap &previewMap = PreviewMap[i];
-
-        if (previewMap.terrain != nullptr) {
-            destroy_bitmap(previewMap.terrain);
-            previewMap.terrain = nullptr;
-        }
-
-        // clear out name
-        previewMap.name.clear();
-
-        // clear out map data
-        previewMap.mapdata.clear();
-
-        previewMap.iPlayers = 0;
-
-        previewMap.width = 0;
-        previewMap.height = 0;
-
-        previewMap.iStartCell[0] = -1;
-        previewMap.iStartCell[1] = -1;
-        previewMap.iStartCell[2] = -1;
-        previewMap.iStartCell[3] = -1;
-        previewMap.iStartCell[4] = -1;
-    }
-
-    int maxCells = 128*128;
-    PreviewMap[0].mapdata = std::vector<int>(maxCells, -1);
-    PreviewMap[0].name = "RANDOM MAP";
-    //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-    PreviewMap[0].terrain = create_bitmap(128, 128);
-}
 
 const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {
