@@ -7,10 +7,14 @@
 #include "gui/cGuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
+#include "map/cPreviewMaps.h"
+
+#include <memory>
 
 struct BITMAP;
 class cGame;
 class cMouse;
+class cPreviewMaps;
 
 struct s_SkirmishPlayer {
     bool bHuman;
@@ -24,7 +28,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishGameState : public cGameState {
 
 public:
-    explicit cSetupSkirmishGameState(cGame& theGame);
+    explicit cSetupSkirmishGameState(cGame& theGame, std::shared_ptr<cPreviewMaps> previewMaps);
     ~cSetupSkirmishGameState() override;
 
     void thinkFast() override;
@@ -38,6 +42,8 @@ public:
 private:
     cTextDrawer textDrawer;
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
+    std::shared_ptr<cPreviewMaps> m_previewMaps;
+
     cMouse * mouse;
 
     int iSkirmishMap;			// what map is selected

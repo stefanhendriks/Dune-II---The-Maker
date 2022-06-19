@@ -9,6 +9,7 @@
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
+#include "map/cPreviewMaps.h"
 #include "player/brains/cPlayerBrainSandworm.h"
 #include "player/brains/cPlayerBrainSkirmish.h"
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
@@ -19,7 +20,9 @@
 #include <fmt/core.h>
 #include <algorithm>
 
-cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
+
+cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame) {
+    m_previewMaps = previewMaps;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.
@@ -343,7 +346,7 @@ void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
 
 void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const {
     if (iSkirmishMap > -1) {
-        s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+        s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
         // Render skirmish map as-is (pre-loaded map)
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
@@ -396,7 +399,7 @@ void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
 }
 
 void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap) {
-    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+    s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
     game.m_mission = 9; // high tech level (TODO: make this customizable)
@@ -423,7 +426,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
     auto mapEditor = cMapEditor(map);
     for (int c = 0; c < map.getMaxCells(); c++) {
-        mapEditor.createCell(c, selectedMap.mapdata[c], 0);
+        mapEditor.createCell(c, selectedMap.terrainType[c], 0);
     }
     mapEditor.smoothMap();
 
@@ -931,39 +934,35 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
-        if (PreviewMap[i].name[0] != '\0') {
-            int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+        s_PreviewMap &previewMap = m_previewMaps->getMap(i);
+        if (previewMap.name.empty()) continue;
 
-            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-            int textColor = bHover ? colorRed : colorWhite;
-            if (bHover) {
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-                iSkirmishMap = i;
+        bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-                if (i == 0) {
-                    generateRandomMap();
-                } else {
-                    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
-                    if (selectedMap.name[0] != '\0') {
-                        iStartingPoints = 0;
-                        // count starting points
-                        for (int s: selectedMap.iStartCell) {
-                            if (s > -1) {
-                                iStartingPoints++;
-                            }
+        if (bHover && previewMap.validMap) {
+            iSkirmishMap = i;
+
+            if (i == 0) {
+                generateRandomMap();
+            } else {
+                if (previewMap.name[0] != '\0') {
+                    iStartingPoints = 0;
+                    // count starting points
+                    for (int s: previewMap.iStartCell) {
+                        if (s > -1) {
+                            iStartingPoints++;
                         }
                     }
                 }
             }
-
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
         }
     }
 }
 
 void cSetupSkirmishGameState::generateRandomMap() {
-    randomMapGenerator.generateRandomMap(iStartingPoints);
+    randomMapGenerator.generateRandomMap(iStartingPoints, m_previewMaps->getMap(0) );
     spawnWorms = map.isBigMap() ? 4 : 2;
 }
 
@@ -978,24 +977,31 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
-        if (PreviewMap[i].name[0] != '\0') {
-            int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+        s_PreviewMap &previewMap = m_previewMaps->getMap(i);
+        if (previewMap.name.empty()) continue;
+        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-            int textColor = bHover ? colorRed : colorWhite;
-            if (bHover && mouse->isLeftButtonClicked()) {
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-            }
-
-            // selected map, always render as pressed
-            if (i == iSkirmishMap) {
-                textColor = bHover ? colorDarkerYellow : colorYellow;
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-            }
-
-            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name.c_str());
+        int textColor = bHover ? colorRed : colorWhite;
+        if (!previewMap.validMap) {
+            textColor = colorDisabled;
         }
+
+        if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
+            GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+
+        // selected map, always render as pressed
+        if (i == iSkirmishMap) {
+            textColor = bHover ? colorDarkerYellow : colorYellow;
+            if (!previewMap.validMap) {
+                textColor = colorDisabled;
+            }
+            GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+
+        textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, previewMap.name.c_str());
     }
 }
 

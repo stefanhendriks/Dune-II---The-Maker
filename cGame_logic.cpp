@@ -47,6 +47,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
+#include "map/cPreviewMaps.h"
 
 #include "utils/cFileValidator.h"
 #include "utils/cHandleArgument.h"
@@ -108,6 +109,7 @@ void cGame::init() {
     m_TIMER_evaluatePlayerStatus = 5;
 
     m_skirmish = false;
+    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_debugMode);
 
     // Alpha (for fading in/out)
     m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
@@ -539,6 +541,11 @@ void cGame::initSkirmish() const {
     game.missionInit();
 }
 
+void cGame::loadSkirmishMaps() const {
+    m_PreviewMaps->loadSkirmishMaps();
+}
+
+
 void cGame::handleTimeSlicing() {
     if (iRest > 0) {
         rest(iRest);
@@ -685,6 +692,10 @@ void cGame::shutdown() {
         }
     }
 
+    if (m_PreviewMaps != nullptr) {
+        m_PreviewMaps->destroy();
+    }
+
     delete m_mentat;
     delete m_mapViewport;
 
@@ -770,8 +781,8 @@ bool cGame::setupGame() {
               fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
 
     // SETTINGS.INI
-    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini");
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini", m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
     map.setReinforcements(m_reinforcements);
@@ -1291,7 +1302,7 @@ void cGame::setState(int newState) {
                 newStatePtr = pState;
             } else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
-                newStatePtr = new cSetupSkirmishGameState(*this);
+                newStatePtr = new cSetupSkirmishGameState(*this, m_PreviewMaps);
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             } else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this);
