@@ -6,25 +6,39 @@
 #include <vector>
 #include <string>
 
+static constexpr int MAX_SKIRMISHMAP_PLAYERS = 5;
+
 struct s_PreviewMap {
-     BITMAP *terrain = nullptr;        // terrain
-     int width, height;      // width & height of map
-     std::vector<int> mapdata;
-     int iPlayers;           // players
-     int iStartCell[5];      // starting locations
-     std::string name;       // name
+    BITMAP *terrain = nullptr;      // terrain bitmap (for showing preview at top right)
+    int width, height;              // width & height of map
+    std::vector<int> terrainType;   // terrainType per cell (for map creation)
+    int iStartCell[MAX_SKIRMISHMAP_PLAYERS];      // starting locations
+    bool validMap = true;           // is this a valid map? (is false, when map can be loaded but has invalid data)
+    std::string name;               // name of map
 };
 
-class cPreviewMaps
-{
+class cPreviewMaps {
 public:
-    cPreviewMaps();
-    ~cPreviewMaps();
+    cPreviewMaps(bool debugMode);
+
+    ~cPreviewMaps() = default;
+
     void prescanSkirmish();
-    s_PreviewMap& getMap(int i)  { if (i > MAX_SKIRMISHMAPS) return PreviewMap[0]; return PreviewMap[i]; }
     void destroy();
+
+    s_PreviewMap &getMap(int i) {
+        if (i > MAX_SKIRMISHMAPS) {
+            return PreviewMap[0];
+        }
+        return PreviewMap[i];
+    }
+
 private:
-    void loadSkirmish(const std::string& filename);
+    void loadSkirmish(const std::string &filename);
+
     void initPreviews();
+
     s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];
+
+    bool m_debugMode;
 };

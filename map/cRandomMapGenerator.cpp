@@ -173,7 +173,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
             if (cellType == TERRAIN_SPICE) iColor = makecol(186, 93, 32);
             if (cellType == TERRAIN_HILL) iColor = makecol(188, 115, 50);
 
-            randomMapEntry.mapdata[cll] = cellType;
+            randomMapEntry.terrainType[cll] = cellType;
 
             for (int s = 0; s < 4; s++) {
                 if (randomMapEntry.iStartCell[s] > -1) {

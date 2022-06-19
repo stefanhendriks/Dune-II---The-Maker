@@ -23,23 +23,38 @@ cSection::~cSection() {
     m_dataConfs.clear();
 }
 
-cSection::cSection(const std::string &secName) : m_sectionName(secName) {}
+cSection::cSection(const std::string &secName, bool debugMode) : m_debugMode(debugMode), m_sectionName(secName) {}
 
-bool cSection::addValue(const std::string &key, const std::string &value) {
-    if (m_sectionConf.find(value) != m_sectionConf.end()) {
-        //std::cout << "Key " << key << " already exist on section " << m_sectionName << std::endl;
-        cLogger *logger = cLogger::getInstance();
-        logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)",
-                    fmt::format("Key {} already exist on section {}", key, m_sectionName));
-        return false;
+bool cSection::addValue(const std::string &key, const std::string &value, int id = 0) {
+    std::string realKey = fmt::format("{}-{}", key, id);
+    if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
+        // multiple values are allowed in ini files (ie skirmish maps)
+        // so we accept this for now. And don't log anything about this; unless
+        // we are in debug mode
+        if (m_debugMode) {
+            std::cout << "Key " << key << " / " << realKey << " - already exist on section " << m_sectionName
+                      << std::endl;
+            cLogger *logger = cLogger::getInstance();
+            logger->log(LOG_INFO, COMP_GAMEINI, "(cSection)",
+                        fmt::format("Key {} already exist on section {}", key, m_sectionName));
+        }
+        return addValue(key, value, ++id);
     }
-    m_sectionConf[key] = value;
+    m_sectionConf[realKey] = value;
     return true;
 }
 
 bool cSection::addData(const std::string &data) {
     m_dataConfs.push_back(data);
     return true;
+}
+
+bool cSection::hasValue(const std::string &key, int id) const {
+    std::string realKey = fmt::format("{}-{}", key, id);
+    if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -50,13 +65,16 @@ bool cSection::addData(const std::string &data) {
  * @param key
  * @return
  */
-std::string cSection::getStringValue(const std::string &key) const {
-    if (m_sectionConf.find(key) != m_sectionConf.end()) {
-        return m_sectionConf.at(key);
+std::string cSection::getStringValue(const std::string &key, int id) const {
+    std::string realKey = fmt::format("{}-{}", key, id);
+    if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
+        return m_sectionConf.at(realKey);
     } else {
-        cLogger *logger = cLogger::getInstance();
-        logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)",
-                    fmt::format("Key {} didn't exist on section {}", key, m_sectionName));
+        if (m_debugMode) {
+            cLogger *logger = cLogger::getInstance();
+            logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)",
+                        fmt::format("Key {} ({}) didn't exist on section {}", key, realKey, m_sectionName));
+        }
         return std::string();
     }
 }
@@ -69,8 +87,8 @@ T cSection::FromString(std::string value) const {
     return res;
 }
 
-int cSection::getInt(const std::string &key) const {
-    const std::string &value = getStringValue(key);
+int cSection::getInt(const std::string &key, int id) const {
+    const std::string &value = getStringValue(key, id);
     if (!value.empty()) {
         return FromString<int>(value);
     }
@@ -78,8 +96,8 @@ int cSection::getInt(const std::string &key) const {
     return 0;
 }
 
-bool cSection::getBoolean(const std::string &key) const {
-    std::string value = getStringValue(key);
+bool cSection::getBoolean(const std::string &key, int id) const {
+    std::string value = getStringValue(key, id);
     if (!value.empty()) {
         std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return std::tolower(c); });
 
@@ -90,8 +108,8 @@ bool cSection::getBoolean(const std::string &key) const {
     return false;
 }
 
-double cSection::getDouble(const std::string &key) const {
-    const std::string &value = getStringValue(key);
+double cSection::getDouble(const std::string &key, int id) const {
+    const std::string &value = getStringValue(key, id);
     if (!value.empty()) {
         return FromString<double>(value);
     }
@@ -103,9 +121,8 @@ double cSection::getDouble(const std::string &key) const {
 //
 // cIniFile class
 //
-
-cIniFile::cIniFile(const std::string &configFileName)
-        : m_loadSuccess(false), m_fileName(configFileName) {
+cIniFile::cIniFile(const std::string &configFileName, bool debugMode)
+        : m_loadSuccess(false), m_debugMode(debugMode), m_fileName(configFileName) {
     m_loadSuccess = load(m_fileName);
 }
 
@@ -142,11 +159,13 @@ bool cIniFile::load(const std::string &config) {
         if (isSectionName(line) && !m_actualSection.empty()) {
             // test if already exist
             if (m_mapConfig.find(m_actualSection) != m_mapConfig.end()) {
-                logger->log(LOG_WARN, COMP_GAMEINI, "(cIniFile)",
-                            fmt::format("section {} already exist", m_actualSection));
+                if (m_debugMode) {
+                    logger->log(LOG_WARN, COMP_GAMEINI, "(cIniFile)",
+                                fmt::format("section {} already exist", m_actualSection));
+                }
                 continue;
             }
-            m_mapConfig[m_actualSection] = cSection(m_actualSection);
+            m_mapConfig[m_actualSection] = cSection(m_actualSection, m_debugMode);
             continue;
         }
         // test if key=value
@@ -217,10 +236,12 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
     if (hasSection(section)) {
         return getSection(section).getStringValue(key);
     } else {
-        // std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
-        cLogger *logger = cLogger::getInstance();
-        logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", fmt::format(" getStringValue section {} didn't exist", section));
-
+        if (m_debugMode) {
+            std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
+            cLogger *logger = cLogger::getInstance();
+            logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)",
+                        fmt::format(" getStringValue section {} didn't exist", section));
+        }
         return std::string();
     }
 }
