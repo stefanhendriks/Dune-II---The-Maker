@@ -23,7 +23,7 @@ public:
 
     ~cPreviewMaps() = default;
 
-    void prescanSkirmish();
+    void loadSkirmishMaps();
     void destroy();
 
     s_PreviewMap &getMap(int i) {

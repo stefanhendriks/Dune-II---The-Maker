@@ -175,7 +175,7 @@ Scanning of skirmish maps:
 - load the file, into a sPreviewMap struct
   - also creates a preview of map in BITMAP (minimap preview)
 */
-void cPreviewMaps::prescanSkirmish() {
+void cPreviewMaps::loadSkirmishMaps() {
     // scans for all ini files
     initPreviews(); // clear all of them
 

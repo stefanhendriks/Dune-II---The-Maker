@@ -109,7 +109,7 @@ public:
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
     void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
-    void prescanSkirmish() const;
+    void loadSkirmishMaps() const;
     void loadScenario();
 
     void run();			            // run the game (MAIN LOOP)
