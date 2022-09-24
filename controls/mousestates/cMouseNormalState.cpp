@@ -235,3 +235,8 @@ void cMouseNormalState::setState(eMouseNormalState newState) {
 void cMouseNormalState::onFocus() {
     m_mouse->setTile(mouseTile);
 }
+
+void cMouseNormalState::onBlur() {
+    m_mouse->resetBoxSelect();
+    m_mouse->resetDragViewportInteraction();
+}

@@ -115,7 +115,7 @@ cScreenInit::cScreenInit(const cPlatformLayerInit& platform, bool windowed, int 
         } else {
             const auto msg = fmt::format("Failed to create window with resolution {}x{} and color depth {}.", width, height, m_colorDepth);
             logger->log(LOG_ERROR, COMP_ALLEGRO, "Screen init", msg, OUTC_FAILED);
-            throw std::runtime_error("Allegro could not create the game window.");
+            throw std::runtime_error(fmt::format("Allegro could not create the game window at resolution {}x{} depth {}.", width, height, m_colorDepth));
         }
     } else {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Screen init", "Fullscreen mode requested.");
@@ -164,6 +164,6 @@ void cScreenInit::AutoDetectFullScreen() {
         const auto msg = fmt::format("Failed initialized full-screen with resolution {}x{} and color depth {}.",
                                      setResolution->width, setResolution->height, m_colorDepth);
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Screen init", msg, OUTC_FAILED);
-        throw std::runtime_error("Allegro could not initialize full-screen.");
+        throw std::runtime_error(fmt::format("Allegro could not initialize full-screen at resolution {}x{} depth {}.", setResolution->width, setResolution->height, m_colorDepth));
     }
 }

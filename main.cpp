@@ -17,6 +17,7 @@
 #include "map/cMapEditor.h"
 #include "map/cRandomMapGenerator.h"
 #include "player/cPlayer.h"
+#include "utils/cLog.h"
 
 #include <string>
 
@@ -43,8 +44,6 @@ cDrawManager   			*	drawManager = nullptr;
 cAllegroDrawer          *   allegroDrawer = nullptr;
 
 // Structs of all kinds of objects (*info)
-s_PreviewMap     			    PreviewMap[MAX_SKIRMISHMAPS];
-s_HouseInfo         			sHouseInfo[MAX_HOUSES];
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
 s_UnitInfo         			    sUnitInfo[MAX_UNITTYPES];
 s_UpgradeInfo                   sUpgradeInfo[MAX_UPGRADETYPES];
@@ -89,11 +88,16 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    if (game.setupGame()) {
-        game.run();
-    }
+    try {
+        if (game.setupGame()) {
+            game.run();
+        }
 
-    game.shutdown();
+        game.shutdown();
+    } catch (std::runtime_error &e) {
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_NONE, "Unknown", fmt::format("Error: {}", e.what()));
+        std::cerr << fmt::format("Error: {}\n\n", e.what());
+    }
 
     std::cout << fmt::format("Thank you for playing Dune 2 - The Maker\n");
     return 0;

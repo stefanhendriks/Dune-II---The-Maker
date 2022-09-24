@@ -24,13 +24,26 @@
 ;	Everything is case sensitive
 ;
 
-[SETTINGS]
-#Uncomment to hard set resolution, keep commented to use auto-detection
-ScreenWidth=800
-ScreenHeight=600
-CameraBorderOrKeyMoveSpeed=0.5
-CameraDragMoveSpeed=0.5
-CameraEdgeMove=true
+[HOUSES]
+GENERAL_SWAPCOLOR = 128
+GENERAL_MINIMAPCOLOR = 128,128,128
+# 144
+HARKONNEN_SWAPCOLOR = -1
+HARKONNEN_MINIMAPCOLOR = 255,0,0
+ATREIDES_SWAPCOLOR = 160
+ATREIDES_MINIMAPCOLOR = 0,0,255
+ORDOS_SWAPCOLOR = 176
+ORDOS_MINIMAPCOLOR = 0,255,0
+MERCENARY_SWAPCOLOR = 192
+MERCENARY_MINIMAPCOLOR = 214,121,16
+SARDAUKAR_SWAPCOLOR = 208
+SARDAUKAR_MINIMAPCOLOR = 255,0,255
+# Fremen is colored as "sand" on the minimap
+FREMEN_SWAPCOLOR = 224
+FREMEN_MINIMAPCOLOR = 194,125,60
+CORRINO_SWAPCOLOR = 136
+CORRINO_MINIMAPCOLOR = 192,192,192
+
 
 [UNITS]
 ; ========================================================
@@ -132,7 +145,9 @@ HarvestAmount=10
 HitPoints=130
 MoveSpeed=4
 TurnSpeed=4
-AttackFrequency=25
+FireTwice=true
+AttackFrequency=30
+NextAttackFrequency=10
 Sight=9
 Range=8
 
@@ -181,7 +196,9 @@ Cost=900
 HitPoints=400
 MoveSpeed=6
 TurnSpeed=6
-AttackFrequency=17
+FireTwice=true
+AttackFrequency=23
+NextAttackFrequency=6
 Sight=6
 Range=5
 
@@ -197,7 +214,8 @@ Cost=600
 HitPoints=175
 MoveSpeed=5
 TurnSpeed=4
-AttackFrequency=8
+FireTwice=false
+AttackFrequency=13
 Sight=5
 Range=4
 
@@ -213,7 +231,8 @@ Cost=300
 HitPoints=220
 MoveSpeed=4
 TurnSpeed=4
-AttackFrequency=18
+FireTwice=false
+AttackFrequency=19
 Sight=7
 Range=7
 
@@ -228,6 +247,7 @@ Cost=600
 HitPoints=130
 MoveSpeed=3
 TurnSpeed=3
+FireTwice=true
 AttackFrequency=12
 Sight=4
 Range=3
@@ -241,6 +261,7 @@ Cost=200
 HitPoints=100
 MoveSpeed=2
 TurnSpeed=1
+FireTwice=false
 AttackFrequency=8
 Sight=4
 Range=3
@@ -256,6 +277,7 @@ BuildTime=28
 HitPoints=40
 MoveSpeed=0
 TurnSpeed=1
+FireTwice=false
 AttackFrequency=5
 Sight=5
 Range=2
@@ -275,6 +297,7 @@ Cost=125
 HitPoints=40
 MoveSpeed=5
 TurnSpeed=1
+FireTwice=false
 AttackFrequency=10
 Sight=2
 Range=1
@@ -293,6 +316,7 @@ Cost=60
 HitPoints=80
 MoveSpeed=5
 TurnSpeed=1
+FireTwice=true
 AttackFrequency=13
 Sight=3
 Range=2
@@ -309,6 +333,7 @@ Cost=100
 HitPoints=60
 MoveSpeed=6
 TurnSpeed=1
+FireTwice=false
 AttackFrequency=15
 Sight=3
 Range=3
@@ -325,6 +350,7 @@ Cost=80
 HitPoints=100
 MoveSpeed=6
 TurnSpeed=1
+FireTwice=true
 AttackFrequency=18
 Sight=4
 Range=4
@@ -332,6 +358,7 @@ Range=4
 ; Build properties + Sidebar
 BuildTime=38
 Cost=175
+
 ; -----------------
 ; Unit: Mobile Construction Vehicle
 ; -----------------
@@ -347,8 +374,12 @@ BuildTime=100
 
 ; -------------------------------------
 ; PALACE SPECIFIC UNITS
+;
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
+;
 ; -------------------------------------
-; NOTE: "Missile" = Dead hand. Is not a real unit
 
 ; -----------------
 ; Unit: Single fremen (Atreides)
@@ -363,10 +394,10 @@ AttackFrequency=16
 Sight=6
 Range=5
 
-; Build properties + Sidebar
-; Buildtime = 1000, equals saboteur
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
 BuildTime=1000
-; costs nothing
 Cost=0
 
 ; -----------------
@@ -379,24 +410,15 @@ Cost=0
 HitPoints=250
 MoveSpeed=4
 TurnSpeed=2
+FireTwice=true
 AttackFrequency=16
 Sight=6
 Range=5
 
-; Build properties + Sidebar
-; Buildtime = 1000, equals saboteur
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
 BuildTime=1000
-; costs nothing
-Cost=0
-
-; -----------------
-; MISSILE - HARKONNEN
-; -----------------
-[UNIT: MISSILE]
-; Buildtime = 1000, equals saboteur
-; Missile is a bit longer because its strong
-BuildTime=1300 
-; costs nothing
 Cost=0
 
 ; -----------------
@@ -411,10 +433,10 @@ AttackFrequency=0
 Sight=3
 Range=2
   
-; Build properties + Sidebar
-; Buildtime = 1000, equals saboteur
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
 BuildTime=1000
-; costs nothing
 Cost=0
 
 ; ========================================================

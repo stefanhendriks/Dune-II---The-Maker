@@ -11,7 +11,7 @@ class cOrdosMentat : public cAbstractMentat {
     void interact();
 
 public:
-    cOrdosMentat();
+    cOrdosMentat(bool allowMissionSelect);
 
     void think();
 };

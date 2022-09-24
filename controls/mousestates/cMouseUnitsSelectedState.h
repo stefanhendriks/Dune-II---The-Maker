@@ -44,7 +44,7 @@ public:
     void onStateSet() override;
 
     void onFocus() override;
-    void onBlur() override {}
+    void onBlur() override;
 
 private:
     // A list of unit id's that we have selected

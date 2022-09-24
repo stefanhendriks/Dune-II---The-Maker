@@ -45,6 +45,11 @@ int slowThinkMsToTicks(int desiredMs) {
     return desiredMs / 100;
 }
 
+int fastThinkTicksToMs(int ticks) {
+    // "fast" thinking, is 1 tick == 5ms
+    return ticks * 5;
+}
+
 int fastThinkMsToTicks(int desiredMs) {
     if (desiredMs < 5) {
         return 1; // fastest thinking is 1 tick (5 ms)
@@ -65,42 +70,6 @@ int makeColFromString(std::string colorStr)
 /********************************
  House Rules
  ********************************/
-void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg) {
-    const cSection &section = gameCfg->getSection(SECTION_HOUSES);
-
-    // General / Default / No House
-    sHouseInfo[GENERALHOUSE].swap_color = section.getInt("GENERAL_SWAPCOLOR");
-    sHouseInfo[GENERALHOUSE].minimap_color = makeColFromString(section.getStringValue("GENERAL_MINIMAPCOLOR"));
-
-    // Harkonnen
-    sHouseInfo[HARKONNEN].swap_color = section.getInt("HARKONNEN_SWAPCOLOR");
-    sHouseInfo[HARKONNEN].minimap_color = makeColFromString(section.getStringValue("HARKONNEN_MINIMAPCOLOR"));
-
-    // Atreides
-    sHouseInfo[ATREIDES].swap_color = section.getInt("ATREIDES_SWAPCOLOR");
-    sHouseInfo[ATREIDES].minimap_color = makeColFromString(section.getStringValue("ATREIDES_MINIMAPCOLOR"));
-
-    // Ordos
-    sHouseInfo[ORDOS].swap_color = section.getInt("ORDOS_SWAPCOLOR");
-    sHouseInfo[ORDOS].minimap_color = makeColFromString(section.getStringValue("ORDOS_MINIMAPCOLOR"));
-
-    // Mercenary
-    sHouseInfo[MERCENARY].swap_color = section.getInt("MERCENARY_SWAPCOLOR");
-    sHouseInfo[MERCENARY].minimap_color = makeColFromString(section.getStringValue("MERCENARY_MINIMAPCOLOR"));
-
-    // Sardaukar
-    sHouseInfo[SARDAUKAR].swap_color = section.getInt("SARDAUKAR_SWAPCOLOR");
-    sHouseInfo[SARDAUKAR].minimap_color = makeColFromString(section.getStringValue("SARDAUKAR_MINIMAPCOLOR"));
-
-    // Fremen
-    sHouseInfo[FREMEN].swap_color = section.getInt("FREMEN_SWAPCOLOR");
-    sHouseInfo[FREMEN].minimap_color = makeColFromString(section.getStringValue("FREMEN_MINIMAPCOLOR"));
-
-    // GREY
-    // ???
-    sHouseInfo[CORRINO].swap_color = section.getInt("CORRINO_SWAPCOLOR");
-    sHouseInfo[CORRINO].minimap_color = makeColFromString(section.getStringValue("CORRINO_MINIMAPCOLOR"));
-}
 
 /*****************************
  Unit Rules
@@ -131,6 +100,7 @@ void install_units() {
         unitInfo.bulletTypeSecondary = -1;
         unitInfo.fireSecondaryWithinRange = -1;
         unitInfo.attack_frequency = -1;
+        unitInfo.next_attack_frequency = -1;
         unitInfo.buildTime = -1;
         unitInfo.airborn = false;
         unitInfo.infantry = false;
@@ -1594,6 +1564,7 @@ void install_structures() {
     sStructureInfo[TURRET].sight = 7;
     sStructureInfo[TURRET].configured = true;
     sStructureInfo[TURRET].canAttackGroundUnits = true;
+    sStructureInfo[TURRET].fireRate = 275;
     strcpy(sStructureInfo[TURRET].name, "Gun Turret");
 
     // Structure    : Rocket Turret
@@ -1608,6 +1579,7 @@ void install_structures() {
     sStructureInfo[RTURRET].configured = true;
     sStructureInfo[RTURRET].canAttackAirUnits = true;
     sStructureInfo[RTURRET].canAttackGroundUnits = true;
+    sStructureInfo[RTURRET].fireRate = 350;
     strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
 
     // Structure    : Windtrap
@@ -1801,40 +1773,6 @@ void Shimmer(int r, int x, int y) {
 
 }
 
-// Skirmish map initialization
-void INIT_PREVIEWS() {
-    for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
-        s_PreviewMap &previewMap = PreviewMap[i];
-        previewMap.terrain = nullptr;
-
-        // clear out name
-        memset(previewMap.name, 0, sizeof(previewMap.name));
-
-        // clear out map data
-        if (i == 0) { // first entry/random map
-            int maxCells = 128*128;
-            previewMap.mapdata = std::vector<int>(maxCells, -1);
-        } else {
-//            int maxCells = 4096; // 64x64 map
-            previewMap.mapdata = std::vector<int>();
-        }
-
-        previewMap.iPlayers = 0;
-
-        previewMap.width = 0;
-        previewMap.height = 0;
-
-        previewMap.iStartCell[0] = -1;
-        previewMap.iStartCell[1] = -1;
-        previewMap.iStartCell[2] = -1;
-        previewMap.iStartCell[3] = -1;
-        previewMap.iStartCell[4] = -1;
-    }
-
-    sprintf(PreviewMap[0].name, "RANDOM MAP");
-    //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-    PreviewMap[0].terrain = create_bitmap(128, 128);
-}
 
 const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {

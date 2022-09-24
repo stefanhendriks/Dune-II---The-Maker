@@ -17,7 +17,7 @@ cFileValidator::cFileValidator(const std::string &path) {
     // m_enumToString[eGameDirFileName::GFXAUDIO] = "gfxaudio.dat";
 }
 
-void cFileValidator::addRessources(std::map<eGameDirFileName, std::string> _transfertMap) {
+void cFileValidator::addResources(std::map<eGameDirFileName, std::string> _transfertMap) {
     m_enumToString = _transfertMap;
 }
 

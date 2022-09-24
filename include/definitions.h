@@ -64,6 +64,7 @@
 #define MAX_BULLETS      300     // max of bullets in the game at once
 #define MAX_PARTICLES    600	 // max of particles in the game at once
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
+// #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 //#define HOUSE_SLOTS       10      // amount of House 'types'
 
 // Game states (state machine)
@@ -102,9 +103,6 @@
 #define AI_CPU6         6  // 6 = WORM
 #define AI_WORM			AI_CPU6
 #define MAX_PLAYERS       7
-
-// HOUSES stuff
-#define MAX_HOUSES        12      // 12 different type of houses
 
 // UNITS stuff
 #define MAX_UNITTYPES       50    // maximum of unit types
