@@ -28,6 +28,14 @@
 
 #include <allegro.h>
 #include <fmt/core.h>
+#include <filesystem>
+namespace fs=std::filesystem;
+
+int INI_SectionType(char section[30], int last);
+void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
+int getHouseFromChar(char chunk[25]);
+int getUnitTypeFromChar(char chunk[25]);
+int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
 class cReinforcements;
 
@@ -469,9 +477,13 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "TurnSpeed") == 0)
             return WORD_TURNSPEED;
 
-        // Attack frequency
+        // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
         if (strcmp(word, "AttackFrequency") == 0)
             return WORD_ATTACKFREQ;
+
+        // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
+        if (strcmp(word, "NextAttackFrequency") == 0)
+            return WORD_NEXTATTACKFREQ;
 
         // Sight
         if (strcmp(word, "Sight") == 0)
@@ -493,8 +505,8 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "IsHarvester") == 0)
             return WORD_ISHARVESTER;
 
-        if (strcmp(word, "SecondShot") == 0)
-            return WORD_SECONDSHOT;
+        if (strcmp(word, "FireTwice") == 0)
+            return WORD_FIRETWICE;
 
         if (strcmp(word, "IsInfantry") == 0)
             return WORD_ISINFANTRY;
@@ -521,41 +533,7 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "MaxCredits") == 0) return WORD_HARVESTLIMIT;
         if (strcmp(word, "HarvestSpeed") == 0) return WORD_HARVESTSPEED;
         if (strcmp(word, "HarvestAmount") == 0) return WORD_HARVESTAMOUNT;
-    } else if (section == INI_TEAMS) {
-        // SwapColor
-        if (strcmp(word, "SwapColor") == 0)
-            return WORD_SWAPCOLOR;
-
-        // Red MiniMap value
-        if (strcmp(word, "MapColorRed") == 0)
-            return WORD_HOUSE_RED;
-
-        // Green MiniMap value
-        if (strcmp(word, "MapColorGreen") == 0)
-            return WORD_HOUSE_GREEN;
-
-        // Blue MiniMap value
-        if (strcmp(word, "MapColorBlue") == 0)
-            return WORD_HOUSE_BLUE;
-
     }
-        /*
-        else if (section == INI_ICONS)
-        {
-          // Process all Icons here
-          if (strlen(word) > 1)
-            return WORD_ICONID;
-          else
-            return WORD_NONE;
-        }
-        else if (section == INI_BITMAPS)
-        {
-          // Process all Bitmaps here
-          if (strlen(word) > 1)
-            return WORD_BITMAPID;
-          else
-            return WORD_NONE;
-        }*/
     else if (section == INI_STRUCTURES) {
         if (strlen(word) > 1) {
             // Structure properties
@@ -1675,9 +1653,13 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             } else if (iPart == 3) {
                 delayInMinutes = atoi(chunk);
                 bool repeat = game.m_allowRepeatingReinforcements && plusDetected;
-                int reinforcementMultiplier = 60; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
-                int delayInSeconds = delayInMinutes * reinforcementMultiplier;
-                reinforcements->addReinforcement(playerId, unitType, targetCell, delayInSeconds, repeat);
+                int reinforcementMultiplier = 20; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
+                // D2TM does not interpret the delay as minutes, as doing so takes a very long time for reinforcements
+                // to arrive. So I guess delay is not really 1 minute in game-time in Dune 2.
+                // Stefan: 08/04/2022 -> I reduced the multiplier again to 20, as it still takes a very long time;
+                // this feels better.
+                int delayD2TM = delayInMinutes * reinforcementMultiplier;
+                reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
                 break;
             }
 
@@ -1935,6 +1917,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 players[HUMAN].setCredits(creditsPlayer);
                 players[HUMAN].setHouse(houseForPlayer);
                 players[HUMAN].setTeam(0);
+                players[HUMAN].setAutoSlabStructures(false);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
@@ -1951,6 +1934,8 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 }
 
             } else {
+                players[iCPUId].setAutoSlabStructures(true);
+
                 if (quota > 0) {
                     players[iCPUId].setQuota(quota);
                 }
@@ -2114,16 +2099,6 @@ void INI_Install_Game(std::string filename) {
                     if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
                 }
 
-                if (section == INI_TEAMS) {
-                    // check if we found a new [TEAM part!
-                    if (strstr(linefeed, "[TEAM:") != nullptr) {
-                        id++; // New ID
-                        if (id > MAX_HOUSES) {
-                          id--;
-                        }
-                    }
-                }
-
                 // New unit type
                 if (section == INI_UNITS) {
                     // check if we found a new [UNIT part!
@@ -2207,6 +2182,7 @@ void INI_Install_Game(std::string filename) {
                     if (wordtype == WORD_MOVESPEED) unitInfo.speed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = INI_WordValueINT(linefeed);
                     if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
 
@@ -2221,7 +2197,7 @@ void INI_Install_Game(std::string filename) {
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
@@ -2263,247 +2239,3 @@ void INI_Install_Game(std::string filename) {
 
     logbook("[GAME.INI] Done");
 }
-
-
-void INI_LOAD_SKIRMISH(const char filename[80]) {
-    // search for new entry in previewed maps
-    int iNew = -1;
-    for (int i = 0; i < 100; i++) {
-        if (PreviewMap[i].name[0] == '\0') {
-            iNew = i;
-            break;
-        }
-    }
-
-    if (iNew < 0) {
-        return;
-    }
-
-    // initialize as 64x64 by default
-    map.init(64, 64);
-
-    // first clear it all out (previewMap always assumes 64x64 data - for now)
-    s_PreviewMap &previewMap = PreviewMap[iNew];
-    int maxCells = 64*64;
-//    for (int x = 0; x < 64; x++) {
-//        for (int y = 0; y < 64; y++) {
-//            int cll = map.makeCell(x, y); // we initialized so this makes sense
-//            previewMap.mapdata[cll] = -1;
-//        }
-//    }
-
-    previewMap.mapdata = std::vector<int>(maxCells, -1);
-
-    // Load file
-
-    FILE *stream;                    // file stream
-    int section = INI_NONE;            // section
-    int wordtype = WORD_NONE;            // word
-
-    int maxWidth = -1;
-    int maxHeight = -1;
-
-    int iYLine = 0;
-    int iStart = 0;
-
-    std::vector<std::string> mapLines = std::vector<std::string>();
-
-    if ((stream = fopen(filename, "r+t")) != nullptr) {
-        char linefeed[MAX_LINE_LENGTH];
-        char lineword[30];
-        char linesection[30];
-
-        memset(lineword, '\0', sizeof(lineword));
-        memset(linesection, '\0', sizeof(linesection));
-        memset(linefeed, '\0', sizeof(linefeed));
-
-        // infinite loop baby
-        while (!feof(stream)) {
-            INI_Sentence(stream, linefeed);
-
-            // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-            // character (which is "//", ";" or "#"), or an empty line, then skip it
-            if (isCommentLine(linefeed)) {
-                continue;   // Skip
-            }
-
-            // Every line is checked for a new section.
-            INI_Section(linefeed, linesection);
-
-            if (linesection[0] != '\0' && strlen(linesection) > 1) {
-                int iOld = section;
-                section = INI_SectionType(linesection, section);
-
-                // section found
-                if (iOld != section) {
-                    if (section == INI_MAP) {
-                        if (previewMap.terrain == nullptr) {
-                            previewMap.terrain = create_bitmap(128, 128);
-                            clear_bitmap(previewMap.terrain);
-                            //clear_to_color(PreviewMap[iNew].terrain, makecol(255,255,255));
-                        }
-                        continue; // skip
-                    }
-                }
-            }
-
-            // Okay, we found a new section; if its NOT [GAME] then we remember this one!
-
-            if (section != INI_NONE) {
-                INI_Word(linefeed, lineword);
-                wordtype = INI_WordType(lineword, section);
-            } else {
-                continue;
-            }
-
-            if (section == INI_SKIRMISH) {
-                if (wordtype == WORD_MAPNAME) {
-                    INI_WordValueSENTENCE(linefeed, previewMap.name);
-                    //logbook(PreviewMap[iNew].name);
-                }
-
-                if (wordtype == WORD_STARTCELL) {
-                    if (iStart == 0) {
-                        for (int i = 0; i < 5; i++)
-                            previewMap.iStartCell[i] = -1;
-                    }
-
-                    // start locations
-                    if (iStart < 5) {
-                        previewMap.iStartCell[iStart] = INI_WordValueINT(linefeed);
-                        iStart++;
-                    }
-                }
-            }
-
-            if (section == INI_MAP) {
-                int iLength = strlen(linefeed);
-
-                if (iLength > maxWidth) maxWidth = iLength;
-                // END!
-                if (iLength < 2) {
-                    break; // done
-                }
-
-                std::string str(linefeed);
-                mapLines.push_back(str);
-
-                iYLine++;
-                maxHeight = iYLine;
-            }
-
-        } // end of file reading
-        
-
-        previewMap.width = maxWidth + 1;
-        previewMap.height = maxHeight + 1;
-        map.resize(maxWidth+1, maxHeight+1);
-
-        for (int iY = 0; iY < maxHeight; iY++) {
-            const char *mapLine = mapLines[iY].c_str();
-            for (int iX = 0; iX < maxWidth; iX++) {
-                char letter[1];
-                letter[0] = mapLine[iX];
-
-                int iCll = map.makeCell((iX + 1), (iY + 1));
-
-                int iColor = makecol(194, 125, 60);
-
-                // rock
-                if (letter[0] == '%') iColor = makecol(80, 80, 60);
-                if (letter[0] == '^') iColor = makecol(80, 80, 60);
-                if (letter[0] == '&') iColor = makecol(80, 80, 60);
-                if (letter[0] == '(') iColor = makecol(80, 80, 60);
-
-                // mountain
-                if (letter[0] == 'R') iColor = makecol(48, 48, 36);
-                if (letter[0] == 'r') iColor = makecol(48, 48, 36);
-
-                // spicehill
-                if (letter[0] == '+') iColor = makecol(180, 90, 25); // bit darker
-
-                // spice
-                if (letter[0] == '-') iColor = makecol(186, 93, 32);
-
-                // HILLS (NEW)
-                if (letter[0] == 'H') iColor = makecol(188, 115, 50);
-                if (letter[0] == 'h') iColor = makecol(188, 115, 50);
-
-                if (iCll > -1) {
-                    if (iColor == makecol(194, 125, 60)) {
-                        previewMap.mapdata[iCll] = TERRAIN_SAND;
-                    } else if (iColor == makecol(80, 80, 60)) {
-                        previewMap.mapdata[iCll] = TERRAIN_ROCK;
-                    } else if (iColor == makecol(48, 48, 36)) {
-                        previewMap.mapdata[iCll] = TERRAIN_MOUNTAIN;
-                    } else if (iColor == makecol(180, 90, 25)) {
-                        previewMap.mapdata[iCll] = TERRAIN_SPICEHILL;
-                    } else if (iColor == makecol(186, 93, 32)) {
-                        previewMap.mapdata[iCll] = TERRAIN_SPICE;
-                    } else if (iColor == makecol(188, 115, 50)) {
-                        previewMap.mapdata[iCll] = TERRAIN_HILL;
-                    } else {
-                        logbook(fmt::format("iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
-                                letter[0]));
-                        previewMap.mapdata[iCll] = TERRAIN_SAND;
-                        iColor = makecol(255, 255, 255);
-                    }
-                }
-
-                putpixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-                putpixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-                putpixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-                putpixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
-
-            }
-        }
-
-        // starting points
-        for (int i = 0; i < 5; i++) {
-            if (previewMap.iStartCell[i] > -1) {
-                int x = map.getCellX(previewMap.iStartCell[i]);
-                int y = map.getCellY(previewMap.iStartCell[i]);
-
-                putpixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
-                putpixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));
-                putpixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, makecol(255, 255, 255));
-                putpixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, makecol(255, 255, 255));
-            }
-        }
-        fclose(stream);
-
-    } // file exists
-
-}
-
-/*
-Pre-scanning of skirmish maps:
-
-- open file
-- read [SKIRMISH] data (name of map, startcells, etc)
-- create preview of map in BITMAP (minimap preview)
-*/
-void INI_PRESCAN_SKIRMISH() {
-    // scans for all ini files
-    INIT_PREVIEWS(); // clear all of them
-
-    al_ffblk file;
-    if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-        do {
-            auto fullname = fmt::format("skirmish/{}", file.name);
-            logbook(fmt::format("Loading skirmish map: {}", fullname));
-            INI_LOAD_SKIRMISH(fullname.c_str());
-        } while (!al_findnext(&file));
-    } else {
-        logbook("No skirmish maps found in skirmish directory.");
-    }
-    al_findclose(&file);
-
-}
-
-// this code should make it possible to read any ini file in the skirmish
-// directory. However, Allegro 4.2.0 somehow gives weird results.
-// when upgrading to Allegro 4.2.2, the method works. But FBLEND crashes, even
-// after recompiling it against Allegro 4.2.2...
-//
-// See: http://www.allegro.cc/forums/thread/600998

@@ -3,12 +3,13 @@
 #include "enums.h"
 
 #include <vector>
+#include <string>
 
 struct BITMAP;
 
 // Unit properties
 // the s_UnitInfo struct is holding all properties for a specific unit type.
-// note: The unit properties are actually set in common.cpp , like the sHouseInfo!
+// note: The unit properties are actually set in common.cpp
 // note: Some values are now read via INI.CPP (GAME.INI reader).
 struct s_UnitInfo {
   BITMAP  *bmp;         // each unit has a reference to his 8 bit bitmap.
@@ -26,6 +27,8 @@ struct s_UnitInfo {
   int    speed;          // speed (0 being super fast, the higher the number, the slower).
   int    turnspeed;
   int    attack_frequency;  // timer for attacking
+  int    next_attack_frequency;  // in case a second shot is fired, this is the delay used. (-1 by default, if
+                                 // not specified, this will be 1/4th of attack_frequency)
 
   int    buildTime;        // how long it takes for building this thing
 
@@ -113,7 +116,6 @@ struct s_StructureInfo {
 
   int buildTime;      // how long it takes for building this structure
 
-
   int power_drain;       // the power that this building drains...
   int power_give;        // the power that this building gives...
 
@@ -132,8 +134,11 @@ struct s_StructureInfo {
 
   bool configured;     // is this structure configured? (poor man solution)
 
-  bool canAttackAirUnits;    // for turrets
-  bool canAttackGroundUnits; // for turrets
+  // Turret specific:
+  bool canAttackAirUnits;
+  bool canAttackGroundUnits;
+  int fireRate;         // delay before firing
+
 };
 
 /**
@@ -208,12 +213,6 @@ struct s_SpecialInfo {
     int subListId;
 };
 
-// House properties
-struct s_HouseInfo {
-  int swap_color;           // color index to start swapping with.
-  int minimap_color;        // rgb value on minimap
-};
-
 /**
  * Particle info
  * A particle can have 3 states:
@@ -257,14 +256,4 @@ struct s_BulletInfo {
     char description[64]; // ie: "bullet"
 
     bool canDamageGround; // when true, this bullet can damage ground (ie walls, concrete, etc)
-};
-
-// SKIRMISH MAP PREVIEW DATA
-struct s_PreviewMap {
-     BITMAP *terrain;        // terrain
-     int width, height;      // width & height of map
-     std::vector<int> mapdata;
-     int iPlayers;           // players
-     int iStartCell[5];      // starting locations
-     char name[80];          // name
 };

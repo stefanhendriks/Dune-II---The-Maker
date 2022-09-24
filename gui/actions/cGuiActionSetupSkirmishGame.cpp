@@ -4,7 +4,7 @@
 #include "ini.h"
 
 void cGuiActionSetupSkirmishGame::execute() {
-    INI_PRESCAN_SKIRMISH();
+    game.loadSkirmishMaps();
     game.initSkirmish();
     game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
     game.initiateFadingOut();

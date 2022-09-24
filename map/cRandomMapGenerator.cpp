@@ -11,7 +11,7 @@
 cRandomMapGenerator::cRandomMapGenerator() {
 }
 
-void cRandomMapGenerator::generateRandomMap(int startingPoints) {
+void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry) {
     // create random map
     map.init(128, 128);
     auto mapEditor = cMapEditor(map);
@@ -32,7 +32,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
     int iSpot = 0;
     int iFails = 0;
 
-    s_PreviewMap &randomMapEntry = PreviewMap[0];
+    //s_PreviewMap &randomMapEntry = PreviewMap[0];
     randomMapEntry.width = 128;
     randomMapEntry.height = 128;
     memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
@@ -173,7 +173,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints) {
             if (cellType == TERRAIN_SPICE) iColor = makecol(186, 93, 32);
             if (cellType == TERRAIN_HILL) iColor = makecol(188, 115, 50);
 
-            randomMapEntry.mapdata[cll] = cellType;
+            randomMapEntry.terrainType[cll] = cellType;
 
             for (int s = 0; s < 4; s++) {
                 if (randomMapEntry.iStartCell[s] > -1) {

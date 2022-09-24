@@ -7,6 +7,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
+#include "player/cHousesInfo.h"
 
 #include <allegro.h>
 #include <fmt/format.h>
@@ -29,7 +30,7 @@ cPlayer::cPlayer() {
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
     brain_ = nullptr;
-    autoSlabStructures = false;
+    m_autoSlabStructures = false;
 }
 
 cPlayer::~cPlayer() {
@@ -208,6 +209,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     powerProduce_ = 0;
 
     iTeam = -1;
+    notifications.clear();
 }
 
 /**
@@ -234,8 +236,8 @@ void cPlayer::setHouse(int iHouse) {
         logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 
         // now set the different colors based upon house
-        if (sHouseInfo[house].swap_color > -1) {
-            int start = sHouseInfo[house].swap_color;
+        if (m_HousesInfo->getSwapColor(house) > -1) {
+            int start = m_HousesInfo->getSwapColor(house);
             int s = 144;                // original position (harkonnen)
             logbook(fmt::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
             for (int j = start; j < (start + 7); j++) {
@@ -245,7 +247,7 @@ void cPlayer::setHouse(int iHouse) {
             }
         }
 
-        minimapColor = sHouseInfo[house].minimap_color;
+        minimapColor = m_HousesInfo->getMinimapColor(house);
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
@@ -599,7 +601,7 @@ int cPlayer::getHouseFadingColor() const {
         color = makecol(0, 255, 0);
     }
 
-    // TODO other sHouseInfo (Sardaukar, etc)
+    // TODO other m_houseInfo (Sardaukar, etc)
     return game.getColorFadeSelected(color);
 }
 
@@ -1378,6 +1380,9 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
     if (!canPlace) {
         return nullptr;
     }
+    if (m_autoSlabStructures) {
+        pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
+    }
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
 }
 
@@ -1396,7 +1401,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
         return nullptr;
     }
 
-    if (autoSlabStructures) {
+    if (m_autoSlabStructures) {
         pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
     }
 
@@ -1490,7 +1495,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
 }
 
 void cPlayer::setAutoSlabStructures(bool value) {
-    autoSlabStructures = value;
+    m_autoSlabStructures = value;
 }
 
 int cPlayer::getScoutingUnitType() {
@@ -1726,6 +1731,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
 //        // do nothing
 //        return;
 //    }
+
     if (game.m_musicType != MUSIC_PEACE) {
         // nothing to do here music-wise
         return;
@@ -1742,13 +1748,14 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
         bool detectedEntityIsHuman = pUnit.getPlayer()->isHuman();
 
         // unit discovered is NOT the same team, so enemy detected / music trigger
+//        if (detectedEntityIsHuman || (isHuman() && !detectedEntityIsHuman)) {
         if (detectedEntityIsHuman || isHuman()) {
             if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pUnit.getPlayer())) {
                 triggerMusic = true;
                 if (pUnit.iType == SANDWORM) {
-                    voiceId = SOUND_VOICE_10_ATR;
+                    voiceId = SOUND_VOICE_10_ATR; // wormsign
                 } else {
-                    voiceId = SOUND_VOICE_09_ATR;
+                    voiceId = SOUND_VOICE_09_ATR; // enemy unit approaching
                 }
             }
         } else {
@@ -1760,6 +1767,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
         bool detectedEntityIsHuman = pStructure->getPlayer()->isHuman();
 
         // structure discovered is NOT the same team, so enemy detected / music trigger
+//        if (detectedEntityIsHuman || (isHuman() && !detectedEntityIsHuman)) {
         if (detectedEntityIsHuman || isHuman()) {
             if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pStructure->getPlayer())) {
                 // only things that can harm us will trigger attack music?
@@ -1773,12 +1781,19 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
         }
     }
 
+    bool hasVoiceToPlay = isHuman() && voiceId > -1; // don't warn when already in "attack music mode"
+
+    bool mayPlayVoice = true;
     if (triggerMusic) {
-        game.playMusicByType(MUSIC_ATTACK);
+        if (game.m_musicType != MUSIC_ATTACK) {
+            mayPlayVoice = game.playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
+        } else {
+            mayPlayVoice = false;
+        }
     }
 
-    if (voiceId > -1) {
-        game.playVoice(voiceId, getHouse());
+    if (mayPlayVoice && hasVoiceToPlay) {
+        game.playVoice(voiceId, getId());
     }
 }
 
@@ -1868,12 +1883,14 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
             // check if the player has any harvester left
 
             // if 1, or less
-            if (harvesters < 2) {
+            if (harvesters == 1) {
                 addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
             }
 
             // No harvester found, deliver one
             if (harvesters < 1) {
+                addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
+
                 // deliver
                 cAbstractStructure *refinery = pUnit.findClosestStructureType(REFINERY);
 
@@ -1961,7 +1978,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &pUnit = unit[i];
         if (!pUnit.isValid()) continue;
-        if (pUnit.isDead()) continue;
+        if (pUnit.isDead() && !pUnit.isHidden()) continue; // hidden units play "dead" :/
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
 
@@ -2044,8 +2061,8 @@ std::vector<int> cPlayer::getSelectedUnits() const {
 
 void cPlayer::deselectAllUnits() {
     const std::vector<int> &ids = getAllMyUnits();
-    for (auto i : ids) {
-        unit[i].bSelected = false;
+    for (const auto & i : ids) {
+        deselectUnit(i);
     }
 }
 
@@ -2120,4 +2137,8 @@ void cPlayer::thinkSlow() {
     if (orderProcesser) {
         orderProcesser->think();
     }
+}
+
+void cPlayer::deselectUnit(const int & unitId) {
+    unit[unitId].bSelected = false;
 }

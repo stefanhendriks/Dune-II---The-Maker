@@ -25,19 +25,10 @@ class cSelectYourNextConquestState;
 #define INI_GENERAL    3
 #define INI_MAP        4
 
-//#define INI_PLAYER     5
-//#define INI_ICONS      6
-//#define INI_BITMAPS    7
 #define INI_NEWID      10
 #define INI_GAME       11       // mod.ini / game.ini
-//#define INI_MOD        12       // mod.ini
-//#define INI_MENU       13       // game.ini
-#define INI_TEAMS      14       // game.ini
-//#define INI_MOUSE      15       // game.ini
-//#define INI_SIDEBAR    16       // game.ini
 #define INI_BULLETS    17       // game.ini
 #define INI_EXPLOSIONS 18
-//#define INI_TERRAIN	   19
 #define INI_BASIC	   20
 #define INI_SKIRMISH   21
 
@@ -63,13 +54,7 @@ class cSelectYourNextConquestState;
 #define WORD_NONE       -1
 #define WORD_MAPHEIGHT   0
 #define WORD_MAPWIDTH    1
-#define WORD_ICONNAME    2
 #define WORD_DESCRIPTION 3
-#define WORD_SWAPCOLOR   4
-#define WORD_ICONID      5
-#define WORD_FADECOLOR   6
-#define WORD_FADEMAX     7
-#define WORD_BITMAPID    8
 #define WORD_PREBUILD    9
 #define WORD_POWER       10
 #define WORD_MODID       11     // mod.ini
@@ -86,9 +71,6 @@ class cSelectYourNextConquestState;
 #define WORD_RED          22    // game.ini
 #define WORD_GREEN        23    // game.ini
 #define WORD_BLUE         24    // game.ini
-#define WORD_HOUSE_RED    25    // game.ini
-#define WORD_HOUSE_GREEN  26    // game.ini
-#define WORD_HOUSE_BLUE   27    // game.ini
 #define WORD_BITMAP       28    // game.ini
 #define WORD_BITMAP_WIDTH 29    // game.ini
 #define WORD_BITMAP_HEIGHT 30     // game.ini
@@ -110,7 +92,7 @@ class cSelectYourNextConquestState;
 #define WORD_TURNSPEED    47    // game.ini (turn speed)
 #define WORD_SOUND        48    // game.ini (sound)
 #define WORD_ISHARVESTER  49    // game.ini (IsHarvester, is it a harvester or not?)
-#define WORD_SECONDSHOT   50    // game.ini (SecondShot, makes unit shoot twice?)
+#define WORD_FIRETWICE   50    // game.ini (SecondShot, makes unit shoot twice?)
 #define WORD_ISAIRBORN    51    // game.ini (Unit is airborn?)
 #define WORD_ABLETOCARRY  52    // game.ini (Able to transport units, aka CarryAll)
 #define WORD_FREEROAM     53    // game.ini (Will freely roam around the map?)
@@ -118,6 +100,7 @@ class cSelectYourNextConquestState;
 #define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
+#define WORD_NEXTATTACKFREQ   59   // game.ini (next attack frequency)
 #define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
 #define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
 #define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
@@ -184,14 +167,5 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinfo
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);
-//void LOAD_BRIEFING(char filename[35]);
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat);
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
-
-int INI_SectionType(char section[30], int last);
-void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
-void INI_PRESCAN_SKIRMISH();
-
-int getHouseFromChar(char chunk[25]);
-int getUnitTypeFromChar(char chunk[25]);
-int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);

@@ -77,8 +77,7 @@ void cStarPort::think_deploy() {
                     if (rallyPoint > -1) {
                         unit[id].move_to(rallyPoint, -1, -1);
                     }
-                    const int house = players[iPlayer].getHouse();
-                    game.playVoice(SOUND_VOICE_05_ATR, house); // unit deployed
+                    game.playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
                 } else {
                     // could not find cell to deploy to, reinforce it
                     if (rallyPoint > -1) {

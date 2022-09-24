@@ -23,8 +23,7 @@ USE AT YOUR OWN RISK.
 ===================
 Version information
 ===================
-Version number	: 0.6.0
-
+Version number	: 0.7.0
 
 ===========
 Description
@@ -33,10 +32,21 @@ This game is a tribute and a Dune 2 remake that is more up to date with the
 current standards yet still keeps the 'nostalgia' (as far as that can go with remakes).
 
 
+=====
+Usage
+=====
+Double-click d2tm.exe
+
+If you want to influence the screen resolution, full-screen mode and other things:
+1. You can either edit settings.ini
+2. You can also run d2tm.exe with flags, ie from command prompt, run "d2tm.exe --help" for all possible options
+
 ========
 Features
 ========
 * 1080p or higher screen resolution (minimum is 800x600)
+  - change resolution in settings.ini
+  - full-screen/windowed mode can be set in settings.ini
 * Smooth gameplay
   - C&C like controls
   - "point and click" gameplay
@@ -44,7 +54,7 @@ Features
   - easy to use interface
   - queueing
 * Hotkeys
-  - hold R (and click accordingly) to repair units and structures
+  - Press R (and click accordingly) to repair units and structures
   - Unit selected: hold CTRL to force attack 
   - Structure selected: hold CTRL to set rally point
   	- can be used on anything that has to do with units (repair facility, etc)
@@ -65,31 +75,29 @@ Features
 * Uses all original dune 2 (english) mission briefings
 * Little animation 'system' for nice effects (fading, explosions, smoke, etc)
 * Ability to play Skirmish games (4 players max)
-   - Map size is 128x128
-   - with random map generator
-   - ability to create your own maps (see skirmish folder, map size is 64x64)
+   - Max map size (random maps) is 128x128
+     - with own random map generator
+   - ability to create your own maps (see skirmish folder, max size is 64x64)
    
 ===================
 System Requirements
 ===================
 The program has been tested on several systems; though it is timer based
-the ideal is 60 fps or higher for a fluent gameplay overall. Windowed mode
-is slower in general then full-screen. Most systems with just Windows would
-run the program. 
+the ideal is 60 fps or higher for a fluent gameplay overall. Most systems
+with just Windows would run the program.
 
 There are good experiences running this game within Wine on Linux. Those who
 do not use Windows, but still want to try out the game, you could give Wine
 a shot.
 
-FYI: There is a Github ticket for working on Linux support; I dont use Linux
-so if anyone wants to help with this contact me.
-
+If you are a Linux user, good chance is you can compile this yourself. Head out
+to the Github repository and follow the readme.md
 
 ==================================
 BALACING NOTES / UNIT DESCRIPTIONS
 ==================================
 One of the things DUNE 2 lacked, was real balancing. Mostly you would win by just having bigger
-better , and mostly, more units then your computer opponent. In D2TM this issue should be solved;
+better , and mostly, more units than your computer opponent. In D2TM this issue should be solved;
 though I am not there yet, I do intent to get there!
 
 In order to tackle this issue, a few things have been changed:
@@ -104,7 +112,7 @@ Infantry/Soldier:
 -----------------
 These units have little to no effect on bigger units, but they are the best weapon against the Trooper
 and Troopers. Having no soldiers around your base, makes it a lot tougher to defend it. Even trikes
-and Quads will have a more harder time to take out Trooper/Troopers then the Infantry/Soldier.
+and Quads will have a worse time to take out Trooper/Troopers then the Infantry/Soldier.
 
 Quad/Trike/Raider:
 ------------------
@@ -139,7 +147,7 @@ is fast but it lacks armor. Therefor it is easy to destroy.
 Deviator:
 ---------
 The Deviator acts like a normal Rocket Launcher. However, by firing its nerve gas it will convert
-any unit to its own side. (Unline Dune 2, the units will STAY that way and not be converted back).
+any unit to its own side. (Unlike Dune 2, the units will STAY that way and not be converted back).
 The unit is fast, light-weighted and has little armor; thus easily to destroy. However, do NOT
 underestimate the power and danger of this unit!
 
@@ -152,28 +160,26 @@ Dune 2 - The Maker could never get this far, without the help of the following p
 Libraries:
 Allegro (www.allegro.cc)
 AlFONT  (Javier Gonzalez)
-AlMP3   (Javier Gonzalez)
-FBlend  (Robert J Ohannessian)
 
-TEAM Members:
+Contributors:
 Vidiware (www.vidiware.com)
-Timen
-Nema Fakei
-MrFlibble
-
-Others:
 Jesse Reid (Gobalopper, www.dune2k.com)
 Amarillion (allegro.cc)
 Jpexs	   (dune 2 seedmap generator)
 Rene	   (for the D2TM skirmish map editor)
-
-Contributors:
+Rozmy      (improved gfx since 0.7.0)
+Timen
+Nema Fakei
+MrFlibble
 Guillaume Lavoie
 Dennis Stansert
 Ash
 Ruurd Nijdam
 rphl
 Rene
+Paul (code contributions)
+Miria (code contributions)
+
 
 Books / Must reads:
 C++ Grand Cru (Stevem Holzner)

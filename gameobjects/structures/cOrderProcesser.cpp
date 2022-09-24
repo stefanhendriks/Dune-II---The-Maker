@@ -10,10 +10,11 @@
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
+#include <fmt/core.h>
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
-  player = thePlayer;
+    player = thePlayer;
 	orderPlaced = false;
 	frigateSent = false;
 	secondsUntilArrival = -1;
@@ -90,8 +91,7 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 void cOrderProcesser::think() {
 	if (secondsUntilArrival > 0) {
 		secondsUntilArrival--;
-		char msg[255];
-		sprintf(msg, "T-%d before Frigate arrival.", secondsUntilArrival);
+		std::string msg = fmt::format("T-{} before Frigate arrival.", secondsUntilArrival);
 
 		if (secondsUntilArrival <= 5 && player->getId() == HUMAN) {
 			playTMinusSound(secondsUntilArrival);

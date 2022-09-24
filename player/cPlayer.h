@@ -34,9 +34,11 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <memory>
 
 class cItemBuilder;
 class cBuildingListUpdater;
+class cHousesInfo;
 
 struct sEntityForDistance {
     int distance = 9999;
@@ -80,6 +82,10 @@ public:
     void init(int id, brains::cPlayerBrain *brain);
 
     void setBrain(brains::cPlayerBrain *brain);
+
+    void setHousesInfo(std::shared_ptr<cHousesInfo> housesInfo) {
+        m_HousesInfo = housesInfo;
+    }
 
     void setAutoSlabStructures(bool value);
 
@@ -446,6 +452,8 @@ public:
 
     void thinkSlow();
 
+    void deselectUnit(const int & unitId);
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -480,6 +488,7 @@ private:
 
     cBuildingListUpdater *buildingListUpdater; // modifies list of sidebar on upgrades
     cOrderProcesser *orderProcesser; // process orders for starport
+    std::shared_ptr<cHousesInfo> m_HousesInfo;
 
     cGameControlsContext *gameControlsContext;
 
@@ -512,7 +521,7 @@ private:
 
     brains::cPlayerBrain *brain_;
 
-    bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
+    bool m_autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
     // A condition to win the mission
     int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)

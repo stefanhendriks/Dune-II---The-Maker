@@ -37,7 +37,7 @@ class cFileValidator {
 public:
     cFileValidator(const std::string &path);
 
-    void addRessources(std::map<eGameDirFileName, std::string> _transfertMap);
+    void addResources(std::map<eGameDirFileName, std::string> _transfertMap);
 
     ~cFileValidator();
 

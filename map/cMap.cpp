@@ -32,8 +32,10 @@ cMap::cMap() {
     TIMER_scroll = 0;
     iScrollSpeed = 1;
     maxCells = 0;
+    m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
+    init(64, 64);
 }
 
 cMap::~cMap() {
@@ -54,13 +56,16 @@ void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements) {
 }
 
 void cMap::init(int width, int height) {
-    m_reinforcements->init();
+    if (m_reinforcements) {
+        m_reinforcements->init();
+    }
 
     m_bAutoDetonateSpiceBlooms = false;
     m_bAutoSpawnSpiceBlooms = true;
 
     m_iTIMER_blooms = 200;
     m_mBloomTimers = std::map<int, int>();
+    m_mBloomTimers.clear();
 
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
@@ -123,7 +128,7 @@ void cMap::smudge_increase(int iType, int iCell) {
  * @param iCell
  * @return
  */
-bool cMap::occupiedByType(int iCell) {
+bool cMap::occupiedByWallOrMountain(int iCell) {
     if (iCell < 0 || iCell >= maxCells) return false;
 
     if (map.getCellType(iCell) == TERRAIN_WALL) return true;
@@ -139,6 +144,10 @@ bool cMap::occupiedInDimension(int iCell, int dimension) {
     return map.cell[iCell].id[dimension] > -1;
 }
 
+bool cMap::occupiedByUnit(int iCell) {
+    return occupiedInDimension(iCell, MAPID_UNITS);
+}
+
 /**
  * Is the specific cell occupied by any dimension?
  *
@@ -151,7 +160,7 @@ bool cMap::occupied(int iCell) {
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
     if (occupiedInDimension(iCell, MAPID_STRUCTURES)) return true;
-    if (occupiedByType(iCell)) return true;
+    if (occupiedByWallOrMountain(iCell)) return true;
 
     return false;
 }
@@ -558,7 +567,7 @@ void cMap::draw_units_2nd() {
         if (!pUnit.isValid()) continue;
         if (!pUnit.bHovered && !pUnit.bSelected) continue;
         if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
-        if (pUnit.iTempHitPoints > -1) continue;
+        if (pUnit.isHidden()) continue;
 
         pUnit.draw_health();
         pUnit.draw_experience();
@@ -1106,7 +1115,7 @@ int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) {
  * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
  *
  * @param pStructure
- * @param thePlayer
+ * @param thePlayer (for who it should be visible)
  * @return
  */
 bool cMap::isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer) {
@@ -1184,6 +1193,7 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
+            if (!map.isWithinBoundaries(cl)) continue;
 
             if (map.canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
                 return cl;
