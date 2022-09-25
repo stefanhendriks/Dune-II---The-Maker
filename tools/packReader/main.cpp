@@ -3,6 +3,7 @@
 
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
 #include <map>
@@ -289,6 +290,8 @@ public:
     ~DataPack();
     SDL_Surface *getSurface(int index);
     SDL_Surface *getSurface(const std::string &name);
+    Mix_Music *getMusic(int index);
+    Mix_Music *getMusic(const std::string &name);
 private:
     std::unique_ptr<ReaderPack> reader;
 };
@@ -313,12 +316,27 @@ SDL_Surface *DataPack::getSurface(int index)
     return out;
 }
 
+Mix_Music *DataPack::getMusic(int index)
+{
+    SDL_RWops *tmp = reader->getData(index);
+    Mix_Music *out = Mix_LoadMUS_RW(tmp, SDL_TRUE);
+    if (!out) {
+        printf("Failed to load music %i : %s\n", index, SDL_GetError());
+    }
+    return out;
+}
+
 SDL_Surface *DataPack::getSurface(const std::string &name)
 {
     int index = reader->getIndexFromName(name);
     return this->getSurface(index);
 }
 
+Mix_Music *DataPack::getMusic(const std::string &name)
+{
+    int index = reader->getIndexFromName(name);
+    return this->getMusic(index);
+}
 
 int main(int argc, char ** argv)
 {
@@ -334,10 +352,30 @@ int main(int argc, char ** argv)
         test.writePackFilesOnDisk();
     }    
 
+    if (1) {
+        // write pak file with audio file.
+    	WriterPack test("audio1.pak");
+        //
+        test.addFile("DUNE1_4.mid","audio1");
+        test.addFile("DUNE1_5.mid","audio2");
+        test.addFile("DUNE1_6.mid","audio3");
+        test.addFile("DUNE1_7.mid","audio4");
+        //
+        test.writePackFilesOnDisk();
+    } 
+
     bool quit = false;
     SDL_Event event;
  
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+
+    //Initialize SDL2_mixer to play sound
+    if(Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
+    {
+        printf("SDL2_mixer could not be initialized!\n"
+               "SDL_Error: %s\n", SDL_GetError());
+        return 0;
+    }
 
     SDL_Window * window = SDL_CreateWindow("SDL2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
@@ -363,6 +401,13 @@ int main(int argc, char ** argv)
     
     SDL_Texture * texture = texture1;
 
+    //-----------------------------------------------------------------
+    //load with DataPack and play it
+    //-----------------------------------------------------------------
+    DataPack dataAudio("audio1.pak");
+    Mix_Music * music = dataAudio.getMusic(2);
+    Mix_PlayMusic( music, -1 );
+
     while (!quit)
     {
         SDL_WaitEvent(&event);
@@ -382,6 +427,26 @@ int main(int argc, char ** argv)
                 if (event.key.keysym.sym == SDLK_e){
                     texture = texture3;
 		        }
+                if (event.key.keysym.sym == SDLK_q){
+                    Mix_FreeMusic(music);
+                    music = dataAudio.getMusic("audio1");
+                    Mix_PlayMusic( music, -1 );
+		        }
+                if (event.key.keysym.sym == SDLK_s){
+                    Mix_FreeMusic(music);
+                    music = dataAudio.getMusic("audio2");
+                    Mix_PlayMusic( music, -1 );
+		        }
+                if (event.key.keysym.sym == SDLK_d){
+                    Mix_FreeMusic(music);
+                    music = dataAudio.getMusic("audio3");
+                    Mix_PlayMusic( music, -1 );
+		        }
+                if (event.key.keysym.sym == SDLK_f){
+                    Mix_FreeMusic(music);
+                    music = dataAudio.getMusic("audio4");
+                    Mix_PlayMusic( music, -1 );
+		        }                
                 if (event.key.keysym.sym == SDLK_ESCAPE){
                     quit = true;
 		        }
@@ -391,6 +456,7 @@ int main(int argc, char ** argv)
         SDL_RenderPresent(renderer);
     }
 
+    Mix_HaltMusic();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
