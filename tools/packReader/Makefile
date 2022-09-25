@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS= -lSDL2
+CFLAGS= -lSDL2 -lSDL2_mixer
 DFLAGS= -g
 DEPS = *.h
 OBJ = main.o
