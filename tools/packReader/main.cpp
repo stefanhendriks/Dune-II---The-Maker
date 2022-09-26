@@ -6,6 +6,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <map>
 #include <vector>
 #include <algorithm>
@@ -45,15 +46,15 @@ public:
     //! get index from ressource nemed fileId
     int getIndexFromName(const std::string &fileId);
     //! print all files in Pack
-    //! @todo get a vector for other traitement
-    void listpackFile();
+
+    void displayPackFile();
 private:
     std::vector<FileInPack> fileInPack;
     bool readHeader();
     void readFileLines();
     void readDataIntoMemory();
     char *fileInMemory = nullptr;
-    SDL_RWops *rfp;  //wfp as readFilePack
+    SDL_RWops *rfp = nullptr;  //wfp as readFilePack
     std::string fpName;
     int fileInPak = 0;
     uint64_t sizeInMemory =0;
@@ -127,10 +128,15 @@ SDL_RWops* ReaderPack::getData(int index) {
     return SDL_RWFromMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
 };
 
-void ReaderPack::listpackFile() {
+void ReaderPack::displayPackFile() {
+    std::cout << "------------------------------" << std::endl;
+    std::cout << "File(s) stored in archive " << fpName << std::endl;
+    std::cout << "[Name] -> size -> offset" << std::endl;
+    std::cout << "------------------------------" << std::endl;
     for (auto i=0; i<fileInPack.size(); i++ ) {
-        std::cout << '[' << fileInPack[i].fileId << "] = " << fileInPack[i].fileSize << std::endl;
+        std::cout << '[' << fileInPack[i].fileId << "] -> " << std::setw(8) << fileInPack[i].fileSize << " -> " << std::setw(8) << fileInPack[i].fileOffset << std::endl;
     }
+    std::cout << "EOF" << std::endl;
 }
 
 void ReaderPack::readDataIntoMemory()
@@ -155,6 +161,7 @@ public:
     bool addFile(const std::string &fileName, const std::string &fileId);
     //! Create PackFile after add all files in archive
     bool writePackFilesOnDisk();
+    void displayPackFile();
 private:
     void listpackFile();
     void writeHeader();
@@ -221,15 +228,16 @@ void WriterPack::writeFileLines()
     }
 }
 
-void WriterPack::listpackFile()
+void WriterPack::displayPackFile()
 {
     std::cout << "------------------------------" << std::endl;
     std::cout << "File(s) stored in archive " << std::endl;
+    std::cout << "[Name] -> size" << std::endl;
     std::cout << "------------------------------" << std::endl;
     for (const auto& tmp : fileInPack) {
-        std::cout << "\t[" << tmp.fileId << "] -> " << tmp.fileSize << std::endl;
+        std::cout << "\t[" << tmp.fileId << "] -> " << std::setw(8) << tmp.fileSize << std::endl;
     }
-    std::cout << "------------------------------" << std::endl;
+    std::cout << "EOF" << std::endl;
 }
 
 void WriterPack::copyFile()
@@ -256,7 +264,7 @@ bool WriterPack::writePackFilesOnDisk()
     writeHeader();
     writeFileLines();
     copyFile();
-    listpackFile();
+    displayPackFile();
     return true;
 }
 
@@ -292,6 +300,7 @@ public:
     SDL_Surface *getSurface(const std::string &name);
     Mix_Music *getMusic(int index);
     Mix_Music *getMusic(const std::string &name);
+    void displayPackFile();
 private:
     std::unique_ptr<ReaderPack> reader;
 };
@@ -304,6 +313,11 @@ DataPack::DataPack(const std::string &packName)
 DataPack::~DataPack()
 {
     reader.reset();
+}
+
+void DataPack::displayPackFile()
+{
+    reader->displayPackFile();
 }
 
 SDL_Surface *DataPack::getSurface(int index)
