@@ -32,7 +32,7 @@ struct FileInPack {
 
 // **********************
 //
-// ReaderPack
+// ReaderPack : read a pack file
 //
 // **********************
 class ReaderPack
@@ -43,10 +43,9 @@ public:
     ~ReaderPack();
     //! get raw ressources from PackFile by this index in the archive
     SDL_RWops * getData(int index);
-    //! get index from ressource nemed fileId
+    //! get index from ressource named fileId
     int getIndexFromName(const std::string &fileId);
     //! print all files in Pack
-
     void displayPackFile();
 private:
     std::vector<FileInPack> fileInPack;
@@ -148,7 +147,7 @@ void ReaderPack::readDataIntoMemory()
 
 // **********************
 //
-// WriterPack
+// WriterPack create a pack file from scratch
 //
 // **********************
 class WriterPack
@@ -161,9 +160,9 @@ public:
     bool addFile(const std::string &fileName, const std::string &fileId);
     //! Create PackFile after add all files in archive
     bool writePackFilesOnDisk();
+    //! for debug: display files in pack
     void displayPackFile();
 private:
-    void listpackFile();
     void writeHeader();
     void writeFileLines();
     void copyFile();
@@ -284,22 +283,28 @@ bool WriterPack::writePackFilesOnDisk()
 // - the size of the file : sizeFile on 4 bytes (uint32_t) 
 //
 // Data are organized like this
-// file0 offset 0          to    0+sizeFile0 <-- offset1
-// file1 offset offset1    to    offset1 + sizeFile1 <--- offset2
-// file2 offset offset2    to    offset2 + sizeFile2 <--- offset3
-// file3 offset offset3    to    offset3 + sizeFile3 <--- offset4
+// file0 offset: 0          to    0+sizeFile0 <-- offset1
+// file1 offset: offset1    to    offset1 + sizeFile1 <--- offset2
+// file2 offset: offset2    to    offset2 + sizeFile2 <--- offset3
+// file3 offset: offset3    to    offset3 + sizeFile3 <--- offset4
 // ...
 //
 // **********************
 class DataPack
 {
 public:
+    // read pack packName and load it on memory
     DataPack(const std::string &packName);
     ~DataPack();
+    // return a surface from his index in pack
     SDL_Surface *getSurface(int index);
+    // return a surface from his name
     SDL_Surface *getSurface(const std::string &name);
+    // return a music from his index in pack
     Mix_Music *getMusic(int index);
+    // return a music from his name
     Mix_Music *getMusic(const std::string &name);
+    // for debug
     void displayPackFile();
 private:
     std::unique_ptr<ReaderPack> reader;
