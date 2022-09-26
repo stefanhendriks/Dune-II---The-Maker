@@ -927,9 +927,9 @@ bool cGame::setupGame() {
     }
 
     if (!m_playSound) {
-        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);
+        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, settingsValidator->getFullName(eGameDirFileName::GFXAUDIO) ,  0);
     } else {
-        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
+        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
     }
 
     // do it here, because it depends on fonts to be loaded

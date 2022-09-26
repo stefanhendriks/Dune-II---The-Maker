@@ -32,10 +32,10 @@ constexpr int kMaxVolume = 220;
 
 class cSoundData {
   public:
-    cSoundData() {
+    cSoundData(const std::string& fileName) {
         auto logger = cLogger::getInstance();
 
-        gfxaudio = load_datafile("data/gfxaudio.dat");
+        gfxaudio = load_datafile(fileName.c_str());
         if (gfxaudio == nullptr) {
             static auto msg = "Could not hook/load datafile: gfxaudio.dat.";
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
@@ -56,11 +56,11 @@ class cSoundData {
     const DATAFILE* gfxaudio;
 };
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit& init) : cSoundPlayer(init, kAllegroMaxNrVoices) {
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit& init, const std::string& fileName) : cSoundPlayer(init, fileName, kAllegroMaxNrVoices) {
 }
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
-        : soundData(std::make_unique<cSoundData>()) {
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, const std::string& fileName, const int maxNrVoices)
+        : soundData(std::make_unique<cSoundData>(fileName)) {
     // The platform layer init object is not used here, but since it needs to be passed, it tells
     // the caller that the initialization needs to be performed first.
 

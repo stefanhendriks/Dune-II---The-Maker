@@ -5,14 +5,15 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 class cSoundData;
 
 class cSoundPlayer {
 	public:
         // Initialize the platform layer before creating this object.
-		explicit cSoundPlayer(const cPlatformLayerInit& init);
-		cSoundPlayer(const cPlatformLayerInit& init, int maxNrVoices);
+		explicit cSoundPlayer(const cPlatformLayerInit& init, const std::string& fileName);
+		cSoundPlayer(const cPlatformLayerInit& init, const std::string& fileName, int maxNrVoices);
 		~cSoundPlayer();
 
         static int getMaxVolume();
