@@ -476,6 +476,7 @@ int main(int argc, char ** argv)
     }
 
     Mix_HaltMusic();
+    Mix_FreeMusic(music);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
