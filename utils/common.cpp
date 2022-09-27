@@ -204,8 +204,8 @@ void install_units() {
     sUnitInfo[HARVESTER].bmp_height = 26 * 2;
     sUnitInfo[HARVESTER].bmp_frames = 4;
     sUnitInfo[HARVESTER].icon = ICON_UNIT_HARVESTER;
-    sUnitInfo[HARVESTER].credit_capacity = 700;
-    sUnitInfo[HARVESTER].harvesting_amount = 5;
+    // sUnitInfo[HARVESTER].credit_capacity = 700;
+    // sUnitInfo[HARVESTER].harvesting_amount = 5;
     sUnitInfo[HARVESTER].listType = eListType::LIST_UNITS;
     sUnitInfo[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
@@ -441,7 +441,7 @@ void install_units() {
     sUnitInfo[INFANTRY].bmp_height = 16 * 2;
     sUnitInfo[INFANTRY].bmp_startpixel = 0;
     sUnitInfo[INFANTRY].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[INFANTRY].speed = 8;
+    // sUnitInfo[INFANTRY].speed = 8;
     sUnitInfo[INFANTRY].infantry = true;
     sUnitInfo[INFANTRY].bulletType = BULLET_SMALL;
     sUnitInfo[INFANTRY].fireTwice = true;
@@ -555,11 +555,11 @@ void install_units() {
     sUnitInfo[SABOTEUR].bmp_height = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_startpixel = 0;
     sUnitInfo[SABOTEUR].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[SABOTEUR].speed = 0; // very fast
-    sUnitInfo[SABOTEUR].hp = 60;   // quite some health
-    sUnitInfo[SABOTEUR].cost = 0;
-    sUnitInfo[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
-    sUnitInfo[SABOTEUR].range = 2;
+    // sUnitInfo[SABOTEUR].speed = 0; // very fast
+    // sUnitInfo[SABOTEUR].hp = 60;   // quite some health
+    // sUnitInfo[SABOTEUR].cost = 0;
+    // sUnitInfo[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
+    // sUnitInfo[SABOTEUR].range = 2;
     sUnitInfo[SABOTEUR].attack_frequency = 0;
     sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
     strcpy(sUnitInfo[SABOTEUR].name, "Saboteur");
@@ -574,15 +574,15 @@ void install_units() {
     sUnitInfo[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
 
     // Unit        : Sandworm
-    sUnitInfo[SANDWORM].speed = 3; // very fast
+    // sUnitInfo[SANDWORM].speed = 3; // very fast
     sUnitInfo[SANDWORM].bmp = (BITMAP *) gfxdata[UNIT_SANDWORM].dat;
-    sUnitInfo[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
+    // sUnitInfo[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
     sUnitInfo[SANDWORM].dieWhenLowerThanHP = 1000;
-    sUnitInfo[SANDWORM].appetite = 10;
+    // sUnitInfo[SANDWORM].appetite = 10;
     sUnitInfo[SANDWORM].bmp_width = 48;
     sUnitInfo[SANDWORM].bmp_height = 48;
-    sUnitInfo[SANDWORM].turnspeed = 0; // very fast
-    sUnitInfo[SANDWORM].sight = 16;
+    // sUnitInfo[SANDWORM].turnspeed = 0; // very fast
+    // sUnitInfo[SANDWORM].sight = 16;
     strcpy(sUnitInfo[SANDWORM].name, "Sandworm");
     sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
     sUnitInfo[SANDWORM].squish = false;
