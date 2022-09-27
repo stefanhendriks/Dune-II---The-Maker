@@ -550,7 +550,7 @@ void install_units() {
     // Unit        : Saboteur
     // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
     sUnitInfo[SABOTEUR].bmp = (BITMAP *) gfxdata[UNIT_SABOTEUR].dat;
-    sUnitInfo[SABOTEUR].buildTime = 1000;
+    // sUnitInfo[SABOTEUR].buildTime = 1000;
     sUnitInfo[SABOTEUR].bmp_width = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_height = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_startpixel = 0;
@@ -561,7 +561,7 @@ void install_units() {
     // sUnitInfo[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
     // sUnitInfo[SABOTEUR].range = 2;
     sUnitInfo[SABOTEUR].attack_frequency = 0;
-    sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
+    // sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
     strcpy(sUnitInfo[SABOTEUR].name, "Saboteur");
     sUnitInfo[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
     sUnitInfo[SABOTEUR].squish = false;
