@@ -843,9 +843,9 @@ void install_specials() {
 /****************
  Install bullets
  ****************/
-void install_bullets() {
+void install_bullets(const std::string& iniFile) {
     logbook("Installing:  BULLET TYPES");
-
+    logbook(fmt::format("Reading {}", iniFile ));
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
         sBulletInfo[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
         sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
