@@ -258,11 +258,11 @@
 #define ROCKET_SMALL_FREMEN     15   // small rocket (trooper/troopers) - FOR FREMEN
 
 // Special bullets (explosions) (Particle types)
-#define EXPL_ONE          21  // 2 types of explosion
-#define EXPL_TWO          22  // for structures
-#define EXPL_TRIKE        23  // explosion for trike/quad
-#define EXPL_TANK         24  // explosion for a tank/siege/devastator
-#define EXPL_TANK_TWO     25  // another explosion of a tank etc
+// #define EXPL_ONE          21  // 2 types of explosion
+// #define EXPL_TWO          22  // for structures
+// #define EXPL_TRIKE        23  // explosion for trike/quad
+// #define EXPL_TANK         24  // explosion for a tank/siege/devastator
+// #define EXPL_TANK_TWO     25  // another explosion of a tank etc
 
 // Particle types
 const int D2TM_PARTICLE_MOVE	                = 1; // particle used for indicating when move order has been received
