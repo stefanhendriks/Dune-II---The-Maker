@@ -239,23 +239,26 @@
 #define SPECIAL_FREMEN          1  // special unit(s) for fremen support
 #define SPECIAL_DEATHHAND       2
 
-// Bullet types
-#define ROCKET_SMALL      0   // small rocket (trooper/troopers)
-#define ROCKET_NORMAL     1   // normal rocket (turret/launcher/deviator)
-#define ROCKET_BIG        2   // big rocket (palace, nuclear/deathhand/missile)
-#define BULLET_SMALL      3   // infantry bullet
-#define BULLET_TRIKE      4   // a trike bullet, looks like infantry but is stronger
-#define BULLET_QUAD       5   // a quad bullet
-#define BULLET_TANK       6   // a normal tank dot
-#define BULLET_SIEGE      7   // a siege tank dot
-#define BULLET_DEVASTATOR 8   // a devastator dot
-#define BULLET_GAS        9   // a deviator shot
-#define BULLET_TURRET     10  // a normal turret dot
-#define BULLET_SHIMMER    11  // EXEPTION: Shimmer effect!
-#define ROCKET_SMALL_ORNI 12   // small rocket ornithopter
-#define ROCKET_RTURRET	  13	// rocket turrets have weaker turrets!
-#define BULLET_SAB        14    // a fake bullet , to make it easier to blow up stuff
-#define ROCKET_SMALL_FREMEN     15   // small rocket (trooper/troopers) - FOR FREMEN
+// // Bullet types
+// #define ROCKET_SMALL      0   // small rocket (trooper/troopers)
+// #define ROCKET_NORMAL     1   // normal rocket (turret/launcher/deviator)
+// #define ROCKET_BIG        2   // big rocket (palace, nuclear/deathhand/missile)
+// #define BULLET_SMALL      3   // infantry bullet
+// #define BULLET_TRIKE      4   // a trike bullet, looks like infantry but is stronger
+// #define BULLET_QUAD       5   // a quad bullet
+// #define BULLET_TANK       6   // a normal tank dot
+// #define BULLET_SIEGE      7   // a siege tank dot
+// #define BULLET_DEVASTATOR 8   // a devastator dot
+// #define BULLET_GAS        9   // a deviator shot
+// #define BULLET_TURRET     10  // a normal turret dot
+// #define BULLET_SHIMMER    11  // EXEPTION: Shimmer effect!
+// #define ROCKET_SMALL_ORNI 12   // small rocket ornithopter
+// #define ROCKET_RTURRET	  13	// rocket turrets have weaker turrets!
+// #define BULLET_SAB        14    // a fake bullet , to make it easier to blow up stuff
+// #define ROCKET_SMALL_FREMEN     15   // small rocket (trooper/troopers) - FOR FREMEN
+
+enum bulletTypes { NO_ROCKET = -1, ROCKET_SMALL =0 , ROCKET_NORMAL ,ROCKET_BIG ,BULLET_SMALL ,BULLET_TRIKE ,BULLET_QUAD ,BULLET_TANK ,BULLET_SIEGE ,BULLET_DEVASTATOR ,BULLET_GAS ,BULLET_TURRET ,BULLET_SHIMMER ,ROCKET_SMALL_ORNI ,ROCKET_RTURRET ,BULLET_SAB , ROCKET_SMALL_FREMEN };
+static const bulletTypes All[] = { NO_ROCKET, ROCKET_SMALL, ROCKET_NORMAL, ROCKET_BIG ,BULLET_SMALL ,BULLET_TRIKE ,BULLET_QUAD ,BULLET_TANK ,BULLET_SIEGE ,BULLET_DEVASTATOR ,BULLET_GAS ,BULLET_TURRET ,BULLET_SHIMMER ,ROCKET_SMALL_ORNI ,ROCKET_RTURRET ,BULLET_SAB , ROCKET_SMALL_FREMEN };
 
 // Special bullets (explosions) (Particle types)
 // #define EXPL_ONE          21  // 2 types of explosion
