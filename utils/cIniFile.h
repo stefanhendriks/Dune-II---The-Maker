@@ -54,6 +54,10 @@ public:
     bool load(const std::string &configFileName);
 
     std::string getStringValue(const std::string &section, const std::string &key) const;
+    int getInt(const std::string& section, const std::string& key) const;
+    double getDouble(const std::string& section, const std::string& key) const;
+    bool getBoolean(const std::string& section, const std::string& key) const;
+    std::vector<std::string> getSectionData(const std::string& section) const;
 
     cSection getSection(const std::string &section) const;
 
