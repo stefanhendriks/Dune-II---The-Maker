@@ -139,7 +139,7 @@ void install_units() {
 
         unitInfo.canGuard = false;
 
-        strcpy(unitInfo.name, "\0");
+        unitInfo.name ="Unknown";
     }
 
     // Unit        : CarryAll
@@ -155,7 +155,7 @@ void install_units() {
     sUnitInfo[CARRYALL].free_roam = true; // may freely roam the air
     sUnitInfo[CARRYALL].listType = eListType::LIST_UNITS;
     sUnitInfo[CARRYALL].subListId = SUBLIST_HIGHTECH;
-    strcpy(sUnitInfo[CARRYALL].name, "Carry-All");
+    sUnitInfo[CARRYALL].name =  "Carry-All";
 
     // Unit        : Ornithopter
     // Description : Pesty little aircraft shooting bastard
@@ -174,7 +174,7 @@ void install_units() {
     sUnitInfo[ORNITHOPTER].listType = eListType::LIST_UNITS;
     sUnitInfo[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
 //    sUnitInfo[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
-    strcpy(sUnitInfo[ORNITHOPTER].name, "Ornithopter");
+    sUnitInfo[ORNITHOPTER].name =  "Ornithopter";
 
     // Unit        : Devastator
     // Description : Devastator
@@ -193,7 +193,7 @@ void install_units() {
     sUnitInfo[DEVASTATOR].smokeHpFactor = 0.5f;
     sUnitInfo[DEVASTATOR].canGuard = true;
     sUnitInfo[DEVASTATOR].canAttackUnits = true;
-    strcpy(sUnitInfo[DEVASTATOR].name, "Devastator");
+    sUnitInfo[DEVASTATOR].name =  "Devastator";
 
     // Unit        : Harvester
     // Description : Harvester
@@ -210,7 +210,7 @@ void install_units() {
     sUnitInfo[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[HARVESTER].smokeHpFactor = 0.5f;
-    strcpy(sUnitInfo[HARVESTER].name, "Harvester");
+    sUnitInfo[HARVESTER].name =  "Harvester";
 
     // Unit        : Combattank
     // Description : Combattank
@@ -229,7 +229,7 @@ void install_units() {
     sUnitInfo[TANK].smokeHpFactor = 0.5f;
     sUnitInfo[TANK].canGuard = true;
     sUnitInfo[TANK].canAttackUnits = true;
-    strcpy(sUnitInfo[TANK].name, "Tank");
+    sUnitInfo[TANK].name =  "Tank";
 
 
     // Unit        : Siege Tank
@@ -250,7 +250,7 @@ void install_units() {
     sUnitInfo[SIEGETANK].smokeHpFactor = 0.5f;
     sUnitInfo[SIEGETANK].canGuard = true;
     sUnitInfo[SIEGETANK].canAttackUnits = true;
-    strcpy(sUnitInfo[SIEGETANK].name, "Siege Tank");
+    sUnitInfo[SIEGETANK].name =  "Siege Tank";
 
     // Unit        : MCV
     // Description : Movable Construction Vehicle
@@ -265,7 +265,7 @@ void install_units() {
     sUnitInfo[MCV].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[MCV].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[MCV].smokeHpFactor = 0.5f;
-    strcpy(sUnitInfo[MCV].name, "MCV");
+    sUnitInfo[MCV].name =  "MCV";
 
 
     // Unit        : Deviator
@@ -283,7 +283,7 @@ void install_units() {
     sUnitInfo[DEVIATOR].smokeHpFactor = 0.5f;
     sUnitInfo[DEVIATOR].canGuard = true;
     sUnitInfo[DEVIATOR].canAttackUnits = true;
-    strcpy(sUnitInfo[DEVIATOR].name, "Deviator");
+    sUnitInfo[DEVIATOR].name =  "Deviator";
 
     // Unit        : Launcher
     // Description : Rocket Launcher
@@ -304,7 +304,7 @@ void install_units() {
     sUnitInfo[LAUNCHER].smokeHpFactor = 0.5f;
     sUnitInfo[LAUNCHER].canGuard = true;
     sUnitInfo[LAUNCHER].canAttackUnits = true;
-    strcpy(sUnitInfo[LAUNCHER].name, "Launcher");
+    sUnitInfo[LAUNCHER].name =  "Launcher";
 
     // Unit        : Quad
     // Description : Quad, 4 wheeled (double gunned)
@@ -324,7 +324,7 @@ void install_units() {
     sUnitInfo[QUAD].smokeHpFactor = 0.5f;
     sUnitInfo[QUAD].canGuard = true;
     sUnitInfo[QUAD].canAttackUnits = true;
-    strcpy(sUnitInfo[QUAD].name, "Quad");
+    sUnitInfo[QUAD].name =  "Quad";
 
 
     // Unit        : Trike (normal trike)
@@ -344,7 +344,7 @@ void install_units() {
     sUnitInfo[TRIKE].smokeHpFactor = 0.5f;
     sUnitInfo[TRIKE].canGuard = true;
     sUnitInfo[TRIKE].canAttackUnits = true;
-    strcpy(sUnitInfo[TRIKE].name, "Trike");
+    sUnitInfo[TRIKE].name =  "Trike";
 
     // Unit        : Raider Trike (Ordos trike)
     // Description : Raider Trike, 3 wheeled (single gunned), weaker, but faster
@@ -354,7 +354,7 @@ void install_units() {
     sUnitInfo[RAIDER].bmp_height = 14 * 2;
     sUnitInfo[RAIDER].bmp_startpixel = 0;
     sUnitInfo[RAIDER].bmp_frames = 1;
-    strcpy(sUnitInfo[RAIDER].name, "Raider Trike");
+    sUnitInfo[RAIDER].name =  "Raider Trike";
     sUnitInfo[RAIDER].icon = ICON_UNIT_RAIDER;
     sUnitInfo[RAIDER].bulletType = BULLET_TRIKE;
     sUnitInfo[RAIDER].squish = false;
@@ -380,7 +380,7 @@ void install_units() {
     sUnitInfo[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
     sUnitInfo[FRIGATE].hp = 9999;
     // frigate has no list
-    strcpy(sUnitInfo[FRIGATE].name, "Frigate");
+    sUnitInfo[FRIGATE].name =  "Frigate";
 
     /*
     units[FRIGATE].speed     = 0;
@@ -409,7 +409,7 @@ void install_units() {
     sUnitInfo[SONICTANK].canGuard = true;
     sUnitInfo[SONICTANK].canAttackUnits = true;
 
-    strcpy(sUnitInfo[SONICTANK].name, "Sonic Tank");
+    sUnitInfo[SONICTANK].name =  "Sonic Tank";
 
 
     // Unit        : Single Soldier
@@ -431,7 +431,7 @@ void install_units() {
     sUnitInfo[SOLDIER].damageOnEnterStructure = 10.0f;
     sUnitInfo[SOLDIER].canGuard = true;
     sUnitInfo[SOLDIER].canAttackUnits = true;
-    strcpy(sUnitInfo[SOLDIER].name, "Soldier");
+    sUnitInfo[SOLDIER].name =  "Soldier";
 
 
     // Unit        : Infantry
@@ -455,7 +455,7 @@ void install_units() {
     sUnitInfo[INFANTRY].damageOnEnterStructure = 25.0f;
     sUnitInfo[INFANTRY].canGuard = true;
     sUnitInfo[INFANTRY].canAttackUnits = true;
-    strcpy(sUnitInfo[INFANTRY].name, "Light Infantry");
+    sUnitInfo[INFANTRY].name =  "Light Infantry";
 
     // Unit        : Single Trooper
     // Description : 1 trooper
@@ -464,7 +464,7 @@ void install_units() {
     sUnitInfo[TROOPER].bmp_height = 16 * 2;
     sUnitInfo[TROOPER].bmp_startpixel = 0;
     sUnitInfo[TROOPER].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[TROOPER].name, "Trooper");
+    sUnitInfo[TROOPER].name =  "Trooper";
     sUnitInfo[TROOPER].infantry = true;
     sUnitInfo[TROOPER].bulletType = ROCKET_SMALL;
     sUnitInfo[TROOPER].icon = ICON_UNIT_TROOPER;
@@ -488,7 +488,7 @@ void install_units() {
     sUnitInfo[TROOPERS].bmp_height = 16 * 2;
     sUnitInfo[TROOPERS].bmp_startpixel = 0;
     sUnitInfo[TROOPERS].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[TROOPERS].name, "Troopers");
+    sUnitInfo[TROOPERS].name =  "Troopers";
     sUnitInfo[TROOPERS].icon = ICON_UNIT_TROOPERS;
     sUnitInfo[TROOPERS].bulletType = ROCKET_SMALL;
     sUnitInfo[TROOPERS].fireTwice = true;
@@ -513,7 +513,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_ONE].bmp_height = 16 * 2;
     sUnitInfo[UNIT_FREMEN_ONE].bmp_startpixel = 0;
     sUnitInfo[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[UNIT_FREMEN_ONE].name, "Fremen (1)");
+    sUnitInfo[UNIT_FREMEN_ONE].name =  "Fremen (1)";
     sUnitInfo[UNIT_FREMEN_ONE].icon = ICON_SPECIAL_FREMEN;
     sUnitInfo[UNIT_FREMEN_ONE].bulletType = ROCKET_SMALL_FREMEN;
     sUnitInfo[UNIT_FREMEN_ONE].fireTwice = false;
@@ -534,7 +534,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_THREE].bmp_height = 16 * 2;
     sUnitInfo[UNIT_FREMEN_THREE].bmp_startpixel = 0;
     sUnitInfo[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[UNIT_FREMEN_THREE].name, "Fremen (3)");
+    sUnitInfo[UNIT_FREMEN_THREE].name =  "Fremen (3)";
     sUnitInfo[UNIT_FREMEN_THREE].icon = ICON_SPECIAL_FREMEN;
     sUnitInfo[UNIT_FREMEN_THREE].bulletType = ROCKET_SMALL_FREMEN;
     sUnitInfo[UNIT_FREMEN_THREE].fireTwice = true;
@@ -562,7 +562,7 @@ void install_units() {
     // sUnitInfo[SABOTEUR].range = 2;
     sUnitInfo[SABOTEUR].attack_frequency = 0;
     // sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
-    strcpy(sUnitInfo[SABOTEUR].name, "Saboteur");
+    sUnitInfo[SABOTEUR].name =  "Saboteur";
     sUnitInfo[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
     sUnitInfo[SABOTEUR].squish = false;
     sUnitInfo[SABOTEUR].canBeSquished = true;
@@ -583,7 +583,7 @@ void install_units() {
     sUnitInfo[SANDWORM].bmp_height = 48;
     // sUnitInfo[SANDWORM].turnspeed = 0; // very fast
     // sUnitInfo[SANDWORM].sight = 16;
-    strcpy(sUnitInfo[SANDWORM].name, "Sandworm");
+    sUnitInfo[SANDWORM].name =  "Sandworm";
     sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
     sUnitInfo[SANDWORM].squish = false;
     sUnitInfo[SANDWORM].canGuard = true;
@@ -787,7 +787,7 @@ void install_specials() {
         sSpecialInfo[i].deployTargetPrecision = 0;
         sSpecialInfo[i].listType = eListType::LIST_NONE;
         sSpecialInfo[i].subListId = -1;
-        strcpy(sSpecialInfo[i].description, "\0");
+        sSpecialInfo[i].description = "Unknown";
     }
 
     // Deploy Saboteur
@@ -802,7 +802,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
     sSpecialInfo[SPECIAL_SABOTEUR].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_SABOTEUR].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_SABOTEUR].description, "Saboteur");
+    sSpecialInfo[SPECIAL_SABOTEUR].description = "Saboteur";
 
     // Deploy Fremen
     sSpecialInfo[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
@@ -816,7 +816,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
     sSpecialInfo[SPECIAL_FREMEN].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_FREMEN].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_FREMEN].description, "Fremen");
+    sSpecialInfo[SPECIAL_FREMEN].description = "Fremen";
 
     // Launch Death Hand
     sSpecialInfo[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
@@ -835,7 +835,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     sSpecialInfo[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_DEATHHAND].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_DEATHHAND].description, "Death Hand");
+    sSpecialInfo[SPECIAL_DEATHHAND].description = "Death Hand";
 
 }
 
@@ -879,7 +879,7 @@ void install_bullets(const std::string& iniFile) {
     sBulletInfo[ROCKET_BIG].canDamageAirUnits = settings->getBoolean("ROCKET_BIG","canDamageAirUnits");
     sBulletInfo[ROCKET_BIG].canDamageGround = settings->getBoolean("ROCKET_BIG","canDamageGround");
     sBulletInfo[ROCKET_BIG].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    sBulletInfo[ROCKET_BIG].description = settings->getStringValue("ROCKET_BIG","description").c_str();
+    sBulletInfo[ROCKET_BIG].description = settings->getStringValue("ROCKET_BIG","description");
 
     // small rocket (for ornithopter)
     sBulletInfo[ROCKET_SMALL_ORNI].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -1081,7 +1081,7 @@ void install_upgrades() {
         sUpgradeInfo[i].providesTypeList = eListType::LIST_NONE;
         sUpgradeInfo[i].providesTypeSubList = -1;
         sUpgradeInfo[i].buildTime = 5;
-        strcpy(sUpgradeInfo[i].description, "Upgrade");
+        sUpgradeInfo[i].description = "Upgrade";
     }
 
     // CONSTYARD UPGRADES
@@ -1099,7 +1099,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = eListType::LIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
+    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].description = "Build 4 concrete slabs at once";
 
     // Second upgrade Constyard: Rturret
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
@@ -1116,7 +1116,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
+    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].description = "Build Rocket Turret";
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
@@ -1133,7 +1133,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
+    sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description = "Build Quad at Light Factory";
 
     // HEAVYFACTORY UPGRADES:
 
@@ -1152,7 +1152,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].description = "Build MCV at Heavy Factory";
 
     // Harkonnen/Atreides only
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
@@ -1169,7 +1169,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description = "Build Rocket Launcher at Heavy Factory";
 
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
@@ -1185,7 +1185,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description = "Build Siege Tank at Heavy Factory";
 
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
@@ -1201,7 +1201,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description = "Build Siege Tank at Heavy Factory";
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
@@ -1216,7 +1216,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
+    sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].description = "Build Ornithopter at Hi-Tech";
 
     // WOR (Harkonnen & Ordos)
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
@@ -1233,7 +1233,7 @@ void install_upgrades() {
     if (!game.isDebugMode()) {
         sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
+    sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].description = "Build Troopers at WOR";
 
     // BARRACKS (Atreides & Ordos)
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
@@ -1250,7 +1250,7 @@ void install_upgrades() {
     if (!game.isDebugMode()) {
         sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
+    sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].description = "Build Infantry at Barracks";
 
 }
 
@@ -1284,7 +1284,7 @@ void install_structures() {
         structureInfo.configured = false;
         structureInfo.canAttackAirUnits = false;
         structureInfo.canAttackGroundUnits = false;
-        strcpy(structureInfo.name, "Unknown");
+        structureInfo.name = "Unknown";
     }
 
     // Single and 4 slabs
@@ -1295,7 +1295,7 @@ void install_structures() {
     sStructureInfo[SLAB1].bmp_height = 16 * 2;
     sStructureInfo[SLAB1].configured = true;
     sStructureInfo[SLAB1].queuable = true;
-    strcpy(sStructureInfo[SLAB1].name, "Concrete Slab");
+    sStructureInfo[SLAB1].name =  "Concrete Slab";
 
     sStructureInfo[SLAB4].bmp = (BITMAP *) gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
     sStructureInfo[SLAB4].icon = ICON_STR_4SLAB;
@@ -1304,7 +1304,7 @@ void install_structures() {
     sStructureInfo[SLAB4].bmp_height = 32 * 2;
     sStructureInfo[SLAB4].configured = true;
     sStructureInfo[SLAB4].queuable = true;
-    strcpy(sStructureInfo[SLAB4].name, "4 Concrete Slabs");
+    sStructureInfo[SLAB4].name =  "4 Concrete Slabs";
 
 
     // Concrete Wall
@@ -1315,7 +1315,7 @@ void install_structures() {
     sStructureInfo[WALL].bmp_height = 16 * 2;
     sStructureInfo[WALL].queuable = true;
     sStructureInfo[WALL].configured = true;
-    strcpy(sStructureInfo[WALL].name, "Concrete Wall");
+    sStructureInfo[WALL].name =  "Concrete Wall";
 
     // Structure    : Windtrap
     // Description  : <none>
@@ -1330,7 +1330,7 @@ void install_structures() {
             .relX = 53,
             .relY = 37
     });
-    strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
+    sStructureInfo[WINDTRAP].name =  "Windtrap";
 
     // Structure    : Heavy Factory
     // Description  : <none>
@@ -1347,7 +1347,7 @@ void install_structures() {
             .relX = 25,
             .relY = 3
     });
-    strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
+    sStructureInfo[HEAVYFACTORY].name =  "Heavy Factory";
 
     // Structure    : Hight Tech Factory (for aircraft only)
     // Description  : <none>
@@ -1363,7 +1363,7 @@ void install_structures() {
             .relX = 19,
             .relY = 36
     });
-    strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
+    sStructureInfo[HIGHTECH].name =  "Hi-Tech";
 
     // Structure    : Repair
     // Description  : <none>
@@ -1379,7 +1379,7 @@ void install_structures() {
             .relX = 41,
             .relY = 3
     });
-    strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
+    sStructureInfo[REPAIR].name =  "Repair Facility";
 
     // Structure    : Palace
     // Description  : <none>
@@ -1394,7 +1394,7 @@ void install_structures() {
             .relX = 28,
             .relY = 14
     });
-    strcpy(sStructureInfo[PALACE].name, "Palace");
+    sStructureInfo[PALACE].name =  "Palace";
 
     // Structure    : Light Factory
     // Description  : <none>
@@ -1411,7 +1411,7 @@ void install_structures() {
             .relX = 41,
             .relY = 2
     });
-    strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
+    sStructureInfo[LIGHTFACTORY].name =  "Light Factory";
 
     // Structure    : Radar
     // Description  : <none>
@@ -1434,7 +1434,7 @@ void install_structures() {
             .relX = 12,
             .relY = 46
     });
-    strcpy(sStructureInfo[RADAR].name, "Outpost");
+    sStructureInfo[RADAR].name =  "Outpost";
 
     // Structure    : Barracks
     // Description  : <none>
@@ -1455,7 +1455,7 @@ void install_structures() {
             .relX = 51,
             .relY = 50
     });
-    strcpy(sStructureInfo[BARRACKS].name, "Barracks");
+    sStructureInfo[BARRACKS].name =  "Barracks";
 
     // Structure    : WOR
     // Description  : <none>
@@ -1471,7 +1471,7 @@ void install_structures() {
             .relX = 21,
             .relY = 31
     });
-    strcpy(sStructureInfo[WOR].name, "WOR");
+    sStructureInfo[WOR].name =  "WOR";
 
 
     // Structure    : Silo
@@ -1489,7 +1489,7 @@ void install_structures() {
             .relX = 43,
             .relY = 20
     });
-    strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
+    sStructureInfo[SILO].name =  "Spice Storage Silo";
 
     // Structure    : Refinery
     // Description  : <none>
@@ -1505,7 +1505,7 @@ void install_structures() {
             .relX = 45,
             .relY = 12
     });
-    strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
+    sStructureInfo[REFINERY].name =  "Spice Refinery";
 
     // Structure    : Construction Yard
     // Description  : <none>
@@ -1522,7 +1522,7 @@ void install_structures() {
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
     sStructureInfo[CONSTYARD].configured = true;
-    strcpy(sStructureInfo[CONSTYARD].name, "Construction Yard");
+    sStructureInfo[CONSTYARD].name =  "Construction Yard";
 
     // Structure    : Starport
     // Description  : You can order units from this structure
@@ -1538,7 +1538,7 @@ void install_structures() {
             .relX = 16,
             .relY = 3
     });
-    strcpy(sStructureInfo[STARPORT].name, "Starport");
+    sStructureInfo[STARPORT].name =  "Starport";
 
     // Structure    : House of IX
     // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
@@ -1554,7 +1554,7 @@ void install_structures() {
             .relX = 60, // 60
             .relY = 40  // 40
     });
-    strcpy(sStructureInfo[IX].name, "House of IX");
+    sStructureInfo[IX].name =  "House of IX";
 
     // Structure    : Normal Turret
     // Description  : defence
@@ -1568,7 +1568,7 @@ void install_structures() {
     sStructureInfo[TURRET].configured = true;
     sStructureInfo[TURRET].canAttackGroundUnits = true;
     sStructureInfo[TURRET].fireRate = 275;
-    strcpy(sStructureInfo[TURRET].name, "Gun Turret");
+    sStructureInfo[TURRET].name =  "Gun Turret";
 
     // Structure    : Rocket Turret
     // Description  : defence
@@ -1583,7 +1583,7 @@ void install_structures() {
     sStructureInfo[RTURRET].canAttackAirUnits = true;
     sStructureInfo[RTURRET].canAttackGroundUnits = true;
     sStructureInfo[RTURRET].fireRate = 350;
-    strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
+    sStructureInfo[RTURRET].name =  "Rocket Turret";
 
     // Structure    : Windtrap
     // Description  : <none>
@@ -1780,15 +1780,15 @@ void Shimmer(int r, int x, int y) {
 const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {
         case eBuildType::SPECIAL:
-            return sSpecialInfo[specificTypeId].description;
+            return sSpecialInfo[specificTypeId].description.c_str();
         case eBuildType::UNIT:
-            return sUnitInfo[specificTypeId].name;
+            return sUnitInfo[specificTypeId].name.c_str();
         case eBuildType::STRUCTURE:
-            return sStructureInfo[specificTypeId].name;
+            return sStructureInfo[specificTypeId].name.c_str();
         case eBuildType::BULLET:
             return sBulletInfo[specificTypeId].description.c_str();
         case eBuildType::UPGRADE:
-            return sUpgradeInfo[specificTypeId].description;
+            return sUpgradeInfo[specificTypeId].description.c_str();
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:

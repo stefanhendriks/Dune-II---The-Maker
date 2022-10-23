@@ -2193,7 +2193,9 @@ void INI_Install_Game(std::string filename) {
                     if (wordtype == WORD_DESCRIPTION) {
                         char n[256];
                         INI_WordValueCHAR(linefeed, n);
-                        sprintf(unitInfo.name, "%s", n);
+                        char unitName[256];
+                        sprintf(unitName, "%s", n);
+                        unitInfo.name = std::string(unitName);
                     }
 
                     // Booleans
