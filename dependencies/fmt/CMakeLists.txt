@@ -81,12 +81,13 @@ option(FMT_FUZZ "Generate the fuzz target." OFF)
 option(FMT_CUDA_TEST "Generate the cuda-test target." OFF)
 option(FMT_OS "Include core requiring OS (Windows/Posix) " ON)
 option(FMT_MODULE "Build a module instead of a traditional library." OFF)
+option(FMT_SYSTEM_HEADERS "Expose headers with marking them as system." OFF)
 
 set(FMT_CAN_MODULE OFF)
 if (CMAKE_CXX_STANDARD GREATER 17 AND
     # msvc 16.10-pre4
     MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.29.30035)
-  set(FMT_CAN_MODULE ON)
+  set(FMT_CAN_MODULE OFF)
 endif ()
 if (NOT FMT_CAN_MODULE)
   set(FMT_MODULE OFF)
@@ -95,6 +96,10 @@ endif ()
 if (FMT_TEST AND FMT_MODULE)
   # The tests require {fmt} to be compiled as traditional library
   message(STATUS "Testing is incompatible with build mode 'module'.")
+endif ()
+set(FMT_SYSTEM_HEADERS_ATTRIBUTE "")
+if (FMT_SYSTEM_HEADERS)
+  set(FMT_SYSTEM_HEADERS_ATTRIBUTE SYSTEM)
 endif ()
 
 # Get version from core.h
@@ -120,7 +125,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
   "${CMAKE_CURRENT_SOURCE_DIR}/support/cmake")
 
 include(cxx14)
-include(CheckCXXCompilerFlag)
 include(JoinPaths)
 
 list(FIND CMAKE_CXX_COMPILE_FEATURES "cxx_variadic_templates" index)
@@ -151,7 +155,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
       -Wcast-align
       -Wctor-dtor-privacy -Wdisabled-optimization
       -Winvalid-pch -Woverloaded-virtual
-      -Wconversion -Wswitch-enum -Wundef
+      -Wconversion -Wundef
       -Wno-ctor-dtor-privacy -Wno-format-nonliteral)
   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6)
       set(PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS}
@@ -204,18 +208,6 @@ if (FMT_MASTER_PROJECT AND CMAKE_GENERATOR MATCHES "Visual Studio")
     ${CMAKE_MAKE_PROGRAM} -p:FrameworkPathOverride=\"${netfxpath}\" %*")
 endif ()
 
-set(strtod_l_headers stdlib.h)
-if (APPLE)
-  set(strtod_l_headers ${strtod_l_headers} xlocale.h)
-endif ()
-
-include(CheckSymbolExists)
-if (WIN32)
-  check_symbol_exists(_strtod_l "${strtod_l_headers}" HAVE_STRTOD_L)
-else ()
-  check_symbol_exists(strtod_l "${strtod_l_headers}" HAVE_STRTOD_L)
-endif ()
-
 function(add_headers VAR)
   set(headers ${${VAR}})
   foreach (header ${ARGN})
@@ -226,7 +218,7 @@ endfunction()
 
 # Define the fmt library, its includes and the needed defines.
 add_headers(FMT_HEADERS args.h chrono.h color.h compile.h core.h format.h
-                        format-inl.h locale.h os.h ostream.h printf.h ranges.h
+                        format-inl.h os.h ostream.h printf.h ranges.h std.h
                         xchar.h)
 if (FMT_MODULE)
   set(FMT_SOURCES src/fmt.cc)
@@ -238,17 +230,6 @@ endif ()
 
 add_library(fmt ${FMT_SOURCES} ${FMT_HEADERS} README.rst ChangeLog.rst)
 add_library(fmt::fmt ALIAS fmt)
-
-if (HAVE_STRTOD_L)
-  target_compile_definitions(fmt PUBLIC FMT_LOCALE)
-endif ()
-
-if (MINGW)
-  check_cxx_compiler_flag("Wa,-mbig-obj" FMT_HAS_MBIG_OBJ)
-  if (${FMT_HAS_MBIG_OBJ})
-    target_compile_options(fmt PUBLIC "-Wa,-mbig-obj")
-  endif()
-endif ()
 
 if (FMT_WERROR)
   target_compile_options(fmt PRIVATE ${WERROR_FLAG})
@@ -262,7 +243,7 @@ endif ()
 
 target_compile_features(fmt INTERFACE ${FMT_REQUIRED_FEATURES})
 
-target_include_directories(fmt PUBLIC
+target_include_directories(fmt ${FMT_SYSTEM_HEADERS_ATTRIBUTE} PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${FMT_INC_DIR}>)
 
@@ -270,6 +251,7 @@ set(FMT_DEBUG_POSTFIX d CACHE STRING "Debug library postfix.")
 
 set_target_properties(fmt PROPERTIES
   VERSION ${FMT_VERSION} SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+  PUBLIC_HEADER "${FMT_HEADERS}"
   DEBUG_POSTFIX "${FMT_DEBUG_POSTFIX}")
 
 # Set FMT_LIB_NAME for pkg-config fmt.pc. We cannot use the OUTPUT_NAME target
@@ -298,7 +280,7 @@ add_library(fmt::fmt-header-only ALIAS fmt-header-only)
 target_compile_definitions(fmt-header-only INTERFACE FMT_HEADER_ONLY=1)
 target_compile_features(fmt-header-only INTERFACE ${FMT_REQUIRED_FEATURES})
 
-target_include_directories(fmt-header-only INTERFACE
+target_include_directories(fmt-header-only ${FMT_SYSTEM_HEADERS_ATTRIBUTE} INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${FMT_INC_DIR}>)
 
@@ -347,6 +329,8 @@ if (FMT_INSTALL)
   install(TARGETS ${INSTALL_TARGETS} EXPORT ${targets_export_name}
           LIBRARY DESTINATION ${FMT_LIB_DIR}
           ARCHIVE DESTINATION ${FMT_LIB_DIR}
+          PUBLIC_HEADER DESTINATION "${FMT_INC_DIR}/fmt"
+          FRAMEWORK DESTINATION "."
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
   # Use a namespace because CMake provides better diagnostics for namespaced
@@ -363,7 +347,6 @@ if (FMT_INSTALL)
 
   install(FILES $<TARGET_PDB_FILE:${INSTALL_TARGETS}>
           DESTINATION ${FMT_LIB_DIR} OPTIONAL)
-  install(FILES ${FMT_HEADERS} DESTINATION "${FMT_INC_DIR}/fmt")
   install(FILES "${pkgconfig}" DESTINATION "${FMT_PKGCONFIG_DIR}")
 endif ()
 
