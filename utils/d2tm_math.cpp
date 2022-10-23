@@ -15,7 +15,7 @@
 
   */
 #include "d2tm_math.h"
-
+#define FMT_HEADER_ONLY
 #include <fmt/format.h>
 
 #include "definitions.h"
