@@ -10,6 +10,7 @@
 #include "player/cHousesInfo.h"
 
 #include <allegro.h>
+#define FMT_HEADER_ONLY
 #include <fmt/format.h>
 
 #include <vector>
@@ -975,7 +976,7 @@ bool cPlayer::startBuildingUnit(int iUnitType) const {
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to build unit [{}] iUnitType = [{}], with listType[{}] - {}",
-                        unitType.name, iUnitType, listType, result));
+                        unitType.name, iUnitType, eListTypeString(listType), result));
     }
     return startedBuilding;
 }
@@ -988,7 +989,7 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to build structure [{}] iStructureType = [{}], with listType[{}] - {}",
-                        sStructureInfo[iStructureType].name, iStructureType, listType, startedBuilding));
+                        sStructureInfo[iStructureType].name, iStructureType, eListTypeString(listType), startedBuilding));
     }
     return startedBuilding;
 }
@@ -1001,7 +1002,7 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to build special [{}] iSpecialType = [{}], with listType[{}] - {}",
-                        sSpecialInfo[iSpecialType].description, iSpecialType, listType, result));
+                        sSpecialInfo[iSpecialType].description, iSpecialType, eListTypeString(listType), result));
     }
     return startedBuilding;
 }
@@ -1013,7 +1014,7 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(fmt::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
-                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, listType, result));
+                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, eListTypeString(listType), result));
     }
     return startedBuilding;
 }
@@ -1217,7 +1218,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
         // not available to build (not in list)
         // assume it requires an upgrade?
         log(fmt::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this unit: [{}]",
-                        sUnitInfo[iUnitType].listType, sUnitInfo[iUnitType].name));
+                        eListTypeString(sUnitInfo[iUnitType].listType), sUnitInfo[iUnitType].name));
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
@@ -1250,7 +1251,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
         // not available to build (not in list)
         // assume it requires an upgrade?
         log(fmt::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this special: [{}]",
-                        special.listType, special.description));
+                        eListTypeString(special.listType), special.description));
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
