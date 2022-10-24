@@ -1780,7 +1780,10 @@ void Shimmer(int r, int x, int y) {
 const std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {
         case eBuildType::SPECIAL:
+            if (specificTypeId!=-1) //@todo: what did i need this patch ?
                 return sSpecialInfo[specificTypeId].description;
+            else
+                return "";
         case eBuildType::UNIT:
             return sUnitInfo[specificTypeId].name;
         case eBuildType::STRUCTURE:
