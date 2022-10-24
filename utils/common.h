@@ -53,4 +53,4 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
-const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
+const std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);

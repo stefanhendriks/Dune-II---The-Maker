@@ -1777,18 +1777,18 @@ void Shimmer(int r, int x, int y) {
 }
 
 
-const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
+const std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {
         case eBuildType::SPECIAL:
-            return sSpecialInfo[specificTypeId].description.c_str();
+                return sSpecialInfo[specificTypeId].description;
         case eBuildType::UNIT:
-            return sUnitInfo[specificTypeId].name.c_str();
+            return sUnitInfo[specificTypeId].name;
         case eBuildType::STRUCTURE:
-            return sStructureInfo[specificTypeId].name.c_str();
+            return sStructureInfo[specificTypeId].name;
         case eBuildType::BULLET:
-            return sBulletInfo[specificTypeId].description.c_str();
+            return sBulletInfo[specificTypeId].description;
         case eBuildType::UPGRADE:
-            return sUpgradeInfo[specificTypeId].description.c_str();
+            return sUpgradeInfo[specificTypeId].description;
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:
