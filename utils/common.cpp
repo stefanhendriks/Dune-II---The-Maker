@@ -164,20 +164,30 @@ void install_units(const std::string& iniFile) {
     // Description : Pesty little aircraft shooting bastard
     sUnitInfo[ORNITHOPTER].bmp = (BITMAP *) gfxdata[UNIT_ORNITHOPTER].dat;      // pointer to the original 8bit bitmap
     sUnitInfo[ORNITHOPTER].shadow = (BITMAP *) gfxdata[UNIT_ORNITHOPTER_SHADOW].dat;      // pointer to the original 8bit bitmap
-    sUnitInfo[ORNITHOPTER].bmp_width = 24 * 2;
-    sUnitInfo[ORNITHOPTER].bmp_height = 24 * 2;
-    sUnitInfo[ORNITHOPTER].bmp_startpixel = 0;
-    sUnitInfo[ORNITHOPTER].bmp_frames = 4; // we have at max 3 extra frames
+    sUnitInfo[ORNITHOPTER].bmp_width = settings->getInt("ORNITHOPTER","bmp_width");
+    sUnitInfo[ORNITHOPTER].bmp_height = settings->getInt("ORNITHOPTER","bmp_height");
+    //sUnitInfo[ORNITHOPTER].bmp_startpixel = 0;
+    sUnitInfo[ORNITHOPTER].bmp_frames = settings->getInt("ORNITHOPTER","bmp_frames");
     sUnitInfo[ORNITHOPTER].icon = ICON_UNIT_ORNITHOPTER;
     sUnitInfo[ORNITHOPTER].bulletType = ROCKET_SMALL_ORNI;
-    sUnitInfo[ORNITHOPTER].fireTwice = true;
-    sUnitInfo[ORNITHOPTER].airborn = true;   // is airborn
-    sUnitInfo[ORNITHOPTER].squish = false;   // can't squish infantry
-    sUnitInfo[ORNITHOPTER].free_roam = true; // may freely roam the air
+    sUnitInfo[ORNITHOPTER].fireTwice = settings->getBoolean("ORNITHOPTER","fireTwice");
+    sUnitInfo[ORNITHOPTER].airborn = settings->getBoolean("ORNITHOPTER","airborn");
+    sUnitInfo[ORNITHOPTER].squish = settings->getBoolean("ORNITHOPTER","Squish");
+    sUnitInfo[ORNITHOPTER].free_roam = settings->getBoolean("ORNITHOPTER","free_roam");
     sUnitInfo[ORNITHOPTER].listType = eListType::LIST_UNITS;
     sUnitInfo[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
 //    sUnitInfo[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
-    sUnitInfo[ORNITHOPTER].name =  "Ornithopter";
+    sUnitInfo[ORNITHOPTER].name =  settings->getStringValue("ORNITHOPTER","Name");
+    sUnitInfo[ORNITHOPTER].speed = settings->getInt("ORNITHOPTER","MoveSpeed");
+    sUnitInfo[ORNITHOPTER].turnspeed = settings->getInt("ORNITHOPTER","TurnSpeed");
+    sUnitInfo[ORNITHOPTER].hp = settings->getInt("ORNITHOPTER","HitPoints");
+    sUnitInfo[ORNITHOPTER].sight = settings->getInt("ORNITHOPTER","Sight");
+    sUnitInfo[ORNITHOPTER].range = settings->getInt("ORNITHOPTER","Range");
+    sUnitInfo[ORNITHOPTER].buildTime = settings->getInt("ORNITHOPTER","BuildTime");
+    sUnitInfo[ORNITHOPTER].cost = settings->getInt("ORNITHOPTER","Cost");
+
+
+
 
     // Unit        : Devastator
     // Description : Devastator
@@ -577,20 +587,20 @@ void install_units(const std::string& iniFile) {
     sUnitInfo[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
 
     // Unit        : Sandworm
-    // sUnitInfo[SANDWORM].speed = 3; // very fast
+    sUnitInfo[SANDWORM].speed = settings->getInt("SANDWORM","MoveSpeed");
     sUnitInfo[SANDWORM].bmp = (BITMAP *) gfxdata[UNIT_SANDWORM].dat;
-    // sUnitInfo[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
-    sUnitInfo[SANDWORM].dieWhenLowerThanHP = 1000;
-    // sUnitInfo[SANDWORM].appetite = 10;
-    sUnitInfo[SANDWORM].bmp_width = 48;
-    sUnitInfo[SANDWORM].bmp_height = 48;
-    // sUnitInfo[SANDWORM].turnspeed = 0; // very fast
-    // sUnitInfo[SANDWORM].sight = 16;
-    sUnitInfo[SANDWORM].name =  "Sandworm";
+    sUnitInfo[SANDWORM].hp = settings->getInt("SANDWORM","HitPoints");
+    sUnitInfo[SANDWORM].dieWhenLowerThanHP = settings->getInt("SANDWORM","DieWhenLowerThanHP");
+    sUnitInfo[SANDWORM].appetite = settings->getInt("SANDWORM","appetite");
+    sUnitInfo[SANDWORM].bmp_width = settings->getInt("SANDWORM","bmp_width");
+    sUnitInfo[SANDWORM].bmp_height =  settings->getInt("SANDWORM","bmp_height");
+    sUnitInfo[SANDWORM].turnspeed = settings->getInt("SANDWORM","TurnSpeed");
+    sUnitInfo[SANDWORM].sight = settings->getInt("SANDWORM","Sight");
+    sUnitInfo[SANDWORM].name =  settings->getStringValue("SANDWORM","Name");
     sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
-    sUnitInfo[SANDWORM].squish = false;
-    sUnitInfo[SANDWORM].canGuard = true;
-    sUnitInfo[SANDWORM].canAttackUnits = true;
+    sUnitInfo[SANDWORM].squish = settings->getBoolean("SANDWORM","Squish");
+    sUnitInfo[SANDWORM].canGuard = settings->getBoolean("SANDWORM","CanGuard");
+    sUnitInfo[SANDWORM].canAttackUnits = settings->getBoolean("SANDWORM","CanAttackUnits");
 
 
     // Unit        : <name>
