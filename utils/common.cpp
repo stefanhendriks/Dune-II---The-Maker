@@ -74,8 +74,11 @@ int makeColFromString(std::string colorStr)
 /*****************************
  Unit Rules
  *****************************/
-void install_units() {
+void install_units(const std::string& iniFile) {
     logbook("Installing:  UNITS");
+    logbook(fmt::format("Reading {}", iniFile ));
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>(iniFile, true);
+
     // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
     // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
     // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
