@@ -39,5 +39,7 @@ public:
     int getFade() { return iFade; }
 
     std::string getStatusForMessageBar() const override;
+
+    void onNotifyGameEvent(const s_GameEvent &) override {}
 };
 

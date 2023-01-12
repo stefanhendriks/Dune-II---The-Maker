@@ -8,24 +8,19 @@
 
   2001 - 2022 (c) code by Stefan Hendriks
 
-
-  ---
-  New
-  ---
-
-  Giving a go for true OOP programming, using a base class and derived classes.
   */
 #pragma once
 
 #include "gameobjects/cFlag.h"
 #include "structs.h"
+#include "observers/cScenarioObserver.h"
 
 #include <vector>
 #include <string>
 
 class cPlayer;
 
-class cAbstractStructure {
+class cAbstractStructure : public cScenarioObserver {
 
 	private:
 		int armor;			// armor
@@ -258,4 +253,5 @@ class cAbstractStructure {
         std::string getDefaultStatusMessageBar() const;
 
         virtual std::string getStatusForMessageBar() const = 0;
+
 };

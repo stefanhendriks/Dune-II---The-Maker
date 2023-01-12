@@ -35,5 +35,6 @@ class cStarPort : public cAbstractStructure {
 
     std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
 
+    void onNotifyGameEvent(const s_GameEvent &) override {}
 };
 
