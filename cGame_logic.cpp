@@ -1904,7 +1904,7 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
 }
 
 void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
-    const cPlayer &humanPlayer = players[HUMAN];
+    cPlayer &humanPlayer = players[HUMAN];
 
     if (event.hasKey(KEY_F)) {
         m_drawFps = false;
@@ -1920,6 +1920,26 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
         if (selectedStructure) {
             mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
+    }
+
+    cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+    if (selectedStructure) {
+        // depending on type of structure, a key could mean a different thing?
+        // so, kind of like event.hasKey(selectedStructure->KeyForDeploying()) ?
+        // and then perform?
+        if (event.hasKey(KEY_D)) {
+            if (selectedStructure->getType() == REPAIR) { // this should be done differently?
+                s_GameEvent e{
+                        .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                        .entityType = eBuildType::UNKNOWN,
+                        .entityID = -1,
+                        .player = &humanPlayer
+                };
+                selectedStructure->onNotifyGameEvent(e);
+            }
+        }
+        // other keys for other structures?
+        // like: repair/stop repairing?
     }
 }
 

@@ -313,6 +313,9 @@ enum eGameEventType {
 	GAME_EVENT_SPICE_BLOOM_BLEW,
     // a player got defeated
 	GAME_EVENT_PLAYER_DEFEATED,
+
+    // Notify a unit should be deployed
+    GAME_EVENT_DEPLOY_UNIT,
 };
 
 // Fading action for transitioning between states

@@ -114,4 +114,16 @@ void cRepairFacility::startAnimating() {
     animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
 }
 
+void cRepairFacility::onNotifyGameEvent(const s_GameEvent &event) {
+    if (event.eventType == GAME_EVENT_DEPLOY_UNIT) {
+        if (hasUnitWithin()) {
+            // dump unit, get rid of it
+            unitLeavesStructure();
+
+            // show door open/close thing
+            setAnimating(true);
+        }
+    }
+}
+
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
