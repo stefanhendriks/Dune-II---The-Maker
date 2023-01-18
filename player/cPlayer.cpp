@@ -1878,8 +1878,9 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
 
         const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
+        int harvesters = getAmountOfUnitsForType(HARVESTER);
+
         if (!refineries.empty()) { // and its player still has a refinery)
-            int harvesters = getAmountOfUnitsForType(HARVESTER);
             // check if the player has any harvester left
 
             // if 1, or less
@@ -1905,12 +1906,12 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
                 pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
             }
         } else {
-            int harvesters = getAmountOfUnitsForType(HARVESTER);
-
             if (harvesters < 1) {
                 addNotification("No harvesters and refineries left!", eNotificationType::BAD);
             }
         }
+    } else {
+
     }
 }
 
@@ -1984,6 +1985,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
 
         // check for unit type?
         if (unitType > -1) {
+            // TODO: what about units in a carry-all being transferred?
             if (pUnit.iType != unitType) continue; // not the same type? skip
         }
 
