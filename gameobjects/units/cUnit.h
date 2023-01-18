@@ -122,7 +122,6 @@ public:
     // iTempHitPoints = hp of unit when transfertype = 1
     eTransferType m_transferType;
 
-	int iCarryTarget;	// Unit ID to carry, but is not carried yet
 	int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
 	int iNewUnitType;	// new unit that will be brought, will be this type
 	int lastDroppedOffCell; // last cell where we dropepd off a unit

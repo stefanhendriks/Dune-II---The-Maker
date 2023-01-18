@@ -109,7 +109,6 @@ void cUnit::init(int i) {
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
-    iCarryTarget = -1;    // Unit ID to carry, but is not carried yet
     iBringTarget = -1;    // Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     iNewUnitType = -1;    // new unit that will be brought, will be this type
     bPickedUp = false;    // carry-all/frigate: picked up the unit? (TODO: change this into states!)
@@ -1411,7 +1410,6 @@ void cUnit::thinkFast_move_airUnit() {
                             if (!unitToPickupOrDrop.bPickedUp) {
                                 // keep updating goal as long as unit has not been picked up yet.
                                 setGoalCell(unitToPickupOrDrop.iCell);
-                                iCarryTarget = unitToPickupOrDrop.iCell;
                             } else {
                                 forgetAboutUnitToPickUp();
                             }
@@ -1786,9 +1784,6 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
         setGoalCell(iBring);
         iBringTarget = iGoalCell;
 
-        // carry is not valid
-        iCarryTarget = -1;
-
         // unit we carry is none
         iUnitID = -1;
 
@@ -1804,7 +1799,6 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
             m_transferType = transferType;
 
             setGoalCell(pUnit.iCell); // first go to the target to pick it up
-            iCarryTarget = pUnit.iCell; // same here...
 
             iNewUnitType = -1;
 
