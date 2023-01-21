@@ -277,13 +277,23 @@ public:
      * @return
      */
     bool isAttackableAirUnit() {
-        return iType == ORNITHOPTER;
+        return isType(ORNITHOPTER);
     }
 
-    bool isHarvester() {
-        return iType == HARVESTER;
+    /**
+     * @deprecated
+     */
+    bool isHarvester() const {
+        return isType(HARVESTER);
     }
 
+    bool isType(int value) const {
+        return iType == value;
+    }
+
+    /**
+     * @deprecated
+     */
     bool isSandworm() const;
 
     /**
