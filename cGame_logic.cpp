@@ -1866,13 +1866,31 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
         }
     }
 
-    if (isDebugMode() && event.hasKey(KEY_TAB)) {
-        onKeyDownDebugMode(event);
+    if (isDebugMode() ) {
+        if (event.hasKey(KEY_TAB)) {
+            onKeyDownDebugMode(event);
+        }
+
+        if (event.hasKey(KEY_F4)) {
+            int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
+            if (mouseCell > -1) {
+                map.clearShroud(mouseCell, 6, HUMAN);
+            }
+        }
+
+        if (event.hasKey(KEY_F6)) {
+            // kill all carry-all's
+            const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
+            for (auto &unitId : myUnitsForType) {
+                cUnit &pUnit = unit[unitId];
+                pUnit.die(true, false);
+            }
+        }
+
     } else {
         if (event.hasKey(KEY_Z)) {
             mapCamera->resetZoom();
         }
-
 
         if (event.hasKey(KEY_H)) {
             mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
@@ -1888,13 +1906,6 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
 
         if (event.hasKey(KEY_ESC)) {
             game.setNextStateToTransitionTo(GAME_OPTIONS);
-        }
-    }
-
-    if (isDebugMode() && event.hasKey(KEY_F4)) {
-        int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
-        if (mouseCell > -1) {
-            map.clearShroud(mouseCell, 6, HUMAN);
         }
     }
 

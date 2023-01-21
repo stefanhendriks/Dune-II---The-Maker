@@ -1875,12 +1875,11 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
     // player
     if (pUnit.isHarvester()) { // a harvester died
         addNotification("You've lost a Harvester.", eNotificationType::PRIORITY);
-
         const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
         int harvesters = getAmountOfUnitsForType(HARVESTER);
 
-        if (!refineries.empty()) { // and its player still has a refinery)
+        if (!refineries.empty()) { // and its player still has a refinery
             // check if the player has any harvester left
 
             // if 1, or less
@@ -1910,8 +1909,28 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
                 addNotification("No harvesters and refineries left!", eNotificationType::BAD);
             }
         }
-    } else {
+    } else if (pUnit.isType(CARRYALL)) {
+        if (pUnit.iNewUnitType == HARVESTER) { // was bringing new harvester...
+            const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
+            int harvesters = getAmountOfUnitsForType(HARVESTER);
 
+            if (!refineries.empty()) { // and its player still has a refinery
+                // check if the player has any harvester left
+
+                // No harvester found, deliver one
+                if (harvesters < 1) {
+                    addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
+
+                    // deliver
+                    cAbstractStructure *refinery = map.findClosestStructureType(pUnit.getCell(), REFINERY, this);
+
+                    // found a refinery, deliver harvester to that
+                    if (refinery) {
+                        REINFORCE(id, HARVESTER, refinery->getCell(), -1);
+                    }
+                }
+            }
+        }
     }
 }
 
