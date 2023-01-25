@@ -1457,7 +1457,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event) {
 
         if (event.entityType == eBuildType::STRUCTURE) {
             if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
-                buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
+                onMyStructureDestroyed(event);
             } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
                 buildingListUpdater->onStructureCreated(event.entitySpecificType);
             }
@@ -2162,4 +2162,37 @@ void cPlayer::thinkSlow() {
 
 void cPlayer::deselectUnit(const int & unitId) {
     unit[unitId].bSelected = false;
+}
+
+void cPlayer::onMyStructureDestroyed(const s_GameEvent &event) {
+    buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
+
+    //
+    if (event.entitySpecificType == REFINERY) {
+        const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
+
+        int harvesters = getAmountOfUnitsForType(HARVESTER);
+
+        if (!refineries.empty()) { // and its player still has a refinery
+            // check if the player has any harvester left
+
+            // No harvester found, deliver one
+            if (harvesters < 1) {
+                addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
+
+                // deliver
+                cAbstractStructure *refinery = map.findClosestStructureType(event.atCell, REFINERY, this);
+
+                // found a refinery, deliver harvester to that
+                if (refinery) {
+                    REINFORCE(id, HARVESTER, refinery->getCell(), -1);
+                }
+            }
+
+            for (auto &structureId: refineries) {
+                cAbstractStructure *pStructure = structure[structureId];
+                pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
+            }
+        }
+    }
 }

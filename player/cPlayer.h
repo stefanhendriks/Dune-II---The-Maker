@@ -529,4 +529,6 @@ private:
     bool alive;
 
     std::vector<cPlayerNotification> notifications;
+
+    void onMyStructureDestroyed(const s_GameEvent &event);
 };
