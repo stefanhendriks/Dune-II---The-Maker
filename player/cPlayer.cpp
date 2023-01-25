@@ -1879,20 +1879,20 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
 
         int harvesters = getAmountOfUnitsForType(HARVESTER);
 
+        // if 1, or less
+        if (harvesters == 1) {
+            addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
+        }
+
         if (!refineries.empty()) { // and its player still has a refinery
             // check if the player has any harvester left
-
-            // if 1, or less
-            if (harvesters == 1) {
-                addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
-            }
 
             // No harvester found, deliver one
             if (harvesters < 1) {
                 addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
 
                 // deliver
-                cAbstractStructure *refinery = pUnit.findClosestStructureType(REFINERY);
+                cAbstractStructure *refinery = map.findClosestStructureType(pUnit.getCell(), REFINERY, this);
 
                 // found a refinery, deliver harvester to that
                 if (refinery) {
