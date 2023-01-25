@@ -268,7 +268,7 @@ void cUnit::createExplosionParticle() {
     }
 
     if (iType == TANK || iType == SIEGETANK || iType == SONICTANK || iType == LAUNCHER || iType == DEVIATOR ||
-        iType == HARVESTER || iType == ORNITHOPTER || iType == MCV || iType == FRIGATE) {
+        iType == HARVESTER || iType == ORNITHOPTER || iType == CARRYALL || iType == MCV || iType == FRIGATE) {
         // play quick 'boom' sound and show animation
         if (rnd(100) < 50) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
