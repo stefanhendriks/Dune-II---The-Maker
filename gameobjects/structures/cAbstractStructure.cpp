@@ -241,7 +241,8 @@ void cAbstractStructure::die() {
         .entityType = eBuildType::STRUCTURE,
         .entityID = getStructureId(),
         .player = pPlayer,
-        .entitySpecificType = getType()
+        .entitySpecificType = getType(),
+        .atCell = iCell
     };
 
     game.onNotifyGameEvent(event);
