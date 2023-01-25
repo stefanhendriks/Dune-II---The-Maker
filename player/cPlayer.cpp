@@ -1885,20 +1885,7 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
         }
 
         if (!refineries.empty()) { // and its player still has a refinery
-            // check if the player has any harvester left
-
-            // No harvester found, deliver one
-            if (harvesters < 1) {
-                addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
-
-                // deliver
-                cAbstractStructure *refinery = map.findClosestStructureType(pUnit.getCell(), REFINERY, this);
-
-                // found a refinery, deliver harvester to that
-                if (refinery) {
-                    REINFORCE(id, HARVESTER, refinery->getCell(), -1);
-                }
-            }
+            reinforceHarvesterIfNeeded(pUnit.getCell());
 
             for (auto &structureId: refineries) {
                 cAbstractStructure *pStructure = structure[structureId];
@@ -1911,24 +1898,28 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
         }
     } else if (pUnit.isType(CARRYALL)) {
         if (pUnit.iNewUnitType == HARVESTER) { // was bringing new harvester...
-            const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
-            int harvesters = getAmountOfUnitsForType(HARVESTER);
+            reinforceHarvesterIfNeeded(pUnit.getCell());
+        }
+    }
+}
 
-            if (!refineries.empty()) { // and its player still has a refinery
-                // check if the player has any harvester left
+void cPlayer::reinforceHarvesterIfNeeded(int cell) {
+    const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
+    int harvesters = getAmountOfUnitsForType(HARVESTER);
 
-                // No harvester found, deliver one
-                if (harvesters < 1) {
-                    addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
+    if (!refineries.empty()) { // and its player still has a refinery
+        // check if the player has any harvester left
 
-                    // deliver
-                    cAbstractStructure *refinery = map.findClosestStructureType(pUnit.getCell(), REFINERY, this);
+        // No harvester found, deliver one
+        if (harvesters < 1) {
+            addNotification("No more Harvester left, reinforcing...", BAD);
 
-                    // found a refinery, deliver harvester to that
-                    if (refinery) {
-                        REINFORCE(id, HARVESTER, refinery->getCell(), -1);
-                    }
-                }
+            // deliver
+            cAbstractStructure *refinery = map.findClosestStructureType(cell, REFINERY, this);
+
+            // found a refinery, deliver harvester to that
+            if (refinery) {
+                REINFORCE(id, HARVESTER, refinery->getCell(), -1);
             }
         }
     }
@@ -2169,30 +2160,6 @@ void cPlayer::onMyStructureDestroyed(const s_GameEvent &event) {
 
     //
     if (event.entitySpecificType == REFINERY) {
-        const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
-
-        int harvesters = getAmountOfUnitsForType(HARVESTER);
-
-        if (!refineries.empty()) { // and its player still has a refinery
-            // check if the player has any harvester left
-
-            // No harvester found, deliver one
-            if (harvesters < 1) {
-                addNotification("No more Harvester left, reinforcing...", eNotificationType::BAD);
-
-                // deliver
-                cAbstractStructure *refinery = map.findClosestStructureType(event.atCell, REFINERY, this);
-
-                // found a refinery, deliver harvester to that
-                if (refinery) {
-                    REINFORCE(id, HARVESTER, refinery->getCell(), -1);
-                }
-            }
-
-            for (auto &structureId: refineries) {
-                cAbstractStructure *pStructure = structure[structureId];
-                pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
-            }
-        }
+        reinforceHarvesterIfNeeded(event.atCell);
     }
 }

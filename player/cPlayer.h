@@ -531,4 +531,6 @@ private:
     std::vector<cPlayerNotification> notifications;
 
     void onMyStructureDestroyed(const s_GameEvent &event);
+
+    void reinforceHarvesterIfNeeded(int cell);
 };
