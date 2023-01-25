@@ -1866,7 +1866,7 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
         }
     }
 
-    if (isDebugMode() ) {
+    if (isDebugMode()) { // debug mode has additional keys
         if (event.hasKey(KEY_TAB)) {
             onKeyDownDebugMode(event);
         }
@@ -1878,35 +1878,27 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
             }
         }
 
-        if (event.hasKey(KEY_F6)) {
-            // kill all carry-all's
-            const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
-            for (auto &unitId : myUnitsForType) {
-                cUnit &pUnit = unit[unitId];
-                pUnit.die(true, false);
-            }
-        }
+    }
 
-    } else {
-        if (event.hasKey(KEY_Z)) {
-            mapCamera->resetZoom();
-        }
 
-        if (event.hasKey(KEY_H)) {
-            mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
-        }
+    if (event.hasKey(KEY_Z)) {
+        mapCamera->resetZoom();
+    }
 
-        // Center on the selected structure
-        if (event.hasKey(KEY_C)) {
-            cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
-            if (selectedStructure) {
-                mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
-            }
-        }
+    if (event.hasKey(KEY_H)) {
+        mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+    }
 
-        if (event.hasKey(KEY_ESC)) {
-            game.setNextStateToTransitionTo(GAME_OPTIONS);
+    // Center on the selected structure
+    if (event.hasKey(KEY_C)) {
+        cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+        if (selectedStructure) {
+            mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
+    }
+
+    if (event.hasKey(KEY_ESC)) {
+        game.setNextStateToTransitionTo(GAME_OPTIONS);
     }
 
     if (event.hasKey(KEY_F)) {
@@ -2146,6 +2138,8 @@ void cGame::thinkSlow_state() {
 }
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
+    const cPlayer &humanPlayer = players[HUMAN];
+
     if (event.hasKey(KEY_0)) {
         drawManager->setPlayerToDraw(&players[0]);
         game.setPlayerToInteractFor(&players[0]);
@@ -2179,7 +2173,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
 
     //DESTROY UNIT OR BUILDING
     if (event.hasKeys(KEY_F4, KEY_LSHIFT)) {
-        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
@@ -2200,7 +2194,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
 
     //DESTROY UNIT OR BUILDING
     if (event.hasKeys(KEY_F5, KEY_LSHIFT)) {
-        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
@@ -2215,6 +2209,15 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
         // REVEAL MAP
         if (event.hasKey(KEY_F5)) {
             map.clear_all(HUMAN);
+        }
+    }
+
+    if (event.hasKey(KEY_F6)) {
+        // kill all carry-all's
+        const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
+        for (auto &unitId : myUnitsForType) {
+            cUnit &pUnit = unit[unitId];
+            pUnit.die(true, false);
         }
     }
 
