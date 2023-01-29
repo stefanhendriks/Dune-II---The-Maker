@@ -555,41 +555,52 @@ void cGame::handleTimeSlicing() {
 void cGame::shakeScreenAndBlitBuffer() {
     if (m_TIMER_shake == 0) {
         m_TIMER_shake = -1;
-	  }
+    }
 
-	  // blitSprite on screen
-	  if (m_TIMER_shake > 0)
-	  {
-		    // the more we get to the 'end' the less we 'throttle'.
-		    // Structure explosions are 6 time units per cell.
-		    // Max is 9 cells (9*6=54)
-		    // the max border is then 9. So, we do time / 6
-        m_TIMER_shake = std::min(m_TIMER_shake, 69);
-        int offset = std::min(m_TIMER_shake / 5, 9);
+    // only in playing state we shake screen
+    if (m_state == GAME_PLAYING) {
+        // TODO: move the shaking part of the rendering in the playing state object at some time
+        // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
+        // always at some point in the main loop, and does not need to know about the shaking logic.
 
-          m_shakeX = -abs(offset / 2) + rnd(offset);
-          m_shakeY = -abs(offset / 2) + rnd(offset);
+        // blitSprite on screen
+        if (m_TIMER_shake > 0) {
+            // the more we get to the 'end' the less we 'throttle'.
+            // Structure explosions are 6 time units per cell.
+            // Max is 9 cells (9*6=54)
+            // the max border is then 9. So, we do time / 6
+            int shakiness = std::min(m_TIMER_shake, 69);
+            float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
 
-		    blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenX, m_screenY);
-		    blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenX, m_screenY);
-	  }
-	  else
-	  {
-		    if (m_fadeAction == eFadeAction::FADE_NONE) {
-  		  // Not shaking and not fading.
+            m_shakeX = -abs(offset / 2) + rnd(offset);
+            m_shakeY = -abs(offset / 2) + rnd(offset);
+
+            blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenX, m_screenY);
+            blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenX, m_screenY);
+        } else {
+            fadeOutOrBlitScreenBuffer();
+        }
+    } else {
+        fadeOutOrBlitScreenBuffer();
+    }
+}
+
+void cGame::fadeOutOrBlitScreenBuffer() const {
+    if (m_fadeAction == FADE_NONE) {
+        // Not shaking and not fading.
         blit(bmp_screen, screen, 0, 0, 0, 0, m_screenX, m_screenY);
     } else {
         // Fading
         assert(m_fadeAlpha >= kMinAlpha);
         assert(m_fadeAlpha <= kMaxAlpha);
-        auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(create_bitmap(game.m_screenX, game.m_screenY), destroy_bitmap);
-			  assert(temp);
-			  clear(temp.get());
+        auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(
+                create_bitmap(game.m_screenX, game.m_screenY), destroy_bitmap);
+        assert(temp);
+        clear(temp.get());
         set_trans_blender(0, 0, 0, m_fadeAlpha);
         draw_trans_sprite(temp.get(), bmp_screen, 0, 0);
-			  blit(temp.get(), screen, 0, 0, 0, 0, m_screenX, m_screenY);
-		}
-	}
+        blit(temp.get(), screen, 0, 0, 0, 0, m_screenX, m_screenY);
+    }
 }
 
 void cGame::drawState() {
@@ -2219,6 +2230,11 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event) {
             cUnit &pUnit = unit[unitId];
             pUnit.die(true, false);
         }
+    }
+
+    if (event.hasKey(KEY_F7)) {
+//        shakeScreen(200); // shake for 1 second (fast timer)
+        game.m_TIMER_shake = 200;
     }
 
 }

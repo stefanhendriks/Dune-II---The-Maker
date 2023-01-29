@@ -298,7 +298,8 @@ private:
     int m_shakeX;
     int m_shakeY;
 
-    int m_TIMER_shake;
+    int m_TIMER_shake;                  // time to shake screen, using fast timer (every 5 ms called, so 200 = 1 second)
+
     int m_TIMER_evaluatePlayerStatus;
 
     // win/lose flags
@@ -367,4 +368,6 @@ private:
     void thinkSlow_state();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
+
+    void fadeOutOrBlitScreenBuffer() const;
 };
