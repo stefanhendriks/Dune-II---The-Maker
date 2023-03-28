@@ -368,6 +368,20 @@ bool cBullet::isSonicWave() const {
     return iType == BULLET_SHIMMER;
 }
 
+bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const {
+    if (unitIdOnAirLayer < 0) return false; // invalid id, so no
+    if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
+
+    cUnit &airUnit = unit[unitIdOnAirLayer];
+    if (iOwnerUnit > 0) {
+        cUnit &ownerUnit = unit[iOwnerUnit];
+        if (ownerUnit.isValid() && ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
+            return false;
+        }
+    }
+    return true;
+}
+
 /**
  * Handle damaging at cell, returns true if an (non-owner) unit is damaged.
  * Returns false when cell is invalid, bullet cannot damage air units, or if unit at cell is same as owner of this bullet.
@@ -375,15 +389,17 @@ bool cBullet::isSonicWave() const {
 bool cBullet::damageAirUnit(int cell, double factor) const {
     if (!map.isValidCell(cell)) return false;
     if (!canDamageAirUnits()) return false;
-    int id = map.getCellIdAirUnitLayer(cell);
-    if (id < 0) return false;
-    if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
+    int unitIdOnAirLayer = map.getCellIdAirUnitLayer(cell);
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
-    cUnit &airUnit = unit[id];
-    airUnit.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
-    return true;
+    if (doesAirUnitTakeDamage(unitIdOnAirLayer)) {
+        cUnit &airUnit = unit[unitIdOnAirLayer];
+        airUnit.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
+        return true;
+    }
+
+    return false;
 }
 
 /**
