@@ -56,6 +56,8 @@ private:
 
     int getBulletBmpHeight() const;
 
+    bool doesAirUnitTakeDamage(int unitIdOnAirLayer) const;
+
     void die();
 
     void damageStructure(int idOfStructureAtCell, double factor);
