@@ -1116,7 +1116,7 @@ bool cGame::setupGame() {
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
-    install_bullets();
+    install_bullets("bullets.ini");
     logbook("Setup:  UNITS");
     install_units();
     logbook("Setup:  SPECIALS");
