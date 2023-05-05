@@ -74,8 +74,11 @@ int makeColFromString(std::string colorStr)
 /*****************************
  Unit Rules
  *****************************/
-void install_units() {
+void install_units(const std::string& iniFile) {
     logbook("Installing:  UNITS");
+    logbook(fmt::format("Reading {}", iniFile ));
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>(iniFile, true);
+
     // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
     // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
     // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
@@ -139,7 +142,7 @@ void install_units() {
 
         unitInfo.canGuard = false;
 
-        strcpy(unitInfo.name, "\0");
+        unitInfo.name ="Unknown";
     }
 
     // Unit        : CarryAll
@@ -155,26 +158,36 @@ void install_units() {
     sUnitInfo[CARRYALL].free_roam = true; // may freely roam the air
     sUnitInfo[CARRYALL].listType = eListType::LIST_UNITS;
     sUnitInfo[CARRYALL].subListId = SUBLIST_HIGHTECH;
-    strcpy(sUnitInfo[CARRYALL].name, "Carry-All");
+    sUnitInfo[CARRYALL].name =  "Carry-All";
 
     // Unit        : Ornithopter
     // Description : Pesty little aircraft shooting bastard
     sUnitInfo[ORNITHOPTER].bmp = (BITMAP *) gfxdata[UNIT_ORNITHOPTER].dat;      // pointer to the original 8bit bitmap
     sUnitInfo[ORNITHOPTER].shadow = (BITMAP *) gfxdata[UNIT_ORNITHOPTER_SHADOW].dat;      // pointer to the original 8bit bitmap
-    sUnitInfo[ORNITHOPTER].bmp_width = 24 * 2;
-    sUnitInfo[ORNITHOPTER].bmp_height = 24 * 2;
-    sUnitInfo[ORNITHOPTER].bmp_startpixel = 0;
-    sUnitInfo[ORNITHOPTER].bmp_frames = 4; // we have at max 3 extra frames
+    sUnitInfo[ORNITHOPTER].bmp_width = settings->getInt("ORNITHOPTER","bmp_width");
+    sUnitInfo[ORNITHOPTER].bmp_height = settings->getInt("ORNITHOPTER","bmp_height");
+    //sUnitInfo[ORNITHOPTER].bmp_startpixel = 0;
+    sUnitInfo[ORNITHOPTER].bmp_frames = settings->getInt("ORNITHOPTER","bmp_frames");
     sUnitInfo[ORNITHOPTER].icon = ICON_UNIT_ORNITHOPTER;
     sUnitInfo[ORNITHOPTER].bulletType = ROCKET_SMALL_ORNI;
-    sUnitInfo[ORNITHOPTER].fireTwice = true;
-    sUnitInfo[ORNITHOPTER].airborn = true;   // is airborn
-    sUnitInfo[ORNITHOPTER].squish = false;   // can't squish infantry
-    sUnitInfo[ORNITHOPTER].free_roam = true; // may freely roam the air
+    sUnitInfo[ORNITHOPTER].fireTwice = settings->getBoolean("ORNITHOPTER","fireTwice");
+    sUnitInfo[ORNITHOPTER].airborn = settings->getBoolean("ORNITHOPTER","airborn");
+    sUnitInfo[ORNITHOPTER].squish = settings->getBoolean("ORNITHOPTER","Squish");
+    sUnitInfo[ORNITHOPTER].free_roam = settings->getBoolean("ORNITHOPTER","free_roam");
     sUnitInfo[ORNITHOPTER].listType = eListType::LIST_UNITS;
     sUnitInfo[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
 //    sUnitInfo[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
-    strcpy(sUnitInfo[ORNITHOPTER].name, "Ornithopter");
+    sUnitInfo[ORNITHOPTER].name =  settings->getStringValue("ORNITHOPTER","Name");
+    sUnitInfo[ORNITHOPTER].speed = settings->getInt("ORNITHOPTER","MoveSpeed");
+    sUnitInfo[ORNITHOPTER].turnspeed = settings->getInt("ORNITHOPTER","TurnSpeed");
+    sUnitInfo[ORNITHOPTER].hp = settings->getInt("ORNITHOPTER","HitPoints");
+    sUnitInfo[ORNITHOPTER].sight = settings->getInt("ORNITHOPTER","Sight");
+    sUnitInfo[ORNITHOPTER].range = settings->getInt("ORNITHOPTER","Range");
+    sUnitInfo[ORNITHOPTER].buildTime = settings->getInt("ORNITHOPTER","BuildTime");
+    sUnitInfo[ORNITHOPTER].cost = settings->getInt("ORNITHOPTER","Cost");
+
+
+
 
     // Unit        : Devastator
     // Description : Devastator
@@ -193,7 +206,7 @@ void install_units() {
     sUnitInfo[DEVASTATOR].smokeHpFactor = 0.5f;
     sUnitInfo[DEVASTATOR].canGuard = true;
     sUnitInfo[DEVASTATOR].canAttackUnits = true;
-    strcpy(sUnitInfo[DEVASTATOR].name, "Devastator");
+    sUnitInfo[DEVASTATOR].name =  "Devastator";
 
     // Unit        : Harvester
     // Description : Harvester
@@ -204,13 +217,13 @@ void install_units() {
     sUnitInfo[HARVESTER].bmp_height = 26 * 2;
     sUnitInfo[HARVESTER].bmp_frames = 4;
     sUnitInfo[HARVESTER].icon = ICON_UNIT_HARVESTER;
-    sUnitInfo[HARVESTER].credit_capacity = 700;
-    sUnitInfo[HARVESTER].harvesting_amount = 5;
+    // sUnitInfo[HARVESTER].credit_capacity = 700;
+    // sUnitInfo[HARVESTER].harvesting_amount = 5;
     sUnitInfo[HARVESTER].listType = eListType::LIST_UNITS;
     sUnitInfo[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[HARVESTER].smokeHpFactor = 0.5f;
-    strcpy(sUnitInfo[HARVESTER].name, "Harvester");
+    sUnitInfo[HARVESTER].name =  "Harvester";
 
     // Unit        : Combattank
     // Description : Combattank
@@ -229,7 +242,7 @@ void install_units() {
     sUnitInfo[TANK].smokeHpFactor = 0.5f;
     sUnitInfo[TANK].canGuard = true;
     sUnitInfo[TANK].canAttackUnits = true;
-    strcpy(sUnitInfo[TANK].name, "Tank");
+    sUnitInfo[TANK].name =  "Tank";
 
 
     // Unit        : Siege Tank
@@ -250,7 +263,7 @@ void install_units() {
     sUnitInfo[SIEGETANK].smokeHpFactor = 0.5f;
     sUnitInfo[SIEGETANK].canGuard = true;
     sUnitInfo[SIEGETANK].canAttackUnits = true;
-    strcpy(sUnitInfo[SIEGETANK].name, "Siege Tank");
+    sUnitInfo[SIEGETANK].name =  "Siege Tank";
 
     // Unit        : MCV
     // Description : Movable Construction Vehicle
@@ -265,7 +278,7 @@ void install_units() {
     sUnitInfo[MCV].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[MCV].renderSmokeOnUnitWhenThresholdMet = true;
     sUnitInfo[MCV].smokeHpFactor = 0.5f;
-    strcpy(sUnitInfo[MCV].name, "MCV");
+    sUnitInfo[MCV].name =  "MCV";
 
 
     // Unit        : Deviator
@@ -283,7 +296,7 @@ void install_units() {
     sUnitInfo[DEVIATOR].smokeHpFactor = 0.5f;
     sUnitInfo[DEVIATOR].canGuard = true;
     sUnitInfo[DEVIATOR].canAttackUnits = true;
-    strcpy(sUnitInfo[DEVIATOR].name, "Deviator");
+    sUnitInfo[DEVIATOR].name =  "Deviator";
 
     // Unit        : Launcher
     // Description : Rocket Launcher
@@ -304,7 +317,7 @@ void install_units() {
     sUnitInfo[LAUNCHER].smokeHpFactor = 0.5f;
     sUnitInfo[LAUNCHER].canGuard = true;
     sUnitInfo[LAUNCHER].canAttackUnits = true;
-    strcpy(sUnitInfo[LAUNCHER].name, "Launcher");
+    sUnitInfo[LAUNCHER].name =  "Launcher";
 
     // Unit        : Quad
     // Description : Quad, 4 wheeled (double gunned)
@@ -324,7 +337,7 @@ void install_units() {
     sUnitInfo[QUAD].smokeHpFactor = 0.5f;
     sUnitInfo[QUAD].canGuard = true;
     sUnitInfo[QUAD].canAttackUnits = true;
-    strcpy(sUnitInfo[QUAD].name, "Quad");
+    sUnitInfo[QUAD].name =  "Quad";
 
 
     // Unit        : Trike (normal trike)
@@ -344,7 +357,7 @@ void install_units() {
     sUnitInfo[TRIKE].smokeHpFactor = 0.5f;
     sUnitInfo[TRIKE].canGuard = true;
     sUnitInfo[TRIKE].canAttackUnits = true;
-    strcpy(sUnitInfo[TRIKE].name, "Trike");
+    sUnitInfo[TRIKE].name =  "Trike";
 
     // Unit        : Raider Trike (Ordos trike)
     // Description : Raider Trike, 3 wheeled (single gunned), weaker, but faster
@@ -354,7 +367,7 @@ void install_units() {
     sUnitInfo[RAIDER].bmp_height = 14 * 2;
     sUnitInfo[RAIDER].bmp_startpixel = 0;
     sUnitInfo[RAIDER].bmp_frames = 1;
-    strcpy(sUnitInfo[RAIDER].name, "Raider Trike");
+    sUnitInfo[RAIDER].name =  "Raider Trike";
     sUnitInfo[RAIDER].icon = ICON_UNIT_RAIDER;
     sUnitInfo[RAIDER].bulletType = BULLET_TRIKE;
     sUnitInfo[RAIDER].squish = false;
@@ -380,7 +393,7 @@ void install_units() {
     sUnitInfo[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
     sUnitInfo[FRIGATE].hp = 9999;
     // frigate has no list
-    strcpy(sUnitInfo[FRIGATE].name, "Frigate");
+    sUnitInfo[FRIGATE].name =  "Frigate";
 
     /*
     units[FRIGATE].speed     = 0;
@@ -409,7 +422,7 @@ void install_units() {
     sUnitInfo[SONICTANK].canGuard = true;
     sUnitInfo[SONICTANK].canAttackUnits = true;
 
-    strcpy(sUnitInfo[SONICTANK].name, "Sonic Tank");
+    sUnitInfo[SONICTANK].name =  "Sonic Tank";
 
 
     // Unit        : Single Soldier
@@ -431,7 +444,7 @@ void install_units() {
     sUnitInfo[SOLDIER].damageOnEnterStructure = 10.0f;
     sUnitInfo[SOLDIER].canGuard = true;
     sUnitInfo[SOLDIER].canAttackUnits = true;
-    strcpy(sUnitInfo[SOLDIER].name, "Soldier");
+    sUnitInfo[SOLDIER].name =  "Soldier";
 
 
     // Unit        : Infantry
@@ -441,7 +454,7 @@ void install_units() {
     sUnitInfo[INFANTRY].bmp_height = 16 * 2;
     sUnitInfo[INFANTRY].bmp_startpixel = 0;
     sUnitInfo[INFANTRY].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[INFANTRY].speed = 8;
+    // sUnitInfo[INFANTRY].speed = 8;
     sUnitInfo[INFANTRY].infantry = true;
     sUnitInfo[INFANTRY].bulletType = BULLET_SMALL;
     sUnitInfo[INFANTRY].fireTwice = true;
@@ -455,7 +468,7 @@ void install_units() {
     sUnitInfo[INFANTRY].damageOnEnterStructure = 25.0f;
     sUnitInfo[INFANTRY].canGuard = true;
     sUnitInfo[INFANTRY].canAttackUnits = true;
-    strcpy(sUnitInfo[INFANTRY].name, "Light Infantry");
+    sUnitInfo[INFANTRY].name =  "Light Infantry";
 
     // Unit        : Single Trooper
     // Description : 1 trooper
@@ -464,7 +477,7 @@ void install_units() {
     sUnitInfo[TROOPER].bmp_height = 16 * 2;
     sUnitInfo[TROOPER].bmp_startpixel = 0;
     sUnitInfo[TROOPER].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[TROOPER].name, "Trooper");
+    sUnitInfo[TROOPER].name =  "Trooper";
     sUnitInfo[TROOPER].infantry = true;
     sUnitInfo[TROOPER].bulletType = ROCKET_SMALL;
     sUnitInfo[TROOPER].icon = ICON_UNIT_TROOPER;
@@ -488,7 +501,7 @@ void install_units() {
     sUnitInfo[TROOPERS].bmp_height = 16 * 2;
     sUnitInfo[TROOPERS].bmp_startpixel = 0;
     sUnitInfo[TROOPERS].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[TROOPERS].name, "Troopers");
+    sUnitInfo[TROOPERS].name =  "Troopers";
     sUnitInfo[TROOPERS].icon = ICON_UNIT_TROOPERS;
     sUnitInfo[TROOPERS].bulletType = ROCKET_SMALL;
     sUnitInfo[TROOPERS].fireTwice = true;
@@ -513,7 +526,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_ONE].bmp_height = 16 * 2;
     sUnitInfo[UNIT_FREMEN_ONE].bmp_startpixel = 0;
     sUnitInfo[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[UNIT_FREMEN_ONE].name, "Fremen (1)");
+    sUnitInfo[UNIT_FREMEN_ONE].name =  "Fremen (1)";
     sUnitInfo[UNIT_FREMEN_ONE].icon = ICON_SPECIAL_FREMEN;
     sUnitInfo[UNIT_FREMEN_ONE].bulletType = ROCKET_SMALL_FREMEN;
     sUnitInfo[UNIT_FREMEN_ONE].fireTwice = false;
@@ -534,7 +547,7 @@ void install_units() {
     sUnitInfo[UNIT_FREMEN_THREE].bmp_height = 16 * 2;
     sUnitInfo[UNIT_FREMEN_THREE].bmp_startpixel = 0;
     sUnitInfo[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[UNIT_FREMEN_THREE].name, "Fremen (3)");
+    sUnitInfo[UNIT_FREMEN_THREE].name =  "Fremen (3)";
     sUnitInfo[UNIT_FREMEN_THREE].icon = ICON_SPECIAL_FREMEN;
     sUnitInfo[UNIT_FREMEN_THREE].bulletType = ROCKET_SMALL_FREMEN;
     sUnitInfo[UNIT_FREMEN_THREE].fireTwice = true;
@@ -550,19 +563,19 @@ void install_units() {
     // Unit        : Saboteur
     // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
     sUnitInfo[SABOTEUR].bmp = (BITMAP *) gfxdata[UNIT_SABOTEUR].dat;
-    sUnitInfo[SABOTEUR].buildTime = 1000;
+    // sUnitInfo[SABOTEUR].buildTime = 1000;
     sUnitInfo[SABOTEUR].bmp_width = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_height = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_startpixel = 0;
     sUnitInfo[SABOTEUR].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[SABOTEUR].speed = 0; // very fast
-    sUnitInfo[SABOTEUR].hp = 60;   // quite some health
-    sUnitInfo[SABOTEUR].cost = 0;
-    sUnitInfo[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
-    sUnitInfo[SABOTEUR].range = 2;
+    // sUnitInfo[SABOTEUR].speed = 0; // very fast
+    // sUnitInfo[SABOTEUR].hp = 60;   // quite some health
+    // sUnitInfo[SABOTEUR].cost = 0;
+    // sUnitInfo[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
+    // sUnitInfo[SABOTEUR].range = 2;
     sUnitInfo[SABOTEUR].attack_frequency = 0;
-    sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
-    strcpy(sUnitInfo[SABOTEUR].name, "Saboteur");
+    // sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
+    sUnitInfo[SABOTEUR].name =  "Saboteur";
     sUnitInfo[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
     sUnitInfo[SABOTEUR].squish = false;
     sUnitInfo[SABOTEUR].canBeSquished = true;
@@ -574,20 +587,20 @@ void install_units() {
     sUnitInfo[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
 
     // Unit        : Sandworm
-    sUnitInfo[SANDWORM].speed = 3; // very fast
+    sUnitInfo[SANDWORM].speed = settings->getInt("SANDWORM","MoveSpeed");
     sUnitInfo[SANDWORM].bmp = (BITMAP *) gfxdata[UNIT_SANDWORM].dat;
-    sUnitInfo[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
-    sUnitInfo[SANDWORM].dieWhenLowerThanHP = 1000;
-    sUnitInfo[SANDWORM].appetite = 10;
-    sUnitInfo[SANDWORM].bmp_width = 48;
-    sUnitInfo[SANDWORM].bmp_height = 48;
-    sUnitInfo[SANDWORM].turnspeed = 0; // very fast
-    sUnitInfo[SANDWORM].sight = 16;
-    strcpy(sUnitInfo[SANDWORM].name, "Sandworm");
+    sUnitInfo[SANDWORM].hp = settings->getInt("SANDWORM","HitPoints");
+    sUnitInfo[SANDWORM].dieWhenLowerThanHP = settings->getInt("SANDWORM","DieWhenLowerThanHP");
+    sUnitInfo[SANDWORM].appetite = settings->getInt("SANDWORM","appetite");
+    sUnitInfo[SANDWORM].bmp_width = settings->getInt("SANDWORM","bmp_width");
+    sUnitInfo[SANDWORM].bmp_height =  settings->getInt("SANDWORM","bmp_height");
+    sUnitInfo[SANDWORM].turnspeed = settings->getInt("SANDWORM","TurnSpeed");
+    sUnitInfo[SANDWORM].sight = settings->getInt("SANDWORM","Sight");
+    sUnitInfo[SANDWORM].name =  settings->getStringValue("SANDWORM","Name");
     sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
-    sUnitInfo[SANDWORM].squish = false;
-    sUnitInfo[SANDWORM].canGuard = true;
-    sUnitInfo[SANDWORM].canAttackUnits = true;
+    sUnitInfo[SANDWORM].squish = settings->getBoolean("SANDWORM","Squish");
+    sUnitInfo[SANDWORM].canGuard = settings->getBoolean("SANDWORM","CanGuard");
+    sUnitInfo[SANDWORM].canAttackUnits = settings->getBoolean("SANDWORM","CanAttackUnits");
 
 
     // Unit        : <name>
@@ -787,7 +800,7 @@ void install_specials() {
         sSpecialInfo[i].deployTargetPrecision = 0;
         sSpecialInfo[i].listType = eListType::LIST_NONE;
         sSpecialInfo[i].subListId = -1;
-        strcpy(sSpecialInfo[i].description, "\0");
+        sSpecialInfo[i].description = "Unknown";
     }
 
     // Deploy Saboteur
@@ -802,7 +815,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
     sSpecialInfo[SPECIAL_SABOTEUR].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_SABOTEUR].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_SABOTEUR].description, "Saboteur");
+    sSpecialInfo[SPECIAL_SABOTEUR].description = "Saboteur";
 
     // Deploy Fremen
     sSpecialInfo[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
@@ -816,7 +829,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
     sSpecialInfo[SPECIAL_FREMEN].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_FREMEN].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_FREMEN].description, "Fremen");
+    sSpecialInfo[SPECIAL_FREMEN].description = "Fremen";
 
     // Launch Death Hand
     sSpecialInfo[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
@@ -835,7 +848,7 @@ void install_specials() {
     sSpecialInfo[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     sSpecialInfo[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
     sSpecialInfo[SPECIAL_DEATHHAND].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_DEATHHAND].description, "Death Hand");
+    sSpecialInfo[SPECIAL_DEATHHAND].description = "Death Hand";
 
 }
 
@@ -843,9 +856,12 @@ void install_specials() {
 /****************
  Install bullets
  ****************/
-void install_bullets() {
+void install_bullets(const std::string& iniFile) {
     logbook("Installing:  BULLET TYPES");
-
+    logbook(fmt::format("Reading {}", iniFile ));
+    //std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>(iniFile, game.isDebugMode());
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>(iniFile, true);
+    
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
         sBulletInfo[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
         sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
@@ -861,204 +877,204 @@ void install_bullets() {
         sBulletInfo[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
         sBulletInfo[i].canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
         sBulletInfo[i].canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
-        strcpy(sBulletInfo[i].description, "Unknown");
+        sBulletInfo[i].description = "Unknown";
     }
 
     // huge rocket/missile
     sBulletInfo[ROCKET_BIG].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_LARGE].dat;
     sBulletInfo[ROCKET_BIG].deathParticle = D2TM_PARTICLE_EXPLOSION_STRUCTURE01;
-    sBulletInfo[ROCKET_BIG].bmp_width = 48;
-    sBulletInfo[ROCKET_BIG].damage = 999;
-    sBulletInfo[ROCKET_BIG].damage_inf = 999;
-    sBulletInfo[ROCKET_BIG].max_frames = 1;
+    sBulletInfo[ROCKET_BIG].bmp_width = settings->getInt("ROCKET_BIG","bmp_width");
+    sBulletInfo[ROCKET_BIG].damage = settings->getInt("ROCKET_BIG","damage");
+    sBulletInfo[ROCKET_BIG].damage_inf = settings->getInt("ROCKET_BIG","damage_inf");
+    sBulletInfo[ROCKET_BIG].max_frames = settings->getInt("ROCKET_BIG","max_frames");
     sBulletInfo[ROCKET_BIG].sound = SOUND_ROCKET;
-    sBulletInfo[ROCKET_BIG].explosionSize = 7;
-    sBulletInfo[ROCKET_BIG].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_BIG].canDamageGround = true;
+    sBulletInfo[ROCKET_BIG].explosionSize = settings->getInt("ROCKET_BIG","explosionSize");
+    sBulletInfo[ROCKET_BIG].canDamageAirUnits = settings->getBoolean("ROCKET_BIG","canDamageAirUnits");
+    sBulletInfo[ROCKET_BIG].canDamageGround = settings->getBoolean("ROCKET_BIG","canDamageGround");
     sBulletInfo[ROCKET_BIG].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_BIG].description, "ROCKET_BIG");
+    sBulletInfo[ROCKET_BIG].description = settings->getStringValue("ROCKET_BIG","description");
 
     // small rocket (for ornithopter)
     sBulletInfo[ROCKET_SMALL_ORNI].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
     sBulletInfo[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_ORNI].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL_ORNI].damage = 12; // they can do pretty damage
-    sBulletInfo[ROCKET_SMALL_ORNI].damage_inf = 9;
-    sBulletInfo[ROCKET_SMALL_ORNI].max_frames = 1;
+    sBulletInfo[ROCKET_SMALL_ORNI].bmp_width = settings->getInt("ROCKET_SMALL_ORNI","bmp_width");
+    sBulletInfo[ROCKET_SMALL_ORNI].damage = settings->getInt("ROCKET_SMALL_ORNI","damage");
+    sBulletInfo[ROCKET_SMALL_ORNI].damage_inf = settings->getInt("ROCKET_SMALL_ORNI","damage_inf");
+    sBulletInfo[ROCKET_SMALL_ORNI].max_frames = settings->getInt("ROCKET_SMALL_ORNI","max_frames");
     sBulletInfo[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_SMALL_ORNI].max_deadframes = 1;
-    sBulletInfo[ROCKET_SMALL_ORNI].canDamageGround = true;
+    sBulletInfo[ROCKET_SMALL_ORNI].canDamageAirUnits = settings->getBoolean("ROCKET_SMALL_ORNI","canDamageAirUnits");
+    sBulletInfo[ROCKET_SMALL_ORNI].max_deadframes = settings->getInt("ROCKET_SMALL_ORNI","max_deadframes");
+    sBulletInfo[ROCKET_SMALL_ORNI].canDamageGround = settings->getBoolean("ROCKET_SMALL_ORNI","canDamageGround");
     sBulletInfo[ROCKET_SMALL_ORNI].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
+    sBulletInfo[ROCKET_SMALL_ORNI].description = settings->getStringValue("ROCKET_SMALL_ORNI","description");
 
     // small rocket
     sBulletInfo[ROCKET_SMALL].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
     sBulletInfo[ROCKET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL].damage = 10; // was 8
-    sBulletInfo[ROCKET_SMALL].damage_inf = 8; // was 4
-    sBulletInfo[ROCKET_SMALL].max_frames = 1;
+    sBulletInfo[ROCKET_SMALL].bmp_width = settings->getInt("ROCKET_SMALL","bmp_width");
+    sBulletInfo[ROCKET_SMALL].damage = settings->getInt("ROCKET_SMALL","bmp_width");
+    sBulletInfo[ROCKET_SMALL].damage_inf = settings->getInt("ROCKET_SMALL","bmp_width");
+    sBulletInfo[ROCKET_SMALL].max_frames = settings->getInt("ROCKET_SMALL","bmp_width");
     sBulletInfo[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_SMALL].max_deadframes = 1;
-    sBulletInfo[ROCKET_SMALL].canDamageGround = true;
+    sBulletInfo[ROCKET_SMALL].canDamageAirUnits = settings->getBoolean("ROCKET_SMALL","canDamageAirUnits");
+    sBulletInfo[ROCKET_SMALL].max_deadframes = settings->getInt("ROCKET_SMALL","max_deadframes");
+    sBulletInfo[ROCKET_SMALL].canDamageGround = settings->getBoolean("ROCKET_SMALL","canDamageGround");
 //    bullets[ROCKET_SMALL].smokeParticle = BULLET_PUF; // small rockets have no smoke trail yet
-    strcpy(sBulletInfo[ROCKET_SMALL].description, "ROCKET_SMALL");
+    sBulletInfo[ROCKET_SMALL].description = settings->getStringValue("ROCKET_SMALL","description");
 
     // small rocket - fremen rocket
     sBulletInfo[ROCKET_SMALL_FREMEN].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
     sBulletInfo[ROCKET_SMALL_FREMEN].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_FREMEN].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL_FREMEN].damage = 22;
-    sBulletInfo[ROCKET_SMALL_FREMEN].damage_inf = 20;
-    sBulletInfo[ROCKET_SMALL_FREMEN].max_frames = 1;
+    sBulletInfo[ROCKET_SMALL_FREMEN].bmp_width = settings->getInt("ROCKET_SMALL_FREMEN","bmp_width");
+    sBulletInfo[ROCKET_SMALL_FREMEN].damage =  settings->getInt("ROCKET_SMALL_FREMEN","damage");
+    sBulletInfo[ROCKET_SMALL_FREMEN].damage_inf =  settings->getInt("ROCKET_SMALL_FREMEN","damage_inf");
+    sBulletInfo[ROCKET_SMALL_FREMEN].max_frames = settings->getInt("ROCKET_SMALL_FREMEN","max_frames");
     sBulletInfo[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_FREMEN].max_deadframes = 1;
-    sBulletInfo[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_SMALL_FREMEN].canDamageGround = true;
+    sBulletInfo[ROCKET_SMALL_FREMEN].max_deadframes = settings->getInt("ROCKET_SMALL_FREMEN","max_deadframes");
+    sBulletInfo[ROCKET_SMALL_FREMEN].canDamageAirUnits = settings->getBoolean("ROCKET_SMALL_FREMEN","canDamageAirUnits");
+    sBulletInfo[ROCKET_SMALL_FREMEN].canDamageGround = settings->getBoolean("ROCKET_SMALL_FREMEN","canDamageGround");
 //    bullets[ROCKET_SMALL_FREMEN].smokeParticle = true; // not yet
-    strcpy(sBulletInfo[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
+    sBulletInfo[ROCKET_SMALL_FREMEN].description = settings->getStringValue("ROCKET_SMALL_FREMEN","description");
 
     // normal rocket
     sBulletInfo[ROCKET_NORMAL].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_NORMAL].dat;
     sBulletInfo[ROCKET_NORMAL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET;
-    sBulletInfo[ROCKET_NORMAL].bmp_width = 32;
-    sBulletInfo[ROCKET_NORMAL].damage = 76;
-    sBulletInfo[ROCKET_NORMAL].damage_inf = 36;  // less damage on infantry
-    sBulletInfo[ROCKET_NORMAL].max_frames = 1;
+    sBulletInfo[ROCKET_NORMAL].bmp_width = settings->getInt("ROCKET_NORMAL","bmp_width");
+    sBulletInfo[ROCKET_NORMAL].damage = settings->getInt("ROCKET_NORMAL","damage");
+    sBulletInfo[ROCKET_NORMAL].damage_inf = settings->getInt("ROCKET_NORMAL","damage_inf");
+    sBulletInfo[ROCKET_NORMAL].max_frames = settings->getInt("ROCKET_NORMAL","max_frames");
     sBulletInfo[ROCKET_NORMAL].sound = SOUND_ROCKET;
-    sBulletInfo[ROCKET_NORMAL].max_deadframes = 4;
-    sBulletInfo[ROCKET_NORMAL].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_NORMAL].canDamageGround = true;
+    sBulletInfo[ROCKET_NORMAL].max_deadframes = settings->getInt("ROCKET_NORMAL","max_deadframes");
+    sBulletInfo[ROCKET_NORMAL].canDamageAirUnits =  settings->getBoolean("ROCKET_NORMAL","canDamageAirUnits");
+    sBulletInfo[ROCKET_NORMAL].canDamageGround = settings->getBoolean("ROCKET_NORMAL","canDamageGround");
     sBulletInfo[ROCKET_NORMAL].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_NORMAL].description, "ROCKET_NORMAL");
+    sBulletInfo[ROCKET_NORMAL].description = settings->getStringValue("ROCKET_NORMAL","description");
 
     // soldier shot
     sBulletInfo[BULLET_SMALL].bmp = (BITMAP *) gfxdata[BULLET_DOT_SMALL].dat;
     sBulletInfo[BULLET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_SMALL].bmp_width = 6;
-    sBulletInfo[BULLET_SMALL].damage = 4; // vehicles are no match
-    sBulletInfo[BULLET_SMALL].damage_inf = 10; // infantry vs infantry means big time damage
-    sBulletInfo[BULLET_SMALL].max_frames = 0;
+    sBulletInfo[BULLET_SMALL].bmp_width = settings->getInt("BULLET_SMALL","bmp_width");
+    sBulletInfo[BULLET_SMALL].damage = settings->getInt("BULLET_SMALL","damage");
+    sBulletInfo[BULLET_SMALL].damage_inf = settings->getInt("BULLET_SMALL","damage_inf");
+    sBulletInfo[BULLET_SMALL].max_frames = settings->getInt("BULLET_SMALL","max_frames");
     sBulletInfo[BULLET_SMALL].sound = SOUND_GUN;
-    sBulletInfo[BULLET_SMALL].max_deadframes = 0;
-    sBulletInfo[BULLET_SMALL].groundBullet = true;
-    strcpy(sBulletInfo[BULLET_SMALL].description, "BULLET_SMALL");
+    sBulletInfo[BULLET_SMALL].max_deadframes = settings->getInt("BULLET_SMALL","max_deadframes");
+    sBulletInfo[BULLET_SMALL].groundBullet = settings->getBoolean("BULLET_SMALL","groundBullet");
+    sBulletInfo[BULLET_SMALL].description = settings->getStringValue("BULLET_SMALL","description");
 
     // trike shot
     sBulletInfo[BULLET_TRIKE].bmp = (BITMAP *) gfxdata[BULLET_DOT_SMALL].dat;
     sBulletInfo[BULLET_TRIKE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_TRIKE].bmp_width = 6;
-    sBulletInfo[BULLET_TRIKE].damage = 3; // trikes do not do much damage to vehicles
-    sBulletInfo[BULLET_TRIKE].damage_inf = 6; // but more to infantry
-    sBulletInfo[BULLET_TRIKE].max_frames = 0;
+    sBulletInfo[BULLET_TRIKE].bmp_width = settings->getInt("BULLET_TRIKE","bmp_width");
+    sBulletInfo[BULLET_TRIKE].damage = settings->getInt("BULLET_TRIKE","damage");
+    sBulletInfo[BULLET_TRIKE].damage_inf = settings->getInt("BULLET_TRIKE","damage_inf");
+    sBulletInfo[BULLET_TRIKE].max_frames = settings->getInt("BULLET_TRIKE","max_frames");
     sBulletInfo[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
-    sBulletInfo[BULLET_TRIKE].max_deadframes = 0;
-    sBulletInfo[BULLET_TRIKE].groundBullet = true;
-    strcpy(sBulletInfo[BULLET_TRIKE].description, "BULLET_TRIKE");
+    sBulletInfo[BULLET_TRIKE].max_deadframes = settings->getInt("BULLET_TRIKE","max_deadframes");
+    sBulletInfo[BULLET_TRIKE].groundBullet = settings->getBoolean("BULLET_TRIKE","groundBullet");
+    sBulletInfo[BULLET_TRIKE].description = settings->getStringValue("BULLET_TRIKE","description");
 
     // quad shot
     sBulletInfo[BULLET_QUAD].bmp = (BITMAP *) gfxdata[BULLET_DOT_SMALL].dat;
     sBulletInfo[BULLET_QUAD].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_QUAD].bmp_width = 6;
-    sBulletInfo[BULLET_QUAD].damage = 6;
-    sBulletInfo[BULLET_QUAD].damage_inf = 8; // bigger impact on infantry
-    sBulletInfo[BULLET_QUAD].max_frames = 0;
+    sBulletInfo[BULLET_QUAD].bmp_width = settings->getInt("BULLET_QUAD","bmp_width");
+    sBulletInfo[BULLET_QUAD].damage = settings->getInt("BULLET_QUAD","damage");
+    sBulletInfo[BULLET_QUAD].damage_inf = settings->getInt("BULLET_QUAD","damage_inf");
+    sBulletInfo[BULLET_QUAD].max_frames = settings->getInt("BULLET_QUAD","max_frames");
     sBulletInfo[BULLET_QUAD].sound = SOUND_MACHINEGUN;
-    sBulletInfo[BULLET_QUAD].max_deadframes = 0;
-    sBulletInfo[BULLET_QUAD].groundBullet = true;
-    strcpy(sBulletInfo[BULLET_QUAD].description, "BULLET_QUAD");
+    sBulletInfo[BULLET_QUAD].max_deadframes = settings->getInt("BULLET_QUAD","max_deadframes");
+    sBulletInfo[BULLET_QUAD].groundBullet = settings->getBoolean("BULLET_QUAD","groundBullet");
+    sBulletInfo[BULLET_QUAD].description = settings->getStringValue("BULLET_QUAD","description");
 
     // normal tank shot
     sBulletInfo[BULLET_TANK].bmp = (BITMAP *) gfxdata[BULLET_DOT_MEDIUM].dat;
     sBulletInfo[BULLET_TANK].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_TANK].bmp_width = 8;
-    sBulletInfo[BULLET_TANK].damage = 12;
-    sBulletInfo[BULLET_TANK].damage_inf = 4;  // infantry is not much damaged
-    sBulletInfo[BULLET_TANK].max_frames = 0;
+    sBulletInfo[BULLET_TANK].bmp_width = settings->getInt("BULLET_TANK","bmp_width");
+    sBulletInfo[BULLET_TANK].damage = settings->getInt("BULLET_TANK","damage");
+    sBulletInfo[BULLET_TANK].damage_inf = settings->getInt("BULLET_TANK","damage_inf");
+    sBulletInfo[BULLET_TANK].max_frames = settings->getInt("BULLET_TANK","max_frames");
     sBulletInfo[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
-    sBulletInfo[BULLET_TANK].max_deadframes = 1;
-    sBulletInfo[BULLET_TANK].groundBullet = true;
-    sBulletInfo[BULLET_TANK].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_TANK].description, "BULLET_TANK");
+    sBulletInfo[BULLET_TANK].max_deadframes = settings->getInt("BULLET_TANK","max_deadframes");
+    sBulletInfo[BULLET_TANK].groundBullet = settings->getBoolean("BULLET_TANK","groundBullet");
+    sBulletInfo[BULLET_TANK].canDamageGround = settings->getBoolean("BULLET_TANK","canDamageGround");
+    sBulletInfo[BULLET_TANK].description = settings->getStringValue("BULLET_TANK","description");
 
     // siege tank shot
     sBulletInfo[BULLET_SIEGE].bmp = (BITMAP *) gfxdata[BULLET_DOT_MEDIUM].dat;
     sBulletInfo[BULLET_SIEGE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_SIEGE].bmp_width = 8;
-    sBulletInfo[BULLET_SIEGE].damage = 24;
-    sBulletInfo[BULLET_SIEGE].damage_inf = 6; // infantry is not as much damaged
-    sBulletInfo[BULLET_SIEGE].max_frames = 0;
+    sBulletInfo[BULLET_SIEGE].bmp_width = settings->getInt("BULLET_SIEGE","bmp_width");
+    sBulletInfo[BULLET_SIEGE].damage = settings->getInt("BULLET_SIEGE","damage");
+    sBulletInfo[BULLET_SIEGE].damage_inf = settings->getInt("BULLET_SIEGE","damage_inf");
+    sBulletInfo[BULLET_SIEGE].max_frames = settings->getInt("BULLET_SIEGE","max_frames");
     sBulletInfo[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
-    sBulletInfo[BULLET_SIEGE].max_deadframes = 2;
-    sBulletInfo[BULLET_SIEGE].groundBullet = true;
-    sBulletInfo[BULLET_SIEGE].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_SIEGE].description, "BULLET_SIEGE");
+    sBulletInfo[BULLET_SIEGE].max_deadframes = settings->getInt("BULLET_SIEGE","max_deadframes");
+    sBulletInfo[BULLET_SIEGE].groundBullet = settings->getBoolean("BULLET_SIEGE","groundBullet");
+    sBulletInfo[BULLET_SIEGE].canDamageGround = settings->getBoolean("BULLET_SIEGE","canDamageGround");
+    sBulletInfo[BULLET_SIEGE].description = settings->getStringValue("BULLET_SIEGE","description");
 
     // devastator shot
     sBulletInfo[BULLET_DEVASTATOR].bmp = (BITMAP *) gfxdata[BULLET_DOT_LARGE].dat;
     sBulletInfo[BULLET_DEVASTATOR].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL; // not used anyway
-    sBulletInfo[BULLET_DEVASTATOR].bmp_width = 8;
-    sBulletInfo[BULLET_DEVASTATOR].damage = 30;
-    sBulletInfo[BULLET_DEVASTATOR].damage_inf = 12; // infantry again not much damaged
-    sBulletInfo[BULLET_DEVASTATOR].max_frames = 0;
+    sBulletInfo[BULLET_DEVASTATOR].bmp_width = settings->getInt("BULLET_DEVASTATOR","bmp_width");
+    sBulletInfo[BULLET_DEVASTATOR].damage = settings->getInt("BULLET_DEVASTATOR","damage");
+    sBulletInfo[BULLET_DEVASTATOR].damage_inf = settings->getInt("BULLET_DEVASTATOR","damage_inf");
+    sBulletInfo[BULLET_DEVASTATOR].max_frames = settings->getInt("BULLET_DEVASTATOR","max_frames");
     sBulletInfo[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
-    sBulletInfo[BULLET_DEVASTATOR].max_deadframes = 1;
-    sBulletInfo[BULLET_DEVASTATOR].groundBullet = true;
-    sBulletInfo[BULLET_DEVASTATOR].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
+    sBulletInfo[BULLET_DEVASTATOR].max_deadframes = settings->getInt("BULLET_DEVASTATOR","max_deadframes");
+    sBulletInfo[BULLET_DEVASTATOR].groundBullet = settings->getBoolean("BULLET_DEVASTATOR","groundBullet");
+    sBulletInfo[BULLET_DEVASTATOR].canDamageGround = settings->getBoolean("BULLET_DEVASTATOR","canDamageGround");
+    sBulletInfo[BULLET_DEVASTATOR].description = settings->getStringValue("BULLET_DEVASTATOR","description");
 
     // Gas rocket of a deviator
     sBulletInfo[BULLET_GAS].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_NORMAL].dat;
     sBulletInfo[BULLET_GAS].deathParticle = D2TM_PARTICLE_EXPLOSION_GAS;
-    sBulletInfo[BULLET_GAS].bmp_width = 32;
-    sBulletInfo[BULLET_GAS].damage = 1;
-    sBulletInfo[BULLET_GAS].damage_inf = 1;
-    sBulletInfo[BULLET_GAS].max_frames = 1;
-    sBulletInfo[BULLET_GAS].max_deadframes = 4;
+    sBulletInfo[BULLET_GAS].bmp_width = settings->getInt("BULLET_GAS","bmp_width");
+    sBulletInfo[BULLET_GAS].damage = settings->getInt("BULLET_GAS","damage");
+    sBulletInfo[BULLET_GAS].damage_inf = settings->getInt("BULLET_GAS","damage_inf");
+    sBulletInfo[BULLET_GAS].max_frames = settings->getInt("BULLET_GAS","max_frames");
+    sBulletInfo[BULLET_GAS].max_deadframes = settings->getInt("BULLET_GAS","max_deadframes");
     sBulletInfo[BULLET_GAS].sound = SOUND_ROCKET;
-    sBulletInfo[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
+    sBulletInfo[BULLET_GAS].deviateProbability = settings->getInt("BULLET_GAS","deviateProbability");
     sBulletInfo[BULLET_GAS].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[BULLET_GAS].description, "BULLET_GAS");
+    sBulletInfo[BULLET_GAS].description = settings->getStringValue("BULLET_GAS","description");
 
     // normal turret shot
     sBulletInfo[BULLET_TURRET].bmp = (BITMAP *) gfxdata[BULLET_DOT_MEDIUM].dat;
     sBulletInfo[BULLET_TURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_TURRET].bmp_width = 8;
-    sBulletInfo[BULLET_TURRET].damage = 12;
-    sBulletInfo[BULLET_TURRET].damage_inf = 12; // infantry is a hard target
-    sBulletInfo[BULLET_TURRET].max_frames = 0;
-    sBulletInfo[BULLET_TURRET].max_deadframes = 1;
+    sBulletInfo[BULLET_TURRET].bmp_width = settings->getInt("BULLET_TURRET","bmp_width");
+    sBulletInfo[BULLET_TURRET].damage = settings->getInt("BULLET_TURRET","damage");
+    sBulletInfo[BULLET_TURRET].damage_inf = settings->getInt("BULLET_TURRET","damage_inf");
+    sBulletInfo[BULLET_TURRET].max_frames = settings->getInt("BULLET_TURRET","max_frames");
+    sBulletInfo[BULLET_TURRET].max_deadframes = settings->getInt("BULLET_TURRET","max_deadframes");
     sBulletInfo[BULLET_TURRET].sound = SOUND_GUNTURRET;
-    sBulletInfo[BULLET_TURRET].groundBullet = false; // this can fly over structures, walls, mountains, yes!
-    sBulletInfo[BULLET_TURRET].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_TURRET].description, "BULLET_TURRET");
+    sBulletInfo[BULLET_TURRET].groundBullet = settings->getBoolean("BULLET_TURRET","groundBullet");
+    sBulletInfo[BULLET_TURRET].canDamageGround = settings->getBoolean("BULLET_TURRET","canDamageGround");
+    sBulletInfo[BULLET_TURRET].description = settings->getStringValue("BULLET_TURRET","description");
 
     // EXEPTION: Shimmer/ Sonic tank
     sBulletInfo[BULLET_SHIMMER].bmp = nullptr;
     sBulletInfo[BULLET_SHIMMER].deathParticle = -1;
-    sBulletInfo[BULLET_SHIMMER].bmp_width = 0;
-    sBulletInfo[BULLET_SHIMMER].damage = 55;
-    sBulletInfo[BULLET_SHIMMER].damage_inf = 70; // infantry cant stand the sound, die very fast
-    sBulletInfo[BULLET_SHIMMER].max_frames = 0;
-    sBulletInfo[BULLET_SHIMMER].max_deadframes = 0;
+    sBulletInfo[BULLET_SHIMMER].bmp_width = settings->getInt("BULLET_SHIMMER","bmp_width");
+    sBulletInfo[BULLET_SHIMMER].damage = settings->getInt("BULLET_SHIMMER","damage");
+    sBulletInfo[BULLET_SHIMMER].damage_inf = settings->getInt("BULLET_SHIMMER","damage_inf");
+    sBulletInfo[BULLET_SHIMMER].max_frames = settings->getInt("BULLET_SHIMMER","max_frames");
+    sBulletInfo[BULLET_SHIMMER].max_deadframes = settings->getInt("BULLET_SHIMMER","max_deadframes");
     sBulletInfo[BULLET_SHIMMER].sound = SOUND_SHIMMER;
-    strcpy(sBulletInfo[BULLET_SHIMMER].description, "BULLET_SHIMMER");
+    sBulletInfo[BULLET_SHIMMER].description = settings->getStringValue("BULLET_SHIMMER","description");
 
     // rocket of rocket turret
     sBulletInfo[ROCKET_RTURRET].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_NORMAL].dat;
     sBulletInfo[ROCKET_RTURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_RTURRET].bmp_width = 16 * 2;
-    sBulletInfo[ROCKET_RTURRET].damage = 25;
-    sBulletInfo[ROCKET_RTURRET].damage_inf = 10; // infantry is a bit tougher
-    sBulletInfo[ROCKET_RTURRET].max_frames = 1;
+    sBulletInfo[ROCKET_RTURRET].bmp_width = settings->getInt("ROCKET_RTURRET","bmp_width");
+    sBulletInfo[ROCKET_RTURRET].damage = settings->getInt("ROCKET_RTURRET","damage");
+    sBulletInfo[ROCKET_RTURRET].damage_inf = settings->getInt("ROCKET_RTURRET","damage_inf");
+    sBulletInfo[ROCKET_RTURRET].max_frames = settings->getInt("ROCKET_RTURRET","max_frames");
     sBulletInfo[ROCKET_RTURRET].sound = SOUND_ROCKET;
-    sBulletInfo[ROCKET_RTURRET].max_deadframes = 4;
-    sBulletInfo[ROCKET_RTURRET].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_RTURRET].canDamageGround = true;
+    sBulletInfo[ROCKET_RTURRET].max_deadframes = settings->getInt("ROCKET_RTURRET","max_deadframes");
+    sBulletInfo[ROCKET_RTURRET].canDamageAirUnits = settings->getBoolean("ROCKET_RTURRET","canDamageAirUnits");
+    sBulletInfo[ROCKET_RTURRET].canDamageGround = settings->getBoolean("ROCKET_RTURRET","canDamageGround");
     sBulletInfo[ROCKET_RTURRET].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_RTURRET].description, "ROCKET_RTURRET");
+    sBulletInfo[ROCKET_RTURRET].description = settings->getStringValue("ROCKET_RTURRET","description");
 }
 
 
@@ -1078,7 +1094,7 @@ void install_upgrades() {
         sUpgradeInfo[i].providesTypeList = eListType::LIST_NONE;
         sUpgradeInfo[i].providesTypeSubList = -1;
         sUpgradeInfo[i].buildTime = 5;
-        strcpy(sUpgradeInfo[i].description, "Upgrade");
+        sUpgradeInfo[i].description = "Upgrade";
     }
 
     // CONSTYARD UPGRADES
@@ -1096,7 +1112,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = eListType::LIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
+    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_SLAB4].description = "Build 4 concrete slabs at once";
 
     // Second upgrade Constyard: Rturret
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
@@ -1113,7 +1129,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
     sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
+    sUpgradeInfo[UPGRADE_TYPE_CONSTYARD_RTURRET].description = "Build Rocket Turret";
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
@@ -1130,7 +1146,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
+    sUpgradeInfo[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description = "Build Quad at Light Factory";
 
     // HEAVYFACTORY UPGRADES:
 
@@ -1149,7 +1165,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_MVC].description = "Build MCV at Heavy Factory";
 
     // Harkonnen/Atreides only
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
@@ -1166,7 +1182,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description = "Build Rocket Launcher at Heavy Factory";
 
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
@@ -1182,7 +1198,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description = "Build Siege Tank at Heavy Factory";
 
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
@@ -1198,7 +1214,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
 
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
+    sUpgradeInfo[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description = "Build Siege Tank at Heavy Factory";
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
@@ -1213,7 +1229,7 @@ void install_upgrades() {
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = eListType::LIST_UNITS;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
     sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
+    sUpgradeInfo[UPGRADE_TYPE_HITECH_ORNI].description = "Build Ornithopter at Hi-Tech";
 
     // WOR (Harkonnen & Ordos)
     sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
@@ -1230,7 +1246,7 @@ void install_upgrades() {
     if (!game.isDebugMode()) {
         sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
+    sUpgradeInfo[UPGRADE_TYPE_WOR_TROOPERS].description = "Build Troopers at WOR";
 
     // BARRACKS (Atreides & Ordos)
     sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
@@ -1247,7 +1263,7 @@ void install_upgrades() {
     if (!game.isDebugMode()) {
         sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
-    strcpy(sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
+    sUpgradeInfo[UPGRADE_TYPE_BARRACKS_INFANTRY].description = "Build Infantry at Barracks";
 
 }
 
@@ -1281,7 +1297,7 @@ void install_structures() {
         structureInfo.configured = false;
         structureInfo.canAttackAirUnits = false;
         structureInfo.canAttackGroundUnits = false;
-        strcpy(structureInfo.name, "Unknown");
+        structureInfo.name = "Unknown";
     }
 
     // Single and 4 slabs
@@ -1292,7 +1308,7 @@ void install_structures() {
     sStructureInfo[SLAB1].bmp_height = 16 * 2;
     sStructureInfo[SLAB1].configured = true;
     sStructureInfo[SLAB1].queuable = true;
-    strcpy(sStructureInfo[SLAB1].name, "Concrete Slab");
+    sStructureInfo[SLAB1].name =  "Concrete Slab";
 
     sStructureInfo[SLAB4].bmp = (BITMAP *) gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
     sStructureInfo[SLAB4].icon = ICON_STR_4SLAB;
@@ -1301,7 +1317,7 @@ void install_structures() {
     sStructureInfo[SLAB4].bmp_height = 32 * 2;
     sStructureInfo[SLAB4].configured = true;
     sStructureInfo[SLAB4].queuable = true;
-    strcpy(sStructureInfo[SLAB4].name, "4 Concrete Slabs");
+    sStructureInfo[SLAB4].name =  "4 Concrete Slabs";
 
 
     // Concrete Wall
@@ -1312,7 +1328,7 @@ void install_structures() {
     sStructureInfo[WALL].bmp_height = 16 * 2;
     sStructureInfo[WALL].queuable = true;
     sStructureInfo[WALL].configured = true;
-    strcpy(sStructureInfo[WALL].name, "Concrete Wall");
+    sStructureInfo[WALL].name =  "Concrete Wall";
 
     // Structure    : Windtrap
     // Description  : <none>
@@ -1327,7 +1343,7 @@ void install_structures() {
             .relX = 53,
             .relY = 37
     });
-    strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
+    sStructureInfo[WINDTRAP].name =  "Windtrap";
 
     // Structure    : Heavy Factory
     // Description  : <none>
@@ -1344,7 +1360,7 @@ void install_structures() {
             .relX = 25,
             .relY = 3
     });
-    strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
+    sStructureInfo[HEAVYFACTORY].name =  "Heavy Factory";
 
     // Structure    : Hight Tech Factory (for aircraft only)
     // Description  : <none>
@@ -1360,7 +1376,7 @@ void install_structures() {
             .relX = 19,
             .relY = 36
     });
-    strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
+    sStructureInfo[HIGHTECH].name =  "Hi-Tech";
 
     // Structure    : Repair
     // Description  : <none>
@@ -1376,7 +1392,7 @@ void install_structures() {
             .relX = 41,
             .relY = 3
     });
-    strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
+    sStructureInfo[REPAIR].name =  "Repair Facility";
 
     // Structure    : Palace
     // Description  : <none>
@@ -1391,7 +1407,7 @@ void install_structures() {
             .relX = 28,
             .relY = 14
     });
-    strcpy(sStructureInfo[PALACE].name, "Palace");
+    sStructureInfo[PALACE].name =  "Palace";
 
     // Structure    : Light Factory
     // Description  : <none>
@@ -1408,7 +1424,7 @@ void install_structures() {
             .relX = 41,
             .relY = 2
     });
-    strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
+    sStructureInfo[LIGHTFACTORY].name =  "Light Factory";
 
     // Structure    : Radar
     // Description  : <none>
@@ -1431,7 +1447,7 @@ void install_structures() {
             .relX = 12,
             .relY = 46
     });
-    strcpy(sStructureInfo[RADAR].name, "Outpost");
+    sStructureInfo[RADAR].name =  "Outpost";
 
     // Structure    : Barracks
     // Description  : <none>
@@ -1452,7 +1468,7 @@ void install_structures() {
             .relX = 51,
             .relY = 50
     });
-    strcpy(sStructureInfo[BARRACKS].name, "Barracks");
+    sStructureInfo[BARRACKS].name =  "Barracks";
 
     // Structure    : WOR
     // Description  : <none>
@@ -1468,7 +1484,7 @@ void install_structures() {
             .relX = 21,
             .relY = 31
     });
-    strcpy(sStructureInfo[WOR].name, "WOR");
+    sStructureInfo[WOR].name =  "WOR";
 
 
     // Structure    : Silo
@@ -1486,7 +1502,7 @@ void install_structures() {
             .relX = 43,
             .relY = 20
     });
-    strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
+    sStructureInfo[SILO].name =  "Spice Storage Silo";
 
     // Structure    : Refinery
     // Description  : <none>
@@ -1502,7 +1518,7 @@ void install_structures() {
             .relX = 45,
             .relY = 12
     });
-    strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
+    sStructureInfo[REFINERY].name =  "Spice Refinery";
 
     // Structure    : Construction Yard
     // Description  : <none>
@@ -1519,7 +1535,7 @@ void install_structures() {
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
     sStructureInfo[CONSTYARD].configured = true;
-    strcpy(sStructureInfo[CONSTYARD].name, "Construction Yard");
+    sStructureInfo[CONSTYARD].name =  "Construction Yard";
 
     // Structure    : Starport
     // Description  : You can order units from this structure
@@ -1535,7 +1551,7 @@ void install_structures() {
             .relX = 16,
             .relY = 3
     });
-    strcpy(sStructureInfo[STARPORT].name, "Starport");
+    sStructureInfo[STARPORT].name =  "Starport";
 
     // Structure    : House of IX
     // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
@@ -1551,7 +1567,7 @@ void install_structures() {
             .relX = 60, // 60
             .relY = 40  // 40
     });
-    strcpy(sStructureInfo[IX].name, "House of IX");
+    sStructureInfo[IX].name =  "House of IX";
 
     // Structure    : Normal Turret
     // Description  : defence
@@ -1565,7 +1581,7 @@ void install_structures() {
     sStructureInfo[TURRET].configured = true;
     sStructureInfo[TURRET].canAttackGroundUnits = true;
     sStructureInfo[TURRET].fireRate = 275;
-    strcpy(sStructureInfo[TURRET].name, "Gun Turret");
+    sStructureInfo[TURRET].name =  "Gun Turret";
 
     // Structure    : Rocket Turret
     // Description  : defence
@@ -1580,7 +1596,7 @@ void install_structures() {
     sStructureInfo[RTURRET].canAttackAirUnits = true;
     sStructureInfo[RTURRET].canAttackGroundUnits = true;
     sStructureInfo[RTURRET].fireRate = 350;
-    strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
+    sStructureInfo[RTURRET].name =  "Rocket Turret";
 
     // Structure    : Windtrap
     // Description  : <none>
@@ -1774,10 +1790,13 @@ void Shimmer(int r, int x, int y) {
 }
 
 
-const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
+const std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
     switch (buildType) {
         case eBuildType::SPECIAL:
-            return sSpecialInfo[specificTypeId].description;
+            if (specificTypeId!=-1) //@todo: what did i need this patch ?
+                return sSpecialInfo[specificTypeId].description;
+            else
+                return "";
         case eBuildType::UNIT:
             return sUnitInfo[specificTypeId].name;
         case eBuildType::STRUCTURE:

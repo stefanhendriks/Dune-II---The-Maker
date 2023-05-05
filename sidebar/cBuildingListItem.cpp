@@ -390,16 +390,16 @@ std::string cBuildingListItem::getTypeString() {
 std::string cBuildingListItem::getNameString() {
     if (isTypeStructure()) {
         s_StructureInfo info = getStructureInfo();
-        return std::string(info.name);
+        return info.name;
     } else if (isTypeUnit()) {
         s_UnitInfo &info = getUnitInfo();
-        return std::string(info.name);
+        return info.name;
     } else if (isTypeUpgrade()){
         s_UpgradeInfo upgrade = getUpgradeInfo();
-        return std::string(upgrade.description);
+        return upgrade.description;
     } else if (isTypeSpecial()) {
         s_SpecialInfo special = getSpecialInfo();
-        return std::string(special.description);
+        return special.description;
     }
 
     return std::string("Unknown type.");

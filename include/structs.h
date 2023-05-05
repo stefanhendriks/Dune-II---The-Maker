@@ -58,7 +58,7 @@ struct s_UnitInfo {
   int dieWhenLowerThanHP;   // A unit that 'dies'(disappears) when health < this value. By default this is 1;
   int appetite;     // Amount of units this can eat, before 'dying'
 
-  char name[64];            // name of unit
+  std::string name;            // name of unit
 
   int structureTypeItLeavesFrom; // the type of structure this unit will 'leave' from when it is built. (ie Quad from Light Factory, etc)
 
@@ -128,7 +128,7 @@ struct s_StructureInfo {
 
   int cost;            // price
 
-  char name[64];       // name
+  std::string name;       // name
 
   bool queuable;        // can this item be queued in the buildList? (default = false)
 
@@ -154,7 +154,7 @@ struct s_UpgradeInfo {
 
     int cost;            // price
 
-    char description[64]; // ie: "Upgrade to 4slab"
+    std::string description; // ie: "Upgrade to 4slab"
 
     int buildTime;     // how long it takes to upgrade/build
 
@@ -184,7 +184,7 @@ struct s_UpgradeInfo {
 struct s_SpecialInfo {
     int icon;            // icon id
 
-    char description[64]; // ie: "Upgrade to 4slab"
+    std::string description; // ie: "Upgrade to 4slab"
 
     int buildTime;     // how long it takes to 'build' (ie wait before ready)
 
@@ -253,7 +253,7 @@ struct s_BulletInfo {
     bool groundBullet;   // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
     bool canDamageAirUnits;   // if true, then upon impact the bullet can also damage air units
 
-    char description[64]; // ie: "bullet"
+    std::string description; // ie: "bullet"
 
     bool canDamageGround; // when true, this bullet can damage ground (ie walls, concrete, etc)
 };
