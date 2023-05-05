@@ -15,6 +15,7 @@
 #include "controls/cKeyboard.h"
 #include "data/cAllegroDataRepository.h"
 #include "definitions.h"
+#include "map/cPathFinder.h"
 #include "mentat/cAbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
@@ -111,6 +112,7 @@ public:
     void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
     void loadSkirmishMaps() const;
     void loadScenario();
+    void rebuildPathFinder();
 
     void run();			            // run the game (MAIN LOOP)
 
@@ -247,6 +249,8 @@ public:
     bool isDebugMode() { return m_debugMode; }
     void setDebugMode(bool value) { m_debugMode = value; }
 
+    cPathFinder *getPathFinder() { return m_pathFinder; }
+
 private:
     /**
      * Variables start here
@@ -313,6 +317,8 @@ private:
     cGameState *m_currentState;
 
     cGameState *m_states[GAME_MAX_STATES];
+
+    cPathFinder *m_pathFinder;
 
     bool loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardStateAndGamePlaying(); // ugly name, to point out this does two things :/

@@ -3,6 +3,7 @@
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
 #include "d2tmc.h"
+#include "map/cPathFinder.h"
 #include "drawers/cAllegroDrawer.h"
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
@@ -171,6 +172,28 @@ void cMapDrawer::drawTerrain() {
 
             // Draw debugging information
             if (game.isDebugMode()) {
+                cPathFinder *pFinder = game.getPathFinder();
+
+                if (pFinder->isStart(iCell)) {
+                    allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                                                                  makecol(255, 0, 0), 128);
+                }
+
+                if (pFinder->isEnd(iCell)) {
+                    allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                                                                  makecol(0, 255, 0), 128);
+                }
+
+                if (pFinder->isVisited(iCell)) {
+                    allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                                                                  makecol(0, 0, 255), 64);
+                }
+
+                if (pFinder->isPathCell(iCell)) {
+                    allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                                                                  makecol(128, 128, 128), 64);
+                }
+
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
