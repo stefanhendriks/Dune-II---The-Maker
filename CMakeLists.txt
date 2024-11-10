@@ -113,6 +113,7 @@ target_compile_options(${PROJECT_NAME}
     "-Wall"
     "-Wextra"
     "-Wno-dangling-reference"
+    "-Wno-deprecated"
     "-Wpedantic"
     "-Wnon-virtual-dtor"
     "-Wuseless-cast"
