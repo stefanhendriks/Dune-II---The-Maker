@@ -112,6 +112,7 @@ target_compile_options(${PROJECT_NAME}
     "-Werror"
     "-Wall"
     "-Wextra"
+    "-Wno-dangling-reference"
     "-Wpedantic"
     "-Wnon-virtual-dtor"
     "-Wuseless-cast"
