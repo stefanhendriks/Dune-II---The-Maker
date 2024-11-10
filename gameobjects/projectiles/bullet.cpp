@@ -368,17 +368,31 @@ bool cBullet::isSonicWave() const {
     return iType == BULLET_SHIMMER;
 }
 
+/**
+ * Returns true if air unit exists and can be damaged. Takes same team into account.
+ *
+ * @param unitIdOnAirLayer
+ * @return
+ */
 bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const {
-    if (unitIdOnAirLayer < 0) return false; // invalid id, so no
+    if (unitIdOnAirLayer < 0) return false;
     if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
 
     cUnit &airUnit = unit[unitIdOnAirLayer];
-    if (iOwnerUnit > 0) {
-        cUnit &ownerUnit = unit[iOwnerUnit];
-        if (ownerUnit.isValid() && ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
-            return false;
-        }
+    if (iOwnerUnit <= 0) {
+        return false; // no air unit to damage
     }
+
+    cUnit &ownerUnit = unit[iOwnerUnit];
+    if (!ownerUnit.isValid()) {
+        return false; // unit is not 'valid'
+    }
+
+    if (ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
+        return false; // Do not damage same team
+    }
+
+    // yes, an air unit is present, is not of my team and can should be damaged.
     return true;
 }
 
