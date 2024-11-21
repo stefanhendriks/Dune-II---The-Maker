@@ -39,7 +39,7 @@ int makeColFromString(std::string colorStr);
 
 void install_structures();
 void install_units();
-void install_bullets();
+void install_bullets(const std::string& iniFile);
 void install_upgrades();
 void install_specials();
 void install_particles();
