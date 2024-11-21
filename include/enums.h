@@ -189,6 +189,23 @@ enum class eListType {
     LIST_UPGRADES, // possible sUpgradeInfo
 };
 
+
+inline const char* eListTypeString(const eListType &listType) {
+    switch (listType) {
+        case eListType::LIST_NONE: return "NONE";
+        case eListType::LIST_CONSTYARD: return "CONSTYARD";
+        case eListType::LIST_FOOT_UNITS: return "FOOT_UNITS";
+        case eListType::LIST_UNITS: return "UNITS";
+        case eListType::LIST_STARPORT: return "STARPORT";
+        case eListType::LIST_PALACE: return "PALACE";
+        case eListType::LIST_UPGRADES: return "UPGRADES";
+        default:
+            assert(false && "Undefined listType?");
+            break;
+    }
+    return "";
+}
+
 static const eListType AllListTypes[] = {
         eListType::LIST_NONE,
         eListType::LIST_CONSTYARD,
