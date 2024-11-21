@@ -71,6 +71,7 @@ void cMap::init(int width, int height) {
     m_iTIMER_respawnSandworms = -1;
 
     maxCells = width * height;
+    cell.clear();
     cell = std::vector<tCell>(maxCells, tCell());
 
     // clear out all cells
@@ -741,7 +742,12 @@ int cMap::getCellY(int c) {
         return -1;
     }
 
-    return (c / width);
+    tCell *pCell = getCell(c);
+    if (pCell->y < 0) {
+        pCell->y = (c / width);
+    }
+
+    return pCell->y;
 }
 
 int cMap::getCellX(int c) {
@@ -749,8 +755,12 @@ int cMap::getCellX(int c) {
         return -1;
     }
 
-    int cellX = c - ((c / width) * width);
-    return cellX;
+    tCell *pCell = getCell(c);
+    if (pCell->x < 0) {
+        pCell->x = c - ((c / width) * width);
+    }
+
+    return pCell->x;
 }
 
 bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell) {
@@ -888,15 +898,12 @@ int cMap::getCellWithMapBorders(int x, int y) {
 }
 
 int cMap::getCellWithMapDimensions(int x, int y) {
-    int mapWidth = width;
-    int mapHeight = height;
-    // (over the) boundaries result in cell -1
-    if (x < 0) return -1;
-    if (x >= mapWidth) return -1;
-    if (y < 0) return -1;
-    if (y >= mapHeight) return -1;
+    if (x < 0) x = 0;
+    if (x >= width) x = width-1;
+    if (y < 0) y = 0;
+    if (y >= height) y = height-1;
 
-    return (y * mapWidth) + x;
+    return (y * width) + x;
 }
 
 bool cMap::isValidCell(int c) const {
@@ -1547,4 +1554,20 @@ void cMap::onEntityDestroyed(const s_GameEvent &event) {
 
 cPoint cMap::getAbsolutePositionFromCell(int cell) {
     return cPoint(getAbsoluteXPositionFromCell(cell), getAbsoluteYPositionFromCell(cell));
+}
+
+std::vector<int> cMap::getNeighbours(int centerX, int centerY) {
+    std::vector<int> result = std::vector<int>();
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            if (x == 0 && y == 0) {
+                continue; // this results in same value as centerX and centerY, which is self == not neighbour
+            }
+            int cll = getCellWithMapBorders(centerX + x, centerY + y);
+            if (cll > -1) {
+                result.push_back(cll);
+            }
+        }
+    }
+    return result;
 }
