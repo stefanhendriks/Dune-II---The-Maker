@@ -19,3 +19,5 @@ cmake-build-*
 dependencies/allegro-src
 Release/
 /Default/
+log.txt
+d2tm

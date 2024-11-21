@@ -38,8 +38,8 @@ void logbook(const std::string& txt);
 int makeColFromString(std::string colorStr);
 
 void install_structures();
-void install_units();
-void install_bullets();
+void install_units(const std::string& iniFile);
+void install_bullets(const std::string& iniFile);
 void install_upgrades();
 void install_specials();
 void install_particles();
@@ -53,4 +53,4 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
-const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
+const std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
