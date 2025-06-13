@@ -6,6 +6,7 @@
 #include <fmt/core.h>
 
 #include <algorithm>
+#include <random>
 
 namespace brains {
 
@@ -34,6 +35,8 @@ namespace brains {
 
         // attack things!
         int cellToAttack = -1;
+        std::random_device rd;
+        std::mt19937 g(rd());
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
             cPlayer *pPlayer = &players[i];
@@ -49,7 +52,7 @@ namespace brains {
             // nope! now choose which unit to attack
             std::vector<int> unitIds = pPlayer->getAllMyUnits();
             if (!unitIds.empty()) {
-                std::random_shuffle(unitIds.begin(), unitIds.end());
+                std::shuffle(unitIds.begin(), unitIds.end(), g);
                 cellToAttack = unit[unitIds.front()].getCell();
                 if (rnd(100) > 30) break;
             }
@@ -58,7 +61,7 @@ namespace brains {
             std::vector<int> structureIds = pPlayer->getAllMyStructuresAsId();
             if (!structureIds.empty()) {
                 // pick structure to attack
-                std::random_shuffle(structureIds.begin(), structureIds.end());
+                std::shuffle(structureIds.begin(), structureIds.end(), g);
                 cellToAttack = structure[structureIds.front()]->getCell();
                 if (rnd(100) > 30) break;
             }
