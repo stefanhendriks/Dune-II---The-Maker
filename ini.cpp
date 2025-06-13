@@ -31,6 +31,9 @@
 #include <filesystem>
 namespace fs=std::filesystem;
 
+#include <string>
+#include <algorithm>
+
 int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 int getHouseFromChar(char chunk[25]);
@@ -69,21 +72,14 @@ bool caseInsCompare(const std::string &s1, const std::string &s2) {
 
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH]) {
-    char ch;
-    int pos = 0;
-
-    // clear out entire string
-    for (int i = 0; i < MAX_LINE_LENGTH; i++)
-        result[i] = '\0';
-
-    while ((feof(f) == 0) && ((ch = fgetc(f)) != '\n')) {
-        result[pos] = ch;
-        pos++;
-
-        // do not allow strings greater then 80 characters. This check prevents a crash for
-        // users who do exceed the limit.
-        if (pos > (MAX_LINE_LENGTH - 1))
-            break;
+    if (fgets(result, MAX_LINE_LENGTH, f) == nullptr) {
+        result[0] = '\0'; // EOF ou erreur
+        return;
+    }
+    // get out \r and/or \n final for DOS/UNIX compatibility 
+    size_t len = strlen(result);
+    while (len > 0 && (result[len-1] == '\n' || result[len-1] == '\r')) {
+        result[--len] = '\0';
     }
 }
 
@@ -1054,100 +1050,82 @@ std::string INI_GetHouseDirectoryName(int iHouse) {
 }
 
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState) {
-
     auto filename = fmt::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
     cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
 
-    ////////////////////////////
-    // START OPENING FILE
-    ////////////////////////////
-    FILE *stream;                    // file stream
-    int wordtype = WORD_NONE;            // word
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        logbook("[CAMPAIGN] Error, could not open file");
+        return;
+    }
+
+    int wordtype = WORD_NONE;
     int iRegionIndex = -1;
     int iRegionNumber = -1;
     int iRegionConquer = -1;
 
-    // open file
-    if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
+    std::string line;
+    while (std::getline(file, line)) {
+        // Nettoyage des fins de ligne DOS/UNIX
+        line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 
-        char linefeed[MAX_LINE_LENGTH];
-        char lineword[30];
-        char linesection[30];
+        // Sauter les lignes de commentaire ou vides
+        if (line.empty() || isCommentLine(const_cast<char*>(line.c_str()))) {
+            continue;
+        }
 
-        memset(lineword, '\0', sizeof(lineword));
-        memset(linesection, '\0', sizeof(linesection));
+        char lineword[30] = {0};
 
-        while (!feof(stream)) {
-            INI_Sentence(stream, linefeed);
+        INI_Word(const_cast<char*>(line.c_str()), lineword);
+        wordtype = INI_WordType(lineword, SEC_REGION);
 
-            // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-            // character (which is "//", ";" or "#"), or an empty line, then skip it
-            if (isCommentLine(linefeed)) {
-                continue;   // Skip
-            }
+        if (wordtype == WORD_REGION) {
+            iRegionNumber = -1;
+            iRegionConquer = -1;
+            iRegionNumber = INI_WordValueINT(const_cast<char*>(line.c_str())) - 1;
+        } else if (wordtype == WORD_REGIONCONQUER) {
+            iRegionNumber = -1;
+            iRegionConquer = -1;
+            iRegionIndex++;
+            iRegionConquer = INI_WordValueINT(const_cast<char*>(line.c_str())) - 1;
+            selectYourNextConquestState->setRegionConquer(iRegionIndex, iRegionConquer);
+        }
 
-            wordtype = WORD_NONE;
+        if (iRegionIndex > -1 || iRegionNumber > -1) {
+            if (wordtype == WORD_REGIONHOUSE) {
+                char cHouseRegion[256] = {0};
+                INI_WordValueCHAR(const_cast<char*>(line.c_str()), cHouseRegion);
 
-            // Every line is checked for a new section.
-            INI_Word(linefeed, lineword);
-            wordtype = INI_WordType(lineword, SEC_REGION);
+                logbook("Region house");
+                int iH = getHouseFromChar(cHouseRegion);
 
-            if (wordtype == WORD_REGION) {
-                iRegionNumber = -1;
-                iRegionConquer = -1;
-                iRegionNumber = INI_WordValueINT(linefeed) - 1;
-            } else if (wordtype == WORD_REGIONCONQUER) {
-                iRegionNumber = -1;
-                iRegionConquer = -1;
-                iRegionIndex++;
-                iRegionConquer = INI_WordValueINT(linefeed) - 1;
-                selectYourNextConquestState->setRegionConquer(iRegionIndex, iRegionConquer);
-            }
-
-            if (iRegionIndex > -1 || iRegionNumber > -1) {
-                if (wordtype == WORD_REGIONHOUSE) {
-                    char cHouseRegion[256];
-                    memset(cHouseRegion, 0, sizeof(cHouseRegion));
-                    INI_WordValueCHAR(linefeed, cHouseRegion);
-
-                    logbook("Region house");
-                    int iH = getHouseFromChar(cHouseRegion);
-
-                    if (iRegionNumber > -1) {
-                        world[iRegionNumber].iHouse = iH;
-                        world[iRegionNumber].iAlpha = 255;
-                    }
-
-                    if (iRegionConquer > -1) {
-                        selectYourNextConquestState->setRegionHouse(iRegionIndex, iH);
-                    }
-
+                if (iRegionNumber > -1) {
+                    world[iRegionNumber].iHouse = iH;
+                    world[iRegionNumber].iAlpha = 255;
                 }
 
-                if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
-                    char cHouseText[256];
-                    INI_WordValueSENTENCE(linefeed, cHouseText);
-                    selectYourNextConquestState->setRegionText(iRegionIndex, cHouseText);
+                if (iRegionConquer > -1) {
+                    selectYourNextConquestState->setRegionHouse(iRegionIndex, iH);
                 }
-
-                if (wordtype == WORD_REGIONSELECT) {
-                    if (iRegionNumber > -1) {
-                        world[iRegionNumber].bSelectable = INI_WordValueBOOL(linefeed);
-                        world[iRegionNumber].iAlpha = 1;
-                    }
-                }
-
             }
-        } // while
 
-        fclose(stream);
-        logbook("[CAMPAIGN] Done");
-        return;
+            if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
+                char cHouseText[256] = {0};
+                INI_WordValueSENTENCE(const_cast<char*>(line.c_str()), cHouseText);
+                selectYourNextConquestState->setRegionText(iRegionIndex, cHouseText);
+            }
+
+            if (wordtype == WORD_REGIONSELECT) {
+                if (iRegionNumber > -1) {
+                    world[iRegionNumber].bSelectable = INI_WordValueBOOL(const_cast<char*>(line.c_str()));
+                    world[iRegionNumber].iAlpha = 1;
+                }
+            }
+        }
     }
 
-    logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook
+    logbook("[CAMPAIGN] Done");
 }
-
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
 int getUnitTypeFromChar(char chunk[35]) {
     std::string unitString(chunk);
