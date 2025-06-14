@@ -1920,8 +1920,32 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event) {
 void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
     cPlayer &humanPlayer = players[HUMAN];
 
+    int digivol;
+    int midivol;
+    
     if (event.hasKey(KEY_F)) {
         m_drawFps = false;
+    }
+
+    if (event.hasKey(KEY_M)) {
+        game.m_playMusic = !game.m_playMusic;
+        if (!game.m_playMusic) {
+            m_soundPlayer->stopMusic();
+        } else {
+            m_soundPlayer->playMusic(m_newMusicSample);
+        }
+    }
+
+    if (event.hasKey(KEY_O)) {
+        get_volume(&digivol, &midivol);
+        midivol -= 10;
+        set_volume(digivol, midivol);
+    }
+
+    if (event.hasKey(KEY_P)) {
+        get_volume(&digivol, &midivol);
+        midivol += 10;
+        set_volume(digivol, midivol);
     }
 
     if (event.hasKey(KEY_H)) {

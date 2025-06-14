@@ -3,6 +3,7 @@
 #include "definitions.h"
 #include "utils/cLog.h"
 
+#include <allegro/config.h>
 #include <allegro/datafile.h>
 #include <allegro/digi.h>
 #include <allegro/midi.h>
@@ -72,13 +73,25 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
     }
 
     int nr_voices = maxNrVoices;
+    int midi_voices = 0;
+
+    int card_id = get_config_id("sound", "midi_card", MIDI_AUTODETECT);
     while (true) {
         if (nr_voices < kMinNrVoices) {
             logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
             return;
         }
 
-        reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
+        //reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
+        nr_voices = maxNrVoices;
+        if (card_id == MIDI_DIGMID) {
+            midi_voices = nr_voices / 8;
+            nr_voices = CLAMP(kMinNrVoices, nr_voices - midi_voices, maxNrVoices);
+            midi_voices = maxNrVoices - nr_voices;
+        } else {
+            // Reserve nothing for MIDI, assume it will "steal" from the digi voices
+        }
+        reserve_voices(nr_voices, midi_voices);
 
         if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, nullptr) == 0)
         {
@@ -93,7 +106,8 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
         auto msg = fmt::format("Failed reserving {} voices. Will try {}.", nr_voices, (nr_voices / 2));
         logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
 
-        nr_voices /= 2;
+        //nr_voices /= 2;
+        maxNrVoices = (nr_voices + midi_voices) / 2;
     }
 
     // Sound effects are loud, the music is queiter (its background music, so it should not be disturbing).
