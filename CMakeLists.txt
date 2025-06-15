@@ -6,77 +6,19 @@ project(d2tm)
 
 SET(OpenGL_GL_PREFERENCE "GLVND")
 
-file(GLOB d2tm_SRC
-        "*.h"
-        "*.cpp"
-        "building/*.h"
-        "building/*.cpp"
-        "controls/*.h"
-        "controls/*.cpp"
-        "controls/mousestates/*.h"
-        "controls/mousestates/*.cpp"
-        "data/*.h"
-        "data/*.cpp"
-        "drawers/*.h"
-        "drawers/*.cpp"
-        "gameobjects/*.h"
-        "gameobjects/*.cpp"
-        "gameobjects/structures/*.h"
-        "gameobjects/structures/*.cpp"
-        "gameobjects/units/*.h"
-        "gameobjects/units/*.cpp"
-        "gameobjects/projectiles/*.h"
-        "gameobjects/projectiles/*.cpp"
-        "gameobjects/particles/*.h"
-        "gameobjects/particles/*.cpp"
-        "observers/*.h"
-        "observers/*.cpp"
-        "gamestates/*.h"
-        "gamestates/*.cpp"
-        "gui/*.h"
-        "gui/*.cpp"
-        "gui/actions/*.h"
-        "gui/actions/*.cpp"
-        "include/*.h"
-        "mentat/*.h"
-        "mentat/*.cpp"
-        "managers/*.h"
-        "managers/*.cpp"
-        "map/*.h"
-        "map/*.cpp"
-        "player/*.h"
-        "player/*.cpp"
-        "player/brains/*.h"
-        "player/brains/*.cpp"
-        "player/brains/actions/*.h"
-        "player/brains/actions/*.cpp"
-        "player/brains/missions/*.h"
-        "player/brains/missions/*.cpp"
-        "player/brains/missions/campaign/*.h"
-        "player/brains/missions/campaign/*.cpp"
-        "player/brains/missions/skirmish/*.h"
-        "player/brains/missions/skirmish/*.cpp"
-        "player/brains/superweapon/*.h"
-        "player/brains/superweapon/*.cpp"
-        "player/*.h"
-        "player/*.cpp"
-        "sidebar/*.h"
-        "sidebar/*.cpp"
-        "upgrade/*.h"
-        "upgrade/*.cpp"
-        "utils/*.h"
-        "utils/*.cpp"
-        )
+add_subdirectory(dependencies)
+add_subdirectory(src)
+
 
 add_executable(${PROJECT_NAME}
-  ${d2tm_SRC}
+  ${D2TM_SRC}
   Script.rc
 )
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/include
 )
 
 if (UNIX)
@@ -128,5 +70,3 @@ if (NOT UNIX)
     COMMAND_EXPAND_LISTS
   )
 endif()
-
-add_subdirectory(dependencies)
