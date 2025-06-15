@@ -6,6 +6,12 @@ project(d2tm)
 
 SET(OpenGL_GL_PREFERENCE "GLVND")
 
+find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+link_libraries(SDL2 SDL2_ttf SDL2_mixer SDL2_image)
+
 add_subdirectory(dependencies)
 add_subdirectory(src)
 
@@ -63,6 +69,8 @@ target_compile_options(${PROJECT_NAME}
     "-Wzero-as-null-pointer-constant"
     "-Wextra-semi"
 )
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 if (NOT UNIX)
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

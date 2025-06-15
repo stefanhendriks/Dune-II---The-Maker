@@ -56,6 +56,8 @@ std::string getLogComponentString(eLogComponent component) {
             return "INIT";
         case COMP_ALLEGRO:
             return "ALLEGRO";
+        case COMP_SDL2:
+            return "SDL2";
         case COMP_VERSION:
             return "VERSION";
         case COMP_SKIRMISHSETUP:
