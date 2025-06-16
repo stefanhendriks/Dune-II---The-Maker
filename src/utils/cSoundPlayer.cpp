@@ -3,16 +3,21 @@
 #include "definitions.h"
 #include "utils/cLog.h"
 
-#include <allegro/datafile.h>
-#include <allegro/digi.h>
-#include <allegro/midi.h>
-#include <allegro/sound.h>
+#include "utils/pack.h"
+// #include <allegro/datafile.h>
+// #include <allegro/digi.h>
+// #include <allegro/midi.h>
+// #include <allegro/sound.h>
 #include <fmt/core.h>
 
 #include <algorithm>
 #include <cassert>
 #include <memory>
 #include <stdexcept>
+
+#include <SDL2/SDL_mixer.h>
+#include <algorithm> // for std::clamp
+
 
 namespace {
 
@@ -27,7 +32,8 @@ constexpr int kNoLoop = 0;
 
 constexpr int kMinNrVoices = 4;
 constexpr int kMaxVolume = 220;
-
+constexpr int MinVolume = 0;
+constexpr int MaxVolume = MIX_MAX_VOLUME;
 }
 
 class cSoundData {
@@ -35,25 +41,25 @@ public:
     cSoundData() {
         auto logger = cLogger::getInstance();
 
-        gfxaudio = load_datafile("data/gfxaudio.dat");
+        gfxaudio = std::make_unique<DataPack>("data/sdl_audio.dat");
         if (gfxaudio == nullptr) {
-            static auto msg = "Could not hook/load datafile: gfxaudio.dat.";
+            static auto msg = "Could not hook/load datafile: sdl_audio.dat.";
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
             throw std::runtime_error(msg);
         } else {
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Hooked datafile: gfxaudio.dat.", OUTC_SUCCESS);
+            logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Hooked datafile: sdl_audio.dat.", OUTC_SUCCESS);
         }
     }
 
-    const SAMPLE* getSample(int sampleId) const {
-        return static_cast<const SAMPLE*>(gfxaudio[sampleId].dat);
+    Mix_Chunk* getSample(int sampleId) const {
+        return gfxaudio->getSample(sampleId);
     }
 
-    MIDI* getMusic(int musicId) const {
-        return static_cast<MIDI*>(gfxaudio[musicId].dat);
+    Mix_Music *getMusic(int musicId) const {
+        return gfxaudio->getMusic(musicId);
     }
 private:
-    const DATAFILE* gfxaudio;
+    std::unique_ptr<DataPack> gfxaudio;
 };
 
 cSoundPlayer::cSoundPlayer(const cPlatformLayerInit& init) : cSoundPlayer(init, kAllegroMaxNrVoices) {
@@ -78,58 +84,70 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
             return;
         }
 
-        reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
-
-        if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, nullptr) == 0)
+        //reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
+        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
         {
+            logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
+        }
+
+        // if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, nullptr) == 0)
+        // {
+        //     auto msg = fmt::format("Successfully installed sound. {} voices reserved", nr_voices);
+        //     logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+
+        //     // One fewer voice for the samples, as MIDI playing will use a voice.
+        //     voices.resize(nr_voices - 1, kNoVoice);
+        //     break;
+        // }
+        if (Mix_AllocateChannels(nr_voices) >= kMinNrVoices) {
             auto msg = fmt::format("Successfully installed sound. {} voices reserved", nr_voices);
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 
-            // One fewer voice for the samples, as MIDI playing will use a voice.
             voices.resize(nr_voices - 1, kNoVoice);
             break;
+        } else {
+            auto msg = fmt::format("Failed installing sound. {} voices reserved", nr_voices);
+            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
         }
-
-        auto msg = fmt::format("Failed reserving {} voices. Will try {}.", nr_voices, (nr_voices / 2));
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
-
-        nr_voices /= 2;
     }
-
+    musicVolume = MaxVolume/2;
     // Sound effects are loud, the music is queiter (its background music, so it should not be disturbing).
     // FIXME: shouldn't this be the Allegro max volume and half of that instead of 220 and 110?
-    set_volume(kMaxVolume, kMaxVolume / 2);
+    //set_volume(kMaxVolume, kMaxVolume / 2);
+    Mix_MasterVolume(MaxVolume/2);
+    Mix_VolumeMusic(musicVolume);
 }
 
 cSoundPlayer::~cSoundPlayer() {
-    for (int voice : voices) {
-        if (voice != kNoVoice) {
-            deallocate_voice(voice);
-        }
-    }
+    // for (int voice : voices) {
+    //     if (voice != kNoVoice) {
+    //         deallocate_voice(voice);
+    //     }
+    // }
 }
 
 int cSoundPlayer::getMaxVolume() {
     // TODO: This will become configurable (so you can set your own max volume for sounds, etc)
-    return kAllegroMaxVolume;
+    return MaxVolume;
 }
 
 void cSoundPlayer::think() {
-    for (int& voice : voices) {
-        if (voice == kNoVoice) {
-            continue;
-        }
+    // MIRA : free voices tab
+    // for (int& voice : voices) {
+    //     if (voice == kNoVoice) {
+    //         continue;
+    //     }
 
-        auto pos = voice_get_position(voice);
-        if (pos == kFinishedPLaying) {
-            deallocate_voice(voice); // Same as release_voice, as it stopped playing
-            voice = kNoVoice;
-        }
-    }
+    //     auto pos = voice_get_position(voice);
+    //     if (pos == kFinishedPLaying) {
+    //         deallocate_voice(voice); // Same as release_voice, as it stopped playing
+    //         voice = kNoVoice;
+    //     }
+    // }
 }
 
 void cSoundPlayer::playSound(int sampleId) {
-    playSound(sampleId, kAllegroMaxVolume);
+    playSound(sampleId, musicVolume);
 }
 
 void cSoundPlayer::playSound(int sampleId, int vol) {
@@ -137,30 +155,30 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
         return;
     }
 
-    if (voices.size() < kMinNrVoices) {
-        return;
-    }
+    // if (voices.size() < kMinNrVoices) {
+    //     return;
+    // }
 
 
-    auto voice = std::find(voices.begin(), voices.end(), kNoVoice);
-    if (voice == voices.end()) {
-        cLogger::getInstance()->log(eLogLevel::LOG_WARN, eLogComponent::COMP_SOUND, "Playing sound",
-                                    "Cannot play sample, no more voices available.");
-        return;
-    }
+    // auto voice = std::find(voices.begin(), voices.end(), kNoVoice);
+    // if (voice == voices.end()) {
+    //     cLogger::getInstance()->log(eLogLevel::LOG_WARN, eLogComponent::COMP_SOUND, "Playing sound",
+    //                                 "Cannot play sample, no more voices available.");
+    //     return;
+    // }
 
     vol = std::clamp(vol, 0, kAllegroMaxVolume);
 
-    const SAMPLE* sample = soundData->getSample(sampleId);
-	assert(sample);
+    Mix_Chunk* sample = soundData->getSample(sampleId);
+	// assert(sample);
+    Mix_PlayChannel(-1, sample, 0); // -1 means play on any available channel
+	// *voice = allocate_voice(sample);
+    // assert(*voice != kNoVoiceAvailable);
 
-	*voice = allocate_voice(sample);
-    assert(*voice != kNoVoiceAvailable);
-
-    voice_set_playmode(*voice, PLAYMODE_PLAY | PLAYMODE_FORWARD); // The default
-    voice_set_volume(*voice, vol);
-    voice_set_pan(*voice, kAllegroPanCenter);
-    voice_start(*voice);
+    // voice_set_playmode(*voice, PLAYMODE_PLAY | PLAYMODE_FORWARD); // The default
+    // voice_set_volume(*voice, vol);
+    // voice_set_pan(*voice, kAllegroPanCenter);
+    // voice_start(*voice);
 }
 
 void cSoundPlayer::playVoice(int sampleId, int house) {
@@ -174,30 +192,25 @@ void cSoundPlayer::playVoice(int sampleId, int house) {
 }
 
 void cSoundPlayer::playMusic(int sampleId) {
-    play_midi(soundData->getMusic(sampleId), kNoLoop);
+    Mix_PlayMusic(soundData->getMusic(sampleId), kNoLoop);
 }
 
 bool cSoundPlayer::isMusicPlaying() const {
-    return midi_pos > -1;
+    return Mix_PlayingMusic() > 0;
 }
 
 void cSoundPlayer::stopMusic() {
-    stop_midi();
+    Mix_HaltMusic();
 }
 
 void cSoundPlayer::setMusicVolume(int vol)
 {
-    int digivol;
-    int midivol;
-    get_volume(&digivol, &midivol);
-    set_volume(digivol, vol);
+    musicVolume = std::clamp(vol, 0, MaxVolume);
+    Mix_VolumeMusic(musicVolume);
 };
 
 void cSoundPlayer::changeMusicVolume(int delta)
 {
-    int digivol;
-    int midivol;
-    get_volume(&digivol, &midivol);
-    int vol = std::clamp(digivol + delta, 0, kAllegroMaxVolume);
-    set_volume(digivol, vol);
+    musicVolume = std::clamp(musicVolume + delta, 0, MaxVolume);
+    this ->setMusicVolume(musicVolume);
 };
