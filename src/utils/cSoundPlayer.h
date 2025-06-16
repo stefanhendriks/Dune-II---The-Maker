@@ -35,4 +35,5 @@ class cSoundPlayer {
 	private:
 		std::vector<int> voices;
         std::unique_ptr<cSoundData> soundData;
+        int musicVolume;
 };
