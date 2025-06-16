@@ -27,6 +27,8 @@ class cSoundPlayer {
         void stopMusic();
         bool isMusicPlaying() const;
 
+        void setMusicVolume(int vol);
+        void changeMusicVolume(int delta);
 		// think about voices, clear voices, etc.
 		void think();
 

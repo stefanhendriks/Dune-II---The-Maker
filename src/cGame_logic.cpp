@@ -1924,6 +1924,23 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
         m_drawFps = false;
     }
 
+    if (event.hasKey(KEY_M)) {
+        game.m_playMusic = !game.m_playMusic;
+        if (!game.m_playMusic) {
+            m_soundPlayer->stopMusic();
+        } else {
+            m_soundPlayer->playMusic(m_newMusicSample);
+        }
+    }
+
+    if (event.hasKey(KEY_O)) {
+        m_soundPlayer->changeMusicVolume(-10);
+    }
+
+    if (event.hasKey(KEY_P)) {
+        m_soundPlayer->changeMusicVolume(10);
+    }
+
     if (event.hasKey(KEY_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }

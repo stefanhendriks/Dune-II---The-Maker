@@ -184,3 +184,20 @@ bool cSoundPlayer::isMusicPlaying() const {
 void cSoundPlayer::stopMusic() {
     stop_midi();
 }
+
+void cSoundPlayer::setMusicVolume(int vol)
+{
+    int digivol;
+    int midivol;
+    get_volume(&digivol, &midivol);
+    set_volume(digivol, vol);
+};
+
+void cSoundPlayer::changeMusicVolume(int delta)
+{
+    int digivol;
+    int midivol;
+    get_volume(&digivol, &midivol);
+    int vol = std::clamp(digivol + delta, 0, kAllegroMaxVolume);
+    set_volume(digivol, vol);
+};
