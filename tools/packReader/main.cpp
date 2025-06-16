@@ -15,6 +15,7 @@ const int fileNameSize = 40;
 const int titleSize = 4;    // "D2TM"
 const int offsetSize = 4+4; // two uint32_t 
 const int nbrFilesSize = 2; // one uint16_t
+const int extensionSize = 4; // "WAV", "JPG", ...
 
 // **********************
 //
@@ -24,6 +25,7 @@ const int nbrFilesSize = 2; // one uint16_t
 struct FileInPack {
     std::string name;
     std::string fileId;
+    std::string extension;
     uint32_t fileOffset;
     uint32_t fileSize;
 };
@@ -85,6 +87,13 @@ void ReaderPack::readFileLines()
             std::cerr << "Failed to read file ID for file " << i << std::endl;
             return;
         }
+        // file extension
+        char rawExt[4] = {0};
+        if (SDL_RWread(rfp.get(), rawExt, extensionSize, 1) != 1) {
+            std::cerr << "Failed to read extension for file " << i << std::endl;
+            return;
+        }
+
         // index offset
         uint32_t offsetFile;
         if (SDL_RWread(rfp.get(), reinterpret_cast<char*>(&offsetFile), sizeof(offsetFile), 1) != 1) {
@@ -101,6 +110,7 @@ void ReaderPack::readFileLines()
         FileInPack tmp;
         tmp.name = std::string(fileID);
         tmp.fileId = std::string(fileID); 
+        tmp.extension = std::string(rawExt);
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
         fileInPack.push_back(tmp);
@@ -151,17 +161,17 @@ SDL_RWops* ReaderPack::getData(int index) {
 void ReaderPack::displayPackFile() {
     std::cout << "------------------------------" << std::endl;
     std::cout << "File(s) stored in archive " << fpName << std::endl;
-    std::cout << "[Name] -> size -> offset" << std::endl;
+    std::cout << "[Name] -> [ext] -> size -> offset" << std::endl;
     std::cout << "------------------------------" << std::endl;
     for (auto i=0; i<fileInPack.size(); i++ ) {
-        std::cout << '[' << fileInPack[i].fileId << "] -> " << std::setw(8) << fileInPack[i].fileSize << " -> " << std::setw(8) << fileInPack[i].fileOffset << std::endl;
+        std::cout << '[' << fileInPack[i].fileId << "] -> ["<< fileInPack[i].extension << "] -> " << std::setw(8) << fileInPack[i].fileSize << " -> " << std::setw(8) << fileInPack[i].fileOffset << std::endl;
     }
     std::cout << "EOF" << std::endl;
 }
 
 void ReaderPack::readDataIntoMemory()
 {
-    uint16_t firstData = titleSize + nbrFilesSize + (fileNameSize+offsetSize) * fileInPak;
+    uint16_t firstData = titleSize + nbrFilesSize + (fileNameSize+extensionSize+offsetSize) * fileInPak;
     SDL_RWseek(rfp.get(), firstData, RW_SEEK_SET );
     SDL_RWread(rfp.get(), fileInMemory.get() , sizeInMemory, 1);
 }
@@ -209,7 +219,10 @@ bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
        
         FileInPack tmp;
         tmp.name = fileName;
-        tmp.fileId = fileId; 
+        tmp.fileId = fileId;
+        std::string ext = fileName.substr(fileName.find_last_of('.') + 1);
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::toupper);
+        tmp.extension = ext.substr(0, 3); 
         tmp.fileSize = SDL_RWsize(file);
         tmp.fileOffset = 0;
         fileInPack.push_back(tmp);
@@ -237,13 +250,15 @@ void WriterPack::writeFileLines()
     uint32_t offset = 0;
     for (const auto& tmp : fileInPack) {
         // Create a temporary buffer to group the data
-        char buffer[fileNameSize + sizeof(uint32_t) + sizeof(uint32_t)] = {0};
+        char buffer[fileNameSize + extensionSize + sizeof(uint32_t) + sizeof(uint32_t)] = {0};
         // Copy fileId to buffer (limited to fileNameSize)
         strncpy(buffer, tmp.fileId.c_str(), fileNameSize);
+        // Copy extension to buffer (limited to extensionSize)
+        strncpy(buffer + fileNameSize, tmp.extension.c_str(), extensionSize);
         // Copy offset into buffer
-        memcpy(buffer + fileNameSize, &offset, sizeof(uint32_t));
+        memcpy(buffer + fileNameSize + extensionSize, &offset, sizeof(uint32_t));
         // Copy fileSize to buffer
-        memcpy(buffer + fileNameSize + sizeof(uint32_t), &tmp.fileSize, sizeof(uint32_t));
+        memcpy(buffer + fileNameSize + extensionSize + sizeof(uint32_t), &tmp.fileSize, sizeof(uint32_t));
         // Write the buffer in one operation
         if (SDL_RWwrite(wfp.get(), buffer, 1, sizeof(buffer)) != sizeof(buffer)) {
             std::cerr << "Failed to write file line for: " << tmp.fileId << std::endl;
@@ -257,10 +272,10 @@ void WriterPack::displayPackFile()
 {
     std::cout << "------------------------------" << std::endl;
     std::cout << "File(s) stored in archive " << std::endl;
-    std::cout << "[Name] -> size" << std::endl;
+    std::cout << "[fileId] -> [extension] -> size" << std::endl;
     std::cout << "------------------------------" << std::endl;
     for (const auto& tmp : fileInPack) {
-        std::cout << "\t[" << tmp.fileId << "] -> " << std::setw(8) << tmp.fileSize << std::endl;
+        std::cout << "\t[" << tmp.fileId << "] -> [" << tmp.extension << "] -> " << std::setw(8) << tmp.fileSize << std::endl;
     }
     std::cout << "EOF" << std::endl;
 }
@@ -314,6 +329,7 @@ bool WriterPack::writePackFilesOnDisk()
 // - number of files: on 2 bytes (uint16_t)
 // One line for each file that contains
 // - its identifier on 40 bytes
+// - its extension on 4 bytes
 // - its position in the data : offset on 4 bytes (uint32_t)
 // - the size of the file : sizeFile on 4 bytes (uint32_t) 
 //
@@ -449,6 +465,7 @@ int main(int argc, char ** argv)
     SDL_Surface *surface1 = dataRead.getSurface(0);
     SDL_Surface *surface2 = dataRead.getSurface("test2");
     SDL_Surface *surface3 = dataRead.getSurface(2);
+    dataRead.displayPackFile();
     //-----------------------------------------------------------------
 
     //convert SDL_Surface to SDL_Texture
@@ -469,6 +486,7 @@ int main(int argc, char ** argv)
     DataPack dataAudio("audio1.pak");
     Mix_Music * music = dataAudio.getMusic(2);
     Mix_PlayMusic( music, -1 );
+    dataAudio.displayPackFile();
 
     while (!quit)
     {
