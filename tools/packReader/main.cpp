@@ -416,6 +416,13 @@ Mix_Music *DataPack::getMusic(const std::string &name)
     return this->getMusic(index);
 }
 
+
+/*
+ * This is a test program to read and write pack files.
+ * It uses SDL2 and SDL2_mixer to display images and play music.
+ * The pack files are created with WriterPack and read with DataPack.
+ */
+
 int main(int argc, char ** argv)
 {
     // First we create a pak file from scratch
@@ -544,4 +551,3 @@ int main(int argc, char ** argv)
  
     return 0;
 }
-
