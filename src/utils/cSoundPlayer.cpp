@@ -31,7 +31,7 @@ constexpr int kMaxVolume = 220;
 }
 
 class cSoundData {
-  public:
+public:
     cSoundData() {
         auto logger = cLogger::getInstance();
 
@@ -52,7 +52,7 @@ class cSoundData {
     MIDI* getMusic(int musicId) const {
         return static_cast<MIDI*>(gfxaudio[musicId].dat);
     }
-
+private:
     const DATAFILE* gfxaudio;
 };
 
