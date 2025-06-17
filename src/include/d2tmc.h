@@ -58,7 +58,7 @@ extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
-extern cAllegroDrawer      *allegroDrawer;
+extern cAllegroDrawer      *renderDrawer;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];

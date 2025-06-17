@@ -71,7 +71,7 @@ void cSelectMissionState::thinkFast() {
 }
 
 void cSelectMissionState::draw() const {
-    allegroDrawer->drawSprite(bmp_screen, background, 0, 0);
+    renderDrawer->drawSprite(bmp_screen, background, 0, 0);
 
     gui_window->draw();
 

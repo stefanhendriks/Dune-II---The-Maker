@@ -38,7 +38,7 @@ void cFlag::draw() {
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-        allegroDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+        renderDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                          drawX, drawY, scaledWidth, scaledHeight);
     }
 }

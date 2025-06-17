@@ -118,7 +118,7 @@ void cMiniMapDrawer::drawTerrain() {
                 iDrawX += x;
                 iDrawY += y;
             }
-            allegroDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+            renderDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
         }
     }
 }
@@ -130,7 +130,7 @@ void cMiniMapDrawer::drawTerrain() {
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
-    int iColor = allegroDrawer->getColor_BLACK();
+    int iColor = renderDrawer->getColor_BLACK();
 
     for (int x = 0; x < map->getWidth(); x++) {
         for (int y = 0; y < map->getHeight(); y++) {
@@ -144,7 +144,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                 continue;
             }
 
-            iColor = allegroDrawer->getColor_BLACK();
+            iColor = renderDrawer->getColor_BLACK();
 
             int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
@@ -182,7 +182,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
             }
 
             // no need to draw black on black background
-            if (iColor != allegroDrawer->getColor_BLACK()) {
+            if (iColor != renderDrawer->getColor_BLACK()) {
                 int iDrawX = drawX + x;
                 int iDrawY = drawY + y;
 
@@ -190,7 +190,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                     iDrawX += x;
                     iDrawY += y;
                 }
-                allegroDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+                renderDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
             }
         }
     }
@@ -230,7 +230,7 @@ void cMiniMapDrawer::draw() {
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    allegroDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0, 0, 0));
+    renderDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0, 0, 0));
     set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(),
                   m_RectFullMinimap.getEndY());
 

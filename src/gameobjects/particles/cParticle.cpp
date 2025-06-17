@@ -110,10 +110,10 @@ void cParticle::draw() {
 
     if (bmp) {
         // new behavior
-        allegroDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+        renderDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
     } else {
         // old behavior
-        allegroDrawer->blitFromGfxData(iType, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+        renderDrawer->blitFromGfxData(iType, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
     }
 
     // create proper sized bitmap
@@ -123,7 +123,7 @@ void cParticle::draw() {
     // create bmp that is the stretched version of temp
     BITMAP *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
     clear_to_color(stretched, makecol(255, 0, 255)); // mask color
-    allegroDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
+    renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed
     destroy_bitmap(temp);

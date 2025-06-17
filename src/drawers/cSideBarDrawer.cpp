@@ -205,7 +205,7 @@ void cSideBarDrawer::drawCreditsUsage() {
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-    allegroDrawer->drawRectangleFilled(bmp_screen, powerBarRect, allegroDrawer->getColor_BLACK());
+    renderDrawer->drawRectangleFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
 
     // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
     // and so forth.
@@ -243,7 +243,7 @@ void cSideBarDrawer::drawCreditsUsage() {
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
 
-    allegroDrawer->drawRectangle(bmp_screen, powerBarRect, m_sidebarColor);
+    renderDrawer->drawRectangle(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     int darker = makecol(89, 56, 0);
@@ -263,7 +263,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-    allegroDrawer->drawRectangleFilled(bmp_screen, powerBarRect, allegroDrawer->getColor_BLACK());
+    renderDrawer->drawRectangleFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
@@ -296,14 +296,14 @@ void cSideBarDrawer::drawPowerUsage() const {
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
 
-    allegroDrawer->drawRectangle(bmp_screen, powerBarRect, m_sidebarColor);
+    renderDrawer->drawRectangle(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     int darker = makecol(89, 56, 0);
     line(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
     line(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
-    allegroDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
+    renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
 //    m_textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
 //    m_textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
 //    m_textDrawer->drawText(barX, barY - 20, "P");
@@ -357,7 +357,7 @@ void cSideBarDrawer::drawMinimap() {
         drawX += (sprite->w / 2) - (emblemDesiredWidth / 2);
         drawY = cSideBar::TopBarHeight + ((heightMinimap / 2) - (emblemDesiredHeight / 2));
 
-        allegroDrawer->stretchBlit((BITMAP *) gfxinter[bitmapId].dat, bmp_screen, srcX, srcY, emblemWidth,
+        renderDrawer->stretchBlit((BITMAP *) gfxinter[bitmapId].dat, bmp_screen, srcX, srcY, emblemWidth,
                                    emblemHeight, drawX, drawY, emblemDesiredWidth, emblemDesiredHeight);
     }
 }

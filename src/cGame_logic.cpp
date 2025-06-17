@@ -319,7 +319,7 @@ void cGame::setMissionWon() {
     // copy over
     blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenX, m_screenY);
 
-    allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
+    renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
 }
 
 void cGame::setMissionLost() {
@@ -338,7 +338,7 @@ void cGame::setMissionLost() {
     // copy over
     blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenX, m_screenY);
 
-    allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
+    renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
 }
 
 bool cGame::isMissionFailed() const {
@@ -721,7 +721,7 @@ void cGame::shutdown() {
         players[i].destroyAllegroBitmaps();
     }
 
-    delete allegroDrawer;
+    delete renderDrawer;
     delete m_dataRepository;
     m_soundPlayer.reset();
     delete m_mouse;
@@ -1089,7 +1089,7 @@ bool cGame::setupGame() {
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
-    allegroDrawer = new cAllegroDrawer(m_dataRepository);
+    renderDrawer = new cAllegroDrawer(m_dataRepository);
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
@@ -1325,7 +1325,7 @@ void cGame::setState(int newState) {
             } else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 BITMAP *background = create_bitmap(m_screenX, m_screenY);
-                allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
+                renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cSelectMissionState(*this, background, m_state);
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
@@ -1337,7 +1337,7 @@ void cGame::setState(int newState) {
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
 
-                allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
+                renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             } else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
@@ -1822,14 +1822,14 @@ void cGame::setNextStateToTransitionTo(int newState) {
 
 void cGame::drawCombatMouse() {
     if (m_mouse->isBoxSelecting()) {
-        allegroDrawer->drawRectangle(bmp_screen, m_mouse->getBoxSelectRectangle(),
+        renderDrawer->drawRectangle(bmp_screen, m_mouse->getBoxSelectRectangle(),
                                      game.getColorFadeSelected(255, 255, 255));
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        allegroDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+        renderDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y,
                                 game.getColorFadeSelected(255, 255, 255));
     }
 

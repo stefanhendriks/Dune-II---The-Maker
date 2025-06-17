@@ -44,7 +44,7 @@ cDrawManager::~cDrawManager() {
 
 void cDrawManager::drawCombatState() {
     // MAP
-	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenY);
+	renderDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenY);
     m_mapDrawer.drawTerrain();
 
     m_structureDrawer.drawStructuresFirstLayer();
@@ -68,16 +68,16 @@ void cDrawManager::drawCombatState() {
 
 	drawRallyPoint();
 
-    allegroDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor(bmp_screen);
 
     // GUI
 	drawSidebar();
 
 	drawOptionBar();
 
-	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+	renderDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
 	drawStructurePlacing();
-    allegroDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor(bmp_screen);
 
     drawTopBarBackground();
 	drawCredits();
@@ -87,7 +87,7 @@ void cDrawManager::drawCombatState() {
 
     drawNotifications();
 
-    allegroDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor(bmp_screen);
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
@@ -155,7 +155,7 @@ void cDrawManager::drawRallyPoint() {
 
     int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
-    allegroDrawer->stretchSprite(mouseMoveBitmap, bmp_screen, drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled);
+    renderDrawer->stretchSprite(mouseMoveBitmap, bmp_screen, drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled);
 
     int startX = theStructure->iDrawX() + mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
@@ -171,10 +171,10 @@ void cDrawManager::drawRallyPoint() {
 }
 
 void cDrawManager::drawSidebar() {
-    allegroDrawer->setClippingFor(bmp_screen, game.m_screenX - cSideBar::SidebarWidth, 0, game.m_screenX, game.m_screenY);
+    renderDrawer->setClippingFor(bmp_screen, game.m_screenX - cSideBar::SidebarWidth, 0, game.m_screenX, game.m_screenY);
     m_sidebarDrawer.draw();
     miniMapDrawer.draw();
-    allegroDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor(bmp_screen);
 }
 
 /**
@@ -217,15 +217,15 @@ void cDrawManager::drawTopBarBackground() {
         m_topBarBmp = create_bitmap(game.m_screenX, 30);
         BITMAP *topbarPiece = (BITMAP *)gfxinter[BMP_TOPBAR_BACKGROUND].dat;
         for (int x = 0; x < game.m_screenX; x+= topbarPiece->w) {
-            allegroDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
+            renderDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
         }
 
         set_palette(m_player->pal);
 
-        allegroDrawer->drawSprite(m_topBarBmp, (BITMAP *)gfxinter[BTN_OPTIONS].dat, 1, 0);
+        renderDrawer->drawSprite(m_topBarBmp, (BITMAP *)gfxinter[BTN_OPTIONS].dat, 1, 0);
     }
 
-    allegroDrawer->drawSprite(bmp_screen, m_topBarBmp, 0, 0);
+    renderDrawer->drawSprite(bmp_screen, m_topBarBmp, 0, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);

@@ -22,7 +22,7 @@ cGuiWindow::~cGuiWindow() noexcept {
 void cGuiWindow::draw() const {
     int colorYellow = makecol(255, 207, 41);
     // draw window itself...
-    allegroDrawer->gui_DrawRect(bmp_screen, m_rect);
+    renderDrawer->gui_DrawRect(bmp_screen, m_rect);
 
     for (auto & guiObject : gui_objects) {
         guiObject->draw();

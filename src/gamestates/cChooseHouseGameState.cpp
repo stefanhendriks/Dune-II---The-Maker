@@ -66,9 +66,9 @@ void cChooseHouseGameState::draw() const {
     // HOUSES
     draw_sprite(bmp_screen, bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
-    allegroDrawer->blitSprite(bmp_HouseAtreides, bmp_screen, &houseAtreides);
-    allegroDrawer->blitSprite(bmp_HouseOrdos, bmp_screen, &houseOrdos);
-    allegroDrawer->blitSprite(bmp_HouseHarkonnen, bmp_screen, &houseHarkonnen);
+    renderDrawer->blitSprite(bmp_HouseAtreides, bmp_screen, &houseAtreides);
+    renderDrawer->blitSprite(bmp_HouseOrdos, bmp_screen, &houseOrdos);
+    renderDrawer->blitSprite(bmp_HouseHarkonnen, bmp_screen, &houseHarkonnen);
 
     // BACK (bottom right
     int color = hoversOverBackButton ? makecol(255, 0, 0) : makecol(255, 255, 255);
