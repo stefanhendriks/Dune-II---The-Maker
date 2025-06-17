@@ -15,7 +15,7 @@
 */
 
 #pragma once
-
+#include <stdint.h>
 class cGame;
 
 class cTimeManager {
@@ -26,6 +26,10 @@ private:
 	int m_timerSecond;
 	int m_timerGlobal;
 
+    uint64_t m_lastUnitsTick = 0;
+    uint64_t m_lastGameTimeTick = 0;
+    uint64_t m_lastSecondsTick = 0;
+
 	void handleTimerUnits();
 	void handleTimerAllegroTimerSeconds();
 	void handleTimerGameTime();
@@ -33,8 +37,8 @@ private:
 	void capTimers();
 
 	/** Allegro specific routines to handle timers **/
-	void syncFromAllegroTimers();
-	void syncAllegroTimers();
+	// void syncFromAllegroTimers();
+	// void syncAllegroTimers();
 
 public:
 
