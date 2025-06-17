@@ -57,7 +57,6 @@ endif()
 target_compile_options(${PROJECT_NAME}
   PRIVATE
     ${D2TM_OPTMIZATION}
-    "-Werror"
     "-Wall"
     "-Wextra"
     "-Wno-dangling-reference"
