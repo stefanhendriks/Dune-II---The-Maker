@@ -31,14 +31,12 @@ if (UNIX)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
       alleg
-      alfont
       fmt::fmt
   )
 else()
   target_link_libraries(${PROJECT_NAME}
   PRIVATE
     allegro
-    alfont
     fmt::fmt
     -static-libgcc
     -static-libstdc++
