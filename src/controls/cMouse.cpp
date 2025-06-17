@@ -303,7 +303,7 @@ void cMouse::draw() {
         }
     }
 
-    allegroDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
+    renderDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
 
     if (game.isDebugMode()) {
         int y = mouseDrawY;

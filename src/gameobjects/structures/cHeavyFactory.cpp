@@ -84,7 +84,7 @@ void cHeavyFactory::draw() {
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
         BITMAP *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
-        allegroDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+        renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                          drawX, drawY, scaledWidth, scaledHeight);
     }
 }

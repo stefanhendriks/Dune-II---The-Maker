@@ -42,8 +42,8 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
 
     int color = m_player->getSelectFadingColor();
 
-    allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
-    allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
+    renderDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
+    renderDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
 
 }
 
@@ -77,7 +77,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
 
     if (!list->isAvailable()) {
-      allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, makecol(0,0,0), 96);
+      renderDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, makecol(0,0,0), 96);
     }
 
     if (pressed) {
@@ -85,15 +85,15 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
         int color = m_player->getHouseFadingColor();
 
-        allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
-        allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
+        renderDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
+        renderDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
     } else {
         if (list->isFlashing()) {
             int color = list->getFlashingColor();
 
-            allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
-            allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
-            allegroDrawer->drawRectangle(bmp_screen, x + 2, y + 2, width - 3, height - 3, color);
+            renderDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
+            renderDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
+            renderDrawer->drawRectangle(bmp_screen, x + 2, y + 2, width - 3, height - 3, color);
         }
     }
 }

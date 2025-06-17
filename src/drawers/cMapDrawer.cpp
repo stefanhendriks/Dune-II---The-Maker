@@ -70,11 +70,11 @@ void cMapDrawer::drawShroud() {
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX,
+                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX,
                                                                     fDrawY, iTileWidth, iTileHeight);
                         clear_to_color(temp, makecol(255, 0, 255));
 
-                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
+                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
                                                                     iTileWidth, iTileHeight);
                         draw_trans_sprite(bmp_screen, temp, fDrawX, fDrawY);
                     }
@@ -82,7 +82,7 @@ void cMapDrawer::drawShroud() {
                     // NOT VISIBLE, DO NOT DRAW A THING THEN!
                     // Except when there is a building here, that should not be visible ;)
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
-                    allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,
+                    renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,
                                                                 iTileWidth, iTileHeight);
                 }
             }
@@ -142,7 +142,7 @@ void cMapDrawer::drawTerrain() {
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
                 cRectangle rectangle = cRectangle(0, 0, 32, 32);
-                allegroDrawer->drawRectangleFilled(m_BmpTemp, rectangle, makecol(245, 245, 245));
+                renderDrawer->drawRectangleFilled(m_BmpTemp, rectangle, makecol(245, 245, 245));
             } else {
                 // valid type
                 blit((BITMAP *) gfxdata[cell->type].dat,
@@ -156,7 +156,7 @@ void cMapDrawer::drawTerrain() {
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
                 // no need to stretch here, we stretch m_BmpTemp below
-                allegroDrawer->maskedBlitFromGfxData(SMUDGE, m_BmpTemp,
+                renderDrawer->maskedBlitFromGfxData(SMUDGE, m_BmpTemp,
                                                      cell->smudgetile * 32,
                                                      cell->smudgetype * 32,
                                                      0,
@@ -167,7 +167,7 @@ void cMapDrawer::drawTerrain() {
 
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
-            allegroDrawer->stretchBlit(m_BmpTemp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+            renderDrawer->stretchBlit(m_BmpTemp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             // Draw debugging information
             if (game.isDebugMode()) {
@@ -178,7 +178,7 @@ void cMapDrawer::drawTerrain() {
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                      allegroDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                      renderDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
                                                                     makecol(255, 255, 0), 96);
                     }
                 }

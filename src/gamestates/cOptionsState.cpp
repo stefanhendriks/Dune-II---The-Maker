@@ -91,7 +91,7 @@ void cOptionsState::thinkFast() {
 }
 
 void cOptionsState::draw() const {
-    allegroDrawer->drawSprite(bmp_screen, m_background, 0, 0);
+    renderDrawer->drawSprite(bmp_screen, m_background, 0, 0);
 
     m_guiWindow->draw();
 

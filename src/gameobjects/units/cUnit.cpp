@@ -724,11 +724,11 @@ void cUnit::draw() {
         int colorDepth = bitmap_color_depth(bmp_screen);
         BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
-        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
+        renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
                                          0, 0,
                                          scaledWidth, scaledHeight);
 
-        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, ux, destY);
+        renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, ux, destY);
         destroy_bitmap(shadow);
         destroy_bitmap(stretchedShadow);
     }
@@ -736,7 +736,7 @@ void cUnit::draw() {
     // Draw BODY
     BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
-        allegroDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
+        renderDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
                                          ux, uy,
                                          scaledWidth,
                                          scaledHeight);
@@ -751,7 +751,7 @@ void cUnit::draw() {
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
 
-        allegroDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
+        renderDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
                                          mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
 
@@ -773,7 +773,7 @@ void cUnit::draw() {
         int x = draw_x(bmp_width);
         int y = draw_y(bmp_height);
 
-        allegroDrawer->maskedStretchBlit(focusBitmap,
+        renderDrawer->maskedStretchBlit(focusBitmap,
                                          bmp_screen,
                                          0, 0, bmp_width, bmp_height, x, y,
                                          mapCamera->factorZoomLevel(bmp_width),
@@ -3217,7 +3217,7 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const {
 }
 
 void cUnit::draw_debug() {
-    allegroDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
+    renderDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
     putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
     //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
 

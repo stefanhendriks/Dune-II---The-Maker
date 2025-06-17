@@ -143,7 +143,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                allegroDrawer->drawRectangleFilled(temp, rectangle, placeColor);
+                renderDrawer->drawRectangleFilled(temp, rectangle, placeColor);
             }
         }
     }
@@ -187,7 +187,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace) {
         bmp = player->getStructureBitmap(structureId);
 	}
 
-    allegroDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
+    renderDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
 
     draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 

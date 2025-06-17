@@ -266,19 +266,19 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
 
 void cSelectYourNextConquestState::drawStateIntroduction() const {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
-        allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // draw dune planet (being faded in)
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12);
     } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
         draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12); // dune is opaque
-        allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
         // draw dune world map over Dune planet , transitioning
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
         draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
-        allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // introduce the borders (world pieces), draw over world dune, transitioning
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
@@ -468,7 +468,7 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
     if (regionPiece.iAlpha >= 255) {
         draw_sprite(bmp_screen, regionPiece.bmp, regionX, regionY);
     } else {
-        allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
+        renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
         clear_to_color(regionPiece.bmpHighBit, makecol(255, 0, 255));
         draw_sprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
         draw_trans_sprite(bmp_screen, regionPiece.bmpHighBit, regionX, regionY);

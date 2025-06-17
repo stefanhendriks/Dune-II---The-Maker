@@ -75,10 +75,10 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     clear_to_color(background, makecol(0, 0, 0));
 
     BITMAP *dunePlanet = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
-    allegroDrawer->drawSprite(background, dunePlanet, game.m_screenX * 0.2, (game.m_screenY * 0.5));
+    renderDrawer->drawSprite(background, dunePlanet, game.m_screenX * 0.2, (game.m_screenY * 0.5));
 
     for (int dy = 0; dy < game.m_screenY; dy += 2) {
-        allegroDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0, 0, 0));
+        renderDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0, 0, 0));
     }
 
     // Rectangles for GUI interaction
@@ -189,17 +189,17 @@ void cSetupSkirmishGameState::thinkFast() {
 }
 
 void cSetupSkirmishGameState::draw() const {
-    allegroDrawer->drawSprite(bmp_screen, background, 0, 0);
+    renderDrawer->drawSprite(bmp_screen, background, 0, 0);
 
-    allegroDrawer->gui_DrawRect(bmp_screen, topBar);
+    renderDrawer->gui_DrawRect(bmp_screen, topBar);
 
     textDrawer.drawTextCentered("Skirmish", 1);
 
-    allegroDrawer->gui_DrawRect(bmp_screen, playerTitleBar, colorDarkishBackground, colorWhite, colorWhite);
-    allegroDrawer->gui_DrawRect(bmp_screen, topRightBox);
-    allegroDrawer->gui_DrawRect(bmp_screen, playerList, colorDarkishBackground, colorWhite, colorWhite);
-    allegroDrawer->gui_DrawRect(bmp_screen, mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    allegroDrawer->gui_DrawRect(bmp_screen, mapList);
+    renderDrawer->gui_DrawRect(bmp_screen, playerTitleBar, colorDarkishBackground, colorWhite, colorWhite);
+    renderDrawer->gui_DrawRect(bmp_screen, topRightBox);
+    renderDrawer->gui_DrawRect(bmp_screen, playerList, colorDarkishBackground, colorWhite, colorWhite);
+    renderDrawer->gui_DrawRect(bmp_screen, mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    renderDrawer->gui_DrawRect(bmp_screen, mapList);
 
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4,
                                 colorYellow);
@@ -266,7 +266,7 @@ void cSetupSkirmishGameState::draw() const {
     }
 
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    allegroDrawer->gui_DrawRect(bmp_screen, bottomBarRect);
+    renderDrawer->gui_DrawRect(bmp_screen, bottomBarRect);
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);

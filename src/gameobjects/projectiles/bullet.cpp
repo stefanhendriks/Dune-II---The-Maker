@@ -120,7 +120,7 @@ void cBullet::draw() {
     }
 
     if (sBulletInfo[iType].bmp != nullptr) {
-        allegroDrawer->maskedStretchBlit(sBulletInfo[iType].bmp,
+        renderDrawer->maskedStretchBlit(sBulletInfo[iType].bmp,
                                          bmp_screen,
                                          sx, sy,
                                          bmp_width, bmp_width,

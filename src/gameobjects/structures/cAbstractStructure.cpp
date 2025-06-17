@@ -830,7 +830,7 @@ void cAbstractStructure::drawWithShadow() {
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     BITMAP *bitmapToDraw = getBitmap();
-    allegroDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+    renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                      drawX, drawY, scaledWidth, scaledHeight);
 
     BITMAP *shadow = getShadowBitmap();
@@ -841,10 +841,10 @@ void cAbstractStructure::drawWithShadow() {
         BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
-        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
+        renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
                                          0, 0, scaledWidth, scaledHeight);
 
-        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+        renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
         destroy_bitmap(stretchedShadow);
     }

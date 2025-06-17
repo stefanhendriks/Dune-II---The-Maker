@@ -54,12 +54,12 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
     m_bmpBar = create_bitmap(desiredWidth, 30);
     clear_to_color(m_bmpBar, makecol(255, 0, 255));
 
-    allegroDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_LEFT].dat, 0, 0);
+    renderDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_LEFT].dat, 0, 0);
     for (int drawX = 11; drawX < m_bmpBar->w; drawX+= 55) {
-        allegroDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_MIDDLE].dat, drawX, 0);
+        renderDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_MIDDLE].dat, drawX, 0);
     }
 
-    allegroDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_RIGHT].dat, m_bmpBar->w - 11, 0);
+    renderDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_RIGHT].dat, m_bmpBar->w - 11, 0);
 
     // create this one which we use for actual drawing
     m_temp = create_bitmap(m_bmpBar->w, m_bmpBar->h);
@@ -122,9 +122,9 @@ void cMessageDrawer::draw() {
 		draw_sprite(m_temp, m_bmpBar, 0, 0);
 
 		// draw message
-        allegroDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
+        renderDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
 		//Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
-        allegroDrawer->resetClippingFor(m_temp);
+        renderDrawer->resetClippingFor(m_temp);
 
 		// draw temp
 		draw_trans_sprite(bmp_screen, m_temp, m_position.x, m_position.y);

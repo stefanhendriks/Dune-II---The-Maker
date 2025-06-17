@@ -41,7 +41,7 @@ cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
 cDrawManager   			*	drawManager = nullptr;
 
-cAllegroDrawer          *   allegroDrawer = nullptr;
+cAllegroDrawer          *   renderDrawer = nullptr;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];

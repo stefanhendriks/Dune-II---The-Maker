@@ -270,8 +270,8 @@ void cAbstractMentat::draw() {
     }
 
     if (state == AWAITING_RESPONSE) {
-        allegroDrawer->blitSprite(leftButtonBmp, bmp_screen, leftButton);
-        allegroDrawer->blitSprite(rightButtonBmp, bmp_screen, rightButton);
+        renderDrawer->blitSprite(leftButtonBmp, bmp_screen, leftButton);
+        renderDrawer->blitSprite(rightButtonBmp, bmp_screen, rightButton);
     }
 
     if (m_guiBtnToMissionSelect) {
