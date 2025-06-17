@@ -11,6 +11,7 @@
 
 #include <allegro.h>
 #include <fmt/format.h>
+#include <iostream>
 
 #include <vector>
 #include <algorithm>
@@ -276,7 +277,7 @@ void cPlayer::setHouse(int iHouse) {
 
             bmp_structure[i] = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
             if (!bmp_structure[i]) {
-                allegro_message("Could not create bmp structure bitmap!? - Imminent crash.");
+                std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
             clear_to_color(bmp_structure[i], makecol(255, 0, 255));
 
@@ -287,7 +288,7 @@ void cPlayer::setHouse(int iHouse) {
                 int j = MAX_STRUCTURETYPES + i;
                 BITMAP *bitmap = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
                 if (!bitmap) {
-                    allegro_message("Could not create FLASH bmp structure bitmap!? - Imminent crash.");
+                    std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
                 clear_to_color(bitmap, makecol(255, 0, 255));
 
@@ -304,7 +305,7 @@ void cPlayer::setHouse(int iHouse) {
 
             bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
             if (!bmp_unit[i]) {
-                allegro_message("Could not create bmp unit bitmap!? - Imminent crash.");
+                std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
             clear_to_color(bmp_unit[i], makecol(255, 0, 255));
 

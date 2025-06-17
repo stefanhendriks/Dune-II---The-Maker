@@ -841,7 +841,7 @@ bool cGame::setupGame() {
     if (r > -1) {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
     } else {
-        allegro_message("Failed to install timer");
+        std::cerr << "Failed to install timer\n";
         logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
         return false;
     }
@@ -903,7 +903,7 @@ bool cGame::setupGame() {
     //Mira TEXT     alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
     //Mira TEXT } else {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
-    //Mira TEXT     allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
+    //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
     //Mira TEXT     return false;
     //Mira TEXT }
 
@@ -915,7 +915,7 @@ bool cGame::setupGame() {
     //Mira TEXT     alfont_set_font_size(bene_font, 10); // set size
     //Mira TEXT } else {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
-    //Mira TEXT     allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
+    //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
     //Mira TEXT     return false;
     //Mira TEXT }
 
@@ -926,7 +926,7 @@ bool cGame::setupGame() {
     //Mira TEXT     alfont_set_font_size(small_font, 10); // set size
     //Mira TEXT } else {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
-    //Mira TEXT     allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
+    //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
     //Mira TEXT     return false;
     //Mira TEXT }
 
@@ -959,7 +959,7 @@ bool cGame::setupGame() {
     bmp_screen = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_screen == nullptr) {
-        allegro_message("Failed to create a memory bitmap");
+        std::cerr << "Failed to create a memory bitmap\n";
         logbook("ERROR: Could not create bitmap: bmp_screen");
         return false;
     } else {
@@ -970,7 +970,7 @@ bool cGame::setupGame() {
     bmp_backgroundMentat = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_backgroundMentat == nullptr) {
-        allegro_message("Failed to create a memory bitmap");
+        std::cerr << "Failed to create a memory bitmap\n";
         logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
         return false;
     } else {
@@ -1012,7 +1012,7 @@ bool cGame::setupGame() {
     bmp_throttle = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_throttle == nullptr) {
-        allegro_message("Failed to create a memory bitmap");
+        std::cerr << "Failed to create a memory bitmap\n";
         logbook("ERROR: Could not create bitmap: bmp_throttle");
         return false;
     } else {
@@ -1022,7 +1022,7 @@ bool cGame::setupGame() {
     bmp_winlose = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_winlose == nullptr) {
-        allegro_message("Failed to create a memory bitmap");
+        std::cerr <<  "Failed to create a memory bitmap\n";
         logbook("ERROR: Could not create bitmap: bmp_winlose");
         return false;
     } else {
@@ -1032,7 +1032,7 @@ bool cGame::setupGame() {
     bmp_fadeout = create_bitmap(game.m_screenX, game.m_screenY);
 
     if (bmp_fadeout == nullptr) {
-        allegro_message("Failed to create a memory bitmap");
+        std::cerr <<  "Failed to create a memory bitmap\n";
         logbook("ERROR: Could not create bitmap: bmp_fadeout");
         return false;
     } else {
