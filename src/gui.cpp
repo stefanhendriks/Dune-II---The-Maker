@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "drawers/cAllegroDrawer.h"
 
-#include <alfont.h>
+// #include <alfont.h>
 #include <allegro.h>
 
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
@@ -41,15 +41,15 @@ bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
 bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, const std::string& text, int hoverColor) {
     const char *cstring = text.c_str();
     
-    alfont_textprintf(bmp_screen, bene_font, x + 1, y + 1, makecol(0, 0, 0), cstring);
+    //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x + 1, y + 1, makecol(0, 0, 0), cstring);
 
-	int width = alfont_text_length(bene_font, cstring);
-    int height = alfont_text_height(bene_font);
-    if (MOUSE_WITHIN_RECT(x, y, width, height)) {
-        alfont_textprintf(bmp_screen, bene_font, x, y, hoverColor, cstring);
-        return true;
-    }
-    alfont_textprintf(bmp_screen, bene_font, x, y, makecol(255, 255, 255), cstring);
+	//Mira TEXT int width = alfont_text_length(bene_font, cstring);
+    //Mira TEXT int height = alfont_text_height(bene_font);
+    //Mira TEXT if (MOUSE_WITHIN_RECT(x, y, width, height)) {
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x, y, hoverColor, cstring);
+    //Mira TEXT     return true;
+    //Mira TEXT }
+    //Mira TEXT     alfont_textprintf(bmp_screen, bene_font, x, y, makecol(255, 255, 255), cstring);
     return false;	
 }
 

@@ -5,7 +5,7 @@
 #include "drawers/cAllegroDrawer.h"
 #include "sidebar/cSideBar.h"
 
-#include <alfont.h>
+// #include <alfont.h>
 #include <allegro.h>
 
 // Game Playing State and SelectYourNextConquestState have their own version
@@ -123,7 +123,7 @@ void cMessageDrawer::draw() {
 
 		// draw message
         allegroDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
-		alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
+		//Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
         allegroDrawer->resetClippingFor(m_temp);
 
 		// draw temp

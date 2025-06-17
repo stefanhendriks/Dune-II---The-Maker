@@ -20,7 +20,7 @@
 #include "gui/cGuiButton.h"
 #include "gui/actions/cGuiActionToGameState.h"
 
-#include <alfont.h>
+// #include <alfont.h>
 #include <allegro.h>
 #include <fmt/core.h>
 
@@ -261,12 +261,11 @@ void cAbstractMentat::draw() {
     if (state == SPEAKING) {
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
-            alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
 
-            alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 37, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
-            alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 36, makecol(255, 255, 255), "%s",
-                              sentence[iMentatSentence + 1]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 37, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 36, makecol(255, 255, 255), "%s",  sentence[iMentatSentence + 1]);
         }
     }
 

@@ -10,7 +10,7 @@
 #include "gui/actions/cGuiActionShowOptions.h"
 #include "gui/actions/cGuiActionToGameState.h"
 
-#include <alfont.h>
+// #include <alfont.h>
 #include <allegro.h>
 #include <fmt/core.h>
 
@@ -42,7 +42,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 //    /////////////////////////////////
 //    //// Credits (top)
 //    ////////////////////////////////
-    int buttonWidth = alfont_text_length(bene_font, "CREDITS") / 2;
+    int buttonWidth = 12; //Mira TEXT alfont_text_length(bene_font, "CREDITS") / 2;
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
     int creditsX = (game.m_screenX / 2) - buttonWidth;
@@ -145,7 +145,7 @@ void cMainMenuGameState::draw() const {
     if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenX; x += 60) {
             for (int y = 0; y < game.m_screenY; y += 20) {
-                alfont_textprintf(bmp_screen, bene_font, x, y, makecol(48, 48, 48), "DEBUG");
+                //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x, y, makecol(48, 48, 48), "DEBUG");
             }
         }
     }

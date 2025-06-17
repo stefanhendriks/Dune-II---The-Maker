@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 
-#include <alfont.h>
+// #include <alfont.h>
 #include <allegro.h>
 
 cCreditsState::cCreditsState(cGame &theGame) :

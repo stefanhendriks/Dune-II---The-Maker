@@ -56,7 +56,7 @@
 
 
 #include <allegro.h>
-#include <alfont.h>
+//#include <alfont.h>
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -508,8 +508,7 @@ void cGame::updateMouseAndKeyboardStateAndGamePlaying() {
 void cGame::drawStateCombat() {
     drawManager->drawCombatState();
     if (m_drawFps) {
-        alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(),
-                          iRest);
+        //Mira TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
     }
 
     // for now, call this on game class.
@@ -747,7 +746,7 @@ void cGame::shutdown() {
     //alfont_destroy_font(bene_font);
 
     // Exit the font library (must be first)
-    alfont_exit();
+    //Mira TEXT alfont_exit();
 
     logbook("Allegro FONT library shut down.");
 
@@ -847,8 +846,8 @@ bool cGame::setupGame() {
         return false;
     }
 
-    alfont_init();
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
+    //Mira TEXT alfont_init();
+    //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
     install_keyboard();
     m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
@@ -892,43 +891,44 @@ bool cGame::setupGame() {
     m_screenX = m_Screen->Width();
     m_screenY = m_Screen->Height();
 
-    alfont_text_mode(-1);
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
+    //Mira TEXT alfont_text_mode(-1);
+    //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
-    game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
+    //Mira TEXT game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
+    game_font = nullptr;
 
-    if (game_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
-        alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
-    } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
-        allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
-        return false;
-    }
+    //Mira TEXT if (game_font != nullptr) {
+    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
+    //Mira TEXT     alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
+    //Mira TEXT } else {
+    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
+    //Mira TEXT     allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
+    //Mira TEXT     return false;
+    //Mira TEXT }
 
 
-    bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
+    //Mira TEXT bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
+    bene_font = nullptr;
+    //Mira TEXT if (bene_font != nullptr) {
+    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
+    //Mira TEXT     alfont_set_font_size(bene_font, 10); // set size
+    //Mira TEXT } else {
+    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
+    //Mira TEXT     allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
+    //Mira TEXT     return false;
+    //Mira TEXT }
 
-    if (bene_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
-        alfont_set_font_size(bene_font, 10); // set size
-    } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
-        allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
-        return false;
-    }
-
-    small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
-
-    if (small_font != nullptr) {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
-        alfont_set_font_size(small_font, 10); // set size
-    } else {
-        logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
-        allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
-        return false;
-    }
+    //Mira TEXT small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
+    small_font = nullptr;
+    //Mira TEXT if (small_font != nullptr) {
+    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
+    //Mira TEXT     alfont_set_font_size(small_font, 10); // set size
+    //Mira TEXT } else {
+    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
+    //Mira TEXT     allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
+    //Mira TEXT     return false;
+    //Mira TEXT }
 
     if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
         set_display_switch_mode(SWITCH_PAUSE);
