@@ -225,9 +225,9 @@ void cAllegroDrawer::drawRectangleTransparentFilled(BITMAP *dest, const cRectang
     draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
-cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
-    return new cRectangle(x, y, src->w, src->h);
-}
+// cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
+//     return new cRectangle(x, y, src->w, src->h);
+// }
 
 void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha) {
     set_trans_blender(std::clamp(red, 0, 255),

@@ -14,7 +14,7 @@ class cAllegroDrawer {
 		cAllegroDrawer(cAllegroDataRepository * dataRepository);
 		virtual ~cAllegroDrawer();
 
-		cRectangle * fromBitmap(int x, int y, BITMAP *src);
+		// cRectangle * fromBitmap(int x, int y, BITMAP *src);
 
 		void drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y, int totalWidth, int xOffset);
 		void drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x);
