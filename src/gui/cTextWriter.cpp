@@ -1,6 +1,6 @@
 #include "cTextWriter.h"
 
-#include <alfont.h>
+// #include <alfont.h>
 
 #include <cassert>
 
@@ -17,7 +17,7 @@ cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize) {
 }
 
 cTextWriter::~cTextWriter() {
-	font=NULL;
+	font=nullptr;
 	delete textDrawer;
 }
 

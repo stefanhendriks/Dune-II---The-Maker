@@ -23,7 +23,8 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
-#include <alfont.h>
+// #include <alfont.h>
+#include <allegro.h>
 #include <fmt/core.h>
 
 #include <cmath>
@@ -582,8 +583,8 @@ void cUnit::draw_health() {
     // draw group
     if (iGroup > 0 &&
         iPlayer == HUMAN) {
-        alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, makecol(0, 0, 0), "%d", iGroup);
-        alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, makecol(255, 255, 255), "%d", iGroup);
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, makecol(0, 0, 0), "%d", iGroup);
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, makecol(255, 255, 255), "%d", iGroup);
     }
 
 }
@@ -3218,10 +3219,10 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const {
 void cUnit::draw_debug() {
     allegroDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
     putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
-    alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
+    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
 
     if (isSandworm()) {
-        alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, makecol(255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
+        //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, makecol(255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
     }
 }
 
