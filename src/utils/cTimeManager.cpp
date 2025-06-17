@@ -1,12 +1,12 @@
 #include "cTimeManager.h"
 
 #include "cGame.h"
-#include "timers.h"
+// #include "timers.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
 
 #include <fmt/core.h>
-
+#include <SDL2/SDL_timer.h>
 cTimeManager::cTimeManager(cGame& game)
     : m_timerUnits(0)
     , m_timerSecond(0)
@@ -97,26 +97,44 @@ void cTimeManager::handleTimerUnits() {
     is now not the case.
 */
 void cTimeManager::processTime() {
-    syncFromAllegroTimers();
+//    syncFromAllegroTimers();
+    uint64_t now = SDL_GetTicks64();
 
+    // 100 ms pour allegro_timerunits
+    while (now - m_lastUnitsTick >= 100) {
+        m_timerUnits++;
+        m_lastUnitsTick += 100;
+    }
+
+    // 5 ms pour allegro_timergametime
+    while (now - m_lastGameTimeTick >= 5) {
+        m_timerGlobal++;
+        m_lastGameTimeTick += 5;
+    }
+
+    // 1000 ms pour allegro_timerseconds
+    while (now - m_lastSecondsTick >= 1000) {
+        m_timerSecond++;
+        m_lastSecondsTick += 1000;
+    }
     capTimers();
     handleTimerAllegroTimerSeconds();
     handleTimerUnits();
     handleTimerGameTime();
 
-    syncAllegroTimers();
+//    syncAllegroTimers();
 }
 
-/** allegro specific routine **/
-void cTimeManager::syncFromAllegroTimers() {
-    m_timerSecond = allegro_timerSecond;
-    m_timerGlobal = allegro_timerGlobal;
-    m_timerUnits = allegro_timerUnits;
-}
+// /** allegro specific routine **/
+// void cTimeManager::syncFromAllegroTimers() {
+//     m_timerSecond = allegro_timerSecond;
+//     m_timerGlobal = allegro_timerGlobal;
+//     m_timerUnits = allegro_timerUnits;
+// }
 
-/** allegro specific routine **/
-void cTimeManager::syncAllegroTimers() {
-    allegro_timerSecond = m_timerSecond;
-    allegro_timerGlobal = m_timerGlobal;
-    allegro_timerUnits = m_timerUnits;
-}
+// /** allegro specific routine **/
+// void cTimeManager::syncAllegroTimers() {
+//     allegro_timerSecond = m_timerSecond;
+//     allegro_timerGlobal = m_timerGlobal;
+//     allegro_timerUnits = m_timerUnits;
+// }

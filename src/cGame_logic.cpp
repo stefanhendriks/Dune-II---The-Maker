@@ -41,7 +41,7 @@
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "sidebar/cBuildingListFactory.h"
 #include "sidebar/cSideBarFactory.h"
-#include "timers.h"
+
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
@@ -857,20 +857,20 @@ bool cGame::setupGame() {
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
 
-    LOCK_VARIABLE(allegro_timerUnits);
-    LOCK_VARIABLE(allegro_timerGlobal);
-    LOCK_VARIABLE(allegro_timerSecond);
+    // LOCK_VARIABLE(allegro_timerUnits);
+    // LOCK_VARIABLE(allegro_timerGlobal);
+    // LOCK_VARIABLE(allegro_timerSecond);
 
-    LOCK_FUNCTION(allegro_timerunits);
-    LOCK_FUNCTION(allegro_timergametime);
-    LOCK_FUNCTION(allegro_timerseconds);
+    // LOCK_FUNCTION(allegro_timerunits);
+    // LOCK_FUNCTION(allegro_timergametime);
+    // LOCK_FUNCTION(allegro_timerseconds);
 
-	// Install timers
-    install_int(allegro_timerunits, 100); // 100 milliseconds
-    install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
-    install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
+	// // Install timers
+    // install_int(allegro_timerunits, 100); // 100 milliseconds
+    // install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
+    // install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
 
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
+    // logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
     m_frameCount = m_fps = 0;
 
