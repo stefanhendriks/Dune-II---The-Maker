@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <SDL2/SDL.h>
+#include <unordered_map>
 
 // **********************
 //
@@ -52,4 +53,8 @@ public:
     void displayPackFile();
 private:
     std::unique_ptr<ReaderPack> reader;
+    // for memory management
+    std::unordered_map<int, SDL_Surface*> surfaceCache;
+    std::unordered_map<int, Mix_Music*> musicCache;
+    std::unordered_map<int, Mix_Chunk*> sampleCache;
 };
