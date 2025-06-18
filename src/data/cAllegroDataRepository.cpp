@@ -54,34 +54,34 @@ int cAllegroDataRepository::findAvailableSlot() {
 //     return slot;
 // }
 
-bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
-    if (index < 0) return false;
-    if (index >= MAX_BITMAPS) return false;
+// bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
+//     if (index < 0) return false;
+//     if (index >= MAX_BITMAPS) return false;
 
-    if (m_data[index].bitmap) {
-        logbook(fmt::format(
-            "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap at {} index {}, because it has already been taken.", file, index));
+//     if (m_data[index].bitmap) {
+//         logbook(fmt::format(
+//             "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap at {} index {}, because it has already been taken.", file, index));
 
-        // already taken!
-        return false;
-    }
+//         // already taken!
+//         return false;
+//     }
 
-    BITMAP *pBitmap = load_bitmap(file, nullptr);
-    if (!pBitmap) {
-        logbook(fmt::format(
-            "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap {} at index {}, cannot find it or invalid format.", file, index));
-        // unable to load
-        return false;
-    }
+//     BITMAP *pBitmap = load_bitmap(file, nullptr);
+//     if (!pBitmap) {
+//         logbook(fmt::format(
+//             "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap {} at index {}, cannot find it or invalid format.", file, index));
+//         // unable to load
+//         return false;
+//     }
 
-    if (game.isDebugMode()) {
-        logbook(fmt::format("cAllegroDataRepository::loadBitmapAt() Loaded bitmap {} at index {}", file, index));
-    }
+//     if (game.isDebugMode()) {
+//         logbook(fmt::format("cAllegroDataRepository::loadBitmapAt() Loaded bitmap {} at index {}", file, index));
+//     }
 
-    m_data[index].bitmap = pBitmap;
-    m_data[index].ownsIt = true;
-    return true;
-}
+//     m_data[index].bitmap = pBitmap;
+//     m_data[index].ownsIt = true;
+//     return true;
+// }
 
 bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
     if (index < 0) return false;
