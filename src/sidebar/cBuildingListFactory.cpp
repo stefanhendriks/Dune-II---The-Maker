@@ -23,7 +23,7 @@ int cBuildingListFactory::getButtonDrawY() {
 }
 
 int cBuildingListFactory::getButtonDrawXStart() {
-	return (game.m_screenX - 200) + 2;
+	return (game.m_screenW - 200) + 2;
 }
 
 

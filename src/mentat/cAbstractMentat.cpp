@@ -57,8 +57,8 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
     if (canMissionSelect) {
         cTextDrawer textDrawer(bene_font);
         int length = textDrawer.textLength("Mission select");
-        const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenX - length,
-                                                                           game.m_screenY - textDrawer.getFontHeight(),
+        const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
+                                                                           game.m_screenH - textDrawer.getFontHeight(),
                                                                            "Mission select");
         cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
                                                              buttonKind);
@@ -75,8 +75,8 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
     font = bene_font;
 
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
-    offsetX = (game.m_screenX - 640) / 2;
-    offsetY = (game.m_screenY - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetX = (game.m_screenW - 640) / 2;
+    offsetY = (game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
 
     memset(sentence, 0, sizeof(sentence));
     logbook("cAbstractMentat::cAbstractMentat()");

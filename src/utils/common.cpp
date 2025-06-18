@@ -1750,8 +1750,8 @@ void Shimmer(int r, int x, int y) {
 
             if (x1 < 0) x1 = 0;
             if (y1 < 0) y1 = 0;
-            if (x1 >= game.m_screenX) x1 = game.m_screenX - 1;
-            if (y1 >= game.m_screenY) y1 = game.m_screenY - 1;
+            if (x1 >= game.m_screenW) x1 = game.m_screenW - 1;
+            if (y1 >= game.m_screenH) y1 = game.m_screenH - 1;
 
             gp = getpixel(bmp_screen, x1, y1); //ALLEGRO // use this inline function to speed up things.
             // Now choose random spot to 'switch' with.
@@ -1760,8 +1760,8 @@ void Shimmer(int r, int x, int y) {
 
             if (nx < 0) nx = 0;
             if (ny < 0) ny = 0;
-            if (nx >= game.m_screenX) nx = game.m_screenX - 1;
-            if (ny >= game.m_screenY) ny = game.m_screenY - 1;
+            if (nx >= game.m_screenW) nx = game.m_screenW - 1;
+            if (ny >= game.m_screenH) ny = game.m_screenH - 1;
 
             tc = getpixel(bmp_screen, nx, ny); //ALLEGRO
 

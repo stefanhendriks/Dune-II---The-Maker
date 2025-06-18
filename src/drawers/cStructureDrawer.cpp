@@ -384,7 +384,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
         }
 	}
 
-	rectfill(bmp_screen, (game.m_screenX - cSideBar::SidebarWidth), 0, game.m_screenX, game.m_screenY, makecol(0, 0, 0));
+	rectfill(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, game.m_screenW, game.m_screenH, makecol(0, 0, 0));
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure) {

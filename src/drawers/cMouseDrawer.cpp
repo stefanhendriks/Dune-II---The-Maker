@@ -26,7 +26,7 @@ int cMouseDrawer::getDrawXToolTip(int width) {
 	int x = mouseX + 32;
 
 	// correct drawing position so it does not fall off screen.
-	int diffX = (x + width) - game.m_screenX;
+	int diffX = (x + width) - game.m_screenW;
 	if (diffX > 0) {
 		x-= diffX;
 	}
@@ -37,7 +37,7 @@ int cMouseDrawer::getDrawYToolTip(int height) {
 	int y = mouseY + 32;
 
 	// correct drawing position so it does not fall off screen.
-	int diffY = (y + height) - game.m_screenY;
+	int diffY = (y + height) - game.m_screenH;
 	if (diffY > 0) {
 		y -= diffY;
 	}

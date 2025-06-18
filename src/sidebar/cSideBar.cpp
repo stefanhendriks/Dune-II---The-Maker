@@ -119,7 +119,7 @@ void cSideBar::thinkProgressAnimation() {
 }
 
 void cSideBar::onMouseAt(const s_MouseEvent &event) {
-    isMouseOverSidebarValue = event.coords.x > (game.m_screenX - cSideBar::SidebarWidth);
+    isMouseOverSidebarValue = event.coords.x > (game.m_screenW - cSideBar::SidebarWidth);
     drawManager->setKeepMessage(isMouseOverSidebarValue);
 
     if (selectedListID < 0) return;

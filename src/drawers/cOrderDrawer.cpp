@@ -15,8 +15,8 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
     int halfOfButtonHeight = buttonBitmap->h / 2;
-    buttonRect = cRectangle((game.m_screenX - halfOfSidebar) - halfOfButton,
-                            (game.m_screenY - halfOfHeightLeftForButton) - halfOfButtonHeight,
+    buttonRect = cRectangle((game.m_screenW - halfOfSidebar) - halfOfButton,
+                            (game.m_screenH - halfOfHeightLeftForButton) - halfOfButtonHeight,
                                 buttonBitmap->w, buttonBitmap->h);
     _isMouseOverOrderButton = false;
 

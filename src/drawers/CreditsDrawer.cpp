@@ -23,7 +23,7 @@ CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : player(thePlayer){
 
 	// center credits bar within sidebar
     int widthCreditsBar = ((BITMAP *)gfxinter[CREDITS_BAR].dat)->w;
-	drawX = game.m_screenX - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
+	drawX = game.m_screenW - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
 	drawY = 0;
 }
 

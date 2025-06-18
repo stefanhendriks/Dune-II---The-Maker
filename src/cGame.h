@@ -71,8 +71,8 @@ public:
     eFadeAction m_fadeAction;       // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     // resolution of the game
-	int m_screenX;
-	int m_screenY;
+	int m_screenW;
+	int m_screenH;
     int m_iniScreenWidth;
     int m_iniScreenHeight;
 

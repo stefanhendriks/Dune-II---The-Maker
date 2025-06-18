@@ -20,7 +20,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
 
-    int centerOfScreen = game.m_screenX / 2;
+    int centerOfScreen = game.m_screenW / 2;
 
     logoX = centerOfScreen - (logoWidth / 2);
     logoY = (logoHeight/10);
@@ -45,7 +45,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int buttonWidth = 12; //Mira TEXT alfont_text_length(bene_font, "CREDITS") / 2;
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
-    int creditsX = (game.m_screenX / 2) - buttonWidth;
+    int creditsX = (game.m_screenW / 2) - buttonWidth;
     GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
     gui_btn_credits = new cGuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
@@ -143,8 +143,8 @@ void cMainMenuGameState::thinkFast() {
 
 void cMainMenuGameState::draw() const {
     if (game.isDebugMode()) {
-        for (int x = 0; x < game.m_screenX; x += 60) {
-            for (int y = 0; y < game.m_screenY; y += 20) {
+        for (int x = 0; x < game.m_screenW; x += 60) {
+            for (int y = 0; y < game.m_screenH; y += 20) {
                 //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x, y, makecol(48, 48, 48), "DEBUG");
             }
         }

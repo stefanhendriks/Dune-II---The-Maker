@@ -53,7 +53,7 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords) {
         return;
     }
 
-    if (coords.x > (game.m_screenX - cSideBar::SidebarWidth)) {
+    if (coords.x > (game.m_screenW - cSideBar::SidebarWidth)) {
         m_mouseCell = MOUSECELL_SIDEBAR; // on sidebar
         m_mouseOnBattleField = false;
         return;

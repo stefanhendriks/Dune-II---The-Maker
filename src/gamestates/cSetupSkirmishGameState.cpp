@@ -67,17 +67,17 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     widthOfSomething = 300; //??
 
     // Screen
-    screen_x = game.m_screenX;
-    screen_y = game.m_screenY;
+    screen_x = game.m_screenW;
+    screen_y = game.m_screenH;
 
     // Background
     background = create_bitmap(screen_x, screen_y);
     clear_to_color(background, makecol(0, 0, 0));
 
     BITMAP *dunePlanet = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
-    renderDrawer->drawSprite(background, dunePlanet, game.m_screenX * 0.2, (game.m_screenY * 0.5));
+    renderDrawer->drawSprite(background, dunePlanet, game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
-    for (int dy = 0; dy < game.m_screenY; dy += 2) {
+    for (int dy = 0; dy < game.m_screenH; dy += 2) {
         renderDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0, 0, 0));
     }
 
@@ -890,8 +890,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms() {
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton() {
     int topBarHeight = 21;
-    int screen_y = game.m_screenY;
-    int screen_x = game.m_screenX;
+    int screen_y = game.m_screenH;
+    int screen_x = game.m_screenW;
 
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;
