@@ -1924,6 +1924,20 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event) {
         m_drawFps = false;
     }
 
+    if (event.hasKey(KEY_D)) {
+        for (int i = 0; i < MAX_UNITS; i++) {
+            cUnit &u = unit[i];
+            if (u.bSelected && u.iType == MCV && u.getPlayer()->isHuman()) {
+                bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
+                if (canPlace) {
+                    int iLocation = u.getCell();
+                    u.die(false, false);
+                    u.getPlayer()->placeStructure(iLocation, CONSTYARD, 100);
+                }
+            }
+        }
+    }
+
     if (event.hasKey(KEY_M)) {
         game.m_playMusic = !game.m_playMusic;
         if (!game.m_playMusic) {
