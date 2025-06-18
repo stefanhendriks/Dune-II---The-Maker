@@ -22,7 +22,7 @@ public:
      * @param file
      * @return
      */
-    int loadBitmap(char *file);
+    // int loadBitmap(char *file);
 
     bool loadBitmapAt(int index, const char *file);
 
