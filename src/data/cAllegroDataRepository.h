@@ -24,7 +24,7 @@ public:
      */
     // int loadBitmap(char *file);
 
-    bool loadBitmapAt(int index, const char *file);
+    // bool loadBitmapAt(int index, const char *file);
 
     bool loadBitmapFromDataFileAt(int index, BITMAP *bmp);
     bool loadBitmapFromDataFileGfxDataAt(int index, int indexAtDataFile);
