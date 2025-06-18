@@ -142,4 +142,5 @@
 #define STAT19                           136      /* BMP  */
 #define STAT20                           137      /* BMP  */
 #define STAT21                           138      /* BMP  */
+#define ICON_POWER                       139      /* BMP  */
 
