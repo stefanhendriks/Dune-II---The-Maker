@@ -14,7 +14,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 
-#include <allegro/keyboard.h>
+//#include <allegro/keyboard.h>
 
 #include <cassert>
 

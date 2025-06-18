@@ -26,7 +26,7 @@
 #include "utils/cSeedMapGenerator.h"
 #include "gameobjects/units/cReinforcements.h"
 
-#include <allegro.h>
+// #include <allegro.h>
 #include <fmt/core.h>
 #include <filesystem>
 namespace fs=std::filesystem;
@@ -683,11 +683,13 @@ int INI_SectionType(char section[30], int last) {
         return INI_UNITS;
 
     if (strcmp(section, "STRUCTURES") == 0) {
-        alert("Structure Section found", section, "", "OK", nullptr, 13, 0);
+        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Structure Section found", section);
+        //alert("Structure Section found", section, "", "OK", nullptr, 13, 0);
         return INI_STRUCTURES;
     }
 
-    alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", nullptr, 13, 0);
+    //alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", nullptr, 13, 0);
+    cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "No SECTION id found, assuming its an ID nested in section", section);
 
     // When nothing found; we assume its just a new ID tag for some unit or structure
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
