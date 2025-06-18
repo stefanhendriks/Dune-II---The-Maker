@@ -537,7 +537,7 @@ private:
 
     int getTurnSpeed();
 
-    void think_MVC();
+    // void think_MVC();
     void think_ornithopter();
     void think_harvester();
 

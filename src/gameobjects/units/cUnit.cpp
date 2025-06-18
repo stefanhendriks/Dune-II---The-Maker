@@ -1072,9 +1072,9 @@ void cUnit::thinkActionAgnostic() {
         TIMER_blink--;
     }
 
-    if (iType == MCV) {
-        think_MVC();
-    }
+    // if (iType == MCV) {
+    //     think_MVC();
+    // }
 
     if (isSandworm()) {
         // add a worm trail behind worm randomly for now (just not every frame, or else this spams a great
@@ -3489,27 +3489,27 @@ int cUnit::findNearbyStructureToAttack(int range) {
     return structureIdToAttack;
 }
 
-void cUnit::think_MVC() {
-    cPlayer *pPlayer = getPlayer();
-    if (pPlayer->isHuman()) {
-        // TODO: React upon keypress and then issue a command to deploy MCV instead of using this hacky via think function
-        if (bSelected) {
-            if (key[KEY_D]) {
-                bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
+// void cUnit::think_MVC() {
+//     cPlayer *pPlayer = getPlayer();
+//     if (pPlayer->isHuman()) {
+//         // TODO: React upon keypress and then issue a command to deploy MCV instead of using this hacky via think function
+//         if (bSelected) {
+//             if (key[KEY_D]) {
+//                 bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
 
-                if (result) {
-                    int iLocation = iCell;
+//                 if (result) {
+//                     int iLocation = iCell;
 
-                    die(false, false);
+//                     die(false, false);
 
-                    // place const yard
-                    pPlayer->placeStructure(iLocation, CONSTYARD, 100);
-                    return;
-                }
-            }
-        }
-    }
-}
+//                     // place const yard
+//                     pPlayer->placeStructure(iLocation, CONSTYARD, 100);
+//                     return;
+//                 }
+//             }
+//         }
+//     }
+// }
 
 int cUnit::getTurnSpeed() {
     return sUnitInfo[iType].turnspeed;
