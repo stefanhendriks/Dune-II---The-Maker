@@ -307,14 +307,15 @@ void cAbstractMentat::interact() {
     }
     if (state != AWAITING_RESPONSE) return;
 
-    if (game.getMouse()->isLeftButtonClicked()) {
+    auto m_mouse = game.getMouse();
+    if (m_mouse->isLeftButtonClicked()) {
         // execute left button logic
-        if (leftButton && leftButton->isPointWithin(mouse_x, mouse_y)) {
+        if (leftButton && leftButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
             leftButtonCommand->execute(*this);
         }
 
         // execute right button logic
-        if (rightButton && rightButton->isPointWithin(mouse_x, mouse_y)) {
+        if (rightButton && rightButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
             rightButtonCommand->execute(*this);
         }
     }

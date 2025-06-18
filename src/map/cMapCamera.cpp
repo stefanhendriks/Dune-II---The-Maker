@@ -46,7 +46,8 @@ cMapCamera::~cMapCamera() {
 void cMapCamera::zoomIn() {
     if (m_zoomLevel < 4.0) {
         m_zoomLevel += 0.1;
-        adjustViewport(mouse_x, mouse_y);
+        auto m_mouse = game.getMouse();
+        adjustViewport(m_mouse->getX(), m_mouse->getY());
     }
 }
 
@@ -71,7 +72,8 @@ void cMapCamera::adjustViewport(float screenX, float screenY) {
 void cMapCamera::zoomOut()  {
     if (m_zoomLevel > 0.25) {
         m_zoomLevel -= 0.1;
-        adjustViewport(mouse_x, mouse_y);
+        auto m_mouse = game.getMouse();
+        adjustViewport(m_mouse->getX(), m_mouse->getY());
     }
 }
 

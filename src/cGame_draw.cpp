@@ -29,7 +29,7 @@ void cGame::initiateFadingOut() {
 void cGame::drawStateLosing() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenX, m_screenY);
 
-    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
+    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
         m_state = GAME_LOSEBRIEF;
@@ -45,7 +45,7 @@ void cGame::drawStateLosing() {
 void cGame::drawStateWinning() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenX, m_screenY);
 
-    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
+    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
         // Mentat will be happy, after that enter "Select your next Conquest"

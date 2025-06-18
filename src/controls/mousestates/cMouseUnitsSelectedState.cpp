@@ -447,8 +447,8 @@ void cMouseUnitsSelectedState::toPreviousState() {
 }
 
 void cMouseUnitsSelectedState::spawnParticle(const int type) {
-    int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
-    int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
+    int absoluteXCoordinate = mapCamera->getAbsMapMouseX(m_mouse->getX());
+    int absoluteYCoordinate = mapCamera->getAbsMapMouseY(m_mouse->getY());
     cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1);
 }
 

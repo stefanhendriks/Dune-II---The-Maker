@@ -162,7 +162,8 @@ void cMainMenuGameState::draw() const {
     textDrawer.drawTextBottomRight(game.m_version.c_str());
 
     if (game.isDebugMode()) {
-        textDrawer.drawText(0, 0, fmt::format("{}, {}", mouse_x, mouse_y).c_str());
+        auto m_mouse = game.getMouse();
+        textDrawer.drawText(0, 0, fmt::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
 
     // MOUSE
