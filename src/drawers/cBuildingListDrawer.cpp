@@ -285,7 +285,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         }
 
 		// draw rectangle when mouse hovers over icon
-		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
+		auto m_mouse = game.getMouse();
+		if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
 			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
 			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, selectFadingColor);
 		} else {

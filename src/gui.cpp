@@ -23,7 +23,9 @@ bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
 
 bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
 {
-    return ((mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y <= (y + height)));
+    auto m_mouse = game.getMouse();
+    return ((m_mouse->getX() >= x && m_mouse->getX() < (x + width)) 
+            && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height)));
 }
 
 /**
@@ -66,8 +68,9 @@ bool GUI_DRAW_FRAME(int x, int y, int width, int height) {
 //    // lines to darken the right sides
 //    line(bmp_screen, x+width, y, x+width , y+height, makecol(84,84,120));
 //    line(bmp_screen, x, y+height, x+width , y+height, makecol(84,84,120));
-
-    if ((mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y <= (y + height))) {
+    auto m_mouse = game.getMouse();
+    if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width)) 
+        && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
         return true;
     }
 

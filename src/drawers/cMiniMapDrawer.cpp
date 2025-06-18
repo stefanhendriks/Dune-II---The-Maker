@@ -369,7 +369,8 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
             ) {
 
         if (player->hasAtleastOneStructure(RADAR)) {
-            int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
+            auto m_mouse = game.getMouse();
+            int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
             mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
     }

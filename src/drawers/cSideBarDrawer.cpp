@@ -166,7 +166,8 @@ void cSideBarDrawer::drawBuildingLists() {
         if (list->isAvailable() == false) continue; // not available, so no interaction possible
 
         // render hover over border
-        if (list->isOverButton(mouse_x, mouse_y)) {
+        auto m_mouse = game.getMouse();
+        if (list->isOverButton(m_mouse->getX(), m_mouse->getX())) {
             m_buildingListDrawer.drawButtonHoverRectangle(list);
         }
     }
