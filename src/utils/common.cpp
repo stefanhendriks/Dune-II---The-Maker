@@ -61,9 +61,11 @@ int fastThinkMsToTicks(int desiredMs) {
 
 int makeColFromString(std::string colorStr)
 {
-    int r=0, g=0, b=0;
-    // c version
-    sscanf(colorStr.c_str(),"%i,%i,%i",&r, &g, &b);
+    int r = 0, g = 0, b = 0;
+    char comma; // Pour consommer les virgules
+
+    std::stringstream ss(colorStr);
+    ss >> r >> comma >> g >> comma >> b;
     return makecol(r,g,b);
 }
 
@@ -1751,7 +1753,7 @@ void Shimmer(int r, int x, int y) {
             if (x1 >= game.m_screenX) x1 = game.m_screenX - 1;
             if (y1 >= game.m_screenY) y1 = game.m_screenY - 1;
 
-            gp = getpixel(bmp_screen, x1, y1); // use this inline function to speed up things.
+            gp = getpixel(bmp_screen, x1, y1); //ALLEGRO // use this inline function to speed up things.
             // Now choose random spot to 'switch' with.
             nx = (x1 - 1) + rnd(2);
             ny = (y1 - 1) + rnd(2);
@@ -1761,7 +1763,7 @@ void Shimmer(int r, int x, int y) {
             if (nx >= game.m_screenX) nx = game.m_screenX - 1;
             if (ny >= game.m_screenY) ny = game.m_screenY - 1;
 
-            tc = getpixel(bmp_screen, nx, ny);
+            tc = getpixel(bmp_screen, nx, ny); //ALLEGRO
 
             if (gp > -1 && tc > -1) {
                 // Now switch colors
