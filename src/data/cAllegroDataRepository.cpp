@@ -36,23 +36,23 @@ int cAllegroDataRepository::findAvailableSlot() {
     return -1;
 }
 
-int cAllegroDataRepository::loadBitmap(char *file) {
-    int slot = findAvailableSlot();
-    if (slot < 0) {
-        // unable to find available slot
-        return -1;
-    }
+// int cAllegroDataRepository::loadBitmap(char *file) {
+//     int slot = findAvailableSlot();
+//     if (slot < 0) {
+//         // unable to find available slot
+//         return -1;
+//     }
 
-    BITMAP *pBitmap = load_bitmap(file, nullptr);
-    if (!pBitmap) {
-        // unable to load
-        return -2;
-    }
+//     BITMAP *pBitmap = load_bitmap(file, nullptr);
+//     if (!pBitmap) {
+//         // unable to load
+//         return -2;
+//     }
 
-    m_data[slot].bitmap = pBitmap;
-    m_data[slot].ownsIt = true;
-    return slot;
-}
+//     m_data[slot].bitmap = pBitmap;
+//     m_data[slot].ownsIt = true;
+//     return slot;
+// }
 
 bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
     if (index < 0) return false;
