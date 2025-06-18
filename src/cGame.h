@@ -73,8 +73,8 @@ public:
     // resolution of the game
 	int m_screenW;
 	int m_screenH;
-    int m_iniScreenWidth;
-    int m_iniScreenHeight;
+    // int m_iniScreenWidth;
+    // int m_iniScreenHeight;
 
     bool m_playSound;               // play sound?
     bool m_disableAI;               // disable AI thinking?
