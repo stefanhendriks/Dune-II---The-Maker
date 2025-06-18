@@ -23,8 +23,8 @@ cMapCamera::cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedBorder
     int widthOfSidebar = cSideBar::SidebarWidth;
     m_heightOfTopBar = cSideBar::TopBarHeight;
 
-    m_windowWidth= game.m_screenX - widthOfSidebar;
-    m_windowHeight= game.m_screenY - m_heightOfTopBar;
+    m_windowWidth= game.m_screenW - widthOfSidebar;
+    m_windowHeight= game.m_screenH - m_heightOfTopBar;
 
     m_viewportWidth=m_windowWidth;
     m_viewportHeight=m_windowHeight;
@@ -194,7 +194,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
         if (mouseX <= 2) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_LEFT);
-        } else if (mouseX >= (game.m_screenX - 2)) {
+        } else if (mouseX >= (game.m_screenW - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_RIGHT);
         } else {
@@ -206,7 +206,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
         if (mouseY <= 2) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_UP);
-        } else if (mouseY >= (game.m_screenY - 2)) {
+        } else if (mouseY >= (game.m_screenH - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_DOWN);
         } else {

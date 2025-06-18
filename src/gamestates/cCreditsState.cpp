@@ -13,14 +13,14 @@ cCreditsState::cCreditsState(cGame &theGame) :
     m_duneBmp((BITMAP *) gfxinter[BMP_GAME_DUNE].dat),
     m_titleBmp((BITMAP *) gfxinter[BMP_D2TM].dat) {
 
-    int duneAtTheRight = game.m_screenX - (m_duneBmp->w * 1.1f);
-    int duneAlmostAtBottom = game.m_screenY - (m_duneBmp->h * 1.1f);
+    int duneAtTheRight = game.m_screenW - (m_duneBmp->w * 1.1f);
+    int duneAlmostAtBottom = game.m_screenH - (m_duneBmp->h * 1.1f);
     m_duneCoordinates = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
     int titleWidth = m_titleBmp->w;
     m_titleHeight = m_titleBmp->h;
 
-    int centerOfScreen = game.m_screenX / 2;
+    int centerOfScreen = game.m_screenW / 2;
 
     m_titleX = centerOfScreen - (titleWidth / 2);
     resetCrawler();
@@ -318,7 +318,7 @@ void cCreditsState::prepareCrawlerLines() {
 }
 
 void cCreditsState::resetCrawler() {
-    m_crawlerY = game.m_screenY + 1;
+    m_crawlerY = game.m_screenH + 1;
 }
 
 cCreditsState::~cCreditsState() {
@@ -344,7 +344,7 @@ void cCreditsState::draw() const {
 
     draw_sprite(bmp_screen, m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
-    int halfScreen = game.m_screenX / 2;
+    int halfScreen = game.m_screenW / 2;
 
     // draw crawler
     draw_sprite(bmp_screen, m_titleBmp, m_titleX, m_crawlerY);

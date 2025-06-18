@@ -157,10 +157,10 @@ void cHandleArgument::applyArguments() {
                 m_game->m_windowed = value;
                 break;
             case Options::SCREENX:
-                m_game->m_screenX = m_argumentScreenX;
+                m_game->m_screenW = m_argumentScreenX;
                 break;
             case Options::SCREENY:
-                m_game->m_screenY = m_argumentScreenY;
+                m_game->m_screenH = m_argumentScreenY;
                 break;
             default:
                 break;

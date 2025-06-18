@@ -77,8 +77,8 @@ cGame::cGame() : m_timeManager(*this) {
     m_drawFps = false;
     m_nextState = -1;
     m_currentState = nullptr;
-    m_screenX = 800;
-    m_screenY = 600;
+    m_screenW = 800;
+    m_screenH = 600;
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
@@ -317,7 +317,7 @@ void cGame::setMissionWon() {
     playMusicByType(MUSIC_WIN);
 
     // copy over
-    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenX, m_screenY);
+    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
 }
@@ -336,7 +336,7 @@ void cGame::setMissionLost() {
     playMusicByType(MUSIC_LOSE);
 
     // copy over
-    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenX, m_screenY);
+    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
 }
@@ -574,8 +574,8 @@ void cGame::shakeScreenAndBlitBuffer() {
             m_shakeX = -abs(offset / 2) + rnd(offset);
             m_shakeY = -abs(offset / 2) + rnd(offset);
 
-            blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenX, m_screenY);
-            blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenX, m_screenY);
+            blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
+            blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenW, m_screenH);
         } else {
             fadeOutOrBlitScreenBuffer();
         }
@@ -587,18 +587,18 @@ void cGame::shakeScreenAndBlitBuffer() {
 void cGame::fadeOutOrBlitScreenBuffer() const {
     if (m_fadeAction == FADE_NONE) {
         // Not shaking and not fading.
-        blit(bmp_screen, screen, 0, 0, 0, 0, m_screenX, m_screenY);
+        blit(bmp_screen, screen, 0, 0, 0, 0, m_screenW, m_screenH);
     } else {
         // Fading
         assert(m_fadeAlpha >= kMinAlpha);
         assert(m_fadeAlpha <= kMaxAlpha);
         auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(
-                create_bitmap(game.m_screenX, game.m_screenY), destroy_bitmap);
+                create_bitmap(game.m_screenW, game.m_screenH), destroy_bitmap);
         assert(temp);
         clear(temp.get());
         set_trans_blender(0, 0, 0, m_fadeAlpha);
         draw_trans_sprite(temp.get(), bmp_screen, 0, 0);
-        blit(temp.get(), screen, 0, 0, 0, 0, m_screenX, m_screenY);
+        blit(temp.get(), screen, 0, 0, 0, 0, m_screenW, m_screenH);
     }
 }
 
@@ -767,8 +767,8 @@ void cGame::setScreenResolutionFromGameIniSettings() {
         game.m_iniScreenHeight = 600;
         logbook("INI screen height < 600; unsupported; will set to 600.");
     }
-    game.m_screenX = game.m_iniScreenWidth;
-    game.m_screenY = game.m_iniScreenHeight;
+    game.m_screenW = game.m_iniScreenWidth;
+    game.m_screenH = game.m_iniScreenHeight;
 
     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", 
         fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_iniScreenWidth, game.m_iniScreenHeight)
@@ -881,15 +881,15 @@ bool cGame::setupGame() {
         setScreenResolutionFromGameIniSettings();
         m_handleArgument->applyArguments(); //Apply command line arguments
         m_handleArgument.reset();
-        m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenX, m_screenY);
+        m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenW, m_screenH);
     } else {
         if (m_windowed) {
             logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
         }
         m_Screen = std::make_unique<cScreenInit>(*m_PLInit);
     }
-    m_screenX = m_Screen->Width();
-    m_screenY = m_Screen->Height();
+    m_screenW = m_Screen->Width();
+    m_screenH = m_Screen->Height();
 
     //Mira TEXT alfont_text_mode(-1);
     //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
@@ -949,14 +949,14 @@ bool cGame::setupGame() {
     /***
      * Viewport(s)
      */
-    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenX - cSideBar::SidebarWidth,
-                                 game.m_screenY - cSideBar::TopBarHeight);
+    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenW - cSideBar::SidebarWidth,
+                                 game.m_screenH - cSideBar::TopBarHeight);
 
     /***
     Bitmap Creation
     ***/
 
-    bmp_screen = create_bitmap(game.m_screenX, game.m_screenY);
+    bmp_screen = create_bitmap(game.m_screenW, game.m_screenH);
 
     if (bmp_screen == nullptr) {
         std::cerr << "Failed to create a memory bitmap\n";
@@ -967,7 +967,7 @@ bool cGame::setupGame() {
         clear(bmp_screen);
     }
 
-    bmp_backgroundMentat = create_bitmap(game.m_screenX, game.m_screenY);
+    bmp_backgroundMentat = create_bitmap(game.m_screenW, game.m_screenH);
 
     if (bmp_backgroundMentat == nullptr) {
         std::cerr << "Failed to create a memory bitmap\n";
@@ -981,9 +981,9 @@ bool cGame::setupGame() {
         clear_to_color(bmp_backgroundMentat, makecol(8, 8, 16));
         bool offsetX = false;
 
-        float horizon = game.m_screenY / 2;
-        float centered = game.m_screenX / 2;
-        for (int y = 0; y < game.m_screenY; y++) {
+        float horizon = game.m_screenH / 2;
+        float centered = game.m_screenW / 2;
+        for (int y = 0; y < game.m_screenH; y++) {
             float diffYToCenter = 1.0f;
             if (y < horizon) {
                 diffYToCenter = y / horizon;
@@ -991,7 +991,7 @@ bool cGame::setupGame() {
                 diffYToCenter = 1 - ((y - horizon) / horizon);
             }
 
-            for (int x = offsetX ? 0 : 1; x < game.m_screenX; x += 2) {
+            for (int x = offsetX ? 0 : 1; x < game.m_screenW; x += 2) {
                 float diffXToCenter = 1.0f;
                 if (x < centered) {
                     diffXToCenter = x / centered;
@@ -1009,7 +1009,7 @@ bool cGame::setupGame() {
         }
     }
 
-    bmp_throttle = create_bitmap(game.m_screenX, game.m_screenY);
+    bmp_throttle = create_bitmap(game.m_screenW, game.m_screenH);
 
     if (bmp_throttle == nullptr) {
         std::cerr << "Failed to create a memory bitmap\n";
@@ -1019,7 +1019,7 @@ bool cGame::setupGame() {
         logbook("Memory bitmap created: bmp_throttle");
     }
 
-    bmp_winlose = create_bitmap(game.m_screenX, game.m_screenY);
+    bmp_winlose = create_bitmap(game.m_screenW, game.m_screenH);
 
     if (bmp_winlose == nullptr) {
         std::cerr <<  "Failed to create a memory bitmap\n";
@@ -1029,7 +1029,7 @@ bool cGame::setupGame() {
         logbook("Memory bitmap created: bmp_winlose");
     }
 
-    bmp_fadeout = create_bitmap(game.m_screenX, game.m_screenY);
+    bmp_fadeout = create_bitmap(game.m_screenW, game.m_screenH);
 
     if (bmp_fadeout == nullptr) {
         std::cerr <<  "Failed to create a memory bitmap\n";
@@ -1324,12 +1324,12 @@ void cGame::setState(int newState) {
                 newStatePtr = new cChooseHouseGameState(*this);
             } else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                BITMAP *background = create_bitmap(m_screenW, m_screenH);
                 renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cSelectMissionState(*this, background, m_state);
             } else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                BITMAP *background = create_bitmap(m_screenX, m_screenY);
+                BITMAP *background = create_bitmap(m_screenW, m_screenH);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
                     drawManager->drawCombatState();
@@ -1837,7 +1837,7 @@ void cGame::drawCombatMouse() {
 }
 
 void cGame::saveBmpScreenToDisk() {
-    std::string filename = fmt::format("{}x{}_{:0>4}.bmp", m_screenX, m_screenY, m_screenshot);
+    std::string filename = fmt::format("{}x{}_{:0>4}.bmp", m_screenW, m_screenH, m_screenshot);
     save_bmp(filename.c_str(), bmp_screen, general_palette);
 
     // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
