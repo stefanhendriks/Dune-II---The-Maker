@@ -304,7 +304,8 @@ void cSideBarDrawer::drawPowerUsage() const {
     line(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
     line(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
-    renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
+    //renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
+    draw_sprite(bmp_screen, (BITMAP *)gfxinter[ICON_POWER].dat,barX-3, barY - 21);
 //    m_textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
 //    m_textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
 //    m_textDrawer->drawText(barX, barY - 20, "P");
