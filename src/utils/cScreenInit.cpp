@@ -170,19 +170,32 @@ void cScreenInit::AutoDetectFullScreen() {
 
 cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string& title)
 {
+    auto logger = cLogger::getInstance();
 	// Création de la fenêtre
 	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
 	if (window == nullptr) {
-		std::cerr << "SDL CreateWindow Error: " << SDL_GetError() << std::endl;
+        const auto msg = fmt::format("Failed initialized screen with resolution {}x{}", width, height);
+        logger->log(LOG_ERROR, COMP_SDL2, "Screen init", msg, OUTC_FAILED);
+		//std::cerr << "SDL CreateWindow Error: " << SDL_GetError() << std::endl;
 		SDL_Quit();
 		return;
-	}
+	} else {
+        m_screenResolution.width = width;
+        m_screenResolution.height = height;
+        const auto msg = fmt::format("Successfully initialized screen with resolution {}x{}.", width, height);
+        logger->log(LOG_INFO, COMP_SDL2, "Screen init", msg, OUTC_SUCCESS);
+    }
 	// Création du renderer
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == nullptr) {
-		std::cerr << "SDL CreateRenderer Error: " << SDL_GetError() << std::endl;
+		//std::cerr << "SDL CreateRenderer Error: " << SDL_GetError() << std::endl;
+        const auto msg = fmt::format("Failed initialized renderer with resolution {}x{}", width, height);
+        logger->log(LOG_ERROR, COMP_SDL2, "Renderer init", msg, OUTC_FAILED);
 		SDL_DestroyWindow(window);
 		SDL_Quit();
 		return;
-	}
+	}  else {
+        const auto msg = fmt::format("Successfully initialized renderer");
+        logger->log(LOG_INFO, COMP_SDL2, "Renderer init", msg, OUTC_SUCCESS);
+    }
 }
