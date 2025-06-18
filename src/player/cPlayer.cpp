@@ -182,7 +182,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
 
     setBrain(brain);
 
-    memcpy(pal, general_palette, sizeof(pal));
+    // memcpy(pal, general_palette, sizeof(pal));
     house = GENERALHOUSE;
 
     /**
@@ -232,7 +232,7 @@ void cPlayer::setHouse(int iHouse) {
 
     if (currentHouse != iHouse) {
         // copy entire palette
-        memcpy(pal, general_palette, sizeof(pal));
+        // memcpy(pal, general_palette, sizeof(pal));
 
         logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 

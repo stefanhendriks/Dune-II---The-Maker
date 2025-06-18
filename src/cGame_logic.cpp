@@ -1060,7 +1060,7 @@ bool cGame::setupGame() {
         return false;
     } else {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
-        memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+        // memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
     }
 
     gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
@@ -1100,7 +1100,7 @@ bool cGame::setupGame() {
     game.m_screenshot = 0;
     game.m_state = GAME_INITIALIZE;
 
-    set_palette(general_palette);
+    // set_palette(general_palette);
 
     logbook("Setup:  HOUSES");
     m_Houses = std::make_shared<cHousesInfo>();
@@ -1838,7 +1838,7 @@ void cGame::drawCombatMouse() {
 
 void cGame::saveBmpScreenToDisk() {
     std::string filename = fmt::format("{}x{}_{:0>4}.bmp", m_screenW, m_screenH, m_screenshot);
-    save_bmp(filename.c_str(), bmp_screen, general_palette);
+    save_bmp(filename.c_str(), bmp_screen, nullptr); //general_palette);
 
     // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
     // a Quake console perhaps?

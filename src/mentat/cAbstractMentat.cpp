@@ -247,7 +247,7 @@ void cAbstractMentat::draw() {
     rect(bmp_screen, offsetX-1, offsetY-1, offsetX + 641, offsetY + 481, makecol(64, 64,89));
     rect(bmp_screen, offsetX-2, offsetY-2, offsetX + 642, offsetY + 482, makecol(40,40,60));
     rect(bmp_screen, offsetX-3, offsetY-3, offsetX + 643, offsetY + 483, makecol(0,0,0));
-    select_palette(general_palette);
+    // select_palette(general_palette);
 
     // movie
     draw_movie();

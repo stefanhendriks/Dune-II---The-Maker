@@ -52,7 +52,7 @@ s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 
 // palette
-PALETTE general_palette;
+// PALETTE general_palette;
 
 // bitmap(s)
 BITMAP *bmp_screen;
