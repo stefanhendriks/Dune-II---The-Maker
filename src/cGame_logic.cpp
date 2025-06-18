@@ -1670,7 +1670,7 @@ void cGame::reduceShaking() {
 }
 
 void cGame::install_bitmaps() {
-    m_dataRepository->loadBitmapAt(D2TM_BITMAP_ICON_POWER, "./data/bmp/icon_power_sidebar3.bmp");
+    //m_dataRepository->loadBitmapAt(D2TM_BITMAP_ICON_POWER, "./data/bmp/icon_power_sidebar3.bmp");
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_ATTACK, MOUSE_ATTACK);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_DOWN, MOUSE_DOWN);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_LEFT, MOUSE_LEFT);

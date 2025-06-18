@@ -7,7 +7,7 @@ struct sBitmap {
     bool ownsIt; // if set to true, this bitmap is created from the repository, and thus must also be destroyed
 };
 
-static constexpr int D2TM_BITMAP_ICON_POWER = 0;
+//static constexpr int D2TM_BITMAP_ICON_POWER = 0;
 
 class cAllegroDataRepository {
 
