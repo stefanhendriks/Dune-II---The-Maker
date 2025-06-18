@@ -3,6 +3,7 @@
 #include "cPlatformLayerInit.h"
 
 #include <string>
+#include <SDL2/SDL.h>
 
 struct ScreenResolution {
     int width;
@@ -17,6 +18,7 @@ class cScreenInit {
     // Initializes full-screen at desktop color depth, autodetecting a supported resolution.
     cScreenInit(const cPlatformLayerInit& platform);
 
+    cScreenInit(bool windowed, int width, int height, const std::string& title);
     // No cleanup required
     ~cScreenInit() = default;
 
@@ -34,4 +36,7 @@ class cScreenInit {
 
     int m_colorDepth;
     ScreenResolution m_screenResolution;
+
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
 };
