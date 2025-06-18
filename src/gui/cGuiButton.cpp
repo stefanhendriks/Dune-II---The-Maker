@@ -162,11 +162,12 @@ void cGuiButton::onMouseMovedTo(const s_MouseEvent &event) {
 
 void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &) {
     if (game.isDebugMode()) {
-        if (key[KEY_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
-            if (m_focus) toggleTextAlignHorizontal();
-        } else {
+        // LOST in SDL2 port: no keyboard acces i this area of code @Mira
+        // if (key[KEY_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
+        //     if (m_focus) toggleTextAlignHorizontal();
+        // } else {
             if (m_focus) nextRenderKind();
-        }
+        // }
     }
 }
 
