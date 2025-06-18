@@ -77,16 +77,16 @@ cGame::cGame() : m_timeManager(*this) {
     m_drawFps = false;
     m_nextState = -1;
     m_currentState = nullptr;
-    m_screenW = 800;
-    m_screenH = 600;
+    m_screenW = -1;
+    m_screenH = -1;
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
     // default INI screen width and height is not loaded
     // if not loaded, we will try automatic setup
-    m_iniScreenWidth = -1;
-    m_iniScreenHeight = -1;
+    // m_iniScreenWidth = -1;
+    // m_iniScreenHeight = -1;
 
     m_version = "0.7.0";
 
@@ -166,8 +166,8 @@ bool cGame::loadSettings(std::shared_ptr<cIniFile> settings) {
     }
 
     const cSection &section = settings->getSection(SECTION_SETTINGS);
-    game.m_iniScreenWidth = section.getInt("ScreenWidth");
-    game.m_iniScreenHeight = section.getInt("ScreenHeight");
+    game.m_screenW = section.getInt("ScreenWidth");
+    game.m_screenH = section.getInt("ScreenHeight");
     game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
     game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
@@ -755,23 +755,23 @@ void cGame::shutdown() {
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
-    return game.m_iniScreenHeight != -1 && game.m_iniScreenWidth != -1;
+    return game.m_screenW != -1 && game.m_screenH != -1;
 }
 
 void cGame::setScreenResolutionFromGameIniSettings() {
-    if (game.m_iniScreenWidth < 800) {
-        game.m_iniScreenWidth = 800;
+    if (game.m_screenW < 800) {
+        game.m_screenW = 800;
         logbook("INI screen width < 800; unsupported; will set to 800.");
     }
-    if (game.m_iniScreenHeight < 600) {
-        game.m_iniScreenHeight = 600;
+    if (game.m_screenH < 600) {
+        game.m_screenH = 600;
         logbook("INI screen height < 600; unsupported; will set to 600.");
     }
-    game.m_screenW = game.m_iniScreenWidth;
-    game.m_screenH = game.m_iniScreenHeight;
+    // game.m_screenW = game.m_iniScreenWidth;
+    // game.m_screenH = game.m_iniScreenHeight;
 
     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file", 
-        fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_iniScreenWidth, game.m_iniScreenHeight)
+        fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_screenW, game.m_screenH)
     );
 }
 
