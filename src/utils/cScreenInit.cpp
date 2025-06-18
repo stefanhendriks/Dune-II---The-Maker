@@ -167,3 +167,22 @@ void cScreenInit::AutoDetectFullScreen() {
         throw std::runtime_error(fmt::format("Allegro could not initialize full-screen at resolution {}x{} depth {}.", setResolution->width, setResolution->height, m_colorDepth));
     }
 }
+
+cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string& title)
+{
+	// Création de la fenêtre
+	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+	if (window == nullptr) {
+		std::cerr << "SDL CreateWindow Error: " << SDL_GetError() << std::endl;
+		SDL_Quit();
+		return;
+	}
+	// Création du renderer
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (renderer == nullptr) {
+		std::cerr << "SDL CreateRenderer Error: " << SDL_GetError() << std::endl;
+		SDL_DestroyWindow(window);
+		SDL_Quit();
+		return;
+	}
+}
