@@ -184,7 +184,8 @@ void cMapDrawer::drawTerrain() {
                 }
 
                 if (m_drawGrid) {
-                    rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, makecol(128, 128, 128));
+                    //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, makecol(128, 128, 128));
+                    renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, makecol(128, 128, 128));
                 }
             }
 
@@ -204,7 +205,7 @@ void cMapDrawer::drawTerrain() {
 //        logbook(msg);
 //        textDrawer.drawText(0, 100, msg);
 //
-//        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
+//        _rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
 //             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
 //
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);
@@ -250,7 +251,8 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 
     if (bDraw) {
-        rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth - 1), fDrawY + (tileHeight - 1), iClr);
+        //_rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth - 1), fDrawY + (tileHeight - 1), iClr);
+        renderDrawer->drawRectangle(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, iClr);
     }
 }
 

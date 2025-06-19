@@ -73,7 +73,8 @@ void cMiniMapDrawer::drawViewPortRectangle() {
     int minimapWidth = (iWidth * pixelSize) + 1;
     int minimapHeight = (iHeight * pixelSize) + 1;
 
-    rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
+    //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
+    renderDrawer->drawRectangle(bmp_screen, startX, startY, minimapWidth, minimapHeight, makecol(255, 255, 255));
 }
 
 int cMiniMapDrawer::getMapWidthInPixels() {
