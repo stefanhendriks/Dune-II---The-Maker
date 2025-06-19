@@ -231,7 +231,7 @@ void cMiniMapDrawer::draw() {
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    renderDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, m_RectFullMinimap, makecol(0, 0, 0));
     set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(),
                   m_RectFullMinimap.getEndY());
 

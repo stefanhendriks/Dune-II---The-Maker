@@ -206,7 +206,7 @@ void cSideBarDrawer::drawCreditsUsage() {
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-    renderDrawer->drawRectangleFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
+    renderDrawer->drawRectFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
 
     // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
     // and so forth.
@@ -264,7 +264,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-    renderDrawer->drawRectangleFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
+    renderDrawer->drawRectFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;

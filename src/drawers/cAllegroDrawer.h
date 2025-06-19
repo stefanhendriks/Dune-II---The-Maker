@@ -47,9 +47,9 @@ class cAllegroDrawer {
 
     void drawRect(BITMAP *dest, int x, int y, int width, int height, int color);
     void drawRect(BITMAP *dest, const cRectangle &pRectangle, int color);
-    void drawRectangleFilled(BITMAP *dest, int x, int y, int width, int height, int color);
-    void drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color);
-    void drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha);
+    void drawRectFilled(BITMAP *dest, int x, int y, int width, int height, int color);
+    void drawRectFilled(BITMAP *dest, const cRectangle &pRectangle, int color);
+    void drawRectTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha);
 
     int getColor_BLACK() { return colorBlack; }
 

@@ -143,7 +143,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                renderDrawer->drawRectangleFilled(temp, rectangle, placeColor);
+                renderDrawer->drawRectFilled(temp, rectangle, placeColor);
             }
         }
     }
