@@ -209,6 +209,10 @@ void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectan
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
+void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, int x, int y, int width, int height, int color) {
+    rectfill(dest, x, y, x+width, y+height, color);
+}
+
 void cAllegroDrawer::drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha) {
     assert(alpha >= 0);
     assert(alpha <= 255);
