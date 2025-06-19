@@ -244,7 +244,7 @@ void cSideBarDrawer::drawCreditsUsage() {
 
     renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
 
-    renderDrawer->drawRectangle(bmp_screen, powerBarRect, m_sidebarColor);
+    renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     int darker = makecol(89, 56, 0);
@@ -297,7 +297,7 @@ void cSideBarDrawer::drawPowerUsage() const {
 
     renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
 
-    renderDrawer->drawRectangle(bmp_screen, powerBarRect, m_sidebarColor);
+    renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     int darker = makecol(89, 56, 0);

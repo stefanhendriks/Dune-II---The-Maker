@@ -535,7 +535,7 @@ void cUnit::draw_spice() {
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
         //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
-        renderDrawer->drawRectangle(bmp_screen, drawx, drawy,width_x, height_y, makecol(255, 255, 255));
+        renderDrawer->drawRect(bmp_screen, drawx, drawy,width_x, height_y, makecol(255, 255, 255));
     }
 }
 
@@ -579,7 +579,7 @@ void cUnit::draw_health() {
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
         //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
-        renderDrawer->drawRectangle(bmp_screen, drawx, drawy, width_x, height_y, makecol(255, 255, 255));
+        renderDrawer->drawRect(bmp_screen, drawx, drawy, width_x, height_y, makecol(255, 255, 255));
     }
 
     // draw group
@@ -3219,7 +3219,7 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const {
 }
 
 void cUnit::draw_debug() {
-    renderDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
+    renderDrawer->drawRect(bmp_screen, dimensions, makecol(255, 0, 255));
     putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
     //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
 

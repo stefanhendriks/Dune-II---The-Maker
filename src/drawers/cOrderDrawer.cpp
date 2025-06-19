@@ -59,8 +59,8 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int width = buttonRect.getWidth();
     int height = buttonRect.getHeight();
     int color = player->getHouseFadingColor();
-    renderDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
-    renderDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
+    renderDrawer->drawRect(bmp_screen, x, y, width, height, color);
+    renderDrawer->drawRect(bmp_screen, x+1, y+1, width-2, height-2, color);
 }
 
 void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {

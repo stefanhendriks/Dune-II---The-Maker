@@ -1822,7 +1822,7 @@ void cGame::setNextStateToTransitionTo(int newState) {
 
 void cGame::drawCombatMouse() {
     if (m_mouse->isBoxSelecting()) {
-        renderDrawer->drawRectangle(bmp_screen, m_mouse->getBoxSelectRectangle(),
+        renderDrawer->drawRect(bmp_screen, m_mouse->getBoxSelectRectangle(),
                                      game.getColorFadeSelected(255, 255, 255));
     }
 
