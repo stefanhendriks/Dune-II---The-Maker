@@ -194,11 +194,11 @@ void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, const cRectangle *rec
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
-void cAllegroDrawer::drawRectangle(BITMAP *dest, const cRectangle &pRectangle, int color) {
+void cAllegroDrawer::drawRect(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
-void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color) {
+void cAllegroDrawer::drawRect(BITMAP *dest, int x, int y, int width, int height, int color) {
     if (dest == nullptr) return;
     // the -1 is because the width /height is "including" the current pixel
     // ie, a width of 1 pixel means it draws just 1 pixel, since the x2 is a dest it should result into x1
@@ -295,7 +295,7 @@ void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int
     int height = rectangle.getHeight();
 
     drawRectangleFilled(dest, rectangle, gui_colorWindow);
-    drawRectangle(dest, rectangle, gui_colorBorderLight);
+    drawRect(dest, rectangle, gui_colorBorderLight);
 
     // fill it up
 //    _rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
@@ -316,7 +316,7 @@ void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangl
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
 
-    drawRectangle(dest, rectangle, gui_colorBorderLight);
+    drawRect(dest, rectangle, gui_colorBorderLight);
     line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
     line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
 }

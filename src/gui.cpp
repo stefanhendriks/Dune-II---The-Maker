@@ -12,7 +12,7 @@ bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
 
     // _rect
     //_rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(84,84,120));
-    renderDrawer->drawRectangle(bmp_screen, x1, y1, width, height, makecol(84,84,120));
+    renderDrawer->drawRect(bmp_screen, x1, y1, width, height, makecol(84,84,120));
 
     // lines to darken the right sides
     // _line(bmp_screen, x1+width, y1, x1+width , y1+height, makecol(252,252,252));

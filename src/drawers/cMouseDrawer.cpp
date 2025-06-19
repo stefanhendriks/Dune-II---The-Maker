@@ -162,7 +162,7 @@ void cMouseDrawer::drawToolTipBackground() {
   const auto black = renderDrawer->getColor_BLACK();
   const auto white = makecol(255, 255, 255);
 	//_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
-	renderDrawer->drawRectangle(bmp_screen, x, y, width-1, height-1, white);
+	renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
   renderDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
 	int shadowX = x + width;
 	int shadowY = y + height;
