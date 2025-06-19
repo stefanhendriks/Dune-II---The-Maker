@@ -163,11 +163,11 @@ void cMouseDrawer::drawToolTipBackground() {
   const auto white = makecol(255, 255, 255);
 	//_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
 	renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
-  renderDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
+  renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
 	int shadowX = x + width;
 	int shadowY = y + height;
-	renderDrawer->drawRectangleTransparentFilled(bmp_screen, {x + 4, shadowY, (width - 4), 4}, black, 128);
-	renderDrawer->drawRectangleTransparentFilled(bmp_screen, {shadowX, y + 4, 4, height}, black, 128);
+	renderDrawer->drawRectTransparentFilled(bmp_screen, {x + 4, shadowY, (width - 4), 4}, black, 128);
+	renderDrawer->drawRectTransparentFilled(bmp_screen, {shadowX, y + 4, 4, height}, black, 128);
 }
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter& textWriter) {

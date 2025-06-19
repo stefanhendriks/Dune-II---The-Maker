@@ -64,7 +64,7 @@ void cMapDrawer::drawShroud() {
                     // do nothing
                 } else {
                     //_rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, makecol(0, 0, 0));
-                    renderDrawer->drawRectangleFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, makecol(0, 0, 0));
+                    renderDrawer->drawRectFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, makecol(0, 0, 0));
                 }
             } else {
                 if (m_map->isVisible(iCell, iPl)) {
@@ -143,7 +143,7 @@ void cMapDrawer::drawTerrain() {
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
                 cRectangle rectangle = cRectangle(0, 0, 32, 32);
-                renderDrawer->drawRectangleFilled(m_BmpTemp, rectangle, makecol(245, 245, 245));
+                renderDrawer->drawRectFilled(m_BmpTemp, rectangle, makecol(245, 245, 245));
             } else {
                 // valid type
                 blit((BITMAP *) gfxdata[cell->type].dat,
@@ -179,7 +179,7 @@ void cMapDrawer::drawTerrain() {
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                      renderDrawer->drawRectangleTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                      renderDrawer->drawRectTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
                                                                     makecol(255, 255, 0), 96);
                     }
                 }

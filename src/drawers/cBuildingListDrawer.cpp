@@ -77,7 +77,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
 
     if (!list->isAvailable()) {
-      renderDrawer->drawRectangleTransparentFilled(bmp_screen, {x, y, width, height}, makecol(0,0,0), 96);
+      renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, makecol(0,0,0), 96);
     }
 
     if (pressed) {

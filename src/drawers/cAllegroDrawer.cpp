@@ -205,15 +205,15 @@ void cAllegroDrawer::drawRect(BITMAP *dest, int x, int y, int width, int height,
     rect(dest, x, y, x + (width-1), y + (height-1), color);
 }
 
-void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color) {
+void cAllegroDrawer::drawRectFilled(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
-void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, int x, int y, int width, int height, int color) {
+void cAllegroDrawer::drawRectFilled(BITMAP *dest, int x, int y, int width, int height, int color) {
     rectfill(dest, x, y, x+width, y+height, color);
 }
 
-void cAllegroDrawer::drawRectangleTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha) {
+void cAllegroDrawer::drawRectTransparentFilled(BITMAP *dest, const cRectangle& rect, int color, int alpha) {
     assert(alpha >= 0);
     assert(alpha <= 255);
 
@@ -294,7 +294,7 @@ void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
 
-    drawRectangleFilled(dest, rectangle, gui_colorWindow);
+    drawRectFilled(dest, rectangle, gui_colorWindow);
     drawRect(dest, rectangle, gui_colorBorderLight);
 
     // fill it up
