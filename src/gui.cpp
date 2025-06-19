@@ -8,7 +8,7 @@
 
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
     // fill it up
-    rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
+    renderDrawer->drawRectangleFilled(bmp_screen, x1, y1, width, height, makecol(176,176,196));
 
     // _rect
     //_rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(84,84,120));
