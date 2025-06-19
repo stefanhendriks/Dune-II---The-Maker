@@ -8,7 +8,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "player/cPlayer.h"
-
+#include "drawers/cAllegroDrawer.h"
 #include <allegro.h>
 
 #include <cassert>
@@ -245,7 +245,7 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
 
 void cDrawManager::drawOptionBar() {
     // upper bar
-    rectfill(bmp_screen, 0, 0, game.m_screenW, cSideBar::TopBarHeight, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, 0, 0, game.m_screenW, cSideBar::TopBarHeight, makecol(0, 0, 0));
     if (m_optionsBar == nullptr) {
         m_optionsBar = create_bitmap(game.m_screenW, 40);
         clear_to_color(m_optionsBar, m_sidebarColor);

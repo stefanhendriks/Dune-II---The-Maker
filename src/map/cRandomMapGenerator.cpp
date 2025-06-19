@@ -5,7 +5,7 @@
 #include "data/gfxinter.h"
 #include "map/cMap.h"
 #include "map/cMapEditor.h"
-
+#include "drawers/cAllegroDrawer.h"
 #include <allegro.h>
 
 cRandomMapGenerator::cRandomMapGenerator() {
@@ -195,5 +195,6 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 
 void cRandomMapGenerator::drawProgress(float progress) const {
     int iProgress = progress * 211;
-    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, 216, 225, iProgress, 257-225, makecol(255, 0, 0));
 }
