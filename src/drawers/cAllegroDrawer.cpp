@@ -297,7 +297,7 @@ void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int
 //    rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
 
     // rect
-//    rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(252,252,252));
+//    _rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(252,252,252));
 
     // lines to darken the right sides
     line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);

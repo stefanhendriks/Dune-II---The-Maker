@@ -204,7 +204,7 @@ void cMapDrawer::drawTerrain() {
 //        logbook(msg);
 //        textDrawer.drawText(0, 100, msg);
 //
-//        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
+//        _rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
 //             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
 //
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);
