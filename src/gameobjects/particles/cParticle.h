@@ -74,7 +74,7 @@ private:
     bool bAlive;        // alive
 
     // Drawing effects
-    sBitmap * bmp;          // pointer to bitmap to draw (not owner of bitmap!)
+    BITMAP* bmp;          // pointer to bitmap to draw (not owner of bitmap!)
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw

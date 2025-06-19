@@ -8,8 +8,7 @@
 
 cAllegroDataRepository::cAllegroDataRepository() {
     for (int i = 0; i < MAX_BITMAPS; i++) {
-        m_data[i].bitmap = nullptr;
-        m_data[i].ownsIt = false;
+        m_data[i] = nullptr;
     }
 }
 
@@ -18,19 +17,13 @@ cAllegroDataRepository::cAllegroDataRepository() {
  */
 cAllegroDataRepository::~cAllegroDataRepository() {
     for (int i = 0; i < MAX_BITMAPS; i++) {
-        if (m_data[i].bitmap) {
-            if (m_data[i].ownsIt) {
-                destroy_bitmap(m_data[i].bitmap);
-            } else {
-                m_data[i].bitmap = nullptr;
-            }
-        }
+        m_data[i] = nullptr;
     }
 }
 
 int cAllegroDataRepository::findAvailableSlot() {
     for (int i = 0; i < MAX_BITMAPS; i++) {
-        if (m_data[i].bitmap) continue;
+        if (m_data[i]) continue;
         return i;
     }
     return -1;
@@ -87,7 +80,7 @@ bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
     if (index < 0) return false;
     if (index >= MAX_BITMAPS) return false;
 
-    if (m_data[index].bitmap) {
+    if (m_data[index]) {
         logbook(fmt::format(
             "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, because it has already been taken.", index));
 
@@ -107,16 +100,13 @@ bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
             "cAllegroDataRepository::loadBitmapFromDataFileAt() Loaded bitmap from pointer at index {}", index));
     }
 
-    m_data[index].bitmap = bmp;
-    m_data[index].ownsIt = false;
+    m_data[index] = bmp;
     return true;
 }
 
-sBitmap * cAllegroDataRepository::getBitmapAt(int index) {
+BITMAP * cAllegroDataRepository::getBitmapAt(int index) {
     if (index < 0 || index >= MAX_BITMAPS) return nullptr;
-    if (!m_data[index].bitmap) return nullptr; // don't return bitmap stuff when nothing initialized
-
-    return &m_data[index];
+    return m_data[index];
 }
 
 bool cAllegroDataRepository::loadBitmapFromDataFileGfxDataAt(int index, int indexAtDatafile) {
