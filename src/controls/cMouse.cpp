@@ -220,7 +220,8 @@ void cMouse::boxSelectLogic(int mouseCell) {
             }
 
             // and draw the selection box
-            rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, game.getColorFadeSelected(255, 255, 255));
+            //_rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, game.getColorFadeSelected(255, 255, 255));
+            renderDrawer->drawRectangle(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2-mouse_co_x1, mouse_co_y2-mouse_co_y1, game.getColorFadeSelected(255, 255, 255));
         }
 
         // Note that we have to fix up the coordinates when checking 'within border'

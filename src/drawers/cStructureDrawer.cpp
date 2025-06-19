@@ -41,7 +41,8 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure * theStructur
     int width_x = mapCamera->factorZoomLevel(width);
     int height_y = mapCamera->factorZoomLevel(height);
 
-	rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
+	//_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
+    renderDrawer->drawRectangle(bmp_screen, drawX, drawY, width_x, height_y, color);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * structure) {
@@ -346,8 +347,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     rectfill(bmp, draw_x, draw_y, draw_x + (w-1), draw_y + height_y, makecol(r,g,32));
 
     // bar around it
-    rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
-
+    //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
+    renderDrawer->drawRectangle(bmp_screen, draw_x, draw_y, width_x, height_y, makecol(255, 255, 255));
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -418,5 +419,6 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
 	rectfill(bmp_screen, draw_x, draw_y, draw_x + (w-1), draw_y + height_y, makecol(r,g,32));
 
 	// bar around it
-	rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
+	//_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
+    renderDrawer->drawRectangle(bmp_screen, draw_x, draw_y, width_x, height_y, makecol(255, 255, 255));
 }

@@ -534,7 +534,8 @@ void cUnit::draw_spice() {
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+        renderDrawer->drawRectangle(bmp_screen, drawx, drawy,width_x, height_y, makecol(255, 255, 255));
     }
 }
 
@@ -577,7 +578,8 @@ void cUnit::draw_health() {
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+        renderDrawer->drawRectangle(bmp_screen, drawx, drawy, width_x, height_y, makecol(255, 255, 255));
     }
 
     // draw group

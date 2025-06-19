@@ -204,8 +204,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 				// Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
 				if (item->isPendingUpgrading()) {
                     int errorFadingColor = m_player->getErrorFadingColor();
-                    rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+					renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
@@ -217,7 +217,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 				// Pending building (ie: a build is progressing, blocking the upgrade)
 				if (item->isPendingBuilding()) {
                     int errorFadingColor = m_player->getErrorFadingColor();
-                    rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
@@ -238,7 +238,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 					set_trans_blender(0, 0, 0, 64);
           draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
 					int errorFadingColor = m_player->getErrorFadingColor();
-					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+					renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
 					renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 				}
@@ -246,8 +246,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
 			// last built id
 			if (list->getLastClickedId() == i) {
-				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
-				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, selectFadingColor);
+				//_rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
+				renderDrawer->drawRectangle(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
+				renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
 			}
 		}
 
@@ -287,13 +288,14 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 		// draw rectangle when mouse hovers over icon
 		auto m_mouse = game.getMouse();
 		if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
-			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
-			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, selectFadingColor);
+			//_rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
+			renderDrawer->drawRectangle(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);	
+			renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
 		} else {
             int color = list->getFlashingColor();
             if (item->isFlashing()) {
-                rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), color);
-                rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, color);
+                renderDrawer->drawRectangle(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), color);
+				renderDrawer->drawRectangle(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, color);
             }
         }
 
