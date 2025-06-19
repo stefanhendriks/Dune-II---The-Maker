@@ -343,8 +343,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     if (r > 255) r = 255;
 
     // bar itself
-    rectfill(bmp, draw_x, draw_y, draw_x + width_x+1, draw_y + height_y+1, makecol(0,0,0));
-    rectfill(bmp, draw_x, draw_y, draw_x + (w-1), draw_y + height_y, makecol(r,g,32));
+    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, width_x+1, height_y+1, makecol(0,0,0));
+    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, (w-1), height_y, makecol(r,g,32));
 
     // bar around it
     //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
@@ -385,7 +385,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
         }
 	}
 
-	rectfill(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, game.m_screenW, game.m_screenH, makecol(0, 0, 0));
+	renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, makecol(0, 0, 0));
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure) {
@@ -415,8 +415,8 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
     if (r > 255) r = 255;
 
 	// bar itself
-	rectfill(bmp_screen, draw_x, draw_y, draw_x + width_x+1, draw_y + height_y+1, makecol(0,0,0));
-	rectfill(bmp_screen, draw_x, draw_y, draw_x + (w-1), draw_y + height_y, makecol(r,g,32));
+	renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, width_x+1, height_y+1, makecol(0,0,0));
+	renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, (w-1), height_y, makecol(r,g,32));
 
 	// bar around it
 	//_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));

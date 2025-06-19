@@ -144,7 +144,7 @@ void cSideBarDrawer::drawBuildingLists() {
     }
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
-        rectfill(bmp_screen, iDrawX, endY, game.m_screenW, game.m_screenH, m_sidebarColor);
+        renderDrawer->drawRectFilled(bmp_screen, iDrawX, endY, game.m_screenW-iDrawX, game.m_screenH-endY, m_sidebarColor);
         draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
     }
 
@@ -185,7 +185,7 @@ void cSideBarDrawer::draw() {
     set_palette(m_player->pal);
 
     // black out sidebar
-    rectfill(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, game.m_screenW, game.m_screenH, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, makecol(0, 0, 0));
 
     drawCandybar();
 
@@ -222,7 +222,7 @@ void cSideBarDrawer::drawCreditsUsage() {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    rectfill(bmp_screen, barX, powerInY, barX + barWidth, barY + barTotalHeight, makecol(0, 232, 0));
+    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barY + barTotalHeight - powerInY, makecol(0, 232, 0));
 
     barHeightToDraw = barTotalHeight * spiceStored;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -237,9 +237,9 @@ void cSideBarDrawer::drawCreditsUsage() {
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, makecol(r, g, 32));
     } else {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, m_player->getErrorFadingColor());
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
     renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
@@ -276,7 +276,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    rectfill(bmp_screen, barX, powerInY, barX + barWidth, barY + barTotalHeight, makecol(0, 232, 0));
+    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barTotalHeight, makecol(0, 232, 0));
 
     barHeightToDraw = barTotalHeight * powerUse;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -290,9 +290,9 @@ void cSideBarDrawer::drawPowerUsage() const {
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, makecol(r, g, 32));
     } else {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, m_player->getErrorFadingColor());
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
     }
 
     renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
@@ -331,7 +331,8 @@ void cSideBarDrawer::drawMinimap() {
     }
 
     // else, we render the house emblem
-	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.m_screenW, drawY, m_player->getEmblemBackgroundColor());
+	renderDrawer->drawRectFilled(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, 
+                    game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1), m_player->getEmblemBackgroundColor());
 
 	if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS)) {
 	    int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
