@@ -63,7 +63,8 @@ void cMapDrawer::drawShroud() {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
                 } else {
-                    rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, makecol(0, 0, 0));
+                    //_rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, makecol(0, 0, 0));
+                    renderDrawer->drawRectangleFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, makecol(0, 0, 0));
                 }
             } else {
                 if (m_map->isVisible(iCell, iPl)) {
