@@ -243,7 +243,7 @@ void cAbstractMentat::thinkMouth() {// MOUTH
 }
 
 void cAbstractMentat::draw() {
-    rectfill(bmp_screen, offsetX, offsetY, offsetX + 640, offsetY + 480, makecol(0,0,0));
+    renderDrawer->drawRectFilled(bmp_screen, offsetX, offsetY, 640, 480, makecol(0,0,0));
     renderDrawer->drawRect(bmp_screen, offsetX-1, offsetY-1, 641, 481, makecol(64, 64,89));
     renderDrawer->drawRect(bmp_screen, offsetX-2, offsetY-2, 642, 482, makecol(40,40,60));
     renderDrawer->drawRect(bmp_screen, offsetX-3, offsetY-3, 643, 483, makecol(0,0,0));
