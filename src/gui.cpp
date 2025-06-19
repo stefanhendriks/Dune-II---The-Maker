@@ -63,7 +63,7 @@ bool GUI_DRAW_FRAME(int x, int y, int width, int height) {
     renderDrawer->gui_DrawRect(bmp_screen, rect);
 
 //    // fill it up
-//    rectfill(bmp_screen, x, y, x+width, y+height, makecol(176,176,196));
+//    _rectfill(bmp_screen, x, y, x+width, y+height, makecol(176,176,196));
 //
 //    // rect
 //    _rect(bmp_screen, x,y,x+width, y+height, makecol(252,252,252));
