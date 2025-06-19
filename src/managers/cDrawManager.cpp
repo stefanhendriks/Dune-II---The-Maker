@@ -167,7 +167,7 @@ void cDrawManager::drawRallyPoint() {
     int endX = drawX;
     int endY = drawY;
 
-    line(bmp_screen, startX, startY, endX, endY, players[HUMAN].getMinimapColor());
+    renderDrawer->drawLine(bmp_screen, startX, startY, endX, endY, players[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawSidebar() {

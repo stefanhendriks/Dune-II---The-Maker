@@ -205,8 +205,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 				if (item->isPendingUpgrading()) {
                     int errorFadingColor = m_player->getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
 				    m_textDrawer.setFont(small_font);
@@ -218,8 +218,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 				if (item->isPendingBuilding()) {
                     int errorFadingColor = m_player->getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int red = makecol(255, 0, 0);
 				    m_textDrawer.setFont(small_font);
@@ -239,8 +239,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
           draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
 					int errorFadingColor = m_player->getErrorFadingColor();
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-					line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+					renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+					renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 				}
 			}
 

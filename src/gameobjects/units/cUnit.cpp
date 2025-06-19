@@ -660,13 +660,13 @@ void cUnit::draw_path() const {
         int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
-            line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 255));
+            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 255));
         } else if (iPath[i] == iGoalCell) {
             // end of path (goal)
-            line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
         } else {
             // everything else
-            line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 64));
+            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 64));
         }
 
         // draw a line from previous to current
@@ -786,7 +786,7 @@ void cUnit::draw() {
         putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 255, 0));
 
         // render from the units top-left to center pixel
-        line(bmp_screen, draw_x(), draw_y(), center_draw_x(), center_draw_y(), makecol(255, 255, 0));
+        renderDrawer->drawLine(bmp_screen, draw_x(), draw_y(), center_draw_x(), center_draw_y(), makecol(255, 255, 0));
     }
 }
 
@@ -4117,7 +4117,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
             if (game.m_drawUnitDebug) {
-                line(screen, iPrevX, iPrevY, iDx, iDy, makecol(0, 255, 0));
+                renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, makecol(0, 255, 0));
             }
 
             // Now set c to the cll
@@ -4138,7 +4138,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 //                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
 //                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
 //
-//                line(screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+//                _renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
 //                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
 //                iCell = prevCell; // back track
 //            } else {
