@@ -529,8 +529,8 @@ void cUnit::draw_spice() {
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0, 0, 0));
-    rectfill(bmp_screen, drawx, drawy, drawx + (w), drawy + height_y, makecol(255, 91, 1));
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w), height_y, makecol(255, 91, 1));
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
@@ -573,8 +573,8 @@ void cUnit::draw_health() {
     if (r > 255) r = 255;
 
     // bar itself
-    rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0, 0, 0));
-    rectfill(bmp_screen, drawx, drawy, drawx + (w - 1), drawy + height_y, makecol(r, g, 32));
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w - 1), height_y, makecol(r, g, 32));
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
