@@ -10,8 +10,8 @@ bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
     // fill it up
     rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
 
-    // rect
-    rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(84,84,120));
+    // _rect
+    renderDrawer->drawRectangle(bmp_screen, x1,y1,x1+width, y1+height, makecol(84,84,120));
 
     // lines to darken the right sides
     // _line(bmp_screen, x1+width, y1, x1+width , y1+height, makecol(252,252,252));
@@ -65,7 +65,7 @@ bool GUI_DRAW_FRAME(int x, int y, int width, int height) {
 //    rectfill(bmp_screen, x, y, x+width, y+height, makecol(176,176,196));
 //
 //    // rect
-//    rect(bmp_screen, x,y,x+width, y+height, makecol(252,252,252));
+//    _rect(bmp_screen, x,y,x+width, y+height, makecol(252,252,252));
 //
 //    // lines to darken the right sides
 //    _line(bmp_screen, x+width, y, x+width , y+height, makecol(84,84,120));
