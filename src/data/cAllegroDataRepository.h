@@ -2,10 +2,10 @@
 
 struct BITMAP;
 
-struct sBitmap {
-    BITMAP  *bitmap;    // loaded from Allegro
-    bool ownsIt; // if set to true, this bitmap is created from the repository, and thus must also be destroyed
-};
+// struct sBitmap {
+//     BITMAP  *bitmap;    // loaded from Allegro
+//     bool ownsIt; // if set to true, this bitmap is created from the repository, and thus must also be destroyed
+// };
 
 //static constexpr int D2TM_BITMAP_ICON_POWER = 0;
 
@@ -29,10 +29,10 @@ public:
     bool loadBitmapFromDataFileAt(int index, BITMAP *bmp);
     bool loadBitmapFromDataFileGfxDataAt(int index, int indexAtDataFile);
 
-    sBitmap * getBitmapAt(int index);
+    BITMAP * getBitmapAt(int index);
 
 private:
     int findAvailableSlot();
 
-    sBitmap m_data[MAX_BITMAPS];
+    BITMAP* m_data[MAX_BITMAPS];
 };
