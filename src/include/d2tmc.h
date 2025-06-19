@@ -69,7 +69,7 @@ extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
 
 // PALETTE
-// extern PALETTE general_palette;
+extern PALETTE general_palette;
 
 // GAME FONT
 extern ALFONT_FONT *game_font;
