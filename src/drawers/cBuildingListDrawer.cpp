@@ -67,7 +67,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 //	int width = ((BITMAP *)gfxinter[id].dat)->w;
 	int width = 33;
 	int height = ((BITMAP *)gfxinter[id].dat)->h;
-//	rectfill(bmp_screen, x, y, x+width, y+height, makecol(255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
+//	_rectfill(bmp_screen, x, y, x+width, y+height, makecol(255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
 
   // clear
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)

@@ -294,7 +294,7 @@ void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int
     drawRectangle(dest, rectangle, gui_colorBorderLight);
 
     // fill it up
-//    rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
+//    _rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
 
     // rect
 //    rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(252,252,252));
