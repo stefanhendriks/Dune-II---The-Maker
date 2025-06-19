@@ -14,8 +14,10 @@ bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
     rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(84,84,120));
 
     // lines to darken the right sides
-    line(bmp_screen, x1+width, y1, x1+width , y1+height, makecol(252,252,252));
-    line(bmp_screen, x1, y1+height, x1+width , y1+height, makecol(252,252,252));
+    // _line(bmp_screen, x1+width, y1, x1+width , y1+height, makecol(252,252,252));
+    renderDrawer->drawLine(bmp_screen, x1+width, y1, x1+width , y1+height, makecol(252,252,252));
+    // _line(bmp_screen, x1, y1+height, x1+width , y1+height, makecol(252,252,252));
+    renderDrawer->drawLine(bmp_screen, x1, y1+height, x1+width , y1+height, makecol(252,252,252));
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
     return MOUSE_WITHIN_RECT(x1, y1, width, height);
@@ -66,8 +68,8 @@ bool GUI_DRAW_FRAME(int x, int y, int width, int height) {
 //    rect(bmp_screen, x,y,x+width, y+height, makecol(252,252,252));
 //
 //    // lines to darken the right sides
-//    line(bmp_screen, x+width, y, x+width , y+height, makecol(84,84,120));
-//    line(bmp_screen, x, y+height, x+width , y+height, makecol(84,84,120));
+//    _line(bmp_screen, x+width, y, x+width , y+height, makecol(84,84,120));
+//    _line(bmp_screen, x, y+height, x+width , y+height, makecol(84,84,120));
     auto m_mouse = game.getMouse();
     if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width)) 
         && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
