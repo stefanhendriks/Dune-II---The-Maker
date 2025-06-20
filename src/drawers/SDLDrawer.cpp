@@ -328,7 +328,7 @@ void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangl
 }
 
 void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y) {
-    draw_trans_sprite(dest, sprite, x, y);
+    drawSprite(dest, sprite, x, y);
 }
 
 void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color) {
