@@ -18,8 +18,9 @@ SDLDrawer::~SDLDrawer() {
     m_dataRepository = nullptr;
 
     for (auto& p : bitmapCache) {
-      destroy_bitmap(p.second);
+      SDL_FreeSurface(p.second);
     }
+    bitmapCache.clear();
 }
 
 void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
