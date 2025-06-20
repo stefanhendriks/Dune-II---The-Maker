@@ -9,11 +9,11 @@
 #include "sidebar/cSideBar.h"
 #include "utils/d2tm_math.h"
 
-#include <allegro.h>
+//#include <allegro.h>
 
 cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
 {
-    z=0;
+    // z=0;
     leftButtonPressed=false;
     rightButtonPressed=false;
     leftButtonPressedInPreviousFrame=false;
@@ -22,10 +22,10 @@ cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
     rightButtonClicked=false;
     mouseScrolledUp=false;
     mouseScrolledDown=false;
-    zValuePreviousFrame = mouse_z;
+    // zValuePreviousFrame = mouse_z;
     _mouseObserver = nullptr; // set later
     debugLines = std::vector<std::string>();
-
+    didMouseMove = false;
     init();
 }
 
@@ -51,54 +51,76 @@ void cMouse::init()
     debugLines.clear();
 }
 
+void cMouse::handleEvent(const SDL_Event& event) {
+    switch (event.type) {
+        case SDL_MOUSEBUTTONDOWN:
+            if (event.button.button == SDL_BUTTON_LEFT) leftButtonPressed = true;
+            if (event.button.button == SDL_BUTTON_RIGHT) rightButtonPressed = true;
+            break;
+        case SDL_MOUSEBUTTONUP:
+            if (event.button.button == SDL_BUTTON_LEFT) leftButtonPressed = false;
+            if (event.button.button == SDL_BUTTON_RIGHT) rightButtonPressed = false;
+            break;
+        case SDL_MOUSEMOTION:
+            coords.x = event.motion.x;
+            coords.y = event.motion.y;
+            didMouseMove = true;
+            break;
+        case SDL_MOUSEWHEEL:
+            if (event.wheel.y > 0) mouseScrolledUp = true;
+            if (event.wheel.y < 0) mouseScrolledDown = true;
+            break;
+    }
+}
+
 void cMouse::updateState()
 {
     debugLines.clear();
 
-    bool didMouseMove = coords.x != mouse_x || coords.y != mouse_y;
-    coords.x = mouse_x;
-    coords.y = mouse_y;
-    z = mouse_z;
+    // bool didMouseMove = coords.x != event.motion.x || coords.y != mouse_y;
+    // coords.x = event.motion.x;
+    // coords.y = mouse_y;
+    // if (mouseScrolledUp)
+    //     z = 1;
+    // if (mouseScrolledDown)
+    //     z = -1;
 
     // check if leftButtonIsPressed=true (which is the previous frame)
-    leftButtonPressedInPreviousFrame = leftButtonPressed;
-    rightButtonPressedInPreviousFrame = rightButtonPressed;
-
-    leftButtonPressed = mouse_b & 1;
-    rightButtonPressed = mouse_b & 2;
+    // leftButtonPressedInPreviousFrame = leftButtonPressed;
+    // rightButtonPressedInPreviousFrame = rightButtonPressed;
+// 
+    // leftButtonPressed = mouse_b & 1;
+    // rightButtonPressed = mouse_b & 2;
 
     // now check if the leftButtonPressed == false, but the previous frame was true (if so, it is
     // counted as a click)
-    leftButtonClicked = (leftButtonPressedInPreviousFrame == true && leftButtonPressed == false);
-    rightButtonClicked = (rightButtonPressedInPreviousFrame == true && rightButtonPressed == false);
+    // leftButtonClicked = (leftButtonPressedInPreviousFrame == true && leftButtonPressed == false);
+    // rightButtonClicked = (rightButtonPressedInPreviousFrame == true && rightButtonPressed == false);
 
-    mouseScrolledUp = mouseScrolledDown = false;
+    // mouseScrolledUp = mouseScrolledDown = false;
 
-    if (z > zValuePreviousFrame) {
-        mouseScrolledUp = true;
-    }
+    // if (z > zValuePreviousFrame) {
+    //     mouseScrolledUp = true;
+    // }
 
-    if (z < zValuePreviousFrame) {
-        mouseScrolledDown = true;
-    }
+    // if (z < zValuePreviousFrame) {
+    //     mouseScrolledDown = true;
+    // }
 
-    zValuePreviousFrame = z;
+    // zValuePreviousFrame = z;
 
     // cap mouse z
-    if (z > 10 || z < -10) {
-        z = 0;
-        position_mouse_z(0); // allegro function
-    }
+    // if (z > 10 || z < -10) {
+    //     z = 0;
+    //     position_mouse_z(0); // allegro function
+    // }
 
     // mouse moved
     if (_mouseObserver) {
-        s_MouseEvent event {
-            eMouseEventType::MOUSE_MOVED_TO,
-            coords,
-            z
-        };
+        s_MouseEvent event {eMouseEventType::MOUSE_MOVED_TO, coords};
 
         if (didMouseMove) {
+            s_MouseEvent event {eMouseEventType::MOUSE_MOVED_TO, coords};
             _mouseObserver->onNotifyMouseEvent(event);
         }
 
@@ -132,7 +154,9 @@ void cMouse::updateState()
             _mouseObserver->onNotifyMouseEvent(event);
         }
     }
-
+    // check if leftButtonIsPressed=true (which is the previous frame)
+    // leftButtonPressedInPreviousFrame = leftButtonPressed;
+    // rightButtonPressedInPreviousFrame = rightButtonPresse
     // HACK HACK:
     // make -1 to -2, so that we can prevent placeIt/deployIt=false when just stopped viewport dragging
     if (mouse_mv_x2 == -1) {
@@ -141,17 +165,16 @@ void cMouse::updateState()
     if (mouse_mv_y2 == -1) {
         mouse_mv_y2 = -2;
     }
+    didMouseMove = false;
 }
 
-void cMouse::positionMouseCursor(int x, int y)
+void cMouse::setCursorPosition(SDL_Window* _windows, int x, int y)
 {
-    position_mouse(x, y); // allegro function
+    SDL_WarpMouseInWindow(_windows, x, y); // allegro function
     if (_mouseObserver) {
         s_MouseEvent event {
             eMouseEventType::MOUSE_MOVED_TO,
-            cPoint(0,0),
-            0
-        };
+            cPoint(x,y)};
         _mouseObserver->onNotifyMouseEvent(event);
     }
 }
@@ -197,17 +220,17 @@ void cMouse::resetDragViewportInteraction()
 void cMouse::dragViewportInteraction()
 {
     if (mouse_mv_x1 < 0 || mouse_mv_y1 < 0) {
-        mouse_mv_x1 = mouse_x;
-        mouse_mv_y1 = mouse_y;
+        mouse_mv_x1 = coords.x;
+        mouse_mv_y1 = coords.y;
     }
     else {
         // mouse mv 1st coordinates filled
         // when mouse is deviating from this coordinate, draw a line
 
-        if (ABS_length(mouse_x, mouse_y, mouse_mv_x1, mouse_mv_y1) > 4) {
+        if (ABS_length(coords.x, coords.y, mouse_mv_x1, mouse_mv_y1) > 4) {
             // assign 2nd coordinates
-            mouse_mv_x2 = mouse_x;
-            mouse_mv_y2 = mouse_y;
+            mouse_mv_x2 = coords.x;
+            mouse_mv_y2 = coords.y;
         }
     }
 }
@@ -218,16 +241,14 @@ void cMouse::boxSelectLogic(int mouseCell)
     // if so, we will update the second coordinates. If the player holds his mouse we
     // keep updating the second coordinates and create a rectangle to select units with.
     if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
-        if (abs(mouse_x - mouse_co_x1) > 4 &&
-                abs(mouse_y - mouse_co_y1) > 4) {
-
+        if (abs(coords.x - mouse_co_x1) > 4 && abs(coords.y - mouse_co_y1) > 4) {
             // assign 2nd coordinates
-            mouse_co_x2 = mouse_x;
-            if (mouse_x > game.m_screenW - cSideBar::SidebarWidth) {
+            mouse_co_x2 = coords.x;
+            if (coords.x > game.m_screenW - cSideBar::SidebarWidth) {
                 mouse_co_x2 = game.m_screenW - cSideBar::SidebarWidth - 1;
             }
 
-            mouse_co_y2 = mouse_y;
+            mouse_co_y2 = coords.y;
             if (mouse_co_y2 < cSideBar::TopBarHeight) {
                 mouse_co_y2 = cSideBar::TopBarHeight;
             }
@@ -242,8 +263,8 @@ void cMouse::boxSelectLogic(int mouseCell)
     }
     else if (mouseCell > -1) {
         // no first coordinates set, so do that here.
-        mouse_co_x1 = mouse_x;
-        mouse_co_y1 = mouse_y;
+        mouse_co_x1 = coords.x;
+        mouse_co_y1 = coords.y;
     }
 }
 
@@ -289,8 +310,8 @@ bool cMouse::isTile(int value)
 
 void cMouse::draw()
 {
-    int mouseDrawX = mouse_x;
-    int mouseDrawY = mouse_y;
+    int mouseDrawX = coords.x;
+    int mouseDrawY = coords.y;
 
     if (mouse_tile > -1) {
         // adjust coordinates of drawing according to the specific mouse sprite/tile

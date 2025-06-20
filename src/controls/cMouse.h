@@ -4,6 +4,7 @@
 #include "observers/cInputObserver.h"
 #include "utils/cPoint.h"
 
+#include <SDL2/SDL.h>
 #include <string>
 #include <vector>
 
@@ -15,6 +16,8 @@ public:
     cMouse();
 
     ~cMouse();
+
+    void handleEvent(const SDL_Event& event);
 
     void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
@@ -51,9 +54,9 @@ public:
         return coords.y;
     }
 
-    int getZ() {
-        return z;
-    }
+    // int getZ() {
+    //     return z;
+    // }
 
     void positionMouseCursor(int x, int y);
 
@@ -109,10 +112,11 @@ private:
 
     bool mouseScrolledUp;
     bool mouseScrolledDown;
+    bool didMouseMove;
 
     cPoint coords;
-    int z;    // z = scroll wheel value
-    int zValuePreviousFrame;
+    // int z;    // z = scroll wheel value
+    // int zValuePreviousFrame;
 
     // Mouse information - for select box and dragging, etc
     int mouse_co_x1;        // coordinates

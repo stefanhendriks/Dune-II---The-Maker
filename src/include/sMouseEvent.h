@@ -11,15 +11,12 @@
 struct s_MouseEvent {
     eMouseEventType eventType = eMouseEventType::MOUSE_NONE;
     cPoint coords;
-    int z = 0;
 
     static const std::string toString(const s_MouseEvent &event) {
-        std::string msg = fmt::format("s_MouseEvent [type={}], [x={}], [y={}], [z={}]",
+        std::string msg = fmt::format("s_MouseEvent [type={}], [x={}], [y={}]",
                                       toStringMouseEventType(event.eventType),
                                       event.coords.x,
-                                      event.coords.y,
-                                      event.z
-                                     );
+                                      event.coords.y);
         return msg;
     }
 
