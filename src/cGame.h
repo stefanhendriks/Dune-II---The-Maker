@@ -366,7 +366,7 @@ private:
     void shakeScreenAndBlitBuffer();
     void handleTimeSlicing();
 
-    bool isResolutionInGameINIFoundAndSet();
+    // bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
 
     void initPlayers(bool rememberHouse) const;
