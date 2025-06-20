@@ -4,8 +4,10 @@
 #include "cRepeatButtonCommand.h"
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
+#include "drawers/cAllegroDrawer.h"
 
-#include <allegro.h>
+#include <allegro/datafile.h>
+
 
 cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect) {
     iBackgroundFrame = MENTATH;
@@ -29,11 +31,11 @@ void cHarkonnenMentat::draw_other() {
 }
 
 void cHarkonnenMentat::draw_eyes() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[HAR_EYES01+ iMentatEyes].dat, offsetX + 64, offsetY + 256);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[HAR_EYES01+ iMentatEyes].dat, offsetX + 64, offsetY + 256);
 }
 
 void cHarkonnenMentat::draw_mouth() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[HAR_MOUTH01+ iMentatMouth].dat, offsetX + 64, offsetY + 288);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[HAR_MOUTH01+ iMentatMouth].dat, offsetX + 64, offsetY + 288);
 }
 
 void cHarkonnenMentat::interact() {

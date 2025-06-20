@@ -4,8 +4,9 @@
 #include "cRepeatButtonCommand.h"
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
+#include "drawers/cAllegroDrawer.h"
 
-#include <allegro.h>
+#include <allegro/datafile.h>
 
 cOrdosMentat::cOrdosMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect) {
     iBackgroundFrame = MENTATO;
@@ -29,11 +30,11 @@ void cOrdosMentat::draw_other() {
 }
 
 void cOrdosMentat::draw_eyes() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ORD_EYES01+ iMentatEyes].dat, offsetX + 32, offsetY + 240);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[ORD_EYES01+ iMentatEyes].dat, offsetX + 32, offsetY + 240);
 }
 
 void cOrdosMentat::draw_mouth() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ORD_MOUTH01+ iMentatMouth].dat, offsetX + 31, offsetY + 270);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[ORD_MOUTH01+ iMentatMouth].dat, offsetX + 31, offsetY + 270);
 }
 
 void cOrdosMentat::interact() {
