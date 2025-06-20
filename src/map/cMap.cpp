@@ -22,7 +22,6 @@
 #include "player/cPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 
-#include <allegro.h>
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -494,7 +493,8 @@ void cMap::remove_id(int iIndex, int iIDType) {
 }
 
 void cMap::draw_units() {
-    set_trans_blender(0, 0, 0, 160);
+    //@Mira SDL2 blender
+    //set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
     for (int i = 0; i < MAX_UNITS; i++) {
@@ -559,7 +559,8 @@ void cMap::drawUnitDebug(cUnit &pUnit) const {
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
 void cMap::draw_units_2nd() {
-    set_trans_blender(0, 0, 0, 160);
+    // Mira SDL2 blender
+    //set_trans_blender(0, 0, 0, 160);
 
     // draw health of units
     for (int i = 0; i < MAX_UNITS; i++) {
@@ -592,8 +593,8 @@ void cMap::draw_units_2nd() {
         }
 
     }
-
-    set_trans_blender(0, 0, 0, 128);
+    // Mira SDL2 blender
+    //set_trans_blender(0, 0, 0, 128);
 }
 
 int cMap::mouse_draw_x() {
