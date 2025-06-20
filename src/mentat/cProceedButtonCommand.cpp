@@ -11,7 +11,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat)
         drawManager->missionInit();
 
         // CENTER MOUSE
-        game.getMouse()->positionMouseCursor(game.m_screenW / 2, game.m_screenH / 2);
+        game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
 
         game.initiateFadingOut();
 
