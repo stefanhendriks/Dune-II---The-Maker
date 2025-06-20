@@ -16,7 +16,6 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 
-#include <allegro.h>
 #include <fmt/core.h>
 #include <algorithm>
 

@@ -2,9 +2,7 @@
 
 #include "utils/cLog.h"
 
-// #include <allegro/config.h>
 #include <allegro/system.h>
-// #include <allegro/timer.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
