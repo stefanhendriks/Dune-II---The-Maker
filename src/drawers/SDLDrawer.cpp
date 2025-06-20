@@ -301,8 +301,8 @@ void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL
     drawRect(dest, rectangle, gui_colorBorderLight);
 
     // lines to darken the right sides
-    line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
-    line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
+    drawLine(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
+    drawLine(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
 }
 
 void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark) {
@@ -314,6 +314,9 @@ void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangl
     SDL_Rect tmp = {x1,y1,width,height};
     Uint32 mappedColor = SDL_MapRGBA(dest->format, gui_colorBorderLight.r, gui_colorBorderLight.g, gui_colorBorderLight.b, gui_colorBorderLight.a);
     draw_rect_outline_surface(dest, &tmp, mappedColor);
+    // see commit cb797e3
+    drawLine(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
+    drawLine(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
 }
 
 void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y) {
