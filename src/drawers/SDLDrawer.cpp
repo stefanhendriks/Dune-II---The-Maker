@@ -210,7 +210,9 @@ void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, 
 }
 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color) {
-    rectfill(dest, x, y, x+width, y+height, color);
+    const SDL_Rect tmp = {0, 0, width, height};
+    Uint32 mappedColor = SDL_MapRGBA(dest->format, color.r, color.g, color.b, color.a);
+    SDL_FillRect(dest, &tmp, mappedColor);
 }
 
 void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& rect, SDL_Color color, int alpha) {
@@ -222,11 +224,10 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& r
         bitmap = create_bitmap(rect.getWidth(), rect.getHeight());
         bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
     }
+    drawRectFilled(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
 
-    rectfill(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
-
-    set_trans_blender(0, 0, 0, alpha);
-    draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
+    // set_trans_blender(0, 0, 0, alpha);
+    // draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
 // cRectangle *SDLDrawer::fromBitmap(int x, int y, SDL_Surface *src) {
