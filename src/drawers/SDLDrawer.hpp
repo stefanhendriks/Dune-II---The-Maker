@@ -13,8 +13,6 @@ class SDLDrawer {
 		SDLDrawer(cAllegroDataRepository * dataRepository);
 		virtual ~SDLDrawer();
 
-		// cRectangle * fromBitmap(int x, int y, SDL_Surface *src);
-
 		void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);
 		void drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x);
 		void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
@@ -28,7 +26,6 @@ class SDLDrawer {
 
 		void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface* src, float percentage);
 
-		// void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
 		void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const;
 		void blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
 		void blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const;
