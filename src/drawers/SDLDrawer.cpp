@@ -27,7 +27,7 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     if (src == nullptr) return;
     if (dest == nullptr) return;
     // only same color depth is supported
-    if (bitmap_color_depth(src) != bitmap_color_depth(dest)) return;
+    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) return;
 
     // no use drawing outside of bounds
     if (pos_x + desiredWidth < 0) return;
@@ -46,7 +46,7 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     if (src == nullptr) return;
     if (dest == nullptr) return;
     // only same color depth is supported
-    if (bitmap_color_depth(src) != bitmap_color_depth(dest)) return;
+    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) return;
 
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;
@@ -104,7 +104,7 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     if (src == nullptr) return;
     if (dest == nullptr) return;
     // only same color depth is supported
-    if (bitmap_color_depth(src) != bitmap_color_depth(dest)) return;
+    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) return;
 
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;
