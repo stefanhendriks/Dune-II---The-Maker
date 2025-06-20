@@ -306,7 +306,7 @@ private:
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
-    SDL_Window *windows;
+    SDL_Window *window;
     SDL_Renderer *renderer;
 
     cTimeManager m_timeManager;

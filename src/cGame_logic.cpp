@@ -953,16 +953,18 @@ bool cGame::setupGame()
         setScreenResolutionFromGameIniSettings();
         m_handleArgument->applyArguments(); //Apply command line arguments
         m_handleArgument.reset();
-        m_Screen = std::make_unique<cScreenInit>(*m_PLInit, m_windowed, m_screenW, m_screenH);
+        m_Screen = std::make_unique<cScreenInit>(m_windowed, m_screenW, m_screenH, title);
     }
     else {
         if (m_windowed) {
             logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
         }
-        m_Screen = std::make_unique<cScreenInit>(*m_PLInit);
+        m_Screen = std::make_unique<cScreenInit>(false, 800, 600, title);
     }
     m_screenW = m_Screen->Width();
     m_screenH = m_Screen->Height();
+    window = m_Screen->getWindows();
+    renderer = m_Screen->getRenderer();
 
     //Mira TEXT alfont_text_mode(-1);
     //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
@@ -1024,8 +1026,7 @@ bool cGame::setupGame()
     /***
      * Viewport(s)
      */
-    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenW - cSideBar::SidebarWidth,
-                                   game.m_screenH - cSideBar::TopBarHeight);
+    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenW - cSideBar::SidebarWidth, game.m_screenH - cSideBar::TopBarHeight);
 
     /***
     Bitmap Creation
@@ -1243,7 +1244,6 @@ bool cGame::setupGame()
 
     // all has installed well. Let's rock and roll.
     return true;
-
 }
 
 /**
@@ -2447,5 +2447,5 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
 void cGame::setMousePosition(int w, int h)
 {
-    m_mouse->setCursorPosition(windows, w,h);
+    m_mouse->setCursorPosition(window, w,h);
 }

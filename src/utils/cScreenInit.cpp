@@ -3,7 +3,7 @@
 #include "cLog.h"
 
 // Need to include all of Allegro, otherwise the graphic mode defines are not included...
-#include <allegro.h>
+// #include <allegro.h>
 #include <fmt/core.h>
 
 #include <array>
@@ -11,7 +11,7 @@
 #include <optional>
 #include <span>
 #include <vector>
-
+/*
 namespace {
 
 // Note from Peter Gaal: This code is untested on UNIX platfrom - GFX_XWINDOWS_FULLSCREEN should be the right
@@ -101,7 +101,8 @@ std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth)
 }
 
 }
-
+*/
+/*
 cScreenInit::cScreenInit(const cPlatformLayerInit &platform, bool windowed, int width, int height)
 {
     TitleAndColorDepthInit(platform);
@@ -179,6 +180,7 @@ void cScreenInit::AutoDetectFullScreen()
         throw std::runtime_error(fmt::format("Allegro could not initialize full-screen at resolution {}x{} depth {}.", setResolution->width, setResolution->height, m_colorDepth));
     }
 }
+*/
 
 cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string &title)
 {
