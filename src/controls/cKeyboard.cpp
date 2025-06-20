@@ -10,8 +10,25 @@ cKeyboard::cKeyboard() :
 
 }
 
+void cKeyboard::handleEvent(const SDL_Event& event) {
+    if (event.type == SDL_KEYDOWN && !event.key.repeat) {
+        keysPressed.insert(event.key.keysym.scancode);
+    } else if (event.type == SDL_KEYUP) {
+        keysPressed.erase(event.key.keysym.scancode);
+        keysReleased.insert(event.key.keysym.scancode);
+    }
+}
+
 void cKeyboard::updateState()
 {
+    if (!keysPressed.empty()) {
+        _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, keysPressed));
+        //keysPressed.clear();
+    }
+    if (!keysReleased.empty()) {
+        _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, keysReleased));
+        keysReleased.clear();
+    }
     // Stefan: I made this more 'efficient', and I tried to differentiate between a HOLD and a "Released" state
     // which makes sense. However, the way the events are being sent needs to be done differently (not now, I am tired)
     //
@@ -21,7 +38,7 @@ void cKeyboard::updateState()
     //
     // So that you can find combinations of keypresses. Ie CTRL-1 for create group...
     //
-
+/*
     std::set<int> newKeysPressed = std::set<int>();
 
     // capture all the pressed keys here, use a set so we don't capture multiple times the same key (which
@@ -69,4 +86,5 @@ void cKeyboard::updateState()
 
     // finally, update the state
     keysPressed = newKeysPressed;
+    */
 }
