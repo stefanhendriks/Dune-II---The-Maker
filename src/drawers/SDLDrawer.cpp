@@ -276,10 +276,11 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& r
 // }
 
 void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha) {
-    set_trans_blender(std::clamp(red, 0, 255),
-                      std::clamp(green, 0, 255),
-                      std::clamp(blue, 0, 255),
-                      std::clamp(alpha, 0, 255));
+    //Mira NoFix
+    // set_trans_blender(std::clamp(red, 0, 255),
+    //                   std::clamp(green, 0, 255),
+    //                   std::clamp(blue, 0, 255),
+    //                   std::clamp(alpha, 0, 255));
 }
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y) {
@@ -315,8 +316,9 @@ void SDLDrawer::resetClippingFor(SDL_Surface *bmp) {
 }
 
 void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
-    if (!bmp) return;
-    set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
+    //Mira NoFix
+    // if (!bmp) return;
+    // set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
 }
 
 void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
