@@ -12,7 +12,7 @@ cTextDrawer::cTextDrawer(ALFONT_FONT *theFont)
     //Mira TEXT assert(theFont);
     font = theFont;
     applyShadow=true;
-    textColor = makecol(255, 255, 255);
+    textColor = SDL_Color{255, 255, 255,255};
 }
 
 cTextDrawer::cTextDrawer() : cTextDrawer(small_font)
@@ -27,7 +27,7 @@ cTextDrawer::~cTextDrawer()
 void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const char *msg, int var1, int var2) const
 {
     //Mira TEXT if (applyShadow) {
-    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var1, var2);
+    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var1, var2);
     //Mira TEXT }
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, textColor, msg, var1, var2);
 }
@@ -40,7 +40,7 @@ void cTextDrawer::drawTextWithOneInteger(int x, int y, const char *msg, int var)
 void cTextDrawer::drawTextWithOneInteger(int x, int y, int color, const char *msg, int var) const
 {
     //Mira TEXT if (applyShadow) {
-    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var);
+    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
     //Mira TEXT }
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 }
@@ -48,7 +48,7 @@ void cTextDrawer::drawTextWithOneInteger(int x, int y, int color, const char *ms
 void cTextDrawer::drawText(int x, int y, int color, const char *msg) const
 {
     //Mira TEXT if (applyShadow) {
-    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg);
+    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg);
     //Mira TEXT }
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg);
 }
@@ -169,7 +169,7 @@ void cTextDrawer::drawText(int x, int y, const char *msg, const char *var) const
 void cTextDrawer::drawText(int x, int y, int color, const char *msg, const char *var) const
 {
     //Mira TEXT if (applyShadow) {
-    //Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var);
+    //Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
     //Mira TEXT }
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 }

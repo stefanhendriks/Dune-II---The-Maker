@@ -100,7 +100,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
     BITMAP *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     if (!bWithinBuildDistance) {
-        clear_to_color(temp, game.getColorPlaceBad());
+        // @Mira clear_to_color(temp, game.getColorPlaceBad());
+        clear_to_color(temp, makecol(255,0,0)); //game.getColorPlaceBad());
     }
     else {
         clear_bitmap(temp);
@@ -108,7 +109,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
         // Draw over it the mask for good/bad placing (decorates temp bitmap)
         for (int iX=0; iX < cellWidth; iX++) {
             for (int iY=0; iY < cellHeight; iY++) {
-                int placeColor = game.getColorPlaceNeutral();
+                SDL_Color placeColor = game.getColorPlaceNeutral();
 
                 int cellX = iCellX + iX;
                 int cellY = iCellY + iY;

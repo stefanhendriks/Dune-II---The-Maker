@@ -143,7 +143,7 @@ void cMouseDrawer::drawToolTipBackground()
     int x = getDrawXToolTip(width);
     int y = getDrawYToolTip(height);
 
-    int color = player->getMinimapColor();
+    SDL_Color color = player->getMinimapColor();
 
     if (context->isMouseOverStructure()) {
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
@@ -159,19 +159,19 @@ void cMouseDrawer::drawToolTipBackground()
 //		}
     }
 
-    int red = getr(color);
-    int green = getg(color);
-    int blue = getb(color);
+    unsigned char red = color.r;
+    unsigned char green = color.g;
+    unsigned char blue = color.b;
 
     // tone down a bit
     red = std::max(red - 64, 0);
     green = std::max(green - 64, 0);
     blue = std::max(blue - 64, 0);
 
-    color = makecol(red, green, blue);
+    color = SDL_Color{red, green, blue,255};
 
     const auto black = renderDrawer->getColor_BLACK();
-    const auto white = makecol(255, 255, 255);
+    const auto white = SDL_Color{255, 255, 255,255};
     //_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
     renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
     renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
@@ -206,7 +206,7 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
     else {
         description=fmt::format("{}", structureType.name);
     }
-    textWriter.write(description.c_str(), makecol(255, 255, 0));
+    textWriter.write(description.c_str(), SDL_Color{255, 255, 0,255});
     textWriter.writeWithTwoIntegers("Hitpoints : %d/%d", theStructure->getHitPoints(), theStructure->getMaxHP());
     textWriter.writeWithOneInteger("Armor : %d", theStructure->getArmor());
     textWriter.writeWithOneInteger("Protected : %d%%", (100-theStructure->getPercentageNotPaved()));

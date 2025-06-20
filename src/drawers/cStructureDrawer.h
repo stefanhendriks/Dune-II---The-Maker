@@ -12,7 +12,7 @@ public:
 protected:
     void drawStructureHealthBar(int iStructure);
     void drawStructuresForLayer(int layer);
-    void drawRectangleOfStructure(cAbstractStructure *theStructure, int color);
+    void drawRectangleOfStructure(cAbstractStructure *theStructure, SDL_Color color);
     void drawStructurePrebuildAnimation(cAbstractStructure *structure);
     void drawStructureAnimation(cAbstractStructure *structure);
     void drawStructureAnimationWindTrap(cAbstractStructure *structure);

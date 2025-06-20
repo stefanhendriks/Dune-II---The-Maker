@@ -8,6 +8,7 @@
 #pragma once
 
 #include "drawers/cTextDrawer.h"
+#include <SDL2/SDL.h>
 
 struct ALFONT_FONT;
 
@@ -22,6 +23,7 @@ public:
 
     void write(const char *msg);
     void write(const char *msg, int color);
+    void write(const char *msg, SDL_Color color);
     void writeWithOneInteger(const char *msg, int value1);
     void writeWithTwoIntegers(const char *msg, int value1, int value2);
 

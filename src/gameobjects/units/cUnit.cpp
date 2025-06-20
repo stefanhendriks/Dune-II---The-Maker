@@ -552,13 +552,13 @@ void cUnit::draw_spice()
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, makecol(0, 0, 0));
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w), height_y, makecol(255, 91, 1));
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, SDL_Color{0, 0, 0,255});
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w), height_y, SDL_Color{255, 91, 1,255});
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
-        renderDrawer->drawRect(bmp_screen, drawx, drawy,width_x, height_y, makecol(255, 255, 255));
+        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, SDL_Color{255, 255, 255));
+        renderDrawer->drawRect(bmp_screen, drawx, drawy,width_x, height_y, SDL_Color{255, 255, 255,255});
     }
 }
 
@@ -600,20 +600,20 @@ void cUnit::draw_health()
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, makecol(0, 0, 0));
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w - 1), height_y, makecol(r, g, 32));
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, SDL_Color{0, 0, 0,255});
+    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w - 1), height_y, SDL_Color{(Uint8)r,(Uint8)g, 32,255});
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
-        renderDrawer->drawRect(bmp_screen, drawx, drawy, width_x, height_y, makecol(255, 255, 255));
+        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, SDL_Color{255, 255, 255));
+        renderDrawer->drawRect(bmp_screen, drawx, drawy, width_x, height_y, SDL_Color{255, 255, 255,255});
     }
 
     // draw group
     if (iGroup > 0 &&
             iPlayer == HUMAN) {
-        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, makecol(0, 0, 0), "%d", iGroup);
-        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, makecol(255, 255, 255), "%d", iGroup);
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, SDL_Color{0, 0, 0), "%d", iGroup);
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, SDL_Color{255, 255, 255), "%d", iGroup);
     }
 
 }
@@ -692,15 +692,15 @@ void cUnit::draw_path() const
         int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
-            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 255));
+            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 255,255});
         }
         else if (iPath[i] == iGoalCell) {
             // end of path (goal)
-            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0,255});
         }
         else {
             // everything else
-            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 64));
+            renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 64,255});
         }
 
         // draw a line from previous to current
@@ -794,7 +794,7 @@ void cUnit::draw()
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
 //	if (TIMER_blink > 0)
 //		if (rnd(100) < 15)
-//			mask_to_color(temp, makecol(255,255,255));
+//			mask_to_color(temp, SDL_Color{255,255,255));
 
     // when we want to be picked up..
     if (bCarryMe) {
@@ -819,10 +819,10 @@ void cUnit::draw()
 
     if (game.m_drawUnitDebug) {
         // render pixel at the very center
-        putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 255, 0));
+        renderDrawer->set_pixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
 
         // render from the units top-left to center pixel
-        renderDrawer->drawLine(bmp_screen, draw_x(), draw_y(), center_draw_x(), center_draw_y(), makecol(255, 255, 0));
+        renderDrawer->drawLine(bmp_screen, draw_x(), draw_y(), center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
     }
 }
 
@@ -3415,12 +3415,12 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug()
 {
-    renderDrawer->drawRect(bmp_screen, dimensions, makecol(255, 0, 255));
-    putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
-    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
+    renderDrawer->drawRect(bmp_screen, dimensions, SDL_Color{255, 0, 255,255});
+    renderDrawer->set_pixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 0, 255,255});
+    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), SDL_Color{255, 255, 255), "%d", iID);
 
     if (isSandworm()) {
-        //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, makecol(255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
+        //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, SDL_Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
     }
 }
 
@@ -4352,7 +4352,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
             if (game.m_drawUnitDebug) {
-                renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, makecol(0, 255, 0));
+                renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{0, 255, 0,255});
             }
 
             // Now set c to the cll
@@ -4374,7 +4374,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
 //                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
 //                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
 //
-//                _renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+//                _renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0));
 //                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
 //                iCell = prevCell; // back track
 //            } else {

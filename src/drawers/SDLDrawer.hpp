@@ -46,7 +46,7 @@ public:
     void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
     void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
     void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha);
-
+    void set_pixel(BITMAP *bmp, int x, int y, SDL_Color color);
     SDL_Color getColor_BLACK() {
         return colorBlack;
     }

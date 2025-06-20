@@ -5,7 +5,7 @@
 
 #include <map>
 #include <memory>
-
+#include <SDL2/SDL.h>
 // Forward declarations to prevent including Allegro headers
 struct BITMAP;
 
@@ -51,26 +51,41 @@ public:
     void drawRectFilled(BITMAP *dest, const cRectangle &pRectangle, int color);
     void drawRectTransparentFilled(BITMAP *dest, const cRectangle &rect, int color, int alpha);
 
-    int getColor_BLACK() {
-        return colorBlack;
+    void drawRect(BITMAP *dest, int x, int y, int width, int height, SDL_Color color);
+    void drawRect(BITMAP *dest, const cRectangle &pRectangle, SDL_Color color);
+    void drawRectFilled(BITMAP *dest, int x, int y, int width, int height, SDL_Color color);
+    void drawRectFilled(BITMAP *dest, const cRectangle &pRectangle, SDL_Color color);
+    void drawRectTransparentFilled(BITMAP *dest, const cRectangle &rect, SDL_Color color, int alpha);
+    void drawRectTransparentFilled(BITMAP *dest, const cRectangle &rect, SDL_Color color);
+
+
+    SDL_Color getColor_BLACK() {
+        return SDL_Color{0,0,0,255};
     }
 
     void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
+    void bitmap_replace_color(BITMAP *bmp, SDL_Color colorToReplace, SDL_Color newColor);
 
     void setTransBlender(int red, int green, int blue, int alpha);
 
     int getColorByNormValue(int r, int g, int b, float norm);
 
     void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle);
+    
     void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
     void gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
-
     void drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color);
 
+    void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
+    void gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
+    void drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, SDL_Color color);
+
+
     void drawDot(BITMAP *bmp, int x, int y, int color, int size);
+    void drawDot(BITMAP *bmp, int x, int y, SDL_Color color, int size);
     //Scramble the pixels. In a radius "r" around position X,Y at the screen! (the x,y are screencoordinates!)
     void shimmer(int r, int x, int y, float cameraZoom);
-
+    void set_pixel(BITMAP *bmp, int x, int y, SDL_Color color);
 protected:
     int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
     int getCenteredYPosForBitmap(BITMAP *bmp);

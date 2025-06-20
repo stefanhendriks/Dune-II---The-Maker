@@ -267,10 +267,10 @@ void cAbstractMentat::thinkMouth()  // MOUTH
 
 void cAbstractMentat::draw()
 {
-    renderDrawer->drawRectFilled(bmp_screen, offsetX, offsetY, 640, 480, makecol(0,0,0));
-    renderDrawer->drawRect(bmp_screen, offsetX-1, offsetY-1, 641, 481, makecol(64, 64,89));
-    renderDrawer->drawRect(bmp_screen, offsetX-2, offsetY-2, 642, 482, makecol(40,40,60));
-    renderDrawer->drawRect(bmp_screen, offsetX-3, offsetY-3, 643, 483, makecol(0,0,0));
+    renderDrawer->drawRectFilled(bmp_screen, offsetX, offsetY, 640, 480, SDL_Color{0,0,0,255});
+    renderDrawer->drawRect(bmp_screen, offsetX-1, offsetY-1, 641, 481, SDL_Color{64, 64,89,255});
+    renderDrawer->drawRect(bmp_screen, offsetX-2, offsetY-2, 642, 482, SDL_Color{40,40,60,255});
+    renderDrawer->drawRect(bmp_screen, offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
     select_palette(general_palette);
 
     // movie
@@ -285,11 +285,11 @@ void cAbstractMentat::draw()
     if (state == SPEAKING) {
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 17, SDL_Color{0, 0, 0), "%s", sentence[iMentatSentence]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 16, SDL_Color{255, 255, 255), "%s", sentence[iMentatSentence]);
 
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 37, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 36, makecol(255, 255, 255), "%s",  sentence[iMentatSentence + 1]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 37, SDL_Color{0, 0, 0), "%s", sentence[iMentatSentence + 1]);
+            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 36, SDL_Color{255, 255, 255), "%s",  sentence[iMentatSentence + 1]);
         }
     }
 

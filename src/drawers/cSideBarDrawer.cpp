@@ -18,7 +18,7 @@ cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
     m_sidebar(nullptr),
     m_candybar(nullptr),
     m_textDrawer(bene_font),
-    m_sidebarColor(makecol(214, 149, 20))
+    m_sidebarColor(SDL_Color{214, 149, 20,255})
 {
     assert(player);
 }
@@ -136,8 +136,8 @@ void cSideBarDrawer::drawBuildingLists()
 
     for (int i = 1; i < 3; i++) {
         int barX = (iDrawX - 1) + (i * 66);
-        int darker = makecol(89, 56, 0);
-        int veryDark = makecol(48, 28, 0);
+        SDL_Color darker = SDL_Color{89, 56, 0,255};
+        SDL_Color veryDark = SDL_Color{48, 28, 0,255};
         renderDrawer->drawLine(bmp_screen, barX - 1, iDrawY, barX - 1, endY, darker);
         renderDrawer->drawLine(bmp_screen, barX, iDrawY, barX, endY, veryDark);
 
@@ -155,8 +155,8 @@ void cSideBarDrawer::drawBuildingLists()
     }
 
     // vertical lines at the side
-    renderDrawer->drawLine(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, makecol(255, 211, 125)); // left
-    renderDrawer->drawLine(bmp_screen, game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, makecol(209, 150, 28)); // right
+    renderDrawer->drawLine(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, SDL_Color{255, 211, 125,255}); // left
+    renderDrawer->drawLine(bmp_screen, game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, SDL_Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
 
@@ -192,7 +192,7 @@ void cSideBarDrawer::draw()
     set_palette(m_player->pal);
 
     // black out sidebar
-    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -231,7 +231,7 @@ void cSideBarDrawer::drawCreditsUsage()
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barY + barTotalHeight - powerInY, makecol(0, 232, 0));
+    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barY + barTotalHeight - powerInY, SDL_Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * spiceStored;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -246,23 +246,24 @@ void cSideBarDrawer::drawCreditsUsage()
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, makecol(r, g, 32));
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, 
+                            SDL_Color{(Uint8)r,(Uint8)g, 32,255});
     }
     else {
         renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
+    renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
 
     renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
-    int darker = makecol(89, 56, 0);
+    SDL_Color darker = SDL_Color{89, 56, 0,255};
     renderDrawer->drawLine(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->drawLine(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
-    m_textDrawer.drawText(barX - 1, barY - 21, makecol(0, 0, 0), "$");
-    m_textDrawer.drawText(barX + 1, barY - 19, makecol(0, 0, 0), "$");
+    m_textDrawer.drawText(barX - 1, barY - 21, SDL_Color{0, 0, 0,255}, "$");
+    m_textDrawer.drawText(barX + 1, barY - 19, SDL_Color{0, 0, 0,255}, "$");
     m_textDrawer.drawText(barX, barY - 20, "$");
 }
 
@@ -287,7 +288,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barTotalHeight, makecol(0, 232, 0));
+    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barTotalHeight, SDL_Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * powerUse;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -301,25 +302,26 @@ void cSideBarDrawer::drawPowerUsage() const
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, makecol(r, g, 32));
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, 
+                            SDL_Color{(Uint8)r, (Uint8)g, 32,255});
     }
     else {
         renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
+    renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
 
     renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
-    int darker = makecol(89, 56, 0);
+    SDL_Color darker = SDL_Color{89, 56, 0,255};
     renderDrawer->drawLine(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->drawLine(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
     //renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
     renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[3].dat,barX-3, barY - 21);
-//    m_textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
-//    m_textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
+//    m_textDrawer->drawText(barX-1, barY - 21, SDL_Color{0,0,0),"P");
+//    m_textDrawer->drawText(barX+1, barY - 19, SDL_Color{0,0,0),"P");
 //    m_textDrawer->drawText(barX, barY - 20, "P");
 }
 

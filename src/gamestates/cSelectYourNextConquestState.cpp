@@ -517,7 +517,7 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
 
     int c = getpixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
 
-    //alfont_textprintf(bmp_screen, bene_font, 17,17, makecol(0,0,0), "region %d", c-1);
+    //alfont_textprintf(bmp_screen, bene_font, 17,17, SDL_Color{0,0,0), "region %d", c-1);
 
     return c - 1;
 }
