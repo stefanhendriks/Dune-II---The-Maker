@@ -547,7 +547,7 @@ void cGame::loadSkirmishMaps() const {
 
 void cGame::handleTimeSlicing() {
     if (iRest > 0) {
-        std::cout << iRest << std::endl;
+        //std::cout << iRest << std::endl;
         // rest(iRest);
         SDL_Delay(iRest);
     }
