@@ -19,9 +19,14 @@
 
 #include "gui/cGuiButton.h"
 #include "gui/actions/cGuiActionToGameState.h"
+#include "drawers/cAllegroDrawer.h"
 
 // #include <alfont.h>
-#include <allegro.h>
+#include <allegro/datafile.h>
+#include <allegro/palette.h>
+#include <allegro/color.h>
+#include <allegro.h>  //for bitmap
+
 #include <fmt/core.h>
 
 cAbstractMentat::cAbstractMentat(bool canMissionSelect) {
@@ -252,7 +257,7 @@ void cAbstractMentat::draw() {
     // movie
     draw_movie();
 
-    draw_sprite(bmp_screen, getBackgroundBitmap(), offsetX, offsetY);
+    renderDrawer->drawSprite(bmp_screen, getBackgroundBitmap(), offsetX, offsetY);
 
     draw_eyes();
     draw_mouth();
@@ -292,7 +297,7 @@ void cAbstractMentat::draw_movie() {
     int movieTopleftX = offsetX + 256;
     int movieTopleftY = offsetY + 120;
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, movieTopleftX, movieTopleftY);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, movieTopleftX, movieTopleftY);
 }
 
 void cAbstractMentat::interact() {

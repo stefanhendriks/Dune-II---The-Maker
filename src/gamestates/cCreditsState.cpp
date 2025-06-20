@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
+#include "drawers/cAllegroDrawer.h"
 
 // #include <alfont.h>
 #include <allegro.h>
@@ -342,12 +343,12 @@ void cCreditsState::thinkFast() {
 void cCreditsState::draw() const {
     clear_to_color(bmp_screen, makecol(0, 0, 16));
 
-    draw_sprite(bmp_screen, m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
+    renderDrawer->drawSprite(bmp_screen, m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
     int halfScreen = game.m_screenW / 2;
 
     // draw crawler
-    draw_sprite(bmp_screen, m_titleBmp, m_titleX, m_crawlerY);
+    renderDrawer->drawSprite(bmp_screen, m_titleBmp, m_titleX, m_crawlerY);
     int textCrawlY = m_crawlerY + m_titleHeight;
     for (auto & line : m_lines) {
         if (line.name.empty()) {

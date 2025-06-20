@@ -251,11 +251,11 @@ void cDrawManager::drawOptionBar() {
         clear_to_color(m_optionsBar, m_sidebarColor);
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-            draw_sprite(m_optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
+            renderDrawer->drawSprite(m_optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
         }
     }
 
-    draw_sprite(bmp_screen, m_optionsBar, 0, 0);
+    renderDrawer->drawSprite(bmp_screen, m_optionsBar, 0, 0);
 }
 
 void cDrawManager::drawNotifications() {
