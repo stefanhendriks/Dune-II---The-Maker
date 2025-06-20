@@ -55,7 +55,7 @@
 #include "player/cHousesInfo.h"
 
 
-#include <allegro.h>
+//#include <allegro.h>
 //#include <alfont.h>
 #include <fmt/core.h>
 
