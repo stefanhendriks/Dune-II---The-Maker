@@ -70,11 +70,11 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 //	_rectfill(bmp_screen, x, y, x+width, y+height, makecol(255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
 
   // clear
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
+	renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
 
   // set blender
   set_trans_blender(0,0,0,128);
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
+	renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
 
     if (!list->isAvailable()) {
       renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, makecol(0,0,0), 96);
@@ -146,7 +146,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         // icon id must be set , assert it.
 		assert(item->getIconId() > -1);
 
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
+		renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
 
 		if (shouldDrawStructureSize) {
 			drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
@@ -168,7 +168,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
-                    draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
+                    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
 				} else if (item->shouldDeployIt()) {
                     // TODO: draw white/red (flicker)
                     // TODO: draw DEPLOY
@@ -176,7 +176,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
-                    draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
+                    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
                 }
 			}
 		} else { // not building
@@ -345,11 +345,11 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y) {
 
 	draw_trans_sprite(temp, bmp_screen, x + 43, y + 20);
 
-	draw_sprite(temp, (BITMAP *)gfxinter[GRID_0X0].dat, 0, 0);
+	renderDrawer->drawSprite(temp, (BITMAP *)gfxinter[GRID_0X0].dat, 0, 0);
 
 	draw_trans_sprite(bmp_screen, temp, x + 43, y + 20);
 
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, x + 43, y + 20);
+	renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, x + 43, y + 20);
 
 	destroy_bitmap(temp);
 

@@ -35,7 +35,7 @@ void cSideBarDrawer::drawCandybar() {
 
 	int drawX = game.m_screenW - cSideBar::SidebarWidth;
 	int drawY = 40;
-	draw_sprite(bmp_screen, m_candybar, drawX, drawY);
+	renderDrawer->drawSprite(bmp_screen, m_candybar, drawX, drawY);
 }
 
 void cSideBarDrawer::createCandyBar() {
@@ -44,14 +44,14 @@ void cSideBarDrawer::createCandyBar() {
     clear_to_color(m_candybar, makecol(0, 0, 0));
 
     // ball first
-    draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, 0); // height of ball = 25
-    draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, 26); // height of top = 10
+    renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, 0); // height of ball = 25
+    renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, 26); // height of top = 10
 // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
     set_clip_rect(m_candybar, 0, 0, 24, heightMinimap - (6 + 1)); // (add 1 pixel for room between ball and bar)
     for (int y = startY; y < (heightMinimap); y += 24) {
-        draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
+        renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
     }
     set_clip_rect(m_candybar, 0, 0, m_candybar->w, m_candybar->h);
 
@@ -60,20 +60,20 @@ void cSideBarDrawer::createCandyBar() {
     int ballY = (heightMinimap) - 6;
 
     // draw bottom m_candybar
-    draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, ballY - 10); // height of bottom = 9
+    renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, ballY - 10); // height of bottom = 9
 
     // draw ball
-    draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, ballY); // height of ball = 25
+    renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, ballY); // height of ball = 25
 
     // draw top m_candybar again
-    draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, ballY + 26); // height of top = 10
+    renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, ballY + 26); // height of top = 10
 
     startY = ballY + 26 + 10;
     for (int y = startY; y < (heightInPixels + 23); y += 24) {
-        draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
+        renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
     }
     // draw bottom
-    draw_sprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels - 10); // height of top = 10
+    renderDrawer->drawSprite(m_candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels - 10); // height of top = 10
 }
 
 void cSideBarDrawer::drawBuildingLists() {
@@ -103,7 +103,7 @@ void cSideBarDrawer::drawBuildingLists() {
 
     for (; drawX < game.m_screenW; drawX += backgroundSprite->w) {
         for (int drawY=startY; drawY < game.m_screenH; drawY += backgroundSprite->h) {
-            draw_sprite(bmp_screen, backgroundSprite, drawX, drawY);
+            renderDrawer->drawSprite(bmp_screen, backgroundSprite, drawX, drawY);
         }
     }
 
@@ -114,8 +114,8 @@ void cSideBarDrawer::drawBuildingLists() {
     int iDrawY = m_buildingListDrawer.getDrawY();
 
     BITMAP *horBar = (BITMAP *) gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat;
-    draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-38); // above sublist buttons
-    draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-5); // above normal icons
+    renderDrawer->drawSprite(bmp_screen, horBar, iDrawX-1, iDrawY-38); // above sublist buttons
+    renderDrawer->drawSprite(bmp_screen, horBar, iDrawX-1, iDrawY-5); // above normal icons
 
     if (selectedListId > -1) {
         selectedList = m_sidebar->getList(selectedListId);
@@ -145,7 +145,7 @@ void cSideBarDrawer::drawBuildingLists() {
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         renderDrawer->drawRectFilled(bmp_screen, iDrawX, endY, game.m_screenW-iDrawX, game.m_screenH-endY, m_sidebarColor);
-        draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
+        renderDrawer->drawSprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
     }
 
     // vertical lines at the side
@@ -305,7 +305,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     renderDrawer->drawLine(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
     //renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
-    draw_sprite(bmp_screen, (BITMAP *)gfxinter[3].dat,barX-3, barY - 21);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[3].dat,barX-3, barY - 21);
 //    m_textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
 //    m_textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
 //    m_textDrawer->drawText(barX, barY - 20, "P");
@@ -317,7 +317,7 @@ void cSideBarDrawer::drawMinimap() {
 	// 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
 	int drawY = cSideBar::TopBarHeight + heightMinimap;
-	draw_sprite(bmp_screen, sprite, drawX, drawY);
+	renderDrawer->drawSprite(bmp_screen, sprite, drawX, drawY);
 
 	// 11, 10
 	// 78, 60
