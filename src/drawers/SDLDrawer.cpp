@@ -341,3 +341,133 @@ void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int siz
         }
     }
 }
+
+
+// Fonction utilitaire pour dessiner un pixel sur une SDL_Surface
+// Assurez-vous que la surface est verrouillée avant d'appeler cette fonction !
+void SDLDrawer::set_pixel(SDL_Surface* surface, int x, int y, Uint32 pixel_color) {
+    if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
+        return; // Hors des limites de la surface
+    }
+
+    int bpp = surface->format->BytesPerPixel;
+    // Pointeur vers le début de la ligne y
+    Uint8* p = (Uint8*)surface->pixels + y * surface->pitch;
+
+    // Déplacer le pointeur jusqu'au pixel x
+    // On convertit Uint32 en la taille appropriée (1, 2, 3 ou 4 octets)
+    switch (bpp) {
+        case 1: // 8 bits par pixel
+            *((Uint8*)p + x) = (Uint8)pixel_color;
+            break;
+        case 2: // 16 bits par pixel
+            *((Uint16*)p + x) = (Uint16)pixel_color;
+            break;
+        case 3: // 24 bits par pixel
+            // C'est un peu plus complexe car 3 octets ne s'alignent pas directement avec les types C
+            // Il faut copier octet par octet
+            if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+                *((Uint8*)p + x * bpp + 0) = (pixel_color >> 16) & 0xFF;
+                *((Uint8*)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
+                *((Uint8*)p + x * bpp + 2) = pixel_color & 0xFF;
+            } else {
+                *((Uint8*)p + x * bpp + 0) = pixel_color & 0xFF;
+                *((Uint8*)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
+                *((Uint8*)p + x * bpp + 2) = (pixel_color >> 16) & 0xFF;
+            }
+            break;
+        case 4: // 32 bits par pixel
+            *((Uint32*)p + x) = pixel_color;
+            break;
+    }
+}
+
+// Fonction pour dessiner une ligne sur une SDL_Surface
+void SDLDrawer::draw_line_surface(SDL_Surface* surface, int x1, int y1, int x2, int y2, Uint32 color) {
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int sx = (x1 < x2) ? 1 : -1;
+    int sy = (y1 < y2) ? 1 : -1;
+    int err = dx - dy;
+
+    while (1) {
+        set_pixel(surface, x1, y1, color);
+
+        if (x1 == x2 && y1 == y2) break;
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x1 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y1 += sy;
+        }
+    }
+}
+
+// Fonction pour dessiner un rectangle sans remplissage sur une SDL_Surface
+void SDLDrawer::draw_rect_outline_surface(SDL_Surface* surface, const SDL_Rect* rect, Uint32 color) {
+    if (rect == NULL || surface == NULL) {
+        return;
+    }
+
+    // Vérrouiller la surface avant de modifier les pixels
+    if (SDL_LockSurface(surface) < 0) {
+        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
+        return;
+    }
+
+    // Dessiner les 4 lignes
+    // Ligne du haut
+    draw_line_surface(surface, rect->x, rect->y, rect->x + rect->w - 1, rect->y, color);
+    // Ligne du bas
+    draw_line_surface(surface, rect->x, rect->y + rect->h - 1, rect->x + rect->w - 1, rect->y + rect->h - 1, color);
+    // Ligne de gauche
+    draw_line_surface(surface, rect->x, rect->y, rect->x, rect->y + rect->h - 1, color);
+    // Ligne de droite
+    draw_line_surface(surface, rect->x + rect->w - 1, rect->y, rect->x + rect->w - 1, rect->y + rect->h - 1, color);
+
+    // Déverrouiller la surface
+    SDL_UnlockSurface(surface);
+}
+
+// Fonction utilitaire pour obtenir la couleur d'un pixel sur une SDL_Surface.
+// Retourne la valeur du pixel (Uint32) ou 0 si hors limites/erreur.
+// Assurez-vous que la surface est verrouillée AVANT d'appeler cette fonction si nécessaire !
+Uint32 SDLDrawer::get_pixel(SDL_Surface* surface, int x, int y) {
+    // Vérifier les limites de la surface
+    if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
+        // Pixel hors des limites, retourner 0 ou une valeur d'erreur définie
+        // Dans un vrai programme, vous pourriez logger une erreur.
+        return 0;
+    }
+
+    int bpp = surface->format->BytesPerPixel; // Bytes Per Pixel
+
+    // Calculer l'adresse du pixel
+    // p pointe vers le début de la ligne 'y'
+    Uint8* p = (Uint8*)surface->pixels + y * surface->pitch;
+    // Déplacer p à la position 'x' du pixel en tenant compte du BPP
+    p += x * bpp;
+
+    // Lire la valeur du pixel en fonction du nombre d'octets par pixel
+    switch (bpp) {
+        case 1: // 8 bits par pixel
+            return *p;
+        case 2: // 16 bits par pixel
+            return *(Uint16*)p;
+        case 3: // 24 bits par pixel (spécial car non aligné sur 4 octets)
+            // L'ordre des octets dépend de l'endianness du système
+            if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+                return (p[0] << 16) | (p[1] << 8) | p[2];
+            } else {
+                return p[0] | (p[1] << 8) | (p[2] << 16);
+            }
+        case 4: // 32 bits par pixel
+            return *(Uint32*)p;
+        default:
+            fprintf(stderr, "Format de pixel non supporté pour get_pixel: %d BPP\n", bpp);
+            return 0; // Ou une valeur d'erreur
+    }
+}
