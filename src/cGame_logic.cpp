@@ -513,11 +513,14 @@ void cGame::think_audio()
     }
 }
 
-void cGame::updateMouseAndKeyboardStateAndGamePlaying()
+void cGame::updateMouseAndKeyboardState()
 {
     m_mouse->updateState(); // calls observers that are interested in mouse input
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
+}
 
+void cGame::updateGamePlaying()
+{
     if (m_state != GAME_PLAYING) {
         return;
     }
@@ -693,7 +696,8 @@ void cGame::run()
 
     while (m_playing) {
         m_timeManager.processTime();
-        updateMouseAndKeyboardStateAndGamePlaying();
+        updateMouseAndKeyboardState();
+        updateGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
