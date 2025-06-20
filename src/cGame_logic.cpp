@@ -982,13 +982,13 @@ bool cGame::setupGame()
     //Mira TEXT     return false;
     //Mira TEXT }
 
-    if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
-        set_display_switch_mode(SWITCH_PAUSE);
-        logbook("Display 'switch and pause' mode set");
-    }
-    else {
-        logbook("Display 'switch to background' mode set");
-    }
+    // if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
+    //     set_display_switch_mode(SWITCH_PAUSE);
+    //     logbook("Display 'switch and pause' mode set");
+    // }
+    // else {
+    //     logbook("Display 'switch to background' mode set");
+    // }
 
     if (!m_playSound) {
         m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);
