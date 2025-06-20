@@ -19,6 +19,7 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 
+#include "utils/DataPack.hpp"
 #include <string>
 
 #include <iostream>
@@ -66,6 +67,8 @@ DATAFILE *gfxdata;		// graphics (terrain, units, structures)
 DATAFILE *gfxinter;		// interface graphics
 DATAFILE *gfxworld;		// world/pieces graphics
 DATAFILE *gfxmentat;	// mentat graphics
+
+DataPack* sdl_data;
 
 // FONT stuff
 ALFONT_FONT *game_font; 	// arrakeen.fon

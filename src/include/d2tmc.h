@@ -35,6 +35,7 @@ class cUnit;
 class cParticle;
 class cPlayer;
 class cRegion;
+class DataPack;
 
 struct ALFONT_FONT;
 struct BITMAP;
@@ -81,6 +82,8 @@ extern DATAFILE *gfxdata;
 extern DATAFILE *gfxinter;
 extern DATAFILE *gfxworld;
 extern DATAFILE *gfxmentat;
+
+extern DataPack *sdl_data;
 
 // BITMAPS
 extern BITMAP *bmp_screen;
