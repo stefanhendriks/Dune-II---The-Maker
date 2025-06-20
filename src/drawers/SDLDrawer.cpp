@@ -256,7 +256,7 @@ void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int n
     for (int x = 0; x < bmp->w; x++) {
         for (int y = 0; y < bmp->h; y++) {
             if (getpixel(bmp, x, y) == colorToReplace) {
-                putpixel(bmp, x, y, newColor);
+                set_pixel(bmp, x, y, newColor);
             }
         }
     }
@@ -328,8 +328,9 @@ void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_C
 void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size) {
     if (size < 1) return;
 
+    Uint32 mappedColor = SDL_MapRGBA(bmp->format, color.r, color.g, color.b, color.a);
     if (size == 1) {
-        putpixel(bmp, x, y, color);
+        set_pixel(bmp, x, y, mappedColor);
         return;
     }
 
@@ -337,7 +338,7 @@ void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int siz
     int endY = y + size;
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            putpixel(bmp, sx, sy, color);
+            set_pixel(bmp, sx, sy, mappedColor);
         }
     }
 }
