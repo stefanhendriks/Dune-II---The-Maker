@@ -9,7 +9,6 @@
 #include "utils/cSoundPlayer.h"
 
 #include <fmt/core.h>
-#include <allegro/mouse.h>
 
 #include <algorithm>
 #include <string>
