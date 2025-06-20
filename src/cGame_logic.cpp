@@ -693,10 +693,29 @@ void cGame::drawState()
 void cGame::run()
 {
     set_trans_blender(0, 0, 0, 128);
-
+    SDL_Event event;
     while (m_playing) {
         m_timeManager.processTime();
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    m_playing = true;
+                    break;
+
+                case SDL_KEYDOWN:
+                case SDL_KEYUP:
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                case SDL_MOUSEBUTTONUP:
+                case SDL_MOUSEMOTION:
+                case SDL_MOUSEWHEEL:
+                default:
+                    break;
+            }
+        }
         updateMouseAndKeyboardState();
+
         updateGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
