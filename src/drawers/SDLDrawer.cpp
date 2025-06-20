@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 
+#include <iostream>
 #include <algorithm>
 #include <memory>
 
@@ -38,8 +39,15 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     // no use drawing a desired image with 0 width or height
     if (desiredHeight <= 0) return;
     if (desiredWidth <= 0) return;
-
-    stretch_sprite(dest, src, pos_x, pos_y, desiredWidth, desiredHeight);
+    //stretch_sprite(dest, src, pos_x, pos_y, desiredWidth, desiredHeight);
+    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, magicPink);
+    SDL_Rect srcRect = { 0, 0, src->w, src->h };
+    SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+    int result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    if (result < 0) {
+        std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
+    }
 }
 
 void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
@@ -65,7 +73,15 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     if (desiredHeight <= 0) return;
     if (desiredWidth <= 0) return;
 
-    stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    //stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, magicPink);
+    SDL_Rect srcRect = {src_x, src_y, width, height };
+    SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+    int result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    if (result < 0) {
+        std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
+    }
 }
 
 void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
@@ -89,7 +105,12 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
     if (pos_x > dest->w) return;
     if (pos_y > dest->h) return;
 
-    masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, magicPink);
+    SDL_Rect srcRect = { src_x, src_y, width, height }; // Zone à copier de la source
+    SDL_Rect dstRect = { pos_x, pos_y, width, height };     // Destination sur la surface cible
+    SDL_BlitSurface(src, &srcRect, dest, &dstRect);
+    //masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
 void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
@@ -123,7 +144,15 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     if (desiredHeight <= 0) return;
     if (desiredWidth <= 0) return;
 
-    masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, magicPink);
+    SDL_Rect srcRect = {src_x, src_y, width, height };
+    SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+    int result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    if (result < 0) {
+        std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
+    }
+    //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
 void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src) {
