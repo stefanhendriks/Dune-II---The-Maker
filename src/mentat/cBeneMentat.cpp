@@ -5,9 +5,10 @@
 #include "data/gfxmentat.h"
 #include "d2tmc.h"
 #include "player/cPlayer.h"
+#include "drawers/cAllegroDrawer.h"
 
 // #include <alfont.h>
-#include <allegro.h>
+#include <allegro/datafile.h>
 
 cBeneMentat::cBeneMentat() : cAbstractMentat(false) {
     iBackgroundFrame = MENTATM;
@@ -39,11 +40,11 @@ void cBeneMentat::draw_other() {
 }
 
 void cBeneMentat::draw_eyes() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, offsetX + 128, offsetY + 240);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, offsetX + 128, offsetY + 240);
 }
 
 void cBeneMentat::draw_mouth() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, offsetX + 112, offsetY + 272);
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, offsetX + 112, offsetY + 272);
 }
 
 void cBeneMentat::interact() {
