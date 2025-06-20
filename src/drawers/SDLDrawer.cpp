@@ -255,7 +255,7 @@ void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y) {
 void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor) {
     for (int x = 0; x < bmp->w; x++) {
         for (int y = 0; y < bmp->h; y++) {
-            if (getpixel(bmp, x, y) == colorToReplace) {
+            if (get_pixel(bmp, x, y) == colorToReplace) {
                 set_pixel(bmp, x, y, newColor);
             }
         }
