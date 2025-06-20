@@ -883,15 +883,15 @@ bool cGame::setupGame()
     // global anymore, because it needs to be destructed before main exits.
     m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg", title);
 
-    int r = install_timer();
-    if (r > -1) {
-        logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
-    }
-    else {
-        std::cerr << "Failed to install timer\n";
-        logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
-        return false;
-    }
+    // int r = install_timer();
+    // if (r > -1) {
+    //     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
+    // }
+    // else {
+    //     std::cerr << "Failed to install timer\n";
+    //     logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
+    //     return false;
+    // }
 
     //Mira TEXT alfont_init();
     //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
