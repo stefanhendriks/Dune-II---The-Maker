@@ -13,6 +13,7 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <allegro.h>
 
@@ -22,14 +23,14 @@ void cGame::initiateFadingOut() {
     m_fadeAction = eFadeAction::FADE_OUT; // fade out
 
     // copy the last bitmap of screen into a separate bitmap which we use for fading out.
-    draw_sprite(bmp_fadeout, bmp_screen, 0, 0);
+    renderDrawer->drawSprite(bmp_fadeout, bmp_screen, 0, 0);
 }
 
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::drawStateLosing() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
-    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
         m_state = GAME_LOSEBRIEF;
@@ -45,7 +46,7 @@ void cGame::drawStateLosing() {
 void cGame::drawStateWinning() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
-    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
+    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
         // Mentat will be happy, after that enter "Select your next Conquest"

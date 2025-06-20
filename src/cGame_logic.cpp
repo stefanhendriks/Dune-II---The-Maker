@@ -519,7 +519,7 @@ void cGame::drawStateCombat() {
 
 // drawStateMentat logic + drawing mouth/eyes
 void cGame::drawStateMentat(cAbstractMentat *mentat) {
-    draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
+    renderDrawer->drawSprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
     m_mouse->setTile(MOUSE_NORMAL);
 
@@ -606,7 +606,7 @@ void cGame::drawState() {
     clear(bmp_screen);
 
     if (m_fadeAction == eFadeAction::FADE_OUT) {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+        renderDrawer->drawSprite(bmp_screen, bmp_fadeout, 0, 0);
         return;
     }
 

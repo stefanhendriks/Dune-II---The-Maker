@@ -8,6 +8,7 @@
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 #include "player/cHousesInfo.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <allegro.h>
 #include <fmt/format.h>
@@ -262,12 +263,12 @@ void cPlayer::setHouse(int iHouse) {
         BITMAP *flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_LARGE].dat;
         bmp_flag = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
         clear_to_color(bmp_flag, makecol(255, 0, 255));
-        draw_sprite(bmp_flag, flagBmpData, 0, 0);
+        renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
 
         flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_SMALL].dat;
         bmp_flag_small = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
         clear_to_color(bmp_flag_small, makecol(255, 0, 255));
-        draw_sprite(bmp_flag_small, flagBmpData, 0, 0);
+        renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -281,7 +282,7 @@ void cPlayer::setHouse(int iHouse) {
             }
             clear_to_color(bmp_structure[i], makecol(255, 0, 255));
 
-            draw_sprite(bmp_structure[i], structureType.bmp, 0, 0);
+            renderDrawer->drawSprite(bmp_structure[i], structureType.bmp, 0, 0);
 
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
@@ -292,7 +293,7 @@ void cPlayer::setHouse(int iHouse) {
                 }
                 clear_to_color(bitmap, makecol(255, 0, 255));
 
-                draw_sprite(bitmap, structureType.flash, 0, 0);
+                renderDrawer->drawSprite(bitmap, structureType.flash, 0, 0);
                 bmp_structure[j] = bitmap;
             }
 
@@ -309,13 +310,13 @@ void cPlayer::setHouse(int iHouse) {
             }
             clear_to_color(bmp_unit[i], makecol(255, 0, 255));
 
-            draw_sprite(bmp_unit[i], unitType.bmp, 0, 0);
+            renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
 
             if (unitType.top) {
                 bmp_unit_top[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
                 clear_to_color(bmp_unit_top[i], makecol(255, 0, 255));
 
-                draw_sprite(bmp_unit_top[i], unitType.top, 0, 0);
+                renderDrawer->drawSprite(bmp_unit_top[i], unitType.top, 0, 0);
             }
         }
     }
@@ -546,7 +547,7 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
         BITMAP *shadow = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
         clear_to_color(shadow, makecol(255, 0, 255));
 
-        blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+        renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
         return shadow;
     }
     return nullptr;
