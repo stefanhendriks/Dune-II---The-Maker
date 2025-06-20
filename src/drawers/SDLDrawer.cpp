@@ -221,7 +221,7 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& r
 
     auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
     if (bitmap == nullptr) {
-        bitmap = create_bitmap(rect.getWidth(), rect.getHeight());
+        bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
         bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
     }
     drawRectFilled(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
