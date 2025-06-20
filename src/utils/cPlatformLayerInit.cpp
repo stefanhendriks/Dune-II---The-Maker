@@ -15,10 +15,9 @@ static bool allegroInitialized = false;
 cPlatformLayerInit::cPlatformLayerInit(const std::string &path_to_config_file, const std::string &window_title)
 {
     cLogger *logger = cLogger::getInstance();
-    logger->logHeader("Allegro");
+    logger->logHeader("SDL");
 
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-    if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING)< 0) {
         logger->log(LOG_FATAL, COMP_SDL2, "SDL2 init", SDL_GetError(), OUTC_FAILED);
         throw std::runtime_error(SDL_GetError());
     }
@@ -32,7 +31,7 @@ cPlatformLayerInit::cPlatformLayerInit(const std::string &path_to_config_file, c
     else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL2_mixer", "Initialized successfully", OUTC_SUCCESS);
     }
-
+/*
     if (allegroInitialized) {
         throw std::runtime_error("Allegro initialization was attempted twice.");
     }
@@ -52,14 +51,15 @@ cPlatformLayerInit::cPlatformLayerInit(const std::string &path_to_config_file, c
 
     set_window_title(window_title.c_str());
     logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
+    */
 }
 
 cPlatformLayerInit::~cPlatformLayerInit()
 {
     cLogger *logger = cLogger::getInstance();
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro shutdown", "Shutting down...");
-    allegro_exit();
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro shutdown", "Thanks for playing!", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_ALLEGRO, "SDL shutdown", "Shutting down...");
+    // allegro_exit();
+    // logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro shutdown", "Thanks for playing!", OUTC_SUCCESS);
     Mix_CloseAudio();
     logger->log(LOG_INFO, COMP_SDL2, "SDL2_mixer shutdown", "Thanks for playing!", OUTC_SUCCESS);
     SDL_Quit();

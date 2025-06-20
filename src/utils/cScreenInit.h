@@ -13,10 +13,10 @@ struct ScreenResolution {
 class cScreenInit {
 public:
     // Creates a window or initializes full-screen with the given resolution at desktop color depth
-    cScreenInit(const cPlatformLayerInit &platform, bool windowed, int width, int height);
+    // cScreenInit(const cPlatformLayerInit &platform, bool windowed, int width, int height);
 
     // Initializes full-screen at desktop color depth, autodetecting a supported resolution.
-    cScreenInit(const cPlatformLayerInit &platform);
+    // cScreenInit(const cPlatformLayerInit &platform);
 
     cScreenInit(bool windowed, int width, int height, const std::string &title);
     // No cleanup required
@@ -34,11 +34,19 @@ public:
         return m_screenResolution.height;
     }
 
-private:
-    void TitleAndColorDepthInit(const cPlatformLayerInit &platform);
-    void AutoDetectFullScreen();
+    SDL_Window* getWindows() const {
+        return window;
+    }
 
-    int m_colorDepth;
+    SDL_Renderer* getRenderer() const {
+        return renderer;
+    }
+
+private:
+    // void TitleAndColorDepthInit(const cPlatformLayerInit &platform);
+    // void AutoDetectFullScreen();
+
+    // int m_colorDepth;
     ScreenResolution m_screenResolution;
 
     SDL_Window *window = nullptr;
