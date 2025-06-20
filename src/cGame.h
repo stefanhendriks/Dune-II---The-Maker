@@ -175,6 +175,7 @@ public:
     }
 
     void setPlayerToInteractFor(cPlayer *pPlayer);
+    void setMousePosition(int w, int h);
 
     // Event handling
     void onNotifyGameEvent(const s_GameEvent &event) override;
@@ -305,6 +306,8 @@ private:
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
+    SDL_Window *windows;
+    SDL_Renderer *renderer;
 
     cTimeManager m_timeManager;
 

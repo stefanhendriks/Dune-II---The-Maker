@@ -58,7 +58,7 @@ public:
     //     return z;
     // }
 
-    void positionMouseCursor(int x, int y);
+    void setCursorPosition(SDL_Window* _windows, int x, int y);
 
     bool isOverRectangle(int x, int y, int width, int height);
 
