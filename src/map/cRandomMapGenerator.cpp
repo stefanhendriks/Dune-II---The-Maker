@@ -6,7 +6,6 @@
 #include "map/cMap.h"
 #include "map/cMapEditor.h"
 #include "drawers/cAllegroDrawer.h"
-#include <allegro.h>
 
 cRandomMapGenerator::cRandomMapGenerator() {
 }
