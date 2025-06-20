@@ -394,6 +394,45 @@ void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int siz
     }
 }
 
+void SDLDrawer::shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom) {
+    int x1, y1;
+    int nx, ny;
+    int gp = 0;     // Get Pixel Result
+    int tc = 0;
+
+    // go around 360 fDegrees (twice as fast now)
+    float step = std::fmax(1.0f, cameraZoom);
+
+    for (float dr = 0; dr < r; dr += step) {
+        for (double d = 0; d < 360; d++) {
+            x1 = (x + (cos(d) * (dr)));
+            y1 = (y + (sin(d) * (dr)));
+
+            if (x1 < 0) x1 = 0;
+            if (y1 < 0) y1 = 0;
+            if (x1 >= game.m_screenW) x1 = game.m_screenW - 1;
+            if (y1 >= game.m_screenH) y1 = game.m_screenH - 1;
+
+            gp = get_pixel(src, x1, y1); //ALLEGRO // use this inline function to speed up things.
+            // Now choose random spot to 'switch' with.
+            nx = (x1 - 1) + rnd(2);
+            ny = (y1 - 1) + rnd(2);
+
+            if (nx < 0) nx = 0;
+            if (ny < 0) ny = 0;
+            if (nx >= game.m_screenW) nx = game.m_screenW - 1;
+            if (ny >= game.m_screenH) ny = game.m_screenH - 1;
+
+            tc = get_pixel(src, nx, ny); //ALLEGRO
+
+            if (gp > -1 && tc > -1) {
+                // Now switch colors
+                set_pixel(src, nx, ny, gp);
+                set_pixel(src, x1, y1, tc);
+            }
+        }
+    }
+}
 
 // Fonction utilitaire pour dessiner un pixel sur une SDL_Surface
 // Assurez-vous que la surface est verrouillée avant d'appeler cette fonction !
