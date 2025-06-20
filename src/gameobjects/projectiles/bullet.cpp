@@ -115,7 +115,7 @@ void cBullet::draw() {
 
     // Whenever this bullet is a shimmer, draw a shimmer and leave
     if (iType == BULLET_SHIMMER) {
-        Shimmer(mapCamera->factorZoomLevel(16), x, y);
+        renderDrawer->shimmer(mapCamera->factorZoomLevel(16), x, y, mapCamera->factorZoomLevel(4));
         return;
     }
 

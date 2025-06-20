@@ -48,7 +48,6 @@ float health_bar(float max_w, int i, int w);
 
 int iFindCloseBorderCell(int iCll);
 
-void Shimmer(int r, int x, int y);
 int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots);
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
