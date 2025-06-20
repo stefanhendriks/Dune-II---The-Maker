@@ -195,14 +195,22 @@ void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle
 }
 
 void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color) {
-    rect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
+    drawRect(dest, pRectangle.getX(), pRectangle.getWidth(), pRectangle.getHeight(), pRectangle.getEndY(), color);
 }
 
 void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color) {
     if (dest == nullptr) return;
     // the -1 is because the width /height is "including" the current pixel
     // ie, a width of 1 pixel means it draws just 1 pixel, since the x2 is a dest it should result into x1
-    rect(dest, x, y, x + (width-1), y + (height-1), color);
+    ///rect(dest, x, y, x + (width-1), y + (height-1), color);
+    if (SDL_LockSurface(dest) < 0) {
+        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
+        return;
+    }
+    Uint32 mappedColor = SDL_MapRGBA(dest->format, color.r, color.g, color.b, color.a);
+    const SDL_Rect tmp = {x, y, x + (width-1), y + (height-1)};
+    draw_rect_outline_surface(dest, &tmp, mappedColor);
+    SDL_UnlockSurface(dest);
 }
 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color) {
