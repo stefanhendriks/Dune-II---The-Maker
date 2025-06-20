@@ -704,6 +704,7 @@ void cGame::run()
 
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
+                    m_keyboard->handleEvent(event);
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
