@@ -906,7 +906,7 @@ bool cGame::setupGame()
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.
-    m_PLInit = std::make_unique<cPlatformLayerInit>("d2tm.cfg", title);
+    m_PLInit = std::make_unique<cPlatformLayerInit>();
 
     // int r = install_timer();
     // if (r > -1) {

@@ -10,9 +10,9 @@
 #include <cstring>
 #include <stdexcept>
 
-static bool allegroInitialized = false;
+// static bool allegroInitialized = false;
 
-cPlatformLayerInit::cPlatformLayerInit(const std::string &path_to_config_file, const std::string &window_title)
+cPlatformLayerInit::cPlatformLayerInit(/*const std::string &path_to_config_file, const std::string &window_title*/)
 {
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("SDL");
