@@ -3,7 +3,7 @@
 #include "cAbstractStructure.h"
 
 class cGunTurret : public cAbstractStructure {
-  private:
+private:
     int iHeadFacing;        // (for turrets only) what is this structure facing at?
     int iShouldHeadFacing;  // where should we look face at?
     int iTargetID;           // target id (assumes is always a unit)
@@ -12,10 +12,10 @@ class cGunTurret : public cAbstractStructure {
     int TIMER_turn;
     int TIMER_guard;         // timed 'area scanning'
 
-  public:
+public:
     cGunTurret();
 
-    // overloaded functions    
+    // overloaded functions
     void thinkFast() override;
 
     void thinkSlow() override {}
@@ -30,21 +30,29 @@ class cGunTurret : public cAbstractStructure {
 
     int getFacingAngles();
 
-    void setShouldHeadFacing(int value) { iShouldHeadFacing = value; }
+    void setShouldHeadFacing(int value) {
+        iShouldHeadFacing = value;
+    }
 
     void startAnimating() override {}
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
     int getType() const override;
 
-    int getHeadFacing() { return iHeadFacing; }
+    int getHeadFacing() {
+        return iHeadFacing;
+    }
 
     void think_turning();
 
     bool isFacingTarget() const;
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 
-void cGuiActionShowOptions::execute() {
+void cGuiActionShowOptions::execute()
+{
     game.setNextStateToTransitionTo(GAME_OPTIONS);
 }

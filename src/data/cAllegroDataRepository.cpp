@@ -6,7 +6,8 @@
 #include <allegro/gfx.h>
 #include <fmt/core.h>
 
-cAllegroDataRepository::cAllegroDataRepository() {
+cAllegroDataRepository::cAllegroDataRepository()
+{
     for (int i = 0; i < MAX_BITMAPS; i++) {
         m_data[i] = nullptr;
     }
@@ -15,13 +16,15 @@ cAllegroDataRepository::cAllegroDataRepository() {
 /**
  * Delete this before unloading Allegro!
  */
-cAllegroDataRepository::~cAllegroDataRepository() {
+cAllegroDataRepository::~cAllegroDataRepository()
+{
     for (int i = 0; i < MAX_BITMAPS; i++) {
         m_data[i] = nullptr;
     }
 }
 
-int cAllegroDataRepository::findAvailableSlot() {
+int cAllegroDataRepository::findAvailableSlot()
+{
     for (int i = 0; i < MAX_BITMAPS; i++) {
         if (m_data[i]) continue;
         return i;
@@ -76,13 +79,14 @@ int cAllegroDataRepository::findAvailableSlot() {
 //     return true;
 // }
 
-bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
+bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp)
+{
     if (index < 0) return false;
     if (index >= MAX_BITMAPS) return false;
 
     if (m_data[index]) {
         logbook(fmt::format(
-            "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, because it has already been taken.", index));
+                    "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, because it has already been taken.", index));
 
         // already taken!
         return false;
@@ -90,25 +94,27 @@ bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp) {
 
     if (!bmp) {
         logbook(fmt::format(
-            "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, the provided bmp is null!", index));
+                    "cAllegroDataRepository::loadBitmapFromDataFileAt() Unable to load bitmap at index {}, the provided bmp is null!", index));
         // unable to load
         return false;
     }
 
     if (game.isDebugMode()) {
         logbook(fmt::format(
-            "cAllegroDataRepository::loadBitmapFromDataFileAt() Loaded bitmap from pointer at index {}", index));
+                    "cAllegroDataRepository::loadBitmapFromDataFileAt() Loaded bitmap from pointer at index {}", index));
     }
 
     m_data[index] = bmp;
     return true;
 }
 
-BITMAP * cAllegroDataRepository::getBitmapAt(int index) {
+BITMAP *cAllegroDataRepository::getBitmapAt(int index)
+{
     if (index < 0 || index >= MAX_BITMAPS) return nullptr;
     return m_data[index];
 }
 
-bool cAllegroDataRepository::loadBitmapFromDataFileGfxDataAt(int index, int indexAtDatafile) {
+bool cAllegroDataRepository::loadBitmapFromDataFileGfxDataAt(int index, int indexAtDatafile)
+{
     return loadBitmapFromDataFileAt(index, (BITMAP *)gfxdata[indexAtDatafile].dat);
 }

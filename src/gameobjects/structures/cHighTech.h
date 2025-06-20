@@ -12,14 +12,16 @@ private:
 public:
     cHighTech();
 
-    // overloaded functions    
+    // overloaded functions
     void thinkFast() override;
 
     void thinkSlow() override {}
 
     void startAnimating() override;
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
     void think_animation() override;
 
@@ -27,7 +29,9 @@ public:
 
     int getType() const override;
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

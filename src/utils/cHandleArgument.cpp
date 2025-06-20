@@ -3,10 +3,10 @@
 #include <iostream>
 
 cHandleArgument::cHandleArgument(cGame *game) :
-m_game(game),
-m_optionToHandleAfter(),
-m_argumentScreenX(800),
-m_argumentScreenY(600)
+    m_game(game),
+    m_optionToHandleAfter(),
+    m_argumentScreenX(800),
+    m_argumentScreenY(600)
 {
 
 }
@@ -20,7 +20,8 @@ cHandleArgument::~cHandleArgument() {}
  * @param argv
  * @return
  */
-int cHandleArgument::handleArguments(int argc, char *argv[]) {
+int cHandleArgument::handleArguments(int argc, char *argv[])
+{
     // TODO: make this return a config object, and not be tightly coupled to cGame
     m_game->m_disableAI = false;
     m_game->m_disableReinforcements = false;
@@ -111,7 +112,8 @@ int cHandleArgument::handleArguments(int argc, char *argv[]) {
     return 0;
 }
 
-void cHandleArgument::printInstructions() const {
+void cHandleArgument::printInstructions() const
+{
     std::cout << fmt::format("\n");
     std::cout << fmt::format("Usage: d2tm[.exe] [-windowed] [-screenWidth <width>] ...\n\n");
     std::cout << fmt::format("Graphics\n");
@@ -150,7 +152,8 @@ void cHandleArgument::printInstructions() const {
     std::cout << fmt::format("\n\n");
 }
 
-void cHandleArgument::applyArguments() {
+void cHandleArgument::applyArguments()
+{
     for (const auto&[key, value]: m_optionToHandleAfter) {
         switch (key) {
             case Options::WINDOWED:

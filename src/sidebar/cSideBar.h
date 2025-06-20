@@ -54,16 +54,22 @@ public:
 
     ~cSideBar();
 
-    cBuildingList *getList(int listId) { return lists[listId]; }
+    cBuildingList *getList(int listId) {
+        return lists[listId];
+    }
 
-    cBuildingList *getList(eListType listType) { return getList(eListTypeAsInt(listType)); }
+    cBuildingList *getList(eListType listType) {
+        return getList(eListTypeAsInt(listType));
+    }
 
     bool startBuildingItemIfOk(eListType listType, int buildId) const;
 
     void setList(eListType listType, cBuildingList *list);
 
-    int getSelectedListID() { return selectedListID; }
-    cBuildingListItem * getBuildingListItem(eListType listType, int buildId) const;
+    int getSelectedListID() {
+        return selectedListID;
+    }
+    cBuildingListItem *getBuildingListItem(eListType listType, int buildId) const;
 
     void think();    // timer based
 
@@ -87,7 +93,7 @@ public:
     static const int HeightOfListButton = 34;
 
     static const int TotalHeightBeforePowerBarStarts =
-            TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMarginHeight;
+        TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMarginHeight;
 
     void onNotifyMouseEvent(const s_MouseEvent &event);
 

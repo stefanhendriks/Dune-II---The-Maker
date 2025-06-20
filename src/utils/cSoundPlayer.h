@@ -9,31 +9,31 @@
 class cSoundData;
 
 class cSoundPlayer {
-	public:
-        // Initialize the platform layer before creating this object.
-		explicit cSoundPlayer(const cPlatformLayerInit& init);
-		cSoundPlayer(const cPlatformLayerInit& init, int maxNrVoices);
-		~cSoundPlayer();
+public:
+    // Initialize the platform layer before creating this object.
+    explicit cSoundPlayer(const cPlatformLayerInit &init);
+    cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
+    ~cSoundPlayer();
 
-        static int getMaxVolume();
+    static int getMaxVolume();
 
-        void playSound(int sampleId); // Maximum volume
-		void playSound(int sampleId, int vol);
+    void playSound(int sampleId); // Maximum volume
+    void playSound(int sampleId, int vol);
 
-        // Pass the sample ID of the Atreides voice
-        void playVoice(int sampleId, int house);
+    // Pass the sample ID of the Atreides voice
+    void playVoice(int sampleId, int house);
 
-        void playMusic(int sampleId);
-        void stopMusic();
-        bool isMusicPlaying() const;
+    void playMusic(int sampleId);
+    void stopMusic();
+    bool isMusicPlaying() const;
 
-        void setMusicVolume(int vol);
-        void changeMusicVolume(int delta);
-		// think about voices, clear voices, etc.
-		void think();
+    void setMusicVolume(int vol);
+    void changeMusicVolume(int delta);
+    // think about voices, clear voices, etc.
+    void think();
 
-	private:
-		std::vector<int> voices;
-        std::unique_ptr<cSoundData> soundData;
-        int musicVolume;
+private:
+    std::vector<int> voices;
+    std::unique_ptr<cSoundData> soundData;
+    int musicVolume;
 };

@@ -10,7 +10,7 @@ class cPlayer;
 class cMouseState : public cInputObserver, cScenarioObserver {
 
 public:
-    cMouseState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
+    cMouseState(cPlayer *player, cGameControlsContext *context, cMouse *mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override = 0;
@@ -21,9 +21,9 @@ public:
     virtual void onBlur() = 0; // called when state loses focus
 
 protected:
-    cPlayer * m_player;
-    cGameControlsContext * m_context;
-    cMouse * m_mouse;
+    cPlayer *m_player;
+    cGameControlsContext *m_context;
+    cMouse *m_mouse;
 
     int mouseTile;
 

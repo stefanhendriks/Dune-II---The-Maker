@@ -4,30 +4,32 @@
 
 namespace brains {
 
-    class cPlayerBrainMission;
+class cPlayerBrainMission;
 
-    class cPlayerBrainMissionKindExplore : public cPlayerBrainMissionKind {
+class cPlayerBrainMissionKindExplore : public cPlayerBrainMissionKind {
 
-    public:
+public:
 
-        cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission * mission);
+    cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission *mission);
 
-        ~cPlayerBrainMissionKindExplore() override;
+    ~cPlayerBrainMissionKindExplore() override;
 
-        cPlayerBrainMissionKind * clone(cPlayer *player, cPlayerBrainMission * mission) override;
+    cPlayerBrainMissionKind *clone(cPlayer *player, cPlayerBrainMission *mission) override;
 
-        bool think_SelectTarget() override;
+    bool think_SelectTarget() override;
 
-        void think_Execute() override;
+    void think_Execute() override;
 
-        void onNotifyGameEvent(const s_GameEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        const char *toString() override { return "cPlayerBrainMissionKindExplore"; }
+    const char *toString() override {
+        return "cPlayerBrainMissionKindExplore";
+    }
 
-        void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+    void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
 
-    private:
-        int targetCell;
-    };
+private:
+    int targetCell;
+};
 
 }

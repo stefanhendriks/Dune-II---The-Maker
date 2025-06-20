@@ -31,7 +31,9 @@ public:
 
     [[nodiscard]] bool getBoolean(const std::string &key, int id = 0) const;
 
-    [[nodiscard]] std::vector<std::string> getData() const { return m_dataConfs; }
+    [[nodiscard]] std::vector<std::string> getData() const {
+        return m_dataConfs;
+    }
 
     template<typename T>
     T FromString(std::string value) const;
@@ -59,7 +61,9 @@ public:
 
     bool hasSection(const std::string &section) const;
 
-    bool isLoadSuccess() const { return m_loadSuccess; }
+    bool isLoadSuccess() const {
+        return m_loadSuccess;
+    }
 
 private:
 

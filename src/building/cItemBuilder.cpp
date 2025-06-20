@@ -18,16 +18,17 @@
 
 #include <cassert>
 
-cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) :
-        m_player(thePlayer),
-        m_buildingListUpdater(buildingListUpdater),
-        m_buildItemMultiplierEnabled(false)
+cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingListUpdater) :
+    m_player(thePlayer),
+    m_buildingListUpdater(buildingListUpdater),
+    m_buildItemMultiplierEnabled(false)
 {
-	removeAllItems();
-	memset(m_timers, 0, sizeof(m_timers));
+    removeAllItems();
+    memset(m_timers, 0, sizeof(m_timers));
 }
 
-cItemBuilder::~cItemBuilder() {
+cItemBuilder::~cItemBuilder()
+{
     removeAllItems();
 }
 
@@ -68,8 +69,9 @@ cItemBuilder::~cItemBuilder() {
  * @param item
  * @return
  */
-int cItemBuilder::getTimerCap(cBuildingListItem *item) {
-	int iTimerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+int cItemBuilder::getTimerCap(cBuildingListItem *item)
+{
+    int iTimerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {
@@ -80,7 +82,8 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
         if (structureCount > 1) {
             iTimerCap /= structureCount;
         }
-    } else if (item->getBuildType() == STRUCTURE) {
+    }
+    else if (item->getBuildType() == STRUCTURE) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
         int structureCount = m_player->getAmountOfStructuresForType(CONSTYARD);
@@ -96,17 +99,18 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
         iTimerCap *= 6; // make painful
     }
 
-	return iTimerCap;
+    return iTimerCap;
 }
 
 /**
  * Called every 5 ms
  */
-void cItemBuilder::thinkFast() {
-	// go through all the items and increase progress counters...
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		cBuildingListItem *item = getItem(i);
-		if (item == nullptr) continue;
+void cItemBuilder::thinkFast()
+{
+    // go through all the items and increase progress counters...
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        if (item == nullptr) continue;
 
         // not building now, but in list.
         // Build as soon as possible.
@@ -177,15 +181,17 @@ void cItemBuilder::thinkFast() {
                 startBuilding(itemInSameList);
             }
 
-        } else {
+        }
+        else {
             // item still needs to be built more times.
             item->resetProgress(); // set back progress
             startBuilding(item);
         }
-	}
+    }
 }
 
-void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
+void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
+{
     // remember them
     eBuildType eBuildType = item->getBuildType();
     int buildId = item->getBuildId();
@@ -199,19 +205,20 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
             item->setPlaceIt(true);
 
             s_GameEvent event {
-                    .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT,
-                    .entityType = item->getBuildType(),
-                    .entityID = -1,
-                    .player = m_player,
-                    .entitySpecificType = item->getBuildId(),
-                    .atCell = -1,
-                    .isReinforce = false,
-                    .buildingListItem = item // mandatory for this event!
+                .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT,
+                .entityType = item->getBuildType(),
+                .entityID = -1,
+                .player = m_player,
+                .entitySpecificType = item->getBuildId(),
+                .atCell = -1,
+                .isReinforce = false,
+                .buildingListItem = item // mandatory for this event!
             };
 
             game.onNotifyGameEvent(event);
         }
-    } else {
+    }
+    else {
         if (eBuildType == UNIT) {
             m_buildingListUpdater->onBuildItemCompleted(item);
             item->decreaseTimesToBuild(); // decrease amount of times to build
@@ -222,7 +229,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
             if (!item->getUnitInfo().airborn) {
                 // ground-unit
                 deployUnit(item, buildId);
-            } else {
+            }
+            else {
                 // airborn unit
                 int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(m_player);
                 if (structureToDeployUnit > -1) {
@@ -235,25 +243,27 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                             unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
                         }
                     }
-                } else {
+                }
+                else {
                     // got destroyed very recently
                 }
             }
 
             // notify game that the item just has been finished
             s_GameEvent newEvent {
-                    .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
-                    .entityType = eBuildType,
-                    .entityID = -1,
-                    .player = nullptr,
-                    .entitySpecificType = buildId,
-                    .atCell = -1,
-                    .isReinforce = false,
-                    .buildingListItem = nullptr
+                .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+                .entityType = eBuildType,
+                .entityID = -1,
+                .player = nullptr,
+                .entitySpecificType = buildId,
+                .atCell = -1,
+                .isReinforce = false,
+                .buildingListItem = nullptr
             };
 
             game.onNotifyGameEvent(newEvent);
-        } else if (eBuildType == SPECIAL) {
+        }
+        else if (eBuildType == SPECIAL) {
             m_buildingListUpdater->onBuildItemCompleted(item);
             const s_SpecialInfo &special = item->getSpecialInfo();
 
@@ -266,7 +276,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                     }
                     item->stopBuilding();
                     removeItemFromList(item);
-                } else if (special.deployFrom == AT_RANDOM_CELL) {
+                }
+                else if (special.deployFrom == AT_RANDOM_CELL) {
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
@@ -277,7 +288,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
 
                             if (passable) {
                                 UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
-                            } else {
+                            }
+                            else {
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
@@ -312,47 +324,6 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
 
                 // notify game that the item just has been finished
                 s_GameEvent newEvent {
-                        .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
-                        .entityType = eBuildType,
-                        .entityID = -1,
-                        .player = m_player,
-                        .entitySpecificType = buildId,
-                        .atCell = -1,
-                        .isReinforce = false,
-                        .buildingListItem = nullptr
-                };
-
-                game.onNotifyGameEvent(newEvent);
-            } else if (special.providesType == BULLET) {
-                // Case: Deathhand, it is finished, and the player should select a target first.
-                // So emit a "special_ready" event first.
-                if (special.deployFrom == AT_STRUCTURE) {
-                    if (!item->shouldDeployIt()) {
-                        item->setDeployIt(true);
-
-                        s_GameEvent event {
-                                .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
-                                .entityType = item->getBuildType(),
-                                .entityID = -1,
-                                .player = m_player,
-                                .entitySpecificType = item->getBuildId(),
-                                .atCell = -1,
-                                .isReinforce = false,
-                                .buildingListItem = item // mandatory for this event!
-                        };
-
-                        game.onNotifyGameEvent(event);
-                    }
-                } else {
-                    // unsupported case
-                    assert(false && "Unsupported special case");
-                }
-
-                // We do NOT send a "Finished" event here; see above - we send a special_ready instead
-            }
-        } else if (eBuildType == UPGRADE) {
-            // notify game that the item just has been finished
-            s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
                     .entityType = eBuildType,
                     .entityID = -1,
@@ -360,7 +331,51 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                     .entitySpecificType = buildId,
                     .atCell = -1,
                     .isReinforce = false,
-                    .buildingListItem = item
+                    .buildingListItem = nullptr
+                };
+
+                game.onNotifyGameEvent(newEvent);
+            }
+            else if (special.providesType == BULLET) {
+                // Case: Deathhand, it is finished, and the player should select a target first.
+                // So emit a "special_ready" event first.
+                if (special.deployFrom == AT_STRUCTURE) {
+                    if (!item->shouldDeployIt()) {
+                        item->setDeployIt(true);
+
+                        s_GameEvent event {
+                            .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
+                            .entityType = item->getBuildType(),
+                            .entityID = -1,
+                            .player = m_player,
+                            .entitySpecificType = item->getBuildId(),
+                            .atCell = -1,
+                            .isReinforce = false,
+                            .buildingListItem = item // mandatory for this event!
+                        };
+
+                        game.onNotifyGameEvent(event);
+                    }
+                }
+                else {
+                    // unsupported case
+                    assert(false && "Unsupported special case");
+                }
+
+                // We do NOT send a "Finished" event here; see above - we send a special_ready instead
+            }
+        }
+        else if (eBuildType == UPGRADE) {
+            // notify game that the item just has been finished
+            s_GameEvent newEvent {
+                .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+                .entityType = eBuildType,
+                .entityID = -1,
+                .player = m_player,
+                .entitySpecificType = buildId,
+                .atCell = -1,
+                .isReinforce = false,
+                .buildingListItem = item
             };
 
             game.onNotifyGameEvent(newEvent);
@@ -379,7 +394,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
  * @param item
  * @param buildId
  */
-void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
+void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
+{
     int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
     assert(structureTypeByItem > -1);
     int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_player, structureTypeByItem);
@@ -397,26 +413,28 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
                     unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
                 }
             }
-        } else {
+        }
+        else {
             logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
         }
-    } else {
+    }
+    else {
         structureToDeployUnit = m_player->getPrimaryStructureForStructureType(structureTypeByItem);
         if (structureToDeployUnit < 0) {
             // find any structure of type (regardless if we can deploy or not)
             for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
                 cAbstractStructure *pStructure = structure[structureId];
                 if (pStructure &&
-                    pStructure->isValid() &&
-                    pStructure->belongsTo(m_player->getId()) &&
-                    pStructure->getType() == structureTypeByItem) {
+                        pStructure->isValid() &&
+                        pStructure->belongsTo(m_player->getId()) &&
+                        pStructure->getType() == structureTypeByItem) {
                     structureToDeployUnit = structureId;
                     break;
                 }
             }
         }
 
-        cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
         if (pStructureToDeploy && pStructureToDeploy->isValid()) {
             int cellToDeploy = structure[structureToDeployUnit]->getCell();
             if (pStructureToDeploy->getRallyPoint() > -1) {
@@ -432,23 +450,25 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
  *
  * @return
  */
-int cItemBuilder::getFreeSlot() {
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		if (m_items[i] == nullptr) {
-			return i; // return free slot
-		}
-	}
+int cItemBuilder::getFreeSlot()
+{
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        if (m_items[i] == nullptr) {
+            return i; // return free slot
+        }
+    }
 
-	return -1; // no free slot
+    return -1; // no free slot
 }
 
 /**
  * Removes all references to items, because this itemBuilder does not *own* the items it is building
  */
-void cItemBuilder::removeAllItems() {
-	for (int i =0 ; i < MAX_ITEMS; i++) {
-		removeItemFromList(i);
-	}
+void cItemBuilder::removeAllItems()
+{
+    for (int i =0 ; i < MAX_ITEMS; i++) {
+        removeItemFromList(i);
+    }
 }
 
 /**
@@ -459,45 +479,49 @@ void cItemBuilder::removeAllItems() {
  *
  * @param item
  */
-void cItemBuilder::addItemToList(cBuildingListItem * item) {
-	assert(item != NULL);
-	int slot = getFreeSlot();
-	if (slot < 0) {
-	    logbook("ERROR: Unable to add item to list because no slots are free!");
-		return;
-	}
+void cItemBuilder::addItemToList(cBuildingListItem *item)
+{
+    assert(item != NULL);
+    int slot = getFreeSlot();
+    if (slot < 0) {
+        logbook("ERROR: Unable to add item to list because no slots are free!");
+        return;
+    }
 
-	// check if there is a similar type in the list
-	if (isBuildListItemTheFirstOfItsListType(item)) {
+    // check if there is a similar type in the list
+    if (isBuildListItemTheFirstOfItsListType(item)) {
         // build it immediately, if we don't do this the start of building is a bit delayed by the think timer
         // of the ItemBuilder.
-		startBuilding(item);
-	}
+        startBuilding(item);
+    }
 
-	// increase amount
-	if (m_buildItemMultiplierEnabled) {
+    // increase amount
+    if (m_buildItemMultiplierEnabled) {
         item->increaseTimesToBuildNTimes(4); // 4 times makes more sense (for structures ~ 4 slabs)
-	} else {
+    }
+    else {
         item->increaseTimesToBuild();
     }
 
-	if (!isItemInList(item)) {
-		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
-		// add to list
-		m_items[slot] = item;
-	} else {
-		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
-	}
+    if (!isItemInList(item)) {
+        cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
+        // add to list
+        m_items[slot] = item;
+    }
+    else {
+        cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
+    }
 }
 
-bool cItemBuilder::isItemInList(cBuildingListItem *item) {
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		if (m_items[i] == item) {
-			return true; // return slot where this item is
-		}
-	}
+bool cItemBuilder::isItemInList(cBuildingListItem *item)
+{
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        if (m_items[i] == item) {
+            return true; // return slot where this item is
+        }
+    }
 
-	return false;
+    return false;
 }
 
 /**
@@ -506,19 +530,20 @@ bool cItemBuilder::isItemInList(cBuildingListItem *item) {
  * @param item
  * @return
  */
-cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListItem *item) {
-	assert(item != NULL);
+cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListItem *item)
+{
+    assert(item != NULL);
 
-	// get through the build list and find an item that is of the same list.
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		cBuildingListItem *listItem = getItem(i);
+    // get through the build list and find an item that is of the same list.
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
         if (!listItem) continue;
         if (item->getList() == listItem->getList() &&
-            item->getSubList() == listItem->getSubList()) {
+                item->getSubList() == listItem->getSubList()) {
             return listItem;
         }
-	}
-	return nullptr;
+    }
+    return nullptr;
 }
 
 /**
@@ -526,21 +551,22 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
  * @param item
  * @return
  */
-bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item) {
-	assert(item != NULL);
+bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item)
+{
+    assert(item != NULL);
 
-	// get through the build list and find an item that is of the same list.
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		cBuildingListItem *listItem = getItem(i);
-		if (listItem) {
-			if (listItem == item) continue; // do not check self
+    // get through the build list and find an item that is of the same list.
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
+        if (listItem) {
+            if (listItem == item) continue; // do not check self
 
-			if (item->getList() == listItem->getList()) {
-				if (listItem->isBuilding()) return true;
-			}
-		}
-	}
-	return false;
+            if (item->getList() == listItem->getList()) {
+                if (listItem->isBuilding()) return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -550,7 +576,8 @@ bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingLis
  * @param sublistType
  * @return
  */
-bool cItemBuilder::isAnythingBeingBuiltForListType(eListType listType, int sublistType) {
+bool cItemBuilder::isAnythingBeingBuiltForListType(eListType listType, int sublistType)
+{
     cBuildingListItem *pItem = getListItemWhichIsBuilding(listType, sublistType);
     return pItem != nullptr;
 }
@@ -562,7 +589,8 @@ bool cItemBuilder::isAnythingBeingBuiltForListType(eListType listType, int subli
  * @param sublistType
  * @return
  */
-bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(eListType listType, int sublistType) {
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(eListType listType, int sublistType)
+{
     cBuildingListItem *pItem = getListItemWhichIsAwaitingPlacement(listType, sublistType);
     return pItem != nullptr;
 }
@@ -574,7 +602,8 @@ bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(eListType list
  * @param sublistType
  * @return
  */
-bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(eListType listType, int sublistType) {
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(eListType listType, int sublistType)
+{
     cBuildingListItem *pItem = getListItemWhichIsAwaitingDeployment(listType, sublistType);
     return pItem != nullptr;
 }
@@ -585,7 +614,8 @@ bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(eListType lis
  * @param sublistType
  * @return
  */
-cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(eListType listType, int sublistType) {
+cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(eListType listType, int sublistType)
+{
     cBuildingListItem *pItem = nullptr; // get through the build list and find an item that is of the same list.
 
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -593,7 +623,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(eListType listType, 
         if (listItem) {
             cBuildingList *pList = listItem->getList();
             if (listType == pList->getType() &&
-                sublistType == listItem->getSubList()) {
+                    sublistType == listItem->getSubList()) {
                 if (listItem->isBuilding()) {
                     pItem = listItem;
                     break;
@@ -610,7 +640,8 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(eListType listType, 
  * @param sublistType
  * @return
  */
-cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(eListType listType, int sublistType) {
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(eListType listType, int sublistType)
+{
     cBuildingListItem *pItem = nullptr;
 
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -619,7 +650,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(eListType l
             cBuildingList *pList = listItem->getList();
             // check if list is available
             if (pList && listType == pList->getType() &&
-                sublistType == listItem->getSubList()) {
+                    sublistType == listItem->getSubList()) {
                 if (listItem->shouldPlaceIt()) {
                     pItem = listItem;
                     break;
@@ -636,7 +667,8 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(eListType l
  * @param sublistType
  * @return
  */
-cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(eListType listType, int sublistType) {
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(eListType listType, int sublistType)
+{
     cBuildingListItem *pItem = nullptr;
 
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -645,7 +677,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(eListType 
             cBuildingList *pList = listItem->getList();
             // check if list is available
             if (pList && listType == pList->getType() &&
-                sublistType == listItem->getSubList()) {
+                    sublistType == listItem->getSubList()) {
                 if (listItem->shouldDeployIt()) {
                     pItem = listItem;
                     break;
@@ -665,31 +697,34 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(eListType 
  * @param item
  * @return
  */
-bool cItemBuilder::isBuildListItemTheFirstOfItsListType(cBuildingListItem *item) {
-	return findBuildingListItemOfSameListAs(item) == nullptr;
+bool cItemBuilder::isBuildListItemTheFirstOfItsListType(cBuildingListItem *item)
+{
+    return findBuildingListItemOfSameListAs(item) == nullptr;
 }
 
 /**
  * Remove item from list; finds its index and removes it.
  * @param item
  */
-void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
-	if (item == nullptr) return;
+void cItemBuilder::removeItemFromList(cBuildingListItem *item)
+{
+    if (item == nullptr) return;
 
-	int indexToDelete = -1;
-	for (int i = 0; i < MAX_ITEMS; i++) {
-		cBuildingListItem *theItem = getItem(i);
-		if (theItem == item) {
-			indexToDelete = i;
-			break;
-		}
-	}
+    int indexToDelete = -1;
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *theItem = getItem(i);
+        if (theItem == item) {
+            indexToDelete = i;
+            break;
+        }
+    }
 
-	if (indexToDelete > -1) {
-		removeItemFromList(indexToDelete);
-	} else {
-		// log statement?
-	}
+    if (indexToDelete > -1) {
+        removeItemFromList(indexToDelete);
+    }
+    else {
+        // log statement?
+    }
 }
 
 /**
@@ -698,7 +733,8 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
  * @param iBuildId
  * @return
  */
-cBuildingListItem * cItemBuilder::getBuildingListItem(eBuildType buildType, int iBuildId) {
+cBuildingListItem *cItemBuilder::getBuildingListItem(eBuildType buildType, int iBuildId)
+{
     for (int i = 0; i < MAX_ICONS; i++) {
         cBuildingListItem *pItem = m_items[i];
         if (pItem == nullptr) continue;
@@ -715,22 +751,25 @@ cBuildingListItem * cItemBuilder::getBuildingListItem(eBuildType buildType, int 
  *
  * @param position
  */
-void cItemBuilder::removeItemFromList(int position) {
-	assert(position > -1);
-	assert(position < MAX_ICONS);
+void cItemBuilder::removeItemFromList(int position)
+{
+    assert(position > -1);
+    assert(position < MAX_ICONS);
 
-	// remove
-	m_items[position] = nullptr;
+    // remove
+    m_items[position] = nullptr;
     m_timers[position] = 0;
 }
 
-cBuildingListItem * cItemBuilder::getItem(int position) {
-	assert(position > -1);
-	assert(position < MAX_ITEMS);
-	return m_items[position];
+cBuildingListItem *cItemBuilder::getItem(int position)
+{
+    assert(position > -1);
+    assert(position < MAX_ITEMS);
+    return m_items[position];
 }
 
-void cItemBuilder::startBuilding(cBuildingListItem *item) {
+void cItemBuilder::startBuilding(cBuildingListItem *item)
+{
     if (item == nullptr) return;
     item->setIsBuilding(true);
     item->setTimerCap(getTimerCap(item));
@@ -738,7 +777,8 @@ void cItemBuilder::startBuilding(cBuildingListItem *item) {
     m_buildingListUpdater->onBuildItemStarted(item);
 }
 
-void cItemBuilder::removeItemsFromListType(eListType listType, int subListId) {
+void cItemBuilder::removeItemsFromListType(eListType listType, int subListId)
+{
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *theItem = getItem(i);
         if (theItem == nullptr) continue;
@@ -748,7 +788,8 @@ void cItemBuilder::removeItemsFromListType(eListType listType, int subListId) {
     }
 }
 
-void cItemBuilder::removeItemsByBuildId(eBuildType buildType, int buildId) {
+void cItemBuilder::removeItemsByBuildId(eBuildType buildType, int buildId)
+{
     for (int i = 0; i < MAX_ICONS; i++) {
         cBuildingListItem *pItem = m_items[i];
         if (pItem == nullptr) continue;
@@ -759,11 +800,13 @@ void cItemBuilder::removeItemsByBuildId(eBuildType buildType, int buildId) {
     }
 }
 
-void cItemBuilder::onNotifyMouseEvent(const s_MouseEvent &) {
+void cItemBuilder::onNotifyMouseEvent(const s_MouseEvent &)
+{
     // NOOP
 }
 
-void cItemBuilder::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cItemBuilder::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     switch (event.eventType) {
         case eKeyEventType::HOLD:
             onKeyHold(event);
@@ -776,13 +819,15 @@ void cItemBuilder::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     }
 }
 
-void cItemBuilder::onKeyHold(const cKeyboardEvent &event) {
+void cItemBuilder::onKeyHold(const cKeyboardEvent &event)
+{
     if (event.hasEitherKey(KEY_LSHIFT, KEY_RSHIFT)) {
         m_buildItemMultiplierEnabled = true;
     }
 }
 
-void cItemBuilder::onKeyPressed(const cKeyboardEvent &event) {
+void cItemBuilder::onKeyPressed(const cKeyboardEvent &event)
+{
     if (event.hasEitherKey(KEY_LSHIFT, KEY_RSHIFT)) {
         m_buildItemMultiplierEnabled = false;
     }

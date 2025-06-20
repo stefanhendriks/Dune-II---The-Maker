@@ -14,10 +14,12 @@ public:
 
     void thinkFast();
 
-    static cFlag * createBigFlag(cPlayer * player, cPoint & position);
-    static cFlag * createSmallFlag(cPlayer * player, cPoint & position);
+    static cFlag *createBigFlag(cPlayer *player, cPoint &position);
+    static cFlag *createSmallFlag(cPlayer *player, cPoint &position);
 
-    void setBig(bool value) { big = value; }
+    void setBig(bool value) {
+        big = value;
+    }
 private:
     cPoint absCoords;
 

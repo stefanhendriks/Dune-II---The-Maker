@@ -3,7 +3,8 @@
 #include "d2tmc.h"
 #include "player/cPlayer.h"
 
-void cYesButtonCommand::execute(cAbstractMentat& mentat) {
+void cYesButtonCommand::execute(cAbstractMentat &mentat)
+{
     logbook("cYesButtonCommand::execute()");
     game.setNextStateToTransitionTo(GAME_BRIEFING);
     game.m_mission = 1; // first mission

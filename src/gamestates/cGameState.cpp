@@ -1,5 +1,6 @@
 #include "cGameState.h"
 
-cGameState::cGameState(cGame& theGame) : game(theGame) {
+cGameState::cGameState(cGame &theGame) : game(theGame)
+{
 
 }

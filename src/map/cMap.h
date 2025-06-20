@@ -30,28 +30,28 @@ class cMap : public cScenarioObserver {
 
 public:
 
-	cMap();
-	~cMap();
+    cMap();
+    ~cMap();
 
     void init(int width, int height);
 
     void onNotifyGameEvent(const s_GameEvent &event) override;
 
     bool canDeployUnitAtCell(int iCell, int iUnitId);
-	bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
+    bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
     bool occupiedByUnit(int iCell);
-	bool occupied(int iCell);
-	bool occupied(int iCll, int iUnitID);
-	bool occupiedInDimension(int iCell, int dimension);
-	bool occupiedByWallOrMountain(int iCell);
+    bool occupied(int iCell);
+    bool occupied(int iCll, int iUnitID);
+    bool occupiedInDimension(int iCell, int dimension);
+    bool occupiedByWallOrMountain(int iCell);
 
-	/**
-	 * Returns cell , taking given map width/height into account. This includes the invisible border around the map.
-	 * If you want to take the invisible border into account use getCellWithMapBorders instead.
-	 * @param x
-	 * @param y
-	 * @return
-	 */
+    /**
+     * Returns cell , taking given map width/height into account. This includes the invisible border around the map.
+     * If you want to take the invisible border into account use getCellWithMapBorders instead.
+     * @param x
+     * @param y
+     * @return
+     */
     int getCellWithMapDimensions(int x, int y);
 
     /**
@@ -67,8 +67,8 @@ public:
     int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance);
 
     /**
-	Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
-	and runs the normal distance method to get the distance.
+    Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
+    and runs the normal distance method to get the distance.
     **/
     double distance(int cell1, int cell2);
 
@@ -108,24 +108,24 @@ public:
 
     int getCellAbove(int c);
 
-	int getCellBelow(int c);
+    int getCellBelow(int c);
 
     int getCellLeft(int c);
 
-	int getCellRight(int c);
+    int getCellRight(int c);
 
-	int getCellUpperLeft(int c);
+    int getCellUpperLeft(int c);
 
-	int getCellUpperRight(int c);
+    int getCellUpperRight(int c);
 
-	int getCellLowerLeft(int c);
+    int getCellLowerLeft(int c);
 
     int getCellLowerRight(int c);
 
     /**
      * returns true if one cell is adjacent to another cell
      */
-	bool isCellAdjacentToOtherCell(int thisCell, int otherCell);
+    bool isCellAdjacentToOtherCell(int thisCell, int otherCell);
 
     /**
         The X coordinate is found by finding out how many 'rows' (the Y) are there, then
@@ -134,39 +134,39 @@ public:
     int getCellX(int c);
 
     /**
-	    The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
+        The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
     **/
     int getCellY(int c);
 
     bool isWithinBoundaries(int c);
 
-	/**
-	 * Returns true/false when x,y coordinate is within playable bounds of the map. Taking invisible boundary into account.
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	bool isWithinBoundaries(int x, int y) {
-	    // in a map of 64x64, the outer boundaries are impassable
-	    // so; the actual valid values are 1...62 (because the coordinates
-	    // are 0 based. Ie, coordinate 63 means it is at the 64th tile.
-	    // hence, if coordinate 63 is passed in, it means it is out of bounds.
-	    // but coordinate 62 is within bounds.
+    /**
+     * Returns true/false when x,y coordinate is within playable bounds of the map. Taking invisible boundary into account.
+     * @param x
+     * @param y
+     * @return
+     */
+    bool isWithinBoundaries(int x, int y) {
+        // in a map of 64x64, the outer boundaries are impassable
+        // so; the actual valid values are 1...62 (because the coordinates
+        // are 0 based. Ie, coordinate 63 means it is at the 64th tile.
+        // hence, if coordinate 63 is passed in, it means it is out of bounds.
+        // but coordinate 62 is within bounds.
 
-	    // since the width/height passed in the constructor is not 0 based (but 1 based)
-	    // we need to take that into account when checking width/height (hence the -2)
+        // since the width/height passed in the constructor is not 0 based (but 1 based)
+        // we need to take that into account when checking width/height (hence the -2)
 
-	    // Example:
-	    // width=64
-	    // height=64
-	    // ie: x = 63 ... 63 =< (64-2=62) -> out of bounds
-	    //     x = 62 ... 62 =< (64-2-62) -> at the edge
-	    //     x = 0  ...  0 > 0 ? no
-	    //     x = 1  ...  1 > 0 ? yes, in bounds
+        // Example:
+        // width=64
+        // height=64
+        // ie: x = 63 ... 63 =< (64-2=62) -> out of bounds
+        //     x = 62 ... 62 =< (64-2-62) -> at the edge
+        //     x = 0  ...  0 > 0 ? no
+        //     x = 1  ...  1 > 0 ? yes, in bounds
 
-	    return  x > 0 && x <= (width-2) &&
-	            y > 0 && y <= (height -2);
-	}
+        return  x > 0 && x <= (width-2) &&
+                y > 0 && y <= (height -2);
+    }
 
     double distance(int x1, int y1, int x2, int y2);
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
@@ -174,8 +174,8 @@ public:
     // Drawing
     int  mouse_draw_x();
     int  mouse_draw_y();
-	void draw_units_2nd();
-	void draw_units();
+    void draw_units_2nd();
+    void draw_units();
     void draw_bullets();
 
     void smudge_increase(int iType, int iCell);
@@ -205,12 +205,12 @@ public:
      * @param cellNr
      * @return
      */
-    tCell * getCell(int cellNr) {
+    tCell *getCell(int cellNr) {
         if (cellNr < 0) return nullptr;
         if (cellNr >= maxCells) return nullptr;
         return &cell[cellNr];
     }
-    
+
     int getCellType(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->type;
@@ -337,7 +337,7 @@ public:
      *
      * @return pointer to cAbstractStructure
      */
-    cAbstractStructure * findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer);
+    cAbstractStructure *findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer);
 
     /**
      * Finds the closest structure (compared to cell param) of required type, for player.
@@ -347,7 +347,7 @@ public:
      *
      * @return pointer to cAbstractStructure
      */
-    cAbstractStructure * findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer);
+    cAbstractStructure *findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer);
 
     /**
      * Finds the closest structure (compared to cell param) of required type, for player.
@@ -357,7 +357,7 @@ public:
      *
      * @return pointer to cAbstractStructure
      */
-    cAbstractStructure * findClosestStructureType(int cell, int structureType, cPlayer * player);
+    cAbstractStructure *findClosestStructureType(int cell, int structureType, cPlayer *player);
 
     void cellTakeDamage(int cellNr, int damage);
 
@@ -450,13 +450,17 @@ public:
      * Get height of map in cells
      * @return
      */
-    int getHeight() const { return height; }
+    int getHeight() const {
+        return height;
+    }
 
     /**
      * Get width of map in cells
      * @return
      */
-    int getWidth() const { return width; }
+    int getWidth() const {
+        return width;
+    }
 
     int getMaxDistanceInPixels() {
         int tileWidth = 32;
@@ -548,9 +552,13 @@ public:
 
     void detonateSpiceBloom(int cell);
 
-    void setAutoDetonateSpiceBlooms(bool value) { m_bAutoDetonateSpiceBlooms = value; }
+    void setAutoDetonateSpiceBlooms(bool value) {
+        m_bAutoDetonateSpiceBlooms = value;
+    }
 
-    void setAutoSpawnSpiceBlooms(bool value) { m_bAutoSpawnSpiceBlooms = value; }
+    void setAutoSpawnSpiceBlooms(bool value) {
+        m_bAutoSpawnSpiceBlooms = value;
+    }
 
     void setDesiredAmountOfWorms(int value);
 

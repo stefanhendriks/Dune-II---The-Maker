@@ -5,10 +5,10 @@
 class cPlayer;
 
 class cOrderProcesser {
-  private:
+private:
     static constexpr auto kMaxItemsToOrder = 8;
 
-  public:
+public:
     explicit cOrderProcesser(cPlayer *thePlayer);
 
     ~cOrderProcesser();
@@ -34,13 +34,19 @@ class cOrderProcesser {
                isOrderPlaced() == false;
     }
 
-    bool isOrderPlaced() { return orderPlaced; }
+    bool isOrderPlaced() {
+        return orderPlaced;
+    }
 
-    bool isFrigateSent() { return frigateSent; }
+    bool isFrigateSent() {
+        return frigateSent;
+    }
 
     bool hasOrderedAnything();
 
-    bool hasFreeSlot() { return getFreeSlot() >= 0; }
+    bool hasFreeSlot() {
+        return getFreeSlot() >= 0;
+    }
 
     cBuildingListItem *getItemToDeploy();
 

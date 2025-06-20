@@ -8,39 +8,39 @@ class cAbstractStructure;
 
 namespace {
 
-    constexpr int kScanRadius = 20; // hard-coded for now, make player property later?
+constexpr int kScanRadius = 20; // hard-coded for now, make player property later?
 
 }
 
 namespace brains {
 
-    class cPlayerBrain : public cScenarioObserver {
+class cPlayerBrain : public cScenarioObserver {
 
-    public:
-        // AI brain tick is every 100ms, so rest-time of 10 means resting 1 second.
-        const static int RestTime = 10;
+public:
+    // AI brain tick is every 100ms, so rest-time of 10 means resting 1 second.
+    const static int RestTime = 10;
 
-        explicit cPlayerBrain(cPlayer *player);
+    explicit cPlayerBrain(cPlayer *player);
 
-        virtual ~cPlayerBrain() = default;
+    virtual ~cPlayerBrain() = default;
 
-        /**
-         * called, every 100 ms
-         */
-        virtual void think() = 0;
+    /**
+     * called, every 100 ms
+     */
+    virtual void think() = 0;
 
-        /**
-         * called, every 5 ms
-         */
-        virtual void thinkFast() = 0;
+    /**
+     * called, every 5 ms
+     */
+    virtual void thinkFast() = 0;
 
-        virtual void addBuildOrder(S_buildOrder order) = 0;
+    virtual void addBuildOrder(S_buildOrder order) = 0;
 
-    protected:
-        cPlayer *player;
+protected:
+    cPlayer *player;
 
-    private:
+private:
 
 
-    };
+};
 }

@@ -15,10 +15,10 @@
 #include "cAbstractStructure.h"
 
 class cStructureFactory {
-  protected:
+protected:
     cStructureFactory();
 
-  public:
+public:
     ~cStructureFactory();
 
     static cStructureFactory *getInstance();

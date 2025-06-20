@@ -35,7 +35,7 @@ enum eMouseUnitsSelectedState {
 class cMouseUnitsSelectedState : public cMouseState {
 
 public:
-    explicit cMouseUnitsSelectedState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
+    explicit cMouseUnitsSelectedState(cPlayer *player, cGameControlsContext *context, cMouse *mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;

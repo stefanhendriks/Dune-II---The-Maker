@@ -28,14 +28,14 @@
 // returns in fRadians
 float fRadians(int x1, int y1, int x2, int y2)
 {
-  float delta_x = (x2-x1);
-  float delta_y = (y2-y1);
+    float delta_x = (x2-x1);
+    float delta_y = (y2-y1);
 
-  // calculate fRadians
-  float r = (std::atan2(delta_y, delta_x));
+    // calculate fRadians
+    float r = (std::atan2(delta_y, delta_x));
 
-  // return in fRadians
-  return r;
+    // return in fRadians
+    return r;
 }
 
 
@@ -57,7 +57,8 @@ float fRadians(int x1, int y1, int x2, int y2)
  * @param y2
  * @return
  */
-float fDegrees(int x1, int y1, int x2, int y2) {
+float fDegrees(int x1, int y1, int x2, int y2)
+{
     /***
      calculation between two 2D positions, returning the angle in degrees (1-360 degrees).
 
@@ -106,12 +107,14 @@ float fDegrees(int x1, int y1, int x2, int y2) {
 
 // for bullets; bullets have twice as many angles (facings) than units. (16)
 // also, bullets have a clock-wise rotation on the drawing bitmap
-int bullet_face_angle(float angle) {
+int bullet_face_angle(float angle)
+{
     int facingAngle = faceAngle(angle, 16);
     return convertAngleToDrawIndex(facingAngle, true, 0, 16);
 }
 
-float wrapDegrees(float value) {
+float wrapDegrees(float value)
+{
     if (value < 0) {
         return value + 360;
     }
@@ -129,7 +132,8 @@ float wrapDegrees(float value) {
  * @param angle2
  * @return
  */
-bool isAngleBetween(int degrees, int angle1, int angle2) {
+bool isAngleBetween(int degrees, int angle1, int angle2)
+{
     // make the angle from angle1 to angle2 to be <= 180 degrees
     int rAngle = ((angle2 - angle1) % 360 + 360) % 360;
     if (rAngle >= 180)
@@ -152,42 +156,44 @@ bool isAngleBetween(int degrees, int angle1, int angle2) {
  * @param angle
  * @return
  */
-int faceAngle(float angle, int angles) {
-  int degreesPerFacing = (360 / angles);
+int faceAngle(float angle, int angles)
+{
+    int degreesPerFacing = (360 / angles);
 
-  // face angles are determined
-  // by having boundaries of degrees
-  // ie, face angle of 0, (UP) is when degrees is
-  // between 330 and 30 (or something)
-  // we need to build up that table, depending
-  // on the amount of degreesPerFacing we have
+    // face angles are determined
+    // by having boundaries of degrees
+    // ie, face angle of 0, (UP) is when degrees is
+    // between 330 and 30 (or something)
+    // we need to build up that table, depending
+    // on the amount of degreesPerFacing we have
 
-  float halfDegreesFacing = degreesPerFacing / 2;
+    float halfDegreesFacing = degreesPerFacing / 2;
 
-  // 0 = UP
-  float startDegreesFacing = wrapDegrees(0 - halfDegreesFacing); // -22 becomes (360 - 22) = 338
-  int facingIndex = 0;
+    // 0 = UP
+    float startDegreesFacing = wrapDegrees(0 - halfDegreesFacing); // -22 becomes (360 - 22) = 338
+    int facingIndex = 0;
 
-  // 360 - 22 =
-  float start = wrapDegrees(startDegreesFacing); // ie 338
-  float end = wrapDegrees(start + degreesPerFacing); // ie 338 + 45 = 383 - 360 = 23
+    // 360 - 22 =
+    float start = wrapDegrees(startDegreesFacing); // ie 338
+    float end = wrapDegrees(start + degreesPerFacing); // ie 338 + 45 = 383 - 360 = 23
 
-  while (facingIndex < angles) {
-      if (isAngleBetween(angle, start, end)) {
-          // found it!
-          break;
-      }
-      start = wrapDegrees(start + degreesPerFacing);
-      end = wrapDegrees(end + degreesPerFacing);
+    while (facingIndex < angles) {
+        if (isAngleBetween(angle, start, end)) {
+            // found it!
+            break;
+        }
+        start = wrapDegrees(start + degreesPerFacing);
+        end = wrapDegrees(end + degreesPerFacing);
 
-      facingIndex++;
-  }
+        facingIndex++;
+    }
     return facingIndex;
 }
 
 // Converts the faceAngle produced with the function above, into a correct number for drawing
 // correctly.
-int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int maxFacings) {
+int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int maxFacings)
+{
     if (clockWiseBitmap) {
         // assume drawing bitmap has a clockwise direction (from left to right).
         // in that case, the offset is *added* to the faceAngle
@@ -198,7 +204,8 @@ int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int
             angle -= maxFacings;
         }
         return angle;
-    } else {
+    }
+    else {
         // assume drawing bitmap has a counter-clockwise direction (going from left to right).
         // we need to substract the faceAngle from the offset here.
 
@@ -213,9 +220,10 @@ int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int
 }
 
 // return random number between 0 and 'max'
-int rnd(int max) {
-  if (max < 1) return 0;
-  return std::rand() % max;
+int rnd(int max)
+{
+    if (max < 1) return 0;
+    return std::rand() % max;
 }
 
 /**
@@ -226,10 +234,11 @@ int rnd(int max) {
  * @param y2
  * @return
  */
-double ABS_length(int x1, int y1, int x2, int y2) {
-  if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
+double ABS_length(int x1, int y1, int x2, int y2)
+{
+    if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
-  int A = std::abs(x2 - x1) * std::abs(x2 - x1);
-  int B = std::abs(y2 - y1) * std::abs(y2 - y1);
-  return sqrt(static_cast<double>(A + B)); // A2 + B2 = C2 :)
+    int A = std::abs(x2 - x1) * std::abs(x2 - x1);
+    int B = std::abs(y2 - y1) * std::abs(y2 - y1);
+    return sqrt(static_cast<double>(A + B)); // A2 + B2 = C2 :)
 }

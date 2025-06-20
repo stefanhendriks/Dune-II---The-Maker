@@ -9,14 +9,15 @@
 #include <algorithm>
 
 namespace {
-    constexpr auto kMapBoundaryScrollSpeed = 5.0f;
+constexpr auto kMapBoundaryScrollSpeed = 5.0f;
 }
 
-cMapCamera::cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys, bool cameraEdgeMove) :
+cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys, bool cameraEdgeMove) :
     m_moveSpeedDrag(moveSpeedDrag),
     m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
     m_cameraEdgeMove(cameraEdgeMove),
-    m_pMap(theMap) {
+    m_pMap(theMap)
+{
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 
@@ -40,10 +41,12 @@ cMapCamera::cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedBorder
     calibrate();
 }
 
-cMapCamera::~cMapCamera() {
+cMapCamera::~cMapCamera()
+{
 }
 
-void cMapCamera::zoomIn() {
+void cMapCamera::zoomIn()
+{
     if (m_zoomLevel < 4.0) {
         m_zoomLevel += 0.1;
         auto m_mouse = game.getMouse();
@@ -51,7 +54,8 @@ void cMapCamera::zoomIn() {
     }
 }
 
-void cMapCamera::adjustViewport(float screenX, float screenY) {
+void cMapCamera::adjustViewport(float screenX, float screenY)
+{
     int oldViewportWidth = m_viewportWidth;
     int oldViewportHeight = m_viewportHeight;
 
@@ -69,7 +73,8 @@ void cMapCamera::adjustViewport(float screenX, float screenY) {
     keepViewportWithinReasonableBounds();
 }
 
-void cMapCamera::zoomOut()  {
+void cMapCamera::zoomOut()
+{
     if (m_zoomLevel > 0.25) {
         m_zoomLevel -= 0.1;
         auto m_mouse = game.getMouse();
@@ -77,7 +82,8 @@ void cMapCamera::zoomOut()  {
     }
 }
 
-void cMapCamera::calibrate() {
+void cMapCamera::calibrate()
+{
     m_tileHeight = factorZoomLevel(TILESIZE_WIDTH_PIXELS);
     m_tileWidth = factorZoomLevel(TILESIZE_HEIGHT_PIXELS);
 
@@ -85,7 +91,8 @@ void cMapCamera::calibrate() {
     m_viewportHeight = divideByZoomLevel(m_windowHeight);
 }
 
-void cMapCamera::keepViewportWithinReasonableBounds() {
+void cMapCamera::keepViewportWithinReasonableBounds()
+{
     int halfViewportWidth = m_viewportWidth / 2;
     int halfViewportHeight = m_viewportHeight / 2;
 
@@ -108,34 +115,36 @@ void cMapCamera::keepViewportWithinReasonableBounds() {
     }
 }
 
-void cMapCamera::centerAndJumpViewPortToCell(int cell) {
-	// fix any boundaries
-	if (cell < 0) cell = 0;
-	if (cell >= map.getMaxCells()) cell = (map.getMaxCells()-1);
+void cMapCamera::centerAndJumpViewPortToCell(int cell)
+{
+    // fix any boundaries
+    if (cell < 0) cell = 0;
+    if (cell >= map.getMaxCells()) cell = (map.getMaxCells()-1);
 
-	int mapCellX = m_pMap->getAbsoluteXPositionFromCell(cell);
-	int mapCellY = m_pMap->getAbsoluteYPositionFromCell(cell);
+    int mapCellX = m_pMap->getAbsoluteXPositionFromCell(cell);
+    int mapCellY = m_pMap->getAbsoluteYPositionFromCell(cell);
 
-	// determine the half of our screen
-	int halfViewportWidth = m_viewportWidth / 2;
-	int halfViewportHeight = m_viewportHeight / 2;
+    // determine the half of our screen
+    int halfViewportWidth = m_viewportWidth / 2;
+    int halfViewportHeight = m_viewportHeight / 2;
 
-	// determine the new X and Y position, absolute map coordinates
-	int newViewPortX = mapCellX - halfViewportWidth;
-	int newViewPortY = mapCellY - halfViewportHeight;
+    // determine the new X and Y position, absolute map coordinates
+    int newViewPortX = mapCellX - halfViewportWidth;
+    int newViewPortY = mapCellY - halfViewportHeight;
 
-	// for now, snap it to 32x32 grid
-	newViewPortX = (newViewPortX / 32) * 32;
-	newViewPortY = (newViewPortY / 32) * 32;
+    // for now, snap it to 32x32 grid
+    newViewPortX = (newViewPortX / 32) * 32;
+    newViewPortY = (newViewPortY / 32) * 32;
 
-	jumpTo(newViewPortX, newViewPortY);
+    jumpTo(newViewPortX, newViewPortY);
 
     calibrate();
 
     keepViewportWithinReasonableBounds();
 }
 
-void cMapCamera::thinkFast() {
+void cMapCamera::thinkFast()
+{
     // update viewport coordinates
     m_viewportStartX = m_viewportStartX + m_moveX;
     m_viewportStartY = m_viewportStartY + m_moveY;
@@ -144,22 +153,26 @@ void cMapCamera::thinkFast() {
 
 }
 
-void cMapCamera::jumpTo(int theX, int theY) {
+void cMapCamera::jumpTo(int theX, int theY)
+{
     m_viewportStartX = theX;
     m_viewportStartY = theY;
     calibrate();
 }
 
-void cMapCamera::setViewportPosition(int x, int y) {
+void cMapCamera::setViewportPosition(int x, int y)
+{
     jumpTo(x, y);
     keepViewportWithinReasonableBounds();
 }
 
-int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
+int cMapCamera::getCellFromAbsolutePosition(int x, int y)
+{
     return map.getCellWithMapDimensions((x / 32), (y / 32));
 }
 
-void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     // MOUSE WHEEL scrolling causes zooming in/out
     switch (event.eventType) {
         case eMouseEventType::MOUSE_MOVED_TO:
@@ -182,7 +195,8 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
+void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
+{
     cMouse *pMouse = game.getMouse();
 
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with edges
@@ -194,10 +208,12 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
         if (mouseX <= 2) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_LEFT);
-        } else if (mouseX >= (game.m_screenW - 2)) {
+        }
+        else if (mouseX >= (game.m_screenW - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_RIGHT);
-        } else {
+        }
+        else {
             if (!m_keyPressedLeft && !m_keyPressedRight) {
                 setMoveX(0.0f, m_moveSpeedBorderOrKeys);
             }
@@ -206,10 +222,12 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
         if (mouseY <= 2) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_UP);
-        } else if (mouseY >= (game.m_screenH - 2)) {
+        }
+        else if (mouseY >= (game.m_screenH - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_DOWN);
-        } else {
+        }
+        else {
             if (!m_keyPressedUp && !m_keyPressedDown) {
                 setMoveY(0.0f, m_moveSpeedBorderOrKeys);
             }
@@ -217,7 +235,8 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event) {
     }
 }
 
-void cMapCamera::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cMapCamera::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     switch (event.eventType) {
         case eKeyEventType::HOLD:
             onKeyHold(event);
@@ -230,7 +249,8 @@ void cMapCamera::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     }
 }
 
-void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &) {
+void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &)
+{
     m_moveX = 0.0f;
     m_moveY = 0.0f;
 
@@ -270,15 +290,18 @@ void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &) {
     }
 }
 
-void cMapCamera::setMoveX(float x, float moveSpeed) {
+void cMapCamera::setMoveX(float x, float moveSpeed)
+{
     m_moveX = x * moveSpeed;
 }
 
-void cMapCamera::setMoveY(float y, float moveSpeed) {
+void cMapCamera::setMoveY(float y, float moveSpeed)
+{
     m_moveY = y * moveSpeed;
 }
 
-void cMapCamera::onKeyHold(const cKeyboardEvent &event) {
+void cMapCamera::onKeyHold(const cKeyboardEvent &event)
+{
     cMouse *pMouse = game.getMouse();
 
     // mouse is 'moving by pressing right mouse button', this supersedes reacting to keypress
@@ -309,7 +332,8 @@ void cMapCamera::onKeyHold(const cKeyboardEvent &event) {
     }
 }
 
-void cMapCamera::onKeyPressed(const cKeyboardEvent &event) {
+void cMapCamera::onKeyPressed(const cKeyboardEvent &event)
+{
     if (event.hasKey(KEY_LEFT)) {
         setMoveX(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedLeft = false;
@@ -331,7 +355,8 @@ void cMapCamera::onKeyPressed(const cKeyboardEvent &event) {
     }
 }
 
-void cMapCamera::onMouseRightButtonClicked(const s_MouseEvent &) {
+void cMapCamera::onMouseRightButtonClicked(const s_MouseEvent &)
+{
     m_moveX = 0.0f;
     m_moveY = 0.0f;
 }

@@ -10,14 +10,16 @@ namespace fs = std::filesystem;
 #include <algorithm>
 #include "utils/cIniFile.h"
 
-cPreviewMaps::cPreviewMaps(bool debugMode) : m_debugMode(debugMode) {
+cPreviewMaps::cPreviewMaps(bool debugMode) : m_debugMode(debugMode)
+{
 
 }
 
 /**
  * Make sure to destroy all Allegro bitmaps
  */
-void cPreviewMaps::destroy() {
+void cPreviewMaps::destroy()
+{
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
         if (previewMap.terrain) {
@@ -27,7 +29,8 @@ void cPreviewMaps::destroy() {
     }
 }
 
-void cPreviewMaps::loadSkirmish(const std::string &filename) {
+void cPreviewMaps::loadSkirmish(const std::string &filename)
+{
     // std::cout << filename << std::endl;
 
     int iNew = -1;
@@ -75,10 +78,12 @@ void cPreviewMaps::loadSkirmish(const std::string &filename) {
                 if (m_debugMode) {
                     std::cerr << "StartCell [" << startCell << "] invalid. (value must be between range [0-" << maxCells << ")]. For map " << filename << " - marking map as invalid.\n";
                 }
-            } else {
+            }
+            else {
                 previewMap.iStartCell[i] = startCell;
             }
-        } catch (std::invalid_argument const &e) {
+        }
+        catch (std::invalid_argument const &e) {
             // could not perform conversion
             if (m_debugMode) {
                 std::cerr << "Could not convert startCell [" << string << "] to an int. Reason:" << e.what() << "\n";
@@ -142,8 +147,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename) {
 
             if (terrainType < 0 || iColor < 0) {
                 logbook(fmt::format(
-                    "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
-                    letter));
+                            "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
+                            letter));
                 terrainType = TERRAIN_SAND;
                 iColor = makecol(255, 255, 255); // show as purple to indicate wrong char
             }
@@ -178,7 +183,8 @@ Scanning of skirmish maps:
 - load the file, into a sPreviewMap struct
   - also creates a preview of map in BITMAP (minimap preview)
 */
-void cPreviewMaps::loadSkirmishMaps() {
+void cPreviewMaps::loadSkirmishMaps()
+{
     // scans for all ini files
     initPreviews(); // clear all of them
 
@@ -193,7 +199,8 @@ void cPreviewMaps::loadSkirmishMaps() {
 }
 
 // Skirmish map initialization
-void cPreviewMaps::initPreviews() {
+void cPreviewMaps::initPreviews()
+{
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
 

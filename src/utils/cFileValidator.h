@@ -16,16 +16,25 @@ enum class eGameDirFileName {
     GFXAUDIO
 };
 
-static const char* eGameDirFileNameString(const eGameDirFileName &value) {
+static const char *eGameDirFileNameString(const eGameDirFileName &value)
+{
     switch (value) {
-        case eGameDirFileName::ARRAKEEN: return "ARRAKEEN";
-        case eGameDirFileName::BENEGESS: return "BENEGESS";
-        case eGameDirFileName::SMALL: return "SMALL";
-        case eGameDirFileName::GFXDATA: return "GFXDATA";
-        case eGameDirFileName::GFXINTER: return "GFXINTER";
-        case eGameDirFileName::GFXWORLD: return "GFXWORLD";
-        case eGameDirFileName::GFXMENTAT: return "GFXMENTAT";
-        case eGameDirFileName::GFXAUDIO: return "GFXAUDIO";
+        case eGameDirFileName::ARRAKEEN:
+            return "ARRAKEEN";
+        case eGameDirFileName::BENEGESS:
+            return "BENEGESS";
+        case eGameDirFileName::SMALL:
+            return "SMALL";
+        case eGameDirFileName::GFXDATA:
+            return "GFXDATA";
+        case eGameDirFileName::GFXINTER:
+            return "GFXINTER";
+        case eGameDirFileName::GFXWORLD:
+            return "GFXWORLD";
+        case eGameDirFileName::GFXMENTAT:
+            return "GFXMENTAT";
+        case eGameDirFileName::GFXAUDIO:
+            return "GFXAUDIO";
         default:
             assert(false);
             break;

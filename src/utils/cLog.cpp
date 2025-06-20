@@ -7,7 +7,8 @@
 
 namespace {
 
-std::string getLogLevelString(eLogLevel level) {
+std::string getLogLevelString(eLogLevel level)
+{
     // LOG_TRACE, LOG_WARN, LOG_ERROR, LOG_FATAL
     switch (level) {
         case LOG_FATAL:
@@ -24,7 +25,8 @@ std::string getLogLevelString(eLogLevel level) {
     return "UNIDENTIFIED";
 }
 
-std::string getLogComponentString(eLogComponent component) {
+std::string getLogComponentString(eLogComponent component)
+{
     switch(component) {
         case COMP_UNITS:
             return "UNITS";
@@ -72,7 +74,8 @@ std::string getLogComponentString(eLogComponent component) {
     return "UNIDENTIFIED";
 }
 
-std::string getLogOutcomeString(eLogOutcome outcome) {
+std::string getLogOutcomeString(eLogOutcome outcome)
+{
     switch (outcome) {
         case OUTC_SUCCESS:
             return "SUCCESS";
@@ -88,7 +91,8 @@ std::string getLogOutcomeString(eLogOutcome outcome) {
     return "UNIDENTIFIED";
 }
 
-std::string getLogHouseString(int houseId) {
+std::string getLogHouseString(int houseId)
+{
     switch (houseId) {
         case ATREIDES:
             return "ATREIDES";
@@ -110,22 +114,26 @@ std::string getLogHouseString(int houseId) {
 
 }
 
-cLogger* cLogger::getInstance() {
+cLogger *cLogger::getInstance()
+{
     // The logger is initialized once as soon as this function is called for the first time.
     static cLogger theLogger;
     return &theLogger;
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message) {
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message)
+{
     log(level, component, event, message.c_str(), OUTC_IGNOREME, -1, -1);
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome) {
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome)
+{
     log(level, component, event, message.c_str(), outcome, -1, -1);
 }
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
-void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId) {
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome, int playerId, int houseId)
+{
     if (level == LOG_TRACE && !m_debugMode) {
         // trace level is only in debug mode
         return;
@@ -154,7 +162,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
     }
 
     logline += message;
-        logline += "|";
+    logline += "|";
 
     if (outcome != OUTC_IGNOREME) {
         logline += getLogOutcomeString(outcome);
@@ -167,12 +175,14 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
     m_file.flush();
 }
 
-void cLogger::logCommentLine(const std::string& txt) {
+void cLogger::logCommentLine(const std::string &txt)
+{
     m_file << "\\\\" << txt << '\n'; // print the text into the file
     m_file.flush();
 }
 
-void cLogger::logHeader(const std::string& txt) {
+void cLogger::logHeader(const std::string &txt)
+{
     auto str = txt.substr(0, 79);
     auto line = std::string(str.length(), '-');
 
@@ -181,20 +191,23 @@ void cLogger::logHeader(const std::string& txt) {
     logCommentLine(line);
 }
 
-cLogger::cLogger() : m_startTime(std::clock()), m_debugMode(false) {
+cLogger::cLogger() : m_startTime(std::clock()), m_debugMode(false)
+{
     m_file.open ("log.txt", std::ofstream::out | std::ofstream::trunc);
     if (!m_file.is_open()) {        // This translates the POSIX error number into a C++ exception
         throw std::system_error(errno, std::generic_category());
     }
 }
 
-cLogger::~cLogger() {
+cLogger::~cLogger()
+{
     log(eLogLevel::LOG_INFO, eLogComponent::COMP_NONE, "Logger shut down", "Thanks for playing.");
     m_file.close();
 }
 
 /* From 1970-01-01T00:00:00 */
-long cLogger::getTimeInMilisDifference() const {
+long cLogger::getTimeInMilisDifference() const
+{
     long time_taken_millis = (std::clock() - m_startTime) * 1E3 / CLOCKS_PER_SEC;
     return time_taken_millis;
 }

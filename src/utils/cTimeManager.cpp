@@ -7,12 +7,13 @@
 
 #include <fmt/core.h>
 #include <SDL2/SDL_timer.h>
-cTimeManager::cTimeManager(cGame& game)
+cTimeManager::cTimeManager(cGame &game)
     : m_timerUnits(0)
     , m_timerSecond(0)
     , m_timerGlobal(0)
     , m_game(game)
-    , m_gameTime(0) {
+    , m_gameTime(0)
+{
 }
 
 /**
@@ -22,7 +23,8 @@ cTimeManager::cTimeManager(cGame& game)
 
 	In most cases this is not nescesary.
 **/
-void cTimeManager::capTimers() {
+void cTimeManager::capTimers()
+{
     auto logger = cLogger::getInstance();
 
     if (m_timerUnits > 10) {
@@ -51,7 +53,8 @@ void cTimeManager::capTimers() {
 /**
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerAllegroTimerSeconds() {
+void cTimeManager::handleTimerAllegroTimerSeconds()
+{
     while (m_timerSecond > 0) {
         m_gameTime++;
         m_game.thinkSlow();
@@ -63,7 +66,8 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
 /**
  * gametime timer is called every 5 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerGameTime() {
+void cTimeManager::handleTimerGameTime()
+{
     // keep up with time cycles
     while (m_timerGlobal > 0) {
         m_game.think_fading();
@@ -76,7 +80,8 @@ void cTimeManager::handleTimerGameTime() {
 /**
  * units timer is called every 100 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerUnits() {
+void cTimeManager::handleTimerUnits()
+{
     while (m_timerUnits > 0) {
         m_game.think_state();
         m_timerUnits--;
@@ -96,7 +101,8 @@ void cTimeManager::handleTimerUnits() {
     expect this function to be called by the main update function. Heck, even per state this would be different - which
     is now not the case.
 */
-void cTimeManager::processTime() {
+void cTimeManager::processTime()
+{
 //    syncFromAllegroTimers();
     uint64_t now = SDL_GetTicks64();
 

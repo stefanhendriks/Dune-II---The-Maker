@@ -10,34 +10,38 @@
 
 #include <cassert>
 
-cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
+cPlaceItDrawer::cPlaceItDrawer(cPlayer *thePlayer) : player(thePlayer)
+{
 }
 
-cPlaceItDrawer::~cPlaceItDrawer() {
+cPlaceItDrawer::~cPlaceItDrawer()
+{
     player = nullptr;
 }
 
-void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell) {
+void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell)
+{
     if (itemToPlace == nullptr) {
         return;
     }
 
-	if (mouseCell < 0) {
-		return;
-	}
+    if (mouseCell < 0) {
+        return;
+    }
 
-	drawStructureIdAtMousePos(itemToPlace);
-	drawStatusOfStructureAtCell(itemToPlace, mouseCell);
+    drawStructureIdAtMousePos(itemToPlace);
+    drawStatusOfStructureAtCell(itemToPlace, mouseCell);
 }
 
-void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell) {
-	assert(itemToPlace);
-	if (mouseCell < 0) return;
+void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell)
+{
+    assert(itemToPlace);
+    if (mouseCell < 0) return;
 
-	int structureId = itemToPlace->getBuildId();
-	assert(structureId > -1);
+    int structureId = itemToPlace->getBuildId();
+    assert(structureId > -1);
 
-	bool bWithinBuildDistance = false;
+    bool bWithinBuildDistance = false;
 
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
@@ -48,26 +52,26 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-	int iCellX = map.getCellX(mouseCell);
-	int iCellY = map.getCellY(mouseCell);
+    int iCellX = map.getCellX(mouseCell);
+    int iCellY = map.getCellY(mouseCell);
 
-	// check
-	int iStartX = iCellX-SCANWIDTH;
-	int iStartY = iCellY-SCANWIDTH;
+    // check
+    int iStartX = iCellX-SCANWIDTH;
+    int iStartY = iCellY-SCANWIDTH;
 
-	int iEndX = iCellX + SCANWIDTH + cellWidth;
-	int iEndY = iCellY + SCANWIDTH + cellHeight;
+    int iEndX = iCellX + SCANWIDTH + cellWidth;
+    int iEndY = iCellY + SCANWIDTH + cellHeight;
 
-	// Fix up the boundaries
-	cPoint::split(iStartX, iStartY) = map.fixCoordinatesToBeWithinMap(iStartX, iStartY);
-	cPoint::split(iEndX, iEndY) = map.fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    // Fix up the boundaries
+    cPoint::split(iStartX, iStartY) = map.fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = map.fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
-	// Determine if structure to be placed is within build distance
-	for (int iX=iStartX; iX < iEndX; iX++) {
-		for (int iY=iStartY; iY < iEndY; iY++) {
+    // Determine if structure to be placed is within build distance
+    for (int iX=iStartX; iX < iEndX; iX++) {
+        for (int iY=iStartY; iY < iEndY; iY++) {
             int iCll = map.getCellWithMapDimensions(iX, iY);
 
-			if (iCll > -1) {
+            if (iCll > -1) {
                 int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
@@ -81,22 +85,23 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 }
 
                 if (map.getCellType(iCll) == TERRAIN_WALL ||
-                    map.getCellType(iCll) == TERRAIN_SLAB) {
+                        map.getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance=true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
                 }
             }
-		}
-	}
+        }
+    }
 
-	int iDrawX = map.mouse_draw_x();
-	int iDrawY = map.mouse_draw_y();
+    int iDrawX = map.mouse_draw_x();
+    int iDrawY = map.mouse_draw_y();
 
     BITMAP *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     if (!bWithinBuildDistance) {
         clear_to_color(temp, game.getColorPlaceBad());
-    } else {
+    }
+    else {
         clear_bitmap(temp);
 
         // Draw over it the mask for good/bad placing (decorates temp bitmap)
@@ -148,24 +153,25 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
         }
     }
 
-	// draw temp bitmap
-	set_trans_blender(0, 0, 0, 64);
+    // draw temp bitmap
+    set_trans_blender(0, 0, 0, 64);
 
-	draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
+    draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
-	// reset to normal
-	set_trans_blender(0, 0, 0, 128);
+    // reset to normal
+    set_trans_blender(0, 0, 0, 128);
 
-	destroy_bitmap(temp);
+    destroy_bitmap(temp);
 }
 
-void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace) {
-	assert(itemToPlace);
+void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
+{
+    assert(itemToPlace);
 
-	int structureId = itemToPlace->getBuildId();
+    int structureId = itemToPlace->getBuildId();
 
-	int iDrawX = map.mouse_draw_x();
-	int iDrawY = map.mouse_draw_y();
+    int iDrawX = map.mouse_draw_x();
+    int iDrawY = map.mouse_draw_y();
 
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
@@ -178,14 +184,17 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace) {
 
     BITMAP *bmp = nullptr;
     if (structureId == SLAB1) {
-		bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat;
-	} else if (structureId == SLAB4) {
+        bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat;
+    }
+    else if (structureId == SLAB4) {
         bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat;
-	} else if (structureId == WALL) {
+    }
+    else if (structureId == WALL) {
         bmp = (BITMAP *)gfxdata[PLACE_WALL].dat;
-	} else {
+    }
+    else {
         bmp = player->getStructureBitmap(structureId);
-	}
+    }
 
     renderDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
 

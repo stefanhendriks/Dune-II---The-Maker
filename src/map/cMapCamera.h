@@ -20,7 +20,7 @@
 class cMapCamera : cInputObserver {
 
 public:
-    cMapCamera(cMap * theMap, float moveSpeedDrag, float moveSpeedKeys, bool cameraEdgeMove);
+    cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedKeys, bool cameraEdgeMove);
 
     ~cMapCamera();
 
@@ -104,27 +104,47 @@ public:
         return iMouseY + getViewportStartY();
     }
 
-    int getViewportStartX() { return m_viewportStartX; }
+    int getViewportStartX() {
+        return m_viewportStartX;
+    }
 
-    int getViewportStartY() { return m_viewportStartY; }
+    int getViewportStartY() {
+        return m_viewportStartY;
+    }
 
-    int getViewportEndX() { return m_viewportStartX + m_viewportWidth; }
+    int getViewportEndX() {
+        return m_viewportStartX + m_viewportWidth;
+    }
 
-    int getViewportEndY() { return m_viewportStartY + m_viewportHeight; }
+    int getViewportEndY() {
+        return m_viewportStartY + m_viewportHeight;
+    }
 
-    int getViewportWidth() { return m_viewportWidth; }
+    int getViewportWidth() {
+        return m_viewportWidth;
+    }
 
-    int getViewportHeight() { return m_viewportHeight; }
+    int getViewportHeight() {
+        return m_viewportHeight;
+    }
 
-    int getViewportCenterX() { return m_viewportStartX + (m_viewportWidth / 2); }
+    int getViewportCenterX() {
+        return m_viewportStartX + (m_viewportWidth / 2);
+    }
 
-    int getViewportCenterY() { return m_viewportStartY + (m_viewportHeight / 2); }
+    int getViewportCenterY() {
+        return m_viewportStartY + (m_viewportHeight / 2);
+    }
 
     void centerAndJumpViewPortToCell(int cell);
 
-    float getZoomedTileWidth() const { return m_tileWidth; }
+    float getZoomedTileWidth() const {
+        return m_tileWidth;
+    }
 
-    float getZoomedTileHeight() const { return m_tileHeight; }
+    float getZoomedTileHeight() const {
+        return m_tileHeight;
+    }
 
     float factorZoomLevel(int value) {
         return value * m_zoomLevel;
@@ -189,7 +209,7 @@ private:
     float m_tileWidth;
 
     // the map this camera is viewing
-    cMap * m_pMap;
+    cMap *m_pMap;
 
     void adjustViewport(float screenX, float screenY);
 

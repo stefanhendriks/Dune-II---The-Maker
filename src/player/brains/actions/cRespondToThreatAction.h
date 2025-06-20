@@ -23,7 +23,7 @@ class cPlayer;
 class cRespondToThreatAction {
 
 public:
-    cRespondToThreatAction(cPlayer *player, cUnit * threat, cUnit * victim, int cellOriginOfThreat, int maxUnitsToOrder);
+    cRespondToThreatAction(cPlayer *player, cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
 
     void execute();
 
@@ -33,11 +33,11 @@ private:
 
     // Cause of threat (currently only a unit can be a threat)
     // pointer because it can be nullptr! (ie a structure can be a threat)
-    cUnit * m_threat;
+    cUnit *m_threat;
     int m_cellOriginOfThreat;
 
     // the unit that was damaged by threat
-    cUnit * m_victim;
+    cUnit *m_victim;
 
     // the amount of units to use to retaliate
     int m_maxUnitsToOrder;

@@ -124,11 +124,15 @@ public:
 
     void thinkMovie();
 
-    void setHouse(int value) { house = value; }
+    void setHouse(int value) {
+        house = value;
+    }
 
-    int getHouse() { return house; }
+    int getHouse() {
+        return house;
+    }
 
     void resetSpeak();
 
-    cGuiButton * m_guiBtnToMissionSelect;
+    cGuiButton *m_guiBtnToMissionSelect;
 };

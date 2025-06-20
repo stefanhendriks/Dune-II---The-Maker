@@ -10,40 +10,40 @@ enum eAnimationDirection {
 };
 
 enum eCantBuildReason {
-	/**
+    /**
      * Not enough money to build it
      */
-	NOT_ENOUGH_MONEY,
+    NOT_ENOUGH_MONEY,
 
-	/**
+    /**
      * The thing to build requires an upgrade
      */
-	REQUIRES_UPGRADE,
+    REQUIRES_UPGRADE,
 
-	/**
+    /**
      * Already building the thing (does not take queueing into account)
      */
-	ALREADY_BUILDING,
+    ALREADY_BUILDING,
 
-	/**
+    /**
      * Requires a structure to build this (producing structure)
      */
-	REQUIRES_STRUCTURE,
+    REQUIRES_STRUCTURE,
 
-	/**
+    /**
      * Requires an additional structure to build this (ie, IX for special units)
      */
-	REQUIRES_ADDITIONAL_STRUCTURE,
+    REQUIRES_ADDITIONAL_STRUCTURE,
 
-	/**
+    /**
      * The required thing to build is not available
      */
-	NOT_AVAILABLE,
+    NOT_AVAILABLE,
 
-	/**
+    /**
      * There is no reason we can't build it (ie SUCCESS)
      */
-	NONE
+    NONE
 };
 
 // what is the intent of the action given to the unit?
@@ -113,14 +113,21 @@ enum eBuildType {
     UNKNOWN    // 5 -> use for unknown
 };
 
-inline const char* eBuildTypeString(const eBuildType &buildType) {
+inline const char *eBuildTypeString(const eBuildType &buildType)
+{
     switch (buildType) {
-        case eBuildType::SPECIAL: return "SPECIAL";
-        case eBuildType::UNIT: return "UNIT";
-        case eBuildType::STRUCTURE: return "STRUCTURE";
-        case eBuildType::BULLET: return "BULLET";
-        case eBuildType::UPGRADE: return "UPGRADE";
-        case eBuildType::UNKNOWN: return "UNKNOWN";
+        case eBuildType::SPECIAL:
+            return "SPECIAL";
+        case eBuildType::UNIT:
+            return "UNIT";
+        case eBuildType::STRUCTURE:
+            return "STRUCTURE";
+        case eBuildType::BULLET:
+            return "BULLET";
+        case eBuildType::UPGRADE:
+            return "UPGRADE";
+        case eBuildType::UNKNOWN:
+            return "UNKNOWN";
         default:
             assert(false && "Undefined buildType?");
             break;
@@ -129,23 +136,27 @@ inline const char* eBuildTypeString(const eBuildType &buildType) {
 }
 
 namespace buildOrder {
-	enum eBuildOrderState {
-		PROCESSME,
-		BUILDING,
-		REMOVEME
-	};
+enum eBuildOrderState {
+    PROCESSME,
+    BUILDING,
+    REMOVEME
+};
 
-    inline const char* eBuildOrderStateString(const eBuildOrderState &state) {
-        switch (state) {
-            case eBuildOrderState::PROCESSME: return "PROCESSME";
-            case eBuildOrderState::REMOVEME: return "REMOVEME";
-            case eBuildOrderState::BUILDING: return "BUILDING";
-            default:
-                assert(false && "Unknown eBuildOrderState");
-                break;
-        }
-        return "";
+inline const char *eBuildOrderStateString(const eBuildOrderState &state)
+{
+    switch (state) {
+        case eBuildOrderState::PROCESSME:
+            return "PROCESSME";
+        case eBuildOrderState::REMOVEME:
+            return "REMOVEME";
+        case eBuildOrderState::BUILDING:
+            return "BUILDING";
+        default:
+            assert(false && "Unknown eBuildOrderState");
+            break;
     }
+    return "";
+}
 }
 enum eDeployTargetType {
     TARGET_NONE,
@@ -190,16 +201,17 @@ enum class eListType {
 };
 
 static const eListType AllListTypes[] = {
-        eListType::LIST_NONE,
-        eListType::LIST_CONSTYARD,
-        eListType::LIST_FOOT_UNITS,
-        eListType::LIST_UNITS,
-        eListType::LIST_STARPORT,
-        eListType::LIST_PALACE,
-        eListType::LIST_UPGRADES
+    eListType::LIST_NONE,
+    eListType::LIST_CONSTYARD,
+    eListType::LIST_FOOT_UNITS,
+    eListType::LIST_UNITS,
+    eListType::LIST_STARPORT,
+    eListType::LIST_PALACE,
+    eListType::LIST_UPGRADES
 };
 
-inline eListType eListTypeFromInt(int value) {
+inline eListType eListTypeFromInt(int value)
+{
     switch (value) {
         case 0:
             return eListType::LIST_NONE;
@@ -219,7 +231,8 @@ inline eListType eListTypeFromInt(int value) {
     return eListType::LIST_NONE;
 }
 
-inline int eListTypeAsInt(eListType value) {
+inline int eListTypeAsInt(eListType value)
+{
     switch (value) {
         case eListType::LIST_NONE:
             return 0;
@@ -249,25 +262,25 @@ enum eBuildingListItemState {
 };
 
 enum eMouseEventType {
-	MOUSE_NONE,
+    MOUSE_NONE,
     // Mouse moved to a position on screen
-	MOUSE_MOVED_TO,
+    MOUSE_MOVED_TO,
     // When mouse button has been pressed down, and released; it becomes a "click"
-	MOUSE_RIGHT_BUTTON_CLICKED,
+    MOUSE_RIGHT_BUTTON_CLICKED,
     // When mouse button has been pressed down, and released; it becomes a "click"
-	MOUSE_LEFT_BUTTON_CLICKED,
+    MOUSE_LEFT_BUTTON_CLICKED,
     // If a mouse button has been pressed (held down)
-	MOUSE_RIGHT_BUTTON_PRESSED,
+    MOUSE_RIGHT_BUTTON_PRESSED,
     // If a mouse button has been pressed (held down)
-	MOUSE_LEFT_BUTTON_PRESSED,
+    MOUSE_LEFT_BUTTON_PRESSED,
     // Mouse scroll wheel moved up
-	MOUSE_SCROLLED_UP,
+    MOUSE_SCROLLED_UP,
     // Mouse scroll wheel moved down
-	MOUSE_SCROLLED_DOWN
+    MOUSE_SCROLLED_DOWN
 };
 
 enum eGameEventType {
-	GAME_EVENT_NONE,
+    GAME_EVENT_NONE,
     // an entity was created
     GAME_EVENT_DESTROYED,
     // an entity was deviated (switched player ownership)
@@ -275,7 +288,7 @@ enum eGameEventType {
     // an entity was discovered
     GAME_EVENT_DISCOVERED,
     // an entity was destroyed
-	GAME_EVENT_CREATED,
+    GAME_EVENT_CREATED,
     // damaged by projectile
     GAME_EVENT_DAMAGED,
     // damaged by decay
@@ -304,15 +317,15 @@ enum eGameEventType {
      */
     GAME_EVENT_LIST_ITEM_FINISHED,
     // list item has been cancelled
-	GAME_EVENT_LIST_ITEM_CANCELLED,
+    GAME_EVENT_LIST_ITEM_CANCELLED,
     // we're about to play the mission! (kind of init state)
-	GAME_EVENT_ABOUT_TO_BEGIN,
+    GAME_EVENT_ABOUT_TO_BEGIN,
     // spice bloom has been spawned on the map
-	GAME_EVENT_SPICE_BLOOM_SPAWNED,
+    GAME_EVENT_SPICE_BLOOM_SPAWNED,
     // spice bloom has been blown up
-	GAME_EVENT_SPICE_BLOOM_BLEW,
+    GAME_EVENT_SPICE_BLOOM_BLEW,
     // a player got defeated
-	GAME_EVENT_PLAYER_DEFEATED,
+    GAME_EVENT_PLAYER_DEFEATED,
 
     // Notify a unit should be deployed
     GAME_EVENT_DEPLOY_UNIT,

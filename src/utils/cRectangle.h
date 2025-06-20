@@ -27,14 +27,28 @@ public:
 
     bool isPointWithin(const cPoint *point) const;
 
-    cPoint & getTopLeft() { return topLeft; }
+    cPoint &getTopLeft() {
+        return topLeft;
+    }
 
-    int getX() const { return topLeft.x; }
-    int getEndX() const { return topLeft.x + width; }
-    int getY() const { return topLeft.y; }
-    int getEndY() const { return topLeft.y + height; }
-    int getWidth() const { return width; }
-    int getHeight() const { return height; }
+    int getX() const {
+        return topLeft.x;
+    }
+    int getEndX() const {
+        return topLeft.x + width;
+    }
+    int getY() const {
+        return topLeft.y;
+    }
+    int getEndY() const {
+        return topLeft.y + height;
+    }
+    int getWidth() const {
+        return width;
+    }
+    int getHeight() const {
+        return height;
+    }
 
     /**
      * Moves rectangle around, updates x and y coordinate.

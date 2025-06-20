@@ -16,24 +16,24 @@ struct ALFONT_FONT;
 
 
 class cTextWriter {
-	public:
-		cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize);
-		~cTextWriter();
+public:
+    cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize);
+    ~cTextWriter();
 
-		void write(const char *msg);
-		void write(const char *msg, int color);
-		void writeWithOneInteger(const char * msg, int value1);
-		void writeWithTwoIntegers(const char * msg, int value1, int value2);
+    void write(const char *msg);
+    void write(const char *msg, int color);
+    void writeWithOneInteger(const char *msg, int value1);
+    void writeWithTwoIntegers(const char *msg, int value1, int value2);
 
-	protected:
-		void updateDrawY();
+protected:
+    void updateDrawY();
 
-	private:
-		cTextDrawer *textDrawer;
-		ALFONT_FONT *font;
-		int fontSize;
-		int originalX;
-		int originalY;
-		int drawY;
-		int drawX;
+private:
+    cTextDrawer *textDrawer;
+    ALFONT_FONT *font;
+    int fontSize;
+    int originalX;
+    int originalY;
+    int drawY;
+    int drawX;
 };

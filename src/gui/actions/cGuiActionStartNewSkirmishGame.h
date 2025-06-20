@@ -4,10 +4,10 @@
 #include "gui/cGuiAction.h"
 
 class cGuiActionStartNewSkirmishGame : public cGuiAction {
-  public:
-    explicit cGuiActionStartNewSkirmishGame(cSetupSkirmishGameState * skirmishGameState);
+public:
+    explicit cGuiActionStartNewSkirmishGame(cSetupSkirmishGameState *skirmishGameState);
     void execute() override;
 
-  private:
-    cSetupSkirmishGameState * skirmishGameState;
+private:
+    cSetupSkirmishGameState *skirmishGameState;
 };

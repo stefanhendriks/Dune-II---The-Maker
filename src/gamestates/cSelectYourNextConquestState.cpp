@@ -14,7 +14,8 @@
 
 #include <allegro.h>
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame) {
+cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame)
+{
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 
@@ -38,28 +39,31 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     cTextDrawer textDrawer(bene_font);
     int length = textDrawer.textLength("Mission select");
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
-                                                                       game.m_screenH - textDrawer.getFontHeight(),
-                                                                       "Mission select");
+                                            game.m_screenH - textDrawer.getFontHeight(),
+                                            "Mission select");
     cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
-                                                         buttonKind);
+            buttonKind);
     gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
     gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
     m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 
-void cSelectYourNextConquestState::calculateOffset() {
+void cSelectYourNextConquestState::calculateOffset()
+{
     offsetX = (game.m_screenW - 640) / 2;
     offsetY = (game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
 }
 
-cSelectYourNextConquestState::~cSelectYourNextConquestState() {
+cSelectYourNextConquestState::~cSelectYourNextConquestState()
+{
     destroy_bitmap(regionClickMapBmp);
     destroy();
     delete m_guiBtnToMissionSelect;
 }
 
-void cSelectYourNextConquestState::thinkFast() {
+void cSelectYourNextConquestState::thinkFast()
+{
 
     // First time INIT
     if (state == eRegionState::REGSTATE_INIT) {
@@ -94,17 +98,20 @@ void cSelectYourNextConquestState::thinkFast() {
             REGION_SETUP_NEXT_MISSION(iMission, iHouse);
             drawManager->setMessage("3 Houses have come to Dune.");
             transitionToNextRegionSceneState(SCENE_THREE_HOUSES_COME_FOR_DUNE);
-        } else if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
+        }
+        else if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
             if (!hasMessage && iRegionSceneAlpha >= 255) {
                 drawManager->setMessage("To take control of the land.");
                 transitionToNextRegionSceneState(SCENE_TO_TAKE_CONTROL_OF_THE_LAND);
             }
-        } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
+        }
+        else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
             if (!hasMessage && iRegionSceneAlpha >= 255) {
                 drawManager->setMessage("That has become divided.");
                 transitionToNextRegionSceneState(SCENE_THAT_HAS_BECOME_DIVIDED);
             }
-        } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
+        }
+        else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
             if (iRegionSceneAlpha >= 255) {
                 transitionToNextRegionSceneState(SCENE_SELECT_YOUR_NEXT_CONQUEST);
                 conquerRegions(); // this will change the message bar and state
@@ -113,7 +120,7 @@ void cSelectYourNextConquestState::thinkFast() {
     }
 
     if (state == eRegionState::REGSTATE_CONQUER_REGIONS ||
-        state == eRegionState::REGSTATE_INTRODUCTION) {
+            state == eRegionState::REGSTATE_INTRODUCTION) {
         for (int i = 0; i < 27; i++) {
             cRegion &regionPiece = world[i];
 
@@ -147,7 +154,7 @@ void cSelectYourNextConquestState::thinkFast() {
                 bool isRegionTextEmpty = regionTextString[0] == '\0';
 
                 if ((isRegionTextGiven && !drawManager->hasMessage()) ||
-                    isRegionTextEmpty) {
+                        isRegionTextEmpty) {
                     // set this up
                     region.iHouse = houseThatConquersTheRegion;
                     region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
@@ -157,12 +164,14 @@ void cSelectYourNextConquestState::thinkFast() {
                     }
                     isFinishedConqueringRegions = false;
                     break;
-                } else {
+                }
+                else {
                     isFinishedConqueringRegions = false;
                     break;
 
                 }
-            } else {
+            }
+            else {
                 // house = the same
                 if (region.iAlpha >= 255) {
                     // remove this from the 'regionToConquer' index
@@ -171,7 +180,8 @@ void cSelectYourNextConquestState::thinkFast() {
                     isFinishedConqueringRegions = false;
 
                     break;
-                } else if (region.iAlpha < 255) {
+                }
+                else if (region.iAlpha < 255) {
                     isFinishedConqueringRegions = false;
                     break; // not done yet, so wait before we do another region!
                 }
@@ -187,7 +197,8 @@ void cSelectYourNextConquestState::thinkFast() {
     if (state == REGSTATE_SELECT_NEXT_CONQUEST) {
         if (selectNextConquestAlpha < 255) {
             selectNextConquestAlpha += 1;
-        } else {
+        }
+        else {
             selectNextConquestAlpha = 1;
         }
 
@@ -202,7 +213,8 @@ void cSelectYourNextConquestState::thinkFast() {
 
 }
 
-void cSelectYourNextConquestState::draw() const {
+void cSelectYourNextConquestState::draw() const
+{
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
     int veryDark = makecol(48, 28, 0);
@@ -221,11 +233,14 @@ void cSelectYourNextConquestState::draw() const {
 
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
         drawStateIntroduction();
-    } else if (state == eRegionState::REGSTATE_CONQUER_REGIONS) {
+    }
+    else if (state == eRegionState::REGSTATE_CONQUER_REGIONS) {
         drawStateConquerRegions();
-    } else if (state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
+    }
+    else if (state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
         drawStateSelectYourNextConquest();
-    } else if (state == eRegionState::REGSTATE_FADEOUT) {
+    }
+    else if (state == eRegionState::REGSTATE_FADEOUT) {
         drawStateConquerRegions();
     }
 
@@ -242,7 +257,8 @@ void cSelectYourNextConquestState::draw() const {
     drawManager->drawMouse();
 }
 
-void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
+void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
+{
     int iLogo = -1;
 
     // Draw your logo
@@ -264,30 +280,35 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
     }
 }
 
-void cSelectYourNextConquestState::drawStateIntroduction() const {
+void cSelectYourNextConquestState::drawStateIntroduction() const
+{
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
         renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // draw dune planet (being faded in)
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12);
-    } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
+    }
+    else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
         renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12); // dune is opaque
         renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
         // draw dune world map over Dune planet , transitioning
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
-    } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
+    }
+    else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
         renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
         renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // introduce the borders (world pieces), draw over world dune, transitioning
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
-    } else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
+    }
+    else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
         renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
     }
 }
 
-void cSelectYourNextConquestState::drawStateConquerRegions() const { // draw dune first
+void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dune first
+{
     renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
 
@@ -302,7 +323,8 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const { // draw dun
     }
 }
 
-void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
+void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
+{
     renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
 
@@ -323,7 +345,8 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
     }
 }
 
-void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {
+void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission)
+{
     // Calculate mission from region:
     // region 1 = mission 1
     // region 2, 3, 4 = mission 2
@@ -353,7 +376,8 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
         if (world[ir].bSelectable) {
             if (ir != regionMouseIsHoveringOver) {
                 iReg++;
-            } else {
+            }
+            else {
                 break;
             }
         }
@@ -383,14 +407,16 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     game.initiateFadingOut();
 }
 
-cRegion * cSelectYourNextConquestState::getRegionMouseIsOver() const {
+cRegion *cSelectYourNextConquestState::getRegionMouseIsOver() const
+{
     if (regionMouseIsHoveringOver < 0) {
         return nullptr;
     }
     return &world[regionMouseIsHoveringOver];
 }
 
-void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION() {
+void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION()
+{
     drawManager->regionInit(offsetX, offsetY);
 
     selectNextConquestAlpha = 1;
@@ -404,7 +430,8 @@ void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION() {
     return;
 }
 
-void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int iHouse) {
+void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int iHouse)
+{
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. That's what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
@@ -435,7 +462,8 @@ void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int i
     return;
 }
 
-void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const {
+void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
+{
     if (regionPiece.iAlpha <= 0) {
         // no alpha, no use in drawing
         return;
@@ -461,13 +489,15 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const {
 
 }
 
-void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
+void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
+{
     int regionX = offsetX + regionPiece.x;
     int regionY = offsetY + regionPiece.y;
 
     if (regionPiece.iAlpha >= 255) {
         renderDrawer->drawSprite(bmp_screen, regionPiece.bmp, regionX, regionY);
-    } else {
+    }
+    else {
         renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
         clear_to_color(regionPiece.bmpHighBit, makecol(255, 0, 255));
         renderDrawer->drawSprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
@@ -476,7 +506,8 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
 }
 // End of function
 
-int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY) {
+int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
+{
     // when mouse is not even on the map, return -1
     cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
     if (!mapRect.isPointWithin(mouseX, mouseY)) return -1;
@@ -490,7 +521,8 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY) {
     return c - 1;
 }
 
-void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile) {
+void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile)
+{
     int iNew = -1;
 
     for (int i = 0; i < MAX_REGIONS; i++) {
@@ -518,7 +550,8 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.bmpHighBit = tempregion;
 }
 
-void cSelectYourNextConquestState::INSTALL_WORLD() {
+void cSelectYourNextConquestState::INSTALL_WORLD()
+{
     // create regions
     for (int i = 0; i < MAX_REGIONS; i++) {
         world[i].bSelectable = false;
@@ -568,21 +601,25 @@ void cSelectYourNextConquestState::INSTALL_WORLD() {
     REGION_NEW(514, 227, 1, -1, PIECE_DUNE_027);
 }
 
-eGameStateType cSelectYourNextConquestState::getType() {
+eGameStateType cSelectYourNextConquestState::getType()
+{
     return GAMESTATE_SELECT_YOUR_NEXT_CONQUEST;
 }
 
-void cSelectYourNextConquestState::conquerRegions() {
+void cSelectYourNextConquestState::conquerRegions()
+{
     fastForward = false;
     state = REGSTATE_CONQUER_REGIONS;
 }
 
-void cSelectYourNextConquestState::transitionToNextRegionSceneState(eRegionSceneState newSceneState) {
+void cSelectYourNextConquestState::transitionToNextRegionSceneState(eRegionSceneState newSceneState)
+{
     regionSceneState = newSceneState;
     iRegionSceneAlpha = 0;
 }
 
-void cSelectYourNextConquestState::destroy() {
+void cSelectYourNextConquestState::destroy()
+{
     for (int i = 0; i < 27; i++) {
         cRegion &region = world[i];
         if (region.bmpHighBit) {
@@ -591,7 +628,8 @@ void cSelectYourNextConquestState::destroy() {
     }
 }
 
-void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     switch (event.eventType) {
         case MOUSE_MOVED_TO:
             onMouseMove(event);
@@ -607,20 +645,22 @@ void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
     m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
 }
 
-void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event) {
+void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event)
+{
     // no interaction unless we select next conquest
     if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
 
     this->regionMouseIsHoveringOver = REGION_OVER(event.coords.x, event.coords.y);
 
-    cRegion * region = getRegionMouseIsOver();
+    cRegion *region = getRegionMouseIsOver();
     if (region && region->bSelectable) {
         region->iAlpha = 255;
         game.getMouse()->setTile(MOUSE_ATTACK);
     }
 }
 
-void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &) {
+void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &)
+{
     // no interaction unless we select next conquest
     if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
 
@@ -630,7 +670,8 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
     }
 }
 
-void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (event.eventType == eKeyEventType::PRESSED) {
         if (event.hasKey(KEY_ESC)) {
             game.setNextStateToTransitionTo(GAME_OPTIONS);
@@ -638,7 +679,8 @@ void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &e
     }
 }
 
-void cSelectYourNextConquestState::fastForwardUntilMission(int missionNr, int house) {
+void cSelectYourNextConquestState::fastForwardUntilMission(int missionNr, int house)
+{
     fastForward = true;
     for (int m = 1; m < missionNr; m++) {
         REGION_SETUP_NEXT_MISSION(m, house);

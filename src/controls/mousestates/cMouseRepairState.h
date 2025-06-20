@@ -14,8 +14,8 @@ class cPlayer;
  *
  */
 class cMouseRepairState : public cMouseState {
-  public:
-    cMouseRepairState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
+public:
+    cMouseRepairState(cPlayer *player, cGameControlsContext *context, cMouse *mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -26,7 +26,7 @@ class cMouseRepairState : public cMouseState {
     void onFocus() override;
     void onBlur() override;
 
-  private:
+private:
     void onMouseLeftButtonClicked();
 
     void onMouseRightButtonPressed();

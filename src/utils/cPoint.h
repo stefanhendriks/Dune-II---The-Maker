@@ -25,13 +25,13 @@ public:
      *   cPoint::split(x, y) = getPoint();
      */
     struct split {
-        split(int& x, int& y) : m_x(x), m_y(y) {}
+        split(int &x, int &y) : m_x(x), m_y(y) {}
 
         void operator=(cPoint p) {
             m_x = p.x;
             m_y = p.y;
         }
 
-        int& m_x, m_y;
+        int &m_x, m_y;
     };
 };

@@ -9,40 +9,42 @@
 class cPlayer;
 
 class cSideBarDrawer : cInputObserver {
-	public:
-		explicit cSideBarDrawer(cPlayer * player);
-		~cSideBarDrawer() override;
+public:
+    explicit cSideBarDrawer(cPlayer *player);
+    ~cSideBarDrawer() override;
 
-        void onNotifyMouseEvent(const s_MouseEvent &event) override;
-        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-		void draw();
+    void draw();
 
-		cBuildingListDrawer * getBuildingListDrawer() { return &m_buildingListDrawer; }
+    cBuildingListDrawer *getBuildingListDrawer() {
+        return &m_buildingListDrawer;
+    }
 
-        void setPlayer(cPlayer *pPlayer);
+    void setPlayer(cPlayer *pPlayer);
 
-    protected:
-		void drawBuildingLists();
-		void drawCapacities();
+protected:
+    void drawBuildingLists();
+    void drawCapacities();
 
-		void drawCandybar();
+    void drawCandybar();
 
-		void drawMinimap();
+    void drawMinimap();
 
-	private:
-        cPlayer * m_player;
-		cBuildingListDrawer m_buildingListDrawer;
-		cSideBar * m_sidebar;
+private:
+    cPlayer *m_player;
+    cBuildingListDrawer m_buildingListDrawer;
+    cSideBar *m_sidebar;
 
-		// the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
-		BITMAP *m_candybar;
-		cTextDrawer m_textDrawer;
+    // the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
+    BITMAP *m_candybar;
+    cTextDrawer m_textDrawer;
 
-		int m_sidebarColor;
+    int m_sidebarColor;
 
-        void createCandyBar();
+    void createCandyBar();
 
-        void drawPowerUsage() const;
-        void drawCreditsUsage();
+    void drawPowerUsage() const;
+    void drawCreditsUsage();
 };

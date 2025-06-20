@@ -10,8 +10,8 @@ struct BITMAP;
 class cGame;
 
 class cSelectMissionState : public cGameState {
-  public:
-    cSelectMissionState(cGame& theGame, BITMAP *background, int prevState);
+public:
+    cSelectMissionState(cGame &theGame, BITMAP *background, int prevState);
     ~cSelectMissionState() override;
 
     void thinkFast() override;
@@ -22,12 +22,12 @@ class cSelectMissionState : public cGameState {
 
     eGameStateType getType() override;
 
-  private:
+private:
     BITMAP *background;
 
     int prevState;
 
     const cTextDrawer textDrawer;
 
-    cGuiWindow * gui_window;
+    cGuiWindow *gui_window;
 };

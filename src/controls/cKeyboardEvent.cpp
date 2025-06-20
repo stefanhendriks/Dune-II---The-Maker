@@ -1,12 +1,14 @@
 #include "cKeyboardEvent.h"
 
-cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, std::set<int> & keys) :
-        eventType(eventType),
-        keys(keys) {
+cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, std::set<int> &keys) :
+    eventType(eventType),
+    keys(keys)
+{
 
 }
 
-int cKeyboardEvent::getGroupNumber() const {
+int cKeyboardEvent::getGroupNumber() const
+{
     if (hasKey(KEY_1)) {
         return 1;
     }

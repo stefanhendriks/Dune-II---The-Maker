@@ -9,11 +9,13 @@
 #include <algorithm>
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
-        cMouseState(player, context, mouse) {
+    cMouseState(player, context, mouse)
+{
 
 }
 
-void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
@@ -38,7 +40,8 @@ void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMousePlaceState::onMouseLeftButtonClicked() {
+void cMousePlaceState::onMouseLeftButtonClicked()
+{
     // this assumes the m_context has been updated beforehand...
     int mouseCell = m_context->getMouseCell();
 
@@ -58,7 +61,8 @@ void cMousePlaceState::onMouseLeftButtonClicked() {
     }
 }
 
-bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell) {
+bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
+{
     // TODO: Maybe reduce logic here by combining it with player->canPlaceXXXXXX function(s)?
     if (mouseCell < 0) {
         return false;
@@ -107,12 +111,13 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 }
 
                 if (map.getCellType(iCll) == TERRAIN_WALL ||
-                    map.getCellType(iCll) == TERRAIN_SLAB) {
+                        map.getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance = true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
                 }
-            } else {
+            }
+            else {
                 return false;
             }
         }
@@ -159,37 +164,45 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     return true;
 }
 
-void cMousePlaceState::onMouseRightButtonPressed() {
+void cMousePlaceState::onMouseRightButtonPressed()
+{
     m_mouse->dragViewportInteraction();
 }
 
-void cMousePlaceState::onMouseRightButtonClicked() {
+void cMousePlaceState::onMouseRightButtonClicked()
+{
     if (m_mouse->isMapScrolling()) {
         m_mouse->resetDragViewportInteraction();
-    } else {
+    }
+    else {
         m_context->toPreviousState();
     }
 }
 
-void cMousePlaceState::onMouseMovedTo() {
+void cMousePlaceState::onMouseMovedTo()
+{
     // TODO: update state for determining place result so that renderer does not need to do
     // that logic every frame (see cPlaceItDrawer)
 }
 
-void cMousePlaceState::onStateSet() {
+void cMousePlaceState::onStateSet()
+{
     mouseTile = MOUSE_NORMAL;
     m_mouse->setTile(mouseTile);
 }
 
 
-void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &)
+{
 }
 
-void cMousePlaceState::onFocus() {
+void cMousePlaceState::onFocus()
+{
     m_mouse->setTile(mouseTile);
 }
 
-void cMousePlaceState::onBlur() {
+void cMousePlaceState::onBlur()
+{
     m_mouse->resetBoxSelect();
     m_mouse->resetDragViewportInteraction();
 }

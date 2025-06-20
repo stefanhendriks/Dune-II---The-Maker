@@ -8,11 +8,13 @@
 
 #include <cassert>
 
-cMapEditor::cMapEditor(cMap& map) : m_map(map) {
+cMapEditor::cMapEditor(cMap &map) : m_map(map)
+{
 }
 
 
-void cMapEditor::createCell(int cell, int terrainType, int tile) {
+void cMapEditor::createCell(int cell, int terrainType, int tile)
+{
     int theTile = tile;
     if (terrainType == TERRAIN_SLAB) {
         theTile = rnd(5);
@@ -20,7 +22,8 @@ void cMapEditor::createCell(int cell, int terrainType, int tile) {
     m_map.createCell(cell, terrainType, theTile);
 }
 
-void cMapEditor::createRandomField(int cell, int terrainType, int size) {
+void cMapEditor::createRandomField(int cell, int terrainType, int size)
+{
     assert(terrainType >= TERRAIN_BLOOM);
     assert(terrainType <= TERRAIN_WALL);
 
@@ -66,19 +69,22 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size) {
             int terrainTypeOfNewCell = m_map.getCellType(c);
             if (terrainType == TERRAIN_SPICE) {
                 if ((terrainTypeOfNewCell != TERRAIN_ROCK) &&
-                    (terrainTypeOfNewCell != TERRAIN_SLAB) &&
-                    (terrainTypeOfNewCell != TERRAIN_MOUNTAIN) &&
-                    (terrainTypeOfNewCell != TERRAIN_WALL)) {
+                        (terrainTypeOfNewCell != TERRAIN_SLAB) &&
+                        (terrainTypeOfNewCell != TERRAIN_MOUNTAIN) &&
+                        (terrainTypeOfNewCell != TERRAIN_WALL)) {
                     createCell(c, TERRAIN_SPICE, 0);
                 }
-            } else if (terrainType == TERRAIN_HILL) {
+            }
+            else if (terrainType == TERRAIN_HILL) {
                 // create hill
                 if (terrainTypeOfNewCell == TERRAIN_SAND) {
                     createCell(c, TERRAIN_HILL, 0);
-                } else if (terrainTypeOfNewCell == TERRAIN_SPICE) {
+                }
+                else if (terrainTypeOfNewCell == TERRAIN_SPICE) {
                     createCell(c, TERRAIN_SPICE, 0);
                 }
-            } else {
+            }
+            else {
                 createCell(c, terrainType, 0);
             }
         }
@@ -111,7 +117,8 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size) {
     smoothMap();
 }
 
-void cMapEditor::createSquaredField(int cell, int terrainType, int size) {
+void cMapEditor::createSquaredField(int cell, int terrainType, int size)
+{
     assert(terrainType >= TERRAIN_BLOOM);
     assert(terrainType <= TERRAIN_WALL);
 
@@ -131,7 +138,8 @@ void cMapEditor::createSquaredField(int cell, int terrainType, int size) {
     smoothMap();
 }
 
-int cMapEditor::getWallTerrainIndex(bool up, bool down, bool left, bool right) {
+int cMapEditor::getWallTerrainIndex(bool up, bool down, bool left, bool right)
+{
     bool a = up;
     bool u = down;
     bool l = left;
@@ -172,7 +180,8 @@ int cMapEditor::getWallTerrainIndex(bool up, bool down, bool left, bool right) {
  *
  * NOTE: This is not true for walls!
  */
-int cMapEditor::getDefaultTerrainIndex(bool up, bool down, bool left, bool right) {
+int cMapEditor::getDefaultTerrainIndex(bool up, bool down, bool left, bool right)
+{
     // fix compatibility for now
     bool a = up;
     bool u = down;
@@ -209,36 +218,42 @@ int cMapEditor::getDefaultTerrainIndex(bool up, bool down, bool left, bool right
     return value;
 }
 
-bool cMapEditor::isAboveSpecificTerrainType(int sourceCell, int terrainType) {
+bool cMapEditor::isAboveSpecificTerrainType(int sourceCell, int terrainType)
+{
     if (sourceCell < 0) return false;
     int above = m_map.getCellAbove(sourceCell);
     return isSpecificTerrainType(above, terrainType);
 }
 
-bool cMapEditor::isSpecificTerrainType(int cell, int terrainType) {
+bool cMapEditor::isSpecificTerrainType(int cell, int terrainType)
+{
     if (!m_map.isValidCell(cell)) return false;
     return m_map.getCellType(cell) == terrainType;
 }
 
-bool cMapEditor::isBelowSpecificTerrainType(int sourceCell, int terrainType) {
+bool cMapEditor::isBelowSpecificTerrainType(int sourceCell, int terrainType)
+{
     if (sourceCell < 0) return false;
     int under = m_map.getCellBelow(sourceCell);
     return isSpecificTerrainType(under, terrainType);
 }
 
-bool cMapEditor::isLeftSpecificTerrainType(int sourceCell, int terrainType) {
+bool cMapEditor::isLeftSpecificTerrainType(int sourceCell, int terrainType)
+{
     if (sourceCell < 0) return false;
     int left = m_map.getCellLeft(sourceCell);
     return isSpecificTerrainType(left, terrainType);
 }
 
-bool cMapEditor::isRightSpecificTerrainType(int sourceCell, int terrainType) {
+bool cMapEditor::isRightSpecificTerrainType(int sourceCell, int terrainType)
+{
     if (sourceCell < 0) return false;
     int right = m_map.getCellRight(sourceCell);
     return isSpecificTerrainType(right, terrainType);
 }
 
-int cMapEditor::smoothMountainCell(int cell) {
+int cMapEditor::smoothMountainCell(int cell)
+{
     bool a, d, l, r;
 
     a = isAboveSpecificTerrainType(cell, TERRAIN_MOUNTAIN);
@@ -266,7 +281,8 @@ int cMapEditor::smoothMountainCell(int cell) {
     return getDefaultTerrainIndex(a, d, l, r);
 }
 
-int cMapEditor::smoothSpiceCell(int cell) {
+int cMapEditor::smoothSpiceCell(int cell)
+{
     bool a, d, l, r;
 
     a = isAboveSpecificTerrainType(cell, TERRAIN_SPICE) || isAboveSpecificTerrainType(cell, TERRAIN_SPICEHILL);
@@ -277,7 +293,8 @@ int cMapEditor::smoothSpiceCell(int cell) {
     return getDefaultTerrainIndex(a, d, l, r);
 }
 
-int cMapEditor::smoothRockCell(int cell) {
+int cMapEditor::smoothRockCell(int cell)
+{
     bool a, d, l, r;
 
     // rock above?
@@ -304,7 +321,8 @@ int cMapEditor::smoothRockCell(int cell) {
     return getDefaultTerrainIndex(a, d, l, r);
 }
 
-int cMapEditor::smoothSpiceHillCell(int cell) {
+int cMapEditor::smoothSpiceHillCell(int cell)
+{
     bool a, d, l, r;
 
     a = isAboveSpecificTerrainType(cell, TERRAIN_SPICEHILL);
@@ -315,7 +333,8 @@ int cMapEditor::smoothSpiceHillCell(int cell) {
     return getDefaultTerrainIndex(a, d, l, r);
 }
 
-int cMapEditor::smoothSandHillCell(int cell) {
+int cMapEditor::smoothSandHillCell(int cell)
+{
     bool a, d, l, r;
 
     a = isAboveSpecificTerrainType(cell, TERRAIN_HILL);
@@ -326,7 +345,8 @@ int cMapEditor::smoothSandHillCell(int cell) {
     return getDefaultTerrainIndex(a, d, l, r);
 }
 
-int cMapEditor::smoothWallCell(int cell) {
+int cMapEditor::smoothWallCell(int cell)
+{
     bool a, d, l, r;
 
     a = isAboveSpecificTerrainType(cell, TERRAIN_WALL);
@@ -337,24 +357,32 @@ int cMapEditor::smoothWallCell(int cell) {
     return getWallTerrainIndex(a, d, l, r);
 }
 
-void cMapEditor::smoothCell(int cell) {
+void cMapEditor::smoothCell(int cell)
+{
     int tile = -1;
     int terrainType = m_map.getCellType(cell);
     if (terrainType == TERRAIN_ROCK) {
         tile = smoothRockCell(cell);
-    } else if (terrainType == TERRAIN_MOUNTAIN) {
+    }
+    else if (terrainType == TERRAIN_MOUNTAIN) {
         tile = smoothMountainCell(cell);
-    } else if (terrainType == TERRAIN_SPICE) {
+    }
+    else if (terrainType == TERRAIN_SPICE) {
         tile = smoothSpiceCell(cell);
-    } else if (terrainType == TERRAIN_SPICEHILL) {
+    }
+    else if (terrainType == TERRAIN_SPICEHILL) {
         tile = smoothSpiceHillCell(cell);
-    } else if (terrainType == TERRAIN_HILL) {
+    }
+    else if (terrainType == TERRAIN_HILL) {
         tile = smoothSandHillCell(cell);
-    } else if (terrainType == TERRAIN_WALL) {
+    }
+    else if (terrainType == TERRAIN_WALL) {
         tile = smoothWallCell(cell);
-    } else if (terrainType == TERRAIN_SAND || terrainType == TERRAIN_BLOOM || terrainType == TERRAIN_SLAB) {
+    }
+    else if (terrainType == TERRAIN_SAND || terrainType == TERRAIN_BLOOM || terrainType == TERRAIN_SLAB) {
         tile = 0; // always the same
-    } else {
+    }
+    else {
         logbook(fmt::format("Unknown terrain type [{}] .", terrainType));
         m_map.cellChangeType(cell, TERRAIN_SAND);
         m_map.cellChangeTile(cell, 0);
@@ -365,7 +393,8 @@ void cMapEditor::smoothCell(int cell) {
     m_map.cellChangeTile(cell, tile);
 }
 
-void cMapEditor::smoothAroundCell(int cell) {
+void cMapEditor::smoothAroundCell(int cell)
+{
     int above = m_map.getCellAbove(cell);
     int under = m_map.getCellBelow(cell);
     int left = m_map.getCellLeft(cell);
@@ -378,7 +407,8 @@ void cMapEditor::smoothAroundCell(int cell) {
     if (cell > -1) smoothCell(cell);
 }
 
-void cMapEditor::removeSingleRockSpots() {
+void cMapEditor::removeSingleRockSpots()
+{
     // soft out rocky spots!
     int startX = 1;
     int startY = 1;
@@ -416,7 +446,8 @@ void cMapEditor::removeSingleRockSpots() {
     }
 }
 
-void cMapEditor::smoothMap() {
+void cMapEditor::smoothMap()
+{
     for (int c = 0; c < m_map.getMaxCells(); c++) {
         smoothCell(c);
     }

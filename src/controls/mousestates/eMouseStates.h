@@ -17,13 +17,19 @@ enum eMouseState {
     MOUSESTATE_DEPLOY,
 };
 
-inline std::string mouseStateString(eMouseState state) {
+inline std::string mouseStateString(eMouseState state)
+{
     switch (state) {
-        case MOUSESTATE_SELECT: return "MOUSESTATE_SELECT";
-        case MOUSESTATE_UNITS_SELECTED: return "MOUSESTATE_UNITS_SELECTED";
-        case MOUSESTATE_REPAIR: return "MOUSESTATE_REPAIR";
-        case MOUSESTATE_PLACE: return "MOUSESTATE_PLACE";
-        case MOUSESTATE_DEPLOY: return "MOUSESTATE_DEPLOY";
+        case MOUSESTATE_SELECT:
+            return "MOUSESTATE_SELECT";
+        case MOUSESTATE_UNITS_SELECTED:
+            return "MOUSESTATE_UNITS_SELECTED";
+        case MOUSESTATE_REPAIR:
+            return "MOUSESTATE_REPAIR";
+        case MOUSESTATE_PLACE:
+            return "MOUSESTATE_PLACE";
+        case MOUSESTATE_DEPLOY:
+            return "MOUSESTATE_DEPLOY";
         default:
             assert(false);
             break;

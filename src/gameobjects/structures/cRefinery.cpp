@@ -6,17 +6,20 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
-cRefinery::cRefinery() {
+cRefinery::cRefinery()
+{
 
     // other variables (class specific)
     shouldAnimateWhenUnitHeadsTowardsStructure = true;
 }
 
-int cRefinery::getType() const {
+int cRefinery::getType() const
+{
     return REFINERY;
 }
 
-void cRefinery::thinkFast() {
+void cRefinery::thinkFast()
+{
 
     if (hasUnitWithin()) { // unit has entered structure
         think_unit_occupation();
@@ -26,7 +29,8 @@ void cRefinery::thinkFast() {
     cAbstractStructure::thinkFast();
 }
 
-void cRefinery::think_unit_occupation() {
+void cRefinery::think_unit_occupation()
+{
     int iUnitID = getUnitIdWithin();
     cUnit &cUnit = unit[iUnitID];
 
@@ -87,11 +91,13 @@ void cRefinery::think_unit_occupation() {
     }
 }
 
-void cRefinery::think_harvester_deploy() {
+void cRefinery::think_harvester_deploy()
+{
     if (hasUnitWithin()) {
         iFrame = 7;
         return;
-    } else {
+    }
+    else {
         if (!isAnimating()) {
             iFrame = 0;
         }
@@ -116,18 +122,21 @@ void cRefinery::think_harvester_deploy() {
     }
 }
 
-void cRefinery::think_animation() {
+void cRefinery::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_harvester_deploy();
 }
 
-void cRefinery::think_guard() {
+void cRefinery::think_guard()
+{
 
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-int cRefinery::getSpiceSiloCapacity() {
+int cRefinery::getSpiceSiloCapacity()
+{
     float percentage = ((float) getHitPoints() / (float) sStructureInfo[getType()].hp);
     return 1000 * percentage;
 }

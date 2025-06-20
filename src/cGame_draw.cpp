@@ -18,7 +18,8 @@
 #include <allegro.h>
 
 // Fading between menu items
-void cGame::initiateFadingOut() {
+void cGame::initiateFadingOut()
+{
     // set state to fade out
     m_fadeAction = eFadeAction::FADE_OUT; // fade out
 
@@ -27,7 +28,8 @@ void cGame::initiateFadingOut() {
 }
 
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateLosing() {
+void cGame::drawStateLosing()
+{
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
@@ -43,7 +45,8 @@ void cGame::drawStateLosing() {
 }
 
 // this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateWinning() {
+void cGame::drawStateWinning()
+{
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());

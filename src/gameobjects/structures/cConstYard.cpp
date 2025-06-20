@@ -2,23 +2,28 @@
 
 #include "definitions.h"
 
-cConstYard::cConstYard() {
+cConstYard::cConstYard()
+{
     frames = 0;
 }
 
-int cConstYard::getType() const {
-	return CONSTYARD;
+int cConstYard::getType() const
+{
+    return CONSTYARD;
 }
 
-void cConstYard::thinkFast() {
+void cConstYard::thinkFast()
+{
     cAbstractStructure::thinkFast();
 }
 
-void cConstYard::think_animation() {
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag_new();
+void cConstYard::think_animation()
+{
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag_new();
 }
 
-void cConstYard::think_guard() {
- // do nothing
+void cConstYard::think_guard()
+{
+// do nothing
 }

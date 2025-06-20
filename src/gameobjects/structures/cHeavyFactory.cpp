@@ -6,24 +6,28 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 
-cHeavyFactory::cHeavyFactory() {
+cHeavyFactory::cHeavyFactory()
+{
     // other variables (class specific)
     drawFlash = false;
     flashes = 0;
     TIMER_animation = 0;
 }
 
-int cHeavyFactory::getType() const {
+int cHeavyFactory::getType() const
+{
     return HEAVYFACTORY;
 }
 
-void cHeavyFactory::thinkFast() {
+void cHeavyFactory::thinkFast()
+{
     // last but not least, think like our abstraction
     cAbstractStructure::thinkFast();
 }
 
 // think animation for unit deployment (when building unit is finished)
-void cHeavyFactory::think_animation_unitDeploy() {
+void cHeavyFactory::think_animation_unitDeploy()
+{
     if (!isAnimating()) {
         drawFlash = false;
         flashes = 0;
@@ -45,7 +49,8 @@ void cHeavyFactory::think_animation_unitDeploy() {
             drawFlash = !drawFlash;
             TIMER_flag = 0;
         }
-    } else {
+    }
+    else {
         TIMER_flag = 0;
         drawFlash = false;
     }
@@ -56,17 +61,20 @@ void cHeavyFactory::think_animation_unitDeploy() {
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cHeavyFactory::think_animation() {
+void cHeavyFactory::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_animation_unitDeploy();
 }
 
-void cHeavyFactory::think_guard() {
+void cHeavyFactory::think_guard()
+{
 
 }
 
-void cHeavyFactory::draw() {
+void cHeavyFactory::draw()
+{
     drawWithShadow();
     // draw flashing light
     if (drawFlash) {
@@ -85,15 +93,17 @@ void cHeavyFactory::draw() {
 
         BITMAP *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-                                         drawX, drawY, scaledWidth, scaledHeight);
+                                        drawX, drawY, scaledWidth, scaledHeight);
     }
 }
 
-void cHeavyFactory::startAnimating() {
+void cHeavyFactory::startAnimating()
+{
     if (isAnimating()) {
         flashes = 5;
         drawFlash = true;
-    } else {
+    }
+    else {
         iFrame = 0;
         flashes = 0;
         drawFlash = false;

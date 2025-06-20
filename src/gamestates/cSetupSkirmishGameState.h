@@ -28,7 +28,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishGameState : public cGameState {
 
 public:
-    explicit cSetupSkirmishGameState(cGame& theGame, std::shared_ptr<cPreviewMaps> previewMaps);
+    explicit cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps);
     ~cSetupSkirmishGameState() override;
 
     void thinkFast() override;
@@ -44,7 +44,7 @@ private:
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     std::shared_ptr<cPreviewMaps> m_previewMaps;
 
-    cMouse * mouse;
+    cMouse *mouse;
 
     int iSkirmishMap;			// what map is selected
     int spawnWorms;
@@ -86,8 +86,8 @@ private:
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
 
-    cGuiButton * backButton;
-    cGuiButton * startButton;
+    cGuiButton *backButton;
+    cGuiButton *startButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);

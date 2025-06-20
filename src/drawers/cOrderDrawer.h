@@ -28,8 +28,8 @@ private:
 
     bool _isMouseOverOrderButton;
 
-    cPlayer* player;
+    cPlayer *player;
     cRectangle buttonRect;
-    BITMAP* buttonBitmap;
-    BITMAP* greyedButtonBitmap;
+    BITMAP *buttonBitmap;
+    BITMAP *greyedButtonBitmap;
 };

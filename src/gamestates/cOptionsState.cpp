@@ -10,15 +10,17 @@
 #include <allegro/gfx.h>
 
 cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
-  : cGameState(theGame)
-  , m_background(background)
-  , m_textDrawer(cTextDrawer(bene_font))
-  , m_prevState(prevState)
-  , m_guiWindow(nullptr) {
+    : cGameState(theGame)
+    , m_background(background)
+    , m_textDrawer(cTextDrawer(bene_font))
+    , m_prevState(prevState)
+    , m_guiWindow(nullptr)
+{
     refresh();
 }
 
-void cOptionsState::constructWindow(int prevState) {
+void cOptionsState::constructWindow(int prevState)
+{
     int margin = game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
@@ -71,9 +73,9 @@ void cOptionsState::constructWindow(int prevState) {
         rows = 3;
         int toMissionSelect = mainMenuHeight - ((buttonHeight * rows) + (margin * rows));// 424
         const cRectangle &toMissionSelectRect = m_guiWindow->getRelativeRect(margin, toMissionSelect, buttonWidth,
-                                                                             buttonHeight);
+                                                buttonHeight);
         cGuiButton *gui_btn_toMissionSelect = new cGuiButton(m_textDrawer, toMissionSelectRect, "Mission select",
-                                                             buttonKinds);
+                buttonKinds);
         gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
         cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
         gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action3);
@@ -81,16 +83,19 @@ void cOptionsState::constructWindow(int prevState) {
     }
 }
 
-cOptionsState::~cOptionsState() {
+cOptionsState::~cOptionsState()
+{
     delete m_guiWindow;
     destroy_bitmap(m_background);
 }
 
-void cOptionsState::thinkFast() {
+void cOptionsState::thinkFast()
+{
 
 }
 
-void cOptionsState::draw() const {
+void cOptionsState::draw() const
+{
     renderDrawer->drawSprite(bmp_screen, m_background, 0, 0);
 
     m_guiWindow->draw();
@@ -99,27 +104,32 @@ void cOptionsState::draw() const {
     game.getMouse()->draw();
 }
 
-void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     m_guiWindow->onNotifyMouseEvent(event);
 }
 
-eGameStateType cOptionsState::getType() {
+eGameStateType cOptionsState::getType()
+{
     return GAMESTATE_OPTIONS;
 }
 
-void cOptionsState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cOptionsState::onNotifyKeyboardEvent(const cKeyboardEvent &)
+{
 }
 
 /**
  * Reconstructs window so that it knows to which previous state it should go 'back to'
  * @param prevState
  */
-void cOptionsState::setPrevState(int prevState) {
+void cOptionsState::setPrevState(int prevState)
+{
     m_prevState = prevState;
     refresh();
 }
 
-void cOptionsState::refresh() {
+void cOptionsState::refresh()
+{
     delete m_guiWindow;
     m_guiWindow = nullptr;
     constructWindow(m_prevState);

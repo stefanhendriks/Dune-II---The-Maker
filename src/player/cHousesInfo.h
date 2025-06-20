@@ -17,9 +17,13 @@ public:
 
     ~cHousesInfo() = default;
 
-    int getSwapColor(int house) { return m_houseInfo[house].swap_color; }
+    int getSwapColor(int house) {
+        return m_houseInfo[house].swap_color;
+    }
 
-    int getMinimapColor(int house) { return m_houseInfo[house].minimap_color; }
+    int getMinimapColor(int house) {
+        return m_houseInfo[house].minimap_color;
+    }
 
     void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
 

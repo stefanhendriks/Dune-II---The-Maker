@@ -3,12 +3,14 @@
 #include "cGunTurret.h"
 
 class cRocketTurret : public cGunTurret {
-  public:
+public:
     cRocketTurret();
 
     int getType() const override;
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

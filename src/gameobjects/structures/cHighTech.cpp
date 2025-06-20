@@ -2,21 +2,25 @@
 
 #include "definitions.h"
 
-cHighTech::cHighTech() {
+cHighTech::cHighTech()
+{
     // other variables (class specific)
     animDir = eAnimationDirection::ANIM_NONE;
 }
 
-int cHighTech::getType() const {
+int cHighTech::getType() const
+{
     return HIGHTECH;
 }
 
-void cHighTech::thinkFast() {
+void cHighTech::thinkFast()
+{
     // last but not least, think like our abstraction
     cAbstractStructure::thinkFast();
 }
 
-void cHighTech::think_animation_unitDeploy() {
+void cHighTech::think_animation_unitDeploy()
+{
     if (!isAnimating()) return; // do nothing when not animating
     TIMER_flag++;
     int waitLimit = animDir == eAnimationDirection::ANIM_SPAWN_UNIT ? 120 : 30;
@@ -51,16 +55,19 @@ void cHighTech::think_animation_unitDeploy() {
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cHighTech::think_animation() {
+void cHighTech::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_animation_unitDeploy();
 }
 
-void cHighTech::think_guard() {
+void cHighTech::think_guard()
+{
 
 }
 
-void cHighTech::startAnimating() {
+void cHighTech::startAnimating()
+{
     animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
 }

@@ -8,11 +8,13 @@
 #include <algorithm>
 
 cMouseRepairState::cMouseRepairState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
-        cMouseState(player, context, mouse) {
+    cMouseState(player, context, mouse)
+{
 
 }
 
-void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
@@ -37,7 +39,8 @@ void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMouseRepairState::onMouseLeftButtonClicked() {
+void cMouseRepairState::onMouseLeftButtonClicked()
+{
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
@@ -54,11 +57,13 @@ void cMouseRepairState::onMouseLeftButtonClicked() {
     }
 }
 
-void cMouseRepairState::onMouseRightButtonPressed() {
+void cMouseRepairState::onMouseRightButtonPressed()
+{
     m_mouse->dragViewportInteraction();
 }
 
-void cMouseRepairState::onMouseRightButtonClicked() {
+void cMouseRepairState::onMouseRightButtonClicked()
+{
     if (!m_mouse->isMapScrolling()) {
         m_context->toPreviousState();
     }
@@ -66,23 +71,27 @@ void cMouseRepairState::onMouseRightButtonClicked() {
     m_mouse->resetDragViewportInteraction();
 }
 
-void cMouseRepairState::onMouseMovedTo() {
+void cMouseRepairState::onMouseMovedTo()
+{
     mouseTile = getMouseTileForRepairState();
 }
 
-void cMouseRepairState::onStateSet() {
+void cMouseRepairState::onStateSet()
+{
     mouseTile = getMouseTileForRepairState();
     m_mouse->setTile(mouseTile);
 }
 
 
-void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_R)) {
         m_context->toPreviousState();
     }
 }
 
-int cMouseRepairState::getMouseTileForRepairState() {
+int cMouseRepairState::getMouseTileForRepairState()
+{
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
@@ -101,11 +110,13 @@ int cMouseRepairState::getMouseTileForRepairState() {
     return MOUSE_FORBIDDEN;
 }
 
-void cMouseRepairState::onFocus() {
+void cMouseRepairState::onFocus()
+{
     m_mouse->setTile(mouseTile);
 }
 
-void cMouseRepairState::onBlur() {
+void cMouseRepairState::onBlur()
+{
     m_mouse->resetBoxSelect();
     m_mouse->resetDragViewportInteraction();
 }

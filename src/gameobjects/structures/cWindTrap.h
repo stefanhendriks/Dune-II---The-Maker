@@ -28,7 +28,9 @@ public:
 
     void startAnimating() override {}
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
     int getType() const override;
 
@@ -36,7 +38,9 @@ public:
 
     int getMaxPowerOut() const;
 
-    int getFade() { return iFade; }
+    int getFade() {
+        return iFade;
+    }
 
     std::string getStatusForMessageBar() const override;
 

@@ -5,11 +5,13 @@
 
 cKeyboard::cKeyboard() :
     _keyboardObserver(nullptr),
-    keysPressed() {
+    keysPressed()
+{
 
 }
 
-void cKeyboard::updateState() {
+void cKeyboard::updateState()
+{
     // Stefan: I made this more 'efficient', and I tried to differentiate between a HOLD and a "Released" state
     // which makes sense. However, the way the events are being sent needs to be done differently (not now, I am tired)
     //
@@ -48,11 +50,13 @@ void cKeyboard::updateState() {
         // the 'old' key is still held down in the 'new' state, so ignore
         if (std::find(newKeysPressed.begin(), newKeysPressed.end(), k) != newKeysPressed.end()) {
             // still pressed (by keyboard event)
-        } else if (key[k]) {
+        }
+        else if (key[k]) {
             // still pressed "down
             // but not in the 'newKeysPressed' set, so make sure to add it still, so we don't forget it being pressed
             newKeysPressed.insert(k);
-        } else {
+        }
+        else {
             // the 'old' key is not present in newKeysPressed, so it has been released.
             keysReleased.insert(k);
         }

@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 
-void cGuiActionFadeOutOnly::execute() {
+void cGuiActionFadeOutOnly::execute()
+{
     game.initiateFadingOut();
 }

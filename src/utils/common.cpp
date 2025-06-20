@@ -31,14 +31,16 @@
  * Default printing in logs. Only will be done if game.isDebugMode() is true.
  * @param txt
  */
-void logbook(const std::string& txt) {
-  if (game.isDebugMode()) {
-    cLogger *logger = cLogger::getInstance();
-    logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
-  }
+void logbook(const std::string &txt)
+{
+    if (game.isDebugMode()) {
+        cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
+    }
 }
 
-int slowThinkMsToTicks(int desiredMs) {
+int slowThinkMsToTicks(int desiredMs)
+{
     if (desiredMs < 100) {
         return 1; // fastest thinking is 1 tick (100 ms)
     }
@@ -46,12 +48,14 @@ int slowThinkMsToTicks(int desiredMs) {
     return desiredMs / 100;
 }
 
-int fastThinkTicksToMs(int ticks) {
+int fastThinkTicksToMs(int ticks)
+{
     // "fast" thinking, is 1 tick == 5ms
     return ticks * 5;
 }
 
-int fastThinkMsToTicks(int desiredMs) {
+int fastThinkMsToTicks(int desiredMs)
+{
     if (desiredMs < 5) {
         return 1; // fastest thinking is 1 tick (5 ms)
     }
@@ -77,7 +81,8 @@ int makeColFromString(std::string colorStr)
 /*****************************
  Unit Rules
  *****************************/
-void install_units() {
+void install_units()
+{
     logbook("Installing:  UNITS");
     // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
     // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
@@ -598,7 +603,8 @@ void install_units() {
 
 }
 
-void install_particles() {
+void install_particles()
+{
     for (int i = 0; i < MAX_PARTICLE_TYPES; i++) {
         s_ParticleInfo &particleInfo = sParticleInfo[i];
         particleInfo.bmpIndex = -1;
@@ -760,7 +766,7 @@ void install_particles() {
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].startAlpha = 240;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].frameWidth = 512;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].frameHeight = 512;
-            ;
+    ;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM02;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].usesAdditiveBlending = true;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].startAlpha = 230;
@@ -775,7 +781,8 @@ void install_particles() {
 
 }
 
-void install_specials() {
+void install_specials()
+{
 
     for (int i = 0; i < MAX_SPECIALTYPES; i++) {
         sSpecialInfo[i].icon = -1;
@@ -832,8 +839,8 @@ void install_specials() {
     sSpecialInfo[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     sSpecialInfo[SPECIAL_DEATHHAND].units = 1;
     sSpecialInfo[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
-        // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
-        // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
+    // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
+    // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
 
     sSpecialInfo[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     sSpecialInfo[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
@@ -846,7 +853,8 @@ void install_specials() {
 /****************
  Install bullets
  ****************/
-void install_bullets() {
+void install_bullets()
+{
     logbook("Installing:  BULLET TYPES");
 
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
@@ -1065,7 +1073,8 @@ void install_bullets() {
 }
 
 
-void install_upgrades() {
+void install_upgrades()
+{
     logbook("Installing:  UPGRADES");
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
         sUpgradeInfo[i].enabled = false;
@@ -1258,7 +1267,8 @@ void install_upgrades() {
 /*****************************
  Structure Rules
  *****************************/
-void install_structures() {
+void install_structures()
+{
 
     logbook("Installing:  STRUCTURES");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -1326,9 +1336,9 @@ void install_structures() {
     sStructureInfo[WINDTRAP].icon = ICON_STR_WINDTRAP;
     sStructureInfo[WINDTRAP].configured = true;
     sStructureInfo[WINDTRAP].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 53,
-            .relY = 37
+        .big = true,
+        .relX = 53,
+        .relY = 37
     });
     strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
 
@@ -1343,9 +1353,9 @@ void install_structures() {
     sStructureInfo[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
     sStructureInfo[HEAVYFACTORY].configured = true;
     sStructureInfo[HEAVYFACTORY].flags.push_back(s_FlagInfo{
-            .big = false,
-            .relX = 25,
-            .relY = 3
+        .big = false,
+        .relX = 25,
+        .relY = 3
     });
     strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
 
@@ -1359,9 +1369,9 @@ void install_structures() {
     sStructureInfo[HIGHTECH].icon = ICON_STR_HIGHTECH;
     sStructureInfo[HIGHTECH].configured = true;
     sStructureInfo[HIGHTECH].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 19,
-            .relY = 36
+        .big = true,
+        .relX = 19,
+        .relY = 36
     });
     strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
 
@@ -1375,9 +1385,9 @@ void install_structures() {
     sStructureInfo[REPAIR].icon = ICON_STR_REPAIR;
     sStructureInfo[REPAIR].configured = true;
     sStructureInfo[REPAIR].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 41,
-            .relY = 3
+        .big = true,
+        .relX = 41,
+        .relY = 3
     });
     strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
 
@@ -1390,9 +1400,9 @@ void install_structures() {
     sStructureInfo[PALACE].icon = ICON_STR_PALACE;
     sStructureInfo[PALACE].configured = true;
     sStructureInfo[PALACE].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 28,
-            .relY = 14
+        .big = true,
+        .relX = 28,
+        .relY = 14
     });
     strcpy(sStructureInfo[PALACE].name, "Palace");
 
@@ -1407,9 +1417,9 @@ void install_structures() {
     sStructureInfo[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
     sStructureInfo[LIGHTFACTORY].configured = true;
     sStructureInfo[LIGHTFACTORY].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 41,
-            .relY = 2
+        .big = true,
+        .relX = 41,
+        .relY = 2
     });
     strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
 
@@ -1425,14 +1435,14 @@ void install_structures() {
     sStructureInfo[RADAR].configured = true;
     // outpost has 2 flags
     sStructureInfo[RADAR].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 17,
-            .relY = 38
+        .big = true,
+        .relX = 17,
+        .relY = 38
     });
     sStructureInfo[RADAR].flags.push_back(s_FlagInfo{
-            .big = false,
-            .relX = 12,
-            .relY = 46
+        .big = false,
+        .relX = 12,
+        .relY = 46
     });
     strcpy(sStructureInfo[RADAR].name, "Outpost");
 
@@ -1446,14 +1456,14 @@ void install_structures() {
     sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
     sStructureInfo[BARRACKS].configured = true;
     sStructureInfo[BARRACKS].flags.push_back(s_FlagInfo{
-            .big = false,
-            .relX = 60,
-            .relY = 47
+        .big = false,
+        .relX = 60,
+        .relY = 47
     });
     sStructureInfo[BARRACKS].flags.push_back(s_FlagInfo{
-            .big = false,
-            .relX = 51,
-            .relY = 50
+        .big = false,
+        .relX = 51,
+        .relY = 50
     });
     strcpy(sStructureInfo[BARRACKS].name, "Barracks");
 
@@ -1467,9 +1477,9 @@ void install_structures() {
     sStructureInfo[WOR].icon = ICON_STR_WOR;
     sStructureInfo[WOR].configured = true;
     sStructureInfo[WOR].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 21,
-            .relY = 31
+        .big = true,
+        .relX = 21,
+        .relY = 31
     });
     strcpy(sStructureInfo[WOR].name, "WOR");
 
@@ -1485,9 +1495,9 @@ void install_structures() {
     sStructureInfo[SILO].configured = true;
     sStructureInfo[SILO].queuable = true;
     sStructureInfo[SILO].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 43,
-            .relY = 20
+        .big = true,
+        .relX = 43,
+        .relY = 20
     });
     strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
 
@@ -1501,9 +1511,9 @@ void install_structures() {
     sStructureInfo[REFINERY].icon = ICON_STR_REFINERY;
     sStructureInfo[REFINERY].configured = true;
     sStructureInfo[REFINERY].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 45,
-            .relY = 12
+        .big = true,
+        .relX = 45,
+        .relY = 12
     });
     strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
 
@@ -1515,9 +1525,9 @@ void install_structures() {
     sStructureInfo[CONSTYARD].bmp = (BITMAP *) gfxdata[BUILD_CONSTYARD].dat;
     sStructureInfo[CONSTYARD].shadow = (BITMAP *) gfxdata[BUILD_CONSTYARD_SHADOW].dat;
     sStructureInfo[CONSTYARD].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 14,
-            .relY = 14
+        .big = true,
+        .relX = 14,
+        .relY = 14
     });
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
@@ -1534,9 +1544,9 @@ void install_structures() {
     sStructureInfo[STARPORT].icon = ICON_STR_STARPORT;
     sStructureInfo[STARPORT].configured = true;
     sStructureInfo[STARPORT].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 16,
-            .relY = 3
+        .big = true,
+        .relX = 16,
+        .relY = 3
     });
     strcpy(sStructureInfo[STARPORT].name, "Starport");
 
@@ -1550,9 +1560,9 @@ void install_structures() {
     sStructureInfo[IX].icon = ICON_STR_IX;
     sStructureInfo[IX].configured = true;
     sStructureInfo[IX].flags.push_back(s_FlagInfo{
-            .big = true,
-            .relX = 60, // 60
-            .relY = 40  // 40
+        .big = true,
+        .relX = 60, // 60
+        .relY = 40  // 40
     });
     strcpy(sStructureInfo[IX].name, "House of IX");
 
@@ -1594,30 +1604,33 @@ void install_structures() {
 /******************************
  Calculation for SPICE/POWER bars, returns amount of pixels
  ******************************/
- // MAX_W = pixels maxed
- // I = How much we have (CURRENT STATE)
- // W = MAX it can have
-float health_bar(float max_w, int i, int w) {
-  float flHP   = i;
-  float flMAX  = w;
+// MAX_W = pixels maxed
+// I = How much we have (CURRENT STATE)
+// W = MAX it can have
+float health_bar(float max_w, int i, int w)
+{
+    float flHP   = i;
+    float flMAX  = w;
 
-  if (flHP > flMAX) {
-      return max_w;
-  }
+    if (flHP > flMAX) {
+        return max_w;
+    }
 
-  // amount of pixels (max_w = 100%)
-  auto health = flHP / flMAX;
+    // amount of pixels (max_w = 100%)
+    auto health = flHP / flMAX;
 
-  return (health * max_w);
+    return (health * max_w);
 }
 
 // return a border cell, close to iCll
-int iFindCloseBorderCell(int iCll) {
+int iFindCloseBorderCell(int iCll)
+{
     return map.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 }
 
 
-int distanceBetweenCellAndCenterOfScreen(int iCell) {
+int distanceBetweenCellAndCenterOfScreen(int iCell)
+{
     if (map.isValidCell(iCell)) {
         int centerX = mapCamera->getViewportCenterX();
         int centerY = mapCamera->getViewportCenterY();
@@ -1641,7 +1654,8 @@ int distanceBetweenCellAndCenterOfScreen(int iCell) {
  * @param structureWhichShoots
  * @return
  */
-int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots) {
+int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots)
+{
     int new_id = -1;
 
     for (int i = 0; i < MAX_BULLETS; i++)
@@ -1728,7 +1742,8 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
     return new_id;
 }
 
-const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
+const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId)
+{
     switch (buildType) {
         case eBuildType::SPECIAL:
             return sSpecialInfo[specificTypeId].description;

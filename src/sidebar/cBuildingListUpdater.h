@@ -5,46 +5,46 @@
 class cPlayer;
 
 class cBuildingListUpdater {
-	public:
-		explicit cBuildingListUpdater(cPlayer * thePlayer);
+public:
+    explicit cBuildingListUpdater(cPlayer *thePlayer);
 
-		// update methods are event based. Ie, when structure is created,
-		// when structure is destroyed, etc
+    // update methods are event based. Ie, when structure is created,
+    // when structure is destroyed, etc
 
-		// structure created and placed (ie, building windtrap, gives refinery in list, etc)
-		void onStructureCreated(int structureType);
+    // structure created and placed (ie, building windtrap, gives refinery in list, etc)
+    void onStructureCreated(int structureType);
 
-		// structure destroyed..
-		void onStructureDestroyed(int structureType);
+    // structure destroyed..
+    void onStructureDestroyed(int structureType);
 
-		// upgrade completed, like add 4slab
-		void onUpgradeCompleted(cBuildingListItem *item);
+    // upgrade completed, like add 4slab
+    void onUpgradeCompleted(cBuildingListItem *item);
 
-		void evaluateUpgrades();
+    void evaluateUpgrades();
 
-        void onUpgradeStarted(cBuildingListItem *pItem);
+    void onUpgradeStarted(cBuildingListItem *pItem);
 
-        void onUpgradeCancelled(cBuildingListItem *pItem);
+    void onUpgradeCancelled(cBuildingListItem *pItem);
 
-        void onBuildItemCancelled(cBuildingListItem *pItem);
+    void onBuildItemCancelled(cBuildingListItem *pItem);
 
-        void onBuildItemStarted(cBuildingListItem *pItem);
+    void onBuildItemStarted(cBuildingListItem *pItem);
 
-        void onBuildItemCompleted(cBuildingListItem *pItem);
+    void onBuildItemCompleted(cBuildingListItem *pItem);
 
 private:
-		// this player will be used to read state from
-		// in order to know what to update
-		cPlayer * player;
+    // this player will be used to read state from
+    // in order to know what to update
+    cPlayer *player;
 
-        void applyUpgrade(const s_UpgradeInfo &upgradeType);
+    void applyUpgrade(const s_UpgradeInfo &upgradeType);
 
-        void onStructureCreatedSkirmishMode(int structureType) const;
+    void onStructureCreatedSkirmishMode(int structureType) const;
 
-        void onStructureCreatedCampaignMode(int structureType) const;
+    void onStructureCreatedCampaignMode(int structureType) const;
 
-        void onStructureDestroyedSkirmishMode() const;
+    void onStructureDestroyedSkirmishMode() const;
 
-        void onStructureDestroyedCampaignMode() const;
+    void onStructureDestroyedCampaignMode() const;
 
 };

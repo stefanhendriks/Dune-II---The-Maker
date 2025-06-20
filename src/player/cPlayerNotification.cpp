@@ -4,11 +4,15 @@
 
 #include <allegro/color.h>
 
-std::string eNotificationTypeString(const eNotificationType &type) {
+std::string eNotificationTypeString(const eNotificationType &type)
+{
     switch (type) {
-        case eNotificationType::NEUTRAL: return "NEUTRAL";
-        case eNotificationType::PRIORITY: return "PRIORITY";
-        case eNotificationType::BAD: return "BAD";
+        case eNotificationType::NEUTRAL:
+            return "NEUTRAL";
+        case eNotificationType::PRIORITY:
+            return "PRIORITY";
+        case eNotificationType::BAD:
+            return "BAD";
         default:
             assert(false && "Unknown eNotificationType?");
             break;
@@ -16,19 +20,23 @@ std::string eNotificationTypeString(const eNotificationType &type) {
     return {};
 }
 
-cPlayerNotification::cPlayerNotification(const std::string& msg, eNotificationType type)
-  : msg(msg), TIMER((1000/5) * 7), initialDuration(TIMER), type(type) {
+cPlayerNotification::cPlayerNotification(const std::string &msg, eNotificationType type)
+    : msg(msg), TIMER((1000/5) * 7), initialDuration(TIMER), type(type)
+{
 }
 
-void cPlayerNotification::thinkFast() {
+void cPlayerNotification::thinkFast()
+{
     TIMER--;
 }
 
-const std::string& cPlayerNotification::getMessage() const {
+const std::string &cPlayerNotification::getMessage() const
+{
     return msg;
 }
 
-int cPlayerNotification::getColor() const {
+int cPlayerNotification::getColor() const
+{
     bool justStarted = (initialDuration - TIMER) < 500;
     static const int neutralColor = makecol(255, 255, 255); // white
     static const int priorityColor = makecol(255, 207, 41); // yellow

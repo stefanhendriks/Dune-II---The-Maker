@@ -39,7 +39,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(cGame& theGame);
+    explicit cSelectYourNextConquestState(cGame &theGame);
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;
@@ -59,7 +59,7 @@ public:
         iRegionHouse[iRegionIndex] = iHouse;
     }
 
-    void setRegionText(int iRegionIndex, char* txt) {
+    void setRegionText(int iRegionIndex, char *txt) {
         sprintf(cRegionText[iRegionIndex], "%s", txt);
     }
 
@@ -99,7 +99,7 @@ private:
 
     bool fastForward = false;
 
-    cGuiButton * m_guiBtnToMissionSelect;
+    cGuiButton *m_guiBtnToMissionSelect;
 
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;
@@ -121,7 +121,7 @@ private:
     int REGION_OVER(int mouseX, int mouseY);
     void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
 
-    cRegion * getRegionMouseIsOver() const;
+    cRegion *getRegionMouseIsOver() const;
 
     void loadScenarioAndTransitionToNextState(int iMission);
 

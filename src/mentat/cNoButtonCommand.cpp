@@ -3,7 +3,8 @@
 #include "d2tmc.h"
 #include "player/cPlayer.h"
 
-void cNoButtonCommand::execute(cAbstractMentat&) {
+void cNoButtonCommand::execute(cAbstractMentat &)
+{
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
     players[HUMAN].setHouse(GENERALHOUSE);

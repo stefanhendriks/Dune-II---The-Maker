@@ -5,7 +5,8 @@
 
 #include <fmt/core.h>
 
-cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable) {
+cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
+{
     assert(buildId >= 0);
     this->icon = icon;
     this->buildId = buildId;
@@ -41,13 +42,14 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
 
     if (game.isDebugMode()) {
         logbook(fmt::format("cBuildingListItem constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
-                getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
-        
+                            getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
+
     }
 
 }
 
-cBuildingListItem::~cBuildingListItem() {
+cBuildingListItem::~cBuildingListItem()
+{
     myList = NULL;
 }
 
@@ -59,7 +61,8 @@ cBuildingListItem::~cBuildingListItem() {
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, list, subList, entry.queuable) {
+    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, list, subList, entry.queuable)
+{
 }
 
 /**
@@ -70,7 +73,8 @@ cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, cBuilding
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(SPECIAL, theID, 0, entry.icon, list, subList, false) {
+    cBuildingListItem(SPECIAL, theID, 0, entry.icon, list, subList, false)
+{
 }
 
 /**
@@ -81,13 +85,16 @@ cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingLi
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, list, subList, false) {
+    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, list, subList, false)
+{
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList)
+{
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList)
+{
 }
 
 /**
@@ -98,23 +105,29 @@ cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, int subList
  * @param subList
  */
 cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, list, subList, entry.queuable) {
+    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, list, subList, entry.queuable)
+{
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList)
+{
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList)
+{
 }
 
-int cBuildingListItem::getCosts() {
+int cBuildingListItem::getCosts()
+{
     int costs = 0;
 
     if (type == UNIT) {
         costs = sUnitInfo[buildId].cost;
-    } else if (type == STRUCTURE) {
+    }
+    else if (type == STRUCTURE) {
         costs = sStructureInfo[buildId].cost;
-    } else if (type == UPGRADE) {
+    }
+    else if (type == UPGRADE) {
         costs = sUpgradeInfo[buildId].cost;
     }
     return costs;
@@ -124,19 +137,22 @@ int cBuildingListItem::getCosts() {
  * Return the amount of money the player gets back
  * @return
  */
-float cBuildingListItem::getRefundAmount() {
-	float fProgress = progress;
-	if (fProgress < 1.0F) {
-		return 0.0F;
-	}
-	return (fProgress * creditsPerProgressTime);
+float cBuildingListItem::getRefundAmount()
+{
+    float fProgress = progress;
+    if (fProgress < 1.0F) {
+        return 0.0F;
+    }
+    return (fProgress * creditsPerProgressTime);
 }
 
-void cBuildingListItem::decreaseTimesToBuild() {
-	timesToBuild--;
+void cBuildingListItem::decreaseTimesToBuild()
+{
+    timesToBuild--;
 }
 
-void cBuildingListItem::increaseProgress(int byAmount) {
+void cBuildingListItem::increaseProgress(int byAmount)
+{
     setProgress(getProgress() + byAmount);
 }
 
@@ -145,7 +161,8 @@ void cBuildingListItem::increaseProgress(int byAmount) {
  * appropriate *info struct.
  * @return
  */
-int cBuildingListItem::getTotalBuildTime() const {
+int cBuildingListItem::getTotalBuildTime() const
+{
     if (type == STRUCTURE) {
         return sStructureInfo[buildId].buildTime;
     }
@@ -159,78 +176,91 @@ int cBuildingListItem::getTotalBuildTime() const {
     return sUnitInfo[buildId].buildTime;
 }
 
-bool cBuildingListItem::isDoneBuilding() {
+bool cBuildingListItem::isDoneBuilding()
+{
     return getProgress() >= getTotalBuildTime();
 }
 
-bool cBuildingListItem::isTypeUpgrade() {
+bool cBuildingListItem::isTypeUpgrade()
+{
     return isType(eBuildType::UPGRADE);
 }
 
-bool cBuildingListItem::isTypeStructure() {
+bool cBuildingListItem::isTypeStructure()
+{
     return isType(eBuildType::STRUCTURE);
 }
 
-bool cBuildingListItem::isTypeUnit() {
+bool cBuildingListItem::isTypeUnit()
+{
     return isType(eBuildType::UNIT);
 }
 
-bool cBuildingListItem::isTypeSpecial() {
+bool cBuildingListItem::isTypeSpecial()
+{
     return isType(eBuildType::SPECIAL);
 }
 
-bool cBuildingListItem::isType(eBuildType value) {
+bool cBuildingListItem::isType(eBuildType value)
+{
     return getBuildType() == value;
 }
 
-s_UpgradeInfo& cBuildingListItem::getUpgradeInfo() {
+s_UpgradeInfo &cBuildingListItem::getUpgradeInfo()
+{
     int buildId = getBuildId();
-    if (getBuildType() != eBuildType::UPGRADE){
+    if (getBuildType() != eBuildType::UPGRADE) {
         logbook("ERROR!!! - calling getUpgradeInfo while type is not UPGRADE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sUpgradeInfo[buildId];
 }
 
-s_SpecialInfo& cBuildingListItem::getSpecialInfo() {
+s_SpecialInfo &cBuildingListItem::getSpecialInfo()
+{
     int buildId = getBuildId();
-    if (getBuildType() != eBuildType::SPECIAL){
+    if (getBuildType() != eBuildType::SPECIAL) {
         logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sSpecialInfo[buildId];
 }
 
-s_UnitInfo& cBuildingListItem::getUnitInfo() {
+s_UnitInfo &cBuildingListItem::getUnitInfo()
+{
     int buildId = getBuildId();
-    if (getBuildType() != eBuildType::UNIT){
+    if (getBuildType() != eBuildType::UNIT) {
         logbook("ERROR!!! - calling getUnitInfo while type is not UNIT! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sUnitInfo[buildId];
 }
 
-s_StructureInfo& cBuildingListItem::getStructureInfo() {
+s_StructureInfo &cBuildingListItem::getStructureInfo()
+{
     int buildId = getBuildId();
-    if (getBuildType() != eBuildType::STRUCTURE){
+    if (getBuildType() != eBuildType::STRUCTURE) {
         logbook("ERROR!!! - calling getStructureInfo while type is not STRUCTURE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sStructureInfo[buildId];
 }
 
-void cBuildingListItem::resetTimesOrdered() {
+void cBuildingListItem::resetTimesOrdered()
+{
     timesOrdered = 0;
 }
 
-eListType cBuildingListItem::getListType() {
+eListType cBuildingListItem::getListType()
+{
     if (myList) {
         return myList->getType();
     }
     return eListType::LIST_NONE;
 }
 
-int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress() {
+int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress()
+{
     // frame to draw (for building in progress)
 //    int iFrame = health_bar(31, progress, getTotalBuildTime());
     int iFrame = health_bar(31, progress, getTotalBuildTime());
@@ -242,34 +272,41 @@ int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress() {
     return iFrame;
 }
 
-void cBuildingListItem::decreaseProgressFrameTimer() {
+void cBuildingListItem::decreaseProgressFrameTimer()
+{
     TIMER_progressFrame--;
 }
 
-float cBuildingListItem::getProgressFrameTimer() {
+float cBuildingListItem::getProgressFrameTimer()
+{
     return TIMER_progressFrame;
 }
 
-void cBuildingListItem::resetProgressFrameTimer() {
+void cBuildingListItem::resetProgressFrameTimer()
+{
     // total time to build is progress * 35 (time unit). (in ticks)
     // divide that by frames (31), and get the time between frames!
     int buildTimeInTicks = getTotalBuildTimeInTicks();
     if (buildTimeInTicks > 0) {
         TIMER_progressFrame = buildTimeInTicks / 31;
-    } else {
+    }
+    else {
         TIMER_progressFrame = 0;
     }
 }
 
-int cBuildingListItem::getTotalBuildTimeInTicks() const {
+int cBuildingListItem::getTotalBuildTimeInTicks() const
+{
     return getInTicks(getTotalBuildTime());
 }
 
-int cBuildingListItem::getInTicks(int getTimeInTicks) const {
+int cBuildingListItem::getInTicks(int getTimeInTicks) const
+{
     return timerCap * getTimeInTicks;
 }
 
-void cBuildingListItem::setTimerCap(int value) {
+void cBuildingListItem::setTimerCap(int value)
+{
     timerCap = value;
 }
 
@@ -278,7 +315,8 @@ void cBuildingListItem::setTimerCap(int value) {
  * is called 200 times. Every tick is 5 ms, times 5 gives the total amount of ms.
  * @return
  */
-int cBuildingListItem::getTotalBuildTimeInMs() {
+int cBuildingListItem::getTotalBuildTimeInMs()
+{
     return getTotalBuildTimeInTicks() * 5; // 5 = ms for every time we call the itemBuilder
 }
 
@@ -287,11 +325,13 @@ int cBuildingListItem::getTotalBuildTimeInMs() {
  * is called 200 times. Every tick is 5 ms, times 5 gives the total amount of ms.
  * @return
  */
-int cBuildingListItem::getProgressBuildTimeInMs() {
+int cBuildingListItem::getProgressBuildTimeInMs()
+{
     return getInTicks(progress) * 5; // 5 = ms for every time we call the itemBuilder
 }
 
-int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
+int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
+{
     int buildTime = 0;
     switch (type) {
         case UNIT:
@@ -314,7 +354,8 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
     return buildTime * 35;
 }
 
-int cBuildingListItem::getListId(eBuildType type, int buildId) {
+int cBuildingListItem::getListId(eBuildType type, int buildId)
+{
     switch (type) {
         case UNIT:
             return eListTypeAsInt(sUnitInfo[buildId].listType);
@@ -332,7 +373,8 @@ int cBuildingListItem::getListId(eBuildType type, int buildId) {
     }
 }
 
-bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
+bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId)
+{
     switch (type) {
         case SPECIAL:
             return sSpecialInfo[buildId].autoBuild;
@@ -341,11 +383,13 @@ bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
     }
 }
 
-bool cBuildingListItem::isAutoBuild() {
+bool cBuildingListItem::isAutoBuild()
+{
     return cBuildingListItem::isAutoBuild(type, buildId);
 }
 
-std::string cBuildingListItem::getInfo() {
+std::string cBuildingListItem::getInfo()
+{
     std::string msg;
     int seconds = getTotalBuildTimeInMs() / 1000;
     if (isBuilding()) {
@@ -356,48 +400,60 @@ std::string cBuildingListItem::getInfo() {
     if (isTypeStructure()) {
         s_StructureInfo structureType = getStructureInfo();
         msg = fmt::format("${} | {} | {} Power | {} Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-    } else if (isTypeUnit()) {
+    }
+    else if (isTypeUnit()) {
         s_UnitInfo unitType = getUnitInfo();
         if (getBuildCost() > 0) {
             msg = fmt::format("${} | {} | {} Secs", getBuildCost(), unitType.name, seconds);
-        } else {
+        }
+        else {
             msg = fmt::format("{} | {} Secs", sUnitInfo[getBuildId()].name, seconds);
         }
-    } else if (isTypeUpgrade()){
+    }
+    else if (isTypeUpgrade()) {
         s_UpgradeInfo upgrade = getUpgradeInfo();
         msg = fmt::format("UPGRADE: ${} | {} | {} Secs", getBuildCost(), upgrade.description, seconds);
-    } else if (isTypeSpecial()) {
+    }
+    else if (isTypeSpecial()) {
         s_SpecialInfo special = getSpecialInfo();
         msg = fmt::format("${} | {} | {} Secs", getBuildCost(), special.description, seconds);
-    } else {
+    }
+    else {
         msg = "ERROR: UNKNOWN BUILD TYPE";
     }
     return msg;
 }
 
-bool cBuildingListItem::isFlashing() {
+bool cBuildingListItem::isFlashing()
+{
     return TIMER_flashing > 0;
 }
 
-void cBuildingListItem::decreaseFlashingTimer() {
+void cBuildingListItem::decreaseFlashingTimer()
+{
     if (TIMER_flashing > 0) TIMER_flashing--;
 }
 
-std::string cBuildingListItem::getTypeString() {
+std::string cBuildingListItem::getTypeString()
+{
     return std::string(eBuildTypeString(this->type));
 }
 
-std::string cBuildingListItem::getNameString() {
+std::string cBuildingListItem::getNameString()
+{
     if (isTypeStructure()) {
         s_StructureInfo info = getStructureInfo();
         return std::string(info.name);
-    } else if (isTypeUnit()) {
+    }
+    else if (isTypeUnit()) {
         s_UnitInfo &info = getUnitInfo();
         return std::string(info.name);
-    } else if (isTypeUpgrade()){
+    }
+    else if (isTypeUpgrade()) {
         s_UpgradeInfo upgrade = getUpgradeInfo();
         return std::string(upgrade.description);
-    } else if (isTypeSpecial()) {
+    }
+    else if (isTypeSpecial()) {
         s_SpecialInfo special = getSpecialInfo();
         return std::string(special.description);
     }

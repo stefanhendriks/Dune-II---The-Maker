@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -58,7 +58,7 @@ private:
     int getFrameWidth();
     int getFrameHeight();
 
-    s_ParticleInfo& getParticleInfo() const;
+    s_ParticleInfo &getParticleInfo() const;
 
     // x and y position to draw (absolute numbers).
     // This is the 'center' of a particle from a drawing perspective. Meaning the center of the
@@ -66,7 +66,7 @@ private:
     float x, y;
 
     // the actual position + dimensions of particle
-    cRectangle * dimensions;
+    cRectangle *dimensions;
 
     int iType;
 
@@ -74,7 +74,7 @@ private:
     bool bAlive;        // alive
 
     // Drawing effects
-    BITMAP* bmp;          // pointer to bitmap to draw (not owner of bitmap!)
+    BITMAP *bmp;          // pointer to bitmap to draw (not owner of bitmap!)
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw

@@ -23,57 +23,57 @@ enum eMinimapStatus {
 };
 
 class cMiniMapDrawer {
-	public:
-		cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera);
-		~cMiniMapDrawer();
+public:
+    cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
+    ~cMiniMapDrawer();
 
-		void draw();
+    void draw();
 
-		void drawStaticFrame();
+    void drawStaticFrame();
 
-        // in-between solution until we have a proper combat state object
-        void init();
+    // in-between solution until we have a proper combat state object
+    void init();
 
-        void think();
+    void think();
 
-        bool isMouseOver();
+    bool isMouseOver();
 
-        void setPlayer(cPlayer * thePlayer);
+    void setPlayer(cPlayer *thePlayer);
 
-	    void onNotifyMouseEvent(const s_MouseEvent &event);
+    void onNotifyMouseEvent(const s_MouseEvent &event);
 
 protected:
 
-		void drawTerrain();
-		void drawViewPortRectangle();
-		void drawUnitsAndStructures(bool playerOnly);
+    void drawTerrain();
+    void drawViewPortRectangle();
+    void drawUnitsAndStructures(bool playerOnly);
 
-		int getRGBColorForTerrainType(int terrainType);
+    int getRGBColorForTerrainType(int terrainType);
 
-		int getMapHeightInPixels();
-		int getMapWidthInPixels();
+    int getMapHeightInPixels();
+    int getMapWidthInPixels();
 
-	private:
-		void onMouseAt(const s_MouseEvent &event);
-		void onMousePressedLeft(const s_MouseEvent &event);
+private:
+    void onMouseAt(const s_MouseEvent &event);
+    void onMousePressedLeft(const s_MouseEvent &event);
 
-        int getMouseCell(int mouseX, int mouseY);
+    int getMouseCell(int mouseX, int mouseY);
 
-		bool m_isMouseOver;
+    bool m_isMouseOver;
 
-		cMap *map;	// the minimap drawer reads data from here
-		cPlayer * player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
-		cMapCamera *mapCamera;
-		cRectangle m_RectMinimap; // the minimap (map) itself
-		cRectangle m_RectFullMinimap; // the total space it could take
+    cMap *map;	// the minimap drawer reads data from here
+    cPlayer *player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
+    cMapCamera *mapCamera;
+    cRectangle m_RectMinimap; // the minimap (map) itself
+    cRectangle m_RectFullMinimap; // the total space it could take
 
-        eMinimapStatus status;
+    eMinimapStatus status;
 
-        int iStaticFrame;
-	    int iTrans;							// transparancy
+    int iStaticFrame;
+    int iTrans;							// transparancy
 
-	    // the top left coordinates for the minimap
-	    int drawX, drawY;
+    // the top left coordinates for the minimap
+    int drawX, drawY;
 
-        bool isBigMap;
+    bool isBigMap;
 };

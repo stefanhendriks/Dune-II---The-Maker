@@ -5,18 +5,19 @@
 
 #include <vector>
 
-cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit * threat, cUnit * victim, int cellOriginOfThreat, int maxUnitsToOrder)
-:
-m_player(player),
-m_threat(threat),
-m_cellOriginOfThreat(cellOriginOfThreat),
-m_victim(victim),
-m_maxUnitsToOrder(maxUnitsToOrder)
+cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder)
+    :
+    m_player(player),
+    m_threat(threat),
+    m_cellOriginOfThreat(cellOriginOfThreat),
+    m_victim(victim),
+    m_maxUnitsToOrder(maxUnitsToOrder)
 {
 
 }
 
-void cRespondToThreatAction::execute() {
+void cRespondToThreatAction::execute()
+{
     // be aware: this also returns the victim unit!
     const std::vector<sEntityForDistance> &units = m_player->getAllMyUnitsOrderClosestToCell(m_cellOriginOfThreat);
 
@@ -65,7 +66,7 @@ void cRespondToThreatAction::execute() {
 
     int unitsOrdered = 0;
 
-    for (auto & ufd : units) {
+    for (auto &ufd : units) {
         cUnit &pUnit = unit[ufd.entityId];
         if (pUnit.iID == skipThisUnit) continue;
         if (!pUnit.isIdle()) continue;

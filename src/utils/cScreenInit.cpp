@@ -38,9 +38,10 @@ constexpr std::array<ScreenResolution, 9> kResolutionsToTry = {
     ScreenResolution{800, 600}
 };
 
-const GFX_MODE* FindGfxMode(const GFX_MODE_LIST& list, ScreenResolution res, int colorDepth) {
+const GFX_MODE *FindGfxMode(const GFX_MODE_LIST &list, ScreenResolution res, int colorDepth)
+{
     for (int n = 0; n < list.num_modes; ++n) {
-        const GFX_MODE& mode = list.mode[n];
+        const GFX_MODE &mode = list.mode[n];
         if (mode.width == res.width && mode.height == res.height && mode.bpp == colorDepth) {
             return &list.mode[n];
         }
@@ -48,7 +49,8 @@ const GFX_MODE* FindGfxMode(const GFX_MODE_LIST& list, ScreenResolution res, int
     return nullptr;
 }
 
-std::optional<ScreenResolution> TryAndSetFirstValidResolution(std::span<const ScreenResolution> resolutionsToTry) {
+std::optional<ScreenResolution> TryAndSetFirstValidResolution(std::span<const ScreenResolution> resolutionsToTry)
+{
     auto logger = cLogger::getInstance();
 
     for (ScreenResolution res : resolutionsToTry) {
@@ -64,7 +66,8 @@ std::optional<ScreenResolution> TryAndSetFirstValidResolution(std::span<const Sc
     return {};
 }
 
-std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth) {
+std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth)
+{
     // Allegro supports the following color depths
     assert(colorDepth == 8 || colorDepth == 15 || colorDepth == 16 ||
            colorDepth == 24 || colorDepth == 32);
@@ -73,7 +76,7 @@ std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth) {
 
     // Note: do not use "magic" drivers like GFX_AUTODETECT here, that doesn't work according to the Allegro
     // documentation.
-    GFX_MODE_LIST* modeList = get_gfx_mode_list(kNonMagicVideoDriver);
+    GFX_MODE_LIST *modeList = get_gfx_mode_list(kNonMagicVideoDriver);
 
     std::optional<ScreenResolution> setResolution;
     if (modeList) {
@@ -89,7 +92,8 @@ std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth) {
         destroy_gfx_mode_list(modeList);
 
         return TryAndSetFirstValidResolution(supportedResolutions);
-    } else {
+    }
+    else {
         logger->log(LOG_WARN, COMP_ALLEGRO, "Screen auto init",
                     "Allegro could not determine suppored resolutions. Trying out several of them.");
         return TryAndSetFirstValidResolution(kResolutionsToTry);
@@ -98,7 +102,8 @@ std::optional<ScreenResolution> SetBestScreenResolution(int colorDepth) {
 
 }
 
-cScreenInit::cScreenInit(const cPlatformLayerInit& platform, bool windowed, int width, int height) {
+cScreenInit::cScreenInit(const cPlatformLayerInit &platform, bool windowed, int width, int height)
+{
     TitleAndColorDepthInit(platform);
 
     auto logger = cLogger::getInstance();
@@ -112,12 +117,14 @@ cScreenInit::cScreenInit(const cPlatformLayerInit& platform, bool windowed, int 
             logger->log(LOG_INFO, COMP_ALLEGRO, "Screen init", msg, OUTC_SUCCESS);
             m_screenResolution.width = width;
             m_screenResolution.height = height;
-        } else {
+        }
+        else {
             const auto msg = fmt::format("Failed to create window with resolution {}x{} and color depth {}.", width, height, m_colorDepth);
             logger->log(LOG_ERROR, COMP_ALLEGRO, "Screen init", msg, OUTC_FAILED);
             throw std::runtime_error(fmt::format("Allegro could not create the game window at resolution {}x{} depth {}.", width, height, m_colorDepth));
         }
-    } else {
+    }
+    else {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Screen init", "Fullscreen mode requested.");
 
         const int r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, width, height, width, height);
@@ -128,7 +135,8 @@ cScreenInit::cScreenInit(const cPlatformLayerInit& platform, bool windowed, int 
 
             m_screenResolution.width = width;
             m_screenResolution.height = height;
-        } else {
+        }
+        else {
             const auto msg = fmt::format("Failed to initialize full-screen with resolution {}x{} and color depth {}.", width, height, m_colorDepth);
             logger->log(LOG_WARN, COMP_ALLEGRO, "Screen init", msg, OUTC_FAILED);
 
@@ -137,12 +145,14 @@ cScreenInit::cScreenInit(const cPlatformLayerInit& platform, bool windowed, int 
     }
 }
 
-cScreenInit::cScreenInit(const cPlatformLayerInit& platform) {
+cScreenInit::cScreenInit(const cPlatformLayerInit &platform)
+{
     TitleAndColorDepthInit(platform);
     AutoDetectFullScreen();
 }
 
-void cScreenInit::TitleAndColorDepthInit(const cPlatformLayerInit&) {
+void cScreenInit::TitleAndColorDepthInit(const cPlatformLayerInit &)
+{
     auto logger = cLogger::getInstance();
 
     m_colorDepth = desktop_color_depth();
@@ -150,7 +160,8 @@ void cScreenInit::TitleAndColorDepthInit(const cPlatformLayerInit&) {
     logger->log(LOG_INFO, COMP_ALLEGRO, "Screen init", fmt::format("Desktop color dept is {}.", m_colorDepth));
 }
 
-void cScreenInit::AutoDetectFullScreen() {
+void cScreenInit::AutoDetectFullScreen()
+{
     auto logger = cLogger::getInstance();
 
     auto setResolution = SetBestScreenResolution(m_colorDepth);
@@ -160,7 +171,8 @@ void cScreenInit::AutoDetectFullScreen() {
                                      setResolution->width, setResolution->height, m_colorDepth);
         logger->log(LOG_INFO, COMP_ALLEGRO, "Screen init", msg, OUTC_SUCCESS);
         m_screenResolution = *setResolution;
-    } else {
+    }
+    else {
         const auto msg = fmt::format("Failed initialized full-screen with resolution {}x{} and color depth {}.",
                                      setResolution->width, setResolution->height, m_colorDepth);
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Screen init", msg, OUTC_FAILED);
@@ -168,33 +180,35 @@ void cScreenInit::AutoDetectFullScreen() {
     }
 }
 
-cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string& title)
+cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string &title)
 {
     auto logger = cLogger::getInstance();
-	// Création de la fenêtre
-	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-	if (window == nullptr) {
+    // Création de la fenêtre
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    if (window == nullptr) {
         const auto msg = fmt::format("Failed initialized screen with resolution {}x{}", width, height);
         logger->log(LOG_ERROR, COMP_SDL2, "Screen init", msg, OUTC_FAILED);
-		//std::cerr << "SDL CreateWindow Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return;
-	} else {
+        //std::cerr << "SDL CreateWindow Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return;
+    }
+    else {
         m_screenResolution.width = width;
         m_screenResolution.height = height;
         const auto msg = fmt::format("Successfully initialized screen with resolution {}x{}.", width, height);
         logger->log(LOG_INFO, COMP_SDL2, "Screen init", msg, OUTC_SUCCESS);
     }
-	// Création du renderer
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (renderer == nullptr) {
-		//std::cerr << "SDL CreateRenderer Error: " << SDL_GetError() << std::endl;
+    // Création du renderer
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr) {
+        //std::cerr << "SDL CreateRenderer Error: " << SDL_GetError() << std::endl;
         const auto msg = fmt::format("Failed initialized renderer with resolution {}x{}", width, height);
         logger->log(LOG_ERROR, COMP_SDL2, "Renderer init", msg, OUTC_FAILED);
-		SDL_DestroyWindow(window);
-		SDL_Quit();
-		return;
-	}  else {
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return;
+    }
+    else {
         const auto msg = fmt::format("Successfully initialized renderer");
         logger->log(LOG_INFO, COMP_SDL2, "Renderer init", msg, OUTC_SUCCESS);
     }

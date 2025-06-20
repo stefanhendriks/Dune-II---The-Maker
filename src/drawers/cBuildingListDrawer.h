@@ -9,29 +9,29 @@ class cPlayer;
 class cBuildingListDrawer : cInputObserver {
 
 public:
-	explicit cBuildingListDrawer(cPlayer *player);
+    explicit cBuildingListDrawer(cPlayer *player);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void drawList(cBuildingList *list, int listIDToDraw);
     void drawButtonHoverRectangle(cBuildingList *list);
-	void drawButton(cBuildingList *list, bool pressed);
+    void drawButton(cBuildingList *list, bool pressed);
 
-	cBuildingListItem *isOverItemCoordinates(cBuildingList *list, int x, int y);
+    cBuildingListItem *isOverItemCoordinates(cBuildingList *list, int x, int y);
 
     int getDrawX();
     int getDrawY();
 
-    void setPlayer(cPlayer * player);
+    void setPlayer(cPlayer *player);
 
 protected:
 
 private:
-	// the list to draw
-	cTextDrawer m_textDrawer;
+    // the list to draw
+    cTextDrawer m_textDrawer;
 
-	cPlayer* m_player;
+    cPlayer *m_player;
 
     bool m_renderListIds;
 

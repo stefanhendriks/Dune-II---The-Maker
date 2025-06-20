@@ -19,23 +19,23 @@ class cOrderDrawer;
 class cSideBar;
 
 class cInteractionManager : public cInputObserver, cScenarioObserver {
-	public:
-		explicit cInteractionManager(cPlayer * thePlayer);
-		~cInteractionManager();
+public:
+    explicit cInteractionManager(cPlayer *thePlayer);
+    ~cInteractionManager();
 
-		void onNotifyMouseEvent(const s_MouseEvent &mouseEvent) override;
-        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-        void onNotifyGameEvent(const s_GameEvent &) override {}
+    void onNotifyMouseEvent(const s_MouseEvent &mouseEvent) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &) override {}
 
-		void setPlayerToInteractFor(cPlayer * thePlayer);
+    void setPlayerToInteractFor(cPlayer *thePlayer);
 
-	private:
-		cSideBar * sidebar;
-		cPlayer * player;
+private:
+    cSideBar *sidebar;
+    cPlayer *player;
 
-        void onMouseAt(const s_MouseEvent &mouseEvent);
-        void onMouseClickedLeft(const s_MouseEvent &mouseEvent);
-        void onMouseClickedRight(const s_MouseEvent &mouseEvent);
-        void onMouseScrolledUp(const s_MouseEvent &mouseEvent);
-        void onMouseScrolledDown(const s_MouseEvent &mouseEvent);
+    void onMouseAt(const s_MouseEvent &mouseEvent);
+    void onMouseClickedLeft(const s_MouseEvent &mouseEvent);
+    void onMouseClickedRight(const s_MouseEvent &mouseEvent);
+    void onMouseScrolledUp(const s_MouseEvent &mouseEvent);
+    void onMouseScrolledDown(const s_MouseEvent &mouseEvent);
 };

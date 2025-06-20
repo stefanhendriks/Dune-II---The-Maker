@@ -44,8 +44,7 @@ struct sEntityForDistance {
     int distance = 9999;
     int entityId = -1;
 
-    bool operator<(const sEntityForDistance& rhs) const
-    {
+    bool operator<(const sEntityForDistance &rhs) const {
         return distance < rhs.distance;
     }
 };
@@ -106,12 +105,18 @@ public:
 
     // focus cell
     void setFocusCell(int cll);
-    int getFocusCell() const { return focusCell_; }
+    int getFocusCell() const {
+        return focusCell_;
+    }
 
     // house
     std::string getHouseName() const;
-    int getHouse() const { return house; }
-    bool isHouse(int houseId) const { return house == houseId; }
+    int getHouse() const {
+        return house;
+    }
+    bool isHouse(int houseId) const {
+        return house == houseId;
+    }
     void setHouse(int iHouse);
 
     // ---
@@ -121,20 +126,30 @@ public:
 
     void setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader);
 
-    void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
+    void setTechLevel(int theTechLevel) {
+        techLevel = theTechLevel;
+    }
 
     void setOrderProcesser(cOrderProcesser *theOrderProcesser);
 
     void setGameControlsContext(cGameControlsContext *theGameControlsContext);
 
     // get
-    cBuildingListUpdater *getBuildingListUpdater() const { return buildingListUpdater; }
+    cBuildingListUpdater *getBuildingListUpdater() const {
+        return buildingListUpdater;
+    }
 
-    cPlayerDifficultySettings *getDifficultySettings() const { return difficultySettings; }
+    cPlayerDifficultySettings *getDifficultySettings() const {
+        return difficultySettings;
+    }
 
-    cItemBuilder *getItemBuilder() const { return itemBuilder; }
+    cItemBuilder *getItemBuilder() const {
+        return itemBuilder;
+    }
 
-    cSideBar *getSideBar() const { return sidebar; }
+    cSideBar *getSideBar() const {
+        return sidebar;
+    }
 
     cAbstractStructure *getSelectedStructure() const;
 
@@ -148,21 +163,33 @@ public:
 
     int getSelectFadingColor() const;
 
-    int getTechLevel() const { return techLevel; }
+    int getTechLevel() const {
+        return techLevel;
+    }
 
-    int getId() const { return id; }
+    int getId() const {
+        return id;
+    }
 
-    cOrderProcesser *getOrderProcesser() const { return orderProcesser; }
+    cOrderProcesser *getOrderProcesser() const {
+        return orderProcesser;
+    }
 
-    cGameControlsContext *getGameControlsContext() const { return gameControlsContext; }
+    cGameControlsContext *getGameControlsContext() const {
+        return gameControlsContext;
+    }
 
     void setContextMouseState(eMouseState newState);
 
     bool isContextMouseState(eMouseState state);
 
-    int getMinimapColor() const { return minimapColor; }
+    int getMinimapColor() const {
+        return minimapColor;
+    }
 
-    int getEmblemBackgroundColor() const { return emblemBackgroundColor; }
+    int getEmblemBackgroundColor() const {
+        return emblemBackgroundColor;
+    }
 
     bool isHuman() {
         return m_Human;
@@ -236,9 +263,13 @@ public:
         iStructureUpgradeLevel[structureType]++;
     }
 
-    void setTeam(int value) { iTeam = value; }
+    void setTeam(int value) {
+        iTeam = value;
+    }
 
-    int getTeam() { return iTeam; }
+    int getTeam() {
+        return iTeam;
+    }
 
 
     /**
@@ -350,14 +381,14 @@ public:
      */
     bool isBuildingStructureAwaitingPlacement() const;
     bool isSpecialAwaitingPlacement() const;
-    cBuildingListItem * getSpecialAwaitingPlacement() const;
+    cBuildingListItem *getSpecialAwaitingPlacement() const;
 
-    cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
-    cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
+    cBuildingListItem *isUpgradeAvailableToGrantUnit(int iUnitType) const;
+    cBuildingListItem *isUpgradeAvailableToGrantStructure(int iStructureType) const;
 
-    cBuildingListItem * isUpgradingList(eListType listType, int sublistId) const;
-    cBuildingListItem * isUpgradingConstyard() const;
-    cBuildingListItem * isBuildingStructure() const;
+    cBuildingListItem *isUpgradingList(eListType listType, int sublistId) const;
+    cBuildingListItem *isUpgradingConstyard() const;
+    cBuildingListItem *isBuildingStructure() const;
     bool isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const;
 
     bool startBuildingUnit(int iUnitType) const;
@@ -379,7 +410,7 @@ public:
      * @param itemToPlace       which building list item to use? (used to derive which kind of structure, etc)
      * @return
      */
-    cAbstractStructure* placeItem(int destinationCell, cBuildingListItem *itemToPlace);
+    cAbstractStructure *placeItem(int destinationCell, cBuildingListItem *itemToPlace);
 
     /**
      * Places structure, usually the source is somewhere else (a unit, MCV; or from map loading).
@@ -388,7 +419,7 @@ public:
      * @param healthPercentage 0-100
      * @return
      */
-    cAbstractStructure* placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage);
+    cAbstractStructure *placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage);
 
     void onNotifyGameEvent(const s_GameEvent &event);
 
@@ -407,7 +438,7 @@ public:
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType);
     s_PlaceResult canPlaceConcreteAt(int iCell);
 
-    void log(const std::string& txt) const;
+    void log(const std::string &txt) const;
 
     void thinkFast();
 
@@ -417,7 +448,9 @@ public:
 
     int getSameOrSimilarUnitType(int requestedUnitType);
 
-    void setQuota(int value) { spiceQuota = value; }
+    void setQuota(int value) {
+        spiceQuota = value;
+    }
 
     bool hasMetQuota();
 
@@ -426,11 +459,13 @@ public:
      */
     bool evaluateStillAlive();
 
-    bool isAlive() { return alive; }
+    bool isAlive() {
+        return alive;
+    }
 
-    std::vector<cPlayerNotification> & getNotifications();
+    std::vector<cPlayerNotification> &getNotifications();
 
-    void addNotification(const std::string& msg, eNotificationType type);
+    void addNotification(const std::string &msg, eNotificationType type);
 
     // properties (for now public, should become private)
     int selected_structure;
@@ -452,7 +487,7 @@ public:
 
     void thinkSlow();
 
-    void deselectUnit(const int & unitId);
+    void deselectUnit(const int &unitId);
 
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
