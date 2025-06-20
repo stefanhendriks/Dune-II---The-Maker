@@ -284,7 +284,7 @@ void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha) {
 }
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y) {
-    // draw_sprite(dest, src, x, y);
+    //_draw_sprite(dest, src, x, y);
     SDL_Rect tmp = {x,y,src->w, src->h};
     SDL_BlitSurface(src, nullptr, dest, &tmp);
 }

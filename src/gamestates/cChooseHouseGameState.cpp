@@ -61,10 +61,10 @@ void cChooseHouseGameState::draw() const {
     cMouse *mouse = game.getMouse();
 
     // Render the planet Dune a bit downward
-    draw_sprite(bmp_screen, bmp_Dune, coords_Dune.x, coords_Dune.y);
+    renderDrawer->drawSprite(bmp_screen, bmp_Dune, coords_Dune.x, coords_Dune.y);
     
     // HOUSES
-    draw_sprite(bmp_screen, bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
+    renderDrawer->drawSprite(bmp_screen, bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
     renderDrawer->blitSprite(bmp_HouseAtreides, bmp_screen, &houseAtreides);
     renderDrawer->blitSprite(bmp_HouseOrdos, bmp_screen, &houseOrdos);

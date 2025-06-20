@@ -22,7 +22,7 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
 
     auto temp_bitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
     clear_to_color(temp_bitmap, makecol(255,0,255));
-	  draw_sprite(temp_bitmap, buttonBitmap, 0, 0);
+	renderDrawer->drawSprite(temp_bitmap, buttonBitmap, 0, 0);
 
     greyedButtonBitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
     clear_to_color(greyedButtonBitmap, makecol(0, 0, 0));
@@ -43,9 +43,9 @@ void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
 
 	assert(orderProcesser);
 	if (orderProcesser->isOrderPlaced()) {
-		draw_sprite(bmp_screen, greyedButtonBitmap, buttonRect.getX(), buttonRect.getY());
+		renderDrawer->drawSprite(bmp_screen, greyedButtonBitmap, buttonRect.getX(), buttonRect.getY());
 	} else {
-		draw_sprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
+		renderDrawer->drawSprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
 	}
 
     if (_isMouseOverOrderButton) {

@@ -350,7 +350,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
                 if (selectedMap.terrain) {
-                    draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    renderDrawer->drawSprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                 }
             }
         } else {
@@ -360,13 +360,13 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                        renderDrawer->drawSprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                     }
                 }
             } else {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(),
+                        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(),
                                     previewMapRect.getY());
                     }
                 }

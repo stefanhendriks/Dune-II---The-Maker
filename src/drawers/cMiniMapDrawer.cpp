@@ -258,7 +258,7 @@ void cMiniMapDrawer::drawStaticFrame() {
     if (status == eMinimapStatus::LOWPOWER) return;
 
     if (status == eMinimapStatus::POWERDOWN) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, drawX, drawY);
+        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, drawX, drawY);
         return;
     }
 

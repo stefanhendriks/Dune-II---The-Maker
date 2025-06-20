@@ -5,6 +5,7 @@
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
+#include "drawers/cAllegroDrawer.h"
 
 #include <allegro.h>
 
@@ -163,13 +164,13 @@ void CreditsDrawer::draw() {
 	clear_bitmap(bmp);
 	clear_to_color(bmp, makecol(255, 0, 255)); // transparency
 
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[CREDITS_BAR].dat, drawX, drawY);
+	renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[CREDITS_BAR].dat, drawX, drawY);
 
 	drawCurrentCredits();
 	drawPreviousCredits();
 
 	// draw bmp on screen
-	draw_sprite(bmp_screen, bmp, drawX+8, drawY + 8);
+	renderDrawer->drawSprite(bmp_screen, bmp, drawX+8, drawY + 8);
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount) {
@@ -225,7 +226,7 @@ void CreditsDrawer::drawCurrentCredits() {
 		int nr = getCreditDrawId(credits[i]);
 
 		if (nr != CREDITS_NONE) {
-			draw_sprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
+			renderDrawer->drawSprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
 		}
 	}
 }
@@ -257,7 +258,7 @@ void CreditsDrawer::drawPreviousCredits() {
 		int nr = getCreditDrawId(credits[i]);
 
 		if (nr != CREDITS_NONE) {
-			draw_sprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
+			renderDrawer->drawSprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
 		}
 	}
 }

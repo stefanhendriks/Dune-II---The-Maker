@@ -639,7 +639,7 @@ void cUnit::draw_experience() {
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxdata[OBJECT_STAR_01 + iStarType].dat, drawx + i * 9, drawy);
+        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[OBJECT_STAR_01 + iStarType].dat, drawx + i * 9, drawy);
     }
 
 }
@@ -764,7 +764,7 @@ void cUnit::draw() {
 
     // when we want to be picked up..
     if (bCarryMe) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux, uy - 7);
+        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux, uy - 7);
     }
 
     if (bSelected) {
