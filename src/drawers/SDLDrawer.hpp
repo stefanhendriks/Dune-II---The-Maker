@@ -60,8 +60,9 @@ class SDLDrawer {
     void gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
 
     void drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color);
-
     void drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size);
+
+    void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);
 
 protected:
     int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
