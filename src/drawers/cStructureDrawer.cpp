@@ -63,7 +63,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
-    draw_sprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
+    renderDrawer->drawSprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
     renderDrawer->stretchSprite(temp, bmp_screen, drawX, drawY, scaledWidth, scaledHeight);
     destroy_bitmap(temp);
 
@@ -324,7 +324,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int iconHeight = ((BITMAP *)gfxinter[iconId].dat)->h;
     BITMAP *bmp = create_bitmap(iconWidth, iconHeight);
     clear_to_color(bmp, makecol(255, 0, 255));
-    draw_sprite(bmp, (BITMAP *)gfxinter[iconId].dat, 0, 0);
+    renderDrawer->drawSprite(bmp, (BITMAP *)gfxinter[iconId].dat, 0, 0);
 
     // draw health bar of unit on top of icon?
     int draw_x = 3;

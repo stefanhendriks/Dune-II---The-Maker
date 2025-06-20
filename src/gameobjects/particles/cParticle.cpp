@@ -139,7 +139,7 @@ void cParticle::draw() {
         }
         draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
     } else {
-        draw_sprite(bmp_screen, stretched, drawX, drawY);
+        renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);
     }
 
     set_trans_blender(0, 0, 0, 128);

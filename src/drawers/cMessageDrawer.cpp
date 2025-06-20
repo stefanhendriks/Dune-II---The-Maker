@@ -111,7 +111,7 @@ void cMessageDrawer::setMessage(const std::string & msg, bool keepMessage) {
 
 void cMessageDrawer::draw() {
     if (m_state == messages::eMessageDrawerState::COMBAT) {
-        draw_sprite(bmp_screen, m_bmpBar, m_position.x, m_position.y);
+        renderDrawer->drawSprite(bmp_screen, m_bmpBar, m_position.x, m_position.y);
     }
 
 	if (m_alpha > -1) {
@@ -119,7 +119,7 @@ void cMessageDrawer::draw() {
 
 		clear_to_color(m_temp, makecol(255, 0, 255));
 
-		draw_sprite(m_temp, m_bmpBar, 0, 0);
+		renderDrawer->drawSprite(m_temp, m_bmpBar, 0, 0);
 
 		// draw message
         renderDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
