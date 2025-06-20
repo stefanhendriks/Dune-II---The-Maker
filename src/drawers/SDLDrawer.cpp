@@ -30,8 +30,6 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
-    // only same color depth is supported
-    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) return;
 
     // no use drawing outside of bounds
     if (pos_x + desiredWidth < 0) return;
@@ -47,7 +45,15 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = { 0, 0, src->w, src->h };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    int result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    int result;
+    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+        SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+        result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+        SDL_FreeSurface(converted);
+    } else {
+        result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    }
+    
     if (result < 0) {
         std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
     }
@@ -57,8 +63,6 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
-    // only same color depth is supported
-    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) return;
 
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;
@@ -82,7 +86,14 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = {src_x, src_y, width, height };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    int result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    int result;
+    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+        SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+        result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+        SDL_FreeSurface(converted);
+    } else {
+        result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    }
     if (result < 0) {
         std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
     }
@@ -133,9 +144,6 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
-    // only same color depth is supported
-    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) return;
-
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;
 
@@ -157,7 +165,14 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = {src_x, src_y, width, height };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    int result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    int result;
+    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+        SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+        result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+        SDL_FreeSurface(converted);
+    } else {
+        result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    }
     if (result < 0) {
         std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
     }
