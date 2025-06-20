@@ -311,10 +311,9 @@ void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangl
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-
-    drawRect(dest, rectangle, gui_colorBorderLight);
-    line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
-    line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
+    SDL_Rect tmp = {x1,y1,width,height};
+    Uint32 mappedColor = SDL_MapRGBA(dest->format, gui_colorBorderLight.r, gui_colorBorderLight.g, gui_colorBorderLight.b, gui_colorBorderLight.a);
+    draw_rect_outline_surface(dest, &tmp, mappedColor);
 }
 
 void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y) {
