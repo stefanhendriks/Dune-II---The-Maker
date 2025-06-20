@@ -184,8 +184,12 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp) {
 void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const {
     // use :: so we use global scope Allegro blitSprite
     if (src == nullptr || dest == nullptr) return;
-    ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+    //::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+    const SDL_Rect src_pos = {src_x, src_y,width, height};
+    SDL_Rect dest_pos = {pos_x, pos_y,width, height};
+    SDL_BlitSurface(src, &src_pos, dest, &dest_pos);
 }
+
 
 void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const {
     if (rectangle == nullptr) return;
