@@ -3,7 +3,8 @@
 #include "d2tmc.h"
 #include "managers/cDrawManager.h"
 
-void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
+void cProceedButtonCommand::execute(cAbstractMentat &mentat)
+{
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
         game.setNextStateToTransitionTo(GAME_PLAYING);
@@ -24,7 +25,8 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
             game.initSkirmish();
             game.initiateFadingOut();
-        } else {
+        }
+        else {
             logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
         }
         return;
@@ -48,7 +50,8 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.setNextStateToTransitionTo(GAME_REGION);
 
             game.m_mission--; // we did not win
-        } else {
+        }
+        else {
             // mission 1 failed, really?..., back to mentat with briefing
             game.setNextStateToTransitionTo(GAME_BRIEFING);
             game.prepareMentatForPlayer();

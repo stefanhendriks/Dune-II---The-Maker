@@ -8,7 +8,7 @@ class cGame;
 class cHandleArgument {
 
 public:
-    explicit cHandleArgument(cGame * game);
+    explicit cHandleArgument(cGame *game);
 
     ~cHandleArgument();
 
@@ -36,21 +36,21 @@ private:
     };
 
     const std::map<std::string, Options> optionStrings{
-            {"-game",             Options::GAME},
-            {"-windowed",         Options::WINDOWED},
-            {"-nomusic",          Options::NOMUSIC},
-            {"-nosound",          Options::NOSOUND},
-            {"-debug",            Options::DEBUG},
-            {"-debug-units",      Options::DEBUG_UNITS},
-            {"-noai",             Options::NOAI},
-            {"-oneai",            Options::ONEAI},
-            {"-nowormai",         Options::NOWORMAI},
-            {"-noreinforcements", Options::NOREINFORCEMENTS},
-            {"-noairest",         Options::NOAIREST},
-            {"-screenWidth",      Options::SCREENX},
-            {"-screenHeight",     Options::SCREENY},
-            {"-usages",           Options::USAGES},
-            {"--help",            Options::HELP}
+        {"-game",             Options::GAME},
+        {"-windowed",         Options::WINDOWED},
+        {"-nomusic",          Options::NOMUSIC},
+        {"-nosound",          Options::NOSOUND},
+        {"-debug",            Options::DEBUG},
+        {"-debug-units",      Options::DEBUG_UNITS},
+        {"-noai",             Options::NOAI},
+        {"-oneai",            Options::ONEAI},
+        {"-nowormai",         Options::NOWORMAI},
+        {"-noreinforcements", Options::NOREINFORCEMENTS},
+        {"-noairest",         Options::NOAIREST},
+        {"-screenWidth",      Options::SCREENX},
+        {"-screenHeight",     Options::SCREENY},
+        {"-usages",           Options::USAGES},
+        {"--help",            Options::HELP}
     };
 
     cGame *m_game = nullptr;

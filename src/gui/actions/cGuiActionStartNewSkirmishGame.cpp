@@ -1,9 +1,11 @@
 #include "cGuiActionStartNewSkirmishGame.h"
 
-cGuiActionStartNewSkirmishGame::cGuiActionStartNewSkirmishGame(cSetupSkirmishGameState *skirmishGameState) : skirmishGameState(skirmishGameState) {
+cGuiActionStartNewSkirmishGame::cGuiActionStartNewSkirmishGame(cSetupSkirmishGameState *skirmishGameState) : skirmishGameState(skirmishGameState)
+{
 
 }
 
-void cGuiActionStartNewSkirmishGame::execute() {
+void cGuiActionStartNewSkirmishGame::execute()
+{
 
 }

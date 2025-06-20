@@ -4,14 +4,14 @@
 #include "enums.h"
 
 class cRepairFacility : public cAbstractStructure {
-  private:
+private:
     void think_animation_unitDeploy();
 
     int TIMER_repairunit;
 
     eAnimationDirection animDir;
 
-  public:
+public:
     cRepairFacility();
 
     void thinkFast() override;
@@ -28,9 +28,13 @@ class cRepairFacility : public cAbstractStructure {
 
     void startAnimating() override;
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override;
 };

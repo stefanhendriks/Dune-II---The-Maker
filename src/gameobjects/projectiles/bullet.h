@@ -29,7 +29,7 @@ public:
     bool bStartedFromMountain; // was fired from a mountain level tile? (if so, it won't be locked by mountains or walls)
 
     int iCell;          // cell of bullet - calculated in think_move() based on posX/posY
-    int iType;          // type of bullet    
+    int iType;          // type of bullet
 
     int iOwnerUnit;     // unit who shoots
     int iOwnerStructure;// structure who shoots (rocket/normal turret for example)

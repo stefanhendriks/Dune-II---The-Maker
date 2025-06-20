@@ -6,15 +6,18 @@
 #include "player/cPlayer.h"
 
 cRepairFacility::cRepairFacility()
-        : TIMER_repairunit(0)
-        , animDir(ANIM_NONE) {
+    : TIMER_repairunit(0)
+    , animDir(ANIM_NONE)
+{
 }
 
-int cRepairFacility::getType() const {
+int cRepairFacility::getType() const
+{
     return REPAIR;
 }
 
-void cRepairFacility::thinkFast() {
+void cRepairFacility::thinkFast()
+{
 
     // Repair unit here (if any)
     if (hasUnitWithin()) {
@@ -26,7 +29,8 @@ void cRepairFacility::thinkFast() {
 
 }
 
-void cRepairFacility::think_repairUnit() {// must repair...
+void cRepairFacility::think_repairUnit()  // must repair...
+{
     int iUnitID = getUnitIdWithin();
     cUnit &unitToRepair = unit[iUnitID];
 //    int maxHpForUnitType = sUnitInfo[unitToRepair.iType].hp;
@@ -67,13 +71,15 @@ void cRepairFacility::think_repairUnit() {// must repair...
     setAnimating(true);
 }
 
-void cRepairFacility::think_animation() {
+void cRepairFacility::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_animation_unitDeploy();
 }
 
-void cRepairFacility::think_animation_unitDeploy() {
+void cRepairFacility::think_animation_unitDeploy()
+{
     if (!isAnimating()) return; // do nothing when not animating
     TIMER_flag++;
     int waitLimit = animDir == eAnimationDirection::ANIM_SPAWN_UNIT ? 120 : 30;
@@ -106,15 +112,18 @@ void cRepairFacility::think_animation_unitDeploy() {
 
 }
 
-void cRepairFacility::think_guard() {
+void cRepairFacility::think_guard()
+{
 
 }
 
-void cRepairFacility::startAnimating() {
+void cRepairFacility::startAnimating()
+{
     animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
 }
 
-void cRepairFacility::onNotifyGameEvent(const s_GameEvent &event) {
+void cRepairFacility::onNotifyGameEvent(const s_GameEvent &event)
+{
     if (event.eventType == GAME_EVENT_DEPLOY_UNIT) {
         if (hasUnitWithin()) {
             // dump unit, get rid of it

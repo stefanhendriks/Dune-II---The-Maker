@@ -13,12 +13,12 @@
 #pragma once
 
 class cUnitUtils {
-  protected:
-  	cUnitUtils();
+protected:
+    cUnitUtils();
 
-  public:
-	  static cUnitUtils& getInstance();
+public:
+    static cUnitUtils &getInstance();
 
-	  int findUnit(int type, int iPlayerId); // find the first unit of type belonging to player Id.
-	  int findUnit(int type, int iPlayerId, int iIgnoreUnitId);
+    int findUnit(int type, int iPlayerId); // find the first unit of type belonging to player Id.
+    int findUnit(int type, int iPlayerId, int iIgnoreUnitId);
 };

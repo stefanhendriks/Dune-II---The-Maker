@@ -3,7 +3,7 @@
 #include "cAbstractMentat.h"
 
 class cOrdosMentat : public cAbstractMentat {
-  private:
+private:
     void draw_mouth();
     void draw_eyes();
     void draw_other();

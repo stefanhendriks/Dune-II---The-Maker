@@ -11,7 +11,8 @@
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     cGameState(theGame),
-    textDrawer(cTextDrawer(bene_font)) {
+    textDrawer(cTextDrawer(bene_font))
+{
     backButtonRect = textDrawer.getAsRectangle(0, game.m_screenH - textDrawer.getFontHeight(), " BACK");
 
     bmp_Dune = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
@@ -42,7 +43,8 @@ cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     hoversOverBackButton = false;
 }
 
-cChooseHouseGameState::~cChooseHouseGameState() {
+cChooseHouseGameState::~cChooseHouseGameState()
+{
     delete backButtonRect;
 
     // not owner of these
@@ -53,16 +55,18 @@ cChooseHouseGameState::~cChooseHouseGameState() {
     bmp_HouseHarkonnen = nullptr;
 }
 
-void cChooseHouseGameState::thinkFast() {
+void cChooseHouseGameState::thinkFast()
+{
 
 }
 
-void cChooseHouseGameState::draw() const {
+void cChooseHouseGameState::draw() const
+{
     cMouse *mouse = game.getMouse();
 
     // Render the planet Dune a bit downward
     renderDrawer->drawSprite(bmp_screen, bmp_Dune, coords_Dune.x, coords_Dune.y);
-    
+
     // HOUSES
     renderDrawer->drawSprite(bmp_screen, bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
@@ -73,16 +77,18 @@ void cChooseHouseGameState::draw() const {
     // BACK (bottom right
     int color = hoversOverBackButton ? makecol(255, 0, 0) : makecol(255, 255, 255);
     textDrawer.drawText(backButtonRect->getTopLeft(), color, " BACK");
-    
+
     // MOUSE
     mouse->draw();
 }
 
-eGameStateType cChooseHouseGameState::getType() {
+eGameStateType cChooseHouseGameState::getType()
+{
     return GAMESTATE_SELECT_YOUR_NEXT_CONQUEST;
 }
 
-void cChooseHouseGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cChooseHouseGameState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
@@ -95,34 +101,40 @@ void cChooseHouseGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) const {
+void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) const
+{
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
         game.prepareMentatToTellAboutHouse(ATREIDES);
         game.playSound(SOUND_ATREIDES);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.initiateFadingOut();
-    } else if (event.coords.isWithinRectangle(&houseOrdos)) {
+    }
+    else if (event.coords.isWithinRectangle(&houseOrdos)) {
         game.prepareMentatToTellAboutHouse(ORDOS);
         game.playSound(SOUND_ORDOS);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.initiateFadingOut();
-    } else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
+    }
+    else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         game.prepareMentatToTellAboutHouse(HARKONNEN);
         game.playSound(SOUND_HARKONNEN);
         game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.initiateFadingOut();
-    } else if (event.coords.isWithinRectangle(backButtonRect)) {
+    }
+    else if (event.coords.isWithinRectangle(backButtonRect)) {
         game.setNextStateToTransitionTo(GAME_MENU);
         game.initiateFadingOut();
     }
 }
 
-void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event) {
+void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event)
+{
     hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
 }
 
-void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(KEY_ESC)) {
             game.setNextStateToTransitionTo(GAME_MENU);

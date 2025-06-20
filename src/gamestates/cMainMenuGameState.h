@@ -11,8 +11,8 @@ struct BITMAP;
 class cGame;
 
 class cMainMenuGameState : public cGameState {
-  public:
-    explicit cMainMenuGameState(cGame& theGame);
+public:
+    explicit cMainMenuGameState(cGame &theGame);
     ~cMainMenuGameState() override;
 
     void thinkFast() override;
@@ -23,7 +23,7 @@ class cMainMenuGameState : public cGameState {
 
     eGameStateType getType() override;
 
-  private:
+private:
     int logoX;
     int logoY;
 
@@ -34,8 +34,8 @@ class cMainMenuGameState : public cGameState {
 
     const cTextDrawer textDrawer;
 
-    cGuiWindow * gui_window;
-    cGuiButton * gui_btn_credits;
+    cGuiWindow *gui_window;
+    cGuiButton *gui_btn_credits;
 
     BITMAP *bmp_D2TM_Title;
 };

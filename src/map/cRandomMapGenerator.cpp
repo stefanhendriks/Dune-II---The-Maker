@@ -7,10 +7,12 @@
 #include "map/cMapEditor.h"
 #include "drawers/cAllegroDrawer.h"
 
-cRandomMapGenerator::cRandomMapGenerator() {
+cRandomMapGenerator::cRandomMapGenerator()
+{
 }
 
-void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry) {
+void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry)
+{
     // create random map
     map.init(128, 128);
     auto mapEditor = cMapEditor(map);
@@ -60,7 +62,8 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
                     if (ABS_length(map.getCellX(iCll), map.getCellY(iCll), map.getCellX(iSpotRock[s]),
                                    map.getCellY(iSpotRock[s])) < iDistance) {
                         bOk = false;
-                    } else {
+                    }
+                    else {
                         iFails++;
                     }
                 }
@@ -78,7 +81,8 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 
             if (iSpot < startingPoints) {
                 randomMapEntry.iStartCell[iSpot] = iCll;
-            } else {
+            }
+            else {
                 mapEditor.createRandomField(iCll, TERRAIN_MOUNTAIN, 5 + rnd(15));
             }
 
@@ -192,7 +196,8 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenW, game.m_screenH);
 }
 
-void cRandomMapGenerator::drawProgress(float progress) const {
+void cRandomMapGenerator::drawProgress(float progress) const
+{
     int iProgress = progress * 211;
     //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
     renderDrawer->drawRectFilled(bmp_screen, 216, 225, iProgress, 257-225, makecol(255, 0, 0));

@@ -6,39 +6,41 @@ class cBuildingListItem;
 
 namespace brains {
 
-    class cPlayerBrainMission;
+class cPlayerBrainMission;
 
-    class cPlayerBrainMissionKindDeathHand : public cPlayerBrainMissionKind {
+class cPlayerBrainMissionKindDeathHand : public cPlayerBrainMissionKind {
 
-    public:
+public:
 
-        cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission * mission);
+    cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission *mission);
 
-        ~cPlayerBrainMissionKindDeathHand() override;
+    ~cPlayerBrainMissionKindDeathHand() override;
 
-        cPlayerBrainMissionKind * clone(cPlayer *player, cPlayerBrainMission * mission) override;
+    cPlayerBrainMissionKind *clone(cPlayer *player, cPlayerBrainMission *mission) override;
 
-        bool think_SelectTarget() override;
+    bool think_SelectTarget() override;
 
-        void think_Execute() override;
+    void think_Execute() override;
 
-        void onNotifyGameEvent(const s_GameEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        const char *toString() override { return "cPlayerBrainMissionKindDeathHand"; }
+    const char *toString() override {
+        return "cPlayerBrainMissionKindDeathHand";
+    }
 
-        void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+    void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
 
-    private:
-        int target;
-        cBuildingListItem * itemToLaunch;
+private:
+    int target;
+    cBuildingListItem *itemToLaunch;
 
-        void onEventDeviated(const s_GameEvent &event);
+    void onEventDeviated(const s_GameEvent &event);
 
-        void onEventDestroyed(const s_GameEvent &event);
+    void onEventDestroyed(const s_GameEvent &event);
 
-        void onMySpecialSelectTarget(const s_GameEvent &event);
+    void onMySpecialSelectTarget(const s_GameEvent &event);
 
-        void onBuildItemCancelled(const s_GameEvent &event);
-    };
+    void onBuildItemCancelled(const s_GameEvent &event);
+};
 
 }

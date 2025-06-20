@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -19,4 +19,4 @@
 bool GUI_DRAW_FRAME(int x, int y, int width, int height);
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height);
 bool MOUSE_WITHIN_RECT(int x, int y, int width, int height);
-bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, const std::string& text, int hoverColor);
+bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, const std::string &text, int hoverColor);

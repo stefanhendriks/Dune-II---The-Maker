@@ -35,7 +35,8 @@ constexpr int MaxVolume = MIX_MAX_VOLUME;
 
 class cSoundData {
 public:
-    cSoundData() {
+    cSoundData()
+    {
         auto logger = cLogger::getInstance();
 
         gfxaudio = std::make_unique<DataPack>("data/sdl_audio.dat");
@@ -43,27 +44,32 @@ public:
             static auto msg = "Could not hook/load datafile: sdl_audio.dat.";
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
             throw std::runtime_error(msg);
-        } else {
+        }
+        else {
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Hooked datafile: sdl_audio.dat.", OUTC_SUCCESS);
         }
     }
 
-    Mix_Chunk* getSample(int sampleId) const {
+    Mix_Chunk *getSample(int sampleId) const
+    {
         return gfxaudio->getSample(sampleId);
     }
 
-    Mix_Music *getMusic(int musicId) const {
+    Mix_Music *getMusic(int musicId) const
+    {
         return gfxaudio->getMusic(musicId);
     }
 private:
     std::unique_ptr<DataPack> gfxaudio;
 };
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit& init) : cSoundPlayer(init, kAllegroMaxNrVoices) {
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &init) : cSoundPlayer(init, kAllegroMaxNrVoices)
+{
 }
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
-        : soundData(std::make_unique<cSoundData>()) {
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
+    : soundData(std::make_unique<cSoundData>())
+{
     // The platform layer init object is not used here, but since it needs to be passed, it tells
     // the caller that the initialization needs to be performed first.
 
@@ -82,8 +88,7 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
         }
 
         //reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
-        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
-        {
+        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
             logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
         }
 
@@ -102,7 +107,8 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
 
             voices.resize(nr_voices - 1, kNoVoice);
             break;
-        } else {
+        }
+        else {
             auto msg = fmt::format("Failed installing sound. {} voices reserved", nr_voices);
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
         }
@@ -115,7 +121,8 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit&, int maxNrVoices)
     Mix_VolumeMusic(musicVolume);
 }
 
-cSoundPlayer::~cSoundPlayer() {
+cSoundPlayer::~cSoundPlayer()
+{
     // for (int voice : voices) {
     //     if (voice != kNoVoice) {
     //         deallocate_voice(voice);
@@ -123,12 +130,14 @@ cSoundPlayer::~cSoundPlayer() {
     // }
 }
 
-int cSoundPlayer::getMaxVolume() {
+int cSoundPlayer::getMaxVolume()
+{
     // TODO: This will become configurable (so you can set your own max volume for sounds, etc)
     return MaxVolume;
 }
 
-void cSoundPlayer::think() {
+void cSoundPlayer::think()
+{
     // MIRA : free voices tab
     // for (int& voice : voices) {
     //     if (voice == kNoVoice) {
@@ -143,11 +152,13 @@ void cSoundPlayer::think() {
     // }
 }
 
-void cSoundPlayer::playSound(int sampleId) {
+void cSoundPlayer::playSound(int sampleId)
+{
     playSound(sampleId, musicVolume);
 }
 
-void cSoundPlayer::playSound(int sampleId, int vol) {
+void cSoundPlayer::playSound(int sampleId, int vol)
+{
     if (vol <= 0) {
         return;
     }
@@ -166,10 +177,10 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
 
     vol = std::clamp(vol, 0, kAllegroMaxVolume);
 
-    Mix_Chunk* sample = soundData->getSample(sampleId);
-	// assert(sample);
+    Mix_Chunk *sample = soundData->getSample(sampleId);
+    // assert(sample);
     Mix_PlayChannel(-1, sample, 0); // -1 means play on any available channel
-	// *voice = allocate_voice(sample);
+    // *voice = allocate_voice(sample);
     // assert(*voice != kNoVoiceAvailable);
 
     // voice_set_playmode(*voice, PLAYMODE_PLAY | PLAYMODE_FORWARD); // The default
@@ -178,25 +189,30 @@ void cSoundPlayer::playSound(int sampleId, int vol) {
     // voice_start(*voice);
 }
 
-void cSoundPlayer::playVoice(int sampleId, int house) {
-	if (house == HARKONNEN) {
-		sampleId += 1;
-	} else if (house == ORDOS) {
-		sampleId += 2;
-	}
+void cSoundPlayer::playVoice(int sampleId, int house)
+{
+    if (house == HARKONNEN) {
+        sampleId += 1;
+    }
+    else if (house == ORDOS) {
+        sampleId += 2;
+    }
 
     playSound(sampleId);
 }
 
-void cSoundPlayer::playMusic(int sampleId) {
+void cSoundPlayer::playMusic(int sampleId)
+{
     Mix_PlayMusic(soundData->getMusic(sampleId), kNoLoop);
 }
 
-bool cSoundPlayer::isMusicPlaying() const {
+bool cSoundPlayer::isMusicPlaying() const
+{
     return Mix_PlayingMusic() > 0;
 }
 
-void cSoundPlayer::stopMusic() {
+void cSoundPlayer::stopMusic()
+{
     Mix_HaltMusic();
 }
 

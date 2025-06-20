@@ -2,10 +2,12 @@
 
 #include "definitions.h"
 
-cRocketTurret::cRocketTurret() {
+cRocketTurret::cRocketTurret()
+{
 
 }
 
-int cRocketTurret::getType() const {
-	return RTURRET;
+int cRocketTurret::getType() const
+{
+    return RTURRET;
 }

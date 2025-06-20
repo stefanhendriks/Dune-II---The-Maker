@@ -33,7 +33,7 @@ int slowThinkMsToTicks(int desiredMs);
 int fastThinkMsToTicks(int desiredMs);
 int fastThinkTicksToMs(int ticks);
 
-void logbook(const std::string& txt);
+void logbook(const std::string &txt);
 
 int makeColFromString(std::string colorStr);
 
@@ -52,4 +52,4 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
-const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
+const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);

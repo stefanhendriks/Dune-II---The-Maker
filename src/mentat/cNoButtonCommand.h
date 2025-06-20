@@ -10,5 +10,5 @@ class cAbstractMentat;
 class cNoButtonCommand : public cButtonCommand {
 
 public:
-    void execute(cAbstractMentat& mentat) override;
+    void execute(cAbstractMentat &mentat) override;
 };

@@ -12,19 +12,22 @@
 // this class has to be abstracted in such a way so it is used in both those states, yet without the wonky init
 // functions
 
-cMessageDrawer::cMessageDrawer() {
+cMessageDrawer::cMessageDrawer()
+{
     m_bmpBar = nullptr;
     m_temp = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
-	init();
+    init();
 }
 
-cMessageDrawer::~cMessageDrawer() {
-	init();
+cMessageDrawer::~cMessageDrawer()
+{
+    init();
 }
 
-void cMessageDrawer::destroy() {
+void cMessageDrawer::destroy()
+{
     m_alpha = -1;
     m_TIMER_message = 0;
 
@@ -32,17 +35,19 @@ void cMessageDrawer::destroy() {
     destroy_bitmap(m_temp);
 }
 
-void cMessageDrawer::init() {
+void cMessageDrawer::init()
+{
     m_state = messages::eMessageDrawerState::COMBAT;
     m_fadeState = messages::eMessageDrawerFadingState::FADE_IN;
     m_keepMessage = false;
     m_alpha = -1;
-	m_message.clear();
+    m_message.clear();
     m_TIMER_message = 0;
-	initCombatPosition();
+    initCombatPosition();
 }
 
-void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
+void cMessageDrawer::createMessageBarBmp(int desiredWidth)
+{
     if (m_bmpBar) {
         destroy_bitmap(m_bmpBar);
     }
@@ -65,7 +70,8 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
     m_temp = create_bitmap(m_bmpBar->w, m_bmpBar->h);
 }
 
-void cMessageDrawer::thinkFast() {
+void cMessageDrawer::thinkFast()
+{
     if (m_fadeState == messages::eMessageDrawerFadingState::FADE_IN) {
         m_TIMER_message++;
 
@@ -102,36 +108,39 @@ void cMessageDrawer::thinkFast() {
  *
  * @param msg
  */
-void cMessageDrawer::setMessage(const std::string & msg, bool keepMessage) {
+void cMessageDrawer::setMessage(const std::string &msg, bool keepMessage)
+{
     m_TIMER_message=0;
     m_fadeState = messages::eMessageDrawerFadingState::FADE_IN;
     m_message = msg;
     setKeepMessage(keepMessage);
 }
 
-void cMessageDrawer::draw() {
+void cMessageDrawer::draw()
+{
     if (m_state == messages::eMessageDrawerState::COMBAT) {
         renderDrawer->drawSprite(bmp_screen, m_bmpBar, m_position.x, m_position.y);
     }
 
-	if (m_alpha > -1) {
-		set_trans_blender(0, 0, 0, m_alpha);
+    if (m_alpha > -1) {
+        set_trans_blender(0, 0, 0, m_alpha);
 
-		clear_to_color(m_temp, makecol(255, 0, 255));
+        clear_to_color(m_temp, makecol(255, 0, 255));
 
-		renderDrawer->drawSprite(m_temp, m_bmpBar, 0, 0);
+        renderDrawer->drawSprite(m_temp, m_bmpBar, 0, 0);
 
-		// draw message
+        // draw message
         renderDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
-		//Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
+        //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
         renderDrawer->resetClippingFor(m_temp);
 
-		// draw temp
-		draw_trans_sprite(bmp_screen, m_temp, m_position.x, m_position.y);
-	}
+        // draw temp
+        draw_trans_sprite(bmp_screen, m_temp, m_position.x, m_position.y);
+    }
 }
 
-void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
+void cMessageDrawer::initRegionPosition(int offsetX, int offsetY)
+{
     m_state = messages::eMessageDrawerState::NEXT_CONQUEST;
     m_keepMessage = false;
     m_timeMessageIsVisible = 650; // sensible default
@@ -145,7 +154,8 @@ void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
     m_position.y = offsetY + 358;
 }
 
-void cMessageDrawer::initCombatPosition() {
+void cMessageDrawer::initCombatPosition()
+{
     m_state = messages::eMessageDrawerState::COMBAT;
     m_keepMessage = false;
     m_timeMessageIsVisible = 450; // sensible default
@@ -160,6 +170,7 @@ void cMessageDrawer::initCombatPosition() {
     m_position.y = 1;
 }
 
-void cMessageDrawer::setKeepMessage(bool value) {
+void cMessageDrawer::setKeepMessage(bool value)
+{
     m_keepMessage = value;
 }

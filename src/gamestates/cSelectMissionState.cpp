@@ -10,10 +10,11 @@
 #include <allegro/gfx.h>
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, BITMAP *background, int prevState)
-  : cGameState(theGame)
-  ,  background(background)
-  ,  prevState(prevState)
-  ,  textDrawer(cTextDrawer(bene_font)) {
+    : cGameState(theGame)
+    ,  background(background)
+    ,  prevState(prevState)
+    ,  textDrawer(cTextDrawer(bene_font))
+{
     int margin = game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
@@ -61,16 +62,19 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, BITMAP *background, int
     gui_window->addGuiObject(gui_btn_Back);
 }
 
-cSelectMissionState::~cSelectMissionState() {
+cSelectMissionState::~cSelectMissionState()
+{
     delete gui_window;
     destroy_bitmap(background);
 }
 
-void cSelectMissionState::thinkFast() {
+void cSelectMissionState::thinkFast()
+{
 
 }
 
-void cSelectMissionState::draw() const {
+void cSelectMissionState::draw() const
+{
     renderDrawer->drawSprite(bmp_screen, background, 0, 0);
 
     gui_window->draw();
@@ -79,13 +83,16 @@ void cSelectMissionState::draw() const {
     game.getMouse()->draw();
 }
 
-void cSelectMissionState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cSelectMissionState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     gui_window->onNotifyMouseEvent(event);
 }
 
-eGameStateType cSelectMissionState::getType() {
+eGameStateType cSelectMissionState::getType()
+{
     return GAMESTATE_MISSION_SELECT;
 }
 
-void cSelectMissionState::onNotifyKeyboardEvent(const cKeyboardEvent &) {
+void cSelectMissionState::onNotifyKeyboardEvent(const cKeyboardEvent &)
+{
 }

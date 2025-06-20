@@ -2,8 +2,9 @@
 
 namespace brains {
 
-    cPlayerBrain::cPlayerBrain(cPlayer *player) : player(player) {
+cPlayerBrain::cPlayerBrain(cPlayer *player) : player(player)
+{
 
-    }
+}
 
 }

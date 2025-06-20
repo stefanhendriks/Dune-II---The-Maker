@@ -5,24 +5,24 @@
 
 namespace brains {
 
-    class cPlayerBrainSandworm : public cPlayerBrain {
+class cPlayerBrainSandworm : public cPlayerBrain {
 
-    public:
-        explicit cPlayerBrainSandworm(cPlayer * player);
-        ~cPlayerBrainSandworm();
+public:
+    explicit cPlayerBrainSandworm(cPlayer *player);
+    ~cPlayerBrainSandworm();
 
-        void think() override;
+    void think() override;
 
-        void thinkFast() override;
+    void thinkFast() override;
 
-        void onNotifyGameEvent(const s_GameEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        void addBuildOrder(S_buildOrder order) override;
+    void addBuildOrder(S_buildOrder order) override;
 
-    private:
-        int TIMER_think;
+private:
+    int TIMER_think;
 
-        void findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const;
-    };
+    void findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const;
+};
 
 }

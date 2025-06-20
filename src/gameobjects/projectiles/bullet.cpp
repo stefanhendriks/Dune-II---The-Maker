@@ -26,7 +26,8 @@
 
 static constexpr auto ANIMATION_SPEED = 12;
 
-void cBullet::init() {
+void cBullet::init()
+{
     bAlive = false;
     bStartedFromMountain = false;
 
@@ -51,26 +52,31 @@ void cBullet::init() {
     TIMER_homing = 0;   // when timer set, > 0 means homing
 }
 
-int cBullet::pos_x() const {
+int cBullet::pos_x() const
+{
     return posX;
 }
 
-int cBullet::pos_y() const {
+int cBullet::pos_y() const
+{
     return posY;
 }
 
-int cBullet::draw_x() {
+int cBullet::draw_x()
+{
     int bmpOffset = (getBulletBmpWidth()/2) * -1;
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
-int cBullet::draw_y() {
+int cBullet::draw_y()
+{
     int bmpOffset = (getBulletBmpHeight()/2) * -1;
     return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
 // draw the bullet
-void cBullet::draw() {
+void cBullet::draw()
+{
     int x = draw_x();
     int y = draw_y();
 
@@ -96,20 +102,21 @@ void cBullet::draw() {
     }
 
     if (iType == ROCKET_SMALL ||
-        iType == ROCKET_SMALL_FREMEN ||
-        iType == ROCKET_SMALL_ORNI) {
+            iType == ROCKET_SMALL_FREMEN ||
+            iType == ROCKET_SMALL_ORNI) {
         sy = (iFrame * 16);
     }
 
     if (iType != BULLET_SMALL &&
-        iType != BULLET_TRIKE &&
-        iType != BULLET_QUAD &&
-        iType != BULLET_TANK &&
-        iType != BULLET_SIEGE &&
-        iType != BULLET_DEVASTATOR &&
-        iType != BULLET_TURRET) {
+            iType != BULLET_TRIKE &&
+            iType != BULLET_QUAD &&
+            iType != BULLET_TANK &&
+            iType != BULLET_SIEGE &&
+            iType != BULLET_DEVASTATOR &&
+            iType != BULLET_TURRET) {
         sx = ba * getBulletBmpWidth();
-    } else {
+    }
+    else {
         sx = 0;
     }
 
@@ -121,25 +128,28 @@ void cBullet::draw() {
 
     if (sBulletInfo[iType].bmp != nullptr) {
         renderDrawer->maskedStretchBlit(sBulletInfo[iType].bmp,
-                                         bmp_screen,
-                                         sx, sy,
-                                         bmp_width, bmp_width,
-                                         x, y,
-                                         mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
+                                        bmp_screen,
+                                        sx, sy,
+                                        bmp_width, bmp_width,
+                                        x, y,
+                                        mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
     }
 }
 
-int cBullet::getBulletBmpWidth() const {
+int cBullet::getBulletBmpWidth() const
+{
     return sBulletInfo[iType].bmp_width;
 }
 
-int cBullet::getBulletBmpHeight() const {
+int cBullet::getBulletBmpHeight() const
+{
     return getBulletBmpWidth(); // the bullets are always assumed to be a square (height==width)
 }
 
 
 // called every 5 ms
-void cBullet::thinkFast() {
+void cBullet::thinkFast()
+{
     int maxFrames = gets_Bullet().max_frames;
     if (maxFrames > 0) {
         // frame animation first
@@ -179,7 +189,8 @@ void cBullet::thinkFast() {
 }
 
 
-void cBullet::think_move() {
+void cBullet::think_move()
+{
     iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
 
     int iCellX = map.getCellX(iCell);
@@ -232,13 +243,15 @@ void cBullet::think_move() {
         if (iOwnerStructure > -1) {
             if (id != iOwnerStructure) {
                 bHitsEnemyBuilding = true;
-            } else {
+            }
+            else {
                 // do not hit own or allied structures
                 if (!structure[id]->getPlayer()->isSameTeamAs(getPlayer())) {
                     bHitsEnemyBuilding = true;
                 }
             }
-        } else {
+        }
+        else {
             // OG Dune 2 effect: Hit structures
             bHitsEnemyBuilding = true;
         }
@@ -250,7 +263,8 @@ void cBullet::think_move() {
     }
 }
 
-void cBullet::arrivedAtDestinationLogic() {
+void cBullet::arrivedAtDestinationLogic()
+{
     //
     // we handle different kind of places where we can inflict damage
     // and we don't bail out after doing that, allowing to inflict damage on several layers on the battle field
@@ -290,8 +304,8 @@ void cBullet::arrivedAtDestinationLogic() {
             int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
             logbook(fmt::format(
-                "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
-                iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor));
+                        "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
+                        iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor));
 
             // when air layer is hit, it won't damage ground things
             if (!damageAirUnit(cellToDamage, factor)) {                // inflict damage on air unit (if rocket)
@@ -340,7 +354,8 @@ void cBullet::arrivedAtDestinationLogic() {
  * @param cell
  * @param factor
  */
-void cBullet::damageTerrain(int cell, double factor) const {
+void cBullet::damageTerrain(int cell, double factor) const
+{
     if (!map.isValidCell(cell)) return;
     if (!canDamageGround()) return;
 
@@ -360,11 +375,13 @@ void cBullet::damageTerrain(int cell, double factor) const {
     }
 }
 
-bool cBullet::isInfantryBullet() const {
+bool cBullet::isInfantryBullet() const
+{
     return iType == BULLET_SMALL;
 }
 
-bool cBullet::isSonicWave() const {
+bool cBullet::isSonicWave() const
+{
     return iType == BULLET_SHIMMER;
 }
 
@@ -374,7 +391,8 @@ bool cBullet::isSonicWave() const {
  * @param unitIdOnAirLayer
  * @return
  */
-bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const {
+bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
+{
     if (unitIdOnAirLayer < 0) return false;
     if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
 
@@ -400,7 +418,8 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const {
  * Handle damaging at cell, returns true if an (non-owner) unit is damaged.
  * Returns false when cell is invalid, bullet cannot damage air units, or if unit at cell is same as owner of this bullet.
  */
-bool cBullet::damageAirUnit(int cell, double factor) const {
+bool cBullet::damageAirUnit(int cell, double factor) const
+{
     if (!map.isValidCell(cell)) return false;
     if (!canDamageAirUnits()) return false;
     int unitIdOnAirLayer = map.getCellIdAirUnitLayer(cell);
@@ -421,7 +440,8 @@ bool cBullet::damageAirUnit(int cell, double factor) const {
  * If cell param is invalid or no ground unit exists at (valid) cell, then this method aborts.
  * @param cell
  */
-bool cBullet::damageGroundUnit(int cell, double factor) const {
+bool cBullet::damageGroundUnit(int cell, double factor) const
+{
     if (!map.isValidCell(cell)) return false;
     int id = map.getCellIdUnitLayer(cell);
     if (id < 0) return false;
@@ -445,7 +465,8 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
 
                 if (sUnitInfo[groundUnitTakingDamage.iType].infantry) {
                     ownerUnit.fExperience += 0.25; // 4 kills = 1 star
-                } else {
+                }
+                else {
                     ownerUnit.fExperience += 0.45; // ~ 3 kills = 1 star
                 }
             }
@@ -468,11 +489,11 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
 
                 // send out event that this unit got deviated (and what the new owner ID is)
                 s_GameEvent event {
-                        .eventType = eGameEventType::GAME_EVENT_DEVIATED,
-                        .entityType = eBuildType::UNIT,
-                        .entityID = groundUnitTakingDamage.iID,
-                        .player = groundUnitTakingDamage.getPlayer(), // <-- is now changed
-                        .entitySpecificType = groundUnitTakingDamage.iType
+                    .eventType = eGameEventType::GAME_EVENT_DEVIATED,
+                    .entityType = eBuildType::UNIT,
+                    .entityID = groundUnitTakingDamage.iID,
+                    .player = groundUnitTakingDamage.getPlayer(), // <-- is now changed
+                    .entitySpecificType = groundUnitTakingDamage.iType
                 };
 
                 game.onNotifyGameEvent(event);
@@ -487,14 +508,16 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
  * @param unitTakingDamage
  * @return
  */
-float cBullet::getDamageToInflictToUnit(cUnit &unitTakingDamage) const {
+float cBullet::getDamageToInflictToUnit(cUnit &unitTakingDamage) const
+{
     if (unitTakingDamage.isInfantryUnit()) {
         return getDamageToInflictToInfantry();
     }
     return getDamageToInflictToNonInfantry();
 }
 
-float cBullet::getDamageToInflictToInfantry() const {
+float cBullet::getDamageToInflictToInfantry() const
+{
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
     float result = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_inf);
@@ -511,11 +534,13 @@ float cBullet::getDamageToInflictToInfantry() const {
  * if cell is invalid, or terrain is not TERRAIN_BLOOM; it will abort.
  * @param cell
  */
-void cBullet::detonateSpiceBloom(int cell) const {
+void cBullet::detonateSpiceBloom(int cell) const
+{
     map.detonateSpiceBloom(cell);
 }
 
-void cBullet::damageSandworm(int cell, double factor) const {
+void cBullet::damageSandworm(int cell, double factor) const
+{
     if (!map.isValidCell(cell)) return;
     int id = map.getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
@@ -525,7 +550,8 @@ void cBullet::damageSandworm(int cell, double factor) const {
     worm.takeDamage(damage, iOwnerUnit, iOwnerStructure);
 }
 
-bool cBullet::isAtDestination() const {
+bool cBullet::isAtDestination() const
+{
     int distanceX = abs(targetX - posX);
     int distanceY = abs(targetY - posY);
     return distanceX < 2 && distanceY < 2;
@@ -537,7 +563,8 @@ bool cBullet::isAtDestination() const {
  * If cell param provided is invalid, it aborts.
  * @param cell
  */
-void cBullet::damageWall(int cell, double factor) const {
+void cBullet::damageWall(int cell, double factor) const
+{
     if (!map.isValidCell(cell)) return;
     int cellTypeAtCell = map.getCellType(cell);
     if (cellTypeAtCell != TERRAIN_WALL) return;
@@ -555,7 +582,8 @@ void cBullet::damageWall(int cell, double factor) const {
     }
 }
 
-void cBullet::moveBulletTowardsGoal() {
+void cBullet::moveBulletTowardsGoal()
+{
     // step 1 : look to the correct direction
     float angle = fRadians(posX, posY, targetX, targetY);
 
@@ -566,15 +594,18 @@ void cBullet::moveBulletTowardsGoal() {
     posY += sin(angle) * movespeed;
 }
 
-bool cBullet::isGroundBullet() const {
+bool cBullet::isGroundBullet() const
+{
     return gets_Bullet().groundBullet;
 }
 
-bool cBullet::canDamageAirUnits() const {
+bool cBullet::canDamageAirUnits() const
+{
     return gets_Bullet().canDamageAirUnits;
 }
 
-float cBullet::getDamageToInflictToNonInfantry() const {
+float cBullet::getDamageToInflictToNonInfantry() const
+{
     cPlayerDifficultySettings *pDifficultySettings = getDifficultySettings();
     const s_BulletInfo &sBullet = gets_Bullet();
     float iDamage = pDifficultySettings->getInflictDamage(sBullet.damage);
@@ -592,17 +623,20 @@ float cBullet::getDamageToInflictToNonInfantry() const {
     return iDamage;
 }
 
-cPlayerDifficultySettings *cBullet::getDifficultySettings() const {
-    const cPlayer * cPlayer = getPlayer();
+cPlayerDifficultySettings *cBullet::getDifficultySettings() const
+{
+    const cPlayer *cPlayer = getPlayer();
     cPlayerDifficultySettings *pDifficultySettings = cPlayer->getDifficultySettings();
     return pDifficultySettings;
 }
 
-s_BulletInfo cBullet::gets_Bullet() const {
+s_BulletInfo cBullet::gets_Bullet() const
+{
     return sBulletInfo[iType];
 }
 
-cPlayer * cBullet::getPlayer() const {
+cPlayer *cBullet::getPlayer() const
+{
     return &players[iPlayer];
 }
 
@@ -612,7 +646,8 @@ cPlayer * cBullet::getPlayer() const {
  * @param difficultySettings
  * @param idOfStructureAtCell
  */
-void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
+void cBullet::damageStructure(int idOfStructureAtCell, double factor)
+{
     if (!map.isValidCell(idOfStructureAtCell)) return;
     int id = map.getCellIdStructuresLayer(idOfStructureAtCell);
     if (id < 0) return; // bail
@@ -652,7 +687,8 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
  * Picks a random Y position around current position. (max half tile distance)
  * @return
  */
-int cBullet::getRandomY() const {
+int cBullet::getRandomY() const
+{
     int half = 16;
     int randomY = -8 + rnd(half);
     return pos_y() + half + randomY;
@@ -662,16 +698,19 @@ int cBullet::getRandomY() const {
  * Picks a random X position around current position. (max half tile distance)
  * @return
  */
-int cBullet::getRandomX() const {
+int cBullet::getRandomX() const
+{
     int half = 16;
     int randomX = -8 + rnd(half);
     return pos_x() + half + randomX;
 }
 
-void cBullet::die() {
+void cBullet::die()
+{
     bAlive = false;
 }
 
-bool cBullet::canDamageGround() const {
+bool cBullet::canDamageGround() const
+{
     return gets_Bullet().canDamageGround;
 }

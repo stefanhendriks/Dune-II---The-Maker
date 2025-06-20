@@ -12,7 +12,8 @@ cCreditsState::cCreditsState(cGame &theGame) :
     m_moveSpeed(0.15f),
     m_textDrawer(cTextDrawer(bene_font)),
     m_duneBmp((BITMAP *) gfxinter[BMP_GAME_DUNE].dat),
-    m_titleBmp((BITMAP *) gfxinter[BMP_D2TM].dat) {
+    m_titleBmp((BITMAP *) gfxinter[BMP_D2TM].dat)
+{
 
     int duneAtTheRight = game.m_screenW - (m_duneBmp->w * 1.1f);
     int duneAlmostAtBottom = game.m_screenH - (m_duneBmp->h * 1.1f);
@@ -30,7 +31,8 @@ cCreditsState::cCreditsState(cGame &theGame) :
     prepareCrawlerLines();
 }
 
-void cCreditsState::prepareCrawlerLines() {
+void cCreditsState::prepareCrawlerLines()
+{
     int colorYellow = makecol(255, 207, 41);
     int colorWhite = makecol(255, 255, 255);
     int colorGreen = makecol(0, 255, 0);
@@ -318,20 +320,23 @@ void cCreditsState::prepareCrawlerLines() {
     });
 }
 
-void cCreditsState::resetCrawler() {
+void cCreditsState::resetCrawler()
+{
     m_crawlerY = game.m_screenH + 1;
 }
 
-cCreditsState::~cCreditsState() {
+cCreditsState::~cCreditsState()
+{
     m_duneBmp = nullptr;
     m_titleBmp = nullptr;
 }
 
-void cCreditsState::thinkFast() {
+void cCreditsState::thinkFast()
+{
     m_crawlerY -= m_moveSpeed;
 
     int textCrawlY = m_crawlerY + m_titleHeight;
-    for (auto & line : m_lines) {
+    for (auto &line : m_lines) {
         textCrawlY += line.height;
     }
 
@@ -340,7 +345,8 @@ void cCreditsState::thinkFast() {
     }
 }
 
-void cCreditsState::draw() const {
+void cCreditsState::draw() const
+{
     clear_to_color(bmp_screen, makecol(0, 0, 16));
 
     renderDrawer->drawSprite(bmp_screen, m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
@@ -350,12 +356,14 @@ void cCreditsState::draw() const {
     // draw crawler
     renderDrawer->drawSprite(bmp_screen, m_titleBmp, m_titleX, m_crawlerY);
     int textCrawlY = m_crawlerY + m_titleHeight;
-    for (auto & line : m_lines) {
+    for (auto &line : m_lines) {
         if (line.name.empty()) {
             m_textDrawer.drawTextCentered(line.txt.c_str(), textCrawlY, line.color);
-        } else if (line.txt.empty()) {
+        }
+        else if (line.txt.empty()) {
             m_textDrawer.drawTextCentered(line.name.c_str(), textCrawlY, line.color);
-        } else {
+        }
+        else {
             int spaceBetween = 4;
             // both name and line given, then we render them differently.
             m_textDrawer.drawText(halfScreen+spaceBetween, textCrawlY, line.txt.c_str());
@@ -369,19 +377,23 @@ void cCreditsState::draw() const {
     game.getMouse()->draw();
 }
 
-void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED) {
         m_moveSpeed = 1.0f; // speed up
-    } else if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
+    }
+    else if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
         m_moveSpeed = 0.15f; // restore
     }
 }
 
-eGameStateType cCreditsState::getType() {
+eGameStateType cCreditsState::getType()
+{
     return GAMESTATE_CREDITS;
 }
 
-void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_ESC)) {
         game.setNextStateToTransitionTo(GAME_MENU);
         game.initiateFadingOut();

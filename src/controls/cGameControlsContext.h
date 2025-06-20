@@ -23,82 +23,102 @@
 #include "controls/mousestates/cMouseDeployState.h"
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
-	public:
-		explicit cGameControlsContext(cPlayer *player, cMouse *mouse);
-		~cGameControlsContext() override;
+public:
+    explicit cGameControlsContext(cPlayer *player, cMouse *mouse);
+    ~cGameControlsContext() override;
 
-		int getIdOfStructureWhereMouseHovers() const { return m_mouseHoveringOverStructureId; }
-		int getIdOfUnitWhereMouseHovers() const { return m_mouseHoveringOverUnitId; }
+    int getIdOfStructureWhereMouseHovers() const {
+        return m_mouseHoveringOverStructureId;
+    }
+    int getIdOfUnitWhereMouseHovers() const {
+        return m_mouseHoveringOverUnitId;
+    }
 
-		int getMouseCell() const { return m_mouseCell; }
+    int getMouseCell() const {
+        return m_mouseCell;
+    }
 
-		bool isMouseOverStructure() const { return m_mouseHoveringOverStructureId > -1; }
-		bool isMouseOverUnit() const { return m_mouseHoveringOverUnitId > -1; }
+    bool isMouseOverStructure() const {
+        return m_mouseHoveringOverStructureId > -1;
+    }
+    bool isMouseOverUnit() const {
+        return m_mouseHoveringOverUnitId > -1;
+    }
 
-		bool isMouseOnSidebar() const { return m_mouseCell == MOUSECELL_SIDEBAR; }
-		bool isMouseOnTopBar() const { return m_mouseCell == MOUSECELL_TOPBAR; }
-		bool isMouseOnMiniMap() const { return m_mouseCell == MOUSECELL_MINIMAP; }
-        bool isMouseOnSidebarOrMinimap() const { return isMouseOnSidebar() || isMouseOnMiniMap(); }
-		bool isMouseOnBattleField() const;
+    bool isMouseOnSidebar() const {
+        return m_mouseCell == MOUSECELL_SIDEBAR;
+    }
+    bool isMouseOnTopBar() const {
+        return m_mouseCell == MOUSECELL_TOPBAR;
+    }
+    bool isMouseOnMiniMap() const {
+        return m_mouseCell == MOUSECELL_MINIMAP;
+    }
+    bool isMouseOnSidebarOrMinimap() const {
+        return isMouseOnSidebar() || isMouseOnMiniMap();
+    }
+    bool isMouseOnBattleField() const;
 
-		bool shouldDrawToolTip() const { return m_drawToolTip; }
+    bool shouldDrawToolTip() const {
+        return m_drawToolTip;
+    }
 
-		cAbstractStructure * getStructurePointerWhereMouseHovers() const;
+    cAbstractStructure *getStructurePointerWhereMouseHovers() const;
 
-		int getMouseCellFromScreen(int mouseX, int mouseY) const;
+    int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
-        void onNotifyMouseEvent(const s_MouseEvent &event) override;
-        void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-        void onNotifyGameEvent(const s_GameEvent &event) override;
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        void setMouseState(eMouseState newState);
+    void setMouseState(eMouseState newState);
 
-        void toPreviousState();
+    void toPreviousState();
 
-        bool isState(eMouseState other) const;
+    bool isState(eMouseState other) const;
 
-        void onFocusMouseStateEvent();
+    void onFocusMouseStateEvent();
 
-    protected:
-		void determineToolTip();
-		void determineHoveringOverStructureId();
-		void determineHoveringOverUnitId();
+protected:
+    void determineToolTip();
+    void determineHoveringOverStructureId();
+    void determineHoveringOverUnitId();
 
-	private:
-		int m_mouseHoveringOverStructureId;
-		int m_mouseHoveringOverUnitId;
-        bool m_mouseOnBattleField;
+private:
+    int m_mouseHoveringOverStructureId;
+    int m_mouseHoveringOverUnitId;
+    bool m_mouseOnBattleField;
 
-		bool m_drawToolTip;
+    bool m_drawToolTip;
 
-		// on what cell is the mouse hovering
-		int m_mouseCell;
+    // on what cell is the mouse hovering
+    int m_mouseCell;
 
-		// context belongs to specific player
-		cPlayer * m_player;
+    // context belongs to specific player
+    cPlayer *m_player;
 
-        // the state to direct events to
-        eMouseState m_state;
-        eMouseState m_prevState;             // used to switch back previous state (ie from Place, or Repair mode)
-        eMouseState m_prevStateBeforeRepair; // the state before repair mode only, used when Place/Repair mode is used
-                                           // in conjunction
+    // the state to direct events to
+    eMouseState m_state;
+    eMouseState m_prevState;             // used to switch back previous state (ie from Place, or Repair mode)
+    eMouseState m_prevStateBeforeRepair; // the state before repair mode only, used when Place/Repair mode is used
+    // in conjunction
 
-        cMouse *m_mouse;
+    cMouse *m_mouse;
 
-        // the states, initialized once to save a lot of construct/destructs (and make it possible
-        // to switch between states without needing to restore 'state' within the state object)
-        cMouseNormalState * m_mouseNormalState;
-        cMouseUnitsSelectedState * m_mouseUnitsSelectedState;
-        cMouseRepairState * m_mouseRepairState;
-		cMousePlaceState * m_mousePlaceState;
-		cMouseDeployState * m_mouseDeployState;
+    // the states, initialized once to save a lot of construct/destructs (and make it possible
+    // to switch between states without needing to restore 'state' within the state object)
+    cMouseNormalState *m_mouseNormalState;
+    cMouseUnitsSelectedState *m_mouseUnitsSelectedState;
+    cMouseRepairState *m_mouseRepairState;
+    cMousePlaceState *m_mousePlaceState;
+    cMouseDeployState *m_mouseDeployState;
 
-		//
-		bool m_prevTickMouseAtBattleField;
+    //
+    bool m_prevTickMouseAtBattleField;
 
-        // mouse state
-        void onNotifyMouseStateEvent(const s_MouseEvent &event);
-        void onBlurMouseStateEvent();
-        void onMouseMovedTo(const s_MouseEvent &event);
-        void updateMouseCell(const cPoint &coords);
+    // mouse state
+    void onNotifyMouseStateEvent(const s_MouseEvent &event);
+    void onBlurMouseStateEvent();
+    void onMouseMovedTo(const s_MouseEvent &event);
+    void updateMouseCell(const cPoint &coords);
 };

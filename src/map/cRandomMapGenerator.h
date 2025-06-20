@@ -3,12 +3,12 @@
 #include "map/cPreviewMaps.h"
 
 class cRandomMapGenerator {
-	public:
-		cRandomMapGenerator();
+public:
+    cRandomMapGenerator();
 
-		void generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry);
+    void generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry);
 
-	private:
+private:
 
     void drawProgress(float progress) const;
 };

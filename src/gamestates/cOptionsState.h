@@ -10,8 +10,8 @@ struct BITMAP;
 class cGame;
 
 class cOptionsState : public cGameState {
-  public:
-    explicit cOptionsState(cGame& theGame, BITMAP *background, int prevState);
+public:
+    explicit cOptionsState(cGame &theGame, BITMAP *background, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -25,14 +25,14 @@ class cOptionsState : public cGameState {
     void setPrevState(int prevState);
     void refresh();
 
-  private:
+private:
     BITMAP *m_background;
 
     const cTextDrawer m_textDrawer;
 
     int m_prevState;
 
-    cGuiWindow * m_guiWindow;
+    cGuiWindow *m_guiWindow;
 
     void constructWindow(int prevState);
 };

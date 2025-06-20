@@ -5,16 +5,16 @@
 #include <set>
 
 class cKeyboard {
-	public:
-		cKeyboard();
+public:
+    cKeyboard();
 
-        void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
+    void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
-        void setKeyboardObserver(cInputObserver *keyboardObserver) {
-            _keyboardObserver = keyboardObserver;
-        }
+    void setKeyboardObserver(cInputObserver *keyboardObserver) {
+        _keyboardObserver = keyboardObserver;
+    }
 
-	private:
-        cInputObserver *_keyboardObserver;
-        std::set<int> keysPressed;
+private:
+    cInputObserver *_keyboardObserver;
+    std::set<int> keysPressed;
 };

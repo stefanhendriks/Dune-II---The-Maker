@@ -9,7 +9,8 @@
 
 #include <allegro.h>
 
-cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
+cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
+{
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
@@ -17,12 +18,12 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     int halfOfButtonHeight = buttonBitmap->h / 2;
     buttonRect = cRectangle((game.m_screenW - halfOfSidebar) - halfOfButton,
                             (game.m_screenH - halfOfHeightLeftForButton) - halfOfButtonHeight,
-                                buttonBitmap->w, buttonBitmap->h);
+                            buttonBitmap->w, buttonBitmap->h);
     _isMouseOverOrderButton = false;
 
     auto temp_bitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
     clear_to_color(temp_bitmap, makecol(255,0,255));
-	renderDrawer->drawSprite(temp_bitmap, buttonBitmap, 0, 0);
+    renderDrawer->drawSprite(temp_bitmap, buttonBitmap, 0, 0);
 
     greyedButtonBitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
     clear_to_color(greyedButtonBitmap, makecol(0, 0, 0));
@@ -32,28 +33,32 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     destroy_bitmap(temp_bitmap);
 }
 
-cOrderDrawer::~cOrderDrawer() {
+cOrderDrawer::~cOrderDrawer()
+{
     destroy_bitmap(greyedButtonBitmap);
 }
 
-void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
-	assert(thePlayer);
+void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
+{
+    assert(thePlayer);
 
-	cOrderProcesser * orderProcesser = thePlayer->getOrderProcesser();
+    cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
-	assert(orderProcesser);
-	if (orderProcesser->isOrderPlaced()) {
-		renderDrawer->drawSprite(bmp_screen, greyedButtonBitmap, buttonRect.getX(), buttonRect.getY());
-	} else {
-		renderDrawer->drawSprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
-	}
+    assert(orderProcesser);
+    if (orderProcesser->isOrderPlaced()) {
+        renderDrawer->drawSprite(bmp_screen, greyedButtonBitmap, buttonRect.getX(), buttonRect.getY());
+    }
+    else {
+        renderDrawer->drawSprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
+    }
 
     if (_isMouseOverOrderButton) {
         drawRectangleOrderButton();
     }
 }
 
-void cOrderDrawer::drawRectangleOrderButton() {
+void cOrderDrawer::drawRectangleOrderButton()
+{
     int x = buttonRect.getX();
     int y = buttonRect.getY();
     int width = buttonRect.getWidth();
@@ -63,14 +68,16 @@ void cOrderDrawer::drawRectangleOrderButton() {
     renderDrawer->drawRect(bmp_screen, x+1, y+1, width-2, height-2, color);
 }
 
-void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
+void cOrderDrawer::onMouseAt(const s_MouseEvent &event)
+{
     _isMouseOverOrderButton = buttonRect.isPointWithin(event.coords);
 }
 
-void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &) {
+void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &)
+{
     // handle "order" button interaction
     if (_isMouseOverOrderButton) {
-        cOrderProcesser * orderProcesser = player->getOrderProcesser();
+        cOrderProcesser *orderProcesser = player->getOrderProcesser();
         if (orderProcesser->canPlaceOrder()) {
             orderProcesser->placeOrder();
         }
@@ -78,7 +85,8 @@ void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &) {
 
 }
 
-void cOrderDrawer::onNotify(const s_MouseEvent &event) {
+void cOrderDrawer::onNotify(const s_MouseEvent &event)
+{
     switch (event.eventType) {
         case eMouseEventType::MOUSE_MOVED_TO:
             onMouseAt(event);
@@ -91,6 +99,7 @@ void cOrderDrawer::onNotify(const s_MouseEvent &event) {
     }
 }
 
-void cOrderDrawer::setPlayer(cPlayer *pPlayer) {
+void cOrderDrawer::setPlayer(cPlayer *pPlayer)
+{
     this->player = pPlayer;
 }

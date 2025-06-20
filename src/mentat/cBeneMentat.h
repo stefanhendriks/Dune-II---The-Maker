@@ -6,7 +6,7 @@
  * This is the mentat that is used for house selection. (Bene Geserit)
  */
 class cBeneMentat : public cAbstractMentat {
-  private:
+private:
     void draw_mouth() override;
     void draw_eyes() override;
     void draw_other() override;

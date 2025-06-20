@@ -10,6 +10,6 @@ class cAbstractMentat;
 class cYesButtonCommand : public cButtonCommand {
 
 public:
-    void execute(cAbstractMentat& mentat) override;
+    void execute(cAbstractMentat &mentat) override;
 
 };

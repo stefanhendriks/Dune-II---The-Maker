@@ -3,7 +3,7 @@
 #include "cAbstractStructure.h"
 
 class cBarracks : public cAbstractStructure {
-  public:
+public:
     cBarracks();
 
     void thinkFast() override;
@@ -16,11 +16,15 @@ class cBarracks : public cAbstractStructure {
 
     void startAnimating() override {}
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
     int getType() const override;
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

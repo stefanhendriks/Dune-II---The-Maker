@@ -163,7 +163,7 @@ class cSelectYourNextConquestState;
 
 // Scenario loading
 //void INI_Load_scenario(bool bOrDune, char filename[30] );
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinforcements* reinforcements);
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinforcements *reinforcements);
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);

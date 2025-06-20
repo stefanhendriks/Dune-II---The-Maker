@@ -16,7 +16,7 @@ class cPlayer;
 class cMousePlaceState : public cMouseState {
 
 public:
-    explicit cMousePlaceState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
+    explicit cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;

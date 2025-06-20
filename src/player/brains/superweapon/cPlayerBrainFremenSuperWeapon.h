@@ -4,19 +4,19 @@
 
 namespace brains {
 
-    class cPlayerBrainFremenSuperWeapon : public cPlayerBrain {
+class cPlayerBrainFremenSuperWeapon : public cPlayerBrain {
 
-    public:
-        explicit cPlayerBrainFremenSuperWeapon(cPlayer *player);
+public:
+    explicit cPlayerBrainFremenSuperWeapon(cPlayer *player);
 
-        void think() override;
+    void think() override;
 
-        void thinkFast() override;
+    void thinkFast() override;
 
-        void onNotifyGameEvent(const s_GameEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
-        void addBuildOrder(S_buildOrder order) override;
+    void addBuildOrder(S_buildOrder order) override;
 
-    };
+};
 
 }

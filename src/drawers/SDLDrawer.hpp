@@ -9,45 +9,47 @@
 
 
 class SDLDrawer {
-	public:
-		SDLDrawer(cAllegroDataRepository * dataRepository);
-		virtual ~SDLDrawer();
+public:
+    SDLDrawer(cAllegroDataRepository *dataRepository);
+    virtual ~SDLDrawer();
 
-		void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);
-		void drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x);
-		void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
+    void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);
+    void drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x);
+    void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
     void drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y);
 
     void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y);
-		void drawSprite(SDL_Surface *dest, int index, int x, int y);
+    void drawSprite(SDL_Surface *dest, int index, int x, int y);
 
-		void resetClippingFor(SDL_Surface *bmp);
-		void setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
+    void resetClippingFor(SDL_Surface *bmp);
+    void setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
 
-		void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface* src, float percentage);
+    void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage);
 
-		void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const;
-		void blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
-		void blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const;
+    void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const;
+    void blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
+    void blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const;
 
-		void stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    void stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-		void stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    void stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
     void stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
     void maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
     void maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
 
-		void maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
-		void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    void maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
     void drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
     void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
     void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
     void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
-    void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& rect, SDL_Color color, int alpha);
+    void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha);
 
-    SDL_Color getColor_BLACK() { return colorBlack; }
+    SDL_Color getColor_BLACK() {
+        return colorBlack;
+    }
 
     void bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor);
 
@@ -67,10 +69,10 @@ class SDLDrawer {
 protected:
     int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
     int getCenteredYPosForBitmap(SDL_Surface *bmp);
-    void set_pixel(SDL_Surface* surface, int x, int y, Uint32 pixel_color);
-    void draw_line_surface(SDL_Surface* surface, int x1, int y1, int x2, int y2, Uint32 color);
-    void draw_rect_outline_surface(SDL_Surface* surface, const SDL_Rect* rect, Uint32 color);
-    Uint32 get_pixel(SDL_Surface* surface, int x, int y);
+    void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
+    void draw_line_surface(SDL_Surface *surface, int x1, int y1, int x2, int y2, Uint32 color);
+    void draw_rect_outline_surface(SDL_Surface *surface, const SDL_Rect *rect, Uint32 color);
+    Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 
     SDL_Color colorBlack;
     SDL_Color gui_colorWindow;
@@ -78,12 +80,14 @@ protected:
     SDL_Color gui_colorBorderDark;
 
 private:
-    cAllegroDataRepository * m_dataRepository;
-    struct sSize{
+    cAllegroDataRepository *m_dataRepository;
+    struct sSize {
         int width;
         int height;
 
-        bool operator<(sSize rhs) const { return width == rhs.width ? height < rhs.height : width < rhs.width; }
+        bool operator<(sSize rhs) const {
+            return width == rhs.width ? height < rhs.height : width < rhs.width;
+        }
     };
-    std::map<sSize, SDL_Surface*> bitmapCache;
+    std::map<sSize, SDL_Surface *> bitmapCache;
 };

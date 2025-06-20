@@ -33,16 +33,16 @@ cStructureUtils 			structureUtils;
 cMap           				map;
 cRandomMapGenerator 		randomMapGenerator;
 
-cAbstractStructure     	*	structure[MAX_STRUCTURES];
+cAbstractStructure     		*structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
-cMapCamera				*	mapCamera;
+cMapCamera					*mapCamera;
 cPlayer        				players[MAX_PLAYERS];             // player is
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
-cDrawManager   			*	drawManager = nullptr;
+cDrawManager   				*drawManager = nullptr;
 
-cAllegroDrawer          *   renderDrawer = nullptr;
+cAllegroDrawer             *renderDrawer = nullptr;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
@@ -68,7 +68,7 @@ DATAFILE *gfxinter;		// interface graphics
 DATAFILE *gfxworld;		// world/pieces graphics
 DATAFILE *gfxmentat;	// mentat graphics
 
-DataPack* sdl_data;
+DataPack *sdl_data;
 
 // FONT stuff
 ALFONT_FONT *game_font; 	// arrakeen.fon
@@ -84,7 +84,8 @@ ALFONT_FONT *small_font;	// small font.
 /**
 	Entry point of the game
 */
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     game.setGameFilename("game.ini");
 
     if (game.handleArguments(argc, argv) < 0) {
@@ -97,7 +98,8 @@ int main(int argc, char **argv) {
         }
 
         game.shutdown();
-    } catch (std::runtime_error &e) {
+    }
+    catch (std::runtime_error &e) {
         cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_NONE, "Unknown", fmt::format("Error: {}", e.what()));
         std::cerr << fmt::format("Error: {}\n\n", e.what());
     }

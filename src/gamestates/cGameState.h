@@ -19,7 +19,7 @@ enum eGameStateType {
 class cGameState : cInputObserver {
 
 public:
-    explicit cGameState(cGame& theGame);
+    explicit cGameState(cGame &theGame);
     virtual ~cGameState() = default;
 
     virtual void thinkFast() = 0;
@@ -33,7 +33,7 @@ public:
 
 protected:
     // the state of the game itself
-    cGame& game;
+    cGame &game;
 
 private:
 

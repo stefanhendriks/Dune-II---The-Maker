@@ -8,7 +8,7 @@
 
 class cGuiWindow : cGuiObject {
 public:
-    explicit cGuiWindow(const cRectangle& rect);
+    explicit cGuiWindow(const cRectangle &rect);
     ~cGuiWindow();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -20,7 +20,9 @@ public:
 
     cRectangle getRelativeRect(int x, int y, int width, int height);
 
-    void setTitle(const std::string &value) { title = value; }
+    void setTitle(const std::string &value) {
+        title = value;
+    }
 
 private:
     std::vector<cGuiObject *> gui_objects;

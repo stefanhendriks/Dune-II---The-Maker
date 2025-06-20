@@ -2,7 +2,8 @@
 #include "include/definitions.h"
 #include "utils/common.h"
 
-void cHousesInfo::INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg) {
+void cHousesInfo::INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg)
+{
     const cSection &section = gameCfg->getSection(SECTION_HOUSES);
 
     // General / Default / No House

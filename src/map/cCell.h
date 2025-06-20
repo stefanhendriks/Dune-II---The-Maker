@@ -16,10 +16,10 @@ struct tCell {
     // there are 4 'dimensions' of this cell. Each represents the perspective of
     // an entity that is either a unit, structure, the 'worms' dimension and the 'air' dimension.
     int id[4];          // ID of
-                        // 0 = unit
-                        // 1 = structure
-                        // 2 = air
-                        // 3 = worm
+    // 0 = unit
+    // 1 = structure
+    // 2 = air
+    // 3 = worm
 };
 
 #endif /* CCELL_H_ */

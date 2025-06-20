@@ -25,21 +25,35 @@ public:
     void init();
 
     // these functions return true when the mouse button is being hold down
-    bool isLeftButtonPressed() { return leftButtonPressed; }
+    bool isLeftButtonPressed() {
+        return leftButtonPressed;
+    }
 
-    bool isRightButtonPressed() { return rightButtonPressed; }
+    bool isRightButtonPressed() {
+        return rightButtonPressed;
+    }
 
     // these functions return true when the mouse button was pressed in the previous
     // frame, but released in the current (which is counted as a 'click')
-    bool isLeftButtonClicked() { return leftButtonClicked; }
+    bool isLeftButtonClicked() {
+        return leftButtonClicked;
+    }
 
-    bool isRightButtonClicked() { return rightButtonClicked; }
+    bool isRightButtonClicked() {
+        return rightButtonClicked;
+    }
 
-    int getX() { return coords.x; }
+    int getX() {
+        return coords.x;
+    }
 
-    int getY() { return coords.y; }
+    int getY() {
+        return coords.y;
+    }
 
-    int getZ() { return z; }
+    int getZ() {
+        return z;
+    }
 
     void positionMouseCursor(int x, int y);
 

@@ -1,6 +1,7 @@
 #include "cRectangle.h"
 
-bool cRectangle::isOverlapping(const cRectangle &other) const {
+bool cRectangle::isOverlapping(const cRectangle &other) const
+{
     return isOverlapping(&other);
 }
 
@@ -9,7 +10,8 @@ bool cRectangle::isOverlapping(const cRectangle &other) const {
  * @param other
  * @return
  */
-bool cRectangle::isOverlapping(const cRectangle *other) const {
+bool cRectangle::isOverlapping(const cRectangle *other) const
+{
     if (other == nullptr) return false;
 
     if (other->isPointWithin(getX(), getY())) return true;
@@ -20,21 +22,25 @@ bool cRectangle::isOverlapping(const cRectangle *other) const {
     return false;
 }
 
-bool cRectangle::isPointWithin(int pointX, int pointY) const {
+bool cRectangle::isPointWithin(int pointX, int pointY) const
+{
     return (pointX >= topLeft.x && pointX <= (topLeft.x + width)) &&
            (pointY >= topLeft.y && pointY <= (topLeft.y + height));
 }
 
-bool cRectangle::isPointWithin(const cPoint &point) {
+bool cRectangle::isPointWithin(const cPoint &point)
+{
     return (point.x >= topLeft.x && point.x <= (topLeft.x + width)) &&
            (point.y >= topLeft.y && point.y <= (topLeft.y + height));
 }
 
-bool cRectangle::isPointWithin(const cPoint *point) const {
+bool cRectangle::isPointWithin(const cPoint *point) const
+{
     if (point == nullptr) return false;
     return (point->x >= topLeft.x && point->x <= (topLeft.x + width)) &&
            (point->y >= topLeft.y && point->y <= (topLeft.y + height));
 }
 
-cRectangle::cRectangle() : cRectangle(0,0,0,0){
+cRectangle::cRectangle() : cRectangle(0,0,0,0)
+{
 }

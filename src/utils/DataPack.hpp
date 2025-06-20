@@ -9,7 +9,7 @@
 //
 // DataPack
 //
-// A DataPack is composed by an header and data 
+// A DataPack is composed by an header and data
 //
 // The header is organized like this
 // - title: on 4 bytes
@@ -18,7 +18,7 @@
 // - its identifier on 40 bytes
 // - its extension on 4 bytes
 // - its position in the data : offset on 4 bytes (uint32_t)
-// - the size of the file : sizeFile on 4 bytes (uint32_t) 
+// - the size of the file : sizeFile on 4 bytes (uint32_t)
 //
 // Data are organized like this
 // file0 offset: 0          to    0+sizeFile0 <-- offset1
@@ -31,8 +31,7 @@
 
 class ReaderPack;
 
-class DataPack
-{
+class DataPack {
 public:
     // read pack packName and load it on memory
     DataPack(const std::string &packName);
@@ -54,7 +53,7 @@ public:
 private:
     std::unique_ptr<ReaderPack> reader;
     // for memory management
-    std::unordered_map<int, SDL_Surface*> surfaceCache;
-    std::unordered_map<int, Mix_Music*> musicCache;
-    std::unordered_map<int, Mix_Chunk*> sampleCache;
+    std::unordered_map<int, SDL_Surface *> surfaceCache;
+    std::unordered_map<int, Mix_Music *> musicCache;
+    std::unordered_map<int, Mix_Chunk *> sampleCache;
 };

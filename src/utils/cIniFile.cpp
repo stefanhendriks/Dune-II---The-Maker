@@ -6,7 +6,7 @@
 #include <algorithm>
 
 
-static void Trim(std::string& str)
+static void Trim(std::string &str)
 {
     str.erase(str.find_last_not_of(" \t\"")+1);         //suffixing spaces
     str.erase(0, str.find_first_not_of(" \t\""));       //prefixing spaces
@@ -18,14 +18,16 @@ static void Trim(std::string& str)
 
 cSection::cSection() {}
 
-cSection::~cSection() {
+cSection::~cSection()
+{
     m_sectionConf.clear();
     m_dataConfs.clear();
 }
 
 cSection::cSection(const std::string &secName, bool debugMode) : m_debugMode(debugMode), m_sectionName(secName) {}
 
-bool cSection::addValue(const std::string &key, const std::string &value, int id = 0) {
+bool cSection::addValue(const std::string &key, const std::string &value, int id = 0)
+{
     std::string realKey = fmt::format("{}-{}", key, id);
     if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
         // multiple values are allowed in ini files (ie skirmish maps)
@@ -44,12 +46,14 @@ bool cSection::addValue(const std::string &key, const std::string &value, int id
     return true;
 }
 
-bool cSection::addData(const std::string &data) {
+bool cSection::addData(const std::string &data)
+{
     m_dataConfs.push_back(data);
     return true;
 }
 
-bool cSection::hasValue(const std::string &key, int id) const {
+bool cSection::hasValue(const std::string &key, int id) const
+{
     std::string realKey = fmt::format("{}-{}", key, id);
     if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
         return true;
@@ -65,11 +69,13 @@ bool cSection::hasValue(const std::string &key, int id) const {
  * @param key
  * @return
  */
-std::string cSection::getStringValue(const std::string &key, int id) const {
+std::string cSection::getStringValue(const std::string &key, int id) const
+{
     std::string realKey = fmt::format("{}-{}", key, id);
     if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
         return m_sectionConf.at(realKey);
-    } else {
+    }
+    else {
         if (m_debugMode) {
             cLogger *logger = cLogger::getInstance();
             logger->log(LOG_WARN, COMP_GAMEINI, "(cSection)",
@@ -80,14 +86,16 @@ std::string cSection::getStringValue(const std::string &key, int id) const {
 }
 
 template<typename T>
-T cSection::FromString(std::string value) const {
+T cSection::FromString(std::string value) const
+{
     std::istringstream ss(value);
     T res;
     ss >> res;
     return res;
 }
 
-int cSection::getInt(const std::string &key, int id) const {
+int cSection::getInt(const std::string &key, int id) const
+{
     const std::string &value = getStringValue(key, id);
     if (!value.empty()) {
         return FromString<int>(value);
@@ -96,10 +104,13 @@ int cSection::getInt(const std::string &key, int id) const {
     return 0;
 }
 
-bool cSection::getBoolean(const std::string &key, int id) const {
+bool cSection::getBoolean(const std::string &key, int id) const
+{
     std::string value = getStringValue(key, id);
     if (!value.empty()) {
-        std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return std::tolower(c); });
+        std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
+            return std::tolower(c);
+        });
 
         if (value == "on" || value == "1" || value == "true")
             return true;
@@ -108,7 +119,8 @@ bool cSection::getBoolean(const std::string &key, int id) const {
     return false;
 }
 
-double cSection::getDouble(const std::string &key, int id) const {
+double cSection::getDouble(const std::string &key, int id) const
+{
     const std::string &value = getStringValue(key, id);
     if (!value.empty()) {
         return FromString<double>(value);
@@ -122,14 +134,16 @@ double cSection::getDouble(const std::string &key, int id) const {
 // cIniFile class
 //
 cIniFile::cIniFile(const std::string &configFileName, bool debugMode)
-        : m_loadSuccess(false), m_debugMode(debugMode), m_fileName(configFileName) {
+    : m_loadSuccess(false), m_debugMode(debugMode), m_fileName(configFileName)
+{
     m_loadSuccess = load(m_fileName);
 }
 
 cIniFile::~cIniFile() {}
 
 
-bool cIniFile::load(const std::string &config) {
+bool cIniFile::load(const std::string &config)
+{
     cLogger *logger = cLogger::getInstance();
     m_fileName = config;
     logger->log(LOG_INFO, COMP_GAMEINI, "(cIniFile)", fmt::format("Load file {}", m_fileName));
@@ -139,7 +153,8 @@ bool cIniFile::load(const std::string &config) {
         // see also: https://stackoverflow.com/a/51118995/214597
         try {
             throw std::system_error(errno, std::system_category(), fmt::format("Unable to open file {}", m_fileName));
-        } catch (std::runtime_error &e) {
+        }
+        catch (std::runtime_error &e) {
             std::cerr << e.what() << std::endl;
             logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)", e.what());
         }
@@ -148,7 +163,7 @@ bool cIniFile::load(const std::string &config) {
 
     std::string line, secName, lastSecName;
     while (!in.eof()) {
-        // get raw line 
+        // get raw line
         getline(in, line);
         Trim(line);
         // commented line
@@ -184,7 +199,8 @@ bool cIniFile::load(const std::string &config) {
     return true;
 }
 
-bool cIniFile::isSectionName(std::string inputLine) {
+bool cIniFile::isSectionName(std::string inputLine)
+{
     size_t sec_begin_pos = inputLine.find('[');
     if (sec_begin_pos == std::string::npos || sec_begin_pos != 0) {
         return false;
@@ -199,7 +215,8 @@ bool cIniFile::isSectionName(std::string inputLine) {
     return true;
 }
 
-bool cIniFile::isKeyValue(std::string inputLine) {
+bool cIniFile::isKeyValue(std::string inputLine)
+{
     size_t keyPos = inputLine.find('=');
     if (keyPos == std::string::npos || keyPos == 0 || keyPos == inputLine.length() - 1) {
         m_actualKey.clear();
@@ -232,10 +249,12 @@ bool cIniFile::isKeyValue(std::string inputLine) {
  * @param key
  * @return
  */
-std::string cIniFile::getStringValue(const std::string &section, const std::string &key) const {
+std::string cIniFile::getStringValue(const std::string &section, const std::string &key) const
+{
     if (hasSection(section)) {
         return getSection(section).getStringValue(key);
-    } else {
+    }
+    else {
         if (m_debugMode) {
             std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
             cLogger *logger = cLogger::getInstance();
@@ -246,13 +265,18 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
     }
 }
 
-bool cIniFile::hasSection(const std::string &section) const { return m_mapConfig.find(section) != m_mapConfig.end(); }
+bool cIniFile::hasSection(const std::string &section) const
+{
+    return m_mapConfig.find(section) != m_mapConfig.end();
+}
 
 
-cSection cIniFile::getSection(const std::string &section) const {
+cSection cIniFile::getSection(const std::string &section) const
+{
     if (hasSection(section)) {
         return m_mapConfig.at(section);
-    } else {
+    }
+    else {
         throw std::invalid_argument(fmt::format("Section {} not found in file {}", section, this->m_fileName));
     }
 }

@@ -5,27 +5,30 @@
 
 #include <vector>
 
-cBuildingList::cBuildingList(eListType listType) {
-	TIMER_flashing = 0;
-	lastClickedId = 0;
-	buttonIconIdPressed = 0;	// the button to draw at the left of the list
-	buttonDrawX = 0;
-	buttonDrawY = 0;
-	memset(items, 0, sizeof(items));
-	typeOfList = listType;
-	maxItems = 0;
+cBuildingList::cBuildingList(eListType listType)
+{
+    TIMER_flashing = 0;
+    lastClickedId = 0;
+    buttonIconIdPressed = 0;	// the button to draw at the left of the list
+    buttonDrawX = 0;
+    buttonDrawY = 0;
+    memset(items, 0, sizeof(items));
+    typeOfList = listType;
+    maxItems = 0;
     m_itemBuilder = nullptr;
     selected = false;
 }
 
-cBuildingList::~cBuildingList() {
-	removeAllItems();
+cBuildingList::~cBuildingList()
+{
+    removeAllItems();
 }
 
-cBuildingListItem * cBuildingList::getItem(int i) {
+cBuildingListItem *cBuildingList::getItem(int i)
+{
     if (i < 0) return nullptr;
     if (i >= MAX_ICONS) return nullptr;
-	return items[i];
+    return items[i];
 }
 
 /**
@@ -33,64 +36,72 @@ cBuildingListItem * cBuildingList::getItem(int i) {
  *
  * @return
  */
-int cBuildingList::getFreeSlot() {
-	for (int i = 0; i < MAX_ICONS; i++) {
-		if (items[i] == nullptr) {
-			return i; // return free slot
-		}
-	}
+int cBuildingList::getFreeSlot()
+{
+    for (int i = 0; i < MAX_ICONS; i++) {
+        if (items[i] == nullptr) {
+            return i; // return free slot
+        }
+    }
 
-	return -1; // no free slot
+    return -1; // no free slot
 }
 
-void cBuildingList::removeAllItems() {
-	for (int i =0 ; i < MAX_ICONS; i++) {
+void cBuildingList::removeAllItems()
+{
+    for (int i =0 ; i < MAX_ICONS; i++) {
         delete items[i];
         items[i] = nullptr;
     }
 }
 
-bool cBuildingList::isItemInList(cBuildingListItem * item) {
-	if (item == nullptr) return false;
-	return getItemByBuildId(item->getBuildId()) != nullptr;
+bool cBuildingList::isItemInList(cBuildingListItem *item)
+{
+    if (item == nullptr) return false;
+    return getItemByBuildId(item->getBuildId()) != nullptr;
 }
 
-cBuildingListItem * cBuildingList::getItemByBuildId(int buildId) {
-	for (int i =0; i < MAX_ICONS; i++) {
-		cBuildingListItem * itemInList = getItem(i);
-		if (itemInList == nullptr) continue;
+cBuildingListItem *cBuildingList::getItemByBuildId(int buildId)
+{
+    for (int i =0; i < MAX_ICONS; i++) {
+        cBuildingListItem *itemInList = getItem(i);
+        if (itemInList == nullptr) continue;
 
-		// item already in list (same build id)
+        // item already in list (same build id)
         if (buildId == itemInList->getBuildId()) {
             return itemInList;
         }
-	}
-	return nullptr;
+    }
+    return nullptr;
 }
 
-void cBuildingList::addUpgradeToList(int upgradeType) {
+void cBuildingList::addUpgradeToList(int upgradeType)
+{
     cBuildingListItem *item = new cBuildingListItem(upgradeType, sUpgradeInfo[upgradeType],
-                                                    sUpgradeInfo[upgradeType].providesTypeSubList);
+            sUpgradeInfo[upgradeType].providesTypeSubList);
     if (!addItemToList(item)) {
         delete item;
     }
 }
 
-void cBuildingList::addStructureToList(int structureType, int subList) {
+void cBuildingList::addStructureToList(int structureType, int subList)
+{
     cBuildingListItem *item = new cBuildingListItem(structureType, sStructureInfo[structureType], subList);
     if (!addItemToList(item)) {
         delete item;
     }
 }
 
-void cBuildingList::addUnitToList(int unitType, int subList) {
+void cBuildingList::addUnitToList(int unitType, int subList)
+{
     cBuildingListItem *item = new cBuildingListItem(unitType, sUnitInfo[unitType], subList);
     if (!addItemToList(item)) {
         delete item;
     }
 }
 
-void cBuildingList::addSpecialToList(int specialType, int subList) {
+void cBuildingList::addSpecialToList(int specialType, int subList)
+{
     s_SpecialInfo &special = sSpecialInfo[specialType];
     cBuildingListItem *item = new cBuildingListItem(specialType, special, subList);
     if (!addItemToList(item)) {
@@ -98,26 +109,27 @@ void cBuildingList::addSpecialToList(int specialType, int subList) {
     }
 }
 
-bool cBuildingList::addItemToList(cBuildingListItem * item) {
-	if (isItemInList(item)) {
+bool cBuildingList::addItemToList(cBuildingListItem *item)
+{
+    if (isItemInList(item)) {
 //		logbook("Will not add, item is already in list.");
-		// item is already in list, do not add
-		return false;
-	}
-
-	int slotId = getFreeSlot();
-	if (slotId < 0 ) {
-		logbook("Failed to add icon to cBuildingList, no free slot left in list");
+        // item is already in list, do not add
         return false;
-	}
+    }
+
+    int slotId = getFreeSlot();
+    if (slotId < 0 ) {
+        logbook("Failed to add icon to cBuildingList, no free slot left in list");
+        return false;
+    }
 
     bool beforeAddingAvailable = isAvailable();
 
-	// add
-	items[slotId] = item;
-	item->setSlotId(slotId);
-	item->setList(this);
-	maxItems = slotId + 1;
+    // add
+    items[slotId] = item;
+    item->setSlotId(slotId);
+    item->setList(this);
+    maxItems = slotId + 1;
 //	char msg[355];
 //	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
 //	logbook(msg);
@@ -128,14 +140,14 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
     eBuildType buildType = item->getBuildType();
 
     s_GameEvent event {
-            .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_ADDED,
-            .entityType = buildType,
-            .entityID = -1,
-            .player = pPlayer,
-            .entitySpecificType = buildId,
-            .atCell = -1,
-            .isReinforce = false,
-            .buildingListItem = item
+        .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_ADDED,
+        .entityType = buildType,
+        .entityID = -1,
+        .player = pPlayer,
+        .entitySpecificType = buildId,
+        .atCell = -1,
+        .isReinforce = false,
+        .buildingListItem = item
     };
 
     game.onNotifyGameEvent(event);
@@ -143,15 +155,15 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
     if (isAvailable() != beforeAddingAvailable) {
         // emit another event that this list became available! (so that sidebar can animate things)
         s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE,
-                .entityType = buildType,
-                .entityID = -1,
-                .player = pPlayer,
-                .entitySpecificType = buildId,
-                .atCell = -1,
-                .isReinforce = false,
-                .buildingListItem = item,
-                .buildingList = this
+            .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE,
+            .entityType = buildType,
+            .entityID = -1,
+            .player = pPlayer,
+            .entitySpecificType = buildId,
+            .atCell = -1,
+            .isReinforce = false,
+            .buildingListItem = item,
+            .buildingList = this
         };
 
         game.onNotifyGameEvent(event);
@@ -161,13 +173,15 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
     return true;
 }
 
-bool cBuildingList::removeItemFromList(cBuildingListItem * item) {
+bool cBuildingList::removeItemFromList(cBuildingListItem *item)
+{
     if (item == nullptr) return false;
     return removeItemFromList(item->getSlotId());
 }
 
-bool cBuildingList::removeItemFromListByBuildId(int buildId) {
-    cBuildingListItem * item = getItemByBuildId(buildId);
+bool cBuildingList::removeItemFromListByBuildId(int buildId)
+{
+    cBuildingListItem *item = getItemByBuildId(buildId);
     return removeItemFromList(item);
 }
 /**
@@ -176,24 +190,25 @@ bool cBuildingList::removeItemFromListByBuildId(int buildId) {
  *
  * @param position
  */
-bool cBuildingList::removeItemFromList(int position) {
+bool cBuildingList::removeItemFromList(int position)
+{
     if (position < 0) return false;
     if (position >= MAX_ICONS) return false;
 
-	cBuildingListItem * item = getItem(position);
-	if (item == nullptr) {
-		// item can be null, in that case do nothing.
-		return false;
-	}
+    cBuildingListItem *item = getItem(position);
+    if (item == nullptr) {
+        // item can be null, in that case do nothing.
+        return false;
+    }
 
-	if (m_itemBuilder) {
-	    // first remove this, before deleting it!
+    if (m_itemBuilder) {
+        // first remove this, before deleting it!
         m_itemBuilder->removeItemFromList(item);
-	}
+    }
 
     bool beforeRemovingAvailable = isAvailable();
 
-	delete item;
+    delete item;
     items[position] = nullptr;
 
     // starting from 'position' which became NULL, make sure everything
@@ -212,15 +227,15 @@ bool cBuildingList::removeItemFromList(int position) {
     if (isAvailable() != beforeRemovingAvailable) {
         // emit another event that this list became un-available!
         s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE,
-                .entityType = eBuildType::UNIT, // BOGUS
-                .entityID = -1,
-                .player = this->m_itemBuilder->getPlayer(),
-                .entitySpecificType = -1, // BOGUS
-                .atCell = -1,
-                .isReinforce = false,
-                .buildingListItem = nullptr,
-                .buildingList = this
+            .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE,
+            .entityType = eBuildType::UNIT, // BOGUS
+            .entityID = -1,
+            .player = this->m_itemBuilder->getPlayer(),
+            .entitySpecificType = -1, // BOGUS
+            .atCell = -1,
+            .isReinforce = false,
+            .buildingListItem = nullptr,
+            .buildingList = this
         };
 
         game.onNotifyGameEvent(event);
@@ -236,7 +251,8 @@ bool cBuildingList::removeItemFromList(int position) {
  * @param y
  * @return
  */
-bool cBuildingList::isOverButton(int x, int y) {
+bool cBuildingList::isOverButton(int x, int y)
+{
     return cRectangle::isWithin(x, y, getButtonDrawX(), getButtonDrawY(), 33, 27);
 }
 
@@ -248,23 +264,24 @@ bool cBuildingList::isOverButton(int x, int y) {
  *
  * @return std::array<int, 5>
  */
-std::array<int, 5> cBuildingList::isBuildingItem() {
+std::array<int, 5> cBuildingList::isBuildingItem()
+{
     std::array<int, 5> subListIds;
     for (int i = 0; i < 5; i++) {
         subListIds[i] = -1;
     }
-	for (int i = 0 ; i < MAX_ITEMS; i++) {
-		cBuildingListItem *item = getItem(i);
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
 
-		// valid pointer
-		if (item) {
-			// get isBuilding
-			if (item->isBuilding() || item->shouldPlaceIt()) {
+        // valid pointer
+        if (item) {
+            // get isBuilding
+            if (item->isBuilding() || item->shouldPlaceIt()) {
                 subListIds[item->getSubList()] = item->getBuildId();
-			}
-		}
-	}
-	return subListIds;
+            }
+        }
+    }
+    return subListIds;
 }
 
 
@@ -272,38 +289,41 @@ std::array<int, 5> cBuildingList::isBuildingItem() {
 // placeIt = true, so that we *know* which item to place, and not have to retrospectively decide which item we where
 // placing - this makes no sense. Especially when we are going to deploy stuff later as well... (and we assume
 // that placement is ALWAYS from CONSTYARD; deployment from PALACE. Which may work, but is not flexible at all.
-cBuildingListItem * cBuildingList::getItemToPlace() {
-	for (int i = 0 ; i < MAX_ITEMS; i++) {
-		cBuildingListItem *item = getItem(i);
-		// valid pointer
-		if (item) {
-			// get isBuilding
-			if (item->shouldPlaceIt()) {
-				return item;
-			}
-		}
-	}
-	return NULL;
+cBuildingListItem *cBuildingList::getItemToPlace()
+{
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item) {
+            // get isBuilding
+            if (item->shouldPlaceIt()) {
+                return item;
+            }
+        }
+    }
+    return NULL;
 }
 
 // TODO: This should be set, not looked up. Ie, the item to place should be set somewhere (instead of setting
 // deployIt = true, so that we *know* which item to place, and not have to retrospectively decide which item we where
 // deploying - this makes no sense.
-cBuildingListItem * cBuildingList::getItemToDeploy() {
-	for (int i = 0 ; i < MAX_ITEMS; i++) {
-		cBuildingListItem *item = getItem(i);
-		// valid pointer
-		if (item) {
-			// get isBuilding
-			if (item->shouldDeployIt()) {
-				return item;
-			}
-		}
-	}
-	return NULL;
+cBuildingListItem *cBuildingList::getItemToDeploy()
+{
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item) {
+            // get isBuilding
+            if (item->shouldDeployIt()) {
+                return item;
+            }
+        }
+    }
+    return NULL;
 }
 
-void cBuildingList::setStatusPendingUpgrade(int subListId) {
+void cBuildingList::setStatusPendingUpgrade(int subListId)
+{
     for (int i = 0 ; i < MAX_ITEMS; i++) {
         cBuildingListItem *item = getItem(i);
         // valid pointer
@@ -313,7 +333,8 @@ void cBuildingList::setStatusPendingUpgrade(int subListId) {
                 if (item->getUpgradeInfo().providesTypeSubList == subListId) {
                     item->setStatusPendingUpgrade();
                 }
-            } else {
+            }
+            else {
                 if (item->getSubList() == subListId) {
                     item->setStatusPendingUpgrade();
                 }
@@ -322,7 +343,8 @@ void cBuildingList::setStatusPendingUpgrade(int subListId) {
     }
 }
 
-void cBuildingList::setStatusAvailable(int subListId) {
+void cBuildingList::setStatusAvailable(int subListId)
+{
     for (int i = 0 ; i < MAX_ITEMS; i++) {
         cBuildingListItem *item = getItem(i);
         // valid pointer
@@ -332,7 +354,8 @@ void cBuildingList::setStatusAvailable(int subListId) {
                 if (item->getUpgradeInfo().providesTypeSubList == subListId) {
                     item->setStatusAvailable();
                 }
-            } else {
+            }
+            else {
                 if (item->getSubList() == subListId) {
                     item->setStatusAvailable();
                 }
@@ -341,7 +364,8 @@ void cBuildingList::setStatusAvailable(int subListId) {
     }
 }
 
-void cBuildingList::setStatusPendingBuilding(int subListId) {
+void cBuildingList::setStatusPendingBuilding(int subListId)
+{
     for (int i = 0 ; i < MAX_ITEMS; i++) {
         cBuildingListItem *item = getItem(i);
         // valid pointer
@@ -351,7 +375,8 @@ void cBuildingList::setStatusPendingBuilding(int subListId) {
                 if (item->getUpgradeInfo().providesTypeSubList == subListId) {
                     item->setStatusPendingBuilding();
                 }
-            } else {
+            }
+            else {
                 if (item->getSubList() == subListId) {
                     item->setStatusPendingBuilding();
                 }
@@ -360,7 +385,8 @@ void cBuildingList::setStatusPendingBuilding(int subListId) {
     }
 }
 
-void cBuildingList::removeAllSublistItems(int sublistId) {
+void cBuildingList::removeAllSublistItems(int sublistId)
+{
     std::vector<int> buildIdsToRemove;
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = getItem(i);
@@ -375,7 +401,8 @@ void cBuildingList::removeAllSublistItems(int sublistId) {
     }
 }
 
-void cBuildingList::resetTimesOrderedForAllItems() {
+void cBuildingList::resetTimesOrderedForAllItems()
+{
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = getItem(i);
         if (pItem == nullptr) continue;
@@ -383,7 +410,8 @@ void cBuildingList::resetTimesOrderedForAllItems() {
     }
 }
 
-cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId) {
+cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId)
+{
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = getItem(i);
         if (pItem == nullptr) continue;
@@ -393,16 +421,19 @@ cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId) {
     return nullptr;
 }
 
-void cBuildingList::setItemBuilder(cItemBuilder *value) {
+void cBuildingList::setItemBuilder(cItemBuilder *value)
+{
     assert(value && "cBuildingList::setItemBuilder - Expected to set to a non-null value");
     m_itemBuilder = value;
 }
 
-int cBuildingList::getFlashingColor() {
+int cBuildingList::getFlashingColor()
+{
     return game.getColorFadeSelected(255, 209, 64);
 }
 
-void cBuildingList::think() {
+void cBuildingList::think()
+{
     if (TIMER_flashing > 0) {
         TIMER_flashing--;
     }
@@ -430,10 +461,12 @@ void cBuildingList::think() {
     }
 }
 
-void cBuildingList::stopFlashing() {
+void cBuildingList::stopFlashing()
+{
     TIMER_flashing = 0;
 }
 
-void cBuildingList::startFlashing() {
+void cBuildingList::startFlashing()
+{
     TIMER_flashing = 2500;
 }

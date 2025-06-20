@@ -9,10 +9,12 @@
 
 #include <cassert>
 
-cMouseToolTip::cMouseToolTip(cPlayer *thePlayer) {
-	assert(thePlayer);
-	player = thePlayer;
+cMouseToolTip::cMouseToolTip(cPlayer *thePlayer)
+{
+    assert(thePlayer);
+    player = thePlayer;
 }
 
-cMouseToolTip::~cMouseToolTip() {
+cMouseToolTip::~cMouseToolTip()
+{
 }

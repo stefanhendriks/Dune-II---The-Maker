@@ -3,13 +3,13 @@
 #include "cAbstractStructure.h"
 
 class cLightFactory : public cAbstractStructure {
-  private:
+private:
     void think_animation_unitDeploy();
 
     bool drawFlash;
     int flashes;
 
-  public:
+public:
     cLightFactory();
 
     void thinkFast() override;
@@ -26,7 +26,9 @@ class cLightFactory : public cAbstractStructure {
 
     int getType() const override;
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

@@ -7,24 +7,27 @@
 #include <memory>
 
 
-SDLDrawer::SDLDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {
+SDLDrawer::SDLDrawer(cAllegroDataRepository *dataRepository) : m_dataRepository(dataRepository)
+{
     colorBlack= SDL_Color{0,0,0,255};
     gui_colorWindow = SDL_Color{176,176,196,255};
     gui_colorBorderDark = SDL_Color{84,84,120,255};
     gui_colorBorderLight = SDL_Color{252,252,252,255};
 }
 
-SDLDrawer::~SDLDrawer() {
+SDLDrawer::~SDLDrawer()
+{
     // do not delete data repository, we do not own it!
     m_dataRepository = nullptr;
 
-    for (auto& p : bitmapCache) {
-      SDL_FreeSurface(p.second);
+    for (auto &p : bitmapCache) {
+        SDL_FreeSurface(p.second);
     }
     bitmapCache.clear();
 }
 
-void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+{
     if (src == nullptr) return;
     if (dest == nullptr) return;
     // only same color depth is supported
@@ -50,7 +53,8 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     }
 }
 
-void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+{
     if (src == nullptr) return;
     if (dest == nullptr) return;
     // only same color depth is supported
@@ -84,11 +88,13 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     }
 }
 
-void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+{
     stretchBlit(sdl_data->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
+void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
+{
     if (src == nullptr) return;
     if (dest == nullptr) return;
 
@@ -113,15 +119,18 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
     //masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
-void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
+void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
+{
     maskedBlit(sdl_data->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
-void SDLDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+void SDLDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+{
     maskedStretchBlit(sdl_data->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+{
     if (src == nullptr) return;
     if (dest == nullptr) return;
     // only same color depth is supported
@@ -155,54 +164,60 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src) {
-	assert(src);
-	assert(dest);
-	int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
-	int yPos = getCenteredYPosForBitmap(src);
-	this->drawSprite(dest, src, xPos, yPos);
+void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src)
+{
+    assert(src);
+    assert(dest);
+    int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
+    int yPos = getCenteredYPosForBitmap(src);
+    this->drawSprite(dest, src, xPos, yPos);
 }
 
-void SDLDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface* src, float percentage) {
-	int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
+void SDLDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage)
+{
+    int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
 
-	// we want to know the 'center' first. This is done in the percentage
-	int wantedYPos = ((float)game.m_screenH * percentage);
+    // we want to know the 'center' first. This is done in the percentage
+    int wantedYPos = ((float)game.m_screenH * percentage);
 
-	// we need to know the height of the src
-	int height = src->h;
-	int halfOfHeight = height / 2;
-	int yPos = wantedYPos - halfOfHeight;
-	this->drawSprite(dest, src, xPos, yPos);
+    // we need to know the height of the src
+    int height = src->h;
+    int halfOfHeight = height / 2;
+    int yPos = wantedYPos - halfOfHeight;
+    this->drawSprite(dest, src, xPos, yPos);
 }
 
 
-void SDLDrawer::drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset) {
-	assert(src);
-	assert(dest);
-	int xPos = getCenteredXPosForBitmap(src, totalWidth) + xOffset;
-	this->drawSprite(dest, src, xPos, y);
+void SDLDrawer::drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset)
+{
+    assert(src);
+    assert(dest);
+    int xPos = getCenteredXPosForBitmap(src, totalWidth) + xOffset;
+    this->drawSprite(dest, src, xPos, y);
 }
 
-void SDLDrawer::drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x) {
-	assert(src);
-	assert(dest);
-	int yPos = getCenteredXPosForBitmap(src, game.m_screenW);
-	this->drawSprite(dest, src, x, yPos);
+void SDLDrawer::drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x)
+{
+    assert(src);
+    assert(dest);
+    int yPos = getCenteredXPosForBitmap(src, game.m_screenW);
+    this->drawSprite(dest, src, x, yPos);
 }
 
-int SDLDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth) {
-	assert(bmp);
-	int width = bmp->w;
-	int halfOfWidth = width / 2;
-	return (totalWidth / 2) - halfOfWidth;
+int SDLDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth)
+{
+    assert(bmp);
+    int width = bmp->w;
+    int halfOfWidth = width / 2;
+    return (totalWidth / 2) - halfOfWidth;
 }
 
-int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp) {
-	assert(bmp);
-	int height = bmp->h;
-	int halfOfHeight = height / 2;
-	return (game.m_screenH / 2) - halfOfHeight;
+int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
+{
+    assert(bmp);
+    int height = bmp->h;
+    int halfOfHeight = height / 2;
+    return (game.m_screenH / 2) - halfOfHeight;
 }
 
 // void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
@@ -210,7 +225,8 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp) {
 //     blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 // }
 
-void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const {
+void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const
+{
     // use :: so we use global scope Allegro blitSprite
     if (src == nullptr || dest == nullptr) return;
     //::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
@@ -220,18 +236,21 @@ void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, 
 }
 
 
-void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const {
+void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const
+{
     if (rectangle == nullptr) return;
     if (src == nullptr) return;
     if (dest == nullptr) return;
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
-void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color) {
+void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
+{
     drawRect(dest, pRectangle.getX(), pRectangle.getWidth(), pRectangle.getHeight(), pRectangle.getEndY(), color);
 }
 
-void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color) {
+void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
+{
     if (dest == nullptr) return;
     // the -1 is because the width /height is "including" the current pixel
     // ie, a width of 1 pixel means it draws just 1 pixel, since the x2 is a dest it should result into x1
@@ -246,17 +265,20 @@ void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height,
     SDL_UnlockSurface(dest);
 }
 
-void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color) {
+void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
+{
     drawRectFilled(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
-void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color) {
+void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
+{
     const SDL_Rect tmp = {0, 0, width, height};
     Uint32 mappedColor = SDL_MapRGBA(dest->format, color.r, color.g, color.b, color.a);
     SDL_FillRect(dest, &tmp, mappedColor);
 }
 
-void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& rect, SDL_Color color, int alpha) {
+void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha)
+{
     assert(alpha >= 0);
     assert(alpha <= 255);
 
@@ -275,7 +297,8 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle& r
 //     return new cRectangle(x, y, src->w, src->h);
 // }
 
-void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha) {
+void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha)
+{
     //Mira NoFix
     // set_trans_blender(std::clamp(red, 0, 255),
     //                   std::clamp(green, 0, 255),
@@ -283,7 +306,8 @@ void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha) {
     //                   std::clamp(alpha, 0, 255));
 }
 
-void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y) {
+void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y)
+{
     //_draw_sprite(dest, src, x, y);
     SDL_Rect tmp = {x,y,src->w, src->h};
     SDL_BlitSurface(src, nullptr, dest, &tmp);
@@ -294,7 +318,8 @@ void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y) {
 	Function that will go through all pixels and will replace a certain color with another.
     Ie, this can be used to create the fading animation for Windtraps.
 **/
-void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor) {
+void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor)
+{
     for (int x = 0; x < bmp->w; x++) {
         for (int y = 0; y < bmp->h; y++) {
             if (get_pixel(bmp, x, y) == colorToReplace) {
@@ -304,37 +329,44 @@ void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int n
     }
 }
 
-void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y) {
-    SDL_Surface * sBitmap = sdl_data->getSurface(index);
+void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y)
+{
+    SDL_Surface *sBitmap = sdl_data->getSurface(index);
     if (!sBitmap) return; // failed, bail!
     drawSprite(dest, sBitmap, x, y);
 }
 
-void SDLDrawer::resetClippingFor(SDL_Surface *bmp) {
+void SDLDrawer::resetClippingFor(SDL_Surface *bmp)
+{
     if (!bmp) return;
     setClippingFor(bmp, 0, 0, bmp->w, bmp->h);
 }
 
-void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
+void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+{
     //Mira NoFix
     // if (!bmp) return;
     // set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
 }
 
-void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
+{
     SDL_Surface *src = sdl_data->getSurface(index);
     this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
 
-SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm) {
+SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)
+{
     return SDL_Color{(Uint8)(r * norm), (Uint8)(g * norm), (Uint8)(b * norm), 255};
 }
 
-void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle) {
+void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle)
+{
     gui_DrawRect(dest, rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
 }
 
-void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark) {
+void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+{
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
@@ -344,11 +376,12 @@ void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL
     drawRect(dest, rectangle, gui_colorBorderLight);
 
     // lines to darken the right sides
-    drawLine(dest, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
-    drawLine(dest, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
+    drawLine(dest, x1+width, y1, x1+width, y1+height, gui_colorBorderDark);
+    drawLine(dest, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
 }
 
-void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark) {
+void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+{
 
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
@@ -358,15 +391,17 @@ void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangl
     Uint32 mappedColor = SDL_MapRGBA(dest->format, gui_colorBorderLight.r, gui_colorBorderLight.g, gui_colorBorderLight.b, gui_colorBorderLight.a);
     draw_rect_outline_surface(dest, &tmp, mappedColor);
     // see commit cb797e3
-    drawLine(dest, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
-    drawLine(dest, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
+    drawLine(dest, x1+width, y1, x1+width, y1+height, gui_colorBorderDark);
+    drawLine(dest, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
 }
 
-void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y) {
+void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y)
+{
     drawSprite(dest, sprite, x, y);
 }
 
-void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color) {
+void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color)
+{
     if (SDL_LockSurface(bmp) < 0) {
         fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
         return;
@@ -376,7 +411,8 @@ void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_C
     SDL_UnlockSurface(bmp);
 }
 
-void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size) {
+void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size)
+{
     if (size < 1) return;
 
     Uint32 mappedColor = SDL_MapRGBA(bmp->format, color.r, color.g, color.b, color.a);
@@ -394,7 +430,8 @@ void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int siz
     }
 }
 
-void SDLDrawer::shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom) {
+void SDLDrawer::shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom)
+{
     int x1, y1;
     int nx, ny;
     int gp = 0;     // Get Pixel Result
@@ -436,45 +473,48 @@ void SDLDrawer::shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom)
 
 // Fonction utilitaire pour dessiner un pixel sur une SDL_Surface
 // Assurez-vous que la surface est verrouillée avant d'appeler cette fonction !
-void SDLDrawer::set_pixel(SDL_Surface* surface, int x, int y, Uint32 pixel_color) {
+void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color)
+{
     if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
         return; // Hors des limites de la surface
     }
 
     int bpp = surface->format->BytesPerPixel;
     // Pointeur vers le début de la ligne y
-    Uint8* p = (Uint8*)surface->pixels + y * surface->pitch;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch;
 
     // Déplacer le pointeur jusqu'au pixel x
     // On convertit Uint32 en la taille appropriée (1, 2, 3 ou 4 octets)
     switch (bpp) {
         case 1: // 8 bits par pixel
-            *((Uint8*)p + x) = (Uint8)pixel_color;
+            *((Uint8 *)p + x) = (Uint8)pixel_color;
             break;
         case 2: // 16 bits par pixel
-            *((Uint16*)p + x) = (Uint16)pixel_color;
+            *((Uint16 *)p + x) = (Uint16)pixel_color;
             break;
         case 3: // 24 bits par pixel
             // C'est un peu plus complexe car 3 octets ne s'alignent pas directement avec les types C
             // Il faut copier octet par octet
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-                *((Uint8*)p + x * bpp + 0) = (pixel_color >> 16) & 0xFF;
-                *((Uint8*)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
-                *((Uint8*)p + x * bpp + 2) = pixel_color & 0xFF;
-            } else {
-                *((Uint8*)p + x * bpp + 0) = pixel_color & 0xFF;
-                *((Uint8*)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
-                *((Uint8*)p + x * bpp + 2) = (pixel_color >> 16) & 0xFF;
+                *((Uint8 *)p + x * bpp + 0) = (pixel_color >> 16) & 0xFF;
+                *((Uint8 *)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
+                *((Uint8 *)p + x * bpp + 2) = pixel_color & 0xFF;
+            }
+            else {
+                *((Uint8 *)p + x * bpp + 0) = pixel_color & 0xFF;
+                *((Uint8 *)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
+                *((Uint8 *)p + x * bpp + 2) = (pixel_color >> 16) & 0xFF;
             }
             break;
         case 4: // 32 bits par pixel
-            *((Uint32*)p + x) = pixel_color;
+            *((Uint32 *)p + x) = pixel_color;
             break;
     }
 }
 
 // Fonction pour dessiner une ligne sur une SDL_Surface
-void SDLDrawer::draw_line_surface(SDL_Surface* surface, int x1, int y1, int x2, int y2, Uint32 color) {
+void SDLDrawer::draw_line_surface(SDL_Surface *surface, int x1, int y1, int x2, int y2, Uint32 color)
+{
     int dx = abs(x2 - x1);
     int dy = abs(y2 - y1);
     int sx = (x1 < x2) ? 1 : -1;
@@ -498,7 +538,8 @@ void SDLDrawer::draw_line_surface(SDL_Surface* surface, int x1, int y1, int x2, 
 }
 
 // Fonction pour dessiner un rectangle sans remplissage sur une SDL_Surface
-void SDLDrawer::draw_rect_outline_surface(SDL_Surface* surface, const SDL_Rect* rect, Uint32 color) {
+void SDLDrawer::draw_rect_outline_surface(SDL_Surface *surface, const SDL_Rect *rect, Uint32 color)
+{
     if (rect == NULL || surface == NULL) {
         return;
     }
@@ -526,7 +567,8 @@ void SDLDrawer::draw_rect_outline_surface(SDL_Surface* surface, const SDL_Rect* 
 // Fonction utilitaire pour obtenir la couleur d'un pixel sur une SDL_Surface.
 // Retourne la valeur du pixel (Uint32) ou 0 si hors limites/erreur.
 // Assurez-vous que la surface est verrouillée AVANT d'appeler cette fonction si nécessaire !
-Uint32 SDLDrawer::get_pixel(SDL_Surface* surface, int x, int y) {
+Uint32 SDLDrawer::get_pixel(SDL_Surface *surface, int x, int y)
+{
     // Vérifier les limites de la surface
     if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
         // Pixel hors des limites, retourner 0 ou une valeur d'erreur définie
@@ -538,7 +580,7 @@ Uint32 SDLDrawer::get_pixel(SDL_Surface* surface, int x, int y) {
 
     // Calculer l'adresse du pixel
     // p pointe vers le début de la ligne 'y'
-    Uint8* p = (Uint8*)surface->pixels + y * surface->pitch;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch;
     // Déplacer p à la position 'x' du pixel en tenant compte du BPP
     p += x * bpp;
 
@@ -547,16 +589,17 @@ Uint32 SDLDrawer::get_pixel(SDL_Surface* surface, int x, int y) {
         case 1: // 8 bits par pixel
             return *p;
         case 2: // 16 bits par pixel
-            return *(Uint16*)p;
+            return *(Uint16 *)p;
         case 3: // 24 bits par pixel (spécial car non aligné sur 4 octets)
             // L'ordre des octets dépend de l'endianness du système
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                 return (p[0] << 16) | (p[1] << 8) | p[2];
-            } else {
+            }
+            else {
                 return p[0] | (p[1] << 8) | (p[2] << 16);
             }
         case 4: // 32 bits par pixel
-            return *(Uint32*)p;
+            return *(Uint32 *)p;
         default:
             fprintf(stderr, "Format de pixel non supporté pour get_pixel: %d BPP\n", bpp);
             return 0; // Ou une valeur d'erreur

@@ -8,16 +8,18 @@
 #include <allegro/gfx.h>
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
-  : absCoords(absCoords)
-  , player(player)
-  , TIMER_animate(0)
-  , big(true)
-  , animationDelay(animationDelay)
-  , frames(frames)
-  , frame(0) {
+    : absCoords(absCoords)
+    , player(player)
+    , TIMER_animate(0)
+    , big(true)
+    , animationDelay(animationDelay)
+    , frames(frames)
+    , frame(0)
+{
 }
 
-void cFlag::draw() {
+void cFlag::draw()
+{
     BITMAP *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
@@ -25,7 +27,7 @@ void cFlag::draw() {
     int drawY = mapCamera->getWindowYPosition(absCoords.y);
 
     if ((drawX >= 0 && drawX < game.m_screenW) &&
-        (drawY >= 0 && drawY < game.m_screenH)) { // within screen
+            (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
 
         int pixelWidth = flagBitmap->w;
@@ -39,11 +41,12 @@ void cFlag::draw() {
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
         renderDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-                                         drawX, drawY, scaledWidth, scaledHeight);
+                                        drawX, drawY, scaledWidth, scaledHeight);
     }
 }
 
-void cFlag::thinkFast() {
+void cFlag::thinkFast()
+{
     TIMER_animate++;
     if (TIMER_animate > animationDelay) {
         frame++;
@@ -52,22 +55,24 @@ void cFlag::thinkFast() {
     }
 }
 
-cFlag *cFlag::createBigFlag(cPlayer * player, cPoint & position) {
+cFlag *cFlag::createBigFlag(cPlayer *player, cPoint &position)
+{
     cPoint correctedPoint = cPoint(
-            position.x,
-            position.y
-    );
+                                position.x,
+                                position.y
+                            );
     correctedPoint.x -= 15; // width of flag
     cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(true);
     return pFlag;
 }
 
-cFlag *cFlag::createSmallFlag(cPlayer * player, cPoint & position) {
+cFlag *cFlag::createSmallFlag(cPlayer *player, cPoint &position)
+{
     cPoint correctedPoint = cPoint(
-            position.x,
-            position.y
-    );
+                                position.x,
+                                position.y
+                            );
     correctedPoint.x -= 10; // width of flag
     cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(false);

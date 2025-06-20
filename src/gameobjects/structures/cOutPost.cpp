@@ -2,15 +2,18 @@
 
 #include "definitions.h"
 
-cOutPost::cOutPost() {
+cOutPost::cOutPost()
+{
     // other variables (class specific)
 }
 
-int cOutPost::getType() const {
+int cOutPost::getType() const
+{
     return RADAR;
 }
 
-void cOutPost::thinkFast() {
+void cOutPost::thinkFast()
+{
     // last but not least, think like our abstraction
     cAbstractStructure::thinkFast();
 
@@ -30,13 +33,15 @@ void cOutPost::thinkFast() {
     }
 }
 
-void cOutPost::think_animation() {
+void cOutPost::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
 }
 
 
-void cOutPost::think_guard() {
+void cOutPost::think_guard()
+{
 
 }
 

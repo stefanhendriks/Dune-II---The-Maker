@@ -46,7 +46,7 @@ SDL_Surface *DataPack::getSurface(int index)
     SDL_Surface *out = SDL_LoadBMP_RW(tmp, SDL_TRUE);
     if (!out) {
         printf("Failed to load image %i : %s\n", index, SDL_GetError());
-    } 
+    }
     surfaceCache[index] = out;
     return out;
 }
@@ -118,7 +118,7 @@ int main(int argc, char ** argv)
         test.addFile("test3.bmp","test3");
         //
         test.writePackFilesOnDisk();
-    }    
+    }
 
     if (1) {
         // write pak file with audio file.
@@ -130,11 +130,11 @@ int main(int argc, char ** argv)
         test.addFile("DUNE1_7.mid","audio4");
         //
         test.writePackFilesOnDisk();
-    } 
+    }
 
     bool quit = false;
     SDL_Event event;
- 
+
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
     //Initialize SDL2_mixer to play sound
@@ -167,7 +167,7 @@ int main(int argc, char ** argv)
     SDL_FreeSurface(surface3);
 
     SDL_Color color = { 255, 255, 255 };
-    
+
     SDL_Texture * texture = texture1;
 
     //-----------------------------------------------------------------
@@ -181,7 +181,7 @@ int main(int argc, char ** argv)
     while (!quit)
     {
         SDL_WaitEvent(&event);
- 
+
         switch (event.type)
         {
             case SDL_QUIT:
@@ -216,7 +216,7 @@ int main(int argc, char ** argv)
                     Mix_FreeMusic(music);
                     music = dataAudio.getMusic("audio4");
                     Mix_PlayMusic( music, -1 );
-		        }                
+		        }
                 if (event.key.keysym.sym == SDLK_ESCAPE){
                     quit = true;
 		        }
@@ -231,7 +231,7 @@ int main(int argc, char ** argv)
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
- 
+
     return 0;
 }
 */

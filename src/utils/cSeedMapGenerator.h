@@ -2,9 +2,8 @@
 
 #include "cSeedMap.h"
 
-struct cell
-{
-   short w, a, b;
+struct cell {
+    short w, a, b;
 };
 
 // needed for offset2
@@ -25,39 +24,39 @@ class cSeedMapGenerator {
 
 private:
 
-	unsigned long seed;
+    unsigned long seed;
 
-	short random();	// create random number
+    short random();	// create random number
 
-	/* these is array used to find corresponding points */
-	/*
-	      A.B.C    00..20..40
-	      .....    ..........
-	      D.E.F    02..22..42
-	      .....    ..........
-	      G.H.I    04..24..44
-	*/
-	static short offsets2[SMG_OFFSET2_SIZE];
-	static short offsets[21];
-	static bool canAddSpiceTo[10];
-	static unsigned char spicemap[256];
-	static unsigned char spicemap2[256];
+    /* these is array used to find corresponding points */
+    /*
+          A.B.C    00..20..40
+          .....    ..........
+          D.E.F    02..22..42
+          .....    ..........
+          G.H.I    04..24..44
+    */
+    static short offsets2[SMG_OFFSET2_SIZE];
+    static short offsets[21];
+    static bool canAddSpiceTo[10];
+    static unsigned char spicemap[256];
+    static unsigned char spicemap2[256];
 
-	// methods needed to generate seedmap
-	void convertMap (cell map[64][64], short *iconmap);
-	void addSpice(cell map[64][64]);
-	void scanRegions (cell map[64][64]);
-	void createRegions (cell map[64][64]);
-	void balanceMap (cell map[64][64]);
-	void spreadMatrix (cell map[64][64]);
-	void copyMatrix (char *matrix, cell map[65][64]);
-	void createMatrix (char *matrix);
-	void addNoise1 (char *matrix);
-	void addNoise2 (char *matrix);
-	void addSpiceAt(cell map[64][64],short x,short y);
+    // methods needed to generate seedmap
+    void convertMap (cell map[64][64], short *iconmap);
+    void addSpice(cell map[64][64]);
+    void scanRegions (cell map[64][64]);
+    void createRegions (cell map[64][64]);
+    void balanceMap (cell map[64][64]);
+    void spreadMatrix (cell map[64][64]);
+    void copyMatrix (char *matrix, cell map[65][64]);
+    void createMatrix (char *matrix);
+    void addNoise1 (char *matrix);
+    void addNoise2 (char *matrix);
+    void addSpiceAt(cell map[64][64],short x,short y);
 
 public:
-	explicit cSeedMapGenerator(unsigned long value);
+    explicit cSeedMapGenerator(unsigned long value);
 
-	cSeedMap generateSeedMap();
+    cSeedMap generateSeedMap();
 };

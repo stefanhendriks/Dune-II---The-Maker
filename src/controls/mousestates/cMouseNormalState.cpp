@@ -17,11 +17,13 @@
 #include <algorithm>
 
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
-        cMouseState(player, context, mouse),
-        m_state(SELECT_STATE_NORMAL) {
+    cMouseState(player, context, mouse),
+    m_state(SELECT_STATE_NORMAL)
+{
 }
 
-void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event)
+{
 
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
@@ -50,7 +52,8 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cMouseNormalState::onMouseLeftButtonClicked() {
+void cMouseNormalState::onMouseLeftButtonClicked()
+{
     bool selectedUnits = false;
     if (m_mouse->isBoxSelecting()) {
         m_player->deselectAllUnits();
@@ -65,12 +68,14 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
         if (!ids.empty()) {
             if (ids.size() > 1) {
                 drawManager->setMessage(fmt::format("{} units selected", ids.size()));
-            } else {
+            }
+            else {
                 cUnit &pUnit = unit[ids[0]];
                 drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
             }
         }
-    } else {
+    }
+    else {
         bool infantrySelected = false;
         bool unitSelected = false;
 
@@ -85,7 +90,8 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                     pUnit.bSelected = true;
                     if (pUnit.isInfantryUnit()) {
                         infantrySelected = true;
-                    } else {
+                    }
+                    else {
                         unitSelected = true;
                     }
                     drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
@@ -101,7 +107,8 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                     if (listId != eListType::LIST_NONE) {
                         m_player->getSideBar()->setSelectedListId(listId);
                     }
-                } else {
+                }
+                else {
                     m_player->selected_structure = -1;
                 }
 
@@ -109,7 +116,8 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
                     drawManager->setMessage(pStructure->getStatusForMessageBar());
                 }
             }
-        } else if (m_state == SELECT_STATE_RALLY) {
+        }
+        else if (m_state == SELECT_STATE_RALLY) {
             // setting a rally point!
             cAbstractStructure *pStructure = m_player->getSelectedStructure();
             if (pStructure && pStructure->isValid()) {
@@ -135,23 +143,28 @@ void cMouseNormalState::onMouseLeftButtonClicked() {
     m_mouse->resetBoxSelect();
 }
 
-void cMouseNormalState::onMouseRightButtonPressed() {
+void cMouseNormalState::onMouseRightButtonPressed()
+{
     m_mouse->dragViewportInteraction();
 }
 
-void cMouseNormalState::onMouseRightButtonClicked() {
+void cMouseNormalState::onMouseRightButtonClicked()
+{
     m_mouse->resetDragViewportInteraction();
 }
 
-void cMouseNormalState::onMouseMovedTo() {
+void cMouseNormalState::onMouseMovedTo()
+{
     if (m_state == SELECT_STATE_NORMAL) {
         mouseTile = getMouseTileForNormalState();
-    } else if (m_state == SELECT_STATE_RALLY) {
+    }
+    else if (m_state == SELECT_STATE_RALLY) {
         mouseTile = MOUSE_RALLY;
     }
 }
 
-int cMouseNormalState::getMouseTileForNormalState() const {
+int cMouseNormalState::getMouseTileForNormalState() const
+{
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit &pUnit = unit[hoverUnitId];
@@ -165,12 +178,14 @@ int cMouseNormalState::getMouseTileForNormalState() const {
     return MOUSE_NORMAL;
 }
 
-void cMouseNormalState::onStateSet() {
+void cMouseNormalState::onStateSet()
+{
     mouseTile = MOUSE_NORMAL;
     m_mouse->setTile(mouseTile);
 }
 
-void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     // these methods can have a side-effect which changes mouseTile...
     switch (event.eventType) {
         case eKeyEventType::HOLD:
@@ -189,7 +204,8 @@ void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     }
 }
 
-void cMouseNormalState::onKeyDown(const cKeyboardEvent &event) {
+void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
+{
     if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
         cAbstractStructure *pSelectedStructure = m_player->getSelectedStructure();
         // when selecting a structure
@@ -200,13 +216,15 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event) {
     }
 }
 
-void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
+void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
+{
     bool createGroup = event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL);
     if (createGroup) {
         // actual group creation is at cGameLogic onKeyPressed
         setState(SELECT_STATE_NORMAL);
         mouseTile = MOUSE_NORMAL;
-    } else {
+    }
+    else {
         // select group
         int iGroup = event.getGroupNumber();
 
@@ -225,18 +243,21 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event) {
     }
 }
 
-void cMouseNormalState::setState(eMouseNormalState newState) {
+void cMouseNormalState::setState(eMouseNormalState newState)
+{
     if (game.isDebugMode()) {
         logbook(fmt::format("Setting state from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
     }
     m_state = newState;
 }
 
-void cMouseNormalState::onFocus() {
+void cMouseNormalState::onFocus()
+{
     m_mouse->setTile(mouseTile);
 }
 
-void cMouseNormalState::onBlur() {
+void cMouseNormalState::onBlur()
+{
     m_mouse->resetBoxSelect();
     m_mouse->resetDragViewportInteraction();
 }

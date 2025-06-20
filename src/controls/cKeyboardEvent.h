@@ -25,7 +25,7 @@ enum class eKeyEventType {
 class cKeyboardEvent {
 
 public:
-    cKeyboardEvent(eKeyEventType eventType, std::set<int> & keys);
+    cKeyboardEvent(eKeyEventType eventType, std::set<int> &keys);
 
     eKeyEventType eventType = eKeyEventType::NONE;
 
@@ -75,11 +75,14 @@ public:
     int getGroupNumber() const;
 
 private:
-    inline const char* toStringKeyboardEventType(const eKeyEventType &type) const {
+    inline const char *toStringKeyboardEventType(const eKeyEventType &type) const {
         switch (type) {
-            case eKeyEventType::NONE: return "NONE";
-            case eKeyEventType::HOLD: return "HOLD";
-            case eKeyEventType::PRESSED: return "PRESSED";
+            case eKeyEventType::NONE:
+                return "NONE";
+            case eKeyEventType::HOLD:
+                return "HOLD";
+            case eKeyEventType::PRESSED:
+                return "PRESSED";
             default:
                 assert(false);
                 break;

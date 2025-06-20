@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -44,7 +44,7 @@ enum class eFindBestStructureResultReason {
  * A result when finding a best structure.
  */
 struct sFindBestStructureResult {
-    cAbstractStructure * structure;
+    cAbstractStructure *structure;
     eFindBestStructureResultReason reason;
 };
 
@@ -56,13 +56,19 @@ enum class eHeadTowardsStructureResult {
 };
 
 
-inline std::string eActionTypeString(eActionType actionType) {
+inline std::string eActionTypeString(eActionType actionType)
+{
     switch (actionType) {
-        case eActionType::GUARD: return "GUARD";
-        case eActionType::ATTACK_CHASE: return "ATTACK_CHASE";
-        case eActionType::ATTACK: return "ATTACK";
-        case eActionType::MOVE: return "MOVE";
-        case eActionType::CHASE: return "CHASE";
+        case eActionType::GUARD:
+            return "GUARD";
+        case eActionType::ATTACK_CHASE:
+            return "ATTACK_CHASE";
+        case eActionType::ATTACK:
+            return "ATTACK";
+        case eActionType::MOVE:
+            return "MOVE";
+        case eActionType::CHASE:
+            return "CHASE";
         default:
             assert(false);
             break;
@@ -77,7 +83,7 @@ public:
     cUnit();
     ~cUnit();
 
-	float fExperience;	// experience gained by unit
+    float fExperience;	// experience gained by unit
 
     int iID;            // index of unit in the unit array
 
@@ -89,18 +95,18 @@ public:
 
     // Movement
     int iNextCell;      // where to move to (next cell)
-    int iGoalCell;      // the goal cell (goal of path)    
+    int iGoalCell;      // the goal cell (goal of path)
 //    float iOffsetX;       // X offset
 //    float iOffsetY;       // Y offset
     int iPath[MAX_PATH_SIZE];    // path of unit
     int iPathIndex;     // where are we?
     int iPathFails;     // failed...
-    bool bCalculateNewPath; // calculate new path?	
+    bool bCalculateNewPath; // calculate new path?
 
     // carryall stuff
-	bool bCarryMe;		// carry this unit when moving it around?
-	int  iCarryAll;		// any carry-all that will pickup this unit... so this unit knows
-						// it should wait when moving, etc, etc
+    bool bCarryMe;		// carry this unit when moving it around?
+    int  iCarryAll;		// any carry-all that will pickup this unit... so this unit knows
+    // it should wait when moving, etc, etc
 
 
     // WHEN ATTACKING
@@ -115,16 +121,16 @@ public:
     // Harvester specific
     int iCredits;       // credits stored in this baby
 
-	// Carry-All specific
+    // Carry-All specific
 
     // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
     eTransferType m_transferType;
 
-	int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
-	int iNewUnitType;	// new unit that will be brought, will be this type
-	int lastDroppedOffCell; // last cell where we dropepd off a unit
+    int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
+    int iNewUnitType;	// new unit that will be brought, will be this type
+    int lastDroppedOffCell; // last cell where we dropepd off a unit
 
     // Drawing
     int iBodyFacing;    // Body of tanks facing
@@ -138,7 +144,7 @@ public:
 
     void retreatToNearbyBase();
 
-	float fExpDamage();	// experience damage by bullet (extra damage that is)
+    float fExpDamage();	// experience damage by bullet (extra damage that is)
 
     bool isWithinViewport(cRectangle *viewport) const;
 
@@ -158,15 +164,15 @@ public:
     int center_draw_y();
 
     void draw_health();
-	void draw_experience();
-	void draw_spice();
+    void draw_experience();
+    void draw_spice();
     void draw();
-	void draw_path() const;
+    void draw_path() const;
     bool isValid() const;     // valid unit?
 
     void shoot(int iTargetCell);  // shoot at goalcell
 
-	void die(bool bBlowUp, bool bSquish);			// die!
+    void die(bool bBlowUp, bool bSquish);			// die!
 
     void updateCellXAndY();        // updateCellXAndY status
 
@@ -175,11 +181,11 @@ public:
     void thinkFast_move_airUnit();  // aircraft specific
     void think_move_foot(); // soldiers specific
     void thinkFast_move();  // thinking about movement (which is called upon a faster rate)
-                        // for wheeled/tracked units
+    // for wheeled/tracked units
     void think_attack();
     void thinkFast_guard();
 
-	void log(const std::string& txt) const;
+    void log(const std::string &txt) const;
 
     void think_hit(int iShotUnit, int iShotStructure);
 
@@ -219,17 +225,17 @@ public:
      * @return
      */
     eHeadTowardsStructureResult findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, bool allowCarryallTransfer,
-                                                                                 eUnitActionIntent actionIntent);
+            eUnitActionIntent actionIntent);
 
-    cAbstractStructure * findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType);
-    cAbstractStructure * findClosestAvailableStructureType(int structureType);
-    cAbstractStructure * findClosestStructureType(int structureType);
+    cAbstractStructure *findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType);
+    cAbstractStructure *findClosestAvailableStructureType(int structureType);
+    cAbstractStructure *findClosestStructureType(int structureType);
 
-	// carryall-functions:
-	void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
+    // carryall-functions:
+    void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     // -------------
-	int TIMER_blink;	    // blink
+    int TIMER_blink;	    // blink
 
     int TIMER_move;         // movement timer
     int TIMER_movewait;     // wait for move think...
@@ -249,7 +255,7 @@ public:
 
     int TIMER_wormtrail;    // when to spawn a trail when moving
 
-    s_UnitInfo& getUnitInfo() const;
+    s_UnitInfo &getUnitInfo() const;
 
     /**
      * Return current health normalized (between 0.0 and 1.0)
@@ -344,9 +350,15 @@ public:
     void setMaxHitPoints();
 
     void setCell(int cll);
-    int getCell() { return iCell; }
-    int getCellX() { return iCellX; }
-    int getCellY() { return iCellY; }
+    int getCell() {
+        return iCell;
+    }
+    int getCellX() {
+        return iCellX;
+    }
+    int getCellY() {
+        return iCellY;
+    }
 
     cPlayer *getPlayer();
 
@@ -406,7 +418,9 @@ public:
 
     void setBoundParticleId(int particleId);
 
-    int getHitPoints() { return iHitPoints; }
+    int getHitPoints() {
+        return iHitPoints;
+    }
 
     bool isEligibleForRepair();
 
@@ -500,7 +514,7 @@ private:
      */
     cAbstractStructure *getStructureUnitWantsToEnter() const;
 
-    cUnit& getUnitToPickupOrDrop() const;
+    cUnit &getUnitToPickupOrDrop() const;
 
     bool findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell);
 

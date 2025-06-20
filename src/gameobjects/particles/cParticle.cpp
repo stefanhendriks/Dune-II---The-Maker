@@ -18,19 +18,22 @@
 
 #include <allegro.h>
 
-cParticle::cParticle() {
+cParticle::cParticle()
+{
     dimensions = nullptr;
     init();
 }
 
-cParticle::~cParticle() {
+cParticle::~cParticle()
+{
     bmp = nullptr;
     if (dimensions) delete dimensions;
 }
 
 
 // init
-void cParticle::init() {
+void cParticle::init()
+{
     boundUnitID = -1;
     boundParticleID = -1;
     oldParticle = true;
@@ -58,15 +61,18 @@ void cParticle::init() {
 }
 
 // valid
-bool cParticle::isValid() {
+bool cParticle::isValid()
+{
     return bAlive;
 }
 
-int cParticle::draw_x() {
+int cParticle::draw_x()
+{
     return mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
-int cParticle::draw_y() {
+int cParticle::draw_y()
+{
     return mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
 }
 
@@ -74,7 +80,8 @@ int cParticle::draw_y() {
  * Poor man solution to frequently update the dimensions, better would be using events?
  * (onMove, onViewportMove, onViewportZoom?)
  */
-void cParticle::think_position() {
+void cParticle::think_position()
+{
     if (boundUnitID > -1) {
         cUnit &pUnit = unit[boundUnitID];
         if (!pUnit.isValid()) {
@@ -91,7 +98,8 @@ void cParticle::think_position() {
 }
 
 // draw
-void cParticle::draw() {
+void cParticle::draw()
+{
     s_ParticleInfo particleInfo = getParticleInfo();
     int frameWidth = getFrameWidth();
     int frameHeight = getFrameHeight();
@@ -111,7 +119,8 @@ void cParticle::draw() {
     if (bmp) {
         // new behavior
         renderDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
-    } else {
+    }
+    else {
         // old behavior
         renderDrawer->blitFromGfxData(iType, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
     }
@@ -134,11 +143,13 @@ void cParticle::draw() {
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
             set_add_blender(0, 0, 0, iAlpha);
-        } else {
+        }
+        else {
             set_trans_blender(0, 0, 0, iAlpha);
         }
         draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
-    } else {
+    }
+    else {
         renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);
     }
 
@@ -147,22 +158,26 @@ void cParticle::draw() {
     destroy_bitmap(stretched);
 }
 
-s_ParticleInfo &cParticle::getParticleInfo() const {
+s_ParticleInfo &cParticle::getParticleInfo() const
+{
     s_ParticleInfo &particleInfo = sParticleInfo[iType];
     return particleInfo;
 }
 
-bool cParticle::isUsingAlphaChannel() const {
+bool cParticle::isUsingAlphaChannel() const
+{
     return iAlpha > -1 && iAlpha < 255;
 }
 
-bool cParticle::isWithinViewport(const cRectangle &viewport) {
+bool cParticle::isWithinViewport(const cRectangle &viewport)
+{
     return dimensions->isOverlapping(viewport);
 }
 
 
 // called every 5 ms
-void cParticle::thinkFast() {
+void cParticle::thinkFast()
+{
     think_position();
 
     if (!oldParticle) {
@@ -173,8 +188,8 @@ void cParticle::thinkFast() {
 
     // old way
     if (iType == D2TM_PARTICLE_OBJECT_BOOM01 ||
-        iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
-        iType == D2TM_PARTICLE_OBJECT_BOOM03) {
+            iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
+            iType == D2TM_PARTICLE_OBJECT_BOOM03) {
         TIMER_frame++;
 
         if (TIMER_frame > 0) {
@@ -207,7 +222,7 @@ void cParticle::thinkFast() {
 
     // move
     if (iType == D2TM_PARTICLE_MOVE ||
-        iType == D2TM_PARTICLE_ATTACK) {
+            iType == D2TM_PARTICLE_ATTACK) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
@@ -244,7 +259,8 @@ void cParticle::thinkFast() {
                 }
 
                 TIMER_frame = 10;
-            } else {
+            }
+            else {
                 TIMER_frame = 250;
             }
         }
@@ -267,7 +283,7 @@ void cParticle::thinkFast() {
     }
 
     if (iType == D2TM_PARTICLE_SMOKE ||
-        iType == D2TM_PARTICLE_SMOKE_SHADOW) {
+            iType == D2TM_PARTICLE_SMOKE_SHADOW) {
         TIMER_frame--;
         TIMER_dead--;
 
@@ -275,7 +291,8 @@ void cParticle::thinkFast() {
         if (TIMER_dead > 0 && iAlpha < 255) {
             if (iType == D2TM_PARTICLE_SMOKE) {
                 iAlpha++;
-            } else if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
+            }
+            else if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
                 // shadow remains 128 alpha (never fully opaque)
                 if (iAlpha < 128) {
                     iAlpha++;
@@ -297,7 +314,8 @@ void cParticle::thinkFast() {
                 TIMER_dead = -1;
                 if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
                     iAlpha -= 10;
-                } else {
+                }
+                else {
                     iAlpha -= 14;
                 }
 
@@ -311,9 +329,9 @@ void cParticle::thinkFast() {
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA ||
-        iType == D2TM_PARTICLE_TRACK_HOR ||
-        iType == D2TM_PARTICLE_TRACK_VER ||
-        iType == D2TM_PARTICLE_TRACK_DIA2) {
+            iType == D2TM_PARTICLE_TRACK_HOR ||
+            iType == D2TM_PARTICLE_TRACK_VER ||
+            iType == D2TM_PARTICLE_TRACK_DIA2) {
         TIMER_frame--;
         TIMER_dead--;
         if (TIMER_frame < 0) {
@@ -325,11 +343,13 @@ void cParticle::thinkFast() {
                 if (iAlpha < 255)
                     iAlpha += 2;
 
-            } else {
+            }
+            else {
                 // its dying
                 if (iAlpha > 10) {
                     iAlpha -= 10;
-                } else {
+                }
+                else {
                     die();
                 }
 
@@ -353,7 +373,7 @@ void cParticle::thinkFast() {
     }
 
     if (iType == D2TM_PARTICLE_DEADINF01 ||
-        iType == D2TM_PARTICLE_DEADINF02) {
+            iType == D2TM_PARTICLE_DEADINF02) {
         TIMER_frame--;
         TIMER_dead--;
 
@@ -438,10 +458,10 @@ void cParticle::thinkFast() {
     }
     // tank explosion(s)
     if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
-        iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
-        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
-        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
-        iType == D2TM_PARTICLE_EXPLOSION_GAS) {
+            iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
+            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+            iType == D2TM_PARTICLE_EXPLOSION_GAS) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
@@ -449,7 +469,8 @@ void cParticle::thinkFast() {
             // delay for next frame(s)
             if (frameIndex <= 3) {
                 TIMER_frame = 28;
-            } else {
+            }
+            else {
                 TIMER_frame = 10;
             }
 
@@ -478,7 +499,8 @@ void cParticle::thinkFast() {
                 // begins slow, and speeds up after each frame
 //                TIMER_frame = (4 - frameIndex) * 32;
                 TIMER_frame = 80;
-            } else {
+            }
+            else {
                 // frame will stick at 4 (eaten)
                 frameIndex = 4;
 
@@ -508,14 +530,15 @@ void cParticle::thinkFast() {
     }
 
     if (iType == D2TM_PARTICLE_SQUISH01 ||
-        iType == D2TM_PARTICLE_SQUISH02 ||
-        iType == D2TM_PARTICLE_SQUISH03 ||
-        iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+            iType == D2TM_PARTICLE_SQUISH02 ||
+            iType == D2TM_PARTICLE_SQUISH03 ||
+            iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
             if (iAlpha > 5) {
                 iAlpha -= 5;
-            } else {
+            }
+            else {
                 die();
             }
 
@@ -531,7 +554,8 @@ void cParticle::thinkFast() {
             if (TIMER_dead > 0) {
                 if (iAlpha + 5 < 255)
                     iAlpha += 5;
-            } else {
+            }
+            else {
                 TIMER_dead = -1;
                 iAlpha -= 15;
 
@@ -560,7 +584,8 @@ void cParticle::thinkFast() {
                 if (iAlpha < 10) {
                     die();
                 }
-            } else {
+            }
+            else {
                 if (iAlpha + 15 < 255)
                     iAlpha += 15;
                 else
@@ -585,11 +610,13 @@ void cParticle::thinkFast() {
  * @param iFrame
  * @return
  */
-int cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame)
+{
     return create(x, y, iType, iHouse, iFrame, -1);
 }
 
-int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID) {
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID)
+{
     int iNewId = findNewSlot();
 
     if (iNewId < 0) {
@@ -600,7 +627,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
         s_ParticleInfo &sParticle = sParticleInfo[iType];
         pParticle.init(sParticle);
-    } else {
+    }
+    else {
         pParticle.init();
     }
 
@@ -656,7 +684,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
-        iType == D2TM_PARTICLE_TRACK_DIA2) {
+            iType == D2TM_PARTICLE_TRACK_DIA2) {
         pParticle.TIMER_dead = 2000;
     }
 
@@ -675,10 +703,10 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     // tanks exploding
     if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
-        iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
-        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
-        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
-        iType == D2TM_PARTICLE_EXPLOSION_GAS) {
+            iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
+            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+            iType == D2TM_PARTICLE_EXPLOSION_GAS) {
 
         if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
             create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
@@ -687,7 +715,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     if (iType == D2TM_PARTICLE_DEADINF01 ||
-        iType == D2TM_PARTICLE_DEADINF02) {
+            iType == D2TM_PARTICLE_DEADINF02) {
         pParticle.TIMER_dead = 500 + rnd(500);
         pParticle.iAlpha = 255;
     }
@@ -698,9 +726,9 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     if (iType == D2TM_PARTICLE_SQUISH01 ||
-        iType == D2TM_PARTICLE_SQUISH02 ||
-        iType == D2TM_PARTICLE_SQUISH03 ||
-        iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+            iType == D2TM_PARTICLE_SQUISH02 ||
+            iType == D2TM_PARTICLE_SQUISH03 ||
+            iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         pParticle.frameIndex = 0;
         pParticle.TIMER_frame = 50;
     }
@@ -729,7 +757,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     return iNewId;
 }
 
-int cParticle::findNewSlot() {
+int cParticle::findNewSlot()
+{
     for (int i = 0; i < MAX_PARTICLES; i++) {
         if (!particle[i].isValid())
             return i;
@@ -738,7 +767,8 @@ int cParticle::findNewSlot() {
     return -1;
 }
 
-void cParticle::init(const s_ParticleInfo &particleInfo) {
+void cParticle::init(const s_ParticleInfo &particleInfo)
+{
     init();
 
     if (particleInfo.bmpIndex > -1) {
@@ -747,37 +777,44 @@ void cParticle::init(const s_ParticleInfo &particleInfo) {
 
     if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
         iAlpha = particleInfo.startAlpha;
-    } else {
+    }
+    else {
         iAlpha = 255;
     }
 
     oldParticle = particleInfo.oldParticle;
 }
 
-int cParticle::getFrameWidth() {
+int cParticle::getFrameWidth()
+{
     return getParticleInfo().frameWidth;
 }
 
-int cParticle::getFrameHeight() {
+int cParticle::getFrameHeight()
+{
     return getParticleInfo().frameHeight;
 }
 
-int cParticle::getLayer() {
+int cParticle::getLayer()
+{
     return getParticleInfo().layer;
 }
 
-void cParticle::recreateDimensions() {
+void cParticle::recreateDimensions()
+{
     if (dimensions) {
         delete dimensions;
     }
     dimensions = new cRectangle(draw_x(), draw_y(), getFrameWidth(), getFrameHeight());
 }
 
-void cParticle::think_new() {
+void cParticle::think_new()
+{
 
 }
 
-void cParticle::bindToUnit(int unitID) {
+void cParticle::bindToUnit(int unitID)
+{
     if (boundUnitID > -1) {
         cUnit &pUnit = unit[boundUnitID];
         if (pUnit.isValid()) {
@@ -787,34 +824,39 @@ void cParticle::bindToUnit(int unitID) {
     boundUnitID = unitID;
 }
 
-void cParticle::addPosX(float d) {
+void cParticle::addPosX(float d)
+{
     this->x += d;
     if (boundParticleID > -1) {
         cParticle &otherParticle = particle[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosX(d);
-        } else {
+        }
+        else {
             boundParticleID = -1;
         }
     }
 }
 
-void cParticle::addPosY(float d) {
+void cParticle::addPosY(float d)
+{
     this->y += d;
     if (boundParticleID > -1) {
         cParticle &otherParticle = particle[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosY(d);
-        } else {
+        }
+        else {
             boundParticleID = -1;
         }
     }
 }
 
-void cParticle::die() {
+void cParticle::die()
+{
     bindToUnit(-1);
     bAlive = false;
-    if (boundParticleID > -1){
+    if (boundParticleID > -1) {
         cParticle &pParticle = particle[boundParticleID];
         if (pParticle.isValid()) {
             pParticle.die();

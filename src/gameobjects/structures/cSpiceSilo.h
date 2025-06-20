@@ -3,7 +3,7 @@
 #include "cAbstractStructure.h"
 
 class cSpiceSilo : public cAbstractStructure {
-  public:
+public:
     cSpiceSilo();
 
     void thinkFast() override;
@@ -18,11 +18,15 @@ class cSpiceSilo : public cAbstractStructure {
 
     void startAnimating() override {}
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
     int getSpiceSiloCapacity();
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

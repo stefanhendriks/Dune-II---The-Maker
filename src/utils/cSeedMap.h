@@ -7,16 +7,16 @@
  *
  */
 class cSeedMap {
-  public:
-	cSeedMap();
+public:
+    cSeedMap();
 
     static constexpr int kMapWidth = 64;
     static constexpr int kMapHeight = 64;
 
-	void setCellType(int x, int y, int type);
-	int getCellType(int x, int y);
-	char getCellTypeCharacter(int x, int y);
+    void setCellType(int x, int y, int type);
+    int getCellType(int x, int y);
+    char getCellTypeCharacter(int x, int y);
 
-  private:
-	std::vector<int> map; // 64x64
+private:
+    std::vector<int> map; // 64x64
 };

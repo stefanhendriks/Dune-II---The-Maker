@@ -3,10 +3,10 @@
 #include "cAbstractStructure.h"
 
 class cRefinery : public cAbstractStructure {
-  private:
+private:
     void think_harvester_deploy();
 
-  public:
+public:
     cRefinery();
 
     void thinkFast() override;
@@ -21,13 +21,17 @@ class cRefinery : public cAbstractStructure {
 
     void startAnimating() override {}
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
     int getType() const override;
 
     int getSpiceSiloCapacity();
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

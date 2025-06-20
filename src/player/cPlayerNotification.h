@@ -12,15 +12,19 @@ std::string eNotificationTypeString(const eNotificationType &type);
 
 class cPlayerNotification {
 public:
-    cPlayerNotification(const std::string& msg, eNotificationType type);
+    cPlayerNotification(const std::string &msg, eNotificationType type);
 
     void thinkFast();
 
-    bool isVisible() const { return TIMER > 0; }
+    bool isVisible() const {
+        return TIMER > 0;
+    }
 
-    const std::string& getMessage() const;
+    const std::string &getMessage() const;
 
-    int getTimer() const { return TIMER; }
+    int getTimer() const {
+        return TIMER;
+    }
 
     int getColor() const;
 

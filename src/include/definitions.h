@@ -35,7 +35,7 @@
 #define SCENE_SPICE		3		// the spice controls the empire, whoever controls dune, controls the spice
 #define SCENE_EMPEROR	4		// the emperor has proposed a challange to each of the houses
 #define SCENE_EMPTALK	5		// The House that produces the most spice, whill control dune. There are no set
-								// territories and no rules of engagement
+// territories and no rules of engagement
 #define SCENE_ARMIES	6		// vast armies have arrived
 
 // now 3 houses fight, for control of dune (no image, blank)

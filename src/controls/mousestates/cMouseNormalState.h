@@ -12,10 +12,13 @@ enum eMouseNormalState {
     SELECT_STATE_RALLY,  // set rally point for structure
 };
 
-inline const char* mouseNormalStateString(const eMouseNormalState &state) {
+inline const char *mouseNormalStateString(const eMouseNormalState &state)
+{
     switch (state) {
-        case SELECT_STATE_NORMAL: return "SELECT_STATE_NORMAL";
-        case SELECT_STATE_RALLY: return "SELECT_STATE_RALLY";
+        case SELECT_STATE_NORMAL:
+            return "SELECT_STATE_NORMAL";
+        case SELECT_STATE_RALLY:
+            return "SELECT_STATE_RALLY";
         default:
             assert(false);
             break;
@@ -31,7 +34,7 @@ inline const char* mouseNormalStateString(const eMouseNormalState &state) {
 class cMouseNormalState : public cMouseState {
 
 public:
-    explicit cMouseNormalState(cPlayer * player, cGameControlsContext *context, cMouse * mouse);
+    explicit cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;

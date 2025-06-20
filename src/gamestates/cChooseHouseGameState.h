@@ -10,8 +10,8 @@ struct BITMAP;
 class cGame;
 
 class cChooseHouseGameState : public cGameState {
-  public:
-    explicit cChooseHouseGameState(cGame& theGame);
+public:
+    explicit cChooseHouseGameState(cGame &theGame);
     ~cChooseHouseGameState() override;
 
     void thinkFast() override;
@@ -22,7 +22,7 @@ class cChooseHouseGameState : public cGameState {
 
     eGameStateType getType() override;
 
-  private:
+private:
     cTextDrawer textDrawer;
     cRectangle *backButtonRect;
 

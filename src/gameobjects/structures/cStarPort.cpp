@@ -7,23 +7,27 @@
 #include "utils/cSoundPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 
-cStarPort::cStarPort() {
+cStarPort::cStarPort()
+{
     // other variables (class specific)
     TIMER_deploy = 0;
     frigateDroppedPackage = false;
 }
 
-int cStarPort::getType() const {
+int cStarPort::getType() const
+{
     return STARPORT;
 }
 
-void cStarPort::thinkFast() {
+void cStarPort::thinkFast()
+{
     // think like base class
     cAbstractStructure::thinkFast();
 }
 
 // think about units deployment animation
-void cStarPort::think_deployment() {
+void cStarPort::think_deployment()
+{
     if (!isAnimating()) {
         return; // do nothing when not animating
     }
@@ -47,18 +51,21 @@ void cStarPort::think_deployment() {
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cStarPort::think_animation() {
+void cStarPort::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_deployment();
 }
 
-void cStarPort::thinkSlow() {
+void cStarPort::thinkSlow()
+{
     think_deploy();
 }
 
 // FPS based thing function (every second called)
-void cStarPort::think_deploy() {
+void cStarPort::think_deploy()
+{
     if (frigateDroppedPackage) {
         TIMER_deploy--;
         if (TIMER_deploy < 0) {
@@ -78,7 +85,8 @@ void cStarPort::think_deploy() {
                         unit[id].move_to(rallyPoint, -1, -1);
                     }
                     game.playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
-                } else {
+                }
+                else {
                     // could not find cell to deploy to, reinforce it
                     if (rallyPoint > -1) {
                         cellToDeployTo = rallyPoint;
@@ -92,7 +100,8 @@ void cStarPort::think_deploy() {
                     int cellAtBorderOfMap = map.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
                     REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
                 }
-            } else {
+            }
+            else {
                 // item is null, no more items to deploy.
                 setAnimating(false);
                 orderProcesser->setOrderHasBeenProcessed();
@@ -103,6 +112,7 @@ void cStarPort::think_deploy() {
     }
 }
 
-void cStarPort::think_guard() {
+void cStarPort::think_guard()
+{
     return; // starport has no guard function
 }

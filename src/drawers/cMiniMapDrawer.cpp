@@ -13,14 +13,15 @@
 #include <cassert>
 
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
-        m_isMouseOver(false),
-        map(theMap),
-        player(thePlayer),
-        mapCamera(theMapCamera),
-        status(eMinimapStatus::NOTAVAILABLE),
-        iStaticFrame(STAT14),
-        iTrans(0),
-        isBigMap(theMap->isBigMap()) {
+    m_isMouseOver(false),
+    map(theMap),
+    player(thePlayer),
+    mapCamera(theMapCamera),
+    status(eMinimapStatus::NOTAVAILABLE),
+    iStaticFrame(STAT14),
+    iTrans(0),
+    isBigMap(theMap->isBigMap())
+{
     assert(theMap);
     assert(thePlayer);
     assert(theMapCamera);
@@ -39,14 +40,16 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
 }
 
-cMiniMapDrawer::~cMiniMapDrawer() {
+cMiniMapDrawer::~cMiniMapDrawer()
+{
     map = nullptr;
     mapCamera = nullptr;
     iStaticFrame = STAT14;
     status = eMinimapStatus::NOTAVAILABLE;
 }
 
-void cMiniMapDrawer::init() {
+void cMiniMapDrawer::init()
+{
     status = eMinimapStatus::NOTAVAILABLE;
     iStaticFrame = STAT14;
     iTrans = 0;
@@ -54,7 +57,8 @@ void cMiniMapDrawer::init() {
     m_isMouseOver = false;
 }
 
-void cMiniMapDrawer::drawViewPortRectangle() {
+void cMiniMapDrawer::drawViewPortRectangle()
+{
     // Draw the magic rectangle (viewport)
     int iWidth = (mapCamera->getViewportWidth()) / TILESIZE_WIDTH_PIXELS;
     int iHeight = (mapCamera->getViewportHeight()) / TILESIZE_HEIGHT_PIXELS;
@@ -77,7 +81,8 @@ void cMiniMapDrawer::drawViewPortRectangle() {
     renderDrawer->drawRect(bmp_screen, startX, startY, minimapWidth, minimapHeight, makecol(255, 255, 255));
 }
 
-int cMiniMapDrawer::getMapWidthInPixels() {
+int cMiniMapDrawer::getMapWidthInPixels()
+{
     // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
     if (map->isBigMap()) {
         return map->getWidth();
@@ -85,7 +90,8 @@ int cMiniMapDrawer::getMapWidthInPixels() {
     return map->getWidth() * 2; // double pixel size
 }
 
-int cMiniMapDrawer::getMapHeightInPixels() {
+int cMiniMapDrawer::getMapHeightInPixels()
+{
     // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
     if (map->isBigMap()) {
         return map->getHeight();
@@ -93,7 +99,8 @@ int cMiniMapDrawer::getMapHeightInPixels() {
     return map->getHeight() * 2;
 }
 
-void cMiniMapDrawer::drawTerrain() {
+void cMiniMapDrawer::drawTerrain()
+{
     int iColor = 0;
 
     for (int x = 0; x < (map->getWidth()); x++) {
@@ -129,7 +136,8 @@ void cMiniMapDrawer::drawTerrain() {
  *
  * @param playerOnly (if false, draws all other players than player)
  */
-void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
+void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
+{
 
     int iColor = renderDrawer->getColor_BLACK();
 
@@ -198,7 +206,8 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 }
 
 
-int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
+int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
+{
     // get color for terrain type (for minimap)
     switch (terrainType) {
         case TERRAIN_ROCK:
@@ -226,7 +235,8 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
     }
 }
 
-void cMiniMapDrawer::draw() {
+void cMiniMapDrawer::draw()
+{
     if (!map) return;
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
@@ -236,8 +246,8 @@ void cMiniMapDrawer::draw() {
                   m_RectFullMinimap.getEndY());
 
     if (status == eMinimapStatus::POWERUP ||
-        status == eMinimapStatus::RENDERMAP ||
-        status == eMinimapStatus::POWERDOWN) {
+            status == eMinimapStatus::RENDERMAP ||
+            status == eMinimapStatus::POWERDOWN) {
         drawTerrain();
         drawUnitsAndStructures(false);
     }
@@ -252,7 +262,8 @@ void cMiniMapDrawer::draw() {
     set_clip_rect(bmp_screen, 0, 0, game.m_screenW, game.m_screenH);
 }
 
-void cMiniMapDrawer::drawStaticFrame() {
+void cMiniMapDrawer::drawStaticFrame()
+{
     if (status == eMinimapStatus::NOTAVAILABLE) return;
     if (status == eMinimapStatus::RENDERMAP) return;
     if (status == eMinimapStatus::LOWPOWER) return;
@@ -266,7 +277,8 @@ void cMiniMapDrawer::drawStaticFrame() {
     // < STAT01 frames are going from very transparent to opaque
     if (iStaticFrame < STAT10) {
         iTrans = 255 - health_bar(192, (STAT12 - iStaticFrame), 12);
-    } else {
+    }
+    else {
         iTrans = 255;
     }
 
@@ -280,7 +292,8 @@ void cMiniMapDrawer::drawStaticFrame() {
     }
 }
 
-int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
+int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
+{
     // the minimap can be 128x128 pixels at the bottom right of the screen.
     int mouseMiniMapX = mouseX - drawX;
     int mouseMiniMapY = mouseY - drawY;
@@ -289,7 +302,8 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
     // However, every dot is (due the 64x64 map) 2 pixels wide...
     if (map->getHeight() > 64 || map->getWidth() > 64) {
         // do nothing (assume, 1 cell = 1 pixel)
-    } else {
+    }
+    else {
         // old behavior assumes 1 cell = 2x2 pixels
         mouseMiniMapX /= 2;
         mouseMiniMapY /= 2;
@@ -301,12 +315,14 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 }
 
 // TODO: Respond to game events instead of using the "think" function (tell, don't ask)
-void cMiniMapDrawer::think() {
+void cMiniMapDrawer::think()
+{
     if (player->hasAtleastOneStructure(RADAR)) {
         if (status == eMinimapStatus::NOTAVAILABLE) {
             status = eMinimapStatus::POWERUP;
         }
-    } else {
+    }
+    else {
         status = eMinimapStatus::NOTAVAILABLE;
     }
 
@@ -340,34 +356,41 @@ void cMiniMapDrawer::think() {
     if (status == eMinimapStatus::POWERDOWN) {
         if (iStaticFrame < STAT21) {
             iStaticFrame++;
-        } else {
+        }
+        else {
             status = eMinimapStatus::LOWPOWER;
         }
-    } else if (status == eMinimapStatus::POWERUP) {
+    }
+    else if (status == eMinimapStatus::POWERUP) {
         if (iStaticFrame > STAT01) {
             iStaticFrame--;
-        } else {
+        }
+        else {
             status = eMinimapStatus::RENDERMAP;
         }
     }
 }
 
-void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event) {
+void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event)
+{
     m_isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
 }
 
-bool cMiniMapDrawer::isMouseOver() {
+bool cMiniMapDrawer::isMouseOver()
+{
     return m_isMouseOver;
 }
 
-void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
+void cMiniMapDrawer::setPlayer(cPlayer *thePlayer)
+{
     this->player = thePlayer;
 }
 
-void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
+void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
+{
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
-        !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
-            ) {
+            !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
+       ) {
 
         if (player->hasAtleastOneStructure(RADAR)) {
             auto m_mouse = game.getMouse();
@@ -377,7 +400,8 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
     }
 }
 
-void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     switch (event.eventType) {
         case eMouseEventType::MOUSE_MOVED_TO:
             onMouseAt(event);

@@ -5,28 +5,29 @@
 #include "managers/cDrawManager.h"
 
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
-        m_mouseHoveringOverStructureId(-1),
-        m_mouseHoveringOverUnitId(-1),
-        m_mouseOnBattleField(false),
-        m_drawToolTip(false),
-        m_mouseCell(-99),
-        m_player(player),
-        m_state(MOUSESTATE_SELECT),
-        m_prevState(MOUSESTATE_SELECT),
-        m_prevStateBeforeRepair(MOUSESTATE_SELECT),
-        m_mouse(mouse),
-        m_mouseNormalState(new cMouseNormalState(player, this, m_mouse)),
-        m_mouseUnitsSelectedState(new cMouseUnitsSelectedState(player, this, m_mouse)),
-        m_mouseRepairState(new cMouseRepairState(player, this, m_mouse)),
-        m_mousePlaceState(new cMousePlaceState(player, this, m_mouse)),
-        m_mouseDeployState(new cMouseDeployState(player, this, m_mouse)),
-        m_prevTickMouseAtBattleField(false)
+    m_mouseHoveringOverStructureId(-1),
+    m_mouseHoveringOverUnitId(-1),
+    m_mouseOnBattleField(false),
+    m_drawToolTip(false),
+    m_mouseCell(-99),
+    m_player(player),
+    m_state(MOUSESTATE_SELECT),
+    m_prevState(MOUSESTATE_SELECT),
+    m_prevStateBeforeRepair(MOUSESTATE_SELECT),
+    m_mouse(mouse),
+    m_mouseNormalState(new cMouseNormalState(player, this, m_mouse)),
+    m_mouseUnitsSelectedState(new cMouseUnitsSelectedState(player, this, m_mouse)),
+    m_mouseRepairState(new cMouseRepairState(player, this, m_mouse)),
+    m_mousePlaceState(new cMousePlaceState(player, this, m_mouse)),
+    m_mouseDeployState(new cMouseDeployState(player, this, m_mouse)),
+    m_prevTickMouseAtBattleField(false)
 {
     assert(player && "Expected player in cGameControlsContext constructor");
     assert(mouse && "Expected mouse in cGameControlsContext constructor");
 }
 
-cGameControlsContext::~cGameControlsContext() {
+cGameControlsContext::~cGameControlsContext()
+{
     // not owner
     m_player = nullptr;
     m_mouse = nullptr;
@@ -40,7 +41,8 @@ cGameControlsContext::~cGameControlsContext() {
 }
 
 
-void cGameControlsContext::updateMouseCell(const cPoint &coords) {
+void cGameControlsContext::updateMouseCell(const cPoint &coords)
+{
     if (coords.y < cSideBar::TopBarHeight) {
         m_mouseCell = MOUSECELL_TOPBAR; // at the top bar or higher, so no mouse cell id.
         m_mouseOnBattleField = false;
@@ -62,20 +64,23 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords) {
     m_mouseCell = getMouseCellFromScreen(coords.x, coords.y);
 }
 
-int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const {
+int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
+{
     int absMapX = mapCamera->getAbsMapMouseX(mouseX);
     int absMapY = mapCamera->getAbsMapMouseY(mouseY);
     return mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
 }
 
-void cGameControlsContext::determineToolTip() {
+void cGameControlsContext::determineToolTip()
+{
     m_drawToolTip = false;
     if (key[KEY_T] && isMouseOnBattleField()) { // TODO: this gets removed later, when we redo tooltips anyway
         m_drawToolTip = true;
     }
 }
 
-void cGameControlsContext::determineHoveringOverStructureId() {
+void cGameControlsContext::determineHoveringOverStructureId()
+{
     m_mouseHoveringOverStructureId = -1;
 
     if (!map.isVisible(m_mouseCell, this->m_player)) {
@@ -85,7 +90,8 @@ void cGameControlsContext::determineHoveringOverStructureId() {
     m_mouseHoveringOverStructureId = map.getCellIdStructuresLayer(m_mouseCell);
 }
 
-void cGameControlsContext::determineHoveringOverUnitId() {
+void cGameControlsContext::determineHoveringOverUnitId()
+{
     if (m_mouseHoveringOverUnitId > -1) {
         cUnit &aUnit = unit[m_mouseHoveringOverUnitId];
         if (aUnit.isValid()) {
@@ -108,7 +114,8 @@ void cGameControlsContext::determineHoveringOverUnitId() {
             m_mouseHoveringOverUnitId = iUnitId;
         }
 
-    } else if (cellOfMouse->id[MAPID_WORMS] > -1) {
+    }
+    else if (cellOfMouse->id[MAPID_WORMS] > -1) {
         int iUnitId = cellOfMouse->id[MAPID_WORMS];
         m_mouseHoveringOverUnitId = iUnitId;
     }
@@ -121,14 +128,16 @@ void cGameControlsContext::determineHoveringOverUnitId() {
     }
 }
 
-cAbstractStructure *cGameControlsContext::getStructurePointerWhereMouseHovers() const {
+cAbstractStructure *cGameControlsContext::getStructurePointerWhereMouseHovers() const
+{
     if (m_mouseHoveringOverStructureId < 0) {
         return nullptr;
     }
     return structure[m_mouseHoveringOverStructureId];
 }
 
-void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event) {
+void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event)
+{
     updateMouseCell(event.coords);
     bool mouseOnBattleField = isMouseOnBattleField();
     if (mouseOnBattleField) {
@@ -139,7 +148,8 @@ void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event) {
         if (!m_prevTickMouseAtBattleField) {
             onFocusMouseStateEvent();
         }
-    } else {
+    }
+    else {
         m_mouseHoveringOverStructureId = -1;
         m_mouseHoveringOverUnitId = -1;
 
@@ -152,7 +162,8 @@ void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event) {
     m_prevTickMouseAtBattleField = mouseOnBattleField;
 }
 
-void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     if (event.eventType == eMouseEventType::MOUSE_MOVED_TO) {
         onMouseMovedTo(event);
     }
@@ -166,11 +177,13 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event) {
 
 }
 
-bool cGameControlsContext::isMouseOnBattleField() const {
+bool cGameControlsContext::isMouseOnBattleField() const
+{
     return m_mouseOnBattleField;
 }
 
-void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
+void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event)
+{
     if (isMouseOnBattleField()) {
         switch (m_state) {
             case MOUSESTATE_SELECT:
@@ -189,12 +202,14 @@ void cGameControlsContext::onNotifyMouseStateEvent(const s_MouseEvent &event) {
                 m_mouseDeployState->onNotifyMouseEvent(event);
                 break;
         }
-    } else {
+    }
+    else {
         // if
     }
 }
 
-void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     switch (m_state) {
         case MOUSESTATE_SELECT:
             m_mouseNormalState->onNotifyKeyboardEvent(event);
@@ -214,7 +229,8 @@ void cGameControlsContext::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
     }
 }
 
-void cGameControlsContext::setMouseState(eMouseState newState) {
+void cGameControlsContext::setMouseState(eMouseState newState)
+{
     if (newState != m_state) {
         // Remember previous state as long as it is not the PLACE state, since we can't go back to that state
         if (m_state != eMouseState::MOUSESTATE_PLACE) {
@@ -254,15 +270,18 @@ void cGameControlsContext::setMouseState(eMouseState newState) {
     }
 }
 
-void cGameControlsContext::toPreviousState() {
+void cGameControlsContext::toPreviousState()
+{
     setMouseState(m_prevState);
 }
 
-bool cGameControlsContext::isState(eMouseState other) const {
+bool cGameControlsContext::isState(eMouseState other) const
+{
     return this->m_state == other;
 }
 
-void cGameControlsContext::onBlurMouseStateEvent() {
+void cGameControlsContext::onBlurMouseStateEvent()
+{
     switch (m_state) {
         case MOUSESTATE_SELECT:
             m_mouseNormalState->onBlur();
@@ -282,7 +301,8 @@ void cGameControlsContext::onBlurMouseStateEvent() {
     }
 }
 
-void cGameControlsContext::onFocusMouseStateEvent() {
+void cGameControlsContext::onFocusMouseStateEvent()
+{
     switch (m_state) {
         case MOUSESTATE_SELECT:
             m_mouseNormalState->onFocus();
@@ -302,7 +322,8 @@ void cGameControlsContext::onFocusMouseStateEvent() {
     }
 }
 
-void cGameControlsContext::onNotifyGameEvent(const s_GameEvent &event) {
+void cGameControlsContext::onNotifyGameEvent(const s_GameEvent &event)
+{
     switch (m_state) {
         case MOUSESTATE_SELECT:
             m_mouseNormalState->onNotifyGameEvent(event);

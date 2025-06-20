@@ -2,7 +2,8 @@
 
 #include "cAbstractMentat.h"
 
-void cRepeatButtonCommand::execute(cAbstractMentat &mentat) {
+void cRepeatButtonCommand::execute(cAbstractMentat &mentat)
+{
     mentat.resetSpeak();
 }
 

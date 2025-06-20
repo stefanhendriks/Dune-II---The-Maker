@@ -4,7 +4,7 @@
 #include "sMouseEvent.h"
 
 class cInputObserver {
-  public:
+public:
     virtual ~cInputObserver() = default;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) = 0;

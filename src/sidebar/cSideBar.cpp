@@ -11,46 +11,52 @@
 
 #include <cassert>
 
-cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
+cSideBar::cSideBar(cPlayer *thePlayer) : player(thePlayer)
+{
     assert(thePlayer != nullptr && "Expected player to be not null!");
-	selectedListID = -1; // nothing is selected
-	isMouseOverSidebarValue = false;
-	memset(lists, 0, sizeof(lists));
+    selectedListID = -1; // nothing is selected
+    isMouseOverSidebarValue = false;
+    memset(lists, 0, sizeof(lists));
 }
 
-cSideBar::~cSideBar() {
-	for (int i = 0; i < LIST_MAX; i++) {
+cSideBar::~cSideBar()
+{
+    for (int i = 0; i < LIST_MAX; i++) {
         cBuildingList *pList = lists[i];
         if (pList) {
             pList->removeAllItems();
-			delete pList; // delete list (also removes pointers within the list)
-			lists[i] = nullptr;
-		}
-	}
+            delete pList; // delete list (also removes pointers within the list)
+            lists[i] = nullptr;
+        }
+    }
 }
 
-void cSideBar::setList(eListType listType, cBuildingList* list) {
+void cSideBar::setList(eListType listType, cBuildingList *list)
+{
     int listId = eListTypeAsInt(listType);
-	if (lists[listId]) {
-		logbook("WARNING: Setting list, while list already set. Deleting old entry before assigning new.");
-		delete lists[listId];
-	}
+    if (lists[listId]) {
+        logbook("WARNING: Setting list, while list already set. Deleting old entry before assigning new.");
+        delete lists[listId];
+    }
 
-	lists[listId] = list;
+    lists[listId] = list;
 }
 
 /**
  * Thinking for sidebar - timer based
  */
-void cSideBar::think() {
-	thinkProgressAnimation();
+void cSideBar::think()
+{
+    thinkProgressAnimation();
 }
 
-void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const {
+void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const
+{
     drawManager->setMessage(item->getInfo());
 }
 
-bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
+bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
+{
     if (item == nullptr) {
         return false;
     }
@@ -68,9 +74,11 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
 
         if (item->isQueuable()) {
             itemBuilder->addItemToList(item);
-        } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
+        }
+        else if (firstOfItsListType) {   // may only build if there is nothing else in the list type being built
             itemBuilder->addItemToList(item);
-        } else {
+        }
+        else {
             // fail
             return false;
         }
@@ -87,18 +95,21 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
  * @param buildId
  * @return
  */
-bool cSideBar::startBuildingItemIfOk(eListType listType, int buildId) const {
+bool cSideBar::startBuildingItemIfOk(eListType listType, int buildId) const
+{
     cBuildingListItem *pItem = getBuildingListItem(listType, buildId);
     if (pItem) {
         return startBuildingItemIfOk(pItem);
-    } else {
+    }
+    else {
         logbook(fmt::format("ERROR: startBuildingItemIfOk with listType[{}] and buildId[{}] did not find an item to build!",
-        eListTypeAsInt(listType), buildId ));
+                            eListTypeAsInt(listType), buildId ));
     }
     return false;
 }
 
-cBuildingListItem * cSideBar::getBuildingListItem(eListType listType, int buildId) const {
+cBuildingListItem *cSideBar::getBuildingListItem(eListType listType, int buildId) const
+{
     int listId = eListTypeAsInt(listType);
 
     cBuildingList *pList = lists[listId];
@@ -107,7 +118,8 @@ cBuildingListItem * cSideBar::getBuildingListItem(eListType listType, int buildI
     return pList->getItemByBuildId(buildId);
 }
 
-void cSideBar::thinkProgressAnimation() {
+void cSideBar::thinkProgressAnimation()
+{
     int startPos = eListTypeAsInt(eListType::LIST_CONSTYARD);
     for (int i = startPos; i < LIST_MAX; i++) {
         cBuildingList *list = getList(i);
@@ -118,7 +130,8 @@ void cSideBar::thinkProgressAnimation() {
     }
 }
 
-void cSideBar::onMouseAt(const s_MouseEvent &event) {
+void cSideBar::onMouseAt(const s_MouseEvent &event)
+{
     isMouseOverSidebarValue = event.coords.x > (game.m_screenW - cSideBar::SidebarWidth);
     drawManager->setKeepMessage(isMouseOverSidebarValue);
 
@@ -126,7 +139,7 @@ void cSideBar::onMouseAt(const s_MouseEvent &event) {
 
     // when mouse is selecting a list, and over an item, then draw message bar...!?
     cBuildingList *list = getList(selectedListID);
-    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -135,7 +148,8 @@ void cSideBar::onMouseAt(const s_MouseEvent &event) {
     drawMessageBarWithItemInfo(item);
 }
 
-void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
+void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
+{
     int startPos = eListTypeAsInt(eListType::LIST_CONSTYARD);
 
     // button interaction
@@ -167,14 +181,14 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         return;
     }
 
-    cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = drawManager->getOrderDrawer();
 
     // allow clicking on the order button, send event through...
     if (list->getType() == eListType::LIST_STARPORT) {
         orderDrawer->onNotify(event);
     }
 
-    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -185,13 +199,16 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
         if (item->shouldPlaceIt()) {
             player->setContextMouseState(eMouseState::MOUSESTATE_PLACE);
-        } else if (item->shouldDeployIt()) {
+        }
+        else if (item->shouldDeployIt()) {
             player->setContextMouseState(eMouseState::MOUSESTATE_DEPLOY);
-        } else {
+        }
+        else {
             startBuildingItemIfOk(item);
         }
-    } else {
-        cOrderProcesser * orderProcesser = player->getOrderProcesser();
+    }
+    else {
+        cOrderProcesser *orderProcesser = player->getOrderProcesser();
 
         // add orders
         if (orderProcesser->acceptsOrders()) {
@@ -204,21 +221,23 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
     }
 }
 
-void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
+void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
+{
     if (selectedListID < 0) return;
 
     // when mouse pressed, build item if over item
     cBuildingList *list = getList(selectedListID);
 
-    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
     // anything but the starport can 'build' things
     if (list->getType() != eListType::LIST_STARPORT) {
         cancelBuildingListItem(item);
-    } else {
-        cOrderProcesser * orderProcesser = player->getOrderProcesser();
+    }
+    else {
+        cOrderProcesser *orderProcesser = player->getOrderProcesser();
 
         assert(orderProcesser);
         if (!orderProcesser->isOrderPlaced()) {
@@ -230,7 +249,8 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
     }
 }
 
-void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
+void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
+{
     if (item->getTimesToBuild() > 0) {
         item->decreaseTimesToBuild();
         item->setPlaceIt(false);
@@ -249,14 +269,14 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
 
             // notify game that the item just has been cancelled, just before the actual removal
             s_GameEvent newEvent {
-                    .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED,
-                    .entityType = item->getBuildType(),
-                    .entityID = -1,
-                    .player = player,
-                    .entitySpecificType = item->getBuildId(),
-                    .atCell = -1,
-                    .isReinforce = false,
-                    .buildingListItem = item
+                .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED,
+                .entityType = item->getBuildType(),
+                .entityID = -1,
+                .player = player,
+                .entitySpecificType = item->getBuildId(),
+                .atCell = -1,
+                .isReinforce = false,
+                .buildingListItem = item
             };
 
             game.onNotifyGameEvent(newEvent);
@@ -268,7 +288,8 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
     }
 }
 
-void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event) {
+void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event)
+{
     cGameControlsContext *pContext = player->getGameControlsContext();
 
     if (!pContext->isMouseOnSidebarOrMinimap()) {
@@ -294,7 +315,8 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event) {
     }
 }
 
-void cSideBar::onNotify(const s_GameEvent &event) {
+void cSideBar::onNotify(const s_GameEvent &event)
+{
     // event is for specific player, and we are not that player...
     if (event.player != nullptr && event.player != player) {
         return;
@@ -322,31 +344,37 @@ void cSideBar::onNotify(const s_GameEvent &event) {
     }
 }
 
-void cSideBar::onListItemReadyToPlaceEvent(const s_GameEvent &event) const {
+void cSideBar::onListItemReadyToPlaceEvent(const s_GameEvent &event) const
+{
     event.buildingListItem->getList()->startFlashing();
 }
 
-void cSideBar::onSpecialReadyToDeployEvent(const s_GameEvent &event) const {
+void cSideBar::onSpecialReadyToDeployEvent(const s_GameEvent &event) const
+{
     event.buildingListItem->getList()->startFlashing();
 }
 
-void cSideBar::onListBecameAvailableEvent(const s_GameEvent &event) {
+void cSideBar::onListBecameAvailableEvent(const s_GameEvent &event)
+{
     event.buildingList->startFlashing();
 }
 
-void cSideBar::onListBecameUnavailableEvent(const s_GameEvent &event) {
+void cSideBar::onListBecameUnavailableEvent(const s_GameEvent &event)
+{
     cBuildingList *pList = getSelectedList();
     if (pList == event.buildingList) {
         findFirstActiveListAndSelectIt();
     }
 }
 
-cBuildingList *cSideBar::getSelectedList() const {
+cBuildingList *cSideBar::getSelectedList() const
+{
     if (selectedListID < 0) return nullptr;
     return lists[selectedListID];
 }
 
-void cSideBar::findFirstActiveListAndSelectIt() {
+void cSideBar::findFirstActiveListAndSelectIt()
+{
     logbook(fmt::format("cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [{}]", selectedListID));
     for (int i = 0; i < LIST_MAX; i++) {
         cBuildingList *pList = lists[i];
@@ -358,9 +386,10 @@ void cSideBar::findFirstActiveListAndSelectIt() {
     logbook(fmt::format("cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [{}]", selectedListID));
 }
 
-void cSideBar::setSelectedListId(eListType value) {
-    logbook(fmt::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]", 
-        player->getId(), selectedListID, eListTypeAsInt(value)));
+void cSideBar::setSelectedListId(eListType value)
+{
+    logbook(fmt::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]",
+                        player->getId(), selectedListID, eListTypeAsInt(value)));
 
     int oldListId = selectedListID;
     selectedListID = eListTypeAsInt(value);

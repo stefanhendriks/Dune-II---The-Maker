@@ -54,26 +54,42 @@ public:
     bool isItemInList(cBuildingListItem *item);
 
     // get
-    bool isSelected() { return selected; }
+    bool isSelected() {
+        return selected;
+    }
 
-    int getLastClickedId() { return lastClickedId; }
+    int getLastClickedId() {
+        return lastClickedId;
+    }
 
-    int getButtonIconIdPressed() { return buttonIconIdPressed; }
+    int getButtonIconIdPressed() {
+        return buttonIconIdPressed;
+    }
 
-    int getButtonIconIdUnpressed() { return buttonIconIdUnpressed; }
+    int getButtonIconIdUnpressed() {
+        return buttonIconIdUnpressed;
+    }
 
-    int getButtonDrawX() { return buttonDrawX; }
+    int getButtonDrawX() {
+        return buttonDrawX;
+    }
 
-    int getButtonDrawY() { return buttonDrawY; }
+    int getButtonDrawY() {
+        return buttonDrawY;
+    }
 
-    bool isAvailable() { return maxItems > 0; }
+    bool isAvailable() {
+        return maxItems > 0;
+    }
 
     std::array<int, 5> isBuildingItem();
 
     cBuildingListItem *getItemByBuildId(int buildId);
 
     // set
-    void setSelected(bool value) { selected = value; }
+    void setSelected(bool value) {
+        selected = value;
+    }
 
     void setStatusPendingUpgrade(int subListId);
 
@@ -81,25 +97,41 @@ public:
 
     void setStatusAvailable(int subListId);
 
-    void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
+    void setButtonIconIdPressed(int iconId) {
+        buttonIconIdPressed = iconId;
+    }
 
-    void setButtonIconIdUnpressed(int iconId) { buttonIconIdUnpressed = iconId; }
+    void setButtonIconIdUnpressed(int iconId) {
+        buttonIconIdUnpressed = iconId;
+    }
 
-    void setButtonWidth(int value) { buttonWidth = value; }
+    void setButtonWidth(int value) {
+        buttonWidth = value;
+    }
 
-    void setButtonHeight(int value) { buttonHeight = value; }
+    void setButtonHeight(int value) {
+        buttonHeight = value;
+    }
 
-    void setButtonDrawX(int value) { buttonDrawX = value; }
+    void setButtonDrawX(int value) {
+        buttonDrawX = value;
+    }
 
-    void setButtonDrawY(int value) { buttonDrawY = value; }
+    void setButtonDrawY(int value) {
+        buttonDrawY = value;
+    }
 
-    void setLastClickedId(int value) { lastClickedId = value; }
+    void setLastClickedId(int value) {
+        lastClickedId = value;
+    }
 
     /**
     * type of list (see cSideBarFactory) , ie 0 = CONSTYARD, last is IX (sUpgradeInfo), etc.
     * @param value
     */
-    eListType getType() { return typeOfList; }
+    eListType getType() {
+        return typeOfList;
+    }
 
     void removeAllSublistItems(int sublistId);
 
@@ -109,7 +141,9 @@ public:
 
     void startFlashing();
 
-    bool isFlashing() { return TIMER_flashing > 0; }
+    bool isFlashing() {
+        return TIMER_flashing > 0;
+    }
 
     int getFlashingColor();
 

@@ -5,7 +5,8 @@
 
 namespace fs = std::filesystem;
 
-cFileValidator::cFileValidator(const std::string &path) {
+cFileValidator::cFileValidator(const std::string &path)
+{
     m_path = path;
     // m_enumToString[eGameDirFileName::ARRAKEEN] = "arrakeen.fon";
     // m_enumToString[eGameDirFileName::BENEGESS] = "benegess.fon";
@@ -17,15 +18,18 @@ cFileValidator::cFileValidator(const std::string &path) {
     // m_enumToString[eGameDirFileName::GFXAUDIO] = "gfxaudio.dat";
 }
 
-void cFileValidator::addResources(std::map<eGameDirFileName, std::string> _transfertMap) {
+void cFileValidator::addResources(std::map<eGameDirFileName, std::string> _transfertMap)
+{
     m_enumToString = _transfertMap;
 }
 
-cFileValidator::~cFileValidator() {
+cFileValidator::~cFileValidator()
+{
     m_enumToString.clear();
 }
 
-bool cFileValidator::fileExists() {
+bool cFileValidator::fileExists()
+{
     // check if directory exists first
     fs::directory_entry entry_sandbox{m_path};
     if (!entry_sandbox.exists()) {
@@ -49,10 +53,12 @@ bool cFileValidator::fileExists() {
     return result;
 }
 
-const std::string cFileValidator::getName(eGameDirFileName fileName) {
+const std::string cFileValidator::getName(eGameDirFileName fileName)
+{
     return m_enumToString[fileName];
 }
 
-const std::string cFileValidator::getFullName(eGameDirFileName fileName) {
+const std::string cFileValidator::getFullName(eGameDirFileName fileName)
+{
     return m_path + "/" + m_enumToString[fileName];
 }

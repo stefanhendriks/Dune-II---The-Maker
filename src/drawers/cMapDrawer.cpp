@@ -12,17 +12,19 @@
 #include <cmath>
 
 cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
-        m_map(map),
-        m_player(player),
-        m_camera(camera),
-        m_BmpTemp(nullptr),
-        m_drawWithoutShroudTiles(false),
-        m_drawGrid(false) {
+    m_map(map),
+    m_player(player),
+    m_camera(camera),
+    m_BmpTemp(nullptr),
+    m_drawWithoutShroudTiles(false),
+    m_drawGrid(false)
+{
     assert(map);
     assert(camera);
 }
 
-cMapDrawer::~cMapDrawer() {
+cMapDrawer::~cMapDrawer()
+{
     m_map = nullptr;
     m_camera = nullptr;
     m_player = nullptr;
@@ -31,7 +33,8 @@ cMapDrawer::~cMapDrawer() {
     }
 }
 
-void cMapDrawer::drawShroud() {
+void cMapDrawer::drawShroud()
+{
     set_trans_blender(0, 0, 0, 128);
 
     float tileWidth = mapCamera->getZoomedTileWidth();
@@ -62,29 +65,32 @@ void cMapDrawer::drawShroud() {
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
-                } else {
+                }
+                else {
                     //_rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, makecol(0, 0, 0));
                     renderDrawer->drawRectFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, makecol(0, 0, 0));
                 }
-            } else {
+            }
+            else {
                 if (m_map->isVisible(iCell, iPl)) {
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
                         renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX,
-                                                                    fDrawY, iTileWidth, iTileHeight);
+                                fDrawY, iTileWidth, iTileHeight);
                         clear_to_color(temp, makecol(255, 0, 255));
 
                         renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
-                                                                    iTileWidth, iTileHeight);
+                                iTileWidth, iTileHeight);
                         draw_trans_sprite(bmp_screen, temp, fDrawX, fDrawY);
                     }
-                } else {
+                }
+                else {
                     // NOT VISIBLE, DO NOT DRAW A THING THEN!
                     // Except when there is a building here, that should not be visible ;)
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
                     renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,
-                                                                iTileWidth, iTileHeight);
+                            iTileWidth, iTileHeight);
                 }
             }
         }
@@ -93,7 +99,8 @@ void cMapDrawer::drawShroud() {
     destroy_bitmap(temp);
 }
 
-void cMapDrawer::drawTerrain() {
+void cMapDrawer::drawTerrain()
+{
     if (m_BmpTemp == nullptr) {
         int colorDepthScreen = bitmap_color_depth(bmp_screen);
         m_BmpTemp = create_bitmap_ex(colorDepthScreen, 32, 32);
@@ -144,26 +151,27 @@ void cMapDrawer::drawTerrain() {
                 // somehow, invalid type
                 cRectangle rectangle = cRectangle(0, 0, 32, 32);
                 renderDrawer->drawRectFilled(m_BmpTemp, rectangle, makecol(245, 245, 245));
-            } else {
+            }
+            else {
                 // valid type
                 blit((BITMAP *) gfxdata[cell->type].dat,
                      m_BmpTemp,
                      cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
                      0, 0,
                      32, 32
-                );
+                    );
             }
 
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
                 // no need to stretch here, we stretch m_BmpTemp below
                 renderDrawer->maskedBlitFromGfxData(SMUDGE, m_BmpTemp,
-                                                     cell->smudgetile * 32,
-                                                     cell->smudgetype * 32,
-                                                     0,
-                                                     0,
-                                                     32,
-                                                     32);
+                                                    cell->smudgetile * 32,
+                                                    cell->smudgetype * 32,
+                                                    0,
+                                                    0,
+                                                    32,
+                                                    32);
             }
 
             int iDrawX = round(fDrawX);
@@ -179,8 +187,8 @@ void cMapDrawer::drawTerrain() {
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                      renderDrawer->drawRectTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
-                                                                    makecol(255, 255, 0), 96);
+                        renderDrawer->drawRectTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                                                                makecol(255, 255, 0), 96);
                     }
                 }
 
@@ -220,7 +228,8 @@ void cMapDrawer::drawTerrain() {
     }
 }
 
-void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY) {
+void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY)
+{
     int iClr = makecol(255, 0, 0);
 
     bool bDraw = false;
@@ -231,7 +240,8 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
             iClr = makecol(0, 198, 0);
         }
         bDraw = true;
-    } else if (!m_map->isCellPassableFoot(iCell)) {
+    }
+    else if (!m_map->isCellPassableFoot(iCell)) {
         iClr = makecol(0, 198, 0);
         bDraw = true;
     }
@@ -257,7 +267,8 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 }
 
-int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
+int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const
+{
     if (cll < 0) return -1;
     if (playerId < HUMAN || playerId >= MAX_PLAYERS) return -1;
 
@@ -275,7 +286,8 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
         if (m_map->isVisible(above, playerId)) {
             a = false;  // visible
         }
-    } else {
+    }
+    else {
         a = false;
     }
 
@@ -283,7 +295,8 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
         if (m_map->isVisible(under, playerId)) {
             u = false;  // visible
         }
-    } else {
+    }
+    else {
         u = false;
     }
 
@@ -291,7 +304,8 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
         if (m_map->isVisible(left, playerId)) {
             l = false;  // visible
         }
-    } else {
+    }
+    else {
         l = false;
     }
 
@@ -299,7 +313,8 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
         if (m_map->isVisible(right, playerId)) {
             r = false;  // visible
         }
-    } else {
+    }
+    else {
         r = false;
     }
 
@@ -351,6 +366,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     return tile;
 }
 
-void cMapDrawer::setPlayer(cPlayer *thePlayer) {
+void cMapDrawer::setPlayer(cPlayer *thePlayer)
+{
     m_player = thePlayer;
 }

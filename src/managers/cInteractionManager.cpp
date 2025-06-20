@@ -8,46 +8,55 @@
 #include "drawers/cMiniMapDrawer.h"
 #include "player/cPlayer.h"
 
-cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cInputObserver() {
-	assert(thePlayer);
-	// does not own these things!
-	player = thePlayer;
+cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()
+{
+    assert(thePlayer);
+    // does not own these things!
+    player = thePlayer;
     sidebar = thePlayer->getSideBar();
     logbook("cInteractionManager constructor");
 }
 
-cInteractionManager::~cInteractionManager() {
+cInteractionManager::~cInteractionManager()
+{
     player = nullptr;
-	sidebar = nullptr;
+    sidebar = nullptr;
     logbook("cInteractionManager destructor");
 }
 
-void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
+void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer)
+{
     this->sidebar = thePlayer->getSideBar();
     this->player = thePlayer;
     logbook(fmt::format("cInteractionManager::setPlayerToInteractFor for player [{}] [{}]", thePlayer->getId(), thePlayer->getHouseName()));
 }
 
-void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &) {
+void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &)
+{
 }
 
-void cInteractionManager::onMouseClickedRight(const s_MouseEvent &) {
+void cInteractionManager::onMouseClickedRight(const s_MouseEvent &)
+{
 }
 
-void cInteractionManager::onMouseAt(const s_MouseEvent &) {
+void cInteractionManager::onMouseAt(const s_MouseEvent &)
+{
 }
 
-void cInteractionManager::onMouseScrolledUp(const s_MouseEvent &) {
+void cInteractionManager::onMouseScrolledUp(const s_MouseEvent &)
+{
 }
 
-void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &) {
+void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &)
+{
 }
 
 /**
  * Called by mouse to send an event.
  * @param mouseEvent
  */
-void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
+void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
+{
     // process these events by itself (if any implementation is present)...
     switch (mouseEvent.eventType) {
         case eMouseEventType::MOUSE_MOVED_TO:
@@ -96,7 +105,8 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
     game.onNotifyMouseEvent(mouseEvent);
 }
 
-void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event) {
+void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
     if (game.isState(GAME_PLAYING)) {
         cGameControlsContext *pContext = player->getGameControlsContext();
         pContext->onNotifyKeyboardEvent(event);

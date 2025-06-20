@@ -7,22 +7,26 @@
 #include "player/cPlayer.h"
 
 // Constructor
-cLightFactory::cLightFactory() {
+cLightFactory::cLightFactory()
+{
     // other variables (class specific)
     drawFlash = false;
     flashes = 0;
 }
 
-int cLightFactory::getType() const {
+int cLightFactory::getType() const
+{
     return LIGHTFACTORY;
 }
 
-void cLightFactory::thinkFast() {
+void cLightFactory::thinkFast()
+{
     // last but not least, think like our abstraction
     cAbstractStructure::thinkFast();
 }
 
-void cLightFactory::think_animation_unitDeploy() {
+void cLightFactory::think_animation_unitDeploy()
+{
     if (!isAnimating()) {
         drawFlash = false;
         flashes = 0;
@@ -36,23 +40,27 @@ void cLightFactory::think_animation_unitDeploy() {
             drawFlash = !drawFlash;
             TIMER_flag = 0;
         }
-    } else {
+    }
+    else {
         setAnimating(false);
     }
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cLightFactory::think_animation() {
+void cLightFactory::think_animation()
+{
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
     think_animation_unitDeploy();
 }
 
-void cLightFactory::think_guard() {
+void cLightFactory::think_guard()
+{
 
 }
 
-void cLightFactory::draw() {
+void cLightFactory::draw()
+{
     drawWithShadow();
     // draw flashing light
     if (drawFlash) {
@@ -71,15 +79,17 @@ void cLightFactory::draw() {
 
         BITMAP *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-                                         drawX, drawY, scaledWidth, scaledHeight);
+                                        drawX, drawY, scaledWidth, scaledHeight);
     }
 }
 
-void cLightFactory::startAnimating() {
+void cLightFactory::startAnimating()
+{
     if (isAnimating()) {
         flashes = 5;
         drawFlash = true;
-    } else {
+    }
+    else {
         TIMER_flag = 0;
         drawFlash = false;
     }

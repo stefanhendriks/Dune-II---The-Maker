@@ -9,54 +9,61 @@
 
 /// Reinforcement class
 cReinforcement::cReinforcement(int delayInSeconds, int unitType, int playerId, int targetCell, bool repeat) :
-        m_delayInSeconds(delayInSeconds),
-        m_unitType(unitType),
-        m_playerId(playerId),
-        m_cell(targetCell),
-        m_repeat(repeat),
-        m_removeMe(false),
-        m_originalDelay(delayInSeconds)
+    m_delayInSeconds(delayInSeconds),
+    m_unitType(unitType),
+    m_playerId(playerId),
+    m_cell(targetCell),
+    m_repeat(repeat),
+    m_removeMe(false),
+    m_originalDelay(delayInSeconds)
 {
 
 }
 
 cReinforcement::cReinforcement() :
-        m_delayInSeconds(-1),
-        m_unitType(-1),
-        m_playerId(-1),
-        m_cell(-1),
-        m_removeMe(false)
+    m_delayInSeconds(-1),
+    m_unitType(-1),
+    m_playerId(-1),
+    m_cell(-1),
+    m_removeMe(false)
 {
     // default constructor creates invalid reinforcement
 }
 
-void cReinforcement::substractSecondIfApplicable() {
+void cReinforcement::substractSecondIfApplicable()
+{
     if (m_delayInSeconds > -1) {
         m_delayInSeconds--;
     }
 }
 
-bool cReinforcement::isValid() const {
+bool cReinforcement::isValid() const
+{
     return m_cell > 0;
 }
 
-bool cReinforcement::canBeRemoved() const {
+bool cReinforcement::canBeRemoved() const
+{
     return m_removeMe;
 }
 
-void cReinforcement::repeatOrMarkForDeletion() {
+void cReinforcement::repeatOrMarkForDeletion()
+{
     if (m_repeat) {
         m_delayInSeconds = m_originalDelay;
-    } else {
+    }
+    else {
         m_removeMe = true;
     }
 }
 
-bool cReinforcement::isReady() const {
+bool cReinforcement::isReady() const
+{
     return m_delayInSeconds < 0;
 }
 
-void cReinforcement::execute() const {
+void cReinforcement::execute() const
+{
     int focusCell = players[m_playerId].getFocusCell();
     REINFORCE(m_playerId, m_unitType, m_cell, focusCell, true);
 }
@@ -64,30 +71,35 @@ void cReinforcement::execute() const {
 /// Reinforcements container class
 
 
-cReinforcements::cReinforcements() {
+cReinforcements::cReinforcements()
+{
     init();
 }
 
-void cReinforcements::init() {
+void cReinforcements::init()
+{
     reinforcements.clear();
 }
 
-void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat) {
+void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat)
+{
     logbook(fmt::format("Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat));
 
     cReinforcement reinforcement(delayInSeconds, unitType, playerId, targetCell, repeat);
     reinforcements.push_back(reinforcement);
 }
 
-void cReinforcements::substractSecondFromValidReinforcements() {
-    for (auto & reinforcement : reinforcements) {
+void cReinforcements::substractSecondFromValidReinforcements()
+{
+    for (auto &reinforcement : reinforcements) {
         reinforcement.substractSecondIfApplicable();
     }
 }
 
-void cReinforcements::thinkSlow() {
+void cReinforcements::thinkSlow()
+{
     substractSecondFromValidReinforcements();
-    for (auto & reinforcement : reinforcements) {
+    for (auto &reinforcement : reinforcements) {
         if (reinforcement.isReady()) {
             reinforcement.repeatOrMarkForDeletion();
             REINFORCE(reinforcement);
@@ -96,11 +108,13 @@ void cReinforcements::thinkSlow() {
 
     // delete invalid reinforcements
     reinforcements.erase(
-            std::remove_if(
-                    reinforcements.begin(),
-                    reinforcements.end(),
-                    [](cReinforcement r) { return r.canBeRemoved(); }),
-            reinforcements.end()
+        std::remove_if(
+            reinforcements.begin(),
+            reinforcements.end(),
+    [](cReinforcement r) {
+        return r.canBeRemoved();
+    }),
+    reinforcements.end()
     );
 }
 
@@ -115,7 +129,8 @@ void cReinforcements::thinkSlow() {
  * @param iStart where to start from
 
  */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart)
+{
     REINFORCE(iPlr, iTpe, iCll, iStart, true);
 }
 
@@ -123,7 +138,8 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
  * Same as above REINFORCE function, but takes sReinforcement. if iCell is < 0 then it will do nothing.
  * @param reinforcement
  */
-void REINFORCE(const cReinforcement &reinforcement) {
+void REINFORCE(const cReinforcement &reinforcement)
+{
     if (!reinforcement.isValid()) return; // bail, invalid reinforcement given
     reinforcement.execute();
 }
@@ -139,7 +155,8 @@ void REINFORCE(const cReinforcement &reinforcement) {
  * @param iStart
  * @param isReinforcement
  */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
+{
     // handle invalid arguments
     if (iPlr < 0 || iTpe < 0)
         return;

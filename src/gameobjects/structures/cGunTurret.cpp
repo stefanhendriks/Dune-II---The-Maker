@@ -8,26 +8,29 @@
 #include "player/cPlayer.h"
 
 namespace {
-    constexpr auto kTurretFacings = 8;
+constexpr auto kTurretFacings = 8;
 }
 
-cGunTurret::cGunTurret() {
- // other variables (class specific)
- iHeadFacing=0;        // (for turrets only) what is this structure facing at?
- iShouldHeadFacing=0;  // where should we look face at?
- iTargetID=-1;           // target id
+cGunTurret::cGunTurret()
+{
+// other variables (class specific)
+    iHeadFacing=0;        // (for turrets only) what is this structure facing at?
+    iShouldHeadFacing=0;  // where should we look face at?
+    iTargetID=-1;           // target id
 
- TIMER_fire=0;
- TIMER_turn=0;
- TIMER_guard=0;         // timed 'area scanning'
+    TIMER_fire=0;
+    TIMER_turn=0;
+    TIMER_guard=0;         // timed 'area scanning'
 }
 
 
-int cGunTurret::getType() const {
-	return TURRET;
+int cGunTurret::getType() const
+{
+    return TURRET;
 }
 
-void cGunTurret::thinkFast() {
+void cGunTurret::thinkFast()
+{
     bool lowPower = !getPlayer()->bEnoughPower();
     if (lowPower && game.isTurretsDownOnLowPower()) {
         // don't do anything when low power and this flag is set
@@ -48,11 +51,13 @@ void cGunTurret::thinkFast() {
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cGunTurret::think_animation() {
-	cAbstractStructure::think_animation();
+void cGunTurret::think_animation()
+{
+    cAbstractStructure::think_animation();
 }
 
-void cGunTurret::think_attack() {
+void cGunTurret::think_attack()
+{
     cUnit &unitTarget = unit[iTargetID];
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         int iCellX = map.getCellX(getCell());
@@ -72,16 +77,19 @@ void cGunTurret::think_attack() {
         if (isFacingTarget()) {
             think_fire();
         }
-    } else {
+    }
+    else {
         iTargetID = -1;
     }
 }
 
-bool cGunTurret::isFacingTarget() const {
+bool cGunTurret::isFacingTarget() const
+{
     return iShouldHeadFacing == iHeadFacing;
 }
 
-void cGunTurret::think_turning() {
+void cGunTurret::think_turning()
+{
     TIMER_turn++;
 
     int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
@@ -123,7 +131,8 @@ void cGunTurret::think_turning() {
     } // turning
 }
 
-void cGunTurret::think_fire() {
+void cGunTurret::think_fire()
+{
     bool lowPower = !getPlayer()->bEnoughPower();
 
     cUnit &unitTarget = unit[iTargetID];
@@ -156,10 +165,12 @@ void cGunTurret::think_fire() {
 
             if (unitTarget.isAirbornUnit()) {
                 bulletType = ROCKET_RTURRET;
-            } else {
+            }
+            else {
                 if (!lowPower && getType() == RTURRET && iDistance > distanceForSecondaryFire) {
                     bulletType = ROCKET_RTURRET; // long-range bullet,
-                } else {
+                }
+                else {
                     int half = 16;
                     int iShootX = pos_x() + half;
                     int iShootY = pos_y() + half;
@@ -185,7 +196,8 @@ void cGunTurret::think_fire() {
     }
 }
 
-void cGunTurret::think_guard() {
+void cGunTurret::think_guard()
+{
     bool lowPower = !getPlayer()->bEnoughPower();
     if (lowPower && game.isTurretsDownOnLowPower()) {
         // don't do anything when low power and this flag is set
@@ -229,7 +241,8 @@ void cGunTurret::think_guard() {
                 if (cUnit.isAirbornUnit()) {
                     continue; // it was airborn, and turrets which can't attack air units cannot hit this, so skip
                 }
-            } else {
+            }
+            else {
                 // we can attack air units, but we are low on power, hence we don't attack them
                 if (lowPower && game.isRocketTurretsDownOnLowPower()) {
                     // do not aim for air units when low power
@@ -245,9 +258,11 @@ void cGunTurret::think_guard() {
             if (distance <= distanceForAttacking) {
                 if (cUnit.isAttackableAirUnit()) {
                     iAir = i;
-                } else if (cUnit.isSandworm()) {
+                }
+                else if (cUnit.isSandworm()) {
                     iWorm = i;
-                } else if (distance < iDistance) {
+                }
+                else if (distance < iDistance) {
                     // ATTACK
                     iDistance = distance;
                     iDanger = i;
@@ -258,9 +273,11 @@ void cGunTurret::think_guard() {
         // set target
         if (iAir > -1) {
             iTargetID = iAir;
-        } else if (iDanger > -1) {
+        }
+        else if (iDanger > -1) {
             iTargetID = iDanger;
-        } else if (iWorm > -1) {
+        }
+        else if (iWorm > -1) {
             iTargetID = iWorm;
         }
 
@@ -269,12 +286,12 @@ void cGunTurret::think_guard() {
             cUnit &unitToAttack = unit[iTargetID];
             if (unitToAttack.isValid()) {
                 s_GameEvent event{
-                        .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                        .entityType = eBuildType::UNIT,
-                        .entityID = unitToAttack.iID,
-                        .player = getPlayer(),
-                        .entitySpecificType = unitToAttack.getType(),
-                        .atCell = unitToAttack.getCell()
+                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                    .entityType = eBuildType::UNIT,
+                    .entityID = unitToAttack.iID,
+                    .player = getPlayer(),
+                    .entitySpecificType = unitToAttack.getType(),
+                    .atCell = unitToAttack.getCell()
                 };
 
                 game.onNotifyGameEvent(event);
@@ -283,7 +300,8 @@ void cGunTurret::think_guard() {
     }
 }
 
-int cGunTurret::getFacingAngles() {
+int cGunTurret::getFacingAngles()
+{
     return kTurretFacings;
 }
 

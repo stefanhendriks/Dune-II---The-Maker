@@ -29,10 +29,10 @@ public:
     bool loadBitmapFromDataFileAt(int index, BITMAP *bmp);
     bool loadBitmapFromDataFileGfxDataAt(int index, int indexAtDataFile);
 
-    BITMAP * getBitmapAt(int index);
+    BITMAP *getBitmapAt(int index);
 
 private:
     int findAvailableSlot();
 
-    BITMAP* m_data[MAX_BITMAPS];
+    BITMAP *m_data[MAX_BITMAPS];
 };

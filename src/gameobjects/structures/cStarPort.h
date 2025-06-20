@@ -3,7 +3,7 @@
 #include "cAbstractStructure.h"
 
 class cStarPort : public cAbstractStructure {
-  private:
+private:
     void think_deployment();
 
     bool frigateDroppedPackage;
@@ -13,7 +13,7 @@ class cStarPort : public cAbstractStructure {
 
     void think_deploy();            // starport uses this to deploy unit
 
-  public:
+public:
     cStarPort();
 
     // overloaded functions
@@ -27,13 +27,19 @@ class cStarPort : public cAbstractStructure {
 
     int getType() const override;
 
-    void setFrigateDroppedPackage(bool value) { frigateDroppedPackage = value; }
+    void setFrigateDroppedPackage(bool value) {
+        frigateDroppedPackage = value;
+    }
 
     void startAnimating() override {}
 
-    void draw() override { drawWithShadow(); }
+    void draw() override {
+        drawWithShadow();
+    }
 
-    std::string getStatusForMessageBar() const override { return getDefaultStatusMessageBar(); }
+    std::string getStatusForMessageBar() const override {
+        return getDefaultStatusMessageBar();
+    }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

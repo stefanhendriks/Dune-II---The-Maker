@@ -45,33 +45,35 @@ enum eLogOutcome {
 };
 
 class cLogger {
-  public:
-      static cLogger* getInstance();
+public:
+    static cLogger *getInstance();
 
-      void setDebugMode(bool value) { m_debugMode = value; }
+    void setDebugMode(bool value) {
+        m_debugMode = value;
+    }
 
-      void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message);
-      void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId);
-      void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome);
+    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message);
+    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome, int playerId, int houseId);
+    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome);
 
-      void logCommentLine(const std::string& txt);
+    void logCommentLine(const std::string &txt);
 
-      void logHeader(const std::string& txt);
+    void logHeader(const std::string &txt);
 
-  private:
-      cLogger();
-      ~cLogger();
+private:
+    cLogger();
+    ~cLogger();
 
-      cLogger& operator=(const cLogger&) = delete;
-      cLogger& operator=(cLogger&&) = delete;
-      cLogger(const cLogger&) = delete;
-      cLogger(cLogger&&) = delete;
+    cLogger &operator=(const cLogger &) = delete;
+    cLogger &operator=(cLogger &&) = delete;
+    cLogger(const cLogger &) = delete;
+    cLogger(cLogger &&) = delete;
 
-      std::ofstream m_file;
+    std::ofstream m_file;
 
-      long m_startTime; // start time of logging in miliseconds
+    long m_startTime; // start time of logging in miliseconds
 
-      bool m_debugMode;
+    bool m_debugMode;
 
-      long getTimeInMilisDifference() const;
+    long getTimeInMilisDifference() const;
 };

@@ -34,15 +34,25 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    cMiniMapDrawer *getMiniMapDrawer() { return &miniMapDrawer; }
+    cMiniMapDrawer *getMiniMapDrawer() {
+        return &miniMapDrawer;
+    }
 
-    cOrderDrawer *getOrderDrawer() { return &m_orderDrawer; }
+    cOrderDrawer *getOrderDrawer() {
+        return &m_orderDrawer;
+    }
 
-    cMouseDrawer *getMouseDrawer() { return &m_mouseDrawer; }
+    cMouseDrawer *getMouseDrawer() {
+        return &m_mouseDrawer;
+    }
 
-    cPlaceItDrawer *getPlaceItDrawer() { return &m_placeitDrawer; }
+    cPlaceItDrawer *getPlaceItDrawer() {
+        return &m_placeitDrawer;
+    }
 
-    cBuildingListDrawer *getBuildingListDrawer() { return m_sidebarDrawer.getBuildingListDrawer(); }
+    cBuildingListDrawer *getBuildingListDrawer() {
+        return m_sidebarDrawer.getBuildingListDrawer();
+    }
 
     void drawMouse();
 

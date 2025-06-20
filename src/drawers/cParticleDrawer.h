@@ -4,14 +4,14 @@
 #include "utils/cRectangle.h"
 
 class cParticleDrawer {
-	public:
-		void drawLowerLayer();
-		void drawTopLayer();
-        void drawDebugInfo();
+public:
+    void drawLowerLayer();
+    void drawTopLayer();
+    void drawDebugInfo();
 
-        void determineParticlesToDraw(const cRectangle &viewport);
+    void determineParticlesToDraw(const cRectangle &viewport);
 
-	private:
-        std::vector<int> particlesLowerLayer;
-        std::vector<int> particlesTopLayer;
+private:
+    std::vector<int> particlesLowerLayer;
+    std::vector<int> particlesTopLayer;
 };

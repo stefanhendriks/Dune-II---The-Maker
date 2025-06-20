@@ -51,28 +51,28 @@ class cPreviewMaps;
 class cGame : public cScenarioObserver, cInputObserver {
 
 public:
-	cGame();
-	~cGame();
+    cGame();
+    ~cGame();
 
     void jumpToSelectYourNextConquestMission(int missionNr);
 
-    void setGameFilename(const std::string& filename) {
+    void setGameFilename(const std::string &filename) {
         m_gameFilename = filename;
     }
 
     int handleArguments(int argc, char **argv);
 
-	bool m_windowed;			    // windowed
+    bool m_windowed;			    // windowed
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
-	std::string m_version;          // version number, or name.
+    std::string m_version;          // version number, or name.
 
     // Alpha (for fading in/out)
     int m_fadeAlpha;                // 255 = opaque , anything else
     eFadeAction m_fadeAction;       // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     // resolution of the game
-	int m_screenW;
-	int m_screenH;
+    int m_screenW;
+    int m_screenH;
     // int m_iniScreenWidth;
     // int m_iniScreenHeight;
 
@@ -89,14 +89,14 @@ public:
     float m_cameraBorderOrKeyMoveSpeed;   // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
     bool m_cameraEdgeMove;              // should move map camera when hitting edges of screen
 
-	bool m_playing;				    // playing or not
+    bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
-	int m_screenshot;				// screenshot taking number
+    int m_screenshot;				// screenshot taking number
 
     int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
-	int m_mission;		            // what mission are we playing? (= techlevel)
+    int m_mission;		            // what mission are we playing? (= techlevel)
 
-	int m_pathsCreated;
+    int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
     int m_musicType;
@@ -122,16 +122,16 @@ public:
     void thinkFast_state();
 
     void think_audio();
-	void think_mentat();
+    void think_mentat();
     void think_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
 
-	bool isState(int thisState) const;
+    bool isState(int thisState) const;
 
     // Use this instead
-	void setNextStateToTransitionTo(int newState);
+    void setNextStateToTransitionTo(int newState);
 
     // Game acts as a facade, delegates to sound player
     void playSound(int sampleId); // Maximum volume
@@ -183,25 +183,42 @@ public:
 
     void onEventSpecialLaunch(const s_GameEvent &event);
 
-    static const char* stateString(const int &state) {
+    static const char *stateString(const int &state) {
         switch (state) {
-            case GAME_INITIALIZE: return "GAME_INITIALIZE";
-            case GAME_OVER: return "GAME_OVER";
-            case GAME_MENU: return "GAME_MENU";
-            case GAME_PLAYING: return "GAME_PLAYING";
-            case GAME_BRIEFING: return "GAME_BRIEFING";
-            case GAME_EDITING: return "GAME_EDITING";
-            case GAME_OPTIONS: return "GAME_OPTIONS";
-            case GAME_REGION: return "GAME_REGION";
-            case GAME_SELECT_HOUSE: return "GAME_SELECT_HOUSE";
-            case GAME_TELLHOUSE: return "GAME_TELLHOUSE";
-            case GAME_WINNING: return "GAME_WINNING";
-            case GAME_WINBRIEF: return "GAME_WINBRIEF";
-            case GAME_LOSEBRIEF: return "GAME_LOSEBRIEF";
-            case GAME_LOSING: return "GAME_LOSING";
-            case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
-            case GAME_CREDITS: return "GAME_CREDITS";
-            case GAME_MISSIONSELECT: return "GAME_MISSIONSELECT";
+            case GAME_INITIALIZE:
+                return "GAME_INITIALIZE";
+            case GAME_OVER:
+                return "GAME_OVER";
+            case GAME_MENU:
+                return "GAME_MENU";
+            case GAME_PLAYING:
+                return "GAME_PLAYING";
+            case GAME_BRIEFING:
+                return "GAME_BRIEFING";
+            case GAME_EDITING:
+                return "GAME_EDITING";
+            case GAME_OPTIONS:
+                return "GAME_OPTIONS";
+            case GAME_REGION:
+                return "GAME_REGION";
+            case GAME_SELECT_HOUSE:
+                return "GAME_SELECT_HOUSE";
+            case GAME_TELLHOUSE:
+                return "GAME_TELLHOUSE";
+            case GAME_WINNING:
+                return "GAME_WINNING";
+            case GAME_WINBRIEF:
+                return "GAME_WINBRIEF";
+            case GAME_LOSEBRIEF:
+                return "GAME_LOSEBRIEF";
+            case GAME_LOSING:
+                return "GAME_LOSING";
+            case GAME_SETUPSKIRMISH:
+                return "GAME_SETUPSKIRMISH";
+            case GAME_CREDITS:
+                return "GAME_CREDITS";
+            case GAME_MISSIONSELECT:
+                return "GAME_MISSIONSELECT";
             default:
                 assert(false);
                 break;
@@ -212,7 +229,7 @@ public:
     void shakeScreen(int duration);
     void reduceShaking();
 
-    cAllegroDataRepository * getDataRepository() {
+    cAllegroDataRepository *getDataRepository() {
         return m_dataRepository;
     }
 
@@ -240,14 +257,26 @@ public:
 
     void thinkSlow();
 
-    bool isTurretsDownOnLowPower() { return m_turretsDownOnLowPower; }
-    void setTurretsDownOnLowPower(bool value) { m_turretsDownOnLowPower = value; }
+    bool isTurretsDownOnLowPower() {
+        return m_turretsDownOnLowPower;
+    }
+    void setTurretsDownOnLowPower(bool value) {
+        m_turretsDownOnLowPower = value;
+    }
 
-    bool isRocketTurretsDownOnLowPower() { return m_rocketTurretsDownOnLowPower; }
-    void setRocketTurretsDownOnLowPower(bool value) { m_rocketTurretsDownOnLowPower = value; }
+    bool isRocketTurretsDownOnLowPower() {
+        return m_rocketTurretsDownOnLowPower;
+    }
+    void setRocketTurretsDownOnLowPower(bool value) {
+        m_rocketTurretsDownOnLowPower = value;
+    }
 
-    bool isDebugMode() { return m_debugMode; }
-    void setDebugMode(bool value) { m_debugMode = value; }
+    bool isDebugMode() {
+        return m_debugMode;
+    }
+    void setDebugMode(bool value) {
+        m_debugMode = value;
+    }
 
 private:
     /**
@@ -261,7 +290,7 @@ private:
     // if true, rocket turrets will not fire rockets when low power
     bool m_rocketTurretsDownOnLowPower;
 
-	std::string m_gameFilename;
+    std::string m_gameFilename;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
@@ -284,12 +313,12 @@ private:
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
-	int m_state;
+    int m_state;
 
     int m_newMusicSample;
     int m_newMusicCountdown;
 
-	cAbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
+    cAbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
 
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
@@ -322,10 +351,10 @@ private:
     void drawStateCombat();		// the combat part (main) of the game
     void drawStateMenu();		// main menu
     void drawStateWinning();    // drawStateWinning (during combat you get the window "you have been successful"),
-                                // after clicking you get to debrief
+    // after clicking you get to debrief
 
     void drawStateLosing();     // drawStateLosing (during combat you get the window "you have lost"),
-                                // after clicking you get to debrief
+    // after clicking you get to debrief
 
 
     void drawStateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction

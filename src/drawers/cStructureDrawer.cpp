@@ -13,16 +13,19 @@
 
 #include <allegro.h>
 
-void cStructureDrawer::drawStructuresFirstLayer() {
-	drawStructuresForLayer(0);
+void cStructureDrawer::drawStructuresFirstLayer()
+{
+    drawStructuresForLayer(0);
 }
 
-void cStructureDrawer::drawStructuresSecondLayer() {
-	drawStructuresForLayer(2);
+void cStructureDrawer::drawStructuresSecondLayer()
+{
+    drawStructuresForLayer(2);
 }
 
-void cStructureDrawer::drawStructuresHealthBars() {
-	cGameControlsContext * context = players[HUMAN].getGameControlsContext();
+void cStructureDrawer::drawStructuresHealthBars()
+{
+    cGameControlsContext *context = players[HUMAN].getGameControlsContext();
 
     // DRAW HEALTH
     if (context->isMouseOverStructure()) {
@@ -31,33 +34,35 @@ void cStructureDrawer::drawStructuresHealthBars() {
     }
 }
 
-void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure * theStructure, int color) {
-	assert(theStructure);
-	int drawX = theStructure->iDrawX();
-	int drawY = theStructure->iDrawY();
+void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, int color)
+{
+    assert(theStructure);
+    int drawX = theStructure->iDrawX();
+    int drawY = theStructure->iDrawY();
     int width = sStructureInfo[theStructure->getType()].bmp_width - 1;
     int height = sStructureInfo[theStructure->getType()].bmp_height - 1;
 
     int width_x = mapCamera->factorZoomLevel(width);
     int height_y = mapCamera->factorZoomLevel(height);
 
-	//_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
+    //_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
     renderDrawer->drawRect(bmp_screen, drawX, drawY, width_x, height_y, color);
 }
 
-void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * structure) {
-	int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
+void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
+{
+    int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
     if (iDrawPreBuild < 0) return; // bail, don't draw invalid tiles
 
     int pixelWidth = structure->getWidthInPixels();
     int pixelHeight = structure->getHeightInPixels();
 
     int colorDepth = bitmap_color_depth(bmp_screen);
-	BITMAP *temp = create_bitmap_ex(colorDepth, pixelWidth, pixelHeight);
+    BITMAP *temp = create_bitmap_ex(colorDepth, pixelWidth, pixelHeight);
     clear_to_color(temp, makecol(255, 0, 255));
-	
-	int drawX = structure->iDrawX();
-	int drawY = structure->iDrawY();
+
+    int drawX = structure->iDrawX();
+    int drawY = structure->iDrawY();
 
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
@@ -81,63 +86,66 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
     destroy_bitmap(stretchedShadow);
 }
 
-void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
-	if (!structure) return;
+void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
+{
+    if (!structure) return;
     structure->draw();
 }
 
-int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * structure) {
-	assert(structure);
-	int iBuildFase = structure->getBuildingFase();
-	int height = structure->getHeight();
-	int width = structure->getWidth();
+int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *structure)
+{
+    assert(structure);
+    int iBuildFase = structure->getBuildingFase();
+    int height = structure->getHeight();
+    int width = structure->getWidth();
 
     // prebuild
     if (iBuildFase == 1 ||
-        iBuildFase == 3 ||
-        iBuildFase == 5 ||
-        iBuildFase == 7 ||
-        iBuildFase == 9) {
+            iBuildFase == 3 ||
+            iBuildFase == 5 ||
+            iBuildFase == 7 ||
+            iBuildFase == 9) {
 
         // determine what kind of prebuild picture should be used.
-		if (width == 1 && height == 1) {
-			return BUILD_PRE_1X1;
-		}
+        if (width == 1 && height == 1) {
+            return BUILD_PRE_1X1;
+        }
 
-		if (width == 2 && height == 2) {
+        if (width == 2 && height == 2) {
             return BUILD_PRE_2X2;
-		}
+        }
 
-		if (width == 3 && height == 2) {
+        if (width == 3 && height == 2) {
             return BUILD_PRE_3X2;
-		}
+        }
 
-		if (width == 3 && height == 3) {
-           return BUILD_PRE_3X3;
-		}
+        if (width == 3 && height == 3) {
+            return BUILD_PRE_3X3;
+        }
     }
 
     return -1;
 }
 
-void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * structure) {
-	assert(structure);
-	assert(structure->getType() == WINDTRAP);
+void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *structure)
+{
+    assert(structure);
+    assert(structure->getType() == WINDTRAP);
 
-	cWindTrap * windtrap = dynamic_cast<cWindTrap*>(structure);
-	assert(windtrap);
+    cWindTrap *windtrap = dynamic_cast<cWindTrap *>(structure);
+    assert(windtrap);
 
-	int pixelWidth = structure->getWidthInPixels();
-	int pixelHeight = structure->getHeightInPixels();
+    int pixelWidth = structure->getWidthInPixels();
+    int pixelHeight = structure->getHeightInPixels();
 
-	int drawX = structure->iDrawX();
-	int drawY = structure->iDrawY();
+    int drawX = structure->iDrawX();
+    int drawY = structure->iDrawY();
 
     // structures are animated within the same source bitmap. The Y coordinates determine
     // what frame is being drawn. So multiply the height of the structure size times frame
     int iSourceY = pixelHeight * structure->getFrame();
 
-	int fade = windtrap->getFade();
+    int fade = windtrap->getFade();
     int screenDepth = bitmap_color_depth(bmp_screen);
 
     BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
@@ -158,7 +166,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
-                                         0, 0, scaledWidth, scaledHeight);
+                                        0, 0, scaledWidth, scaledHeight);
 
         renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
@@ -172,27 +180,30 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
     destroy_bitmap(wind);
 }
 
-void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structure) {
-	assert(structure);
-	assert(structure->getType() == TURRET || structure->getType() == RTURRET);
+void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
+{
+    assert(structure);
+    assert(structure->getType() == TURRET || structure->getType() == RTURRET);
 
-	int iHeadFacing = -1;
+    int iHeadFacing = -1;
     int facingAngles = 8;
-	if (structure->getType() == TURRET) {
-		cGunTurret * gunTurret = dynamic_cast<cGunTurret *>(structure);
-		iHeadFacing = gunTurret->getHeadFacing();
+    if (structure->getType() == TURRET) {
+        cGunTurret *gunTurret = dynamic_cast<cGunTurret *>(structure);
+        iHeadFacing = gunTurret->getHeadFacing();
         facingAngles = gunTurret->getFacingAngles();
-	} else if (structure->getType() == RTURRET) {
-		cRocketTurret * rocketTurret = dynamic_cast<cRocketTurret *>(structure);
-		iHeadFacing = rocketTurret->getHeadFacing();
+    }
+    else if (structure->getType() == RTURRET) {
+        cRocketTurret *rocketTurret = dynamic_cast<cRocketTurret *>(structure);
+        iHeadFacing = rocketTurret->getHeadFacing();
         facingAngles = rocketTurret->getFacingAngles();
-	}
-	assert(iHeadFacing > -1);
+    }
+    assert(iHeadFacing > -1);
 
     // for now support these 2 facing angles amounts
     if (facingAngles == 16) {
         structure->setFrame(convertAngleToDrawIndex(iHeadFacing, false, 4, 16));
-    } else if (facingAngles == 8) {
+    }
+    else if (facingAngles == 8) {
         structure->setFrame(convertAngleToDrawIndex(iHeadFacing, false, 2, 8));
     }
 
@@ -228,10 +239,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
 //            structure->setFrame(frame);
 
             if (structure->getType() == TURRET) {
-                cGunTurret * gunTurret = dynamic_cast<cGunTurret *>(structure);
+                cGunTurret *gunTurret = dynamic_cast<cGunTurret *>(structure);
                 gunTurret->setShouldHeadFacing(facingAngle);
-            } else if (structure->getType() == RTURRET) {
-                cRocketTurret * rocketTurret = dynamic_cast<cRocketTurret *>(structure);
+            }
+            else if (structure->getType() == RTURRET) {
+                cRocketTurret *rocketTurret = dynamic_cast<cRocketTurret *>(structure);
                 rocketTurret->setShouldHeadFacing(facingAngle);
             }
 
@@ -241,54 +253,60 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structu
     drawStructureAnimation(structure);
 }
 
-void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure * structure) {
-	assert(structure);
-	assert(structure->getType() == REFINERY);
+void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure *structure)
+{
+    assert(structure);
+    assert(structure->getType() == REFINERY);
 
-	drawStructureAnimation(structure);
+    drawStructureAnimation(structure);
 }
 
-void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int layer) {
-	assert(structure);
+void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int layer)
+{
+    assert(structure);
 
-	// always select proper palette (of owner)
+    // always select proper palette (of owner)
     select_palette(players[structure->getOwner()].pal);
 
-	// when layer is <= 1 the building is just being placed. The prebuild
-	// animation should be be drawn or, the normal drawing is shown (ie the
-	// structure is not in action, like deploying harvester etc).
+    // when layer is <= 1 the building is just being placed. The prebuild
+    // animation should be be drawn or, the normal drawing is shown (ie the
+    // structure is not in action, like deploying harvester etc).
 
-	// when stage == 2, it means only to draw the repair animation above the structure
-	// this is done after all the structures have been drawn with stage 1 or lower. Causing
-	// the repair icons to always overlap other structures. This is ugly, the repair icons
-	// should be 'particles' (like smoke etc) instead of being hacked here!
+    // when stage == 2, it means only to draw the repair animation above the structure
+    // this is done after all the structures have been drawn with stage 1 or lower. Causing
+    // the repair icons to always overlap other structures. This is ugly, the repair icons
+    // should be 'particles' (like smoke etc) instead of being hacked here!
 
-	if (layer <= 1) {
+    if (layer <= 1) {
         int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
 
         // if no prebuild picture is selected, than we should draw the building
-		// itself. The reason why the above if uses only buildfase 1, 3, 5, 7 and 9 means
-		// that it will cause the switching between pre-build/building state as if the
-		// building is being 'readied' after placement.
+        // itself. The reason why the above if uses only buildfase 1, 3, 5, 7 and 9 means
+        // that it will cause the switching between pre-build/building state as if the
+        // building is being 'readied' after placement.
         if (iDrawPreBuild < 0) {
-        	if (structure->getType() == WINDTRAP) {
-        		// draw windtrap
-        		drawStructureAnimationWindTrap(structure);
-        	} else if (structure->getType() == TURRET || structure->getType() == RTURRET) {
-        		drawStructureAnimationTurret(structure);
-        	} else if (structure->getType() == REFINERY) {
-        		drawStructureAnimationRefinery(structure);
-        	} else {
-        		drawStructureAnimation(structure);
-        	}
+            if (structure->getType() == WINDTRAP) {
+                // draw windtrap
+                drawStructureAnimationWindTrap(structure);
+            }
+            else if (structure->getType() == TURRET || structure->getType() == RTURRET) {
+                drawStructureAnimationTurret(structure);
+            }
+            else if (structure->getType() == REFINERY) {
+                drawStructureAnimationRefinery(structure);
+            }
+            else {
+                drawStructureAnimation(structure);
+            }
             structure->drawFlags();
-        } else {
-        	drawStructurePrebuildAnimation(structure);
         }
-	}
-	else if (layer == 2) {
-		// TODO: REMOVE THIS CODE AND create particles for this
-		// now draw the repair alpha when repairing
+        else {
+            drawStructurePrebuildAnimation(structure);
+        }
+    }
+    else if (layer == 2) {
+        // TODO: REMOVE THIS CODE AND create particles for this
+        // now draw the repair alpha when repairing
         if (structure->getType() == REPAIR && structure->hasUnitWithin()) {
             renderIconOfUnitBeingRepaired(structure);
         }
@@ -296,10 +314,11 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
         if (structure->isRepairing()) {
             renderIconThatStructureIsBeingRepaired(structure);
         }
-	}
+    }
 }
 
-void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const {
+void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
+{
     int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
     int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
     int drawX = structure->iDrawX();
@@ -313,8 +332,9 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     stretch_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
 }
 
-void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const {
-    cRepairFacility * repairFacility = dynamic_cast<cRepairFacility*>(structure);
+void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
+{
+    cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
     assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
     cUnit &pUnit = unit[unitId];
@@ -362,11 +382,12 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     destroy_bitmap(bmp);
 }
 
-void cStructureDrawer::drawStructuresForLayer(int layer) {
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-		cAbstractStructure * theStructure = structure[i];
+void cStructureDrawer::drawStructuresForLayer(int layer)
+{
+    for (int i=0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *theStructure = structure[i];
 
-		if (!theStructure) continue;
+        if (!theStructure) continue;
 
         if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
             // draw
@@ -383,28 +404,29 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
                 drawRectangleOfStructure(theStructure, player.getSelectFadingColor());
             }
         }
-	}
+    }
 
-	renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, makecol(0, 0, 0));
 }
 
-void cStructureDrawer::drawStructureHealthBar(int iStructure) {
+void cStructureDrawer::drawStructureHealthBar(int iStructure)
+{
     if (iStructure < 0 || iStructure >= MAX_STRUCTURES) return;
 
-	cAbstractStructure * theStructure = structure[iStructure];
+    cAbstractStructure *theStructure = structure[iStructure];
 
-	if (!theStructure) {
-	    return;
-	}
+    if (!theStructure) {
+        return;
+    }
 
-	// Draw structure health
-	int draw_x = theStructure->iDrawX() - 1;
-	int draw_y = theStructure->iDrawY() - 5;
+    // Draw structure health
+    int draw_x = theStructure->iDrawX() - 1;
+    int draw_y = theStructure->iDrawY() - 5;
 
-	int widthBmp = mapCamera->factorZoomLevel(theStructure->getStructureInfo().bmp_width);
-	int width_x = widthBmp - 1;
+    int widthBmp = mapCamera->factorZoomLevel(theStructure->getStructureInfo().bmp_width);
+    int width_x = widthBmp - 1;
 
-	int height_y = 4;
+    int height_y = 4;
 
     float healthNormalized = theStructure->getHealthNormalized();
 
@@ -414,11 +436,11 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
 
     if (r > 255) r = 255;
 
-	// bar itself
-	renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, width_x+1, height_y+1, makecol(0,0,0));
-	renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, (w-1), height_y, makecol(r,g,32));
+    // bar itself
+    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, width_x+1, height_y+1, makecol(0,0,0));
+    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, (w-1), height_y, makecol(r,g,32));
 
-	// bar around it
-	//_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
+    // bar around it
+    //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
     renderDrawer->drawRect(bmp_screen, draw_x, draw_y, width_x, height_y, makecol(255, 255, 255));
 }

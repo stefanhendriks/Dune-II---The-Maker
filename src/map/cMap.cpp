@@ -27,7 +27,8 @@
 #include <algorithm>
 #include <cmath>
 
-cMap::cMap() {
+cMap::cMap()
+{
     TIMER_scroll = 0;
     iScrollSpeed = 1;
     maxCells = 0;
@@ -37,7 +38,8 @@ cMap::cMap() {
     init(64, 64);
 }
 
-cMap::~cMap() {
+cMap::~cMap()
+{
     // do not trigger getInstance from structure factory
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
@@ -50,11 +52,13 @@ cMap::~cMap() {
     }
 }
 
-void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements) {
+void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
+{
     m_reinforcements = reinforcements;
 }
 
-void cMap::init(int width, int height) {
+void cMap::init(int width, int height)
+{
     if (m_reinforcements) {
         m_reinforcements->init();
     }
@@ -96,7 +100,8 @@ void cMap::init(int width, int height) {
     this->height = height;
 }
 
-void cMap::smudge_increase(int iType, int iCell) {
+void cMap::smudge_increase(int iType, int iCell)
+{
     if (!isValidCell(iCell)) return;
     tCell *pCell = getCell(iCell);
 
@@ -127,7 +132,8 @@ void cMap::smudge_increase(int iType, int iCell) {
  * @param iCell
  * @return
  */
-bool cMap::occupiedByWallOrMountain(int iCell) {
+bool cMap::occupiedByWallOrMountain(int iCell)
+{
     if (iCell < 0 || iCell >= maxCells) return false;
 
     if (map.getCellType(iCell) == TERRAIN_WALL) return true;
@@ -136,14 +142,16 @@ bool cMap::occupiedByWallOrMountain(int iCell) {
     return false;
 }
 
-bool cMap::occupiedInDimension(int iCell, int dimension) {
+bool cMap::occupiedInDimension(int iCell, int dimension)
+{
     if (!map.isValidCell(iCell)) return false;
     if (dimension < 0 || dimension >= MAPID_MAX) return false;
 
     return map.cell[iCell].id[dimension] > -1;
 }
 
-bool cMap::occupiedByUnit(int iCell) {
+bool cMap::occupiedByUnit(int iCell)
+{
     return occupiedInDimension(iCell, MAPID_UNITS);
 }
 
@@ -153,7 +161,8 @@ bool cMap::occupiedByUnit(int iCell) {
  * @param iCll
  * @return
  */
-bool cMap::occupied(int iCell) {
+bool cMap::occupied(int iCell)
+{
     if (iCell < 0 || iCell >= maxCells) return false;
 
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
@@ -164,7 +173,8 @@ bool cMap::occupied(int iCell) {
     return false;
 }
 
-bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
+bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType)
+{
     if (iCell < 0 || iUnitType < 0)
         return false;
 
@@ -198,7 +208,8 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
  * @param iUnitID (the carry-all)
  * @return
  */
-bool cMap::canDeployUnitAtCell(int iCell, int iUnitID) {
+bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
+{
     if (iCell < 0 || iUnitID < 0)
         return false;
 
@@ -254,7 +265,8 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID) {
  * @param iUnitID
  * @return
  */
-bool cMap::occupied(int iCll, int iUnitID) {
+bool cMap::occupied(int iCll, int iUnitID)
+{
     if (iCll < 0 || iUnitID < 0)
         return true;
 
@@ -300,13 +312,15 @@ bool cMap::occupied(int iCll, int iUnitID) {
 /**
  * Think function, called every 5 ms
  */
-void cMap::thinkFast() {
+void cMap::thinkFast()
+{
     thinkAutoDetonateSpiceBlooms();
     thinkAboutSpawningNewSpiceBlooms();
     thinkAboutRespawningWorms();
 }
 
-void cMap::thinkAboutRespawningWorms() {
+void cMap::thinkAboutRespawningWorms()
+{
     if (m_iTIMER_respawnSandworms < 0) return;
 
     if (m_iTIMER_respawnSandworms > 1) {
@@ -336,7 +350,8 @@ void cMap::thinkAboutRespawningWorms() {
     // we have the desired amount of worms already so don't do anything
 }
 
-void cMap::thinkAboutSpawningNewSpiceBlooms() {
+void cMap::thinkAboutSpawningNewSpiceBlooms()
+{
     if (!m_bAutoSpawnSpiceBlooms) {
         return;
     }
@@ -370,13 +385,15 @@ void cMap::thinkAboutSpawningNewSpiceBlooms() {
         if (iCll > -1) {
             // create bloom (can deal with < -1 cell)
             cMapEditor(*this).createCell(iCll, TERRAIN_BLOOM, 0);
-        } else {
+        }
+        else {
             m_iTIMER_blooms = (1000 / 5) * 5; // try again sooner than 30 secs
         }
     }
 }
 
-void cMap::thinkAutoDetonateSpiceBlooms() {// let spice bloom detonate after X amount of time
+void cMap::thinkAutoDetonateSpiceBlooms()  // let spice bloom detonate after X amount of time
+{
     if (!m_bAutoDetonateSpiceBlooms) {
         return;
     }
@@ -396,7 +413,8 @@ void cMap::thinkAutoDetonateSpiceBlooms() {// let spice bloom detonate after X a
     }
 }
 
-void cMap::draw_bullets() {
+void cMap::draw_bullets()
+{
     // Loop through all units, check if they should be drawn, and if so, draw them
     for (int i = 0; i < MAX_BULLETS; i++) {
         if (bullet[i].bAlive) {
@@ -405,19 +423,22 @@ void cMap::draw_bullets() {
     }
 }
 
-void cMap::clear_all(int playerId) {
+void cMap::clear_all(int playerId)
+{
     for (int c = 0; c < maxCells; c++) {
         cell[c].iVisible[playerId] = true;
     }
 }
 
-void cMap::clearShroudForAllPlayers(int c, int size) {
+void cMap::clearShroudForAllPlayers(int c, int size)
+{
     for (int p = 0; p < MAX_PLAYERS; p++) {
         clearShroud(c, size, p);
     }
 }
 
-void cMap::clearShroud(int c, int size, int playerId) {
+void cMap::clearShroud(int c, int size, int playerId)
+{
     if (!map.isWithinBoundaries(c)) return;
 
     map.setVisibleFor(c, playerId);
@@ -448,12 +469,12 @@ void cMap::clearShroud(int c, int size, int playerId) {
                 if (structureId > -1) {
                     cAbstractStructure *pStructure = structure[structureId];
                     s_GameEvent event{
-                            .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                            .entityType = eBuildType::STRUCTURE,
-                            .entityID = structureId,
-                            .player = &players[playerId],
-                            .entitySpecificType = pStructure->getType(),
-                            .atCell = cl
+                        .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                        .entityType = eBuildType::STRUCTURE,
+                        .entityID = structureId,
+                        .player = &players[playerId],
+                        .entitySpecificType = pStructure->getType(),
+                        .atCell = cl
                     };
 
                     game.onNotifyGameEvent(event);
@@ -464,12 +485,12 @@ void cMap::clearShroud(int c, int size, int playerId) {
                     cUnit &cUnit = unit[unitId];
                     if (cUnit.isValid()) {
                         s_GameEvent event{
-                                .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                                .entityType = eBuildType::UNIT,
-                                .entityID = unitId,
-                                .player = &players[playerId],
-                                .entitySpecificType = cUnit.getType(),
-                                .atCell = cl
+                            .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                            .entityType = eBuildType::UNIT,
+                            .entityID = unitId,
+                            .player = &players[playerId],
+                            .entitySpecificType = cUnit.getType(),
+                            .atCell = cl
                         };
 
                         game.onNotifyGameEvent(event);
@@ -482,7 +503,8 @@ void cMap::clearShroud(int c, int size, int playerId) {
 
 // Each index is a map data field holding indexes of the map layout
 //
-void cMap::remove_id(int iIndex, int iIDType) {
+void cMap::remove_id(int iIndex, int iIDType)
+{
     // Search through the entire map and remove the id
     for (int iCell = 0; iCell < maxCells; iCell++) {
         tCell &tCell = cell[iCell];
@@ -492,7 +514,8 @@ void cMap::remove_id(int iIndex, int iIDType) {
     }
 }
 
-void cMap::draw_units() {
+void cMap::draw_units()
+{
     //@Mira SDL2 blender
     //set_trans_blender(0, 0, 0, 160);
 
@@ -538,8 +561,8 @@ void cMap::draw_units() {
         if (!pUnit.isValid()) continue;
 
         if (pUnit.isAirbornUnit() ||
-            pUnit.isSandworm() ||
-            pUnit.isInfantryUnit())
+                pUnit.isSandworm() ||
+                pUnit.isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
         if (pUnit.isWithinViewport(game.m_mapViewport)) {
@@ -551,14 +574,16 @@ void cMap::draw_units() {
     }
 }
 
-void cMap::drawUnitDebug(cUnit &pUnit) const {
+void cMap::drawUnitDebug(cUnit &pUnit) const
+{
     if (!game.m_drawUnitDebug) return;
 
     pUnit.draw_debug();
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
-void cMap::draw_units_2nd() {
+void cMap::draw_units_2nd()
+{
     // Mira SDL2 blender
     //set_trans_blender(0, 0, 0, 160);
 
@@ -597,7 +622,8 @@ void cMap::draw_units_2nd() {
     //set_trans_blender(0, 0, 0, 128);
 }
 
-int cMap::mouse_draw_x() {
+int cMap::mouse_draw_x()
+{
     if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absX = getAbsoluteXPositionFromCell(mouseCell);
@@ -606,7 +632,8 @@ int cMap::mouse_draw_x() {
     return -1;
 }
 
-int cMap::mouse_draw_y() {
+int cMap::mouse_draw_y()
+{
     if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absY = getAbsoluteYPositionFromCell(mouseCell);
@@ -623,7 +650,8 @@ int cMap::mouse_draw_y() {
  * @param cellType
  * @return
  */
-int cMap::getTotalCountCellType(int cellType) {
+int cMap::getTotalCountCellType(int cellType)
+{
     return getAllCellsOfType(cellType).size();
 }
 
@@ -633,7 +661,8 @@ int cMap::getTotalCountCellType(int cellType) {
  * NOTE: This is a slow method, as it iterates though all possible cells
  * @return
  */
-std::vector<int> cMap::getAllCellsOfType(int cellType) {
+std::vector<int> cMap::getAllCellsOfType(int cellType)
+{
     std::vector<int> cellsOfType = std::vector<int>();
     for (int c = 0; c < maxCells; c++) {
         if (getCellType(c) == cellType) {
@@ -643,7 +672,8 @@ std::vector<int> cMap::getAllCellsOfType(int cellType) {
     return cellsOfType;
 }
 
-int cMap::getCellSlowDown(int iCell) {
+int cMap::getCellSlowDown(int iCell)
+{
     int cellType = map.getCellType(iCell);
 
     if (cellType == TERRAIN_SAND) return 2;
@@ -656,7 +686,8 @@ int cMap::getCellSlowDown(int iCell) {
     return 1;
 }
 
-int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
+int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
+{
     assert(destinationCell > -1);
     // Cell x and y coordinates
     int iCllX = getCellX(destinationCell);
@@ -729,7 +760,8 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) 
     return iStartCell;
 }
 
-double cMap::distance(int x1, int y1, int x2, int y2) {
+double cMap::distance(int x1, int y1, int x2, int y2)
+{
     if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
     int A = abs(x2 - x1) * abs(x2 - x1);
@@ -737,7 +769,8 @@ double cMap::distance(int x1, int y1, int x2, int y2) {
     return sqrt((double) (A + B)); // get C from A and B
 }
 
-int cMap::getCellY(int c) {
+int cMap::getCellY(int c)
+{
     if (c < 0 || c >= maxCells) {
         return -1;
     }
@@ -745,7 +778,8 @@ int cMap::getCellY(int c) {
     return (c / width);
 }
 
-int cMap::getCellX(int c) {
+int cMap::getCellX(int c)
+{
     if (c < 0 || c >= maxCells) {
         return -1;
     }
@@ -754,7 +788,8 @@ int cMap::getCellX(int c) {
     return cellX;
 }
 
-bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell) {
+bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell)
+{
     if (getCellAbove(thisCell) == otherCell) return true;
     if (getCellBelow(thisCell) == otherCell) return true;
     if (getCellLeft(thisCell) == otherCell) return true;
@@ -769,7 +804,8 @@ bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell) {
     return false;
 }
 
-int cMap::getCellLowerRight(int c) {
+int cMap::getCellLowerRight(int c)
+{
     int lowerRightCell = getCellBelow(c) + 1;
     if (lowerRightCell >= maxCells) return -1;
     if (lowerRightCell < 0) return -1;
@@ -777,28 +813,32 @@ int cMap::getCellLowerRight(int c) {
     return lowerRightCell;
 }
 
-int cMap::getCellLowerLeft(int c) {
+int cMap::getCellLowerLeft(int c)
+{
     int lowerLeftCell = getCellBelow(c) - 1;
     if (lowerLeftCell < 0) return -1;
     if (lowerLeftCell >= maxCells) return -1;
     return lowerLeftCell;
 }
 
-int cMap::getCellUpperRight(int c) {
+int cMap::getCellUpperRight(int c)
+{
     int upperRightCell = getCellAbove(c) + 1;
     if (upperRightCell < 0) return -1;
 
     return upperRightCell;
 }
 
-int cMap::getCellUpperLeft(int c) {
+int cMap::getCellUpperLeft(int c)
+{
     int upperLeftCell = getCellAbove(c) - 1;
     if (upperLeftCell < 0) return -1;
 
     return upperLeftCell;
 }
 
-int cMap::getCellRight(int c) {
+int cMap::getCellRight(int c)
+{
     int x = getCellX(c);
     int cellRight = x + 1;
     if (cellRight >= maxCells) return -1;
@@ -807,7 +847,8 @@ int cMap::getCellRight(int c) {
     return c + 1;
 }
 
-int cMap::getCellLeft(int c) {
+int cMap::getCellLeft(int c)
+{
     if (c < 0) return -1;
     int x = getCellX(c);
     int cellLeft = x - 1;
@@ -815,7 +856,8 @@ int cMap::getCellLeft(int c) {
     return c - 1;
 }
 
-int cMap::getCellBelow(int c) {
+int cMap::getCellBelow(int c)
+{
     if (c < 0) return -1;
     int cellBelow = c + width;
     if (cellBelow >= maxCells)
@@ -824,7 +866,8 @@ int cMap::getCellBelow(int c) {
     return cellBelow;
 }
 
-int cMap::getCellAbove(int c) {
+int cMap::getCellAbove(int c)
+{
     if (c < 0) return -1;
     int cellAbove = c - width;
 
@@ -833,25 +876,30 @@ int cMap::getCellAbove(int c) {
     return cellAbove;
 }
 
-int cMap::getAbsoluteYPositionFromCell(int cell) {
+int cMap::getAbsoluteYPositionFromCell(int cell)
+{
     if (cell < 0) return -1;
     return getCellY(cell) * TILESIZE_HEIGHT_PIXELS;
 }
 
-int cMap::getAbsoluteXPositionFromCell(int cell) {
+int cMap::getAbsoluteXPositionFromCell(int cell)
+{
     if (cell < 0) return -1;
     return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
 }
 
-int cMap::getAbsoluteXPositionFromCellCentered(int cell) {
+int cMap::getAbsoluteXPositionFromCellCentered(int cell)
+{
     return getAbsoluteXPositionFromCell(cell) + (TILESIZE_WIDTH_PIXELS / 2);
 }
 
-int cMap::getAbsoluteYPositionFromCellCentered(int cell) {
+int cMap::getAbsoluteYPositionFromCellCentered(int cell)
+{
     return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
 }
 
-int cMap::makeCell(int x, int y) {
+int cMap::makeCell(int x, int y)
+{
     assert(x > -1 && "makeCell x must be > -1");
     assert(x < width && "makeCell x must be < width"); // should never be higher!
     assert(y > -1 && "makeCell y must be > -1");
@@ -866,7 +914,8 @@ int cMap::makeCell(int x, int y) {
     return result;
 }
 
-double cMap::distance(int cell1, int cell2) {
+double cMap::distance(int cell1, int cell2)
+{
     int x1 = getCellX(cell1);
     int y1 = getCellY(cell1);
 
@@ -875,7 +924,8 @@ double cMap::distance(int cell1, int cell2) {
     return ABS_length(x1, y1, x2, y2);
 }
 
-int cMap::getCellWithMapBorders(int x, int y) {
+int cMap::getCellWithMapBorders(int x, int y)
+{
     // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
     int maxHeight = (height - 2); // hence the -2!
     int maxWidth = (width - 2);
@@ -888,7 +938,8 @@ int cMap::getCellWithMapBorders(int x, int y) {
     return getCellWithMapDimensions(x, y);
 }
 
-int cMap::getCellWithMapDimensions(int x, int y) {
+int cMap::getCellWithMapDimensions(int x, int y)
+{
     int mapWidth = width;
     int mapHeight = height;
     // (over the) boundaries result in cell -1
@@ -900,7 +951,8 @@ int cMap::getCellWithMapDimensions(int x, int y) {
     return (y * mapWidth) + x;
 }
 
-bool cMap::isValidCell(int c) const {
+bool cMap::isValidCell(int c) const
+{
     return !(c < 0 || c >= maxCells);
 }
 
@@ -908,11 +960,13 @@ bool cMap::isValidCell(int c) const {
  * Returns a random cell, disregards playable borders
  * @return
  */
-int cMap::getRandomCell() {
+int cMap::getRandomCell()
+{
     return rnd(maxCells);
 }
 
-void cMap::createCell(int cell, int terrainType, int tile) {
+void cMap::createCell(int cell, int terrainType, int tile)
+{
     if (!isValidCell(cell)) return;
     if (terrainType > TERRAIN_WALL) return;
     if (terrainType < TERRAIN_BLOOM) return;
@@ -938,77 +992,89 @@ void cMap::createCell(int cell, int terrainType, int tile) {
 
     if (terrainType == TERRAIN_SPICE) {
         map.cellChangeCredits(cell, 50 + rnd(125));
-    } else if (terrainType == TERRAIN_SPICEHILL) {
+    }
+    else if (terrainType == TERRAIN_SPICEHILL) {
         map.cellChangeCredits(cell, 75 + rnd(150));
-    } else if (terrainType == TERRAIN_MOUNTAIN) {
+    }
+    else if (terrainType == TERRAIN_MOUNTAIN) {
         map.cellChangePassable(cell, false);
         map.cellChangePassableFoot(cell, true);
-    } else if (terrainType == TERRAIN_WALL) {
+    }
+    else if (terrainType == TERRAIN_WALL) {
         map.cellChangeHealth(cell, 100);
         map.cellChangePassable(cell, false);
         map.cellChangePassableFoot(cell, false);
-    } else if (terrainType == TERRAIN_BLOOM) {
+    }
+    else if (terrainType == TERRAIN_BLOOM) {
         map.cellChangeCredits(cell, -23);
 
         s_GameEvent event{
-                .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED,
-                .entityType = eBuildType::SPECIAL,
-                .entityID = -1,
-                .player = nullptr,
-                .entitySpecificType = -1,
-                .atCell = cell,
-                .isReinforce = false,
-                .buildingListItem = nullptr,
-                .buildingList = nullptr
+            .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED,
+            .entityType = eBuildType::SPECIAL,
+            .entityID = -1,
+            .player = nullptr,
+            .entitySpecificType = -1,
+            .atCell = cell,
+            .isReinforce = false,
+            .buildingListItem = nullptr,
+            .buildingList = nullptr
         };
 
         game.onNotifyGameEvent(event);
     }
 }
 
-void cMap::clearAllCells() {
+void cMap::clearAllCells()
+{
     for (int c = 0; c < getMaxCells(); c++) {
         cellInit(c);
     }
 }
 
-bool cMap::isVisible(int iCell, cPlayer *thePlayer) {
+bool cMap::isVisible(int iCell, cPlayer *thePlayer)
+{
     if (!thePlayer) return false;
     int playerId = thePlayer->getId();
     return isVisible(iCell, playerId);
 }
 
-void cMap::resize(int width, int height) {
+void cMap::resize(int width, int height)
+{
     maxCells = width * height;
     this->width = width;
     this->height = height;
     cell.resize(maxCells);
 }
 
-int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) {
+int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance)
+{
     return getCellWithMapBorders(
-            distance + rnd(width - (distance * 2)),
-            distance + rnd(height - (distance * 2))
-    );
+               distance + rnd(width - (distance * 2)),
+               distance + rnd(height - (distance * 2))
+           );
 }
 
-bool cMap::isWithinBoundaries(int c) {
+bool cMap::isWithinBoundaries(int c)
+{
     return isWithinBoundaries(getCellX(c), getCellY(c));
 }
 
-void cMap::setVisibleFor(int iCell, cPlayer *pPlayer) {
+void cMap::setVisibleFor(int iCell, cPlayer *pPlayer)
+{
     if (!pPlayer) return;
     setVisible(iCell, pPlayer->getId(), true);
 }
 
-void cMap::setVisible(int iCell, int iPlayer, bool flag) {
+void cMap::setVisible(int iCell, int iPlayer, bool flag)
+{
     if (!isValidCell(iCell)) return;
     if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return;
 
     cell[iCell].iVisible[iPlayer] = flag;
 }
 
-int cMap::findNearestSpiceBloom(int iCell) {
+int cMap::findNearestSpiceBloom(int iCell)
+{
     int quarterOfMap = getWidth() / 4;
     int iDistance = quarterOfMap;
     int halfWidth = getWidth() / 2;
@@ -1068,7 +1134,8 @@ int cMap::findNearestSpiceBloom(int iCell) {
     return iTargets[rnd(iT)];
 }
 
-bool cMap::isValidTerrainForStructureAtCell(int cll) {
+bool cMap::isValidTerrainForStructureAtCell(int cll)
+{
     if (!isValidCell(cll)) return false;
     int cellType = getCellType(cll);
     // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
@@ -1087,7 +1154,8 @@ bool cMap::isValidTerrainForStructureAtCell(int cll) {
  * @param cell
  * @param distance
  */
-int cMap::getRandomCellFrom(int cell, int distance) {
+int cMap::getRandomCellFrom(int cell, int distance)
+{
     int startX = getCellX(cell);
     int startY = getCellY(cell);
     int xDir = rnd(100) < 50 ? -1 : 1;
@@ -1104,7 +1172,8 @@ int cMap::getRandomCellFrom(int cell, int distance) {
  * @param distance
  * @return
  */
-int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) {
+int cMap::getRandomCellFromWithRandomDistance(int cell, int distance)
+{
     int startX = getCellX(cell);
     int startY = getCellY(cell);
     int newX = (startX - distance) + (rnd(distance * 2));
@@ -1119,7 +1188,8 @@ int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) {
  * @param thePlayer (for who it should be visible)
  * @return
  */
-bool cMap::isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer) {
+bool cMap::isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer)
+{
     if (!thePlayer) return false;
     return isStructureVisible(pStructure, thePlayer->getId());
 }
@@ -1131,7 +1201,8 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer
  * @param iPlayer
  * @return
  */
-bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer) {
+bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
+{
     if (!pStructure) return false;
     if (!pStructure->isValid()) return false;
 
@@ -1146,7 +1217,8 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer) {
     return false;
 }
 
-bool cMap::isAtMapBoundaries(int cell) {
+bool cMap::isAtMapBoundaries(int cell)
+{
     bool validCell = isValidCell(cell);
     if (!validCell) return false;
 
@@ -1162,15 +1234,18 @@ bool cMap::isAtMapBoundaries(int cell) {
     return false;
 }
 
-cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const {
+cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const
+{
     return {std::clamp(x, 1, getWidth() - 2), std::clamp(y, 1, getHeight() - 2)};
 }
 
-cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const {
+cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const
+{
     return {std::clamp(x, 0, getWidth() - 1), std::clamp(y, 0, getHeight() - 1)};
 }
 
-int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop) {
+int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop)
+{
 
     if (minRange < 1) {
         minRange = 1;
@@ -1204,11 +1279,13 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
     return -1;
 }
 
-int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop) {
+int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
+{
     return findNearByValidDropLocation(cell, 1, range, unitTypeToDrop);
 }
 
-int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop) {
+int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
+{
     // go around 360 fDegrees and calculate new stuff.
     for (float dr = 1; dr < range; dr++) { // go outwards
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
@@ -1242,7 +1319,8 @@ int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDr
  * @param structureType
  * @return
  */
-cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, cPlayer *player) {
+cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, cPlayer *player)
+{
     assert(player);
     assert(structureType > -1);
     assert(isValidCell(cell));
@@ -1272,7 +1350,8 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
     return nullptr;
 }
 
-void cMap::cellTakeDamage(int cellNr, int damage) {
+void cMap::cellTakeDamage(int cellNr, int damage)
+{
     tCell *pCell = getCell(cellNr);
     if (pCell) {
         pCell->health -= damage;
@@ -1283,9 +1362,9 @@ void cMap::cellTakeDamage(int cellNr, int damage) {
             }
 
             if (pCell->type == TERRAIN_SAND ||
-                pCell->type == TERRAIN_HILL ||
-                pCell->type == TERRAIN_SPICE ||
-                pCell->type == TERRAIN_SPICEHILL) {
+                    pCell->type == TERRAIN_HILL ||
+                    pCell->type == TERRAIN_SPICE ||
+                    pCell->type == TERRAIN_SPICEHILL) {
                 smudge_increase(SMUDGE_SAND, cellNr);
             }
 
@@ -1294,20 +1373,24 @@ void cMap::cellTakeDamage(int cellNr, int damage) {
     }
 }
 
-void cMap::cellChangeType(int cellNr, int type) {
+void cMap::cellChangeType(int cellNr, int type)
+{
     tCell *pCell = getCell(cellNr);
     if (pCell) {
         if (type > TERRAIN_WALL) {
             pCell->type = type;
-        } else if (type < TERRAIN_BLOOM) {
+        }
+        else if (type < TERRAIN_BLOOM) {
             pCell->type = type;
-        } else {
+        }
+        else {
             pCell->type = type;
         }
     }
 }
 
-void cMap::cellInit(int cellNr) {
+void cMap::cellInit(int cellNr)
+{
     tCell *pCell = getCell(cellNr);
     if (!pCell) return; // bail
 
@@ -1330,7 +1413,8 @@ void cMap::cellInit(int cellNr) {
     // }
 }
 
-cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer) {
+cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer)
+{
     assert(pPlayer);
     assert(structureType > -1);
     assert(isValidCell(cell));
@@ -1362,7 +1446,8 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
 }
 
 cAbstractStructure *
-cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer) {
+cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer)
+{
     assert(pPlayer);
     assert(structureType > -1);
     assert(isValidCell(cell));
@@ -1398,11 +1483,13 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
     return nullptr;
 }
 
-int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType) {
+int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType)
+{
     return findNearByValidDropLocation(cell, minRange, maxRange, unitType);
 }
 
-bool cMap::isCellPassableForWorm(int cell) {
+bool cMap::isCellPassableForWorm(int cell)
+{
     int cellType = getCellType(cell);
     return cellType == TERRAIN_SAND ||
            cellType == TERRAIN_HILL ||
@@ -1410,7 +1497,8 @@ bool cMap::isCellPassableForWorm(int cell) {
            cellType == TERRAIN_SPICEHILL;
 }
 
-bool cMap::isValidTerrainForConcreteAtCell(int cell) {
+bool cMap::isValidTerrainForConcreteAtCell(int cell)
+{
     if (!isValidCell(cell)) return false;
     int cellType = getCellType(cell);
     // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
@@ -1426,11 +1514,13 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell) {
  * Returns true if map is wider or higher than 64 cells
  * @return
  */
-bool cMap::isBigMap() {
+bool cMap::isBigMap()
+{
     return getWidth() > 64 || getHeight() > 64;
 }
 
-void cMap::detonateSpiceBloom(int cell) {
+void cMap::detonateSpiceBloom(int cell)
+{
     if (!isValidCell(cell)) return;
     int cellTypeAtCell = getCellType(cell);
     if (cellTypeAtCell != TERRAIN_BLOOM) return;
@@ -1443,21 +1533,22 @@ void cMap::detonateSpiceBloom(int cell) {
     game.shakeScreen(20);
 
     s_GameEvent event{
-            .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
-            .entityType = eBuildType::SPECIAL,
-            .entityID = -1,
-            .player = nullptr,
-            .entitySpecificType = -1,
-            .atCell = cell,
-            .isReinforce = false,
-            .buildingListItem = nullptr,
-            .buildingList = nullptr
+        .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
+        .entityType = eBuildType::SPECIAL,
+        .entityID = -1,
+        .player = nullptr,
+        .entitySpecificType = -1,
+        .atCell = cell,
+        .isReinforce = false,
+        .buildingListItem = nullptr,
+        .buildingList = nullptr
     };
     game.onNotifyGameEvent(event);
 
 }
 
-void cMap::onNotifyGameEvent(const s_GameEvent &event) {
+void cMap::onNotifyGameEvent(const s_GameEvent &event)
+{
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED:
             if (m_bAutoDetonateSpiceBlooms) {
@@ -1482,7 +1573,8 @@ void cMap::onNotifyGameEvent(const s_GameEvent &event) {
     }
 }
 
-void cMap::onEntityCreated(const s_GameEvent &event) {
+void cMap::onEntityCreated(const s_GameEvent &event)
+{
     if (event.entityType != eBuildType::UNIT) return;
 
     // only care about units
@@ -1491,24 +1583,27 @@ void cMap::onEntityCreated(const s_GameEvent &event) {
     }
 }
 
-void cMap::evaluateIfWeShouldSetTimerToRespawnWorm() {
+void cMap::evaluateIfWeShouldSetTimerToRespawnWorm()
+{
     int currentAmountOfWorms = players[AI_WORM].getAmountOfUnitsForType(SANDWORM);
 
     // as long as we don't have the desired amount, set respawn timer
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
         setSandwormRespawnTimer();
-    } else {
+    }
+    else {
         // we spawned a worm and got to the total amount, so set timer to -1
         // until a worm has been destroyed (either by enemy units or by withdrawal of worm)
         m_iTIMER_respawnSandworms = -1;
         if (game.isDebugMode()) {
             logbook(fmt::format("cMap::evaluateIfWeShouldSetTimerToRespawnWorm set m_iTIMER_respawnSandworms to -1, because current amount sandworms ({}) == desired amount ({})",
-                currentAmountOfWorms, m_iDesiredAmountOfWorms));
+                                currentAmountOfWorms, m_iDesiredAmountOfWorms));
         }
     }
 }
 
-void cMap::setSandwormRespawnTimer() {
+void cMap::setSandwormRespawnTimer()
+{
     //only set timer when it has been < 0 (not set already)
     if (m_iTIMER_respawnSandworms < 0) {
         // 1000/5 = taking care of thinkFast 5ms loop. The second part
@@ -1520,15 +1615,17 @@ void cMap::setSandwormRespawnTimer() {
         if (game.isDebugMode()) {
             logbook(fmt::format("cMap::setSandwormRespawnTimer set timer to {}", this->m_iTIMER_respawnSandworms));
         }
-    } else {
+    }
+    else {
         if (game.isDebugMode()) {
             logbook(fmt::format("cMap::setSandwormRespawnTimer did not change value because timer was already set (value = {})",
-                this->m_iTIMER_respawnSandworms));
+                                this->m_iTIMER_respawnSandworms));
         }
     }
 }
 
-void cMap::setDesiredAmountOfWorms(int value) {
+void cMap::setDesiredAmountOfWorms(int value)
+{
     if (game.isDebugMode()) {
         logbook(fmt::format("cMap::setDesiredAmountOfWorms changed value from {} to {}", this->m_iDesiredAmountOfWorms, value));
     }
@@ -1536,7 +1633,8 @@ void cMap::setDesiredAmountOfWorms(int value) {
     evaluateIfWeShouldSetTimerToRespawnWorm();
 }
 
-void cMap::onEntityDestroyed(const s_GameEvent &event) {
+void cMap::onEntityDestroyed(const s_GameEvent &event)
+{
     if (event.entityType != eBuildType::UNIT) return;
 
     // only care about units
@@ -1546,6 +1644,7 @@ void cMap::onEntityDestroyed(const s_GameEvent &event) {
     }
 }
 
-cPoint cMap::getAbsolutePositionFromCell(int cell) {
+cPoint cMap::getAbsolutePositionFromCell(int cell)
+{
     return cPoint(getAbsoluteXPositionFromCell(cell), getAbsoluteYPositionFromCell(cell));
 }

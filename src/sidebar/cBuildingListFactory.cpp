@@ -5,25 +5,29 @@
 
 cBuildingListFactory *cBuildingListFactory::instance = NULL;
 
-cBuildingListFactory::cBuildingListFactory() {
+cBuildingListFactory::cBuildingListFactory()
+{
 }
 
-cBuildingListFactory *cBuildingListFactory::getInstance() {
-	if (instance == nullptr) {
-		instance = new cBuildingListFactory();
-	}
+cBuildingListFactory *cBuildingListFactory::getInstance()
+{
+    if (instance == nullptr) {
+        instance = new cBuildingListFactory();
+    }
 
-	return instance;
+    return instance;
 }
 
-int cBuildingListFactory::getButtonDrawY() {
+int cBuildingListFactory::getButtonDrawY()
+{
     // 6 pixels margin below horizontal candybar, so it lines up nice horizontally with the sphere
     // of the vertical candybar at the left of the building list icons
-	return cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight + 6;
+    return cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight + 6;
 }
 
-int cBuildingListFactory::getButtonDrawXStart() {
-	return (game.m_screenW - 200) + 2;
+int cBuildingListFactory::getButtonDrawXStart()
+{
+    return (game.m_screenW - 200) + 2;
 }
 
 
@@ -35,73 +39,74 @@ int cBuildingListFactory::getButtonDrawXStart() {
  * @param techlevel
  * @param house
  */
-void cBuildingListFactory::initializeList(cBuildingList *list, eListType listType) {
-	assert(list != NULL);
+void cBuildingListFactory::initializeList(cBuildingList *list, eListType listType)
+{
+    assert(list != NULL);
 
-	// first clear the list
-	list->removeAllItems();
+    // first clear the list
+    list->removeAllItems();
 
-	// Y is the same for all list buttons
-	list->setButtonDrawY(getButtonDrawY());
+    // Y is the same for all list buttons
+    list->setButtonDrawY(getButtonDrawY());
 
     int widthOfButtonIncludingMargin = 33;
     list->setButtonWidth(widthOfButtonIncludingMargin);
 //    list->setButtonHeight()
 
-	int startX = getButtonDrawXStart();
+    int startX = getButtonDrawXStart();
 
-	// now set it up
-	if (listType == eListType::LIST_CONSTYARD) {
-		list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
-		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
-	}
+    // now set it up
+    if (listType == eListType::LIST_CONSTYARD) {
+        list->setButtonDrawX(startX);
+        list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
+        list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
+    }
 
 
     startX += widthOfButtonIncludingMargin;
 
-	// other lists, have 40 pixels more Y , but the X remains the same
-	// now set it up
-	if (listType == eListType::LIST_FOOT_UNITS) {
+    // other lists, have 40 pixels more Y , but the X remains the same
+    // now set it up
+    if (listType == eListType::LIST_FOOT_UNITS) {
         list->setButtonDrawX(startX);
         list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
-	}
+    }
 
     startX += widthOfButtonIncludingMargin;
 
-	if (listType == eListType::LIST_UNITS) {
-		list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_FACTORY);
-		list->setButtonIconIdUnpressed(LIST_BTN_FACTORY);
-	}
-
-	startX += widthOfButtonIncludingMargin;
-
-	if (listType == eListType::LIST_STARPORT) {
+    if (listType == eListType::LIST_UNITS) {
         list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_STARPORT);
-		list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
-	}
+        list->setButtonIconIdPressed(LIST_BTN_FACTORY);
+        list->setButtonIconIdUnpressed(LIST_BTN_FACTORY);
+    }
 
-	startX += widthOfButtonIncludingMargin;
+    startX += widthOfButtonIncludingMargin;
 
-	if (listType == eListType::LIST_PALACE) {
+    if (listType == eListType::LIST_STARPORT) {
         list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_PALACE);
-		list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
-	}
+        list->setButtonIconIdPressed(LIST_BTN_STARPORT);
+        list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
+    }
 
-	startX += widthOfButtonIncludingMargin;
+    startX += widthOfButtonIncludingMargin;
 
-	if (listType == eListType::LIST_UPGRADES) {
+    if (listType == eListType::LIST_PALACE) {
+        list->setButtonDrawX(startX);
+        list->setButtonIconIdPressed(LIST_BTN_PALACE);
+        list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
+    }
+
+    startX += widthOfButtonIncludingMargin;
+
+    if (listType == eListType::LIST_UPGRADES) {
         list->setButtonDrawX(startX);
         // temp, use CONST YARD
-		list->setButtonIconIdPressed(LIST_BTN_UPGRADE);
-		list->setButtonIconIdUnpressed(LIST_BTN_UPGRADE);
+        list->setButtonIconIdPressed(LIST_BTN_UPGRADE);
+        list->setButtonIconIdUnpressed(LIST_BTN_UPGRADE);
 
-		// the contents of the list is determined elsewhere
-	}
+        // the contents of the list is determined elsewhere
+    }
 
 }
 
@@ -112,13 +117,15 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
  * @param techlevel
  * @return
  */
-cBuildingList * cBuildingListFactory::createList(eListType listType) {
-	cBuildingList * list = new cBuildingList(listType);
+cBuildingList *cBuildingListFactory::createList(eListType listType)
+{
+    cBuildingList *list = new cBuildingList(listType);
     initializeList(list, listType);
-	return list;
+    return list;
 }
 
-void cBuildingListFactory::destroy() {
+void cBuildingListFactory::destroy()
+{
     if (instance) {
         delete instance;
     }

@@ -6,17 +6,17 @@
 class cSideBarFactory {
 
 private:
-	static cSideBarFactory *instance;
+    static cSideBarFactory *instance;
 
 protected:
-	cSideBarFactory();
-	~cSideBarFactory();
+    cSideBarFactory();
+    ~cSideBarFactory();
 
 public:
-	static cSideBarFactory *getInstance();
-	static void destroy();
+    static cSideBarFactory *getInstance();
+    static void destroy();
 
-	cSideBar *createSideBar(cPlayer * thePlayer);
+    cSideBar *createSideBar(cPlayer *thePlayer);
 
 private:
 
