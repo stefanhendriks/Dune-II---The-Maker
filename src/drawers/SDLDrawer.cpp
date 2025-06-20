@@ -131,7 +131,7 @@ void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src) {
 	assert(dest);
 	int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
 	int yPos = getCenteredYPosForBitmap(src);
-	draw_sprite(dest, src, xPos, yPos);
+	this->drawSprite(dest, src, xPos, yPos);
 }
 
 void SDLDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface* src, float percentage) {
@@ -144,7 +144,7 @@ void SDLDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surf
 	int height = src->h;
 	int halfOfHeight = height / 2;
 	int yPos = wantedYPos - halfOfHeight;
-	draw_sprite(dest, src, xPos, yPos);
+	this->drawSprite(dest, src, xPos, yPos);
 }
 
 
@@ -152,14 +152,14 @@ void SDLDrawer::drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src
 	assert(src);
 	assert(dest);
 	int xPos = getCenteredXPosForBitmap(src, totalWidth) + xOffset;
-	draw_sprite(dest, src, xPos, y);
+	this->drawSprite(dest, src, xPos, y);
 }
 
 void SDLDrawer::drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x) {
 	assert(src);
 	assert(dest);
 	int yPos = getCenteredXPosForBitmap(src, game.m_screenW);
-	draw_sprite(dest, src, x, yPos);
+	this->drawSprite(dest, src, x, yPos);
 }
 
 int SDLDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth) {
@@ -241,7 +241,9 @@ void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha) {
 }
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y) {
-    draw_sprite(dest, src, x, y);
+    // draw_sprite(dest, src, x, y);
+    SDL_Rect tmp = {x,y,src->w, src->h};
+    SDL_BlitSurface(src, nullptr, dest, &tmp);
 }
 
 
