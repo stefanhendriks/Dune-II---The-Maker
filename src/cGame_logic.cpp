@@ -711,6 +711,7 @@ void cGame::run()
                 case SDL_MOUSEBUTTONUP:
                 case SDL_MOUSEMOTION:
                 case SDL_MOUSEWHEEL:
+                    m_mouse->handleEvent(event);
                 default:
                     break;
             }
@@ -919,11 +920,11 @@ bool cGame::setupGame()
 
     //Mira TEXT alfont_init();
     //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
-    install_keyboard();
+    //install_keyboard();
     m_keyboard = new cKeyboard();
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
-    install_mouse();
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
+    //logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
+    //install_mouse();
+    //logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
@@ -2442,4 +2443,9 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         game.m_TIMER_shake = 200;
     }
 
+}
+
+void cGame::setMousePosition(int w, int h)
+{
+    m_mouse->setCursorPosition(windows, w,h);
 }
