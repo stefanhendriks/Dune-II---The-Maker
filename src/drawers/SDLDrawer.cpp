@@ -324,7 +324,13 @@ void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, i
 }
 
 void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color) {
-    line(bmp, x1, y1, x2, y2, color);
+    if (SDL_LockSurface(bmp) < 0) {
+        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
+        return;
+    }
+    Uint32 mappedColor = SDL_MapRGBA(bmp->format, color.r, color.g, color.b, color.a);
+    draw_line_surface(bmp, x1, y1, x2, y2, mappedColor);
+    SDL_UnlockSurface(bmp);
 }
 
 void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size) {
