@@ -1198,8 +1198,8 @@ bool cGame::setupGame()
     // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
 
-    m_mouse->setMouseObserver(nullptr);
-    m_keyboard->setKeyboardObserver(nullptr);
+    // m_mouse->setMouseObserver(nullptr);
+    // m_keyboard->setKeyboardObserver(nullptr);
 
     cPlayer *humanPlayer = &players[HUMAN];
 
