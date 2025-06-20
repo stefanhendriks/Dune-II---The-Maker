@@ -1,5 +1,5 @@
 #include "SDLDrawer.hpp"
-
+#include "utils/DataPack.hpp"
 #include "d2tmc.h"
 
 #include <iostream>
@@ -85,7 +85,7 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
 }
 
 void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
-    stretchBlit((SDL_Surface *)gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    stretchBlit(sdl_data->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
 void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
@@ -114,11 +114,11 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
 }
 
 void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
-    maskedBlit((SDL_Surface *)gfxdata[index].dat, dest, src_x, src_y, pos_x, pos_y, width, height);
+    maskedBlit(sdl_data->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
 void SDLDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
-    maskedStretchBlit((SDL_Surface *)gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    maskedStretchBlit(sdl_data->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
 void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
@@ -304,7 +304,7 @@ void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int n
 }
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y) {
-    SDL_Surface * sBitmap = m_dataRepository->getBitmapAt(index);
+    SDL_Surface * sBitmap = sdl_data->getSurface(index);
     if (!sBitmap) return; // failed, bail!
     drawSprite(dest, sBitmap, x, y);
 }
@@ -320,7 +320,7 @@ void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int
 }
 
 void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
-    SDL_Surface *src = (SDL_Surface *) gfxdata[index].dat;
+    SDL_Surface *src = sdl_data->getSurface(index);
     this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
 
