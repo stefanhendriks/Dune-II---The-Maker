@@ -17,6 +17,7 @@
 #include "player/cPlayer.h"
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 cParticle::cParticle()
 {

@@ -3,6 +3,7 @@
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 #include <vector>
 #include <string>
 

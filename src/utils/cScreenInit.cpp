@@ -4,6 +4,7 @@
 
 // Need to include all of Allegro, otherwise the graphic mode defines are not included...
 // #include <allegro.h>
+#include <SDL2/SDL.h>
 #include <fmt/core.h>
 
 #include <array>

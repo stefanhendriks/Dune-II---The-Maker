@@ -3,6 +3,7 @@
 #include "d2tmc.h"
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 #include <algorithm>
 #include <memory>

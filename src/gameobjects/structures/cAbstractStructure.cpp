@@ -22,6 +22,7 @@
 #include "utils/cSoundPlayer.h"
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 #include <fmt/core.h>
 
 // "default" Constructor

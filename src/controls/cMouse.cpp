@@ -10,6 +10,7 @@
 #include "utils/d2tm_math.h"
 
 //#include <allegro.h>
+#include <SDL2/SDL.h>
 
 cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
 {

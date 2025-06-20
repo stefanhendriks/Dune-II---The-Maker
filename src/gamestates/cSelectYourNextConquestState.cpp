@@ -13,6 +13,7 @@
 #include "gui/cGuiButton.h"
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame)
 {
