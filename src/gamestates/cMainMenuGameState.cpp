@@ -9,6 +9,7 @@
 #include "gui/actions/cGuiActionSetupSkirmishGame.h"
 #include "gui/actions/cGuiActionShowOptions.h"
 #include "gui/actions/cGuiActionToGameState.h"
+#include "drawers/cAllegroDrawer.h"
 
 // #include <alfont.h>
 #include <allegro.h>
@@ -150,7 +151,7 @@ void cMainMenuGameState::draw() const {
         }
     }
 
-    draw_sprite(bmp_screen, bmp_D2TM_Title, logoX, logoY);
+    renderDrawer->drawSprite(bmp_screen, bmp_D2TM_Title, logoX, logoY);
 
     GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
