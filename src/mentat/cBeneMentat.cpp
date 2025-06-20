@@ -33,8 +33,8 @@ void cBeneMentat::draw()
     if (state == AWAITING_RESPONSE) {
         //Mira TEXT alfont_set_font_size(font, 35); // set size
         std::string houseName = cPlayer::getHouseNameForId(house);
-        //Mira TEXT alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 17, offsetY + 17, makecol(0, 0, 0), makecol(0, 0, 0), "Do you wish to join house %s ?", houseName.c_str());
-        //Mira TEXT alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 16, offsetY + 16, makecol(255, 214, 137), makecol(0, 0, 0),  "Do you wish to join house %s ?", houseName.c_str());
+        //Mira TEXT alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 17, offsetY + 17, SDL_Color{0, 0, 0), SDL_Color{0, 0, 0), "Do you wish to join house %s ?", houseName.c_str());
+        //Mira TEXT alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 16, offsetY + 16, SDL_Color{255, 214, 137), SDL_Color{0, 0, 0),  "Do you wish to join house %s ?", houseName.c_str());
     }
 }
 

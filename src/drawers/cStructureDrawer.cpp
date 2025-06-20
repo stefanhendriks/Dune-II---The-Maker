@@ -35,7 +35,7 @@ void cStructureDrawer::drawStructuresHealthBars()
     }
 }
 
-void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, int color)
+void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, SDL_Color color)
 {
     assert(theStructure);
     int drawX = theStructure->iDrawX();
@@ -174,7 +174,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
         destroy_bitmap(stretchedShadow);
     }
 
-    renderDrawer->bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
+    renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
 
     renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 
@@ -221,7 +221,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
             int x2 = mapCamera->getWindowXPosition(structure->pos_x() + 16);
             int y2 = mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
-            renderDrawer->drawLine(bmp_screen, x1, y1, x2, y2, makecol(255, 255, 255));
+            renderDrawer->drawLine(bmp_screen, x1, y1, x2, y2, SDL_Color{255, 255, 255,255});
 
             int mouseCellX = map.getCellX(pContext->getMouseCell());
             int mouseCellY = map.getCellY(pContext->getMouseCell());
@@ -364,12 +364,12 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, width_x+1, height_y+1, makecol(0,0,0));
-    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, (w-1), height_y, makecol(r,g,32));
+    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, width_x+1, height_y+1, SDL_Color{0,0,0,255});
+    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, (w-1), height_y, SDL_Color{(Uint8)r,(Uint8)g,32,255});
 
     // bar around it
-    //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
-    renderDrawer->drawRect(bmp_screen, draw_x, draw_y, width_x, height_y, makecol(255, 255, 255));
+    //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));
+    renderDrawer->drawRect(bmp_screen, draw_x, draw_y, width_x, height_y, SDL_Color{255, 255, 255,255});
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -407,7 +407,8 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         }
     }
 
-    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, 
+    cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure)
@@ -438,10 +439,10 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, width_x+1, height_y+1, makecol(0,0,0));
-    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, (w-1), height_y, makecol(r,g,32));
+    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, width_x+1, height_y+1, SDL_Color{0,0,0,255});
+    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, (w-1), height_y, SDL_Color{(Uint8)r,(Uint8)g,32,255});
 
     // bar around it
-    //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
-    renderDrawer->drawRect(bmp_screen, draw_x, draw_y, width_x, height_y, makecol(255, 255, 255));
+    //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));
+    renderDrawer->drawRect(bmp_screen, draw_x, draw_y, width_x, height_y, SDL_Color{255, 255, 255,255});
 }

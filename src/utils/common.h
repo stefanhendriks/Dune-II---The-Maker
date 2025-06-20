@@ -15,6 +15,7 @@
 
 #include <string>
 #include <array>
+#include <SDL2/SDL.h>
 
 class cIniFile;
 
@@ -35,7 +36,7 @@ int fastThinkTicksToMs(int ticks);
 
 void logbook(const std::string &txt);
 
-int makeColFromString(std::string colorStr);
+SDL_Color makeColFromString(std::string colorStr);
 
 void install_structures();
 void install_units();

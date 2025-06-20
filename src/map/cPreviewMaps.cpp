@@ -1,6 +1,8 @@
 #include "cPreviewMaps.h"
 #include "data/gfxdata.h"
+#include "drawers/cAllegroDrawer.h"
 #include "map/cMap.h"
+#include "include/d2tmc.h"
 
 #include <filesystem>
 
@@ -111,53 +113,53 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int iCll = map.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
-            int iColor = -1;
+            SDL_Color iColor = SDL_Color{255,255,255,255};
             int terrainType = -1; // unknown
 
             char letter = mapLine[iX];
             if (letter == ')') {
                 terrainType = TERRAIN_SAND;
-                iColor = makecol(194, 125, 60);
+                iColor = SDL_Color{194, 125, 60,255};
             }
             // rock
             if (letter == '%' || letter == '^' || letter == '&' || letter == '(') {
                 terrainType = TERRAIN_ROCK;
-                iColor = makecol(80, 80, 60);
+                iColor = SDL_Color{80, 80, 60,255};
             }
             // mountain
             if (letter == 'R' || letter == 'r') {
                 terrainType = TERRAIN_MOUNTAIN;
-                iColor = makecol(48, 48, 36);
+                iColor = SDL_Color{48, 48, 36,255};
             }
             // spice hill
             if (letter == '+') {
                 terrainType = TERRAIN_SPICEHILL;
-                iColor = makecol(180, 90, 25); // bit darker
+                iColor = SDL_Color{180, 90, 25,255}; // bit darker
             }
             // spice
             if (letter == '-') {
                 terrainType = TERRAIN_SPICE;
-                iColor = makecol(186, 93, 32);
+                iColor = SDL_Color{186, 93, 32,255};
             }
             // sand hill
             if (letter == 'H' || letter == 'h') {
                 terrainType = TERRAIN_HILL;
-                iColor = makecol(188, 115, 50);
+                iColor = SDL_Color{188, 115, 50,255};
             }
 
-            if (terrainType < 0 || iColor < 0) {
+            if (terrainType < 0 /* @Mira not fixed|| iColor < 0*/) {
                 logbook(fmt::format(
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
                 terrainType = TERRAIN_SAND;
-                iColor = makecol(255, 255, 255); // show as purple to indicate wrong char
+                iColor = SDL_Color{255, 255, 255,255}; // show as purple to indicate wrong char
             }
 
             previewMap.terrainType[iCll] = terrainType;
-            putpixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-            putpixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-            putpixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-            putpixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
         }
     }
 
@@ -167,10 +169,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = map.getCellX(startCell);
             int y = map.getCellY(startCell);
-            putpixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
-            putpixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));
-            putpixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, makecol(255, 255, 255));
-            putpixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, makecol(255, 255, 255));
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), SDL_Color{255, 255, 255,255});
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), SDL_Color{255, 255, 255,255});
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
+            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
         }
     }
 }

@@ -76,7 +76,7 @@ void cChooseHouseGameState::draw() const
     renderDrawer->blitSprite(bmp_HouseHarkonnen, bmp_screen, &houseHarkonnen);
 
     // BACK (bottom right
-    int color = hoversOverBackButton ? makecol(255, 0, 0) : makecol(255, 255, 255);
+    SDL_Color color = hoversOverBackButton ? SDL_Color{255, 0, 0,255} : SDL_Color{255, 255, 255,255};
     textDrawer.drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE

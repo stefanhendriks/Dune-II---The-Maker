@@ -41,7 +41,7 @@ private:
     BITMAP *m_candybar;
     cTextDrawer m_textDrawer;
 
-    int m_sidebarColor;
+    SDL_Color m_sidebarColor;
 
     void createCandyBar();
 

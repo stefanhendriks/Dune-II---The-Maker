@@ -52,13 +52,13 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     detonateBlooms = true;
 
     // Colors
-    colorDarkishBackground = makecol(32, 32, 32);
-    colorDarkishBorder = makecol(227, 229, 211);
-    colorWhite = makecol(255, 255, 255);
-    colorRed = makecol(255, 0, 0); // used for hover
-    colorYellow = makecol(255, 207, 41);
-    colorDarkerYellow = makecol(225, 177, 21); // a bit darker colorYellow to give some visual clue (hover color)
-    colorDisabled = makecol(128, 128, 128);
+    colorDarkishBackground = SDL_Color{32, 32, 32,255};
+    colorDarkishBorder = SDL_Color{227, 229, 211,255};
+    colorWhite = SDL_Color{255, 255, 255,255};
+    colorRed = SDL_Color{255, 0, 0,255}; // used for hover
+    colorYellow = SDL_Color{255, 207, 41,255};
+    colorDarkerYellow = SDL_Color{225, 177, 21,255}; // a bit darker colorYellow to give some visual clue (hover color)
+    colorDisabled = SDL_Color{128, 128, 128,255};
 
     // Basic coordinates
     topBarHeight = 21;
@@ -78,7 +78,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     renderDrawer->drawSprite(background, dunePlanet, game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
     for (int dy = 0; dy < game.m_screenH; dy += 2) {
-        renderDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0, 0, 0));
+        renderDrawer->drawLine(background, 0, dy, screen_x, dy, SDL_Color{0, 0, 0,255});
     }
 
     // Rectangles for GUI interaction
@@ -283,7 +283,7 @@ void cSetupSkirmishGameState::draw() const
 
 void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const
 {
-    int textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
+    SDL_Color textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
     textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, "%d", sSkirmishPlayer.team);
 }
 
@@ -292,7 +292,7 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
         const cRectangle &startingUnitsRect) const
 {
 
-    int textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
+    SDL_Color textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
     textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor, "%d",
                         sSkirmishPlayer.startingUnits);
 }
@@ -300,16 +300,16 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
 void
 cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
 {
-    int textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
+    SDL_Color textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
     textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, "%d", sSkirmishPlayer.iCredits);
 }
 
-int
+SDL_Color
 cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
     if (rect.isPointWithin(mouse->getX(), mouse->getY())) {
-        int colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
-        int colorDisabledFade = game.getColorFadeSelected(128, 128, 128);
+        SDL_Color colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
+        SDL_Color colorDisabledFade = game.getColorFadeSelected(128, 128, 128);
         return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
     }
 
@@ -322,7 +322,7 @@ cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPl
 
 void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const
 {
-    int textColor = getTextColorForRect(sSkirmishPlayer, houseRec);
+    SDL_Color textColor = getTextColorForRect(sSkirmishPlayer, houseRec);
     const std::string &cPlayerHouseString = cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse);
     const char *cHouse = sSkirmishPlayer.iHouse > 0 ? cPlayerHouseString.c_str() : "Random";
     textDrawer.drawText(houseRec.getX(), houseRec.getY(), textColor, cHouse);
@@ -335,14 +335,14 @@ cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
     }
     else {
-        int textColor = getTextColorForRect(sSkirmishPlayer, brainRect);
+        SDL_Color textColor = getTextColorForRect(sSkirmishPlayer, brainRect);
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), textColor, "  CPU");
     }
 }
 
 void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const
 {
-    int textColor = colorWhite;
+    SDL_Color textColor = colorWhite;
     if (iSkirmishMap == 0) { // random map selected
         if (startPoints.isPointWithin(mouse->getX(), mouse->getY())) {
             textColor = colorRed;
@@ -394,7 +394,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
 void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const
 {
     if (spawnBlooms) {
-        int textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? colorRed : colorWhite;
+        SDL_Color textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? colorRed : colorWhite;
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor, "Auto-detonate : %s",
                             detonateBlooms
                             ? "YES" : "NO");
@@ -406,14 +406,14 @@ void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloom
 
 void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const
 {
-    int textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? colorRed : colorWhite;
+    SDL_Color textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? colorRed : colorWhite;
     textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor, "Spice blooms : %s",
                         spawnBlooms ? "YES" : "NO");
 }
 
 void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const
 {
-    int textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? colorRed : colorWhite;
+    SDL_Color textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? colorRed : colorWhite;
     textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor, "Worms? : %d", spawnWorms);
 }
 
@@ -1034,7 +1034,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
 
         bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-        int textColor = bHover ? colorRed : colorWhite;
+        SDL_Color textColor = bHover ? colorRed : colorWhite;
         if (!previewMap.validMap) {
             textColor = colorDisabled;
         }

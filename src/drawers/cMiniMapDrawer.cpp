@@ -78,8 +78,8 @@ void cMiniMapDrawer::drawViewPortRectangle()
     int minimapWidth = (iWidth * pixelSize) + 1;
     int minimapHeight = (iHeight * pixelSize) + 1;
 
-    //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
-    renderDrawer->drawRect(bmp_screen, startX, startY, minimapWidth, minimapHeight, makecol(255, 255, 255));
+    //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, SDL_Color{255, 255, 255));
+    renderDrawer->drawRect(bmp_screen, startX, startY, minimapWidth, minimapHeight, SDL_Color{255, 255, 255,255});
 }
 
 int cMiniMapDrawer::getMapWidthInPixels()
@@ -102,11 +102,11 @@ int cMiniMapDrawer::getMapHeightInPixels()
 
 void cMiniMapDrawer::drawTerrain()
 {
-    int iColor = 0;
+    SDL_Color iColor = SDL_Color{0, 0, 0,255};
 
     for (int x = 0; x < (map->getWidth()); x++) {
         for (int y = 0; y < (map->getHeight()); y++) {
-            iColor = makecol(0, 0, 0);
+            iColor = SDL_Color{0, 0, 0,255};
             int iCll = map->makeCell(x, y);
 
             if (map->isVisible(iCll, player->getId())) {
@@ -116,7 +116,7 @@ void cMiniMapDrawer::drawTerrain()
             // TODO: make flexible map borders
             // do not show the helper border
             if (!map->isWithinBoundaries(x, y)) {
-                iColor = makecol(0, 0, 0);
+                iColor = SDL_Color{0, 0, 0,255};
             }
 
             int iDrawX = drawX + x;
@@ -140,7 +140,7 @@ void cMiniMapDrawer::drawTerrain()
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
 {
 
-    int iColor = renderDrawer->getColor_BLACK();
+    SDL_Color iColor = renderDrawer->getColor_BLACK();
 
     for (int x = 0; x < map->getWidth(); x++) {
         for (int y = 0; y < map->getHeight(); y++) {
@@ -192,7 +192,8 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             }
 
             // no need to draw black on black background
-            if (iColor != renderDrawer->getColor_BLACK()) {
+            auto black = renderDrawer->getColor_BLACK();
+            if (iColor.r != black.r && iColor.g != black.g && iColor.b != black.b) {
                 int iDrawX = drawX + x;
                 int iDrawY = drawY + y;
 
@@ -207,32 +208,32 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
 }
 
 
-int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
+SDL_Color cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
 {
     // get color for terrain type (for minimap)
     switch (terrainType) {
         case TERRAIN_ROCK:
-            return makecol(80, 80, 60);
+            return SDL_Color{80, 80, 60,255};
         case TERRAIN_SPICE:
-            return makecol(186, 93, 32);
+            return SDL_Color{186, 93, 32,255};
         case TERRAIN_SPICEHILL:
-            return makecol(180, 90, 25);
+            return SDL_Color{180, 90, 25,255};
         case TERRAIN_HILL:
-            return makecol(188, 115, 50);
+            return SDL_Color{188, 115, 50,255};
         case TERRAIN_MOUNTAIN:
-            return makecol(48, 48, 36);
+            return SDL_Color{48, 48, 36,255};
         case TERRAIN_SAND:
-            return makecol(194, 125, 60);
+            return SDL_Color{194, 125, 60,255};
         case TERRAIN_WALL:
-            return makecol(192, 192, 192);
+            return SDL_Color{192, 192, 192,255};
         case TERRAIN_SLAB:
-            return makecol(80, 80, 80);
+            return SDL_Color{80, 80, 80,255};
         case TERRAIN_BLOOM:
-            return makecol(214, 145, 100);
+            return SDL_Color{214, 145, 100,255};
         case -1:
-            return makecol(255, 0, 255);
+            return SDL_Color{255, 0, 255,255};
         default:
-            return makecol(255, 0, 255);
+            return SDL_Color{255, 0, 255,255};
     }
 }
 
@@ -242,7 +243,7 @@ void cMiniMapDrawer::draw()
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    renderDrawer->drawRectFilled(bmp_screen, m_RectFullMinimap, makecol(0, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, m_RectFullMinimap, SDL_Color{0, 0, 0,255});
     set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(),
                   m_RectFullMinimap.getEndY());
 

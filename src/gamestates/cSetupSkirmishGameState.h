@@ -54,13 +54,13 @@ private:
 
 
     // Colors
-    int colorDarkishBackground;
-    int colorDarkishBorder;
-    int colorWhite;
-    int colorRed;
-    int colorYellow;
-    int colorDarkerYellow;
-    int colorDisabled;
+    SDL_Color colorDarkishBackground;
+    SDL_Color colorDarkishBorder;
+    SDL_Color colorWhite;
+    SDL_Color colorRed;
+    SDL_Color colorYellow;
+    SDL_Color colorDarkerYellow;
+    SDL_Color colorDisabled;
 
     // Some basic layout coordinates
     int topBarHeight;
@@ -112,7 +112,7 @@ private:
 
     void drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const;
 
-    int getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const;
+    SDL_Color getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const;
 
     void drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &startingUnitsRect) const;
 

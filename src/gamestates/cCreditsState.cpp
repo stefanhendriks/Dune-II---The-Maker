@@ -34,19 +34,19 @@ cCreditsState::cCreditsState(cGame &theGame) :
 
 void cCreditsState::prepareCrawlerLines()
 {
-    int colorYellow = makecol(255, 207, 41);
-    int colorWhite = makecol(255, 255, 255);
-    int colorGreen = makecol(0, 255, 0);
-    int colorRed = makecol(255, 0, 0);
+    SDL_Color colorYellow = SDL_Color{255, 207, 41,255};
+    SDL_Color colorWhite = SDL_Color{255, 255, 255,255};
+    SDL_Color colorGreen = SDL_Color{0, 255, 0,255};
+    SDL_Color colorRed = SDL_Color{255, 0, 0,255};
 
-    int colorHeadlines = colorGreen;
+    SDL_Color colorHeadlines = colorGreen;
 
     int fontHeightWithALittlePadding = m_textDrawer.getFontHeight() + 4;
     int spacerAfterHeadline = fontHeightWithALittlePadding + m_textDrawer.getFontHeight();
     auto spacer = s_CreditLine {
         .name = "",
         .txt = "",
-        .color = makecol(0,0,0),
+        .color = SDL_Color{0,0,0,255},
         .height = 40
     };
 

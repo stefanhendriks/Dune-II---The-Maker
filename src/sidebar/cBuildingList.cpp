@@ -427,9 +427,9 @@ void cBuildingList::setItemBuilder(cItemBuilder *value)
     m_itemBuilder = value;
 }
 
-int cBuildingList::getFlashingColor()
+SDL_Color cBuildingList::getFlashingColor()
 {
-    return game.getColorFadeSelected(255, 209, 64);
+    return SDL_Color{255, 209, 64, 255};
 }
 
 void cBuildingList::think()

@@ -114,7 +114,7 @@ private:
 
     BITMAP *m_optionsBar;
 
-    int m_sidebarColor;
+    SDL_Color m_sidebarColor;
 
     // TODO: bullet/projectile drawer
 

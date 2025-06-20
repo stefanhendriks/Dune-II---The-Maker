@@ -48,7 +48,7 @@ protected:
     void drawViewPortRectangle();
     void drawUnitsAndStructures(bool playerOnly);
 
-    int getRGBColorForTerrainType(int terrainType);
+    SDL_Color getRGBColorForTerrainType(int terrainType);
 
     int getMapHeightInPixels();
     int getMapWidthInPixels();

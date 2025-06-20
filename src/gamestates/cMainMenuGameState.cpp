@@ -49,7 +49,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
     int creditsX = (game.m_screenW / 2) - buttonWidth;
-    GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
+    GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", SDL_Color{64, 64, 64,255});
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
     gui_btn_credits = new cGuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
     gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
@@ -64,8 +64,8 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
 
-    int colorInactiveHover = makecol(128, 128, 128);
-    int colorInactive = makecol(192, 192, 192);
+    SDL_Color colorInactiveHover = SDL_Color{128, 128, 128,255};
+    SDL_Color colorInactive = SDL_Color{192, 192, 192,255};
 
     // PLAY
     int playY = 323;
@@ -151,7 +151,7 @@ void cMainMenuGameState::draw() const
     if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenW; x += 60) {
             for (int y = 0; y < game.m_screenH; y += 20) {
-                //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x, y, makecol(48, 48, 48), "DEBUG");
+                //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x, y, SDL_Color{48, 48, 48), "DEBUG");
             }
         }
     }

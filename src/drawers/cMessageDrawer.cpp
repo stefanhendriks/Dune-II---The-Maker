@@ -132,7 +132,7 @@ void cMessageDrawer::draw()
 
         // draw message
         renderDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
-        //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, makecol(0, 0, 0), m_message.c_str());
+        //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, SDL_Color{0, 0, 0), m_message.c_str());
         renderDrawer->resetClippingFor(m_temp);
 
         // draw temp

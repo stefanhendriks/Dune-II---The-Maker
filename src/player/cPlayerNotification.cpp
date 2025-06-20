@@ -35,19 +35,20 @@ const std::string &cPlayerNotification::getMessage() const
     return msg;
 }
 
-int cPlayerNotification::getColor() const
+SDL_Color cPlayerNotification::getColor() const
 {
-    bool justStarted = (initialDuration - TIMER) < 500;
-    static const int neutralColor = makecol(255, 255, 255); // white
-    static const int priorityColor = makecol(255, 207, 41); // yellow
-    static const int badColor = makecol(255, 0, 0); // red
+    // @Mira regression on color
+    //bool justStarted = (initialDuration - TIMER) < 500;
+    static const SDL_Color neutralColor = SDL_Color{255, 255, 255,255}; // white
+    static const SDL_Color priorityColor = SDL_Color{255, 207, 41,255}; // yellow
+    static const SDL_Color badColor = SDL_Color{255, 0, 0,255}; // red
     switch (type) {
         case NEUTRAL:
-            return justStarted ? game.getColorFadeSelected(neutralColor) : neutralColor;
+            return /*justStarted ? game.getColorFadeSelected(neutralColor) :*/ neutralColor;
         case PRIORITY:
-            return justStarted ? game.getColorFadeSelected(priorityColor) : priorityColor;
+            return /*justStarted ? game.getColorFadeSelected(priorityColor) :*/ priorityColor;
         case BAD:
-            return justStarted ? game.getColorFadeSelected(badColor) : badColor;
+            return /*justStarted ? game.getColorFadeSelected(badColor) :*/ badColor;
     }
-    return 0;
+    return neutralColor;
 }

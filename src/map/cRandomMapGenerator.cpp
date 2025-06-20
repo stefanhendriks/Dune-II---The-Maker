@@ -166,15 +166,15 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
             int cll = map.getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
-            int iColor = makecol(194, 125, 60);
+            SDL_Color iColor = SDL_Color{194, 125, 60,255};
 
             // rock
             int cellType = map.getCellType(cll);
-            if (cellType == TERRAIN_ROCK) iColor = makecol(80, 80, 60);
-            if (cellType == TERRAIN_MOUNTAIN) iColor = makecol(48, 48, 36);
-            if (cellType == TERRAIN_SPICEHILL) iColor = makecol(180, 90, 25); // bit darker
-            if (cellType == TERRAIN_SPICE) iColor = makecol(186, 93, 32);
-            if (cellType == TERRAIN_HILL) iColor = makecol(188, 115, 50);
+            if (cellType == TERRAIN_ROCK) iColor = SDL_Color{80, 80, 60,255};
+            if (cellType == TERRAIN_MOUNTAIN) iColor = SDL_Color{48, 48, 36,255};
+            if (cellType == TERRAIN_SPICEHILL) iColor = SDL_Color{180, 90, 25,255}; // a bit darker
+            if (cellType == TERRAIN_SPICE) iColor = SDL_Color{186, 93, 32,255};
+            if (cellType == TERRAIN_HILL) iColor = SDL_Color{188, 115, 50,255};
 
             randomMapEntry.terrainType[cll] = cellType;
 
@@ -184,21 +184,21 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
                     int sy = map.getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
-                        iColor = makecol(255, 255, 255);
+                        iColor = SDL_Color{255, 255, 255,255};
                 }
             }
 
-            putpixel(randomMapEntry.terrain, x, y, iColor);
+            renderDrawer->set_pixel(randomMapEntry.terrain, x, y, iColor);
         }
 
     // blit on screen
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenW, game.m_screenH);
+    renderDrawer->blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenW, game.m_screenH);
 }
 
 void cRandomMapGenerator::drawProgress(float progress) const
 {
     int iProgress = progress * 211;
-    //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-    renderDrawer->drawRectFilled(bmp_screen, 216, 225, iProgress, 257-225, makecol(255, 0, 0));
+    //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, SDL_Color{255, 0, 0));
+    renderDrawer->drawRectFilled(bmp_screen, 216, 225, iProgress, 257-225, SDL_Color{255, 0, 0,255});
 }

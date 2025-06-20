@@ -337,19 +337,19 @@ void cPlayer::setHouse(int iHouse)
     }
 }
 
-int cPlayer::getEmblemBackgroundColorForHouse(int houseId)
+SDL_Color cPlayer::getEmblemBackgroundColorForHouse(int houseId)
 {
     switch (houseId) {
         case ATREIDES:
-            return makecol(8, 12, 89);
+            return SDL_Color{8, 12, 89,255};
         case HARKONNEN:
-            return makecol(60, 0, 0);
+            return SDL_Color{60, 0, 0,255};
         case ORDOS:
-            return makecol(0, 32, 0);
+            return SDL_Color{0, 32, 0,255};
         case SARDAUKAR:
-            return makecol(128, 0, 128);
+            return SDL_Color{128, 0, 128,255};
         default:
-            return makecol(100, 255, 100);
+            return SDL_Color{100, 255, 100,255};
     }
 }
 
@@ -633,46 +633,46 @@ bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType)
  * Returns house based fading/pulsating color
  * @return
  */
-int cPlayer::getHouseFadingColor() const
+SDL_Color cPlayer::getHouseFadingColor() const
 {
-    int color = makecol(255, 255, 255);
+    SDL_Color color = SDL_Color{255, 255, 255,255};
     if (house == ATREIDES) {
-        color = makecol(0, 0, 255);
+        color = SDL_Color{0, 0, 255,255};
     }
     if (house == HARKONNEN) {
-        color = makecol(255, 0, 0);
+        color = SDL_Color{255, 0, 0,255};
     }
     if (house == ORDOS) {
-        color = makecol(0, 255, 0);
+        color = SDL_Color{0, 255, 0,255};
     }
 
     // TODO other m_houseInfo (Sardaukar, etc)
-    return game.getColorFadeSelected(color);
+    return color;
 }
 
 /**
  * Returns the error fading color (red to black pulsating)
  * @return
  */
-int cPlayer::getErrorFadingColor() const
+SDL_Color cPlayer::getErrorFadingColor() const
 {
-    return game.getColorFadeSelectedRed(255, 0, 0);
+    return SDL_Color{255,0,0,255};
 }
 
 /**
  * Returns the error fading color (red to black pulsating)
  * @return
  */
-int cPlayer::getPrimaryBuildingFadingColor() const
+SDL_Color cPlayer::getPrimaryBuildingFadingColor() const
 {
-    return game.getColorFadeSelectedGreen(0, 255, 0);
+    return SDL_Color{0,255,0,255};
 }
 
 /**
  * Returns the fading white color
  * @return
  */
-int cPlayer::getSelectFadingColor() const
+SDL_Color cPlayer::getSelectFadingColor() const
 {
     return game.getColorFadeSelected(255, 255, 255);
 }

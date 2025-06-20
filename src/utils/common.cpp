@@ -64,14 +64,14 @@ int fastThinkMsToTicks(int desiredMs)
 }
 
 
-int makeColFromString(std::string colorStr)
+SDL_Color makeColFromString(std::string colorStr)
 {
-    int r = 0, g = 0, b = 0;
+    Uint8 r = 0, g = 0, b = 0;
     char comma; // Pour consommer les virgules
 
     std::stringstream ss(colorStr);
     ss >> r >> comma >> g >> comma >> b;
-    return makecol(r,g,b);
+    return SDL_Color{r,g,b,255};
 }
 
 /********************************

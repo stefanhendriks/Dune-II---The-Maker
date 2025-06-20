@@ -536,7 +536,7 @@ void cGame::drawStateCombat()
 {
     drawManager->drawCombatState();
     if (m_drawFps) {
-        //Mira TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
+        //Mira TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, SDL_Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
     }
 
     // for now, call this on game class.
@@ -1853,32 +1853,27 @@ void cGame::install_bitmaps()
 
 }
 
-int cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
+SDL_Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
-    int desiredRed = rFlag ? r * m_fadeSelect : r;
-    int desiredGreen = gFlag ? g * m_fadeSelect : g;
-    int desiredBlue = bFlag ? b * m_fadeSelect : b;
-    return makecol(desiredRed, desiredGreen, desiredBlue);
+    unsigned char desiredRed = rFlag ? r * m_fadeSelect : r;
+    unsigned char desiredGreen = gFlag ? g * m_fadeSelect : g;
+    unsigned char desiredBlue = bFlag ? b * m_fadeSelect : b;
+    return SDL_Color{desiredRed, desiredGreen, desiredBlue,255};
 }
 
-int cGame::getColorFadeSelected(int color)
+SDL_Color cGame::getColorPlaceNeutral()
 {
-    return getColorFadeSelected(getr(color), getg(color), getb(color));
+    return SDL_Color{242, 174, 36,255};
 }
 
-int cGame::getColorPlaceNeutral()
+SDL_Color cGame::getColorPlaceBad()
 {
-    return getColorFadeSelected(makecol(242, 174, 36));
+    return SDL_Color{160, 0, 0,255};
 }
 
-int cGame::getColorPlaceBad()
+SDL_Color cGame::getColorPlaceGood()
 {
-    return getColorFadeSelected(makecol(160, 0, 0));
-}
-
-int cGame::getColorPlaceGood()
-{
-    return getColorFadeSelected(makecol(64, 255, 64));
+    return SDL_Color{64, 255, 64,255};
 }
 
 void cGame::setWinFlags(int value)
@@ -1964,15 +1959,15 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::drawCombatMouse()
 {
     if (m_mouse->isBoxSelecting()) {
-        renderDrawer->drawRect(bmp_screen, m_mouse->getBoxSelectRectangle(),
-                               game.getColorFadeSelected(255, 255, 255));
+        renderDrawer->drawRect(bmp_screen, m_mouse->getBoxSelectRectangle(), 
+                               SDL_Color{255,255,255,255});
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
         renderDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y,
-                               game.getColorFadeSelected(255, 255, 255));
+                        SDL_Color{255,255,255,255});
     }
 
     m_mouse->draw();
