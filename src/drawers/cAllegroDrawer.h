@@ -66,6 +66,8 @@ class cAllegroDrawer {
     void drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color);
 
     void drawDot(BITMAP *bmp, int x, int y, int color, int size);
+    //Scramble the pixels. In a radius "r" around position X,Y at the screen! (the x,y are screencoordinates!)
+    void shimmer(int r, int x, int y, float cameraZoom);
 
 protected:
     int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);

@@ -691,7 +691,7 @@ void cUnit::draw() {
     if (isSandworm()) {
         // randomize drawing shimmer effect, as it is expensive
         if (rnd(100) < 15) {
-            Shimmer(TILESIZE_HEIGHT_PIXELS, center_draw_x(), center_draw_y());
+            renderDrawer->shimmer(TILESIZE_HEIGHT_PIXELS, center_draw_x(), center_draw_y(), mapCamera->divideByZoomLevel(4));
         }
         return;
     }
