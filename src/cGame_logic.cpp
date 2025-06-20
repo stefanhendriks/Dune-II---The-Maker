@@ -327,7 +327,7 @@ void cGame::setMissionWon()
     playMusicByType(MUSIC_WIN);
 
     // copy over
-    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
+    renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
 }
