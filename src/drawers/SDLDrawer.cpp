@@ -305,7 +305,7 @@ void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL
     line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
 }
 
-void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, int gui_colorBorderLight, SDL_Color gui_colorBorderDark) {
+void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark) {
 
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
