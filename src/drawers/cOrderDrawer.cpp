@@ -8,6 +8,7 @@
 #include "sidebar/cSideBar.h"
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
 {

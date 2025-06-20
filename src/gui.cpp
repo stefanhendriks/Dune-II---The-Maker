@@ -5,6 +5,7 @@
 
 // #include <alfont.h>
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
 {

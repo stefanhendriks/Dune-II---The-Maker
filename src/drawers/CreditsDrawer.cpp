@@ -8,6 +8,7 @@
 #include "drawers/cAllegroDrawer.h"
 
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)
 {

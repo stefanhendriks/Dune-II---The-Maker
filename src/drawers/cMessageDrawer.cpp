@@ -7,6 +7,7 @@
 
 // #include <alfont.h>
 #include <allegro.h>
+#include <SDL2/SDL.h>
 
 // Game Playing State and SelectYourNextConquestState have their own version
 // this class has to be abstracted in such a way so it is used in both those states, yet without the wonky init

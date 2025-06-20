@@ -13,6 +13,7 @@
 
 // #include <alfont.h>
 #include <allegro.h>
+#include <SDL2/SDL.h>
 #include <fmt/core.h>
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))

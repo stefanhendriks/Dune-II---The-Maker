@@ -25,7 +25,8 @@
 #include <allegro/datafile.h>
 #include <allegro/palette.h>
 #include <allegro/color.h>
-#include <allegro.h>  //for bitmap
+#include <allegro.h>
+#include <SDL2/SDL.h>  //for bitmap
 
 #include <fmt/core.h>
 
