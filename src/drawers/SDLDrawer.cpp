@@ -391,13 +391,17 @@ void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-
-    drawRectFilled(dest, rectangle, gui_colorWindow);
-    drawRect(dest, rectangle, gui_colorBorderLight);
+    SDL_Rect tmp = {x1,y1, width, height};
+    renderChangeColor(gui_colorWindow);
+    SDL_RenderFillRect(renderer, &tmp );
+    renderChangeColor(gui_colorBorderLight);
+    SDL_RenderDrawRect(renderer, &tmp );
 
     // lines to darken the right sides
-    drawLine(dest, x1+width, y1, x1+width, y1+height, gui_colorBorderDark);
-    drawLine(dest, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
+    renderChangeColor(gui_colorBorderDark);
+    SDL_RenderDrawLine(renderer, x1+width, y1, x1+width, y1+height);
+    renderChangeColor(gui_colorBorderDark);
+    SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
 }
 
 void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
