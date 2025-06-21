@@ -326,7 +326,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         }
     }
 
-    //set_clip_rect(bmp_screen, 0, 0, game.m_screenW, game.m_screenH);
+    SDL_SetClipRect(bmp_screen, nullptr);
 }
 
 /**

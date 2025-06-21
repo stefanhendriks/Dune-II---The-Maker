@@ -243,8 +243,9 @@ void cMiniMapDrawer::draw()
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
     renderDrawer->drawRectFilled(bmp_screen, m_RectFullMinimap, SDL_Color{0, 0, 0,255});
-    set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(),
-                  m_RectFullMinimap.getEndY());
+    auto tmp = SDL_Rect{m_RectFullMinimap.getX(), m_RectFullMinimap.getY(),
+                        m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight()};
+    SDL_SetClipRect(bmp_screen, &tmp);
 
     if (status == eMinimapStatus::POWERUP ||
             status == eMinimapStatus::RENDERMAP ||
@@ -260,7 +261,7 @@ void cMiniMapDrawer::draw()
     drawStaticFrame();
 
     drawViewPortRectangle();
-    set_clip_rect(bmp_screen, 0, 0, game.m_screenW, game.m_screenH);
+    SDL_SetClipRect(bmp_screen, nullptr);
 }
 
 void cMiniMapDrawer::drawStaticFrame()

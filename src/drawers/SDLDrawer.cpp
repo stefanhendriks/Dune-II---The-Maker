@@ -360,13 +360,15 @@ void SDLDrawer::resetClippingFor(SDL_Surface *bmp)
 {
     if (!bmp) return;
     setClippingFor(bmp, 0, 0, bmp->w, bmp->h);
+    SDL_SetClipRect(bmp, nullptr);
 }
 
 void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 {
-    //Mira NoFix
-    // if (!bmp) return;
-    // set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
+    if (!bmp) return;
+    auto tmp = SDL_Rect{topLeftX,topLeftY, bottomRightX-topLeftX, bottomRightY - topLeftY};
+    SDL_SetClipRect(bmp_screen, &tmp);
+
 }
 
 void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
