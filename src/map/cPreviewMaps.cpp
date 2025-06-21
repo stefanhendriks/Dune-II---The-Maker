@@ -155,10 +155,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             previewMap.terrainType[iCll] = terrainType;
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
         }
     }
 
@@ -168,10 +168,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = map.getCellX(startCell);
             int y = map.getCellY(startCell);
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), SDL_Color{255, 255, 255,255});
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), SDL_Color{255, 255, 255,255});
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
-            renderDrawer->set_pixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), SDL_Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), SDL_Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
         }
     }
 }

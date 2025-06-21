@@ -187,7 +187,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
                 }
             }
 
-            renderDrawer->set_pixel(randomMapEntry.terrain, x, y, iColor);
+            renderDrawer->setPixel(randomMapEntry.terrain, x, y, iColor);
         }
 
     // blit on screen
