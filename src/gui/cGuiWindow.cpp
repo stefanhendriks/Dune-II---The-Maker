@@ -1,9 +1,8 @@
 #include "cGuiWindow.h"
 
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-#include <allegro/color.h>
 
 cGuiWindow::cGuiWindow(const cRectangle &rect) : cGuiObject(rect)
 {

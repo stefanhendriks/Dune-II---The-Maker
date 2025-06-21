@@ -3,11 +3,10 @@
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 #include <cmath>

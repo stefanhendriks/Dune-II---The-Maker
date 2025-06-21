@@ -1,6 +1,6 @@
 #include "cMiniMapDrawer.h"
 
-#include "cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "d2tmc.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
@@ -8,7 +8,6 @@
 #include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 #include <cassert>

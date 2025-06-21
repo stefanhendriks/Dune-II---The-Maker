@@ -1,11 +1,10 @@
 #include "cFlag.h"
 
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 
-#include <allegro/gfx.h>
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
     : absCoords(absCoords)

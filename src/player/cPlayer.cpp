@@ -8,9 +8,8 @@
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 #include "player/cHousesInfo.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 #include <fmt/format.h>
 #include <iostream>

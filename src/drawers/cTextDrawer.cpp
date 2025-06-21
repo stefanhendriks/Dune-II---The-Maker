@@ -2,9 +2,6 @@
 
 #include "d2tmc.h"
 
-// #include <alfont.h>
-#include <allegro/color.h>
-
 #include <cassert>
 
 cTextDrawer::cTextDrawer(ALFONT_FONT *theFont)

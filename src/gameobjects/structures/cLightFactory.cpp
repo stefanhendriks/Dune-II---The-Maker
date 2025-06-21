@@ -1,7 +1,7 @@
 #include "cLightFactory.h"
 
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "definitions.h"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"

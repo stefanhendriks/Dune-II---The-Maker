@@ -2,8 +2,6 @@
 
 #include "d2tmc.h"
 
-#include <allegro/datafile.h>
-#include <allegro/gfx.h>
 #include <fmt/core.h>
 
 cAllegroDataRepository::cAllegroDataRepository()

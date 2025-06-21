@@ -5,7 +5,7 @@
 #include "data/gfxinter.h"
 #include "map/cMap.h"
 #include "map/cMapEditor.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
 cRandomMapGenerator::cRandomMapGenerator()
 {

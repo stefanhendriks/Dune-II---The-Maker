@@ -14,7 +14,7 @@
 
 #include "data/gfxdata.h"
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"

@@ -18,6 +18,7 @@
 #include "map/cRandomMapGenerator.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
+#include "drawers/SDLDrawer.hpp"
 
 #include "utils/DataPack.hpp"
 #include <string>
@@ -42,7 +43,7 @@ cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
 cDrawManager   				*drawManager = nullptr;
 
-cAllegroDrawer             *renderDrawer = nullptr;
+SDLDrawer             *renderDrawer = nullptr;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
@@ -67,8 +68,6 @@ DataPack *gfxdata;		// graphics (terrain, units, structures)
 DataPack *gfxinter;		// interface graphics
 DataPack *gfxworld;		// world/pieces graphics
 DataPack *gfxmentat;	// mentat graphics
-
-DataPack *sdl_data;
 
 // FONT stuff
 ALFONT_FONT *game_font; 	// arrakeen.fon

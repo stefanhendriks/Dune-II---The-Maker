@@ -1,6 +1,6 @@
 #include "cStructureDrawer.h"
 
-#include "cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
 #include "d2tmc.h"
@@ -11,7 +11,6 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 void cStructureDrawer::drawStructuresFirstLayer()

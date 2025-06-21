@@ -5,10 +5,8 @@
 #include "data/gfxmentat.h"
 #include "d2tmc.h"
 #include "player/cPlayer.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-// #include <alfont.h>
-#include <allegro/datafile.h>
 
 cBeneMentat::cBeneMentat() : cAbstractMentat(false)
 {

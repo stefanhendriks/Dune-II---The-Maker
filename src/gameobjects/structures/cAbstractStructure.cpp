@@ -14,14 +14,13 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
 

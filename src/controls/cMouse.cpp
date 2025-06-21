@@ -3,13 +3,12 @@
 #include "controls/cGameControlsContext.h"
 #include "d2tmc.h"
 #include "data/gfxdata.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/d2tm_math.h"
 
-//#include <allegro.h>
 #include <SDL2/SDL.h>
 
 cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))

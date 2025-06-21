@@ -2,7 +2,6 @@
 
 #include "d2tmc.h"
 
-#include <allegro/color.h>
 
 std::string eNotificationTypeString(const eNotificationType &type)
 {

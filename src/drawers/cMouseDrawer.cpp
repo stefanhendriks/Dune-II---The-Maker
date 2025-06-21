@@ -2,14 +2,13 @@
 
 #include "controls/cGameControlsContext.h"
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
 #include "gameobjects/structures/cWindTrap.h"
 #include "gui/cTextWriter.h"
 #include "player/cPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 #include <algorithm>

@@ -2,11 +2,9 @@
 
 #include "data/gfxinter.h"
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
 
-// #include <alfont.h>
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 // Game Playing State and SelectYourNextConquestState have their own version

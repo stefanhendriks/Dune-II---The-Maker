@@ -1,13 +1,13 @@
 #include "cOptionsState.h"
 
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/cGuiButton.h"
 #include "gui/cGuiWindow.h"
 
-#include <allegro/gfx.h>
+
 
 cOptionsState::cOptionsState(cGame &theGame, SDL_Surface *background, int prevState)
     : cGameState(theGame)

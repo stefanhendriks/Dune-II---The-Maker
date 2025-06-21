@@ -9,10 +9,8 @@
 #include "gui/actions/cGuiActionSetupSkirmishGame.h"
 #include "gui/actions/cGuiActionShowOptions.h"
 #include "gui/actions/cGuiActionToGameState.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-// #include <alfont.h>
-#include <allegro.h>
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
 

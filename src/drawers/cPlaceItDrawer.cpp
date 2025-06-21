@@ -2,11 +2,10 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 #include <cassert>

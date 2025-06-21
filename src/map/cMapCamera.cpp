@@ -4,8 +4,6 @@
 #include "d2tmc.h"
 #include "sidebar/cSideBar.h"
 
-#include <allegro/mouse.h>
-
 #include <algorithm>
 
 namespace {

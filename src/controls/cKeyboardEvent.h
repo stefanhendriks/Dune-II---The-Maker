@@ -8,8 +8,6 @@
 #include "enums.h"
 #include "utils/common.h"
 
-#include <allegro/keyboard.h>
-
 enum class eKeyEventType {
     NONE,
     /**
