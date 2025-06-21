@@ -41,17 +41,17 @@ void cTextWriter::write(const std::string& msg, SDL_Color color)
     updateDrawY();
 }
 
-void cTextWriter::writeWithOneInteger(const char *msg, int value1)
-{
-    textDrawer->drawTextWithOneInteger(drawX, drawY, msg, value1);
-    updateDrawY();
-}
+// void cTextWriter::writeWithOneInteger(const char *msg, int value1)
+// {
+//     textDrawer->drawTextWithOneInteger(drawX, drawY, msg, value1);
+//     updateDrawY();
+// }
 
-void cTextWriter::writeWithTwoIntegers(const char *msg, int value1, int value2)
-{
-    textDrawer->drawTextWithTwoIntegers(drawX, drawY, msg, value1, value2);
-    updateDrawY();
-}
+// void cTextWriter::writeWithTwoIntegers(const char *msg, int value1, int value2)
+// {
+//     textDrawer->drawTextWithTwoIntegers(drawX, drawY, msg, value1, value2);
+//     updateDrawY();
+// }
 
 void cTextWriter::updateDrawY()
 {

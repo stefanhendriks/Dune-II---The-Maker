@@ -22,26 +22,26 @@ cTextDrawer::~cTextDrawer()
     font = nullptr; // do not delete, because we are not the owner of it
 }
 
-void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const std::string& msg, int var1, int var2) const
-{
-    //Mira TEXT if (applyShadow) {
-    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var1, var2);
-    //Mira TEXT }
-    //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, textColor, msg, var1, var2);
-}
+// void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const std::string& msg, int var1, int var2) const
+// {
+//     //Mira TEXT if (applyShadow) {
+//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var1, var2);
+//     //Mira TEXT }
+//     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, textColor, msg, var1, var2);
+// }
 
-void cTextDrawer::drawTextWithOneInteger(int x, int y, const std::string& msg, int var) const
-{
-    drawTextWithOneInteger(x, y, textColor, msg, var);
-}
+// void cTextDrawer::drawTextWithOneInteger(int x, int y, const std::string& msg, int var) const
+// {
+//     drawTextWithOneInteger(x, y, textColor, msg, var);
+// }
 
-void cTextDrawer::drawTextWithOneInteger(int x, int y, SDL_Color color, const std::string& msg, int var) const
-{
-    //Mira TEXT if (applyShadow) {
-    //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
-    //Mira TEXT }
-    //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
-}
+// void cTextDrawer::drawTextWithOneInteger(int x, int y, SDL_Color color, const std::string& msg, int var) const
+// {
+//     //Mira TEXT if (applyShadow) {
+//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
+//     //Mira TEXT }
+//     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
+// }
 
 void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg) const
 {
@@ -181,30 +181,30 @@ cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string& msg) co
     return new cRectangle(x, y, textLength(msg), getFontHeight());
 }
 
-void cTextDrawer::drawText(int x, int y, const std::string& msg, const char *var) const
-{
-    drawText(x, y, textColor, msg, var);
-}
+// void cTextDrawer::drawText(int x, int y, const std::string& msg, const char *var) const
+// {
+//     drawText(x, y, textColor, msg, var);
+// }
 
-void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg, const char *var) const
-{
+// void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg, const char *var) const
+// {
     //Mira TEXT if (applyShadow) {
     //Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
     //Mira TEXT }
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
-}
+// }
 
-void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg, int var) const
-{
-    drawTextWithOneInteger(x, y, color, msg, var);
-}
+// void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg, int var) const
+// {
+//     drawTextWithOneInteger(x, y, color, msg, var);
+// }
 
-void cTextDrawer::drawText(int x, int y, const std::string& msg, int var1, int var2) const
-{
-    drawTextWithTwoIntegers(x, y, msg, var1, var2);
-}
+// void cTextDrawer::drawText(int x, int y, const std::string& msg, int var1, int var2) const
+// {
+//     drawTextWithTwoIntegers(x, y, msg, var1, var2);
+// }
 
-void cTextDrawer::drawText(int x, int y, const std::string& msg, int var) const
-{
-    drawText(x, y, textColor, msg, var);
-}
+// void cTextDrawer::drawText(int x, int y, const std::string& msg, int var) const
+// {
+//     drawText(x, y, textColor, msg, var);
+// }

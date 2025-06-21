@@ -132,10 +132,10 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int startY = 74;
     int height = 14;
-    m_textDrawer.drawTextWithTwoIntegers(0, startY, "Units %d/%d", unitsUsed, MAX_UNITS);
-    m_textDrawer.drawTextWithTwoIntegers(0, startY + 1*height, "Structures %d/%d", structuresUsed, MAX_STRUCTURES);
-    m_textDrawer.drawTextWithTwoIntegers(0, startY + 2*height, "Bullets %d/%d", bulletsUsed, MAX_BULLETS);
-    m_textDrawer.drawTextWithTwoIntegers(0, startY + 3*height, "Particles %d/%d", particlesUsed, MAX_PARTICLES);
+    m_textDrawer.drawText(0, startY, fmt::format("Units {}/{}", unitsUsed, MAX_UNITS));
+    m_textDrawer.drawText(0, startY + 1*height, fmt::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
+    m_textDrawer.drawText(0, startY + 2*height, fmt::format("Bullets %d/%d", bulletsUsed, MAX_BULLETS));
+    m_textDrawer.drawText(0, startY + 3*height, fmt::format("Particles %d/%d", particlesUsed, MAX_PARTICLES));
 }
 
 void cDrawManager::drawCredits()

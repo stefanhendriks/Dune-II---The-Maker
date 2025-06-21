@@ -287,7 +287,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
             // draw
-            m_textDrawer.drawText(textX, textY, fmt::format("{}",amountToShow).c_str());
+            m_textDrawer.drawText(textX, textY, fmt::format("{}",amountToShow));
         }
 
         if (game.isDebugMode()) {
@@ -295,7 +295,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
 
-                m_textDrawer.drawTextWithOneInteger(textX, textY, "%d", item->getSubList());
+                m_textDrawer.drawText(textX, textY, fmt::format("{}",item->getSubList()));
             }
         }
 

@@ -184,8 +184,8 @@ void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure
 {
     assert(theStructure);
     if (theStructure->belongsTo(player)) {
-        textWriter.writeWithOneInteger("Sight : %d", theStructure->getSight());
-        textWriter.writeWithOneInteger("Range : %d", theStructure->getRange());
+        textWriter.write(fmt::format("Sight : {}", theStructure->getSight()));
+        textWriter.write(fmt::format("Range : {}", theStructure->getRange()));
     }
     else {
         textWriter.write("Sight : Unknown");
@@ -206,9 +206,9 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
         description=fmt::format("{}", structureType.name);
     }
     textWriter.write(description.c_str(), SDL_Color{255, 255, 0,255});
-    textWriter.writeWithTwoIntegers("Hitpoints : %d/%d", theStructure->getHitPoints(), theStructure->getMaxHP());
-    textWriter.writeWithOneInteger("Armor : %d", theStructure->getArmor());
-    textWriter.writeWithOneInteger("Protected : %d%%", (100-theStructure->getPercentageNotPaved()));
+    textWriter.writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());
+    textWriter.writef("Armor : {}", theStructure->getArmor());
+    textWriter.writef("Protected : {}%%", (100-theStructure->getPercentageNotPaved()));
 }
 
 void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap, cTextWriter &textWriter)
@@ -219,12 +219,12 @@ void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap, cTextW
         int powerUse = theWindTrap->getPlayer()->getPowerUsage();
 
         if (powerUse <= powerOut) {
-            textWriter.writeWithTwoIntegers("Total usage : %d/%d (OK)", powerUse, powerOut);
+            textWriter.writef("Total usage : {}/{} (OK)", powerUse, powerOut);
         }
         else {
-            textWriter.writeWithTwoIntegers("Total usage : %d/%d (LOW)", powerUse, powerOut);
+            textWriter.writef("Total usage : {}/{} (LOW)", powerUse, powerOut);
         }
-        textWriter.writeWithTwoIntegers("Windtrap outage : %d/%d", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
+        textWriter.writef("Windtrap outage : {}/{}", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
     }
     else {
         textWriter.write("Total usage : Unknown");
@@ -255,12 +255,12 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure, 
         int maxSpice = thePlayer->getMaxCredits();
         int currentSpice =  thePlayer->getCredits();
         if (currentSpice <= maxSpice) {
-            textWriter.writeWithTwoIntegers("Total usage : %d/%d (OK)", currentSpice, maxSpice);
+            textWriter.writef("Total usage : {}/{} (OK)", currentSpice, maxSpice);
         }
         else {
-            textWriter.writeWithTwoIntegers("Total usage : %d/%d (NOK)", currentSpice, maxSpice);
+            textWriter.writef("Total usage : {}/{} (NOK)", currentSpice, maxSpice);
         }
-        textWriter.writeWithTwoIntegers("Silo capacity : %d/%d", spiceCapacityOfStructure, 1000);
+        textWriter.writef("Silo capacity : {}/{}", spiceCapacityOfStructure, 1000);
     }
     else {
         textWriter.write("Spice usage : Unknown");
