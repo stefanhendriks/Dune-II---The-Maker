@@ -816,7 +816,7 @@ void cUnit::draw()
 
     if (game.m_drawUnitDebug) {
         // render pixel at the very center
-        renderDrawer->set_pixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
+        renderDrawer->setPixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
 
         // render from the units top-left to center pixel
         renderDrawer->drawLine(bmp_screen, draw_x(), draw_y(), center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
@@ -3413,7 +3413,7 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 void cUnit::draw_debug()
 {
     renderDrawer->drawRect(bmp_screen, dimensions, SDL_Color{255, 0, 255,255});
-    renderDrawer->set_pixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 0, 255,255});
+    renderDrawer->setPixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 0, 255,255});
     //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), SDL_Color{255, 255, 255), "%d", iID);
 
     if (isSandworm()) {

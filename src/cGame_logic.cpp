@@ -1080,7 +1080,7 @@ bool cGame::setupGame()
                 float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
                 float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
                 float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
-                renderDrawer->set_pixel(bmp_backgroundMentat, x, y, SDL_Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
+                renderDrawer->setPixel(bmp_backgroundMentat, x, y, SDL_Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
             }
             // flip offset every y row
             offsetX = !offsetX;
