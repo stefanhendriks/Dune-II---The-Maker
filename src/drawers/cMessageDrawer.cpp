@@ -32,8 +32,8 @@ void cMessageDrawer::destroy()
     m_alpha = -1;
     m_TIMER_message = 0;
 
-    destroy_bitmap(m_bmpBar);
-    destroy_bitmap(m_temp);
+    SDL_FreeSurface(m_bmpBar);
+    SDL_FreeSurface(m_temp);
 }
 
 void cMessageDrawer::init()
@@ -50,11 +50,11 @@ void cMessageDrawer::init()
 void cMessageDrawer::createMessageBarBmp(int desiredWidth)
 {
     if (m_bmpBar) {
-        destroy_bitmap(m_bmpBar);
+        SDL_FreeSurface(m_bmpBar);
     }
 
     if (m_temp) {
-        destroy_bitmap(m_temp);
+        SDL_FreeSurface(m_temp);
     }
 
     m_bmpBar = create_bitmap(desiredWidth, 30);

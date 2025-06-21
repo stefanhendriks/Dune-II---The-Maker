@@ -86,7 +86,7 @@ void cOptionsState::constructWindow(int prevState)
 cOptionsState::~cOptionsState()
 {
     delete m_guiWindow;
-    destroy_bitmap(m_background);
+    SDL_FreeSurface(m_background);
 }
 
 void cOptionsState::thinkFast()

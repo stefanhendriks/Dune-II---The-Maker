@@ -30,7 +30,7 @@ cMapDrawer::~cMapDrawer()
     m_camera = nullptr;
     m_player = nullptr;
     if (m_BmpTemp) {
-        destroy_bitmap(m_BmpTemp);
+        SDL_FreeSurface(m_BmpTemp);
     }
 }
 
@@ -96,7 +96,7 @@ void cMapDrawer::drawShroud()
         }
     }
 
-    destroy_bitmap(temp);
+    SDL_FreeSurface(temp);
 }
 
 void cMapDrawer::drawTerrain()

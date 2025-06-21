@@ -136,7 +136,7 @@ void cParticle::draw()
     renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed
-    destroy_bitmap(temp);
+    SDL_FreeSurface(temp);
 
     int drawX = draw_x();
     int drawY = draw_y();
@@ -156,7 +156,7 @@ void cParticle::draw()
 
     set_trans_blender(0, 0, 0, 128);
 
-    destroy_bitmap(stretched);
+    SDL_FreeSurface(stretched);
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const

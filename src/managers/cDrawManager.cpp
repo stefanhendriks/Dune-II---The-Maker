@@ -37,10 +37,10 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
 cDrawManager::~cDrawManager()
 {
     if (m_optionsBar) {
-        destroy_bitmap(m_optionsBar);
+        SDL_FreeSurface(m_optionsBar);
     }
     if (m_topBarBmp) {
-        destroy_bitmap(m_topBarBmp);
+        SDL_FreeSurface(m_topBarBmp);
     }
 }
 

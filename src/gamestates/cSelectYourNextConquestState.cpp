@@ -58,7 +58,7 @@ void cSelectYourNextConquestState::calculateOffset()
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
 {
-    destroy_bitmap(regionClickMapBmp);
+    SDL_FreeSurface(regionClickMapBmp);
     destroy();
     delete m_guiBtnToMissionSelect;
 }
@@ -623,7 +623,7 @@ void cSelectYourNextConquestState::destroy()
     for (int i = 0; i < 27; i++) {
         cRegion &region = world[i];
         if (region.bmpHighBit) {
-            destroy_bitmap(region.bmpHighBit);
+            SDL_FreeSurface(region.bmpHighBit);
         }
     }
 }

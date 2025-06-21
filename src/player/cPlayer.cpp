@@ -66,8 +66,8 @@ cPlayer::~cPlayer()
 
 void cPlayer::destroyAllegroBitmaps()
 {
-    destroy_bitmap(bmp_flag);
-    destroy_bitmap(bmp_flag_small);
+    SDL_FreeSurface(bmp_flag);
+    SDL_FreeSurface(bmp_flag_small);
     clearStructureTypeBitmaps();
     clearUnitTypeBitmaps();
 }
@@ -79,7 +79,7 @@ void cPlayer::clearStructureTypeBitmaps()
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
 //            log(msg);
-            destroy_bitmap(bmp_structure[i]);
+            SDL_FreeSurface(bmp_structure[i]);
         }
         else {
 //            char msg[255];
@@ -104,7 +104,7 @@ void cPlayer::clearUnitTypeBitmaps()
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
 //                log(msg);
             }
-            destroy_bitmap(bmp_unit[i]);
+            SDL_FreeSurface(bmp_unit[i]);
         }
         bmp_unit[i] = nullptr;
 
@@ -114,7 +114,7 @@ void cPlayer::clearUnitTypeBitmaps()
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
 //                log(msg);
             }
-            destroy_bitmap(bmp_unit_top[i]);
+            SDL_FreeSurface(bmp_unit_top[i]);
         }
         bmp_unit_top[i] = nullptr;
     }

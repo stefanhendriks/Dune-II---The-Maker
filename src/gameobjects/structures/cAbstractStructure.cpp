@@ -915,7 +915,7 @@ void cAbstractStructure::drawWithShadow()
 
         renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
-        destroy_bitmap(stretchedShadow);
+        SDL_FreeSurface(stretchedShadow);
     }
 }
 

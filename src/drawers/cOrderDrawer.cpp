@@ -31,12 +31,12 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
     set_trans_blender(0, 0, 0, 128);
     draw_trans_sprite(greyedButtonBitmap, temp_bitmap, 0, 0);
 
-    destroy_bitmap(temp_bitmap);
+    SDL_FreeSurface(temp_bitmap);
 }
 
 cOrderDrawer::~cOrderDrawer()
 {
-    destroy_bitmap(greyedButtonBitmap);
+    SDL_FreeSurface(greyedButtonBitmap);
 }
 
 void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)

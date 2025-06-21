@@ -70,7 +70,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     // Draw prebuild
     renderDrawer->drawSprite(temp, gfxdata->getSurface(iDrawPreBuild), 0, 0);
     renderDrawer->stretchSprite(temp, bmp_screen, drawX, drawY, scaledWidth, scaledHeight);
-    destroy_bitmap(temp);
+    SDL_FreeSurface(temp);
 
     // Draw shadow of the prebuild animation
     int shadowIndex = iDrawPreBuild + 1;
@@ -83,7 +83,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
-    destroy_bitmap(stretchedShadow);
+    SDL_FreeSurface(stretchedShadow);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -168,14 +168,14 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
 
         renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
-        destroy_bitmap(stretchedShadow);
+        SDL_FreeSurface(stretchedShadow);
     }
 
     renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
 
     renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 
-    destroy_bitmap(wind);
+    SDL_FreeSurface(wind);
 }
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
@@ -377,7 +377,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
 
     stretch_sprite(bmp_screen, bmp, drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
-    destroy_bitmap(bmp);
+    SDL_FreeSurface(bmp);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)

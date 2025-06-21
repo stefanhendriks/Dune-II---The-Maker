@@ -26,7 +26,7 @@ cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
 cSideBarDrawer::~cSideBarDrawer()
 {
     if (m_candybar) {
-        destroy_bitmap(m_candybar);
+        SDL_FreeSurface(m_candybar);
     }
     m_sidebar = nullptr;
 }
