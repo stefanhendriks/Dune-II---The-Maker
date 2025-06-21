@@ -611,7 +611,7 @@ void cGame::shakeScreenAndBlitBuffer()
             m_shakeY = -abs(offset / 2) + rnd(offset);
 
             renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
-            renderDrawer->blit(bmp_throttle, screenSurface, 0, 0, 0, 0, m_screenW, m_screenH);
+            //renderDrawer->blit(bmp_throttle, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         }
         else {
             fadeOutOrBlitScreenBuffer();
@@ -626,7 +626,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
 {
     if (m_fadeAction == FADE_NONE) {
         // Not shaking and not fading.
-        renderDrawer->blit(bmp_screen, screenSurface, 0, 0, 0, 0, m_screenW, m_screenH);
+        //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
     }
     else {
         // Fading
@@ -638,6 +638,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         renderDrawer->drawTransSprite(temp, bmp_screen, 0, 0);
         renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         SDL_FreeSurface(temp);
+        //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
     }
 }
 
@@ -698,7 +699,7 @@ void cGame::run()
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    m_playing = true;
+                    m_playing = false;
                     break;
 
                 case SDL_KEYDOWN:
@@ -719,10 +720,16 @@ void cGame::run()
 
         updateGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
-        SDL_UpdateWindowSurface(window);
+        screenTexture= SDL_CreateTextureFromSurface(renderer,bmp_screen);
+        SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
+        SDL_RenderPresent(renderer);
+        SDL_DestroyTexture(screenTexture);
+
         m_frameCount++;
     }
 }
@@ -965,7 +972,6 @@ bool cGame::setupGame()
     m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
-    screenSurface = SDL_GetWindowSurface(window);
     //Mira TEXT alfont_text_mode(-1);
     //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
@@ -1174,7 +1180,7 @@ bool cGame::setupGame()
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
-    renderDrawer = new SDLDrawer(m_dataRepository);
+    renderDrawer = new SDLDrawer(m_dataRepository,renderer);
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
