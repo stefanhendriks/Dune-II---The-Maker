@@ -38,7 +38,7 @@ private:
     cSideBar *m_sidebar;
 
     // the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
-    BITMAP *m_candybar;
+    SDL_Surface *m_candybar;
     cTextDrawer m_textDrawer;
 
     SDL_Color m_sidebarColor;

@@ -45,7 +45,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
     int id = list->getButtonIconIdUnpressed();
 
     int width = 33;
-    int height = ((BITMAP *)gfxinter[id].dat)->h;
+    int height = (gfxinter->getSurface(id))->h;
 
     SDL_Color color = m_player->getSelectFadingColor();
 
@@ -72,17 +72,17 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
         return;
     }
 
-//	int width = ((BITMAP *)gfxinter[id].dat)->w;
+//	int width = (gfxinter->getSurface(id))->w;
     int width = 33;
-    int height = ((BITMAP *)gfxinter[id].dat)->h;
+    int height = (gfxinter->getSurface(id))->h;
 //	_rectfill(bmp_screen, x, y, x+width, y+height, SDL_Color{255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
 
     // clear
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
+    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
     set_trans_blender(0,0,0,128);
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
+    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(id), x, y);
 
     if (!list->isAvailable()) {
         renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, SDL_Color{0,0,0,96});
@@ -158,7 +158,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         // icon id must be set , assert it.
         assert(item->getIconId() > -1);
 
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
+        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(item->getIconId()), iDrawX, iDrawY);
 
         if (shouldDrawStructureSize) {
             drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
@@ -171,8 +171,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
                 set_trans_blender(0, 0, 0, 128);
-                draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
-                draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);
+                draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
+                draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
             }
             else {
                 if (item->shouldPlaceIt()) {
@@ -181,7 +181,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
-                    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
+                    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(icon), iDrawX + 3, iDrawY + 16);
                 }
                 else if (item->shouldDeployIt()) {
                     // TODO: draw white/red (flicker)
@@ -190,7 +190,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
-                    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
+                    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(icon), iDrawX + 3, iDrawY + 16);
                 }
             }
         }
@@ -214,7 +214,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
                 set_trans_blender(0, 0, 0, 64);
-                draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
+                draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
@@ -251,7 +251,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // payment/progress)
                 if (cannotPayIt) {
                     set_trans_blender(0, 0, 0, 64);
-                    draw_trans_sprite(bmp_screen, static_cast<BITMAP *>(gfxinter[PROGRESSNA].dat), iDrawX, iDrawY);
+                    draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
@@ -357,17 +357,17 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
         iTile = GRID_3X3;
     }
 
-    BITMAP *temp=create_bitmap(19,19);
+    SDL_Surface *temp=create_bitmap(19,19);
     clear_bitmap(temp);
     set_trans_blender(0, 0, 0, 192);
 
     draw_trans_sprite(temp, bmp_screen, x + 43, y + 20);
 
-    renderDrawer->drawSprite(temp, (BITMAP *)gfxinter[GRID_0X0].dat, 0, 0);
+    renderDrawer->drawSprite(temp, gfxinter->getSurface(GRID_0X0), 0, 0);
 
     draw_trans_sprite(bmp_screen, temp, x + 43, y + 20);
 
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, x + 43, y + 20);
+    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(iTile), x + 43, y + 20);
 
     destroy_bitmap(temp);
 

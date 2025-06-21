@@ -60,12 +60,12 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
     m_bmpBar = create_bitmap(desiredWidth, 30);
     clear_to_color(m_bmpBar, makecol(255, 0, 255));
 
-    renderDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_LEFT].dat, 0, 0);
+    renderDrawer->drawSprite(m_bmpBar, gfxinter->getSurface(MESSAGE_LEFT), 0, 0);
     for (int drawX = 11; drawX < m_bmpBar->w; drawX+= 55) {
-        renderDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_MIDDLE].dat, drawX, 0);
+        renderDrawer->drawSprite(m_bmpBar, gfxinter->getSurface(MESSAGE_MIDDLE), drawX, 0);
     }
 
-    renderDrawer->drawSprite(m_bmpBar, (BITMAP *)gfxinter[MESSAGE_RIGHT].dat, m_bmpBar->w - 11, 0);
+    renderDrawer->drawSprite(m_bmpBar, gfxinter->getSurface(MESSAGE_RIGHT), m_bmpBar->w - 11, 0);
 
     // create this one which we use for actual drawing
     m_temp = create_bitmap(m_bmpBar->w, m_bmpBar->h);

@@ -117,12 +117,12 @@ int cAbstractStructure::iDrawY()
     return mapCamera->getWindowYPosition(pos_y());
 }
 
-BITMAP *cAbstractStructure::getBitmap()
+SDL_Surface *cAbstractStructure::getBitmap()
 {
     return this->getPlayer()->getStructureBitmap(getType());
 }
 
-BITMAP *cAbstractStructure::getShadowBitmap()
+SDL_Surface *cAbstractStructure::getShadowBitmap()
 {
     s_StructureInfo structureType = getStructureInfo();
     return structureType.shadow;
@@ -899,16 +899,16 @@ void cAbstractStructure::drawWithShadow()
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    BITMAP *bitmapToDraw = getBitmap();
+    SDL_Surface *bitmapToDraw = getBitmap();
     renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                     drawX, drawY, scaledWidth, scaledHeight);
 
-    BITMAP *shadow = getShadowBitmap();
+    SDL_Surface *shadow = getShadowBitmap();
     if (shadow) {
         set_trans_blender(0, 0, 0, 160);
 
         int colorDepth = bitmap_color_depth(bmp_screen);
-        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,

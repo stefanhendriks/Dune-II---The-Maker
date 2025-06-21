@@ -53,8 +53,8 @@ private:
     int m_alpha;
 
     cPoint m_position; // draw positions
-    BITMAP *m_bmpBar;
-    BITMAP *m_temp;
+    SDL_Surface *m_bmpBar;
+    SDL_Surface *m_temp;
 
     int m_timeMessageIsVisible;
 

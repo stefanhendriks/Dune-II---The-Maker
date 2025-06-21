@@ -74,7 +74,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     background = create_bitmap(screen_x, screen_y);
     clear_to_color(background, makecol(0, 0, 0));
 
-    BITMAP *dunePlanet = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
+    SDL_Surface *dunePlanet = gfxinter->getSurface(BMP_GAME_DUNE);
     renderDrawer->drawSprite(background, dunePlanet, game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
     for (int dy = 0; dy < game.m_screenH; dy += 2) {
@@ -382,7 +382,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
             else {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(),
+                        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(BMP_UNKNOWNMAP), previewMapRect.getX(),
                                                  previewMapRect.getY());
                     }
                 }

@@ -9,7 +9,7 @@
 
 #include <allegro/gfx.h>
 
-cSelectMissionState::cSelectMissionState(cGame &theGame, BITMAP *background, int prevState)
+cSelectMissionState::cSelectMissionState(cGame &theGame, SDL_Surface *background, int prevState)
     : cGameState(theGame)
     ,  background(background)
     ,  prevState(prevState)

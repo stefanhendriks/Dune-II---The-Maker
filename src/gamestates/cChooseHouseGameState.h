@@ -26,13 +26,13 @@ private:
     cTextDrawer textDrawer;
     cRectangle *backButtonRect;
 
-    BITMAP *bmp_Dune;
-    BITMAP *bmp_SelectYourHouseTitle;
+    SDL_Surface *bmp_Dune;
+    SDL_Surface *bmp_SelectYourHouseTitle;
 
     // TODO: abstract away the selectable houses
-    BITMAP *bmp_HouseAtreides;
-    BITMAP *bmp_HouseOrdos;
-    BITMAP *bmp_HouseHarkonnen;
+    SDL_Surface *bmp_HouseAtreides;
+    SDL_Surface *bmp_HouseOrdos;
+    SDL_Surface *bmp_HouseHarkonnen;
 
     // Click areas of house emblems
     cRectangle houseAtreides;

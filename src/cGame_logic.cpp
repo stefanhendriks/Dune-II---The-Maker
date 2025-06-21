@@ -329,7 +329,7 @@ void cGame::setMissionWon()
     // copy over
     renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
 
-    renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
+    renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_WINNING));
 }
 
 void cGame::setMissionLost()
@@ -349,7 +349,7 @@ void cGame::setMissionLost()
     // copy over
     blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
 
-    renderDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
+    renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_LOSING));
 }
 
 bool cGame::isMissionFailed() const
@@ -1144,7 +1144,7 @@ bool cGame::setupGame()
     }
     else {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
-        memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+        //memcpy(general_palette, gfxdata[PALETTE_D2TM), sizeof general_palette);
     }
 
     gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
@@ -1423,13 +1423,13 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                BITMAP *background = create_bitmap(m_screenW, m_screenH);
+                SDL_Surface *background = create_bitmap(m_screenW, m_screenH);
                 renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cSelectMissionState(*this, background, m_state);
             }
             else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                BITMAP *background = create_bitmap(m_screenW, m_screenH);
+                SDL_Surface *background = create_bitmap(m_screenW, m_screenH);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
                     drawManager->drawCombatState();

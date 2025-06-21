@@ -9,7 +9,7 @@
 
 #include <allegro/gfx.h>
 
-cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState)
+cOptionsState::cOptionsState(cGame &theGame, SDL_Surface *background, int prevState)
     : cGameState(theGame)
     , m_background(background)
     , m_textDrawer(cTextDrawer(bene_font))

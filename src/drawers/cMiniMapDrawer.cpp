@@ -271,7 +271,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (status == eMinimapStatus::LOWPOWER) return;
 
     if (status == eMinimapStatus::POWERDOWN) {
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, drawX, drawY);
+        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(iStaticFrame), drawX, drawY);
         return;
     }
 
@@ -288,7 +288,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (iStaticFrame != STAT01) {
         set_trans_blender(0, 0, 0, iTrans);
 
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, drawX, drawY);
+        draw_trans_sprite(bmp_screen, gfxinter->getSurface(iStaticFrame), drawX, drawY);
         // reset the trans blender
         set_trans_blender(0, 0, 0, 128);
     }

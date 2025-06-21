@@ -37,5 +37,5 @@ private:
     cGuiWindow *gui_window;
     cGuiButton *gui_btn_credits;
 
-    BITMAP *bmp_D2TM_Title;
+    SDL_Surface *bmp_D2TM_Title;
 };

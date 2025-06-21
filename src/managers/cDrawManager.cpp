@@ -157,7 +157,7 @@ void cDrawManager::drawRallyPoint()
     int drawX = mapCamera->getWindowXPositionFromCell(rallyPointCell);
     int drawY = mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
-    BITMAP *mouseMoveBitmap = (BITMAP *) gfxdata[MOUSE_MOVE].dat;
+    SDL_Surface *mouseMoveBitmap = gfxdata->getSurface(MOUSE_MOVE);
 
     int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
@@ -227,14 +227,14 @@ void cDrawManager::drawTopBarBackground()
 {
     if (m_topBarBmp == nullptr) {
         m_topBarBmp = create_bitmap(game.m_screenW, 30);
-        BITMAP *topbarPiece = (BITMAP *)gfxinter[BMP_TOPBAR_BACKGROUND].dat;
+        SDL_Surface *topbarPiece = gfxinter->getSurface(BMP_TOPBAR_BACKGROUND);
         for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
             renderDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
         }
 
         set_palette(m_player->pal);
 
-        renderDrawer->drawSprite(m_topBarBmp, (BITMAP *)gfxinter[BTN_OPTIONS].dat, 1, 0);
+        renderDrawer->drawSprite(m_topBarBmp, gfxinter->getSurface(BTN_OPTIONS), 1, 0);
     }
 
     renderDrawer->drawSprite(bmp_screen, m_topBarBmp, 0, 0);
@@ -266,7 +266,7 @@ void cDrawManager::drawOptionBar()
         clear_to_color(m_optionsBar, makecol(214, 149, 20));
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-            renderDrawer->drawSprite(m_optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
+            renderDrawer->drawSprite(m_optionsBar, gfxinter->getSurface(BMP_GERALD_TOP_BAR), w, 31);
         }
     }
 

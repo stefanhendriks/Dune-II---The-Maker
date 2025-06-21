@@ -23,7 +23,7 @@ public:
     void setCredits(int amount);
     void setCredits();
 
-    BITMAP *getBitmap() {
+    SDL_Surface *getBitmap() {
         return bmp;
     }
 
@@ -31,7 +31,7 @@ public:
 
 private:
     cPlayer *player;  //
-    BITMAP *bmp;	 // a bitmap being drawn on
+    SDL_Surface *bmp;	 // a bitmap being drawn on
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits();

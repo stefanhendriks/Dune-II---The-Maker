@@ -39,7 +39,7 @@ int cAllegroDataRepository::findAvailableSlot()
 //         return -1;
 //     }
 
-//     BITMAP *pBitmap = load_bitmap(file, nullptr);
+//     SDL_Surface *pBitmap = load_bitmap(file, nullptr);
 //     if (!pBitmap) {
 //         // unable to load
 //         return -2;
@@ -62,7 +62,7 @@ int cAllegroDataRepository::findAvailableSlot()
 //         return false;
 //     }
 
-//     BITMAP *pBitmap = load_bitmap(file, nullptr);
+//     SDL_Surface *pBitmap = load_bitmap(file, nullptr);
 //     if (!pBitmap) {
 //         logbook(fmt::format(
 //             "cAllegroDataRepository::loadBitmapAt() Unable to load bitmap {} at index {}, cannot find it or invalid format.", file, index));
@@ -79,7 +79,7 @@ int cAllegroDataRepository::findAvailableSlot()
 //     return true;
 // }
 
-bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp)
+bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, SDL_Surface *bmp)
 {
     if (index < 0) return false;
     if (index >= MAX_BITMAPS) return false;
@@ -108,7 +108,7 @@ bool cAllegroDataRepository::loadBitmapFromDataFileAt(int index, BITMAP *bmp)
     return true;
 }
 
-BITMAP *cAllegroDataRepository::getBitmapAt(int index)
+SDL_Surface *cAllegroDataRepository::getBitmapAt(int index)
 {
     if (index < 0 || index >= MAX_BITMAPS) return nullptr;
     return m_data[index];
@@ -116,5 +116,5 @@ BITMAP *cAllegroDataRepository::getBitmapAt(int index)
 
 bool cAllegroDataRepository::loadBitmapFromDataFileGfxDataAt(int index, int indexAtDatafile)
 {
-    return loadBitmapFromDataFileAt(index, (BITMAP *)gfxdata[indexAtDatafile].dat);
+    return loadBitmapFromDataFileAt(index, gfxdata->getSurface(indexAtDatafile));
 }

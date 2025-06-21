@@ -45,8 +45,8 @@ private:
     std::vector<s_CreditLine> m_lines;
 
     cPoint m_duneCoordinates;
-    BITMAP *m_duneBmp;
-    BITMAP *m_titleBmp;
+    SDL_Surface *m_duneBmp;
+    SDL_Surface *m_titleBmp;
 
     void resetCrawler();
     void prepareCrawlerLines();

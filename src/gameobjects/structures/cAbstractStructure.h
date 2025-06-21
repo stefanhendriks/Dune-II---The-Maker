@@ -140,8 +140,8 @@ public:
         return iPlayer;
     }
 
-    BITMAP *getBitmap();
-    BITMAP *getShadowBitmap();
+    SDL_Surface *getBitmap();
+    SDL_Surface *getShadowBitmap();
 
     int pos_x();
     int pos_y();

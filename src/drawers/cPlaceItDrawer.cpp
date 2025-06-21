@@ -98,7 +98,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iDrawX = map.mouse_draw_x();
     int iDrawY = map.mouse_draw_y();
 
-    BITMAP *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
+    SDL_Surface *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     if (!bWithinBuildDistance) {
         // @Mira clear_to_color(temp, game.getColorPlaceBad());
         clear_to_color(temp, makecol(255,0,0)); //game.getColorPlaceBad());
@@ -181,18 +181,18 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
-    BITMAP *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
+    SDL_Surface *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     clear_to_color(temp, makecol(255, 0, 255));
 
-    BITMAP *bmp = nullptr;
+    SDL_Surface *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat;
+        bmp = gfxdata->getSurface(PLACE_SLAB1);
     }
     else if (structureId == SLAB4) {
-        bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat;
+        bmp = gfxdata->getSurface(PLACE_SLAB4);
     }
     else if (structureId == WALL) {
-        bmp = (BITMAP *)gfxdata[PLACE_WALL].dat;
+        bmp = gfxdata->getSurface(PLACE_WALL);
     }
     else {
         bmp = player->getStructureBitmap(structureId);

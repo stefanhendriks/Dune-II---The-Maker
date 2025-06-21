@@ -16,20 +16,20 @@ cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
 {
     backButtonRect = textDrawer.getAsRectangle(0, game.m_screenH - textDrawer.getFontHeight(), " BACK");
 
-    bmp_Dune = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
+    bmp_Dune = gfxinter->getSurface(BMP_GAME_DUNE);
 
     int duneAtTheRight = game.m_screenW - bmp_Dune->w;
     int duneAlmostAtBottom = game.m_screenH - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
-    bmp_SelectYourHouseTitle = (BITMAP *) gfxinter[BMP_SELECT_YOUR_HOUSE].dat;
+    bmp_SelectYourHouseTitle = gfxinter->getSurface(BMP_SELECT_YOUR_HOUSE);
 
     selectYourHouseXCentered = (game.m_screenW / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
-    bmp_HouseAtreides = (BITMAP *) gfxinter[BMP_SELECT_HOUSE_ATREIDES].dat;
-    bmp_HouseOrdos = (BITMAP *) gfxinter[BMP_SELECT_HOUSE_ORDOS].dat;
-    bmp_HouseHarkonnen = (BITMAP *) gfxinter[BMP_SELECT_HOUSE_HARKONNEN].dat;
+    bmp_HouseAtreides = gfxinter->getSurface(BMP_SELECT_HOUSE_ATREIDES);
+    bmp_HouseOrdos = gfxinter->getSurface(BMP_SELECT_HOUSE_ORDOS);
+    bmp_HouseHarkonnen = gfxinter->getSurface(BMP_SELECT_HOUSE_HARKONNEN);
 
     int selectYourHouseY = game.m_screenH * 0.25f;
 

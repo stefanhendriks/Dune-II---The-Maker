@@ -25,7 +25,7 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)
     previousCredits = 0;
 
     // center credits bar within sidebar
-    int widthCreditsBar = ((BITMAP *)gfxinter[CREDITS_BAR].dat)->w;
+    int widthCreditsBar = (gfxinter->getSurface(CREDITS_BAR))->w;
     drawX = game.m_screenW - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     drawY = 0;
 }
@@ -179,7 +179,7 @@ void CreditsDrawer::draw()
     clear_bitmap(bmp);
     clear_to_color(bmp, makecol(255, 0, 255)); // transparency
 
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxinter[CREDITS_BAR].dat, drawX, drawY);
+    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(CREDITS_BAR), drawX, drawY);
 
     drawCurrentCredits();
     drawPreviousCredits();
@@ -245,7 +245,7 @@ void CreditsDrawer::drawCurrentCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->drawSprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
+            renderDrawer->drawSprite(bmp, gfxdata->getSurface(nr), dx, dy);
         }
     }
 }
@@ -279,7 +279,7 @@ void CreditsDrawer::drawPreviousCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->drawSprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
+            renderDrawer->drawSprite(bmp, gfxdata->getSurface(nr), dx, dy);
         }
     }
 }

@@ -303,10 +303,10 @@ void cAbstractMentat::draw()
     }
 }
 
-BITMAP *cAbstractMentat::getBackgroundBitmap() const
+SDL_Surface *cAbstractMentat::getBackgroundBitmap() const
 {
     if (iBackgroundFrame < 0) return nullptr;
-    return (BITMAP *) gfxmentat[iBackgroundFrame].dat;
+    return gfxmentat->getSurface(iBackgroundFrame);
 }
 
 void cAbstractMentat::draw_movie()
@@ -318,7 +318,7 @@ void cAbstractMentat::draw_movie()
     int movieTopleftX = offsetX + 256;
     int movieTopleftY = offsetY + 120;
 
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, movieTopleftX, movieTopleftY);
+    renderDrawer->drawSprite(bmp_screen, (SDL_Surface *)gfxmovie[iMovieFrame), movieTopleftX, movieTopleftY);
 }
 
 void cAbstractMentat::interact()
@@ -388,14 +388,14 @@ void cAbstractMentat::speak()
     state = SPEAKING;
 }
 
-void cAbstractMentat::buildLeftButton(BITMAP *bmp, int x, int y)
+void cAbstractMentat::buildLeftButton(SDL_Surface *bmp, int x, int y)
 {
     delete leftButton;
     leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
-void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y)
+void cAbstractMentat::buildRightButton(SDL_Surface *bmp, int x, int y)
 {
     delete rightButton;
     rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);

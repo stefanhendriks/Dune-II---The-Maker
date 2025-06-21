@@ -28,8 +28,8 @@ cPlayer::cPlayer()
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
     // no log(), because we can't assume player is fully initialized yet
-    logbook(fmt::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(BITMAP *)={}",
-                        MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(BITMAP *)));
+    logbook(fmt::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
+                        MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
     memset(bmp_structure, 0, sizeof(bmp_structure));
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
@@ -275,12 +275,12 @@ void cPlayer::setHouse(int iHouse)
         select_palette(pal);
 
         // copy flag(s) with correct color
-        BITMAP *flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_LARGE].dat;
+        SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
         bmp_flag = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
         clear_to_color(bmp_flag, makecol(255, 0, 255));
         renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
 
-        flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_SMALL].dat;
+        flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
         bmp_flag_small = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
         clear_to_color(bmp_flag_small, makecol(255, 0, 255));
         renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
@@ -302,7 +302,7 @@ void cPlayer::setHouse(int iHouse)
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
                 int j = MAX_STRUCTURETYPES + i;
-                BITMAP *bitmap = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
+                SDL_Surface *bitmap = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
@@ -501,7 +501,7 @@ int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
  * @param index
  * @return
  */
-BITMAP *cPlayer::getStructureBitmap(int index)
+SDL_Surface *cPlayer::getStructureBitmap(int index)
 {
     if (bmp_structure[index]) {
         return bmp_structure[index];
@@ -515,17 +515,17 @@ BITMAP *cPlayer::getStructureBitmap(int index)
  * @param index
  * @return
  */
-BITMAP *cPlayer::getStructureBitmapFlash(int index)
+SDL_Surface *cPlayer::getStructureBitmapFlash(int index)
 {
     return getStructureBitmap(MAX_STRUCTURETYPES + index); // by convention flash bmp's are stored starting at MAX + index
 }
 
-BITMAP *cPlayer::getFlagBitmap()
+SDL_Surface *cPlayer::getFlagBitmap()
 {
     return bmp_flag;
 }
 
-BITMAP *cPlayer::getFlagSmallBitmap()
+SDL_Surface *cPlayer::getFlagSmallBitmap()
 {
     return bmp_flag_small;
 }
@@ -536,7 +536,7 @@ BITMAP *cPlayer::getFlagSmallBitmap()
  * @param index
  * @return
  */
-BITMAP *cPlayer::getUnitBitmap(int index)
+SDL_Surface *cPlayer::getUnitBitmap(int index)
 {
     if (bmp_unit[index]) {
         return bmp_unit[index];
@@ -550,7 +550,7 @@ BITMAP *cPlayer::getUnitBitmap(int index)
  * @param index
  * @return
  */
-BITMAP *cPlayer::getUnitTopBitmap(int index)
+SDL_Surface *cPlayer::getUnitTopBitmap(int index)
 {
     if (bmp_unit_top[index]) {
         return bmp_unit_top[index];
@@ -564,7 +564,7 @@ BITMAP *cPlayer::getUnitTopBitmap(int index)
  * @param index
  * @return
  */
-BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
+SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
 {
     if (sUnitInfo[index].shadow) {
         int bmp_width = sUnitInfo[index].bmp_width;
@@ -579,7 +579,7 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
         }
 
         int colorDepth = bitmap_color_depth(bmp_screen);
-        BITMAP *shadow = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
+        SDL_Surface *shadow = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
         clear_to_color(shadow, makecol(255, 0, 255));
 
         renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);

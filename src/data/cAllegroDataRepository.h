@@ -26,13 +26,13 @@ public:
 
     // bool loadBitmapAt(int index, const char *file);
 
-    bool loadBitmapFromDataFileAt(int index, BITMAP *bmp);
+    bool loadBitmapFromDataFileAt(int index, SDL_Surface *bmp);
     bool loadBitmapFromDataFileGfxDataAt(int index, int indexAtDataFile);
 
-    BITMAP *getBitmapAt(int index);
+    SDL_Surface *getBitmapAt(int index);
 
 private:
     int findAvailableSlot();
 
-    BITMAP *m_data[MAX_BITMAPS];
+    SDL_Surface *m_data[MAX_BITMAPS];
 };

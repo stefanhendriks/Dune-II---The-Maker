@@ -235,6 +235,6 @@ void cPreviewMaps::initPreviews()
 
     firstSkirmishMap.terrainType = std::vector<int>(maxCells, -1);
     firstSkirmishMap.name = "Random map";
-    //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
+    //PreviewMap[0].terrain = gfxinter->getSurface(BMP_UNKNOWNMAP);
     firstSkirmishMap.terrain = create_bitmap(128, 128);
 }
