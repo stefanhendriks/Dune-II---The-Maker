@@ -50,6 +50,7 @@ public:
     Mix_Chunk *getSample(const std::string &name);
     // for debug
     void displayPackFile();
+    int getNumberOfFile() const; //should take a extension parameters
 private:
     std::unique_ptr<ReaderPack> reader;
     // for memory management
