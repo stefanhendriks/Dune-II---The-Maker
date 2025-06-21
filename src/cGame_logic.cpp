@@ -611,7 +611,7 @@ void cGame::shakeScreenAndBlitBuffer()
             m_shakeY = -abs(offset / 2) + rnd(offset);
 
             renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
-            renderDrawer->blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenW, m_screenH);
+            renderDrawer->blit(bmp_throttle, screenSurface, 0, 0, 0, 0, m_screenW, m_screenH);
         }
         else {
             fadeOutOrBlitScreenBuffer();
@@ -626,7 +626,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
 {
     if (m_fadeAction == FADE_NONE) {
         // Not shaking and not fading.
-        renderDrawer->blit(bmp_screen, screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        renderDrawer->blit(bmp_screen, screenSurface, 0, 0, 0, 0, m_screenW, m_screenH);
     }
     else {
         // Fading
@@ -636,7 +636,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
         renderDrawer->drawTransSprite(temp, bmp_screen, 0, 0);
-        renderDrawer->blit(temp, screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         SDL_FreeSurface(temp);
     }
 }
@@ -722,6 +722,7 @@ void cGame::run()
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
+        SDL_UpdateWindowSurface(window);
         m_frameCount++;
     }
 }
@@ -964,7 +965,7 @@ bool cGame::setupGame()
     m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
-
+    screenSurface = SDL_GetWindowSurface(window);
     //Mira TEXT alfont_text_mode(-1);
     //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 

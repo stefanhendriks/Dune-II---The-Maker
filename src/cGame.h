@@ -306,6 +306,7 @@ private:
     cKeyboard *m_keyboard;
     SDL_Window *window;
     SDL_Renderer *renderer;
+    SDL_Surface* screenSurface;
 
     cTimeManager m_timeManager;
 
