@@ -24,7 +24,7 @@
 #include <string>
 
 #include <iostream>
-
+#include <SDL2/SDL_ttf.h>
 int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
@@ -43,7 +43,7 @@ cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
 cDrawManager   				*drawManager = nullptr;
 
-SDLDrawer             *renderDrawer = nullptr;
+SDLDrawer                   *renderDrawer = nullptr;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
@@ -70,9 +70,9 @@ std::shared_ptr<DataPack> gfxworld;		// world/pieces graphics
 std::shared_ptr<DataPack> gfxmentat;	// mentat graphics
 
 // FONT stuff
-ALFONT_FONT *game_font; 	// arrakeen.fon
-ALFONT_FONT *bene_font;		// benegesserit font.
-ALFONT_FONT *small_font;	// small font.
+TTF_Font *game_font; 	// arrakeen.fon
+TTF_Font *bene_font;	// benegesserit font.
+TTF_Font *small_font;	// small font.
 
 /** Allegro specific timer creation starts here **/
 // volatile int allegro_timerSecond = 0;
