@@ -16,8 +16,8 @@ cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
     // z=0;
     leftButtonPressed=false;
     rightButtonPressed=false;
-    leftButtonPressedInPreviousFrame=false;
-    rightButtonPressedInPreviousFrame=false;
+    // leftButtonPressedInPreviousFrame=false;
+    // rightButtonPressedInPreviousFrame=false;
     leftButtonClicked=false;
     rightButtonClicked=false;
     mouseScrolledUp=false;
@@ -58,8 +58,8 @@ void cMouse::handleEvent(const SDL_Event& event) {
             if (event.button.button == SDL_BUTTON_RIGHT) rightButtonPressed = true;
             break;
         case SDL_MOUSEBUTTONUP:
-            if (event.button.button == SDL_BUTTON_LEFT) leftButtonPressed = false;
-            if (event.button.button == SDL_BUTTON_RIGHT) rightButtonPressed = false;
+            if (event.button.button == SDL_BUTTON_LEFT) {leftButtonPressed = false; leftButtonClicked = true;}
+            if (event.button.button == SDL_BUTTON_RIGHT) {rightButtonPressed = false; rightButtonClicked = true;}
             break;
         case SDL_MOUSEMOTION:
             coords.x = event.motion.x;
@@ -166,6 +166,8 @@ void cMouse::updateState()
         mouse_mv_y2 = -2;
     }
     didMouseMove = false;
+    leftButtonClicked = false;
+    rightButtonClicked = false;
 }
 
 void cMouse::setCursorPosition(SDL_Window* _windows, int x, int y)
