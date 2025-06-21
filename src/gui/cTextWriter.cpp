@@ -23,7 +23,7 @@ cTextWriter::~cTextWriter()
     delete textDrawer;
 }
 
-void cTextWriter::write(const char *msg)
+void cTextWriter::write(const std::string& msg)
 {
     textDrawer->drawText(drawX, drawY, msg);
     updateDrawY();
@@ -35,7 +35,7 @@ void cTextWriter::write(const char *msg)
 //     updateDrawY();
 // }
 
-void cTextWriter::write(const char *msg, SDL_Color color)
+void cTextWriter::write(const std::string& msg, SDL_Color color)
 {
     textDrawer->drawText(drawX, drawY, color, msg);
     updateDrawY();
