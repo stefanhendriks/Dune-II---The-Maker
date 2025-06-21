@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-#include <iostream>
+//#include <iostream>
 
 #include <cassert>
 
@@ -79,7 +79,7 @@ void cTextDrawer::drawTextCentered(const std::string& msg, int y, SDL_Color colo
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     int half = w / 2;
     int xPos = (game.m_screenW / 2) - half;
-    std::cout << xPos << y << msg <<std::endl;
+    //std::cout << xPos << y << msg <<std::endl;
     drawText(xPos, y, color, msg);
 }
 
@@ -111,7 +111,7 @@ void cTextDrawer::drawTextCenteredInBox(const std::string& msg, const cRectangle
 void cTextDrawer::drawTextCentered(const std::string& msg, int x, int width, int y, SDL_Color color) const
 {
     if (msg.empty()) return;
-    std::cout << msg << std::endl;
+    //std::cout << msg << std::endl;
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
