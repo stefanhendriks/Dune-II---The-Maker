@@ -1,11 +1,10 @@
 #include "cBuildingListDrawer.h"
 
-#include "cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
 
@@ -170,9 +169,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
-                set_trans_blender(0, 0, 0, 128);
-                draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
-                draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
+                //@Mira fix transparency set_trans_blender(0, 0, 0, 128);
+                renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
+                renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
             }
             else {
                 if (item->shouldPlaceIt()) {

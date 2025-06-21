@@ -4,9 +4,7 @@
 #include "cRepeatButtonCommand.h"
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
-#include "drawers/cAllegroDrawer.h"
-
-#include <allegro/datafile.h>
+#include "drawers/SDLDrawer.hpp"
 
 
 cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)

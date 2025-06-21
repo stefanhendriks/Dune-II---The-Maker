@@ -4,12 +4,11 @@
 #include "d2tmc.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "player/cPlayer.h"
-#include "drawers/cAllegroDrawer.h"
-#include <allegro.h>
+
 #include <SDL2/SDL.h>
 
 #include <cassert>

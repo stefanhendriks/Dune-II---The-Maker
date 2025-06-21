@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "definitions.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 

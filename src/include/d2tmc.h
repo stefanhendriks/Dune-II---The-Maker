@@ -23,11 +23,10 @@
 #include "structs.h"
 #include "utils/cStructureUtils.h"
 
-#include <allegro/palette.h>
 #include "utils/DataPack.hpp"
 
 class cAbstractStructure;
-class cAllegroDrawer;
+class SDLDrawer;
 class cBullet;
 class cDrawManager;
 class cMapCamera;
@@ -60,7 +59,7 @@ extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
-extern cAllegroDrawer      *renderDrawer;
+extern SDLDrawer      *renderDrawer;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
@@ -83,8 +82,6 @@ extern DataPack *gfxdata;
 extern DataPack *gfxinter;
 extern DataPack *gfxworld;
 extern DataPack *gfxmentat;
-
-extern DataPack *sdl_data;
 
 // BITMAPS
 extern SDL_Surface *bmp_screen;

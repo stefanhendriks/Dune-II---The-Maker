@@ -1,9 +1,7 @@
 #include "cGuiButton.h"
 
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
-
-#include <allegro/color.h>
+#include "drawers/SDLDrawer.hpp"
 
 cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText)
     : cGuiObject(rect)

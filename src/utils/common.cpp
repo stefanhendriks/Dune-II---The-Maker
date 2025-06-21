@@ -22,9 +22,6 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cIniFile.h"
 
-#include <allegro/datafile.h>
-#include <allegro/color.h>
-
 #include <cmath>
 
 /**

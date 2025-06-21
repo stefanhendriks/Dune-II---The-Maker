@@ -1,13 +1,12 @@
 #include "cSelectMissionState.h"
 
 #include "d2tmc.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/cGuiButton.h"
 #include "gui/cGuiWindow.h"
 #include "gui/actions/cGuiActionSelectMission.h"
 
-#include <allegro/gfx.h>
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, SDL_Surface *background, int prevState)
     : cGameState(theGame)

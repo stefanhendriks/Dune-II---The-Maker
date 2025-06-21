@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gui.h"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "managers/cDrawManager.h"

@@ -5,9 +5,8 @@
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)

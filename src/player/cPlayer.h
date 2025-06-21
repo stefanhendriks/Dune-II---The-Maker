@@ -29,8 +29,6 @@
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
 
-#include <allegro/palette.h>
-
 #include <set>
 #include <string>
 #include <vector>

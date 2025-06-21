@@ -15,17 +15,12 @@
 #include "cButtonCommand.h"
 #include "d2tmc.h"
 #include "definitions.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
 #include "gui/cGuiButton.h"
 #include "gui/actions/cGuiActionToGameState.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-// #include <alfont.h>
-#include <allegro/datafile.h>
-#include <allegro/palette.h>
-#include <allegro/color.h>
-#include <allegro.h>
 #include <SDL2/SDL.h>  //for bitmap
 
 #include <fmt/core.h>

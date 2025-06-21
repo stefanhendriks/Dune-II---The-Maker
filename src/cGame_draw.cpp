@@ -13,9 +13,8 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 // Fading between menu items
@@ -31,7 +30,7 @@ void cGame::initiateFadingOut()
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::drawStateLosing()
 {
-    blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
+    renderDrawer->blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
@@ -48,7 +47,7 @@ void cGame::drawStateLosing()
 // this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::drawStateWinning()
 {
-    blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
+    renderDrawer->blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 

@@ -2,12 +2,11 @@
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)

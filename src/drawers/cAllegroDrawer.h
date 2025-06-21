@@ -45,12 +45,6 @@ public:
     void maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
     void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-    void drawRect(SDL_Surface *dest, int x, int y, int width, int height, int color);
-    void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, int color);
-    void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, int color);
-    void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, int color);
-    void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, int color, int alpha);
-
     void drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
     void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
     void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);

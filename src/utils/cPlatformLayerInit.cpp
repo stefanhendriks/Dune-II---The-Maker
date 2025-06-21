@@ -2,8 +2,6 @@
 
 #include "utils/cLog.h"
 
-#include <allegro/system.h>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 

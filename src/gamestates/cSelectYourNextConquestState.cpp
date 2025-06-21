@@ -4,7 +4,7 @@
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "data/gfxworld.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
 #include "ini.h"
 #include "managers/cDrawManager.h"
@@ -12,7 +12,6 @@
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/cGuiButton.h"
 
-#include <allegro.h>
 #include <SDL2/SDL.h>
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame)

@@ -15,7 +15,7 @@
 #include "d2tmc.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"

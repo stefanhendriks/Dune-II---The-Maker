@@ -1,6 +1,6 @@
 #include "cPreviewMaps.h"
 #include "data/gfxdata.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "map/cMap.h"
 #include "include/d2tmc.h"
 

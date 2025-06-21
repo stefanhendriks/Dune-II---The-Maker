@@ -2,10 +2,9 @@
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
-// #include <alfont.h>
-#include <allegro.h>
+
 #include <SDL2/SDL.h>
 
 cCreditsState::cCreditsState(cGame &theGame) :
