@@ -16,6 +16,6 @@ public:
 
 private:
     cInputObserver *_keyboardObserver;
-    std::set<int> keysPressed;
-    std::set<int> keysReleased;
+    std::set<SDL_Scancode> keysPressed;
+    std::set<SDL_Scancode> keysReleased;
 };
