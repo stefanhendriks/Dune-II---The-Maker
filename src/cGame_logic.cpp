@@ -794,18 +794,18 @@ void cGame::shutdown()
     delete m_mouse;
     delete m_keyboard;
 
-    if (gfxdata) {
-        unload_datafile(gfxdata);
-    }
-    if (gfxinter) {
-        unload_datafile(gfxinter);
-    }
-    if (gfxworld) {
-        unload_datafile(gfxworld);
-    }
-    if (gfxmentat) {
-        unload_datafile(gfxmentat);
-    }
+    // if (gfxdata) {
+    //     unload_datafile(gfxdata);
+    // }
+    // if (gfxinter) {
+    //     unload_datafile(gfxinter);
+    // }
+    // if (gfxworld) {
+    //     unload_datafile(gfxworld);
+    // }
+    // if (gfxmentat) {
+    //     unload_datafile(gfxmentat);
+    // }
 
     // Destroy font of Allegro FONT library
     // Commented because it crash on Linux. As alfont is deprecated, i didn't try to understand. Replacing Alfont will avoid this possible memory leak. @Mira
@@ -1134,7 +1134,7 @@ bool cGame::setupGame()
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXDATA).c_str());
+    gfxdata = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXDATA));
     if (gfxdata == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_FAILED);
         return false;
@@ -1144,7 +1144,7 @@ bool cGame::setupGame()
         //memcpy(general_palette, gfxdata[PALETTE_D2TM), sizeof general_palette);
     }
 
-    gfxinter = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXINTER).c_str());
+    gfxinter = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXINTER));
     if (gfxinter == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
         return false;
@@ -1153,7 +1153,7 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
     }
 
-    gfxworld = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXWORLD).c_str());
+    gfxworld = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
     if (gfxworld == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
         return false;
@@ -1162,7 +1162,7 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
     }
 
-    gfxmentat = load_datafile(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT).c_str());
+    gfxmentat = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
     if (gfxworld == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
         return false;

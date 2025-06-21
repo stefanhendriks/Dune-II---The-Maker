@@ -22,8 +22,10 @@
 
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
+#include "utils/DataPack.hpp"
 
 #include <string>
+#include <memory>
 
 class cButtonCommand;
 class cGuiButton;
@@ -70,7 +72,7 @@ protected:
     int iMentatMouth;
     int iMentatEyes;
 
-    DATAFILE *gfxmovie;
+    std::shared_ptr<DataPack> gfxmovie;
     ALFONT_FONT *font;
 
     eMentatState state;
