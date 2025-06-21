@@ -259,7 +259,7 @@ void cPlayer::setHouse(int iHouse)
             logbook(fmt::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
             for (int j = start; j < (start + 7); j++) {
                 // swap everything from S with J
-                pal[s] = pal[j];
+                //@Mira : no distinct unit color // pal[s] = pal[j];
                 s++;
             }
         }
