@@ -196,7 +196,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain)
 
     setBrain(brain);
 
-    memcpy(pal, general_palette, sizeof(pal));
+    // memcpy(pal, general_palette, sizeof(pal));
     house = GENERALHOUSE;
 
     /**
@@ -247,11 +247,12 @@ void cPlayer::setHouse(int iHouse)
 
     if (currentHouse != iHouse) {
         // copy entire palette
-        memcpy(pal, general_palette, sizeof(pal));
+        // memcpy(pal, general_palette, sizeof(pal));
 
         logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 
         // now set the different colors based upon house
+        // @Mira trafic on Palette
         if (m_HousesInfo->getSwapColor(house) > -1) {
             int start = m_HousesInfo->getSwapColor(house);
             int s = 144;                // original position (harkonnen)

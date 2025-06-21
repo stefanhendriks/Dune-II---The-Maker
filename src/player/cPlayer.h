@@ -74,7 +74,7 @@ public:
 
     ~cPlayer();
 
-    PALETTE pal;        // each player has its own 256 color scheme (used for coloring units)
+    // PALETTE pal;        // each player has its own 256 color scheme (used for coloring units)
 
     void init(int id, brains::cPlayerBrain *brain);
 
