@@ -99,6 +99,10 @@ Mix_Chunk *DataPack::getSample(int index)
     return out;
 }
 
+int DataPack::getNumberOfFile() const
+{
+    return reader->getNumberOfFiles();
+}
 
 /*
  * This is a test program to read and write pack files.
