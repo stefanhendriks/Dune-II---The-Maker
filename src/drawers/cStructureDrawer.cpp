@@ -261,7 +261,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
     assert(structure);
 
     // always select proper palette (of owner)
-    select_palette(players[structure->getOwner()].pal);
+    // select_palette(players[structure->getOwner()].pal);
 
     // when layer is <= 1 the building is just being placed. The prebuild
     // animation should be be drawn or, the normal drawing is shown (ie the

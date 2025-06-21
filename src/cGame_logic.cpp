@@ -1120,12 +1120,12 @@ bool cGame::setupGame()
     }
 
     /*** End of Bitmap Creation ***/
-    set_color_conversion(COLORCONV_MOST);
+    //set_color_conversion(COLORCONV_MOST);
 
     logbook("Color conversion method set");
 
     // setup mouse speed
-    set_mouse_speed(0, 0);
+    //set_mouse_speed(0, 0);
 
     logbook("MOUSE: Mouse speed set");
 
@@ -1184,7 +1184,7 @@ bool cGame::setupGame()
     game.m_screenshot = 0;
     game.m_state = GAME_INITIALIZE;
 
-    set_palette(general_palette);
+    // set_palette(general_palette);
 
     logbook("Setup:  HOUSES");
     m_Houses = std::make_shared<cHousesInfo>();

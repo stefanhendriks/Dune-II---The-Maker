@@ -271,7 +271,7 @@ void cPlayer::setHouse(int iHouse)
         //int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
 
         // use this palette to draw stuff
-        select_palette(pal);
+        //select_palette(pal);
 
         // copy flag(s) with correct color
         SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);

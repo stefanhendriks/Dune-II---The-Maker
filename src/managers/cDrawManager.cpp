@@ -231,7 +231,7 @@ void cDrawManager::drawTopBarBackground()
             renderDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
         }
 
-        set_palette(m_player->pal);
+        // set_palette(m_player->pal);
 
         renderDrawer->drawSprite(m_topBarBmp, gfxinter->getSurface(BTN_OPTIONS), 1, 0);
     }
