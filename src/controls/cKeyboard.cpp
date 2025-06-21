@@ -51,11 +51,11 @@ void cKeyboard::updateState()
 
     // these keys are not detected as a separate keypress by allegro (by keypressed(), and hence not readkey()).
     // so check these via the key[] way.
-    if (key[KEY_RCONTROL]) newKeysPressed.insert(KEY_RCONTROL);
-    if (key[KEY_LCONTROL]) newKeysPressed.insert(KEY_LCONTROL);
-    if (key[KEY_RSHIFT]) newKeysPressed.insert(KEY_RSHIFT);
-    if (key[KEY_LSHIFT]) newKeysPressed.insert(KEY_LSHIFT);
-    if (key[KEY_TAB]) newKeysPressed.insert(KEY_TAB);
+    if (key[SDL_SCANCODE_RCTRL]) newKeysPressed.insert(SDL_SCANCODE_RCTRL);
+    if (key[SDL_SCANCODE_LCTRL]) newKeysPressed.insert(SDL_SCANCODE_LCTRL);
+    if (key[SDL_SCANCODE_RSHIFT]) newKeysPressed.insert(SDL_SCANCODE_RSHIFT);
+    if (key[SDL_SCANCODE_LSHIFT]) newKeysPressed.insert(SDL_SCANCODE_LSHIFT);
+    if (key[SDL_SCANCODE_TAB]) newKeysPressed.insert(SDL_SCANCODE_TAB);
 
     if (!newKeysPressed.empty()) {
         _keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, newKeysPressed));

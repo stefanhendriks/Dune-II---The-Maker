@@ -316,10 +316,10 @@ void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cDrawManager::onKeyDown(const cKeyboardEvent &event)
 {
     if (game.isDebugMode()) {
-        if (event.hasKeys(KEY_TAB, KEY_D)) {
+        if (event.hasKeys(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
             m_mapDrawer.setDrawWithoutShroudTiles(true);
         }
-        if (event.hasKey(KEY_G)) {
+        if (event.hasKey(SDL_SCANCODE_G)) {
             m_mapDrawer.setDrawGrid(true);
         }
     }
@@ -330,10 +330,10 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event)
     if (game.isDebugMode()) {
         // one of these we're pressed, that's enough info to revert back as it breaks the
         // mandatory 'both keys must be pressed' state:
-        if (event.hasEitherKey(KEY_TAB, KEY_D)) {
+        if (event.hasEitherKey(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
             m_mapDrawer.setDrawWithoutShroudTiles(false);
         }
-        if (event.hasKey(KEY_G)) {
+        if (event.hasKey(SDL_SCANCODE_G)) {
             m_mapDrawer.setDrawGrid(false);
         }
     }

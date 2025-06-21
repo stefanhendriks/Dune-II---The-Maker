@@ -3701,7 +3701,7 @@ int cUnit::findNearbyStructureToAttack(int range)
 //     if (pPlayer->isHuman()) {
 //         // TODO: React upon keypress and then issue a command to deploy MCV instead of using this hacky via think function
 //         if (bSelected) {
-//             if (key[KEY_D]) {
+//             if (key[SDL_SCANCODE_D]) {
 //                 bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
 
 //                 if (result) {

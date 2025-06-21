@@ -440,14 +440,14 @@ void cBuildingListDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cBuildingListDrawer::onKeyHold(const cKeyboardEvent &event)
 {
-    if (event.hasKeys(KEY_TAB, KEY_D)) {
+    if (event.hasKeys(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
         m_renderListIds = true;
     }
 }
 
 void cBuildingListDrawer::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.hasEitherKey(KEY_TAB, KEY_D)) {
+    if (event.hasEitherKey(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
         m_renderListIds = false;
     }
 }

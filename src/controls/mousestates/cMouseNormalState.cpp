@@ -206,7 +206,7 @@ void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
 {
-    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
+    if (event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL)) {
         cAbstractStructure *pSelectedStructure = m_player->getSelectedStructure();
         // when selecting a structure
         if (pSelectedStructure && pSelectedStructure->belongsTo(m_player) && pSelectedStructure->canSpawnUnits()) {
@@ -218,7 +218,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
 {
-    bool createGroup = event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL);
+    bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
     if (createGroup) {
         // actual group creation is at cGameLogic onKeyPressed
         setState(SELECT_STATE_NORMAL);
@@ -238,7 +238,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(KEY_R)) {
+    if (event.hasKey(SDL_SCANCODE_R)) {
         m_context->setMouseState(MOUSESTATE_REPAIR);
     }
 }

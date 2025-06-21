@@ -136,7 +136,7 @@ void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event)
 void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        if (event.hasKey(KEY_ESC)) {
+        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
             game.setNextStateToTransitionTo(GAME_MENU);
             game.initiateFadingOut();
         }
