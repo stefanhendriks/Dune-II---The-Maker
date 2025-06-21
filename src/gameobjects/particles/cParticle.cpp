@@ -140,7 +140,7 @@ void cParticle::draw()
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
-            set_add_blender(0, 0, 0, iAlpha);
+            // @Mira fix transparency set_add_blender(0, 0, 0, iAlpha);
         }
         else {
             // @Mira fix trasnparency set_trans_blender(0, 0, 0, iAlpha);
