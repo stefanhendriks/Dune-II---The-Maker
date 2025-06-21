@@ -32,7 +32,7 @@ class cGuiButton;
 
 struct ALFONT_FONT;
 struct DATAFILE;
-struct BITMAP;
+struct SDL_Surface;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)

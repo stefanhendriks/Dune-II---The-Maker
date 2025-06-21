@@ -11,7 +11,7 @@
 
 #include <memory>
 
-struct BITMAP;
+struct SDL_Surface;
 class cGame;
 class cMouse;
 class cPreviewMaps;

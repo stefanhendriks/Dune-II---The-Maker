@@ -1,6 +1,7 @@
 #pragma once
 
-struct BITMAP;
+
+struct SDL_Surface;
 
 // struct sBitmap {
 //     BITMAP  *bitmap;    // loaded from Allegro

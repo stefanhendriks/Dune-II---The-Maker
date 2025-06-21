@@ -17,7 +17,7 @@
 #include "sMouseEvent.h"
 
 class cPlayer;
-struct BITMAP;
+struct SDL_Surface;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing

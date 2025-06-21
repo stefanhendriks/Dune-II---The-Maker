@@ -1,7 +1,7 @@
 #include "cAllegroDataRepository.h"
 
 #include "d2tmc.h"
-
+#include <SDL2/SDL.h>
 #include <fmt/core.h>
 
 cAllegroDataRepository::cAllegroDataRepository()

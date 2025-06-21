@@ -6,7 +6,7 @@
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 
-struct BITMAP;
+struct SDL_Surface;
 class cGame;
 
 class cChooseHouseGameState : public cGameState {

@@ -7,7 +7,7 @@
 #include "gui/cGuiWindow.h"
 #include "sMouseEvent.h"
 
-struct BITMAP;
+struct SDL_Surface;
 class cGame;
 
 class cMainMenuGameState : public cGameState {

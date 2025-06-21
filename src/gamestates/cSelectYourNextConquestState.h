@@ -6,7 +6,7 @@
 
 class cGame;
 class cGuiButton;
-struct BITMAP;
+struct SDL_Surface;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
