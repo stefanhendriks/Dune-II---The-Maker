@@ -151,7 +151,7 @@ void cMapDrawer::drawTerrain()
             }
             else {
                 // valid type
-                blit(gfxdata->getSurface(cell->type),
+                renderDrawer->blit(gfxdata->getSurface(cell->type),
                      m_BmpTemp,
                      cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
                      0, 0,

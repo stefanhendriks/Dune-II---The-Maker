@@ -4349,7 +4349,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
             if (game.m_drawUnitDebug) {
-                renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{0, 255, 0,255});
+                renderDrawer->drawLine(bmp_screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{0, 255, 0,255});
             }
 
             // Now set c to the cll
