@@ -74,7 +74,7 @@ int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
 void cGameControlsContext::determineToolTip()
 {
     m_drawToolTip = false;
-    if (key[KEY_T] && isMouseOnBattleField()) { // TODO: this gets removed later, when we redo tooltips anyway
+    if (key[SDL_SCANCODE_T] && isMouseOnBattleField()) { // TODO: this gets removed later, when we redo tooltips anyway
         m_drawToolTip = true;
     }
 }

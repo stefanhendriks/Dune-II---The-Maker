@@ -304,25 +304,25 @@ void cMapCamera::onKeyHold(const cKeyboardEvent &event)
 
     // mouse is 'moving by pressing right mouse button', this supersedes reacting to keypress
     if (!pMouse->isMapScrolling()) {
-        if (event.hasKey(KEY_LEFT)) {
+        if (event.hasKey(SDL_SCANCODE_LEFT)) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_LEFT);
             m_keyPressedLeft = true;
         }
 
-        if (event.hasKey(KEY_UP)) {
+        if (event.hasKey(SDL_SCANCODE_UP)) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_UP);
             m_keyPressedUp = true;
         }
 
-        if (event.hasKey(KEY_RIGHT)) {
+        if (event.hasKey(SDL_SCANCODE_RIGHT)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_RIGHT);
             m_keyPressedRight = true;
         }
 
-        if (event.hasKey(KEY_DOWN)) {
+        if (event.hasKey(SDL_SCANCODE_DOWN)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_DOWN);
             m_keyPressedDown = true;
@@ -332,22 +332,22 @@ void cMapCamera::onKeyHold(const cKeyboardEvent &event)
 
 void cMapCamera::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.hasKey(KEY_LEFT)) {
+    if (event.hasKey(SDL_SCANCODE_LEFT)) {
         setMoveX(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedLeft = false;
     }
 
-    if (event.hasKey(KEY_UP)) {
+    if (event.hasKey(SDL_SCANCODE_UP)) {
         setMoveY(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedUp = false;
     }
 
-    if (event.hasKey(KEY_RIGHT)) {
+    if (event.hasKey(SDL_SCANCODE_RIGHT)) {
         setMoveX(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedRight = false;
     }
 
-    if (event.hasKey(KEY_DOWN)) {
+    if (event.hasKey(SDL_SCANCODE_DOWN)) {
         setMoveY(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedDown = false;
     }

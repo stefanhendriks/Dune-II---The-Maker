@@ -402,12 +402,12 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const cKeyboardEvent &event
 
 void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 {
-    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
+    if (event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL)) {
         setState(SELECTED_STATE_ATTACK);
         mouseTile = MOUSE_ATTACK;
     }
 
-    bool appendingSelectionToGroup = event.hasKey(KEY_LSHIFT) || event.hasKey(KEY_RSHIFT);
+    bool appendingSelectionToGroup = event.hasKey(SDL_SCANCODE_LSHIFT) || event.hasKey(SDL_SCANCODE_RSHIFT);
     if (appendingSelectionToGroup) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
         mouseTile = MOUSE_NORMAL;
@@ -432,7 +432,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         m_selectedUnits = m_player->getSelectedUnits();
     }
     else {
-        bool createGroup = event.hasKey(KEY_RCONTROL) || event.hasKey(KEY_LCONTROL);
+        bool createGroup = event.hasKey(SDL_SCANCODE_RCTRL) || event.hasKey(SDL_SCANCODE_LCTRL);
         // Do this within the "HOLD" event, because if we do it at Pressed event
         // we miss the fact that we hold SHIFT as well (see cKeyboard for reason).
         if (!createGroup) {
@@ -458,23 +458,23 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.hasKey(KEY_LCONTROL) || event.hasKey(KEY_RCONTROL)) {
+    if (event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL)) {
         setState(SELECTED_STATE_ATTACK);
         evaluateMouseMoveState();
     }
 
-    if (event.hasKey(KEY_LSHIFT) || event.hasKey(KEY_RSHIFT)) {
+    if (event.hasKey(SDL_SCANCODE_LSHIFT) || event.hasKey(SDL_SCANCODE_RSHIFT)) {
         toPreviousState();
         evaluateMouseMoveState();
     }
 
     // go to repair state
-    if (event.hasKey(KEY_R)) {
+    if (event.hasKey(SDL_SCANCODE_R)) {
         m_context->setMouseState(MOUSESTATE_REPAIR);
     }
 
     // order any selected harvester to return to refinery
-    if (event.hasKey(KEY_D)) {
+    if (event.hasKey(SDL_SCANCODE_D)) {
         const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
         for (auto &id : selectedUnits) {
             cUnit &pUnit = unit[id];

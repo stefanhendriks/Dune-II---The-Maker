@@ -85,7 +85,7 @@ void cMouseRepairState::onStateSet()
 
 void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(KEY_R)) {
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_R)) {
         m_context->toPreviousState();
     }
 }

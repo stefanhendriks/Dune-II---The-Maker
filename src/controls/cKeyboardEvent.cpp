@@ -9,19 +9,19 @@ cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, std::set<int> &keys) :
 
 int cKeyboardEvent::getGroupNumber() const
 {
-    if (hasKey(KEY_1)) {
+    if (hasKey(SDL_SCANCODE_1)) {
         return 1;
     }
-    if (hasKey(KEY_2)) {
+    if (hasKey(SDL_SCANCODE_2)) {
         return 2;
     }
-    if (hasKey(KEY_3)) {
+    if (hasKey(SDL_SCANCODE_3)) {
         return 3;
     }
-    if (hasKey(KEY_4)) {
+    if (hasKey(SDL_SCANCODE_4)) {
         return 4;
     }
-    if (hasKey(KEY_5)) {
+    if (hasKey(SDL_SCANCODE_5)) {
         return 5;
     }
     return 0;

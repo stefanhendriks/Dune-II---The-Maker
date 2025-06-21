@@ -186,7 +186,7 @@ void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
     if (game.isDebugMode()) {
         // LOST in SDL2 port: no keyboard acces i this area of code @Mira
-        // if (key[KEY_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
+        // if (key[SDL_SCANCODE_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
         //     if (m_focus) toggleTextAlignHorizontal();
         // } else {
         if (m_focus) nextRenderKind();
