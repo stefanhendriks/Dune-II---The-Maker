@@ -9,16 +9,16 @@
 
 #include "utils/cRectangle.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
-struct ALFONT_FONT;
 
 class cTextDrawer {
 public:
     cTextDrawer();
-    cTextDrawer(ALFONT_FONT *theFont);
+    cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
-    void setFont(ALFONT_FONT *theFont);
+    void setFont(TTF_Font *theFont);
 
     void drawTextWithOneInteger(int x, int y, SDL_Color color, const char *msg, int var) const;
     void drawTextWithOneInteger(int x, int y, const char *msg, int var) const;
@@ -75,7 +75,7 @@ public:
 protected:
 
 private:
-    ALFONT_FONT *font;
+    TTF_Font *font;
     bool applyShadow;
 
     SDL_Color textColor;

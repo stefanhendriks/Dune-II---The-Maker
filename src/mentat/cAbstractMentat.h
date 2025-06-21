@@ -26,12 +26,11 @@
 
 #include <string>
 #include <memory>
+#include <SDL2/SDL_ttf.h>
 
 class cButtonCommand;
 class cGuiButton;
 
-struct ALFONT_FONT;
-struct DATAFILE;
 struct SDL_Surface;
 
 enum eMentatState {
@@ -73,7 +72,7 @@ protected:
     int iMentatEyes;
 
     std::shared_ptr<DataPack> gfxmovie;
-    ALFONT_FONT *font;
+    TTF_Font *font;
 
     eMentatState state;
 

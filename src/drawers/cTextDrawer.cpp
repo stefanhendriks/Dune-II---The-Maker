@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-cTextDrawer::cTextDrawer(ALFONT_FONT *theFont)
+cTextDrawer::cTextDrawer(TTF_Font *theFont)
 {
     //Mira TEXT assert(theFont);
     font = theFont;
@@ -142,7 +142,7 @@ int cTextDrawer::textLength(const char *msg) const
     return 0;
 }
 
-void cTextDrawer::setFont(ALFONT_FONT *theFont)
+void cTextDrawer::setFont(TTF_Font *theFont)
 {
     if (theFont == nullptr) return; // do not allow null
     this->font = theFont;

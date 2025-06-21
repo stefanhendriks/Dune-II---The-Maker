@@ -9,8 +9,8 @@
 
 #include "drawers/cTextDrawer.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
-struct ALFONT_FONT;
 
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
 // every new command it will start on a new line.
@@ -18,7 +18,7 @@ struct ALFONT_FONT;
 
 class cTextWriter {
 public:
-    cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize);
+    cTextWriter(int x, int y, TTF_Font *theFont, int theFontSize);
     ~cTextWriter();
 
     void write(const char *msg);
@@ -32,7 +32,7 @@ protected:
 
 private:
     cTextDrawer *textDrawer;
-    ALFONT_FONT *font;
+    TTF_Font *font;
     int fontSize;
     int originalX;
     int originalY;

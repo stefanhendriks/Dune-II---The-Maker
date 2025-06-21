@@ -21,7 +21,8 @@
 #include "gui/actions/cGuiActionToGameState.h"
 #include "drawers/SDLDrawer.hpp"
 
-#include <SDL2/SDL.h>  //for bitmap
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <fmt/core.h>
 

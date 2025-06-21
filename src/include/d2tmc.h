@@ -39,9 +39,7 @@ class cPlayer;
 class cRegion;
 class DataPack;
 
-struct ALFONT_FONT;
 struct SDL_Surface;
-struct DATAFILE;
 
 // Process 'extern' stuff, so we can access our classes
 extern int		iRest;	// rest value
