@@ -756,8 +756,7 @@ void cUnit::draw()
             destY = uy + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
         }
 
-        int colorDepth = bitmap_color_depth(bmp_screen);
-        SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
                                         0, 0,
