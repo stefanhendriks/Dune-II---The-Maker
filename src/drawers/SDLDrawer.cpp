@@ -329,9 +329,21 @@ void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha)
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y)
 {
+    drawSprite(src,x,y);
+}
+
+void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y)
+{
     //_draw_sprite(dest, src, x, y);
     SDL_Rect tmp = {x,y,src->w, src->h};
-    SDL_BlitSurface(src, nullptr, dest, &tmp);
+    transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    if (!texture) {
+        std::cerr << "error drawSprite : " << SDL_GetError();
+        return;
+    }
+    SDL_RenderCopy(renderer, texture, NULL, &tmp);
 }
 
 
@@ -686,3 +698,8 @@ void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace,
     SDL_UnlockSurface(bmp);
 }
 
+
+void SDLDrawer::renderChangeColor(SDL_Color color)
+{
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+}

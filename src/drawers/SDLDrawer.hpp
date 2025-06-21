@@ -18,6 +18,7 @@ public:
     void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
     void drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y);
 
+    void drawSprite(SDL_Surface *src, int x, int y);
     void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y);
     void drawSprite(SDL_Surface *dest, int index, int x, int y);
 
@@ -96,4 +97,6 @@ private:
     };
     std::map<sSize, SDL_Surface *> bitmapCache;
     SDL_Renderer *renderer=nullptr;
+    Uint32 transparentColorKey;
+    void renderChangeColor(SDL_Color color);
 };
