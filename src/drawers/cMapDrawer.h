@@ -3,7 +3,7 @@
 #include "map/cMap.h"
 #include "map/cMapCamera.h"
 
-struct BITMAP;
+struct SDL_Surface;
 class cPlayer;
 
 class cMapDrawer {

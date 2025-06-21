@@ -4,7 +4,7 @@
 #include "utils/cRectangle.h"
 
 class cPlayer;
-struct BITMAP;
+struct SDL_Surface;
 
 class cOrderDrawer {
 public:

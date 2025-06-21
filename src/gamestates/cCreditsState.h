@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-struct BITMAP;
+struct SDL_Surface;
 class cGame;
 
 struct s_CreditLine {

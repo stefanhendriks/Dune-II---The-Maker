@@ -8,7 +8,8 @@
 #pragma once
 
 class cPlayer;
-struct BITMAP;
+//struct SDL_Surface;
+struct SDL_Surface;
 
 // the credits drawer takes state of a player, and draws the credits accordingly
 

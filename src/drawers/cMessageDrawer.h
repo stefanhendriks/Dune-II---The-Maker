@@ -4,7 +4,7 @@
 
 #include <string>
 
-struct BITMAP;
+struct SDL_Surface;
 
 namespace messages {
 enum eMessageDrawerState {
