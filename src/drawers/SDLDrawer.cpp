@@ -274,7 +274,7 @@ void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height,
 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
 {
-    drawRectFilled(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
+    drawRectFilled(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
 }
 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
