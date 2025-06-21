@@ -149,13 +149,12 @@ void cMainMenuGameState::draw() const
     if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenW; x += 60) {
             for (int y = 0; y < game.m_screenH; y += 20) {
-                //Mira TEXT alfont_textprintf(bmp_screen, bene_font, x, y, SDL_Color{48, 48, 48), "DEBUG");
+                textDrawer.drawText(x, y, SDL_Color{48, 48, 48,255}, "DEBUG");
             }
         }
     }
 
     renderDrawer->drawSprite(bmp_D2TM_Title, logoX, logoY);
-    //renderDrawer->drawTexture(bmp_D2TM_Title, logoX, logoY);
 
     GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
