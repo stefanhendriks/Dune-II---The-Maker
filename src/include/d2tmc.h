@@ -24,6 +24,7 @@
 #include "utils/cStructureUtils.h"
 
 #include "utils/DataPack.hpp"
+#include <memory>
 
 class cAbstractStructure;
 class SDLDrawer;
@@ -78,10 +79,10 @@ extern ALFONT_FONT *bene_font;
 extern ALFONT_FONT *small_font;
 
 // DATAFILES
-extern DataPack *gfxdata;
-extern DataPack *gfxinter;
-extern DataPack *gfxworld;
-extern DataPack *gfxmentat;
+extern std::shared_ptr<DataPack> gfxdata;
+extern std::shared_ptr<DataPack> gfxinter;
+extern std::shared_ptr<DataPack> gfxworld;
+extern std::shared_ptr<DataPack> gfxmentat;
 
 // BITMAPS
 extern SDL_Surface *bmp_screen;

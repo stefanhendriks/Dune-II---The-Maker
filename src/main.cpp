@@ -64,10 +64,10 @@ SDL_Surface *bmp_winlose;
 SDL_Surface *bmp_fadeout;
 
 // datafile(s)
-DataPack *gfxdata;		// graphics (terrain, units, structures)
-DataPack *gfxinter;		// interface graphics
-DataPack *gfxworld;		// world/pieces graphics
-DataPack *gfxmentat;	// mentat graphics
+std::unique_ptr<DataPack> gfxdata;		// graphics (terrain, units, structures)
+std::unique_ptr<DataPack> gfxinter;		// interface graphics
+std::unique_ptr<DataPack> gfxworld;		// world/pieces graphics
+std::unique_ptr<DataPack> gfxmentat;	// mentat graphics
 
 // FONT stuff
 ALFONT_FONT *game_font; 	// arrakeen.fon

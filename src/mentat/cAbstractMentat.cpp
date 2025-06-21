@@ -88,10 +88,10 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
 cAbstractMentat::~cAbstractMentat()
 {
     // we can do this because Mentats are created/deleted before allegro gets destroyed
-    if (gfxmovie) {
-        unload_datafile(gfxmovie);
-    }
-    gfxmovie = nullptr;
+    // if (gfxmovie) {
+    //     unload_datafile(gfxmovie);
+    // }
+    // gfxmovie = nullptr;
 
     delete leftButton;
     delete rightButton;
@@ -162,8 +162,7 @@ void cAbstractMentat::thinkMovie()
         if (TIMER_movie > 20) {
             iMovieFrame++;
 
-            if (gfxmovie[iMovieFrame].type == DAT_END ||
-                    gfxmovie[iMovieFrame].type != DAT_BITMAP) {
+            if (iMovieFrame > gfxmovie->getNumberOfFile()) {
                 iMovieFrame = 0;
             }
             TIMER_movie = 0;
@@ -266,7 +265,7 @@ void cAbstractMentat::draw()
     renderDrawer->drawRect(bmp_screen, offsetX-1, offsetY-1, 641, 481, SDL_Color{64, 64,89,255});
     renderDrawer->drawRect(bmp_screen, offsetX-2, offsetY-2, 642, 482, SDL_Color{40,40,60,255});
     renderDrawer->drawRect(bmp_screen, offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
-    select_palette(general_palette);
+    // select_palette(general_palette);
 
     // movie
     draw_movie();
@@ -313,7 +312,7 @@ void cAbstractMentat::draw_movie()
     int movieTopleftX = offsetX + 256;
     int movieTopleftY = offsetY + 120;
 
-    renderDrawer->drawSprite(bmp_screen, (SDL_Surface *)gfxmovie[iMovieFrame), movieTopleftX, movieTopleftY);
+    renderDrawer->drawSprite(bmp_screen, gfxmovie->getSurface(iMovieFrame), movieTopleftX, movieTopleftY);
 }
 
 void cAbstractMentat::interact()
@@ -361,7 +360,7 @@ void cAbstractMentat::loadScene(const std::string &scene)
     char filename[255];
     sprintf(filename, "data/scenes/%s.dat", scene.c_str());
 
-    gfxmovie = load_datafile(filename);
+    gfxmovie = std::make_shared<DataPack>(filename);
 
     TIMER_movie = 0;
     iMovieFrame=0;
