@@ -71,7 +71,7 @@ void cSelectYourNextConquestState::thinkFast()
         // temp bitmap to read from
         regionClickMapBmp = SDL_CreateRGBSurface(0, 640, 480,8,0,0,0,0); // 8 bit bitmap
         select_palette(general_palette); // default palette
-        clear_bitmap(regionClickMapBmp); // clear bitmap
+        renderDrawer->FillWithColor(regionClickMapBmp, SDL_Color{0,0,0,255});
 
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate

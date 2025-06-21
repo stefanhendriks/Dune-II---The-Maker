@@ -104,8 +104,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap.terrain == nullptr) {
         previewMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
     }
-
-    clear_bitmap(previewMap.terrain);
+    renderDrawer->FillWithColor(previewMap.terrain, SDL_Color{0,0,0,255});
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
