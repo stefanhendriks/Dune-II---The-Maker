@@ -53,11 +53,12 @@ void cSideBarDrawer::createCandyBar()
 // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
-    set_clip_rect(m_candybar, 0, 0, 24, heightMinimap - (6 + 1)); // (add 1 pixel for room between ball and bar)
+    auto tmp = SDL_Rect{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
+    SDL_SetClipRect(m_candybar, &tmp);
     for (int y = startY; y < (heightMinimap); y += 24) {
         renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), 0, y);
     }
-    set_clip_rect(m_candybar, 0, 0, m_candybar->w, m_candybar->h);
+    SDL_SetClipRect(m_candybar, nullptr);
 
     // note: no need to take top bar into account because 'm_candybar' is a separate bitmap so coords start at 0,0
 // ball is 6 pixels higher than horizontal m_candybar
