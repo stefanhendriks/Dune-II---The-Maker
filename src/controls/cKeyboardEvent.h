@@ -23,7 +23,7 @@ enum class eKeyEventType {
 class cKeyboardEvent {
 
 public:
-    cKeyboardEvent(eKeyEventType eventType, std::set<int> &keys);
+    cKeyboardEvent(eKeyEventType eventType, std::set<SDL_Scancode> &keys);
 
     eKeyEventType eventType = eKeyEventType::NONE;
 
@@ -31,14 +31,14 @@ public:
         std::string str= fmt::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(eventType));
         str.append("[");
         for (auto aKey : keys) {
-            str.append(scancode_to_name(aKey));
+            str.append(SDL_GetScancodeName(aKey));
         }
         str.append("]");
 
         return str;
     }
 
-    bool hasKey(int scanCode) const {
+    bool hasKey(SDL_Scancode scanCode) const {
         return keys.find(scanCode) != keys.end();
     }
 
@@ -48,7 +48,7 @@ public:
      * @param secondScanCode
      * @return
      */
-    bool hasKeys(int firstScanCode, int secondScanCode) const {
+    bool hasKeys(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
         return hasKey(firstScanCode) && hasKey(secondScanCode);
     }
 
@@ -58,7 +58,7 @@ public:
      * @param secondScanCode
      * @return
      */
-    bool hasEitherKey(int firstScanCode, int secondScanCode) const {
+    bool hasEitherKey(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
         return hasKey(firstScanCode) || hasKey(secondScanCode);
     }
 
@@ -88,5 +88,5 @@ private:
         return "";
     }
 
-    std::set<int> keys;
+    std::set<SDL_Scancode> keys;
 };

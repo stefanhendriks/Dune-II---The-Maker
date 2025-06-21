@@ -1,6 +1,6 @@
 #include "cKeyboardEvent.h"
 
-cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, std::set<int> &keys) :
+cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, std::set<SDL_Scancode> &keys) :
     eventType(eventType),
     keys(keys)
 {
