@@ -267,18 +267,9 @@ void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Co
 
 void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
 {
-    if (dest == nullptr) return;
-    // the -1 is because the width /height is "including" the current pixel
-    // ie, a width of 1 pixel means it draws just 1 pixel, since the x2 is a dest it should result into x1
-    ///rect(dest, x, y, x + (width-1), y + (height-1), color);
-    if (SDL_LockSurface(dest) < 0) {
-        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
-        return;
-    }
-    Uint32 mappedColor = SDL_MapRGBA(dest->format, color.r, color.g, color.b, color.a);
+    renderChangeColor(color);
     const SDL_Rect tmp = {x, y, x + (width-1), y + (height-1)};
-    draw_rect_outline_surface(dest, &tmp, mappedColor);
-    SDL_UnlockSurface(dest);
+    SDL_RenderDrawRect(renderer, &tmp);
 }
 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
@@ -288,9 +279,9 @@ void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, 
 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
 {
-    const SDL_Rect tmp = {0, 0, width, height};
-    Uint32 mappedColor = SDL_MapRGBA(dest->format, color.r, color.g, color.b, color.a);
-    SDL_FillRect(dest, &tmp, mappedColor);
+    const SDL_Rect tmp = {x, y, width, height};
+    renderChangeColor(color);
+    SDL_RenderFillRect(renderer, &tmp);
 }
 
 void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha)
@@ -412,8 +403,8 @@ void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangl
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
     SDL_Rect tmp = {x1,y1,width,height};
-    Uint32 mappedColor = SDL_MapRGBA(dest->format, gui_colorBorderLight.r, gui_colorBorderLight.g, gui_colorBorderLight.b, gui_colorBorderLight.a);
-    draw_rect_outline_surface(dest, &tmp, mappedColor);
+    renderChangeColor(gui_colorBorderLight);
+    SDL_RenderDrawRect(renderer, &tmp);
     // see commit cb797e3
     drawLine(dest, x1+width, y1, x1+width, y1+height, gui_colorBorderDark);
     drawLine(dest, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
@@ -426,13 +417,8 @@ void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, i
 
 void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color)
 {
-    if (SDL_LockSurface(bmp) < 0) {
-        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
-        return;
-    }
-    Uint32 mappedColor = SDL_MapRGBA(bmp->format, color.r, color.g, color.b, color.a);
-    draw_line_surface(bmp, x1, y1, x2, y2, mappedColor);
-    SDL_UnlockSurface(bmp);
+    renderChangeColor(color);
+    SDL_RenderDrawLine(renderer,x1, y1, x2, y2);
 }
 
 void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size)
@@ -534,58 +520,6 @@ void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color
             *((Uint32 *)p + x) = pixel_color;
             break;
     }
-}
-
-// Fonction pour dessiner une ligne sur une SDL_Surface
-void SDLDrawer::draw_line_surface(SDL_Surface *surface, int x1, int y1, int x2, int y2, Uint32 color)
-{
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-    int sx = (x1 < x2) ? 1 : -1;
-    int sy = (y1 < y2) ? 1 : -1;
-    int err = dx - dy;
-
-    while (1) {
-        set_pixel(surface, x1, y1, color);
-
-        if (x1 == x2 && y1 == y2) break;
-        int e2 = 2 * err;
-        if (e2 > -dy) {
-            err -= dy;
-            x1 += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            y1 += sy;
-        }
-    }
-}
-
-// Fonction pour dessiner un rectangle sans remplissage sur une SDL_Surface
-void SDLDrawer::draw_rect_outline_surface(SDL_Surface *surface, const SDL_Rect *rect, Uint32 color)
-{
-    if (rect == NULL || surface == NULL) {
-        return;
-    }
-
-    // Vérrouiller la surface avant de modifier les pixels
-    if (SDL_LockSurface(surface) < 0) {
-        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
-        return;
-    }
-
-    // Dessiner les 4 lignes
-    // Ligne du haut
-    draw_line_surface(surface, rect->x, rect->y, rect->x + rect->w - 1, rect->y, color);
-    // Ligne du bas
-    draw_line_surface(surface, rect->x, rect->y + rect->h - 1, rect->x + rect->w - 1, rect->y + rect->h - 1, color);
-    // Ligne de gauche
-    draw_line_surface(surface, rect->x, rect->y, rect->x, rect->y + rect->h - 1, color);
-    // Ligne de droite
-    draw_line_surface(surface, rect->x + rect->w - 1, rect->y, rect->x + rect->w - 1, rect->y + rect->h - 1, color);
-
-    // Déverrouiller la surface
-    SDL_UnlockSurface(surface);
 }
 
 // Fonction utilitaire pour obtenir la couleur d'un pixel sur une SDL_Surface.
