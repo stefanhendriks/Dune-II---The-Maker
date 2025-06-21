@@ -163,7 +163,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     // reset to normal
     set_trans_blender(0, 0, 0, 128);
 
-    destroy_bitmap(temp);
+    SDL_FreeSurface(temp);
 }
 
 void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
@@ -202,5 +202,5 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
-    destroy_bitmap(temp);
+    SDL_FreeSurface(temp);
 }

@@ -179,7 +179,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
 {
-    destroy_bitmap(background);
+    SDL_FreeSurface(background);
     background = nullptr;
 
     delete backButton;

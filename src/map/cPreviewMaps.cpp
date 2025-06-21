@@ -25,7 +25,7 @@ void cPreviewMaps::destroy()
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
         if (previewMap.terrain) {
-            destroy_bitmap(previewMap.terrain);
+            SDL_FreeSurface(previewMap.terrain);
             previewMap.terrain = nullptr;
         }
     }
@@ -207,7 +207,7 @@ void cPreviewMaps::initPreviews()
         s_PreviewMap &previewMap = PreviewMap[i];
 
         if (previewMap.terrain != nullptr) {
-            destroy_bitmap(previewMap.terrain);
+            SDL_FreeSurface(previewMap.terrain);
             previewMap.terrain = nullptr;
         }
 

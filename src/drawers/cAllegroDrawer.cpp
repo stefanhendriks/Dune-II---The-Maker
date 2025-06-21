@@ -22,7 +22,7 @@ cAllegroDrawer::~cAllegroDrawer()
     m_dataRepository = nullptr;
 
     for (auto &p : bitmapCache) {
-        destroy_bitmap(p.second);
+        SDL_FreeSurface(p.second);
     }
 }
 

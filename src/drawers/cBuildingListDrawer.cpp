@@ -369,7 +369,7 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
 
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(iTile), x + 43, y + 20);
 
-    destroy_bitmap(temp);
+    SDL_FreeSurface(temp);
 
 }
 

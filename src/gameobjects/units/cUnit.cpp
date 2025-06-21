@@ -763,8 +763,8 @@ void cUnit::draw()
                                         scaledWidth, scaledHeight);
 
         renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, ux, destY);
-        destroy_bitmap(shadow);
-        destroy_bitmap(stretchedShadow);
+        SDL_FreeSurface(shadow);
+        SDL_FreeSurface(stretchedShadow);
     }
 
     // Draw BODY

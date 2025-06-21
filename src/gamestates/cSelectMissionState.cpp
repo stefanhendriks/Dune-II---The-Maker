@@ -65,7 +65,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, SDL_Surface *background
 cSelectMissionState::~cSelectMissionState()
 {
     delete gui_window;
-    destroy_bitmap(background);
+    SDL_FreeSurface(background);
 }
 
 void cSelectMissionState::thinkFast()
