@@ -1173,7 +1173,7 @@ bool cGame::setupGame()
 
     // finally the data repository and drawer interface can be initialized
     m_dataRepository = new cAllegroDataRepository();
-    renderDrawer = new cAllegroDrawer(m_dataRepository);
+    renderDrawer = new SDLDrawer(m_dataRepository);
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
