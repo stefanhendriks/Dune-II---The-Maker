@@ -335,6 +335,7 @@ void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y)
         return;
     }
     SDL_RenderCopy(renderer, texture, NULL, &tmp);
+    SDL_DestroyTexture(texture);
 }
 
 
