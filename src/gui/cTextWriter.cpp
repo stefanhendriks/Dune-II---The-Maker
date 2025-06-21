@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize)
+cTextWriter::cTextWriter(int x, int y, TTF_Font *theFont, int theFontSize)
 {
     assert(theFont);
     assert(theFontSize > 0);
