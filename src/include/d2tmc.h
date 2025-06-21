@@ -86,7 +86,6 @@ extern std::shared_ptr<DataPack> gfxmentat;
 
 // BITMAPS
 extern SDL_Surface *bmp_screen;
-extern SDL_Surface *screenSurface;
 extern SDL_Surface *bmp_backgroundMentat;
 extern SDL_Surface *bmp_fadeout;
 extern SDL_Surface *bmp_throttle;
