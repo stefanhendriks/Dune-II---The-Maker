@@ -73,7 +73,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw shadow of the prebuild animation
     int shadowIndex = iDrawPreBuild + 1;
-    set_trans_blender(0,0,0,128);
+    // @Mira fix trasnparency set_trans_blender(0,0,0,128);
     SDL_Surface *shadow = gfxdata->getSurface(shadowIndex);
 
     SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
@@ -154,7 +154,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
 
     SDL_Surface *shadow = structure->getShadowBitmap();
     if (shadow) {
-        set_trans_blender(0, 0, 0, 160);
+        // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
         
         SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);

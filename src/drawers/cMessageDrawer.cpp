@@ -122,7 +122,7 @@ void cMessageDrawer::draw()
     }
 
     if (m_alpha > -1) {
-        set_trans_blender(0, 0, 0, m_alpha);
+        // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_alpha);
         renderDrawer->FillWithColor(m_temp, SDL_Color{255,0,255,255});
         renderDrawer->drawSprite(m_temp, m_bmpBar, 0, 0);
 
@@ -132,7 +132,7 @@ void cMessageDrawer::draw()
         renderDrawer->resetClippingFor(m_temp);
 
         // draw temp
-        draw_trans_sprite(bmp_screen, m_temp, m_position.x, m_position.y);
+        renderDrawer->drawTransSprite(bmp_screen, m_temp, m_position.x, m_position.y);
     }
 }
 

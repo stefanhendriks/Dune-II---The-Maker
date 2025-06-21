@@ -247,8 +247,8 @@ void cAllegroDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectang
 
     rectfill(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
 
-    set_trans_blender(0, 0, 0, alpha);
-    draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
+    // @Mira fix trasnparency set_trans_blender(0, 0, 0, alpha);
+    renderDrawer->drawTransSprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
 // cRectangle *cAllegroDrawer::fromBitmap(int x, int y, SDL_Surface *src) {
@@ -257,7 +257,7 @@ void cAllegroDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectang
 
 void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha)
 {
-    set_trans_blender(std::clamp(red, 0, 255),
+    // @Mira fix trasnparency set_trans_blender(std::clamp(red, 0, 255),
                       std::clamp(green, 0, 255),
                       std::clamp(blue, 0, 255),
                       std::clamp(alpha, 0, 255));
@@ -356,7 +356,7 @@ void cAllegroDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rec
 
 void cAllegroDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y)
 {
-    draw_trans_sprite(dest, sprite, x, y);
+    renderDrawer->drawTransSprite(dest, sprite, x, y);
 }
 
 void cAllegroDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, int color)

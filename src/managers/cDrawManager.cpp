@@ -152,7 +152,7 @@ void cDrawManager::drawRallyPoint()
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
 
-    set_trans_blender(0,0,0,128);
+    // @Mira fix trasnparency set_trans_blender(0,0,0,128);
     int drawX = mapCamera->getWindowXPositionFromCell(rallyPointCell);
     int drawY = mapCamera->getWindowYPositionFromCell(rallyPointCell);
 

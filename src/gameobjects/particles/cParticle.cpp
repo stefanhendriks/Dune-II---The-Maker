@@ -143,15 +143,15 @@ void cParticle::draw()
             set_add_blender(0, 0, 0, iAlpha);
         }
         else {
-            set_trans_blender(0, 0, 0, iAlpha);
+            // @Mira fix trasnparency set_trans_blender(0, 0, 0, iAlpha);
         }
-        draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
+        renderDrawer->drawTransSprite(bmp_screen, stretched, drawX, drawY);
     }
     else {
         renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);
     }
 
-    set_trans_blender(0, 0, 0, 128);
+    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
 
     SDL_FreeSurface(stretched);
 }
