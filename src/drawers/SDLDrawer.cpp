@@ -308,6 +308,11 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &r
     // renderDrawer->drawTransSprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
+void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color)
+{
+    drawRectTransparentFilled(dest, rect, color, color.a);
+}
+
 // cRectangle *SDLDrawer::fromBitmap(int x, int y, SDL_Surface *src) {
 //     return new cRectangle(x, y, src->w, src->h);
 // }
