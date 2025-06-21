@@ -349,7 +349,7 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &r
     drawRectFilled(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
 
     // // @Mira fix trasnparency set_trans_blender(0, 0, 0, alpha);
-    // renderDrawer->drawTransSprite(dest, bitmap, rect.getX(),rect.getY());
+    renderDrawer->drawTransSprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
 void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color)
