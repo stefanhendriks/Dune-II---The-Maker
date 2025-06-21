@@ -517,7 +517,7 @@ void cMap::remove_id(int iIndex, int iIDType)
 void cMap::draw_units()
 {
     //@Mira SDL2 blender
-    //set_trans_blender(0, 0, 0, 160);
+    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
     for (int i = 0; i < MAX_UNITS; i++) {
@@ -585,7 +585,7 @@ void cMap::drawUnitDebug(cUnit &pUnit) const
 void cMap::draw_units_2nd()
 {
     // Mira SDL2 blender
-    //set_trans_blender(0, 0, 0, 160);
+    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw health of units
     for (int i = 0; i < MAX_UNITS; i++) {
@@ -619,7 +619,7 @@ void cMap::draw_units_2nd()
 
     }
     // Mira SDL2 blender
-    //set_trans_blender(0, 0, 0, 128);
+    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
 }
 
 int cMap::mouse_draw_x()

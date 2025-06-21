@@ -347,7 +347,7 @@ void cGame::setMissionLost()
     playMusicByType(MUSIC_LOSE);
 
     // copy over
-    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
+    renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
 
     renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_LOSING));
 }
@@ -634,8 +634,8 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         assert(m_fadeAlpha <= kMaxAlpha);
         SDL_Surface* temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
         renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
-        set_trans_blender(0, 0, 0, m_fadeAlpha);
-        draw_trans_sprite(temp, bmp_screen, 0, 0);
+        // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
+        renderDrawer->drawTransSprite(temp, bmp_screen, 0, 0);
         renderDrawer->blit(temp, screen, 0, 0, 0, 0, m_screenW, m_screenH);
         SDL_FreeSurface(temp);
     }
@@ -691,7 +691,7 @@ void cGame::drawState()
 */
 void cGame::run()
 {
-    set_trans_blender(0, 0, 0, 128);
+    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
     SDL_Event event;
     while (m_playing) {
         m_timeManager.processTime();

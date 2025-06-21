@@ -35,7 +35,7 @@ cMapDrawer::~cMapDrawer()
 
 void cMapDrawer::drawShroud()
 {
-    set_trans_blender(0, 0, 0, 128);
+    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
 
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
@@ -80,7 +80,7 @@ void cMapDrawer::drawShroud()
                         renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
                         renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
                                 iTileWidth, iTileHeight);
-                        draw_trans_sprite(bmp_screen, temp, fDrawX, fDrawY);
+                        renderDrawer->drawTransSprite(bmp_screen, temp, fDrawX, fDrawY);
                     }
                 }
                 else {

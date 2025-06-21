@@ -80,7 +80,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
-    set_trans_blender(0,0,0,128);
+    // @Mira fix trasnparency set_trans_blender(0,0,0,128);
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(id), x, y);
 
     if (!list->isAvailable()) {
@@ -169,7 +169,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
-                //@Mira fix transparency set_trans_blender(0, 0, 0, 128);
+                //@Mira fix transparency // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
                 renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
                 renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
             }
@@ -212,8 +212,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
-                set_trans_blender(0, 0, 0, 64);
-                draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
+                // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
+                renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
@@ -249,8 +249,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
                 // payment/progress)
                 if (cannotPayIt) {
-                    set_trans_blender(0, 0, 0, 64);
-                    draw_trans_sprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
+                    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
+                    renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
@@ -358,12 +358,12 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
 
     SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
 
-    set_trans_blender(0, 0, 0, 192);
-    draw_trans_sprite(temp, bmp_screen, x + 43, y + 20);
+    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 192);
+    renderDrawer->drawTransSprite(temp, bmp_screen, x + 43, y + 20);
 
     renderDrawer->drawSprite(temp, gfxinter->getSurface(GRID_0X0), 0, 0);
 
-    draw_trans_sprite(bmp_screen, temp, x + 43, y + 20);
+    renderDrawer->drawTransSprite(bmp_screen, temp, x + 43, y + 20);
 
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(iTile), x + 43, y + 20);
 
