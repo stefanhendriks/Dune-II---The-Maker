@@ -631,7 +631,7 @@ void SDLDrawer::FillWithColor(SDL_Surface *src, SDL_Color color)
 
 void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, SDL_Color color)
 {
-    Uint32 mappedColor = SDL_MapRGBA(screenSurface->format,
+    Uint32 mappedColor = SDL_MapRGBA(bmp->format,
                             color.r, color.g, color.b, color.a);
     
     // Vérrouiller la surface avant de modifier les pixels
