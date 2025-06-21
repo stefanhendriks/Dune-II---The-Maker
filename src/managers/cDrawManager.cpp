@@ -218,7 +218,9 @@ void cDrawManager::drawCombatMouse()
 
 void cDrawManager::drawMouse()
 {
-    select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
+    defaultCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+    SDL_SetCursor(defaultCursor);
+    
     m_mouseDrawer.draw();
 }
 
