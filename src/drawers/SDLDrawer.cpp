@@ -7,12 +7,13 @@
 #include <memory>
 
 
-SDLDrawer::SDLDrawer(cAllegroDataRepository *dataRepository) : m_dataRepository(dataRepository)
+SDLDrawer::SDLDrawer(cAllegroDataRepository *dataRepository, SDL_Renderer *_renderer) : m_dataRepository(dataRepository)
 {
     colorBlack= SDL_Color{0,0,0,255};
     gui_colorWindow = SDL_Color{176,176,196,255};
     gui_colorBorderDark = SDL_Color{84,84,120,255};
     gui_colorBorderLight = SDL_Color{252,252,252,255};
+    renderer = _renderer;
 }
 
 SDLDrawer::~SDLDrawer()
