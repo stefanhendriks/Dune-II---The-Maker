@@ -53,6 +53,7 @@ public:
     }
 
     void bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor);
+    void bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor);
 
     void setTransBlender(int red, int green, int blue, int alpha);
 
@@ -68,6 +69,7 @@ public:
     void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);
 
     void FillWithColor(SDL_Surface *src, SDL_Color color);
+    SDL_Color getPixel(SDL_Surface *surface, int x, int y);
 
 protected:
     int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
