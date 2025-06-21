@@ -154,7 +154,8 @@ void cMainMenuGameState::draw() const
         }
     }
 
-    renderDrawer->drawSprite(bmp_screen, bmp_D2TM_Title, logoX, logoY);
+    renderDrawer->drawSprite(bmp_D2TM_Title, logoX, logoY);
+    //renderDrawer->drawTexture(bmp_D2TM_Title, logoX, logoY);
 
     GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
