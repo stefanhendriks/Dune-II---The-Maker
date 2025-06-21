@@ -327,7 +327,8 @@ void cGame::setMissionWon()
     playMusicByType(MUSIC_WIN);
 
     // copy over
-    renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
+    //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
+    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
 
     renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_WINNING));
 }
@@ -347,8 +348,8 @@ void cGame::setMissionLost()
     playMusicByType(MUSIC_LOSE);
 
     // copy over
-    renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
-
+    //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
+    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
     renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_LOSING));
 }
 
@@ -610,7 +611,7 @@ void cGame::shakeScreenAndBlitBuffer()
             m_shakeX = -abs(offset / 2) + rnd(offset);
             m_shakeY = -abs(offset / 2) + rnd(offset);
 
-            renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
+            //renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
             //renderDrawer->blit(bmp_throttle, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         }
         else {
@@ -627,6 +628,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
     if (m_fadeAction == FADE_NONE) {
         // Not shaking and not fading.
         //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
+        // @Mira screenshot for after ?
     }
     else {
         // Fading
@@ -636,7 +638,9 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
         renderDrawer->drawTransSprite(temp, bmp_screen, 0, 0);
-        renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        //renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
+
         SDL_FreeSurface(temp);
         //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
     }
