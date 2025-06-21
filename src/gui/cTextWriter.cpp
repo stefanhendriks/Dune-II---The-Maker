@@ -29,7 +29,13 @@ void cTextWriter::write(const char *msg)
     updateDrawY();
 }
 
-void cTextWriter::write(const char *msg, int color)
+// void cTextWriter::write(const char *msg, int color)
+// {
+//     textDrawer->drawText(drawX, drawY, color, msg);
+//     updateDrawY();
+// }
+
+void cTextWriter::write(const char *msg, SDL_Color color)
 {
     textDrawer->drawText(drawX, drawY, color, msg);
     updateDrawY();

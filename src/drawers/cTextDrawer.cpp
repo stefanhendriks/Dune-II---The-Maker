@@ -34,7 +34,7 @@ void cTextDrawer::drawTextWithOneInteger(int x, int y, const char *msg, int var)
     drawTextWithOneInteger(x, y, textColor, msg, var);
 }
 
-void cTextDrawer::drawTextWithOneInteger(int x, int y, int color, const char *msg, int var) const
+void cTextDrawer::drawTextWithOneInteger(int x, int y, SDL_Color color, const char *msg, int var) const
 {
     //Mira TEXT if (applyShadow) {
     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
@@ -42,7 +42,7 @@ void cTextDrawer::drawTextWithOneInteger(int x, int y, int color, const char *ms
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 }
 
-void cTextDrawer::drawText(int x, int y, int color, const char *msg) const
+void cTextDrawer::drawText(int x, int y, SDL_Color color, const char *msg) const
 {
     //Mira TEXT if (applyShadow) {
     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg);
@@ -50,7 +50,7 @@ void cTextDrawer::drawText(int x, int y, int color, const char *msg) const
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg);
 }
 
-void cTextDrawer::drawText(cPoint &coords, int color, const char *msg) const
+void cTextDrawer::drawText(cPoint &coords, SDL_Color color, const char *msg) const
 {
     drawText(coords.x, coords.y, color, msg);
 }
@@ -65,7 +65,7 @@ void cTextDrawer::drawTextCentered(const char *msg, int y) const
     drawTextCentered(msg, y, textColor);
 }
 
-void cTextDrawer::drawTextCentered(const char *msg, int y, int color) const
+void cTextDrawer::drawTextCentered(const char *msg, int y, SDL_Color color) const
 {
     //Mira TEXT int lenghtInPixels = alfont_text_length(font, msg);
     //Mira TEXT int half = lenghtInPixels / 2;
@@ -73,7 +73,7 @@ void cTextDrawer::drawTextCentered(const char *msg, int y, int color) const
     //Mira TEXT drawText(xPos, y, color, msg);
 }
 
-void cTextDrawer::drawTextCenteredInBox(const char *msg, int x, int y, int boxWidth, int boxHeight, int color) const
+void cTextDrawer::drawTextCenteredInBox(const char *msg, int x, int y, int boxWidth, int boxHeight, SDL_Color color) const
 {
     //Mira TEXT int lenghtInPixels = alfont_text_length(font, msg);
     //Mira TEXT int heightInPixels = alfont_text_height(font);
@@ -87,17 +87,17 @@ void cTextDrawer::drawTextCenteredInBox(const char *msg, int x, int y, int boxWi
     //Mira TEXT drawText(xPos, yPos, color, msg);
 }
 
-void cTextDrawer::drawTextCenteredInBox(const char *msg, const cRectangle &rect, int color) const
+void cTextDrawer::drawTextCenteredInBox(const char *msg, const cRectangle &rect, SDL_Color color) const
 {
     drawTextCenteredInBox(msg, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), color);
 }
 
-void cTextDrawer::drawTextCenteredInBox(const char *msg, const cRectangle &rect, int color, int offsetX, int offsetY) const
+void cTextDrawer::drawTextCenteredInBox(const char *msg, const cRectangle &rect, SDL_Color color, int offsetX, int offsetY) const
 {
     drawTextCenteredInBox(msg, rect.getX() + offsetX, rect.getY() + offsetY, rect.getWidth(), rect.getHeight(), color);
 }
 
-void cTextDrawer::drawTextCentered(const char *msg, int x, int width, int y, int color) const
+void cTextDrawer::drawTextCentered(const char *msg, int x, int width, int y, SDL_Color color) const
 {
     //Mira TEXT int lenghtInPixels = alfont_text_length(font, msg);
     //Mira TEXT int half = lenghtInPixels / 2;
@@ -115,7 +115,7 @@ void cTextDrawer::drawTextBottomLeft(const char *msg) const
     drawTextBottomLeft(textColor, msg);
 }
 
-void cTextDrawer::drawTextBottomRight(int color, const char *msg) const
+void cTextDrawer::drawTextBottomRight(SDL_Color color, const char *msg) const
 {
     //Mira TEXT int lenghtInPixels = alfont_text_length(font, msg);
     //Mira TEXT int x = game.m_screenX - lenghtInPixels;
@@ -130,7 +130,7 @@ int cTextDrawer::getFontHeight() const
     return 10;
 }
 
-void cTextDrawer::drawTextBottomLeft(int color, const char *msg) const
+void cTextDrawer::drawTextBottomLeft(SDL_Color color, const char *msg) const
 {
     //Mira TEXT int y = game.m_screenY - alfont_text_height(font);
     //Mira TEXT drawText(0, y, color, msg);
@@ -163,7 +163,7 @@ void cTextDrawer::drawText(int x, int y, const char *msg, const char *var) const
     drawText(x, y, textColor, msg, var);
 }
 
-void cTextDrawer::drawText(int x, int y, int color, const char *msg, const char *var) const
+void cTextDrawer::drawText(int x, int y, SDL_Color color, const char *msg, const char *var) const
 {
     //Mira TEXT if (applyShadow) {
     //Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
@@ -171,7 +171,7 @@ void cTextDrawer::drawText(int x, int y, int color, const char *msg, const char 
     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 }
 
-void cTextDrawer::drawText(int x, int y, int color, const char *msg, int var) const
+void cTextDrawer::drawText(int x, int y, SDL_Color color, const char *msg, int var) const
 {
     drawTextWithOneInteger(x, y, color, msg, var);
 }
