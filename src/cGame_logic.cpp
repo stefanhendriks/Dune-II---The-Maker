@@ -632,13 +632,12 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         // Fading
         assert(m_fadeAlpha >= kMinAlpha);
         assert(m_fadeAlpha <= kMaxAlpha);
-        SDL_Surface* temp = std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)>(
-                        create_bitmap(game.m_screenW, game.m_screenH), SDL_FreeSurface);
-        assert(temp);
+        SDL_Surface* temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
         renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         set_trans_blender(0, 0, 0, m_fadeAlpha);
-        draw_trans_sprite(temp.get(), bmp_screen, 0, 0);
-        renderDrawer->blit(temp.get(), screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        draw_trans_sprite(temp, bmp_screen, 0, 0);
+        renderDrawer->blit(temp, screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        SDL_FreeSurface(temp);
     }
 }
 
@@ -1032,7 +1031,7 @@ bool cGame::setupGame()
     Bitmap Creation
     ***/
 
-    bmp_screen = create_bitmap(game.m_screenW, game.m_screenH);
+    bmp_screen = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
     if (bmp_screen == nullptr) {
         std::cerr << "Failed to create a memory bitmap\n";
@@ -1044,7 +1043,7 @@ bool cGame::setupGame()
         renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
     }
 
-    bmp_backgroundMentat = create_bitmap(game.m_screenW, game.m_screenH);
+    bmp_backgroundMentat = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
     if (bmp_backgroundMentat == nullptr) {
         std::cerr << "Failed to create a memory bitmap\n";
@@ -1087,7 +1086,7 @@ bool cGame::setupGame()
         }
     }
 
-    bmp_throttle = create_bitmap(game.m_screenW, game.m_screenH);
+    bmp_throttle = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
     if (bmp_throttle == nullptr) {
         std::cerr << "Failed to create a memory bitmap\n";
@@ -1098,7 +1097,7 @@ bool cGame::setupGame()
         logbook("Memory bitmap created: bmp_throttle");
     }
 
-    bmp_winlose = create_bitmap(game.m_screenW, game.m_screenH);
+    bmp_winlose = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
     if (bmp_winlose == nullptr) {
         std::cerr <<  "Failed to create a memory bitmap\n";
@@ -1109,7 +1108,7 @@ bool cGame::setupGame()
         logbook("Memory bitmap created: bmp_winlose");
     }
 
-    bmp_fadeout = create_bitmap(game.m_screenW, game.m_screenH);
+    bmp_fadeout = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
     if (bmp_fadeout == nullptr) {
         std::cerr <<  "Failed to create a memory bitmap\n";
@@ -1421,13 +1420,13 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                SDL_Surface *background = create_bitmap(m_screenW, m_screenH);
+                SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
                 renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cSelectMissionState(*this, background, m_state);
             }
             else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                SDL_Surface *background = create_bitmap(m_screenW, m_screenH);
+                SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
                     drawManager->drawCombatState();

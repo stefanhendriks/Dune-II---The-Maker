@@ -98,7 +98,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iDrawX = map.mouse_draw_x();
     int iDrawY = map.mouse_draw_y();
 
-    SDL_Surface *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
+    SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
     if (!bWithinBuildDistance) {
         // @Mira color should be game.getColorPlaceBad());
         renderDrawer->FillWithColor(temp, SDL_Color{255,0,0,255});
@@ -182,7 +182,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
-    SDL_Surface *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
+    SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
     renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
     SDL_Surface *bmp = nullptr;

@@ -357,10 +357,9 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
         iTile = GRID_3X3;
     }
 
-    SDL_Surface *temp=create_bitmap(19,19);
-    clear_bitmap(temp);
-    set_trans_blender(0, 0, 0, 192);
+    SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
 
+    set_trans_blender(0, 0, 0, 192);
     draw_trans_sprite(temp, bmp_screen, x + 43, y + 20);
 
     renderDrawer->drawSprite(temp, gfxinter->getSurface(GRID_0X0), 0, 0);

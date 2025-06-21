@@ -102,7 +102,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
     if (previewMap.terrain == nullptr) {
-        previewMap.terrain = create_bitmap(128, 128);
+        previewMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
     }
 
     clear_bitmap(previewMap.terrain);
@@ -236,5 +236,5 @@ void cPreviewMaps::initPreviews()
     firstSkirmishMap.terrainType = std::vector<int>(maxCells, -1);
     firstSkirmishMap.name = "Random map";
     //PreviewMap[0].terrain = gfxinter->getSurface(BMP_UNKNOWNMAP);
-    firstSkirmishMap.terrain = create_bitmap(128, 128);
+    firstSkirmishMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
 }

@@ -71,7 +71,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     screen_y = game.m_screenH;
 
     // Background
-    background = create_bitmap(screen_x, screen_y);
+    background = SDL_CreateRGBSurface(0,screen_x, screen_y,32,0,0,0,255);
     renderDrawer->FillWithColor(background, SDL_Color{0,0,0,255});
 
     SDL_Surface *dunePlanet = gfxinter->getSurface(BMP_GAME_DUNE);

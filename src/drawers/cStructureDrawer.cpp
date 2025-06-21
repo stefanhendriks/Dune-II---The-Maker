@@ -338,7 +338,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 
     int iconWidth = (gfxinter->getSurface(iconId))->w;
     int iconHeight = (gfxinter->getSurface(iconId))->h;
-    SDL_Surface *bmp = create_bitmap(iconWidth, iconHeight);
+    SDL_Surface *bmp = SDL_CreateRGBSurface(0,iconWidth, iconHeight,32,0,0,0,255);
     renderDrawer->FillWithColor(bmp, SDL_Color{255,0,255,255});
     renderDrawer->drawSprite(bmp, gfxinter->getSurface(iconId), 0, 0);
 
