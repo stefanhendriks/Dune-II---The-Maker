@@ -20,7 +20,7 @@ cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
 
 void cFlag::draw()
 {
-    BITMAP *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
+    SDL_Surface *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
     int drawX = mapCamera->getWindowXPosition(absCoords.x);

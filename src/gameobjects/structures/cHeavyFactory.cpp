@@ -91,7 +91,7 @@ void cHeavyFactory::draw()
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-        BITMAP *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
+        SDL_Surface *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
                                         drawX, drawY, scaledWidth, scaledHeight);
     }

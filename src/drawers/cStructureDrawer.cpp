@@ -59,7 +59,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int pixelHeight = structure->getHeightInPixels();
 
     int colorDepth = bitmap_color_depth(bmp_screen);
-    BITMAP *temp = create_bitmap_ex(colorDepth, pixelWidth, pixelHeight);
+    SDL_Surface *temp = create_bitmap_ex(colorDepth, pixelWidth, pixelHeight);
     clear_to_color(temp, makecol(255, 0, 255));
 
     int drawX = structure->iDrawX();
@@ -69,16 +69,16 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
-    renderDrawer->drawSprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
+    renderDrawer->drawSprite(temp, gfxdata->getSurface(iDrawPreBuild), 0, 0);
     renderDrawer->stretchSprite(temp, bmp_screen, drawX, drawY, scaledWidth, scaledHeight);
     destroy_bitmap(temp);
 
     // Draw shadow of the prebuild animation
     int shadowIndex = iDrawPreBuild + 1;
     set_trans_blender(0,0,0,128);
-    BITMAP *shadow = (BITMAP *) gfxdata[shadowIndex].dat;
+    SDL_Surface *shadow = gfxdata->getSurface(shadowIndex);
 
-    BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+    SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
     clear_to_color(stretchedShadow, makecol(255, 0, 255));
     renderDrawer->stretchSprite(shadow, stretchedShadow, 0, 0, scaledWidth, scaledHeight);
 
@@ -149,7 +149,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     int fade = windtrap->getFade();
     int screenDepth = bitmap_color_depth(bmp_screen);
 
-    BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
+    SDL_Surface *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
 
     clear_to_color(wind, makecol(255,0,255));
 
@@ -158,12 +158,12 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    BITMAP *shadow = structure->getShadowBitmap();
+    SDL_Surface *shadow = structure->getShadowBitmap();
     if (shadow) {
         set_trans_blender(0, 0, 0, 160);
 
         int colorDepth = bitmap_color_depth(bmp_screen);
-        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
@@ -320,8 +320,8 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
 
 void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
 {
-    int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
-    int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
+    int iconWidth = (gfxdata->getSurface(MOUSE_REPAIR))->w;
+    int iconHeight = (gfxdata->getSurface(MOUSE_REPAIR))->h;
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -330,7 +330,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-    stretch_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
+    stretch_sprite(bmp_screen, gfxdata->getSurface(MOUSE_REPAIR), drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
@@ -341,11 +341,11 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cUnit &pUnit = unit[unitId];
     int iconId = pUnit.getUnitInfo().icon;
 
-    int iconWidth = ((BITMAP *)gfxinter[iconId].dat)->w;
-    int iconHeight = ((BITMAP *)gfxinter[iconId].dat)->h;
-    BITMAP *bmp = create_bitmap(iconWidth, iconHeight);
+    int iconWidth = (gfxinter->getSurface(iconId))->w;
+    int iconHeight = (gfxinter->getSurface(iconId))->h;
+    SDL_Surface *bmp = create_bitmap(iconWidth, iconHeight);
     clear_to_color(bmp, makecol(255, 0, 255));
-    renderDrawer->drawSprite(bmp, (BITMAP *)gfxinter[iconId].dat, 0, 0);
+    renderDrawer->drawSprite(bmp, gfxinter->getSurface(iconId), 0, 0);
 
     // draw health bar of unit on top of icon?
     int draw_x = 3;

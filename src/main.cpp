@@ -56,17 +56,17 @@ s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 PALETTE general_palette;
 
 // bitmap(s)
-BITMAP *bmp_screen;
-BITMAP *bmp_backgroundMentat;
-BITMAP *bmp_throttle;
-BITMAP *bmp_winlose;
-BITMAP *bmp_fadeout;
+SDL_Surface *bmp_screen;
+SDL_Surface *bmp_backgroundMentat;
+SDL_Surface *bmp_throttle;
+SDL_Surface *bmp_winlose;
+SDL_Surface *bmp_fadeout;
 
 // datafile(s)
-DATAFILE *gfxdata;		// graphics (terrain, units, structures)
-DATAFILE *gfxinter;		// interface graphics
-DATAFILE *gfxworld;		// world/pieces graphics
-DATAFILE *gfxmentat;	// mentat graphics
+DataPack *gfxdata;		// graphics (terrain, units, structures)
+DataPack *gfxinter;		// interface graphics
+DataPack *gfxworld;		// world/pieces graphics
+DataPack *gfxmentat;	// mentat graphics
 
 DataPack *sdl_data;
 

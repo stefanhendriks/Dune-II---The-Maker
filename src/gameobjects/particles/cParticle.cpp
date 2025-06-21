@@ -106,7 +106,7 @@ void cParticle::draw()
     int frameHeight = getFrameHeight();
 
     // valid in boundaries
-    BITMAP *temp = create_bitmap(frameWidth, frameHeight);
+    SDL_Surface *temp = create_bitmap(frameWidth, frameHeight);
 
     // transparency
     clear_to_color(temp, makecol(255, 0, 255));
@@ -131,7 +131,7 @@ void cParticle::draw()
     int bmp_height = mapCamera->factorZoomLevel(frameHeight);
 
     // create bmp that is the stretched version of temp
-    BITMAP *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
+    SDL_Surface *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
     clear_to_color(stretched, makecol(255, 0, 255)); // mask color
     renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 

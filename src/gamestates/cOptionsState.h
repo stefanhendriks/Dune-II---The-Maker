@@ -11,7 +11,7 @@ class cGame;
 
 class cOptionsState : public cGameState {
 public:
-    explicit cOptionsState(cGame &theGame, BITMAP *background, int prevState);
+    explicit cOptionsState(cGame &theGame, SDL_Surface *background, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -26,7 +26,7 @@ public:
     void refresh();
 
 private:
-    BITMAP *m_background;
+    SDL_Surface *m_background;
 
     const cTextDrawer m_textDrawer;
 

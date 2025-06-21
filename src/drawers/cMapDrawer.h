@@ -32,7 +32,7 @@ private:
     cMapCamera *m_camera;
 
     // bitmap for drawing tiles, and possibly stretching (depending on zoom level)
-    BITMAP *m_BmpTemp;
+    SDL_Surface *m_BmpTemp;
 
     bool m_drawWithoutShroudTiles;
     bool m_drawGrid;

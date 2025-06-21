@@ -48,7 +48,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 
     // x = 160
     // y = 180
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[BMP_GENERATING].dat, 160, 180);
+    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(BMP_GENERATING), 160, 180);
 
     // draw
     while (a_rock > 0) {

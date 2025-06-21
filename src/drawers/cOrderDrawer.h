@@ -30,6 +30,6 @@ private:
 
     cPlayer *player;
     cRectangle buttonRect;
-    BITMAP *buttonBitmap;
-    BITMAP *greyedButtonBitmap;
+    SDL_Surface *buttonBitmap;
+    SDL_Surface *greyedButtonBitmap;
 };

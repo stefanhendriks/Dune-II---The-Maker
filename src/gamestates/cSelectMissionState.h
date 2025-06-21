@@ -11,7 +11,7 @@ class cGame;
 
 class cSelectMissionState : public cGameState {
 public:
-    cSelectMissionState(cGame &theGame, BITMAP *background, int prevState);
+    cSelectMissionState(cGame &theGame, SDL_Surface *background, int prevState);
     ~cSelectMissionState() override;
 
     void thinkFast() override;
@@ -23,7 +23,7 @@ public:
     eGameStateType getType() override;
 
 private:
-    BITMAP *background;
+    SDL_Surface *background;
 
     int prevState;
 

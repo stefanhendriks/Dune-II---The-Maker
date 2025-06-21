@@ -24,6 +24,7 @@
 #include "utils/cStructureUtils.h"
 
 #include <allegro/palette.h>
+#include "utils/DataPack.hpp"
 
 class cAbstractStructure;
 class cAllegroDrawer;
@@ -78,18 +79,18 @@ extern ALFONT_FONT *bene_font;
 extern ALFONT_FONT *small_font;
 
 // DATAFILES
-extern DATAFILE *gfxdata;
-extern DATAFILE *gfxinter;
-extern DATAFILE *gfxworld;
-extern DATAFILE *gfxmentat;
+extern DataPack *gfxdata;
+extern DataPack *gfxinter;
+extern DataPack *gfxworld;
+extern DataPack *gfxmentat;
 
 extern DataPack *sdl_data;
 
 // BITMAPS
-extern BITMAP *bmp_screen;
-extern BITMAP *bmp_backgroundMentat;
-extern BITMAP *bmp_fadeout;
-extern BITMAP *bmp_throttle;
-extern BITMAP *bmp_winlose;
+extern SDL_Surface *bmp_screen;
+extern SDL_Surface *bmp_backgroundMentat;
+extern SDL_Surface *bmp_fadeout;
+extern SDL_Surface *bmp_throttle;
+extern SDL_Surface *bmp_winlose;
 
 

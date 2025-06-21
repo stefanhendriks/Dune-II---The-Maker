@@ -12,8 +12,8 @@
 cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)
 {
     iBackgroundFrame = MENTATH;
-    buildLeftButton((BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);
-    buildRightButton((BITMAP *) gfxmentat[BTN_PROCEED].dat, 466, 423);
+    buildLeftButton(gfxmentat->getSurface(BTN_REPEAT), 293, 423);
+    buildRightButton(gfxmentat->getSurface(BTN_PROCEED), 466, 423);
     leftButtonCommand = new cRepeatButtonCommand();
     rightButtonCommand = new cProceedButtonCommand();
 }
@@ -36,12 +36,12 @@ void cHarkonnenMentat::draw_other()
 
 void cHarkonnenMentat::draw_eyes()
 {
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[HAR_EYES01+ iMentatEyes].dat, offsetX + 64, offsetY + 256);
+    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
 }
 
 void cHarkonnenMentat::draw_mouth()
 {
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[HAR_MOUTH01+ iMentatMouth].dat, offsetX + 64, offsetY + 288);
+    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
 }
 
 void cHarkonnenMentat::interact()

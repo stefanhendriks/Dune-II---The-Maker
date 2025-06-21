@@ -10,7 +10,7 @@
 static constexpr int MAX_SKIRMISHMAP_PLAYERS = 5;
 
 struct s_PreviewMap {
-    BITMAP *terrain = nullptr;      // terrain bitmap (for showing preview at top right)
+    SDL_Surface *terrain = nullptr;      // terrain bitmap (for showing preview at top right)
     int width, height;              // width & height of map
     std::vector<int> terrainType;   // terrainType per cell (for map creation)
     int iStartCell[MAX_SKIRMISHMAP_PLAYERS];      // starting locations

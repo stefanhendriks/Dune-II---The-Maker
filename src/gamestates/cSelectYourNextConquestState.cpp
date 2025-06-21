@@ -75,7 +75,7 @@ void cSelectYourNextConquestState::thinkFast()
 
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
-        renderDrawer->drawSprite(regionClickMapBmp, (BITMAP *) gfxworld[WORLD_DUNE_CLICK].dat, 16, 73);
+        renderDrawer->drawSprite(regionClickMapBmp, gfxworld->getSurface(WORLD_DUNE_CLICK), 16, 73);
 
         state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
         return;
@@ -249,7 +249,7 @@ void cSelectYourNextConquestState::draw() const
     select_palette(humanPlayerPalette);
 
     // Draw this last
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, offsetX, offsetY); // title "Select your next Conquest"
+    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
     drawManager->drawMessageBar();
 
@@ -274,10 +274,10 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 
     // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX, offsetY);
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX + (640) - 64, offsetY);
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX, offsetY + (480) - 64);
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX + (640) - 64, offsetY + (480) - 64);
+        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX, offsetY);
+        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX + (640) - 64, offsetY);
+        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX, offsetY + (480) - 64);
+        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
     }
 }
 
@@ -287,31 +287,31 @@ void cSelectYourNextConquestState::drawStateIntroduction() const
         renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // draw dune planet (being faded in)
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12);
+        draw_trans_sprite(bmp_screen, gfxinter->getSurface(BMP_GAME_DUNE), offsetX, offsetY + 12);
     }
     else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12); // dune is opaque
+        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
         renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
         // draw dune world map over Dune planet , transitioning
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
+        draw_trans_sprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
     }
     else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
+        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
         renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // introduce the borders (world pieces), draw over world dune, transitioning
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
+        draw_trans_sprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
     }
     else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
+        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
     }
 }
 
 void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dune first
 {
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
+    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
@@ -326,8 +326,8 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dun
 
 void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
 {
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
+    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
@@ -543,10 +543,10 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.iAlpha = iAlpha;
     region.iHouse = iHouse;
     region.iTile = iTile;
-    region.bmp = (BITMAP *) gfxworld[iTile].dat;
+    region.bmp = gfxworld->getSurface(iTile);
 
     int screenBitDepth = bitmap_color_depth(bmp_screen);
-    BITMAP *tempregion = create_bitmap_ex(screenBitDepth, region.bmp->w, region.bmp->h);
+    SDL_Surface *tempregion = create_bitmap_ex(screenBitDepth, region.bmp->w, region.bmp->h);
     clear_to_color(tempregion, makecol(255, 0, 255));
     region.bmpHighBit = tempregion;
 }

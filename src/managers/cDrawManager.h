@@ -112,7 +112,7 @@ private:
     cStructureDrawer m_structureDrawer;
     cMouseDrawer m_mouseDrawer;
 
-    BITMAP *m_optionsBar;
+    SDL_Surface *m_optionsBar;
 
     SDL_Color m_sidebarColor;
 
@@ -120,7 +120,7 @@ private:
 
     cPlayer *m_player;
 
-    BITMAP *m_topBarBmp;
+    SDL_Surface *m_topBarBmp;
 
     cTextDrawer m_textDrawer;
 

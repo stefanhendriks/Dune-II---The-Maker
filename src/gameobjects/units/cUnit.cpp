@@ -668,7 +668,7 @@ void cUnit::draw_experience()
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[OBJECT_STAR_01 + iStarType].dat, drawx + i * 9, drawy);
+        renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy);
     }
 
 }
@@ -744,7 +744,7 @@ void cUnit::draw()
     cPlayer &cPlayer = players[this->iPlayer];
 
     // Draw SHADOW
-    BITMAP *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
+    SDL_Surface *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
     const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
@@ -757,7 +757,7 @@ void cUnit::draw()
         }
 
         int colorDepth = bitmap_color_depth(bmp_screen);
-        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
                                         0, 0,
@@ -769,7 +769,7 @@ void cUnit::draw()
     }
 
     // Draw BODY
-    BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
+    SDL_Surface *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
         renderDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
                                         ux, uy,
@@ -781,7 +781,7 @@ void cUnit::draw()
     }
 
     // Draw TOP
-    BITMAP *top = cPlayer.getUnitTopBitmap(iType);
+    SDL_Surface *top = cPlayer.getUnitTopBitmap(iType);
     if (top && iHitPoints > -1) {
         // recalculate start_x using head instead of body
         start_x = bmp_head * bmp_width;
@@ -798,11 +798,11 @@ void cUnit::draw()
 
     // when we want to be picked up..
     if (bCarryMe) {
-        renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux, uy - 7);
+        renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(SYMB_PICKMEUP), ux, uy - 7);
     }
 
     if (bSelected) {
-        BITMAP *focusBitmap = (BITMAP *) gfxdata[FOCUS].dat;
+        SDL_Surface *focusBitmap = gfxdata->getSurface(FOCUS);
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
 

@@ -12,8 +12,8 @@ cCreditsState::cCreditsState(cGame &theGame) :
     cGameState(theGame),
     m_moveSpeed(0.15f),
     m_textDrawer(cTextDrawer(bene_font)),
-    m_duneBmp((BITMAP *) gfxinter[BMP_GAME_DUNE].dat),
-    m_titleBmp((BITMAP *) gfxinter[BMP_D2TM].dat)
+    m_duneBmp(gfxinter->getSurface(BMP_GAME_DUNE)),
+    m_titleBmp(gfxinter->getSurface(BMP_D2TM))
 {
 
     int duneAtTheRight = game.m_screenW - (m_duneBmp->w * 1.1f);

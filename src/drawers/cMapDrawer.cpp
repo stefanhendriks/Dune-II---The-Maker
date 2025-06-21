@@ -45,7 +45,7 @@ void cMapDrawer::drawShroud()
     int iTileWidth = (tileWidth + 1);
 
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
-    BITMAP *temp = create_bitmap_ex(colorDepthScreen, iTileWidth, iTileHeight);
+    SDL_Surface *temp = create_bitmap_ex(colorDepthScreen, iTileWidth, iTileHeight);
 
     int iPl = m_player->getId();
 
@@ -155,7 +155,7 @@ void cMapDrawer::drawTerrain()
             }
             else {
                 // valid type
-                blit((BITMAP *) gfxdata[cell->type].dat,
+                blit(gfxdata->getSurface(cell->type),
                      m_BmpTemp,
                      cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
                      0, 0,

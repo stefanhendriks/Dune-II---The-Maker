@@ -32,8 +32,8 @@ public:
     int iAlpha;         // Alpha (0 = not visible, > 0 goes up to 255)
     int iTile;          // tile refering to gfxworld.dat
     bool bSelectable;   // selectable for attacking (default = false)
-    BITMAP *bmp;        // the original bmp
-    BITMAP *bmpHighBit; // the bmp (created! and thus must be destroyed) on same bitdepth as bmp_screen
+    SDL_Surface *bmp;        // the original bmp
+    SDL_Surface *bmpHighBit; // the bmp (created! and thus must be destroyed) on same bitdepth as bmp_screen
 };
 
 class cSelectYourNextConquestState : public cGameState {
@@ -93,7 +93,7 @@ private:
 
     int regionMouseIsHoveringOver;
 
-    BITMAP *regionClickMapBmp;  // this is the bmp that
+    SDL_Surface *regionClickMapBmp;  // this is the bmp that
 
     bool isFinishedConqueringRegions = true;
 

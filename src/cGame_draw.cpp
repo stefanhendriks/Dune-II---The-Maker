@@ -33,7 +33,7 @@ void cGame::drawStateLosing()
 {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
+    renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
         m_state = GAME_LOSEBRIEF;
@@ -50,7 +50,7 @@ void cGame::drawStateWinning()
 {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
 
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, m_mouse->getX(), m_mouse->getY());
+    renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
         // Mentat will be happy, after that enter "Select your next Conquest"

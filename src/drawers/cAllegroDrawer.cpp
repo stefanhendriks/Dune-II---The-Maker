@@ -26,7 +26,7 @@ cAllegroDrawer::~cAllegroDrawer()
     }
 }
 
-void cAllegroDrawer::stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+void cAllegroDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
@@ -46,7 +46,7 @@ void cAllegroDrawer::stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos
     stretch_sprite(dest, src, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void cAllegroDrawer::stretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+void cAllegroDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
@@ -73,12 +73,12 @@ void cAllegroDrawer::stretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y
     stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void cAllegroDrawer::stretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+void cAllegroDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
-    stretchBlit((BITMAP *)gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    stretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void cAllegroDrawer::maskedBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
+void cAllegroDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
@@ -99,17 +99,17 @@ void cAllegroDrawer::maskedBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y,
     masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
-void cAllegroDrawer::maskedBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
+void cAllegroDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
 {
-    maskedBlit((BITMAP *)gfxdata[index].dat, dest, src_x, src_y, pos_x, pos_y, width, height);
+    maskedBlit(gfxdata->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
-void cAllegroDrawer::maskedStretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+void cAllegroDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
-    maskedStretchBlit((BITMAP *)gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    maskedStretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void cAllegroDrawer::maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+void cAllegroDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
@@ -136,7 +136,7 @@ void cAllegroDrawer::maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int
     masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
-void cAllegroDrawer::drawCenteredSprite(BITMAP *dest, BITMAP *src)
+void cAllegroDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src)
 {
     assert(src);
     assert(dest);
@@ -145,7 +145,7 @@ void cAllegroDrawer::drawCenteredSprite(BITMAP *dest, BITMAP *src)
     draw_sprite(dest, src, xPos, yPos);
 }
 
-void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP *src, float percentage)
+void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage)
 {
     int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
 
@@ -160,7 +160,7 @@ void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP *
 }
 
 
-void cAllegroDrawer::drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y, int totalWidth, int xOffset)
+void cAllegroDrawer::drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset)
 {
     assert(src);
     assert(dest);
@@ -168,7 +168,7 @@ void cAllegroDrawer::drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int
     draw_sprite(dest, src, xPos, y);
 }
 
-void cAllegroDrawer::drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x)
+void cAllegroDrawer::drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x)
 {
     assert(src);
     assert(dest);
@@ -176,7 +176,7 @@ void cAllegroDrawer::drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x
     draw_sprite(dest, src, x, yPos);
 }
 
-int cAllegroDrawer::getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth)
+int cAllegroDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth)
 {
     assert(bmp);
     int width = bmp->w;
@@ -184,7 +184,7 @@ int cAllegroDrawer::getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth)
     return (totalWidth / 2) - halfOfWidth;
 }
 
-int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp)
+int cAllegroDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 {
     assert(bmp);
     int height = bmp->h;
@@ -192,19 +192,19 @@ int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp)
     return (game.m_screenH / 2) - halfOfHeight;
 }
 
-// void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+// void cAllegroDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
 //     if (src == nullptr) return;
 //     blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 // }
 
-void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const
+void cAllegroDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const
 {
     // use :: so we use global scope Allegro blitSprite
     if (src == nullptr || dest == nullptr) return;
     ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
-void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, const cRectangle *rectangle) const
+void cAllegroDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const
 {
     if (rectangle == nullptr) return;
     if (src == nullptr) return;
@@ -212,12 +212,12 @@ void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, const cRectangle *rec
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
-void cAllegroDrawer::drawRect(BITMAP *dest, const cRectangle &pRectangle, int color)
+void cAllegroDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, int color)
 {
     rect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
-void cAllegroDrawer::drawRect(BITMAP *dest, int x, int y, int width, int height, int color)
+void cAllegroDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, int color)
 {
     if (dest == nullptr) return;
     // the -1 is because the width /height is "including" the current pixel
@@ -225,17 +225,17 @@ void cAllegroDrawer::drawRect(BITMAP *dest, int x, int y, int width, int height,
     rect(dest, x, y, x + (width-1), y + (height-1), color);
 }
 
-void cAllegroDrawer::drawRectFilled(BITMAP *dest, const cRectangle &pRectangle, int color)
+void cAllegroDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, int color)
 {
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
-void cAllegroDrawer::drawRectFilled(BITMAP *dest, int x, int y, int width, int height, int color)
+void cAllegroDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, int color)
 {
     rectfill(dest, x, y, x+width, y+height, color);
 }
 
-void cAllegroDrawer::drawRectTransparentFilled(BITMAP *dest, const cRectangle &rect, int color, int alpha)
+void cAllegroDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, int color, int alpha)
 {
     assert(alpha >= 0);
     assert(alpha <= 255);
@@ -252,7 +252,7 @@ void cAllegroDrawer::drawRectTransparentFilled(BITMAP *dest, const cRectangle &r
     draw_trans_sprite(dest, bitmap, rect.getX(),rect.getY());
 }
 
-// cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
+// cRectangle *cAllegroDrawer::fromBitmap(int x, int y, SDL_Surface *src) {
 //     return new cRectangle(x, y, src->w, src->h);
 // }
 
@@ -264,7 +264,7 @@ void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha)
                       std::clamp(alpha, 0, 255));
 }
 
-void cAllegroDrawer::drawSprite(BITMAP *dest, BITMAP *src, int x, int y)
+void cAllegroDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y)
 {
     draw_sprite(dest, src, x, y);
 }
@@ -274,7 +274,7 @@ void cAllegroDrawer::drawSprite(BITMAP *dest, BITMAP *src, int x, int y)
 	Function that will go through all pixels and will replace a certain color with another.
     Ie, this can be used to create the fading animation for Windtraps.
 **/
-void cAllegroDrawer::bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor)
+void cAllegroDrawer::bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor)
 {
     for (int x = 0; x < bmp->w; x++) {
         for (int y = 0; y < bmp->h; y++) {
@@ -285,28 +285,28 @@ void cAllegroDrawer::bitmap_replace_color(BITMAP *bmp, int colorToReplace, int n
     }
 }
 
-void cAllegroDrawer::drawSprite(BITMAP *dest, int index, int x, int y)
+void cAllegroDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y)
 {
-    BITMAP *sBitmap = m_dataRepository->getBitmapAt(index);
+    SDL_Surface *sBitmap = m_dataRepository->getBitmapAt(index);
     if (!sBitmap) return; // failed, bail!
     drawSprite(dest, sBitmap, x, y);
 }
 
-void cAllegroDrawer::resetClippingFor(BITMAP *bmp)
+void cAllegroDrawer::resetClippingFor(SDL_Surface *bmp)
 {
     if (!bmp) return;
     setClippingFor(bmp, 0, 0, bmp->w, bmp->h);
 }
 
-void cAllegroDrawer::setClippingFor(BITMAP *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+void cAllegroDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 {
     if (!bmp) return;
     set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
 }
 
-void cAllegroDrawer::blitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
+void cAllegroDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
 {
-    BITMAP *src = (BITMAP *) gfxdata[index].dat;
+    SDL_Surface *src = gfxdata->getSurface(index);
     this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
 
@@ -315,12 +315,12 @@ int cAllegroDrawer::getColorByNormValue(int r, int g, int b, float norm)
     return makecol((r * norm), (g * norm), (b * norm));
 }
 
-void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle)
+void cAllegroDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle)
 {
     gui_DrawRect(dest, rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
 }
 
-void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark)
+void cAllegroDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark)
 {
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
@@ -341,7 +341,7 @@ void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int
     line(bmp_screen, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
 }
 
-void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight,
+void cAllegroDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, int gui_colorBorderLight,
                                         int gui_colorBorderDark)
 {
 
@@ -355,17 +355,17 @@ void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangl
     line(bmp_screen, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
 }
 
-void cAllegroDrawer::drawTransSprite(BITMAP *sprite, BITMAP *dest, int x, int y)
+void cAllegroDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y)
 {
     draw_trans_sprite(dest, sprite, x, y);
 }
 
-void cAllegroDrawer::drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color)
+void cAllegroDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, int color)
 {
     line(bmp, x1, y1, x2, y2, color);
 }
 
-void cAllegroDrawer::drawDot(BITMAP *bmp, int x, int y, int color, int size)
+void cAllegroDrawer::drawDot(SDL_Surface *bmp, int x, int y, int color, int size)
 {
     if (size < 1) return;
 

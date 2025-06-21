@@ -18,7 +18,7 @@
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
 {
-    bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;
+    bmp_D2TM_Title = gfxinter->getSurface(BMP_D2TM);
 
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;

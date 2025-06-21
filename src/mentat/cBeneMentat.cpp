@@ -13,8 +13,8 @@
 cBeneMentat::cBeneMentat() : cAbstractMentat(false)
 {
     iBackgroundFrame = MENTATM;
-    buildLeftButton((BITMAP *) gfxmentat[BTN_NO].dat, 293, 423);
-    buildRightButton((BITMAP *) gfxmentat[BTN_YES].dat, 466, 423);
+    buildLeftButton(gfxmentat->getSurface(BTN_NO), 293, 423);
+    buildRightButton(gfxmentat->getSurface(BTN_YES), 466, 423);
     leftButtonCommand = new cNoButtonCommand();
     rightButtonCommand = new cYesButtonCommand();
 }
@@ -45,12 +45,12 @@ void cBeneMentat::draw_other()
 
 void cBeneMentat::draw_eyes()
 {
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, offsetX + 128, offsetY + 240);
+    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
 }
 
 void cBeneMentat::draw_mouth()
 {
-    renderDrawer->drawSprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, offsetX + 112, offsetY + 272);
+    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }
 
 void cBeneMentat::interact()

@@ -78,12 +78,12 @@ protected:
     cRectangle *leftButton;
     cRectangle *rightButton;
 
-    BITMAP *leftButtonBmp;
-    BITMAP *rightButtonBmp;
+    SDL_Surface *leftButtonBmp;
+    SDL_Surface *rightButtonBmp;
 
-    void buildLeftButton(BITMAP *bmp, int x, int y);
+    void buildLeftButton(SDL_Surface *bmp, int x, int y);
 
-    void buildRightButton(BITMAP *bmp, int x, int y);
+    void buildRightButton(SDL_Surface *bmp, int x, int y);
 
     cButtonCommand *leftButtonCommand;
     cButtonCommand *rightButtonCommand;
@@ -110,7 +110,7 @@ public:
 
     virtual ~cAbstractMentat();
 
-    BITMAP *getBackgroundBitmap() const;
+    SDL_Surface *getBackgroundBitmap() const;
 
     void initSentences();
 

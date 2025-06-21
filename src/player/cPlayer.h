@@ -205,19 +205,19 @@ public:
 
     std::string asString() const;
 
-    BITMAP *getStructureBitmap(int index);
+    SDL_Surface *getStructureBitmap(int index);
 
-    BITMAP *getStructureBitmapFlash(int index);
+    SDL_Surface *getStructureBitmapFlash(int index);
 
-    BITMAP *getFlagBitmap();
+    SDL_Surface *getFlagBitmap();
 
-    BITMAP *getFlagSmallBitmap();
+    SDL_Surface *getFlagSmallBitmap();
 
-    BITMAP *getUnitBitmap(int index);
+    SDL_Surface *getUnitBitmap(int index);
 
-    BITMAP *getUnitTopBitmap(int index);
+    SDL_Surface *getUnitTopBitmap(int index);
 
-    BITMAP *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
+    SDL_Surface *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
 
     void destroyAllegroBitmaps();
 
@@ -535,12 +535,12 @@ private:
     int iTeam;
 
 
-    BITMAP *bmp_structure[MAX_STRUCTURE_BMPS];
-    BITMAP *bmp_flag;
-    BITMAP *bmp_flag_small;
+    SDL_Surface *bmp_structure[MAX_STRUCTURE_BMPS];
+    SDL_Surface *bmp_flag;
+    SDL_Surface *bmp_flag_small;
 
-    BITMAP *bmp_unit[MAX_UNITTYPES]; // the body of unit
-    BITMAP *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
+    SDL_Surface *bmp_unit[MAX_UNITTYPES]; // the body of unit
+    SDL_Surface *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
 
     int iPrimaryBuilding[MAX_STRUCTURETYPES];    // remember the primary ID (structure id) of each structure type
     int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
