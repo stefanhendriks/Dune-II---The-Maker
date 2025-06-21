@@ -188,7 +188,7 @@ void cSideBarDrawer::drawBuildingLists()
 // draws the sidebar on screen
 void cSideBarDrawer::draw()
 {
-    set_palette(m_player->pal);
+    // set_palette(m_player->pal);
 
     // black out sidebar
     renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});

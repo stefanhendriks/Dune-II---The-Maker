@@ -111,7 +111,7 @@ void cParticle::draw()
     // now blit it
     if (iHousePal > -1) {
         cPlayer &player = players[iHousePal];
-        select_palette(player.pal);
+        // select_palette(player.pal);
     }
 
     if (bmp) {
