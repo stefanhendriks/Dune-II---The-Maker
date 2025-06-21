@@ -620,3 +620,17 @@ Uint32 SDLDrawer::get_pixel(SDL_Surface *surface, int x, int y)
             return 0; // Ou une valeur d'erreur
     }
 }
+
+
+void SDLDrawer::FillWithColor(SDL_Surface *src, SDL_Color color)
+{
+    Uint32 mappedColor = SDL_MapRGBA(src->format,
+                                  color.r,
+                                  color.g,
+                                  color.b,
+                                  color.a);
+    int result = SDL_FillRect(src, NULL, mappedColor);
+    if (result < 0) {
+        SDL_Log("SDL_FillRect failed to clear surface: %s", SDL_GetError());
+    }
+}

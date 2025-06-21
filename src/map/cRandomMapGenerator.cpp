@@ -153,9 +153,8 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     // blit on screen
     progress += 25;
     drawProgress(progress);
-    blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenW, game.m_screenH);
-
-    clear_to_color(randomMapEntry.terrain, makecol(0, 0, 0));
+    renderDrawer->blit(bmp_screen, screen, 0, 0, 0, 0, game.m_screenW, game.m_screenH);
+    renderDrawer->FillWithColor(randomMapEntry.terrain, SDL_Color{0,0,0,255});
 
     // now put in previewmap 0
     for (int x = 0; x < map.getWidth(); x++)

@@ -218,8 +218,7 @@ void cSelectYourNextConquestState::draw() const
 {
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
-    int veryDark = makecol(48, 28, 0);
-    clear_to_color(bmp_screen, veryDark);
+    renderDrawer->FillWithColor(bmp_screen, SDL_Color{48,28,0,255});
 
     // STEPS:
     // 1. Show current conquered regions
@@ -500,7 +499,7 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
     }
     else {
         renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-        clear_to_color(regionPiece.bmpHighBit, makecol(255, 0, 255));
+        renderDrawer->FillWithColor(regionPiece.bmpHighBit, SDL_Color{255,0,255,255});
         renderDrawer->drawSprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
         draw_trans_sprite(bmp_screen, regionPiece.bmpHighBit, regionX, regionY);
     }
@@ -515,7 +514,7 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
 
     // from here, we are on a region
 
-    int c = getpixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
+    int c = renderDrawer->get_pixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
 
     //alfont_textprintf(bmp_screen, bene_font, 17,17, SDL_Color{0,0,0), "region %d", c-1);
 
@@ -546,7 +545,7 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.bmp = gfxworld->getSurface(iTile);
 
     SDL_Surface *tempregion = SDL_CreateRGBSurface(0, region.bmp->w, region.bmp->h,32,0,0,0,255);
-    clear_to_color(tempregion, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(tempregion, SDL_Color{255,0,255,255});
     region.bmpHighBit = tempregion;
 }
 

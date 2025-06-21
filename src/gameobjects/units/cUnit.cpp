@@ -757,7 +757,7 @@ void cUnit::draw()
         }
 
         SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-        clear_to_color(stretchedShadow, makecol(255, 0, 255));
+        renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
                                         0, 0,
                                         scaledWidth, scaledHeight);

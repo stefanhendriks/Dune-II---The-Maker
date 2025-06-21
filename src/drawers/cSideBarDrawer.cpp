@@ -46,7 +46,7 @@ void cSideBarDrawer::createCandyBar()
 {
     int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
     m_candybar = SDL_CreateRGBSurface(0,24, heightInPixels,8,0,0,0,0);
-    clear_to_color(m_candybar, makecol(0, 0, 0));
+    renderDrawer->FillWithColor(m_candybar, SDL_Color{0,0,0,255});
 
     // ball first
     renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), 0, 0); // height of ball = 25

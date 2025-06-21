@@ -23,11 +23,11 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
     _isMouseOverOrderButton = false;
 
     auto temp_bitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
-    clear_to_color(temp_bitmap, makecol(255,0,255));
+    renderDrawer->FillWithColor(temp_bitmap, SDL_Color{255,0,255,255});
     renderDrawer->drawSprite(temp_bitmap, buttonBitmap, 0, 0);
 
     greyedButtonBitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
-    clear_to_color(greyedButtonBitmap, makecol(0, 0, 0));
+    renderDrawer->FillWithColor(greyedButtonBitmap, SDL_Color{0,0,0,255});
     set_trans_blender(0, 0, 0, 128);
     draw_trans_sprite(greyedButtonBitmap, temp_bitmap, 0, 0);
 

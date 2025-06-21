@@ -348,7 +348,7 @@ void cCreditsState::thinkFast()
 
 void cCreditsState::draw() const
 {
-    clear_to_color(bmp_screen, makecol(0, 0, 16));
+    renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,16,255});
 
     renderDrawer->drawSprite(bmp_screen, m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 

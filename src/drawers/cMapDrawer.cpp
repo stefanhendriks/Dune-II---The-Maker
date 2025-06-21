@@ -78,8 +78,7 @@ void cMapDrawer::drawShroud()
                     if (tile > -1) {
                         renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX,
                                 fDrawY, iTileWidth, iTileHeight);
-                        clear_to_color(temp, makecol(255, 0, 255));
-
+                        renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
                         renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
                                 iTileWidth, iTileHeight);
                         draw_trans_sprite(bmp_screen, temp, fDrawX, fDrawY);

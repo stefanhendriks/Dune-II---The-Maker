@@ -59,7 +59,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int pixelHeight = structure->getHeightInPixels();
 
     SDL_Surface *temp = SDL_CreateRGBSurface(0, pixelWidth, pixelHeight,32,0,0,0,255);
-    clear_to_color(temp, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
@@ -78,7 +78,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     SDL_Surface *shadow = gfxdata->getSurface(shadowIndex);
 
     SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-    clear_to_color(stretchedShadow, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
     renderDrawer->stretchSprite(shadow, stretchedShadow, 0, 0, scaledWidth, scaledHeight);
 
     renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
@@ -147,10 +147,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
 
     int fade = windtrap->getFade();
     SDL_Surface *wind=SDL_CreateRGBSurface(0,pixelWidth, pixelHeight,32,0,0,0,255);
-
-    clear_to_color(wind, makecol(255,0,255));
-
-    blit(structure->getBitmap(), wind, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
+    renderDrawer->FillWithColor(wind, SDL_Color{255,0,255,255});
+    renderDrawer->blit(structure->getBitmap(), wind, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
 
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
@@ -161,7 +159,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
 
         
         SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-        clear_to_color(stretchedShadow, makecol(255, 0, 255));
+        renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
 
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
                                         0, 0, scaledWidth, scaledHeight);
@@ -341,7 +339,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int iconWidth = (gfxinter->getSurface(iconId))->w;
     int iconHeight = (gfxinter->getSurface(iconId))->h;
     SDL_Surface *bmp = create_bitmap(iconWidth, iconHeight);
-    clear_to_color(bmp, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(bmp, SDL_Color{255,0,255,255});
     renderDrawer->drawSprite(bmp, gfxinter->getSurface(iconId), 0, 0);
 
     // draw health bar of unit on top of icon?
