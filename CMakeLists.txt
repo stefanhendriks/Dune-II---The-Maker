@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(d2tm)
 
-SET(OpenGL_GL_PREFERENCE "GLVND")
+#SET(OpenGL_GL_PREFERENCE "GLVND")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
@@ -30,13 +30,11 @@ target_include_directories(${PROJECT_NAME}
 if (UNIX)
   target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      alleg
       fmt::fmt
   )
 else()
   target_link_libraries(${PROJECT_NAME}
   PRIVATE
-    allegro
     fmt::fmt
     -static-libgcc
     -static-libstdc++
