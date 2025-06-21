@@ -44,8 +44,7 @@ void cMapDrawer::drawShroud()
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
 
-    int colorDepthScreen = bitmap_color_depth(bmp_screen);
-    SDL_Surface *temp = create_bitmap_ex(colorDepthScreen, iTileWidth, iTileHeight);
+    SDL_Surface *temp = SDL_CreateRGBSurface(0,iTileWidth, iTileHeight,32,0,0,0,255);
 
     int iPl = m_player->getId();
 
@@ -103,8 +102,7 @@ void cMapDrawer::drawShroud()
 void cMapDrawer::drawTerrain()
 {
     if (m_BmpTemp == nullptr) {
-        int colorDepthScreen = bitmap_color_depth(bmp_screen);
-        m_BmpTemp = create_bitmap_ex(colorDepthScreen, 32, 32);
+        m_BmpTemp = SDL_CreateRGBSurface(0,32, 32,32,0,0,0,255);
     }
 
     float tileWidth = mapCamera->getZoomedTileWidth();

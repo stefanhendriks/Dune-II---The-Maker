@@ -45,7 +45,7 @@ void cSideBarDrawer::drawCandybar()
 void cSideBarDrawer::createCandyBar()
 {
     int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
-    m_candybar = create_bitmap_ex(8, 24, heightInPixels);
+    m_candybar = SDL_CreateRGBSurface(0,24, heightInPixels,8,0,0,0,0);
     clear_to_color(m_candybar, makecol(0, 0, 0));
 
     // ball first

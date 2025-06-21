@@ -907,8 +907,7 @@ void cAbstractStructure::drawWithShadow()
     if (shadow) {
         set_trans_blender(0, 0, 0, 160);
 
-        int colorDepth = bitmap_color_depth(bmp_screen);
-        SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,

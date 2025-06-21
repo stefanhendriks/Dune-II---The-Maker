@@ -269,19 +269,19 @@ void cPlayer::setHouse(int iHouse)
 
         destroyAllegroBitmaps();
 
-        int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
+        //int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
 
         // use this palette to draw stuff
         select_palette(pal);
 
         // copy flag(s) with correct color
         SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
-        bmp_flag = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
+        bmp_flag = SDL_CreateRGBSurface(0, flagBmpData->w, flagBmpData->h,32,0,0,0,255);
         clear_to_color(bmp_flag, makecol(255, 0, 255));
         renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
 
         flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
-        bmp_flag_small = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
+        bmp_flag_small = SDL_CreateRGBSurface(0, flagBmpData->w, flagBmpData->h,32,0,0,0,255);
         clear_to_color(bmp_flag_small, makecol(255, 0, 255));
         renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
 
@@ -291,7 +291,7 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
+            bmp_structure[i] = SDL_CreateRGBSurface(0, structureType.bmp->w, structureType.bmp->h,32,0,0,0,255);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
@@ -302,7 +302,7 @@ void cPlayer::setHouse(int iHouse)
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
                 int j = MAX_STRUCTURETYPES + i;
-                SDL_Surface *bitmap = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
+                SDL_Surface *bitmap = SDL_CreateRGBSurface(0, structureType.bmp->w, structureType.bmp->h,32,0,0,0,255);
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
@@ -319,7 +319,7 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
+            bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
@@ -328,7 +328,7 @@ void cPlayer::setHouse(int iHouse)
             renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
 
             if (unitType.top) {
-                bmp_unit_top[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
+                bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h,32,0,0,0,255);
                 clear_to_color(bmp_unit_top[i], makecol(255, 0, 255));
 
                 renderDrawer->drawSprite(bmp_unit_top[i], unitType.top, 0, 0);
@@ -578,8 +578,7 @@ SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animati
             start_y += 2;
         }
 
-        int colorDepth = bitmap_color_depth(bmp_screen);
-        SDL_Surface *shadow = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
+        SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
         clear_to_color(shadow, makecol(255, 0, 255));
 
         renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);

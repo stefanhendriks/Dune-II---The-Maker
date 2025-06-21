@@ -58,8 +58,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int pixelWidth = structure->getWidthInPixels();
     int pixelHeight = structure->getHeightInPixels();
 
-    int colorDepth = bitmap_color_depth(bmp_screen);
-    SDL_Surface *temp = create_bitmap_ex(colorDepth, pixelWidth, pixelHeight);
+    SDL_Surface *temp = SDL_CreateRGBSurface(0, pixelWidth, pixelHeight,32,0,0,0,255);
     clear_to_color(temp, makecol(255, 0, 255));
 
     int drawX = structure->iDrawX();
@@ -78,7 +77,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     set_trans_blender(0,0,0,128);
     SDL_Surface *shadow = gfxdata->getSurface(shadowIndex);
 
-    SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+    SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
     clear_to_color(stretchedShadow, makecol(255, 0, 255));
     renderDrawer->stretchSprite(shadow, stretchedShadow, 0, 0, scaledWidth, scaledHeight);
 
@@ -147,9 +146,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     int iSourceY = pixelHeight * structure->getFrame();
 
     int fade = windtrap->getFade();
-    int screenDepth = bitmap_color_depth(bmp_screen);
-
-    SDL_Surface *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
+    SDL_Surface *wind=SDL_CreateRGBSurface(0,pixelWidth, pixelHeight,32,0,0,0,255);
 
     clear_to_color(wind, makecol(255,0,255));
 
@@ -162,8 +159,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     if (shadow) {
         set_trans_blender(0, 0, 0, 160);
 
-        int colorDepth = bitmap_color_depth(bmp_screen);
-        SDL_Surface *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        
+        SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
         clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,

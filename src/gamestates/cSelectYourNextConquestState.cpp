@@ -69,7 +69,7 @@ void cSelectYourNextConquestState::thinkFast()
     // First time INIT
     if (state == eRegionState::REGSTATE_INIT) {
         // temp bitmap to read from
-        regionClickMapBmp = create_bitmap_ex(8, 640, 480); // 8 bit bitmap
+        regionClickMapBmp = SDL_CreateRGBSurface(0, 640, 480,8,0,0,0,0); // 8 bit bitmap
         select_palette(general_palette); // default palette
         clear_bitmap(regionClickMapBmp); // clear bitmap
 
@@ -545,8 +545,7 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.iTile = iTile;
     region.bmp = gfxworld->getSurface(iTile);
 
-    int screenBitDepth = bitmap_color_depth(bmp_screen);
-    SDL_Surface *tempregion = create_bitmap_ex(screenBitDepth, region.bmp->w, region.bmp->h);
+    SDL_Surface *tempregion = SDL_CreateRGBSurface(0, region.bmp->w, region.bmp->h,32,0,0,0,255);
     clear_to_color(tempregion, makecol(255, 0, 255));
     region.bmpHighBit = tempregion;
 }
