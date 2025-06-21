@@ -25,6 +25,7 @@
 
 #include "utils/DataPack.hpp"
 #include <memory>
+#include <SDL2/SDL_ttf.h>
 
 class cAbstractStructure;
 class SDLDrawer;
@@ -74,9 +75,9 @@ extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
 // extern PALETTE general_palette;
 
 // GAME FONT
-extern ALFONT_FONT *game_font;
-extern ALFONT_FONT *bene_font;
-extern ALFONT_FONT *small_font;
+extern TTF_Font *game_font;
+extern TTF_Font *bene_font;
+extern TTF_Font *small_font;
 
 // DATAFILES
 extern std::shared_ptr<DataPack> gfxdata;

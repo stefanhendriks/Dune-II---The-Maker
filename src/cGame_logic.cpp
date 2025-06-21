@@ -819,7 +819,9 @@ void cGame::shutdown()
     // Commented because it crash on Linux. As alfont is deprecated, i didn't try to understand. Replacing Alfont will avoid this possible memory leak. @Mira
     //alfont_destroy_font(game_font);
     //alfont_destroy_font(bene_font);
-
+    TTF_CloseFont(game_font);
+    TTF_CloseFont(bene_font);
+    TTF_CloseFont(small_font);
     // Exit the font library (must be first)
     //Mira TEXT alfont_exit();
 
@@ -977,7 +979,7 @@ bool cGame::setupGame()
 
 
     //Mira TEXT game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
-    game_font = nullptr;
+    game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
 
     //Mira TEXT if (game_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
@@ -990,7 +992,7 @@ bool cGame::setupGame()
 
 
     //Mira TEXT bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
-    bene_font = nullptr;
+    bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
     //Mira TEXT if (bene_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(bene_font, 10); // set size
@@ -1001,7 +1003,7 @@ bool cGame::setupGame()
     //Mira TEXT }
 
     //Mira TEXT small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
-    small_font = nullptr;
+    small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
     //Mira TEXT if (small_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(small_font, 10); // set size
