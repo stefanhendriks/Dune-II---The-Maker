@@ -318,7 +318,7 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h);
+            bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h, 32,0,0,0,255);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
