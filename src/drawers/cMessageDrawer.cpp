@@ -57,7 +57,7 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
         SDL_FreeSurface(m_temp);
     }
 
-    m_bmpBar = create_bitmap(desiredWidth, 30);
+    m_bmpBar = SDL_CreateRGBSurface(0,desiredWidth, 30,32,0,0,0,255);
     renderDrawer->FillWithColor(m_bmpBar, SDL_Color{255,0,255,255});
 
     renderDrawer->drawSprite(m_bmpBar, gfxinter->getSurface(MESSAGE_LEFT), 0, 0);
@@ -68,7 +68,7 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
     renderDrawer->drawSprite(m_bmpBar, gfxinter->getSurface(MESSAGE_RIGHT), m_bmpBar->w - 11, 0);
 
     // create this one which we use for actual drawing
-    m_temp = create_bitmap(m_bmpBar->w, m_bmpBar->h);
+    m_temp = SDL_CreateRGBSurface(0,m_bmpBar->w, m_bmpBar->h,32,0,0,0,255);
 }
 
 void cMessageDrawer::thinkFast()

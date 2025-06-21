@@ -226,7 +226,7 @@ void cDrawManager::drawMouse()
 void cDrawManager::drawTopBarBackground()
 {
     if (m_topBarBmp == nullptr) {
-        m_topBarBmp = create_bitmap(game.m_screenW, 30);
+        m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
         SDL_Surface *topbarPiece = gfxinter->getSurface(BMP_TOPBAR_BACKGROUND);
         for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
             renderDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
@@ -261,7 +261,7 @@ void cDrawManager::drawOptionBar()
     // upper bar
     renderDrawer->drawRectFilled(bmp_screen, 0, 0, game.m_screenW, cSideBar::TopBarHeight, SDL_Color{0, 0, 0,255});
     if (m_optionsBar == nullptr) {
-        m_optionsBar = create_bitmap(game.m_screenW, 40);
+        m_optionsBar = SDL_CreateRGBSurface(0,game.m_screenW, 40,32,0,0,0,255);
         renderDrawer->FillWithColor(m_optionsBar, SDL_Color{214,149,20,255});
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {

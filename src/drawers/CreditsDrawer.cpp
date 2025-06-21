@@ -174,7 +174,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
 void CreditsDrawer::draw()
 {
     if (bmp == NULL) {
-        bmp = create_bitmap(120, 17);
+        bmp = SDL_CreateRGBSurface(0,120, 17,32,0,0,0,255);
     }
     renderDrawer->FillWithColor(bmp,SDL_Color{255,0,255,255});
 
