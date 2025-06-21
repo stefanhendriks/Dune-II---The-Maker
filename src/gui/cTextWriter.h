@@ -10,6 +10,7 @@
 #include "drawers/cTextDrawer.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <string>
 
 
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
@@ -21,9 +22,9 @@ public:
     cTextWriter(int x, int y, TTF_Font *theFont, int theFontSize);
     ~cTextWriter();
 
-    void write(const char *msg);
+    void write(const std::string& msg);
     // void write(const char *msg, int color);
-    void write(const char *msg, SDL_Color color);
+    void write(const std::string& msg, SDL_Color color);
     void writeWithOneInteger(const char *msg, int value1);
     void writeWithTwoIntegers(const char *msg, int value1, int value2);
 
