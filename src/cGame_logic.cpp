@@ -725,10 +725,10 @@ void cGame::run()
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
-        screenTexture= SDL_CreateTextureFromSurface(renderer,bmp_screen);
-        SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
+        //screenTexture= SDL_CreateTextureFromSurface(renderer,bmp_screen);
+        // SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
-        SDL_DestroyTexture(screenTexture);
+        // SDL_DestroyTexture(screenTexture);
 
         m_frameCount++;
     }
