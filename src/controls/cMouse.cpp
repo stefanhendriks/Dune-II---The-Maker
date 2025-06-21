@@ -349,7 +349,7 @@ void cMouse::draw()
         if (game.isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
                 int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
-                m_textDrawer.drawTextWithOneInteger(0, cSideBar::TopBarHeight + 1, "MouseCell %d", mouseCell);
+                m_textDrawer.drawText(0, cSideBar::TopBarHeight + 1, fmt::format("MouseCell {}", mouseCell));
             }
         }
     }

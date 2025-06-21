@@ -39,5 +39,6 @@ void cParticleDrawer::drawTopLayer()
 void cParticleDrawer::drawDebugInfo()
 {
     cTextDrawer textDrawer(game_font);
-    textDrawer.drawTextWithTwoIntegers(0, 100, "Visible particles BOTTOM: %d / TOP: %d", particlesLowerLayer.size(), particlesTopLayer.size());
+    textDrawer.drawText(0, 100, 
+        fmt::format("Visible particles BOTTOM: {}/ TOP: {}", particlesLowerLayer.size(), particlesTopLayer.size()));
 }
