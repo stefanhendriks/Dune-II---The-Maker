@@ -227,7 +227,7 @@ void cSelectYourNextConquestState::draw() const
 
     int iHouse = players[0].getHouse();
 
-    PALETTE &humanPlayerPalette = players[0].pal;
+    // PALETTE &humanPlayerPalette = players[0].pal;
     // select_palette(humanPlayerPalette);
 
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
@@ -513,11 +513,13 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
 
     // from here, we are on a region
 
-    int c = renderDrawer->get_pixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
+    SDL_Color c = renderDrawer->getPixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
 
     //alfont_textprintf(bmp_screen, bene_font, 17,17, SDL_Color{0,0,0), "region %d", c-1);
 
-    return c - 1;
+    // @Mira fix color to region ?
+    //return c - 1;
+    return 0;
 }
 
 void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile)
