@@ -241,22 +241,36 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 //     blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 // }
 
-void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const
+void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
 {
     // use :: so we use global scope Allegro blitSprite
-    if (src == nullptr || dest == nullptr) return;
+    if (src == nullptr) return;
     //::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
     const SDL_Rect src_pos = {src_x, src_y,width, height};
     SDL_Rect dest_pos = {pos_x, pos_y,width, height};
-    SDL_BlitSurface(src, &src_pos, dest, &dest_pos);
+    //SDL_BlitSurface(src, &src_pos, dest, &dest_pos);
+    
+    transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    if (!texture) {
+        std::cerr << "error drawSprite : " << SDL_GetError();
+        return;
+    }
+    SDL_RenderCopy(renderer, texture, &src_pos, &dest_pos);
+    SDL_DestroyTexture(texture);
 }
 
+void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
+{
+    SDL_Surface *src = gfxdata->getSurface(index);
+    this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
+}
 
-void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const
+void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle)
 {
     if (rectangle == nullptr) return;
     if (src == nullptr) return;
-    if (dest == nullptr) return;
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
@@ -360,12 +374,6 @@ void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int
     auto tmp = SDL_Rect{topLeftX,topLeftY, bottomRightX-topLeftX, bottomRightY - topLeftY};
     SDL_SetClipRect(bmp_screen, &tmp);
 
-}
-
-void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
-{
-    SDL_Surface *src = gfxdata->getSurface(index);
-    this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
 
 SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)

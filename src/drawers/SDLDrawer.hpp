@@ -27,9 +27,9 @@ public:
 
     void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage);
 
-    void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const;
+    void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
     void blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
-    void blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle) const;
+    void blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle);
 
     void stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
