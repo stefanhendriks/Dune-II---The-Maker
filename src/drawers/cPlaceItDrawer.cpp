@@ -100,11 +100,12 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
     SDL_Surface *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     if (!bWithinBuildDistance) {
-        // @Mira clear_to_color(temp, game.getColorPlaceBad());
-        clear_to_color(temp, makecol(255,0,0)); //game.getColorPlaceBad());
+        // @Mira color should be game.getColorPlaceBad());
+        renderDrawer->FillWithColor(temp, SDL_Color{255,0,0,255});
     }
     else {
-        clear_bitmap(temp);
+        // @Mira clear surface
+        renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
         // Draw over it the mask for good/bad placing (decorates temp bitmap)
         for (int iX=0; iX < cellWidth; iX++) {
@@ -182,7 +183,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
     SDL_Surface *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
-    clear_to_color(temp, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
     SDL_Surface *bmp = nullptr;
     if (structureId == SLAB1) {

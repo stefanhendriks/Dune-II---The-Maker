@@ -107,9 +107,8 @@ void cParticle::draw()
 
     // valid in boundaries
     SDL_Surface *temp = create_bitmap(frameWidth, frameHeight);
-
     // transparency
-    clear_to_color(temp, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
     // now blit it
     if (iHousePal > -1) {
@@ -132,7 +131,7 @@ void cParticle::draw()
 
     // create bmp that is the stretched version of temp
     SDL_Surface *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
-    clear_to_color(stretched, makecol(255, 0, 255)); // mask color
+    renderDrawer->FillWithColor(stretched, SDL_Color{255,0,255,255});
     renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed

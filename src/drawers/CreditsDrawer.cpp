@@ -176,8 +176,7 @@ void CreditsDrawer::draw()
     if (bmp == NULL) {
         bmp = create_bitmap(120, 17);
     }
-    clear_bitmap(bmp);
-    clear_to_color(bmp, makecol(255, 0, 255)); // transparency
+    renderDrawer->FillWithColor(bmp,SDL_Color{255,0,255,255});
 
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(CREDITS_BAR), drawX, drawY);
 

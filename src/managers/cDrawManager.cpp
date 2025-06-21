@@ -262,8 +262,7 @@ void cDrawManager::drawOptionBar()
     renderDrawer->drawRectFilled(bmp_screen, 0, 0, game.m_screenW, cSideBar::TopBarHeight, SDL_Color{0, 0, 0,255});
     if (m_optionsBar == nullptr) {
         m_optionsBar = create_bitmap(game.m_screenW, 40);
-        
-        clear_to_color(m_optionsBar, makecol(214, 149, 20));
+        renderDrawer->FillWithColor(m_optionsBar, SDL_Color{214,149,20,255});
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {
             renderDrawer->drawSprite(m_optionsBar, gfxinter->getSurface(BMP_GERALD_TOP_BAR), w, 31);

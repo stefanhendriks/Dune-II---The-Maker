@@ -58,6 +58,7 @@ public:
     void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha);
     void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color);
 
+    void FillWithColor(SDL_Surface *src, SDL_Color color);
 
     SDL_Color getColor_BLACK() {
         return SDL_Color{0,0,0,255};

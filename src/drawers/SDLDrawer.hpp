@@ -66,6 +66,8 @@ public:
 
     void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);
 
+    void FillWithColor(SDL_Surface *src, SDL_Color color);
+
 protected:
     int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
     int getCenteredYPosForBitmap(SDL_Surface *bmp);

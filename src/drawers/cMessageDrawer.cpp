@@ -58,7 +58,7 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
     }
 
     m_bmpBar = create_bitmap(desiredWidth, 30);
-    clear_to_color(m_bmpBar, makecol(255, 0, 255));
+    renderDrawer->FillWithColor(m_bmpBar, SDL_Color{255,0,255,255});
 
     renderDrawer->drawSprite(m_bmpBar, gfxinter->getSurface(MESSAGE_LEFT), 0, 0);
     for (int drawX = 11; drawX < m_bmpBar->w; drawX+= 55) {
@@ -125,9 +125,7 @@ void cMessageDrawer::draw()
 
     if (m_alpha > -1) {
         set_trans_blender(0, 0, 0, m_alpha);
-
-        clear_to_color(m_temp, makecol(255, 0, 255));
-
+        renderDrawer->FillWithColor(m_temp, SDL_Color{255,0,255,255});
         renderDrawer->drawSprite(m_temp, m_bmpBar, 0, 0);
 
         // draw message

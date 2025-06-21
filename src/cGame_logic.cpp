@@ -610,8 +610,8 @@ void cGame::shakeScreenAndBlitBuffer()
             m_shakeX = -abs(offset / 2) + rnd(offset);
             m_shakeY = -abs(offset / 2) + rnd(offset);
 
-            blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
-            blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenW, m_screenH);
+            renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
+            renderDrawer->blit(bmp_throttle, screen, 0, 0, 0, 0, m_screenW, m_screenH);
         }
         else {
             fadeOutOrBlitScreenBuffer();
@@ -626,25 +626,25 @@ void cGame::fadeOutOrBlitScreenBuffer() const
 {
     if (m_fadeAction == FADE_NONE) {
         // Not shaking and not fading.
-        blit(bmp_screen, screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        renderDrawer->blit(bmp_screen, screen, 0, 0, 0, 0, m_screenW, m_screenH);
     }
     else {
         // Fading
         assert(m_fadeAlpha >= kMinAlpha);
         assert(m_fadeAlpha <= kMaxAlpha);
-        auto temp = std::unique_ptr<BITMAP, decltype(&destroy_bitmap)>(
-                        create_bitmap(game.m_screenW, game.m_screenH), destroy_bitmap);
+        SDL_Surface* temp = std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)>(
+                        create_bitmap(game.m_screenW, game.m_screenH), SDL_FreeSurface);
         assert(temp);
-        clear(temp.get());
+        renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         set_trans_blender(0, 0, 0, m_fadeAlpha);
         draw_trans_sprite(temp.get(), bmp_screen, 0, 0);
-        blit(temp.get(), screen, 0, 0, 0, 0, m_screenW, m_screenH);
+        renderDrawer->blit(temp.get(), screen, 0, 0, 0, 0, m_screenW, m_screenH);
     }
 }
 
 void cGame::drawState()
 {
-    clear(bmp_screen);
+    renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
 
     if (m_fadeAction == eFadeAction::FADE_OUT) {
         renderDrawer->drawSprite(bmp_screen, bmp_fadeout, 0, 0);
@@ -1041,7 +1041,7 @@ bool cGame::setupGame()
     }
     else {
         logbook("Memory bitmap created: bmp_screen");
-        clear(bmp_screen);
+        renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
     }
 
     bmp_backgroundMentat = create_bitmap(game.m_screenW, game.m_screenH);
@@ -1053,10 +1053,8 @@ bool cGame::setupGame()
     }
     else {
         logbook("Memory bitmap created: bmp_backgroundMentat");
-        clear(bmp_backgroundMentat);
-
         // create only once
-        clear_to_color(bmp_backgroundMentat, makecol(8, 8, 16));
+        renderDrawer->FillWithColor(bmp_backgroundMentat, SDL_Color{8,8,16,255});
         bool offsetX = false;
 
         float horizon = game.m_screenH / 2;
@@ -1082,7 +1080,7 @@ bool cGame::setupGame()
                 float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
                 float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
                 float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
-                putpixel(bmp_backgroundMentat, x, y, makecol((int) red, (int) green, (int) blue));
+                renderDrawer->set_pixel(bmp_backgroundMentat, x, y, SDL_Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
             }
             // flip offset every y row
             offsetX = !offsetX;
