@@ -24,7 +24,7 @@ void cGuiWindow::draw() const
 {
     SDL_Color colorYellow = SDL_Color{255, 207, 41,255};
     // draw window itself...
-    renderDrawer->gui_DrawRect(bmp_screen, m_rect);
+    renderDrawer->gui_DrawRect(m_rect);
 
     for (auto &guiObject : gui_objects) {
         guiObject->draw();

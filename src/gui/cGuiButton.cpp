@@ -55,19 +55,19 @@ void cGuiButton::draw() const
         case OPAQUE_WITH_BORDER:
             renderDrawer->drawRectFilled(bmp_screen, m_rect, m_guiColorButton);
             if (m_pressed) {
-                renderDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderDark, m_guiColorBorderLight);
+                renderDrawer->gui_DrawRectBorder(m_rect, m_guiColorBorderDark, m_guiColorBorderLight);
             }
             else {
-                renderDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderLight, m_guiColorBorderDark);
+                renderDrawer->gui_DrawRectBorder(m_rect, m_guiColorBorderLight, m_guiColorBorderDark);
             }
             drawText();
             break;
         case TRANSPARENT_WITH_BORDER:
             if (m_pressed) {
-                renderDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderDark, m_guiColorBorderLight);
+                renderDrawer->gui_DrawRectBorder(m_rect, m_guiColorBorderDark, m_guiColorBorderLight);
             }
             else {
-                renderDrawer->gui_DrawRectBorder(bmp_screen, m_rect, m_guiColorBorderLight, m_guiColorBorderDark);
+                renderDrawer->gui_DrawRectBorder(m_rect, m_guiColorBorderLight, m_guiColorBorderDark);
             }
             drawText();
             break;

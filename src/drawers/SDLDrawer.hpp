@@ -60,9 +60,9 @@ public:
 
     SDL_Color getColorByNormValue(int r, int g, int b, float norm);
 
-    void gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle);
-    void gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
-    void gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
+    void gui_DrawRect(const cRectangle &rectangle);
+    void gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
+    void gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
 
     void drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color);
     void drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size);

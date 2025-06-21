@@ -280,6 +280,7 @@ void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, 
 void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
 {
     const SDL_Rect tmp = {x, y, width, height};
+    //std::cout <<"::" << x << " " << y << " " << width << " " << height << std::endl;
     renderChangeColor(color);
     SDL_RenderFillRect(renderer, &tmp);
 }
@@ -372,17 +373,18 @@ SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)
     return SDL_Color{(Uint8)(r * norm), (Uint8)(g * norm), (Uint8)(b * norm), 255};
 }
 
-void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle)
+void SDLDrawer::gui_DrawRect(const cRectangle &rectangle)
 {
-    gui_DrawRect(dest, rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
+    gui_DrawRect(rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
 }
 
-void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
 {
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
+    //std::cout << x1 << " " << y1 << " " << width << " " << height << std::endl;
     SDL_Rect tmp = {x1,y1, width, height};
     renderChangeColor(gui_colorWindow);
     SDL_RenderFillRect(renderer, &tmp );
@@ -396,19 +398,20 @@ void SDLDrawer::gui_DrawRect(SDL_Surface *dest, const cRectangle &rectangle, SDL
     SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
 }
 
-void SDLDrawer::gui_DrawRectBorder(SDL_Surface *dest, const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
 {
-
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
+    //std::cout <<":" << x1 << " " << y1 << " " << width << " " << height << std::endl;
     SDL_Rect tmp = {x1,y1,width,height};
     renderChangeColor(gui_colorBorderLight);
     SDL_RenderDrawRect(renderer, &tmp);
-    // see commit cb797e3
-    drawLine(dest, x1+width, y1, x1+width, y1+height, gui_colorBorderDark);
-    drawLine(dest, x1, y1+height, x1+width, y1+height, gui_colorBorderDark);
+    renderChangeColor(gui_colorBorderDark);
+    SDL_RenderDrawLine(renderer, x1+width, y1, x1+width, y1+height);
+    renderChangeColor(gui_colorBorderDark);
+    SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
 }
 
 void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y)

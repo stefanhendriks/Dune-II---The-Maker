@@ -62,7 +62,7 @@ bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, const std::string &text, S
 bool GUI_DRAW_FRAME(int x, int y, int width, int height)
 {
     cRectangle rect = cRectangle(x, y, width, height);
-    renderDrawer->gui_DrawRect(bmp_screen, rect);
+    renderDrawer->gui_DrawRect(rect);
 
 //    // fill it up
 //    _rectfill(bmp_screen, x, y, x+width, y+height, SDL_Color{176,176,196));

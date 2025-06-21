@@ -194,15 +194,15 @@ void cSetupSkirmishGameState::draw() const
 {
     renderDrawer->drawSprite(bmp_screen, background, 0, 0);
 
-    renderDrawer->gui_DrawRect(bmp_screen, topBar);
+    renderDrawer->gui_DrawRect(topBar);
 
     textDrawer.drawTextCentered("Skirmish", 1);
 
-    renderDrawer->gui_DrawRect(bmp_screen, playerTitleBar, colorDarkishBackground, colorWhite, colorWhite);
-    renderDrawer->gui_DrawRect(bmp_screen, topRightBox);
-    renderDrawer->gui_DrawRect(bmp_screen, playerList, colorDarkishBackground, colorWhite, colorWhite);
-    renderDrawer->gui_DrawRect(bmp_screen, mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    renderDrawer->gui_DrawRect(bmp_screen, mapList);
+    renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, colorWhite, colorWhite);
+    renderDrawer->gui_DrawRect(topRightBox);
+    renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, colorWhite, colorWhite);
+    renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    renderDrawer->gui_DrawRect(mapList);
 
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4,
                                 colorYellow);
@@ -269,7 +269,7 @@ void cSetupSkirmishGameState::draw() const
     }
 
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    renderDrawer->gui_DrawRect(bmp_screen, bottomBarRect);
+    renderDrawer->gui_DrawRect(bottomBarRect);
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);
