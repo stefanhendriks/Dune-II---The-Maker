@@ -20,7 +20,6 @@ public:
 
     void setFont(ALFONT_FONT *theFont);
 
-    void drawTextWithOneInteger(int x, int y, int color, const char *msg, int var) const;
     void drawTextWithOneInteger(int x, int y, SDL_Color color, const char *msg, int var) const;
     void drawTextWithOneInteger(int x, int y, const char *msg, int var) const;
     void drawTextWithTwoIntegers(int x, int y, const char *msg, int var1, int var2) const;
@@ -29,22 +28,15 @@ public:
     void drawText(int x, int y, const char *msg, int var) const;
     void drawText(int x, int y, const char *msg) const;
 
-    void drawText(cPoint &coords, int color, const char *msg) const;
     void drawText(cPoint &coords, SDL_Color color, const char *msg) const;
 
-    void drawText(int x, int y, int color, const char *msg) const;
-    void drawText(int x, int y, int color, const char *msg, int var) const;
     void drawText(int x, int y, const char *msg, int var1, int var2) const;
-    void drawText(int x, int y, int color, const char *msg, const char *var) const;
-
     void drawText(int x, int y, SDL_Color color, const char *msg) const;
     void drawText(int x, int y, SDL_Color color, const char *msg, int var) const;
     void drawText(int x, int y, SDL_Color color, const char *msg, const char *var) const;
 
     void drawTextCentered(const char *msg, int y) const;
-    void drawTextCentered(const char *msg, int y, int color) const;
     void drawTextCentered(const char *msg, int y, SDL_Color color) const;
-    void drawTextCentered(const char *msg, int x, int width, int y, int color) const;
     void drawTextCentered(const char *msg, int x, int width, int y, SDL_Color color) const;
 
     /**
@@ -58,9 +50,6 @@ public:
      * @param boxHeight
      * @param color
      */
-    void drawTextCenteredInBox(const char *msg, int x, int y, int boxWidth, int boxHeight, int color) const;
-    void drawTextCenteredInBox(const char *msg, const cRectangle &rect, int color) const;
-    void drawTextCenteredInBox(const char *msg, const cRectangle &rect, int color, int offsetX, int offsetY) const;
     void drawTextCenteredInBox(const char *msg, int x, int y, int boxWidth, int boxHeight, SDL_Color color) const;
     void drawTextCenteredInBox(const char *msg, const cRectangle &rect, SDL_Color color) const;
     void drawTextCenteredInBox(const char *msg, const cRectangle &rect, SDL_Color color, int offsetX, int offsetY) const;
@@ -68,8 +57,6 @@ public:
     void drawTextBottomRight(const char *msg) const;
     void drawTextBottomLeft(const char *msg) const;
 
-    void drawTextBottomRight(int color, const char *msg) const;
-    void drawTextBottomLeft(int color, const char *msg) const;
     void drawTextBottomRight(SDL_Color color, const char *msg) const;
     void drawTextBottomLeft(SDL_Color color, const char *msg) const;
 
