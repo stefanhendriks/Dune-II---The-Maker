@@ -1247,6 +1247,7 @@ bool cGame::setupGame()
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
 
     // all has installed well. Let's rock and roll.
+    SDL_ShowCursor(false);
     return true;
 }
 
