@@ -289,8 +289,8 @@ void cAbstractMentat::draw()
     }
 
     if (state == AWAITING_RESPONSE) {
-        renderDrawer->blitSprite(leftButtonBmp, bmp_screen, leftButton);
-        renderDrawer->blitSprite(rightButtonBmp, bmp_screen, rightButton);
+        renderDrawer->blitSprite(leftButtonBmp, leftButton);
+        renderDrawer->blitSprite(rightButtonBmp, rightButton);
     }
 
     if (m_guiBtnToMissionSelect) {

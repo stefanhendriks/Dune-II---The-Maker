@@ -261,17 +261,17 @@ void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, 
     SDL_DestroyTexture(texture);
 }
 
-void SDLDrawer::blitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
+void SDLDrawer::blitFromGfxData(int index, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
 {
     SDL_Surface *src = gfxdata->getSurface(index);
-    this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
+    this->blit(src, nullptr, src_x, src_y, width, height, pos_x, pos_y);
 }
 
-void SDLDrawer::blitSprite(SDL_Surface *src, SDL_Surface *dest, const cRectangle *rectangle)
+void SDLDrawer::blitSprite(SDL_Surface *src, const cRectangle *rectangle)
 {
     if (rectangle == nullptr) return;
     if (src == nullptr) return;
-    blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
+    blit(src, nullptr, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
 void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)

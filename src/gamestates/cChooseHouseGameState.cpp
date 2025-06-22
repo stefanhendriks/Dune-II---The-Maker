@@ -70,9 +70,9 @@ void cChooseHouseGameState::draw() const
     // HOUSES
     renderDrawer->drawSprite(bmp_screen, bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
-    renderDrawer->blitSprite(bmp_HouseAtreides, bmp_screen, &houseAtreides);
-    renderDrawer->blitSprite(bmp_HouseOrdos, bmp_screen, &houseOrdos);
-    renderDrawer->blitSprite(bmp_HouseHarkonnen, bmp_screen, &houseHarkonnen);
+    renderDrawer->blitSprite(bmp_HouseAtreides, &houseAtreides);
+    renderDrawer->blitSprite(bmp_HouseOrdos, &houseOrdos);
+    renderDrawer->blitSprite(bmp_HouseHarkonnen, &houseHarkonnen);
 
     // BACK (bottom right
     SDL_Color color = hoversOverBackButton ? SDL_Color{255, 0, 0,255} : SDL_Color{255, 255, 255,255};
