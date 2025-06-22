@@ -127,9 +127,9 @@ void cMessageDrawer::draw()
         renderDrawer->drawSprite(m_temp, m_bmpBar, 0, 0);
 
         // draw message
-        renderDrawer->setClippingFor(m_temp, 0, 0, m_bmpBar->w - 10, m_bmpBar->h);
+        renderDrawer->setClippingFor(0, 0, m_bmpBar->w - 10, m_bmpBar->h);
         //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, SDL_Color{0, 0, 0), m_message.c_str());
-        renderDrawer->resetClippingFor(m_temp);
+        renderDrawer->resetClippingFor();
 
         // draw temp
         renderDrawer->drawTransSprite(m_temp, m_temp, m_position.x, m_position.y);

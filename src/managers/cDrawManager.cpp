@@ -46,7 +46,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    renderDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenH);
+    renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenH);
     m_mapDrawer.drawTerrain();
 
     m_structureDrawer.drawStructuresFirstLayer();
@@ -70,16 +70,16 @@ void cDrawManager::drawCombatState()
 
     drawRallyPoint();
 
-    renderDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor();
 
     // GUI
     drawSidebar();
 
     drawOptionBar();
 
-    renderDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
-    renderDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor();
 
     drawTopBarBackground();
     drawCredits();
@@ -89,7 +89,7 @@ void cDrawManager::drawCombatState()
 
     drawNotifications();
 
-    renderDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor();
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
@@ -177,10 +177,10 @@ void cDrawManager::drawRallyPoint()
 
 void cDrawManager::drawSidebar()
 {
-    renderDrawer->setClippingFor(bmp_screen, game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
+    renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
     m_sidebarDrawer.draw();
     miniMapDrawer.draw();
-    renderDrawer->resetClippingFor(bmp_screen);
+    renderDrawer->resetClippingFor();
 }
 
 /**

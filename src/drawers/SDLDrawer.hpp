@@ -22,8 +22,8 @@ public:
     void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y);
     void drawSprite(SDL_Surface *dest, int index, int x, int y);
 
-    void resetClippingFor(SDL_Surface *bmp);
-    void setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
+    void resetClippingFor();
+    void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
 
     void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage);
 

@@ -398,18 +398,20 @@ void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y)
     drawSprite(dest, sBitmap, x, y);
 }
 
-void SDLDrawer::resetClippingFor(SDL_Surface *bmp)
+void SDLDrawer::resetClippingFor()
 {
-    if (!bmp) return;
-    setClippingFor(bmp, 0, 0, bmp->w, bmp->h);
-    SDL_SetClipRect(bmp, nullptr);
+    // if (!bmp) return;
+    // setClippingFor(bmp, 0, 0, bmp->w, bmp->h);
+    // SDL_SetClipRect(bmp, nullptr);
+    SDL_RenderSetClipRect(renderer, nullptr);
 }
 
-void SDLDrawer::setClippingFor(SDL_Surface *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
+void SDLDrawer::setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 {
-    if (!bmp) return;
+    // if (!bmp) return;
     auto tmp = SDL_Rect{topLeftX,topLeftY, bottomRightX-topLeftX, bottomRightY - topLeftY};
-    SDL_SetClipRect(bmp_screen, &tmp);
+    // SDL_SetClipRect(bmp_screen, &tmp);
+    SDL_RenderSetClipRect(renderer, &tmp);
 
 }
 
