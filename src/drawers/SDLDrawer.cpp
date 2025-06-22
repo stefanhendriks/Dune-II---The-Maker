@@ -341,15 +341,16 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &r
     assert(alpha >= 0);
     assert(alpha <= 255);
 
-    auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
-    if (bitmap == nullptr) {
-        bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
-        bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
-    }
-    drawRectFilled(bitmap, 0, 0, rect.getWidth(), rect.getHeight(), color);
+    // auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
+    // if (bitmap == nullptr) {
+        // bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
+        // bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
+    // }
+    // auto bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
+    drawRectFilled(nullptr, rect.getX(), rect.getX(), rect.getWidth(), rect.getHeight(), color);
 
     // // @Mira fix trasnparency set_trans_blender(0, 0, 0, alpha);
-    renderDrawer->drawTransSprite(dest, bitmap, rect.getX(),rect.getY());
+    renderDrawer->drawTransSprite(dest, dest, rect.getX(),rect.getY());
 }
 
 void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color)
