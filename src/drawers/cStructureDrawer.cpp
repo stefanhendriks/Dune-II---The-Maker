@@ -46,7 +46,7 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int height_y = mapCamera->factorZoomLevel(height);
 
     //_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
-    renderDrawer->drawRect(bmp_screen, drawX, drawY, width_x, height_y, color);
+    renderDrawer->drawRect(nullptr, drawX, drawY, width_x, height_y, color);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
@@ -57,8 +57,8 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int pixelWidth = structure->getWidthInPixels();
     int pixelHeight = structure->getHeightInPixels();
 
-    SDL_Surface *temp = SDL_CreateRGBSurface(0, pixelWidth, pixelHeight,32,0,0,0,255);
-    renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+    // SDL_Surface *temp = SDL_CreateRGBSurface(0, pixelWidth, pixelHeight,32,0,0,0,255);
+    // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
@@ -67,22 +67,23 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
-    renderDrawer->drawSprite(temp, gfxdata->getSurface(iDrawPreBuild), 0, 0);
-    renderDrawer->stretchSprite(temp, bmp_screen, drawX, drawY, scaledWidth, scaledHeight);
-    SDL_FreeSurface(temp);
+    // renderDrawer->drawSprite(temp, gfxdata->getSurface(iDrawPreBuild), 0, 0);
+    renderDrawer->stretchSprite(gfxdata->getSurface(iDrawPreBuild), gfxdata->getSurface(iDrawPreBuild), 
+                drawX, drawY, scaledWidth, scaledHeight);
+    // SDL_FreeSurface(temp);
 
     // Draw shadow of the prebuild animation
     int shadowIndex = iDrawPreBuild + 1;
     // @Mira fix trasnparency set_trans_blender(0,0,0,128);
     SDL_Surface *shadow = gfxdata->getSurface(shadowIndex);
 
-    SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-    renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
-    renderDrawer->stretchSprite(shadow, stretchedShadow, 0, 0, scaledWidth, scaledHeight);
+    //SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
+    //renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
+    renderDrawer->stretchSprite(shadow, shadow, 0, 0, scaledWidth, scaledHeight,128);
 
-    renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
+    //renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 
-    SDL_FreeSurface(stretchedShadow);
+    //SDL_FreeSurface(stretchedShadow);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -358,8 +359,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, width_x+1, height_y+1, SDL_Color{0,0,0,255});
-    renderDrawer->drawRectFilled(bmp, draw_x, draw_y, (w-1), height_y, SDL_Color{(Uint8)r,(Uint8)g,32,255});
+    renderDrawer->drawSimpleColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    renderDrawer->drawSimpleColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
 
     // bar around it
     //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));
