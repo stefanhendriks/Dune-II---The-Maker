@@ -46,18 +46,28 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = { 0, 0, src->w, src->h };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    int result;
-    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
-        SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
-        result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
-        SDL_FreeSurface(converted);
-    } else {
-        result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
-    }
     
-    if (result < 0) {
-        std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    if (!texture) {
+        std::cerr << "error maskedBlit : " << SDL_GetError();
+        return;
     }
+    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+    SDL_DestroyTexture(texture);
+    
+    
+    // int result;
+    // if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+    //     SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+    //     result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+    //     SDL_FreeSurface(converted);
+    // } else {
+    //     result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+    // }
+    
+    // if (result < 0) {
+    //     std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
+    // }
 }
 
 void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
