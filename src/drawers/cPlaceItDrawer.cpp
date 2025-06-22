@@ -158,7 +158,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     // draw temp bitmap
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
 
-    renderDrawer->drawTransSprite(bmp_screen, temp, iDrawX, iDrawY);
+    renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
 
     // reset to normal
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
@@ -200,7 +200,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     renderDrawer->stretchBlit(bmp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
 
-    renderDrawer->drawTransSprite(bmp_screen, temp, iDrawX, iDrawY);
+    renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
 
     SDL_FreeSurface(temp);
 }

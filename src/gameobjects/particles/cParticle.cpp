@@ -145,7 +145,7 @@ void cParticle::draw()
         else {
             // @Mira fix trasnparency set_trans_blender(0, 0, 0, iAlpha);
         }
-        renderDrawer->drawTransSprite(bmp_screen, stretched, drawX, drawY);
+        renderDrawer->drawTransSprite(stretched, stretched, drawX, drawY);
     }
     else {
         renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);

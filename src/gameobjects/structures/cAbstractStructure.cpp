@@ -912,7 +912,7 @@ void cAbstractStructure::drawWithShadow()
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
                                         0, 0, scaledWidth, scaledHeight);
 
-        renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+        renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 
         SDL_FreeSurface(stretchedShadow);
     }

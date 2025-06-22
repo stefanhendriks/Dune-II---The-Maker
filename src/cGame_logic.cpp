@@ -637,7 +637,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         SDL_Surface* temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
         renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
-        renderDrawer->drawTransSprite(temp, bmp_screen, 0, 0);
+        renderDrawer->drawTransSprite(temp, temp, 0, 0);
         //renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
 

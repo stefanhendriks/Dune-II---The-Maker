@@ -170,8 +170,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
                 //@Mira fix transparency // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
-                renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
-                renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
+                renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESSFIX), gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
+                renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESS001+iFrame), gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
             }
             else {
                 if (item->shouldPlaceIt()) {
@@ -180,7 +180,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
-                    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(icon), iDrawX + 3, iDrawY + 16);
+                    renderDrawer->drawSprite(gfxinter->getSurface(icon), gfxinter->getSurface(icon), iDrawX + 3, iDrawY + 16);
                 }
                 else if (item->shouldDeployIt()) {
                     // TODO: draw white/red (flicker)
@@ -213,7 +213,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
                 // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
-                renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
+                renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
@@ -250,7 +250,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // payment/progress)
                 if (cannotPayIt) {
                     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
-                    renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
+                    renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->drawLine(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
@@ -359,13 +359,13 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
     SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
 
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 192);
-    renderDrawer->drawTransSprite(temp, bmp_screen, x + 43, y + 20);
+    //? draw empty ? renderDrawer->drawTransSprite(temp, temp, x + 43, y + 20);
 
     renderDrawer->drawSprite(temp, gfxinter->getSurface(GRID_0X0), 0, 0);
 
-    renderDrawer->drawTransSprite(bmp_screen, temp, x + 43, y + 20);
+    renderDrawer->drawTransSprite(temp, temp, x + 43, y + 20);
 
-    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(iTile), x + 43, y + 20);
+    renderDrawer->drawSprite(gfxinter->getSurface(iTile), gfxinter->getSurface(iTile), x + 43, y + 20);
 
     SDL_FreeSurface(temp);
 

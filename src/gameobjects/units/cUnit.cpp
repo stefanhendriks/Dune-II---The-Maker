@@ -760,7 +760,7 @@ void cUnit::draw()
                                         0, 0,
                                         scaledWidth, scaledHeight);
 
-        renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, ux, destY);
+        renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, ux, destY);
         SDL_FreeSurface(shadow);
         SDL_FreeSurface(stretchedShadow);
     }

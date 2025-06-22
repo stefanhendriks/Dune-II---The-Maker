@@ -80,7 +80,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
     renderDrawer->stretchSprite(shadow, stretchedShadow, 0, 0, scaledWidth, scaledHeight);
 
-    renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+    renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 
     SDL_FreeSurface(stretchedShadow);
 }
@@ -163,7 +163,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
                                         0, 0, scaledWidth, scaledHeight);
 
-        renderDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+        renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 
         SDL_FreeSurface(stretchedShadow);
     }

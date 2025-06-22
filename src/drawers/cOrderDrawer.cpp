@@ -28,7 +28,7 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
     greyedButtonBitmap = SDL_CreateRGBSurface(0,buttonRect.getWidth(), buttonRect.getHeight(),32,0,0,0,255);
     renderDrawer->FillWithColor(greyedButtonBitmap, SDL_Color{0,0,0,255});
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
-    renderDrawer->drawTransSprite(greyedButtonBitmap, temp_bitmap, 0, 0);
+    renderDrawer->drawTransSprite(temp_bitmap, temp_bitmap, 0, 0);
 
     SDL_FreeSurface(temp_bitmap);
 }
