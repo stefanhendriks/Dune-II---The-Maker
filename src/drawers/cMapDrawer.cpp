@@ -181,6 +181,7 @@ void cMapDrawer::drawTerrain()
                 //                                     0,
                 //                                     32,
                 //                                     32);
+                //@Mira il faut superposer les 2 images 
                 const SDL_Rect src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
                 SDL_Rect dest_pos = {0, 0,32, 32};
                 SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
