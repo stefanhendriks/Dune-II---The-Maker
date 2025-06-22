@@ -34,11 +34,11 @@ public:
         return m_screenResolution.height;
     }
 
-    SDL_Window* getWindows() const {
+    SDL_Window *getWindows() const {
         return window;
     }
 
-    SDL_Renderer* getRenderer() const {
+    SDL_Renderer *getRenderer() const {
         return renderer;
     }
 

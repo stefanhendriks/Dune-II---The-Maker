@@ -634,7 +634,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         // Fading
         assert(m_fadeAlpha >= kMinAlpha);
         assert(m_fadeAlpha <= kMaxAlpha);
-        SDL_Surface* temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+        SDL_Surface *temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
         renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
         renderDrawer->drawTransSprite(temp, temp, 0, 0);
@@ -1970,7 +1970,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::drawCombatMouse()
 {
     if (m_mouse->isBoxSelecting()) {
-        renderDrawer->drawRect(bmp_screen, m_mouse->getBoxSelectRectangle(), 
+        renderDrawer->drawRect(bmp_screen, m_mouse->getBoxSelectRectangle(),
                                SDL_Color{255,255,255,255});
     }
 
@@ -1978,7 +1978,7 @@ void cGame::drawCombatMouse()
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
         renderDrawer->drawLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y,
-                        SDL_Color{255,255,255,255});
+                                SDL_Color{255,255,255,255});
     }
 
     m_mouse->draw();

@@ -113,7 +113,7 @@ private:
     cMouseDrawer m_mouseDrawer;
 
     SDL_Surface *m_optionsBar;
-    SDL_Cursor* defaultCursor;
+    SDL_Cursor *defaultCursor;
     SDL_Color m_sidebarColor;
 
     // TODO: bullet/projectile drawer

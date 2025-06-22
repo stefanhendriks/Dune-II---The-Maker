@@ -350,7 +350,7 @@ private:
 
     bool loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardState();
-    void updateGamePlaying(); 
+    void updateGamePlaying();
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
     void drawStateMenu();		// main menu

@@ -17,7 +17,7 @@ public:
 
     ~cMouse();
 
-    void handleEvent(const SDL_Event& event);
+    void handleEvent(const SDL_Event &event);
 
     void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
@@ -58,7 +58,7 @@ public:
     //     return z;
     // }
 
-    void setCursorPosition(SDL_Window* _windows, int x, int y);
+    void setCursorPosition(SDL_Window *_windows, int x, int y);
 
     bool isOverRectangle(int x, int y, int width, int height);
 

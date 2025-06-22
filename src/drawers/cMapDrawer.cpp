@@ -154,9 +154,9 @@ void cMapDrawer::drawTerrain()
                 // cRectangle rectangle = cRectangle(0, 0, 32, 32);
                 // renderDrawer->drawRectFilled(m_BmpTemp, rectangle, SDL_Color{245, 245, 245, 255});
 
-                    // const SDL_Rect src_pos = {0, 0,32, 32};
-                    // SDL_Rect dest_pos = {0, 0,32, 32};
-                    SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
+                // const SDL_Rect src_pos = {0, 0,32, 32};
+                // SDL_Rect dest_pos = {0, 0,32, 32};
+                SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
             }
             else {
                 // valid type
@@ -166,9 +166,9 @@ void cMapDrawer::drawTerrain()
                 //      0, 0,
                 //      32, 32
                 //     );
-                    const SDL_Rect src_pos = {cell->tile * 32, 0,32, 32};
-                    SDL_Rect dest_pos = {0, 0,32, 32};
-                    SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
+                const SDL_Rect src_pos = {cell->tile * 32, 0,32, 32};
+                SDL_Rect dest_pos = {0, 0,32, 32};
+                SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
             }
 
             // draw Smudge if necessary
@@ -181,7 +181,7 @@ void cMapDrawer::drawTerrain()
                 //                                     0,
                 //                                     32,
                 //                                     32);
-                //@Mira il faut superposer les 2 images 
+                //@Mira il faut superposer les 2 images
                 const SDL_Rect src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
                 SDL_Rect dest_pos = {0, 0,32, 32};
                 SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
