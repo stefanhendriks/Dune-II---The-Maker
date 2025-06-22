@@ -137,7 +137,7 @@ void cTextDrawer::drawTextBottomRight(SDL_Color color, const std::string &msg) c
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
     int x = game.m_screenW - lenghtInPixels;
-    int y = game.m_screenH - getFontHeight();
+    int y = game.m_screenH - getFontHeight()-20;
     drawText(x, y, color, msg);
 }
 
@@ -153,7 +153,7 @@ void cTextDrawer::drawTextBottomLeft(SDL_Color color, const std::string &msg) co
     if (msg.empty()) return;
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
-    int y = game.m_screenH - h;
+    int y = game.m_screenH - h-20;
     drawText(0, y, color, msg);
 }
 
