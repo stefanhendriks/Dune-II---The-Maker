@@ -132,7 +132,7 @@ void cMessageDrawer::draw()
         renderDrawer->resetClippingFor(m_temp);
 
         // draw temp
-        renderDrawer->drawTransSprite(bmp_screen, m_temp, m_position.x, m_position.y);
+        renderDrawer->drawTransSprite(m_temp, m_temp, m_position.x, m_position.y);
     }
 }
 

@@ -288,7 +288,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (iStaticFrame != STAT01) {
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, iTrans);
 
-        renderDrawer->drawTransSprite(bmp_screen, gfxinter->getSurface(iStaticFrame), drawX, drawY);
+        renderDrawer->drawTransSprite(gfxinter->getSurface(iStaticFrame), gfxinter->getSurface(iStaticFrame), drawX, drawY);
         // reset the trans blender
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
     }

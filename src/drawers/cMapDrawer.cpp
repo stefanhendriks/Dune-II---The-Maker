@@ -67,7 +67,7 @@ void cMapDrawer::drawShroud()
                 }
                 else {
                     //_rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, SDL_Color{0, 0, 0));
-                    renderDrawer->drawRectFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, SDL_Color{0, 0, 0,255});
+                    // renderDrawer->drawRectFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, SDL_Color{0, 0, 0,255});
                 }
             }
             else {
@@ -75,12 +75,12 @@ void cMapDrawer::drawShroud()
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX,
+                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,
                                 fDrawY, iTileWidth, iTileHeight);
                         renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
                         renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
                                 iTileWidth, iTileHeight);
-                        renderDrawer->drawTransSprite(bmp_screen, temp, fDrawX, fDrawY);
+                        renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
                     }
                 }
                 else {
@@ -199,20 +199,20 @@ void cMapDrawer::drawTerrain()
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        renderDrawer->drawRectTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
-                                                                SDL_Color{255, 255, 0,96});
+                        // renderDrawer->drawRectTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
+                        //                                         SDL_Color{255, 255, 0,96});
                     }
                 }
 
                 if (m_drawGrid) {
                     //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, SDL_Color{128, 128, 128));
-                    renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
+                    // renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
                 }
             }
 
             // Draw more debugging information
             if (m_drawWithoutShroudTiles) {
-                drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
+                // drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
             }
         }
     }
