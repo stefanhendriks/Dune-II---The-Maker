@@ -319,7 +319,7 @@ void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Co
 void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
 {
     renderChangeColor(color);
-    const SDL_Rect tmp = {x, y, x + (width-1), y + (height-1)};
+    const SDL_Rect tmp = {x, y, width, height};
     SDL_RenderDrawRect(renderer, &tmp);
 }
 
