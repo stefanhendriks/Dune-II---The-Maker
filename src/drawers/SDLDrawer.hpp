@@ -22,7 +22,7 @@ public:
     void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y,unsigned char opacity = 255);
     void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
 
-    void drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, int opacyty);
+    void drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty);
 
     void resetClippingFor();
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
@@ -33,7 +33,7 @@ public:
     void blitFromGfxData(int index, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
     void blitSprite(SDL_Surface *src, const cRectangle *rectangle);
 
-    void stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    void stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity=255);
 
     void stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
     // void stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
