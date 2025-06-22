@@ -126,7 +126,7 @@ void cMiniMapDrawer::drawTerrain()
                 iDrawX += x;
                 iDrawY += y;
             }
-            renderDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+            renderDrawer->drawDot(iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
         }
     }
 }
@@ -200,7 +200,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
                     iDrawX += x;
                     iDrawY += y;
                 }
-                renderDrawer->drawDot(bmp_screen, iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+                renderDrawer->drawDot(iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
             }
         }
     }

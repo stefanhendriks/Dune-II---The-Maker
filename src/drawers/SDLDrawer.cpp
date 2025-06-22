@@ -470,13 +470,12 @@ void SDLDrawer::drawLine(int x1, int y1, int x2, int y2, SDL_Color color)
     SDL_RenderDrawLine(renderer,x1, y1, x2, y2);
 }
 
-void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size)
+void SDLDrawer::drawDot(int x, int y, SDL_Color color, int size)
 {
     if (size < 1) return;
-
-    Uint32 mappedColor = SDL_MapRGBA(bmp->format, color.r, color.g, color.b, color.a);
+    renderChangeColor(color);
     if (size == 1) {
-        set_pixel(bmp, x, y, mappedColor);
+        SDL_RenderDrawPoint(renderer,x, y);
         return;
     }
 
@@ -484,7 +483,7 @@ void SDLDrawer::drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int siz
     int endY = y + size;
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            set_pixel(bmp, sx, sy, mappedColor);
+            SDL_RenderDrawPoint(renderer,sx, sy);
         }
     }
 }
