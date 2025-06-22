@@ -113,6 +113,11 @@ void cMapDrawer::drawTerrain()
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
     cTextDrawer textDrawer = cTextDrawer(bene_font);
 
+    // cache for invalid terran
+    auto invalidTile = SDL_CreateRGBSurfaceWithFormat(0, 32, 32, 32, SDL_PIXELFORMAT_ARGB8888);
+    Uint32 mappedColor = SDL_MapRGBA(invalidTile->format, 245, 245, 245, 255);
+    SDL_FillRect(invalidTile, nullptr, mappedColor);
+
     // draw vertical rows..
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
 
@@ -146,29 +151,39 @@ void cMapDrawer::drawTerrain()
             // Draw terrain
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
-                cRectangle rectangle = cRectangle(0, 0, 32, 32);
-                renderDrawer->drawRectFilled(m_BmpTemp, rectangle, SDL_Color{245, 245, 245, 255});
+                // cRectangle rectangle = cRectangle(0, 0, 32, 32);
+                // renderDrawer->drawRectFilled(m_BmpTemp, rectangle, SDL_Color{245, 245, 245, 255});
+
+                    // const SDL_Rect src_pos = {0, 0,32, 32};
+                    // SDL_Rect dest_pos = {0, 0,32, 32};
+                    SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
             }
             else {
                 // valid type
-                renderDrawer->blit(gfxdata->getSurface(cell->type),
-                     m_BmpTemp,
-                     cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
-                     0, 0,
-                     32, 32
-                    );
+                // renderDrawer->blit(gfxdata->getSurface(cell->type),
+                //      m_BmpTemp,
+                //      cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
+                //      0, 0,
+                //      32, 32
+                //     );
+                    const SDL_Rect src_pos = {cell->tile * 32, 0,32, 32};
+                    SDL_Rect dest_pos = {0, 0,32, 32};
+                    SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
             }
 
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
                 // no need to stretch here, we stretch m_BmpTemp below
-                renderDrawer->maskedBlitFromGfxData(SMUDGE, m_BmpTemp,
-                                                    cell->smudgetile * 32,
-                                                    cell->smudgetype * 32,
-                                                    0,
-                                                    0,
-                                                    32,
-                                                    32);
+                // renderDrawer->maskedBlitFromGfxData(SMUDGE, m_BmpTemp,
+                //                                     cell->smudgetile * 32,
+                //                                     cell->smudgetype * 32,
+                //                                     0,
+                //                                     0,
+                //                                     32,
+                //                                     32);
+                const SDL_Rect src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
+                SDL_Rect dest_pos = {0, 0,32, 32};
+                SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
             }
 
             int iDrawX = round(fDrawX);
