@@ -64,7 +64,7 @@ public:
     void gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
     void gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
 
-    void drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color);
+    void drawLine(int x1, int y1, int x2, int y2, SDL_Color color);
     void drawDot(SDL_Surface *bmp, int x, int y, SDL_Color color, int size);
 
     void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);

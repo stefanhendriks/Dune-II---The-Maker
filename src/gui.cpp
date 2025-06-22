@@ -16,9 +16,9 @@ bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
 
     // lines to darken the right sides
     // _line(bmp_screen, x1+width, y1, x1+width , y1+height, SDL_Color{252,252,252));
-    renderDrawer->drawLine(bmp_screen, x1+width, y1, x1+width, y1+height, SDL_Color{252,252,252,255});
+    renderDrawer->drawLine(x1+width, y1, x1+width, y1+height, SDL_Color{252,252,252,255});
     // _line(bmp_screen, x1, y1+height, x1+width , y1+height, SDL_Color{252,252,252));
-    renderDrawer->drawLine(bmp_screen, x1, y1+height, x1+width, y1+height, SDL_Color{252,252,252,255});
+    renderDrawer->drawLine(x1, y1+height, x1+width, y1+height, SDL_Color{252,252,252,255});
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
     return MOUSE_WITHIN_RECT(x1, y1, width, height);
