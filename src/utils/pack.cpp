@@ -88,7 +88,7 @@ bool ReaderPack::readHeader()
         std::cerr << "Failed to open file: " << fpName << " - " << SDL_GetError() << std::endl;
         return false;
     }
-    char title[4];
+    char title[4+1]={'\0'};
     if (SDL_RWread(rfp.get(), &title, 4, 1) != 1 || strcmp(title, "D2TM") != 0) {
         std::cerr << "Invalid file format: " << fpName << std::endl;
         rfp.reset();
