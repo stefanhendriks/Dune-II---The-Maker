@@ -138,14 +138,14 @@ void cSideBarDrawer::drawBuildingLists()
         int barX = (iDrawX - 1) + (i * 66);
         SDL_Color darker = SDL_Color{89, 56, 0,255};
         SDL_Color veryDark = SDL_Color{48, 28, 0,255};
-        renderDrawer->drawLine(bmp_screen, barX - 1, iDrawY, barX - 1, endY, darker);
-        renderDrawer->drawLine(bmp_screen, barX, iDrawY, barX, endY, veryDark);
+        renderDrawer->drawLine( barX - 1, iDrawY, barX - 1, endY, darker);
+        renderDrawer->drawLine( barX, iDrawY, barX, endY, veryDark);
 
         // horizontal lines
         for (int j = 1; j < rows; j++) {
             int barY = iDrawY - 1 + (j * 50);
-            renderDrawer->drawLine(bmp_screen, iDrawX, barY-1, game.m_screenW, barY - 1, darker);
-            renderDrawer->drawLine(bmp_screen, iDrawX, barY, game.m_screenW, barY, veryDark);
+            renderDrawer->drawLine( iDrawX, barY-1, game.m_screenW, barY - 1, darker);
+            renderDrawer->drawLine( iDrawX, barY, game.m_screenW, barY, veryDark);
         }
     }
 
@@ -155,8 +155,8 @@ void cSideBarDrawer::drawBuildingLists()
     }
 
     // vertical lines at the side
-    renderDrawer->drawLine(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, SDL_Color{255, 211, 125,255}); // left
-    renderDrawer->drawLine(bmp_screen, game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, SDL_Color{209, 150, 28,255}); // right
+    renderDrawer->drawLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, SDL_Color{255, 211, 125,255}); // left
+    renderDrawer->drawLine( game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, SDL_Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
 
@@ -253,14 +253,14 @@ void cSideBarDrawer::drawCreditsUsage()
         renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
+    renderDrawer->drawLine( barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
 
     renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     SDL_Color darker = SDL_Color{89, 56, 0,255};
-    renderDrawer->drawLine(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    renderDrawer->drawLine(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
+    renderDrawer->drawLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    renderDrawer->drawLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
     m_textDrawer.drawText(barX - 1, barY - 21, SDL_Color{0, 0, 0,255}, "$");
     m_textDrawer.drawText(barX + 1, barY - 19, SDL_Color{0, 0, 0,255}, "$");
@@ -309,14 +309,14 @@ void cSideBarDrawer::drawPowerUsage() const
         renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->drawLine(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
+    renderDrawer->drawLine( barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
 
     renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     SDL_Color darker = SDL_Color{89, 56, 0,255};
-    renderDrawer->drawLine(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    renderDrawer->drawLine(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
+    renderDrawer->drawLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    renderDrawer->drawLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
     //renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(3),barX-3, barY - 21);

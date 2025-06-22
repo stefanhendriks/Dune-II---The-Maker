@@ -464,7 +464,7 @@ void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, i
     drawSprite(dest, sprite, x, y);
 }
 
-void SDLDrawer::drawLine(SDL_Surface *bmp, int x1, int y1, int x2, int y2, SDL_Color color)
+void SDLDrawer::drawLine(int x1, int y1, int x2, int y2, SDL_Color color)
 {
     renderChangeColor(color);
     SDL_RenderDrawLine(renderer,x1, y1, x2, y2);
