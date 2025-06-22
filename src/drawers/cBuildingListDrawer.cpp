@@ -74,17 +74,16 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 //	int width = (gfxinter->getSurface(id))->w;
     int width = 33;
     int height = (gfxinter->getSurface(id))->h;
-//	_rectfill(bmp_screen, x, y, x+width, y+height, SDL_Color{255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
 
     // clear
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
     // @Mira fix trasnparency set_trans_blender(0,0,0,128);
-    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(id), x, y);
+    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(id), x, y,128);
 
     if (!list->isAvailable()) {
-        renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, SDL_Color{0,0,0,96});
+        renderDrawer->drawSimpleColor(x, y, width, height, 0,0,0,96);
     }
 
     if (pressed) {
@@ -170,8 +169,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
                 //@Mira fix transparency // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
-                renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESSFIX), gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2);
-                renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESS001+iFrame), gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2);
+                renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSFIX), gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
+                renderDrawer->drawSprite(gfxinter->getSurface(PROGRESS001+iFrame), gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
             }
             else {
                 if (item->shouldPlaceIt()) {
@@ -213,7 +212,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
                 // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
-                renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
+                renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY,64);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
@@ -250,7 +249,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // payment/progress)
                 if (cannotPayIt) {
                     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
-                    renderDrawer->drawTransSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY);
+                    renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY,64);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->drawLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
