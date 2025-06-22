@@ -120,7 +120,7 @@ void cParticle::draw()
     }
     else {
         // old behavior
-        renderDrawer->blitFromGfxData(iType, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+        renderDrawer->blitFromGfxData(iType, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
     }
 
     // create proper sized bitmap
