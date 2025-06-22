@@ -183,6 +183,8 @@ void cMapDrawer::drawTerrain()
                 //@Mira il faut superposer les 2 images
                 const SDL_Rect src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
                 SDL_Rect dest_pos = {0, 0,32, 32};
+                Uint32 magicPinkRGBA = SDL_MapRGB(gfxdata->getSurface(SMUDGE)->format, 255, 0, 255);
+                SDL_SetColorKey(gfxdata->getSurface(SMUDGE),SDL_TRUE,magicPinkRGBA );
                 SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
             }
 
