@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/cPoint.h"
-
+#include "cTextDrawer.h"
 #include <string>
 
 struct SDL_Surface;
@@ -60,6 +60,7 @@ private:
 
     messages::eMessageDrawerState m_state;
     messages::eMessageDrawerFadingState m_fadeState;
+    cTextDrawer m_textDrawer;
 
     void createMessageBarBmp(int desiredWidth);
 };
