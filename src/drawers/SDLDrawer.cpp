@@ -313,7 +313,7 @@ void SDLDrawer::blitSprite(SDL_Surface *src, const cRectangle *rectangle)
 
 void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
 {
-    drawRect(dest, pRectangle.getX(), pRectangle.getWidth(), pRectangle.getHeight(), pRectangle.getEndY(), color);
+    drawRect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
 }
 
 void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
