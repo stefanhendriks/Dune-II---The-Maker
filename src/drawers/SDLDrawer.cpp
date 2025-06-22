@@ -146,15 +146,15 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = { src_x, src_y, width, height }; // Zone à copier de la source
     SDL_Rect dstRect = { pos_x, pos_y, width, height };     // Destination sur la surface cible
-    /*
+    
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error maskedBlit : " << SDL_GetError();
         return;
     }
     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-    SDL_DestroyTexture(texture);*/
-    SDL_BlitSurface(src, &srcRect, dest, &dstRect);
+    SDL_DestroyTexture(texture);
+    //SDL_BlitSurface(src, &srcRect, dest, &dstRect);
     //masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
