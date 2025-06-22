@@ -168,11 +168,11 @@ void cMouseDrawer::drawToolTipBackground()
     blue = std::max(blue - 64, 0);
 
     color = SDL_Color{red, green, blue,255};
-
+	// @Mira what do this code ?
     const auto black = renderDrawer->getColor_BLACK();
     const auto white = SDL_Color{255, 255, 255,255};
     //_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
-    renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
+    //renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
     renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
     int shadowX = x + width;
     int shadowY = y + height;
