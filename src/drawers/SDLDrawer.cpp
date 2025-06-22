@@ -371,12 +371,12 @@ void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha)
     //                   std::clamp(alpha, 0, 255));
 }
 
-void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y)
+void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y, unsigned char opacity)
 {
-    drawSprite(src,x,y);
+    drawSprite(src,x,y, opacity);
 }
 
-void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y)
+void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity)
 {
     //_draw_sprite(dest, src, x, y);
     SDL_Rect tmp = {x,y,src->w, src->h};
@@ -387,16 +387,25 @@ void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y)
         std::cerr << "error drawSprite : " << SDL_GetError();
         return;
     }
+    SDL_SetTextureAlphaMod(texture, opacity);
     SDL_RenderCopy(renderer, texture, NULL, &tmp);
     SDL_DestroyTexture(texture);
 }
 
 
-void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y)
+void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity)
 {
     SDL_Surface *sBitmap = gfxdata->getSurface(index);
     if (!sBitmap) return; // failed, bail!
     drawSprite(dest, sBitmap, x, y);
+}
+
+void SDLDrawer::drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, int opacity)
+{
+    SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_Rect carre = {x, y, width, height};
+    SDL_RenderFillRect(renderer, &carre);
 }
 
 void SDLDrawer::resetClippingFor()
