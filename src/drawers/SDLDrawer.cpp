@@ -27,7 +27,7 @@ SDLDrawer::~SDLDrawer()
     bitmapCache.clear();
 }
 
-void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)
 {
     if (src == nullptr) return;
     if (dest == nullptr) return;
@@ -400,7 +400,7 @@ void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned 
     drawSprite(dest, sBitmap, x, y);
 }
 
-void SDLDrawer::drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, int opacity)
+void SDLDrawer::drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
