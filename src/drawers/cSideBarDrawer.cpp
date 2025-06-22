@@ -375,7 +375,7 @@ void cSideBarDrawer::drawMinimap()
         drawX += (sprite->w / 2) - (emblemDesiredWidth / 2);
         drawY = cSideBar::TopBarHeight + ((heightMinimap / 2) - (emblemDesiredHeight / 2));
 
-        renderDrawer->stretchBlit(gfxinter->getSurface(bitmapId), bmp_screen, srcX, srcY, emblemWidth,
+        renderDrawer->stretchBlit(gfxinter->getSurface(bitmapId), srcX, srcY, emblemWidth,
                                   emblemHeight, drawX, drawY, emblemDesiredWidth, emblemDesiredHeight);
     }
 }
