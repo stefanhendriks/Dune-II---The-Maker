@@ -198,7 +198,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
         bmp = player->getStructureBitmap(structureId);
     }
 
-    renderDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
+    renderDrawer->stretchBlit(bmp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
 
     renderDrawer->drawTransSprite(bmp_screen, temp, iDrawX, iDrawY);
 

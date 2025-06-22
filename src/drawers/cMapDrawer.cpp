@@ -188,7 +188,7 @@ void cMapDrawer::drawTerrain()
 
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
-            renderDrawer->stretchBlit(m_BmpTemp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+            renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             // Draw debugging information
             if (game.isDebugMode()) {
