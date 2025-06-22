@@ -46,7 +46,7 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int height_y = mapCamera->factorZoomLevel(height);
 
     //_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
-    renderDrawer->drawRect(nullptr, drawX, drawY, width_x, height_y, color);
+    renderDrawer->drawSimpleColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, color.a);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
@@ -67,23 +67,23 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
-    // renderDrawer->drawSprite(temp, gfxdata->getSurface(iDrawPreBuild), 0, 0);
-    renderDrawer->stretchSprite(gfxdata->getSurface(iDrawPreBuild), gfxdata->getSurface(iDrawPreBuild), 
-                drawX, drawY, scaledWidth, scaledHeight);
-    // SDL_FreeSurface(temp);
+    //draw_sprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
+    renderDrawer->stretchSprite(gfxdata->getSurface(iDrawPreBuild), nullptr, drawX, drawY, scaledWidth, scaledHeight);
+    //destroy_bitmap(temp);
 
     // Draw shadow of the prebuild animation
     int shadowIndex = iDrawPreBuild + 1;
-    // @Mira fix trasnparency set_trans_blender(0,0,0,128);
-    SDL_Surface *shadow = gfxdata->getSurface(shadowIndex);
+    // set_trans_blender(0,0,0,128);
+    // BITMAP *shadow = (BITMAP *) gfxdata[shadowIndex].dat;
 
-    //SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-    //renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
-    renderDrawer->stretchSprite(shadow, shadow, 0, 0, scaledWidth, scaledHeight,128);
+    // BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+    // clear_to_color(stretchedShadow, makecol(255, 0, 255));
+    
+    renderDrawer->stretchSprite(gfxdata->getSurface(shadowIndex), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
-    //renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
+    //allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
-    //SDL_FreeSurface(stretchedShadow);
+    // destroy_bitmap(stretchedShadow);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -146,34 +146,40 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     int iSourceY = pixelHeight * structure->getFrame();
 
     int fade = windtrap->getFade();
-    SDL_Surface *wind=SDL_CreateRGBSurface(0,pixelWidth, pixelHeight,32,0,0,0,255);
-    renderDrawer->FillWithColor(wind, SDL_Color{255,0,255,255});
-    renderDrawer->blit(structure->getBitmap(), wind, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
+    // int screenDepth = bitmap_color_depth(bmp_screen);
+
+    // BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
+
+    // clear_to_color(wind, makecol(255,0,255));
+
+    // renderDrawer->blit(structure->getBitmap(), nullptr, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
 
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    SDL_Surface *shadow = structure->getShadowBitmap();
-    if (shadow) {
-        // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
+    // BITMAP *shadow = structure->getShadowBitmap();
+    // if (shadow) {
+    //     set_trans_blender(0, 0, 0, 160);
 
+    //     int colorDepth = bitmap_color_depth(bmp_screen);
+    //     BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+    //     clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
-        SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-        renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
+    //     allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
+    //                                      0, 0, scaledWidth, scaledHeight);
 
-        renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
-                                        0, 0, scaledWidth, scaledHeight);
+    //     allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
-        renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
+    //     // destroy_bitmap(stretchedShadow);
+    // }
 
-        SDL_FreeSurface(stretchedShadow);
-    }
+    // renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
+  renderDrawer->stretchSprite(structure->getBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight);
+ 
+//    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
+    renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
-    renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
-
-    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
-
-    SDL_FreeSurface(wind);
+    // SDL_FreeSurface(wind);
 }
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
