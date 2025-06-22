@@ -30,28 +30,28 @@ SDLDrawer::~SDLDrawer()
 void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)
 {
     if (src == nullptr) return;
-    if (dest == nullptr) return;
+    // if (dest == nullptr) return;
 
     // no use drawing outside of bounds
     if (pos_x + desiredWidth < 0) return;
     if (pos_y + desiredHeight < 0) return;
-    if (pos_x > dest->w) return;
-    if (pos_y > dest->h) return;
-
+    // if (pos_x > dest->w) return;
+    // if (pos_y > dest->h) return;
     // no use drawing a desired image with 0 width or height
     if (desiredHeight <= 0) return;
     if (desiredWidth <= 0) return;
-    //stretch_sprite(dest, src, pos_x, pos_y, desiredWidth, desiredHeight);
-    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, magicPink);
+    // cleaned coords for drawing
     SDL_Rect srcRect = { 0, 0, src->w, src->h };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-
+    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error maskedBlit : " << SDL_GetError();
         return;
     }
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);    
+    SDL_SetTextureAlphaMod(texture, opacity);
     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
     SDL_DestroyTexture(texture);
 
@@ -387,6 +387,7 @@ void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity)
         std::cerr << "error drawSprite : " << SDL_GetError();
         return;
     }
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(texture, opacity);
     SDL_RenderCopy(renderer, texture, NULL, &tmp);
     SDL_DestroyTexture(texture);
@@ -397,7 +398,7 @@ void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned 
 {
     SDL_Surface *sBitmap = gfxdata->getSurface(index);
     if (!sBitmap) return; // failed, bail!
-    drawSprite(dest, sBitmap, x, y);
+    drawSprite(dest, sBitmap, x, y, opacity);
 }
 
 void SDLDrawer::drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
