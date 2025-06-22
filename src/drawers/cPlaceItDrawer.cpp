@@ -37,6 +37,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 {
     assert(itemToPlace);
     if (mouseCell < 0) return;
+    SDL_Color itemToPlaceColor;
 
     int structureId = itemToPlace->getBuildId();
     assert(structureId > -1);
@@ -97,19 +98,17 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iDrawX = map.mouse_draw_x();
     int iDrawY = map.mouse_draw_y();
 
-    SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
+    // SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
     if (!bWithinBuildDistance) {
-        // @Mira color should be game.getColorPlaceBad());
-        renderDrawer->FillWithColor(temp, SDL_Color{255,0,0,255});
+        itemToPlaceColor = game.getColorPlaceBad();
     }
     else {
-        // @Mira clear surface
-        renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+        //clear_bitmap(temp);
 
         // Draw over it the mask for good/bad placing (decorates temp bitmap)
         for (int iX=0; iX < cellWidth; iX++) {
             for (int iY=0; iY < cellHeight; iY++) {
-                SDL_Color placeColor = game.getColorPlaceNeutral();
+                itemToPlaceColor = game.getColorPlaceNeutral();
 
                 int cellX = iCellX + iX;
                 int cellY = iCellY + iY;
@@ -121,24 +120,24 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int iCll = map.makeCell(cellX, cellY);
 
                 if (!map.isCellPassable(iCll) || map.getCellType(iCll) != TERRAIN_ROCK) {
-                    placeColor = game.getColorPlaceBad();
+                    itemToPlaceColor = game.getColorPlaceBad();
                 }
 
                 if (map.getCellType(iCll) == TERRAIN_SLAB) {
-                    placeColor = game.getColorPlaceGood();
+                    itemToPlaceColor = game.getColorPlaceGood();
                 }
 
                 // occupied by units or structures
                 int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
-                    placeColor = game.getColorPlaceBad();
+                    itemToPlaceColor = game.getColorPlaceBad();
                 }
 
                 int unitIdOnMap = map.getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!unit[unitIdOnMap].isDead()) {
-                        placeColor = game.getColorPlaceBad();
+                        itemToPlaceColor = game.getColorPlaceBad();
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?
                 }
@@ -150,20 +149,19 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                renderDrawer->drawRectFilled(temp, rectangle, placeColor);
+                //allegroDrawer->drawRectangleFilled(temp, rectangle, placeColor);
             }
         }
     }
 
-    // draw temp bitmap
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
+    // set_trans_blender(0, 0, 0, 64);
 
-    renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
+    renderDrawer->drawSimpleColor(iDrawX, iDrawY, scaledWidth, scaledHeight,itemToPlaceColor.r, itemToPlaceColor.g, itemToPlaceColor.b, 64 );
 
     // reset to normal
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
+    // set_trans_blender(0, 0, 0, 128);
 
-    SDL_FreeSurface(temp);
+    // destroy_bitmap(temp);
 }
 
 void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
