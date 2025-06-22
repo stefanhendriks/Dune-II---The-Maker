@@ -220,7 +220,7 @@ void cDrawManager::drawMouse()
 {
     // defaultCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
     // SDL_SetCursor(defaultCursor);
-    
+
     m_mouseDrawer.draw();
 }
 

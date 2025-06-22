@@ -10,7 +10,7 @@
 
 class SDLDrawer {
 public:
-    SDLDrawer(cAllegroDataRepository *dataRepository, SDL_Renderer* _renderer);
+    SDLDrawer(cAllegroDataRepository *dataRepository, SDL_Renderer *_renderer);
     virtual ~SDLDrawer();
 
     void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);

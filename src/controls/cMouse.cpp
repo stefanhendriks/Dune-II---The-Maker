@@ -51,15 +51,22 @@ void cMouse::init()
     debugLines.clear();
 }
 
-void cMouse::handleEvent(const SDL_Event& event) {
+void cMouse::handleEvent(const SDL_Event &event)
+{
     switch (event.type) {
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_LEFT) leftButtonPressed = true;
             if (event.button.button == SDL_BUTTON_RIGHT) rightButtonPressed = true;
             break;
         case SDL_MOUSEBUTTONUP:
-            if (event.button.button == SDL_BUTTON_LEFT) {leftButtonPressed = false; leftButtonClicked = true;}
-            if (event.button.button == SDL_BUTTON_RIGHT) {rightButtonPressed = false; rightButtonClicked = true;}
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                leftButtonPressed = false;
+                leftButtonClicked = true;
+            }
+            if (event.button.button == SDL_BUTTON_RIGHT) {
+                rightButtonPressed = false;
+                rightButtonClicked = true;
+            }
             break;
         case SDL_MOUSEMOTION:
             coords.x = event.motion.x;
@@ -88,7 +95,7 @@ void cMouse::updateState()
     // check if leftButtonIsPressed=true (which is the previous frame)
     // leftButtonPressedInPreviousFrame = leftButtonPressed;
     // rightButtonPressedInPreviousFrame = rightButtonPressed;
-// 
+//
     // leftButtonPressed = mouse_b & 1;
     // rightButtonPressed = mouse_b & 2;
 
@@ -170,7 +177,7 @@ void cMouse::updateState()
     rightButtonClicked = false;
 }
 
-void cMouse::setCursorPosition(SDL_Window* _windows, int x, int y)
+void cMouse::setCursorPosition(SDL_Window *_windows, int x, int y)
 {
     SDL_WarpMouseInWindow(_windows, x, y); // allegro function
     if (_mouseObserver) {

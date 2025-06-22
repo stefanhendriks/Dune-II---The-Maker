@@ -7,7 +7,7 @@
 class cKeyboard {
 public:
     cKeyboard();
-    void handleEvent(const SDL_Event& event);
+    void handleEvent(const SDL_Event &event);
     void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
     void setKeyboardObserver(cInputObserver *keyboardObserver) {

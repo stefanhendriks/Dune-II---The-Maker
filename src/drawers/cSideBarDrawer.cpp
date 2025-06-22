@@ -246,8 +246,8 @@ void cSideBarDrawer::drawCreditsUsage()
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, 
-                            SDL_Color{(Uint8)r,(Uint8)g, 32,255});
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY,
+                                     SDL_Color{(Uint8)r,(Uint8)g, 32,255});
     }
     else {
         renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
@@ -302,8 +302,8 @@ void cSideBarDrawer::drawPowerUsage() const
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, 
-                            SDL_Color{(Uint8)r, (Uint8)g, 32,255});
+        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY,
+                                     SDL_Color{(Uint8)r, (Uint8)g, 32,255});
     }
     else {
         renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());

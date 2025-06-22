@@ -22,17 +22,17 @@ public:
     cTextWriter(int x, int y, TTF_Font *theFont, int theFontSize);
     ~cTextWriter();
 
-    void write(const std::string& msg);
+    void write(const std::string &msg);
     // void write(const char *msg, int color);
-    void write(const std::string& msg, SDL_Color color);
+    void write(const std::string &msg, SDL_Color color);
 
     template<typename... Args>
-    void writef(fmt::format_string<Args...> fmtStr, Args&&... args) {
+    void writef(fmt::format_string<Args...> fmtStr, Args &&... args) {
         write(fmt::format(fmtStr, std::forward<Args>(args)...));
     }
 
     template<typename... Args>
-    void writef(SDL_Color color, fmt::format_string<Args...> fmtStr, Args&&... args) {
+    void writef(SDL_Color color, fmt::format_string<Args...> fmtStr, Args &&... args) {
         write(fmt::format(fmtStr, std::forward<Args>(args)...), color);
     }
 

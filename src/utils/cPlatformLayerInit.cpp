@@ -23,7 +23,7 @@ cPlatformLayerInit::cPlatformLayerInit(/*const std::string &path_to_config_file,
     else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL2 init", "Initialized successfully", OUTC_SUCCESS);
     }
-    
+
     if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) { //Initialisation de l'API Mixer
         logger->log(LOG_FATAL, COMP_SDL2, "SDL2 mixer", Mix_GetError(), OUTC_FAILED);
         throw std::runtime_error(Mix_GetError());
@@ -32,33 +32,33 @@ cPlatformLayerInit::cPlatformLayerInit(/*const std::string &path_to_config_file,
         logger->log(LOG_INFO, COMP_SDL2, "SDL2_mixer", "Initialized successfully", OUTC_SUCCESS);
     }
 
-    if (TTF_Init() < 0)
-    {
+    if (TTF_Init() < 0) {
         logger->log(LOG_FATAL, COMP_SDL2, "SDL2 ttf", TTF_GetError(), OUTC_FAILED);
-    } else {
+    }
+    else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL2_ttf", "Initialized successfully", OUTC_SUCCESS);
     }
-/*
-    if (allegroInitialized) {
-        throw std::runtime_error("Allegro initialization was attempted twice.");
-    }
-    allegroInitialized = true;
+    /*
+        if (allegroInitialized) {
+            throw std::runtime_error("Allegro initialization was attempted twice.");
+        }
+        allegroInitialized = true;
 
-    set_config_file(path_to_config_file.c_str());
+        set_config_file(path_to_config_file.c_str());
 
-    // Using the install function wihout registering an at_exit function. The cleanup will be done
-    // in the destructor of this object.
-    if (install_allegro(SYSTEM_AUTODETECT, &errno, nullptr) != 0) {
-        const char *error_message = std::strerror(errno);
-        logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", error_message, OUTC_FAILED);
-        throw std::runtime_error(error_message);
-    }
+        // Using the install function wihout registering an at_exit function. The cleanup will be done
+        // in the destructor of this object.
+        if (install_allegro(SYSTEM_AUTODETECT, &errno, nullptr) != 0) {
+            const char *error_message = std::strerror(errno);
+            logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", error_message, OUTC_FAILED);
+            throw std::runtime_error(error_message);
+        }
 
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
-    set_window_title(window_title.c_str());
-    logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
-    */
+        set_window_title(window_title.c_str());
+        logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
+        */
 }
 
 cPlatformLayerInit::~cPlatformLayerInit()

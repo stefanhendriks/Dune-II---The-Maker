@@ -46,16 +46,16 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = { 0, 0, src->w, src->h };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error maskedBlit : " << SDL_GetError();
         return;
     }
     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
     SDL_DestroyTexture(texture);
-    
-    
+
+
     // int result;
     // if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
     //     SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
@@ -64,7 +64,7 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     // } else {
     //     result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
     // }
-    
+
     // if (result < 0) {
     //     std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
     // }
@@ -98,25 +98,25 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, i
     SDL_Rect srcRect = {src_x, src_y, width, height };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error maskedBlit : " << SDL_GetError();
         return;
     }
     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
     SDL_DestroyTexture(texture);
-/*
-    int result;
-    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
-        SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
-        result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
-        SDL_FreeSurface(converted);
-    } else {
-        result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
-    }
-    if (result < 0) {
-        std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
-    }*/
+    /*
+        int result;
+        if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+            SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+            result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+            SDL_FreeSurface(converted);
+        } else {
+            result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+        }
+        if (result < 0) {
+            std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
+        }*/
 }
 
 // void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
@@ -146,8 +146,8 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = { src_x, src_y, width, height }; // Zone à copier de la source
     SDL_Rect dstRect = { pos_x, pos_y, width, height };     // Destination sur la surface cible
-    
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error maskedBlit : " << SDL_GetError();
         return;
@@ -193,8 +193,8 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = {src_x, src_y, width, height };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error maskedStretchBlit : " << SDL_GetError();
         return;
@@ -213,7 +213,7 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     if (result < 0) {
         std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
     }
-*/
+    */
     //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
@@ -286,10 +286,10 @@ void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, 
     const SDL_Rect src_pos = {src_x, src_y,width, height};
     SDL_Rect dest_pos = {pos_x, pos_y,width, height};
     //SDL_BlitSurface(src, &src_pos, dest, &dest_pos);
-    
+
     transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
     SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error drawSprite : " << SDL_GetError();
         return;
@@ -343,8 +343,8 @@ void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &r
 
     // auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
     // if (bitmap == nullptr) {
-        // bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
-        // bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
+    // bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
+    // bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
     // }
     // auto bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
     drawRectFilled(nullptr, rect.getX(), rect.getX(), rect.getWidth(), rect.getHeight(), color);
@@ -382,7 +382,7 @@ void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y)
     SDL_Rect tmp = {x,y,src->w, src->h};
     transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
     SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error drawSprite : " << SDL_GetError();
         return;
@@ -619,10 +619,10 @@ Uint32 SDLDrawer::get_pixel(SDL_Surface *surface, int x, int y)
 void SDLDrawer::FillWithColor(SDL_Surface *src, SDL_Color color)
 {
     Uint32 mappedColor = SDL_MapRGBA(src->format,
-                                  color.r,
-                                  color.g,
-                                  color.b,
-                                  color.a);
+                                     color.r,
+                                     color.g,
+                                     color.b,
+                                     color.a);
     int result = SDL_FillRect(src, NULL, mappedColor);
     if (result < 0) {
         SDL_Log("SDL_FillRect failed to clear surface: %s", SDL_GetError());
@@ -633,8 +633,8 @@ void SDLDrawer::FillWithColor(SDL_Surface *src, SDL_Color color)
 void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, SDL_Color color)
 {
     Uint32 mappedColor = SDL_MapRGBA(bmp->format,
-                            color.r, color.g, color.b, color.a);
-    
+                                     color.r, color.g, color.b, color.a);
+
     // Vérrouiller la surface avant de modifier les pixels
     if (SDL_LockSurface(bmp) < 0) {
         fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
@@ -654,7 +654,7 @@ SDL_Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
     auto tmpColor = get_pixel(surface,x,y);
     SDL_UnlockSurface(surface);
     SDL_Color extractedColor;
-    SDL_GetRGBA(tmpColor, surface->format, 
+    SDL_GetRGBA(tmpColor, surface->format,
                 &extractedColor.r,
                 &extractedColor.g,
                 &extractedColor.b,
@@ -670,9 +670,9 @@ SDL_Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
 void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor)
 {
     Uint32 mappedColorToReplace = SDL_MapRGBA(bmp->format,
-                            colorToReplace.r, colorToReplace.g, colorToReplace.b, colorToReplace.a);
+                                  colorToReplace.r, colorToReplace.g, colorToReplace.b, colorToReplace.a);
     Uint32 mappedNewColor = SDL_MapRGBA(bmp->format,
-                            newColor.r, newColor.g, newColor.b, newColor.a);
+                                        newColor.r, newColor.g, newColor.b, newColor.a);
     if (SDL_LockSurface(bmp) < 0) {
         fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
         return;
