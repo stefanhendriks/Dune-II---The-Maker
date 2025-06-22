@@ -66,8 +66,7 @@ void cMapDrawer::drawShroud()
                     // do nothing
                 }
                 else {
-                    //_rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, SDL_Color{0, 0, 0));
-                    // renderDrawer->drawRectFilled(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, SDL_Color{0, 0, 0,255});
+                    renderDrawer->drawSimpleColor(fDrawX, fDrawY, tileWidth, tileHeight,0, 0, 0,128);
                 }
             }
             else {
@@ -200,14 +199,13 @@ void cMapDrawer::drawTerrain()
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        // renderDrawer->drawRectTransparentFilled(bmp_screen, {iDrawX, iDrawY, iTileWidth, iTileHeight},
-                        //                                         SDL_Color{255, 255, 0,96});
+                        renderDrawer->drawSimpleColor(iDrawX, iDrawY, iTileWidth, iTileHeight,255, 255, 0,96);
                     }
                 }
 
                 if (m_drawGrid) {
                     //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, SDL_Color{128, 128, 128));
-                    // renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
+                    renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
                 }
             }
 
