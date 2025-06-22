@@ -287,8 +287,8 @@ void cMiniMapDrawer::drawStaticFrame()
     // non-stat01 frames are drawn transparent
     if (iStaticFrame != STAT01) {
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, iTrans);
-
-        renderDrawer->drawTransSprite(gfxinter->getSurface(iStaticFrame), gfxinter->getSurface(iStaticFrame), drawX, drawY);
+        renderDrawer->drawSprite(gfxinter->getSurface(iStaticFrame), drawX, drawY);
+        //renderDrawer->drawTransSprite(gfxinter->getSurface(iStaticFrame), gfxinter->getSurface(iStaticFrame), drawX, drawY, iTrans);
         // reset the trans blender
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
     }
