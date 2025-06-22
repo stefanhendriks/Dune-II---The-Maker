@@ -63,7 +63,7 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
 void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
     if (src == nullptr) return;
-    if (dest == nullptr) return;
+    //if (dest == nullptr) return;
 
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;
@@ -75,8 +75,8 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     // no use drawing outside of bounds
     if (pos_x + desiredWidth < 0) return;
     if (pos_y + desiredHeight < 0) return;
-    if (pos_x > dest->w) return;
-    if (pos_y > dest->h) return;
+    // if (pos_x > dest->w) return;
+    // if (pos_y > dest->h) return;
 
     // no use drawing a desired image with 0 width or height
     if (desiredHeight <= 0) return;
@@ -87,6 +87,15 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = {src_x, src_y, width, height };
     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    if (!texture) {
+        std::cerr << "error maskedBlit : " << SDL_GetError();
+        return;
+    }
+    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+    SDL_DestroyTexture(texture);
+/*
     int result;
     if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
         SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
@@ -97,7 +106,7 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int 
     }
     if (result < 0) {
         std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
-    }
+    }*/
 }
 
 // void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
@@ -127,6 +136,14 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
     SDL_SetColorKey(src, SDL_TRUE, magicPink);
     SDL_Rect srcRect = { src_x, src_y, width, height }; // Zone à copier de la source
     SDL_Rect dstRect = { pos_x, pos_y, width, height };     // Destination sur la surface cible
+    /*
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, src);
+    if (!texture) {
+        std::cerr << "error maskedBlit : " << SDL_GetError();
+        return;
+    }
+    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+    SDL_DestroyTexture(texture);*/
     SDL_BlitSurface(src, &srcRect, dest, &dstRect);
     //masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
@@ -177,6 +194,7 @@ void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x
     if (result < 0) {
         std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
     }
+
     //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
