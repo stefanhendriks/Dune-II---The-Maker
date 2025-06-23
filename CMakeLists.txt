@@ -41,14 +41,16 @@ else()
   )
 endif()
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-  set(D2TM_OPTMIZATION "-O0")
-else()
-  set(D2TM_OPTMIZATION "-O3")
-  set_target_properties(${PROJECT_NAME} PROPERTIES
-    INTERPROCEDURAL_OPTIMIZATION TRUE
-  )
-endif()
+# if(CMAKE_BUILD_TYPE MATCHES Debug)
+#   set(D2TM_OPTMIZATION "-O0")
+# else()
+#   set(D2TM_OPTMIZATION "-O3")
+#   set_target_properties(${PROJECT_NAME} PROPERTIES
+#     INTERPROCEDURAL_OPTIMIZATION TRUE
+#   )
+# endif()
+
+SET(CMAKE_CXX_FLAGS "-g")
 
 target_compile_options(${PROJECT_NAME}
   PRIVATE
