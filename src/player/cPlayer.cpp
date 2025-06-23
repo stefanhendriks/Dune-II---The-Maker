@@ -274,6 +274,9 @@ void cPlayer::setHouse(int iHouse)
 
         // use this palette to draw stuff
         //select_palette(pal);
+        //
+        // @Mira here to color SDL_Surface
+        //
 
         // copy flag(s) with correct color
         SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
