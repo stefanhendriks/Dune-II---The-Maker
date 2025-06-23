@@ -2,6 +2,7 @@
 #include "pack.h"
 #include <iostream>
 #include <iomanip>
+#include <SDL2/SDL_image.h>
 
 DataPack::DataPack(const std::string &packName)
 {
@@ -48,7 +49,7 @@ SDL_Surface *DataPack::getSurface(int index)
     if (it != surfaceCache.end())
         return it->second;
     SDL_RWops *tmp = reader->getData(index);
-    SDL_Surface *out = SDL_LoadBMP_RW(tmp, SDL_TRUE);
+    SDL_Surface *out = IMG_Load_RW(tmp, SDL_TRUE);
     if (!out) {
         printf("Failed to load image %i : %s\n", index, SDL_GetError());
     }
