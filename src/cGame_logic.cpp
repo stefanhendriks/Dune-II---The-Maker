@@ -1254,7 +1254,7 @@ bool cGame::setupGame()
 
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);
-    SDL_BlendMode(SDL_BLENDMODE_BLEND);
+    //./d   SDL_BlendMode(SDL_BLENDMODE_BLEND);
     return true;
 }
 
