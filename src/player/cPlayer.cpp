@@ -277,14 +277,15 @@ void cPlayer::setHouse(int iHouse)
         // copy flag(s) with correct color
         SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
         bmp_flag = SDL_CreateRGBSurface(0, flagBmpData->w, flagBmpData->h,32,0,0,0,255);
-        renderDrawer->FillWithColor(bmp_flag, SDL_Color{255,0,255,255});
-        renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
+        // renderDrawer->FillWithColor(bmp_flag, SDL_Color{255,0,255,255});
+        // renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
 
         flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
         bmp_flag_small = SDL_CreateRGBSurface(0, flagBmpData->w, flagBmpData->h,32,0,0,0,255);
-        renderDrawer->FillWithColor(bmp_flag_small, SDL_Color{255,0,255,255});
-        renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
+        // renderDrawer->FillWithColor(bmp_flag_small, SDL_Color{255,0,255,255});
+        // renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
 
+        Uint32 blackRGBA = SDL_MapRGB(flagBmpData->format, 0, 0, 0);
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
             s_StructureInfo &structureType = sStructureInfo[i];
@@ -295,9 +296,11 @@ void cPlayer::setHouse(int iHouse)
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
-            renderDrawer->FillWithColor(bmp_structure[i], SDL_Color{255,0,255,255});
-
-            renderDrawer->drawSprite(bmp_structure[i], structureType.bmp, 0, 0);
+            // renderDrawer->FillWithColor(bmp_structure[i], SDL_Color{255,0,255,255});
+            SDL_SetColorKey(structureType.bmp,SDL_TRUE,blackRGBA);
+            if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
+                    std::cerr << "error bit on " << SDL_GetError() << std::endl;
+            };
 
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
@@ -306,8 +309,8 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                renderDrawer->FillWithColor(bitmap, SDL_Color{255,0,255,255});
-                renderDrawer->drawSprite(bitmap, structureType.flash, 0, 0);
+                // renderDrawer->FillWithColor(bitmap, SDL_Color{255,0,255,255});
+                // renderDrawer->drawSprite(bitmap, structureType.flash, 0, 0);
                 bmp_structure[j] = bitmap;
             }
 
@@ -318,19 +321,26 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h, 32,0,0,0,255);
+            bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h,32,0,0,0,255);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
-            renderDrawer->FillWithColor(bmp_unit[i], SDL_Color{255,0,255,255});
+            // renderDrawer->FillWithColor(bmp_unit[i], SDL_Color{255,0,255,255});
 
-            renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
+            // renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
+            SDL_SetColorKey(unitType.bmp,SDL_TRUE,blackRGBA);
+            if (SDL_BlitSurface(unitType.bmp, nullptr, bmp_unit[i], nullptr)!=0) {
+                    std::cerr << "error bit on " << SDL_GetError() << std::endl;
+                }
 
             if (unitType.top) {
-                bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h,32,0,0,0,255);
-                renderDrawer->FillWithColor(bmp_unit_top[i], SDL_Color{255,0,255,255});
 
-                renderDrawer->drawSprite(bmp_unit_top[i], unitType.top, 0, 0);
+                bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.top->w, unitType.top->h,32,0,0,0,255);
+                // renderDrawer->FillWithColor(bmp_unit_top[i], SDL_Color{255,0,255,255});
+                SDL_SetColorKey(unitType.top,SDL_TRUE,blackRGBA);
+                if (SDL_BlitSurface(unitType.top, nullptr, bmp_unit_top[i], nullptr)!=0) {
+                    std::cerr << "error bit on " << SDL_GetError() << std::endl;
+                }
             }
         }
     }
