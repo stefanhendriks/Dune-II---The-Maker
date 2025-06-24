@@ -9,10 +9,14 @@ Graphics::Graphics(SDL_Renderer *_renderer,const std::string &filePackName): ren
 
 Graphics::~Graphics()
 {
-    for (auto& [_, tex] : texCache) {
-        if (tex) 
-            SDL_DestroyTexture(tex);
+    for (auto& [_, texObj] : texCache) {
+        // auto delete with smartptr required
+        if (texObj) {
+            SDL_DestroyTexture(texObj->tex);
+            delete(texObj);
+        }
     }
+    texCache.clear();
 }
 
 SDL_Surface *Graphics::getSurface(int index) const
@@ -25,7 +29,7 @@ SDL_Surface *Graphics::getSurface(const std::string &name) const
     return dataPack->getSurface(name);
 }
 
-SDL_Texture *Graphics::getTexture(int index)
+Texture *Graphics::getTexture(int index)
 {
     if (index < 0) {
         std::cerr << "Graphics: Invalid index " << index << std::endl;
@@ -45,11 +49,12 @@ SDL_Texture *Graphics::getTexture(int index)
         std::cerr << "Graphics: Failed to convert texture " << index << " : " <<SDL_GetError() << std::endl;
         return nullptr;
     }
-    texCache[index] = outTexture;
-    return outTexture;
+    Texture* Tex = new Texture(outTexture, outSurface->w, outSurface->h);
+    texCache[index] = Tex;
+    return Tex;
 }
 
-SDL_Texture *Graphics::getTexture(const std::string &name)
+Texture *Graphics::getTexture(const std::string &name)
 {
     int index = dataPack->getIndexFromName(name);
     return this->getTexture(index);
