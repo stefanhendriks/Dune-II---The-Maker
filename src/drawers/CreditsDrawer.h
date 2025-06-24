@@ -24,9 +24,9 @@ public:
     void setCredits(int amount);
     void setCredits();
 
-    SDL_Surface *getBitmap() {
-        return bmp;
-    }
+    // SDL_Surface *getBitmap() {
+    //     return bmp;
+    // }
 
     void setPlayer(cPlayer *thePlayer);
 
