@@ -7,7 +7,7 @@
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 
 #include <cassert>

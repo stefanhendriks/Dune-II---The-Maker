@@ -21,6 +21,7 @@
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cIniFile.h"
+#include "utils/Graphics.hpp"
 
 #include <cmath>
 

@@ -37,7 +37,7 @@ class cUnit;
 class cParticle;
 class cPlayer;
 class cRegion;
-class DataPack;
+class Graphics;
 
 struct SDL_Surface;
 
@@ -78,10 +78,10 @@ extern TTF_Font *bene_font;
 extern TTF_Font *small_font;
 
 // DATAFILES
-extern std::shared_ptr<DataPack> gfxdata;
-extern std::shared_ptr<DataPack> gfxinter;
-extern std::shared_ptr<DataPack> gfxworld;
-extern std::shared_ptr<DataPack> gfxmentat;
+extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
+extern std::shared_ptr<Graphics> gfxinter;		// interface graphics
+extern std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
+extern std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 
 // BITMAPS
 extern SDL_Surface *bmp_screen;

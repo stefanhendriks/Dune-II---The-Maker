@@ -15,6 +15,7 @@
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
+#include "utils/Graphics.hpp"
 
 #include <fmt/core.h>
 #include <algorithm>

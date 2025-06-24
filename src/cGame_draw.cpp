@@ -14,6 +14,7 @@
 #include "d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 

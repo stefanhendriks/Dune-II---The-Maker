@@ -5,7 +5,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 
 #include <cassert>

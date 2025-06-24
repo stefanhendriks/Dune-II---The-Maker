@@ -4,6 +4,7 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 #include <fmt/core.h>

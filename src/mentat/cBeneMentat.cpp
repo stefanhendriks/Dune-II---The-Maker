@@ -6,7 +6,7 @@
 #include "d2tmc.h"
 #include "player/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
-
+#include "utils/Graphics.hpp"
 
 cBeneMentat::cBeneMentat() : cAbstractMentat(false)
 {

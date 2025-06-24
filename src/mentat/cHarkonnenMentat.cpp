@@ -5,7 +5,7 @@
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
-
+#include "utils/Graphics.hpp"
 
 cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)
 {

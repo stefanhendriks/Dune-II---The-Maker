@@ -3,6 +3,7 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 

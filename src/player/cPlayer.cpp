@@ -9,6 +9,7 @@
 #include "utils/cSoundPlayer.h"
 #include "player/cHousesInfo.h"
 #include "drawers/SDLDrawer.hpp"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 #include <fmt/format.h>

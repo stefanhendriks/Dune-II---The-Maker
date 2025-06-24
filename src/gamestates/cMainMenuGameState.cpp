@@ -10,6 +10,7 @@
 #include "gui/actions/cGuiActionShowOptions.h"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "drawers/SDLDrawer.hpp"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
