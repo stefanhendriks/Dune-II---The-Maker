@@ -907,8 +907,8 @@ void cAbstractStructure::drawWithShadow()
         // SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
         // renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
 
-        renderDrawer->stretchBlit(shadow, 0, 0, pixelWidth, pixelHeight,
-                                        drawX, drawY, scaledWidth, scaledHeight);
+        // renderDrawer->stretchBlit(shadow, 0, 0, pixelWidth, pixelHeight,
+        //                                 drawX, drawY, scaledWidth, scaledHeight);
 
         // renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 

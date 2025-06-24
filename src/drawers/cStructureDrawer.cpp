@@ -174,10 +174,10 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     // }
 
     // renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
-  renderDrawer->stretchSprite(structure->getBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight);
+    renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
  
 //    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
-    renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
+    //renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
     // SDL_FreeSurface(wind);
 }
