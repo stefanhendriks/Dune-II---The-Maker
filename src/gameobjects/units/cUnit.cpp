@@ -551,13 +551,13 @@ void cUnit::draw_spice()
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, SDL_Color{0, 0, 0,255});
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w), height_y, SDL_Color{255, 91, 1,255});
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,255);
+    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,255);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
         //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, SDL_Color{255, 255, 255));
-        renderDrawer->drawRect(bmp_screen, drawx, drawy,width_x, height_y, SDL_Color{255, 255, 255,255});
+        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,255);
     }
 }
 
@@ -599,13 +599,13 @@ void cUnit::draw_health()
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, width_x, height_y, SDL_Color{0, 0, 0,255});
-    renderDrawer->drawRectFilled(bmp_screen, drawx, drawy, (w - 1), height_y, SDL_Color{(Uint8)r,(Uint8)g, 32,255});
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,255);
+    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,255);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
         //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, SDL_Color{255, 255, 255));
-        renderDrawer->drawRect(bmp_screen, drawx, drawy, width_x, height_y, SDL_Color{255, 255, 255,255});
+        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,255);
     }
 
     // draw group
@@ -667,9 +667,8 @@ void cUnit::draw_experience()
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy);
+        renderDrawer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy);
     }
-
 }
 
 void cUnit::draw_path() const
@@ -691,15 +690,15 @@ void cUnit::draw_path() const
         int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
-            renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 255,255});
+            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 255,255});
         }
         else if (iPath[i] == iGoalCell) {
             // end of path (goal)
-            renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0,255});
+            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0,255});
         }
         else {
             // everything else
-            renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 64,255});
+            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 64,255});
         }
 
         // draw a line from previous to current
@@ -747,7 +746,7 @@ void cUnit::draw()
     const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
-    if (shadow) {
+    /*if (shadow) {
         int destY = uy;
 
         if (iType == CARRYALL) {
@@ -764,7 +763,7 @@ void cUnit::draw()
         renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, ux, destY);
         SDL_FreeSurface(shadow);
         SDL_FreeSurface(stretchedShadow);
-    }
+    }*/
 
     // Draw BODY
     SDL_Surface *bitmap = cPlayer.getUnitBitmap(iType);
@@ -777,6 +776,7 @@ void cUnit::draw()
     else {
         log(fmt::format("unit of iType [{}] did not have a bitmap!?", iType));
     }
+    
 
     // Draw TOP
     SDL_Surface *top = cPlayer.getUnitTopBitmap(iType);
