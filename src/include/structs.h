@@ -99,7 +99,7 @@ struct s_FlagInfo {
 struct s_StructureInfo {
     // Structures
     SDL_Surface *bmp;         // a pointer to the 8 bit bitmap
-    SDL_Surface *shadow;	   // a pointer to the shadow bitmap
+//    SDL_Surface *shadow;	   // a pointer to the shadow bitmap
     SDL_Surface *flash;	   // a pointer to the flash bitmap (used to overlay when unit exits building for light/heavy fctry)
 
     std::vector<s_FlagInfo> flags;

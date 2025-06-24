@@ -121,11 +121,11 @@ SDL_Surface *cAbstractStructure::getBitmap()
     return this->getPlayer()->getStructureBitmap(getType());
 }
 
-SDL_Surface *cAbstractStructure::getShadowBitmap()
-{
-    s_StructureInfo structureType = getStructureInfo();
-    return structureType.shadow;
-}
+// SDL_Surface *cAbstractStructure::getShadowBitmap()
+// {
+//     s_StructureInfo structureType = getStructureInfo();
+//     return structureType.shadow;
+// }
 
 cPlayer *cAbstractStructure::getPlayer()
 {
@@ -900,8 +900,8 @@ void cAbstractStructure::drawWithShadow()
 
     SDL_Surface *bitmapToDraw = getBitmap();
 
-    SDL_Surface *shadow = getShadowBitmap();
-    if (shadow) {
+    // SDL_Surface *shadow = getShadowBitmap();
+    // if (shadow) {
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
         // SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
@@ -913,7 +913,7 @@ void cAbstractStructure::drawWithShadow()
         // renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 
         // SDL_FreeSurface(stretchedShadow);
-    }
+    // }
         renderDrawer->stretchBlit(bitmapToDraw, 0, iSourceY, pixelWidth, pixelHeight,
                                     drawX, drawY, scaledWidth, scaledHeight);
 

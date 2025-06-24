@@ -14,7 +14,7 @@
 cMessageDrawer::cMessageDrawer()
     : m_textDrawer(game_font)
 {
-    m_textDrawer.setApplyShadow(false);
+    // m_textDrawer.setApplyShadow(false);
     m_bmpBar = nullptr;
     m_temp = nullptr;
     m_keepMessage = false;
