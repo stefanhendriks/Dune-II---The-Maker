@@ -410,6 +410,14 @@ void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned 
     drawSprite(dest, sBitmap, x, y, opacity);
 }
 
+void SDLDrawer::renderStrechSprite(Texture *src, SDL_Rect src_pos, SDL_Rect dest_pos, unsigned char opacity)
+{
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureAlphaMod(src->tex, opacity);
+    SDL_RenderCopy(renderer, src->tex, &src_pos, &dest_pos);
+}
+
+
 void SDLDrawer::drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);

@@ -20,6 +20,8 @@ public:
     void drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y);
 
     void renderSprite(Texture *src,int x, int y,unsigned char opacity = 255);
+    void renderStrechSprite(Texture *src, SDL_Rect src_pos, SDL_Rect dest_pos, unsigned char opacity = 255);
+
     [[deprecated]] void drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity = 255);
     [[deprecated]] void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y,unsigned char opacity = 255);
     [[deprecated]] void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
