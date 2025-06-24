@@ -5,6 +5,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include "include/Texture.hpp"
+
 class DataPack;
 
 /*
@@ -21,11 +23,11 @@ public:
     // return a surface from his name    
     SDL_Surface *getSurface(const std::string &name) const;
     // return a texture from his index
-    SDL_Texture *getTexture(int index);
+    Texture *getTexture(int index);
     // return a texture from his name    
-    SDL_Texture *getTexture(const std::string &name);
+    Texture *getTexture(const std::string &name);
 private:
     SDL_Renderer* renderer;
     std::unique_ptr<DataPack> dataPack;
-    std::unordered_map<int , SDL_Texture*> texCache;
+    std::unordered_map<int , Texture*> texCache;
 };
