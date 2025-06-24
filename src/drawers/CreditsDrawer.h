@@ -32,7 +32,7 @@ public:
 
 private:
     cPlayer *player;  //
-    SDL_Surface *bmp;	 // a bitmap being drawn on
+    // SDL_Surface *bmp;	 // a bitmap being drawn on
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits();

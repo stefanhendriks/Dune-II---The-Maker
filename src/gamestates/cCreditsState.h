@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-struct SDL_Surface;
+struct Texture;
 class cGame;
 
 struct s_CreditLine {
@@ -45,8 +45,8 @@ private:
     std::vector<s_CreditLine> m_lines;
 
     cPoint m_duneCoordinates;
-    SDL_Surface *m_duneBmp;
-    SDL_Surface *m_titleBmp;
+    Texture *m_duneBmp;
+    Texture *m_titleBmp;
 
     void resetCrawler();
     void prepareCrawlerLines();
