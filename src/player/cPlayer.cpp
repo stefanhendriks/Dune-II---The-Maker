@@ -296,12 +296,13 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = SDL_CreateRGBSurface(0, structureType.bmp->w, structureType.bmp->h,32,0,0,0,255);
+            bmp_structure[i] = SDL_CreateRGBSurface(0,structureType.bmp->w, structureType.bmp->h, 32, 0,0,0,255);
+            //SDL_SetSurfaceBlendMode(structureType.bmp, SDL_BLENDMODE_BLEND);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
             // renderDrawer->FillWithColor(bmp_structure[i], SDL_Color{255,0,255,255});
-            SDL_SetColorKey(structureType.bmp,SDL_TRUE,blackRGBA);
+            //SDL_SetColorKey(structureType.bmp,SDL_TRUE,blackRGBA);
             if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
                     std::cerr << "error bit on " << SDL_GetError() << std::endl;
             };
