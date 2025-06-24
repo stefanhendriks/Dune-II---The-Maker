@@ -426,6 +426,14 @@ void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r
     SDL_RenderFillRect(renderer, &carre);
 }
 
+void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
+{
+    SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_Rect carre = {x, y, width, height};
+    SDL_RenderDrawRect(renderer, &carre);
+}
+
 void SDLDrawer::resetClippingFor()
 {
     // if (!bmp) return;
