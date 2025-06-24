@@ -483,7 +483,7 @@ void SDLDrawer::renderLine(int x1, int y1, int x2, int y2, SDL_Color color)
     SDL_RenderDrawLine(renderer,x1, y1, x2, y2);
 }
 
-void SDLDrawer::drawDot(int x, int y, SDL_Color color, int size)
+void SDLDrawer::renderDot(int x, int y, SDL_Color color, int size)
 {
     if (size < 1) return;
     renderChangeColor(color);
