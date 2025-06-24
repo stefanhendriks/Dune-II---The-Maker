@@ -219,8 +219,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 if (item->isPendingUpgrading()) {
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    renderDrawer->drawLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->drawLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     SDL_Color red = SDL_Color{255, 0, 0,255};
                     m_textDrawer.setFont(small_font);
@@ -232,8 +232,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 if (item->isPendingBuilding()) {
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    renderDrawer->drawLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->drawLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     SDL_Color red = SDL_Color{255, 0, 0, 255};
                     m_textDrawer.setFont(small_font);
@@ -253,8 +253,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY,64);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    renderDrawer->drawLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->drawLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
                 }
             }
 

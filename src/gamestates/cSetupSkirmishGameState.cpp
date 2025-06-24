@@ -79,7 +79,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     renderDrawer->drawSprite(background, dunePlanet, game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
     for (int dy = 0; dy < game.m_screenH; dy += 2) {
-        renderDrawer->drawLine(0, dy, screen_x, dy, SDL_Color{0, 0, 0,255});
+        renderDrawer->renderLine(0, dy, screen_x, dy, SDL_Color{0, 0, 0,255});
     }
 
     // Rectangles for GUI interaction

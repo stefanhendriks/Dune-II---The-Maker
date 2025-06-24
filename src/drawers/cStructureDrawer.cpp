@@ -222,7 +222,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
             int x2 = mapCamera->getWindowXPosition(structure->pos_x() + 16);
             int y2 = mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
-            renderDrawer->drawLine( x1, y1, x2, y2, SDL_Color{255, 255, 255,255});
+            renderDrawer->renderLine( x1, y1, x2, y2, SDL_Color{255, 255, 255,255});
 
             int mouseCellX = map.getCellX(pContext->getMouseCell());
             int mouseCellY = map.getCellY(pContext->getMouseCell());
