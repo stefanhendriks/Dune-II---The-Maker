@@ -41,6 +41,8 @@ public:
     SDL_Surface *getSurface(int index);
     // return a surface from his name
     SDL_Surface *getSurface(const std::string &name);
+    // return index of a surface
+    int getIndexFromName(const std::string &name);
     // return a music from his index in pack
     Mix_Music *getMusic(int index);
     // return a music from his name
