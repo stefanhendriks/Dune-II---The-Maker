@@ -418,7 +418,7 @@ void SDLDrawer::renderStrechSprite(Texture *src, SDL_Rect src_pos, SDL_Rect dest
 }
 
 
-void SDLDrawer::drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
+void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);

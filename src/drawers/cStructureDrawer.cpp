@@ -46,7 +46,7 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int height_y = mapCamera->factorZoomLevel(height);
 
     //_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
-    renderDrawer->drawSimpleColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, color.a);
+    renderDrawer->renderRectFillColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, color.a);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
@@ -365,8 +365,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawSimpleColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
-    renderDrawer->drawSimpleColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
+    renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
 
     // bar around it
     //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));

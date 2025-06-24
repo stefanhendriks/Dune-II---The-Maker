@@ -156,7 +156,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
     // set_trans_blender(0, 0, 0, 64);
 
-    renderDrawer->drawSimpleColor(iDrawX, iDrawY, scaledWidth, scaledHeight,itemToPlaceColor.r, itemToPlaceColor.g, itemToPlaceColor.b, 64 );
+    renderDrawer->renderRectFillColor(iDrawX, iDrawY, scaledWidth, scaledHeight,itemToPlaceColor.r, itemToPlaceColor.g, itemToPlaceColor.b, 64 );
 
     // reset to normal
     // set_trans_blender(0, 0, 0, 128);

@@ -26,7 +26,7 @@ public:
     [[deprecated]] void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y,unsigned char opacity = 255);
     [[deprecated]] void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
 
-    void drawSimpleColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty);
+    void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty);
 
     void resetClippingFor();
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
