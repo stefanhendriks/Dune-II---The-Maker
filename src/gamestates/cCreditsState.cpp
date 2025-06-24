@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 

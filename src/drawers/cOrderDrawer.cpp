@@ -6,6 +6,7 @@
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 

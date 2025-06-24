@@ -6,6 +6,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 

@@ -6,6 +6,7 @@
 #include "map/cMap.h"
 #include "map/cMapEditor.h"
 #include "drawers/SDLDrawer.hpp"
+#include "utils/Graphics.hpp"
 
 cRandomMapGenerator::cRandomMapGenerator()
 {

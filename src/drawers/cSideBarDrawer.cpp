@@ -6,7 +6,7 @@
 #include "drawers/cOrderDrawer.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 
 #include <algorithm>

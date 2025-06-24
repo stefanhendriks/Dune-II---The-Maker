@@ -1,5 +1,5 @@
 #include "cAllegroDataRepository.h"
-
+#include "utils/Graphics.hpp"
 #include "d2tmc.h"
 #include <SDL2/SDL.h>
 #include <fmt/core.h>

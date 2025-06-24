@@ -11,6 +11,7 @@
 #include "player/cPlayer.h"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/cGuiButton.h"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
 

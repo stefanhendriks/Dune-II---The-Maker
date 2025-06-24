@@ -20,7 +20,7 @@
 #include "utils/cLog.h"
 #include "drawers/SDLDrawer.hpp"
 
-#include "utils/DataPack.hpp"
+#include "utils/Graphics.hpp"
 #include <string>
 
 #include <iostream>
@@ -64,10 +64,10 @@ SDL_Surface *bmp_winlose;
 SDL_Surface *bmp_fadeout;
 
 // datafile(s)
-std::shared_ptr<DataPack> gfxdata;		// graphics (terrain, units, structures)
-std::shared_ptr<DataPack> gfxinter;		// interface graphics
-std::shared_ptr<DataPack> gfxworld;		// world/pieces graphics
-std::shared_ptr<DataPack> gfxmentat;	// mentat graphics
+std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
+std::shared_ptr<Graphics> gfxinter;		// interface graphics
+std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
+std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 
 // FONT stuff
 TTF_Font *game_font; 	// arrakeen.fon

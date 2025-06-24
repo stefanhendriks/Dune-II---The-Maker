@@ -6,7 +6,7 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "drawers/SDLDrawer.hpp"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)

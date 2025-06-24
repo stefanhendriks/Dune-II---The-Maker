@@ -8,9 +8,9 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "player/cPlayer.h"
+#include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
-
 #include <cassert>
 
 cDrawManager::cDrawManager(cPlayer *thePlayer)

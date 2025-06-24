@@ -10,7 +10,7 @@
 #include "gameobjects/structures/cWindTrap.h"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 
 void cStructureDrawer::drawStructuresFirstLayer()

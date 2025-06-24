@@ -53,7 +53,7 @@
 #include "utils/cHandleArgument.h"
 #include "utils/cIniFile.h"
 #include "player/cHousesInfo.h"
-
+#include "utils/Graphics.hpp"
 
 #include <fmt/core.h>
 
@@ -1147,17 +1147,17 @@ bool cGame::setupGame()
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXDATA));
+    gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
     if (gfxdata == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_FAILED);
         return false;
     }
     else {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
-        //memcpy(general_palette, gfxdata[PALETTE_D2TM), sizeof general_palette);
+        // memcpy(general_palette, gfxdata[PALETTE_D2TM), sizeof general_palette);
     }
 
-    gfxinter = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXINTER));
+    gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
     if (gfxinter == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
         return false;
@@ -1166,7 +1166,7 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
     }
 
-    gfxworld = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
+    gfxworld = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
     if (gfxworld == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
         return false;
@@ -1175,7 +1175,7 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
     }
 
-    gfxmentat = std::make_shared<DataPack>(settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
+    gfxmentat = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
     if (gfxworld == nullptr) {
         logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
         return false;

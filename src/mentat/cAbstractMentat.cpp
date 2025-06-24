@@ -19,8 +19,7 @@
 
 #include "gui/cGuiButton.h"
 #include "gui/actions/cGuiActionToGameState.h"
-#include "drawers/SDLDrawer.hpp"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 

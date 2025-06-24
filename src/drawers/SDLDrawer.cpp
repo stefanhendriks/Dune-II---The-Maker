@@ -1,5 +1,5 @@
 #include "SDLDrawer.hpp"
-#include "utils/DataPack.hpp"
+#include "utils/Graphics.hpp"
 #include "d2tmc.h"
 
 #include <iostream>
