@@ -68,7 +68,7 @@ void cMapDrawer::drawShroud()
                     // do nothing
                 }
                 else {
-                    renderDrawer->drawSimpleColor(fDrawX, fDrawY, tileWidth, tileHeight,0, 0, 0,128);
+                    renderDrawer->renderRectFillColor(fDrawX, fDrawY, tileWidth, tileHeight,0, 0, 0,128);
                 }
             }
             else {
@@ -165,7 +165,7 @@ void cMapDrawer::drawTerrain()
                 // const SDL_Rect src_pos = {0, 0,32, 32};
                 // SDL_Rect dest_pos = {0, 0,32, 32};
                 // SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
-                renderDrawer->drawSimpleColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
+                renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
                 // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
             }
             else {
@@ -217,7 +217,7 @@ void cMapDrawer::drawTerrain()
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        renderDrawer->drawSimpleColor(iDrawX, iDrawY, iTileWidth, iTileHeight,255, 255, 0,96);
+                        renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight,255, 255, 0,96);
                     }
                 }
 

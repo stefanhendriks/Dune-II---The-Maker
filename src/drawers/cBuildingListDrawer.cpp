@@ -84,7 +84,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(id), x, y,128);
 
     if (!list->isAvailable()) {
-        renderDrawer->drawSimpleColor(x, y, width, height, 0,0,0,96);
+        renderDrawer->renderRectFillColor(x, y, width, height, 0,0,0,96);
     }
 
     if (pressed) {
