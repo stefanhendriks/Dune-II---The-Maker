@@ -75,11 +75,9 @@ void cMapDrawer::drawShroud()
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,
-                                fDrawY, iTileWidth, iTileHeight);
+                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,fDrawY, iTileWidth, iTileHeight);
                         renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
-                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
-                                iTileWidth, iTileHeight);
+                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,iTileWidth, iTileHeight);
                         renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
                     }
                 }
@@ -87,8 +85,7 @@ void cMapDrawer::drawShroud()
                     // NOT VISIBLE, DO NOT DRAW A THING THEN!
                     // Except when there is a building here, that should not be visible ;)
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
-                    renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,
-                            iTileWidth, iTileHeight);
+                    renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
                 }
             }
         }
@@ -148,6 +145,9 @@ void cMapDrawer::drawTerrain()
             int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
+            int iDrawX = round(fDrawX);
+            int iDrawY = round(fDrawY);
+
             // Draw terrain
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
@@ -156,7 +156,9 @@ void cMapDrawer::drawTerrain()
 
                 // const SDL_Rect src_pos = {0, 0,32, 32};
                 // SDL_Rect dest_pos = {0, 0,32, 32};
-                SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
+                // SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
+                renderDrawer->drawSimpleColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
+                // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
             }
             else {
                 // valid type
@@ -167,8 +169,11 @@ void cMapDrawer::drawTerrain()
                 //      32, 32
                 //     );
                 const SDL_Rect src_pos = {cell->tile * 32, 0,32, 32};
-                SDL_Rect dest_pos = {0, 0,32, 32};
-                SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
+                // SDL_Rect dest_pos = {0, 0,32, 32};
+                // SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
+                            // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+                SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                renderDrawer->renderStrechSprite(gfxdata->getTexture(cell->type), src_pos, dest_pos);
             }
 
             // draw Smudge if necessary
@@ -183,15 +188,17 @@ void cMapDrawer::drawTerrain()
                 //                                     32);
                 //@Mira il faut superposer les 2 images
                 const SDL_Rect src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
-                SDL_Rect dest_pos = {0, 0,32, 32};
-                Uint32 magicPinkRGBA = SDL_MapRGB(gfxdata->getSurface(SMUDGE)->format, 255, 0, 255);
-                SDL_SetColorKey(gfxdata->getSurface(SMUDGE),SDL_TRUE,magicPinkRGBA );
-                SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
+                SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                // SDL_Rect dest_pos = {0, 0,32, 32};
+                // Uint32 magicPinkRGBA = SDL_MapRGB(gfxdata->getSurface(SMUDGE)->format, 255, 0, 255);
+                // SDL_SetColorKey(gfxdata->getSurface(SMUDGE),SDL_TRUE,magicPinkRGBA );
+                // SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
+                // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+                renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
             }
 
-            int iDrawX = round(fDrawX);
-            int iDrawY = round(fDrawY);
-            renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+
+
 
             // Draw debugging information
             if (game.isDebugMode()) {
