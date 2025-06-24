@@ -27,13 +27,13 @@ SDLDrawer::~SDLDrawer()
     bitmapCache.clear();
 }
 
-void SDLDrawer::renderSprite(SDL_Texture *src,int x, int y,unsigned char opacity)
+void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
 {
     if (src == nullptr) return;
-    SDL_Rect tmp = {x,y, 0 /*src->w*/, 0 /*src->h*/};
+    SDL_Rect tmp = {x,y, src->w, src->h };
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureAlphaMod(src, opacity);
-    SDL_RenderCopy(renderer, src, NULL, &tmp);
+    SDL_SetTextureAlphaMod(src->tex, opacity);
+    SDL_RenderCopy(renderer, src->tex, NULL, &tmp);
 }
 
 void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)

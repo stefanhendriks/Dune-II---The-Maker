@@ -6,6 +6,7 @@
 #include "utils/Graphics.hpp"
 #include "include/Texture.hpp"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 cCreditsState::cCreditsState(cGame &theGame) :
     cGameState(theGame),
@@ -14,7 +15,6 @@ cCreditsState::cCreditsState(cGame &theGame) :
     m_duneBmp(gfxinter->getTexture(BMP_GAME_DUNE)),
     m_titleBmp(gfxinter->getTexture(BMP_D2TM))
 {
-
     int duneAtTheRight = game.m_screenW - (m_duneBmp->w * 1.1f);
     int duneAlmostAtBottom = game.m_screenH - (m_duneBmp->h * 1.1f);
     m_duneCoordinates = cPoint(duneAtTheRight, duneAlmostAtBottom);
@@ -349,12 +349,12 @@ void cCreditsState::draw() const
 {
     // renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,16,255});
 
-    renderDrawer->renderSprite(m_duneBmp->tex, m_duneCoordinates.x, m_duneCoordinates.y);
+    renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
     int halfScreen = game.m_screenW / 2;
 
     // draw crawler
-    renderDrawer->renderSprite(m_titleBmp->tex, m_titleX, m_crawlerY);
+    renderDrawer->renderSprite(m_titleBmp, m_titleX, m_crawlerY);
     int textCrawlY = m_crawlerY + m_titleHeight;
     for (auto &line : m_lines) {
         if (line.name.empty()) {

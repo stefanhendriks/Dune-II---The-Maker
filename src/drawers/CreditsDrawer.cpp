@@ -177,7 +177,7 @@ void CreditsDrawer::draw()
     // }
     // renderDrawer->FillWithColor(bmp,SDL_Color{255,0,255,255});
 
-    renderDrawer->renderSprite(gfxinter->getTexture(CREDITS_BAR)->tex, drawX, drawY);
+    renderDrawer->renderSprite(gfxinter->getTexture(CREDITS_BAR), drawX, drawY);
 
     drawCurrentCredits();
     drawPreviousCredits();
@@ -243,7 +243,7 @@ void CreditsDrawer::drawCurrentCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(gfxdata->getTexture(nr)->tex, dx, dy);
+            renderDrawer->renderSprite(gfxdata->getTexture(nr), dx, dy);
         }
     }
 }
@@ -277,7 +277,7 @@ void CreditsDrawer::drawPreviousCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(gfxdata->getTexture(nr)->tex, dx, dy);
+            renderDrawer->renderSprite(gfxdata->getTexture(nr), dx, dy);
         }
     }
 }

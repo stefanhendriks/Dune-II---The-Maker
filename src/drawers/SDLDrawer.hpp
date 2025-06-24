@@ -7,6 +7,7 @@
 #include <memory>
 #include <SDL2/SDL.h>
 
+class Texture;
 
 class SDLDrawer {
 public:
@@ -18,7 +19,7 @@ public:
     void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
     void drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y);
 
-    void renderSprite(SDL_Texture *src,int x, int y,unsigned char opacity = 255);
+    void renderSprite(Texture *src,int x, int y,unsigned char opacity = 255);
     [[deprecated]] void drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity = 255);
     [[deprecated]] void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y,unsigned char opacity = 255);
     [[deprecated]] void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
