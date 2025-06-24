@@ -10,7 +10,7 @@
 
 */
 #include "cGame.h"
-
+#include "include/Texture.hpp"
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
 #include "data/gfxdata.h"

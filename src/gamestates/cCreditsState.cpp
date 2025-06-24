@@ -4,15 +4,15 @@
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-
+#include "include/Texture.hpp"
 #include <SDL2/SDL.h>
 
 cCreditsState::cCreditsState(cGame &theGame) :
     cGameState(theGame),
     m_moveSpeed(0.15f),
     m_textDrawer(cTextDrawer(bene_font)),
-    m_duneBmp(gfxinter->getSurface(BMP_GAME_DUNE)),
-    m_titleBmp(gfxinter->getSurface(BMP_D2TM))
+    m_duneBmp(gfxinter->getTexture(BMP_GAME_DUNE)),
+    m_titleBmp(gfxinter->getTexture(BMP_D2TM))
 {
 
     int duneAtTheRight = game.m_screenW - (m_duneBmp->w * 1.1f);
@@ -347,14 +347,14 @@ void cCreditsState::thinkFast()
 
 void cCreditsState::draw() const
 {
-    renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,16,255});
+    // renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,16,255});
 
-    renderDrawer->drawSprite(bmp_screen, m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
+    renderDrawer->renderSprite(m_duneBmp->tex, m_duneCoordinates.x, m_duneCoordinates.y);
 
     int halfScreen = game.m_screenW / 2;
 
     // draw crawler
-    renderDrawer->drawSprite(bmp_screen, m_titleBmp, m_titleX, m_crawlerY);
+    renderDrawer->renderSprite(m_titleBmp->tex, m_titleX, m_crawlerY);
     int textCrawlY = m_crawlerY + m_titleHeight;
     for (auto &line : m_lines) {
         if (line.name.empty()) {

@@ -12,7 +12,7 @@
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)
 {
     assert(thePlayer);
-    bmp = NULL;
+    // bmp = NULL;
     memset(offset_credit, 0, sizeof(offset_credit));
     memset(offset_direction, 0, sizeof(offset_direction));
     initial = true;
@@ -172,18 +172,18 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
  */
 void CreditsDrawer::draw()
 {
-    if (bmp == NULL) {
-        bmp = SDL_CreateRGBSurface(0,120, 17,32,0,0,0,255);
-    }
-    renderDrawer->FillWithColor(bmp,SDL_Color{255,0,255,255});
+    // if (bmp == NULL) {
+        // bmp = SDL_CreateRGBSurface(0,120, 17,32,0,0,0,255);
+    // }
+    // renderDrawer->FillWithColor(bmp,SDL_Color{255,0,255,255});
 
-    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(CREDITS_BAR), drawX, drawY);
+    renderDrawer->renderSprite(gfxinter->getTexture(CREDITS_BAR)->tex, drawX, drawY);
 
     drawCurrentCredits();
     drawPreviousCredits();
 
     // draw bmp on screen
-    renderDrawer->drawSprite(bmp_screen, bmp, drawX+8, drawY + 8);
+    // renderDrawer->drawSprite(bmp_screen, bmp, drawX+8, drawY + 8);
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount)
@@ -243,7 +243,7 @@ void CreditsDrawer::drawCurrentCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->drawSprite(bmp, gfxdata->getSurface(nr), dx, dy);
+            renderDrawer->renderSprite(gfxdata->getTexture(nr)->tex, dx, dy);
         }
     }
 }
@@ -277,7 +277,7 @@ void CreditsDrawer::drawPreviousCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->drawSprite(bmp, gfxdata->getSurface(nr), dx, dy);
+            renderDrawer->renderSprite(gfxdata->getTexture(nr)->tex, dx, dy);
         }
     }
 }
