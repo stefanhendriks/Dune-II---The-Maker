@@ -72,11 +72,12 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     screen_y = game.m_screenH;
 
     // Background
-    background = SDL_CreateRGBSurface(0,screen_x, screen_y,32,0,0,0,255);
-    renderDrawer->FillWithColor(background, SDL_Color{0,0,0,255});
+    // background = SDL_CreateRGBSurface(0,screen_x, screen_y,32,0,0,0,255);
+    // renderDrawer->FillWithColor(background, SDL_Color{0,0,0,255});
 
-    SDL_Surface *dunePlanet = gfxinter->getSurface(BMP_GAME_DUNE);
-    renderDrawer->drawSprite(background, dunePlanet, game.m_screenW * 0.2, (game.m_screenH * 0.5));
+    // SDL_Surface *dunePlanet = gfxinter->getSurface(BMP_GAME_DUNE);
+    // renderDrawer->drawSprite(background, dunePlanet, game.m_screenW * 0.2, (game.m_screenH * 0.5));
+    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
     for (int dy = 0; dy < game.m_screenH; dy += 2) {
         renderDrawer->renderLine(0, dy, screen_x, dy, SDL_Color{0, 0, 0,255});
@@ -193,7 +194,13 @@ void cSetupSkirmishGameState::thinkFast()
 
 void cSetupSkirmishGameState::draw() const
 {
-    renderDrawer->drawSprite(bmp_screen, background, 0, 0);
+    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
+
+    for (int dy = 0; dy < game.m_screenH; dy += 2) {
+        renderDrawer->renderLine(0, dy, screen_x, dy, SDL_Color{0, 0, 0,255});
+    }
+
+    // renderDrawer->drawSprite(bmp_screen, background, 0, 0);
 
     renderDrawer->gui_DrawRect(topBar);
 
