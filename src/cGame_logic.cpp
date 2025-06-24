@@ -1978,7 +1978,7 @@ void cGame::drawCombatMouse()
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        renderDrawer->drawLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y,
                                 SDL_Color{255,255,255,255});
     }
 

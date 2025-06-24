@@ -691,15 +691,15 @@ void cUnit::draw_path() const
         int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
-            renderDrawer->drawLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 255,255});
+            renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 255,255});
         }
         else if (iPath[i] == iGoalCell) {
             // end of path (goal)
-            renderDrawer->drawLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0,255});
+            renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0,255});
         }
         else {
             // everything else
-            renderDrawer->drawLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 64,255});
+            renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 64,255});
         }
 
         // draw a line from previous to current
@@ -820,7 +820,7 @@ void cUnit::draw()
         renderDrawer->setPixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
 
         // render from the units top-left to center pixel
-        renderDrawer->drawLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
+        renderDrawer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
     }
 }
 
@@ -4350,7 +4350,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
             if (game.m_drawUnitDebug) {
-                renderDrawer->drawLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{0, 255, 0,255});
+                renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{0, 255, 0,255});
             }
 
             // Now set c to the cll
@@ -4372,7 +4372,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
 //                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
 //                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
 //
-//                _renderDrawer->drawLine(screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0));
+//                _renderDrawer->renderLine(screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0));
 //                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
 //                iCell = prevCell; // back track
 //            } else {
