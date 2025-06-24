@@ -33,6 +33,11 @@ SDL_Surface *DataPack::getSurface(const std::string &name)
     return this->getSurface(index);
 }
 
+int DataPack::getIndexFromName(const std::string &name)
+{
+    return reader->getIndexFromName(name);
+}
+
 SDL_Surface *DataPack::getSurface(int index)
 {
     if (index < 0 || index >= reader->getNumberOfFiles()) {
