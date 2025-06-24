@@ -254,17 +254,6 @@ void cPlayer::setHouse(int iHouse)
 
         // now set the different colors based upon house
         // @Mira trafic on Palette
-        if (m_HousesInfo->getSwapColor(house) > -1) {
-            int start = m_HousesInfo->getSwapColor(house);
-            int s = 144;                // original position (harkonnen)
-            logbook(fmt::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
-            for (int j = start; j < (start + 7); j++) {
-                // swap everything from S with J
-                //@Mira : no distinct unit color // pal[s] = pal[j];
-                s++;
-            }
-        }
-
         minimapColor = m_HousesInfo->getMinimapColor(house);
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
@@ -279,30 +268,31 @@ void cPlayer::setHouse(int iHouse)
         //
 
         // copy flag(s) with correct color
-        SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
-        bmp_flag = SDL_CreateRGBSurface(0, flagBmpData->w, flagBmpData->h,32,0,0,0,255);
+        //SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
+        bmp_flag = createSurfaceFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
         // renderDrawer->FillWithColor(bmp_flag, SDL_Color{255,0,255,255});
         // renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
-
-        flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
-        bmp_flag_small = SDL_CreateRGBSurface(0, flagBmpData->w, flagBmpData->h,32,0,0,0,255);
+        //flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
+        bmp_flag_small = createSurfaceFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
         // renderDrawer->FillWithColor(bmp_flag_small, SDL_Color{255,0,255,255});
         // renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
 
-        Uint32 blackRGBA = SDL_MapRGB(flagBmpData->format, 0, 0, 0);
+        // Uint32 blackRGBA = SDL_MapRGB(flagBmpData->format, 0, 0, 0);
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
             s_StructureInfo &structureType = sStructureInfo[i];
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = SDL_CreateRGBSurface(0,structureType.bmp->w, structureType.bmp->h, 32, 0,0,0,255);
+            std::cout << structureType.name << " :" << SDL_GetPixelFormatName(structureType.bmp->format->format) << std::endl;
+            bmp_structure[i] = SDL_CreateRGBSurface(0,structureType.bmp->w, structureType.bmp->h, 8, 0,0,0,0);
+            //SDL_SetColorKey(structureType.bmp,SDL_TRUE,232);
             //SDL_SetSurfaceBlendMode(structureType.bmp, SDL_BLENDMODE_BLEND);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
             // renderDrawer->FillWithColor(bmp_structure[i], SDL_Color{255,0,255,255});
-            //SDL_SetColorKey(structureType.bmp,SDL_TRUE,blackRGBA);
+            
             if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
                     std::cerr << "error bit on " << SDL_GetError() << std::endl;
             };
@@ -333,7 +323,7 @@ void cPlayer::setHouse(int iHouse)
             // renderDrawer->FillWithColor(bmp_unit[i], SDL_Color{255,0,255,255});
 
             // renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
-            SDL_SetColorKey(unitType.bmp,SDL_TRUE,blackRGBA);
+            // SDL_SetColorKey(unitType.bmp,SDL_TRUE,blackRGBA);
             if (SDL_BlitSurface(unitType.bmp, nullptr, bmp_unit[i], nullptr)!=0) {
                     std::cerr << "error bit on " << SDL_GetError() << std::endl;
                 }
@@ -342,7 +332,7 @@ void cPlayer::setHouse(int iHouse)
 
                 bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.top->w, unitType.top->h,32,0,0,0,255);
                 // renderDrawer->FillWithColor(bmp_unit_top[i], SDL_Color{255,0,255,255});
-                SDL_SetColorKey(unitType.top,SDL_TRUE,blackRGBA);
+                // SDL_SetColorKey(unitType.top,SDL_TRUE,blackRGBA);
                 if (SDL_BlitSurface(unitType.top, nullptr, bmp_unit_top[i], nullptr)!=0) {
                     std::cerr << "error bit on " << SDL_GetError() << std::endl;
                 }
@@ -2339,4 +2329,68 @@ void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
     if (event.entitySpecificType == REFINERY) {
         reinforceHarvesterIfNeeded(event.atCell);
     }
+}
+
+
+SDL_Surface* cPlayer::createSurfaceFromIndexedSurfaceWithPalette(SDL_Surface* referenceSurface, int transparentIndex)
+{
+    // Étape 1 : Créer une copie de la surface (même format INDEX8)
+    SDL_Surface* modifiableSurface = SDL_ConvertSurfaceFormat(referenceSurface, SDL_PIXELFORMAT_INDEX8, 0);
+    if (!modifiableSurface) {
+        SDL_Log("Erreur copie surface : %s", SDL_GetError());
+        return NULL;
+    }
+
+    // Étape 2 : Appliquer la nouvelle palette (256 couleurs)
+        if (m_HousesInfo->getSwapColor(house) > -1) {
+            int start = m_HousesInfo->getSwapColor(house);
+            int s = 144;                // original position (harkonnen)
+            logbook(fmt::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
+            //get palette from surface and write color from player
+            SDL_Palette* palette = referenceSurface->format->palette;
+            for (int j = start; j < (start + 7); j++) {
+                // swap everything from S with J
+                //pal[s] = pal[j];
+                palette->colors[s].r = palette->colors[j].r;
+                palette->colors[s].g = palette->colors[j].g;
+                palette->colors[s].b = palette->colors[j].b;
+                palette->colors[s].a = palette->colors[j].a;
+                s++;
+            }
+            const SDL_Color* colors = palette->colors;
+            if (SDL_SetPaletteColors(modifiableSurface->format->palette, colors, 0, 256) != 0) {
+                SDL_Log("Erreur palette : %s", SDL_GetError());
+                SDL_FreeSurface(modifiableSurface);
+                return NULL;
+            }
+        }
+
+    // Étape 3 : Définir l'index de transparence
+    if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, transparentIndex) != 0) {
+        SDL_Log("Erreur couleur clé : %s", SDL_GetError());
+        SDL_FreeSurface(modifiableSurface);
+        return NULL;
+    }
+
+    // Étape 4 : Convertir en RGBA8888 pour créer la texture avec alpha
+    SDL_Surface* rgbaSurface = SDL_ConvertSurfaceFormat(modifiableSurface, SDL_PIXELFORMAT_RGBA8888, 0);
+    SDL_FreeSurface(modifiableSurface); // plus besoin de B
+    if (!rgbaSurface) {
+        SDL_Log("Erreur conversion RGBA : %s", SDL_GetError());
+        return NULL;
+    }
+
+    // // Étape 5 : Créer la texture finale
+    // SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, rgbaSurface);
+    // SDL_FreeSurface(rgbaSurface);
+    // if (!texture) {
+    //     SDL_Log("Erreur texture : %s", SDL_GetError());
+    //     return NULL;
+    // }
+
+    // // Activer le blend mode pour la transparence
+    // SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+    // return texture;
+    return rgbaSurface;
 }

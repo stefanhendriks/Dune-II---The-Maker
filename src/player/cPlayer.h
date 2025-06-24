@@ -566,4 +566,6 @@ private:
     void onMyStructureDestroyed(const s_GameEvent &event);
 
     void reinforceHarvesterIfNeeded(int cell);
+
+    SDL_Surface* createSurfaceFromIndexedSurfaceWithPalette(SDL_Surface* referenceSurface, int transparentIndex);
 };
