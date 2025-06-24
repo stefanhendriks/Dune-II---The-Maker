@@ -61,7 +61,8 @@ void cMapDrawer::drawShroud()
 
             int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
-
+            int iDrawX = round(fDrawX);
+            int iDrawY = round(fDrawY);
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
@@ -75,17 +76,24 @@ void cMapDrawer::drawShroud()
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,fDrawY, iTileWidth, iTileHeight);
-                        renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
-                        renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,iTileWidth, iTileHeight);
-                        renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
+                        // renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,fDrawY, iTileWidth, iTileHeight);
+                        // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+                        // renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,iTileWidth, iTileHeight);
+                        // renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
+                        //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
+                        const SDL_Rect src_pos = {tile * 32, 0, 32, 32};
+                        SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                        renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                     }
                 }
                 else {
                     // NOT VISIBLE, DO NOT DRAW A THING THEN!
                     // Except when there is a building here, that should not be visible ;)
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
-                    renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
+                    //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
+                    const SDL_Rect src_pos = {0, 0, 32, 32};
+                    SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                    renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                 }
             }
         }
