@@ -8,11 +8,11 @@
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
 {
     // fill it up
-    renderDrawer->drawRectFilled(bmp_screen, x1, y1, width, height, SDL_Color{176,176,196,255});
+    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
 
     // _rect
     //_rect(bmp_screen, x1,y1,x1+width, y1+height, SDL_Color{84,84,120));
-    renderDrawer->drawRect(bmp_screen, x1, y1, width, height, SDL_Color{84,84,120,255});
+    renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
 
     // lines to darken the right sides
     // _line(bmp_screen, x1+width, y1, x1+width , y1+height, SDL_Color{252,252,252));

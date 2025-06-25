@@ -3413,8 +3413,8 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug()
 {
-    renderDrawer->drawRect(bmp_screen, dimensions, SDL_Color{255, 0, 255,255});
-    renderDrawer->setPixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 0, 255,255});
+    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), SDL_Color{255, 0, 255,255});
+    renderDrawer->renderDot(center_draw_x(), center_draw_y(), SDL_Color{255, 0, 255,255},1);
     //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), SDL_Color{255, 255, 255), "%d", iID);
 
     if (isSandworm()) {

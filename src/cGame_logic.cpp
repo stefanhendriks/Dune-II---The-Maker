@@ -1971,15 +1971,13 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::drawCombatMouse()
 {
     if (m_mouse->isBoxSelecting()) {
-        renderDrawer->drawRect(bmp_screen, m_mouse->getBoxSelectRectangle(),
-                               SDL_Color{255,255,255,255});
+        renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y,
-                                SDL_Color{255,255,255,255});
+        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, SDL_Color{255,255,255,255});
     }
 
     m_mouse->draw();

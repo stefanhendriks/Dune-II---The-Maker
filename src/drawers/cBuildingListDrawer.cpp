@@ -49,9 +49,8 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
 
     SDL_Color color = m_player->getSelectFadingColor();
 
-    renderDrawer->drawRect(bmp_screen, x, y, width, height, color);
-    renderDrawer->drawRect(bmp_screen, x + 1, y + 1, width-2, height-2, color);
-
+    renderDrawer->renderRectColor(x, y, width, height, color);
+    renderDrawer->renderRectColor(x + 1, y + 1, width-2, height-2, color);
 }
 
 void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
@@ -92,16 +91,16 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
         SDL_Color color = m_player->getHouseFadingColor();
 
-        renderDrawer->drawRect(bmp_screen, x, y, width, height, color);
-        renderDrawer->drawRect(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
+        renderDrawer->renderRectColor(x, y, width, height, color);
+        renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
     }
     else {
         if (list->isFlashing()) {
             SDL_Color color = list->getFlashingColor();
 
-            renderDrawer->drawRect(bmp_screen, x, y, width, height, color);
-            renderDrawer->drawRect(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
-            renderDrawer->drawRect(bmp_screen, x + 2, y + 2, width - 3, height - 3, color);
+            renderDrawer->renderRectColor(x, y, width, height, color);
+            renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
+            renderDrawer->renderRectColor(x + 2, y + 2, width - 3, height - 3, color);
         }
     }
 }
@@ -218,7 +217,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
-                    renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                    renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
@@ -231,7 +230,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // Pending building (ie: a build is progressing, blocking the upgrade)
                 if (item->isPendingBuilding()) {
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
-                    renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                    renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
@@ -252,7 +251,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
                     renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY,64);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
-                    renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                    renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
                 }
@@ -261,8 +260,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             // last built id
             if (list->getLastClickedId() == i) {
                 //_rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
-                renderDrawer->drawRect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
-                renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
+                renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
+                renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
             }
         }
 
@@ -303,14 +302,14 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         auto m_mouse = game.getMouse();
         if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
             //_rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
-            renderDrawer->drawRect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
-            renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
+            renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
+            renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
         }
         else {
             SDL_Color color = list->getFlashingColor();
             if (item->isFlashing()) {
-                renderDrawer->drawRect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), color);
-                renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, color);
+                renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), color);
+                renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, color);
             }
         }
 
