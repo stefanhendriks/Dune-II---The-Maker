@@ -68,18 +68,20 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     //draw_sprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
-    renderDrawer->stretchSprite(gfxdata->getSurface(iDrawPreBuild), nullptr, drawX, drawY, scaledWidth, scaledHeight);
+    SDL_Rect src = {0,0,gfxdata->getTexture(iDrawPreBuild)->w, gfxdata->getTexture(iDrawPreBuild)->h};
+    SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
+    renderDrawer->renderStrechSprite(gfxdata->getTexture(iDrawPreBuild), src, dest);
     //destroy_bitmap(temp);
 
     // Draw shadow of the prebuild animation
-    int shadowIndex = iDrawPreBuild + 1;
+    // int shadowIndex = iDrawPreBuild + 1;
     // set_trans_blender(0,0,0,128);
     // BITMAP *shadow = (BITMAP *) gfxdata[shadowIndex].dat;
 
     // BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
     // clear_to_color(stretchedShadow, makecol(255, 0, 255));
     
-    renderDrawer->stretchSprite(gfxdata->getSurface(shadowIndex), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
+    //renderDrawer->stretchSprite(gfxdata->getSurface(shadowIndex), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
     //allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
@@ -287,11 +289,12 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
         // that it will cause the switching between pre-build/building state as if the
         // building is being 'readied' after placement.
         if (iDrawPreBuild < 0) {
-            if (structure->getType() == WINDTRAP) {
-                // draw windtrap
-                drawStructureAnimationWindTrap(structure);
-            }
-            else if (structure->getType() == TURRET || structure->getType() == RTURRET) {
+            // if (structure->getType() == WINDTRAP) {
+            //     // draw windtrap
+            //     drawStructureAnimationWindTrap(structure);
+            // }
+            // else 
+            if (structure->getType() == TURRET || structure->getType() == RTURRET) {
                 drawStructureAnimationTurret(structure);
             }
             else if (structure->getType() == REFINERY) {
@@ -344,9 +347,9 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 
     int iconWidth = (gfxinter->getSurface(iconId))->w;
     int iconHeight = (gfxinter->getSurface(iconId))->h;
-    SDL_Surface *bmp = SDL_CreateRGBSurface(0,iconWidth, iconHeight,32,0,0,0,255);
-    renderDrawer->FillWithColor(bmp, SDL_Color{255,0,255,255});
-    renderDrawer->drawSprite(bmp, gfxinter->getSurface(iconId), 0, 0);
+    // SDL_Surface *bmp = SDL_CreateRGBSurface(0,iconWidth, iconHeight,32,0,0,0,255);
+    // renderDrawer->FillWithColor(bmp, SDL_Color{255,0,255,255});
+    // renderDrawer->renderSprite(gfxinter->getTexture(iconId), 0, 0);
 
     // draw health bar of unit on top of icon?
     int draw_x = 3;
@@ -379,9 +382,10 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-
-    renderDrawer->stretchSprite(bmp_screen, bmp, drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
-    SDL_FreeSurface(bmp);
+    SDL_Rect src = {0,0,iconWidth, iconHeight};
+    SDL_Rect dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
+    renderDrawer->renderStrechSprite(gfxinter->getTexture(iconId), src, dest);
+    // SDL_FreeSurface(bmp);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
@@ -408,8 +412,8 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         }
     }
 
-    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0,
-                                 cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});
+    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0,
+                                 cSideBar::SidebarWidth, game.m_screenH, 0, 0, 0,255);
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure)
@@ -440,8 +444,8 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, width_x+1, height_y+1, SDL_Color{0,0,0,255});
-    renderDrawer->drawRectFilled(bmp_screen, draw_x, draw_y, (w-1), height_y, SDL_Color{(Uint8)r,(Uint8)g,32,255});
+    renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
 
     // bar around it
     //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));

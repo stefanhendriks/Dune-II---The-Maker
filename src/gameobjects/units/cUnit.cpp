@@ -796,7 +796,7 @@ void cUnit::draw()
 
     // when we want to be picked up..
     if (bCarryMe) {
-        renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(SYMB_PICKMEUP), ux, uy - 7);
+        renderDrawer->renderSprite(gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
     }
 
     if (bSelected) {
@@ -807,12 +807,15 @@ void cUnit::draw()
         int x = draw_x(bmp_width);
         int y = draw_y(bmp_height);
 
-        renderDrawer->maskedStretchBlit(focusBitmap,
-                                        bmp_screen,
-                                        0, 0, bmp_width, bmp_height, x, y,
-                                        mapCamera->factorZoomLevel(bmp_width),
-                                        mapCamera->factorZoomLevel(bmp_height)
-                                       );
+        // renderDrawer->maskedStretchBlit(focusBitmap,
+                                        // bmp_screen,
+                                        // 0, 0, bmp_width, bmp_height, x, y,
+                                        // mapCamera->factorZoomLevel(bmp_width),
+                                        // mapCamera->factorZoomLevel(bmp_height)
+                                    //    );
+        SDL_Rect src = {0, 0, bmp_width, bmp_height};
+        SDL_Rect dest = {x,y, mapCamera->factorZoomLevel(bmp_width),mapCamera->factorZoomLevel(bmp_height)};
+        renderDrawer->renderStrechSprite(gfxdata->getTexture(FOCUS), src, dest);
     }
 
     if (game.m_drawUnitDebug) {
