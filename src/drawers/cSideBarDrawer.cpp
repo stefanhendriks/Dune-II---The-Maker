@@ -213,9 +213,8 @@ void cSideBarDrawer::drawCreditsUsage()
     int barX = (game.m_screenW - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TopBarHeight + 48;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
-    cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-
-    renderDrawer->drawRectFilled(bmp_screen, powerBarRect, renderDrawer->getColor_BLACK());
+    // cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
+    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
 
     // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
     // and so forth.
@@ -231,7 +230,7 @@ void cSideBarDrawer::drawCreditsUsage()
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->drawRectFilled(bmp_screen, barX, powerInY, barWidth, barY + barTotalHeight - powerInY, SDL_Color{0, 232, 0,255});
+    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, SDL_Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * spiceStored;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -246,16 +245,15 @@ void cSideBarDrawer::drawCreditsUsage()
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY,
-                                     SDL_Color{(Uint8)r,(Uint8)g, 32,255});
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
     }
     else {
-        renderDrawer->drawRectFilled(bmp_screen, barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
     renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
 
-    renderDrawer->drawRect(bmp_screen, powerBarRect, m_sidebarColor);
+    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     SDL_Color darker = SDL_Color{89, 56, 0,255};
