@@ -27,7 +27,10 @@ public:
     [[deprecated]] void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
 
     void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
+    void renderRectFillColor(int x, int y, int width, int height, SDL_Color color);
     void renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
+    void renderRectColor(int x, int y, int width, int height, SDL_Color color);
+    void renderRectColor(const cRectangle &pRectangle, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
 
     void resetClippingFor();
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
