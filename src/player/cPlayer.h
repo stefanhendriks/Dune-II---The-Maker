@@ -204,9 +204,9 @@ public:
 
     std::string asString() const;
 
-    SDL_Surface *getStructureBitmap(int index);
+    Texture *getStructureBitmap(int index);
 
-    SDL_Surface *getStructureBitmapFlash(int index);
+    Texture *getStructureBitmapFlash(int index);
 
     Texture *getFlagBitmap();
 
@@ -534,7 +534,7 @@ private:
     int iTeam;
 
 
-    SDL_Surface *bmp_structure[MAX_STRUCTURE_BMPS];
+    Texture *bmp_structure[MAX_STRUCTURE_BMPS];
     Texture *bmp_flag;
     Texture *bmp_flag_small;
 

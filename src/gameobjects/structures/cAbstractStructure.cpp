@@ -20,6 +20,7 @@
 #include "map/cMapEditor.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
+#include "include/Texture.hpp"
 
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
@@ -116,7 +117,7 @@ int cAbstractStructure::iDrawY()
     return mapCamera->getWindowYPosition(pos_y());
 }
 
-SDL_Surface *cAbstractStructure::getBitmap()
+Texture *cAbstractStructure::getBitmap()
 {
     return this->getPlayer()->getStructureBitmap(getType());
 }
@@ -898,7 +899,7 @@ void cAbstractStructure::drawWithShadow()
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    SDL_Surface *bitmapToDraw = getBitmap();
+    Texture *bitmapToDraw = getBitmap();
 
     // SDL_Surface *shadow = getShadowBitmap();
     // if (shadow) {
@@ -914,9 +915,11 @@ void cAbstractStructure::drawWithShadow()
 
         // SDL_FreeSurface(stretchedShadow);
     // }
-        renderDrawer->stretchBlit(bitmapToDraw, 0, iSourceY, pixelWidth, pixelHeight,
-                                    drawX, drawY, scaledWidth, scaledHeight);
+    // renderDrawer->stretchBlit(bitmapToDraw, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 
+    SDL_Rect src =  {0, iSourceY, pixelWidth, pixelHeight};
+    SDL_Rect dest =  {drawX, drawY, scaledWidth, scaledHeight};
+    renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
 }
 
 /**

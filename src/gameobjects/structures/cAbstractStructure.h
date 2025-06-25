@@ -19,6 +19,7 @@
 #include <string>
 
 class cPlayer;
+class Texture;
 
 class cAbstractStructure : public cScenarioObserver {
 
@@ -140,7 +141,7 @@ public:
         return iPlayer;
     }
 
-    SDL_Surface *getBitmap();
+    Texture *getBitmap();
     SDL_Surface *getShadowBitmap();
 
     int pos_x();
