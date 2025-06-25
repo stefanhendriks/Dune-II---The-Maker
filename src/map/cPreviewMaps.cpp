@@ -146,7 +146,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
                 iColor = SDL_Color{188, 115, 50,255};
             }
 
-            if (terrainType < 0 /* @Mira not fixed|| iColor < 0*/) {
+            if (terrainType < 0) {
                 logbook(fmt::format(
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
