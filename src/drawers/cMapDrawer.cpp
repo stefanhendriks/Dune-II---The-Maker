@@ -223,7 +223,7 @@ void cMapDrawer::drawTerrain()
 
                 if (m_drawGrid) {
                     //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, SDL_Color{128, 128, 128));
-                    renderDrawer->drawRect(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
+                    renderDrawer->renderRectColor(iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
                 }
             }
 
@@ -292,7 +292,7 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
 
     if (bDraw) {
         //_rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth - 1), fDrawY + (tileHeight - 1), iClr);
-        renderDrawer->drawRect(bmp_screen, fDrawX, fDrawY, tileWidth, tileHeight, iClr);
+        renderDrawer->renderRectColor(fDrawX, fDrawY, tileWidth, tileHeight, iClr);
     }
 }
 

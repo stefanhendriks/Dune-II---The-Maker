@@ -261,10 +261,10 @@ void cAbstractMentat::thinkMouth()  // MOUTH
 
 void cAbstractMentat::draw()
 {
-    renderDrawer->drawRectFilled(bmp_screen, offsetX, offsetY, 640, 480, SDL_Color{0,0,0,255});
-    renderDrawer->drawRect(bmp_screen, offsetX-1, offsetY-1, 641, 481, SDL_Color{64, 64,89,255});
-    renderDrawer->drawRect(bmp_screen, offsetX-2, offsetY-2, 642, 482, SDL_Color{40,40,60,255});
-    renderDrawer->drawRect(bmp_screen, offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
+    renderDrawer->renderRectFillColor(offsetX, offsetY, 640, 480, SDL_Color{0,0,0,255});
+    renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, SDL_Color{64, 64,89,255});
+    renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, SDL_Color{40,40,60,255});
+    renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
     // select_palette(general_palette);
 
     // movie
