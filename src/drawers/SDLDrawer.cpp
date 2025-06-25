@@ -426,12 +426,27 @@ void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r
     SDL_RenderFillRect(renderer, &carre);
 }
 
+void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, SDL_Color color)
+{
+    renderRectFillColor(x,y,width,height,color.r, color.g, color.b,color.a);
+}
+
 void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_Rect carre = {x, y, width, height};
     SDL_RenderDrawRect(renderer, &carre);
+}
+
+void SDLDrawer::renderRectColor(const cRectangle &rect, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
+{
+    renderRectColor(rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight(),r,g,b,opacity);
+}
+
+void SDLDrawer::renderRectColor(int x, int y, int width, int height, SDL_Color color)
+{
+    renderRectColor(x,y,width,height,color.r, color.g, color.b,color.a);
 }
 
 void SDLDrawer::resetClippingFor()
