@@ -37,6 +37,7 @@
 class cItemBuilder;
 class cBuildingListUpdater;
 class cHousesInfo;
+struct Texture;
 
 struct sEntityForDistance {
     int distance = 9999;
@@ -207,9 +208,9 @@ public:
 
     SDL_Surface *getStructureBitmapFlash(int index);
 
-    SDL_Surface *getFlagBitmap();
+    Texture *getFlagBitmap();
 
-    SDL_Surface *getFlagSmallBitmap();
+    Texture *getFlagSmallBitmap();
 
     SDL_Surface *getUnitBitmap(int index);
 
@@ -534,8 +535,8 @@ private:
 
 
     SDL_Surface *bmp_structure[MAX_STRUCTURE_BMPS];
-    SDL_Surface *bmp_flag;
-    SDL_Surface *bmp_flag_small;
+    Texture *bmp_flag;
+    Texture *bmp_flag_small;
 
     SDL_Surface *bmp_unit[MAX_UNITTYPES]; // the body of unit
     SDL_Surface *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
@@ -567,5 +568,5 @@ private:
 
     void reinforceHarvesterIfNeeded(int cell);
 
-    SDL_Surface* createSurfaceFromIndexedSurfaceWithPalette(SDL_Surface* referenceSurface, int transparentIndex);
+    Texture* createTextureFromIndexedSurfaceWithPalette(SDL_Surface* referenceSurface, int transparentIndex);
 };
