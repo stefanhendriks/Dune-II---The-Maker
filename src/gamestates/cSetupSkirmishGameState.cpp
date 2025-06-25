@@ -212,8 +212,7 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     renderDrawer->gui_DrawRect(mapList);
 
-    textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4,
-                                colorYellow);
+    textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, colorYellow);
 
     ///////
     /// DRAW PREVIEW MAP
@@ -390,7 +389,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
             else {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(BMP_UNKNOWNMAP), previewMapRect.getX(),
+                        renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(),
                                                  previewMapRect.getY());
                     }
                 }
