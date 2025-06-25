@@ -742,7 +742,7 @@ void cUnit::draw()
     cPlayer &cPlayer = players[this->iPlayer];
 
     // Draw SHADOW
-    SDL_Surface *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
+    // SDL_Surface *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
     const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
@@ -766,12 +766,15 @@ void cUnit::draw()
     }*/
 
     // Draw BODY
-    SDL_Surface *bitmap = cPlayer.getUnitBitmap(iType);
+    Texture *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
-        renderDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
-                                        ux, uy,
-                                        scaledWidth,
-                                        scaledHeight);
+        // renderDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
+        //                                 ux, uy,
+        //                                 scaledWidth,
+        //                                 scaledHeight);
+        SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
+        SDL_Rect dest = {ux, uy, scaledWidth, scaledHeight};
+        renderDrawer->renderStrechSprite(bitmap,src, dest);                     
     }
     else {
         log(fmt::format("unit of iType [{}] did not have a bitmap!?", iType));
@@ -779,14 +782,18 @@ void cUnit::draw()
     
 
     // Draw TOP
-    SDL_Surface *top = cPlayer.getUnitTopBitmap(iType);
+    Texture *top = cPlayer.getUnitTopBitmap(iType);
     if (top && iHitPoints > -1) {
         // recalculate start_x using head instead of body
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
 
-        renderDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
-                                        mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        // renderDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
+        //      mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        
+        SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
+        SDL_Rect dest = {ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height)};
+        renderDrawer->renderStrechSprite(bitmap,src, dest);  
     }
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)

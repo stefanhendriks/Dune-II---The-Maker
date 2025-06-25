@@ -212,11 +212,11 @@ public:
 
     Texture *getFlagSmallBitmap();
 
-    SDL_Surface *getUnitBitmap(int index);
+    Texture *getUnitBitmap(int index);
 
-    SDL_Surface *getUnitTopBitmap(int index);
+    Texture *getUnitTopBitmap(int index);
 
-    SDL_Surface *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
+    // SDL_Surface *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
 
     void destroyAllegroBitmaps();
 
@@ -538,8 +538,8 @@ private:
     Texture *bmp_flag;
     Texture *bmp_flag_small;
 
-    SDL_Surface *bmp_unit[MAX_UNITTYPES]; // the body of unit
-    SDL_Surface *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
+    Texture *bmp_unit[MAX_UNITTYPES]; // the body of unit
+    Texture *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
 
     int iPrimaryBuilding[MAX_STRUCTURETYPES];    // remember the primary ID (structure id) of each structure type
     int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure

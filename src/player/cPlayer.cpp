@@ -327,7 +327,8 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h,32,0,0,0,255);
+            // bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h,32,0,0,0,255);
+            bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, 232);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
@@ -335,18 +336,19 @@ void cPlayer::setHouse(int iHouse)
 
             // renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
             // SDL_SetColorKey(unitType.bmp,SDL_TRUE,blackRGBA);
-            if (SDL_BlitSurface(unitType.bmp, nullptr, bmp_unit[i], nullptr)!=0) {
-                    std::cerr << "error bit on " << SDL_GetError() << std::endl;
-                }
+            // if (SDL_BlitSurface(unitType.bmp, nullptr, bmp_unit[i], nullptr)!=0) {
+                    // std::cerr << "error bit on " << SDL_GetError() << std::endl;
+                // }
 
             if (unitType.top) {
 
-                bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.top->w, unitType.top->h,32,0,0,0,255);
+                // bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.top->w, unitType.top->h,32,0,0,0,255);
+                bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, 232);
                 // renderDrawer->FillWithColor(bmp_unit_top[i], SDL_Color{255,0,255,255});
                 // SDL_SetColorKey(unitType.top,SDL_TRUE,blackRGBA);
-                if (SDL_BlitSurface(unitType.top, nullptr, bmp_unit_top[i], nullptr)!=0) {
-                    std::cerr << "error bit on " << SDL_GetError() << std::endl;
-                }
+                // if (SDL_BlitSurface(unitType.top, nullptr, bmp_unit_top[i], nullptr)!=0) {
+                    // std::cerr << "error bit on " << SDL_GetError() << std::endl;
+                // }
             }
         }
     }
@@ -551,7 +553,7 @@ Texture *cPlayer::getFlagSmallBitmap()
  * @param index
  * @return
  */
-SDL_Surface *cPlayer::getUnitBitmap(int index)
+Texture *cPlayer::getUnitBitmap(int index)
 {
     if (bmp_unit[index]) {
         return bmp_unit[index];
@@ -565,7 +567,7 @@ SDL_Surface *cPlayer::getUnitBitmap(int index)
  * @param index
  * @return
  */
-SDL_Surface *cPlayer::getUnitTopBitmap(int index)
+Texture *cPlayer::getUnitTopBitmap(int index)
 {
     if (bmp_unit_top[index]) {
         return bmp_unit_top[index];
@@ -579,27 +581,27 @@ SDL_Surface *cPlayer::getUnitTopBitmap(int index)
  * @param index
  * @return
  */
-SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
-{
-    if (sUnitInfo[index].shadow) {
-        int bmp_width = sUnitInfo[index].bmp_width;
-        int bmp_height = sUnitInfo[index].bmp_height;
-        int start_x = bodyFacing * bmp_width;
-        int start_y = bmp_height * animationFrame;
-
-        // Carry-all has a bit different offset for shadow
-        if (index == CARRYALL) {
-            start_x += 2;
-            start_y += 2;
-        }
-
-        SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
-        renderDrawer->FillWithColor(shadow, SDL_Color{255,0,255,255});
-        renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
-        return shadow;
-    }
-    return nullptr;
-}
+// SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
+// {
+    // if (sUnitInfo[index].shadow) {
+        // int bmp_width = sUnitInfo[index].bmp_width;
+        // int bmp_height = sUnitInfo[index].bmp_height;
+        // int start_x = bodyFacing * bmp_width;
+        // int start_y = bmp_height * animationFrame;
+// 
+        // //Carry-all has a bit different offset for shadow
+        // if (index == CARRYALL) {
+            // start_x += 2;
+            // start_y += 2;
+        // }
+// 
+        // SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
+        // renderDrawer->FillWithColor(shadow, SDL_Color{255,0,255,255});
+        // renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+        // return shadow;
+    // }
+    // return nullptr;
+// }
 
 bool cPlayer::hasWor() const
 {
