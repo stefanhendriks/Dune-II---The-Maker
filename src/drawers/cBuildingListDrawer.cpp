@@ -76,11 +76,11 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
     int height = (gfxinter->getSurface(id))->h;
 
     // clear
-    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
+    renderDrawer->renderSprite(gfxinter->getTexture(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
     // @Mira fix trasnparency set_trans_blender(0,0,0,128);
-    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(id), x, y,128);
+    renderDrawer->renderSprite(gfxinter->getTexture(id), x, y,128);
 
     if (!list->isAvailable()) {
         renderDrawer->renderRectFillColor(x, y, width, height, 0,0,0,96);
@@ -169,8 +169,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
                 //@Mira fix transparency // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
-                renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSFIX), gfxinter->getSurface(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
-                renderDrawer->drawSprite(gfxinter->getSurface(PROGRESS001+iFrame), gfxinter->getSurface(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
+                renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
+                renderDrawer->renderSprite(gfxinter->getTexture(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
             }
             else {
                 if (item->shouldPlaceIt()) {
@@ -179,7 +179,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
-                    renderDrawer->drawSprite(gfxinter->getSurface(icon), gfxinter->getSurface(icon), iDrawX + 3, iDrawY + 16);
+                    renderDrawer->renderSprite(gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
                 }
                 else if (item->shouldDeployIt()) {
                     // TODO: draw white/red (flicker)
@@ -188,7 +188,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
-                    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(icon), iDrawX + 3, iDrawY + 16);
+                    renderDrawer->renderSprite(gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
                 }
             }
         }
@@ -212,7 +212,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
                 // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
-                renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY,64);
+                renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
@@ -249,7 +249,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // payment/progress)
                 if (cannotPayIt) {
                     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
-                    renderDrawer->drawSprite(gfxinter->getSurface(PROGRESSNA), gfxinter->getSurface(PROGRESSNA), iDrawX, iDrawY,64);
+                    renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
                     SDL_Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
@@ -355,18 +355,19 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
         iTile = GRID_3X3;
     }
 
-    SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
+    // SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
 
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 192);
-    //? draw empty ? renderDrawer->drawTransSprite(temp, temp, x + 43, y + 20);
+    //? draw empty ? 
+    renderDrawer->renderRectFillColor(x + 43, y + 20,19,19,0,0,0,192);
 
-    renderDrawer->drawSprite(temp, gfxinter->getSurface(GRID_0X0), 0, 0);
+    renderDrawer->renderSprite(gfxinter->getTexture(GRID_0X0), x + 43, y + 20);
 
-    renderDrawer->drawTransSprite(temp, temp, x + 43, y + 20);
+    //renderDrawer->drawTransSprite(temp, temp, x + 43, y + 20);
 
-    renderDrawer->drawSprite(gfxinter->getSurface(iTile), gfxinter->getSurface(iTile), x + 43, y + 20);
+    renderDrawer->renderSprite(gfxinter->getTexture(iTile), x + 43, y + 20);
 
-    SDL_FreeSurface(temp);
+    // SDL_FreeSurface(temp);
 
 }
 
