@@ -89,7 +89,7 @@ void cPlayer::clearStructureTypeBitmaps()
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
 //            log(msg);
-            SDL_FreeSurface(bmp_structure[i]);
+            delete bmp_structure[i];
         }
         else {
 //            char msg[255];
@@ -114,7 +114,7 @@ void cPlayer::clearUnitTypeBitmaps()
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
 //                log(msg);
             }
-            SDL_FreeSurface(bmp_unit[i]);
+            delete (bmp_unit[i]);
         }
         bmp_unit[i] = nullptr;
 
@@ -124,7 +124,7 @@ void cPlayer::clearUnitTypeBitmaps()
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
 //                log(msg);
             }
-            SDL_FreeSurface(bmp_unit_top[i]);
+            delete (bmp_unit_top[i]);
         }
         bmp_unit_top[i] = nullptr;
     }
@@ -294,8 +294,9 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            std::cout << structureType.name << " :" << SDL_GetPixelFormatName(structureType.bmp->format->format) << std::endl;
-            bmp_structure[i] = SDL_CreateRGBSurface(0,structureType.bmp->w, structureType.bmp->h, 8, 0,0,0,0);
+            // std::cout << structureType.name << " :" << SDL_GetPixelFormatName(structureType.bmp->format->format) << std::endl;
+            // bmp_structure[i] = SDL_CreateRGBSurface(0,structureType.bmp->w, structureType.bmp->h, 8, 0,0,0,0);
+            bmp_structure[i] = createTextureFromIndexedSurfaceWithPalette(structureType.bmp,232);
             //SDL_SetColorKey(structureType.bmp,SDL_TRUE,232);
             //SDL_SetSurfaceBlendMode(structureType.bmp, SDL_BLENDMODE_BLEND);
             if (!bmp_structure[i]) {
@@ -303,9 +304,9 @@ void cPlayer::setHouse(int iHouse)
             }
             // renderDrawer->FillWithColor(bmp_structure[i], SDL_Color{255,0,255,255});
             
-            if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
-                    std::cerr << "error bit on " << SDL_GetError() << std::endl;
-            };
+            // if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
+                    // std::cerr << "error bit on " << SDL_GetError() << std::endl;
+            // };
 
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
@@ -316,7 +317,7 @@ void cPlayer::setHouse(int iHouse)
                 }
                 // renderDrawer->FillWithColor(bitmap, SDL_Color{255,0,255,255});
                 // renderDrawer->drawSprite(bitmap, structureType.flash, 0, 0);
-                bmp_structure[j] = bitmap;
+                bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash,232);
             }
 
         }
@@ -515,7 +516,7 @@ int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
  * @param index
  * @return
  */
-SDL_Surface *cPlayer::getStructureBitmap(int index)
+Texture *cPlayer::getStructureBitmap(int index)
 {
     if (bmp_structure[index]) {
         return bmp_structure[index];
@@ -529,7 +530,7 @@ SDL_Surface *cPlayer::getStructureBitmap(int index)
  * @param index
  * @return
  */
-SDL_Surface *cPlayer::getStructureBitmapFlash(int index)
+Texture *cPlayer::getStructureBitmapFlash(int index)
 {
     return getStructureBitmap(MAX_STRUCTURETYPES + index); // by convention flash bmp's are stored starting at MAX + index
 }

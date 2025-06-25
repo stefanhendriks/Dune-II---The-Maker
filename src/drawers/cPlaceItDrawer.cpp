@@ -179,26 +179,28 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
-    SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
-    renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+    // SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
+    // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
-    SDL_Surface *bmp = nullptr;
+    Texture *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = gfxdata->getSurface(PLACE_SLAB1);
+        bmp = gfxdata->getTexture(PLACE_SLAB1);
     }
     else if (structureId == SLAB4) {
-        bmp = gfxdata->getSurface(PLACE_SLAB4);
+        bmp = gfxdata->getTexture(PLACE_SLAB4);
     }
     else if (structureId == WALL) {
-        bmp = gfxdata->getSurface(PLACE_WALL);
+        bmp = gfxdata->getTexture(PLACE_WALL);
     }
     else {
         bmp = player->getStructureBitmap(structureId);
     }
 
-    renderDrawer->stretchBlit(bmp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
+    // renderDrawer->stretchBlit(bmp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
+    // renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
+        SDL_Rect src = { 0, 0, width, height};
+        SDL_Rect dest= { 0, 0, scaledWidth, scaledHeight};
+        renderDrawer->renderStrechSprite(bmp, src, dest); 
 
-    renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
-
-    SDL_FreeSurface(temp);
+    // SDL_FreeSurface(temp);
 }

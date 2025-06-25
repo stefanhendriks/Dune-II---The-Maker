@@ -77,9 +77,12 @@ void cLightFactory::draw()
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-        SDL_Surface *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
-        renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-                                        drawX, drawY, scaledWidth, scaledHeight);
+        Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
+        // renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+                                        // drawX, drawY, scaledWidth, scaledHeight);
+        SDL_Rect src = { 0, iSourceY, pixelWidth, pixelHeight};
+        SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
+        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest); 
     }
 }
 
