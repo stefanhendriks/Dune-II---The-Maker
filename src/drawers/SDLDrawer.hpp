@@ -82,6 +82,9 @@ public:
     void FillWithColor(SDL_Surface *src, SDL_Color color);
     SDL_Color getPixel(SDL_Surface *surface, int x, int y);
 
+    SDL_Renderer *getRenderer() {
+        return renderer;
+    }
 protected:
     int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
     int getCenteredYPosForBitmap(SDL_Surface *bmp);
