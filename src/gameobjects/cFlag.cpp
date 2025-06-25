@@ -4,6 +4,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
+#include "include/Texture.hpp"
 
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
@@ -19,7 +20,7 @@ cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
 
 void cFlag::draw()
 {
-    SDL_Surface *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
+    Texture *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
     int drawX = mapCamera->getWindowXPosition(absCoords.x);
@@ -38,9 +39,12 @@ void cFlag::draw()
 
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+        SDL_Rect src = {0, iSourceY, pixelWidth, pixelHeight};
+        SDL_Rect dest = {drawX, drawY, scaledWidth, scaledHeight};
 
-        renderDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-                                        drawX, drawY, scaledWidth, scaledHeight);
+        // renderDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+        //                                 drawX, drawY, scaledWidth, scaledHeight);
+        renderDrawer->renderStrechSprite(flagBitmap, src, dest);
     }
 }
 
