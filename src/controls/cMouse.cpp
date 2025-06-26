@@ -175,6 +175,8 @@ void cMouse::updateState()
     didMouseMove = false;
     leftButtonClicked = false;
     rightButtonClicked = false;
+    mouseScrolledDown = false;
+    mouseScrolledUp = false;
 }
 
 void cMouse::setCursorPosition(SDL_Window *_windows, int x, int y)
