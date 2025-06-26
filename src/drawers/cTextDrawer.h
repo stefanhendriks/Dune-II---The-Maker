@@ -60,9 +60,9 @@ public:
     void drawTextBottomRight(SDL_Color color, const std::string &msg) const;
     void drawTextBottomLeft(SDL_Color color, const std::string &msg) const;
 
-    // void setApplyShadow(bool value) {
-    //     applyShadow = value;
-    // }
+    void setApplyShadow(bool value) {
+        applyShadow = value;
+    }
 
     void setTextColor(SDL_Color value) {
         textColor = value;
