@@ -156,7 +156,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         // icon id must be set , assert it.
         assert(item->getIconId() > -1);
 
-        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(item->getIconId()), iDrawX, iDrawY);
+        // renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(item->getIconId()), iDrawX, iDrawY);
+        renderDrawer->renderSprite(gfxinter->getTexture(item->getIconId()), iDrawX, iDrawY);
 
         if (shouldDrawStructureSize) {
             drawStructureSize(item->getBuildId(), iDrawX, iDrawY);

@@ -8,7 +8,7 @@
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/d2tm_math.h"
-
+#include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 
 cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
@@ -363,7 +363,8 @@ void cMouse::draw()
         }
     }
 
-    renderDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
+    // renderDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
+    renderDrawer->renderSprite(gfxdata->getTexture(mouse_tile),mouseDrawX, mouseDrawY );
 
     if (game.isDebugMode()) {
         int y = mouseDrawY;
