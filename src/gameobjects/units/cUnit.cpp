@@ -270,8 +270,7 @@ void cUnit::createExplosionParticle()
     }
 
     if ((iType == SIEGETANK || iType == DEVASTATOR) && rnd(100) < 25) {
-        if (iBodyFacing == FACE_UPLEFT ||
-                iBodyFacing == FACE_DOWNRIGHT) {
+        if (iBodyFacing == FACE_UPLEFT || iBodyFacing == FACE_DOWNRIGHT) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
         }
     }
@@ -325,8 +324,7 @@ void cUnit::createExplosionParticle()
                 }
 
                 if (rnd(100) < 35)
-                    game.playSoundWithDistance(SOUND_TANKDIE + rnd(2),
-                                               distanceBetweenCellAndCenterOfScreen(iCell));
+                    game.playSoundWithDistance(SOUND_TANKDIE + rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
                 // calculate cell and damage stuff around this
                 int cll = map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
@@ -420,7 +418,6 @@ void cUnit::createExplosionParticle()
         cParticle::create(iOrgDieX + 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
         cParticle::create(iOrgDieX, iOrgDieY - 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
         cParticle::create(iOrgDieX, iOrgDieY + 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
-
     }
 
     if (iType == TROOPER || iType == SOLDIER || iType == UNIT_FREMEN_ONE) {
@@ -1525,8 +1522,7 @@ void cUnit::thinkFast_move_airUnit()
                                         }
                                         else {
                                             // !?
-                                            int dropLocation = map.findNearByValidDropLocation(iCell, 3,
-                                                               unitToPickupOrDrop.iType);
+                                            int dropLocation = map.findNearByValidDropLocation(iCell, 3, unitToPickupOrDrop.iType);
 //                                            carryAll_transferUnitTo(iUnitID, dropLocation);
                                             setGoalCell(dropLocation);
                                             iBringTarget = dropLocation;
