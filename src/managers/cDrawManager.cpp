@@ -160,7 +160,10 @@ void cDrawManager::drawRallyPoint()
 
     int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
-    renderDrawer->stretchSprite(mouseMoveBitmap, bmp_screen, drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled);
+    //renderDrawer->stretchSprite(mouseMoveBitmap, bmp_screen, drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled);
+    SDL_Rect src = {0,0,mouseMoveBitmap->w,mouseMoveBitmap->h};
+    SDL_Rect dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
+    renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_MOVE), src, dest);
 
     int startX = theStructure->iDrawX() + mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
