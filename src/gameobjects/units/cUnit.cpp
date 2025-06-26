@@ -790,7 +790,7 @@ void cUnit::draw()
         
         SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
         SDL_Rect dest = {ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height)};
-        renderDrawer->renderStrechSprite(bitmap,src, dest);  
+        renderDrawer->renderStrechSprite(top,src, dest);  
     }
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
