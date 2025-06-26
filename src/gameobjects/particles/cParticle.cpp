@@ -194,8 +194,7 @@ void cParticle::thinkFast()
     }
 
     // old way
-    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 ||
-            iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 ||iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
             iType == D2TM_PARTICLE_OBJECT_BOOM03) {
         TIMER_frame++;
 
@@ -228,8 +227,7 @@ void cParticle::thinkFast()
     }
 
     // move
-    if (iType == D2TM_PARTICLE_MOVE ||
-            iType == D2TM_PARTICLE_ATTACK) {
+    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
@@ -289,8 +287,7 @@ void cParticle::thinkFast()
         }
     }
 
-    if (iType == D2TM_PARTICLE_SMOKE ||
-            iType == D2TM_PARTICLE_SMOKE_SHADOW) {
+    if (iType == D2TM_PARTICLE_SMOKE || iType == D2TM_PARTICLE_SMOKE_SHADOW) {
         TIMER_frame--;
         TIMER_dead--;
 
@@ -335,10 +332,8 @@ void cParticle::thinkFast()
         return;
     }
 
-    if (iType == D2TM_PARTICLE_TRACK_DIA ||
-            iType == D2TM_PARTICLE_TRACK_HOR ||
-            iType == D2TM_PARTICLE_TRACK_VER ||
-            iType == D2TM_PARTICLE_TRACK_DIA2) {
+    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || 
+        iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2) {
         TIMER_frame--;
         TIMER_dead--;
         if (TIMER_frame < 0) {
@@ -379,8 +374,7 @@ void cParticle::thinkFast()
 
     }
 
-    if (iType == D2TM_PARTICLE_DEADINF01 ||
-            iType == D2TM_PARTICLE_DEADINF02) {
+    if (iType == D2TM_PARTICLE_DEADINF01 || iType == D2TM_PARTICLE_DEADINF02) {
         TIMER_frame--;
         TIMER_dead--;
 
@@ -464,10 +458,8 @@ void cParticle::thinkFast()
         }
     }
     // tank explosion(s)
-    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
-            iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
-            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
-            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE || iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 || iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
             iType == D2TM_PARTICLE_EXPLOSION_GAS) {
         TIMER_frame--;
 
@@ -536,10 +528,8 @@ void cParticle::thinkFast()
 
     }
 
-    if (iType == D2TM_PARTICLE_SQUISH01 ||
-            iType == D2TM_PARTICLE_SQUISH02 ||
-            iType == D2TM_PARTICLE_SQUISH03 ||
-            iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+    if (iType == D2TM_PARTICLE_SQUISH01 || iType == D2TM_PARTICLE_SQUISH02 ||
+            iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
             if (iAlpha > 5) {
@@ -709,10 +699,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     // tanks exploding
-    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
-            iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
-            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
-            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE || iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 || iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
             iType == D2TM_PARTICLE_EXPLOSION_GAS) {
 
         if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
@@ -721,8 +709,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     }
 
-    if (iType == D2TM_PARTICLE_DEADINF01 ||
-            iType == D2TM_PARTICLE_DEADINF02) {
+    if (iType == D2TM_PARTICLE_DEADINF01 || iType == D2TM_PARTICLE_DEADINF02) {
         pParticle.TIMER_dead = 500 + rnd(500);
         pParticle.iAlpha = 255;
     }
@@ -732,10 +719,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         pParticle.TIMER_dead = 50;
     }
 
-    if (iType == D2TM_PARTICLE_SQUISH01 ||
-            iType == D2TM_PARTICLE_SQUISH02 ||
-            iType == D2TM_PARTICLE_SQUISH03 ||
-            iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+    if (iType == D2TM_PARTICLE_SQUISH01 || iType == D2TM_PARTICLE_SQUISH02 ||
+            iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         pParticle.frameIndex = 0;
         pParticle.TIMER_frame = 50;
     }
