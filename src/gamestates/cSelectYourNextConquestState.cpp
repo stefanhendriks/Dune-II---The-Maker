@@ -273,10 +273,10 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 
     // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
-        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX, offsetY);
-        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX + (640) - 64, offsetY);
-        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX, offsetY + (480) - 64);
-        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
+        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX, offsetY);
+        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);
+        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX, offsetY + (480) - 64);
+        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
     }
 }
 
@@ -309,8 +309,8 @@ void cSelectYourNextConquestState::drawStateIntroduction() const
 
 void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dune first
 {
-    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
-    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
@@ -325,8 +325,8 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dun
 
 void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
 {
-    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
-    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
