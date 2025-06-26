@@ -46,7 +46,7 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int height_y = mapCamera->factorZoomLevel(height);
 
     //_rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
-    renderDrawer->renderRectFillColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, color.a);
+    renderDrawer->renderRectFillColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, 96);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
