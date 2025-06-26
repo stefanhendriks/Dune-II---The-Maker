@@ -14,7 +14,7 @@
 struct s_UnitInfo {
     SDL_Surface  *bmp;         // each unit has a reference to his 8 bit bitmap.
     SDL_Surface  *top;         // top of unit
-    SDL_Surface  *shadow;      // shadow of unit (24 bit)
+    // SDL_Surface  *shadow;      // shadow of unit (24 bit)
 
     int    bmp_width;     // width of each unit frame (in pixels).
     int    bmp_height;    // Height of the unit, for each animating frame.

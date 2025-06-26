@@ -95,7 +95,7 @@ void install_units()
         s_UnitInfo &unitInfo = sUnitInfo[i];
         unitInfo.bmp = gfxdata->getSurface(UNIT_QUAD); // default bitmap is a quad!
         unitInfo.top = nullptr;  // no top
-        unitInfo.shadow = nullptr;  // no shadow (deliverd with picture itself)
+        // unitInfo.shadow = nullptr;  // no shadow (deliverd with picture itself)
         unitInfo.bmp_width = 0;
         unitInfo.bmp_height = 0;
         unitInfo.turnspeed = 0;
@@ -151,7 +151,7 @@ void install_units()
     // Unit        : CarryAll
     // Description : CarryAll, the flying pickuptruck
     sUnitInfo[CARRYALL].bmp = gfxdata->getSurface(UNIT_CARRYALL);      // pointer to the original 8bit bitmap
-    sUnitInfo[CARRYALL].shadow = gfxdata->getSurface(UNIT_CARRYALL_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[CARRYALL].shadow = gfxdata->getSurface(UNIT_CARRYALL_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[CARRYALL].bmp_width = 24 * 2;
     sUnitInfo[CARRYALL].bmp_height = 24 * 2;
     sUnitInfo[CARRYALL].bmp_startpixel = 0;
@@ -166,7 +166,7 @@ void install_units()
     // Unit        : Ornithopter
     // Description : Pesty little aircraft shooting bastard
     sUnitInfo[ORNITHOPTER].bmp = gfxdata->getSurface(UNIT_ORNITHOPTER);      // pointer to the original 8bit bitmap
-    sUnitInfo[ORNITHOPTER].shadow = gfxdata->getSurface(UNIT_ORNITHOPTER_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[ORNITHOPTER].shadow = gfxdata->getSurface(UNIT_ORNITHOPTER_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[ORNITHOPTER].bmp_width = 24 * 2;
     sUnitInfo[ORNITHOPTER].bmp_height = 24 * 2;
     sUnitInfo[ORNITHOPTER].bmp_startpixel = 0;
@@ -185,7 +185,7 @@ void install_units()
     // Unit        : Devastator
     // Description : Devastator
     sUnitInfo[DEVASTATOR].bmp = gfxdata->getSurface(UNIT_DEVASTATOR);      // pointer to the original 8bit bitmap
-    sUnitInfo[DEVASTATOR].shadow = gfxdata->getSurface(UNIT_DEVASTATOR_SHADOW);      // pointer to the original bitmap shadow
+    // sUnitInfo[DEVASTATOR].shadow = gfxdata->getSurface(UNIT_DEVASTATOR_SHADOW);      // pointer to the original bitmap shadow
     sUnitInfo[DEVASTATOR].bmp_width = 19 * 2;
     sUnitInfo[DEVASTATOR].bmp_startpixel = 0;
     sUnitInfo[DEVASTATOR].bmp_height = 23 * 2;
@@ -204,7 +204,7 @@ void install_units()
     // Unit        : Harvester
     // Description : Harvester
     sUnitInfo[HARVESTER].bmp = gfxdata->getSurface(UNIT_HARVESTER);      // pointer to the original 8bit bitmap
-    sUnitInfo[HARVESTER].shadow = gfxdata->getSurface(UNIT_HARVESTER_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[HARVESTER].shadow = gfxdata->getSurface(UNIT_HARVESTER_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[HARVESTER].bmp_width = 40 * 2;
     sUnitInfo[HARVESTER].bmp_startpixel = 24;
     sUnitInfo[HARVESTER].bmp_height = 26 * 2;
@@ -221,7 +221,7 @@ void install_units()
     // Unit        : Combattank
     // Description : Combattank
     sUnitInfo[TANK].bmp = gfxdata->getSurface(UNIT_TANKBASE);      // pointer to the original 8bit bitmap
-    sUnitInfo[TANK].shadow = gfxdata->getSurface(UNIT_TANKBASE_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[TANK].shadow = gfxdata->getSurface(UNIT_TANKBASE_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[TANK].top = gfxdata->getSurface(UNIT_TANKTOP);      // pointer to the original 8bit bitmap
     sUnitInfo[TANK].bmp_width = 16 * 2;
     sUnitInfo[TANK].bmp_startpixel = 0;
@@ -241,7 +241,7 @@ void install_units()
     // Unit        : Siege Tank
     // Description : Siege tank
     sUnitInfo[SIEGETANK].bmp = gfxdata->getSurface(UNIT_SIEGEBASE);      // pointer to the original 8bit bitmap
-    sUnitInfo[SIEGETANK].shadow = gfxdata->getSurface(UNIT_SIEGEBASE_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[SIEGETANK].shadow = gfxdata->getSurface(UNIT_SIEGEBASE_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[SIEGETANK].top = gfxdata->getSurface(UNIT_SIEGETOP);      // pointer to the original 8bit bitmap
     sUnitInfo[SIEGETANK].bmp_width = 18 * 2;
     sUnitInfo[SIEGETANK].bmp_startpixel = 1;
@@ -261,7 +261,7 @@ void install_units()
     // Unit        : MCV
     // Description : Movable Construction Vehicle
     sUnitInfo[MCV].bmp = gfxdata->getSurface(UNIT_MCV);      // pointer to the original 8bit bitmap
-    sUnitInfo[MCV].shadow = gfxdata->getSurface(UNIT_MCV_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[MCV].shadow = gfxdata->getSurface(UNIT_MCV_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[MCV].bmp_width = 24 * 2;
     sUnitInfo[MCV].bmp_startpixel = 0;
     sUnitInfo[MCV].bmp_height = 25 * 2;
@@ -294,7 +294,7 @@ void install_units()
     // Unit        : Launcher
     // Description : Rocket Launcher
     sUnitInfo[LAUNCHER].bmp = gfxdata->getSurface(UNIT_LAUNCHER);      // pointer to the original 8bit bitmap
-    sUnitInfo[LAUNCHER].shadow = gfxdata->getSurface(UNIT_LAUNCHER_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[LAUNCHER].shadow = gfxdata->getSurface(UNIT_LAUNCHER_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[LAUNCHER].bmp_width = 16 * 2;
     sUnitInfo[LAUNCHER].bmp_height = 16 * 2;
     sUnitInfo[LAUNCHER].bmp_startpixel = 0;
@@ -315,7 +315,7 @@ void install_units()
     // Unit        : Quad
     // Description : Quad, 4 wheeled (double gunned)
     sUnitInfo[QUAD].bmp = gfxdata->getSurface(UNIT_QUAD);      // pointer to the original 8bit bitmap
-    sUnitInfo[QUAD].shadow = gfxdata->getSurface(UNIT_QUAD_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[QUAD].shadow = gfxdata->getSurface(UNIT_QUAD_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[QUAD].bmp_width = 16 * 2;
     sUnitInfo[QUAD].bmp_height = 16 * 2;
     sUnitInfo[QUAD].bmp_startpixel = 0;
@@ -336,7 +336,7 @@ void install_units()
     // Unit        : Trike (normal trike)
     // Description : Trike, 3 wheeled (single gunned)
     sUnitInfo[TRIKE].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
-    sUnitInfo[TRIKE].shadow = gfxdata->getSurface(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[TRIKE].shadow = gfxdata->getSurface(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[TRIKE].bmp_width = 28;
     sUnitInfo[TRIKE].bmp_height = 26;
     sUnitInfo[TRIKE].bmp_startpixel = 0;
@@ -355,7 +355,7 @@ void install_units()
     // Unit        : Raider Trike (Ordos trike)
     // Description : Raider Trike, 3 wheeled (single gunned), weaker, but faster
     sUnitInfo[RAIDER].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
-    sUnitInfo[RAIDER].shadow = gfxdata->getSurface(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[RAIDER].shadow = gfxdata->getSurface(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[RAIDER].bmp_width = 14 * 2;
     sUnitInfo[RAIDER].bmp_height = 14 * 2;
     sUnitInfo[RAIDER].bmp_startpixel = 0;
@@ -374,7 +374,7 @@ void install_units()
     // Unit        : Frigate
     // Description : Frigate
     sUnitInfo[FRIGATE].bmp = gfxdata->getSurface(UNIT_FRIGATE);      // pointer to the original 8bit bitmap
-    sUnitInfo[FRIGATE].shadow = gfxdata->getSurface(UNIT_FRIGATE_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[FRIGATE].shadow = gfxdata->getSurface(UNIT_FRIGATE_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[FRIGATE].bmp_width = 32 * 2;
     sUnitInfo[FRIGATE].bmp_height = 32 * 2;
     sUnitInfo[FRIGATE].bmp_startpixel = 0;
@@ -401,7 +401,7 @@ void install_units()
     // Unit        : Sonic Tank
     // Description : Sonic tank (using sound waves to destroy)
     sUnitInfo[SONICTANK].bmp = gfxdata->getSurface(UNIT_SONICTANK);      // pointer to the original 8bit bitmap
-    sUnitInfo[SONICTANK].shadow = gfxdata->getSurface(UNIT_SONICTANK_SHADOW);      // pointer to the original 8bit bitmap
+    // sUnitInfo[SONICTANK].shadow = gfxdata->getSurface(UNIT_SONICTANK_SHADOW);      // pointer to the original 8bit bitmap
     sUnitInfo[SONICTANK].bmp_width = 16 * 2;
     sUnitInfo[SONICTANK].bmp_height = 16 * 2;
     sUnitInfo[SONICTANK].bmp_startpixel = 0;
