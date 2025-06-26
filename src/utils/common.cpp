@@ -874,7 +874,7 @@ void install_bullets()
     }
 
     // huge rocket/missile
-    sBulletInfo[ROCKET_BIG].bmp = gfxdata->getSurface(BULLET_ROCKET_LARGE);
+    sBulletInfo[ROCKET_BIG].bmp = gfxdata->getTexture(BULLET_ROCKET_LARGE);
     sBulletInfo[ROCKET_BIG].deathParticle = D2TM_PARTICLE_EXPLOSION_STRUCTURE01;
     sBulletInfo[ROCKET_BIG].bmp_width = 48;
     sBulletInfo[ROCKET_BIG].damage = 999;
@@ -888,7 +888,7 @@ void install_bullets()
     strcpy(sBulletInfo[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
-    sBulletInfo[ROCKET_SMALL_ORNI].bmp = gfxdata->getSurface(BULLET_ROCKET_SMALL);
+    sBulletInfo[ROCKET_SMALL_ORNI].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
     sBulletInfo[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_ORNI].bmp_width = 16;
     sBulletInfo[ROCKET_SMALL_ORNI].damage = 12; // they can do pretty damage
@@ -902,7 +902,7 @@ void install_bullets()
     strcpy(sBulletInfo[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
     // small rocket
-    sBulletInfo[ROCKET_SMALL].bmp = gfxdata->getSurface(BULLET_ROCKET_SMALL);
+    sBulletInfo[ROCKET_SMALL].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
     sBulletInfo[ROCKET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL].bmp_width = 16;
     sBulletInfo[ROCKET_SMALL].damage = 10; // was 8
@@ -916,7 +916,7 @@ void install_bullets()
     strcpy(sBulletInfo[ROCKET_SMALL].description, "ROCKET_SMALL");
 
     // small rocket - fremen rocket
-    sBulletInfo[ROCKET_SMALL_FREMEN].bmp = gfxdata->getSurface(BULLET_ROCKET_SMALL);
+    sBulletInfo[ROCKET_SMALL_FREMEN].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
     sBulletInfo[ROCKET_SMALL_FREMEN].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_FREMEN].bmp_width = 16;
     sBulletInfo[ROCKET_SMALL_FREMEN].damage = 22;
@@ -930,7 +930,7 @@ void install_bullets()
     strcpy(sBulletInfo[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
     // normal rocket
-    sBulletInfo[ROCKET_NORMAL].bmp = gfxdata->getSurface(BULLET_ROCKET_NORMAL);
+    sBulletInfo[ROCKET_NORMAL].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
     sBulletInfo[ROCKET_NORMAL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET;
     sBulletInfo[ROCKET_NORMAL].bmp_width = 32;
     sBulletInfo[ROCKET_NORMAL].damage = 76;
@@ -944,7 +944,7 @@ void install_bullets()
     strcpy(sBulletInfo[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
     // soldier shot
-    sBulletInfo[BULLET_SMALL].bmp = gfxdata->getSurface(BULLET_DOT_SMALL);
+    sBulletInfo[BULLET_SMALL].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
     sBulletInfo[BULLET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_SMALL].bmp_width = 6;
     sBulletInfo[BULLET_SMALL].damage = 4; // vehicles are no match
@@ -956,7 +956,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_SMALL].description, "BULLET_SMALL");
 
     // trike shot
-    sBulletInfo[BULLET_TRIKE].bmp = gfxdata->getSurface(BULLET_DOT_SMALL);
+    sBulletInfo[BULLET_TRIKE].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
     sBulletInfo[BULLET_TRIKE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_TRIKE].bmp_width = 6;
     sBulletInfo[BULLET_TRIKE].damage = 3; // trikes do not do much damage to vehicles
@@ -968,7 +968,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_TRIKE].description, "BULLET_TRIKE");
 
     // quad shot
-    sBulletInfo[BULLET_QUAD].bmp = gfxdata->getSurface(BULLET_DOT_SMALL);
+    sBulletInfo[BULLET_QUAD].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
     sBulletInfo[BULLET_QUAD].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_QUAD].bmp_width = 6;
     sBulletInfo[BULLET_QUAD].damage = 6;
@@ -980,7 +980,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_QUAD].description, "BULLET_QUAD");
 
     // normal tank shot
-    sBulletInfo[BULLET_TANK].bmp = gfxdata->getSurface(BULLET_DOT_MEDIUM);
+    sBulletInfo[BULLET_TANK].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
     sBulletInfo[BULLET_TANK].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_TANK].bmp_width = 8;
     sBulletInfo[BULLET_TANK].damage = 12;
@@ -993,7 +993,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_TANK].description, "BULLET_TANK");
 
     // siege tank shot
-    sBulletInfo[BULLET_SIEGE].bmp = gfxdata->getSurface(BULLET_DOT_MEDIUM);
+    sBulletInfo[BULLET_SIEGE].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
     sBulletInfo[BULLET_SIEGE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_SIEGE].bmp_width = 8;
     sBulletInfo[BULLET_SIEGE].damage = 24;
@@ -1006,7 +1006,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_SIEGE].description, "BULLET_SIEGE");
 
     // devastator shot
-    sBulletInfo[BULLET_DEVASTATOR].bmp = gfxdata->getSurface(BULLET_DOT_LARGE);
+    sBulletInfo[BULLET_DEVASTATOR].bmp = gfxdata->getTexture(BULLET_DOT_LARGE);
     sBulletInfo[BULLET_DEVASTATOR].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL; // not used anyway
     sBulletInfo[BULLET_DEVASTATOR].bmp_width = 8;
     sBulletInfo[BULLET_DEVASTATOR].damage = 30;
@@ -1019,7 +1019,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
 
     // Gas rocket of a deviator
-    sBulletInfo[BULLET_GAS].bmp = gfxdata->getSurface(BULLET_ROCKET_NORMAL);
+    sBulletInfo[BULLET_GAS].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
     sBulletInfo[BULLET_GAS].deathParticle = D2TM_PARTICLE_EXPLOSION_GAS;
     sBulletInfo[BULLET_GAS].bmp_width = 32;
     sBulletInfo[BULLET_GAS].damage = 1;
@@ -1032,7 +1032,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_GAS].description, "BULLET_GAS");
 
     // normal turret shot
-    sBulletInfo[BULLET_TURRET].bmp = gfxdata->getSurface(BULLET_DOT_MEDIUM);
+    sBulletInfo[BULLET_TURRET].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
     sBulletInfo[BULLET_TURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_TURRET].bmp_width = 8;
     sBulletInfo[BULLET_TURRET].damage = 12;
@@ -1056,7 +1056,7 @@ void install_bullets()
     strcpy(sBulletInfo[BULLET_SHIMMER].description, "BULLET_SHIMMER");
 
     // rocket of rocket turret
-    sBulletInfo[ROCKET_RTURRET].bmp = gfxdata->getSurface(BULLET_ROCKET_NORMAL);
+    sBulletInfo[ROCKET_RTURRET].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
     sBulletInfo[ROCKET_RTURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_RTURRET].bmp_width = 16 * 2;
     sBulletInfo[ROCKET_RTURRET].damage = 25;
