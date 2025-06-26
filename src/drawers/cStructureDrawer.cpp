@@ -80,7 +80,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
     // clear_to_color(stretchedShadow, makecol(255, 0, 255));
-    
+
     //renderDrawer->stretchSprite(gfxdata->getSurface(shadowIndex), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
     //allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
@@ -296,7 +296,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
             //     // draw windtrap
             //     drawStructureAnimationWindTrap(structure);
             // }
-            // else 
+            // else
             if (structure->getType() == TURRET || structure->getType() == RTURRET) {
                 drawStructureAnimationTurret(structure);
             }
@@ -419,7 +419,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
     }
 
     renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0,
-                                 cSideBar::SidebarWidth, game.m_screenH, 0, 0, 0,255);
+                                      cSideBar::SidebarWidth, game.m_screenH, 0, 0, 0,255);
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure)

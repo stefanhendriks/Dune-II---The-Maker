@@ -903,17 +903,17 @@ void cAbstractStructure::drawWithShadow()
 
     // SDL_Surface *shadow = getShadowBitmap();
     // if (shadow) {
-        // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
+    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
-        // SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-        // renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
+    // SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
+    // renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
 
-        // renderDrawer->stretchBlit(shadow, 0, 0, pixelWidth, pixelHeight,
-        //                                 drawX, drawY, scaledWidth, scaledHeight);
+    // renderDrawer->stretchBlit(shadow, 0, 0, pixelWidth, pixelHeight,
+    //                                 drawX, drawY, scaledWidth, scaledHeight);
 
-        // renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
+    // renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
 
-        // SDL_FreeSurface(stretchedShadow);
+    // SDL_FreeSurface(stretchedShadow);
     // }
     // renderDrawer->stretchBlit(bitmapToDraw, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 

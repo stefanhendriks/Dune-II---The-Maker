@@ -44,12 +44,12 @@ Texture *Graphics::getTexture(int index)
         std::cerr << "Graphics: Failed to load image " << index << " : " <<SDL_GetError() << std::endl;
         return nullptr;
     }
-    SDL_Texture* outTexture = SDL_CreateTextureFromSurface(renderer, outSurface);
+    SDL_Texture *outTexture = SDL_CreateTextureFromSurface(renderer, outSurface);
     if (!outTexture) {
         std::cerr << "Graphics: Failed to convert texture " << index << " : " <<SDL_GetError() << std::endl;
         return nullptr;
     }
-    Texture* Tex = new Texture(outTexture, outSurface->w, outSurface->h);
+    Texture *Tex = new Texture(outTexture, outSurface->w, outSurface->h);
     texCache[index] = Tex;
     return Tex;
 }

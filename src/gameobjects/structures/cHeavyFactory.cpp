@@ -95,8 +95,8 @@ void cHeavyFactory::draw()
         // renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
         SDL_Rect src = { 0, iSourceY, pixelWidth, pixelHeight};
         SDL_Rect dest= { drawX, drawY, scaledWidth, scaledHeight};
-        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest); 
-         
+        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+
 
     }
 }

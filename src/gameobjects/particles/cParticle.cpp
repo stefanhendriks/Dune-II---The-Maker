@@ -140,18 +140,18 @@ void cParticle::draw()
 
     int drawX = draw_x();
     int drawY = draw_y();
-    
+
     SDL_Rect src = { (frameWidth * frameIndex), 0, frameWidth, frameHeight};
     SDL_Rect dest= { drawX, drawY, bmp_width, bmp_height};
-    
+
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
             // @Mira fix transparency set_add_blender(0, 0, 0, iAlpha);
-            renderDrawer->renderStrechSprite(bmp, src, dest,240); 
+            renderDrawer->renderStrechSprite(bmp, src, dest,240);
             //std::cout << "renderStrechSprite " << particleInfo.bmpIndex << std::endl;
         }
         else {
-        renderDrawer->renderStrechSprite(bmp, src, dest,255);
+            renderDrawer->renderStrechSprite(bmp, src, dest,255);
         }
     }
     else {
@@ -331,8 +331,8 @@ void cParticle::thinkFast()
         return;
     }
 
-    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || 
-        iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2) {
+    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR ||
+            iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2) {
         TIMER_frame--;
         TIMER_dead--;
         if (TIMER_frame < 0) {

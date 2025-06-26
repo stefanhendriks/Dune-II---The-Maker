@@ -179,7 +179,7 @@ void cMapDrawer::drawTerrain()
                 const SDL_Rect src_pos = {cell->tile * 32, 0,32, 32};
                 // SDL_Rect dest_pos = {0, 0,32, 32};
                 // SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
-                            // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+                // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
                 SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                 renderDrawer->renderStrechSprite(gfxdata->getTexture(cell->type), src_pos, dest_pos);
             }
