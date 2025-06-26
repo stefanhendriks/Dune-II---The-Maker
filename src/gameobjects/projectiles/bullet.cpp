@@ -20,7 +20,7 @@
 #include "map/cMapEditor.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
-
+#include "include/Texture.hpp"
 #include <fmt/core.h>
 #include <cmath>
 
@@ -127,12 +127,15 @@ void cBullet::draw()
     }
 
     if (sBulletInfo[iType].bmp != nullptr) {
-        renderDrawer->maskedStretchBlit(sBulletInfo[iType].bmp,
-                                        bmp_screen,
-                                        sx, sy,
-                                        bmp_width, bmp_width,
-                                        x, y,
-                                        mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
+        // renderDrawer->maskedStretchBlit(sBulletInfo[iType].bmp,
+                                        // bmp_screen,
+                                        // sx, sy,
+                                        // bmp_width, bmp_width,
+                                        // x, y,
+                                        // mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
+        SDL_Rect src ={sx,sy, bmp_width, bmp_width};
+        SDL_Rect dest ={x,y, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width)};
+        renderDrawer->renderStrechSprite(sBulletInfo[iType].bmp, src, dest);
     }
 }
 

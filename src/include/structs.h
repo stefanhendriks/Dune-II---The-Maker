@@ -7,6 +7,8 @@
 
 #include <SDL2/SDL.h>
 
+class Texture;
+
 // Unit properties
 // the s_UnitInfo struct is holding all properties for a specific unit type.
 // note: The unit properties are actually set in common.cpp
@@ -235,7 +237,7 @@ struct s_ParticleInfo {
 };
 
 struct s_BulletInfo {
-    SDL_Surface *bmp;        // a reference to its bitmap. (16 bits here!)
+    Texture *bmp;        // a reference to its bitmap. (16 bits here!)
     int deathParticle;   // when the bullet dies, it will use this particle to show its death
     int bmp_width;      // how much pixels a bullet is (wide)
 
