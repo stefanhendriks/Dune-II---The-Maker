@@ -16,6 +16,7 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 #include <SDL2/SDL.h>
+#include "utils/Graphics.hpp"
 
 cParticle::cParticle()
 {
@@ -770,7 +771,8 @@ void cParticle::init(const s_ParticleInfo &particleInfo)
     init();
 
     if (particleInfo.bmpIndex > -1) {
-        bmp = game.getDataRepository()->getBitmapAt(particleInfo.bmpIndex);
+        //bmp = game.getDataRepository()->getBitmapAt(particleInfo.bmpIndex);
+        bmp = gfxdata->getSurface(particleInfo.bmpIndex);
     }
 
     if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
