@@ -337,7 +337,10 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-    renderDrawer->stretchSprite(bmp_screen, gfxdata->getSurface(MOUSE_REPAIR), drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
+    //renderDrawer->stretchSprite(bmp_screen, gfxdata->getSurface(MOUSE_REPAIR), drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
+    SDL_Rect src = {0,0,iconWidth,iconHeight};
+    SDL_Rect dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
+    renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_REPAIR), src, dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
