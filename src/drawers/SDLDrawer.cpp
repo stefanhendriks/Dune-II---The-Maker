@@ -7,7 +7,7 @@
 #include <memory>
 
 
-SDLDrawer::SDLDrawer(cAllegroDataRepository *dataRepository, SDL_Renderer *_renderer) : m_dataRepository(dataRepository)
+SDLDrawer::SDLDrawer(/*cAllegroDataRepository *dataRepository,*/ SDL_Renderer *_renderer) //: m_dataRepository(dataRepository)
 {
     colorBlack= SDL_Color{0,0,0,255};
     gui_colorWindow = SDL_Color{176,176,196,255};
@@ -19,7 +19,7 @@ SDLDrawer::SDLDrawer(cAllegroDataRepository *dataRepository, SDL_Renderer *_rend
 SDLDrawer::~SDLDrawer()
 {
     // do not delete data repository, we do not own it!
-    m_dataRepository = nullptr;
+    // m_dataRepository = nullptr;
 
     for (auto &p : bitmapCache) {
         SDL_FreeSurface(p.second);
@@ -169,12 +169,14 @@ void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int s
 
 void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
 {
-    maskedBlit(gfxdata->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
+    std::cout << "maskedBlitFromGfxData deprecated" << std::endl;
+    // maskedBlit(gfxdata->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
 void SDLDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
-    maskedStretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+    std::cout << "maskedBlitFromGfxData deprecated" << std::endl;
+    // maskedStretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 }
 
 void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)

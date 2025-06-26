@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data/cAllegroDataRepository.h"
+// #include "data/cAllegroDataRepository.h"
 #include "utils/cRectangle.h"
 
 #include <map>
@@ -11,7 +11,7 @@ class Texture;
 
 class SDLDrawer {
 public:
-    SDLDrawer(cAllegroDataRepository *dataRepository, SDL_Renderer *_renderer);
+    SDLDrawer(/*cAllegroDataRepository *dataRepository,*/ SDL_Renderer *_renderer);
     virtual ~SDLDrawer();
 
     void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);
@@ -47,10 +47,10 @@ public:
     // void stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
     void maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
-    void maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
+    [[deprecated]] void maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
 
     void maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
-    void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    [[deprecated]] void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
     void drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
     void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
@@ -98,7 +98,7 @@ protected:
     SDL_Color gui_colorBorderDark;
 
 private:
-    cAllegroDataRepository *m_dataRepository;
+    // cAllegroDataRepository *m_dataRepository;
     struct sSize {
         int width;
         int height;

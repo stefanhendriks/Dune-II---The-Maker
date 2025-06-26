@@ -801,7 +801,7 @@ void cGame::shutdown()
     }
 
     delete renderDrawer;
-    delete m_dataRepository;
+    // delete m_dataRepository;
     m_soundPlayer.reset();
     delete m_mouse;
     delete m_keyboard;
@@ -1185,8 +1185,8 @@ bool cGame::setupGame()
     }
 
     // finally the data repository and drawer interface can be initialized
-    m_dataRepository = new cAllegroDataRepository();
-    renderDrawer = new SDLDrawer(m_dataRepository,renderer);
+    // m_dataRepository = new cAllegroDataRepository();
+    renderDrawer = new SDLDrawer(/*m_dataRepository,*/renderer);
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));

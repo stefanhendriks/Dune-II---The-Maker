@@ -13,7 +13,7 @@
 
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
-#include "data/cAllegroDataRepository.h"
+// #include "data/cAllegroDataRepository.h"
 #include "definitions.h"
 #include "mentat/cAbstractMentat.h"
 #include "observers/cScenarioObserver.h"
@@ -228,9 +228,9 @@ public:
     void shakeScreen(int duration);
     void reduceShaking();
 
-    cAllegroDataRepository *getDataRepository() {
-        return m_dataRepository;
-    }
+    // cAllegroDataRepository *getDataRepository() {
+    //     return m_dataRepository;
+    // }
 
     SDL_Color getColorPlaceNeutral();
 
@@ -294,7 +294,7 @@ private:
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
     std::unique_ptr<cInteractionManager> m_interactionManager;
-    cAllegroDataRepository *m_dataRepository;
+    // cAllegroDataRepository *m_dataRepository;
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
 
