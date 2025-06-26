@@ -17,6 +17,7 @@
 #include "player/cPlayer.h"
 #include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
+#include <iostream>
 
 cParticle::cParticle()
 {
@@ -105,56 +106,63 @@ void cParticle::draw()
     int frameHeight = getFrameHeight();
 
     // valid in boundaries
-    SDL_Surface *temp = SDL_CreateRGBSurface(0,frameWidth, frameHeight,32,0,0,0,255);
+    // SDL_Surface *temp = SDL_CreateRGBSurface(0,frameWidth, frameHeight,32,0,0,0,255);
     // transparency
-    renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+    // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
 
-    // now blit it
-    if (iHousePal > -1) {
-        cPlayer &player = players[iHousePal];
-        // select_palette(player.pal);
-    }
+    // // now blit it
+    // if (iHousePal > -1) {
+    //     cPlayer &player = players[iHousePal];
+    //     // select_palette(player.pal);
+    // }
 
-    if (bmp) {
-        // new behavior
-        renderDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
-    }
-    else {
-        // old behavior
-        renderDrawer->blitFromGfxData(iType, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
-    }
+    // if (bmp) {
+    //     // new behavior
+    //     renderDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+    // }
+    // else {
+    //     // old behavior
+    //     renderDrawer->blitFromGfxData(iType, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+    // }
 
     // create proper sized bitmap
     int bmp_width = mapCamera->factorZoomLevel(frameWidth);
     int bmp_height = mapCamera->factorZoomLevel(frameHeight);
 
     // create bmp that is the stretched version of temp
-    SDL_Surface *stretched = SDL_CreateRGBSurface(0,bmp_width + 1, bmp_height + 1,32,0,0,0,255);
-    renderDrawer->FillWithColor(stretched, SDL_Color{255,0,255,255});
-    renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
+    // SDL_Surface *stretched = SDL_CreateRGBSurface(0,bmp_width + 1, bmp_height + 1,32,0,0,0,255);
+    // renderDrawer->FillWithColor(stretched, SDL_Color{255,0,255,255});
+
+    // renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed
-    SDL_FreeSurface(temp);
+    // SDL_FreeSurface(temp);
 
     int drawX = draw_x();
     int drawY = draw_y();
-
+    
+    SDL_Rect src = { (frameWidth * frameIndex), 0, frameWidth, frameHeight};
+    SDL_Rect dest= { drawX, drawY, bmp_width, bmp_height};
+    
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
             // @Mira fix transparency set_add_blender(0, 0, 0, iAlpha);
+            renderDrawer->renderStrechSprite(bmp, src, dest,240); 
+            //std::cout << "renderStrechSprite " << particleInfo.bmpIndex << std::endl;
         }
         else {
-            // @Mira fix trasnparency set_trans_blender(0, 0, 0, iAlpha);
+        renderDrawer->renderStrechSprite(bmp, src, dest,255);
         }
-        renderDrawer->drawTransSprite(stretched, stretched, drawX, drawY);
     }
     else {
-        renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);
+        //renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);
+        renderDrawer->renderStrechSprite(bmp, src, dest,255);
     }
+    //std::cout << "draw particle on " << drawX << ":" << drawY << std::endl;
 
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
 
-    SDL_FreeSurface(stretched);
+    // SDL_FreeSurface(stretched);
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const
@@ -772,7 +780,7 @@ void cParticle::init(const s_ParticleInfo &particleInfo)
 
     if (particleInfo.bmpIndex > -1) {
         //bmp = game.getDataRepository()->getBitmapAt(particleInfo.bmpIndex);
-        bmp = gfxdata->getSurface(particleInfo.bmpIndex);
+        bmp = gfxdata->getTexture(particleInfo.bmpIndex);
     }
 
     if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
