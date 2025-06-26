@@ -827,7 +827,7 @@ void cUnit::draw()
 
     if (game.m_drawUnitDebug) {
         // render pixel at the very center
-        renderDrawer->setPixel(bmp_screen, center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
+        renderDrawer->renderDot(center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255},2);
 
         // render from the units top-left to center pixel
         renderDrawer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
