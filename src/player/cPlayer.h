@@ -568,5 +568,5 @@ private:
 
     void reinforceHarvesterIfNeeded(int cell);
 
-    Texture* createTextureFromIndexedSurfaceWithPalette(SDL_Surface* referenceSurface, int transparentIndex);
+    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int transparentIndex);
 };

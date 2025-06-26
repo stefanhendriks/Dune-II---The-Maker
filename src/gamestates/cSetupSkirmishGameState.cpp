@@ -391,7 +391,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
                         renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(),
-                                                 previewMapRect.getY());
+                                                   previewMapRect.getY());
                     }
                 }
             }

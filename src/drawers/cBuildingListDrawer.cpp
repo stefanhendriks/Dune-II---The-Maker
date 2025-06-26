@@ -358,7 +358,7 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
     // SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
 
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 192);
-    //? draw empty ? 
+    //? draw empty ?
     renderDrawer->renderRectFillColor(x + 43, y + 20,19,19,0,0,0,192);
 
     renderDrawer->renderSprite(gfxinter->getTexture(GRID_0X0), x + 43, y + 20);

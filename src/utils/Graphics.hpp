@@ -16,18 +16,18 @@ class DataPack;
  */
 class Graphics {
 public:
-    explicit Graphics(SDL_Renderer* _renderer, const std::string &filePackName);
+    explicit Graphics(SDL_Renderer *_renderer, const std::string &filePackName);
     ~Graphics();
     // return a surface from his index
     SDL_Surface *getSurface(int index) const;
-    // return a surface from his name    
+    // return a surface from his name
     SDL_Surface *getSurface(const std::string &name) const;
     // return a texture from his index
     Texture *getTexture(int index);
-    // return a texture from his name    
+    // return a texture from his name
     Texture *getTexture(const std::string &name);
 private:
-    SDL_Renderer* renderer;
+    SDL_Renderer *renderer;
     std::unique_ptr<DataPack> dataPack;
-    std::unordered_map<int , Texture*> texCache;
+    std::unordered_map<int, Texture *> texCache;
 };

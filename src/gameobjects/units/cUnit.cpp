@@ -771,12 +771,12 @@ void cUnit::draw()
         //                                 scaledHeight);
         SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
         SDL_Rect dest = {ux, uy, scaledWidth, scaledHeight};
-        renderDrawer->renderStrechSprite(bitmap,src, dest);                     
+        renderDrawer->renderStrechSprite(bitmap,src, dest);
     }
     else {
         log(fmt::format("unit of iType [{}] did not have a bitmap!?", iType));
     }
-    
+
 
     // Draw TOP
     Texture *top = cPlayer.getUnitTopBitmap(iType);
@@ -787,10 +787,10 @@ void cUnit::draw()
 
         // renderDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
         //      mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
-        
+
         SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
         SDL_Rect dest = {ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height)};
-        renderDrawer->renderStrechSprite(top,src, dest);  
+        renderDrawer->renderStrechSprite(top,src, dest);
     }
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
@@ -812,11 +812,11 @@ void cUnit::draw()
         int y = draw_y(bmp_height);
 
         // renderDrawer->maskedStretchBlit(focusBitmap,
-                                        // bmp_screen,
-                                        // 0, 0, bmp_width, bmp_height, x, y,
-                                        // mapCamera->factorZoomLevel(bmp_width),
-                                        // mapCamera->factorZoomLevel(bmp_height)
-                                    //    );
+        // bmp_screen,
+        // 0, 0, bmp_width, bmp_height, x, y,
+        // mapCamera->factorZoomLevel(bmp_width),
+        // mapCamera->factorZoomLevel(bmp_height)
+        //    );
         SDL_Rect src = {0, 0, bmp_width, bmp_height};
         SDL_Rect dest = {x,y, mapCamera->factorZoomLevel(bmp_width),mapCamera->factorZoomLevel(bmp_height)};
         renderDrawer->renderStrechSprite(gfxdata->getTexture(FOCUS), src, dest);

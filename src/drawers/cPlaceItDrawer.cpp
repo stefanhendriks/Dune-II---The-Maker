@@ -199,9 +199,9 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     // renderDrawer->stretchBlit(bmp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
     // renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
-        SDL_Rect src = { 0, 0, width, height};
-        SDL_Rect dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-        renderDrawer->renderStrechSprite(bmp, src, dest); 
+    SDL_Rect src = { 0, 0, width, height};
+    SDL_Rect dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
+    renderDrawer->renderStrechSprite(bmp, src, dest);
 
     // SDL_FreeSurface(temp);
 }
