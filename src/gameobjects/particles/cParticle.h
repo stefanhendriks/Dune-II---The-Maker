@@ -12,10 +12,12 @@
 
 #pragma once
 
-#include "data/cAllegroDataRepository.h"
+// #include "data/cAllegroDataRepository.h"
 #include "structs.h"
 #include "utils/cRectangle.h"
 #include "utils/common.h"
+
+class Texture;
 
 class cParticle {
 public:
@@ -74,7 +76,7 @@ private:
     bool bAlive;        // alive
 
     // Drawing effects
-    SDL_Surface *bmp;          // pointer to bitmap to draw (not owner of bitmap!)
+    Texture *bmp;          // pointer to bitmap to draw (not owner of bitmap!)
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw
