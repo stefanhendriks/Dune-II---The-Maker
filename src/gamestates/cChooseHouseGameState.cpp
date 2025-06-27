@@ -6,7 +6,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
-
+#include "include/Texture.hpp"
 #include <algorithm>
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
@@ -15,20 +15,20 @@ cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
 {
     backButtonRect = textDrawer.getAsRectangle(0, game.m_screenH - textDrawer.getFontHeight(), " BACK");
 
-    bmp_Dune = gfxinter->getSurface(BMP_GAME_DUNE);
+    bmp_Dune = gfxinter->getTexture(BMP_GAME_DUNE);
 
     int duneAtTheRight = game.m_screenW - bmp_Dune->w;
     int duneAlmostAtBottom = game.m_screenH - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
-    bmp_SelectYourHouseTitle = gfxinter->getSurface(BMP_SELECT_YOUR_HOUSE);
+    bmp_SelectYourHouseTitle = gfxinter->getTexture(BMP_SELECT_YOUR_HOUSE);
 
     selectYourHouseXCentered = (game.m_screenW / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
-    bmp_HouseAtreides = gfxinter->getSurface(BMP_SELECT_HOUSE_ATREIDES);
-    bmp_HouseOrdos = gfxinter->getSurface(BMP_SELECT_HOUSE_ORDOS);
-    bmp_HouseHarkonnen = gfxinter->getSurface(BMP_SELECT_HOUSE_HARKONNEN);
+    bmp_HouseAtreides = gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
+    bmp_HouseOrdos = gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
+    bmp_HouseHarkonnen = gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
 
     int selectYourHouseY = game.m_screenH * 0.25f;
 
@@ -65,18 +65,17 @@ void cChooseHouseGameState::draw() const
     cMouse *mouse = game.getMouse();
 
     // Render the planet Dune a bit downward
-    renderDrawer->drawSprite(bmp_screen, bmp_Dune, coords_Dune.x, coords_Dune.y);
+    renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
 
     // HOUSES
-    renderDrawer->drawSprite(bmp_screen, bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
+    renderDrawer->renderSprite(bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
-    renderDrawer->blitSprite(bmp_HouseAtreides, &houseAtreides);
-    renderDrawer->blitSprite(bmp_HouseOrdos, &houseOrdos);
-    renderDrawer->blitSprite(bmp_HouseHarkonnen, &houseHarkonnen);
+    renderDrawer->renderSprite(bmp_HouseAtreides, houseAtreides.getX(), houseAtreides.getY());
+    renderDrawer->renderSprite(bmp_HouseOrdos, houseOrdos.getX(), houseOrdos.getY());
+    renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
 
     // BACK (bottom right
-    SDL_Color color = hoversOverBackButton ? SDL_Color{255, 0, 0,255} :
-                      SDL_Color{255, 255, 255,255};
+    SDL_Color color = hoversOverBackButton ? SDL_Color{255, 0, 0,255} : SDL_Color{255, 255, 255,255};
     textDrawer.drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE

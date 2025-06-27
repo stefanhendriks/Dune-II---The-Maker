@@ -7,6 +7,7 @@
 #include "utils/cRectangle.h"
 
 struct SDL_Surface;
+struct Texture;
 class cGame;
 
 class cChooseHouseGameState : public cGameState {
@@ -26,13 +27,13 @@ private:
     cTextDrawer textDrawer;
     cRectangle *backButtonRect;
 
-    SDL_Surface *bmp_Dune;
-    SDL_Surface *bmp_SelectYourHouseTitle;
+    Texture *bmp_Dune;
+    Texture *bmp_SelectYourHouseTitle;
 
     // TODO: abstract away the selectable houses
-    SDL_Surface *bmp_HouseAtreides;
-    SDL_Surface *bmp_HouseOrdos;
-    SDL_Surface *bmp_HouseHarkonnen;
+    Texture *bmp_HouseAtreides;
+    Texture *bmp_HouseOrdos;
+    Texture *bmp_HouseHarkonnen;
 
     // Click areas of house emblems
     cRectangle houseAtreides;
