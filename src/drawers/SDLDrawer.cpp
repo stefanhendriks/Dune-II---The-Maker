@@ -36,35 +36,35 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
     SDL_RenderCopy(renderer, src->tex, NULL, &tmp);
 }
 
-void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)
-{
-    if (src == nullptr) return;
+// void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)
+// {
+    // if (src == nullptr) return;
     // if (dest == nullptr) return;
-
+// 
     // no use drawing outside of bounds
-    if (pos_x + desiredWidth < 0) return;
-    if (pos_y + desiredHeight < 0) return;
+    // if (pos_x + desiredWidth < 0) return;
+    // if (pos_y + desiredHeight < 0) return;
     // if (pos_x > dest->w) return;
     // if (pos_y > dest->h) return;
     // no use drawing a desired image with 0 width or height
-    if (desiredHeight <= 0) return;
-    if (desiredWidth <= 0) return;
+    // if (desiredHeight <= 0) return;
+    // if (desiredWidth <= 0) return;
     // cleaned coords for drawing
-    SDL_Rect srcRect = { 0, 0, src->w, src->h };
-    SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, magicPink);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    if (!texture) {
-        std::cerr << "error maskedBlit : " << SDL_GetError();
-        return;
-    }
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);    
-    SDL_SetTextureAlphaMod(texture, opacity);
-    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-    SDL_DestroyTexture(texture);
-
-
+    // SDL_Rect srcRect = { 0, 0, src->w, src->h };
+    // SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+    // Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+    // SDL_SetColorKey(src, SDL_TRUE, magicPink);
+    // SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+    // if (!texture) {
+        // std::cerr << "error maskedBlit : " << SDL_GetError();
+        // return;
+    // }
+    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);    
+    // SDL_SetTextureAlphaMod(texture, opacity);
+    // SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+    // SDL_DestroyTexture(texture);
+// 
+// 
     // int result;
     // if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
     //     SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
@@ -77,7 +77,7 @@ void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, in
     // if (result < 0) {
     //     std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
     // }
-}
+// }
 
 void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 {
@@ -133,100 +133,100 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, i
 //     stretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 // }
 
-void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
-{
-    if (src == nullptr) return;
-    if (dest == nullptr) return;
+// void SDLDrawer::maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
+// {
+//     if (src == nullptr) return;
+//     if (dest == nullptr) return;
 
-    if (src_x + width > src->w) width = src->w-src_x;
-    if (src_y + height > src->h) height = src->h-src_y;
+//     if (src_x + width > src->w) width = src->w-src_x;
+//     if (src_y + height > src->h) height = src->h-src_y;
 
-    // could happen due to 'fix' above, you can't have a original width or height of 0
-    if (width <= 0) return;
-    if (height <= 0) return;
+//     // could happen due to 'fix' above, you can't have a original width or height of 0
+//     if (width <= 0) return;
+//     if (height <= 0) return;
 
-    // no use drawing outside of bounds
-    if (pos_x + width < 0) return;
-    if (pos_y + height < 0) return;
-    if (pos_x > dest->w) return;
-    if (pos_y > dest->h) return;
+//     // no use drawing outside of bounds
+//     if (pos_x + width < 0) return;
+//     if (pos_y + height < 0) return;
+//     if (pos_x > dest->w) return;
+//     if (pos_y > dest->h) return;
 
-    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, magicPink);
-    SDL_Rect srcRect = { src_x, src_y, width, height }; // Zone à copier de la source
-    SDL_Rect dstRect = { pos_x, pos_y, width, height };     // Destination sur la surface cible
+//     Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+//     SDL_SetColorKey(src, SDL_TRUE, magicPink);
+//     SDL_Rect srcRect = { src_x, src_y, width, height }; // Zone à copier de la source
+//     SDL_Rect dstRect = { pos_x, pos_y, width, height };     // Destination sur la surface cible
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    if (!texture) {
-        std::cerr << "error maskedBlit : " << SDL_GetError();
-        return;
-    }
-    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-    SDL_DestroyTexture(texture);
-    //SDL_BlitSurface(src, &srcRect, dest, &dstRect);
-    //masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
-}
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+//     if (!texture) {
+//         std::cerr << "error maskedBlit : " << SDL_GetError();
+//         return;
+//     }
+//     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+//     SDL_DestroyTexture(texture);
+//     //SDL_BlitSurface(src, &srcRect, dest, &dstRect);
+//     //masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+// }
 
-void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
-{
-    std::cout << "maskedBlitFromGfxData deprecated" << std::endl;
-    // maskedBlit(gfxdata->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
-}
+// void SDLDrawer::maskedBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height)
+// {
+//     std::cout << "maskedBlitFromGfxData deprecated" << std::endl;
+//     // maskedBlit(gfxdata->getSurface(index), dest, src_x, src_y, pos_x, pos_y, width, height);
+// }
 
-void SDLDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
-{
-    std::cout << "maskedBlitFromGfxData deprecated" << std::endl;
-    // maskedStretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
-}
+// void SDLDrawer::maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+// {
+//     std::cout << "maskedBlitFromGfxData deprecated" << std::endl;
+//     // maskedStretchBlit(gfxdata->getSurface(index), dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+// }
 
-void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
-{
-    if (src == nullptr) return;
-    if (dest == nullptr) return;
-    if (src_x + width > src->w) width = src->w-src_x;
-    if (src_y + height > src->h) height = src->h-src_y;
+// void SDLDrawer::maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+// {
+//     if (src == nullptr) return;
+//     if (dest == nullptr) return;
+//     if (src_x + width > src->w) width = src->w-src_x;
+//     if (src_y + height > src->h) height = src->h-src_y;
 
-    // could happen due to 'fix' above, you can't have a original width or height of 0
-    if (width <= 0) return;
-    if (height <= 0) return;
+//     // could happen due to 'fix' above, you can't have a original width or height of 0
+//     if (width <= 0) return;
+//     if (height <= 0) return;
 
-    // no use drawing outside of bounds
-    if (pos_x + desiredWidth < 0) return;
-    if (pos_y + desiredHeight < 0) return;
-    if (pos_x > dest->w) return;
-    if (pos_y > dest->h) return;
+//     // no use drawing outside of bounds
+//     if (pos_x + desiredWidth < 0) return;
+//     if (pos_y + desiredHeight < 0) return;
+//     if (pos_x > dest->w) return;
+//     if (pos_y > dest->h) return;
 
-    // no use drawing a desired image with 0 width or height
-    if (desiredHeight <= 0) return;
-    if (desiredWidth <= 0) return;
+//     // no use drawing a desired image with 0 width or height
+//     if (desiredHeight <= 0) return;
+//     if (desiredWidth <= 0) return;
 
-    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, magicPink);
-    SDL_Rect srcRect = {src_x, src_y, width, height };
-    SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+//     Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+//     SDL_SetColorKey(src, SDL_TRUE, magicPink);
+//     SDL_Rect srcRect = {src_x, src_y, width, height };
+//     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    if (!texture) {
-        std::cerr << "error maskedStretchBlit : " << SDL_GetError();
-        return;
-    }
-    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-    SDL_DestroyTexture(texture);
-    /*
-    int result;
-    if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
-        SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
-        result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
-        SDL_FreeSurface(converted);
-    } else {
-        result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
-    }
-    if (result < 0) {
-        std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
-    }
-    */
-    //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
-}
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+//     if (!texture) {
+//         std::cerr << "error maskedStretchBlit : " << SDL_GetError();
+//         return;
+//     }
+//     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+//     SDL_DestroyTexture(texture);
+//     /*
+//     int result;
+//     if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+//         SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+//         result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+//         SDL_FreeSurface(converted);
+//     } else {
+//         result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+//     }
+//     if (result < 0) {
+//         std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
+//     }
+//     */
+//     //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+// }
 
 void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src)
 {
@@ -309,11 +309,11 @@ void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, 
     SDL_DestroyTexture(texture);
 }
 
-void SDLDrawer::blitFromGfxData(int index, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
-{
-    SDL_Surface *src = gfxdata->getSurface(index);
-    this->blit(src, nullptr, src_x, src_y, width, height, pos_x, pos_y);
-}
+// void SDLDrawer::blitFromGfxData(int index, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
+// {
+//     SDL_Surface *src = gfxdata->getSurface(index);
+//     this->blit(src, nullptr, src_x, src_y, width, height, pos_x, pos_y);
+// }
 
 void SDLDrawer::blitSprite(SDL_Surface *src, const cRectangle *rectangle)
 {
