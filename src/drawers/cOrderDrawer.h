@@ -5,6 +5,7 @@
 
 class cPlayer;
 struct SDL_Surface;
+struct Texture;
 
 class cOrderDrawer {
 public:
@@ -30,6 +31,6 @@ private:
 
     cPlayer *player;
     cRectangle buttonRect;
-    SDL_Surface *buttonBitmap;
-    SDL_Surface *greyedButtonBitmap;
+    Texture *buttonBitmap;
+    // SDL_Surface *greyedButtonBitmap;
 };

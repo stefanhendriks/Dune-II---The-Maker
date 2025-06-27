@@ -12,7 +12,7 @@
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
 {
-    buttonBitmap = gfxinter->getSurface(BTN_ORDER);
+    buttonBitmap = gfxinter->getTexture(BTN_ORDER);
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -22,7 +22,7 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
                             buttonBitmap->w, buttonBitmap->h);
     _isMouseOverOrderButton = false;
 
-    greyedButtonBitmap = gfxinter->getSurface(BTN_ORDER);
+    // greyedButtonBitmap = gfxinter->getSurface(BTN_ORDER);
     /*
     // @Mira fix ORDER button greyed
     auto temp_bitmap = SDL_CreateRGBSurface(0,buttonRect.getWidth(), buttonRect.getHeight(),32,0,0,0,255);
@@ -50,11 +50,12 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
     cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
     assert(orderProcesser);
-    if (orderProcesser->isOrderPlaced()) {
-        renderDrawer->drawSprite(bmp_screen, greyedButtonBitmap, buttonRect.getX(), buttonRect.getY());
+    if (orderProcesser->isOrderPlaced()) { //grey
+        renderDrawer->renderSprite(buttonBitmap, buttonRect.getX(), buttonRect.getY());
+        renderDrawer->renderRectColor(buttonRect,0,0,0,128);
     }
     else {
-        renderDrawer->drawSprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
+        renderDrawer->renderSprite(buttonBitmap, buttonRect.getX(), buttonRect.getY());
     }
 
     if (_isMouseOverOrderButton) {
