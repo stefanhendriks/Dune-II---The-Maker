@@ -719,25 +719,25 @@ SDL_Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
 	Function that will go through all pixels and will replace a certain color with another.
     Ie, this can be used to create the fading animation for Windtraps.
 **/
-void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor)
-{
-    Uint32 mappedColorToReplace = SDL_MapRGBA(bmp->format,
-                                  colorToReplace.r, colorToReplace.g, colorToReplace.b, colorToReplace.a);
-    Uint32 mappedNewColor = SDL_MapRGBA(bmp->format,
-                                        newColor.r, newColor.g, newColor.b, newColor.a);
-    if (SDL_LockSurface(bmp) < 0) {
-        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
-        return;
-    }
-    for (int x = 0; x < bmp->w; x++) {
-        for (int y = 0; y < bmp->h; y++) {
-            if (get_pixel(bmp, x, y) == mappedColorToReplace) {
-                set_pixel(bmp, x, y, mappedNewColor);
-            }
-        }
-    }
-    SDL_UnlockSurface(bmp);
-}
+// void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor)
+// {
+//     Uint32 mappedColorToReplace = SDL_MapRGBA(bmp->format,
+//                                   colorToReplace.r, colorToReplace.g, colorToReplace.b, colorToReplace.a);
+//     Uint32 mappedNewColor = SDL_MapRGBA(bmp->format,
+//                                         newColor.r, newColor.g, newColor.b, newColor.a);
+//     if (SDL_LockSurface(bmp) < 0) {
+//         fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
+//         return;
+//     }
+//     for (int x = 0; x < bmp->w; x++) {
+//         for (int y = 0; y < bmp->h; y++) {
+//             if (get_pixel(bmp, x, y) == mappedColorToReplace) {
+//                 set_pixel(bmp, x, y, mappedNewColor);
+//             }
+//         }
+//     }
+//     SDL_UnlockSurface(bmp);
+// }
 
 
 void SDLDrawer::renderChangeColor(SDL_Color color)
