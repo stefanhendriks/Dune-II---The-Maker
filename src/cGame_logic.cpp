@@ -618,9 +618,7 @@ void cGame::shakeScreenAndBlitBuffer()
             fadeOutOrBlitScreenBuffer();
         }
     }
-    else {
-        fadeOutOrBlitScreenBuffer();
-    }
+    fadeOutOrBlitScreenBuffer();
 }
 
 void cGame::fadeOutOrBlitScreenBuffer() const
@@ -629,35 +627,47 @@ void cGame::fadeOutOrBlitScreenBuffer() const
         // Not shaking and not fading.
         //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
         // @Mira screenshot for after ?
+        return;
     }
-    else {
+
         // Fading
         assert(m_fadeAlpha >= kMinAlpha);
         assert(m_fadeAlpha <= kMaxAlpha);
-        SDL_Surface *temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-        renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
+        // SDL_Surface *temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+        // renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
         //renderDrawer->drawTransSprite(temp, temp, 0, 0);
         //renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
 
-        SDL_FreeSurface(temp);
+        // SDL_FreeSurface(temp);
         //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
-    }
+
+//    if (m_fadeAction == FADE_IN) {
+ //       renderDrawer->renderRectFillColor(0,0,m_screenW, m_screenH,0,0,128,m_fadeAlpha);
+    //}
 }
 
 void cGame::drawState()
 {
-    renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
+    //renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
 
     if (m_fadeAction == eFadeAction::FADE_OUT) {
-        renderDrawer->drawSprite(bmp_screen, bmp_fadeout, 0, 0);
+        if (screenTexture) {
+            SDL_SetTextureAlphaMod(screenTexture,m_fadeAlpha);
+            SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
+        }
         return;
     }
 
     // this makes fade-in happen after fade-out automatically
     if (m_fadeAlpha == kMinAlpha) {
         m_fadeAction = eFadeAction::FADE_IN;
+    }
+
+    if (m_fadeAction == eFadeAction::FADE_IN && m_fadeAlpha>250) {
+        m_fadeAlpha = kMaxAlpha;
+        m_fadeAction == eFadeAction::FADE_NONE;
     }
 
     switch (m_state) {
@@ -1450,7 +1460,7 @@ void cGame::setState(int newState)
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
 
-                renderDrawer->drawSprite(background, bmp_screen, 0, 0);
+                // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cOptionsState(*this, background, m_state);
             }
             else if (newState == GAME_PLAYING) {
