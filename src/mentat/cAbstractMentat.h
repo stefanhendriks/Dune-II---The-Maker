@@ -22,7 +22,7 @@
 
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
-#include "utils/DataPack.hpp"
+#include "utils/Graphics.hpp"
 
 #include <string>
 #include <memory>
@@ -32,6 +32,7 @@ class cButtonCommand;
 class cGuiButton;
 
 struct SDL_Surface;
+struct Texture;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)
@@ -71,7 +72,7 @@ protected:
     int iMentatMouth;
     int iMentatEyes;
 
-    std::shared_ptr<DataPack> gfxmovie;
+    std::shared_ptr<Graphics> gfxmovie;
     TTF_Font *font;
 
     eMentatState state;
@@ -111,7 +112,7 @@ public:
 
     virtual ~cAbstractMentat();
 
-    SDL_Surface *getBackgroundBitmap() const;
+    Texture *getBackgroundBitmap() const;
 
     void initSentences();
 
@@ -136,4 +137,6 @@ public:
     void resetSpeak();
 
     cGuiButton *m_guiBtnToMissionSelect;
+    int movieTopleftX;
+    int movieTopleftY;
 };
