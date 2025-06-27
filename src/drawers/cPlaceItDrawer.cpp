@@ -150,7 +150,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
                 //allegroDrawer->drawRectangleFilled(temp, rectangle, placeColor);
-                renderDrawer->renderRectFillColor(posX, posY, desiredWidth, desiredHeight,game.getColorPlaceBad());
+                //@Mira reiew this code renderDrawer->renderRectFillColor(posX, posY, desiredWidth, desiredHeight,game.getColorPlaceBad());
             }
         }
     }
