@@ -26,6 +26,8 @@ public:
     Texture *getTexture(int index);
     // return a texture from his name
     Texture *getTexture(const std::string &name);
+    // return number of file in Pack
+    int getNumberOfFiles();
 private:
     SDL_Renderer *renderer;
     std::unique_ptr<DataPack> dataPack;

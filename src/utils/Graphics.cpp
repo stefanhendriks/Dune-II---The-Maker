@@ -60,3 +60,7 @@ Texture *Graphics::getTexture(const std::string &name)
     return this->getTexture(index);
 }
 
+int Graphics::getNumberOfFiles()
+{
+    return dataPack->getNumberOfFile();
+}
