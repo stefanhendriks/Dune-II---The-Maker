@@ -52,12 +52,14 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
     leftButtonCommand = nullptr;
     rightButtonCommand = nullptr;
 
+    textDrawer.setFont(bene_font);
+
     // the quick-way to get to a mission select window
     const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
     const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
     if (canMissionSelect) {
-        cTextDrawer textDrawer(bene_font);
+
         int length = textDrawer.textLength("Mission select");
         const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                                 game.m_screenH - textDrawer.getFontHeight(),
@@ -282,17 +284,17 @@ void cAbstractMentat::draw()
     if (state == SPEAKING) {
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 17, SDL_Color{0, 0, 0), "%s", sentence[iMentatSentence]);
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 16, SDL_Color{255, 255, 255), "%s", sentence[iMentatSentence]);
+            textDrawer.drawText(offsetX + 17, offsetY + 17,SDL_Color{0, 0, 0,255},sentence[iMentatSentence]);
+            textDrawer.drawText(offsetX + 17, offsetY + 17,SDL_Color{255, 255, 255,255},sentence[iMentatSentence]);
 
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 37, SDL_Color{0, 0, 0), "%s", sentence[iMentatSentence + 1]);
-            //Mira TEXT alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 36, SDL_Color{255, 255, 255), "%s",  sentence[iMentatSentence + 1]);
+            textDrawer.drawText(offsetX + 17, offsetY + 37,SDL_Color{0, 0, 0,255},sentence[iMentatSentence+1]);
+            textDrawer.drawText(offsetX + 17, offsetY + 36,SDL_Color{255, 255, 255,255},sentence[iMentatSentence+1]);
         }
     }
 
     if (state == AWAITING_RESPONSE) {
-        renderDrawer->blitSprite(leftButtonBmp, leftButton);
-        renderDrawer->blitSprite(rightButtonBmp, rightButton);
+        renderDrawer->renderSprite(leftButtonBmp, leftButton->getX(),leftButton->getY());
+        renderDrawer->renderSprite(rightButtonBmp, rightButton->getX(),rightButton->getY());
     }
 
     if (m_guiBtnToMissionSelect) {
@@ -385,14 +387,14 @@ void cAbstractMentat::speak()
     state = SPEAKING;
 }
 
-void cAbstractMentat::buildLeftButton(SDL_Surface *bmp, int x, int y)
+void cAbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
 {
     delete leftButton;
     leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
-void cAbstractMentat::buildRightButton(SDL_Surface *bmp, int x, int y)
+void cAbstractMentat::buildRightButton(Texture *bmp, int x, int y)
 {
     delete rightButton;
     rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);

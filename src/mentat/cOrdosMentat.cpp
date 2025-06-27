@@ -10,8 +10,8 @@
 cOrdosMentat::cOrdosMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)
 {
     iBackgroundFrame = MENTATO;
-    buildLeftButton(gfxmentat->getSurface(BTN_REPEAT), 293, 423);
-    buildRightButton(gfxmentat->getSurface(BTN_PROCEED), 466, 423);
+    buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
+    buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
     leftButtonCommand = new cRepeatButtonCommand();
     rightButtonCommand = new cProceedButtonCommand();
 }
@@ -34,12 +34,12 @@ void cOrdosMentat::draw_other()
 
 void cOrdosMentat::draw_eyes()
 {
-    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
+    renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
 }
 
 void cOrdosMentat::draw_mouth()
 {
-    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
+    renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }
 
 void cOrdosMentat::interact()

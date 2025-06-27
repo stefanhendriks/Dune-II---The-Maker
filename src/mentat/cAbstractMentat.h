@@ -23,7 +23,8 @@
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
 #include "utils/Graphics.hpp"
-
+#include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include <string>
 #include <memory>
 #include <SDL2/SDL_ttf.h>
@@ -76,16 +77,17 @@ protected:
     TTF_Font *font;
 
     eMentatState state;
+    cTextDrawer textDrawer;
 
     cRectangle *leftButton;
     cRectangle *rightButton;
 
-    SDL_Surface *leftButtonBmp;
-    SDL_Surface *rightButtonBmp;
+    Texture *leftButtonBmp;
+    Texture *rightButtonBmp;
 
-    void buildLeftButton(SDL_Surface *bmp, int x, int y);
+    void buildLeftButton(Texture *bmp, int x, int y);
 
-    void buildRightButton(SDL_Surface *bmp, int x, int y);
+    void buildRightButton(Texture *bmp, int x, int y);
 
     cButtonCommand *leftButtonCommand;
     cButtonCommand *rightButtonCommand;

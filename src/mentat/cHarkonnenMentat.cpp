@@ -10,8 +10,8 @@
 cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)
 {
     iBackgroundFrame = MENTATH;
-    buildLeftButton(gfxmentat->getSurface(BTN_REPEAT), 293, 423);
-    buildRightButton(gfxmentat->getSurface(BTN_PROCEED), 466, 423);
+    buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
+    buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
     leftButtonCommand = new cRepeatButtonCommand();
     rightButtonCommand = new cProceedButtonCommand();
 }
