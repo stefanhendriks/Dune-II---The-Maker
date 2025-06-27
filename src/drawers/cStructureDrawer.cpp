@@ -129,25 +129,25 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
     return -1;
 }
 
-void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *structure)
-{
-    assert(structure);
-    assert(structure->getType() == WINDTRAP);
+// void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *structure)
+// {
+//     assert(structure);
+//     assert(structure->getType() == WINDTRAP);
 
-    cWindTrap *windtrap = dynamic_cast<cWindTrap *>(structure);
-    assert(windtrap);
+//     cWindTrap *windtrap = dynamic_cast<cWindTrap *>(structure);
+//     assert(windtrap);
 
-    int pixelWidth = structure->getWidthInPixels();
-    int pixelHeight = structure->getHeightInPixels();
+//     int pixelWidth = structure->getWidthInPixels();
+//     int pixelHeight = structure->getHeightInPixels();
 
-    int drawX = structure->iDrawX();
-    int drawY = structure->iDrawY();
+//     int drawX = structure->iDrawX();
+//     int drawY = structure->iDrawY();
 
-    // structures are animated within the same source bitmap. The Y coordinates determine
-    // what frame is being drawn. So multiply the height of the structure size times frame
-    int iSourceY = pixelHeight * structure->getFrame();
+//     // structures are animated within the same source bitmap. The Y coordinates determine
+//     // what frame is being drawn. So multiply the height of the structure size times frame
+//     int iSourceY = pixelHeight * structure->getFrame();
 
-    int fade = windtrap->getFade();
+//     int fade = windtrap->getFade();
     // int screenDepth = bitmap_color_depth(bmp_screen);
 
     // BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
@@ -156,8 +156,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
 
     // renderDrawer->blit(structure->getBitmap(), nullptr, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
 
-    int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+    // int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
+    // int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // BITMAP *shadow = structure->getShadowBitmap();
     // if (shadow) {
@@ -176,16 +176,16 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *struct
     // }
 
     // renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
-    // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
-    SDL_Rect src = {0,0,32,32};
-    SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(structure->getBitmap(), src, dest);    
+    // // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
+    // SDL_Rect src = {0,0,32,32};
+    // SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
+    // renderDrawer->renderStrechSprite(structure->getBitmap(), src, dest);    
  
 //    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
     //renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
     // SDL_FreeSurface(wind);
-}
+// }
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
 {
