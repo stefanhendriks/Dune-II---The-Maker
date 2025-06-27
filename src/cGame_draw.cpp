@@ -15,7 +15,7 @@
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-
+#include <string>
 #include <SDL2/SDL.h>
 
 // Fading between menu items
@@ -23,9 +23,25 @@ void cGame::initiateFadingOut()
 {
     // set state to fade out
     m_fadeAction = eFadeAction::FADE_OUT; // fade out
+    m_fadeAlpha = 250;
 
     // copy the last bitmap of screen into a separate bitmap which we use for fading out.
-    renderDrawer->drawSprite(bmp_fadeout, bmp_screen, 0, 0);
+    //renderDrawer->drawSprite(bmp_fadeout, bmp_screen, 0, 0);
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
+    if (!surface) {
+        //std::cerr << "Erreur lors de la création de la surface: " << SDL_GetError() << std::endl;
+        return;
+    }
+    // Lire les pixels depuis le framebuffer
+    if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
+        //std::cerr << "Erreur lors de la lecture des pixels: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return;
+    }
+    screenTexture = SDL_CreateTextureFromSurface(renderer,surface);
+    std::string name = fmt::format("screenshot{}.bmp",m_screenshot);
+    m_screenshot++;
+    SDL_FreeSurface(surface);
 }
 
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
