@@ -316,7 +316,6 @@ void cSideBarDrawer::drawPowerUsage() const
     renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
-    //renderDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
     renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(ICON_POWER),barX-3, barY - 21);
 //    m_textDrawer->drawText(barX-1, barY - 21, SDL_Color{0,0,0),"P");
 //    m_textDrawer->drawText(barX+1, barY - 19, SDL_Color{0,0,0),"P");

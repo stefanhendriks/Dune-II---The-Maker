@@ -363,7 +363,6 @@ void cMouse::draw()
         }
     }
 
-    // renderDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
     renderDrawer->renderSprite(gfxdata->getTexture(mouse_tile),mouseDrawX, mouseDrawY);
 
     if (game.isDebugMode()) {

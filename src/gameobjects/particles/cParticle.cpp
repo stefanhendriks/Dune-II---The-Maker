@@ -155,7 +155,6 @@ void cParticle::draw()
         }
     }
     else {
-        //renderDrawer->drawSprite(bmp_screen, stretched, drawX, drawY);
         renderDrawer->renderStrechSprite(bmp, src, dest,255);
     }
     //std::cout << "draw particle on " << drawX << ":" << drawY << std::endl;
