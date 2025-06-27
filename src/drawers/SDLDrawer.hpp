@@ -63,8 +63,8 @@ public:
         return colorBlack;
     }
 
-    void bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor);
-    void bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor);
+    // void bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor);
+    // void bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor);
 
     void setTransBlender(int red, int green, int blue, int alpha);
 
