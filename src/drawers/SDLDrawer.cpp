@@ -347,27 +347,27 @@ void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int h
     SDL_RenderFillRect(renderer, &tmp);
 }
 
-void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha)
-{
-    assert(alpha >= 0);
-    assert(alpha <= 255);
+// void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha)
+// {
+//     assert(alpha >= 0);
+//     assert(alpha <= 255);
 
-    // auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
-    // if (bitmap == nullptr) {
-    // bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
-    // bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
-    // }
-    // auto bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
-    drawRectFilled(nullptr, rect.getX(), rect.getX(), rect.getWidth(), rect.getHeight(), color);
+//     // auto bitmap = bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}];
+//     // if (bitmap == nullptr) {
+//     // bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
+//     // bitmapCache[sSize{.width = rect.getWidth(), .height = rect.getHeight()}] = bitmap;
+//     // }
+//     // auto bitmap = SDL_CreateRGBSurface(0, rect.getWidth(), rect.getHeight(),32,0,0,0,alpha );
+//     drawRectFilled(nullptr, rect.getX(), rect.getX(), rect.getWidth(), rect.getHeight(), color);
 
-    // // @Mira fix trasnparency set_trans_blender(0, 0, 0, alpha);
-    renderDrawer->drawTransSprite(dest, dest, rect.getX(),rect.getY());
-}
+//     // // @Mira fix trasnparency set_trans_blender(0, 0, 0, alpha);
+//     renderDrawer->drawTransSprite(dest, dest, rect.getX(),rect.getY());
+// }
 
-void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color)
-{
-    drawRectTransparentFilled(dest, rect, color, color.a);
-}
+// void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color)
+// {
+//     drawRectTransparentFilled(dest, rect, color, color.a);
+// }
 
 // cRectangle *SDLDrawer::fromBitmap(int x, int y, SDL_Surface *src) {
 //     return new cRectangle(x, y, src->w, src->h);
