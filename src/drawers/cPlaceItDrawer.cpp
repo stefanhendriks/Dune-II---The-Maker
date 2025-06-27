@@ -148,8 +148,9 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float desiredHeight = mapCamera->getZoomedTileHeight();
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
-                cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
+                // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
                 //allegroDrawer->drawRectangleFilled(temp, rectangle, placeColor);
+                renderDrawer->renderRectFillColor(posX, posY, desiredWidth, desiredHeight,game.getColorPlaceBad());
             }
         }
     }
