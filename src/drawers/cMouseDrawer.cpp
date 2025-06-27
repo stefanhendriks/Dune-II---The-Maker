@@ -167,17 +167,18 @@ void cMouseDrawer::drawToolTipBackground()
     green = std::max(green - 64, 0);
     blue = std::max(blue - 64, 0);
 
-    color = SDL_Color{red, green, blue,255};
+    color = SDL_Color{red, green, blue,128};
 	// @Mira what do this code ?
-    const auto black = renderDrawer->getColor_BLACK();
-    const auto white = SDL_Color{255, 255, 255,255};
+    auto black = renderDrawer->getColor_BLACK();
+    black.a = 128;
+    // const auto white = SDL_Color{255, 255, 255,255};
     //_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
     //renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
-    renderDrawer->drawRectTransparentFilled(bmp_screen, {x, y, width, height}, color, 128);
+    renderDrawer->renderRectFillColor(x, y, width, height, color);
     int shadowX = x + width;
     int shadowY = y + height;
-    renderDrawer->drawRectTransparentFilled(bmp_screen, {x + 4, shadowY, (width - 4), 4}, black, 128);
-    renderDrawer->drawRectTransparentFilled(bmp_screen, {shadowX, y + 4, 4, height}, black, 128);
+    renderDrawer->renderRectFillColor(x + 4, shadowY, (width - 4), 4, black);
+    renderDrawer->renderRectFillColor(shadowX, y + 4, 4, height, black);
 }
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure, cTextWriter &textWriter)
