@@ -11,8 +11,8 @@
 cBeneMentat::cBeneMentat() : cAbstractMentat(false)
 {
     iBackgroundFrame = MENTATM;
-    buildLeftButton(gfxmentat->getSurface(BTN_NO), 293, 423);
-    buildRightButton(gfxmentat->getSurface(BTN_YES), 466, 423);
+    buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
+    buildRightButton(gfxmentat->getTexture(BTN_YES), 466, 423);
     leftButtonCommand = new cNoButtonCommand();
     rightButtonCommand = new cYesButtonCommand();
 }
