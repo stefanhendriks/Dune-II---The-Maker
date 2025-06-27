@@ -80,7 +80,8 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
     offsetX = (game.m_screenW - 640) / 2;
     offsetY = (game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
-
+    movieTopleftX = offsetX + 256;
+    movieTopleftY = offsetY + 120;
     memset(sentence, 0, sizeof(sentence));
     logbook("cAbstractMentat::cAbstractMentat()");
 }
@@ -162,7 +163,7 @@ void cAbstractMentat::thinkMovie()
         if (TIMER_movie > 20) {
             iMovieFrame++;
 
-            if (iMovieFrame > gfxmovie->getNumberOfFile()) {
+            if (iMovieFrame == gfxmovie->getNumberOfFiles()) {
                 iMovieFrame = 0;
             }
             TIMER_movie = 0;
@@ -267,11 +268,13 @@ void cAbstractMentat::draw()
     renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
     // select_palette(general_palette);
 
+    Texture * tmp = getBackgroundBitmap();
+    SDL_Rect src = {0,0,tmp->w, tmp->h};
+    SDL_Rect dest = {offsetX, offsetY,640, 480};
+    renderDrawer->renderStrechSprite(tmp, src, dest);
+
     // movie
     draw_movie();
-
-    renderDrawer->drawSprite(bmp_screen, getBackgroundBitmap(), offsetX, offsetY);
-
     draw_eyes();
     draw_mouth();
     draw_other();
@@ -297,10 +300,10 @@ void cAbstractMentat::draw()
     }
 }
 
-SDL_Surface *cAbstractMentat::getBackgroundBitmap() const
+Texture *cAbstractMentat::getBackgroundBitmap() const
 {
     if (iBackgroundFrame < 0) return nullptr;
-    return gfxmentat->getSurface(iBackgroundFrame);
+    return gfxmentat->getTexture(iBackgroundFrame);
 }
 
 void cAbstractMentat::draw_movie()
@@ -309,10 +312,10 @@ void cAbstractMentat::draw_movie()
     if (iMovieFrame < 0) return;
 
     // drawing only, circulating is done in think function
-    int movieTopleftX = offsetX + 256;
-    int movieTopleftY = offsetY + 120;
-
-    renderDrawer->drawSprite(bmp_screen, gfxmovie->getSurface(iMovieFrame), movieTopleftX, movieTopleftY);
+    Texture * tmp = gfxmovie->getTexture(iMovieFrame);
+    SDL_Rect src = {0,0,tmp->w, tmp->h};
+    SDL_Rect dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
+    renderDrawer->renderStrechSprite(tmp, src, dest);
 }
 
 void cAbstractMentat::interact()
@@ -358,9 +361,9 @@ void cAbstractMentat::loadScene(const std::string &scene)
     gfxmovie = nullptr;
 
     char filename[255];
-    sprintf(filename, "data/scenes/%s.dat", scene.c_str());
-
-    gfxmovie = std::make_shared<DataPack>(filename);
+    sprintf(filename, "data/scenes/sdl_%s.dat", scene.c_str());
+    
+    gfxmovie = std::make_shared<Graphics>(renderDrawer->getRenderer(),filename);
 
     TIMER_movie = 0;
     iMovieFrame=0;
