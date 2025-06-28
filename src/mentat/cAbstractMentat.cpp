@@ -270,7 +270,7 @@ void cAbstractMentat::draw()
     renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
     // select_palette(general_palette);
 
-    Texture * tmp = getBackgroundBitmap();
+    Texture *tmp = getBackgroundBitmap();
     SDL_Rect src = {0,0,tmp->w, tmp->h};
     SDL_Rect dest = {offsetX, offsetY,640, 480};
     renderDrawer->renderStrechSprite(tmp, src, dest);
@@ -314,7 +314,7 @@ void cAbstractMentat::draw_movie()
     if (iMovieFrame < 0) return;
 
     // drawing only, circulating is done in think function
-    Texture * tmp = gfxmovie->getTexture(iMovieFrame);
+    Texture *tmp = gfxmovie->getTexture(iMovieFrame);
     SDL_Rect src = {0,0,tmp->w, tmp->h};
     SDL_Rect dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
     renderDrawer->renderStrechSprite(tmp, src, dest);
@@ -364,7 +364,7 @@ void cAbstractMentat::loadScene(const std::string &scene)
 
     char filename[255];
     sprintf(filename, "data/scenes/sdl_%s.dat", scene.c_str());
-    
+
     gfxmovie = std::make_shared<Graphics>(renderDrawer->getRenderer(),filename);
 
     TIMER_movie = 0;

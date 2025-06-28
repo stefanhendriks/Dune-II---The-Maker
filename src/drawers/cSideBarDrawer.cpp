@@ -36,7 +36,7 @@ void cSideBarDrawer::drawCandybar()
     int drawX = game.m_screenW - cSideBar::SidebarWidth;
     int drawY = 40;
     // @Mira render to texture
-        createCandyBar(drawX,drawY);
+    createCandyBar(drawX,drawY);
     // }
     //renderDrawer->drawSprite(bmp_screen, drawX, drawY);
 }
@@ -340,8 +340,8 @@ void cSideBarDrawer::drawMinimap()
     }
 
     // else, we render the house emblem
-    renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1), 
-                                  m_player->getEmblemBackgroundColor());
+    renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
+                                      m_player->getEmblemBackgroundColor());
 
     if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS)) {
         int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
