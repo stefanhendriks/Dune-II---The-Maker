@@ -263,17 +263,17 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    renderDrawer->drawRectFilled(bmp_screen, 0, 0, game.m_screenW, cSideBar::TopBarHeight, SDL_Color{0, 0, 0,255});
+    renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, SDL_Color{0, 0, 0,255});
     if (m_optionsBar == nullptr) {
-        m_optionsBar = SDL_CreateRGBSurface(0,game.m_screenW, 40,32,0,0,0,255);
-        renderDrawer->FillWithColor(m_optionsBar, SDL_Color{214,149,20,255});
+        // m_optionsBar = SDL_CreateRGBSurface(0,game.m_screenW, 40,32,0,0,0,255);
+        renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, SDL_Color{214,149,20,255});
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-            renderDrawer->drawSprite(m_optionsBar, gfxinter->getSurface(BMP_GERALD_TOP_BAR), w, 31);
+            renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
         }
     }
 
-    renderDrawer->renderFromSurface(m_optionsBar, 0, 0);
+    // renderDrawer->renderFromSurface(m_optionsBar, 0, 0);
 }
 
 void cDrawManager::drawNotifications()
