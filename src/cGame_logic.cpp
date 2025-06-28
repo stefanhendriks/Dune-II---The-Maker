@@ -1894,17 +1894,17 @@ SDL_Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFla
 
 SDL_Color cGame::getColorPlaceNeutral()
 {
-    return SDL_Color{242, 174, 36,255};
+    return SDL_Color{242, 174, 36,64};
 }
 
 SDL_Color cGame::getColorPlaceBad()
 {
-    return SDL_Color{160, 0, 0,255};
+    return SDL_Color{160, 0, 0,64};
 }
 
 SDL_Color cGame::getColorPlaceGood()
 {
-    return SDL_Color{64, 255, 64,255};
+    return SDL_Color{64, 255, 64,64};
 }
 
 void cGame::setWinFlags(int value)
