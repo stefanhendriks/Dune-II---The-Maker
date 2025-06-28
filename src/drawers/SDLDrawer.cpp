@@ -38,45 +38,45 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
 
 // void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)
 // {
-    // if (src == nullptr) return;
-    // if (dest == nullptr) return;
-// 
-    // no use drawing outside of bounds
-    // if (pos_x + desiredWidth < 0) return;
-    // if (pos_y + desiredHeight < 0) return;
-    // if (pos_x > dest->w) return;
-    // if (pos_y > dest->h) return;
-    // no use drawing a desired image with 0 width or height
-    // if (desiredHeight <= 0) return;
-    // if (desiredWidth <= 0) return;
-    // cleaned coords for drawing
-    // SDL_Rect srcRect = { 0, 0, src->w, src->h };
-    // SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
-    // Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
-    // SDL_SetColorKey(src, SDL_TRUE, magicPink);
-    // SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    // if (!texture) {
-        // std::cerr << "error maskedBlit : " << SDL_GetError();
-        // return;
-    // }
-    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);    
-    // SDL_SetTextureAlphaMod(texture, opacity);
-    // SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-    // SDL_DestroyTexture(texture);
-// 
-// 
-    // int result;
-    // if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
-    //     SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
-    //     result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
-    //     SDL_FreeSurface(converted);
-    // } else {
-    //     result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
-    // }
+// if (src == nullptr) return;
+// if (dest == nullptr) return;
+//
+// no use drawing outside of bounds
+// if (pos_x + desiredWidth < 0) return;
+// if (pos_y + desiredHeight < 0) return;
+// if (pos_x > dest->w) return;
+// if (pos_y > dest->h) return;
+// no use drawing a desired image with 0 width or height
+// if (desiredHeight <= 0) return;
+// if (desiredWidth <= 0) return;
+// cleaned coords for drawing
+// SDL_Rect srcRect = { 0, 0, src->w, src->h };
+// SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+// Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+// SDL_SetColorKey(src, SDL_TRUE, magicPink);
+// SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+// if (!texture) {
+// std::cerr << "error maskedBlit : " << SDL_GetError();
+// return;
+// }
+// SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+// SDL_SetTextureAlphaMod(texture, opacity);
+// SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+// SDL_DestroyTexture(texture);
+//
+//
+// int result;
+// if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+//     SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+//     result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+//     SDL_FreeSurface(converted);
+// } else {
+//     result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+// }
 
-    // if (result < 0) {
-    //     std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
-    // }
+// if (result < 0) {
+//     std::cerr << "SDL_BlitScaledSprite failed: " << SDL_GetError() << std::endl;
+// }
 // }
 
 void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)

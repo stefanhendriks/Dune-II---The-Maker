@@ -168,7 +168,7 @@ void cMouseDrawer::drawToolTipBackground()
     blue = std::max(blue - 64, 0);
 
     color = SDL_Color{red, green, blue,128};
-	// @Mira what do this code ?
+    // @Mira what do this code ?
     auto black = renderDrawer->getColor_BLACK();
     black.a = 128;
     // const auto white = SDL_Color{255, 255, 255,255};

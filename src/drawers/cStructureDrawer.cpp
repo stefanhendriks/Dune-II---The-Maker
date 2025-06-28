@@ -148,43 +148,43 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 //     int iSourceY = pixelHeight * structure->getFrame();
 
 //     int fade = windtrap->getFade();
-    // int screenDepth = bitmap_color_depth(bmp_screen);
+// int screenDepth = bitmap_color_depth(bmp_screen);
 
-    // BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
+// BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
 
-    // clear_to_color(wind, makecol(255,0,255));
+// clear_to_color(wind, makecol(255,0,255));
 
-    // renderDrawer->blit(structure->getBitmap(), nullptr, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
+// renderDrawer->blit(structure->getBitmap(), nullptr, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
 
-    // int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-    // int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+// int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
+// int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    // BITMAP *shadow = structure->getShadowBitmap();
-    // if (shadow) {
-    //     set_trans_blender(0, 0, 0, 160);
+// BITMAP *shadow = structure->getShadowBitmap();
+// if (shadow) {
+//     set_trans_blender(0, 0, 0, 160);
 
-    //     int colorDepth = bitmap_color_depth(bmp_screen);
-    //     BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
-    //     clear_to_color(stretchedShadow, makecol(255, 0, 255));
+//     int colorDepth = bitmap_color_depth(bmp_screen);
+//     BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+//     clear_to_color(stretchedShadow, makecol(255, 0, 255));
 
-    //     allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
-    //                                      0, 0, scaledWidth, scaledHeight);
+//     allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
+//                                      0, 0, scaledWidth, scaledHeight);
 
-    //     allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+//     allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
 
-    //     // destroy_bitmap(stretchedShadow);
-    // }
+//     // destroy_bitmap(stretchedShadow);
+// }
 
-    // renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
-    // // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
-    // SDL_Rect src = {0,0,32,32};
-    // SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
-    // renderDrawer->renderStrechSprite(structure->getBitmap(), src, dest);    
- 
+// renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
+// // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
+// SDL_Rect src = {0,0,32,32};
+// SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
+// renderDrawer->renderStrechSprite(structure->getBitmap(), src, dest);
+
 //    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
-    //renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
+//renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
 
-    // SDL_FreeSurface(wind);
+// SDL_FreeSurface(wind);
 // }
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)

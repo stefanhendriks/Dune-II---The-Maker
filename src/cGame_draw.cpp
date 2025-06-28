@@ -27,7 +27,7 @@ void cGame::initiateFadingOut()
 
     // copy the last bitmap of screen into a separate bitmap which we use for fading out.
     //renderDrawer->drawSprite(bmp_fadeout, bmp_screen, 0, 0);
-    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
         //std::cerr << "Erreur lors de la création de la surface: " << SDL_GetError() << std::endl;
         return;

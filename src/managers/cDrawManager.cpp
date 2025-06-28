@@ -230,15 +230,15 @@ void cDrawManager::drawMouse()
 void cDrawManager::drawTopBarBackground()
 {
     // if (m_topBarBmp == nullptr) {
-        // m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
-        Texture *topbarPiece = gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
-        for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
-            renderDrawer->renderSprite(topbarPiece, x, 0);
-        }
+    // m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
+    Texture *topbarPiece = gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
+    for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
+        renderDrawer->renderSprite(topbarPiece, x, 0);
+    }
 
-        // set_palette(m_player->pal);
-        //@Mira change button color 
-        renderDrawer->renderSprite(gfxinter->getTexture(BTN_OPTIONS), 1, 0);
+    // set_palette(m_player->pal);
+    //@Mira change button color
+    renderDrawer->renderSprite(gfxinter->getTexture(BTN_OPTIONS), 1, 0);
     // }
 
     // renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
