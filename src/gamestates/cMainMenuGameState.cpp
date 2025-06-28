@@ -17,7 +17,7 @@
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
 {
-    bmp_D2TM_Title = gfxinter->getSurface(BMP_D2TM);
+    bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
@@ -155,7 +155,7 @@ void cMainMenuGameState::draw() const
         }
     }
 
-    renderDrawer->drawSprite(bmp_D2TM_Title, logoX, logoY);
+    renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
 
     GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
