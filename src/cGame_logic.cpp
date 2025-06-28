@@ -2004,7 +2004,20 @@ void cGame::drawCombatMouse()
 void cGame::saveBmpScreenToDisk()
 {
     std::string filename = fmt::format("{}x{}_{:0>4}.bmp", m_screenW, m_screenH, m_screenshot);
-    SDL_SaveBMP(bmp_screen, filename.c_str());
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
+    if (!surface) {
+        std::cerr << "Erreur lors de la création de la surface: " << SDL_GetError() << std::endl;
+        return;
+    }
+    // Lire les pixels depuis le framebuffer
+    if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
+        std::cerr << "Erreur lors de la lecture des pixels: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return;
+    }
+    std::string name = fmt::format("screenshot{}.bmp",m_screenshot);
+    SDL_SaveBMP(surface, filename.c_str());
+    SDL_FreeSurface(surface);
 
     // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
     // a Quake console perhaps?
