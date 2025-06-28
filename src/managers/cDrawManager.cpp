@@ -233,15 +233,15 @@ void cDrawManager::drawTopBarBackground()
         m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
         SDL_Surface *topbarPiece = gfxinter->getSurface(BMP_TOPBAR_BACKGROUND);
         for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
-            renderDrawer->drawSprite(m_topBarBmp, topbarPiece, x, 0);
+            renderDrawer->renderFromSurface(topbarPiece, x, 0);
         }
 
         // set_palette(m_player->pal);
 
-        renderDrawer->drawSprite(m_topBarBmp, gfxinter->getSurface(BTN_OPTIONS), 1, 0);
+        renderDrawer->renderFromSurface(gfxinter->getSurface(BTN_OPTIONS), 1, 0);
     }
 
-    renderDrawer->drawSprite(bmp_screen, m_topBarBmp, 0, 0);
+    renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -273,7 +273,7 @@ void cDrawManager::drawOptionBar()
         }
     }
 
-    renderDrawer->drawSprite(bmp_screen, m_optionsBar, 0, 0);
+    renderDrawer->renderFromSurface(m_optionsBar, 0, 0);
 }
 
 void cDrawManager::drawNotifications()

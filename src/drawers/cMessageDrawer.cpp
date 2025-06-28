@@ -124,13 +124,13 @@ void cMessageDrawer::setMessage(const std::string &msg, bool keepMessage)
 void cMessageDrawer::draw()
 {
     if (m_state == messages::eMessageDrawerState::COMBAT) {
-        renderDrawer->drawSprite(m_bmpBar, m_bmpBar, m_position.x, m_position.y);
+        renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y);
     }
 
     if (m_alpha > -1) {
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_alpha);
 //        renderDrawer->FillWithColor(m_temp, SDL_Color{255,0,255,255});
-        renderDrawer->drawSprite(m_bmpBar, m_bmpBar, m_position.x, m_position.y, m_alpha);
+        renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
 
         // draw message
         //renderDrawer->setClippingFor(0, 0, m_bmpBar->w - 10, m_bmpBar->h);
