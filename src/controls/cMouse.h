@@ -115,6 +115,7 @@ private:
     bool didMouseMove;
 
     cPoint coords;
+    cPoint coordsOnClick;
     // int z;    // z = scroll wheel value
     // int zValuePreviousFrame;
 
