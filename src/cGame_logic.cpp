@@ -675,7 +675,7 @@ void cGame::drawState()
 
     if (m_fadeAction == eFadeAction::FADE_IN && m_fadeAlpha>250) {
         m_fadeAlpha = kMaxAlpha;
-        m_fadeAction == eFadeAction::FADE_NONE;
+        m_fadeAction = eFadeAction::FADE_NONE;
     }
 
     switch (m_state) {
