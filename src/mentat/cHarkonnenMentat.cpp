@@ -34,12 +34,12 @@ void cHarkonnenMentat::draw_other()
 
 void cHarkonnenMentat::draw_eyes()
 {
-    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
+    renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
 }
 
 void cHarkonnenMentat::draw_mouth()
 {
-    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
+    renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
 }
 
 void cHarkonnenMentat::interact()

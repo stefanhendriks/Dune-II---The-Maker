@@ -237,8 +237,8 @@ void cDrawManager::drawTopBarBackground()
         }
 
         // set_palette(m_player->pal);
-
-        renderDrawer->renderFromSurface(gfxinter->getSurface(BTN_OPTIONS), 1, 0);
+        //@Mira change button color 
+        renderDrawer->renderSprite(gfxinter->getTexture(BTN_OPTIONS), 1, 0);
     // }
 
     // renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
