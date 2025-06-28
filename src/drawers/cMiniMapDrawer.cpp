@@ -241,15 +241,12 @@ void cMiniMapDrawer::draw()
     if (!map) return;
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
+    // m_RectFullMinimap
+    renderDrawer->renderRectFillColor(m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight(), SDL_Color{0, 0, 0,255});
+    //auto tmp = SDL_Rect{m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight()};
+    // SDL_SetClipRect(bmp_screen, &tmp);
 
-    renderDrawer->drawRectFilled(bmp_screen, m_RectFullMinimap, SDL_Color{0, 0, 0,255});
-    auto tmp = SDL_Rect{m_RectFullMinimap.getX(), m_RectFullMinimap.getY(),
-                        m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight()};
-    SDL_SetClipRect(bmp_screen, &tmp);
-
-    if (status == eMinimapStatus::POWERUP ||
-            status == eMinimapStatus::RENDERMAP ||
-            status == eMinimapStatus::POWERDOWN) {
+    if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP || status == eMinimapStatus::POWERDOWN) {
         drawTerrain();
         drawUnitsAndStructures(false);
     }
@@ -261,7 +258,7 @@ void cMiniMapDrawer::draw()
     drawStaticFrame();
 
     drawViewPortRectangle();
-    SDL_SetClipRect(bmp_screen, nullptr);
+    // SDL_SetClipRect(bmp_screen, nullptr);
 }
 
 void cMiniMapDrawer::drawStaticFrame()
