@@ -404,6 +404,21 @@ void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity)
     SDL_DestroyTexture(texture);
 }
 
+void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,unsigned char opacity)
+{
+    SDL_Rect tmp = {x,y,src->w, src->h};
+    transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+    if (!texture) {
+        std::cerr << "error drawSprite : " << SDL_GetError();
+        return;
+    }
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureAlphaMod(texture, opacity);
+    SDL_RenderCopy(renderer, texture, NULL, &tmp);
+    SDL_DestroyTexture(texture);
+}
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity)
 {
