@@ -551,7 +551,7 @@ void cGame::drawStateCombat()
 // drawStateMentat logic + drawing mouth/eyes
 void cGame::drawStateMentat(cAbstractMentat *mentat)
 {
-    renderDrawer->drawSprite(bmp_screen, bmp_backgroundMentat, 0, 0);
+    // renderDrawer->drawSprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
     m_mouse->setTile(MOUSE_NORMAL);
 
@@ -1446,7 +1446,7 @@ void cGame::setState(int newState)
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
-                renderDrawer->drawSprite(background, bmp_screen, 0, 0);
+                // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
                 newStatePtr = new cSelectMissionState(*this, background, m_state);
             }
             else if (newState == GAME_OPTIONS) {
