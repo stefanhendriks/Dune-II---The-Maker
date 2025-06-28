@@ -96,7 +96,7 @@ void cOptionsState::thinkFast()
 
 void cOptionsState::draw() const
 {
-    renderDrawer->drawSprite(m_background, 0, 0);
+    // renderDrawer->drawSprite(m_background, 0, 0);
 
     m_guiWindow->draw();
 
