@@ -229,19 +229,19 @@ void cDrawManager::drawMouse()
 
 void cDrawManager::drawTopBarBackground()
 {
-    if (m_topBarBmp == nullptr) {
-        m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
-        SDL_Surface *topbarPiece = gfxinter->getSurface(BMP_TOPBAR_BACKGROUND);
+    // if (m_topBarBmp == nullptr) {
+        // m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
+        Texture *topbarPiece = gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
         for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
-            renderDrawer->renderFromSurface(topbarPiece, x, 0);
+            renderDrawer->renderSprite(topbarPiece, x, 0);
         }
 
         // set_palette(m_player->pal);
 
         renderDrawer->renderFromSurface(gfxinter->getSurface(BTN_OPTIONS), 1, 0);
-    }
+    // }
 
-    renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
+    // renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
