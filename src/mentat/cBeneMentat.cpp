@@ -43,12 +43,12 @@ void cBeneMentat::draw_other()
 
 void cBeneMentat::draw_eyes()
 {
-    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
+    renderDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
 }
 
 void cBeneMentat::draw_mouth()
 {
-    renderDrawer->drawSprite(bmp_screen, gfxmentat->getSurface(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
+    renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }
 
 void cBeneMentat::interact()
