@@ -35,8 +35,8 @@ private:
     // SDL_Surface *bmp;	 // a bitmap being drawn on
 
     void thinkAboutIndividualCreditOffsets();
-    void drawCurrentCredits();
-    void drawPreviousCredits();
+    void drawCurrentCredits(int drawX, int drawY);
+    void drawPreviousCredits(int drawX, int drawY);
     int getCreditDrawId(char c);
     int getXDrawingOffset(int amount);
 

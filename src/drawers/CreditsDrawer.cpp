@@ -179,8 +179,8 @@ void CreditsDrawer::draw()
 
     renderDrawer->renderSprite(gfxinter->getTexture(CREDITS_BAR), drawX, drawY);
 
-    drawCurrentCredits();
-    drawPreviousCredits();
+    drawCurrentCredits(drawX, drawY);
+    drawPreviousCredits(drawX, drawY);
 
     // draw bmp on screen
     // renderDrawer->drawSprite(bmp_screen, bmp, drawX+8, drawY + 8);
@@ -215,7 +215,7 @@ int CreditsDrawer::getCreditDrawId(char c)
 
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
-void CreditsDrawer::drawCurrentCredits()
+void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
 {
     if (currentCredits < 0) currentCredits = 0;
 
@@ -243,14 +243,14 @@ void CreditsDrawer::drawCurrentCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(gfxdata->getTexture(nr), dx, dy);
+            renderDrawer->renderSprite(gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
 
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
-void CreditsDrawer::drawPreviousCredits()
+void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
 {
     if (previousCredits < 0) previousCredits = 0;
 
@@ -277,7 +277,7 @@ void CreditsDrawer::drawPreviousCredits()
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(gfxdata->getTexture(nr), dx, dy);
+            renderDrawer->renderSprite(gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
