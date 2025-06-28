@@ -7,7 +7,7 @@
 #include "gui/cGuiWindow.h"
 #include "sMouseEvent.h"
 
-struct SDL_Surface;
+struct Texture;
 class cGame;
 
 class cMainMenuGameState : public cGameState {
@@ -37,5 +37,5 @@ private:
     cGuiWindow *gui_window;
     cGuiButton *gui_btn_credits;
 
-    SDL_Surface *bmp_D2TM_Title;
+    Texture *bmp_D2TM_Title;
 };
