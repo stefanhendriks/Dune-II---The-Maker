@@ -283,27 +283,27 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 void cSelectYourNextConquestState::drawStateIntroduction() const
 {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
-        renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        // renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // draw dune planet (being faded in)
-        renderDrawer->drawTransSprite(gfxinter->getSurface(BMP_GAME_DUNE), gfxinter->getSurface(BMP_GAME_DUNE), offsetX, offsetY + 12);
+        renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-        renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
-        renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
+        // renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
         // draw dune world map over Dune planet , transitioning
-        renderDrawer->drawTransSprite(gfxworld->getSurface(WORLD_DUNE), gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
+        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
-        renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(WORLD_DUNE), offsetX + 16, offsetY + 73);
-        renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+        // renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // introduce the borders (world pieces), draw over world dune, transitioning
-        renderDrawer->drawTransSprite(gfxworld->getSurface(WORLD_DUNE_REGIONS), gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
-        renderDrawer->drawSprite(gfxworld->getSurface(WORLD_DUNE_REGIONS), gfxworld->getSurface(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
     }
 }
 
