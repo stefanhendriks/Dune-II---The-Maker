@@ -43,7 +43,7 @@ private:
 
     SDL_Color m_sidebarColor;
 
-    void createCandyBar();
+    void createCandyBar(int drawX, int drawY);
 
     void drawPowerUsage() const;
     void drawCreditsUsage();

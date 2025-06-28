@@ -32,53 +32,53 @@ cSideBarDrawer::~cSideBarDrawer()
 
 void cSideBarDrawer::drawCandybar()
 {
-    if (m_candybar == nullptr) {
-        createCandyBar();
-    }
-
+    // if (m_candybar == nullptr) {
     int drawX = game.m_screenW - cSideBar::SidebarWidth;
     int drawY = 40;
-    renderDrawer->drawSprite(bmp_screen, m_candybar, drawX, drawY);
+    // @Mira render to texture
+        createCandyBar(drawX,drawY);
+    // }
+    //renderDrawer->drawSprite(bmp_screen, m_candybar, drawX, drawY);
 }
 
-void cSideBarDrawer::createCandyBar()
+void cSideBarDrawer::createCandyBar(int drawX, int drawY)
 {
     int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
     m_candybar = SDL_CreateRGBSurface(0,24, heightInPixels,8,0,0,0,0);
     renderDrawer->FillWithColor(m_candybar, SDL_Color{0,0,0,255});
 
     // ball first
-    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), 0, 0); // height of ball = 25
-    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
-// now draw pieces untill the end (height of piece is 23 pixels)
+    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), drawX,drawY); // height of ball = 25
+    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_TOP), drawX, drawY+26); // height of top = 10
+    // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
     auto tmp = SDL_Rect{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
-    SDL_SetClipRect(m_candybar, &tmp);
+    // SDL_SetClipRect(m_candybar, &tmp);
     for (int y = startY; y < (heightMinimap); y += 24) {
-        renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), 0, y);
+        renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), drawX, drawY+y);
     }
-    SDL_SetClipRect(m_candybar, nullptr);
+    // SDL_SetClipRect(m_candybar, nullptr);
 
     // note: no need to take top bar into account because 'm_candybar' is a separate bitmap so coords start at 0,0
 // ball is 6 pixels higher than horizontal m_candybar
     int ballY = (heightMinimap) - 6;
 
     // draw bottom m_candybar
-    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
+    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BOTTOM), drawX, drawY+ballY - 10); // height of bottom = 9
 
     // draw ball
-    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), 0, ballY); // height of ball = 25
+    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), drawX, drawY+ballY); // height of ball = 25
 
     // draw top m_candybar again
-    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
+    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_TOP), drawX, ballY + 26); // height of top = 10
 
     startY = ballY + 26 + 10;
     for (int y = startY; y < (heightInPixels + 23); y += 24) {
-        renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), 0, y);
+        renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), drawX, drawY+y);
     }
     // draw bottom
-    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
+    renderDrawer->drawSprite(m_candybar, gfxinter->getSurface(BMP_GERALD_CANDYBAR_BOTTOM), drawX, drawY+heightInPixels - 10); // height of top = 10
 }
 
 void cSideBarDrawer::drawBuildingLists()
@@ -192,7 +192,7 @@ void cSideBarDrawer::draw()
     // set_palette(m_player->pal);
 
     // black out sidebar
-    renderDrawer->drawRectFilled(bmp_screen, (game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});
+    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -315,21 +315,20 @@ void cSideBarDrawer::drawPowerUsage() const
     SDL_Color darker = SDL_Color{89, 56, 0,255};
     renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
-
     renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
-//    m_textDrawer->drawText(barX-1, barY - 21, SDL_Color{0,0,0),"P");
-//    m_textDrawer->drawText(barX+1, barY - 19, SDL_Color{0,0,0),"P");
-//    m_textDrawer->drawText(barX, barY - 20, "P");
+    // m_textDrawer.drawText(barX-1, barY - 21, SDL_Color{0,0,0,255},"P");
+    // m_textDrawer.drawText(barX+1, barY - 19, SDL_Color{0,0,0,255},"P");
+    // m_textDrawer.drawText(barX, barY - 20, "P");
 }
 
 void cSideBarDrawer::drawMinimap()
 {
-    SDL_Surface *sprite = gfxinter->getSurface(HORIZONTAL_CANDYBAR);
+    Texture *sprite = gfxinter->getTexture(HORIZONTAL_CANDYBAR);
     int drawX = (game.m_screenW - sprite->w) + 1;
     // 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
     int drawY = cSideBar::TopBarHeight + heightMinimap;
-    renderDrawer->drawSprite(bmp_screen, sprite, drawX, drawY);
+    renderDrawer->renderSprite(sprite, drawX, drawY);
 
     // 11, 10
     // 78, 60
