@@ -360,8 +360,7 @@ void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
         textColor = colorDisabled;
     }
 
-    textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor,
-                        fmt::format("Startpoints: {}",iStartingPoints));
+    textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor,fmt::format("Startpoints: {}",iStartingPoints));
 }
 
 void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const
@@ -372,7 +371,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
                 if (selectedMap.terrain) {
-                    renderDrawer->drawSprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                 }
             }
         }
@@ -383,15 +382,14 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        renderDrawer->drawSprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                        renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                     }
                 }
             }
             else {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(),
-                                                   previewMapRect.getY());
+                        renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(), previewMapRect.getY());
                     }
                 }
             }
