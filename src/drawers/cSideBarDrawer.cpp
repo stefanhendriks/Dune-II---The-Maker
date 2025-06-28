@@ -316,7 +316,7 @@ void cSideBarDrawer::drawPowerUsage() const
     renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
-    renderDrawer->drawSprite(bmp_screen, gfxinter->getSurface(ICON_POWER),barX-3, barY - 21);
+    renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
 //    m_textDrawer->drawText(barX-1, barY - 21, SDL_Color{0,0,0),"P");
 //    m_textDrawer->drawText(barX+1, barY - 19, SDL_Color{0,0,0),"P");
 //    m_textDrawer->drawText(barX, barY - 20, "P");
@@ -343,8 +343,8 @@ void cSideBarDrawer::drawMinimap()
     }
 
     // else, we render the house emblem
-    renderDrawer->drawRectFilled(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1,
-                                 game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1), m_player->getEmblemBackgroundColor());
+    renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1), 
+                                  m_player->getEmblemBackgroundColor());
 
     if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS)) {
         int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
@@ -372,8 +372,9 @@ void cSideBarDrawer::drawMinimap()
         drawX += (sprite->w / 2) - (emblemDesiredWidth / 2);
         drawY = cSideBar::TopBarHeight + ((heightMinimap / 2) - (emblemDesiredHeight / 2));
 
-        renderDrawer->stretchBlit(gfxinter->getSurface(bitmapId), srcX, srcY, emblemWidth,
-                                  emblemHeight, drawX, drawY, emblemDesiredWidth, emblemDesiredHeight);
+        SDL_Rect src = {srcX, srcY, emblemWidth,emblemHeight};
+        SDL_Rect dest = {drawX, drawY, emblemDesiredWidth, emblemDesiredHeight};
+        renderDrawer->renderStrechSprite(gfxinter->getTexture(bitmapId), src, dest);
     }
 }
 
