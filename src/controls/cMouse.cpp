@@ -10,6 +10,7 @@
 #include "utils/d2tm_math.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
 {
@@ -55,13 +56,26 @@ void cMouse::handleEvent(const SDL_Event &event)
 {
     switch (event.type) {
         case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_LEFT) leftButtonPressed = true;
-            if (event.button.button == SDL_BUTTON_RIGHT) rightButtonPressed = true;
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                leftButtonPressed = true;
+                coordsOnClick.x = event.motion.x;
+                coordsOnClick.y = event.motion.y;
+            }
+            if (event.button.button == SDL_BUTTON_RIGHT) {
+                rightButtonPressed = true;
+                coordsOnClick.x = event.motion.x;
+                coordsOnClick.y = event.motion.y;
+            }
             break;
         case SDL_MOUSEBUTTONUP:
             if (event.button.button == SDL_BUTTON_LEFT) {
                 leftButtonPressed = false;
                 leftButtonClicked = true;
+                // int dist = (coordsOnClick.x - event.motion.x)*(coordsOnClick.x - event.motion.x) + (coordsOnClick.y - event.motion.y)*(coordsOnClick.y - event.motion.y);
+                // if (dist < 16) {
+                //     std::cout << "left click" << std::endl;
+                //     leftButtonClicked = true;
+                // }
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
                 rightButtonPressed = false;
@@ -144,21 +158,25 @@ void cMouse::updateState()
         if (leftButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED;
             _mouseObserver->onNotifyMouseEvent(event);
+            //std::cout << "emit left pressed" << std::endl;
         }
 
         if (leftButtonClicked) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
             _mouseObserver->onNotifyMouseEvent(event);
+            //std::cout << "emit left click" << std::endl;
         }
 
         if (rightButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED;
             _mouseObserver->onNotifyMouseEvent(event);
+            //std::cout << "emit right pressed" << std::endl;
         }
 
         if (rightButtonClicked) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED;
             _mouseObserver->onNotifyMouseEvent(event);
+            //std::cout << "emit right click" << std::endl;
         }
     }
     // check if leftButtonIsPressed=true (which is the previous frame)
