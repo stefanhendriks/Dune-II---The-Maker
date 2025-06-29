@@ -104,11 +104,14 @@ private:
     bool leftButtonPressed;
     bool rightButtonPressed;
 
-    bool leftButtonClicked;
-    bool rightButtonClicked;
+    bool leftButtonReleased;
+    bool rightButtonReleased;
 
-    // bool leftButtonPressedInPreviousFrame;
-    // bool rightButtonPressedInPreviousFrame;
+    bool leftButtonClicked;
+    bool rightButtonClicked;    
+
+    bool leftButtonClickedInPreviousFrame;
+    bool rightButtonClickedInPreviousFrame;
 
     bool mouseScrolledUp;
     bool mouseScrolledDown;
