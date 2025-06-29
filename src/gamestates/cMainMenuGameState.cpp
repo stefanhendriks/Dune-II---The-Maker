@@ -2,7 +2,6 @@
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
-#include "gui.h"
 #include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionFadeOutOnly.h"
 #include "gui/actions/cGuiActionSelectHouse.h"
