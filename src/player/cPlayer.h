@@ -488,6 +488,7 @@ public:
 
     void deselectUnit(const int &unitId);
 
+    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int transparentIndex);
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -567,6 +568,4 @@ private:
     void onMyStructureDestroyed(const s_GameEvent &event);
 
     void reinforceHarvesterIfNeeded(int cell);
-
-    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int transparentIndex);
 };
