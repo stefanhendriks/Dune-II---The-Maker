@@ -73,7 +73,7 @@ std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 TTF_Font *game_font; 	// arrakeen.fon
 TTF_Font *bene_font;	// benegesserit font.
 TTF_Font *small_font;	// small font.
-
+TTF_Font *gr_bene_font; // benegesserit font for size XXL
 /** Allegro specific timer creation starts here **/
 // volatile int allegro_timerSecond = 0;
 // volatile int allegro_timerGlobal = 0;
