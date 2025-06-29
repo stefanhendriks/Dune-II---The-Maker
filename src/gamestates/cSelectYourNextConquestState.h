@@ -29,6 +29,7 @@ enum eRegionSceneState {
 class cRegion {
 public:
     int iHouse;         // who (which house) owns this?
+    int oldHouse;       // avoid recreate Texture
     int x, y;           // x and y position of the region
     int iAlpha;         // Alpha (0 = not visible, > 0 goes up to 255)
     int iTile;          // tile refering to gfxworld.dat
@@ -94,7 +95,7 @@ private:
 
     int regionMouseIsHoveringOver;
 
-    SDL_Surface *regionClickMapBmp;  // this is the bmp that
+    SDL_Surface *regionClickMapBmp;  // this is the bmp for determine player'choice. 
 
     bool isFinishedConqueringRegions = true;
 
