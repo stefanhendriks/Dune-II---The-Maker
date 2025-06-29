@@ -20,7 +20,7 @@
 #include <fmt/core.h>
 #include <algorithm>
 
-static bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
+static bool mouse_within_rect(int x, int y, int width, int height)
 {
     auto m_mouse = game.getMouse();
     return ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
@@ -28,7 +28,7 @@ static bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
 }
 
 
-static bool GUI_DRAW_FRAME(int x, int y, int width, int height)
+static bool gui_draw_frame(int x, int y, int width, int height)
 {
     cRectangle rect = cRectangle(x, y, width, height);
     renderDrawer->gui_DrawRect(rect);
@@ -40,7 +40,7 @@ static bool GUI_DRAW_FRAME(int x, int y, int width, int height)
     return false; // not hovering on it
 }
 
-static bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
+static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 {
     // fill it up
     renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
@@ -56,7 +56,7 @@ static bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
     renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, SDL_Color{252,252,252,255});
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
-    return MOUSE_WITHIN_RECT(x1, y1, width, height);
+    return mouse_within_rect(x1, y1, width, height);
 }
 
 
@@ -989,7 +989,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
 
-    if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
+    if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
         // START
         if (iSkirmishMap > -1) {
             prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
@@ -1032,7 +1032,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 
         int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-        bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         if (bHover && previewMap.validMap) {
             iSkirmishMap = i;
@@ -1077,7 +1077,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
         if (previewMap.name.empty()) continue;
         int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-        bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         SDL_Color textColor = bHover ? colorRed : colorWhite;
         if (!previewMap.validMap) {
@@ -1085,7 +1085,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
         }
 
         if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
-            GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         // selected map, always render as pressed
@@ -1094,7 +1094,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
             if (!previewMap.validMap) {
                 textColor = colorDisabled;
             }
-            GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, previewMap.name.c_str());
