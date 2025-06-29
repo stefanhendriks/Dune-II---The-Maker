@@ -7,6 +7,7 @@
 class cGame;
 class cGuiButton;
 struct SDL_Surface;
+struct Texture;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
@@ -33,7 +34,7 @@ public:
     int iTile;          // tile refering to gfxworld.dat
     bool bSelectable;   // selectable for attacking (default = false)
     SDL_Surface *bmp;        // the original bmp
-    SDL_Surface *bmpHighBit; // the bmp (created! and thus must be destroyed) on same bitdepth as bmp_screen
+    Texture *bmpColor; // the bmp (created! and thus must be destroyed) on same bitdepth as bmp_screen
 };
 
 class cSelectYourNextConquestState : public cGameState {

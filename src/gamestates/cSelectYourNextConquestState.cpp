@@ -66,8 +66,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");
-    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
-            buttonKind);
+    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, 
+                    "Mission select", buttonKind);
     gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
     gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
@@ -144,8 +144,7 @@ void cSelectYourNextConquestState::thinkFast()
         }
     }
 
-    if (state == eRegionState::REGSTATE_CONQUER_REGIONS ||
-            state == eRegionState::REGSTATE_INTRODUCTION) {
+    if (state == eRegionState::REGSTATE_CONQUER_REGIONS || state == eRegionState::REGSTATE_INTRODUCTION) {
         for (int i = 0; i < 27; i++) {
             cRegion &regionPiece = world[i];
 
@@ -178,8 +177,7 @@ void cSelectYourNextConquestState::thinkFast()
                 bool isRegionTextGiven = regionTextString[0] != '\0';
                 bool isRegionTextEmpty = regionTextString[0] == '\0';
 
-                if ((isRegionTextGiven && !drawManager->hasMessage()) ||
-                        isRegionTextEmpty) {
+                if ((isRegionTextGiven && !drawManager->hasMessage()) || isRegionTextEmpty) {
                     // set this up
                     region.iHouse = houseThatConquersTheRegion;
                     region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
@@ -272,7 +270,7 @@ void cSelectYourNextConquestState::draw() const
     // select_palette(humanPlayerPalette);
 
     // Draw this last
-    renderDrawer->drawSprite(bmp_screen, gfxworld->getSurface(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
+    renderDrawer->renderSprite(gfxworld->getTexture(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
     drawManager->drawMessageBar();
 
@@ -500,6 +498,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         // is the player we want to get the correct house collor for this piece...
         cPlayer &temp = players[regionPiece.iHouse];
         // select_palette(temp.pal);
+        regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
         drawRegion(regionPiece);
     } // House > -1
 
@@ -508,6 +507,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         int iHouse = players[HUMAN].getHouse();
         cPlayer &temp = players[iHouse];
         // select_palette(temp.pal);
+        regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
         drawRegion(regionPiece);
     }
 
@@ -519,13 +519,14 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
     int regionY = offsetY + regionPiece.y;
 
     if (regionPiece.iAlpha >= 255) {
-        renderDrawer->drawSprite(bmp_screen, regionPiece.bmp, regionX, regionY);
+        renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY);
     }
     else {
-        renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-        renderDrawer->FillWithColor(regionPiece.bmpHighBit, SDL_Color{255,0,255,255});
-        renderDrawer->drawSprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
-        renderDrawer->drawTransSprite(regionPiece.bmpHighBit, regionPiece.bmpHighBit, regionX, regionY);
+        renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY,regionPiece.iAlpha);
+        // renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
+        // renderDrawer->FillWithColor(regionPiece.bmpHighBit, SDL_Color{255,0,255,255});
+        // renderDrawer->drawSprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
+        // renderDrawer->drawTransSprite(regionPiece.bmpHighBit, regionPiece.bmpHighBit, regionX, regionY);
     }
 }
 // End of function
@@ -567,9 +568,9 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.iTile = iTile;
     region.bmp = gfxworld->getSurface(iTile);
 
-    SDL_Surface *tempregion = SDL_CreateRGBSurface(0, region.bmp->w, region.bmp->h,32,0,0,0,255);
-    renderDrawer->FillWithColor(tempregion, SDL_Color{255,0,255,255});
-    region.bmpHighBit = tempregion;
+    // SDL_Surface *tempregion = SDL_CreateRGBSurface(0, region.bmp->w, region.bmp->h,32,0,0,0,255);
+    // renderDrawer->FillWithColor(tempregion, SDL_Color{255,0,255,255});
+    // region.bmpHighBit = tempregion;
 }
 
 void cSelectYourNextConquestState::INSTALL_WORLD()
@@ -644,8 +645,9 @@ void cSelectYourNextConquestState::destroy()
 {
     for (int i = 0; i < 27; i++) {
         cRegion &region = world[i];
-        if (region.bmpHighBit) {
-            SDL_FreeSurface(region.bmpHighBit);
+        if (region.bmpColor) {
+            // SDL_FreeSurface(region.bmpHighBit);
+            delete region.bmpColor;
         }
     }
 }
