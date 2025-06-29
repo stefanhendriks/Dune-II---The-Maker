@@ -546,8 +546,8 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     if (!mapRect.isPointWithin(mouseX, mouseY)) return -1;
 
     // from here, we are on a region
-    int wCalc = round((mouseX-offsetX)*608.0/regionClickMapBmp->w);
-    int hCalc = round((mouseY-offsetY)*241.0/regionClickMapBmp->h);
+    int wCalc = round((mouseX-offsetX-16)*608.0/regionClickMapBmp->w);
+    int hCalc = round((mouseY-offsetY-73)*240.0/regionClickMapBmp->h);
     int c = getPixelColorIndexFromSurface(regionClickMapBmp, wCalc, hCalc);
     //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
     //alfont_textprintf(bmp_screen, bene_font, 17,17, SDL_Color{0,0,0), "region %d", c-1);
