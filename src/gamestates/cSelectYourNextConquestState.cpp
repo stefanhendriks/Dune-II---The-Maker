@@ -95,11 +95,11 @@ void cSelectYourNextConquestState::thinkFast()
         // temp bitmap to read from
         regionClickMapBmp = SDL_CreateRGBSurface(0, 640, 480,8,0,0,0,0); // 8 bit bitmap
         // select_palette(general_palette); // default palette
-        renderDrawer->FillWithColor(regionClickMapBmp, SDL_Color{0,0,0,255});
+        // renderDrawer->FillWithColor(regionClickMapBmp, SDL_Color{0,0,0,255});
 
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
-        renderDrawer->drawSprite(regionClickMapBmp, gfxworld->getSurface(WORLD_DUNE_CLICK), 16, 73);
+        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_CLICK), 16, 73);
 
         state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
         return;
