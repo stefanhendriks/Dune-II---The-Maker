@@ -264,7 +264,7 @@ void cAbstractMentat::thinkMouth()  // MOUTH
 
 void cAbstractMentat::draw()
 {
-    renderDrawer->renderRectFillColor(offsetX, offsetY, 640, 480, SDL_Color{0,0,0,255});
+    renderDrawer->renderClearToColor(SDL_Color{7,7,15,255});
     renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, SDL_Color{64, 64,89,255});
     renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, SDL_Color{40,40,60,255});
     renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
