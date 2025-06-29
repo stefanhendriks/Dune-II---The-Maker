@@ -20,6 +20,45 @@
 #include <fmt/core.h>
 #include <algorithm>
 
+static bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
+{
+    auto m_mouse = game.getMouse();
+    return ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
+            && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height)));
+}
+
+
+static bool GUI_DRAW_FRAME(int x, int y, int width, int height)
+{
+    cRectangle rect = cRectangle(x, y, width, height);
+    renderDrawer->gui_DrawRect(rect);
+    auto m_mouse = game.getMouse();
+    if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
+            && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
+        return true;
+    }
+    return false; // not hovering on it
+}
+
+static bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
+{
+    // fill it up
+    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
+
+    // _rect
+    //_rect(bmp_screen, x1,y1,x1+width, y1+height, SDL_Color{84,84,120));
+    renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
+
+    // lines to darken the right sides
+    // _line(bmp_screen, x1+width, y1, x1+width , y1+height, SDL_Color{252,252,252));
+    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, SDL_Color{252,252,252,255});
+    // _line(bmp_screen, x1, y1+height, x1+width , y1+height, SDL_Color{252,252,252));
+    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, SDL_Color{252,252,252,255});
+
+    // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
+    return MOUSE_WITHIN_RECT(x1, y1, width, height);
+}
+
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame)
 {
