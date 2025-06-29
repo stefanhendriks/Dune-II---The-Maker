@@ -93,13 +93,13 @@ void cSelectYourNextConquestState::thinkFast()
     // First time INIT
     if (state == eRegionState::REGSTATE_INIT) {
         // temp bitmap to read from
-        regionClickMapBmp = SDL_CreateRGBSurface(0, 640, 480,8,0,0,0,0); // 8 bit bitmap
+        regionClickMapBmp = gfxworld->getSurface(WORLD_DUNE_CLICK); // 8 bit bitmap
         // select_palette(general_palette); // default palette
         // renderDrawer->FillWithColor(regionClickMapBmp, SDL_Color{0,0,0,255});
 
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
-        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_CLICK), 16, 73);
+        // renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_CLICK), 16, 73);
 
         state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
         return;
@@ -498,7 +498,10 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         // is the player we want to get the correct house collor for this piece...
         cPlayer &temp = players[regionPiece.iHouse];
         // select_palette(temp.pal);
-        regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+        if (regionPiece.iHouse!=regionPiece.oldHouse) {
+            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+            regionPiece.oldHouse=regionPiece.iHouse;
+        }
         drawRegion(regionPiece);
     } // House > -1
 
@@ -507,7 +510,9 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         int iHouse = players[HUMAN].getHouse();
         cPlayer &temp = players[iHouse];
         // select_palette(temp.pal);
-        regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+        if (regionPiece.iHouse!=regionPiece.oldHouse) {
+            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+        }
         drawRegion(regionPiece);
     }
 
@@ -515,6 +520,9 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
 
 void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
 {
+    if (regionPiece.bmpColor ==nullptr) {
+        return;
+    }
     int regionX = offsetX + regionPiece.x;
     int regionY = offsetY + regionPiece.y;
 
@@ -580,6 +588,7 @@ void cSelectYourNextConquestState::INSTALL_WORLD()
         world[i].bSelectable = false;
         world[i].iAlpha = 0;
         world[i].iHouse = -1;
+        world[i].oldHouse = -2; // all <0 except iHouse = -1 (for cache)
         world[i].iTile = -1;
         world[i].x = -1;
         world[i].y = -1;
