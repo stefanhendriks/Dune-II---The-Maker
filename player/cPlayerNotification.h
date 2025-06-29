@@ -5,7 +5,8 @@
 enum eNotificationType {
     NEUTRAL,    // generic message, in white
     PRIORITY,   // a more important message, yellow
-    BAD         // bad news, in red
+    BAD,        // bad news, in red
+    DEBUG,      // debugging
 };
 
 std::string eNotificationTypeString(const eNotificationType &type);
