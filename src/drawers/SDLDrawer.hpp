@@ -63,7 +63,7 @@ public:
     SDL_Color getColor_BLACK() {
         return colorBlack;
     }
-
+    void renderClearToColor(SDL_Color color = SDL_Color{0,0,0,255});
     // void bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor);
     // void bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor);
 
