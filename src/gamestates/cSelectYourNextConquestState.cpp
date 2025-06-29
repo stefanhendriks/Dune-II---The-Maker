@@ -14,6 +14,30 @@
 #include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
+#include <iostream>
+
+// Return color index from pixel (x, y) in surface
+static Uint8 getPixelColorIndexFromSurface(SDL_Surface* surface, int x, int y)
+{
+    if (surface == nullptr) {
+        std::cerr << "Error : nullptr surface" << std::endl;
+        return 0;
+    }
+
+    if (surface->format->format != SDL_PIXELFORMAT_INDEX8) {
+        std::cerr << "Error : no indexed 8 bits surface (format actuel : "
+                  << SDL_GetPixelFormatName(surface->format->format) << ")." << std::endl;
+        return 0;
+    }
+
+    if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
+        std::cerr << "Error : out of range pixel (" << x << ", " << y << ") in (" << surface->w << ", " << surface->h << ")." << std::endl;
+        return 0;
+    }
+    Uint8* pixelData = (Uint8*)surface->pixels;
+    Uint8 colorIndex = pixelData[y * (surface->pitch) + x];
+    return colorIndex;
+}
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame)
 {
@@ -513,14 +537,11 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     if (!mapRect.isPointWithin(mouseX, mouseY)) return -1;
 
     // from here, we are on a region
-
-    SDL_Color c = renderDrawer->getPixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
+    int c = getPixelColorIndexFromSurface(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
 
     //alfont_textprintf(bmp_screen, bene_font, 17,17, SDL_Color{0,0,0), "region %d", c-1);
-
     // @Mira fix color to region ?
-    //return c - 1;
-    return 0;
+    return c - 1;
 }
 
 void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile)
