@@ -158,7 +158,7 @@ void cMainMenuGameState::draw() const
 
     renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
 
-    GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
+    //GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
     gui_window->draw();
 
