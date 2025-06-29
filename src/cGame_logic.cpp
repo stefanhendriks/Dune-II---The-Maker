@@ -742,8 +742,7 @@ void cGame::run()
 
         updateGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
+        renderDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
