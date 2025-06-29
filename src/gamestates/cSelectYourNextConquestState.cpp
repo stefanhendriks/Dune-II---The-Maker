@@ -240,7 +240,7 @@ void cSelectYourNextConquestState::draw() const
 {
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
-    renderDrawer->FillWithColor(bmp_screen, SDL_Color{48,28,0,255});
+    // renderDrawer->FillWithColor(bmp_screen, SDL_Color{48,28,0,255});
 
     // STEPS:
     // 1. Show current conquered regions
