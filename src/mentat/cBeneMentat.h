@@ -2,6 +2,7 @@
 
 #include "cAbstractMentat.h"
 
+class cTextDrawer;
 /**
  * This is the mentat that is used for house selection. (Bene Geserit)
  */
@@ -12,6 +13,7 @@ private:
     void draw_other() override;
     void draw() override;
     void interact() override;
+    cTextDrawer *textDrawer;
 
 public:
     cBeneMentat();
