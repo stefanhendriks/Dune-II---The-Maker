@@ -483,10 +483,10 @@ void SDLDrawer::setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int
 
 }
 
-SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)
-{
-    return SDL_Color{(Uint8)(r * norm), (Uint8)(g * norm), (Uint8)(b * norm), 255};
-}
+// SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)
+// {
+//     return SDL_Color{(Uint8)(r * norm), (Uint8)(g * norm), (Uint8)(b * norm), 255};
+// }
 
 void SDLDrawer::gui_DrawRect(const cRectangle &rectangle)
 {

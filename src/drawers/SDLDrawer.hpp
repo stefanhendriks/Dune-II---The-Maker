@@ -69,7 +69,7 @@ public:
 
     // void setTransBlender(int red, int green, int blue, int alpha);
 
-    SDL_Color getColorByNormValue(int r, int g, int b, float norm);
+    // SDL_Color getColorByNormValue(int r, int g, int b, float norm);
 
     void gui_DrawRect(const cRectangle &rectangle);
     void gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
