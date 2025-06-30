@@ -1118,16 +1118,16 @@ bool cGame::setupGame()
         }
     }
 
-    bmp_throttle = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+    // bmp_throttle = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
-    if (bmp_throttle == nullptr) {
-        std::cerr << "Failed to create a memory bitmap\n";
-        logbook("ERROR: Could not create bitmap: bmp_throttle");
-        return false;
-    }
-    else {
-        logbook("Memory bitmap created: bmp_throttle");
-    }
+    // if (bmp_throttle == nullptr) {
+    //     std::cerr << "Failed to create a memory bitmap\n";
+    //     logbook("ERROR: Could not create bitmap: bmp_throttle");
+    //     return false;
+    // }
+    // else {
+    //     logbook("Memory bitmap created: bmp_throttle");
+    // }
 
     bmp_winlose = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
