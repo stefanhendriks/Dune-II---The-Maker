@@ -200,5 +200,5 @@ void cRandomMapGenerator::drawProgress(float progress) const
 {
     int iProgress = progress * 211;
     //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, SDL_Color{255, 0, 0));
-    renderDrawer->drawRectFilled(bmp_screen, 216, 225, iProgress, 257-225, SDL_Color{255, 0, 0,255});
+    renderDrawer->renderRectFillColor(216, 225, iProgress, 257-225, SDL_Color{255, 0, 0,255});
 }
