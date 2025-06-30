@@ -331,10 +331,6 @@ void cGame::setMissionWon()
     //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
 
     // renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_WINNING));
-    auto tex = gfxinter->getTexture(BMP_WINNING);
-    int posW = m_screenW-tex->w/2;
-    int posH = m_screenH-tex->h/2;
-    renderDrawer->renderSprite(tex,posW, posH);
 }
 
 void cGame::setMissionLost()
@@ -355,10 +351,6 @@ void cGame::setMissionLost()
     //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
     //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
     // renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_LOSING));
-    auto tex = gfxinter->getTexture(BMP_LOSING);
-    int posW = m_screenW-tex->w/2;
-    int posH = m_screenH-tex->h/2;
-    renderDrawer->renderSprite(tex,posW, posH);
 }
 
 bool cGame::isMissionFailed() const

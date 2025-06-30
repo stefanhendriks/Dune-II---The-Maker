@@ -13,6 +13,7 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
+#include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include <string>
@@ -50,6 +51,11 @@ void cGame::drawStateLosing()
     //renderDrawer->blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
     //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
 
+    auto tex = gfxinter->getTexture(BMP_LOSING);
+    int posW = (m_screenW-tex->w)/2;
+    int posH = (m_screenH-tex->h)/2;
+    renderDrawer->renderSprite(tex,posW, posH);
+
     // renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
@@ -68,6 +74,11 @@ void cGame::drawStateWinning()
 {
     //renderDrawer->blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
     //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
+
+    auto tex = gfxinter->getTexture(BMP_WINNING);
+    int posW = (m_screenW-tex->w)/2;
+    int posH = (m_screenH-tex->h)/2;
+    renderDrawer->renderSprite(tex,posW, posH);
 
     // renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
