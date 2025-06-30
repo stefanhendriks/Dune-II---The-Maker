@@ -53,10 +53,10 @@ public:
     // void maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
     // [[deprecated]] void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-    void drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
-    void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
-    void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
-    void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
+    // void drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
+    // void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
+    // void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
+    // void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
     // void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha);
     // void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color);
     void setPixel(SDL_Surface *bmp, int x, int y, SDL_Color color);

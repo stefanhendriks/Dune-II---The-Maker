@@ -322,30 +322,30 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 //     blit(src, nullptr, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 // }
 
-void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
-{
-    drawRect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
-}
+// void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
+// {
+//     drawRect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
+// }
 
-void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
-{
-    renderChangeColor(color);
-    const SDL_Rect tmp = {x, y, width, height};
-    SDL_RenderDrawRect(renderer, &tmp);
-}
+// void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
+// {
+//     renderChangeColor(color);
+//     const SDL_Rect tmp = {x, y, width, height};
+//     SDL_RenderDrawRect(renderer, &tmp);
+// }
 
-void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
-{
-    drawRectFilled(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
-}
+// void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
+// {
+//     drawRectFilled(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
+// }
 
-void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
-{
-    const SDL_Rect tmp = {x, y, width, height};
-    //std::cout <<"::" << x << " " << y << " " << width << " " << height << std::endl;
-    renderChangeColor(color);
-    SDL_RenderFillRect(renderer, &tmp);
-}
+// void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
+// {
+//     const SDL_Rect tmp = {x, y, width, height};
+//     //std::cout <<"::" << x << " " << y << " " << width << " " << height << std::endl;
+//     renderChangeColor(color);
+//     SDL_RenderFillRect(renderer, &tmp);
+// }
 
 // void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha)
 // {
