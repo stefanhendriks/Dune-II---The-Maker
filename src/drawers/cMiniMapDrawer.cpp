@@ -138,9 +138,8 @@ void cMiniMapDrawer::drawTerrain()
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
 {
-
-    SDL_Color iColor = renderDrawer->getColor_BLACK();
-
+    SDL_Color iColor = SDL_Color{0,0,0,255};
+    const SDL_Color black = renderDrawer->getColor_BLACK();
     for (int x = 0; x < map->getWidth(); x++) {
         for (int y = 0; y < map->getHeight(); y++) {
             // do not show the helper border
@@ -153,7 +152,8 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
                 continue;
             }
 
-            iColor = renderDrawer->getColor_BLACK();
+            // default : black
+            iColor = SDL_Color{0,0,0,255};
 
             int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
@@ -191,17 +191,19 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             }
 
             // no need to draw black on black background
-            auto black = renderDrawer->getColor_BLACK();
-            if (iColor.r != black.r && iColor.g != black.g && iColor.b != black.b) {
-                int iDrawX = drawX + x;
-                int iDrawY = drawY + y;
-
-                if (!isBigMap) {
-                    iDrawX += x;
-                    iDrawY += y;
-                }
-                renderDrawer->renderDot(iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+            if (iColor.r == black.r && iColor.g == black.g && iColor.b == black.b) {
+                continue;
             }
+            int iDrawX = drawX + x;
+            int iDrawY = drawY + y;
+            if (!isBigMap) {
+                iDrawX += x;
+                iDrawY += y;
+            }
+            //     std::cout << "Draw " << iDrawX << " " << iDrawY << " " << static_cast<int>(iColor.r)<< " "
+            //         << static_cast<int>(iColor.g)<< " "<< static_cast<int>(iColor.b) 
+            //         << " "<< static_cast<int>(iColor.a) << std::endl;
+            renderDrawer->renderDot(iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
         }
     }
 }
