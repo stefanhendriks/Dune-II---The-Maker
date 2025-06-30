@@ -17,7 +17,7 @@
 #include <iostream>
 
 // Return color index from pixel (x, y) in surface
-static Uint8 getPixelColorIndexFromSurface(SDL_Surface* surface, int x, int y)
+static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
 {
     if (surface == nullptr) {
         std::cerr << "Error : nullptr surface" << std::endl;
@@ -34,7 +34,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface* surface, int x, int y)
         std::cerr << "Error : out of range pixel (" << x << ", " << y << ") in (" << surface->w << ", " << surface->h << ")." << std::endl;
         return 0;
     }
-    Uint8* pixelData = (Uint8*)surface->pixels;
+    Uint8 *pixelData = (Uint8 *)surface->pixels;
     Uint8 colorIndex = pixelData[y * (surface->pitch) + x];
     return colorIndex;
 }
@@ -66,8 +66,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");
-    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, 
-                    "Mission select", buttonKind);
+    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect,
+            "Mission select", buttonKind);
     gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
     gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
