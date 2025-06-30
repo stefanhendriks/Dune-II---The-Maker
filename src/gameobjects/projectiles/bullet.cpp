@@ -122,7 +122,7 @@ void cBullet::draw()
 
     // Whenever this bullet is a shimmer, draw a shimmer and leave
     if (iType == BULLET_SHIMMER) {
-        renderDrawer->shimmer(bmp_screen, mapCamera->factorZoomLevel(16), x, y, mapCamera->factorZoomLevel(4));
+        //@Mira renderDrawer->shimmer(bmp_screen, mapCamera->factorZoomLevel(16), x, y, mapCamera->factorZoomLevel(4));
         return;
     }
 
