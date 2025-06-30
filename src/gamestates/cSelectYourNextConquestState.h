@@ -95,7 +95,7 @@ private:
 
     int regionMouseIsHoveringOver;
 
-    SDL_Surface *regionClickMapBmp;  // this is the bmp for determine player'choice. 
+    SDL_Surface *regionClickMapBmp;  // this is the bmp for determine player'choice.
 
     bool isFinishedConqueringRegions = true;
 
