@@ -54,11 +54,11 @@ public:
     void drawTextCenteredInBox(const std::string &msg, const cRectangle &rect, SDL_Color color) const;
     void drawTextCenteredInBox(const std::string &msg, const cRectangle &rect, SDL_Color color, int offsetX, int offsetY) const;
 
-    void drawTextBottomRight(const std::string &msg) const;
-    void drawTextBottomLeft(const std::string &msg) const;
+    void drawTextBottomRight(const std::string &msg, int margin=0) const;
+    void drawTextBottomLeft(const std::string &msg, int margin=0) const;
 
-    void drawTextBottomRight(SDL_Color color, const std::string &msg) const;
-    void drawTextBottomLeft(SDL_Color color, const std::string &msg) const;
+    void drawTextBottomRight(SDL_Color color, const std::string &msg,int margin =0) const;
+    void drawTextBottomLeft(SDL_Color color, const std::string &msg,int margin =0) const;
 
     void setApplyShadow(bool value) {
         applyShadow = value;
