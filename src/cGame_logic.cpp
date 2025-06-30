@@ -1063,17 +1063,17 @@ bool cGame::setupGame()
     Bitmap Creation
     ***/
 
-    bmp_screen = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+    // bmp_screen = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
-    if (bmp_screen == nullptr) {
-        std::cerr << "Failed to create a memory bitmap\n";
-        logbook("ERROR: Could not create bitmap: bmp_screen");
-        return false;
-    }
-    else {
-        logbook("Memory bitmap created: bmp_screen");
-        renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
-    }
+    // if (bmp_screen == nullptr) {
+    //     std::cerr << "Failed to create a memory bitmap\n";
+    //     logbook("ERROR: Could not create bitmap: bmp_screen");
+    //     return false;
+    // }
+    // else {
+    //     logbook("Memory bitmap created: bmp_screen");
+    //     renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
+    // }
 
     // bmp_backgroundMentat = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
