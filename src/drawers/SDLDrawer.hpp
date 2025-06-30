@@ -14,17 +14,17 @@ public:
     SDLDrawer(/*cAllegroDataRepository *dataRepository,*/ SDL_Renderer *_renderer);
     virtual ~SDLDrawer();
 
-    void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);
-    void drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x);
-    void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
-    void drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y);
+    // void drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset);
+    // void drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x);
+    // void drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src);
+    // void drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y);
 
     void renderSprite(Texture *src,int x, int y,unsigned char opacity = 255);
     void renderStrechSprite(Texture *src, SDL_Rect src_pos, SDL_Rect dest_pos, unsigned char opacity = 255);
 
-    [[deprecated]] void drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity = 255);
-    [[deprecated]] void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y,unsigned char opacity = 255);
-    [[deprecated]] void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
+    // [[deprecated]] void drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity = 255);
+    // [[deprecated]] void drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y,unsigned char opacity = 255);
+    // [[deprecated]] void drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity = 255);
     void renderFromSurface(SDL_Surface *src, int x, int y,unsigned char opacity = 255);
 
     void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
@@ -36,15 +36,15 @@ public:
     void resetClippingFor();
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
 
-    void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage);
+    // void drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage);
 
-    void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
+    // void blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
     // void blitFromGfxData(int index, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
-    void blitSprite(SDL_Surface *src, const cRectangle *rectangle);
+    // void blitSprite(SDL_Surface *src, const cRectangle *rectangle);
 
     // void stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity=255);
 
-    void stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
+    // void stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
     // void stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
     // void maskedBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height);
