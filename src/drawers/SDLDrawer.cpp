@@ -373,14 +373,14 @@ void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int h
 //     return new cRectangle(x, y, src->w, src->h);
 // }
 
-void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha)
-{
+// void SDLDrawer::setTransBlender(int red, int green, int blue, int alpha)
+// {
     //Mira NoFix
     // // @Mira fix trasnparency set_trans_blender(std::clamp(red, 0, 255),
     //                   std::clamp(green, 0, 255),
     //                   std::clamp(blue, 0, 255),
     //                   std::clamp(alpha, 0, 255));
-}
+// }
 
 void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y, unsigned char opacity)
 {
