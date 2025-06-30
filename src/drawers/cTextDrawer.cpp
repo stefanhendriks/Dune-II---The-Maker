@@ -120,24 +120,24 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int
     drawText(xPos, y, color, msg);
 }
 
-void cTextDrawer::drawTextBottomRight(const std::string &msg) const
+void cTextDrawer::drawTextBottomRight(const std::string &msg, int margin) const
 {
-    drawTextBottomRight(textColor, msg);
+    drawTextBottomRight(textColor, msg, margin);
 }
 
-void cTextDrawer::drawTextBottomLeft(const std::string &msg) const
+void cTextDrawer::drawTextBottomLeft(const std::string &msg, int margin) const
 {
-    drawTextBottomLeft(textColor, msg);
+    drawTextBottomLeft(textColor, msg, margin);
 }
 
-void cTextDrawer::drawTextBottomRight(SDL_Color color, const std::string &msg) const
+void cTextDrawer::drawTextBottomRight(SDL_Color color, const std::string &msg, int margin) const
 {
     if (msg.empty()) return;
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
-    int x = game.m_screenW - lenghtInPixels;
-    int y = game.m_screenH - getFontHeight()-20;
+    int x = game.m_screenW - lenghtInPixels-margin;
+    int y = game.m_screenH - getFontHeight()-20-margin;
     drawText(x, y, color, msg);
 }
 
@@ -148,13 +148,13 @@ int cTextDrawer::getFontHeight() const
     return TTF_FontHeight(font);
 }
 
-void cTextDrawer::drawTextBottomLeft(SDL_Color color, const std::string &msg) const
+void cTextDrawer::drawTextBottomLeft(SDL_Color color, const std::string &msg, int margin) const
 {
     if (msg.empty()) return;
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
-    int y = game.m_screenH - h-20;
-    drawText(0, y, color, msg);
+    int y = game.m_screenH - h-20-margin;
+    drawText(margin, y, color, msg);
 }
 
 int cTextDrawer::textLength(const std::string &msg) const

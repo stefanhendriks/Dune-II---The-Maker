@@ -164,7 +164,7 @@ void cMainMenuGameState::draw() const
     gui_btn_credits->draw();
 
     // draw version
-    textDrawer.drawTextBottomRight(game.m_version.c_str());
+    textDrawer.drawTextBottomRight(game.m_version.c_str(),20);
     textDrawer.drawText(sdl2power.x,sdl2power.y,SDL_Color{255,255,0,200},"SDL2 powered");
 
     if (game.isDebugMode()) {
