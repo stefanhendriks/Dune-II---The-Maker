@@ -79,54 +79,54 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
 // }
 // }
 
-void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
-{
-    if (src == nullptr) return;
-    //if (dest == nullptr) return;
+// void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
+// {
+//     if (src == nullptr) return;
+//     //if (dest == nullptr) return;
 
-    if (src_x + width > src->w) width = src->w-src_x;
-    if (src_y + height > src->h) height = src->h-src_y;
+//     if (src_x + width > src->w) width = src->w-src_x;
+//     if (src_y + height > src->h) height = src->h-src_y;
 
-    // could happen due to 'fix' above, you can't have a original width or height of 0
-    if (width < 0) return;
-    if (height < 0) return;
+//     // could happen due to 'fix' above, you can't have a original width or height of 0
+//     if (width < 0) return;
+//     if (height < 0) return;
 
-    // no use drawing outside of bounds
-    if (pos_x + desiredWidth < 0) return;
-    if (pos_y + desiredHeight < 0) return;
-    // if (pos_x > dest->w) return;
-    // if (pos_y > dest->h) return;
+//     // no use drawing outside of bounds
+//     if (pos_x + desiredWidth < 0) return;
+//     if (pos_y + desiredHeight < 0) return;
+//     // if (pos_x > dest->w) return;
+//     // if (pos_y > dest->h) return;
 
-    // no use drawing a desired image with 0 width or height
-    if (desiredHeight <= 0) return;
-    if (desiredWidth <= 0) return;
+//     // no use drawing a desired image with 0 width or height
+//     if (desiredHeight <= 0) return;
+//     if (desiredWidth <= 0) return;
 
-    //stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
-    Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, magicPink);
-    SDL_Rect srcRect = {src_x, src_y, width, height };
-    SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
+//     //stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+//     Uint32 magicPink = SDL_MapRGB(src->format, 255, 0, 255);
+//     SDL_SetColorKey(src, SDL_TRUE, magicPink);
+//     SDL_Rect srcRect = {src_x, src_y, width, height };
+//     SDL_Rect dstRect = {pos_x, pos_y, desiredWidth, desiredHeight};
 
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    if (!texture) {
-        std::cerr << "error maskedBlit : " << SDL_GetError();
-        return;
-    }
-    SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-    SDL_DestroyTexture(texture);
-    /*
-        int result;
-        if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
-            SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
-            result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
-            SDL_FreeSurface(converted);
-        } else {
-            result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
-        }
-        if (result < 0) {
-            std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
-        }*/
-}
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+//     if (!texture) {
+//         std::cerr << "error maskedBlit : " << SDL_GetError();
+//         return;
+//     }
+//     SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+//     SDL_DestroyTexture(texture);
+//     /*
+//         int result;
+//         if (src->format->BitsPerPixel != dest->format->BitsPerPixel) {
+//             SDL_Surface* converted = SDL_ConvertSurface(src, dest->format, 0);
+//             result = SDL_BlitScaled(converted, &srcRect, dest, &dstRect);
+//             SDL_FreeSurface(converted);
+//         } else {
+//             result = SDL_BlitScaled(src, &srcRect, dest, &dstRect);
+//         }
+//         if (result < 0) {
+//             std::cerr << "SDL_BlitScaled failed: " << SDL_GetError() << std::endl;
+//         }*/
+// }
 
 // void SDLDrawer::stretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight)
 // {
@@ -228,45 +228,45 @@ void SDLDrawer::stretchBlit(SDL_Surface *src, int src_x, int src_y, int width, i
 //     //masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
 // }
 
-void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src)
-{
-    assert(src);
-    assert(dest);
-    int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
-    int yPos = getCenteredYPosForBitmap(src);
-    this->drawSprite(dest, src, xPos, yPos);
-}
+// void SDLDrawer::drawCenteredSprite(SDL_Surface *dest, SDL_Surface *src)
+// {
+//     assert(src);
+//     assert(dest);
+//     int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
+//     int yPos = getCenteredYPosForBitmap(src);
+//     this->drawSprite(dest, src, xPos, yPos);
+// }
 
-void SDLDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage)
-{
-    int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
+// void SDLDrawer::drawSpriteCenteredRelativelyVertical(SDL_Surface *dest, SDL_Surface *src, float percentage)
+// {
+//     int xPos = getCenteredXPosForBitmap(src, game.m_screenW);
 
-    // we want to know the 'center' first. This is done in the percentage
-    int wantedYPos = ((float)game.m_screenH * percentage);
+//     // we want to know the 'center' first. This is done in the percentage
+//     int wantedYPos = ((float)game.m_screenH * percentage);
 
-    // we need to know the height of the src
-    int height = src->h;
-    int halfOfHeight = height / 2;
-    int yPos = wantedYPos - halfOfHeight;
-    this->drawSprite(dest, src, xPos, yPos);
-}
+//     // we need to know the height of the src
+//     int height = src->h;
+//     int halfOfHeight = height / 2;
+//     int yPos = wantedYPos - halfOfHeight;
+//     this->drawSprite(dest, src, xPos, yPos);
+// }
 
 
-void SDLDrawer::drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset)
-{
-    assert(src);
-    assert(dest);
-    int xPos = getCenteredXPosForBitmap(src, totalWidth) + xOffset;
-    this->drawSprite(dest, src, xPos, y);
-}
+// void SDLDrawer::drawCenteredSpriteHorizontal(SDL_Surface *dest, SDL_Surface *src, int y, int totalWidth, int xOffset)
+// {
+//     assert(src);
+//     assert(dest);
+//     int xPos = getCenteredXPosForBitmap(src, totalWidth) + xOffset;
+//     this->drawSprite(dest, src, xPos, y);
+// }
 
-void SDLDrawer::drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x)
-{
-    assert(src);
-    assert(dest);
-    int yPos = getCenteredXPosForBitmap(src, game.m_screenW);
-    this->drawSprite(dest, src, x, yPos);
-}
+// void SDLDrawer::drawCenteredSpriteVertical(SDL_Surface *dest, SDL_Surface *src, int x)
+// {
+//     assert(src);
+//     assert(dest);
+//     int yPos = getCenteredXPosForBitmap(src, game.m_screenW);
+//     this->drawSprite(dest, src, x, yPos);
+// }
 
 int SDLDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth)
 {
@@ -289,25 +289,25 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 //     blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 // }
 
-void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
-{
-    // use :: so we use global scope Allegro blitSprite
-    if (src == nullptr) return;
-    //::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
-    const SDL_Rect src_pos = {src_x, src_y,width, height};
-    SDL_Rect dest_pos = {pos_x, pos_y,width, height};
-    //SDL_BlitSurface(src, &src_pos, dest, &dest_pos);
+// void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
+// {
+//     // use :: so we use global scope Allegro blitSprite
+//     if (src == nullptr) return;
+//     //::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+//     const SDL_Rect src_pos = {src_x, src_y,width, height};
+//     SDL_Rect dest_pos = {pos_x, pos_y,width, height};
+//     //SDL_BlitSurface(src, &src_pos, dest, &dest_pos);
 
-    transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    if (!texture) {
-        std::cerr << "error drawSprite : " << SDL_GetError();
-        return;
-    }
-    SDL_RenderCopy(renderer, texture, &src_pos, &dest_pos);
-    SDL_DestroyTexture(texture);
-}
+//     transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
+//     SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+//     if (!texture) {
+//         std::cerr << "error drawSprite : " << SDL_GetError();
+//         return;
+//     }
+//     SDL_RenderCopy(renderer, texture, &src_pos, &dest_pos);
+//     SDL_DestroyTexture(texture);
+// }
 
 // void SDLDrawer::blitFromGfxData(int index, int src_x, int src_y, int width, int height, int pos_x, int pos_y)
 // {
@@ -315,12 +315,12 @@ void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, 
 //     this->blit(src, nullptr, src_x, src_y, width, height, pos_x, pos_y);
 // }
 
-void SDLDrawer::blitSprite(SDL_Surface *src, const cRectangle *rectangle)
-{
-    if (rectangle == nullptr) return;
-    if (src == nullptr) return;
-    blit(src, nullptr, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
-}
+// void SDLDrawer::blitSprite(SDL_Surface *src, const cRectangle *rectangle)
+// {
+//     if (rectangle == nullptr) return;
+//     if (src == nullptr) return;
+//     blit(src, nullptr, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
+// }
 
 void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
 {
@@ -382,27 +382,27 @@ void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int h
     //                   std::clamp(alpha, 0, 255));
 // }
 
-void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y, unsigned char opacity)
-{
-    drawSprite(src,x,y, opacity);
-}
+// void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y, unsigned char opacity)
+// {
+//     drawSprite(src,x,y, opacity);
+// }
 
-void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity)
-{
-    //_draw_sprite(dest, src, x, y);
-    SDL_Rect tmp = {x,y,src->w, src->h};
-    transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
-    if (!texture) {
-        std::cerr << "error drawSprite : " << SDL_GetError();
-        return;
-    }
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureAlphaMod(texture, opacity);
-    SDL_RenderCopy(renderer, texture, NULL, &tmp);
-    SDL_DestroyTexture(texture);
-}
+// void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity)
+// {
+//     //_draw_sprite(dest, src, x, y);
+//     SDL_Rect tmp = {x,y,src->w, src->h};
+//     transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
+//     SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
+//     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
+//     if (!texture) {
+//         std::cerr << "error drawSprite : " << SDL_GetError();
+//         return;
+//     }
+//     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+//     SDL_SetTextureAlphaMod(texture, opacity);
+//     SDL_RenderCopy(renderer, texture, NULL, &tmp);
+//     SDL_DestroyTexture(texture);
+// }
 
 void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,unsigned char opacity)
 {
@@ -420,12 +420,12 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,unsigned char o
     SDL_DestroyTexture(texture);
 }
 
-void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity)
-{
-    SDL_Surface *sBitmap = gfxdata->getSurface(index);
-    if (!sBitmap) return; // failed, bail!
-    drawSprite(dest, sBitmap, x, y, opacity);
-}
+// void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity)
+// {
+//     SDL_Surface *sBitmap = gfxdata->getSurface(index);
+//     if (!sBitmap) return; // failed, bail!
+//     drawSprite(dest, sBitmap, x, y, opacity);
+// }
 
 void SDLDrawer::renderStrechSprite(Texture *src, SDL_Rect src_pos, SDL_Rect dest_pos, unsigned char opacity)
 {
@@ -529,10 +529,10 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_co
     SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
 }
 
-void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y)
-{
-    drawSprite(dest, sprite, x, y);
-}
+// void SDLDrawer::drawTransSprite(SDL_Surface *sprite, SDL_Surface *dest, int x, int y)
+// {
+//     drawSprite(dest, sprite, x, y);
+// }
 
 void SDLDrawer::renderClearToColor(SDL_Color color)
 {
