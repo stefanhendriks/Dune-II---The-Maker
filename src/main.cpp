@@ -57,7 +57,7 @@ s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 // PALETTE general_palette;
 
 // bitmap(s)
-SDL_Surface *bmp_screen;
+// SDL_Surface *bmp_screen;
 // SDL_Surface *bmp_backgroundMentat;
 // SDL_Surface *bmp_throttle;
 // SDL_Surface *bmp_winlose;
