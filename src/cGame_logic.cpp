@@ -1075,48 +1075,48 @@ bool cGame::setupGame()
         renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
     }
 
-    bmp_backgroundMentat = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+    // bmp_backgroundMentat = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
-    if (bmp_backgroundMentat == nullptr) {
-        std::cerr << "Failed to create a memory bitmap\n";
-        logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
-        return false;
-    }
-    else {
-        logbook("Memory bitmap created: bmp_backgroundMentat");
-        // create only once
-        renderDrawer->FillWithColor(bmp_backgroundMentat, SDL_Color{8,8,16,255});
-        bool offsetX = false;
+    // if (bmp_backgroundMentat == nullptr) {
+    //     std::cerr << "Failed to create a memory bitmap\n";
+    //     logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
+    //     return false;
+    // }
+    // else {
+    //     logbook("Memory bitmap created: bmp_backgroundMentat");
+    //     // create only once
+    //     renderDrawer->FillWithColor(bmp_backgroundMentat, SDL_Color{8,8,16,255});
+    //     bool offsetX = false;
 
-        float horizon = game.m_screenH / 2;
-        float centered = game.m_screenW / 2;
-        for (int y = 0; y < game.m_screenH; y++) {
-            float diffYToCenter = 1.0f;
-            if (y < horizon) {
-                diffYToCenter = y / horizon;
-            }
-            else {
-                diffYToCenter = 1 - ((y - horizon) / horizon);
-            }
+    //     float horizon = game.m_screenH / 2;
+    //     float centered = game.m_screenW / 2;
+    //     for (int y = 0; y < game.m_screenH; y++) {
+    //         float diffYToCenter = 1.0f;
+    //         if (y < horizon) {
+    //             diffYToCenter = y / horizon;
+    //         }
+    //         else {
+    //             diffYToCenter = 1 - ((y - horizon) / horizon);
+    //         }
 
-            for (int x = offsetX ? 0 : 1; x < game.m_screenW; x += 2) {
-                float diffXToCenter = 1.0f;
-                if (x < centered) {
-                    diffXToCenter = x / centered;
-                }
-                else {
-                    diffXToCenter = 1 - ((x - centered) / centered);
-                }
+    //         for (int x = offsetX ? 0 : 1; x < game.m_screenW; x += 2) {
+    //             float diffXToCenter = 1.0f;
+    //             if (x < centered) {
+    //                 diffXToCenter = x / centered;
+    //             }
+    //             else {
+    //                 diffXToCenter = 1 - ((x - centered) / centered);
+    //             }
 
-                float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
-                float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
-                float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
-                renderDrawer->setPixel(bmp_backgroundMentat, x, y, SDL_Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
-            }
-            // flip offset every y row
-            offsetX = !offsetX;
-        }
-    }
+    //             float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
+    //             float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
+    //             float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
+    //             renderDrawer->setPixel(bmp_backgroundMentat, x, y, SDL_Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
+    //         }
+    //         // flip offset every y row
+    //         offsetX = !offsetX;
+    //     }
+    // }
 
     // bmp_throttle = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
@@ -1129,27 +1129,27 @@ bool cGame::setupGame()
     //     logbook("Memory bitmap created: bmp_throttle");
     // }
 
-    bmp_winlose = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+    // bmp_winlose = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
-    if (bmp_winlose == nullptr) {
-        std::cerr <<  "Failed to create a memory bitmap\n";
-        logbook("ERROR: Could not create bitmap: bmp_winlose");
-        return false;
-    }
-    else {
-        logbook("Memory bitmap created: bmp_winlose");
-    }
+    // if (bmp_winlose == nullptr) {
+    //     std::cerr <<  "Failed to create a memory bitmap\n";
+    //     logbook("ERROR: Could not create bitmap: bmp_winlose");
+    //     return false;
+    // }
+    // else {
+    //     logbook("Memory bitmap created: bmp_winlose");
+    // }
 
-    bmp_fadeout = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
+    // bmp_fadeout = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
 
-    if (bmp_fadeout == nullptr) {
-        std::cerr <<  "Failed to create a memory bitmap\n";
-        logbook("ERROR: Could not create bitmap: bmp_fadeout");
-        return false;
-    }
-    else {
-        logbook("Memory bitmap created: bmp_fadeout");
-    }
+    // if (bmp_fadeout == nullptr) {
+    //     std::cerr <<  "Failed to create a memory bitmap\n";
+    //     logbook("ERROR: Could not create bitmap: bmp_fadeout");
+    //     return false;
+    // }
+    // else {
+    //     logbook("Memory bitmap created: bmp_fadeout");
+    // }
 
     /*** End of Bitmap Creation ***/
     //set_color_conversion(COLORCONV_MOST);

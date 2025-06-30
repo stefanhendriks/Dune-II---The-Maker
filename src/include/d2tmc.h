@@ -86,9 +86,9 @@ extern std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 
 // BITMAPS
 extern SDL_Surface *bmp_screen;
-extern SDL_Surface *bmp_backgroundMentat;
-extern SDL_Surface *bmp_fadeout;
+// extern SDL_Surface *bmp_backgroundMentat;
+// extern SDL_Surface *bmp_fadeout;
 // extern SDL_Surface *bmp_throttle;
-extern SDL_Surface *bmp_winlose;
+// extern SDL_Surface *bmp_winlose;
 
 
