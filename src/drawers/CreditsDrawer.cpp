@@ -176,11 +176,12 @@ void CreditsDrawer::draw()
     // bmp = SDL_CreateRGBSurface(0,120, 17,32,0,0,0,255);
     // }
     // renderDrawer->FillWithColor(bmp,SDL_Color{255,0,255,255});
-
-    renderDrawer->renderSprite(gfxinter->getTexture(CREDITS_BAR), drawX, drawY);
-
+    auto *tex = gfxinter->getTexture(CREDITS_BAR);
+    renderDrawer->renderSprite(tex, drawX, drawY);
+    renderDrawer->setClippingFor(drawX+1, drawY+1, drawX+tex->w-1, drawY+tex->h-1);
     drawCurrentCredits(drawX, drawY);
     drawPreviousCredits(drawX, drawY);
+    renderDrawer->resetClippingFor();
 
     // draw bmp on screen
     // renderDrawer->drawSprite(bmp_screen, bmp, drawX+8, drawY + 8);
