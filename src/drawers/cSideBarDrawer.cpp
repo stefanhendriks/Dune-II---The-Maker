@@ -71,7 +71,7 @@ void cSideBarDrawer::createCandyBar(int drawX, int drawY)
     renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_BALL), drawX, drawY+ballY); // height of ball = 25
 
     // draw top m_candybar again
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), drawX, ballY + 26); // height of top = 10
+    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), drawX, drawY+ballY + 26); // height of top = 10
 
     startY = ballY + 26 + 10;
     for (int y = startY; y < (heightInPixels + 23); y += 24) {
