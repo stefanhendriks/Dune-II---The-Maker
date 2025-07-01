@@ -253,7 +253,7 @@ void cSideBarDrawer::drawCreditsUsage()
 
     renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
 
-    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
+    //renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     SDL_Color darker = SDL_Color{89, 56, 0,255};
