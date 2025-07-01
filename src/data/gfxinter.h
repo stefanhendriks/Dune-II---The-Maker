@@ -144,4 +144,7 @@
 #define STAT21                           138      /* BMP  */
 #define ICON_POWER                       139      /* BMP  */
 #define ICON_POWER_HIGH                  140
+#define ICON_SOLARIS_LOW                 141   
+#define ICON_SOLARIS                     142
+#define ICON_SOLARIS_FULL                143
 

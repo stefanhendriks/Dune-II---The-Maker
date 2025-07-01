@@ -272,9 +272,16 @@ void cSideBarDrawer::drawCreditsUsage()
     renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
-    m_textDrawer.drawText(barX - 1, barY - 21, SDL_Color{0, 0, 0,255}, "$");
-    m_textDrawer.drawText(barX + 1, barY - 19, SDL_Color{0, 0, 0,255}, "$");
-    m_textDrawer.drawText(barX, barY - 20, "$");
+    if (spiceCapacityRatio>0.95) {
+        renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
+    } else  if (spiceCapacityRatio<0.05) {
+        renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
+    } else {
+        renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
+    }
+    // m_textDrawer.drawText(barX - 1, barY - 21, SDL_Color{0, 0, 0,255}, "$");
+    // m_textDrawer.drawText(barX + 1, barY - 19, SDL_Color{0, 0, 0,255}, "$");
+    // m_textDrawer.drawText(barX, barY - 20, "$");
 }
 
 void cSideBarDrawer::drawPowerUsage() const
