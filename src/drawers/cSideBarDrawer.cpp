@@ -16,7 +16,7 @@ cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
     m_buildingListDrawer(player),
     m_sidebar(nullptr),
     // m_candybar(nullptr),
-    m_textDrawer(bene_font),
+    // m_textDrawer(bene_font),
     m_sidebarColor(SDL_Color{214, 149, 20,255})
 {
     assert(player);
