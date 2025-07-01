@@ -12,7 +12,7 @@
 
 cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
 {
-    buttonBitmap = gfxinter->getTexture(BTN_ORDER);
+    buttonBitmap = thePlayer->createTextureFromIndexedSurfaceWithPalette(gfxinter->getSurface(BTN_ORDER),232);
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -41,6 +41,8 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
 cOrderDrawer::~cOrderDrawer()
 {
     // SDL_FreeSurface(greyedButtonBitmap);
+    if (buttonBitmap)
+        delete buttonBitmap;
 }
 
 void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
