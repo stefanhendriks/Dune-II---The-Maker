@@ -325,7 +325,12 @@ void cSideBarDrawer::drawPowerUsage() const
     SDL_Color darker = SDL_Color{89, 56, 0,255};
     renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
-    renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
+    if (m_player->bEnoughPower()) {
+        renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
+    }
+    else {
+        renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
+    }
     // m_textDrawer.drawText(barX-1, barY - 21, SDL_Color{0,0,0,255},"P");
     // m_textDrawer.drawText(barX+1, barY - 19, SDL_Color{0,0,0,255},"P");
     // m_textDrawer.drawText(barX, barY - 20, "P");
