@@ -285,7 +285,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barTotalHeight, SDL_Color{0, 232, 0,255});
+    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, SDL_Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * powerUse;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
