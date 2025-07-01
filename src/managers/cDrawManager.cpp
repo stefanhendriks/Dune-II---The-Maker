@@ -24,10 +24,10 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
     , m_placeitDrawer(thePlayer)
     , m_structureDrawer()
     , m_mouseDrawer(thePlayer)
-    , m_optionsBar(nullptr)
+    // , m_optionsBar(nullptr)
     , m_sidebarColor(SDL_Color{214, 149, 20,255})
     , m_player(thePlayer)
-    , m_topBarBmp(nullptr)
+    // , m_topBarBmp(nullptr)
     , m_textDrawer(game_font)
 {
     assert(thePlayer);
@@ -37,12 +37,12 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
 
 cDrawManager::~cDrawManager()
 {
-    if (m_optionsBar) {
-        SDL_FreeSurface(m_optionsBar);
-    }
-    if (m_topBarBmp) {
-        SDL_FreeSurface(m_topBarBmp);
-    }
+    // if (m_optionsBar) {
+    //     SDL_FreeSurface(m_optionsBar);
+    // }
+    // if (m_topBarBmp) {
+    //     SDL_FreeSurface(m_topBarBmp);
+    // }
     if (btnOptions) {
         delete btnOptions;
     }
@@ -269,14 +269,14 @@ void cDrawManager::drawOptionBar()
 {
     // upper bar
     renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, SDL_Color{0, 0, 0,255});
-    if (m_optionsBar == nullptr) {
+    // if (m_optionsBar == nullptr) {
         // m_optionsBar = SDL_CreateRGBSurface(0,game.m_screenW, 40,32,0,0,0,255);
         renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, SDL_Color{214,149,20,255});
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {
             renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
         }
-    }
+    // }
 
     // renderDrawer->renderFromSurface(m_optionsBar, 0, 0);
 }
