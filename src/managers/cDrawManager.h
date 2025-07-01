@@ -18,6 +18,7 @@
 
 class cPlayer;
 struct SDL_Surface;
+struct Texture;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
@@ -115,6 +116,7 @@ private:
     SDL_Surface *m_optionsBar;
     SDL_Cursor *defaultCursor;
     SDL_Color m_sidebarColor;
+    Texture *btnOptions;
 
     // TODO: bullet/projectile drawer
 
