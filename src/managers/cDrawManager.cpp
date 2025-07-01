@@ -31,6 +31,8 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
     , m_textDrawer(game_font)
 {
     assert(thePlayer);
+    btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
+                gfxinter->getSurface(BTN_OPTIONS), 232);
 }
 
 cDrawManager::~cDrawManager()
@@ -40,6 +42,9 @@ cDrawManager::~cDrawManager()
     }
     if (m_topBarBmp) {
         SDL_FreeSurface(m_topBarBmp);
+    }
+    if (btnOptions) {
+        delete btnOptions;
     }
 }
 
@@ -238,7 +243,7 @@ void cDrawManager::drawTopBarBackground()
 
     // set_palette(m_player->pal);
     //@Mira change button color
-    renderDrawer->renderSprite(gfxinter->getTexture(BTN_OPTIONS), 1, 0);
+    renderDrawer->renderSprite(btnOptions, 1, 0);
     // }
 
     // renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
