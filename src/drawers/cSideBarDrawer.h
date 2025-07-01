@@ -40,7 +40,7 @@ private:
 
     // the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
     // SDL_Surface *m_candybar;
-    cTextDrawer m_textDrawer;
+    // cTextDrawer m_textDrawer;
 
     SDL_Color m_sidebarColor;
 
