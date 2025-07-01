@@ -6,6 +6,7 @@
 #include "observers/cInputObserver.h"
 #include "sMouseEvent.h"
 
+class Texture;
 class cPlayer;
 
 class cSideBarDrawer : cInputObserver {
@@ -47,4 +48,7 @@ private:
 
     void drawPowerUsage() const;
     void drawCreditsUsage();
+    Texture *candyBarBall=nullptr;
+    Texture *candyBarPiece=nullptr;
+    Texture *candyHorizonBar=nullptr;
 };
