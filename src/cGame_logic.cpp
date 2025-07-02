@@ -2108,7 +2108,7 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
                 if (canPlace) {
                     int iLocation = u.getCell();
                     u.die(false, false);
-                    u.getPlayer()->placeStructure(iLocation, CONSTYARD, 100);
+                    humanPlayer.placeStructure(iLocation, CONSTYARD, 100);
                 }
             }
         }
