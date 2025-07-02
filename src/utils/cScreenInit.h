@@ -5,7 +5,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-struct ScreenResolution {
+struct DisplayResolution {
     int width;
     int height;
 };
@@ -28,10 +28,10 @@ public:
     cScreenInit(cScreenInit &&) = delete;
 
     int Width() const {
-        return m_screenResolution.width;
+        return renderResolution.width;
     }
     int Height() const {
-        return m_screenResolution.height;
+        return renderResolution.height;
     }
 
     SDL_Window *getWindows() const {
@@ -47,7 +47,7 @@ private:
     // void AutoDetectFullScreen();
 
     // int m_colorDepth;
-    ScreenResolution m_screenResolution;
+    DisplayResolution renderResolution;
 
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;

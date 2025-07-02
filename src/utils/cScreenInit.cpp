@@ -195,8 +195,8 @@ cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string
         return;
     }
     else {
-        m_screenResolution.width = width;
-        m_screenResolution.height = height;
+        renderResolution.width = width;
+        renderResolution.height = height;
         const auto msg = fmt::format("Successfully initialized screen with resolution {}x{}.", width, height);
         logger->log(LOG_INFO, COMP_SDL2, "Screen init", msg, OUTC_SUCCESS);
     }
