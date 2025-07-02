@@ -51,4 +51,5 @@ private:
     Texture *candyBarBall=nullptr;
     Texture *candyBarPiece=nullptr;
     Texture *candyHorizonBar=nullptr;
+    Texture *candiBarRenderer= nullptr;
 };
