@@ -18,7 +18,7 @@ public:
     // Initializes full-screen at desktop color depth, autodetecting a supported resolution.
     // cScreenInit(const cPlatformLayerInit &platform);
 
-    cScreenInit(bool windowed, int width, int height, const std::string &title);
+    cScreenInit(int desiredWidth, int desiredHeight, const std::string &title);
     // No cleanup required
     ~cScreenInit() = default;
 
@@ -44,10 +44,12 @@ public:
 
 private:
     // void TitleAndColorDepthInit(const cPlatformLayerInit &platform);
-    // void AutoDetectFullScreen();
+    void getWindowResolution();
+    void adaptResolution(int desiredWidth, int desiredHeight);
 
     // int m_colorDepth;
     DisplayResolution renderResolution;
+    DisplayResolution windowResolution; //display size of screen
 
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;

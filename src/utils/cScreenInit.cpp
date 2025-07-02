@@ -181,30 +181,63 @@ void cScreenInit::AutoDetectFullScreen()
     }
 }
 */
-
-cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string &title)
+void cScreenInit::getWindowResolution()
 {
+    SDL_DisplayMode mode;
+    if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
+        std::cout << "Résolution écran : " << mode.w << " x " << mode.h << "\n";
+    }
+    windowResolution.width = mode.w;
+    windowResolution.height = mode.h;
+}
+
+void cScreenInit::adaptResolution(int desiredWidth, int desiredHeight)
+{
+    if (desiredWidth<800)
+        desiredWidth = 800;
+    if (desiredHeight<600)
+        desiredHeight = 600;
+    //float baseRatio = (desiredWidth*1.f) / (desiredHeight*1.f);
+    //float screenRatio = (windowResolution.width*1.f) / (windowResolution.height*1.f);
+    // adapt desiredWidth & desiredHeight to ratio
+    int tmpWidth =  windowResolution.width * desiredHeight / windowResolution.height;
+    if (tmpWidth > desiredWidth) {
+        // Écran plus large : on adapte la largeur
+        renderResolution.height = desiredHeight;
+        renderResolution.width = tmpWidth;
+    } else {
+        // Écran plus haut : on adapte la hauteur
+        renderResolution.width = desiredWidth;
+        renderResolution.height = windowResolution.height * desiredWidth / windowResolution.width;
+    }
+    //std::cout << "Resolution adaptée à " << renderResolution.width << "x"<<renderResolution.height<<'\n';
+}
+
+cScreenInit::cScreenInit(int desiredWidth, int desiredHeight, const std::string &title)
+{
+    this->getWindowResolution();
+    this->adaptResolution(desiredWidth, desiredHeight);
+
     auto logger = cLogger::getInstance();
     // Création de la fenêtre
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, renderResolution.width , renderResolution.height, SDL_WINDOW_ALLOW_HIGHDPI);
     if (window == nullptr) {
-        const auto msg = fmt::format("Failed initialized screen with resolution {}x{}", width, height);
+        const auto msg = fmt::format("Failed initialized screen with resolution {}x{}", renderResolution.width, renderResolution.height);
         logger->log(LOG_ERROR, COMP_SDL2, "Screen init", msg, OUTC_FAILED);
         //std::cerr << "SDL CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return;
     }
     else {
-        renderResolution.width = width;
-        renderResolution.height = height;
-        const auto msg = fmt::format("Successfully initialized screen with resolution {}x{}.", width, height);
+        const auto msg = fmt::format("Successfully initialized screen with resolution {}x{}.", renderResolution.width, renderResolution.height);
+        std::cout << msg << std::endl;
         logger->log(LOG_INFO, COMP_SDL2, "Screen init", msg, OUTC_SUCCESS);
     }
     // Création du renderer
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr) {
         //std::cerr << "SDL CreateRenderer Error: " << SDL_GetError() << std::endl;
-        const auto msg = fmt::format("Failed initialized renderer with resolution {}x{}", width, height);
+        const auto msg = fmt::format("Failed initialized renderer with resolution {}x{}", renderResolution.width, renderResolution.height);
         logger->log(LOG_ERROR, COMP_SDL2, "Renderer init", msg, OUTC_FAILED);
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -214,4 +247,21 @@ cScreenInit::cScreenInit(bool windowed, int width, int height, const std::string
         const auto msg = fmt::format("Successfully initialized renderer");
         logger->log(LOG_INFO, COMP_SDL2, "Renderer init", msg, OUTC_SUCCESS);
     }
+
+    SDL_SetWindowFullscreen(window, 0);
+    SDL_SetWindowSize(window, renderResolution.width, renderResolution.height);
+    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    SDL_RenderSetLogicalSize(renderer, renderResolution.width, renderResolution.height);
+
+    // //Affiche la taille réelle du rendu
+    // int renderW, renderH;
+    // SDL_GetRendererOutputSize(renderer, &renderW, &renderH);
+    // std::cout << "Renderer output size : " << renderW << " x " << renderH << "\n";
+    // //Affiche le DPI
+    // float ddpi, hdpi, vdpi;
+    // if (SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi) == 0) {
+        // std::cout << "DPI : " << ddpi << " (H: " << hdpi << ", V: " << vdpi << ")\n";
+    // } else {
+        // std::cerr << "Erreur DPI: " << SDL_GetError() << "\n";
+    // }
 }

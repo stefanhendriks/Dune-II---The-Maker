@@ -968,21 +968,21 @@ bool cGame::setupGame()
 
     m_frameCount = m_fps = 0;
 
-    // TODO: read/write rest value so it does not have to 'fine-tune'
-    // but is already set up. Perhaps even offer it in the options screen? So the user
-    // can specify how much CPU this game may use?
-    if (game.m_screenW != -1 && game.m_screenH != -1) {
-        setScreenResolutionFromGameIniSettings();
-        m_handleArgument->applyArguments(); //Apply command line arguments
+    // Application des arguments de la ligne de commande
+    // applyArguments(*m_handleArgument);
+
+    // if (m_screenW != -1 && m_screenH != -1) {
+        // setScreenResolutionFromGameIniSettings();
+        m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
         // m_handleArgument.reset();
         m_Screen = std::make_unique<cScreenInit>(m_windowed, m_screenW, m_screenH, title);
     }
-    else {
-        if (m_windowed) {
-            logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
-        }
-        m_Screen = std::make_unique<cScreenInit>(false, 800, 600, title);
-    }
+    // } else {
+    //     if (m_windowed) {
+    //         logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
+    //     }
+    //     m_Screen = std::make_unique<cScreenInit>(800, 600, title);
+    // }
     m_screenW = m_Screen->Width();
     m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
