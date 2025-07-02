@@ -26,6 +26,13 @@ cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
                     gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), 232);
     candyHorizonBar = m_player->createTextureFromIndexedSurfaceWithPalette(
                     gfxinter->getSurface(HORIZONTAL_CANDYBAR),232);
+
+    candiBarRenderer = renderDrawer->createRenderTargetTexture(game.m_screenW, game.m_screenH);
+    renderDrawer->beginDrawingToTexture(candiBarRenderer);
+    int drawX = game.m_screenW - cSideBar::SidebarWidth;
+    int drawY = 40;
+    createCandyBar(drawX,drawY);
+    renderDrawer->endDrawingToTexture();
 }
 
 cSideBarDrawer::~cSideBarDrawer()
@@ -40,15 +47,19 @@ cSideBarDrawer::~cSideBarDrawer()
         delete candyBarPiece;
     if (candyHorizonBar)
         delete candyHorizonBar;
+
+    if (candiBarRenderer)
+        delete candiBarRenderer;
 }
 
 void cSideBarDrawer::drawCandybar()
 {
     // if (m_candybar == nullptr) {
-    int drawX = game.m_screenW - cSideBar::SidebarWidth;
-    int drawY = 40;
+    // int drawX = game.m_screenW - cSideBar::SidebarWidth;
+    // int drawY = 40;
     // @Mira render to texture
-    createCandyBar(drawX,drawY);
+    // createCandyBar(drawX,drawY);
+    renderDrawer->renderSprite(candiBarRenderer,0,0);
     // }
     //renderDrawer->drawSprite(bmp_screen, drawX, drawY);
 }
