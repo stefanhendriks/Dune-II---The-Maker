@@ -849,23 +849,23 @@ void cGame::shutdown()
 //     return game.m_screenW != -1 && game.m_screenH != -1;
 // }
 
-void cGame::setScreenResolutionFromGameIniSettings()
-{
-    if (game.m_screenW < 800) {
-        game.m_screenW = 800;
-        logbook("INI screen width < 800; unsupported; will set to 800.");
-    }
-    if (game.m_screenH < 600) {
-        game.m_screenH = 600;
-        logbook("INI screen height < 600; unsupported; will set to 600.");
-    }
-    // game.m_screenW = game.m_iniScreenWidth;
-    // game.m_screenH = game.m_iniScreenHeight;
+// void cGame::setScreenResolutionFromGameIniSettings()
+// {
+//     if (game.m_screenW < 800) {
+//         game.m_screenW = 800;
+//         logbook("INI screen width < 800; unsupported; will set to 800.");
+//     }
+//     if (game.m_screenH < 600) {
+//         game.m_screenH = 600;
+//         logbook("INI screen height < 600; unsupported; will set to 600.");
+//     }
+//     // game.m_screenW = game.m_iniScreenWidth;
+//     // game.m_screenH = game.m_iniScreenHeight;
 
-    cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file",
-                                fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_screenW, game.m_screenH)
-                               );
-}
+//     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file",
+//                                 fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_screenW, game.m_screenH)
+//                                );
+// }
 
 /**
 	Setup the game

@@ -367,7 +367,7 @@ private:
     void handleTimeSlicing();
 
     // bool isResolutionInGameINIFoundAndSet();
-    void setScreenResolutionFromGameIniSettings();
+    // void setScreenResolutionFromGameIniSettings();
 
     void initPlayers(bool rememberHouse) const;
 
