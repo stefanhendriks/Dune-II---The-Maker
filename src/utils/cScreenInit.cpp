@@ -181,6 +181,36 @@ void cScreenInit::AutoDetectFullScreen()
     }
 }
 */
+void cScreenInit::setFullScreenMode()
+{
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_RenderSetLogicalSize(renderer, renderResolution.width, renderResolution.height);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+    std::cout << "✅ Mode : Plein écran desktop\n";
+
+    // Affiche la taille réelle du rendu
+    int renderW, renderH;
+    SDL_GetRendererOutputSize(renderer, &renderW, &renderH);
+    std::cout << "🧩 Renderer output size : " << renderW << " x " << renderH << "\n";
+
+    // Affiche le DPI
+    float ddpi, hdpi, vdpi;
+    if (SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi) == 0) {
+        std::cout << "📐 DPI : " << ddpi << " (H: " << hdpi << ", V: " << vdpi << ")\n";
+    } else {
+        std::cerr << "Erreur DPI: " << SDL_GetError() << "\n";
+    }
+}
+
+void cScreenInit::setWindowMode()
+{
+    SDL_SetWindowFullscreen(window, 0);
+    SDL_SetWindowSize(window, renderResolution.width, renderResolution.height);
+    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    SDL_RenderSetLogicalSize(renderer, renderResolution.width, renderResolution.height);
+}
+
 void cScreenInit::getWindowResolution()
 {
     SDL_DisplayMode mode;

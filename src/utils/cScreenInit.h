@@ -22,6 +22,9 @@ public:
     // No cleanup required
     ~cScreenInit() = default;
 
+    void setFullScreenMode();
+    void setWindowMode();
+
     cScreenInit &operator=(const cScreenInit &) = delete;
     cScreenInit &operator=(cScreenInit &&) = delete;
     cScreenInit(const cScreenInit &) = delete;

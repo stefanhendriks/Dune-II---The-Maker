@@ -974,9 +974,9 @@ bool cGame::setupGame()
     // if (m_screenW != -1 && m_screenH != -1) {
         // setScreenResolutionFromGameIniSettings();
         m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
-        // m_handleArgument.reset();
-        m_Screen = std::make_unique<cScreenInit>(m_windowed, m_screenW, m_screenH, title);
-    }
+        if (!m_windowed) {
+            m_Screen->setFullScreenMode();
+        }
     // } else {
     //     if (m_windowed) {
     //         logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
