@@ -86,6 +86,10 @@ public:
     SDL_Renderer *getRenderer() {
         return renderer;
     }
+
+    Texture *createRenderTargetTexture(int width, int height);
+    void beginDrawingToTexture(Texture* targetTexture);
+    void endDrawingToTexture();
 protected:
     int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
     int getCenteredYPosForBitmap(SDL_Surface *bmp);

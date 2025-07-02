@@ -765,3 +765,39 @@ void SDLDrawer::renderChangeColor(SDL_Color color)
 {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
+
+
+
+
+
+
+// Crée une texture de rendu
+Texture* SDLDrawer::createRenderTargetTexture(int width, int height) {
+    SDL_Texture* texture = SDL_CreateTexture(renderer,
+                                              SDL_PIXELFORMAT_RGBA8888,
+                                              SDL_TEXTUREACCESS_TARGET,
+                                              width,
+                                              height);
+    if (!texture) {
+        throw std::runtime_error("Erreur lors de la création de la texture de rendu: " + std::string(SDL_GetError()));
+    }
+    return new Texture(texture, width, height, true);
+}
+
+// Définit une texture comme cible de rendu.
+// Prend un pointeur vers la texture. Si nullptr, revient à la fenêtre principale.
+void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
+{
+    assert(targetTexture->isRenderTarget == true);
+    if (SDL_SetRenderTarget(renderer, targetTexture->tex) < 0) {
+        throw std::runtime_error("Erreur lors du changement de cible de rendu: " + std::string(SDL_GetError()));
+    }
+}
+
+// Termine le dessin sur une texture et revient à la cible par défaut (la fenêtre)
+void SDLDrawer::endDrawingToTexture()
+{
+    if (SDL_SetRenderTarget(renderer, nullptr) < 0) {
+        throw std::runtime_error("Erreur lors de la restauration de la cible de rendu par défaut: " + std::string(SDL_GetError()));
+    }
+}
