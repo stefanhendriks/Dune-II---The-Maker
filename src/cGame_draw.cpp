@@ -34,11 +34,11 @@ void cGame::initiateFadingOut()
         return;
     }
     // Lire les pixels depuis le framebuffer
-    if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
-        //std::cerr << "Erreur lors de la lecture des pixels: " << SDL_GetError() << std::endl;
-        SDL_FreeSurface(surface);
-        return;
-    }
+    // if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
+    //     std::cerr << "Erreur lors de la lecture des pixels: " << SDL_GetError() << std::endl;
+    //     SDL_FreeSurface(surface);
+    //     return;
+    // }
     screenTexture = SDL_CreateTextureFromSurface(renderer,surface);
     std::string name = fmt::format("screenshot{}.bmp",m_screenshot);
     m_screenshot++;
