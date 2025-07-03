@@ -127,20 +127,4 @@ void cTimeManager::processTime()
     handleTimerAllegroTimerSeconds();
     handleTimerUnits();
     handleTimerGameTime();
-
-//    syncAllegroTimers();
 }
-
-// /** allegro specific routine **/
-// void cTimeManager::syncFromAllegroTimers() {
-//     m_timerSecond = allegro_timerSecond;
-//     m_timerGlobal = allegro_timerGlobal;
-//     m_timerUnits = allegro_timerUnits;
-// }
-
-// /** allegro specific routine **/
-// void cTimeManager::syncAllegroTimers() {
-//     allegro_timerSecond = m_timerSecond;
-//     allegro_timerGlobal = m_timerGlobal;
-//     allegro_timerUnits = m_timerUnits;
-// }
