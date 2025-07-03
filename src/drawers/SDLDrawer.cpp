@@ -27,16 +27,19 @@ SDLDrawer::~SDLDrawer()
     // bitmapCache.clear();
 }
 
-void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
+void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
 {
     if (src == nullptr) return;
     SDL_Rect tmp = {x,y, src->w, src->h };
+    SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureAlphaMod(src->tex, opacity);
+    if (SDL_SetTextureAlphaMod(src->tex, opacity)<0) {
+        std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
+    }
     SDL_RenderCopy(renderer, src->tex, NULL, &tmp);
 }
 
-// void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, unsigned char opacity)
+// void SDLDrawer::stretchSprite(SDL_Surface *src, SDL_Surface *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight, Uint8 opacity)
 // {
 // if (src == nullptr) return;
 // if (dest == nullptr) return;
@@ -382,12 +385,12 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
     //                   std::clamp(alpha, 0, 255));
 // }
 
-// void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y, unsigned char opacity)
+// void SDLDrawer::drawSprite(SDL_Surface *dest, SDL_Surface *src, int x, int y, Uint8 opacity)
 // {
 //     drawSprite(src,x,y, opacity);
 // }
 
-// void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,unsigned char opacity)
+// void SDLDrawer::drawSprite(SDL_Surface *src, int x, int y,Uint8 opacity)
 // {
 //     //_draw_sprite(dest, src, x, y);
 //     SDL_Rect tmp = {x,y,src->w, src->h};
@@ -404,7 +407,7 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
 //     SDL_DestroyTexture(texture);
 // }
 
-void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,unsigned char opacity)
+void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 {
     SDL_Rect tmp = {x,y,src->w, src->h};
     transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
@@ -420,16 +423,19 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,unsigned char o
     SDL_DestroyTexture(texture);
 }
 
-// void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, unsigned char opacity)
+// void SDLDrawer::drawSprite(SDL_Surface *dest, int index, int x, int y, Uint8 opacity)
 // {
 //     SDL_Surface *sBitmap = gfxdata->getSurface(index);
 //     if (!sBitmap) return; // failed, bail!
 //     drawSprite(dest, sBitmap, x, y, opacity);
 // }
 
-void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, unsigned char opacity)
+void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity)
 {
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    if (SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND) < 0) {
+        // Gérer l'erreur, par exemple :
+        std::cerr << "Erreur SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
+    }
     SDL_SetTextureAlphaMod(src->tex, opacity);
     SDL_Rect srcRect = src_pos.toSDL();
     SDL_Rect destRect = dest_pos.toSDL();
@@ -437,7 +443,7 @@ void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle 
 }
 
 
-void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
+void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, Uint8 opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -450,7 +456,7 @@ void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Color c
     renderRectFillColor(x,y,width,height,color.r, color.g, color.b,color.a);
 }
 
-void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
+void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, Uint8 opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -458,7 +464,7 @@ void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Ui
     SDL_RenderDrawRect(renderer, &carre);
 }
 
-void SDLDrawer::renderRectColor(const cRectangle &rect, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity)
+void SDLDrawer::renderRectColor(const cRectangle &rect, Uint8 r, Uint8 g, Uint8 b, Uint8 opacity)
 {
     renderRectColor(rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight(),r,g,b,opacity);
 }
