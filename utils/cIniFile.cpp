@@ -246,6 +246,51 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
     }
 }
 
+int cIniFile::getInt(const std::string& section, const std::string& key) const
+{
+    if (hasSection(section)) {
+        return getSection(section).getInt(key);
+    } else {
+        if (m_debugMode) {
+            std::cout << "From getInt, section " << section << " didn't exist" << std::endl;
+            cLogger *logger = cLogger::getInstance();
+            logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)",
+                        fmt::format("section {} didn't exist", section));
+        }
+        return 0;
+    }
+}
+
+double cIniFile::getDouble(const std::string& section, const std::string& key) const
+{
+    if (hasSection(section)) {
+        return getSection(section).getDouble(key);
+    } else {
+        if (m_debugMode) {
+            std::cout << "From getDouble, section " << section << " didn't exist" << std::endl;
+            cLogger *logger = cLogger::getInstance();
+            logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)",
+                        fmt::format("section {} didn't exist", section));
+        }
+        return 0.0;
+    }
+}
+
+bool cIniFile::getBoolean(const std::string& section, const std::string& key) const
+{
+    if (hasSection(section)) {
+        return getSection(section).getBoolean(key);
+    } else {
+        if (m_debugMode) {
+            std::cout << "From getBoolean, section " << section << " didn't exist" << std::endl;
+            cLogger *logger = cLogger::getInstance();
+            logger->log(LOG_ERROR, COMP_GAMEINI, "(cIniFile)",
+                        fmt::format("section {} didn't exist", section));
+        }
+        return false;
+    }
+}
+
 bool cIniFile::hasSection(const std::string &section) const { return m_mapConfig.find(section) != m_mapConfig.end(); }
 
 

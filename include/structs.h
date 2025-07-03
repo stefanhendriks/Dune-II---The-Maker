@@ -253,7 +253,7 @@ struct s_BulletInfo {
     bool groundBullet;   // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
     bool canDamageAirUnits;   // if true, then upon impact the bullet can also damage air units
 
-    char description[64]; // ie: "bullet"
+    std::string description; // ie: "bullet"
 
     bool canDamageGround; // when true, this bullet can damage ground (ie walls, concrete, etc)
 };
