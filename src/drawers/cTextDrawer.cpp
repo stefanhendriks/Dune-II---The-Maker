@@ -2,7 +2,6 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-//#include <iostream>
 #include "utils/Color.hpp"
 
 #include <cassert>
@@ -22,27 +21,6 @@ cTextDrawer::~cTextDrawer()
 {
     font = nullptr; // do not delete, because we are not the owner of it
 }
-
-// void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const std::string& msg, int var1, int var2) const
-// {
-//     //Mira TEXT if (applyShadow) {
-//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, Color{0,0,0), msg, var1, var2);
-//     //Mira TEXT }
-//     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, textColor, msg, var1, var2);
-// }
-
-// void cTextDrawer::drawTextWithOneInteger(int x, int y, const std::string& msg, int var) const
-// {
-//     drawTextWithOneInteger(x, y, textColor, msg, var);
-// }
-
-// void cTextDrawer::drawTextWithOneInteger(int x, int y, Color color, const std::string& msg, int var) const
-// {
-//     //Mira TEXT if (applyShadow) {
-//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, Color{0,0,0), msg, var);
-//     //Mira TEXT }
-//     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
-// }
 
 void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg) const
 {
@@ -80,7 +58,6 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) c
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     int half = w / 2;
     int xPos = (game.m_screenW / 2) - half;
-    //std::cout << xPos << y << msg <<std::endl;
     drawText(xPos, y, color, msg);
 }
 
@@ -112,7 +89,6 @@ void cTextDrawer::drawTextCenteredInBox(const std::string &msg, const cRectangle
 void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int y, Color color) const
 {
     if (msg.empty()) return;
-    //std::cout << msg << std::endl;
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
@@ -144,8 +120,6 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
 
 int cTextDrawer::getFontHeight() const
 {
-    //Mira TEXT assert(font && "Font not set!?");
-    //Mira TEXT return alfont_text_height(font);
     return TTF_FontHeight(font);
 }
 
@@ -160,7 +134,6 @@ void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int ma
 
 int cTextDrawer::textLength(const std::string &msg) const
 {
-    //Mira TEXT return alfont_text_length(font, msg);
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
     return w;
@@ -181,31 +154,3 @@ cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) co
 {
     return new cRectangle(x, y, textLength(msg), getFontHeight());
 }
-
-// void cTextDrawer::drawText(int x, int y, const std::string& msg, const char *var) const
-// {
-//     drawText(x, y, textColor, msg, var);
-// }
-
-// void cTextDrawer::drawText(int x, int y, Color color, const std::string& msg, const char *var) const
-// {
-//Mira TEXT if (applyShadow) {
-//Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, Color{0,0,0), msg, var);
-//Mira TEXT }
-//Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
-// }
-
-// void cTextDrawer::drawText(int x, int y, Color color, const std::string& msg, int var) const
-// {
-//     drawTextWithOneInteger(x, y, color, msg, var);
-// }
-
-// void cTextDrawer::drawText(int x, int y, const std::string& msg, int var1, int var2) const
-// {
-//     drawTextWithTwoIntegers(x, y, msg, var1, var2);
-// }
-
-// void cTextDrawer::drawText(int x, int y, const std::string& msg, int var) const
-// {
-//     drawText(x, y, textColor, msg, var);
-// }
