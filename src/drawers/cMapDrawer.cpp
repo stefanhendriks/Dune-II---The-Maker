@@ -77,7 +77,7 @@ void cMapDrawer::drawShroud()
 
                     if (tile > -1) {
                         // renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,fDrawY, iTileWidth, iTileHeight);
-                        // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+                        // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
                         // renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,iTileWidth, iTileHeight);
                         // renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
                         //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
@@ -160,7 +160,7 @@ void cMapDrawer::drawTerrain()
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
                 // cRectangle rectangle = cRectangle(0, 0, 32, 32);
-                // renderDrawer->drawRectFilled(m_BmpTemp, rectangle, SDL_Color{245, 245, 245, 255});
+                // renderDrawer->drawRectFilled(m_BmpTemp, rectangle, Color{245, 245, 245, 255});
 
                 // const SDL_Rect src_pos = {0, 0,32, 32};
                 // SDL_Rect dest_pos = {0, 0,32, 32};
@@ -222,8 +222,8 @@ void cMapDrawer::drawTerrain()
                 }
 
                 if (m_drawGrid) {
-                    //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, SDL_Color{128, 128, 128));
-                    renderDrawer->renderRectColor(iDrawX, iDrawY, iTileWidth, iTileHeight, SDL_Color{128, 128, 128,255});
+                    //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, Color{128, 128, 128));
+                    renderDrawer->renderRectColor(iDrawX, iDrawY, iTileWidth, iTileHeight, Color{128, 128, 128,255});
                 }
             }
 
@@ -244,7 +244,7 @@ void cMapDrawer::drawTerrain()
 //        textDrawer.drawText(0, 100, msg);
 //
 //        _rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
-//             startY + mapCamera->getAbsViewportHeight(), SDL_Color{255, 255, 0));
+//             startY + mapCamera->getAbsViewportHeight(), Color{255, 255, 0));
 //
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);
 //        char msg[255];
@@ -259,34 +259,34 @@ void cMapDrawer::drawTerrain()
 
 void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY)
 {
-    SDL_Color iClr = SDL_Color{255, 0, 0,255};
+    Color iClr = Color{255, 0, 0,255};
 
     bool bDraw = false;
 
     if (!m_map->isCellPassable(iCell)) {
-        iClr = SDL_Color{0, 255, 0,255};
+        iClr = Color{0, 255, 0,255};
         if (!m_map->isCellPassableFoot(iCell)) {
-            iClr = SDL_Color{0, 198, 0,255};
+            iClr = Color{0, 198, 0,255};
         }
         bDraw = true;
     }
     else if (!m_map->isCellPassableFoot(iCell)) {
-        iClr = SDL_Color{0, 198, 0,255};
+        iClr = Color{0, 198, 0,255};
         bDraw = true;
     }
 
     if (m_map->getCellIdStructuresLayer(iCell) > -1) {
-        iClr = SDL_Color{0, 255, 0,255};
+        iClr = Color{0, 255, 0,255};
         bDraw = true;
     }
 
     if (m_map->getCellIdUnitLayer(iCell) > -1) {
-        iClr = SDL_Color{0, 0, 255,255};
+        iClr = Color{0, 0, 255,255};
         bDraw = true;
     }
 
     if (m_map->getCellIdAirUnitLayer(iCell) > -1) {
-        iClr = SDL_Color{255, 255, 0,255};
+        iClr = Color{255, 255, 0,255};
         bDraw = true;
     }
 

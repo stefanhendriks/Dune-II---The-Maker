@@ -9,10 +9,10 @@
 
 SDLDrawer::SDLDrawer(/*cAllegroDataRepository *dataRepository,*/ SDL_Renderer *_renderer) //: m_dataRepository(dataRepository)
 {
-    colorBlack= SDL_Color{0,0,0,255};
-    gui_colorWindow = SDL_Color{176,176,196,255};
-    gui_colorBorderDark = SDL_Color{84,84,120,255};
-    gui_colorBorderLight = SDL_Color{252,252,252,255};
+    colorBlack= Color{0,0,0,255};
+    gui_colorWindow = Color{176,176,196,255};
+    gui_colorBorderDark = Color{84,84,120,255};
+    gui_colorBorderLight = Color{252,252,252,255};
     renderer = _renderer;
 }
 
@@ -322,24 +322,24 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 //     blit(src, nullptr, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 // }
 
-// void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
+// void SDLDrawer::drawRect(SDL_Surface *dest, const cRectangle &pRectangle, Color color)
 // {
 //     drawRect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
 // }
 
-// void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
+// void SDLDrawer::drawRect(SDL_Surface *dest, int x, int y, int width, int height, Color color)
 // {
 //     renderChangeColor(color);
 //     const SDL_Rect tmp = {x, y, width, height};
 //     SDL_RenderDrawRect(renderer, &tmp);
 // }
 
-// void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color)
+// void SDLDrawer::drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, Color color)
 // {
 //     drawRectFilled(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getWidth(), pRectangle.getHeight(), color);
 // }
 
-// void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color)
+// void SDLDrawer::drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, Color color)
 // {
 //     const SDL_Rect tmp = {x, y, width, height};
 //     //std::cout <<"::" << x << " " << y << " " << width << " " << height << std::endl;
@@ -347,7 +347,7 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 //     SDL_RenderFillRect(renderer, &tmp);
 // }
 
-// void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha)
+// void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, Color color, int alpha)
 // {
 //     assert(alpha >= 0);
 //     assert(alpha <= 255);
@@ -364,7 +364,7 @@ int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
 //     renderDrawer->drawTransSprite(dest, dest, rect.getX(),rect.getY());
 // }
 
-// void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color)
+// void SDLDrawer::drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, Color color)
 // {
 //     drawRectTransparentFilled(dest, rect, color, color.a);
 // }
@@ -443,7 +443,7 @@ void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r
     SDL_RenderFillRect(renderer, &carre);
 }
 
-void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, SDL_Color color)
+void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Color color)
 {
     renderRectFillColor(x,y,width,height,color.r, color.g, color.b,color.a);
 }
@@ -461,7 +461,7 @@ void SDLDrawer::renderRectColor(const cRectangle &rect, Uint8 r, Uint8 g, Uint8 
     renderRectColor(rect.getX(),rect.getY(), rect.getWidth(), rect.getHeight(),r,g,b,opacity);
 }
 
-void SDLDrawer::renderRectColor(int x, int y, int width, int height, SDL_Color color)
+void SDLDrawer::renderRectColor(int x, int y, int width, int height, Color color)
 {
     renderRectColor(x,y,width,height,color.r, color.g, color.b,color.a);
 }
@@ -483,9 +483,9 @@ void SDLDrawer::setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int
 
 }
 
-// SDL_Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)
+// Color SDLDrawer::getColorByNormValue(int r, int g, int b, float norm)
 // {
-//     return SDL_Color{(Uint8)(r * norm), (Uint8)(g * norm), (Uint8)(b * norm), 255};
+//     return Color{(Uint8)(r * norm), (Uint8)(g * norm), (Uint8)(b * norm), 255};
 // }
 
 void SDLDrawer::gui_DrawRect(const cRectangle &rectangle)
@@ -493,7 +493,7 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle)
     gui_DrawRect(rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
 }
 
-void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark)
 {
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
@@ -513,7 +513,7 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWin
     SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
 }
 
-void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark)
 {
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
@@ -534,19 +534,19 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_co
 //     drawSprite(dest, sprite, x, y);
 // }
 
-void SDLDrawer::renderClearToColor(SDL_Color color)
+void SDLDrawer::renderClearToColor(Color color)
 {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderClear(renderer);
 }
 
-void SDLDrawer::renderLine(int x1, int y1, int x2, int y2, SDL_Color color)
+void SDLDrawer::renderLine(int x1, int y1, int x2, int y2, Color color)
 {
     renderChangeColor(color);
     SDL_RenderDrawLine(renderer,x1, y1, x2, y2);
 }
 
-void SDLDrawer::renderDot(int x, int y, SDL_Color color, int size)
+void SDLDrawer::renderDot(int x, int y, Color color, int size)
 {
     if (size < 1) return;
     renderChangeColor(color);
@@ -689,7 +689,7 @@ Uint32 SDLDrawer::get_pixel(SDL_Surface *surface, int x, int y)
 }
 
 
-void SDLDrawer::FillWithColor(SDL_Surface *src, SDL_Color color)
+void SDLDrawer::FillWithColor(SDL_Surface *src, Color color)
 {
     Uint32 mappedColor = SDL_MapRGBA(src->format,
                                      color.r,
@@ -703,7 +703,7 @@ void SDLDrawer::FillWithColor(SDL_Surface *src, SDL_Color color)
 }
 
 
-void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, SDL_Color color)
+void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
 {
     Uint32 mappedColor = SDL_MapRGBA(bmp->format,
                                      color.r, color.g, color.b, color.a);
@@ -718,15 +718,15 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, SDL_Color color)
 }
 
 
-SDL_Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
+Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
 {
     if (SDL_LockSurface(surface) < 0) {
         fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
-        return SDL_Color{0,0,0,255};
+        return Color{0,0,0,255};
     }
     auto tmpColor = get_pixel(surface,x,y);
     SDL_UnlockSurface(surface);
-    SDL_Color extractedColor;
+    Color extractedColor;
     SDL_GetRGBA(tmpColor, surface->format,
                 &extractedColor.r,
                 &extractedColor.g,
@@ -740,7 +740,7 @@ SDL_Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
 	Function that will go through all pixels and will replace a certain color with another.
     Ie, this can be used to create the fading animation for Windtraps.
 **/
-// void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor)
+// void SDLDrawer::bitmap_replace_color(SDL_Surface *bmp, Color colorToReplace, Color newColor)
 // {
 //     Uint32 mappedColorToReplace = SDL_MapRGBA(bmp->format,
 //                                   colorToReplace.r, colorToReplace.g, colorToReplace.b, colorToReplace.a);
@@ -761,7 +761,7 @@ SDL_Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
 // }
 
 
-void SDLDrawer::renderChangeColor(SDL_Color color)
+void SDLDrawer::renderChangeColor(Color color)
 {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }

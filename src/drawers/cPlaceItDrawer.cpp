@@ -37,7 +37,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 {
     assert(itemToPlace);
     if (mouseCell < 0) return;
-    SDL_Color itemToPlaceColor;
+    Color itemToPlaceColor;
 
     int structureId = itemToPlace->getBuildId();
     assert(structureId > -1);
@@ -182,7 +182,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
     // SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
-    // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+    // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {

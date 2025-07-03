@@ -142,7 +142,7 @@ void cMouseDrawer::drawToolTipBackground()
     int x = getDrawXToolTip(width);
     int y = getDrawYToolTip(height);
 
-    SDL_Color color = player->getMinimapColor();
+    Color color = player->getMinimapColor();
 
     if (context->isMouseOverStructure()) {
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
@@ -167,11 +167,11 @@ void cMouseDrawer::drawToolTipBackground()
     green = std::max(green - 64, 0);
     blue = std::max(blue - 64, 0);
 
-    color = SDL_Color{red, green, blue,128};
+    color = Color{red, green, blue,128};
     // @Mira what do this code ?
     auto black = renderDrawer->getColor_BLACK();
     black.a = 128;
-    // const auto white = SDL_Color{255, 255, 255,255};
+    // const auto white = Color{255, 255, 255,255};
     //_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
     //renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
     renderDrawer->renderRectFillColor(x, y, width, height, color);
@@ -206,7 +206,7 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
     else {
         description=fmt::format("{}", structureType.name);
     }
-    textWriter.write(description.c_str(), SDL_Color{255, 255, 0,255});
+    textWriter.write(description.c_str(), Color{255, 255, 0,255});
     textWriter.writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());
     textWriter.writef("Armor : {}", theStructure->getArmor());
     textWriter.writef("Protected : {}%%", (100-theStructure->getPercentageNotPaved()));

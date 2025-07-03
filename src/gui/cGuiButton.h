@@ -26,8 +26,8 @@ public:
     cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
                eGuiButtonRenderKind renderKind);
 
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, SDL_Color gui_colorButton,
-               SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
+    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
+               Color gui_colorBorderLight, Color gui_colorBorderDark);
 
     ~cGuiButton();
 
@@ -48,11 +48,11 @@ public:
 
     void toggleTextAlignHorizontal();
 
-    void setGui_ColorButton(SDL_Color value);
+    void setGui_ColorButton(Color value);
 
-    void setTextColor(SDL_Color value);
+    void setTextColor(Color value);
 
-    void setTextColorHover(SDL_Color value);
+    void setTextColorHover(Color value);
 
     void setOnLeftMouseButtonClickedAction(cGuiAction *action);
 
@@ -67,12 +67,12 @@ private:
 
     bool m_focus;
 
-    SDL_Color m_guiColorButton;
-    SDL_Color m_guiColorBorderLight;
-    SDL_Color m_guiColorBorderDark;
+    Color m_guiColorButton;
+    Color m_guiColorBorderLight;
+    Color m_guiColorBorderDark;
 
-    SDL_Color m_textColor;
-    SDL_Color m_textColorHover;
+    Color m_textColor;
+    Color m_textColorHover;
 
     // pressed state
     bool m_pressed;

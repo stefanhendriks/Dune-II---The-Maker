@@ -3,6 +3,7 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 //#include <iostream>
+#include "utils/Color.hpp"
 
 #include <cassert>
 
@@ -11,7 +12,7 @@ cTextDrawer::cTextDrawer(TTF_Font *theFont)
     assert(theFont);
     font = theFont;
     applyShadow=true;
-    textColor = SDL_Color{255, 255, 255,255};
+    textColor = Color{255, 255, 255,255};
 }
 
 cTextDrawer::cTextDrawer() : cTextDrawer(small_font)
@@ -25,7 +26,7 @@ cTextDrawer::~cTextDrawer()
 // void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const std::string& msg, int var1, int var2) const
 // {
 //     //Mira TEXT if (applyShadow) {
-//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var1, var2);
+//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, Color{0,0,0), msg, var1, var2);
 //     //Mira TEXT }
 //     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, textColor, msg, var1, var2);
 // }
@@ -35,29 +36,29 @@ cTextDrawer::~cTextDrawer()
 //     drawTextWithOneInteger(x, y, textColor, msg, var);
 // }
 
-// void cTextDrawer::drawTextWithOneInteger(int x, int y, SDL_Color color, const std::string& msg, int var) const
+// void cTextDrawer::drawTextWithOneInteger(int x, int y, Color color, const std::string& msg, int var) const
 // {
 //     //Mira TEXT if (applyShadow) {
-//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
+//     //Mira TEXT 	alfont_textprintf(bmp_screen, font, x + 1,y + 1, Color{0,0,0), msg, var);
 //     //Mira TEXT }
 //     //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 // }
 
-void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string &msg) const
+void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg) const
 {
     if (msg.empty()) return;
     if (applyShadow) {
-        SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), SDL_Color{0,0,0,255});
+        SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), Color::Black().toSDL());
         assert(texte);
         renderDrawer->renderFromSurface(texte,x+1,y+1);
         SDL_FreeSurface(texte);
     }
-    SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), color);
+    SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), color.toSDL());
     renderDrawer->renderFromSurface(texte,x,y);
     SDL_FreeSurface(texte);
 }
 
-void cTextDrawer::drawText(cPoint &coords, SDL_Color color, const std::string &msg) const
+void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg) const
 {
     drawText(coords.x, coords.y, color, msg);
 }
@@ -72,7 +73,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y) const
     drawTextCentered(msg, y, textColor);
 }
 
-void cTextDrawer::drawTextCentered(const std::string &msg, int y, SDL_Color color) const
+void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) const
 {
     if (msg.empty()) return;
     int w,h;
@@ -83,7 +84,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y, SDL_Color colo
     drawText(xPos, y, color, msg);
 }
 
-void cTextDrawer::drawTextCenteredInBox(const std::string &msg, int x, int y, int boxWidth, int boxHeight, SDL_Color color) const
+void cTextDrawer::drawTextCenteredInBox(const std::string &msg, int x, int y, int boxWidth, int boxHeight, Color color) const
 {
     if (msg.empty()) return;
     int w,h;
@@ -98,17 +99,17 @@ void cTextDrawer::drawTextCenteredInBox(const std::string &msg, int x, int y, in
     drawText(xPos, yPos, color, msg);
 }
 
-void cTextDrawer::drawTextCenteredInBox(const std::string &msg, const cRectangle &rect, SDL_Color color) const
+void cTextDrawer::drawTextCenteredInBox(const std::string &msg, const cRectangle &rect, Color color) const
 {
     drawTextCenteredInBox(msg, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), color);
 }
 
-void cTextDrawer::drawTextCenteredInBox(const std::string &msg, const cRectangle &rect, SDL_Color color, int offsetX, int offsetY) const
+void cTextDrawer::drawTextCenteredInBox(const std::string &msg, const cRectangle &rect, Color color, int offsetX, int offsetY) const
 {
     drawTextCenteredInBox(msg, rect.getX() + offsetX, rect.getY() + offsetY, rect.getWidth(), rect.getHeight(), color);
 }
 
-void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int y, SDL_Color color) const
+void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int y, Color color) const
 {
     if (msg.empty()) return;
     //std::cout << msg << std::endl;
@@ -130,7 +131,7 @@ void cTextDrawer::drawTextBottomLeft(const std::string &msg, int margin) const
     drawTextBottomLeft(textColor, msg, margin);
 }
 
-void cTextDrawer::drawTextBottomRight(SDL_Color color, const std::string &msg, int margin) const
+void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int margin) const
 {
     if (msg.empty()) return;
     int w,h;
@@ -148,7 +149,7 @@ int cTextDrawer::getFontHeight() const
     return TTF_FontHeight(font);
 }
 
-void cTextDrawer::drawTextBottomLeft(SDL_Color color, const std::string &msg, int margin) const
+void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int margin) const
 {
     if (msg.empty()) return;
     int w,h;
@@ -186,15 +187,15 @@ cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) co
 //     drawText(x, y, textColor, msg, var);
 // }
 
-// void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg, const char *var) const
+// void cTextDrawer::drawText(int x, int y, Color color, const std::string& msg, const char *var) const
 // {
 //Mira TEXT if (applyShadow) {
-//Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, SDL_Color{0,0,0), msg, var);
+//Mira TEXT     alfont_textprintf(bmp_screen, font, x + 1,y + 1, Color{0,0,0), msg, var);
 //Mira TEXT }
 //Mira TEXT alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 // }
 
-// void cTextDrawer::drawText(int x, int y, SDL_Color color, const std::string& msg, int var) const
+// void cTextDrawer::drawText(int x, int y, Color color, const std::string& msg, int var) const
 // {
 //     drawTextWithOneInteger(x, y, color, msg, var);
 // }

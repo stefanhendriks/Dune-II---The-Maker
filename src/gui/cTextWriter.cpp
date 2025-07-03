@@ -35,7 +35,7 @@ void cTextWriter::write(const std::string &msg)
 //     updateDrawY();
 // }
 
-void cTextWriter::write(const std::string &msg, SDL_Color color)
+void cTextWriter::write(const std::string &msg, Color color)
 {
     textDrawer->drawText(drawX, drawY, color, msg);
     updateDrawY();

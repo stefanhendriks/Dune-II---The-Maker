@@ -2,6 +2,7 @@
 
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
+#include "utils/Color.hpp"
 
 class cStructureDrawer {
 public:
@@ -12,7 +13,7 @@ public:
 protected:
     void drawStructureHealthBar(int iStructure);
     void drawStructuresForLayer(int layer);
-    void drawRectangleOfStructure(cAbstractStructure *theStructure, SDL_Color color);
+    void drawRectangleOfStructure(cAbstractStructure *theStructure, Color color);
     void drawStructurePrebuildAnimation(cAbstractStructure *structure);
     void drawStructureAnimation(cAbstractStructure *structure);
     // void drawStructureAnimationWindTrap(cAbstractStructure *structure);

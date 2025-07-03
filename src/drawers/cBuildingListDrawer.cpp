@@ -47,7 +47,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
     int width = 33;
     int height = (gfxinter->getSurface(id))->h;
 
-    SDL_Color color = m_player->getSelectFadingColor();
+    Color color = m_player->getSelectFadingColor();
 
     renderDrawer->renderRectColor(x, y, width, height, color);
     renderDrawer->renderRectColor(x + 1, y + 1, width-2, height-2, color);
@@ -89,14 +89,14 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
     if (pressed) {
         list->stopFlashing();
 
-        SDL_Color color = m_player->getHouseFadingColor();
+        Color color = m_player->getHouseFadingColor();
 
         renderDrawer->renderRectColor(x, y, width, height, color);
         renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
     }
     else {
         if (list->isFlashing()) {
-            SDL_Color color = list->getFlashingColor();
+            Color color = list->getFlashingColor();
 
             renderDrawer->renderRectColor(x, y, width, height, color);
             renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
@@ -127,7 +127,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
     int iDrawX=getDrawX();
     int iDrawY=getDrawY();
 
-    SDL_Color selectFadingColor = m_player->getSelectFadingColor();
+    Color selectFadingColor = m_player->getSelectFadingColor();
 
     int end = MAX_ITEMS;
 
@@ -216,12 +216,12 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
-                    SDL_Color errorFadingColor = m_player->getErrorFadingColor();
+                    Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
-                    SDL_Color red = SDL_Color{255, 0, 0,255};
+                    Color red = Color{255, 0, 0,255};
                     m_textDrawer.setFont(small_font);
                     m_textDrawer.drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
                     m_textDrawer.setFont(game_font);
@@ -229,12 +229,12 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
                 // Pending building (ie: a build is progressing, blocking the upgrade)
                 if (item->isPendingBuilding()) {
-                    SDL_Color errorFadingColor = m_player->getErrorFadingColor();
+                    Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
-                    SDL_Color red = SDL_Color{255, 0, 0, 255};
+                    Color red = Color{255, 0, 0, 255};
                     m_textDrawer.setFont(small_font);
                     int height = heightOfIcon / 3;
                     m_textDrawer.drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
@@ -250,7 +250,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 if (cannotPayIt) {
                     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
                     renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
-                    SDL_Color errorFadingColor = m_player->getErrorFadingColor();
+                    Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
@@ -306,7 +306,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
         }
         else {
-            SDL_Color color = list->getFlashingColor();
+            Color color = list->getFlashingColor();
             if (item->isFlashing()) {
                 renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), color);
                 renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, color);

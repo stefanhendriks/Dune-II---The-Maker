@@ -155,7 +155,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     progress += 25;
     drawProgress(progress);
     //renderDrawer->blit(bmp_screen, screenSurface, 0, 0, 0, 0, game.m_screenW, game.m_screenH);
-    renderDrawer->FillWithColor(randomMapEntry.terrain, SDL_Color{0,0,0,255});
+    renderDrawer->FillWithColor(randomMapEntry.terrain, Color{0,0,0,255});
 
     // now put in previewmap 0
     for (int x = 0; x < map.getWidth(); x++)
@@ -166,15 +166,15 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
             int cll = map.getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
-            SDL_Color iColor = SDL_Color{194, 125, 60,255};
+            Color iColor = Color{194, 125, 60,255};
 
             // rock
             int cellType = map.getCellType(cll);
-            if (cellType == TERRAIN_ROCK) iColor = SDL_Color{80, 80, 60,255};
-            if (cellType == TERRAIN_MOUNTAIN) iColor = SDL_Color{48, 48, 36,255};
-            if (cellType == TERRAIN_SPICEHILL) iColor = SDL_Color{180, 90, 25,255}; // a bit darker
-            if (cellType == TERRAIN_SPICE) iColor = SDL_Color{186, 93, 32,255};
-            if (cellType == TERRAIN_HILL) iColor = SDL_Color{188, 115, 50,255};
+            if (cellType == TERRAIN_ROCK) iColor = Color{80, 80, 60,255};
+            if (cellType == TERRAIN_MOUNTAIN) iColor = Color{48, 48, 36,255};
+            if (cellType == TERRAIN_SPICEHILL) iColor = Color{180, 90, 25,255}; // a bit darker
+            if (cellType == TERRAIN_SPICE) iColor = Color{186, 93, 32,255};
+            if (cellType == TERRAIN_HILL) iColor = Color{188, 115, 50,255};
 
             randomMapEntry.terrainType[cll] = cellType;
 
@@ -184,7 +184,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
                     int sy = map.getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
-                        iColor = SDL_Color{255, 255, 255,255};
+                        iColor = Color{255, 255, 255,255};
                 }
             }
 
@@ -199,6 +199,6 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 void cRandomMapGenerator::drawProgress(float progress) const
 {
     int iProgress = progress * 211;
-    //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, SDL_Color{255, 0, 0));
-    renderDrawer->renderRectFillColor(216, 225, iProgress, 257-225, SDL_Color{255, 0, 0,255});
+    //_rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, Color{255, 0, 0));
+    renderDrawer->renderRectFillColor(216, 225, iProgress, 257-225, Color{255, 0, 0,255});
 }

@@ -280,11 +280,11 @@ void cPlayer::setHouse(int iHouse)
         // copy flag(s) with correct color
         //SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
         bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        // renderDrawer->FillWithColor(bmp_flag, SDL_Color{255,0,255,255});
+        // renderDrawer->FillWithColor(bmp_flag, Color{255,0,255,255});
         // renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
         //flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
         bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        // renderDrawer->FillWithColor(bmp_flag_small, SDL_Color{255,0,255,255});
+        // renderDrawer->FillWithColor(bmp_flag_small, Color{255,0,255,255});
         // renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
 
         // Uint32 blackRGBA = SDL_MapRGB(flagBmpData->format, 0, 0, 0);
@@ -302,7 +302,7 @@ void cPlayer::setHouse(int iHouse)
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
-            // renderDrawer->FillWithColor(bmp_structure[i], SDL_Color{255,0,255,255});
+            // renderDrawer->FillWithColor(bmp_structure[i], Color{255,0,255,255});
 
             // if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
             // std::cerr << "error bit on " << SDL_GetError() << std::endl;
@@ -315,7 +315,7 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                // renderDrawer->FillWithColor(bitmap, SDL_Color{255,0,255,255});
+                // renderDrawer->FillWithColor(bitmap, Color{255,0,255,255});
                 // renderDrawer->drawSprite(bitmap, structureType.flash, 0, 0);
                 bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash,232);
             }
@@ -332,7 +332,7 @@ void cPlayer::setHouse(int iHouse)
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
-            // renderDrawer->FillWithColor(bmp_unit[i], SDL_Color{255,0,255,255});
+            // renderDrawer->FillWithColor(bmp_unit[i], Color{255,0,255,255});
 
             // renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
             // SDL_SetColorKey(unitType.bmp,SDL_TRUE,blackRGBA);
@@ -344,7 +344,7 @@ void cPlayer::setHouse(int iHouse)
 
                 // bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.top->w, unitType.top->h,32,0,0,0,255);
                 bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, 232);
-                // renderDrawer->FillWithColor(bmp_unit_top[i], SDL_Color{255,0,255,255});
+                // renderDrawer->FillWithColor(bmp_unit_top[i], Color{255,0,255,255});
                 // SDL_SetColorKey(unitType.top,SDL_TRUE,blackRGBA);
                 // if (SDL_BlitSurface(unitType.top, nullptr, bmp_unit_top[i], nullptr)!=0) {
                 // std::cerr << "error bit on " << SDL_GetError() << std::endl;
@@ -354,19 +354,19 @@ void cPlayer::setHouse(int iHouse)
     }
 }
 
-SDL_Color cPlayer::getEmblemBackgroundColorForHouse(int houseId)
+Color cPlayer::getEmblemBackgroundColorForHouse(int houseId)
 {
     switch (houseId) {
         case ATREIDES:
-            return SDL_Color{8, 12, 89,255};
+            return Color{8, 12, 89,255};
         case HARKONNEN:
-            return SDL_Color{60, 0, 0,255};
+            return Color{60, 0, 0,255};
         case ORDOS:
-            return SDL_Color{0, 32, 0,255};
+            return Color{0, 32, 0,255};
         case SARDAUKAR:
-            return SDL_Color{128, 0, 128,255};
+            return Color{128, 0, 128,255};
         default:
-            return SDL_Color{100, 255, 100,255};
+            return Color{100, 255, 100,255};
     }
 }
 
@@ -596,7 +596,7 @@ Texture *cPlayer::getUnitTopBitmap(int index)
 // }
 //
 // SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
-// renderDrawer->FillWithColor(shadow, SDL_Color{255,0,255,255});
+// renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
 // renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
 // return shadow;
 // }
@@ -648,17 +648,17 @@ bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType)
  * Returns house based fading/pulsating color
  * @return
  */
-SDL_Color cPlayer::getHouseFadingColor() const
+Color cPlayer::getHouseFadingColor() const
 {
-    SDL_Color color = SDL_Color{255, 255, 255,255};
+    Color color = Color{255, 255, 255,255};
     if (house == ATREIDES) {
-        color = SDL_Color{0, 0, 255,255};
+        color = Color{0, 0, 255,255};
     }
     if (house == HARKONNEN) {
-        color = SDL_Color{255, 0, 0,255};
+        color = Color{255, 0, 0,255};
     }
     if (house == ORDOS) {
-        color = SDL_Color{0, 255, 0,255};
+        color = Color{0, 255, 0,255};
     }
 
     // TODO other m_houseInfo (Sardaukar, etc)
@@ -669,25 +669,25 @@ SDL_Color cPlayer::getHouseFadingColor() const
  * Returns the error fading color (red to black pulsating)
  * @return
  */
-SDL_Color cPlayer::getErrorFadingColor() const
+Color cPlayer::getErrorFadingColor() const
 {
-    return SDL_Color{255,0,0,255};
+    return Color{255,0,0,255};
 }
 
 /**
  * Returns the error fading color (red to black pulsating)
  * @return
  */
-SDL_Color cPlayer::getPrimaryBuildingFadingColor() const
+Color cPlayer::getPrimaryBuildingFadingColor() const
 {
-    return SDL_Color{0,255,0,255};
+    return Color{0,255,0,255};
 }
 
 /**
  * Returns the fading white color
  * @return
  */
-SDL_Color cPlayer::getSelectFadingColor() const
+Color cPlayer::getSelectFadingColor() const
 {
     return game.getColorFadeSelected(255, 255, 255);
 }

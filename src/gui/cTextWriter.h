@@ -24,7 +24,7 @@ public:
 
     void write(const std::string &msg);
     // void write(const char *msg, int color);
-    void write(const std::string &msg, SDL_Color color);
+    void write(const std::string &msg, Color color);
 
     template<typename... Args>
     void writef(fmt::format_string<Args...> fmtStr, Args &&... args) {
@@ -32,7 +32,7 @@ public:
     }
 
     template<typename... Args>
-    void writef(SDL_Color color, fmt::format_string<Args...> fmtStr, Args &&... args) {
+    void writef(Color color, fmt::format_string<Args...> fmtStr, Args &&... args) {
         write(fmt::format(fmtStr, std::forward<Args>(args)...), color);
     }
 

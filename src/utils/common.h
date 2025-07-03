@@ -36,7 +36,7 @@ int fastThinkTicksToMs(int ticks);
 
 void logbook(const std::string &txt);
 
-// SDL_Color makeColFromString(std::string colorStr);
+// Color makeColFromString(std::string colorStr);
 
 void install_structures();
 void install_units();

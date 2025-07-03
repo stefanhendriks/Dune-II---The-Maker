@@ -176,7 +176,7 @@ int main(int argc, char ** argv)
     SDL_FreeSurface(surface2);
     SDL_FreeSurface(surface3);
 
-    SDL_Color color = { 255, 255, 255 };
+    Color color = { 255, 255, 255 };
 
     SDL_Texture * texture = texture1;
 

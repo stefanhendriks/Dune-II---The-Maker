@@ -15,7 +15,7 @@ class cGame;
 struct s_CreditLine {
     std::string name;
     std::string txt;
-    SDL_Color color;
+    Color color;
     int height;
 };
 

@@ -9,7 +9,7 @@ cGuiWindow::cGuiWindow(const cRectangle &rect) : cGuiObject(rect)
     this->title = "";
     gui_objects = std::vector<cGuiObject *>(0);
     this->textDrawer = cTextDrawer(bene_font);
-    SDL_Color colorYellow = SDL_Color{255, 207, 41,255};
+    Color colorYellow = Color{255, 207, 41,255};
     textDrawer.setTextColor(colorYellow);
 }
 
@@ -22,7 +22,7 @@ cGuiWindow::~cGuiWindow() noexcept
 
 void cGuiWindow::draw() const
 {
-    SDL_Color colorYellow = SDL_Color{255, 207, 41,255};
+    Color colorYellow = Color{255, 207, 41,255};
     // draw window itself...
     renderDrawer->gui_DrawRect(m_rect);
 

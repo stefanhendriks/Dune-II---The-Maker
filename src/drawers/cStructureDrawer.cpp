@@ -34,7 +34,7 @@ void cStructureDrawer::drawStructuresHealthBars()
     }
 }
 
-void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, SDL_Color color)
+void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, Color color)
 {
     assert(theStructure);
     int drawX = theStructure->iDrawX();
@@ -58,7 +58,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int pixelHeight = structure->getHeightInPixels();
 
     // SDL_Surface *temp = SDL_CreateRGBSurface(0, pixelWidth, pixelHeight,32,0,0,0,255);
-    // renderDrawer->FillWithColor(temp, SDL_Color{255,0,255,255});
+    // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
 
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
@@ -175,7 +175,7 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 //     // destroy_bitmap(stretchedShadow);
 // }
 
-// renderDrawer->bitmap_replace_color(wind, SDL_Color{40, 40, 182,255}, SDL_Color{0, 0, (Uint8)fade,255});
+// renderDrawer->bitmap_replace_color(wind, Color{40, 40, 182,255}, Color{0, 0, (Uint8)fade,255});
 // // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
 // SDL_Rect src = {0,0,32,32};
 // SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
@@ -227,7 +227,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
             int x2 = mapCamera->getWindowXPosition(structure->pos_x() + 16);
             int y2 = mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
-            renderDrawer->renderLine( x1, y1, x2, y2, SDL_Color{255, 255, 255,255});
+            renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
             int mouseCellX = map.getCellX(pContext->getMouseCell());
             int mouseCellY = map.getCellY(pContext->getMouseCell());
@@ -354,7 +354,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int iconWidth = (gfxinter->getSurface(iconId))->w;
     int iconHeight = (gfxinter->getSurface(iconId))->h;
     // SDL_Surface *bmp = SDL_CreateRGBSurface(0,iconWidth, iconHeight,32,0,0,0,255);
-    // renderDrawer->FillWithColor(bmp, SDL_Color{255,0,255,255});
+    // renderDrawer->FillWithColor(bmp, Color{255,0,255,255});
     // renderDrawer->renderSprite(gfxinter->getTexture(iconId), 0, 0);
 
     // draw health bar of unit on top of icon?
@@ -378,8 +378,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
 
     // bar around it
-    //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));
-    renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, SDL_Color{255, 255, 255,255});
+    //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, Color{255, 255, 255));
+    renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -454,6 +454,6 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
 
     // bar around it
-    //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, SDL_Color{255, 255, 255));
-    renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, SDL_Color{255, 255, 255,255});
+    //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, Color{255, 255, 255));
+    renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
 }

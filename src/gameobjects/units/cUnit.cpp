@@ -553,7 +553,7 @@ void cUnit::draw_spice()
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, SDL_Color{255, 255, 255));
+        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, Color{255, 255, 255));
         renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,255);
     }
 }
@@ -601,15 +601,15 @@ void cUnit::draw_health()
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, SDL_Color{255, 255, 255));
+        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, Color{255, 255, 255));
         renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,255);
     }
 
     // draw group
     if (iGroup > 0 &&
             iPlayer == HUMAN) {
-        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, SDL_Color{0, 0, 0), "%d", iGroup);
-        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, SDL_Color{255, 255, 255), "%d", iGroup);
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, Color{0, 0, 0), "%d", iGroup);
+        //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, Color{255, 255, 255), "%d", iGroup);
     }
 
 }
@@ -687,15 +687,15 @@ void cUnit::draw_path() const
         int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
-            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 255,255});
+            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 255,255});
         }
         else if (iPath[i] == iGoalCell) {
             // end of path (goal)
-            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0,255});
+            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0,255});
         }
         else {
             // everything else
-            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 255, 64,255});
+            renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 64,255});
         }
 
         // draw a line from previous to current
@@ -752,7 +752,7 @@ void cUnit::draw()
         }
 
         SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-        renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
+        renderDrawer->FillWithColor(stretchedShadow, Color{255,0,255,255});
         renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
                                         0, 0,
                                         scaledWidth, scaledHeight);
@@ -796,7 +796,7 @@ void cUnit::draw()
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
 //	if (TIMER_blink > 0)
 //		if (rnd(100) < 15)
-//			mask_to_color(temp, SDL_Color{255,255,255));
+//			mask_to_color(temp, Color{255,255,255));
 
     // when we want to be picked up..
     if (bCarryMe) {
@@ -824,10 +824,10 @@ void cUnit::draw()
 
     if (game.m_drawUnitDebug) {
         // render pixel at the very center
-        renderDrawer->renderDot(center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255},2);
+        renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 255, 0,255},2);
 
         // render from the units top-left to center pixel
-        renderDrawer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), SDL_Color{255, 255, 0,255});
+        renderDrawer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), Color{255, 255, 0,255});
     }
 }
 
@@ -3419,12 +3419,12 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug()
 {
-    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), SDL_Color{255, 0, 255,255});
-    renderDrawer->renderDot(center_draw_x(), center_draw_y(), SDL_Color{255, 0, 255,255},1);
-    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), SDL_Color{255, 255, 255), "%d", iID);
+    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,255});
+    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,255},1);
+    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255), "%d", iID);
 
     if (isSandworm()) {
-        //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, SDL_Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
+        //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
     }
 }
 
@@ -4356,7 +4356,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
             if (game.m_drawUnitDebug) {
-                renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, SDL_Color{0, 255, 0,255});
+                renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, Color{0, 255, 0,255});
             }
 
             // Now set c to the cll
@@ -4378,7 +4378,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
 //                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
 //                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
 //
-//                _renderDrawer->renderLine(screen, iPrevX, iPrevY, iDx, iDy, SDL_Color{255, 0, 0));
+//                _renderDrawer->renderLine(screen, iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0));
 //                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
 //                iCell = prevCell; // back track
 //            } else {

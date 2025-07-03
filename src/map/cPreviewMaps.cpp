@@ -104,7 +104,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap.terrain == nullptr) {
         previewMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
     }
-    renderDrawer->FillWithColor(previewMap.terrain, SDL_Color{0,0,0,255});
+    renderDrawer->FillWithColor(previewMap.terrain, Color{0,0,0,255});
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -112,38 +112,38 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int iCll = map.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
-            SDL_Color iColor = SDL_Color{255,255,255,255};
+            Color iColor = Color{255,255,255,255};
             int terrainType = -1; // unknown
 
             char letter = mapLine[iX];
             if (letter == ')') {
                 terrainType = TERRAIN_SAND;
-                iColor = SDL_Color{194, 125, 60,255};
+                iColor = Color{194, 125, 60,255};
             }
             // rock
             if (letter == '%' || letter == '^' || letter == '&' || letter == '(') {
                 terrainType = TERRAIN_ROCK;
-                iColor = SDL_Color{80, 80, 60,255};
+                iColor = Color{80, 80, 60,255};
             }
             // mountain
             if (letter == 'R' || letter == 'r') {
                 terrainType = TERRAIN_MOUNTAIN;
-                iColor = SDL_Color{48, 48, 36,255};
+                iColor = Color{48, 48, 36,255};
             }
             // spice hill
             if (letter == '+') {
                 terrainType = TERRAIN_SPICEHILL;
-                iColor = SDL_Color{180, 90, 25,255}; // bit darker
+                iColor = Color{180, 90, 25,255}; // bit darker
             }
             // spice
             if (letter == '-') {
                 terrainType = TERRAIN_SPICE;
-                iColor = SDL_Color{186, 93, 32,255};
+                iColor = Color{186, 93, 32,255};
             }
             // sand hill
             if (letter == 'H' || letter == 'h') {
                 terrainType = TERRAIN_HILL;
-                iColor = SDL_Color{188, 115, 50,255};
+                iColor = Color{188, 115, 50,255};
             }
 
             if (terrainType < 0) {
@@ -151,7 +151,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
                 terrainType = TERRAIN_SAND;
-                iColor = SDL_Color{255, 255, 255,255}; // show as purple to indicate wrong char
+                iColor = Color{255, 255, 255,255}; // show as purple to indicate wrong char
             }
 
             previewMap.terrainType[iCll] = terrainType;
@@ -168,10 +168,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = map.getCellX(startCell);
             int y = map.getCellY(startCell);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), SDL_Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), SDL_Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, SDL_Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, Color{255, 255, 255,255});
         }
     }
 }

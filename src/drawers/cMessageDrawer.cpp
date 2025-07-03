@@ -129,13 +129,13 @@ void cMessageDrawer::draw()
 
     if (m_alpha > -1) {
         // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_alpha);
-//        renderDrawer->FillWithColor(m_temp, SDL_Color{255,0,255,255});
+//        renderDrawer->FillWithColor(m_temp, Color{255,0,255,255});
         renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
 
         // draw message
         //renderDrawer->setClippingFor(0, 0, m_bmpBar->w - 10, m_bmpBar->h);
-        //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, SDL_Color{0, 0, 0), m_message.c_str());
-        m_textDrawer.drawText(m_position.x+13, m_position.y+6, SDL_Color{0, 0, 0,255}, m_message);
+        //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, Color{0, 0, 0), m_message.c_str());
+        m_textDrawer.drawText(m_position.x+13, m_position.y+6, Color{0, 0, 0,255}, m_message);
         //renderDrawer->resetClippingFor();
 
         // draw temp

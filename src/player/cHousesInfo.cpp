@@ -39,7 +39,7 @@ void cHousesInfo::INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg)
     m_houseInfo[CORRINO].minimap_color = makeColFromString(section.getStringValue("CORRINO_MINIMAPCOLOR"));
 }
 
-SDL_Color cHousesInfo::makeColFromString(std::string colorStr)
+Color cHousesInfo::makeColFromString(std::string colorStr)
 {
     int r = 0, g = 0, b = 0;
     char comma; // Pour consommer les virgules
@@ -47,5 +47,5 @@ SDL_Color cHousesInfo::makeColFromString(std::string colorStr)
     std::stringstream ss(colorStr);
     ss >> r >> comma >> g >> comma >> b;
     //std::cout << r << ":"<<g<<":"<<b<<std::endl;
-    return SDL_Color{(Uint8)r,(Uint8)g,(Uint8)b,255};
+    return Color{(Uint8)r,(Uint8)g,(Uint8)b,255};
 }

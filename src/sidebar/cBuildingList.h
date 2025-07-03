@@ -6,7 +6,7 @@
 #include "sidebar/cBuildingListItem.h"
 
 #include <array>
-#include <SDL2/SDL.h>
+#include "utils/Color.hpp"
 
 class cItemBuilder;
 
@@ -146,7 +146,7 @@ public:
         return TIMER_flashing > 0;
     }
 
-    SDL_Color getFlashingColor();
+    Color getFlashingColor();
 
     void think();
 

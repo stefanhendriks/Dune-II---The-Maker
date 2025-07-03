@@ -154,13 +154,13 @@ public:
 
     eHouseBitFlag getHouseBitFlag();
 
-    SDL_Color getHouseFadingColor() const;
+    Color getHouseFadingColor() const;
 
-    SDL_Color getErrorFadingColor() const;
+    Color getErrorFadingColor() const;
 
-    SDL_Color getPrimaryBuildingFadingColor() const;
+    Color getPrimaryBuildingFadingColor() const;
 
-    SDL_Color getSelectFadingColor() const;
+    Color getSelectFadingColor() const;
 
     int getTechLevel() const {
         return techLevel;
@@ -182,11 +182,11 @@ public:
 
     bool isContextMouseState(eMouseState state);
 
-    SDL_Color getMinimapColor() const {
+    Color getMinimapColor() const {
         return minimapColor;
     }
 
-    SDL_Color getEmblemBackgroundColor() const {
+    Color getEmblemBackgroundColor() const {
         return emblemBackgroundColor;
     }
 
@@ -496,9 +496,9 @@ private:
 
     void clearUnitTypeBitmaps();
 
-    SDL_Color getRGBColorForHouse(int houseId);
+    Color getRGBColorForHouse(int houseId);
 
-    SDL_Color getEmblemBackgroundColorForHouse(int houseId);
+    Color getEmblemBackgroundColorForHouse(int houseId);
 
     bool isBuildingAnythingForListAndSublist(eListType listType, int subListId) const;
 
@@ -529,8 +529,8 @@ private:
 
     int techLevel;        // technology level
     int house;
-    SDL_Color minimapColor;            // color of this team on minimap;
-    SDL_Color emblemBackgroundColor;    // color of the emblem background
+    Color minimapColor;            // color of this team on minimap;
+    Color emblemBackgroundColor;    // color of the emblem background
     int id;    // this id is the reference to the player array
     int iTeam;
 

@@ -49,7 +49,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
     int creditsX = (game.m_screenW / 2) - buttonWidth;
-    //GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", SDL_Color{64, 64, 64,255});
+    //GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", Color{64, 64, 64,255});
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
     gui_btn_credits = new cGuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
     gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
@@ -64,8 +64,8 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
 
-    SDL_Color colorInactiveHover = SDL_Color{128, 128, 128,255};
-    SDL_Color colorInactive = SDL_Color{192, 192, 192,255};
+    Color colorInactiveHover = Color{128, 128, 128,255};
+    Color colorInactive = Color{192, 192, 192,255};
 
     // PLAY
     int playY = 323;
@@ -150,7 +150,7 @@ void cMainMenuGameState::draw() const
     if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenW; x += 60) {
             for (int y = 0; y < game.m_screenH; y += 20) {
-                textDrawer.drawText(x, y, SDL_Color{48, 48, 48,255}, "DEBUG");
+                textDrawer.drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
     }
@@ -165,7 +165,7 @@ void cMainMenuGameState::draw() const
 
     // draw version
     textDrawer.drawTextBottomRight(game.m_version.c_str(),20);
-    textDrawer.drawText(sdl2power.x,sdl2power.y,SDL_Color{255,255,0,200},"SDL2 powered");
+    textDrawer.drawText(sdl2power.x,sdl2power.y,Color{255,255,0,200},"SDL2 powered");
 
     if (game.isDebugMode()) {
         auto m_mouse = game.getMouse();
