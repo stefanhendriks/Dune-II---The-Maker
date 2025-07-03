@@ -11,7 +11,7 @@ class cGame;
 
 class cOptionsState : public cGameState {
 public:
-    explicit cOptionsState(cGame &theGame, /*SDL_Surface *background,*/ int prevState);
+    explicit cOptionsState(cGame &theGame, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
