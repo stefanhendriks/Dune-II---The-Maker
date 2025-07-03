@@ -36,10 +36,6 @@ private:
 
     void capTimers();
 
-    /** Allegro specific routines to handle timers **/
-    // void syncFromAllegroTimers();
-    // void syncAllegroTimers();
-
 public:
 
     explicit cTimeManager(cGame &game);

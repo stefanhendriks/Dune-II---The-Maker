@@ -75,8 +75,6 @@ public:
 
     ~cPlayer();
 
-    // PALETTE pal;        // each player has its own 256 color scheme (used for coloring units)
-
     void init(int id, brains::cPlayerBrain *brain);
 
     void setBrain(brains::cPlayerBrain *brain);
@@ -215,8 +213,6 @@ public:
     Texture *getUnitBitmap(int index);
 
     Texture *getUnitTopBitmap(int index);
-
-    // SDL_Surface *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
 
     void destroyAllegroBitmaps();
 

@@ -60,14 +60,10 @@ cPlayer::~cPlayer()
     if (brain_) {
         delete brain_;
     }
-    // cannot do this in destructor, as Allegro is already shutdown
-//    destroyAllegroBitmaps();
 }
 
 void cPlayer::destroyAllegroBitmaps()
 {
-    // SDL_FreeSurface(bmp_flag);
-    // SDL_FreeSurface(bmp_flag_small);
     if (bmp_flag) {
         if (bmp_flag->tex)
             SDL_DestroyTexture(bmp_flag->tex);
@@ -207,7 +203,6 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain)
 
     setBrain(brain);
 
-    // memcpy(pal, general_palette, sizeof(pal));
     house = GENERALHOUSE;
 
     /**
@@ -257,9 +252,6 @@ void cPlayer::setHouse(int iHouse)
     difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
 
     if (currentHouse != iHouse) {
-        // copy entire palette
-        // memcpy(pal, general_palette, sizeof(pal));
-
         logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 
         // now set the different colors based upon house
@@ -268,45 +260,19 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-
-        //int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
-
-        // use this palette to draw stuff
-        //select_palette(pal);
-        //
-        // @Mira here to color SDL_Surface
-        //
-
-        // copy flag(s) with correct color
-        //SDL_Surface *flagBmpData = gfxdata->getSurface(BUILDING_FLAG_LARGE);
         bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        // renderDrawer->FillWithColor(bmp_flag, Color{255,0,255,255});
-        // renderDrawer->drawSprite(bmp_flag, flagBmpData, 0, 0);
-        //flagBmpData = gfxdata->getSurface(BUILDING_FLAG_SMALL);
         bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        // renderDrawer->FillWithColor(bmp_flag_small, Color{255,0,255,255});
-        // renderDrawer->drawSprite(bmp_flag_small, flagBmpData, 0, 0);
 
-        // Uint32 blackRGBA = SDL_MapRGB(flagBmpData->format, 0, 0, 0);
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
             s_StructureInfo &structureType = sStructureInfo[i];
 
             if (!structureType.configured) continue;
 
-            // std::cout << structureType.name << " :" << SDL_GetPixelFormatName(structureType.bmp->format->format) << std::endl;
-            // bmp_structure[i] = SDL_CreateRGBSurface(0,structureType.bmp->w, structureType.bmp->h, 8, 0,0,0,0);
             bmp_structure[i] = createTextureFromIndexedSurfaceWithPalette(structureType.bmp,232);
-            //SDL_SetColorKey(structureType.bmp,SDL_TRUE,232);
-            //SDL_SetSurfaceBlendMode(structureType.bmp, SDL_BLENDMODE_BLEND);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
-            // renderDrawer->FillWithColor(bmp_structure[i], Color{255,0,255,255});
-
-            // if (SDL_BlitSurface(structureType.bmp, nullptr, bmp_structure[i], nullptr)!=0){
-            // std::cerr << "error bit on " << SDL_GetError() << std::endl;
-            // };
 
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
@@ -315,8 +281,6 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                // renderDrawer->FillWithColor(bitmap, Color{255,0,255,255});
-                // renderDrawer->drawSprite(bitmap, structureType.flash, 0, 0);
                 bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash,232);
             }
 
@@ -327,28 +291,13 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            // bmp_unit[i] = SDL_CreateRGBSurface(0, unitType.bmp->w, unitType.bmp->h,32,0,0,0,255);
             bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, 232);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
-            // renderDrawer->FillWithColor(bmp_unit[i], Color{255,0,255,255});
-
-            // renderDrawer->drawSprite(bmp_unit[i], unitType.bmp, 0, 0);
-            // SDL_SetColorKey(unitType.bmp,SDL_TRUE,blackRGBA);
-            // if (SDL_BlitSurface(unitType.bmp, nullptr, bmp_unit[i], nullptr)!=0) {
-            // std::cerr << "error bit on " << SDL_GetError() << std::endl;
-            // }
-
             if (unitType.top) {
 
-                // bmp_unit_top[i] = SDL_CreateRGBSurface(0, unitType.top->w, unitType.top->h,32,0,0,0,255);
                 bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, 232);
-                // renderDrawer->FillWithColor(bmp_unit_top[i], Color{255,0,255,255});
-                // SDL_SetColorKey(unitType.top,SDL_TRUE,blackRGBA);
-                // if (SDL_BlitSurface(unitType.top, nullptr, bmp_unit_top[i], nullptr)!=0) {
-                // std::cerr << "error bit on " << SDL_GetError() << std::endl;
-                // }
             }
         }
     }
@@ -574,34 +523,6 @@ Texture *cPlayer::getUnitTopBitmap(int index)
     }
     return nullptr;
 }
-
-/**
- * Returns the shadow bitmap of unit type "index", using bodyFacing and animationFrame.
- * !!! Be sure to destroy the bitmap returned from here !!!
- * @param index
- * @return
- */
-// SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
-// {
-// if (sUnitInfo[index].shadow) {
-// int bmp_width = sUnitInfo[index].bmp_width;
-// int bmp_height = sUnitInfo[index].bmp_height;
-// int start_x = bodyFacing * bmp_width;
-// int start_y = bmp_height * animationFrame;
-//
-// //Carry-all has a bit different offset for shadow
-// if (index == CARRYALL) {
-// start_x += 2;
-// start_y += 2;
-// }
-//
-// SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
-// renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
-// renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
-// return shadow;
-// }
-// return nullptr;
-// }
 
 bool cPlayer::hasWor() const
 {
@@ -2384,7 +2305,6 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
         SDL_Palette *palette = modifiableSurface->format->palette;
         for (int j = start; j < (start + 7); j++) {
             // swap everything from S with J
-            //pal[s] = pal[j];
             palette->colors[s].r = palette->colors[j].r;
             palette->colors[s].g = palette->colors[j].g;
             palette->colors[s].b = palette->colors[j].b;
