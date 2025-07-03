@@ -51,7 +51,6 @@
 #include "utils/Color.hpp"
 
 #include "utils/cFileValidator.h"
-#include "utils/cHandleArgument.h"
 #include "utils/cIniFile.h"
 #include "player/cHousesInfo.h"
 #include "utils/Graphics.hpp"
@@ -87,10 +86,9 @@ cGame::cGame() : m_timeManager(*this)
     m_version = "0.7.0";
 
     m_mentat = nullptr;
-    // m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
 
-void cGame::applySettings(const GameSettings& gs)
+void cGame::applySettings(const GameSettings &gs)
 {
     m_screenW = gs.screenW;
     m_screenH = gs.screenH;
@@ -178,27 +176,6 @@ void cGame::init()
     INI_Install_Game(m_gameFilename);
 }
 
-// bool cGame::loadSettings(std::shared_ptr<cIniFile> settings)
-// {
-//     if (!settings->hasSection(SECTION_SETTINGS)) {
-//         std::cerr << "No [SETTINGS] section found in settings.ini file" << std::endl;
-//         return false;
-//     }
-
-//     const cSection &section = settings->getSection(SECTION_SETTINGS);
-//     game.m_screenW = section.getInt("ScreenWidth");
-//     game.m_screenH = section.getInt("ScreenHeight");
-//     game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
-//     game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
-//     game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
-//     game.m_windowed = !section.getBoolean("FullScreen");
-//     game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
-//     game.m_turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
-//     game.m_rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
-
-//     return true;
-// }
-
 // TODO: Bad smell (duplicate code)
 // initialize for missions
 void cGame::missionInit()
@@ -229,12 +206,6 @@ void cGame::missionInit()
 
     drawManager->missionInit();
 }
-
-// int cGame::handleArguments(int argc, char **argv)
-// {
-//     return m_handleArgument->handleArguments(argc,argv);
-// }
-
 
 void cGame::initPlayers(bool rememberHouse) const
 {
@@ -847,12 +818,6 @@ bool cGame::setupGame()
     map.setReinforcements(m_reinforcements);
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-
-    // bool loadSettingsResult = game.loadSettings(settings);
-    // if (!loadSettingsResult) {
-    //     logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
-    //     return false;
-    // }
 
     const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
     std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);

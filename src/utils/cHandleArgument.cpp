@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdlib> // pour atoi
 
-int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings& settings)
+int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings &settings)
 {
     if (argc < 2) {
         return 0;

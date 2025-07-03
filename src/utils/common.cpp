@@ -26,7 +26,7 @@
 
 #include <cmath>
 
-GameSettings loadSettingsFromIni(cIniFile* settings)
+GameSettings loadSettingsFromIni(cIniFile *settings)
 {
     GameSettings gs;
     if (!settings->hasSection("SETTINGS")) return gs;
