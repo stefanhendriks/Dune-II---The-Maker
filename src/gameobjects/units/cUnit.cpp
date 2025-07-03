@@ -553,7 +553,6 @@ void cUnit::draw_spice()
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, Color{255, 255, 255));
         renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,255);
     }
 }
@@ -601,7 +600,6 @@ void cUnit::draw_health()
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        //_rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, Color{255, 255, 255));
         renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,255);
     }
 
@@ -717,10 +715,6 @@ void cUnit::draw()
     const int uy = draw_y();
 
     if (isSandworm()) {
-    //     // randomize drawing shimmer effect, as it is expensive
-    //     if (rnd(100) < 15) {
-    //         renderDrawer->shimmer(bmp_screen,TILESIZE_HEIGHT_PIXELS, center_draw_x(), center_draw_y(), mapCamera->divideByZoomLevel(4));
-    //     }
         return;
     }
 
@@ -738,37 +732,12 @@ void cUnit::draw()
 
     cPlayer &cPlayer = players[this->iPlayer];
 
-    // Draw SHADOW
-    // SDL_Surface *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
     const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
-
-    /*if (shadow) {
-        int destY = uy;
-
-        if (iType == CARRYALL) {
-            // adjust X and Y so it looks like a carry-all is 'higher up in the air'
-            destY = uy + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
-        }
-
-        SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-        renderDrawer->FillWithColor(stretchedShadow, Color{255,0,255,255});
-        renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
-                                        0, 0,
-                                        scaledWidth, scaledHeight);
-
-        renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, ux, destY);
-        SDL_FreeSurface(shadow);
-        SDL_FreeSurface(stretchedShadow);
-    }*/
 
     // Draw BODY
     Texture *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
-        // renderDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
-        //                                 ux, uy,
-        //                                 scaledWidth,
-        //                                 scaledHeight);
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
         renderDrawer->renderStrechSprite(bitmap,src, dest);
@@ -784,19 +753,10 @@ void cUnit::draw()
         // recalculate start_x using head instead of body
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
-
-        // renderDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
-        //      mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
-
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
         renderDrawer->renderStrechSprite(top,src, dest);
     }
-
-    // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
-//	if (TIMER_blink > 0)
-//		if (rnd(100) < 15)
-//			mask_to_color(temp, Color{255,255,255));
 
     // when we want to be picked up..
     if (bCarryMe) {
@@ -811,12 +771,6 @@ void cUnit::draw()
         int x = draw_x(bmp_width);
         int y = draw_y(bmp_height);
 
-        // renderDrawer->maskedStretchBlit(focusBitmap,
-        // bmp_screen,
-        // 0, 0, bmp_width, bmp_height, x, y,
-        // mapCamera->factorZoomLevel(bmp_width),
-        // mapCamera->factorZoomLevel(bmp_height)
-        //    );
         cRectangle src = {0, 0, bmp_width, bmp_height};
         cRectangle dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
         renderDrawer->renderStrechSprite(gfxdata->getTexture(FOCUS), src, dest);

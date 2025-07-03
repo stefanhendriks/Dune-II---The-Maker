@@ -28,13 +28,11 @@ private:
 
     int iHitPoints;     // HitPoints this structure has
 
-    int iCell;          // What cell it is (most upper left part of structure where
-    // drawing starts)
+    int iCell;          // What cell it is (most upper left part of structure where drawing starts)
 
     int iRallyPoint;    // rallypoint ...
 
-    bool bAnimate;      // Do its special animation? (unit leaving building, starport
-    // dropping something, etc)
+    bool bAnimate;      // Do its special animation? (unit leaving building, starport dropping something, etc)
 
     bool dead;		    // set to true when die() is called, and thus this structure can be deleted.
 

@@ -347,8 +347,6 @@ void cCreditsState::thinkFast()
 
 void cCreditsState::draw() const
 {
-    // renderDrawer->FillWithColor(bmp_screen, Color{0,0,16,255});
-
     renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
     int halfScreen = game.m_screenW / 2;
