@@ -133,8 +133,8 @@ void cBullet::draw()
         // bmp_width, bmp_width,
         // x, y,
         // mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
-        SDL_Rect src = {sx,sy, bmp_width, bmp_width};
-        SDL_Rect dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width)))};
+        cRectangle src = {sx,sy, bmp_width, bmp_width};
+        cRectangle dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width)))};
         renderDrawer->renderStrechSprite(sBulletInfo[iType].bmp, src, dest);
     }
 }

@@ -33,7 +33,7 @@ private:
     int mainMenuHeight;
 
     const cTextDrawer textDrawer;
-    SDL_Rect sdl2power;
+    cRectangle sdl2power;
 
     cGuiWindow *gui_window;
     cGuiButton *gui_btn_credits;

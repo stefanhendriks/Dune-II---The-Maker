@@ -769,8 +769,8 @@ void cUnit::draw()
         //                                 ux, uy,
         //                                 scaledWidth,
         //                                 scaledHeight);
-        SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
-        SDL_Rect dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
+        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
         renderDrawer->renderStrechSprite(bitmap,src, dest);
     }
     else {
@@ -788,8 +788,8 @@ void cUnit::draw()
         // renderDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
         //      mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
 
-        SDL_Rect src = {start_x, start_y, bmp_width, bmp_height};
-        SDL_Rect dest = {ux, uy, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
+        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        cRectangle dest = {ux, uy, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
         renderDrawer->renderStrechSprite(top,src, dest);
     }
 
@@ -817,8 +817,8 @@ void cUnit::draw()
         // mapCamera->factorZoomLevel(bmp_width),
         // mapCamera->factorZoomLevel(bmp_height)
         //    );
-        SDL_Rect src = {0, 0, bmp_width, bmp_height};
-        SDL_Rect dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
+        cRectangle src = {0, 0, bmp_width, bmp_height};
+        cRectangle dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
         renderDrawer->renderStrechSprite(gfxdata->getTexture(FOCUS), src, dest);
     }
 

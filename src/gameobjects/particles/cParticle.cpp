@@ -141,8 +141,8 @@ void cParticle::draw()
     int drawX = draw_x();
     int drawY = draw_y();
 
-    SDL_Rect src = { (frameWidth * frameIndex), 0, frameWidth, frameHeight};
-    SDL_Rect dest= { drawX, drawY, bmp_width, bmp_height};
+    cRectangle src = { (frameWidth * frameIndex), 0, frameWidth, frameHeight};
+    cRectangle dest= { drawX, drawY, bmp_width, bmp_height};
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {

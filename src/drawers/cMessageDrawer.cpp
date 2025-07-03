@@ -64,12 +64,14 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
 
     for (int drawX = 11; drawX < m_bmpBar->w; drawX+= 55) {
         auto src = gfxinter->getSurface(MESSAGE_MIDDLE);
-        auto tmp = SDL_Rect{drawX, 0,src->w,src->h};
-        SDL_BlitSurface(src, nullptr, m_bmpBar, &tmp);
+        auto tmp = cRectangle{drawX, 0,src->w,src->h};
+        SDL_Rect destRect = tmp.toSDL();
+        SDL_BlitSurface(src, nullptr, m_bmpBar, &destRect);
     }
     auto src = gfxinter->getSurface(MESSAGE_RIGHT);
-    auto tmp = SDL_Rect{m_bmpBar->w - 11, 0,src->w,src->h};
-    SDL_BlitSurface(src, nullptr, m_bmpBar, &tmp);
+    auto tmp = cRectangle{m_bmpBar->w - 11, 0,src->w,src->h};
+    SDL_Rect destRect = tmp.toSDL();
+    SDL_BlitSurface(src, nullptr, m_bmpBar, &destRect);
 
     // create this one which we use for actual drawing
     // m_temp = SDL_CreateRGBSurface(0,m_bmpBar->w, m_bmpBar->h,32,0,0,0,255);

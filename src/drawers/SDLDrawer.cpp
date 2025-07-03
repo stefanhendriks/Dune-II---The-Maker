@@ -427,11 +427,13 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,unsigned char o
 //     drawSprite(dest, sBitmap, x, y, opacity);
 // }
 
-void SDLDrawer::renderStrechSprite(Texture *src, SDL_Rect src_pos, SDL_Rect dest_pos, unsigned char opacity)
+void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, unsigned char opacity)
 {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(src->tex, opacity);
-    SDL_RenderCopy(renderer, src->tex, &src_pos, &dest_pos);
+    SDL_Rect srcRect = src_pos.toSDL();
+    SDL_Rect destRect = dest_pos.toSDL();
+    SDL_RenderCopy(renderer, src->tex, &srcRect, &destRect);
 }
 
 

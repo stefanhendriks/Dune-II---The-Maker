@@ -68,8 +68,8 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     //draw_sprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
-    SDL_Rect src = {0,0,gfxdata->getTexture(iDrawPreBuild)->w, gfxdata->getTexture(iDrawPreBuild)->h};
-    SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
+    cRectangle src = {0,0,gfxdata->getTexture(iDrawPreBuild)->w, gfxdata->getTexture(iDrawPreBuild)->h};
+    cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(gfxdata->getTexture(iDrawPreBuild), src, dest);
     //destroy_bitmap(temp);
 
@@ -177,8 +177,8 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 
 // renderDrawer->bitmap_replace_color(wind, Color{40, 40, 182,255}, Color{0, 0, (Uint8)fade,255});
 // // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
-// SDL_Rect src = {0,0,32,32};
-// SDL_Rect dest= {drawX, drawY, scaledWidth, scaledHeight};
+// cRectangle src = {0,0,32,32};
+// cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
 // renderDrawer->renderStrechSprite(structure->getBitmap(), src, dest);
 
 //    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
@@ -338,8 +338,8 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
     //renderDrawer->stretchSprite(bmp_screen, gfxdata->getSurface(MOUSE_REPAIR), drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
-    SDL_Rect src = {0,0,iconWidth,iconHeight};
-    SDL_Rect dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
+    cRectangle src = {0,0,iconWidth,iconHeight};
+    cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_REPAIR), src, dest);
 }
 
@@ -388,8 +388,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-    SDL_Rect src = {0,0,iconWidth, iconHeight};
-    SDL_Rect dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
+    cRectangle src = {0,0,iconWidth, iconHeight};
+    cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(gfxinter->getTexture(iconId), src, dest);
     // SDL_FreeSurface(bmp);
 }
