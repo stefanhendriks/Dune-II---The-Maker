@@ -271,8 +271,8 @@ void cAbstractMentat::draw()
     // select_palette(general_palette);
 
     Texture *tmp = getBackgroundBitmap();
-    SDL_Rect src = {0,0,tmp->w, tmp->h};
-    SDL_Rect dest = {offsetX, offsetY,640, 480};
+    cRectangle src = {0,0,tmp->w, tmp->h};
+    cRectangle dest = {offsetX, offsetY,640, 480};
     renderDrawer->renderStrechSprite(tmp, src, dest);
 
     // movie
@@ -315,8 +315,8 @@ void cAbstractMentat::draw_movie()
 
     // drawing only, circulating is done in think function
     Texture *tmp = gfxmovie->getTexture(iMovieFrame);
-    SDL_Rect src = {0,0,tmp->w, tmp->h};
-    SDL_Rect dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
+    cRectangle src = {0,0,tmp->w, tmp->h};
+    cRectangle dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
     renderDrawer->renderStrechSprite(tmp, src, dest);
 }
 

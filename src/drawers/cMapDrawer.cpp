@@ -81,8 +81,8 @@ void cMapDrawer::drawShroud()
                         // renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,iTileWidth, iTileHeight);
                         // renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
                         //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
-                        const SDL_Rect src_pos = {tile * 32, 0, 32, 32};
-                        SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                        const cRectangle src_pos = {tile * 32, 0, 32, 32};
+                        cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                         renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                     }
                 }
@@ -91,8 +91,8 @@ void cMapDrawer::drawShroud()
                     // Except when there is a building here, that should not be visible ;)
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
                     //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
-                    const SDL_Rect src_pos = {0, 0, 32, 32};
-                    SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                    const cRectangle src_pos = {0, 0, 32, 32};
+                    cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                     renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                 }
             }
@@ -162,8 +162,8 @@ void cMapDrawer::drawTerrain()
                 // cRectangle rectangle = cRectangle(0, 0, 32, 32);
                 // renderDrawer->drawRectFilled(m_BmpTemp, rectangle, Color{245, 245, 245, 255});
 
-                // const SDL_Rect src_pos = {0, 0,32, 32};
-                // SDL_Rect dest_pos = {0, 0,32, 32};
+                // const cRectangle src_pos = {0, 0,32, 32};
+                // cRectangle dest_pos = {0, 0,32, 32};
                 // SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
                 renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
                 // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
@@ -176,11 +176,11 @@ void cMapDrawer::drawTerrain()
                 //      0, 0,
                 //      32, 32
                 //     );
-                const SDL_Rect src_pos = {cell->tile * 32, 0,32, 32};
-                // SDL_Rect dest_pos = {0, 0,32, 32};
+                const cRectangle src_pos = {cell->tile * 32, 0,32, 32};
+                // cRectangle dest_pos = {0, 0,32, 32};
                 // SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
                 // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
-                SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                 renderDrawer->renderStrechSprite(gfxdata->getTexture(cell->type), src_pos, dest_pos);
             }
 
@@ -195,9 +195,9 @@ void cMapDrawer::drawTerrain()
                 //                                     32,
                 //                                     32);
                 //@Mira il faut superposer les 2 images
-                const SDL_Rect src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
-                SDL_Rect dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                // SDL_Rect dest_pos = {0, 0,32, 32};
+                const cRectangle src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
+                cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                // cRectangle dest_pos = {0, 0,32, 32};
                 // Uint32 magicPinkRGBA = SDL_MapRGB(gfxdata->getSurface(SMUDGE)->format, 255, 0, 255);
                 // SDL_SetColorKey(gfxdata->getSurface(SMUDGE),SDL_TRUE,magicPinkRGBA );
                 // SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);

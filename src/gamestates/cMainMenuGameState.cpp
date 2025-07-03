@@ -29,7 +29,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     mainMenuWidth = 130;
     mainMenuHeight = 143;
 
-    sdl2power = SDL_Rect{centerOfScreen+logoWidth/4, logoY+logoHeight+75,0,0};
+    sdl2power = cRectangle{centerOfScreen+logoWidth/4, logoY+logoHeight+75,0,0};
 
     // adjust x and y according to resolution, we can add because the above values
     // assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
@@ -165,7 +165,7 @@ void cMainMenuGameState::draw() const
 
     // draw version
     textDrawer.drawTextBottomRight(game.m_version.c_str(),20);
-    textDrawer.drawText(sdl2power.x,sdl2power.y,Color{255,255,0,200},"SDL2 powered");
+    textDrawer.drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
     if (game.isDebugMode()) {
         auto m_mouse = game.getMouse();

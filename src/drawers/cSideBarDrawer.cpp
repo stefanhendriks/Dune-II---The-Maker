@@ -74,7 +74,7 @@ void cSideBarDrawer::createCandyBar()
     // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
-    // auto tmp = SDL_Rect{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
+    // auto tmp = cRectangle{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
     // SDL_SetClipRect(&tmp);
     for (int y = startY; y < (heightMinimap); y += 24) {
         renderDrawer->renderSprite(candyBarPiece, 0, y);
@@ -402,8 +402,8 @@ void cSideBarDrawer::drawMinimap()
         drawX += (sprite->w / 2) - (emblemDesiredWidth / 2);
         drawY = cSideBar::TopBarHeight + ((heightMinimap / 2) - (emblemDesiredHeight / 2));
 
-        SDL_Rect src = {srcX, srcY, emblemWidth,emblemHeight};
-        SDL_Rect dest = {drawX, drawY, emblemDesiredWidth, emblemDesiredHeight};
+        cRectangle src = {srcX, srcY, emblemWidth,emblemHeight};
+        cRectangle dest = {drawX, drawY, emblemDesiredWidth, emblemDesiredHeight};
         renderDrawer->renderStrechSprite(gfxinter->getTexture(bitmapId), src, dest);
     }
 }

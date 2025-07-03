@@ -41,6 +41,5 @@ bool cRectangle::isPointWithin(const cPoint *point) const
            (point->y >= topLeft.y && point->y <= (topLeft.y + height));
 }
 
-cRectangle::cRectangle() : cRectangle(0,0,0,0)
-{
-}
+cRectangle::cRectangle() : topLeft(0, 0), width(0), height(0)
+{}

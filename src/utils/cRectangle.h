@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cPoint.h"
+#include <SDL2/SDL_rect.h>
 
 class cRectangle {
 public:
@@ -66,6 +67,9 @@ public:
         this->height = newHeight;
     }
 
+    SDL_Rect toSDL() const {
+        return SDL_Rect{topLeft.x, topLeft.y, width, height};
+}
 private:
     cPoint topLeft;
     int width;

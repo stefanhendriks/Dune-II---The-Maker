@@ -39,8 +39,8 @@ void cFlag::draw()
 
         int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
-        SDL_Rect src = {0, iSourceY, pixelWidth, pixelHeight};
-        SDL_Rect dest = {drawX, drawY, scaledWidth, scaledHeight};
+        cRectangle src = {0, iSourceY, pixelWidth, pixelHeight};
+        cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
 
         // renderDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
         //                                 drawX, drawY, scaledWidth, scaledHeight);
