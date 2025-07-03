@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <SDL2/SDL.h>
+#include <stack>
 
 class Texture;
 
@@ -117,5 +118,5 @@ private:
     SDL_Renderer *renderer=nullptr;
     Uint32 transparentColorKey;
     void renderChangeColor(Color color);
-    bool isDrawingToTexture = false;
+    std::stack<SDL_Texture*> renderTargetStack;
 };
