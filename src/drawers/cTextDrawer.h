@@ -21,20 +21,9 @@ public:
 
     void setFont(TTF_Font *theFont);
 
-    // void drawTextWithOneInteger(int x, int y, Color color, const std::string& msg, int var) const;
-    // void drawTextWithOneInteger(int x, int y, const std::string& msg, int var) const;
-    // void drawTextWithTwoIntegers(int x, int y, const std::string& msg, int var1, int var2) const;
-
-    // void drawText(int x, int y, const std::string& msg, const char *var) const;
-    // void drawText(int x, int y, const std::string& msg, int var) const;
     void drawText(int x, int y, const std::string &msg) const;
-
     void drawText(cPoint &coords, Color color, const std::string &msg) const;
-
-    //void drawText(int x, int y, const std::string& msg, int var1, int var2) const;
     void drawText(int x, int y, Color color, const std::string &msg) const;
-    //void drawText(int x, int y, Color color, const std::string& msg, int var) const;
-    //void drawText(int x, int y, Color color, const std::string& msg, const char *var) const;
 
     void drawTextCentered(const std::string &msg, int y) const;
     void drawTextCentered(const std::string &msg, int y, Color color) const;
