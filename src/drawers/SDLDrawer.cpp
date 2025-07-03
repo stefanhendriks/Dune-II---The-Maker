@@ -790,12 +790,12 @@ Texture* SDLDrawer::createRenderTargetTexture(int width, int height) {
 // Prend un pointeur vers la texture. Si nullptr, revient à la fenêtre principale.
 void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
 {
-    assert(targetTexture->isRenderTarget == true);
-    if (isDrawingToTexture) {
-        throw std::runtime_error("beginDrawingToTexture déjà appelé sans endDrawingToTexture !");
-    }
-    isDrawingToTexture = true;
+    assert(targetTexture && targetTexture->isRenderTarget == true);
+    SDL_Texture* currentTarget = SDL_GetRenderTarget(renderer);
+    renderTargetStack.push(currentTarget);
+
     if (SDL_SetRenderTarget(renderer, targetTexture->tex) < 0) {
+        renderTargetStack.pop();
         throw std::runtime_error("Erreur lors du changement de cible de rendu: " + std::string(SDL_GetError()));
     }
 }
@@ -803,11 +803,12 @@ void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
 // Termine le dessin sur une texture et revient à la cible par défaut (la fenêtre)
 void SDLDrawer::endDrawingToTexture()
 {
-    if (!isDrawingToTexture) {
-        throw std::runtime_error("endDrawingToTexture appelé sans beginDrawingToTexture !");
+    if (renderTargetStack.empty()) {
+        throw std::runtime_error("endDrawingToTexture without beginDrawingToTexture !");
     }
-    if (SDL_SetRenderTarget(renderer, nullptr) < 0) {
+    SDL_Texture* previousTarget = renderTargetStack.top();
+    renderTargetStack.pop();
+    if (SDL_SetRenderTarget(renderer, previousTarget) < 0) {
         throw std::runtime_error("Erreur lors de la restauration de la cible de rendu par défaut: " + std::string(SDL_GetError()));
     }
-    isDrawingToTexture = false;
 }
