@@ -91,7 +91,7 @@ public:
     Texture *createRenderTargetTexture(int width, int height);
     void beginDrawingToTexture(Texture* targetTexture);
     void endDrawingToTexture();
-protected:
+private:
     // int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
     // int getCenteredYPosForBitmap(SDL_Surface *bmp);
     void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
@@ -103,7 +103,7 @@ protected:
     Color gui_colorBorderLight;
     Color gui_colorBorderDark;
 
-private:
+
     // cAllegroDataRepository *m_dataRepository;
     // struct sSize {
     //     int width;
@@ -117,4 +117,5 @@ private:
     SDL_Renderer *renderer=nullptr;
     Uint32 transparentColorKey;
     void renderChangeColor(Color color);
+    bool isDrawingToTexture = false;
 };
