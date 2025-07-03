@@ -307,7 +307,8 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     //SDL_Surface* screenSurface;
-    SDL_Texture *screenTexture=nullptr;
+    Texture *screenTexture=nullptr;
+    Texture *actualRenderer= nullptr;
 
     cTimeManager m_timeManager;
 

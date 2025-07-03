@@ -330,7 +330,9 @@ void cGame::setMissionWon()
     // copy over
     //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
     //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
-
+    renderDrawer->beginDrawingToTexture(screenTexture);
+    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
+    renderDrawer->endDrawingToTexture();
     // renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_WINNING));
 }
 
@@ -352,6 +354,9 @@ void cGame::setMissionLost()
     //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
     //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
     // renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_LOSING));
+    renderDrawer->beginDrawingToTexture(screenTexture);
+    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
+    renderDrawer->endDrawingToTexture();
 }
 
 bool cGame::isMissionFailed() const
@@ -655,8 +660,9 @@ void cGame::drawState()
 
     if (m_fadeAction == eFadeAction::FADE_OUT) {
         if (screenTexture) {
-            SDL_SetTextureAlphaMod(screenTexture,m_fadeAlpha);
-            SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
+            //SDL_SetTextureAlphaMod(screenTexture->tex,m_fadeAlpha);
+            //SDL_RenderCopy(renderer, screenTexture->tex, nullptr, nullptr);
+            renderDrawer->renderSprite(screenTexture,0,0,(Uint8)m_fadeAlpha);
         }
         return;
     }
@@ -707,6 +713,8 @@ void cGame::drawState()
 */
 void cGame::run()
 {
+    actualRenderer = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
+    screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
     SDL_Event event;
     while (m_playing) {
@@ -735,12 +743,15 @@ void cGame::run()
 
         updateGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
+        renderDrawer->beginDrawingToTexture(actualRenderer);
         renderDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
         //screenTexture= SDL_CreateTextureFromSurface(renderer,bmp_screen);
         // SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
+        renderDrawer->endDrawingToTexture();
+        renderDrawer->renderSprite(actualRenderer,0,0);
         SDL_RenderPresent(renderer);
         // SDL_DestroyTexture(screenTexture);
 
