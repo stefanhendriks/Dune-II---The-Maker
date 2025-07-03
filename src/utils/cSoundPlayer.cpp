@@ -3,7 +3,6 @@
 #include "definitions.h"
 #include "utils/cLog.h"
 
-//#include "utils/pack.h"
 #include "utils/DataPack.hpp"
 #include <fmt/core.h>
 
@@ -18,7 +17,7 @@
 
 namespace {
 
-constexpr int kAllegroMaxNrVoices = 256; // From the Allegro 4 documentation
+constexpr int kAllegroMaxNrVoices = 256;
 constexpr int kAllegroMaxVolume = 255;
 constexpr int kAllegroPanCenter = 128;
 
@@ -87,20 +86,10 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
             return;
         }
 
-        //reserve_voices(nr_voices, 0); // Reserve nothing for MIDI, assume it will "steal" from the digi voices
         if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
             logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
         }
 
-        // if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, nullptr) == 0)
-        // {
-        //     auto msg = fmt::format("Successfully installed sound. {} voices reserved", nr_voices);
-        //     logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-
-        //     // One fewer voice for the samples, as MIDI playing will use a voice.
-        //     voices.resize(nr_voices - 1, kNoVoice);
-        //     break;
-        // }
         if (Mix_AllocateChannels(nr_voices) >= kMinNrVoices) {
             auto msg = fmt::format("Successfully installed sound. {} voices reserved", nr_voices);
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
@@ -114,20 +103,12 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
         }
     }
     musicVolume = MaxVolume/2;
-    // Sound effects are loud, the music is queiter (its background music, so it should not be disturbing).
-    // FIXME: shouldn't this be the Allegro max volume and half of that instead of 220 and 110?
-    //set_volume(kMaxVolume, kMaxVolume / 2);
     Mix_MasterVolume(MaxVolume/2);
     Mix_VolumeMusic(musicVolume);
 }
 
 cSoundPlayer::~cSoundPlayer()
 {
-    // for (int voice : voices) {
-    //     if (voice != kNoVoice) {
-    //         deallocate_voice(voice);
-    //     }
-    // }
 }
 
 int cSoundPlayer::getMaxVolume()
@@ -137,20 +118,7 @@ int cSoundPlayer::getMaxVolume()
 }
 
 void cSoundPlayer::think()
-{
-    // MIRA : free voices tab
-    // for (int& voice : voices) {
-    //     if (voice == kNoVoice) {
-    //         continue;
-    //     }
-
-    //     auto pos = voice_get_position(voice);
-    //     if (pos == kFinishedPLaying) {
-    //         deallocate_voice(voice); // Same as release_voice, as it stopped playing
-    //         voice = kNoVoice;
-    //     }
-    // }
-}
+{}
 
 void cSoundPlayer::playSound(int sampleId)
 {
@@ -162,31 +130,10 @@ void cSoundPlayer::playSound(int sampleId, int vol)
     if (vol <= 0) {
         return;
     }
-
-    // if (voices.size() < kMinNrVoices) {
-    //     return;
-    // }
-
-
-    // auto voice = std::find(voices.begin(), voices.end(), kNoVoice);
-    // if (voice == voices.end()) {
-    //     cLogger::getInstance()->log(eLogLevel::LOG_WARN, eLogComponent::COMP_SOUND, "Playing sound",
-    //                                 "Cannot play sample, no more voices available.");
-    //     return;
-    // }
-
-    vol = std::clamp(vol, 0, kAllegroMaxVolume);
+   vol = std::clamp(vol, 0, kAllegroMaxVolume);
 
     Mix_Chunk *sample = soundData->getSample(sampleId);
-    // assert(sample);
     Mix_PlayChannel(-1, sample, 0); // -1 means play on any available channel
-    // *voice = allocate_voice(sample);
-    // assert(*voice != kNoVoiceAvailable);
-
-    // voice_set_playmode(*voice, PLAYMODE_PLAY | PLAYMODE_FORWARD); // The default
-    // voice_set_volume(*voice, vol);
-    // voice_set_pan(*voice, kAllegroPanCenter);
-    // voice_start(*voice);
 }
 
 void cSoundPlayer::playVoice(int sampleId, int house)
