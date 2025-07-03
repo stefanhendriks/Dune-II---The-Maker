@@ -57,9 +57,6 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int pixelWidth = structure->getWidthInPixels();
     int pixelHeight = structure->getHeightInPixels();
 
-    // SDL_Surface *temp = SDL_CreateRGBSurface(0, pixelWidth, pixelHeight,32,0,0,0,255);
-    // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
-
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
 
@@ -67,25 +64,9 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
-    //draw_sprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
     cRectangle src = {0,0,gfxdata->getTexture(iDrawPreBuild)->w, gfxdata->getTexture(iDrawPreBuild)->h};
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(gfxdata->getTexture(iDrawPreBuild), src, dest);
-    //destroy_bitmap(temp);
-
-    // Draw shadow of the prebuild animation
-    // int shadowIndex = iDrawPreBuild + 1;
-    // set_trans_blender(0,0,0,128);
-    // BITMAP *shadow = (BITMAP *) gfxdata[shadowIndex].dat;
-
-    // BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
-    // clear_to_color(stretchedShadow, makecol(255, 0, 255));
-
-    //renderDrawer->stretchSprite(gfxdata->getSurface(shadowIndex), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
-
-    //allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
-
-    // destroy_bitmap(stretchedShadow);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -128,64 +109,6 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 
     return -1;
 }
-
-// void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure *structure)
-// {
-//     assert(structure);
-//     assert(structure->getType() == WINDTRAP);
-
-//     cWindTrap *windtrap = dynamic_cast<cWindTrap *>(structure);
-//     assert(windtrap);
-
-//     int pixelWidth = structure->getWidthInPixels();
-//     int pixelHeight = structure->getHeightInPixels();
-
-//     int drawX = structure->iDrawX();
-//     int drawY = structure->iDrawY();
-
-//     // structures are animated within the same source bitmap. The Y coordinates determine
-//     // what frame is being drawn. So multiply the height of the structure size times frame
-//     int iSourceY = pixelHeight * structure->getFrame();
-
-//     int fade = windtrap->getFade();
-// int screenDepth = bitmap_color_depth(bmp_screen);
-
-// BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
-
-// clear_to_color(wind, makecol(255,0,255));
-
-// renderDrawer->blit(structure->getBitmap(), nullptr, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
-
-// int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-// int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
-
-// BITMAP *shadow = structure->getShadowBitmap();
-// if (shadow) {
-//     set_trans_blender(0, 0, 0, 160);
-
-//     int colorDepth = bitmap_color_depth(bmp_screen);
-//     BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
-//     clear_to_color(stretchedShadow, makecol(255, 0, 255));
-
-//     allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
-//                                      0, 0, scaledWidth, scaledHeight);
-
-//     allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
-
-//     // destroy_bitmap(stretchedShadow);
-// }
-
-// renderDrawer->bitmap_replace_color(wind, Color{40, 40, 182,255}, Color{0, 0, (Uint8)fade,255});
-// // renderDrawer->maskedStretchBlit(structure->getBitmap(), nullptr, 0,0,32,32 , drawX, drawY, scaledWidth, scaledHeight);
-// cRectangle src = {0,0,32,32};
-// cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-// renderDrawer->renderStrechSprite(structure->getBitmap(), src, dest);
-
-//    renderDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
-//renderDrawer->stretchSprite(structure->getShadowBitmap(), nullptr, drawX, drawY, scaledWidth, scaledHeight,128);
-
-// SDL_FreeSurface(wind);
-// }
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
 {
@@ -292,11 +215,6 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
         // that it will cause the switching between pre-build/building state as if the
         // building is being 'readied' after placement.
         if (iDrawPreBuild < 0) {
-            // if (structure->getType() == WINDTRAP) {
-            //     // draw windtrap
-            //     drawStructureAnimationWindTrap(structure);
-            // }
-            // else
             if (structure->getType() == TURRET || structure->getType() == RTURRET) {
                 drawStructureAnimationTurret(structure);
             }
@@ -337,7 +255,6 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-    //renderDrawer->stretchSprite(bmp_screen, gfxdata->getSurface(MOUSE_REPAIR), drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
     cRectangle src = {0,0,iconWidth,iconHeight};
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_REPAIR), src, dest);
@@ -353,9 +270,6 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 
     int iconWidth = (gfxinter->getSurface(iconId))->w;
     int iconHeight = (gfxinter->getSurface(iconId))->h;
-    // SDL_Surface *bmp = SDL_CreateRGBSurface(0,iconWidth, iconHeight,32,0,0,0,255);
-    // renderDrawer->FillWithColor(bmp, Color{255,0,255,255});
-    // renderDrawer->renderSprite(gfxinter->getTexture(iconId), 0, 0);
 
     // draw health bar of unit on top of icon?
     int draw_x = 3;
@@ -378,7 +292,6 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
 
     // bar around it
-    //_rect(bmp, draw_x, draw_y, draw_x + width_x, draw_y + height_y, Color{255, 255, 255));
     renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
@@ -391,7 +304,6 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cRectangle src = {0,0,iconWidth, iconHeight};
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(gfxinter->getTexture(iconId), src, dest);
-    // SDL_FreeSurface(bmp);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
@@ -454,6 +366,5 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
 
     // bar around it
-    //_rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, Color{255, 255, 255));
     renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
 }

@@ -16,7 +16,6 @@ protected:
     void drawRectangleOfStructure(cAbstractStructure *theStructure, Color color);
     void drawStructurePrebuildAnimation(cAbstractStructure *structure);
     void drawStructureAnimation(cAbstractStructure *structure);
-    // void drawStructureAnimationWindTrap(cAbstractStructure *structure);
     void drawStructureAnimationRefinery(cAbstractStructure *structure);
     void drawStructureAnimationTurret(cAbstractStructure *structure);
     void drawStructureForLayer(cAbstractStructure *structure, int layer);
