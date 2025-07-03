@@ -41,17 +41,11 @@ static bool gui_draw_frame(int x, int y, int width, int height)
 
 static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 {
-    // fill it up
     renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
-
-    // _rect
-    //_rect(bmp_screen, x1,y1,x1+width, y1+height, Color{84,84,120));
     renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
 
     // lines to darken the right sides
-    // _line(bmp_screen, x1+width, y1, x1+width , y1+height, Color{252,252,252));
     renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
-    // _line(bmp_screen, x1, y1+height, x1+width , y1+height, Color{252,252,252));
     renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
@@ -110,16 +104,6 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     screen_y = game.m_screenH;
 
     // @Mira render to texture !!!!!!!!!!!
-    // Background
-    // background = SDL_CreateRGBSurface(0,screen_x, screen_y,32,0,0,0,255);
-    // renderDrawer->FillWithColor(background, Color{0,0,0,255});
-
-    // SDL_Surface *dunePlanet = gfxinter->getSurface(BMP_GAME_DUNE);
-    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
-
-    // for (int dy = 0; dy < game.m_screenH; dy += 2) {
-    //     renderDrawer->renderLine(0, dy, screen_x, dy, Color{0, 0, 0,255});
-    // }
 
     // Rectangles for GUI interaction
     int topBarWidth = screen_x + 4;
@@ -161,7 +145,6 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
 
     // actual list of maps
-//    int mapListHeight = m_screenY - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
     int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
     int mapListWidth = mapListTitle.getWidth();
     int mapListTopX = mapListTitle.getX();
@@ -238,8 +221,6 @@ void cSetupSkirmishGameState::draw() const
     for (int dy = 0; dy < game.m_screenH; dy += 4) {
         renderDrawer->renderRectFillColor(0, dy, screen_x, 2, Color{0, 0, 0,255});
     }
-
-    // renderDrawer->drawSprite(bmp_screen, background, 0, 0);
 
     renderDrawer->gui_DrawRect(topBar);
 

@@ -266,8 +266,6 @@ void cSelectYourNextConquestState::draw() const
         drawStateConquerRegions();
     }
 
-    // make sure to select the correct palette again
-    // select_palette(humanPlayerPalette);
 
     // Draw this last
     renderDrawer->renderSprite(gfxworld->getTexture(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
