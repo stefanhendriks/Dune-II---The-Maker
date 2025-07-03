@@ -36,8 +36,6 @@ cMapDrawer::~cMapDrawer()
 
 void cMapDrawer::drawShroud()
 {
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
-
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
 
@@ -76,11 +74,6 @@ void cMapDrawer::drawShroud()
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-                        // renderDrawer->maskedStretchBlitFromGfxData(SHROUD, nullptr, tile * 32, 0, 32, 32, fDrawX,fDrawY, iTileWidth, iTileHeight);
-                        // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
-                        // renderDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,iTileWidth, iTileHeight);
-                        // renderDrawer->drawTransSprite(temp, temp, fDrawX, fDrawY);
-                        //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
                         const cRectangle src_pos = {tile * 32, 0, 32, 32};
                         cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                         renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
@@ -90,7 +83,6 @@ void cMapDrawer::drawShroud()
                     // NOT VISIBLE, DO NOT DRAW A THING THEN!
                     // Except when there is a building here, that should not be visible ;)
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
-                    //renderDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,iTileWidth, iTileHeight);
                     const cRectangle src_pos = {0, 0, 32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                     renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
@@ -159,49 +151,19 @@ void cMapDrawer::drawTerrain()
             // Draw terrain
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
-                // cRectangle rectangle = cRectangle(0, 0, 32, 32);
-                // renderDrawer->drawRectFilled(m_BmpTemp, rectangle, Color{245, 245, 245, 255});
-
-                // const cRectangle src_pos = {0, 0,32, 32};
-                // cRectangle dest_pos = {0, 0,32, 32};
-                // SDL_BlitSurface(invalidTile, nullptr, m_BmpTemp, nullptr);
                 renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
-                // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
             }
             else {
                 // valid type
-                // renderDrawer->blit(gfxdata->getSurface(cell->type),
-                //      m_BmpTemp,
-                //      cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
-                //      0, 0,
-                //      32, 32
-                //     );
                 const cRectangle src_pos = {cell->tile * 32, 0,32, 32};
-                // cRectangle dest_pos = {0, 0,32, 32};
-                // SDL_BlitSurface(gfxdata->getSurface(cell->type), &src_pos, m_BmpTemp, &dest_pos);
-                // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                 renderDrawer->renderStrechSprite(gfxdata->getTexture(cell->type), src_pos, dest_pos);
             }
 
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
-                // no need to stretch here, we stretch m_BmpTemp below
-                // renderDrawer->maskedBlitFromGfxData(SMUDGE, m_BmpTemp,
-                //                                     cell->smudgetile * 32,
-                //                                     cell->smudgetype * 32,
-                //                                     0,
-                //                                     0,
-                //                                     32,
-                //                                     32);
-                //@Mira il faut superposer les 2 images
                 const cRectangle src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                // cRectangle dest_pos = {0, 0,32, 32};
-                // Uint32 magicPinkRGBA = SDL_MapRGB(gfxdata->getSurface(SMUDGE)->format, 255, 0, 255);
-                // SDL_SetColorKey(gfxdata->getSurface(SMUDGE),SDL_TRUE,magicPinkRGBA );
-                // SDL_BlitSurface(gfxdata->getSurface(SMUDGE), &src_pos, m_BmpTemp, &dest_pos);
-                // renderDrawer->stretchBlit(m_BmpTemp, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
                 renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
             }
 
@@ -222,7 +184,6 @@ void cMapDrawer::drawTerrain()
                 }
 
                 if (m_drawGrid) {
-                    //_rect(bmp_screen, iDrawX, iDrawY, iDrawX + iTileWidth, iDrawY + iTileHeight, Color{128, 128, 128));
                     renderDrawer->renderRectColor(iDrawX, iDrawY, iTileWidth, iTileHeight, Color{128, 128, 128,255});
                 }
             }
@@ -291,7 +252,6 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 
     if (bDraw) {
-        //_rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth - 1), fDrawY + (tileHeight - 1), iClr);
         renderDrawer->renderRectColor(fDrawX, fDrawY, tileWidth, tileHeight, iClr);
     }
 }

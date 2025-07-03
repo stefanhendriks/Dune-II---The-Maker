@@ -172,10 +172,6 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
  */
 void CreditsDrawer::draw()
 {
-    // if (bmp == NULL) {
-    // bmp = SDL_CreateRGBSurface(0,120, 17,32,0,0,0,255);
-    // }
-    // renderDrawer->FillWithColor(bmp,Color{255,0,255,255});
     auto *tex = gfxinter->getTexture(CREDITS_BAR);
     renderDrawer->renderSprite(tex, drawX, drawY);
     renderDrawer->setClippingFor(drawX+1, drawY+1, drawX+tex->w-1, drawY+tex->h-1);
@@ -183,8 +179,6 @@ void CreditsDrawer::draw()
     drawPreviousCredits(drawX, drawY);
     renderDrawer->resetClippingFor();
 
-    // draw bmp on screen
-    // renderDrawer->drawSprite(bmp_screen, bmp, drawX+8, drawY + 8);
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount)
