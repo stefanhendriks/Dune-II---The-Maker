@@ -23,7 +23,6 @@ public:
     ~cTextWriter();
 
     void write(const std::string &msg);
-    // void write(const char *msg, int color);
     void write(const std::string &msg, Color color);
 
     template<typename... Args>
@@ -35,9 +34,6 @@ public:
     void writef(Color color, fmt::format_string<Args...> fmtStr, Args &&... args) {
         write(fmt::format(fmtStr, std::forward<Args>(args)...), color);
     }
-
-    // void writeWithOneInteger(const char *msg, int value1);
-    // void writeWithTwoIntegers(const char *msg, int value1, int value2);
 
 protected:
     void updateDrawY();
