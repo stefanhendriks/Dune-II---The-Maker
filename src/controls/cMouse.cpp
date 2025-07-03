@@ -17,15 +17,12 @@ cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
     // z=0;
     leftButtonPressed=false;
     rightButtonPressed=false;
-    // leftButtonPressedInPreviousFrame=false;
-    // rightButtonPressedInPreviousFrame=false;
     leftButtonReleased=false;
     rightButtonReleased=false;
     mouseScrolledUp=false;
     mouseScrolledDown=false;
     leftButtonClickedInPreviousFrame = false;
     rightButtonClickedInPreviousFrame = false;
-    // zValuePreviousFrame = mouse_z;
     _mouseObserver = nullptr; // set later
     debugLines = std::vector<std::string>();
     didMouseMove = false;
@@ -105,47 +102,10 @@ void cMouse::updateState()
 {
     debugLines.clear();
 
-    // bool didMouseMove = coords.x != event.motion.x || coords.y != mouse_y;
-    // coords.x = event.motion.x;
-    // coords.y = mouse_y;
-    // if (mouseScrolledUp)
-    //     z = 1;
-    // if (mouseScrolledDown)
-    //     z = -1;
-
-    // check if leftButtonIsPressed=true (which is the previous frame)
-    // leftButtonPressedInPreviousFrame = leftButtonPressed;
-    // rightButtonPressedInPreviousFrame = rightButtonPressed;
-//
-    // leftButtonPressed = mouse_b & 1;
-    // rightButtonPressed = mouse_b & 2;
-
-    // now check if the leftButtonPressed == false, but the previous frame was true (if so, it is
-    // counted as a click)
     if (leftButtonClickedInPreviousFrame == true)
         leftButtonClicked = false;
     if (rightButtonClickedInPreviousFrame == true)
         rightButtonClicked = false;
-
-    // mouseScrolledUp = mouseScrolledDown = false;
-
-    // if (z > zValuePreviousFrame) {
-    //     mouseScrolledUp = true;
-    // }
-
-    // if (z < zValuePreviousFrame) {
-    //     mouseScrolledDown = true;
-    // }
-
-    // zValuePreviousFrame = z;
-
-    // cap mouse z
-    // if (z > 10 || z < -10) {
-    //     z = 0;
-    //     position_mouse_z(0); // allegro function
-    // }
-
-
 
     // mouse moved
     if (_mouseObserver) {
@@ -190,9 +150,7 @@ void cMouse::updateState()
             // std::cout << "emit right click" << std::endl;
         }
     }
-    // check if leftButtonIsPressed=true (which is the previous frame)
-    // leftButtonPressedInPreviousFrame = leftButtonPressed;
-    // rightButtonPressedInPreviousFrame = rightButtonPresse
+
     // HACK HACK:
     // make -1 to -2, so that we can prevent placeIt/deployIt=false when just stopped viewport dragging
     if (mouse_mv_x2 == -1) {
