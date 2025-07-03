@@ -26,23 +26,6 @@ void cGame::initiateFadingOut()
     m_fadeAction = eFadeAction::FADE_OUT; // fade out
     m_fadeAlpha = 250;
 
-    // copy the last bitmap of screen into a separate bitmap which we use for fading out.
-    //renderDrawer->drawSprite(bmp_fadeout, bmp_screen, 0, 0);
-    // SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
-    // if (!surface) {
-    //     //std::cerr << "Erreur lors de la création de la surface: " << SDL_GetError() << std::endl;
-    //     return;
-    // }
-    // Lire les pixels depuis le framebuffer
-    // if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
-    //     std::cerr << "Erreur lors de la lecture des pixels: " << SDL_GetError() << std::endl;
-    //     SDL_FreeSurface(surface);
-    //     return;
-    // }
-    // screenTexture = SDL_CreateTextureFromSurface(renderer,surface);
-    // std::string name = fmt::format("screenshot{}.bmp",m_screenshot);
-    // m_screenshot++;
-    // SDL_FreeSurface(surface);
     renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
     renderDrawer->endDrawingToTexture();
@@ -51,8 +34,6 @@ void cGame::initiateFadingOut()
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::drawStateLosing()
 {
-    //renderDrawer->blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
-    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
     if (screenTexture)
         renderDrawer->renderSprite(screenTexture,0,0);
 
@@ -60,8 +41,6 @@ void cGame::drawStateLosing()
     int posW = (m_screenW-tex->w)/2;
     int posH = (m_screenH-tex->h)/2;
     renderDrawer->renderSprite(tex,posW, posH);
-
-    // renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
@@ -77,8 +56,6 @@ void cGame::drawStateLosing()
 // this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::drawStateWinning()
 {
-    //renderDrawer->blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
-    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
     if (screenTexture)
         renderDrawer->renderSprite(screenTexture,0,0);
         
@@ -86,8 +63,6 @@ void cGame::drawStateWinning()
     int posW = (m_screenW-tex->w)/2;
     int posH = (m_screenH-tex->h)/2;
     renderDrawer->renderSprite(tex,posW, posH);
-
-    // renderDrawer->drawSprite(bmp_screen, gfxdata->getSurface(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
     if (m_mouse->isLeftButtonClicked()) {
