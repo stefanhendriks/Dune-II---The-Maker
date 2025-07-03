@@ -49,7 +49,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
     int creditsX = (game.m_screenW / 2) - buttonWidth;
-    //GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", Color{64, 64, 64,255});
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
     gui_btn_credits = new cGuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
     gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
@@ -157,10 +156,7 @@ void cMainMenuGameState::draw() const
 
     renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
 
-    //GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
-
     gui_window->draw();
-
     gui_btn_credits->draw();
 
     // draw version
