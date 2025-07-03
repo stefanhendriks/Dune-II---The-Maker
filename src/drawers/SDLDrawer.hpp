@@ -92,8 +92,8 @@ public:
     void beginDrawingToTexture(Texture* targetTexture);
     void endDrawingToTexture();
 protected:
-    int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
-    int getCenteredYPosForBitmap(SDL_Surface *bmp);
+    // int getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth);
+    // int getCenteredYPosForBitmap(SDL_Surface *bmp);
     void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
 
     Uint32 get_pixel(SDL_Surface *surface, int x, int y);
@@ -105,15 +105,15 @@ protected:
 
 private:
     // cAllegroDataRepository *m_dataRepository;
-    struct sSize {
-        int width;
-        int height;
+    // struct sSize {
+    //     int width;
+    //     int height;
 
-        bool operator<(sSize rhs) const {
-            return width == rhs.width ? height < rhs.height : width < rhs.width;
-        }
-    };
-    std::map<sSize, SDL_Surface *> bitmapCache;
+    //     bool operator<(sSize rhs) const {
+    //         return width == rhs.width ? height < rhs.height : width < rhs.width;
+    //     }
+    // };
+    // std::map<sSize, SDL_Surface *> bitmapCache;
     SDL_Renderer *renderer=nullptr;
     Uint32 transparentColorKey;
     void renderChangeColor(Color color);

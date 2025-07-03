@@ -21,10 +21,10 @@ SDLDrawer::~SDLDrawer()
     // do not delete data repository, we do not own it!
     // m_dataRepository = nullptr;
 
-    for (auto &p : bitmapCache) {
-        SDL_FreeSurface(p.second);
-    }
-    bitmapCache.clear();
+    // for (auto &p : bitmapCache) {
+    //     SDL_FreeSurface(p.second);
+    // }
+    // bitmapCache.clear();
 }
 
 void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
@@ -268,21 +268,21 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,unsigned char opacity)
 //     this->drawSprite(dest, src, x, yPos);
 // }
 
-int SDLDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth)
-{
-    assert(bmp);
-    int width = bmp->w;
-    int halfOfWidth = width / 2;
-    return (totalWidth / 2) - halfOfWidth;
-}
+// int SDLDrawer::getCenteredXPosForBitmap(SDL_Surface *bmp, int totalWidth)
+// {
+//     assert(bmp);
+//     int width = bmp->w;
+//     int halfOfWidth = width / 2;
+//     return (totalWidth / 2) - halfOfWidth;
+// }
 
-int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
-{
-    assert(bmp);
-    int height = bmp->h;
-    int halfOfHeight = height / 2;
-    return (game.m_screenH / 2) - halfOfHeight;
-}
+// int SDLDrawer::getCenteredYPosForBitmap(SDL_Surface *bmp)
+// {
+//     assert(bmp);
+//     int height = bmp->h;
+//     int halfOfHeight = height / 2;
+//     return (game.m_screenH / 2) - halfOfHeight;
+// }
 
 // void SDLDrawer::blit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
 //     if (src == nullptr) return;
