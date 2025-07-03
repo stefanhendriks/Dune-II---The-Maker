@@ -18,6 +18,7 @@
 #include <SDL2/SDL.h>
 
 class cIniFile;
+struct GameSettings;
 
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
@@ -54,3 +55,5 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
 const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
+
+GameSettings loadSettingsFromIni(cIniFile *settings);

@@ -22,8 +22,36 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cIniFile.h"
 #include "utils/Graphics.hpp"
+#include "utils/GameSettings.hpp"
 
 #include <cmath>
+
+GameSettings loadSettingsFromIni(cIniFile* settings)
+{
+    GameSettings gs;
+    if (!settings->hasSection("SETTINGS")) return gs;
+    const cSection &section = settings->getSection("SETTINGS");
+    if (section.hasValue("ScreenWidth"))
+        gs.screenW = section.getInt("ScreenWidth");
+    if (section.hasValue("ScreenHeight"))
+        gs.screenH = section.getInt("ScreenHeight");
+    if (section.hasValue("CameraDragMoveSpeed"))
+        gs.cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    if (section.hasValue("CameraBorderOrKeyMoveSpeed"))
+        gs.cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    if (section.hasValue("CameraEdgeMove"))
+        gs.cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    if (section.hasValue("FullScreen"))
+        gs.windowed = !section.getBoolean("FullScreen");
+    if (section.hasValue("AllowRepeatingReinforcements"))
+        gs.allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+    if (section.hasValue("AllTurretsDownOnLowPower"))
+        gs.turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+    if (section.hasValue("RocketTurretsDownOnLowPower"))
+        gs.rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+    return gs;
+}
+
 
 /**
  * Default printing in logs. Only will be done if game.isDebugMode() is true.
