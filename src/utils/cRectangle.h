@@ -9,8 +9,8 @@ public:
     cRectangle(int x, int y, int width, int height) : topLeft(cPoint(x,y)), width(width), height(height) {
     }
 
-    cRectangle(cPoint &coord, cPoint &dimensions) : topLeft(cPoint(coord.x, coord.y)), width(dimensions.y), height(dimensions.x) {
-    }
+    // cRectangle(cPoint &coord, cPoint &dimensions) : topLeft(cPoint(coord.x, coord.y)), width(dimensions.y), height(dimensions.x) {
+    // }
 
     static bool isWithin(int pointX, int pointY, int x, int y, int width, int height) {
         return (pointX >= x && pointX <= (x + width)) &&
