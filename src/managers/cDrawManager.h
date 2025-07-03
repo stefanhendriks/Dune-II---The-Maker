@@ -113,7 +113,6 @@ private:
     cStructureDrawer m_structureDrawer;
     cMouseDrawer m_mouseDrawer;
 
-    // SDL_Surface *m_optionsBar;
     SDL_Cursor *defaultCursor;
     Color m_sidebarColor;
     Texture *btnOptions;
@@ -121,9 +120,6 @@ private:
     // TODO: bullet/projectile drawer
 
     cPlayer *m_player;
-
-    // SDL_Surface *m_topBarBmp;
-
     cTextDrawer m_textDrawer;
 
     void onKeyDown(const cKeyboardEvent &event);

@@ -24,10 +24,8 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
     , m_placeitDrawer(thePlayer)
     , m_structureDrawer()
     , m_mouseDrawer(thePlayer)
-    // , m_optionsBar(nullptr)
     , m_sidebarColor(Color{214, 149, 20,255})
     , m_player(thePlayer)
-    // , m_topBarBmp(nullptr)
     , m_textDrawer(game_font)
 {
     assert(thePlayer);
@@ -37,12 +35,6 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
 
 cDrawManager::~cDrawManager()
 {
-    // if (m_optionsBar) {
-    //     SDL_FreeSurface(m_optionsBar);
-    // }
-    // if (m_topBarBmp) {
-    //     SDL_FreeSurface(m_topBarBmp);
-    // }
     if (btnOptions) {
         delete btnOptions;
     }
@@ -157,7 +149,6 @@ void cDrawManager::drawRallyPoint()
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
 
-    // @Mira fix trasnparency set_trans_blender(0,0,0,128);
     int drawX = mapCamera->getWindowXPositionFromCell(rallyPointCell);
     int drawY = mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
@@ -165,7 +156,6 @@ void cDrawManager::drawRallyPoint()
 
     int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
-    //renderDrawer->stretchSprite(mouseMoveBitmap, bmp_screen, drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled);
     cRectangle src = {0,0,mouseMoveBitmap->w,mouseMoveBitmap->h};
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
     renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_MOVE), src, dest);
@@ -226,27 +216,17 @@ void cDrawManager::drawCombatMouse()
 
 void cDrawManager::drawMouse()
 {
-    // defaultCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
-    // SDL_SetCursor(defaultCursor);
-
     m_mouseDrawer.draw();
 }
 
 void cDrawManager::drawTopBarBackground()
 {
-    // if (m_topBarBmp == nullptr) {
-    // m_topBarBmp = SDL_CreateRGBSurface(0,game.m_screenW, 30,32,0,0,0,255);
     Texture *topbarPiece = gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
     for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
         renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    // set_palette(m_player->pal);
-    //@Mira change button color
     renderDrawer->renderSprite(btnOptions, 1, 0);
-    // }
-
-    // renderDrawer->renderFromSurface(m_topBarBmp, 0, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -269,16 +249,11 @@ void cDrawManager::drawOptionBar()
 {
     // upper bar
     renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    // if (m_optionsBar == nullptr) {
-        // m_optionsBar = SDL_CreateRGBSurface(0,game.m_screenW, 40,32,0,0,0,255);
-        renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
+    renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
 
-        for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-            renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
-        }
-    // }
-
-    // renderDrawer->renderFromSurface(m_optionsBar, 0, 0);
+    for (int w = 0; w < (game.m_screenW + 800); w += 789) {
+        renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+    }
 }
 
 void cDrawManager::drawNotifications()
