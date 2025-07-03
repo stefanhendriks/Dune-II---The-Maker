@@ -32,12 +32,9 @@ void cBeneMentat::draw()
 
     // when not speaking, draw 'do you wish to join house x'
     if (state == AWAITING_RESPONSE) {
-        //Mira TEXT alfont_set_font_size(font, 35); // set size
         std::string houseName = cPlayer::getHouseNameForId(house);
         std::string msg = fmt::format("Do you wish to join house {} ?", houseName);
-        //Mira TEXT alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 17, offsetY + 17, Color{0, 0, 0), Color{0, 0, 0), "Do you wish to join house %s ?", houseName.c_str());
         textDrawer->drawText(offsetX + 17, offsetY + 17, Color{0, 0, 0,255}, msg);
-        //Mira TEXT alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 16, offsetY + 16, Color{255, 214, 137), Color{0, 0, 0),  "Do you wish to join house %s ?", houseName.c_str());
         textDrawer->drawText(offsetX + 16, offsetY + 16, Color{255, 214, 137,255}, msg);
     }
 }

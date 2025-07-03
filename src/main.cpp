@@ -53,16 +53,6 @@ s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
 s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 
-// palette
-// PALETTE general_palette;
-
-// bitmap(s)
-// SDL_Surface *bmp_screen;
-// SDL_Surface *bmp_backgroundMentat;
-// SDL_Surface *bmp_throttle;
-// SDL_Surface *bmp_winlose;
-// SDL_Surface *bmp_fadeout;
-
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 std::shared_ptr<Graphics> gfxinter;		// interface graphics
@@ -74,10 +64,6 @@ TTF_Font *game_font; 	// arrakeen.fon
 TTF_Font *bene_font;	// benegesserit font.
 TTF_Font *small_font;	// small font.
 TTF_Font *gr_bene_font; // benegesserit font for size XXL
-/** Allegro specific timer creation starts here **/
-// volatile int allegro_timerSecond = 0;
-// volatile int allegro_timerGlobal = 0;
-// volatile int allegro_timerUnits = 0;
 
 
 /**

@@ -83,10 +83,6 @@ cGame::cGame() : m_timeManager(*this)
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
-    // default INI screen width and height is not loaded
-    // if not loaded, we will try automatic setup
-    // m_iniScreenWidth = -1;
-    // m_iniScreenHeight = -1;
 
     m_version = "0.7.0";
 
@@ -327,13 +323,9 @@ void cGame::setMissionWon()
 
     playMusicByType(MUSIC_WIN);
 
-    // copy over
-    //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
-    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
     renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
     renderDrawer->endDrawingToTexture();
-    // renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_WINNING));
 }
 
 void cGame::setMissionLost()
@@ -350,10 +342,6 @@ void cGame::setMissionLost()
 
     playMusicByType(MUSIC_LOSE);
 
-    // copy over
-    //renderDrawer->blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, m_screenW, m_screenH);
-    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
-    // renderDrawer->drawCenteredSprite(bmp_winlose, gfxinter->getSurface(BMP_LOSING));
     renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
     renderDrawer->endDrawingToTexture();
@@ -557,8 +545,6 @@ void cGame::drawStateCombat()
 // drawStateMentat logic + drawing mouth/eyes
 void cGame::drawStateMentat(cAbstractMentat *mentat)
 {
-    // renderDrawer->drawSprite(bmp_screen, bmp_backgroundMentat, 0, 0);
-
     m_mouse->setTile(MOUSE_NORMAL);
 
     mentat->draw();
@@ -587,8 +573,6 @@ void cGame::loadSkirmishMaps() const
 void cGame::handleTimeSlicing()
 {
     if (iRest > 0) {
-        //std::cout << iRest << std::endl;
-        // rest(iRest);
         SDL_Delay(iRest);
     }
 }
@@ -617,6 +601,7 @@ void cGame::shakeScreenAndBlitBuffer()
             m_shakeX = -abs(offset / 2) + rnd(offset);
             m_shakeY = -abs(offset / 2) + rnd(offset);
 
+            // @Mira recreate shake screen
             //renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
             //renderDrawer->blit(bmp_throttle, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         }
@@ -630,38 +615,18 @@ void cGame::shakeScreenAndBlitBuffer()
 void cGame::fadeOutOrBlitScreenBuffer() const
 {
     if (m_fadeAction == FADE_NONE) {
-        // Not shaking and not fading.
-        //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
-        // @Mira screenshot for after ?
         return;
     }
 
     // Fading
     assert(m_fadeAlpha >= kMinAlpha);
     assert(m_fadeAlpha <= kMaxAlpha);
-    // SDL_Surface *temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-    // renderDrawer->FillWithColor(temp, Color{0,0,0,255});
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
-    //renderDrawer->drawTransSprite(temp, temp, 0, 0);
-    //renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
-    //@Mira save copy screen renderDrawer->copyScreen(&bmp_screen);
-
-    // SDL_FreeSurface(temp);
-    //renderDrawer->blit(bmp_screen, screenTexture, 0, 0, 0, 0, m_screenW, m_screenH);
-
-//    if (m_fadeAction == FADE_IN) {
-//       renderDrawer->renderRectFillColor(0,0,m_screenW, m_screenH,0,0,128,m_fadeAlpha);
-    //}
 }
 
 void cGame::drawState()
 {
-    //renderDrawer->FillWithColor(bmp_screen, Color{0,0,0,255});
-
     if (m_fadeAction == eFadeAction::FADE_OUT) {
         if (screenTexture) {
-            //SDL_SetTextureAlphaMod(screenTexture->tex,m_fadeAlpha);
-            //SDL_RenderCopy(renderer, screenTexture->tex, nullptr, nullptr);
             renderDrawer->renderSprite(screenTexture,0,0,(Uint8)m_fadeAlpha);
         }
         return;
@@ -715,7 +680,6 @@ void cGame::run()
 {
     actualRenderer = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
     SDL_Event event;
     while (m_playing) {
         m_timeManager.processTime();
@@ -743,18 +707,16 @@ void cGame::run()
 
         updateGamePlaying();
         handleTimeSlicing(); // handle time diff (needs to change!)
+
         renderDrawer->beginDrawingToTexture(actualRenderer);
         renderDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
-        //screenTexture= SDL_CreateTextureFromSurface(renderer,bmp_screen);
-        // SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
+
         renderDrawer->endDrawingToTexture();
         renderDrawer->renderSprite(actualRenderer,0,0);
         SDL_RenderPresent(renderer);
-        // SDL_DestroyTexture(screenTexture);
-
         m_frameCount++;
     }
 }
@@ -827,28 +789,9 @@ void cGame::shutdown()
     delete m_mouse;
     delete m_keyboard;
 
-    // if (gfxdata) {
-    //     unload_datafile(gfxdata);
-    // }
-    // if (gfxinter) {
-    //     unload_datafile(gfxinter);
-    // }
-    // if (gfxworld) {
-    //     unload_datafile(gfxworld);
-    // }
-    // if (gfxmentat) {
-    //     unload_datafile(gfxmentat);
-    // }
-
-    // Destroy font of Allegro FONT library
-    // Commented because it crash on Linux. As alfont is deprecated, i didn't try to understand. Replacing Alfont will avoid this possible memory leak. @Mira
-    //alfont_destroy_font(game_font);
-    //alfont_destroy_font(bene_font);
     TTF_CloseFont(game_font);
     TTF_CloseFont(bene_font);
     TTF_CloseFont(small_font);
-    // Exit the font library (must be first)
-    //Mira TEXT alfont_exit();
 
     logbook("Allegro FONT library shut down.");
 
@@ -856,28 +799,6 @@ void cGame::shutdown()
     m_PLInit.reset();
 }
 
-// bool cGame::isResolutionInGameINIFoundAndSet()
-// {
-//     return game.m_screenW != -1 && game.m_screenH != -1;
-// }
-
-// void cGame::setScreenResolutionFromGameIniSettings()
-// {
-//     if (game.m_screenW < 800) {
-//         game.m_screenW = 800;
-//         logbook("INI screen width < 800; unsupported; will set to 800.");
-//     }
-//     if (game.m_screenH < 600) {
-//         game.m_screenH = 600;
-//         logbook("INI screen height < 600; unsupported; will set to 600.");
-//     }
-//     // game.m_screenW = game.m_iniScreenWidth;
-//     // game.m_screenH = game.m_iniScreenHeight;
-
-//     cLogger::getInstance()->log(LOG_INFO, COMP_SETUP, "Resolution from ini file",
-//                                 fmt::format("Resolution {}x{} loaded from settings.ini.", game.m_screenW, game.m_screenH)
-//                                );
-// }
 
 /**
 	Setup the game
@@ -942,70 +863,24 @@ bool cGame::setupGame()
     // global anymore, because it needs to be destructed before main exits.
     m_PLInit = std::make_unique<cPlatformLayerInit>();
 
-    // int r = install_timer();
-    // if (r > -1) {
-    //     logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
-    // }
-    // else {
-    //     std::cerr << "Failed to install timer\n";
-    //     logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
-    //     return false;
-    // }
-
-    //Mira TEXT alfont_init();
-    //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
-    //install_keyboard();
     m_keyboard = new cKeyboard();
-    //logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
-    //install_mouse();
-    //logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
+    //Mira logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
-
-    // LOCK_VARIABLE(allegro_timerUnits);
-    // LOCK_VARIABLE(allegro_timerGlobal);
-    // LOCK_VARIABLE(allegro_timerSecond);
-
-    // LOCK_FUNCTION(allegro_timerunits);
-    // LOCK_FUNCTION(allegro_timergametime);
-    // LOCK_FUNCTION(allegro_timerseconds);
-
-    // // Install timers
-    // install_int(allegro_timerunits, 100); // 100 milliseconds
-    // install_int(allegro_timergametime, 5); // 5 milliseconds / hence, in 1 second the gametime has passed 1000/5 = 200 times
-    // install_int(allegro_timerseconds, 1000); // 1000 milliseconds (seconds)
-
-    // logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
-
     m_frameCount = m_fps = 0;
 
-    // Application des arguments de la ligne de commande
-    // applyArguments(*m_handleArgument);
+    m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
+    if (!m_windowed) {
+        m_Screen->setFullScreenMode();
+    }
 
-    // if (m_screenW != -1 && m_screenH != -1) {
-        // setScreenResolutionFromGameIniSettings();
-        m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
-        if (!m_windowed) {
-            m_Screen->setFullScreenMode();
-        }
-    // } else {
-    //     if (m_windowed) {
-    //         logger->log(LOG_WARN, COMP_SETUP, "Screen init", "Windowed mode requested, but no resolution set. Falling back to full-screen.");
-    //     }
-    //     m_Screen = std::make_unique<cScreenInit>(800, 600, title);
-    // }
     m_screenW = m_Screen->Width();
     m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
-    //Mira TEXT alfont_text_mode(-1);
-    //Mira TEXT logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
-
-    //Mira TEXT game_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str());
     game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
-
     //Mira TEXT if (game_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
@@ -1015,8 +890,6 @@ bool cGame::setupGame()
     //Mira TEXT     return false;
     //Mira TEXT }
 
-
-    //Mira TEXT bene_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str());
     bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
 
     gr_bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),20);
@@ -1029,7 +902,6 @@ bool cGame::setupGame()
     //Mira TEXT     return false;
     //Mira TEXT }
 
-    //Mira TEXT small_font = alfont_load_font(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str());
     small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
     //Mira TEXT if (small_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
@@ -1039,14 +911,6 @@ bool cGame::setupGame()
     //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
     //Mira TEXT     return false;
     //Mira TEXT }
-
-    // if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
-    //     set_display_switch_mode(SWITCH_PAUSE);
-    //     logbook("Display 'switch and pause' mode set");
-    // }
-    // else {
-    //     logbook("Display 'switch to background' mode set");
-    // }
 
     if (!m_playSound) {
         m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);
@@ -1063,105 +927,7 @@ bool cGame::setupGame()
      */
     m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenW - cSideBar::SidebarWidth, game.m_screenH - cSideBar::TopBarHeight);
 
-    /***
-    Bitmap Creation
-    ***/
-
-    // bmp_screen = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-
-    // if (bmp_screen == nullptr) {
-    //     std::cerr << "Failed to create a memory bitmap\n";
-    //     logbook("ERROR: Could not create bitmap: bmp_screen");
-    //     return false;
-    // }
-    // else {
-    //     logbook("Memory bitmap created: bmp_screen");
-    //     renderDrawer->FillWithColor(bmp_screen, Color{0,0,0,255});
-    // }
-
-    // bmp_backgroundMentat = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-
-    // if (bmp_backgroundMentat == nullptr) {
-    //     std::cerr << "Failed to create a memory bitmap\n";
-    //     logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
-    //     return false;
-    // }
-    // else {
-    //     logbook("Memory bitmap created: bmp_backgroundMentat");
-    //     // create only once
-    //     renderDrawer->FillWithColor(bmp_backgroundMentat, Color{8,8,16,255});
-    //     bool offsetX = false;
-
-    //     float horizon = game.m_screenH / 2;
-    //     float centered = game.m_screenW / 2;
-    //     for (int y = 0; y < game.m_screenH; y++) {
-    //         float diffYToCenter = 1.0f;
-    //         if (y < horizon) {
-    //             diffYToCenter = y / horizon;
-    //         }
-    //         else {
-    //             diffYToCenter = 1 - ((y - horizon) / horizon);
-    //         }
-
-    //         for (int x = offsetX ? 0 : 1; x < game.m_screenW; x += 2) {
-    //             float diffXToCenter = 1.0f;
-    //             if (x < centered) {
-    //                 diffXToCenter = x / centered;
-    //             }
-    //             else {
-    //                 diffXToCenter = 1 - ((x - centered) / centered);
-    //             }
-
-    //             float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
-    //             float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
-    //             float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
-    //             renderDrawer->setPixel(bmp_backgroundMentat, x, y, Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
-    //         }
-    //         // flip offset every y row
-    //         offsetX = !offsetX;
-    //     }
-    // }
-
-    // bmp_throttle = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-
-    // if (bmp_throttle == nullptr) {
-    //     std::cerr << "Failed to create a memory bitmap\n";
-    //     logbook("ERROR: Could not create bitmap: bmp_throttle");
-    //     return false;
-    // }
-    // else {
-    //     logbook("Memory bitmap created: bmp_throttle");
-    // }
-
-    // bmp_winlose = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-
-    // if (bmp_winlose == nullptr) {
-    //     std::cerr <<  "Failed to create a memory bitmap\n";
-    //     logbook("ERROR: Could not create bitmap: bmp_winlose");
-    //     return false;
-    // }
-    // else {
-    //     logbook("Memory bitmap created: bmp_winlose");
-    // }
-
-    // bmp_fadeout = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-
-    // if (bmp_fadeout == nullptr) {
-    //     std::cerr <<  "Failed to create a memory bitmap\n";
-    //     logbook("ERROR: Could not create bitmap: bmp_fadeout");
-    //     return false;
-    // }
-    // else {
-    //     logbook("Memory bitmap created: bmp_fadeout");
-    // }
-
-    /*** End of Bitmap Creation ***/
-    //set_color_conversion(COLORCONV_MOST);
-
     logbook("Color conversion method set");
-
-    // setup mouse speed
-    //set_mouse_speed(0, 0);
 
     logbook("MOUSE: Mouse speed set");
 
@@ -1177,7 +943,6 @@ bool cGame::setupGame()
     }
     else {
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
-        // memcpy(general_palette, gfxdata[PALETTE_D2TM), sizeof general_palette);
     }
 
     gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
@@ -1207,9 +972,7 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
     }
 
-    // finally the data repository and drawer interface can be initialized
-    // m_dataRepository = new cAllegroDataRepository();
-    renderDrawer = new SDLDrawer(/*m_dataRepository,*/renderer);
+    renderDrawer = new SDLDrawer(renderer);
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
@@ -1219,8 +982,6 @@ bool cGame::setupGame()
     game.m_playing = true;
     game.m_screenshot = 0;
     game.m_state = GAME_INITIALIZE;
-
-    // set_palette(general_palette);
 
     logbook("Setup:  HOUSES");
     m_Houses = std::make_shared<cHousesInfo>();
@@ -1248,18 +1009,12 @@ bool cGame::setupGame()
     mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     INI_Install_Game(m_gameFilename);
-    // m_handleArgument->applyArguments(); //Apply command line arguments
-    // m_handleArgument.reset();
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
     install_upgrades();
-
-    // m_mouse->setMouseObserver(nullptr);
-    // m_keyboard->setKeyboardObserver(nullptr);
-
     cPlayer *humanPlayer = &players[HUMAN];
 
     delete drawManager;
@@ -1277,7 +1032,6 @@ bool cGame::setupGame()
 
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);
-    //./d   SDL_BlendMode(SDL_BLENDMODE_BLEND);
     return true;
 }
 
@@ -1553,13 +1307,7 @@ void cGame::think_fading()
 }
 
 cGame::~cGame()
-{
-    // cannot do this, because when game is being quit, and the cGame object being deleted, Allegro has been shut down
-    // already, so the deletion of drawManager has to happen *before* that, hence look in shutdown() method
-//    if (drawManager) {
-//        delete drawManager;
-//    }
-}
+{}
 
 void cGame::prepareMentatForPlayer()
 {
@@ -1833,60 +1581,7 @@ void cGame::reduceShaking()
 
 void cGame::install_bitmaps()
 {
-    /*
-       //m_dataRepository->loadBitmapAt(D2TM_BITMAP_ICON_POWER, "./data/bmp/icon_power_sidebar3.bmp");
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_ATTACK, MOUSE_ATTACK);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_DOWN, MOUSE_DOWN);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_LEFT, MOUSE_LEFT);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_MOVE, MOUSE_MOVE);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_NORMAL, MOUSE_NORMAL);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_PICK, MOUSE_PICK);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_RALLY, MOUSE_RALLY);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_REPAIR, MOUSE_REPAIR);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_RIGHT, MOUSE_RIGHT);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_UP, MOUSE_UP);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_FORBIDDEN, MOUSE_FORBIDDEN);
-
-       // Particle stuff
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_MOVE, MOVE_INDICATOR);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_ATTACK, ATTACK_INDICATOR);
-
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_TRIKE, EXPLOSION_TRIKE);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SMOKE, OBJECT_SMOKE);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SMOKE_SHADOW, OBJECT_SMOKE_SHADOW);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_TRACK_DIA, TRACK_DIA);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_TRACK_HOR, TRACK_HOR);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_TRACK_VER, TRACK_VER);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_TRACK_DIA2, TRACK_DIA2);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_BULLET_PUF, BULLET_PUF);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_FIRE, EXPLOSION_FIRE);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_WORMEAT, OBJECT_WORMEAT);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_ONE, EXPLOSION_TANK_ONE);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_TWO, EXPLOSION_TANK_TWO);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE01,
-               EXPLOSION_STRUCTURE01);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE02,
-               EXPLOSION_STRUCTURE02);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_GAS, EXPLOSION_GAS);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_WORMTRAIL, OBJECT_WORMTRAIL);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_DEADINF01, OBJECT_DEADINF01);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_DEADINF02, OBJECT_DEADINF02);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_TANKSHOOT, OBJECT_TANKSHOOT);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SIEGESHOOT, OBJECT_SIEGESHOOT);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SQUISH01, EXPLOSION_SQUISH01);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SQUISH02, EXPLOSION_SQUISH02);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SQUISH03, EXPLOSION_SQUISH03);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_ORNI, EXPLOSION_ORNI);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_SIEGEDIE, OBJECT_SIEGEDIE);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_CARRYPUFF, OBJECT_CARRYPUFF);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET, EXPLOSION_ROCKET);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET_SMALL,
-               EXPLOSION_ROCKET_SMALL);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM01, OBJECT_BOOM01);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM02, OBJECT_BOOM02);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM03, OBJECT_BOOM03);
-       m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_BULLET, EXPLOSION_BULLET);
-    */
+    //Mira rip this function
 }
 
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)

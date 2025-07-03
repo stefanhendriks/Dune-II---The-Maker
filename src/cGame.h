@@ -13,7 +13,6 @@
 
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
-// #include "data/cAllegroDataRepository.h"
 #include "definitions.h"
 #include "mentat/cAbstractMentat.h"
 #include "observers/cScenarioObserver.h"
@@ -73,8 +72,6 @@ public:
     // resolution of the game
     int m_screenW;
     int m_screenH;
-    // int m_iniScreenWidth;
-    // int m_iniScreenHeight;
 
     bool m_playSound;               // play sound?
     bool m_disableAI;               // disable AI thinking?
@@ -228,10 +225,6 @@ public:
     void shakeScreen(int duration);
     void reduceShaking();
 
-    // cAllegroDataRepository *getDataRepository() {
-    //     return m_dataRepository;
-    // }
-
     Color getColorPlaceNeutral();
 
     Color getColorPlaceBad();
@@ -294,7 +287,6 @@ private:
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
     std::unique_ptr<cInteractionManager> m_interactionManager;
-    // cAllegroDataRepository *m_dataRepository;
 
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
 
@@ -306,7 +298,6 @@ private:
     cKeyboard *m_keyboard;
     SDL_Window *window;
     SDL_Renderer *renderer;
-    //SDL_Surface* screenSurface;
     Texture *screenTexture=nullptr;
     Texture *actualRenderer= nullptr;
 
@@ -366,9 +357,6 @@ private:
 
     void shakeScreenAndBlitBuffer();
     void handleTimeSlicing();
-
-    // bool isResolutionInGameINIFoundAndSet();
-    // void setScreenResolutionFromGameIniSettings();
 
     void initPlayers(bool rememberHouse) const;
 

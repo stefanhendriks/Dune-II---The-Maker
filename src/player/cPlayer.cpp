@@ -255,7 +255,6 @@ void cPlayer::setHouse(int iHouse)
         logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 
         // now set the different colors based upon house
-        // @Mira trafic on Palette
         minimapColor = m_HousesInfo->getMinimapColor(house);
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 

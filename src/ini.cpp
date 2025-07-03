@@ -704,11 +704,9 @@ int INI_SectionType(char section[30], int last)
 
     if (strcmp(section, "STRUCTURES") == 0) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Structure Section found", section);
-        //alert("Structure Section found", section, "", "OK", nullptr, 13, 0);
         return INI_STRUCTURES;
     }
 
-    //alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", nullptr, 13, 0);
     cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "No SECTION id found, assuming its an ID nested in section", section);
 
     // When nothing found; we assume its just a new ID tag for some unit or structure
