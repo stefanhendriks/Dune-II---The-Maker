@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <SDL2/SDL.h>
+#include "utils/Color.hpp"
 
 enum eNotificationType {
     NEUTRAL,    // generic message, in white
@@ -27,7 +27,7 @@ public:
         return TIMER;
     }
 
-    SDL_Color getColor() const;
+    Color getColor() const;
 
 private:
     std::string msg;

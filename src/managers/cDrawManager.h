@@ -115,7 +115,7 @@ private:
 
     // SDL_Surface *m_optionsBar;
     SDL_Cursor *defaultCursor;
-    SDL_Color m_sidebarColor;
+    Color m_sidebarColor;
     Texture *btnOptions;
 
     // TODO: bullet/projectile drawer

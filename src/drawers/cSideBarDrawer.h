@@ -42,7 +42,7 @@ private:
     // SDL_Surface *m_candybar;
     // cTextDrawer m_textDrawer;
 
-    SDL_Color m_sidebarColor;
+    Color m_sidebarColor;
 
     void createCandyBar();
 

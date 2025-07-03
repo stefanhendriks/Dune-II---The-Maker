@@ -264,10 +264,10 @@ void cAbstractMentat::thinkMouth()  // MOUTH
 
 void cAbstractMentat::draw()
 {
-    renderDrawer->renderClearToColor(SDL_Color{7,7,15,255});
-    renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, SDL_Color{64, 64,89,255});
-    renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, SDL_Color{40,40,60,255});
-    renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, SDL_Color{0,0,0,255});
+    renderDrawer->renderClearToColor(Color{7,7,15,255});
+    renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
+    renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
+    renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
     // select_palette(general_palette);
 
     Texture *tmp = getBackgroundBitmap();
@@ -284,11 +284,11 @@ void cAbstractMentat::draw()
     if (state == SPEAKING) {
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            textDrawer.drawText(offsetX + 17, offsetY + 17,SDL_Color{0, 0, 0,255},sentence[iMentatSentence]);
-            textDrawer.drawText(offsetX + 17, offsetY + 17,SDL_Color{255, 255, 255,255},sentence[iMentatSentence]);
+            textDrawer.drawText(offsetX + 17, offsetY + 17,Color{0, 0, 0,255},sentence[iMentatSentence]);
+            textDrawer.drawText(offsetX + 17, offsetY + 17,Color{255, 255, 255,255},sentence[iMentatSentence]);
 
-            textDrawer.drawText(offsetX + 17, offsetY + 37,SDL_Color{0, 0, 0,255},sentence[iMentatSentence+1]);
-            textDrawer.drawText(offsetX + 17, offsetY + 36,SDL_Color{255, 255, 255,255},sentence[iMentatSentence+1]);
+            textDrawer.drawText(offsetX + 17, offsetY + 37,Color{0, 0, 0,255},sentence[iMentatSentence+1]);
+            textDrawer.drawText(offsetX + 17, offsetY + 36,Color{255, 255, 255,255},sentence[iMentatSentence+1]);
         }
     }
 

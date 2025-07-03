@@ -149,24 +149,24 @@ public:
 
     int getMaxVolume();
 
-    SDL_Color getColorFadeSelected(int r, int g, int b) {
+    Color getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
         return getColorFadeSelected(r, g, b, true, true, true);
     }
 
-    SDL_Color getColorFadeSelectedRed(int r, int g, int b) {
+    Color getColorFadeSelectedRed(int r, int g, int b) {
         return getColorFadeSelected(r, g, b, true, false, false);
     }
 
-    SDL_Color getColorFadeSelectedGreen(int r, int g, int b) {
+    Color getColorFadeSelectedGreen(int r, int g, int b) {
         return getColorFadeSelected(r, g, b, false, true, false);
     }
 
-    SDL_Color getColorFadeSelectedBlue(int r, int g, int b) {
+    Color getColorFadeSelectedBlue(int r, int g, int b) {
         return getColorFadeSelected(r, g, b, false, false, true);
     }
 
-    SDL_Color getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag);
+    Color getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag);
 
     cMouse *getMouse() {
         return m_mouse; // NOOOO
@@ -232,11 +232,11 @@ public:
     //     return m_dataRepository;
     // }
 
-    SDL_Color getColorPlaceNeutral();
+    Color getColorPlaceNeutral();
 
-    SDL_Color getColorPlaceBad();
+    Color getColorPlaceBad();
 
-    SDL_Color getColorPlaceGood();
+    Color getColorPlaceGood();
 
     void setWinFlags(int value);
     void setLoseFlags(int value);

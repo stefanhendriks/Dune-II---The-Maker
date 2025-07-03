@@ -906,7 +906,7 @@ void cAbstractStructure::drawWithShadow()
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-    // renderDrawer->FillWithColor(stretchedShadow, SDL_Color{255,0,255,255});
+    // renderDrawer->FillWithColor(stretchedShadow, Color{255,0,255,255});
 
     // renderDrawer->stretchBlit(shadow, 0, 0, pixelWidth, pixelHeight,
     //                                 drawX, drawY, scaledWidth, scaledHeight);

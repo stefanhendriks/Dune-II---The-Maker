@@ -2,6 +2,7 @@
 
 // #include "data/cAllegroDataRepository.h"
 #include "utils/cRectangle.h"
+#include "utils/Color.hpp"
 
 #include <map>
 #include <memory>
@@ -28,9 +29,9 @@ public:
     void renderFromSurface(SDL_Surface *src, int x, int y,unsigned char opacity = 255);
 
     void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
-    void renderRectFillColor(int x, int y, int width, int height, SDL_Color color);
+    void renderRectFillColor(int x, int y, int width, int height, Color color);
     void renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
-    void renderRectColor(int x, int y, int width, int height, SDL_Color color);
+    void renderRectColor(int x, int y, int width, int height, Color color);
     void renderRectColor(const cRectangle &pRectangle, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
 
     void resetClippingFor();
@@ -53,35 +54,35 @@ public:
     // void maskedStretchBlit(SDL_Surface *src, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
     // [[deprecated]] void maskedStretchBlitFromGfxData(int index, SDL_Surface *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-    // void drawRect(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
-    // void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
-    // void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, SDL_Color color);
-    // void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, SDL_Color color);
-    // void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color, int alpha);
-    // void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, SDL_Color color);
-    void setPixel(SDL_Surface *bmp, int x, int y, SDL_Color color);
-    SDL_Color getColor_BLACK() {
-        return colorBlack;
+    // void drawRect(SDL_Surface *dest, int x, int y, int width, int height, Color color);
+    // void drawRect(SDL_Surface *dest, const cRectangle &pRectangle, Color color);
+    // void drawRectFilled(SDL_Surface *dest, int x, int y, int width, int height, Color color);
+    // void drawRectFilled(SDL_Surface *dest, const cRectangle &pRectangle, Color color);
+    // void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, Color color, int alpha);
+    // void drawRectTransparentFilled(SDL_Surface *dest, const cRectangle &rect, Color color);
+    void setPixel(SDL_Surface *bmp, int x, int y, Color color);
+    Color getColor_BLACK() {
+        return Color::Black();
     }
-    void renderClearToColor(SDL_Color color = SDL_Color{0,0,0,255});
+    void renderClearToColor(Color color = Color{0,0,0,255});
     // void bitmap_replace_color(SDL_Surface *bmp, int colorToReplace, int newColor);
-    // void bitmap_replace_color(SDL_Surface *bmp, SDL_Color colorToReplace, SDL_Color newColor);
+    // void bitmap_replace_color(SDL_Surface *bmp, Color colorToReplace, Color newColor);
 
     // void setTransBlender(int red, int green, int blue, int alpha);
 
-    // SDL_Color getColorByNormValue(int r, int g, int b, float norm);
+    // Color getColorByNormValue(int r, int g, int b, float norm);
 
     void gui_DrawRect(const cRectangle &rectangle);
-    void gui_DrawRect(const cRectangle &rectangle, SDL_Color gui_colorWindow, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
-    void gui_DrawRectBorder(const cRectangle &rectangle, SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark);
+    void gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark);
+    void gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark);
 
-    void renderLine(int x1, int y1, int x2, int y2, SDL_Color color);
-    void renderDot(int x, int y, SDL_Color color, int size);
+    void renderLine(int x1, int y1, int x2, int y2, Color color);
+    void renderDot(int x, int y, Color color, int size);
 
     void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);
 
-    void FillWithColor(SDL_Surface *src, SDL_Color color);
-    SDL_Color getPixel(SDL_Surface *surface, int x, int y);
+    void FillWithColor(SDL_Surface *src, Color color);
+    Color getPixel(SDL_Surface *surface, int x, int y);
 
     SDL_Renderer *getRenderer() {
         return renderer;
@@ -97,10 +98,10 @@ protected:
 
     Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 
-    SDL_Color colorBlack;
-    SDL_Color gui_colorWindow;
-    SDL_Color gui_colorBorderLight;
-    SDL_Color gui_colorBorderDark;
+    Color colorBlack;
+    Color gui_colorWindow;
+    Color gui_colorBorderLight;
+    Color gui_colorBorderDark;
 
 private:
     // cAllegroDataRepository *m_dataRepository;
@@ -115,5 +116,5 @@ private:
     std::map<sSize, SDL_Surface *> bitmapCache;
     SDL_Renderer *renderer=nullptr;
     Uint32 transparentColorKey;
-    void renderChangeColor(SDL_Color color);
+    void renderChangeColor(Color color);
 };

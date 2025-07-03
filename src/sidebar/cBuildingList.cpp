@@ -427,9 +427,9 @@ void cBuildingList::setItemBuilder(cItemBuilder *value)
     m_itemBuilder = value;
 }
 
-SDL_Color cBuildingList::getFlashingColor()
+Color cBuildingList::getFlashingColor()
 {
-    return SDL_Color{255, 209, 64, 255};
+    return Color{255, 209, 64, 255};
 }
 
 void cBuildingList::think()

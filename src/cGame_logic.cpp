@@ -48,6 +48,7 @@
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 #include "map/cPreviewMaps.h"
+#include "utils/Color.hpp"
 
 #include "utils/cFileValidator.h"
 #include "utils/cHandleArgument.h"
@@ -537,7 +538,7 @@ void cGame::drawStateCombat()
 {
     drawManager->drawCombatState();
     if (m_drawFps) {
-        //Mira TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, SDL_Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
+        //Mira TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
     }
 
     // for now, call this on game class.
@@ -634,7 +635,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
     assert(m_fadeAlpha >= kMinAlpha);
     assert(m_fadeAlpha <= kMaxAlpha);
     // SDL_Surface *temp = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
-    // renderDrawer->FillWithColor(temp, SDL_Color{0,0,0,255});
+    // renderDrawer->FillWithColor(temp, Color{0,0,0,255});
     // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_fadeAlpha);
     //renderDrawer->drawTransSprite(temp, temp, 0, 0);
     //renderDrawer->blit(temp, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
@@ -650,7 +651,7 @@ void cGame::fadeOutOrBlitScreenBuffer() const
 
 void cGame::drawState()
 {
-    //renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
+    //renderDrawer->FillWithColor(bmp_screen, Color{0,0,0,255});
 
     if (m_fadeAction == eFadeAction::FADE_OUT) {
         if (screenTexture) {
@@ -1064,7 +1065,7 @@ bool cGame::setupGame()
     // }
     // else {
     //     logbook("Memory bitmap created: bmp_screen");
-    //     renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,0,255});
+    //     renderDrawer->FillWithColor(bmp_screen, Color{0,0,0,255});
     // }
 
     // bmp_backgroundMentat = SDL_CreateRGBSurface(0,game.m_screenW, game.m_screenH,32,0,0,0,255);
@@ -1077,7 +1078,7 @@ bool cGame::setupGame()
     // else {
     //     logbook("Memory bitmap created: bmp_backgroundMentat");
     //     // create only once
-    //     renderDrawer->FillWithColor(bmp_backgroundMentat, SDL_Color{8,8,16,255});
+    //     renderDrawer->FillWithColor(bmp_backgroundMentat, Color{8,8,16,255});
     //     bool offsetX = false;
 
     //     float horizon = game.m_screenH / 2;
@@ -1103,7 +1104,7 @@ bool cGame::setupGame()
     //             float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
     //             float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
     //             float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
-    //             renderDrawer->setPixel(bmp_backgroundMentat, x, y, SDL_Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
+    //             renderDrawer->setPixel(bmp_backgroundMentat, x, y, Color{(Uint8) red,(Uint8) green,(Uint8) blue,255});
     //         }
     //         // flip offset every y row
     //         offsetX = !offsetX;
@@ -1877,27 +1878,27 @@ void cGame::install_bitmaps()
     */
 }
 
-SDL_Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
+Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
     unsigned char desiredRed = rFlag ? r * m_fadeSelect : r;
     unsigned char desiredGreen = gFlag ? g * m_fadeSelect : g;
     unsigned char desiredBlue = bFlag ? b * m_fadeSelect : b;
-    return SDL_Color{desiredRed, desiredGreen, desiredBlue,255};
+    return Color{desiredRed, desiredGreen, desiredBlue,255};
 }
 
-SDL_Color cGame::getColorPlaceNeutral()
+Color cGame::getColorPlaceNeutral()
 {
-    return SDL_Color{242, 174, 36,64};
+    return Color{242, 174, 36,64};
 }
 
-SDL_Color cGame::getColorPlaceBad()
+Color cGame::getColorPlaceBad()
 {
-    return SDL_Color{160, 0, 0,64};
+    return Color{160, 0, 0,64};
 }
 
-SDL_Color cGame::getColorPlaceGood()
+Color cGame::getColorPlaceGood()
 {
-    return SDL_Color{64, 255, 64,64};
+    return Color{64, 255, 64,64};
 }
 
 void cGame::setWinFlags(int value)
@@ -1989,7 +1990,7 @@ void cGame::drawCombatMouse()
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, SDL_Color{255,255,255,255});
+        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
     }
 
     m_mouse->draw();

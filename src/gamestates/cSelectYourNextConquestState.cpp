@@ -95,7 +95,7 @@ void cSelectYourNextConquestState::thinkFast()
         // temp bitmap to read from
         regionClickMapBmp = gfxworld->getSurface(WORLD_DUNE_CLICK); // 8 bit bitmap
         // select_palette(general_palette); // default palette
-        // renderDrawer->FillWithColor(regionClickMapBmp, SDL_Color{0,0,0,255});
+        // renderDrawer->FillWithColor(regionClickMapBmp, Color{0,0,0,255});
 
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
@@ -240,7 +240,7 @@ void cSelectYourNextConquestState::draw() const
 {
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
-    // renderDrawer->FillWithColor(bmp_screen, SDL_Color{48,28,0,255});
+    // renderDrawer->FillWithColor(bmp_screen, Color{48,28,0,255});
 
     // STEPS:
     // 1. Show current conquered regions
@@ -532,7 +532,7 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
     else {
         renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY,regionPiece.iAlpha);
         // renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-        // renderDrawer->FillWithColor(regionPiece.bmpHighBit, SDL_Color{255,0,255,255});
+        // renderDrawer->FillWithColor(regionPiece.bmpHighBit, Color{255,0,255,255});
         // renderDrawer->drawSprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
         // renderDrawer->drawTransSprite(regionPiece.bmpHighBit, regionPiece.bmpHighBit, regionX, regionY);
     }
@@ -550,7 +550,7 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     int hCalc = round((mouseY-offsetY-73)*240.0/regionClickMapBmp->h);
     int c = getPixelColorIndexFromSurface(regionClickMapBmp, wCalc, hCalc);
     //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
-    //alfont_textprintf(bmp_screen, bene_font, 17,17, SDL_Color{0,0,0), "region %d", c-1);
+    //alfont_textprintf(bmp_screen, bene_font, 17,17, Color{0,0,0), "region %d", c-1);
     // @Mira fix color to region ?
     return c - 1;
 }
@@ -579,7 +579,7 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.bmp = gfxworld->getSurface(iTile);
 
     // SDL_Surface *tempregion = SDL_CreateRGBSurface(0, region.bmp->w, region.bmp->h,32,0,0,0,255);
-    // renderDrawer->FillWithColor(tempregion, SDL_Color{255,0,255,255});
+    // renderDrawer->FillWithColor(tempregion, Color{255,0,255,255});
     // region.bmpHighBit = tempregion;
 }
 

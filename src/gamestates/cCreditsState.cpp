@@ -33,19 +33,19 @@ cCreditsState::cCreditsState(cGame &theGame) :
 
 void cCreditsState::prepareCrawlerLines()
 {
-    SDL_Color colorYellow = SDL_Color{255, 207, 41,255};
-    SDL_Color colorWhite = SDL_Color{255, 255, 255,255};
-    SDL_Color colorGreen = SDL_Color{0, 255, 0,255};
-    SDL_Color colorRed = SDL_Color{255, 0, 0,255};
+    Color colorYellow = Color{255, 207, 41,255};
+    Color colorWhite = Color{255, 255, 255,255};
+    Color colorGreen = Color{0, 255, 0,255};
+    Color colorRed = Color{255, 0, 0,255};
 
-    SDL_Color colorHeadlines = colorGreen;
+    Color colorHeadlines = colorGreen;
 
     int fontHeightWithALittlePadding = m_textDrawer.getFontHeight() + 4;
     int spacerAfterHeadline = fontHeightWithALittlePadding + m_textDrawer.getFontHeight();
     auto spacer = s_CreditLine {
         .name = "",
         .txt = "",
-        .color = SDL_Color{0,0,0,255},
+        .color = Color{0,0,0,255},
         .height = 40
     };
 
@@ -347,7 +347,7 @@ void cCreditsState::thinkFast()
 
 void cCreditsState::draw() const
 {
-    // renderDrawer->FillWithColor(bmp_screen, SDL_Color{0,0,16,255});
+    // renderDrawer->FillWithColor(bmp_screen, Color{0,0,16,255});
 
     renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 

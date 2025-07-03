@@ -11,11 +11,11 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
     , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
     , m_onLeftMouseButtonClickedAction(nullptr)
     , m_focus(false)
-    , m_guiColorButton(SDL_Color{176, 176, 196,255})
-    , m_guiColorBorderLight(SDL_Color{252, 252, 252,255})
-    , m_guiColorBorderDark(SDL_Color{84, 84, 120,255})
-    , m_textColor(SDL_Color{255, 255, 255,255}) // default white color
-    , m_textColorHover(SDL_Color{255, 0, 0,255})
+    , m_guiColorButton(Color{176, 176, 196,255})
+    , m_guiColorBorderLight(Color{252, 252, 252,255})
+    , m_guiColorBorderDark(Color{84, 84, 120,255})
+    , m_textColor(Color{255, 255, 255,255}) // default white color
+    , m_textColorHover(Color{255, 0, 0,255})
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
@@ -28,8 +28,8 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
     m_renderKind = renderKind;
 }
 
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, SDL_Color gui_colorButton,
-                       SDL_Color gui_colorBorderLight, SDL_Color gui_colorBorderDark)
+cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
+                       Color gui_colorBorderLight, Color gui_colorBorderDark)
     : cGuiButton(textDrawer, rect, btnText)
 {
     m_guiColorButton = gui_colorButton;
@@ -91,7 +91,7 @@ void cGuiButton::setRenderKind(eGuiButtonRenderKind value)
 
 void cGuiButton::drawText() const
 {
-    SDL_Color textColor = m_focus ? m_textColorHover : m_textColor;
+    Color textColor = m_focus ? m_textColorHover : m_textColor;
     if (!m_enabled) {
         textColor = m_focus ? m_guiColorBorderDark : m_guiColorBorderLight;
     }
@@ -142,17 +142,17 @@ void cGuiButton::toggleTextAlignHorizontal()
     }
 }
 
-void cGuiButton::setGui_ColorButton(SDL_Color value)
+void cGuiButton::setGui_ColorButton(Color value)
 {
     m_guiColorButton = value;
 }
 
-void cGuiButton::setTextColor(SDL_Color value)
+void cGuiButton::setTextColor(Color value)
 {
     m_textColor = value;
 }
 
-void cGuiButton::setTextColorHover(SDL_Color value)
+void cGuiButton::setTextColorHover(Color value)
 {
     m_textColorHover = value;
 }

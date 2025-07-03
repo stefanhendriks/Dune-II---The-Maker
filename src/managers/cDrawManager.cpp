@@ -25,7 +25,7 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
     , m_structureDrawer()
     , m_mouseDrawer(thePlayer)
     // , m_optionsBar(nullptr)
-    , m_sidebarColor(SDL_Color{214, 149, 20,255})
+    , m_sidebarColor(Color{214, 149, 20,255})
     , m_player(thePlayer)
     // , m_topBarBmp(nullptr)
     , m_textDrawer(game_font)
@@ -268,10 +268,10 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, SDL_Color{0, 0, 0,255});
+    renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
     // if (m_optionsBar == nullptr) {
         // m_optionsBar = SDL_CreateRGBSurface(0,game.m_screenW, 40,32,0,0,0,255);
-        renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, SDL_Color{214,149,20,255});
+        renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
 
         for (int w = 0; w < (game.m_screenW + 800); w += 789) {
             renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
@@ -399,4 +399,4 @@ bool cDrawManager::hasMessage()
 //    640,0
 //};
 //
-//spline(bmp_screen, points, SDL_Color{255,255,255));//will draw a nice loopy curve
+//spline(bmp_screen, points, Color{255,255,255));//will draw a nice loopy curve

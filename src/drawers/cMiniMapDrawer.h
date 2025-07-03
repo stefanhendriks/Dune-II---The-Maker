@@ -10,6 +10,7 @@
 #include "map/cMap.h"
 #include "map/cMapCamera.h"
 #include "utils/cRectangle.h"
+#include "utils/Color.hpp"
 
 class cPlayer;
 
@@ -48,7 +49,7 @@ protected:
     void drawViewPortRectangle();
     void drawUnitsAndStructures(bool playerOnly);
 
-    SDL_Color getRGBColorForTerrainType(int terrainType);
+    Color getRGBColorForTerrainType(int terrainType);
 
     int getMapHeightInPixels();
     int getMapWidthInPixels();

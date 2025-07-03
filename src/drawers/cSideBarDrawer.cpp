@@ -17,7 +17,7 @@ cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
     m_sidebar(nullptr),
     // m_candybar(nullptr),
     // m_textDrawer(bene_font),
-    m_sidebarColor(SDL_Color{214, 149, 20,255})
+    m_sidebarColor(Color{214, 149, 20,255})
 {
     assert(player);
     candyBarBall = m_player->createTextureFromIndexedSurfaceWithPalette(
@@ -66,7 +66,7 @@ void cSideBarDrawer::createCandyBar()
 {
     int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
     // m_candybar = SDL_CreateRGBSurface(0,24, heightInPixels,8,0,0,0,0);
-    // renderDrawer->FillWithColor(SDL_Color{0,0,0,255});
+    // renderDrawer->FillWithColor(Color{0,0,0,255});
 
     // ball first
     renderDrawer->renderSprite(candyBarBall, 0,0); // height of ball = 25
@@ -157,8 +157,8 @@ void cSideBarDrawer::drawBuildingLists()
 
     for (int i = 1; i < 3; i++) {
         int barX = (iDrawX - 1) + (i * 66);
-        SDL_Color darker = SDL_Color{89, 56, 0,255};
-        SDL_Color veryDark = SDL_Color{48, 28, 0,255};
+        Color darker = Color{89, 56, 0,255};
+        Color veryDark = Color{48, 28, 0,255};
         renderDrawer->renderLine( barX - 1, iDrawY, barX - 1, endY, darker);
         renderDrawer->renderLine( barX, iDrawY, barX, endY, veryDark);
 
@@ -176,8 +176,8 @@ void cSideBarDrawer::drawBuildingLists()
     }
 
     // vertical lines at the side
-    renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, SDL_Color{255, 211, 125,255}); // left
-    renderDrawer->renderLine( game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, SDL_Color{209, 150, 28,255}); // right
+    renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, Color{255, 211, 125,255}); // left
+    renderDrawer->renderLine( game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
 
@@ -213,7 +213,7 @@ void cSideBarDrawer::draw()
     // set_palette(m_player->pal);
 
     // black out sidebar
-    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, SDL_Color{0, 0, 0,255});
+    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -251,7 +251,7 @@ void cSideBarDrawer::drawCreditsUsage()
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, SDL_Color{0, 232, 0,255});
+    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * spiceStored;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -272,12 +272,12 @@ void cSideBarDrawer::drawCreditsUsage()
         renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
+    renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
 
     //renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
-    SDL_Color darker = SDL_Color{89, 56, 0,255};
+    Color darker = Color{89, 56, 0,255};
     renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
@@ -288,8 +288,8 @@ void cSideBarDrawer::drawCreditsUsage()
     } else {
         renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
     }
-    // m_textDrawer.drawText(barX - 1, barY - 21, SDL_Color{0, 0, 0,255}, "$");
-    // m_textDrawer.drawText(barX + 1, barY - 19, SDL_Color{0, 0, 0,255}, "$");
+    // m_textDrawer.drawText(barX - 1, barY - 21, Color{0, 0, 0,255}, "$");
+    // m_textDrawer.drawText(barX + 1, barY - 19, Color{0, 0, 0,255}, "$");
     // m_textDrawer.drawText(barX, barY - 20, "$");
 }
 
@@ -313,7 +313,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, SDL_Color{0, 232, 0,255});
+    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * powerUse;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -327,18 +327,18 @@ void cSideBarDrawer::drawPowerUsage() const
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, SDL_Color{(Uint8)r, (Uint8)g, 32,255});
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
     }
     else {
         renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, SDL_Color{255, 255, 255,255});
+    renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
 
     renderDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
-    SDL_Color darker = SDL_Color{89, 56, 0,255};
+    Color darker = Color{89, 56, 0,255};
     renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
     renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
     if (m_player->bEnoughPower()) {
@@ -347,8 +347,8 @@ void cSideBarDrawer::drawPowerUsage() const
     else {
         renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
     }
-    // m_textDrawer.drawText(barX-1, barY - 21, SDL_Color{0,0,0,255},"P");
-    // m_textDrawer.drawText(barX+1, barY - 19, SDL_Color{0,0,0,255},"P");
+    // m_textDrawer.drawText(barX-1, barY - 21, Color{0,0,0,255},"P");
+    // m_textDrawer.drawText(barX+1, barY - 19, Color{0,0,0,255},"P");
     // m_textDrawer.drawText(barX, barY - 20, "P");
 }
 
