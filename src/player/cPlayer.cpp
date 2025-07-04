@@ -570,15 +570,15 @@ bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType)
  */
 Color cPlayer::getHouseFadingColor() const
 {
-    Color color = Color{255, 255, 255,255};
+    Color color = Color::white(); //{255, 255, 255,255};
     if (house == ATREIDES) {
-        color = Color{0, 0, 255,255};
+        color = Color::blue(); //Color{0, 0, 255,255};
     }
     if (house == HARKONNEN) {
-        color = Color{255, 0, 0,255};
+        color = Color::red(); //Color{255, 0, 0,255};
     }
     if (house == ORDOS) {
-        color = Color{0, 255, 0,255};
+        color = Color::green(); //Color{0, 255, 0,255};
     }
 
     // TODO other m_houseInfo (Sardaukar, etc)
@@ -591,7 +591,7 @@ Color cPlayer::getHouseFadingColor() const
  */
 Color cPlayer::getErrorFadingColor() const
 {
-    return Color{255,0,0,255};
+    return Color::red(); //{255,0,0,255};
 }
 
 /**
@@ -600,7 +600,7 @@ Color cPlayer::getErrorFadingColor() const
  */
 Color cPlayer::getPrimaryBuildingFadingColor() const
 {
-    return Color{0,255,0,255};
+    return Color::green(); //{0,255,0,255};
 }
 
 /**
