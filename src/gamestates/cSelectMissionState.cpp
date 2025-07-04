@@ -3,8 +3,8 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/actions/cGuiActionToGameState.h"
-#include "gui/cGuiButton.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 #include "gui/actions/cGuiActionSelectMission.h"
 
 
