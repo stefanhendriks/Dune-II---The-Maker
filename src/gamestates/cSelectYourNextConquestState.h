@@ -5,7 +5,7 @@
 #include "definitions.h"
 
 class cGame;
-class cGuiButton;
+class GuiButton;
 struct SDL_Surface;
 class Texture;
 
@@ -101,7 +101,7 @@ private:
 
     bool fastForward = false;
 
-    cGuiButton *m_guiBtnToMissionSelect;
+    GuiButton *m_guiBtnToMissionSelect;
 
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;

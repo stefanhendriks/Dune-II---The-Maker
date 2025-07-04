@@ -3,12 +3,12 @@
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
 
-void cGuiObject::setTheme(const GuiTheme& theme)
+void GuiObject::setTheme(const GuiTheme& theme)
 {
     m_theme = theme;
 }
 
-void cGuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
+void GuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
 {
     int x1= m_rect.getX();
     int y1 = m_rect.getY();
@@ -27,7 +27,7 @@ void cGuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
     // SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
 }
 
-void cGuiObject::drawRectFillBorder(const GuiTheme& theme) const
+void GuiObject::drawRectFillBorder(const GuiTheme& theme) const
 {
     renderDrawer->renderRectFillColor(m_rect, theme.fillColor);
     drawRectBorder(theme.borderLight, theme.borderDark);

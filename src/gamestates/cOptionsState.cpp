@@ -32,7 +32,7 @@ void cOptionsState::constructWindow(int prevState)
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    m_guiWindow = new cGuiWindow(window);
+    m_guiWindow = new GuiWindow(window);
     m_guiWindow->setTheme(GuiTheme::Light());
 
     const eGuiButtonRenderKind buttonKinds = OPAQUE_WITH_BORDER;
@@ -45,7 +45,7 @@ void cOptionsState::constructWindow(int prevState)
     int rows = 2;
     int toMainMenu = mainMenuHeight - ((buttonHeight*rows)+(margin*rows));// 424
     const cRectangle &toMainMenuRect = m_guiWindow->getRelativeRect(margin, toMainMenu, buttonWidth, buttonHeight);
-    cGuiButton *gui_btn_toMenu = new cGuiButton(m_textDrawer, toMainMenuRect, "Back to main menu", buttonKinds);
+    GuiButton *gui_btn_toMenu = new GuiButton(m_textDrawer, toMainMenuRect, "Back to main menu", buttonKinds);
     gui_btn_toMenu->setTheme(GuiTheme::Light());
     gui_btn_toMenu->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action2 = new cGuiActionToGameState(GAME_MENU, true);
@@ -56,7 +56,7 @@ void cOptionsState::constructWindow(int prevState)
     int quit = mainMenuHeight - (buttonHeight + margin);// 464
     int width = (buttonWidth / 2);
     const cRectangle &quitRect = m_guiWindow->getRelativeRect(margin, quit, width, buttonHeight);
-    cGuiButton *gui_btn_Quit = new cGuiButton(m_textDrawer, quitRect, "Quit game", buttonKinds);
+    GuiButton *gui_btn_Quit = new GuiButton(m_textDrawer, quitRect, "Quit game", buttonKinds);
     gui_btn_Quit->setTheme(GuiTheme::Light());
     gui_btn_Quit->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_Quit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
@@ -65,7 +65,7 @@ void cOptionsState::constructWindow(int prevState)
     // BACK to where we came from
     int back = mainMenuHeight - (buttonHeight + margin);// 444
     const cRectangle &backRect = m_guiWindow->getRelativeRect(margin + width + margin, back, (width - margin), buttonHeight);
-    cGuiButton *gui_btn_Back = new cGuiButton(m_textDrawer, backRect, "Back", buttonKinds);
+    GuiButton *gui_btn_Back = new GuiButton(m_textDrawer, backRect, "Back", buttonKinds);
     gui_btn_Back->setTheme(GuiTheme::Light());
     gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
@@ -78,7 +78,7 @@ void cOptionsState::constructWindow(int prevState)
         int toMissionSelect = mainMenuHeight - ((buttonHeight * rows) + (margin * rows));// 424
         const cRectangle &toMissionSelectRect = m_guiWindow->getRelativeRect(margin, toMissionSelect, buttonWidth,
                                                 buttonHeight);
-        cGuiButton *gui_btn_toMissionSelect = new cGuiButton(m_textDrawer, toMissionSelectRect, "Mission select",
+        GuiButton *gui_btn_toMissionSelect = new GuiButton(m_textDrawer, toMissionSelectRect, "Mission select",
                 buttonKinds);
         gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
         gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);

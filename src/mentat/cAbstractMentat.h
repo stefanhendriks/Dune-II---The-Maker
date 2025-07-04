@@ -30,7 +30,7 @@
 #include <SDL2/SDL_ttf.h>
 
 class cButtonCommand;
-class cGuiButton;
+class GuiButton;
 
 struct SDL_Surface;
 class Texture;
@@ -138,7 +138,7 @@ public:
 
     void resetSpeak();
 
-    cGuiButton *m_guiBtnToMissionSelect;
+    GuiButton *m_guiBtnToMissionSelect;
     int movieTopleftX;
     int movieTopleftY;
 };

@@ -3,8 +3,8 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText)
-    : cGuiObject(rect)
+GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText)
+    : GuiObject(rect)
     , m_textDrawer(textDrawer)
     , m_buttonText(btnText)
     , m_renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
@@ -21,9 +21,9 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
 {
 }
 
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
+GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
                        eGuiButtonRenderKind renderKind)
-    : cGuiButton(textDrawer, rect, btnText)
+    : GuiButton(textDrawer, rect, btnText)
 {
     m_renderKind = renderKind;
 }
@@ -37,12 +37,12 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
 //     m_guiColorBorderDark = gui_colorBorderDark;
 // }
 
-cGuiButton::~cGuiButton()
+GuiButton::~GuiButton()
 {
     delete m_onLeftMouseButtonClickedAction;
 }
 
-void cGuiButton::draw() const
+void GuiButton::draw() const
 {
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
@@ -78,22 +78,22 @@ void cGuiButton::draw() const
     }
 }
 
-bool cGuiButton::hasFocus()
+bool GuiButton::hasFocus()
 {
     return m_focus;
 }
 
-void cGuiButton::setTextAlignHorizontal(eGuiTextAlignHorizontal value)
+void GuiButton::setTextAlignHorizontal(eGuiTextAlignHorizontal value)
 {
     m_textAlignHorizontal = value;
 }
 
-void cGuiButton::setRenderKind(eGuiButtonRenderKind value)
+void GuiButton::setRenderKind(eGuiButtonRenderKind value)
 {
     m_renderKind = value;
 }
 
-void cGuiButton::drawText() const
+void GuiButton::drawText() const
 {
     Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
     if (!m_enabled) {
@@ -120,7 +120,7 @@ void cGuiButton::drawText() const
     }
 }
 
-void cGuiButton::nextRenderKind()
+void GuiButton::nextRenderKind()
 {
     if (m_renderKind == eGuiButtonRenderKind::OPAQUE_WITH_BORDER) {
         m_renderKind = eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER;
@@ -136,7 +136,7 @@ void cGuiButton::nextRenderKind()
     }
 }
 
-void cGuiButton::toggleTextAlignHorizontal()
+void GuiButton::toggleTextAlignHorizontal()
 {
     if (m_textAlignHorizontal == eGuiTextAlignHorizontal::CENTER) {
         m_textAlignHorizontal = eGuiTextAlignHorizontal::LEFT;
@@ -161,7 +161,7 @@ void cGuiButton::toggleTextAlignHorizontal()
 //     m_textColorHover = value;
 // }
 
-void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
+void GuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     switch (event.eventType) {
         case MOUSE_MOVED_TO:
@@ -181,12 +181,12 @@ void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
     }
 }
 
-void cGuiButton::onMouseMovedTo(const s_MouseEvent &event)
+void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 {
     m_focus = m_rect.isPointWithin(event.coords);
 }
 
-void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
+void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
     if (game.isDebugMode()) {
         // LOST in SDL2 port: no keyboard acces i this area of code @Mira
@@ -198,14 +198,14 @@ void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
     }
 }
 
-void cGuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
+void GuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
 {
     if (m_enabled) {
         m_pressed = m_focus;
     }
 }
 
-void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &)
+void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &)
 {
     if (m_focus) {
         if (m_enabled && m_onLeftMouseButtonClickedAction) {
@@ -214,17 +214,17 @@ void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &)
     }
 }
 
-void cGuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
+void GuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
 {
     m_onLeftMouseButtonClickedAction = action;
 }
 
-void cGuiButton::setEnabled(bool value)
+void GuiButton::setEnabled(bool value)
 {
     m_enabled = value;
 }
 
-void cGuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
+void GuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
 
 }

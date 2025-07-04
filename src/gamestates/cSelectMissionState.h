@@ -29,5 +29,5 @@ private:
 
     const cTextDrawer textDrawer;
 
-    cGuiWindow *gui_window;
+    GuiWindow *gui_window;
 };

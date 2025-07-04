@@ -35,8 +35,8 @@ private:
     const cTextDrawer textDrawer;
     cRectangle sdl2power;
 
-    cGuiWindow *gui_window;
-    cGuiButton *gui_btn_credits;
+    GuiWindow *gui_window;
+    GuiButton *gui_btn_credits;
 
     Texture *bmp_D2TM_Title;
 };
