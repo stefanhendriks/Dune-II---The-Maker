@@ -26,7 +26,7 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg) co
 {
     if (msg.empty()) return;
     if (applyShadow) {
-        SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), Color::Black().toSDL());
+        SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), Color::black().toSDL());
         assert(texte);
         renderDrawer->renderFromSurface(texte,x+1,y+1);
         SDL_FreeSurface(texte);

@@ -112,7 +112,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int iCll = map.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
-            Color iColor = Color{255,255,255,255};
+            Color iColor = Color::white(); //Color{255,255,255,255};
             int terrainType = -1; // unknown
 
             char letter = mapLine[iX];

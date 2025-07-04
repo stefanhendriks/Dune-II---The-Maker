@@ -17,11 +17,12 @@ public:
         return toSDL();
     }
 
-    static Color Red() { return Color(255, 0, 0); }
-    static Color Green() { return Color(0, 255, 0); }
-    static Color Blue() { return Color(0, 0, 255); }
-    static Color Black() { return Color(0,0,0,255);}
-    static Color White() { return Color(255,255,255,255);}
+    static Color red() { return Color(255, 0, 0); }
+    static Color green() { return Color(0, 255, 0); }
+    static Color blue() { return Color(0, 0, 255); }
+    static Color black() { return Color(0,0,0,255);}
+    static Color white() { return Color(255,255,255,255);}
+    static Color yellow() { return Color{255, 207, 41,255};}
 
     Color withAlpha(uint8_t alpha) const { return Color(r, g, b, alpha); }
 };

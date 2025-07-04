@@ -38,9 +38,9 @@ Color cPlayerNotification::getColor() const
 {
     // @Mira regression on color
     //bool justStarted = (initialDuration - TIMER) < 500;
-    static const Color neutralColor = Color{255, 255, 255,255}; // white
-    static const Color priorityColor = Color{255, 207, 41,255}; // yellow
-    static const Color badColor = Color{255, 0, 0,255}; // red
+    static const Color neutralColor = Color::white(); //Color{255, 255, 255,255}; // white
+    static const Color priorityColor = Color::yellow(); //Color{255, 207, 41,255}; // yellow
+    static const Color badColor = Color::red(); //{255, 0, 0,255}; // red
     switch (type) {
         case NEUTRAL:
             return /*justStarted ? game.getColorFadeSelected(neutralColor) :*/ neutralColor;

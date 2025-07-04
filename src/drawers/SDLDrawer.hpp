@@ -28,9 +28,9 @@ public:
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
 
     void setPixel(SDL_Surface *bmp, int x, int y, Color color);
-    Color getColor_BLACK() {
-        return Color::Black();
-    }
+    // Color getColor_BLACK() {
+    //     return Color::black();
+    // }
     void renderClearToColor(Color color = Color{0,0,0,255});
 
     void gui_DrawRect(const cRectangle &rectangle);

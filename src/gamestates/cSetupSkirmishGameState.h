@@ -56,9 +56,6 @@ private:
     // Colors
     Color colorDarkishBackground;
     Color colorDarkishBorder;
-    Color colorWhite;
-    Color colorRed;
-    Color colorYellow;
     Color colorDarkerYellow;
     Color colorDisabled;
 

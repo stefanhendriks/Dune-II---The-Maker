@@ -169,7 +169,7 @@ void cMouseDrawer::drawToolTipBackground()
 
     color = Color{red, green, blue,128};
     // @Mira what do this code ?
-    auto black = renderDrawer->getColor_BLACK();
+    auto black = Color::black(); //renderDrawer->getColor_BLACK();
     black.a = 128;
     // const auto white = Color{255, 255, 255,255};
     //_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
