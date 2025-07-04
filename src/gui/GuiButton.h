@@ -6,6 +6,7 @@
 #include "drawers/cTextDrawer.h"
 
 #include <string>
+#include <functional>
 
 enum eGuiButtonRenderKind {
     OPAQUE_WITH_BORDER = 0,
@@ -53,7 +54,8 @@ public:
 
     // void setTextColorHover(Color value);
 
-    void setOnLeftMouseButtonClickedAction(cGuiAction *action);
+    [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action);
 
     void setEnabled(bool value);
 
@@ -62,7 +64,8 @@ private:
     std::string m_buttonText;
     eGuiButtonRenderKind m_renderKind;
     eGuiTextAlignHorizontal m_textAlignHorizontal;
-    cGuiAction *m_onLeftMouseButtonClickedAction;
+    // cGuiAction *m_onLeftMouseButtonClickedAction;
+    std::function<void()> m_onLeftMouseButtonClickedAction;
 
     bool m_focus;
 

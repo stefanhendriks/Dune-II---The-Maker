@@ -39,7 +39,7 @@ GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, cons
 
 GuiButton::~GuiButton()
 {
-    delete m_onLeftMouseButtonClickedAction;
+    // delete m_onLeftMouseButtonClickedAction;
 }
 
 void GuiButton::draw() const
@@ -209,14 +209,21 @@ void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &)
 {
     if (m_focus) {
         if (m_enabled && m_onLeftMouseButtonClickedAction) {
-            m_onLeftMouseButtonClickedAction->execute();
+            m_onLeftMouseButtonClickedAction();
         }
     }
 }
 
+void GuiButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onLeftMouseButtonClickedAction = std::move(action);
+}
+
 void GuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
 {
-    m_onLeftMouseButtonClickedAction = action;
+    m_onLeftMouseButtonClickedAction = [action]() {
+        if (action) action->execute();
+    };
 }
 
 void GuiButton::setEnabled(bool value)
