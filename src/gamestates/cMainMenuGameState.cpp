@@ -65,8 +65,8 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
 
-    Color colorInactiveHover = Color{128, 128, 128,255};
-    Color colorInactive = Color{192, 192, 192,255};
+    // Color colorInactiveHover = Color{128, 128, 128,255};
+    // Color colorInactive = Color{192, 192, 192,255};
 
     // PLAY
     int playY = 323;
