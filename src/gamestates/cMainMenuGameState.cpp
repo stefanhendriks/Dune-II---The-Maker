@@ -75,6 +75,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = new cGuiWindow(window);
+    gui_window->setTheme(GuiTheme::Light());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
 

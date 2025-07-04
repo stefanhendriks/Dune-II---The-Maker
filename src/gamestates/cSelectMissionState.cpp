@@ -26,6 +26,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *backgrou
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = new cGuiWindow(window);
+    gui_window->setTheme(GuiTheme::Light());
 
     const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
     const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
