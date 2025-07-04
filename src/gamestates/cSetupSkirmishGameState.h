@@ -65,7 +65,7 @@ private:
     int previewMapWidth;
     int widthOfSomething;
 
-    SDL_Surface *background;
+    // SDL_Surface *background;
 
     // screen
     int screen_x, screen_y;
