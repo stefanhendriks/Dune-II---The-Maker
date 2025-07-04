@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-class cGuiWindow : cGuiObject {
+class cGuiWindow : protected cGuiObject {
 public:
     explicit cGuiWindow(const cRectangle &rect);
     ~cGuiWindow();
@@ -23,7 +23,9 @@ public:
     void setTitle(const std::string &value) {
         title = value;
     }
-
+    void setTheme(const GuiTheme& _theme) {
+        cGuiObject::setTheme(_theme);
+    }
 private:
     std::vector<cGuiObject *> gui_objects;
     std::string title;

@@ -32,6 +32,7 @@ void cOptionsState::constructWindow(int prevState)
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = new cGuiWindow(window);
+    m_guiWindow->setTheme(GuiTheme::Light());
 
     const eGuiButtonRenderKind buttonKinds = OPAQUE_WITH_BORDER;
     const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;

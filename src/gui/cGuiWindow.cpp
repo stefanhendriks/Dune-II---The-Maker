@@ -24,7 +24,8 @@ void cGuiWindow::draw() const
 {
     //Color colorYellow = Color{255, 207, 41,255};
     // draw window itself...
-    renderDrawer->gui_DrawRect(m_rect);
+    // renderDrawer->gui_DrawRect(m_rect);
+    drawRectFillBorder(m_theme);
 
     for (auto &guiObject : gui_objects) {
         guiObject->draw();
