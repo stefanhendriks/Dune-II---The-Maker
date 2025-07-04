@@ -42,6 +42,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, SDL_Surface *background
     for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
         cGuiButton *btnMission = new cGuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
+        btnMission->setTheme(GuiTheme::Light());
         btnMission->setTextAlignHorizontal(buttonTextAlignment);
         btnMission->setOnLeftMouseButtonClickedAction(new cGuiActionSelectMission(i));
         gui_window->addGuiObject(btnMission);
@@ -54,6 +55,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, SDL_Surface *background
     width = buttonWidth;
     const cRectangle &backRect = gui_window->getRelativeRect(margin, back, (width - margin), buttonHeight);
     cGuiButton *gui_btn_Back = new cGuiButton(textDrawer, backRect, "Back", buttonKinds);
+    gui_btn_Back->setTheme(GuiTheme::Light());
     gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
     gui_btn_Back->setOnLeftMouseButtonClickedAction(action);

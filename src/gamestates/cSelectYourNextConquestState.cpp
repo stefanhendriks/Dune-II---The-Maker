@@ -68,6 +68,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
                                             "Mission select");
     cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect,
             "Mission select", buttonKind);
+    gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
     gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
     gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);

@@ -51,6 +51,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int creditsX = (game.m_screenW / 2) - buttonWidth;
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
     gui_btn_credits = new cGuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
+    gui_btn_credits->setTheme(GuiTheme::Light());
     gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_credits->setOnLeftMouseButtonClickedAction(new cGuiActionToGameState(GAME_CREDITS, true));
 
@@ -77,6 +78,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
 
     cGuiButton *gui_btn_SelectHouse = new cGuiButton(textDrawer, campaign, "Campaign", buttonKinds);
+    gui_btn_SelectHouse->setTheme(GuiTheme::Light());
     gui_btn_SelectHouse->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_SelectHouse->setOnLeftMouseButtonClickedAction(new cGuiActionSelectHouse());
     gui_window->addGuiObject(gui_btn_SelectHouse);
@@ -84,6 +86,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int skirmishY = 344;
     const cRectangle &skirmish = cRectangle(buttonsX, skirmishY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Skirmish = new cGuiButton(textDrawer, skirmish, "Skirmish", buttonKinds);
+    gui_btn_Skirmish->setTheme(GuiTheme::Light());
     gui_btn_Skirmish->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_Skirmish->setOnLeftMouseButtonClickedAction(new cGuiActionSetupSkirmishGame());
     gui_window->addGuiObject(gui_btn_Skirmish);
@@ -91,9 +94,10 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int multiplayerY = 364;
     const cRectangle &multiplayer = cRectangle(buttonsX, multiplayerY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Multiplayer = new cGuiButton(textDrawer, multiplayer, "Multiplayer", buttonKinds);
-    gui_btn_Multiplayer->setTextColor(colorInactive);
+    gui_btn_Multiplayer->setTheme(GuiTheme::Inactive());
+    // gui_btn_Multiplayer->setTextColor(colorInactive);
     gui_btn_Multiplayer->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Multiplayer->setTextColorHover(colorInactiveHover);
+    // gui_btn_Multiplayer->setTextColorHover(colorInactiveHover);
     gui_btn_Multiplayer->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
     gui_window->addGuiObject(gui_btn_Multiplayer);
 
@@ -101,9 +105,10 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int loadY = 384;
     const cRectangle &load = cRectangle(buttonsX, loadY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Load = new cGuiButton(textDrawer, load, "Load", buttonKinds);
-    gui_btn_Load->setTextColor(colorInactive);
+    gui_btn_Load->setTheme(GuiTheme::Inactive());
+    // gui_btn_Load->setTextColor(colorInactive);
     gui_btn_Load->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Load->setTextColorHover(colorInactiveHover);
+    // gui_btn_Load->setTextColorHover(colorInactiveHover);
     gui_btn_Load->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
     gui_window->addGuiObject(gui_btn_Load);
 
@@ -111,6 +116,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int optionsY = 404;
     const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Options = new cGuiButton(textDrawer, options, "Options", buttonKinds);
+    gui_btn_Options->setTheme(GuiTheme::Light());
     gui_btn_Options->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_Options->setOnLeftMouseButtonClickedAction(new cGuiActionShowOptions());
     gui_window->addGuiObject(gui_btn_Options);
@@ -119,9 +125,10 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int hofY = 424;
     const cRectangle &hof = cRectangle(buttonsX, hofY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Hof = new cGuiButton(textDrawer, hof, "Hall of Fame", buttonKinds);
-    gui_btn_Hof->setTextColor(colorInactive);
+    gui_btn_Hof->setTheme(GuiTheme::Inactive());
+    // gui_btn_Hof->setTextColor(colorInactive);
     gui_btn_Hof->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Hof->setTextColorHover(colorInactiveHover);
+    // gui_btn_Hof->setTextColorHover(colorInactiveHover);
     gui_btn_Hof->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
     gui_window->addGuiObject(gui_btn_Hof);
 
@@ -129,6 +136,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int exitY = 444;
     const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Exit = new cGuiButton(textDrawer, exit, "Exit", buttonKinds);
+    gui_btn_Exit->setTheme(GuiTheme::Light());
     gui_btn_Exit->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_Exit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
     gui_window->addGuiObject(gui_btn_Exit);
