@@ -4,7 +4,7 @@
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
 // #include "gui/actions/cGuiActionExitGame.h"
-#include "gui/actions/cGuiActionToGameState.h"
+// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 
@@ -48,8 +48,10 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_toMenu = new GuiButton(m_textDrawer, toMainMenuRect, "Back to main menu", buttonKinds);
     gui_btn_toMenu->setTheme(GuiTheme::Light());
     gui_btn_toMenu->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToGameState *action2 = new cGuiActionToGameState(GAME_MENU, true);
-    gui_btn_toMenu->setOnLeftMouseButtonClickedAction(action2);
+    // cGuiActionToGameState *action2 = new cGuiActionToGameState(GAME_MENU, true);
+    gui_btn_toMenu->setOnLeftMouseButtonClickedAction([this]() 
+        {game.setNextStateToTransitionTo(GAME_MENU);
+        game.initiateFadingOut();});
     m_guiWindow->addGuiObject(gui_btn_toMenu);
 
     // QUIT game
@@ -70,8 +72,9 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_Back = new GuiButton(m_textDrawer, backRect, "Back", buttonKinds);
     gui_btn_Back->setTheme(GuiTheme::Light());
     gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    gui_btn_Back->setOnLeftMouseButtonClickedAction(action);
+    // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
+    gui_btn_Back->setOnLeftMouseButtonClickedAction([this]() 
+        {game.setNextStateToTransitionTo(GAME_MENU);});
     m_guiWindow->addGuiObject(gui_btn_Back);
 
     // Mission select from options menu, only when playing the game
@@ -84,8 +87,9 @@ void cOptionsState::constructWindow(int prevState)
                 buttonKinds);
         gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
         gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-        cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-        gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action3);
+        // cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+        gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() 
+            {game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
         m_guiWindow->addGuiObject(gui_btn_toMissionSelect);
     }
 }
