@@ -1,4 +1,4 @@
-#include "gui/cGuiObject.h"
+#include "gui/GuiObject.h"
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>

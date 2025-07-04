@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cGuiAction.h"
-#include "cGuiObject.h"
+#include "GuiAction.h"
+#include "GuiObject.h"
 #include "utils/cRectangle.h"
 #include "drawers/cTextDrawer.h"
 

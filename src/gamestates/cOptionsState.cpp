@@ -5,8 +5,8 @@
 #include "drawers/SDLDrawer.hpp"
 #include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionToGameState.h"
-#include "gui/cGuiButton.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 
 
 

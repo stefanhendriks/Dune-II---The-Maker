@@ -3,8 +3,8 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiButton.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 #include "sMouseEvent.h"
 
 class Texture;

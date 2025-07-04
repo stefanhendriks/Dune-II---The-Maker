@@ -2,7 +2,7 @@
 
 #include "sMouseEvent.h"
 #include "gameobjects/structures/cAbstractStructure.h"
-#include "gui/cMouseToolTip.h"
+#include "gui/MouseToolTip.h"
 #include "gui/cTextWriter.h"
 
 class cPlayer;

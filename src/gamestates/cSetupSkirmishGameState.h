@@ -4,7 +4,7 @@
 #include "controls/cKeyboardEvent.h"
 #include "definitions.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiButton.h"
+#include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 #include "map/cPreviewMaps.h"

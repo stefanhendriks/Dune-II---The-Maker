@@ -17,7 +17,7 @@
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/RNG.hpp"
-#include "gui/cGuiButton.h"
+#include "gui/GuiButton.h"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
