@@ -7,7 +7,7 @@
 #include "gui/actions/cGuiActionSelectHouse.h"
 #include "gui/actions/cGuiActionSetupSkirmishGame.h"
 #include "gui/actions/cGuiActionShowOptions.h"
-#include "gui/actions/cGuiActionToGameState.h"
+// #include "gui/actions/cGuiActionToGameState.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 
@@ -54,7 +54,9 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     gui_btn_credits = new GuiButton(textDrawer, creditsRect, "CREDITS", buttonKinds);
     gui_btn_credits->setTheme(GuiTheme::Light());
     gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_credits->setOnLeftMouseButtonClickedAction(new cGuiActionToGameState(GAME_CREDITS, true));
+    gui_btn_credits->setOnLeftMouseButtonClickedAction([this]() {
+        game.setNextStateToTransitionTo(GAME_CREDITS);
+        game.initiateFadingOut();});
 
 
     /////////////////////////////////
