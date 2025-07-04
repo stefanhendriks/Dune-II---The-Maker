@@ -11,11 +11,11 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
     , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
     , m_onLeftMouseButtonClickedAction(nullptr)
     , m_focus(false)
-    , m_guiColorButton(Color{176, 176, 196,255})
-    , m_guiColorBorderLight(Color{252, 252, 252,255})
-    , m_guiColorBorderDark(Color{84, 84, 120,255})
-    , m_textColor(Color{255, 255, 255,255}) // default white color
-    , m_textColorHover(Color{255, 0, 0,255})
+    // , m_guiColorButton(Color{176, 176, 196,255})
+    // , m_guiColorBorderLight(Color{252, 252, 252,255})
+    // , m_guiColorBorderDark(Color{84, 84, 120,255})
+    // , m_textColor(Color{255, 255, 255,255}) // default white color
+    // , m_textColorHover(Color{255, 0, 0,255})
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
@@ -142,20 +142,20 @@ void cGuiButton::toggleTextAlignHorizontal()
     }
 }
 
-void cGuiButton::setGui_ColorButton(Color value)
-{
-    m_guiColorButton = value;
-}
+// void cGuiButton::setGui_ColorButton(Color value)
+// {
+//     m_guiColorButton = value;
+// }
 
-void cGuiButton::setTextColor(Color value)
-{
-    m_textColor = value;
-}
+// void cGuiButton::setTextColor(Color value)
+// {
+//     m_textColor = value;
+// }
 
-void cGuiButton::setTextColorHover(Color value)
-{
-    m_textColorHover = value;
-}
+// void cGuiButton::setTextColorHover(Color value)
+// {
+//     m_textColorHover = value;
+// }
 
 void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
 {

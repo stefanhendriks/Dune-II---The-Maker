@@ -47,11 +47,11 @@ public:
 
     void toggleTextAlignHorizontal();
 
-    void setGui_ColorButton(Color value);
+    // void setGui_ColorButton(Color value);
 
-    void setTextColor(Color value);
+    // void setTextColor(Color value);
 
-    void setTextColorHover(Color value);
+    // void setTextColorHover(Color value);
 
     void setOnLeftMouseButtonClickedAction(cGuiAction *action);
 
@@ -66,12 +66,12 @@ private:
 
     bool m_focus;
 
-    Color m_guiColorButton;
-    Color m_guiColorBorderLight;
-    Color m_guiColorBorderDark;
+    // Color m_guiColorButton;
+    // Color m_guiColorBorderLight;
+    // Color m_guiColorBorderDark;
 
-    Color m_textColor;
-    Color m_textColorHover;
+    // Color m_textColor;
+    // Color m_textColorHover;
 
     // pressed state
     bool m_pressed;
