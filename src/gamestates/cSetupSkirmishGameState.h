@@ -81,8 +81,8 @@ private:
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
 
-    cGuiButton *backButton;
-    cGuiButton *startButton;
+    GuiButton *backButton;
+    GuiButton *startButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);

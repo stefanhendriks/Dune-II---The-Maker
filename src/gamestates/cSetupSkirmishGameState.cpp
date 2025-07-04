@@ -181,7 +181,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int backButtonY = screen_y - topBarHeight;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-    backButton = new cGuiButton(textDrawer, backButtonRect, " BACK");
+    backButton = new GuiButton(textDrawer, backButtonRect, " BACK");
     backButton->setTheme(GuiTheme::Light());
     backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
@@ -192,7 +192,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
     cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
-    startButton = new cGuiButton(textDrawer, startButtonRect, "START");
+    startButton = new GuiButton(textDrawer, startButtonRect, "START");
     startButton->setTheme(GuiTheme::Light());
     startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
 }
