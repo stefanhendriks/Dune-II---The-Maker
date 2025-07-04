@@ -23,11 +23,10 @@ class cGuiButton : public cGuiObject {
 public:
     cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText);
 
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
-               eGuiButtonRenderKind renderKind);
+    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, eGuiButtonRenderKind renderKind);
 
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
-               Color gui_colorBorderLight, Color gui_colorBorderDark);
+    // cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
+    //            Color gui_colorBorderLight, Color gui_colorBorderDark);
 
     ~cGuiButton();
 

@@ -28,14 +28,14 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
     m_renderKind = renderKind;
 }
 
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
-                       Color gui_colorBorderLight, Color gui_colorBorderDark)
-    : cGuiButton(textDrawer, rect, btnText)
-{
-    m_guiColorButton = gui_colorButton;
-    m_guiColorBorderLight = gui_colorBorderLight;
-    m_guiColorBorderDark = gui_colorBorderDark;
-}
+// cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
+//                        Color gui_colorBorderLight, Color gui_colorBorderDark)
+//     : cGuiButton(textDrawer, rect, btnText)
+// {
+//     m_guiColorButton = gui_colorButton;
+//     m_guiColorBorderLight = gui_colorBorderLight;
+//     m_guiColorBorderDark = gui_colorBorderDark;
+// }
 
 cGuiButton::~cGuiButton()
 {
