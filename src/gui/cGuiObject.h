@@ -15,4 +15,6 @@ protected:
     // any gui object has a position and size. Hence its always a 'rect'.
     cRectangle m_rect;
     GuiTheme m_theme;
+    void drawRectBorder(Color borderRect, Color borderBottomRight) const;
+    void drawRectFillBorder(const GuiTheme& theme) const;
 };
