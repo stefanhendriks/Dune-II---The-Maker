@@ -55,19 +55,23 @@ void cGuiButton::draw() const
         case OPAQUE_WITH_BORDER:
             renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             if (m_pressed) {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+                drawRectBorder(m_theme.borderDark, m_theme.borderLight);
+                // renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                drawRectBorder(m_theme.borderLight, m_theme.borderDark);
+                //renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
             }
             drawText();
             break;
         case TRANSPARENT_WITH_BORDER:
             if (m_pressed) {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+                drawRectBorder(m_theme.borderDark, m_theme.borderLight);
+                //renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                drawRectBorder(m_theme.borderLight, m_theme.borderDark);
+                // renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
             }
             drawText();
             break;
