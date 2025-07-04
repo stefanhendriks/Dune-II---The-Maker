@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/actions/cGuiActionExitGame.h"
+// #include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
@@ -59,7 +59,9 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_Quit = new GuiButton(m_textDrawer, quitRect, "Quit game", buttonKinds);
     gui_btn_Quit->setTheme(GuiTheme::Light());
     gui_btn_Quit->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Quit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
+    gui_btn_Quit->setOnLeftMouseButtonClickedAction([this]() {
+        game.m_playing = false;
+        game.initiateFadingOut();});
     m_guiWindow->addGuiObject(gui_btn_Quit);
 
     // BACK to where we came from

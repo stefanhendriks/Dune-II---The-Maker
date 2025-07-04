@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "config.h"
 #include "data/gfxinter.h"
-#include "gui/actions/cGuiActionExitGame.h"
+//#include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionFadeOutOnly.h"
 #include "gui/actions/cGuiActionSelectHouse.h"
 #include "gui/actions/cGuiActionSetupSkirmishGame.h"
@@ -140,7 +140,9 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     GuiButton *gui_btn_Exit = new GuiButton(textDrawer, exit, "Exit", buttonKinds);
     gui_btn_Exit->setTheme(GuiTheme::Light());
     gui_btn_Exit->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Exit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
+    gui_btn_Exit->setOnLeftMouseButtonClickedAction([this]() {
+        game.m_playing = false;
+        game.initiateFadingOut();});
     gui_window->addGuiObject(gui_btn_Exit);
 }
 
