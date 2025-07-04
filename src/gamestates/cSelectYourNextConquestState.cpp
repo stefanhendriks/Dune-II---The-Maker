@@ -10,7 +10,7 @@
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "gui/actions/cGuiActionToGameState.h"
-#include "gui/cGuiButton.h"
+#include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>

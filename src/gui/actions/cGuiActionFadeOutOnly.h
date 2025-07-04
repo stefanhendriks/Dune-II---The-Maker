@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/cGuiAction.h"
+#include "gui/GuiAction.h"
 
 class cGuiActionFadeOutOnly : public cGuiAction {
 public:

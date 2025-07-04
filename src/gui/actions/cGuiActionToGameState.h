@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/cGuiAction.h"
+#include "gui/GuiAction.h"
 
 class cGuiActionToGameState : public cGuiAction {
 public:
