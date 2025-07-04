@@ -64,7 +64,7 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
         const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                                 game.m_screenH - textDrawer.getFontHeight(),
                                                 "Mission select");
-        cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
+        GuiButton *gui_btn_toMissionSelect = new GuiButton(textDrawer, toMissionSelectRect, "Mission select",
                 buttonKind);
         gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
         gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);

@@ -30,7 +30,7 @@ private:
 
     int m_prevState;
 
-    cGuiWindow *m_guiWindow;
+    GuiWindow *m_guiWindow;
 
     void constructWindow(int prevState);
 };

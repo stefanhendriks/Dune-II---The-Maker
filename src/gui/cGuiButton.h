@@ -19,22 +19,22 @@ enum eGuiTextAlignHorizontal {
     CENTER
 };
 
-class cGuiButton : public cGuiObject {
+class GuiButton : public GuiObject {
 public:
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText);
+    GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText);
 
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, eGuiButtonRenderKind renderKind);
+    GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, eGuiButtonRenderKind renderKind);
 
     // cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
     //            Color gui_colorBorderLight, Color gui_colorBorderDark);
 
-    ~cGuiButton();
+    ~GuiButton();
 
     // From cInputObserver
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    // From cGuiObject
+    // From GuiObject
     void draw() const override;
 
     bool hasFocus();
