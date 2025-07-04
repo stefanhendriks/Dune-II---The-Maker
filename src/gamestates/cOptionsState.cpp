@@ -45,6 +45,7 @@ void cOptionsState::constructWindow(int prevState)
     int toMainMenu = mainMenuHeight - ((buttonHeight*rows)+(margin*rows));// 424
     const cRectangle &toMainMenuRect = m_guiWindow->getRelativeRect(margin, toMainMenu, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_toMenu = new cGuiButton(m_textDrawer, toMainMenuRect, "Back to main menu", buttonKinds);
+    gui_btn_toMenu->setTheme(GuiTheme::Light());
     gui_btn_toMenu->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action2 = new cGuiActionToGameState(GAME_MENU, true);
     gui_btn_toMenu->setOnLeftMouseButtonClickedAction(action2);
@@ -55,6 +56,7 @@ void cOptionsState::constructWindow(int prevState)
     int width = (buttonWidth / 2);
     const cRectangle &quitRect = m_guiWindow->getRelativeRect(margin, quit, width, buttonHeight);
     cGuiButton *gui_btn_Quit = new cGuiButton(m_textDrawer, quitRect, "Quit game", buttonKinds);
+    gui_btn_Quit->setTheme(GuiTheme::Light());
     gui_btn_Quit->setTextAlignHorizontal(buttonTextAlignment);
     gui_btn_Quit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
     m_guiWindow->addGuiObject(gui_btn_Quit);
@@ -63,6 +65,7 @@ void cOptionsState::constructWindow(int prevState)
     int back = mainMenuHeight - (buttonHeight + margin);// 444
     const cRectangle &backRect = m_guiWindow->getRelativeRect(margin + width + margin, back, (width - margin), buttonHeight);
     cGuiButton *gui_btn_Back = new cGuiButton(m_textDrawer, backRect, "Back", buttonKinds);
+    gui_btn_Back->setTheme(GuiTheme::Light());
     gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
     gui_btn_Back->setOnLeftMouseButtonClickedAction(action);
@@ -76,6 +79,7 @@ void cOptionsState::constructWindow(int prevState)
                                                 buttonHeight);
         cGuiButton *gui_btn_toMissionSelect = new cGuiButton(m_textDrawer, toMissionSelectRect, "Mission select",
                 buttonKinds);
+        gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
         gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
         cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
         gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action3);
