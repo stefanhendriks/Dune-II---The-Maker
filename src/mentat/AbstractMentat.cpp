@@ -10,7 +10,7 @@
 
   */
 
-#include "cAbstractMentat.h"
+#include "AbstractMentat.h"
 
 // #include "cButtonCommand.h"
 #include "d2tmc.h"
@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fmt/core.h>
 
-cAbstractMentat::cAbstractMentat(bool canMissionSelect)
+AbstractMentat::AbstractMentat(bool canMissionSelect)
 {
     iMentatSentence = -1;
 
@@ -103,7 +103,7 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
     logbook("cAbstractMentat::cAbstractMentat()");
 }
 
-cAbstractMentat::~cAbstractMentat()
+AbstractMentat::~AbstractMentat()
 {
     // we can do this because Mentats are created/deleted before allegro gets destroyed
     // if (gfxmovie) {
@@ -124,7 +124,7 @@ cAbstractMentat::~cAbstractMentat()
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
 
-void cAbstractMentat::think()
+void AbstractMentat::think()
 {
     if (state == INIT) {
         // no thinking for init state
@@ -172,7 +172,7 @@ void cAbstractMentat::think()
     thinkMovie();
 }
 
-void cAbstractMentat::thinkMovie()
+void AbstractMentat::thinkMovie()
 {
     if (gfxmovie != nullptr) {
         TIMER_movie++;
@@ -188,7 +188,7 @@ void cAbstractMentat::thinkMovie()
     }
 }
 
-void cAbstractMentat::thinkEyes()
+void AbstractMentat::thinkEyes()
 {
     if (TIMER_Eyes > 0) {
         TIMER_Eyes--;
@@ -222,7 +222,7 @@ void cAbstractMentat::thinkEyes()
     }
 }
 
-void cAbstractMentat::thinkMouth()  // MOUTH
+void AbstractMentat::thinkMouth()  // MOUTH
 {
     if (TIMER_Mouth > 0) {
         TIMER_Mouth--;
@@ -277,7 +277,7 @@ void cAbstractMentat::thinkMouth()  // MOUTH
 
 }
 
-void cAbstractMentat::draw()
+void AbstractMentat::draw()
 {
     renderDrawer->renderClearToColor(Color{7,7,15,255});
     renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
@@ -323,13 +323,13 @@ void cAbstractMentat::draw()
     }
 }
 
-Texture *cAbstractMentat::getBackgroundBitmap() const
+Texture *AbstractMentat::getBackgroundBitmap() const
 {
     if (iBackgroundFrame < 0) return nullptr;
     return gfxmentat->getTexture(iBackgroundFrame);
 }
 
-void cAbstractMentat::draw_movie()
+void AbstractMentat::draw_movie()
 {
     if (gfxmovie == nullptr) return;
     if (iMovieFrame < 0) return;
@@ -368,18 +368,18 @@ void cAbstractMentat::draw_movie()
     // }
 // }
 
-void cAbstractMentat::initSentences()
+void AbstractMentat::initSentences()
 {
     memset(sentence, 0, sizeof(sentence));
 }
 
-void cAbstractMentat::setSentence(int i, const char *text)
+void AbstractMentat::setSentence(int i, const char *text)
 {
     sprintf(sentence[i], "%s", text);
     logbook(fmt::format("Sentence[{}]={}", i, text));
 }
 
-void cAbstractMentat::loadScene(const std::string &scene)
+void AbstractMentat::loadScene(const std::string &scene)
 {
     gfxmovie = nullptr;
 
@@ -400,7 +400,7 @@ void cAbstractMentat::loadScene(const std::string &scene)
     logbook(fmt::format("Failed to load scene [{}]", filename));
 }
 
-void cAbstractMentat::speak()
+void AbstractMentat::speak()
 {
     TIMER_Speaking = 0;
     TIMER_Mouth = 0;
@@ -408,26 +408,26 @@ void cAbstractMentat::speak()
     state = SPEAKING;
 }
 
-void cAbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
+void AbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
 {
     delete leftButton;
     leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
-void cAbstractMentat::buildRightButton(Texture *bmp, int x, int y)
+void AbstractMentat::buildRightButton(Texture *bmp, int x, int y)
 {
     delete rightButton;
     rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
 }
 
-void cAbstractMentat::resetSpeak()
+void AbstractMentat::resetSpeak()
 {
     speak();
 }
 
-void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
+void AbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (state == SPEAKING) {
         if (event.eventType==MOUSE_LEFT_BUTTON_CLICKED) {
@@ -448,7 +448,7 @@ void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
     }
 }
 
-void cAbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void AbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (m_guiBtnToMissionSelect) {
         m_guiBtnToMissionSelect->onNotifyKeyboardEvent(event);

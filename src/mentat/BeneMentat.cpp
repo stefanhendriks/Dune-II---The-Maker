@@ -1,4 +1,4 @@
-#include "cBeneMentat.h"
+#include "BeneMentat.h"
 
 // #include "cNoButtonCommand.h"
 // #include "cYesButtonCommand.h"
@@ -12,7 +12,7 @@
 #include "gui/GuiButton.h"
 #include <iostream>
 
-cBeneMentat::cBeneMentat() : cAbstractMentat(false)
+BeneMentat::BeneMentat() : AbstractMentat(false)
 {
     iBackgroundFrame = MENTATM;
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
@@ -51,15 +51,15 @@ cBeneMentat::cBeneMentat() : cAbstractMentat(false)
 
 }
 
-void cBeneMentat::think()
+void BeneMentat::think()
 {
     // think like base class
-    cAbstractMentat::think();
+    AbstractMentat::think();
 }
 
-void cBeneMentat::draw()
+void BeneMentat::draw()
 {
-    cAbstractMentat::draw();
+    AbstractMentat::draw();
 
     // when not speaking, draw 'do you wish to join house x'
     if (state == AWAITING_RESPONSE) {
@@ -70,17 +70,17 @@ void cBeneMentat::draw()
     }
 }
 
-void cBeneMentat::draw_other()
+void BeneMentat::draw_other()
 {
 
 }
 
-void cBeneMentat::draw_eyes()
+void BeneMentat::draw_eyes()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
 }
 
-void cBeneMentat::draw_mouth()
+void BeneMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }

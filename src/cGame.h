@@ -14,7 +14,7 @@
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "mentat/cAbstractMentat.h"
+#include "mentat/AbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 #include "utils/cTimeManager.h"
@@ -269,7 +269,7 @@ public:
     void setDebugMode(bool value) {
         m_debugMode = value;
     }
-    void execute(cAbstractMentat &mentat);
+    void execute(AbstractMentat &mentat);
 private:
     /**
      * Variables start here
@@ -314,7 +314,7 @@ private:
     int m_newMusicSample;
     int m_newMusicCountdown;
 
-    cAbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
+    AbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
 
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
@@ -354,7 +354,7 @@ private:
     // after clicking you get to debrief
 
 
-    void drawStateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction
+    void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
     void handleTimeSlicing();

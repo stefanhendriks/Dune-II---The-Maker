@@ -29,7 +29,7 @@
 #include <memory>
 #include <SDL2/SDL_ttf.h>
 
-class cButtonCommand;
+// class cButtonCommand;
 class GuiButton;
 
 struct SDL_Surface;
@@ -42,8 +42,36 @@ enum eMentatState {
     DESTROY,            // the mentat became 'invalid' (BeneGeserit-><house> transition)
 };
 
-class cAbstractMentat : public cInputObserver {
+class AbstractMentat : public cInputObserver {
+public:
+    AbstractMentat(bool canMissionSelect);
+    virtual ~AbstractMentat();
 
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+
+    virtual void draw() = 0;
+    virtual void think() = 0;
+
+    // virtual void interact() = 0;
+
+    void loadScene(const std::string &scene);
+
+    Texture *getBackgroundBitmap() const;
+
+    void initSentences();
+    void speak();
+    void setSentence(int i, const char text[256]);
+    void thinkMouth();
+    void thinkEyes();
+    void thinkMovie();
+    void setHouse(int value) {
+        house = value;
+    }
+    int getHouse() {
+        return house;
+    }
+    void resetSpeak();
 protected:
     virtual void draw_mouth() = 0;
 
@@ -98,48 +126,8 @@ protected:
 
     int offsetX;
     int offsetY;
-
-public:
-    void onNotifyMouseEvent(const s_MouseEvent &event) override;
-    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-
-    virtual void draw() = 0;
-
-    virtual void think() = 0;
-
-    // virtual void interact() = 0;
-
-    void loadScene(const std::string &scene);
-
-    cAbstractMentat(bool canMissionSelect);
-
-    virtual ~cAbstractMentat();
-
-    Texture *getBackgroundBitmap() const;
-
-    void initSentences();
-
-    void speak();
-
-    void setSentence(int i, const char text[256]);
-
-    void thinkMouth();
-
-    void thinkEyes();
-
-    void thinkMovie();
-
-    void setHouse(int value) {
-        house = value;
-    }
-
-    int getHouse() {
-        return house;
-    }
-
-    void resetSpeak();
-
-    GuiButton *m_guiBtnToMissionSelect;
     int movieTopleftX;
     int movieTopleftY;
+
+    GuiButton *m_guiBtnToMissionSelect;
 };
