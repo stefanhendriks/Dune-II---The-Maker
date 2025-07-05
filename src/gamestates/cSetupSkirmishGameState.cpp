@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/actions/cGuiActionToGameState.h"
+// #include "gui/actions/cGuiActionToGameState.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
@@ -203,9 +203,10 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     backButton = new GuiButton(textDrawer, backButtonRect, " BACK");
     backButton->setTheme(GuiTheme::Light());
     backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
-    backButton->setOnLeftMouseButtonClickedAction(action);
-
+    // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
+    backButton->setOnLeftMouseButtonClickedAction([this]() {
+        game.setNextStateToTransitionTo(GAME_MENU);
+        game.initiateFadingOut();});
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;

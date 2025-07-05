@@ -9,7 +9,7 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-#include "gui/actions/cGuiActionToGameState.h"
+// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 
@@ -70,8 +70,9 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
             "Mission select", buttonKind);
     gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
     gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-    gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
+    // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+    gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
+        game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
     m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 

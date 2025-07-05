@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/actions/cGuiActionToGameState.h"
+// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 // #include "gui/actions/cGuiActionSelectMission.h"
@@ -62,8 +62,9 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *backgrou
     GuiButton *gui_btn_Back = new GuiButton(textDrawer, backRect, "Back", buttonKinds);
     gui_btn_Back->setTheme(GuiTheme::Light());
     gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    gui_btn_Back->setOnLeftMouseButtonClickedAction(action);
+    // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
+    gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() {
+        game.setNextStateToTransitionTo(prevState);});
     gui_window->addGuiObject(gui_btn_Back);
 }
 
