@@ -3,9 +3,9 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 
-GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText)
+GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
     : GuiObject(rect)
-    , m_textDrawer(textDrawer)
+    , m_textDrawer(nullptr)
     , m_buttonText(btnText)
     , m_renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
     , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
@@ -21,12 +21,14 @@ GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, cons
 {
 }
 
+/*
 GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
                        eGuiButtonRenderKind renderKind)
     : GuiButton(textDrawer, rect, btnText)
 {
     m_renderKind = renderKind;
 }
+*/
 
 // cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
 //                        Color gui_colorBorderLight, Color gui_colorBorderDark)
@@ -93,6 +95,11 @@ void GuiButton::setRenderKind(eGuiButtonRenderKind value)
     m_renderKind = value;
 }
 
+void GuiButton::setTextDrawer(cTextDrawer *cTextDrawer)
+{
+    m_textDrawer = cTextDrawer;
+}
+
 void GuiButton::drawText() const
 {
     Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
@@ -103,18 +110,18 @@ void GuiButton::drawText() const
     switch (m_textAlignHorizontal) {
         case eGuiTextAlignHorizontal::CENTER:
             if (m_pressed) {
-                m_textDrawer.drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor, 1, 1);
+                m_textDrawer->drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor, 1, 1);
             }
             else {
-                m_textDrawer.drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor);
+                m_textDrawer->drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor);
             }
             break;
         case eGuiTextAlignHorizontal::LEFT:
             if (m_pressed) {
-                m_textDrawer.drawText(m_rect.getX() + 1, m_rect.getY() + 1, textColor, m_buttonText.c_str());
+                m_textDrawer->drawText(m_rect.getX() + 1, m_rect.getY() + 1, textColor, m_buttonText.c_str());
             }
             else {
-                m_textDrawer.drawText(m_rect.getX(), m_rect.getY(), textColor, m_buttonText.c_str());
+                m_textDrawer->drawText(m_rect.getX(), m_rect.getY(), textColor, m_buttonText.c_str());
             }
             break;
     }

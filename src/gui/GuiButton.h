@@ -20,11 +20,22 @@ enum eGuiTextAlignHorizontal {
     CENTER
 };
 
+struct GuiButtonParams {
+    cTextDrawer* drawer = nullptr;
+    cRectangle rect;
+    std::string label = "";
+    eGuiButtonRenderKind kind = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
+    GuiTheme theme = GuiTheme::Light();
+    eGuiTextAlignHorizontal align = eGuiTextAlignHorizontal::CENTER;
+    std::function<void()> onClick = nullptr;
+};
+
+
 class GuiButton : public GuiObject {
 public:
-    GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText);
+    GuiButton(/*const cTextDrawer &textDrawer,*/ const cRectangle &rect, const std::string &btnText);
 
-    GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, eGuiButtonRenderKind renderKind);
+    //GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, eGuiButtonRenderKind renderKind);
 
     // cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
     //            Color gui_colorBorderLight, Color gui_colorBorderDark);
@@ -41,7 +52,7 @@ public:
     bool hasFocus();
 
     void setTextAlignHorizontal(eGuiTextAlignHorizontal value);
-
+    void setTextDrawer(cTextDrawer *cTextDrawer);
     void setRenderKind(eGuiButtonRenderKind value);
 
     void nextRenderKind();
@@ -60,7 +71,7 @@ public:
     void setEnabled(bool value);
 
 private:
-    cTextDrawer m_textDrawer;
+    cTextDrawer *m_textDrawer;
     std::string m_buttonText;
     eGuiButtonRenderKind m_renderKind;
     eGuiTextAlignHorizontal m_textAlignHorizontal;
@@ -91,4 +102,57 @@ private:
     void onMouseLeftButtonPressed(const s_MouseEvent &event);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+};
+
+
+class GuiButtonBuilder {
+public:
+    GuiButtonBuilder& withTextDrawer(cTextDrawer* drawer) {
+        params.drawer = drawer;
+        return *this;
+    }
+
+    GuiButtonBuilder& withRect(const cRectangle& rect) {
+        params.rect = rect;
+        return *this;
+    }
+
+    GuiButtonBuilder& withLabel(const std::string& label) {
+        params.label = label;
+        return *this;
+    }
+
+    GuiButtonBuilder& withKind(eGuiButtonRenderKind kind) {
+        params.kind = kind;
+        return *this;
+    }
+
+    GuiButtonBuilder& withTheme(const GuiTheme& theme) {
+        params.theme = theme;
+        return *this;
+    }
+
+    GuiButtonBuilder& withTextAlign(eGuiTextAlignHorizontal align) {
+        params.align = align;
+        return *this;
+    }
+
+    GuiButtonBuilder& onClick(std::function<void()> callback) {
+        params.onClick = std::move(callback);
+        return *this;
+    }
+
+    GuiButton* build() const {
+        GuiButton* btn = new GuiButton(params.rect, params.label);
+        btn->setTextDrawer(params.drawer);
+        btn->setRenderKind(params.kind);
+        btn->setTheme(params.theme);
+        btn->setTextAlignHorizontal(params.align);
+        if (params.onClick)
+            btn->setOnLeftMouseButtonClickedAction(params.onClick);
+        return btn;
+    }
+
+private:
+    GuiButtonParams params;
 };

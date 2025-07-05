@@ -26,7 +26,7 @@ public:
     void refresh();
 
 private:
-    const cTextDrawer m_textDrawer;
+    cTextDrawer m_textDrawer;
 
     int m_prevState;
 
