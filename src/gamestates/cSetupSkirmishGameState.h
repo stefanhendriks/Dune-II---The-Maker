@@ -119,12 +119,9 @@ private:
 
     void generateRandomMap();
 
-    void onMouseLeftButtonClickedAtMapList();
-
-    void onMouseLeftButtonClickedAtStartPoints();
-
     void onMouseRightButtonClicked(const s_MouseEvent &event);
 
+    void onMouseLeftButtonClickedAtStartPoints();
     void onMouseRightButtonClickedAtStartPoints();
 
     // void onMouseLeftButtonClickedAtStartButton();
@@ -132,11 +129,10 @@ private:
     void onMouseLeftButtonClickedAtWorms();
     void onMouseRightButtonClickedAtWorms();
 
+    void onMouseLeftButtonClickedAtMapList();
     void onMouseLeftButtonClickedAtSpawnBlooms();
-
     void onMouseLeftButtonClickedAtDetonateBlooms();
 
-    void onMouseRightButtonClickedAtPlayerList();
-
     void onMouseLeftButtonClickedAtPlayerList();
+    void onMouseRightButtonClickedAtPlayerList();
 };
