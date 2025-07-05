@@ -17,6 +17,6 @@ private:
 
 public:
     cBeneMentat();
-
+    // void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void think() override;
 };

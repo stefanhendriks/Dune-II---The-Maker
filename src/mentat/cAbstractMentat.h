@@ -89,9 +89,10 @@ protected:
 
     void buildRightButton(Texture *bmp, int x, int y);
 
-    cButtonCommand *leftButtonCommand;
-    cButtonCommand *rightButtonCommand;
-
+    // cButtonCommand *leftButtonCommand;
+    // cButtonCommand *rightButtonCommand;
+    GuiButton *leftGuiButton;
+    GuiButton *rightGuiButton;
     // this is used for Bene Geserit house selection
     int house;
 

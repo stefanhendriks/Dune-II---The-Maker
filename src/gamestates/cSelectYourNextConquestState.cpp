@@ -58,8 +58,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     isFinishedConqueringRegions = true;
 
     // the quick-way to get to a mission select window
-    const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
+    //const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
+    //const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
 //    cTextDrawer textDrawer(bene_font);
     int length = textDrawer.textLength("Mission select");
