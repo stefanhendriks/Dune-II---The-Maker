@@ -6,7 +6,7 @@
 #include "gui/actions/cGuiActionFadeOutOnly.h"
 // #include "gui/actions/cGuiActionSelectHouse.h"
 #include "gui/actions/cGuiActionSetupSkirmishGame.h"
-#include "gui/actions/cGuiActionShowOptions.h"
+// #include "gui/actions/cGuiActionShowOptions.h"
 // #include "gui/actions/cGuiActionToGameState.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -124,7 +124,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     GuiButton *gui_btn_Options = new GuiButton(textDrawer, options, "Options", buttonKinds);
     gui_btn_Options->setTheme(GuiTheme::Light());
     gui_btn_Options->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Options->setOnLeftMouseButtonClickedAction(new cGuiActionShowOptions());
+    gui_btn_Options->setOnLeftMouseButtonClickedAction([this](){game.setNextStateToTransitionTo(GAME_OPTIONS);});
     gui_window->addGuiObject(gui_btn_Options);
 
     // HALL OF FAME
