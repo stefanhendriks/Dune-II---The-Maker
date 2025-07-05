@@ -196,6 +196,11 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     startButton = new GuiButton(textDrawer, startButtonRect, "START");
     startButton->setTheme(GuiTheme::Light());
     startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
+    startButton->setOnLeftMouseButtonClickedAction([this]() {
+        //std::cout << "click" << std::endl;
+        if (iSkirmishMap > -1) {
+            prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+        };});
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
@@ -835,7 +840,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
     onMouseLeftButtonClickedAtSpawnBlooms();
     onMouseLeftButtonClickedAtDetonateBlooms();
     onMouseLeftButtonClickedAtPlayerList();
-    onMouseLeftButtonClickedAtStartButton();
+    //onMouseLeftButtonClickedAtStartButton();
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()
@@ -953,25 +958,25 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
-{
-    int topBarHeight = 21;
-    int screen_y = game.m_screenH;
-    int screen_x = game.m_screenW;
+// void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
+// {
+//     int topBarHeight = 21;
+//     int screen_y = game.m_screenH;
+//     int screen_x = game.m_screenW;
 
-    int startButtonWidth = textDrawer.getTextLength("START");
-    int startButtonHeight = topBarHeight;
-    int startButtonY = screen_y - topBarHeight;
-    int startButtonX = screen_x - startButtonWidth;
+//     int startButtonWidth = textDrawer.textLength("START");
+//     int startButtonHeight = topBarHeight;
+//     int startButtonY = screen_y - topBarHeight;
+//     int startButtonX = screen_x - startButtonWidth;
 
-    if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-        // START
-        if (iSkirmishMap > -1) {
-            prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-        }
-    } // mouse hovers over "START"
+//     if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
+//         // START
+//         if (iSkirmishMap > -1) {
+//             prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+//         }
+//     } // mouse hovers over "START"
 
-}
+// }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
 {
