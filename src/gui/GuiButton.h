@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GuiAction.h"
+// #include "GuiAction.h"
 #include "GuiObject.h"
 #include "utils/cRectangle.h"
 #include "drawers/cTextDrawer.h"
@@ -54,7 +54,7 @@ public:
 
     // void setTextColorHover(Color value);
 
-    [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
+    // [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
 
     void setEnabled(bool value);
