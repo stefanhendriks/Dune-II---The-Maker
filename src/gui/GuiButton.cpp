@@ -10,6 +10,7 @@ GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
     , m_renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
     , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
     , m_onLeftMouseButtonClickedAction(nullptr)
+    , m_tex(nullptr)
     , m_focus(false)
     // , m_guiColorButton(Color{176, 176, 196,255})
     // , m_guiColorBorderLight(Color{252, 252, 252,255})
@@ -77,6 +78,9 @@ void GuiButton::draw() const
             }
             drawText();
             break;
+        case WITH_TEXTURE:
+            renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
+            break;
     }
 }
 
@@ -98,6 +102,11 @@ void GuiButton::setRenderKind(eGuiButtonRenderKind value)
 void GuiButton::setTextDrawer(cTextDrawer *cTextDrawer)
 {
     m_textDrawer = cTextDrawer;
+}
+
+void GuiButton::setTexture(Texture *tex)
+{
+    m_tex = tex;
 }
 
 void GuiButton::drawText() const

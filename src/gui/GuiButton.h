@@ -12,7 +12,8 @@ enum eGuiButtonRenderKind {
     OPAQUE_WITH_BORDER = 0,
     OPAQUE_WITHOUT_BORDER = 1,
     TRANSPARENT_WITH_BORDER = 2,
-    TRANSPARENT_WITHOUT_BORDER = 3
+    TRANSPARENT_WITHOUT_BORDER = 3,
+    WITH_TEXTURE =4
 };
 
 enum eGuiTextAlignHorizontal {
@@ -28,6 +29,7 @@ struct GuiButtonParams {
     GuiTheme theme = GuiTheme::Light();
     eGuiTextAlignHorizontal align = eGuiTextAlignHorizontal::CENTER;
     std::function<void()> onClick = nullptr;
+    Texture *tex = nullptr;
 };
 
 
@@ -54,6 +56,7 @@ public:
     void setTextAlignHorizontal(eGuiTextAlignHorizontal value);
     void setTextDrawer(cTextDrawer *cTextDrawer);
     void setRenderKind(eGuiButtonRenderKind value);
+    void setTexture(Texture *tex);
 
     void nextRenderKind();
 
@@ -77,6 +80,7 @@ private:
     eGuiTextAlignHorizontal m_textAlignHorizontal;
     // cGuiAction *m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onLeftMouseButtonClickedAction;
+    Texture *m_tex;
 
     bool m_focus;
 
@@ -142,12 +146,18 @@ public:
         return *this;
     }
 
+    GuiButtonBuilder& withTexture(Texture* tex) {
+        params.tex = tex;
+        return *this;
+    }
+
     GuiButton* build() const {
         GuiButton* btn = new GuiButton(params.rect, params.label);
         btn->setTextDrawer(params.drawer);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         btn->setTextAlignHorizontal(params.align);
+        btn->setTexture(params.tex);
         if (params.onClick)
             btn->setOnLeftMouseButtonClickedAction(params.onClick);
         return btn;
