@@ -85,10 +85,10 @@ void cBeneMentat::draw_mouth()
     renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }
 
-void cBeneMentat::interact()
-{
-    cAbstractMentat::interact();
-}
+// void cBeneMentat::interact()
+// {
+//     cAbstractMentat::interact();
+// }
 
 
 // void cBeneMentat::onNotifyMouseEvent(const s_MouseEvent &event)

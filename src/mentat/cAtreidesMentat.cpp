@@ -63,7 +63,7 @@ void cAtreidesMentat::draw_mouth()
     renderDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
 }
 
-void cAtreidesMentat::interact()
-{
-    cAbstractMentat::interact();
-}
+// void cAtreidesMentat::interact()
+// {
+//     cAbstractMentat::interact();
+// }

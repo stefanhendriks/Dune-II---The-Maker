@@ -107,7 +107,7 @@ public:
 
     virtual void think() = 0;
 
-    virtual void interact() = 0;
+    // virtual void interact() = 0;
 
     void loadScene(const std::string &scene);
 
