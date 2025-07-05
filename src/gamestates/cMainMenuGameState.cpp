@@ -4,7 +4,7 @@
 #include "config.h"
 #include "data/gfxinter.h"
 //#include "gui/actions/cGuiActionExitGame.h"
-#include "gui/actions/cGuiActionFadeOutOnly.h"
+// #include "gui/actions/cGuiActionFadeOutOnly.h"
 // #include "gui/actions/cGuiActionSelectHouse.h"
 // #include "gui/actions/cGuiActionSetupSkirmishGame.h"
 // #include "gui/actions/cGuiActionShowOptions.h"
@@ -108,7 +108,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Multiplayer->setTextColor(colorInactive);
     gui_btn_Multiplayer->setTextAlignHorizontal(buttonTextAlignment);
     // gui_btn_Multiplayer->setTextColorHover(colorInactiveHover);
-    gui_btn_Multiplayer->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_btn_Multiplayer->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
     gui_window->addGuiObject(gui_btn_Multiplayer);
 
     // LOAD
@@ -119,7 +119,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Load->setTextColor(colorInactive);
     gui_btn_Load->setTextAlignHorizontal(buttonTextAlignment);
     // gui_btn_Load->setTextColorHover(colorInactiveHover);
-    gui_btn_Load->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_btn_Load->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
     gui_window->addGuiObject(gui_btn_Load);
 
     // OPTIONS
@@ -139,7 +139,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Hof->setTextColor(colorInactive);
     gui_btn_Hof->setTextAlignHorizontal(buttonTextAlignment);
     // gui_btn_Hof->setTextColorHover(colorInactiveHover);
-    gui_btn_Hof->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_btn_Hof->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
     gui_window->addGuiObject(gui_btn_Hof);
 
     // EXIT
