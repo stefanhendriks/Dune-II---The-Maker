@@ -39,7 +39,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame)
+cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame), textDrawer(bene_font)
 {
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
@@ -61,7 +61,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
     const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
-    cTextDrawer textDrawer(bene_font);
+//    cTextDrawer textDrawer(bene_font);
     int length = textDrawer.textLength("Mission select");
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
