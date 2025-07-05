@@ -127,10 +127,9 @@ private:
 
     void onMouseRightButtonClickedAtStartPoints();
 
-    void onMouseLeftButtonClickedAtStartButton();
+    // void onMouseLeftButtonClickedAtStartButton();
 
     void onMouseLeftButtonClickedAtWorms();
-
     void onMouseRightButtonClickedAtWorms();
 
     void onMouseLeftButtonClickedAtSpawnBlooms();
