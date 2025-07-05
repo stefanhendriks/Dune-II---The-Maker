@@ -43,13 +43,23 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int y = 40;
     for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
-        GuiButton *btnMission = new GuiButton(textDrawer, rect, std::format("Mission {}", i), buttonKinds);
-        btnMission->setTheme(GuiTheme::Light());
-        btnMission->setTextAlignHorizontal(buttonTextAlignment);
-        btnMission->setOnLeftMouseButtonClickedAction([this,i]() {
-            game.jumpToSelectYourNextConquestMission(i);
-            game.setNextStateToTransitionTo(GAME_REGION);
-            game.initiateFadingOut();});
+        GuiButton *btnMission = GuiButtonBuilder()
+            .withRect(rect)        
+            .withLabel(std::format("Mission {}", i))
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .onClick([this,i]() {
+                game.jumpToSelectYourNextConquestMission(i);
+                game.setNextStateToTransitionTo(GAME_REGION);
+                game.initiateFadingOut();})
+            .build();   
+        // GuiButton *btnMission = new GuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
+        // btnMission->setTheme(GuiTheme::Light());
+        // btnMission->setTextAlignHorizontal(buttonTextAlignment);
+        // btnMission->setOnLeftMouseButtonClickedAction([this,i]() {
+        //     game.jumpToSelectYourNextConquestMission(i);
+        //     game.setNextStateToTransitionTo(GAME_REGION);
+        //     game.initiateFadingOut();});
         gui_window->addGuiObject(btnMission);
 
         y += buttonHeight + margin;
@@ -59,12 +69,20 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int back = mainMenuHeight - (buttonHeight + margin);
     width = buttonWidth;
     const cRectangle &backRect = gui_window->getRelativeRect(margin, back, (width - margin), buttonHeight);
-    GuiButton *gui_btn_Back = new GuiButton(textDrawer, backRect, "Back", buttonKinds);
-    gui_btn_Back->setTheme(GuiTheme::Light());
-    gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
-    // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() {
-        game.setNextStateToTransitionTo(prevState);});
+    GuiButton *gui_btn_Back = GuiButtonBuilder()
+            .withRect(backRect)        
+            .withLabel("Back")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .onClick([this,prevState]() {
+                game.setNextStateToTransitionTo(prevState);})
+            .build();  
+    // GuiButton *gui_btn_Back = new GuiButton(textDrawer, backRect, "Back", buttonKinds);
+    // gui_btn_Back->setTheme(GuiTheme::Light());
+    // gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
+    // // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
+    // gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() {
+    //     game.setNextStateToTransitionTo(prevState);});
     gui_window->addGuiObject(gui_btn_Back);
 }
 
