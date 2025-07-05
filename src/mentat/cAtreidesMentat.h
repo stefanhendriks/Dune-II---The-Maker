@@ -8,7 +8,7 @@ protected:
     void draw_eyes() override;
     void draw_other() override;
     void draw() override;
-    void interact() override;
+    // void interact() override;
 
 public:
     cAtreidesMentat(bool allowMissionSelect);

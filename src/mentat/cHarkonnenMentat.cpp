@@ -60,7 +60,7 @@ void cHarkonnenMentat::draw_mouth()
     renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
 }
 
-void cHarkonnenMentat::interact()
-{
-    cAbstractMentat::interact();
-}
+// void cHarkonnenMentat::interact()
+// {
+//     cAbstractMentat::interact();
+// }

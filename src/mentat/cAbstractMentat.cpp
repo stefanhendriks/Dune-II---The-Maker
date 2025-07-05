@@ -341,8 +341,8 @@ void cAbstractMentat::draw_movie()
     renderDrawer->renderStrechSprite(tmp, src, dest);
 }
 
-void cAbstractMentat::interact()
-{
+// void cAbstractMentat::interact()
+// {
     // if (state == INIT) return;
     // if (state == SPEAKING) {
     //     if (game.getMouse()->isLeftButtonClicked()) {
@@ -366,7 +366,7 @@ void cAbstractMentat::interact()
     //         rightButtonCommand->execute(*this);
     //     }
     // }
-}
+// }
 
 void cAbstractMentat::initSentences()
 {

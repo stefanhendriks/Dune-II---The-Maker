@@ -60,7 +60,7 @@ void cOrdosMentat::draw_mouth()
     renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }
 
-void cOrdosMentat::interact()
-{
-    cAbstractMentat::interact();
-}
+// void cOrdosMentat::interact()
+// {
+//     cAbstractMentat::interact();
+// }
