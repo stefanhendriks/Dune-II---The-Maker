@@ -62,6 +62,9 @@ public:
     bool shouldDrawToolTip() const {
         return m_drawToolTip;
     }
+    bool isMouseRightButtonPressed() const{
+        return m_mouse->isRightButtonPressed();
+    }
 
     cAbstractStructure *getStructurePointerWhereMouseHovers() const;
 
