@@ -3,6 +3,7 @@
 #include "definitions.h"
 #include "cGameState.h"
 #include "definitions.h"
+#include "drawers/cTextDrawer.h"
 
 class cGame;
 class GuiButton;
@@ -126,4 +127,5 @@ private:
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    cTextDrawer textDrawer;
 };
