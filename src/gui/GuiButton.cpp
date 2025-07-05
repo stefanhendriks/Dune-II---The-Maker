@@ -219,12 +219,12 @@ void GuiButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
     m_onLeftMouseButtonClickedAction = std::move(action);
 }
 
-void GuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
-{
-    m_onLeftMouseButtonClickedAction = [action]() {
-        if (action) action->execute();
-    };
-}
+// void GuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
+// {
+//     m_onLeftMouseButtonClickedAction = [action]() {
+//         if (action) action->execute();
+//     };
+// }
 
 void GuiButton::setEnabled(bool value)
 {
