@@ -4,7 +4,7 @@
 #include "data/gfxinter.h"
 //#include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionFadeOutOnly.h"
-#include "gui/actions/cGuiActionSelectHouse.h"
+// #include "gui/actions/cGuiActionSelectHouse.h"
 #include "gui/actions/cGuiActionSetupSkirmishGame.h"
 #include "gui/actions/cGuiActionShowOptions.h"
 // #include "gui/actions/cGuiActionToGameState.h"
@@ -84,7 +84,9 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     GuiButton *gui_btn_SelectHouse = new GuiButton(textDrawer, campaign, "Campaign", buttonKinds);
     gui_btn_SelectHouse->setTheme(GuiTheme::Light());
     gui_btn_SelectHouse->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_SelectHouse->setOnLeftMouseButtonClickedAction(new cGuiActionSelectHouse());
+    gui_btn_SelectHouse->setOnLeftMouseButtonClickedAction([this]() {
+        game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
+        game.initiateFadingOut();});
     gui_window->addGuiObject(gui_btn_SelectHouse);
 
     int skirmishY = 344;
