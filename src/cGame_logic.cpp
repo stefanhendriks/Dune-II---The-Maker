@@ -31,10 +31,10 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
-#include "mentat/cAtreidesMentat.h"
-#include "mentat/cBeneMentat.h"
-#include "mentat/cHarkonnenMentat.h"
-#include "mentat/cOrdosMentat.h"
+#include "mentat/AtreidesMentat.h"
+#include "mentat/BeneMentat.h"
+#include "mentat/HarkonnenMentat.h"
+#include "mentat/OrdosMentat.h"
 #include "player/cPlayer.h"
 #include "player/brains/cPlayerBrainCampaign.h"
 #include "player/brains/cPlayerBrainSandworm.h"
@@ -536,7 +536,7 @@ void cGame::drawStateCombat()
 }
 
 // drawStateMentat logic + drawing mouth/eyes
-void cGame::drawStateMentat(cAbstractMentat *mentat)
+void cGame::drawStateMentat(AbstractMentat *mentat)
 {
     m_mouse->setTile(MOUSE_NORMAL);
 
@@ -1336,17 +1336,17 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new cAtreidesMentat(allowMissionSelect);
+        m_mentat = new AtreidesMentat(allowMissionSelect);
     }
     else if (houseIndex == HARKONNEN) {
-        m_mentat = new cHarkonnenMentat(allowMissionSelect);
+        m_mentat = new HarkonnenMentat(allowMissionSelect);
     }
     else if (houseIndex == ORDOS) {
-        m_mentat = new cOrdosMentat(allowMissionSelect);
+        m_mentat = new OrdosMentat(allowMissionSelect);
     }
     else {
         // fallback
-        m_mentat = new cBeneMentat();
+        m_mentat = new BeneMentat();
     }
     prepareMentatForPlayer();
     m_mentat->speak();
@@ -1355,7 +1355,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     delete m_mentat;
-    m_mentat = new cBeneMentat();
+    m_mentat = new BeneMentat();
     m_mentat->setHouse(house);
     // create new drawStateMentat
     if (house == ATREIDES) {
@@ -2190,7 +2190,7 @@ void cGame::setMousePosition(int w, int h)
     m_mouse->setCursorPosition(window, w,h);
 }
 
-void cGame::execute(cAbstractMentat &mentat)
+void cGame::execute(AbstractMentat &mentat)
 {
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
