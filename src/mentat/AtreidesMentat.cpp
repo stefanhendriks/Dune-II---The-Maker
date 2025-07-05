@@ -1,4 +1,4 @@
-#include "cAtreidesMentat.h"
+#include "AtreidesMentat.h"
 
 // #include "cProceedButtonCommand.h"
 // #include "cRepeatButtonCommand.h"
@@ -10,7 +10,7 @@
 #include <iostream>
 
 
-cAtreidesMentat::cAtreidesMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)
+AtreidesMentat::AtreidesMentat(bool allowMissionSelect) : AbstractMentat(allowMissionSelect)
 {
     iBackgroundFrame = MENTATA;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
@@ -37,28 +37,28 @@ cAtreidesMentat::cAtreidesMentat(bool allowMissionSelect) : cAbstractMentat(allo
             .build();
 }
 
-void cAtreidesMentat::think()
+void AtreidesMentat::think()
 {
     // think like base class
-    cAbstractMentat::think();
+    AbstractMentat::think();
 }
 
-void cAtreidesMentat::draw()
+void AtreidesMentat::draw()
 {
-    cAbstractMentat::draw();
+    AbstractMentat::draw();
 }
 
-void cAtreidesMentat::draw_other()
+void AtreidesMentat::draw_other()
 {
 
 }
 
-void cAtreidesMentat::draw_eyes()
+void AtreidesMentat::draw_eyes()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(ATR_EYES01+ iMentatEyes),  offsetX + 80, offsetY + 241);
 }
 
-void cAtreidesMentat::draw_mouth()
+void AtreidesMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
 }

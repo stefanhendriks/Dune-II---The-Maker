@@ -1,4 +1,4 @@
-#include "cHarkonnenMentat.h"
+#include "OrdosMentat.h"
 
 // #include "cProceedButtonCommand.h"
 // #include "cRepeatButtonCommand.h"
@@ -8,9 +8,9 @@
 #include "utils/Graphics.hpp"
 #include "gui/GuiButton.h"
 
-cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(allowMissionSelect)
+OrdosMentat::OrdosMentat(bool allowMissionSelect) : AbstractMentat(allowMissionSelect)
 {
-    iBackgroundFrame = MENTATH;
+    iBackgroundFrame = MENTATO;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
     // leftButtonCommand = new cRepeatButtonCommand();
@@ -34,33 +34,33 @@ cHarkonnenMentat::cHarkonnenMentat(bool allowMissionSelect) : cAbstractMentat(al
             .build();
 }
 
-void cHarkonnenMentat::think()
+void OrdosMentat::think()
 {
     // think like base class
-    cAbstractMentat::think();
+    AbstractMentat::think();
 }
 
-void cHarkonnenMentat::draw()
+void OrdosMentat::draw()
 {
-    cAbstractMentat::draw();
+    AbstractMentat::draw();
 }
 
-void cHarkonnenMentat::draw_other()
+void OrdosMentat::draw_other()
 {
 
 }
 
-void cHarkonnenMentat::draw_eyes()
+void OrdosMentat::draw_eyes()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
+    renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
 }
 
-void cHarkonnenMentat::draw_mouth()
+void OrdosMentat::draw_mouth()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
+    renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }
 
-// void cHarkonnenMentat::interact()
+// void cOrdosMentat::interact()
 // {
 //     cAbstractMentat::interact();
 // }
