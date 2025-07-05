@@ -12,7 +12,7 @@
 
 #include "cAbstractMentat.h"
 
-#include "cButtonCommand.h"
+// #include "cButtonCommand.h"
 #include "d2tmc.h"
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
@@ -22,7 +22,7 @@
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-
+#include <iostream>
 #include <fmt/core.h>
 
 cAbstractMentat::cAbstractMentat(bool canMissionSelect)
@@ -49,8 +49,10 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
     // the mentat does not *own* the bitmaps
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
-    leftButtonCommand = nullptr;
-    rightButtonCommand = nullptr;
+    // leftButtonCommand = nullptr;
+    // rightButtonCommand = nullptr;
+    leftGuiButton = nullptr;
+    rightGuiButton = nullptr;
 
     textDrawer.setFont(bene_font);
 
@@ -70,6 +72,7 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
             .withLabel("Mission select")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
+            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();
@@ -113,8 +116,8 @@ cAbstractMentat::~cAbstractMentat()
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
 
-    delete leftButtonCommand;
-    delete rightButtonCommand;
+    // delete leftButtonCommand;
+    // delete rightButtonCommand;
 
     delete m_guiBtnToMissionSelect;
 
@@ -305,8 +308,14 @@ void cAbstractMentat::draw()
     }
 
     if (state == AWAITING_RESPONSE) {
-        renderDrawer->renderSprite(leftButtonBmp, leftButton->getX(),leftButton->getY());
-        renderDrawer->renderSprite(rightButtonBmp, rightButton->getX(),rightButton->getY());
+        // renderDrawer->renderSprite(leftButtonBmp, leftButton->getX(),leftButton->getY());
+        // renderDrawer->renderSprite(rightButtonBmp, rightButton->getX(),rightButton->getY());
+        if (leftGuiButton) {
+            leftGuiButton->draw();
+        }
+        if (rightGuiButton){
+            rightGuiButton->draw();
+        }
     }
 
     if (m_guiBtnToMissionSelect) {
@@ -334,29 +343,29 @@ void cAbstractMentat::draw_movie()
 
 void cAbstractMentat::interact()
 {
-    if (state == INIT) return;
-    if (state == SPEAKING) {
-        if (game.getMouse()->isLeftButtonClicked()) {
-            if (TIMER_Speaking > 0) {
-                TIMER_Speaking = 1;
-            }
-        }
-        return;
-    }
-    if (state != AWAITING_RESPONSE) return;
+    // if (state == INIT) return;
+    // if (state == SPEAKING) {
+    //     if (game.getMouse()->isLeftButtonClicked()) {
+    //         if (TIMER_Speaking > 0) {
+    //             TIMER_Speaking = 1;
+    //         }
+    //     }
+    //     return;
+    // }
+    // if (state != AWAITING_RESPONSE) return;
 
-    auto m_mouse = game.getMouse();
-    if (m_mouse->isLeftButtonClicked()) {
-        // execute left button logic
-        if (leftButton && leftButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-            leftButtonCommand->execute(*this);
-        }
+    // auto m_mouse = game.getMouse();
+    // if (m_mouse->isLeftButtonClicked()) {
+    //     // execute left button logic
+    //     if (leftButton && leftButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
+    //         leftButtonCommand->execute(*this);
+    //     }
 
-        // execute right button logic
-        if (rightButton && rightButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-            rightButtonCommand->execute(*this);
-        }
-    }
+    //     // execute right button logic
+    //     if (rightButton && rightButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
+    //         rightButtonCommand->execute(*this);
+    //     }
+    // }
 }
 
 void cAbstractMentat::initSentences()
@@ -420,8 +429,22 @@ void cAbstractMentat::resetSpeak()
 
 void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (state == SPEAKING) {
+        if (event.eventType==MOUSE_LEFT_BUTTON_CLICKED) {
+            if (TIMER_Speaking > 0) {
+                TIMER_Speaking = 1;
+            }
+        }
+    }
+
     if (m_guiBtnToMissionSelect) {
         m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
+    }
+    if (leftGuiButton) {
+        leftGuiButton->onNotifyMouseEvent(event);
+    }
+    if (rightGuiButton) {
+        rightGuiButton->onNotifyMouseEvent(event);
     }
 }
 

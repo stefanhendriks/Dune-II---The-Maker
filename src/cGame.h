@@ -269,7 +269,7 @@ public:
     void setDebugMode(bool value) {
         m_debugMode = value;
     }
-
+    void execute(cAbstractMentat &mentat);
 private:
     /**
      * Variables start here
