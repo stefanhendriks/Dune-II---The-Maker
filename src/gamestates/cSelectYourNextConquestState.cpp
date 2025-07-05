@@ -66,13 +66,21 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");
-    GuiButton *gui_btn_toMissionSelect = new GuiButton(textDrawer, toMissionSelectRect,
-            "Mission select", buttonKind);
-    gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
-    gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-    // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-    gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
-        game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
+    GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+            .withRect(toMissionSelectRect)        
+            .withLabel("Mission select")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .onClick([this]() {
+                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+            .build();   
+    // GuiButton *gui_btn_toMissionSelect = new GuiButton(textDrawer, toMissionSelectRect,
+    //         "Mission select", buttonKind);
+    // gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
+    // gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
+    // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+    // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
+    //     game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
     m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 

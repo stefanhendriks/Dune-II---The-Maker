@@ -27,7 +27,7 @@ private:
 
     int prevState;
 
-    const cTextDrawer textDrawer;
+    cTextDrawer textDrawer;
 
     GuiWindow *gui_window;
 };
