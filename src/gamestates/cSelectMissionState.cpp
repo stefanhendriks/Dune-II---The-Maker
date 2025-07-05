@@ -6,7 +6,7 @@
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
-#include "gui/actions/cGuiActionSelectMission.h"
+// #include "gui/actions/cGuiActionSelectMission.h"
 
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
@@ -46,7 +46,10 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
         GuiButton *btnMission = new GuiButton(textDrawer, rect, std::format("Mission {}", i), buttonKinds);
         btnMission->setTheme(GuiTheme::Light());
         btnMission->setTextAlignHorizontal(buttonTextAlignment);
-        btnMission->setOnLeftMouseButtonClickedAction(new cGuiActionSelectMission(i));
+        btnMission->setOnLeftMouseButtonClickedAction([this,i]() {
+            game.jumpToSelectYourNextConquestMission(i);
+            game.setNextStateToTransitionTo(GAME_REGION);
+            game.initiateFadingOut();});
         gui_window->addGuiObject(btnMission);
 
         y += buttonHeight + margin;
