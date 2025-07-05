@@ -73,8 +73,8 @@ void cOptionsState::constructWindow(int prevState)
     gui_btn_Back->setTheme(GuiTheme::Light());
     gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
     // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    gui_btn_Back->setOnLeftMouseButtonClickedAction([this]() 
-        {game.setNextStateToTransitionTo(GAME_MENU);});
+    gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() 
+        {game.setNextStateToTransitionTo(prevState);});
     m_guiWindow->addGuiObject(gui_btn_Back);
 
     // Mission select from options menu, only when playing the game
