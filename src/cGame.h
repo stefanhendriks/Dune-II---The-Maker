@@ -269,7 +269,7 @@ public:
     }
 
     void applySettings(GameSettings *gs);
-
+    void execute(cAbstractMentat &mentat);
 private:
     /**
      * Variables start here

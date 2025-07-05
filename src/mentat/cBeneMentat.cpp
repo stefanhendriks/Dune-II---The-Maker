@@ -1,7 +1,7 @@
 #include "cBeneMentat.h"
 
-#include "cNoButtonCommand.h"
-#include "cYesButtonCommand.h"
+// #include "cNoButtonCommand.h"
+// #include "cYesButtonCommand.h"
 #include "data/gfxmentat.h"
 #include "d2tmc.h"
 #include "player/cPlayer.h"
@@ -9,15 +9,46 @@
 #include "utils/Graphics.hpp"
 #include "drawers/cTextDrawer.h"
 #include <SDL2/SDL_ttf.h>
+#include "gui/GuiButton.h"
+#include <iostream>
 
 cBeneMentat::cBeneMentat() : cAbstractMentat(false)
 {
     iBackgroundFrame = MENTATM;
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_YES), 466, 423);
-    leftButtonCommand = new cNoButtonCommand();
-    rightButtonCommand = new cYesButtonCommand();
+
+    leftGuiButton = GuiButtonBuilder()
+            .withRect(*leftButton)        
+            .withLabel("No")
+            .withTexture(gfxmentat->getTexture(BTN_NO))
+            .withKind(eGuiButtonRenderKind::WITH_TEXTURE)
+            .onClick([this]() {
+                logbook("cNoButtonCommand::execute()");
+                // head back to choose house
+                players[HUMAN].setHouse(GENERALHOUSE);
+                game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
+                game.initiateFadingOut();})
+            .build();
+
+    rightGuiButton = GuiButtonBuilder()
+            .withRect(*rightButton)        
+            .withLabel("Yes")
+            .withTexture(gfxmentat->getTexture(BTN_YES))
+            .withKind(eGuiButtonRenderKind::WITH_TEXTURE)
+            .onClick([this]() {
+                logbook("cYesButtonCommand::execute()");
+                game.setNextStateToTransitionTo(GAME_BRIEFING);
+                game.m_mission = 1; // first mission
+                game.m_region  = 1; // and the first "region" so to speak
+                game.missionInit();
+                players[HUMAN].setHouse(this->getHouse());
+               game.initiateFadingOut();})
+            .build();
+    // leftButtonCommand = new cNoButtonCommand();
+    // rightButtonCommand = new cYesButtonCommand();
     textDrawer = new cTextDrawer(gr_bene_font);
+
 }
 
 void cBeneMentat::think()
@@ -58,3 +89,14 @@ void cBeneMentat::interact()
 {
     cAbstractMentat::interact();
 }
+
+
+// void cBeneMentat::onNotifyMouseEvent(const s_MouseEvent &event)
+// {
+//     if (leftGuiButton) {
+//         leftGuiButton->onNotifyMouseEvent(event);
+//     }
+//     if (rightGuiButton) {
+//         rightGuiButton->onNotifyMouseEvent(event);
+//     }
+// }
