@@ -5,7 +5,7 @@
 //#include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionFadeOutOnly.h"
 // #include "gui/actions/cGuiActionSelectHouse.h"
-#include "gui/actions/cGuiActionSetupSkirmishGame.h"
+// #include "gui/actions/cGuiActionSetupSkirmishGame.h"
 // #include "gui/actions/cGuiActionShowOptions.h"
 // #include "gui/actions/cGuiActionToGameState.h"
 #include "drawers/SDLDrawer.hpp"
@@ -94,7 +94,11 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     GuiButton *gui_btn_Skirmish = new GuiButton(textDrawer, skirmish, "Skirmish", buttonKinds);
     gui_btn_Skirmish->setTheme(GuiTheme::Light());
     gui_btn_Skirmish->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Skirmish->setOnLeftMouseButtonClickedAction(new cGuiActionSetupSkirmishGame());
+    gui_btn_Skirmish->setOnLeftMouseButtonClickedAction([this](){
+        game.loadSkirmishMaps();
+        game.initSkirmish();
+        game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
+        game.initiateFadingOut();});
     gui_window->addGuiObject(gui_btn_Skirmish);
 
     int multiplayerY = 364;
