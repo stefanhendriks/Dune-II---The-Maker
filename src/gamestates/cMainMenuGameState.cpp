@@ -39,8 +39,8 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     logoY = mainMenuFrameY - (logoHeight)*1.2f;
 
-    const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
+    const GuiRenderKind buttonKinds = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
 
 //    /////////////////////////////////
 //    //// Credits (top)
@@ -56,7 +56,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("CREDITS")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_CREDITS);
                 game.initiateFadingOut();})
@@ -97,7 +97,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Campaign")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
                 game.initiateFadingOut();})
@@ -117,7 +117,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Skirmish")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.loadSkirmishMaps();
                 game.initSkirmish();
@@ -141,7 +141,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Multiplayer")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Inactive())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.initiateFadingOut();})
             .build();
     // GuiButton *gui_btn_Multiplayer = new GuiButton(textDrawer, multiplayer, "Multiplayer", buttonKinds);
@@ -160,7 +160,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Load")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Inactive())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.initiateFadingOut();})
             .build();
     // GuiButton *gui_btn_Load = new GuiButton(textDrawer, load, "Load", buttonKinds);
@@ -179,7 +179,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Options")
             .withTextDrawer(&textDrawer)
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.setNextStateToTransitionTo(GAME_OPTIONS);})
             .build();
     // GuiButton *gui_btn_Options = new GuiButton(textDrawer, options, "Options", buttonKinds);
@@ -196,7 +196,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Hall of Fame")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Inactive())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.initiateFadingOut();})
             .build();
     // GuiButton *gui_btn_Hof = new GuiButton(textDrawer, hof, "Hall of Fame", buttonKinds);
@@ -215,7 +215,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withLabel("Exit")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.m_playing = false;
                 game.initiateFadingOut();})

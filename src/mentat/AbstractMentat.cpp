@@ -72,7 +72,7 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
             .withLabel("Mission select")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();

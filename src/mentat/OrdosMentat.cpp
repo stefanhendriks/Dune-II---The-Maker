@@ -19,7 +19,7 @@ OrdosMentat::OrdosMentat(bool allowMissionSelect) : AbstractMentat(allowMissionS
             .withRect(*leftButton)        
             .withLabel("Repeat")
             .withTexture(gfxmentat->getTexture(BTN_REPEAT))
-            .withKind(eGuiButtonRenderKind::WITH_TEXTURE)
+            .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
             .build();
 
@@ -27,7 +27,7 @@ OrdosMentat::OrdosMentat(bool allowMissionSelect) : AbstractMentat(allowMissionS
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
-            .withKind(eGuiButtonRenderKind::WITH_TEXTURE)
+            .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::execute()");
                 game.execute(*this);})
