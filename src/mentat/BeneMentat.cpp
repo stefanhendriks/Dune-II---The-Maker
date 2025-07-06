@@ -22,7 +22,7 @@ BeneMentat::BeneMentat() : AbstractMentat(false)
             .withRect(*leftButton)        
             .withLabel("No")
             .withTexture(gfxmentat->getTexture(BTN_NO))
-            .withKind(eGuiButtonRenderKind::WITH_TEXTURE)
+            .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cNoButtonCommand::execute()");
                 // head back to choose house
@@ -35,7 +35,7 @@ BeneMentat::BeneMentat() : AbstractMentat(false)
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
-            .withKind(eGuiButtonRenderKind::WITH_TEXTURE)
+            .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::execute()");
                 game.setNextStateToTransitionTo(GAME_BRIEFING);

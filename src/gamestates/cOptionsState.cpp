@@ -35,8 +35,8 @@ void cOptionsState::constructWindow(int prevState)
     m_guiWindow = new GuiWindow(window);
     m_guiWindow->setTheme(GuiTheme::Light());
 
-    const eGuiButtonRenderKind buttonKinds = OPAQUE_WITH_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
+    const GuiRenderKind buttonKinds = OPAQUE_WITH_BORDER;
+    const GuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
     // Title
     m_guiWindow->setTitle("Dune II - The Maker - version " + game.m_version);
