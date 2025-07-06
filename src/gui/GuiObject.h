@@ -4,6 +4,19 @@
 #include "utils/cRectangle.h"
 #include "gui/GuiTheme.hpp"
 
+enum eGuiButtonRenderKind {
+    OPAQUE_WITH_BORDER = 0,
+    OPAQUE_WITHOUT_BORDER = 1,
+    TRANSPARENT_WITH_BORDER = 2,
+    TRANSPARENT_WITHOUT_BORDER = 3,
+    WITH_TEXTURE =4
+};
+
+enum eGuiTextAlignHorizontal {
+    LEFT,
+    CENTER
+};
+
 class GuiObject : public cInputObserver {
 public:
     virtual ~GuiObject() = default;

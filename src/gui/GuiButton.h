@@ -8,19 +8,6 @@
 #include <string>
 #include <functional>
 
-enum eGuiButtonRenderKind {
-    OPAQUE_WITH_BORDER = 0,
-    OPAQUE_WITHOUT_BORDER = 1,
-    TRANSPARENT_WITH_BORDER = 2,
-    TRANSPARENT_WITHOUT_BORDER = 3,
-    WITH_TEXTURE =4
-};
-
-enum eGuiTextAlignHorizontal {
-    LEFT,
-    CENTER
-};
-
 struct GuiButtonParams {
     cTextDrawer* drawer = nullptr;
     cRectangle rect;
