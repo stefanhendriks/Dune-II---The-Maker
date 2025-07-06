@@ -10,6 +10,7 @@ GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
     , m_renderKind(eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER)
     , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
     , m_onLeftMouseButtonClickedAction(nullptr)
+    , m_onRightMouseButtonClickedAction(nullptr)
     , m_tex(nullptr)
     , m_focus(false)
     // , m_guiColorButton(Color{176, 176, 196,255})
@@ -80,10 +81,10 @@ void GuiButton::draw() const
     }
 }
 
-bool GuiButton::hasFocus()
-{
-    return m_focus;
-}
+// bool GuiButton::hasFocus()
+// {
+//     return m_focus;
+// }
 
 void GuiButton::setTextAlignHorizontal(eGuiTextAlignHorizontal value)
 {
