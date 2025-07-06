@@ -28,7 +28,8 @@ struct GuiButtonParams {
     eGuiButtonRenderKind kind = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme theme = GuiTheme::Light();
     eGuiTextAlignHorizontal align = eGuiTextAlignHorizontal::CENTER;
-    std::function<void()> onClick = nullptr;
+    std::function<void()> onLeftClick = nullptr;
+    std::function<void()> onRightClick = nullptr;
     Texture *tex = nullptr;
 };
 
@@ -70,6 +71,7 @@ public:
 
     // [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
+    void setOnRightMouseButtonClickedAction(std::function<void()> action);
 
     void setEnabled(bool value);
 
@@ -80,6 +82,7 @@ private:
     eGuiTextAlignHorizontal m_textAlignHorizontal;
     // cGuiAction *m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onLeftMouseButtonClickedAction;
+    std::function<void()> m_onRightMouseButtonClickedAction;
     Texture *m_tex;
 
     bool m_focus;
@@ -101,10 +104,9 @@ private:
 
     void onMouseMovedTo(const s_MouseEvent &event);
 
+    void onMouseRightButtonPressed(const s_MouseEvent &event);
     void onMouseRightButtonClicked(const s_MouseEvent &event);
-
     void onMouseLeftButtonPressed(const s_MouseEvent &event);
-
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
 
@@ -142,7 +144,12 @@ public:
     }
 
     GuiButtonBuilder& onClick(std::function<void()> callback) {
-        params.onClick = std::move(callback);
+        params.onLeftClick = std::move(callback);
+        return *this;
+    }
+
+    GuiButtonBuilder& onRightClick(std::function<void()> callback) {
+        params.onRightClick = std::move(callback);
         return *this;
     }
 
@@ -158,8 +165,11 @@ public:
         btn->setTheme(params.theme);
         btn->setTextAlignHorizontal(params.align);
         btn->setTexture(params.tex);
-        if (params.onClick)
-            btn->setOnLeftMouseButtonClickedAction(params.onClick);
+        if (params.onLeftClick)
+            btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
+        if (params.onRightClick)
+            btn->setOnRightMouseButtonClickedAction(params.onRightClick);
+        
         return btn;
     }
 
