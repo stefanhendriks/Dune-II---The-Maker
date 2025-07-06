@@ -40,8 +40,8 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     logoY = mainMenuFrameY - (logoHeight)*1.2f;
 
-    const GuiRenderKind buttonKinds = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
-    const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
+    //const GuiRenderKind buttonKinds = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    //const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
 
 //    /////////////////////////////////
 //    //// Credits (top)
