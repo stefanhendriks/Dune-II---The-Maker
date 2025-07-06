@@ -212,6 +212,18 @@ void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
         if (m_focus) nextRenderKind();
         // }
     }
+    if (m_focus) {
+        if (m_enabled && m_onRightMouseButtonClickedAction) {
+            m_onRightMouseButtonClickedAction();
+        }
+    }
+}
+
+void GuiButton::onMouseRightButtonPressed(const s_MouseEvent &)
+{
+    if (m_enabled) {
+        m_pressed = m_focus;
+    }
 }
 
 void GuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
@@ -233,6 +245,11 @@ void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &)
 void GuiButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
 {
     m_onLeftMouseButtonClickedAction = std::move(action);
+}
+
+void GuiButton::setOnRightMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onRightMouseButtonClickedAction = std::move(action);
 }
 
 // void GuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
