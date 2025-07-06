@@ -39,7 +39,7 @@ public:
     // From GuiObject
     void draw() const override;
 
-    bool hasFocus();
+    // bool hasFocus();
 
     void setTextAlignHorizontal(eGuiTextAlignHorizontal value);
     void setTextDrawer(cTextDrawer *cTextDrawer);
