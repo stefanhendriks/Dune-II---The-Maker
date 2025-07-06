@@ -28,8 +28,8 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *backgrou
     gui_window = new GuiWindow(window);
     gui_window->setTheme(GuiTheme::Light());
 
-    const GuiRenderKind buttonKinds = GuiRenderKind::OPAQUE_WITH_BORDER;
-    const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
+    //const GuiRenderKind buttonKinds = GuiRenderKind::OPAQUE_WITH_BORDER;
+    //const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
 
     // Title
     gui_window->setTitle("Dune II - The Maker - version " + game.m_version);
