@@ -12,9 +12,9 @@ struct GuiButtonParams {
     cTextDrawer* drawer = nullptr;
     cRectangle rect;
     std::string label = "";
-    eGuiButtonRenderKind kind = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
+    GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme theme = GuiTheme::Light();
-    eGuiTextAlignHorizontal align = eGuiTextAlignHorizontal::CENTER;
+    GuiTextAlignHorizontal align = GuiTextAlignHorizontal::CENTER;
     std::function<void()> onLeftClick = nullptr;
     std::function<void()> onRightClick = nullptr;
     Texture *tex = nullptr;
@@ -41,9 +41,9 @@ public:
 
     // bool hasFocus();
 
-    void setTextAlignHorizontal(eGuiTextAlignHorizontal value);
+    void setTextAlignHorizontal(GuiTextAlignHorizontal value);
     void setTextDrawer(cTextDrawer *cTextDrawer);
-    void setRenderKind(eGuiButtonRenderKind value);
+    void setRenderKind(GuiRenderKind value);
     void setTexture(Texture *tex);
 
     void nextRenderKind();
@@ -65,8 +65,8 @@ public:
 private:
     cTextDrawer *m_textDrawer;
     std::string m_buttonText;
-    eGuiButtonRenderKind m_renderKind;
-    eGuiTextAlignHorizontal m_textAlignHorizontal;
+    GuiRenderKind m_renderKind;
+    GuiTextAlignHorizontal m_textAlignHorizontal;
     // cGuiAction *m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onRightMouseButtonClickedAction;
@@ -115,7 +115,7 @@ public:
         return *this;
     }
 
-    GuiButtonBuilder& withKind(eGuiButtonRenderKind kind) {
+    GuiButtonBuilder& withKind(GuiRenderKind kind) {
         params.kind = kind;
         return *this;
     }
@@ -125,7 +125,7 @@ public:
         return *this;
     }
 
-    GuiButtonBuilder& withTextAlign(eGuiTextAlignHorizontal align) {
+    GuiButtonBuilder& withTextAlign(GuiTextAlignHorizontal align) {
         params.align = align;
         return *this;
     }

@@ -4,7 +4,7 @@
 #include "utils/cRectangle.h"
 #include "gui/GuiTheme.hpp"
 
-enum eGuiButtonRenderKind {
+enum GuiRenderKind {
     OPAQUE_WITH_BORDER = 0,
     OPAQUE_WITHOUT_BORDER = 1,
     TRANSPARENT_WITH_BORDER = 2,
@@ -12,7 +12,7 @@ enum eGuiButtonRenderKind {
     WITH_TEXTURE =4
 };
 
-enum eGuiTextAlignHorizontal {
+enum GuiTextAlignHorizontal {
     LEFT,
     CENTER
 };

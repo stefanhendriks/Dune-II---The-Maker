@@ -186,7 +186,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .withLabel("BACK")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MENU);
                 game.initiateFadingOut();})
@@ -209,7 +209,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .withLabel("START")
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
-            .withKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
