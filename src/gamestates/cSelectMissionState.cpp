@@ -8,7 +8,7 @@
 #include "gui/actions/cGuiActionSelectMission.h"
 
 
-cSelectMissionState::cSelectMissionState(cGame &theGame, SDL_Surface *background, int prevState)
+cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *background,*/ int prevState)
     : cGameState(theGame)
     ,  prevState(prevState)
     ,  textDrawer(cTextDrawer(bene_font))
