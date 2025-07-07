@@ -105,6 +105,12 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
 
 AbstractMentat::~AbstractMentat()
 {
+    // we can do this because Mentats are created/deleted before allegro gets destroyed
+    // if (gfxmovie) {
+    //     unload_datafile(gfxmovie);
+    // }
+    // gfxmovie = nullptr;
+
     delete leftButton;
     delete rightButton;
     leftButtonBmp = nullptr;
@@ -277,6 +283,7 @@ void AbstractMentat::draw()
     renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
     renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
     renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
+    // select_palette(general_palette);
 
     Texture *tmp = getBackgroundBitmap();
     cRectangle src = {0,0,tmp->w, tmp->h};
