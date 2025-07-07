@@ -8,6 +8,7 @@
 #pragma once
 
 class cPlayer;
+//struct SDL_Surface;
 struct SDL_Surface;
 
 // the credits drawer takes state of a player, and draws the credits accordingly
@@ -22,10 +23,16 @@ public:
     void draw();
     void setCredits(int amount);
     void setCredits();
+
+    // SDL_Surface *getBitmap() {
+    //     return bmp;
+    // }
+
     void setPlayer(cPlayer *thePlayer);
 
 private:
     cPlayer *player;  //
+    // SDL_Surface *bmp;	 // a bitmap being drawn on
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);
