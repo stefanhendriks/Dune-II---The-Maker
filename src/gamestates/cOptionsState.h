@@ -26,7 +26,9 @@ public:
     void refresh();
 
 private:
-    cTextDrawer m_textDrawer;
+    SDL_Surface *m_background;
+
+    const cTextDrawer m_textDrawer;
 
     int m_prevState;
 
