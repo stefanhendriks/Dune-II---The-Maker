@@ -191,8 +191,8 @@ void WriterPack::writeHeader()
     if (SDL_RWwrite(wfp.get(), str, 1, len) != len) {
         printf("Couldn't fully write string\n");
     }
-    u_int16_t nbFiles = fileInPack.size();
-    SDL_RWwrite(wfp.get(), reinterpret_cast<const char *>(&nbFiles), sizeof(u_int16_t), 1);
+    uint16_t nbFiles = fileInPack.size();
+    SDL_RWwrite(wfp.get(), reinterpret_cast<const char *>(&nbFiles), sizeof(uint16_t), 1);
 }
 
 
