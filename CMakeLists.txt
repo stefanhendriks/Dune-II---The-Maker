@@ -32,9 +32,12 @@ if (UNIX)
 else()
   	target_link_libraries(${PROJECT_NAME}
   	PRIVATE
-    	fmt::fmt
-    	-static-libgcc
-    	-static-libstdc++
+    fmt::fmt
+    -static-libgcc
+    -static-libstdc++
+    -lmingw32
+    -lSDL2main
+    -mwindows
   )
 endif()
 
