@@ -19,22 +19,22 @@ add_subdirectory(src)
 add_executable(${PROJECT_NAME} ${D2TM_SRC} Script.rc)
 
 target_include_directories(${PROJECT_NAME}
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+	PRIVATE
+    	${CMAKE_CURRENT_SOURCE_DIR}/src
+    	${CMAKE_CURRENT_SOURCE_DIR}/src/include
 )
 
 if (UNIX)
-  target_link_libraries(${PROJECT_NAME}
+  	target_link_libraries(${PROJECT_NAME}
     PRIVATE
-      fmt::fmt
+      	fmt::fmt
   )
 else()
-  target_link_libraries(${PROJECT_NAME}
-  PRIVATE
-    fmt::fmt
-    -static-libgcc
-    -static-libstdc++
+  	target_link_libraries(${PROJECT_NAME}
+  	PRIVATE
+    	fmt::fmt
+    	-static-libgcc
+    	-static-libstdc++
   )
 endif()
 
@@ -57,7 +57,7 @@ target_compile_options(${PROJECT_NAME}
     "-Wno-dangling-reference"
     # "-Wno-deprecated"
     "-Wpedantic"
-    "-Wnon-virtual-dtor"
+    #"-Wnon-virtual-dtor"
     "-Wuseless-cast"
     "-Wredundant-tags"
     "-Wzero-as-null-pointer-constant"
