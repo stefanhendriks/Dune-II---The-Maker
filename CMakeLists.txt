@@ -16,10 +16,7 @@ add_subdirectory(dependencies)
 add_subdirectory(src)
 
 
-add_executable(${PROJECT_NAME}
-  ${D2TM_SRC}
-  Script.rc
-)
+add_executable(${PROJECT_NAME} ${D2TM_SRC} Script.rc)
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE
