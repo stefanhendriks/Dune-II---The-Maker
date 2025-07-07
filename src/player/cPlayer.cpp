@@ -11,6 +11,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "include/Texture.hpp"
+#include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
 #include <fmt/format.h>
 #include <iostream>
@@ -1278,11 +1279,11 @@ int cPlayer::findCellToPlaceStructure(int structureType)
 //                }
 
             // for now pick random position, but in the future do something more smart
-            std::random_shuffle(potentialCells.begin(), potentialCells.end());
+            std::shuffle(potentialCells.begin(), potentialCells.end(), RNG::getGenerator());
         }
         else {
             // found one, shuffle, and then return the first
-            std::random_shuffle(potentialCells.begin(), potentialCells.end());
+            std::shuffle(potentialCells.begin(), potentialCells.end(),RNG::getGenerator());
         }
         return potentialCells.front();
     }
