@@ -220,10 +220,10 @@ void cSoundPlayer::setMusicVolume(int vol)
 {
     musicVolume = std::clamp(vol, 0, MaxVolume);
     Mix_VolumeMusic(musicVolume);
-};
+}
 
 void cSoundPlayer::changeMusicVolume(int delta)
 {
     musicVolume = std::clamp(musicVolume + delta, 0, MaxVolume);
     this ->setMusicVolume(musicVolume);
-};
+}
