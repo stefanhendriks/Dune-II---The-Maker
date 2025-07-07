@@ -10,6 +10,7 @@
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *background,*/ int prevState)
     : cGameState(theGame)
+    ,  background(background)
     ,  prevState(prevState)
     ,  textDrawer(cTextDrawer(bene_font))
 {
@@ -63,6 +64,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *backgrou
 cSelectMissionState::~cSelectMissionState()
 {
     delete gui_window;
+    SDL_FreeSurface(background);
 }
 
 void cSelectMissionState::thinkFast()
@@ -72,7 +74,8 @@ void cSelectMissionState::thinkFast()
 
 void cSelectMissionState::draw() const
 {
-    // Mira: draw here screenTexture
+    // renderDrawer->drawSprite(bmp_screen, background, 0, 0);
+
     gui_window->draw();
 
     // MOUSE

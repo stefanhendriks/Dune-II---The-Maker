@@ -23,6 +23,8 @@ public:
     eGameStateType getType() override;
 
 private:
+    SDL_Surface *background;
+
     int prevState;
 
     const cTextDrawer textDrawer;

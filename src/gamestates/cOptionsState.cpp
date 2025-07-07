@@ -11,6 +11,7 @@
 
 cOptionsState::cOptionsState(cGame &theGame, /*SDL_Surface *background,*/ int prevState)
     : cGameState(theGame)
+    , m_background(background)
     , m_textDrawer(cTextDrawer(bene_font))
     , m_prevState(prevState)
     , m_guiWindow(nullptr)
@@ -85,6 +86,7 @@ void cOptionsState::constructWindow(int prevState)
 cOptionsState::~cOptionsState()
 {
     delete m_guiWindow;
+    SDL_FreeSurface(m_background);
 }
 
 void cOptionsState::thinkFast()
@@ -94,7 +96,8 @@ void cOptionsState::thinkFast()
 
 void cOptionsState::draw() const
 {
-    //@Mira draw here screenTexture
+    // renderDrawer->drawSprite(m_background, 0, 0);
+
     m_guiWindow->draw();
 
     // MOUSE
