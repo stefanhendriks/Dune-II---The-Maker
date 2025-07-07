@@ -429,7 +429,7 @@ void cBuildingList::setItemBuilder(cItemBuilder *value)
 
 Color cBuildingList::getFlashingColor()
 {
-    return Color{255, 209, 64, 255};
+    return game.getColorFadeSelected(255, 209, 64);
 }
 
 void cBuildingList::think()
