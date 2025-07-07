@@ -203,9 +203,9 @@ void WriterPack::writeFileLines()
         // Create a temporary buffer to group the data
         char buffer[fileNameSize + extensionSize + sizeof(uint32_t) + sizeof(uint32_t)] = {0};
         // Copy fileId to buffer (limited to fileNameSize)
-        strncpy(buffer, tmp.fileId.c_str(), fileNameSize);
+        memcpy(buffer, tmp.fileId.c_str(), fileNameSize);
         // Copy extension to buffer (limited to extensionSize)
-        strncpy(buffer + fileNameSize, tmp.extension.c_str(), extensionSize);
+        memcpy(buffer + fileNameSize, tmp.extension.c_str(), extensionSize);
         // Copy offset into buffer
         memcpy(buffer + fileNameSize + extensionSize, &offset, sizeof(uint32_t));
         // Copy fileSize to buffer
