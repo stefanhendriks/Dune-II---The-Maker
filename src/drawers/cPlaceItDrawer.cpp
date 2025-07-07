@@ -202,7 +202,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     // renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
     cRectangle src = { 0, 0, width, height};
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(bmp, src, dest);
+    renderDrawer->renderStrechSprite(bmp, src, dest,96);
 
     // SDL_FreeSurface(temp);
 }
