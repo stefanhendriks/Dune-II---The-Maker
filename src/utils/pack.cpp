@@ -124,7 +124,7 @@ SDL_RWops *ReaderPack::getData(unsigned int index)
         return nullptr;
     }
     return SDL_RWFromMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
-};
+}
 
 void ReaderPack::displayPackFile()
 {
