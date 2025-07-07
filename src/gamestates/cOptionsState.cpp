@@ -9,7 +9,7 @@
 
 
 
-cOptionsState::cOptionsState(cGame &theGame, SDL_Surface *background, int prevState)
+cOptionsState::cOptionsState(cGame &theGame, /*SDL_Surface *background,*/ int prevState)
     : cGameState(theGame)
     , m_textDrawer(cTextDrawer(bene_font))
     , m_prevState(prevState)
