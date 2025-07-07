@@ -1218,7 +1218,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
+                //SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
                     drawManager->drawCombatState();
@@ -1228,7 +1228,7 @@ void cGame::setState(int newState)
                 }
 
                 // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, background, m_state);
+                newStatePtr = new cOptionsState(*this, /*background,*/ m_state);
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
