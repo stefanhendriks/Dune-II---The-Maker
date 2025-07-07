@@ -487,7 +487,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
         ids.push_back(i);
     }
     return ids;
-};
+}
 
 /**
  * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
