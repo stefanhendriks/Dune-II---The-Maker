@@ -15,6 +15,7 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/Graphics.hpp"
+#include "utils/RNG.hpp"
 
 #include <fmt/core.h>
 #include <algorithm>
@@ -500,7 +501,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     }
 
     logbook("Shuffling starting positions");
-    std::random_shuffle(iStartPositions.begin(), iStartPositions.end());
+    std::shuffle(iStartPositions.begin(), iStartPositions.end(), RNG::getGenerator());
 
     if (game.isDebugMode()) {
         logbook("Starting positions after shuffling:");
