@@ -10,7 +10,7 @@
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *background,*/ int prevState)
     : cGameState(theGame)
-    ,  background(background)
+    // ,  background(background)
     ,  prevState(prevState)
     ,  textDrawer(cTextDrawer(bene_font))
 {
