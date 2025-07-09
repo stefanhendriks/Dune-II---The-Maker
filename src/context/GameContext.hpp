@@ -3,11 +3,7 @@
 #include <stdexcept>
 #include <memory>
 
-class Graphics;
-
-struct GraphicsContext {
-    std::unique_ptr<Graphics> gfxmentat;
-};
+#include "context/EntityContext.hpp"
 
 class GameContext {
 public:
