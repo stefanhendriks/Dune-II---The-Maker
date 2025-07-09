@@ -1,13 +1,18 @@
 #pragma once
 
-class cFileValidator;
+#include <SDL2/SDL.h>
+#include <memory>
 
+class cFileValidator;
+class GraphicsContext;
 
 class ContextCreator {
 public:
-    ContextCreator(cFileValidator *settingsValidator);
+    ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator);
     ~ContextCreator();
 
-private:
+    std::unique_ptr<GraphicsContext> createGraphicsContext();
 
+private:
+    std::shared_ptr<Graphics> gfxmentat = nullptr;
 };
