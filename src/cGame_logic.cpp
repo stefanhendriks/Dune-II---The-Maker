@@ -57,6 +57,7 @@
 #include "utils/Graphics.hpp"
 
 #include "context/GameContext.hpp"
+#include "context/ContextCreator.hpp"
 
 #include <fmt/core.h>
 
@@ -87,6 +88,7 @@ cGame::cGame() : m_timeManager(*this)
     m_playMusic = true;
 
     m_version = "0.7.0";
+    context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
     m_handleArgument = std::make_unique<cHandleArgument>(this);
