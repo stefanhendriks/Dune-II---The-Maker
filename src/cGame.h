@@ -37,6 +37,7 @@ class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
 
+class GameContext;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -394,4 +395,6 @@ private:
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 
     void fadeOutOrBlitScreenBuffer() const;
+
+    std::unique_ptr<GameContext> ctx;
 };

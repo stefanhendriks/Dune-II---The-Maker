@@ -56,6 +56,8 @@
 #include "player/cHousesInfo.h"
 #include "utils/Graphics.hpp"
 
+#include "context/GameContext.hpp"
+
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -85,7 +87,7 @@ cGame::cGame() : m_timeManager(*this)
     m_playMusic = true;
 
     m_version = "0.7.0";
-
+    ctx = nullptr;
     m_mentat = nullptr;
     m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
@@ -848,7 +850,7 @@ bool cGame::setupGame()
     }
 
     // circumvent: -Werror=unused-function :/
-    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
+    //eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
 
     if (!settingsValidator->fileExists()) {
         logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
