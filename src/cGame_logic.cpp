@@ -59,6 +59,7 @@
 #include "utils/GameSettings.hpp"
 #include <format>
 #include "context/GameContext.hpp"
+#include "context/ContextCreator.hpp"
 
 #include <algorithm>
 #include <random>
@@ -85,6 +86,7 @@ cGame::cGame() : m_timeManager(*this)
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
+    context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
 }

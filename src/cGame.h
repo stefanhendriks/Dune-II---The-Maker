@@ -37,6 +37,7 @@ class cReinforcements;
 class cPreviewMaps;
 struct GameSettings;
 
+class ContextCreator;
 class GameContext;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -396,4 +397,5 @@ private:
     void fadeOutOrBlitScreenBuffer() const;
 
     std::unique_ptr<GameContext> ctx;
+    std::unique_ptr<ContextCreator> context;
 };
