@@ -10,21 +10,10 @@ public:
     GameContext() = default;
     ~GameContext() = default;
 
-    void setGraphicsContext(std::unique_ptr<GraphicsContext> newGfxCtx) {
-        if (!newGfxCtx) {
-            throw std::runtime_error("GraphicsContext is not initialized!");
-        }
-        gCtx = std::move(newGfxCtx);
-    }
+    void setGraphicsContext(std::unique_ptr<GraphicsContext> newGfxCtx);
 
-    GraphicsContext* getGraphicsContext() {
-        if (gCtx) {
-            return gCtx.get();
-        } else {
-            throw std::runtime_error("GraphicsContext not define");
-        }
-    }
+    GraphicsContext* getGraphicsContext() const;
 
 private:
-    std::unique_ptr<GraphicsContext> gCtx;
+    std::unique_ptr<GraphicsContext> gCtx=nullptr;
 };
