@@ -30,9 +30,9 @@
 #include <SDL2/SDL_ttf.h>
 
 class GuiButton;
-
 struct SDL_Surface;
 class Texture;
+class GameContext;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)
@@ -43,7 +43,7 @@ enum eMentatState {
 
 class AbstractMentat : public cInputObserver {
 public:
-    AbstractMentat(bool canMissionSelect);
+    AbstractMentat(GameContext* ctx, bool canMissionSelect);
     virtual ~AbstractMentat();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;

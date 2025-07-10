@@ -4,7 +4,7 @@
 
 class OrdosMentat : public AbstractMentat {
 public:
-    OrdosMentat(bool allowMissionSelect);
+    OrdosMentat(GameContext* ctx, bool allowMissionSelect);
     void think();
 private:
     void draw_mouth();

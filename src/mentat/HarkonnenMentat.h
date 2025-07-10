@@ -4,7 +4,7 @@
 
 class HarkonnenMentat : public AbstractMentat {
 public:
-    HarkonnenMentat(bool allowMissionSelect);
+    HarkonnenMentat(GameContext* ctx, bool allowMissionSelect);
     void think();
 private:
     void draw_mouth();

@@ -8,7 +8,7 @@ class cTextDrawer;
  */
 class BeneMentat : public AbstractMentat {
 public:
-    BeneMentat();
+    BeneMentat(GameContext* ctx);
     void think() override;
 private:
     void draw_mouth() override;

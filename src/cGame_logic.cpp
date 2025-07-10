@@ -1336,17 +1336,17 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new AtreidesMentat(allowMissionSelect);
+        m_mentat = new AtreidesMentat(ctx.get(), allowMissionSelect);
     }
     else if (houseIndex == HARKONNEN) {
-        m_mentat = new HarkonnenMentat(allowMissionSelect);
+        m_mentat = new HarkonnenMentat(ctx.get(), allowMissionSelect);
     }
     else if (houseIndex == ORDOS) {
-        m_mentat = new OrdosMentat(allowMissionSelect);
+        m_mentat = new OrdosMentat(ctx.get(), allowMissionSelect);
     }
     else {
         // fallback
-        m_mentat = new BeneMentat();
+        m_mentat = new BeneMentat(ctx.get());
     }
     prepareMentatForPlayer();
     m_mentat->speak();
@@ -1355,7 +1355,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     delete m_mentat;
-    m_mentat = new BeneMentat();
+    m_mentat = new BeneMentat(ctx.get());
     m_mentat->setHouse(house);
     // create new drawStateMentat
     if (house == ATREIDES) {
