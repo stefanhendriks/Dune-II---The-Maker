@@ -31,7 +31,7 @@
 
 // class cButtonCommand;
 class GuiButton;
-
+class GameContext;
 // struct SDL_Surface;
 struct Texture;
 
@@ -44,7 +44,7 @@ enum eMentatState {
 
 class AbstractMentat : public cInputObserver {
 public:
-    AbstractMentat(bool canMissionSelect);
+    AbstractMentat(GameContext* ctx, bool canMissionSelect);
     virtual ~AbstractMentat();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;

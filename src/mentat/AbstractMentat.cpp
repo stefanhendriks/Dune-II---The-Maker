@@ -16,7 +16,7 @@
 #include "d2tmc.h"
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
-
+#include "context/GameContext.hpp"
 #include "gui/GuiButton.h"
 // #include "gui/actions/cGuiActionToGameState.h"
 #include "utils/Graphics.hpp"
@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fmt/core.h>
 
-AbstractMentat::AbstractMentat(bool canMissionSelect)
+AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
     iMentatSentence = -1;
 
