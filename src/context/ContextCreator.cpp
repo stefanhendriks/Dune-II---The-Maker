@@ -19,4 +19,5 @@ std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
 {
     auto gtx = std::make_unique<GraphicsContext>();
     gtx->gfxmentat = gfxmentat;
+    return gtx;
 }
