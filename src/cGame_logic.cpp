@@ -871,6 +871,13 @@ bool cGame::setupGame()
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
 
+    // create GameContext
+    ctx = std::make_unique<GameContext>();
+    // create ressources from scratch
+    context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
+    // share them to all class what use ctx !
+    ctx->setGraphicsContext(context->createGraphicsContext());
+
     game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
     //Mira TEXT if (game_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
