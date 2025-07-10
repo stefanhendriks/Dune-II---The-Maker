@@ -9,6 +9,8 @@ class cGame;
 class GuiButton;
 struct SDL_Surface;
 struct Texture;
+class Graphics;
+class GameContext;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
@@ -42,7 +44,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(cGame &theGame);
+    explicit cSelectYourNextConquestState(GameContext *ctx, cGame &theGame);
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;
@@ -130,4 +132,5 @@ private:
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
     cTextDrawer textDrawer;
+    Graphics* gfxworld;
 };
