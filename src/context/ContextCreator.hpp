@@ -16,5 +16,6 @@ public:
     std::unique_ptr<GraphicsContext> createGraphicsContext();
 
 private:
-    std::shared_ptr<Graphics> gfxmentat = nullptr;
+    std::shared_ptr<Graphics> gfxmentat;
+    std::shared_ptr<Graphics> gfxworld;
 };
