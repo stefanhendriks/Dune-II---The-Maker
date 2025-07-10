@@ -10,7 +10,8 @@ class Graphics;
 class ContextCreator {
 public:
     ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator);
-    ~ContextCreator();
+    ContextCreator() = delete;
+    ~ContextCreator() = default;
 
     std::unique_ptr<GraphicsContext> createGraphicsContext();
 
