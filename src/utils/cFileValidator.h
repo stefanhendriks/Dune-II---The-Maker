@@ -16,7 +16,7 @@ enum class eGameDirFileName {
     GFXAUDIO
 };
 
-static const char *eGameDirFileNameString(const eGameDirFileName &value)
+inline constexpr std::string eGameDirFileNameString(const eGameDirFileName &value)
 {
     switch (value) {
         case eGameDirFileName::ARRAKEEN:
