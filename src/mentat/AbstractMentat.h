@@ -130,4 +130,5 @@ protected:
     int movieTopleftY;
 
     GuiButton *m_guiBtnToMissionSelect;
+    Graphics* gfxmentat;
 };
