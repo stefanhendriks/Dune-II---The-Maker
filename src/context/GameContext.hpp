@@ -7,7 +7,7 @@
 
 class GameContext {
 public:
-    GameContext();
+    GameContext() = default;
     ~GameContext() = default;
 
     void setGraphicsContext(std::unique_ptr<GraphicsContext> newGfxCtx) {

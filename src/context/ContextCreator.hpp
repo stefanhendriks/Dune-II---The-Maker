@@ -5,6 +5,7 @@
 
 class cFileValidator;
 class GraphicsContext;
+class Graphics;
 
 class ContextCreator {
 public:
