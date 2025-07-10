@@ -59,7 +59,7 @@ s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 std::shared_ptr<Graphics> gfxinter;		// interface graphics
-std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
+// std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
 // std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 
 // FONT stuff
