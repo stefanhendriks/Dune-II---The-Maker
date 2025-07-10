@@ -15,6 +15,7 @@
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/RNG.hpp"
+#include "context/GameContext.hpp"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
@@ -22,7 +23,7 @@
 
 #include <format>
 
-AbstractMentat::AbstractMentat(bool canMissionSelect)
+AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
     iMentatSentence = -1;
 
