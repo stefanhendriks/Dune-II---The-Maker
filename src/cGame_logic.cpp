@@ -58,6 +58,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/GameSettings.hpp"
 #include <format>
+#include "context/GameContext.hpp"
 
 #include <algorithm>
 #include <random>
@@ -84,6 +85,7 @@ cGame::cGame() : m_timeManager(*this)
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
+    ctx = nullptr;
     m_mentat = nullptr;
 }
 
@@ -835,7 +837,7 @@ bool cGame::setupGame()
     }
 
     // circumvent: -Werror=unused-function :/
-    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
+    //eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
 
     if (!settingsValidator->fileExists()) {
         logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
