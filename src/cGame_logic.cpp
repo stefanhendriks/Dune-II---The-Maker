@@ -1081,7 +1081,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(ctx.get(),game);
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
@@ -1182,7 +1182,7 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(ctx.get(),game);
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
