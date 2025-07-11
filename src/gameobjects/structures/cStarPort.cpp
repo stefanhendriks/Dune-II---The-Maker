@@ -112,7 +112,7 @@ void cStarPort::think_deploy()
     }
 }
 
-void cStarPort::think_guard()
-{
-    return; // starport has no guard function
-}
+// void cStarPort::think_guard()
+// {
+//     return; // starport has no guard function
+// }

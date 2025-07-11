@@ -32,11 +32,11 @@ cWindTrap::~cWindTrap()
     }
 }
 
-void cWindTrap::thinkFast()
-{
-    // think like base class
-    cAbstractStructure::thinkFast();
-}
+// void cWindTrap::thinkFast()
+// {
+//     // think like base class
+//     cAbstractStructure::thinkFast();
+// }
 
 void cWindTrap::think_fade()
 {
@@ -80,10 +80,10 @@ void cWindTrap::think_animation()
     cAbstractStructure::think_flag_new();
 }
 
-void cWindTrap::think_guard()
-{
+// void cWindTrap::think_guard()
+// {
 
-}
+// }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 

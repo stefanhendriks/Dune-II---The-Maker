@@ -13,11 +13,11 @@ int cHighTech::getType() const
     return HIGHTECH;
 }
 
-void cHighTech::thinkFast()
-{
-    // last but not least, think like our abstraction
-    cAbstractStructure::thinkFast();
-}
+// void cHighTech::thinkFast()
+// {
+//     // last but not least, think like our abstraction
+//     cAbstractStructure::thinkFast();
+// }
 
 void cHighTech::think_animation_unitDeploy()
 {
@@ -62,10 +62,10 @@ void cHighTech::think_animation()
     think_animation_unitDeploy();
 }
 
-void cHighTech::think_guard()
-{
+// void cHighTech::think_guard()
+// {
 
-}
+// }
 
 void cHighTech::startAnimating()
 {

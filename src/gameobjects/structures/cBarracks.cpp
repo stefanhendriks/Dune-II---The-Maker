@@ -6,10 +6,10 @@ cBarracks::cBarracks()
 {
 }
 
-void cBarracks::thinkFast()
-{
-    cAbstractStructure::thinkFast();
-}
+// void cBarracks::thinkFast()
+// {
+//     cAbstractStructure::thinkFast();
+// }
 
 int cBarracks::getType() const
 {
@@ -26,7 +26,7 @@ void cBarracks::think_animation()
     cAbstractStructure::think_flag_new();
 }
 
-void cBarracks::think_guard()
-{
-// do nothing
-}
+// void cBarracks::think_guard()
+// {
+// // do nothing
+// }

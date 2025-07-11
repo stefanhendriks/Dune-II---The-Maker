@@ -23,7 +23,7 @@ public:
 
     void think_animation() override;
 
-    void think_guard() override;
+    // void think_guard() override;
 
     int getType() const override;
 
@@ -31,11 +31,11 @@ public:
         frigateDroppedPackage = value;
     }
 
-    void startAnimating() override {}
+    // void startAnimating() override {}
 
-    void draw() override {
-        drawWithShadow();
-    }
+    // void draw() override {
+    //     drawWithShadow();
+    // }
 
     std::string getStatusForMessageBar() const override {
         return getDefaultStatusMessageBar();

@@ -129,10 +129,10 @@ void cRefinery::think_animation()
     think_harvester_deploy();
 }
 
-void cRefinery::think_guard()
-{
+// void cRefinery::think_guard()
+// {
 
-}
+// }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity()

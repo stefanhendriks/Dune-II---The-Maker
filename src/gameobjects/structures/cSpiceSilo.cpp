@@ -15,11 +15,11 @@ int cSpiceSilo::getType() const
 }
 
 
-void cSpiceSilo::thinkFast()
-{
-    // think like base class
-    cAbstractStructure::thinkFast();
-}
+// void cSpiceSilo::thinkFast()
+// {
+//     // think like base class
+//     cAbstractStructure::thinkFast();
+// }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
 void cSpiceSilo::think_animation()
@@ -28,10 +28,10 @@ void cSpiceSilo::think_animation()
     cAbstractStructure::think_flag_new();
 }
 
-void cSpiceSilo::think_guard()
-{
+// void cSpiceSilo::think_guard()
+// {
 
-}
+// }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cSpiceSilo::getSpiceSiloCapacity()

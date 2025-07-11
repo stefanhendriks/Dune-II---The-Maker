@@ -112,10 +112,10 @@ void cRepairFacility::think_animation_unitDeploy()
 
 }
 
-void cRepairFacility::think_guard()
-{
+// void cRepairFacility::think_guard()
+// {
 
-}
+// }
 
 void cRepairFacility::startAnimating()
 {

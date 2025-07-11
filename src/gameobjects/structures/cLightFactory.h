@@ -12,13 +12,13 @@ private:
 public:
     cLightFactory();
 
-    void thinkFast() override;
+    // void thinkFast() override;
 
-    void thinkSlow() override {}
+    // void thinkSlow() override {}
 
     void think_animation() override;
 
-    void think_guard() override;
+    // void think_guard() override;
 
     void startAnimating() override;
 

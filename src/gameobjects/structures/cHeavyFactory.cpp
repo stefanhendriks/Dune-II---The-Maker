@@ -19,11 +19,11 @@ int cHeavyFactory::getType() const
     return HEAVYFACTORY;
 }
 
-void cHeavyFactory::thinkFast()
-{
-    // last but not least, think like our abstraction
-    cAbstractStructure::thinkFast();
-}
+// void cHeavyFactory::thinkFast()
+// {
+//     // last but not least, think like our abstraction
+//     cAbstractStructure::thinkFast();
+// }
 
 // think animation for unit deployment (when building unit is finished)
 void cHeavyFactory::think_animation_unitDeploy()

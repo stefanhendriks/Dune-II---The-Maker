@@ -40,9 +40,9 @@ void cOutPost::think_animation()
 }
 
 
-void cOutPost::think_guard()
-{
+// void cOutPost::think_guard()
+// {
 
-}
+// }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

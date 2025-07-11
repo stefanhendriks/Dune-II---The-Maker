@@ -3,9 +3,7 @@
 #include "definitions.h"
 
 cRocketTurret::cRocketTurret()
-{
-
-}
+{}
 
 int cRocketTurret::getType() const
 {

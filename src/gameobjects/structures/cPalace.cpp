@@ -13,10 +13,10 @@ int cPalace::getType() const
     return PALACE;
 }
 
-void cPalace::thinkFast()
-{
-    cAbstractStructure::thinkFast();
-}
+// void cPalace::thinkFast()
+// {
+//     cAbstractStructure::thinkFast();
+// }
 
 void cPalace::think_animation()
 {
@@ -28,7 +28,7 @@ void cPalace::think_animation()
     cAbstractStructure::think_flag_new();
 }
 
-void cPalace::think_guard()
-{
+// void cPalace::think_guard()
+// {
 
-}
+// }

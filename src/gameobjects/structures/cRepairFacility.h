@@ -16,11 +16,11 @@ public:
 
     void thinkFast() override;
 
-    void thinkSlow() override {}
+    // void thinkSlow() override {}
 
     void think_animation() override;
 
-    void think_guard() override;
+    // void think_guard() override;
 
     int getType() const override;
 

@@ -18,7 +18,7 @@ public:
     // overloaded functions
     void thinkFast() override;
 
-    void thinkSlow() override {}
+    // void thinkSlow() override {}
 
     void think_animation() override;
 
@@ -34,11 +34,11 @@ public:
         iShouldHeadFacing = value;
     }
 
-    void startAnimating() override {}
+    // void startAnimating() override {}
 
-    void draw() override {
-        drawWithShadow();
-    }
+    // void draw() override {
+    //     drawWithShadow();
+    // }
 
     int getType() const override;
 

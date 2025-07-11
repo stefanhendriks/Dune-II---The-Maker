@@ -19,11 +19,11 @@ int cLightFactory::getType() const
     return LIGHTFACTORY;
 }
 
-void cLightFactory::thinkFast()
-{
-    // last but not least, think like our abstraction
-    cAbstractStructure::thinkFast();
-}
+// void cLightFactory::thinkFast()
+// {
+//     // last but not least, think like our abstraction
+//     cAbstractStructure::thinkFast();
+// }
 
 void cLightFactory::think_animation_unitDeploy()
 {
@@ -54,10 +54,10 @@ void cLightFactory::think_animation()
     think_animation_unitDeploy();
 }
 
-void cLightFactory::think_guard()
-{
+// void cLightFactory::think_guard()
+// {
 
-}
+// }
 
 void cLightFactory::draw()
 {

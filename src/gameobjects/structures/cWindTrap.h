@@ -18,19 +18,19 @@ public:
 
     ~cWindTrap();
 
-    void thinkFast() override;
+    // void thinkFast() override;
 
-    void thinkSlow() override {}
+    // void thinkSlow() override {}
 
     void think_animation() override;
 
-    void think_guard() override;
+    // void think_guard() override;
 
-    void startAnimating() override {}
+    // void startAnimating() override {}
 
-    void draw() override {
-        drawWithShadow();
-    }
+    // void draw() override {
+    //     drawWithShadow();
+    // }
 
     int getType() const override;
 
