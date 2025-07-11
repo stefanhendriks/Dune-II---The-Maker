@@ -73,6 +73,7 @@ else()
     -static-libgcc
     -static-libstdc++
     -lmingw32
+    -lSDL2
     -lSDL2main
     -mwindows
   )
