@@ -9,18 +9,18 @@ on:
 
 jobs:
   MSYS2:
-    name: Windows-msys2-mingw32
+    name: Windows-msys2-mingw64
     runs-on: [windows-latest]
     defaults:
       run:
         shell: msys2 {0}
     steps:
-      - name: Install MSYS2 with MinGW 32-bit
+      - name: Install MSYS2 with MinGW 64-bit
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW32 # D2TM is built within a MinGW32 bit environment
+          msystem: MINGW64 # D2TM is built within a MinGW64 bit environment
           update: true
-          install: mingw-w64-i686-gcc mingw-w64-i686-binutils mingw-w64-i686-cmake mingw-w64-i686-make git
+          install: mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -54,6 +54,27 @@ jobs:
           cd "${{ github.workspace }}"
           chmod +x install_dependencies_ubuntu.sh
           ./install_dependencies_ubuntu.sh
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
+  MACOSX:
+    name: Mac OS X
+    runs-on: [ macos-15 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          ./install_dependencies_macosx.sh
       - name: Configure
         run: |
           cd "${{ github.workspace }}"
