@@ -38,6 +38,7 @@ else()
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
 
+    link_libraries(SDL2 SDL2_ttf SDL2_mixer SDL2_image)
 endif()
 
 add_subdirectory(dependencies)
