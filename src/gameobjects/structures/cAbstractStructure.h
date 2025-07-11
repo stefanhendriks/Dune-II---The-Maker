@@ -95,8 +95,8 @@ public:
 
 
     // Filled in by derived classes
-    virtual void thinkFast()=0;       // think fast (every 5ms)
-    virtual void thinkSlow()=0;       // think slow (every second)
+    virtual void thinkFast();       // think fast (every 5ms)
+    virtual void thinkSlow(){}       // think slow (every second)
     virtual void think_animation()=0; // think animation stuff
     virtual void think_guard();       // think guard stuff
 
@@ -243,8 +243,10 @@ public:
     void setOwner(int player); // set owner (player id) of structure
     void setRallyPoint(int cell); // set rally point of structure
     void setAnimating(bool value); // set animation on / off
-    virtual void startAnimating() = 0;
-    virtual void draw() = 0;
+    virtual void startAnimating(){}
+    virtual void draw(){
+        drawWithShadow();
+    }
     void setFrame(int frame);
     void setStructureId(int theId) {
         id = theId;
