@@ -27,9 +27,9 @@ public:
 
     void deleteStructureInstance(cAbstractStructure *pStructure);
 
-    cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
+    cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent = 100);
 
-    cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer);
+    // cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer);
 
     int getFreeSlot();
 

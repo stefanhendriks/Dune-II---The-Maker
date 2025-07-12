@@ -74,10 +74,10 @@ void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure)
 /**
 	Shorter version, creates structure at full health.
 **/
-cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer)
-{
-    return createStructure(iCell, iStructureType, iPlayer, 100);
-}
+// cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer)
+// {
+//     return createStructure(iCell, iStructureType, iPlayer, 100);
+// }
 
 /**
 	Create a structure, place it and return a reference to this created class.
