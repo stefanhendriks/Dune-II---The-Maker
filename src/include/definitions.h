@@ -15,14 +15,14 @@
 #define MAPID_MAX	 4 // used for clearing all
 
 // Game modes
-#define MOD_DUNE2		0
-#define MOD_D2TM		1
+// #define MOD_DUNE2		0
+// #define MOD_D2TM		1
 //#define MOD_MINE		2		// own made mod
 
 #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
 // Font size
-#define GAME_FONTSIZE 8
+// #define GAME_FONTSIZE 8
 
 // Max length of a path (per unit)
 #define MAX_PATH_SIZE    256
