@@ -19,6 +19,9 @@ int cConstYard::getType() const
 
 void cConstYard::think_animation()
 {
+    if (isAnimating()) {
+        setAnimating(false);
+    }
     cAbstractStructure::think_animation();
     cAbstractStructure::think_flag_new();
 }

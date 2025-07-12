@@ -104,7 +104,7 @@ public:
     void think_prebuild();            // prebuild animation
     void think_repair();              // repair thinking
     void think_decay();              // think about damaging through time
-    void think_flag();				  // think method for flag animation
+    // void think_flag();				  // think method for flag animation
 
     void drawFlags();                   // draw all flags
     void addFlag(cFlag *flag);

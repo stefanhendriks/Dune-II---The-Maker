@@ -364,26 +364,26 @@ void cAbstractStructure::setRepairing(bool value)
     bRepair = value;
 }
 
-void cAbstractStructure::think_flag()
-{
-    think_flag_new();
+// void cAbstractStructure::think_flag()
+// {
+//     think_flag_new();
 
-    if (isAnimating()) return; // do no flag animation when animating
+//     if (isAnimating()) return; // do no flag animation when animating
 
-    // old flag behavior
-    TIMER_flag++;
+//     // old flag behavior
+//     TIMER_flag++;
 
-    if (TIMER_flag > 70) {
-        iFrame++;
+//     if (TIMER_flag > 70) {
+//         iFrame++;
 
-        // switch between 0 and 1.
-        if (iFrame > frames) {
-            iFrame=0;
-        }
+//         // switch between 0 and 1.
+//         if (iFrame > frames) {
+//             iFrame=0;
+//         }
 
-        TIMER_flag=0;
-    }
-}
+//         TIMER_flag=0;
+//     }
+// }
 
 void cAbstractStructure::think_flag_new()
 {
@@ -575,7 +575,7 @@ void cAbstractStructure::thinkFast()
     }
 
     if (getStructureInfo().flags.empty()) {
-        think_flag();
+        // think_flag();
     }
     else {
         think_flag_new();
