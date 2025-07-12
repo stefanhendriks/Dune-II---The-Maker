@@ -19,11 +19,11 @@ int cStarPort::getType() const
     return STARPORT;
 }
 
-void cStarPort::thinkFast()
-{
-    // think like base class
-    cAbstractStructure::thinkFast();
-}
+// void cStarPort::thinkFast()
+// {
+//     // think like base class
+//     cAbstractStructure::thinkFast();
+// }
 
 // think about units deployment animation
 void cStarPort::think_deployment()

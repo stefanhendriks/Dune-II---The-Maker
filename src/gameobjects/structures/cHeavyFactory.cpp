@@ -68,10 +68,10 @@ void cHeavyFactory::think_animation()
     think_animation_unitDeploy();
 }
 
-void cHeavyFactory::think_guard()
-{
+// void cHeavyFactory::think_guard()
+// {
 
-}
+// }
 
 void cHeavyFactory::draw()
 {

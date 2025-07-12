@@ -17,7 +17,7 @@ public:
     cStarPort();
 
     // overloaded functions
-    void thinkFast() override;
+    // void thinkFast() override;
 
     void thinkSlow() override;
 

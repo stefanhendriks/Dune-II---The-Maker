@@ -20,7 +20,7 @@ public:
 
     // void thinkSlow() override {}
 
-    void think_animation() override;
+    // void think_animation() override;
 
     void think_guard() override;
 

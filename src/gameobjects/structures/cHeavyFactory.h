@@ -21,7 +21,7 @@ public:
 
     void think_animation() override;
 
-    void think_guard() override;
+    // void think_guard() override;
 
     void startAnimating() override;
 

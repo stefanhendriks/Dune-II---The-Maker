@@ -6,7 +6,7 @@ class cConstYard : public cAbstractStructure {
 public:
     cConstYard();
 
-    void thinkFast() override;
+    // void thinkFast() override;
 
     // void thinkSlow() override {}
 

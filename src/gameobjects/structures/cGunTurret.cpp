@@ -51,10 +51,10 @@ void cGunTurret::thinkFast()
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cGunTurret::think_animation()
-{
-    cAbstractStructure::think_animation();
-}
+// void cGunTurret::think_animation()
+// {
+//     cAbstractStructure::think_animation();
+// }
 
 void cGunTurret::think_attack()
 {

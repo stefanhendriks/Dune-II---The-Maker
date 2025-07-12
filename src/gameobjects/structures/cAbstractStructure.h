@@ -97,7 +97,7 @@ public:
     // Filled in by derived classes
     virtual void thinkFast();       // think fast (every 5ms)
     virtual void thinkSlow(){}       // think slow (every second)
-    virtual void think_animation()=0; // think animation stuff
+    virtual void think_animation(); // think animation stuff
     virtual void think_guard();       // think guard stuff
 
     virtual int getType() const = 0;		  // implementation gives type of structure

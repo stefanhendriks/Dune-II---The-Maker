@@ -12,10 +12,10 @@ int cConstYard::getType() const
     return CONSTYARD;
 }
 
-void cConstYard::thinkFast()
-{
-    cAbstractStructure::thinkFast();
-}
+// void cConstYard::thinkFast()
+// {
+//     cAbstractStructure::thinkFast();
+// }
 
 void cConstYard::think_animation()
 {
