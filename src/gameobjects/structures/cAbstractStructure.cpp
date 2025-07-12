@@ -965,7 +965,7 @@ eListType cAbstractStructure::getAssociatedListID() const
     }
 }
 
-std::string cAbstractStructure::getDefaultStatusMessageBar() const
+std::string cAbstractStructure::getStatusForMessageBar() const
 {
     s_StructureInfo info = getStructureInfo();
     int health = getHealthNormalized() * 100;

@@ -50,9 +50,9 @@ public:
 
     bool isFacingTarget() const;
 
-    std::string getStatusForMessageBar() const override {
-        return getDefaultStatusMessageBar();
-    }
+    // std::string getStatusForMessageBar() const override {
+    //     return getDefaultStatusMessageBar();
+    // }
 
     void onNotifyGameEvent(const s_GameEvent &) override {}
 };

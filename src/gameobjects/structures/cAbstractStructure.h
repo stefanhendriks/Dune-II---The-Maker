@@ -301,8 +301,8 @@ public:
 
     eListType getAssociatedListID() const;
 
-    std::string getDefaultStatusMessageBar() const;
+    // std::string getDefaultStatusMessageBar() const;
 
-    virtual std::string getStatusForMessageBar() const = 0;
+    virtual std::string getStatusForMessageBar() const;
 
 };

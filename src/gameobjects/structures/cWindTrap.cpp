@@ -101,5 +101,5 @@ int cWindTrap::getMaxPowerOut() const
 std::string cWindTrap::getStatusForMessageBar() const
 {
     int powerProduction = ((float)getPowerOut() / (float)getMaxPowerOut()) * (float)100;
-    return fmt::format("{} and producing at {} percent capacity", cAbstractStructure::getDefaultStatusMessageBar(), powerProduction);
+    return fmt::format("{} and producing at {} percent capacity", cAbstractStructure::getStatusForMessageBar(), powerProduction);
 }
