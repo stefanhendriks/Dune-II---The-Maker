@@ -64,7 +64,7 @@ cPlatformLayerInit::cPlatformLayerInit(/*const std::string &path_to_config_file,
 cPlatformLayerInit::~cPlatformLayerInit()
 {
     cLogger *logger = cLogger::getInstance();
-    logger->log(LOG_INFO, COMP_ALLEGRO, "SDL shutdown", "Shutting down...");
+    logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Shutting down...");
     // allegro_exit();
     // logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro shutdown", "Thanks for playing!", OUTC_SUCCESS);
     TTF_Quit();
