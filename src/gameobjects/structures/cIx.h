@@ -26,6 +26,6 @@ public:
     //     return getDefaultStatusMessageBar();
     // }
 
-    void onNotifyGameEvent(const s_GameEvent &) override {}
+    // void onNotifyGameEvent(const s_GameEvent &) override {}
 };
 

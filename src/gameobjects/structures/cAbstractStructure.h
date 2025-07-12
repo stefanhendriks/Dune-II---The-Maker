@@ -304,5 +304,5 @@ public:
     // std::string getDefaultStatusMessageBar() const;
 
     virtual std::string getStatusForMessageBar() const;
-
+    void onNotifyGameEvent(const s_GameEvent &) override {}
 };

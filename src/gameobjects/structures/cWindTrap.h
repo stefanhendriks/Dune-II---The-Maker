@@ -44,6 +44,6 @@ public:
 
     std::string getStatusForMessageBar() const override;
 
-    void onNotifyGameEvent(const s_GameEvent &) override {}
+    // void onNotifyGameEvent(const s_GameEvent &) override {}
 };
 
