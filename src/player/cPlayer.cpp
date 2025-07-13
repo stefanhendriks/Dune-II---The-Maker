@@ -67,16 +67,10 @@ cPlayer::~cPlayer()
 
 void cPlayer::destroyAllegroBitmaps()
 {
-    // SDL_FreeSurface(bmp_flag);
-    // SDL_FreeSurface(bmp_flag_small);
     if (bmp_flag) {
-        if (bmp_flag->tex)
-            SDL_DestroyTexture(bmp_flag->tex);
         delete bmp_flag;
     }
     if (bmp_flag_small) {
-        if (bmp_flag_small->tex)
-            SDL_DestroyTexture(bmp_flag_small->tex);
         delete bmp_flag_small;
     }
     clearStructureTypeBitmaps();
