@@ -1,9 +1,11 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-struct Texture {
+class Texture {
+
+public:
     SDL_Texture *tex;
-    int w;
+    int w=0;
     int h=0;
     bool isRenderTarget=false;
 

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-struct Texture;
+class Texture;
 class cGame;
 
 struct s_CreditLine {
