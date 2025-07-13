@@ -18,7 +18,7 @@
 
 class cPlayer;
 struct SDL_Surface;
-struct Texture;
+class Texture;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
