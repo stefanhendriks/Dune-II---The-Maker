@@ -554,11 +554,11 @@ void cGame::drawStateMentat(cAbstractMentat *mentat)
     m_mouse->draw();
 }
 
-// draw menu
-void cGame::drawStateMenu()
-{
-    m_currentState->draw();
-}
+// // draw menu
+// void cGame::drawStateMenu()
+// {
+//     m_currentState->draw();
+// }
 
 void cGame::initSkirmish() const
 {
@@ -654,7 +654,8 @@ void cGame::drawState()
             drawStateMentat(m_mentat);
             break;
         case GAME_MENU:
-            drawStateMenu();
+            //drawStateMenu();
+            m_currentState->draw();
             break;
         case GAME_WINNING:
             drawStateWinning();
