@@ -28,9 +28,9 @@ public:
 
     void startAnimating() override;
 
-    void draw() override {
-        drawWithShadow();
-    }
+    // void draw() override {
+    //     drawWithShadow();
+    // }
 
     // std::string getStatusForMessageBar() const override {
     //     return getDefaultStatusMessageBar();
