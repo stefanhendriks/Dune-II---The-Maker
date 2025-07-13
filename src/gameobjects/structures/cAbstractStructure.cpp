@@ -574,12 +574,12 @@ void cAbstractStructure::thinkFast()
         }
     }
 
-    if (getStructureInfo().flags.empty()) {
-        // think_flag();
-    }
-    else {
-        think_flag_new();
-    }
+    // if (getStructureInfo().flags.empty()) {
+    //     // think_flag();
+    // }
+    // else {
+    //     think_flag_new();
+    // }
 }
 
 void cAbstractStructure::think_repair()
