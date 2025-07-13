@@ -71,7 +71,7 @@ public:
 
     void conquerRegions();
 
-    void destroy();
+    // void destroy();
 
     void calculateOffset();
 
