@@ -13,9 +13,9 @@ struct Texture {
     Texture() = delete;
 
     ~Texture() {
-        if (tex) { // Check if tex is not null before destroying
+        if (tex) {
             SDL_DestroyTexture(tex);
-            tex = nullptr; // Set to nullptr after destruction to prevent double-free
+            tex = nullptr;
         }
     }
 };
