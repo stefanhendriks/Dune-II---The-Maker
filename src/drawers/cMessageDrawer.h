@@ -54,7 +54,7 @@ private:
 
     cPoint m_position; // draw positions
     SDL_Surface *m_bmpBar;
-    SDL_Surface *m_temp;
+    // SDL_Surface *m_temp;
 
     int m_timeMessageIsVisible;
 
