@@ -82,8 +82,8 @@ void cSelectYourNextConquestState::calculateOffset()
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
 {
-    SDL_FreeSurface(regionClickMapBmp);
-    destroy();
+    // SDL_FreeSurface(regionClickMapBmp);
+    // destroy();
     delete m_guiBtnToMissionSelect;
 }
 
@@ -652,16 +652,16 @@ void cSelectYourNextConquestState::transitionToNextRegionSceneState(eRegionScene
     iRegionSceneAlpha = 0;
 }
 
-void cSelectYourNextConquestState::destroy()
-{
-    for (int i = 0; i < 27; i++) {
-        cRegion &region = world[i];
-        if (region.bmpColor) {
-            // SDL_FreeSurface(region.bmpHighBit);
-            delete region.bmpColor;
-        }
-    }
-}
+// void cSelectYourNextConquestState::destroy()
+// {
+    // for (int i = 0; i < 27; i++) {
+    //     cRegion &region = world[i];
+    //     if (region.bmpColor) {
+    //         // SDL_FreeSurface(region.bmpHighBit);
+    //         delete region.bmpColor;
+    //     }
+    // }
+// }
 
 void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
