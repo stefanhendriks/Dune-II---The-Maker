@@ -2343,20 +2343,21 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
 {
     SDL_Renderer *_renderer = renderDrawer->getRenderer();
 
-    // Étape 1 : Créer une copie de la surface (même format INDEX8)
+    // Step 1: Create a copy of the surface (same INDEX8 format)
     SDL_Surface *modifiableSurface = SDL_CreateRGBSurfaceWithFormat(0, referenceSurface->w, referenceSurface->h, 8, SDL_PIXELFORMAT_INDEX8);
     if (!modifiableSurface) {
         SDL_Log("Erreur copie surface : %s", SDL_GetError());
         return NULL;
     }
 
-    // Copier les pixels
+    // Copy pixels
     SDL_LockSurface(referenceSurface);
     SDL_LockSurface(modifiableSurface);
     memcpy(modifiableSurface->pixels, referenceSurface->pixels, referenceSurface->h * referenceSurface->pitch);
     SDL_UnlockSurface(referenceSurface);
     SDL_UnlockSurface(modifiableSurface);
-    // Copier la palette
+
+    // copy palette
     if (referenceSurface->format->palette && referenceSurface->format->palette->ncolors > 0) {
         SDL_SetPaletteColors(modifiableSurface->format->palette,
                              referenceSurface->format->palette->colors,
@@ -2364,12 +2365,12 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
                              referenceSurface->format->palette->ncolors);
     }
     else {
-        SDL_Log("Aucune palette dans l'image d'origine !");
+        SDL_Log("No palette in the original image!");
         SDL_FreeSurface(modifiableSurface);
         return NULL;
     }
 
-    // Étape 2 : Appliquer la nouvelle palette (256 couleurs)
+    // Step 2: Apply the new palette (256 colors)
     if (m_HousesInfo->getSwapColor(house) > -1) {
         int start = m_HousesInfo->getSwapColor(house);
         int s = 144;                // original position (harkonnen)
@@ -2378,7 +2379,6 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
         SDL_Palette *palette = modifiableSurface->format->palette;
         for (int j = start; j < (start + 7); j++) {
             // swap everything from S with J
-            //pal[s] = pal[j];
             palette->colors[s].r = palette->colors[j].r;
             palette->colors[s].g = palette->colors[j].g;
             palette->colors[s].b = palette->colors[j].b;
@@ -2387,31 +2387,31 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
         }
         const SDL_Color *colors = palette->colors;
         if (SDL_SetPaletteColors(modifiableSurface->format->palette, colors, 0, 256) != 0) {
-            SDL_Log("Erreur palette : %s", SDL_GetError());
+            SDL_Log("Error setting palette colors : %s", SDL_GetError());
             SDL_FreeSurface(modifiableSurface);
             return NULL;
         }
     }
 
-    // Étape 3 : Définir l'index de transparence
+    // Step 3: Set the transparency index
     if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, transparentIndex) != 0) {
-        SDL_Log("Erreur couleur clé : %s", SDL_GetError());
+        SDL_Log("SDL_SetColorKey error : %s", SDL_GetError());
         SDL_FreeSurface(modifiableSurface);
         return NULL;
     }
 
-    // Étape 4 : Convertir en RGBA8888 pour créer la texture avec alpha
+    // Step 4: Convert to RGBA8888 to create the texture with alpha
     SDL_Surface *rgbaSurface = SDL_ConvertSurfaceFormat(modifiableSurface, SDL_PIXELFORMAT_RGBA8888, 0);
-    SDL_FreeSurface(modifiableSurface); // plus besoin de B
+    SDL_FreeSurface(modifiableSurface);
     if (!rgbaSurface) {
-        SDL_Log("Erreur conversion RGBA : %s", SDL_GetError());
+        SDL_Log("SDL_ConvertSurfaceFormat error : %s", SDL_GetError());
         return NULL;
     }
 
-    // Étape 5 : Créer la texture finale
+    // Step 5: Create the final texture
     SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, rgbaSurface);
     if (!texture) {
-        SDL_Log("Erreur texture : %s", SDL_GetError());
+        SDL_Log("SDL_CreateTextureFromSurface error : %s", SDL_GetError());
         return NULL;
     }
     Texture *newTexture = new Texture(texture, rgbaSurface->w, rgbaSurface->h);
