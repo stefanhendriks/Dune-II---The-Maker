@@ -23,7 +23,7 @@ public:
     eGameStateType getType() override;
 
 private:
-    SDL_Surface *background;
+    // SDL_Surface *background;
 
     int prevState;
 
