@@ -433,8 +433,7 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity)
 {
     if (SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND) < 0) {
-        // Gérer l'erreur, par exemple :
-        std::cerr << "Erreur SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
+        std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
     SDL_SetTextureAlphaMod(src->tex, opacity);
     SDL_Rect srcRect = src_pos.toSDL();
@@ -774,12 +773,7 @@ void SDLDrawer::renderChangeColor(Color color)
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
 
-
-
-
-
-
-// Crée une texture de rendu
+// Creates a render texture
 Texture* SDLDrawer::createRenderTargetTexture(int width, int height) {
     SDL_Texture* texture = SDL_CreateTexture(renderer,
                                               SDL_PIXELFORMAT_RGBA8888,
@@ -787,13 +781,13 @@ Texture* SDLDrawer::createRenderTargetTexture(int width, int height) {
                                               width,
                                               height);
     if (!texture) {
-        throw std::runtime_error("Erreur lors de la création de la texture de rendu: " + std::string(SDL_GetError()));
+        throw std::runtime_error("Error creating render texture: " + std::string(SDL_GetError()));
     }
     return new Texture(texture, width, height, true);
 }
 
-// Définit une texture comme cible de rendu.
-// Prend un pointeur vers la texture. Si nullptr, revient à la fenêtre principale.
+// Sets a texture as a render target.
+// Takes a pointer to the texture. If nullptr, returns to the main window.
 void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
 {
     assert(targetTexture && targetTexture->isRenderTarget == true);
