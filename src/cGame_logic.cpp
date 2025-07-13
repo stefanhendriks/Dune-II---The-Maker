@@ -531,7 +531,8 @@ void cGame::drawStateCombat()
 {
     drawManager->drawCombatState();
     if (m_drawFps) {
-        //Mira TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
+        // TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
+        textDrawer->drawText(180,8, Color::black(), fmt::format("FPS/REST: {}/{}", game.getFps(), iRest));
     }
 
     // for now, call this on game class.
@@ -864,7 +865,7 @@ bool cGame::setupGame()
     m_PLInit = std::make_unique<cPlatformLayerInit>();
 
     m_keyboard = new cKeyboard();
-    //Mira logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
@@ -911,6 +912,9 @@ bool cGame::setupGame()
     //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
     //Mira TEXT     return false;
     //Mira TEXT }
+
+    textDrawer = std::make_unique<cTextDrawer>(game_font);
+    textDrawer->setApplyShadow(false);
 
     if (!m_playSound) {
         m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);

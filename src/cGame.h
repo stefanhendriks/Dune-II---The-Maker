@@ -300,6 +300,7 @@ private:
     SDL_Renderer *renderer;
     Texture *screenTexture=nullptr;
     Texture *actualRenderer= nullptr;
+    std::unique_ptr<cTextDrawer> textDrawer;
 
     cTimeManager m_timeManager;
 
