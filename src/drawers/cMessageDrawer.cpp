@@ -16,7 +16,7 @@ cMessageDrawer::cMessageDrawer()
 {
     m_textDrawer.setApplyShadow(false);
     m_bmpBar = nullptr;
-    m_temp = nullptr;
+    // m_temp = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
     init();
@@ -31,9 +31,9 @@ void cMessageDrawer::destroy()
 {
     m_alpha = -1;
     m_TIMER_message = 0;
-
-    SDL_FreeSurface(m_bmpBar);
-    SDL_FreeSurface(m_temp);
+    if (m_bmpBar!=nullptr)
+        SDL_FreeSurface(m_bmpBar);
+    // SDL_FreeSurface(m_temp);
 }
 
 void cMessageDrawer::init()
