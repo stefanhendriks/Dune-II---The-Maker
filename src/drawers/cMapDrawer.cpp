@@ -44,7 +44,7 @@ void cMapDrawer::drawShroud()
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
 
-    SDL_Surface *temp = SDL_CreateRGBSurface(0,iTileWidth, iTileHeight,32,0,0,0,255);
+    // SDL_Surface *temp = SDL_CreateRGBSurface(0,iTileWidth, iTileHeight,32,0,0,0,255);
 
     int iPl = m_player->getId();
 
@@ -99,7 +99,7 @@ void cMapDrawer::drawShroud()
         }
     }
 
-    SDL_FreeSurface(temp);
+    // SDL_FreeSurface(temp);
 }
 
 void cMapDrawer::drawTerrain()
