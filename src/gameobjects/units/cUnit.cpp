@@ -765,10 +765,6 @@ void cUnit::draw()
     // Draw BODY
     Texture *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
-        // renderDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
-        //                                 ux, uy,
-        //                                 scaledWidth,
-        //                                 scaledHeight);
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
         renderDrawer->renderStrechSprite(bitmap,src, dest);
