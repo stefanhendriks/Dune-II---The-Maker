@@ -33,7 +33,7 @@ class cButtonCommand;
 class cGuiButton;
 
 struct SDL_Surface;
-struct Texture;
+class Texture;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)

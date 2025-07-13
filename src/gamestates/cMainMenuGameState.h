@@ -7,7 +7,7 @@
 #include "gui/cGuiWindow.h"
 #include "sMouseEvent.h"
 
-struct Texture;
+class Texture;
 class cGame;
 
 class cMainMenuGameState : public cGameState {
