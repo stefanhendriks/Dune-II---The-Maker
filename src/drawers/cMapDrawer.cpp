@@ -16,7 +16,7 @@ cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
     m_map(map),
     m_player(player),
     m_camera(camera),
-    m_BmpTemp(nullptr),
+    // m_BmpTemp(nullptr),
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
@@ -29,9 +29,9 @@ cMapDrawer::~cMapDrawer()
     m_map = nullptr;
     m_camera = nullptr;
     m_player = nullptr;
-    if (m_BmpTemp) {
-        SDL_FreeSurface(m_BmpTemp);
-    }
+    // if (m_BmpTemp) {
+    //     SDL_FreeSurface(m_BmpTemp);
+    // }
 }
 
 void cMapDrawer::drawShroud()
@@ -104,9 +104,9 @@ void cMapDrawer::drawShroud()
 
 void cMapDrawer::drawTerrain()
 {
-    if (m_BmpTemp == nullptr) {
-        m_BmpTemp = SDL_CreateRGBSurface(0,32, 32,32,0,0,0,255);
-    }
+    // if (m_BmpTemp == nullptr) {
+    //     m_BmpTemp = SDL_CreateRGBSurface(0,32, 32,32,0,0,0,255);
+    // }
 
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
