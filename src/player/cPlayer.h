@@ -37,7 +37,7 @@
 class cItemBuilder;
 class cBuildingListUpdater;
 class cHousesInfo;
-struct Texture;
+class Texture;
 
 struct sEntityForDistance {
     int distance = 9999;

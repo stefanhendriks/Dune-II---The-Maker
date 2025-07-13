@@ -7,7 +7,7 @@
 #include "utils/cRectangle.h"
 
 struct SDL_Surface;
-struct Texture;
+class Texture;
 class cGame;
 
 class cChooseHouseGameState : public cGameState {

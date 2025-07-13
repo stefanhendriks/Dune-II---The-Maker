@@ -5,7 +5,7 @@
 
 class cPlayer;
 struct SDL_Surface;
-struct Texture;
+class Texture;
 
 class cOrderDrawer {
 public:
@@ -20,8 +20,6 @@ public:
     void setPlayer(cPlayer *pPlayer);
 
 private:
-    void drawOrderPlaced();
-
     void drawRectangleOrderButton();
 
     void onMouseAt(const s_MouseEvent &event);

@@ -7,7 +7,7 @@
 class cGame;
 class cGuiButton;
 struct SDL_Surface;
-struct Texture;
+class Texture;
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
