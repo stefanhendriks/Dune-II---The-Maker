@@ -12,6 +12,9 @@ Graphics::~Graphics()
     for (auto& [_, texObj] : texCache) {
         // auto delete with smartptr required
         if (texObj) {
+            // deleting Graphics will not free an SDL_Texture on GPU
+            // this line will be done with using smartptr
+            SDL_DestroyTexture(texObj->tex);
             delete(texObj);
         }
     }
