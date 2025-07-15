@@ -140,7 +140,7 @@ public:
     }
 
     Texture *getBitmap();
-    SDL_Surface *getShadowBitmap();
+    Texture *getShadowBitmap();
 
     int pos_x();
     int pos_y();
