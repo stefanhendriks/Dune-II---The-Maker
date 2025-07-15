@@ -8,8 +8,4 @@ echo  ---  Installing dependencies  ---
 echo  ---                           ---
 echo  ---------------------------------
 
-sudo apt-get install libpng++-dev
-sudo apt-get install libvorbis-dev
-sudo apt-get install liballegro4-dev
-sudo apt-get install liballeggl4-dev
-sudo apt-get install libgl-dev
+sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
