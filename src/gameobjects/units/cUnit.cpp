@@ -735,6 +735,31 @@ void cUnit::draw()
     const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
+    /*if (shadow) {
+        int destY = uy;
+
+        if (iType == CARRYALL) {
+            // adjust X and Y so it looks like a carry-all is 'higher up in the air'
+            destY = uy + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
+        }
+
+        SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
+        renderDrawer->FillWithColor(stretchedShadow, Color{255,0,255,255});
+        renderDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
+                                        0, 0,
+                                        scaledWidth, scaledHeight);
+
+        renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, ux, destY);
+        SDL_FreeSurface(shadow);
+        SDL_FreeSurface(stretchedShadow);
+    }*/
+    Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
+    if (shadow) {
+        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
+        renderDrawer->renderStrechSprite(shadow,src, dest);
+    }
+
     // Draw BODY
     Texture *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
