@@ -602,6 +602,14 @@ Texture *cPlayer::getUnitTopBitmap(int index)
 // }
 // return nullptr;
 // }
+Texture *cPlayer::getUnitShadowBitmap(int index)
+{
+    if (sUnitInfo[index].shadow) {
+        return sUnitInfo[index].shadow;
+    } else
+        return nullptr;
+}
+
 
 bool cPlayer::hasWor() const
 {

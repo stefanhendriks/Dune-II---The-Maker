@@ -761,6 +761,12 @@ void cUnit::draw()
         SDL_FreeSurface(shadow);
         SDL_FreeSurface(stretchedShadow);
     }*/
+    Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
+    if (shadow) {
+        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
+        renderDrawer->renderStrechSprite(shadow,src, dest);
+    }
 
     // Draw BODY
     Texture *bitmap = cPlayer.getUnitBitmap(iType);
