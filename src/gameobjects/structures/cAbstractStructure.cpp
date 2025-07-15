@@ -122,11 +122,11 @@ Texture *cAbstractStructure::getBitmap()
     return this->getPlayer()->getStructureBitmap(getType());
 }
 
-// SDL_Surface *cAbstractStructure::getShadowBitmap()
-// {
-//     s_StructureInfo structureType = getStructureInfo();
-//     return structureType.shadow;
-// }
+Texture *cAbstractStructure::getShadowBitmap()
+{
+    s_StructureInfo structureType = getStructureInfo();
+    return structureType.shadow;
+}
 
 cPlayer *cAbstractStructure::getPlayer()
 {
@@ -919,6 +919,10 @@ void cAbstractStructure::drawWithShadow()
 
     cRectangle src =  {0, iSourceY, pixelWidth, pixelHeight};
     cRectangle dest =  {drawX, drawY, scaledWidth, scaledHeight};
+    Texture *shadow = getShadowBitmap();
+    if (shadow) {
+        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+    }
     renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
 }
 
