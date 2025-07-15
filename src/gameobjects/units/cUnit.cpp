@@ -756,6 +756,11 @@ void cUnit::draw()
     Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
     if (shadow) {
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        if (iType == CARRYALL) {
+            // start_x += 2;
+            // start_y += 2;
+            src = {start_x+2, start_y+2, bmp_width, bmp_height};
+        }
         cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
         renderDrawer->renderStrechSprite(shadow,src, dest, 160);
     }
