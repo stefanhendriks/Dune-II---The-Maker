@@ -520,6 +520,42 @@ Texture *cPlayer::getUnitTopBitmap(int index)
     return nullptr;
 }
 
+/**
+ * Returns the shadow bitmap of unit type "index", using bodyFacing and animationFrame.
+ * !!! Be sure to destroy the bitmap returned from here !!!
+ * @param index
+ * @return
+ */
+// SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
+// {
+// if (sUnitInfo[index].shadow) {
+// int bmp_width = sUnitInfo[index].bmp_width;
+// int bmp_height = sUnitInfo[index].bmp_height;
+// int start_x = bodyFacing * bmp_width;
+// int start_y = bmp_height * animationFrame;
+//
+// //Carry-all has a bit different offset for shadow
+// if (index == CARRYALL) {
+// start_x += 2;
+// start_y += 2;
+// }
+//
+// SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
+// renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
+// renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+// return shadow;
+// }
+// return nullptr;
+// }
+Texture *cPlayer::getUnitShadowBitmap(int index)
+{
+    if (sUnitInfo[index].shadow) {
+        return sUnitInfo[index].shadow;
+    } else
+        return nullptr;
+}
+
+
 bool cPlayer::hasWor() const
 {
     return iStructures[WOR] > 0;
