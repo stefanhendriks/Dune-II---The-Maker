@@ -7,6 +7,14 @@ project(d2tm)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 #SET(OpenGL_GL_PREFERENCE "GLVND")
+SET(D2TM_VERSION "0.7.0")
+string(TIMESTAMP D2TM_BUILD_DATE "%Y-%m-%d") 
+
+CONFIGURE_FILE (
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h"
+)
+
 
 if(APPLE)
     message(STATUS "Using pkg-config to locate SDL2 libraries on macOS")
