@@ -22,3 +22,4 @@ Release/
 /Default/
 .DS_Store
 /bin
+config.h
