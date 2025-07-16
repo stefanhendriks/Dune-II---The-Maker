@@ -1,6 +1,7 @@
 #include "cSelectMissionState.h"
 
 #include "d2tmc.h"
+#include "config.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/GuiButton.hpp"
 #include "gui/GuiWindow.hpp"
@@ -26,7 +27,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     gui_window->setTheme(GuiTheme::Light());
 
     // Title
-    gui_window->setTitle("Dune II - The Maker - version " + game.m_version);
+    gui_window->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
 
 
     // QUIT game

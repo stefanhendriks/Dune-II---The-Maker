@@ -61,7 +61,7 @@ public:
 
     bool m_windowed;			    // windowed
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
-    std::string m_version;          // version number, or name.
+    // std::string m_version;          // version number, or name.
 
     // Alpha (for fading in/out)
     int m_fadeAlpha;                // 255 = opaque , anything else

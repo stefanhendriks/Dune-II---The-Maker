@@ -13,6 +13,7 @@
 #include "include/Texture.hpp"
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
+#include "config.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
@@ -82,9 +83,6 @@ cGame::cGame() : m_timeManager(*this)
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
-
-    m_version = "0.7.0";
-
     m_mentat = nullptr;
 }
 
@@ -809,7 +807,7 @@ bool cGame::setupGame()
 
     logger->logHeader("Version information");
     logger->log(LOG_INFO, COMP_VERSION, "Initializing",
-                fmt::format("Version {}, Compiled at {} , {}", game.m_version, __DATE__, __TIME__));
+                fmt::format("Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__));
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
@@ -848,7 +846,7 @@ bool cGame::setupGame()
     }
 
     // GAME.INI
-    const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", game.m_version);
+    const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.

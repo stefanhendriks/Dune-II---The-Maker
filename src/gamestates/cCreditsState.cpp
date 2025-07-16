@@ -1,6 +1,7 @@
 #include "cCreditsState.h"
 
 #include "d2tmc.h"
+#include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -51,7 +52,7 @@ void cCreditsState::prepareCrawlerLines()
 
     m_lines.push_back(s_CreditLine {
         .name = "",
-        .txt = fmt::format("Version {}", game.m_version),
+        .txt = fmt::format("Version {}", D2TM_VERSION),
         .color = Color::yellow(),
         .height = spacerAfterHeadline
     });

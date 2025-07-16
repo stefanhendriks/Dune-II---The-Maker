@@ -1,6 +1,7 @@
 #include "cOptionsState.h"
 
 #include "d2tmc.h"
+#include "config.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/GuiButton.hpp"
 #include "gui/GuiWindow.hpp"
@@ -33,7 +34,7 @@ void cOptionsState::constructWindow(int prevState)
     m_guiWindow->setTheme(GuiTheme::Light());
 
     // Title
-    m_guiWindow->setTitle("Dune II - The Maker - version " + game.m_version);
+    m_guiWindow->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
 
     // EXIT
     int rows = 2;

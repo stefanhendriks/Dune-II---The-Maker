@@ -1,6 +1,7 @@
 #include "cMainMenuGameState.h"
 
 #include "d2tmc.h"
+#include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -190,7 +191,7 @@ void cMainMenuGameState::draw() const
     gui_btn_credits->draw();
 
     // draw version
-    textDrawer.drawTextBottomRight(game.m_version.c_str(),20);
+    textDrawer.drawTextBottomRight(D2TM_VERSION,20);
     textDrawer.drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
     if (game.isDebugMode()) {
