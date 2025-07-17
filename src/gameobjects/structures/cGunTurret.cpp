@@ -6,6 +6,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayer.h"
+#include "utils/RNG.hpp"
 
 namespace {
 constexpr auto kTurretFacings = 8;
@@ -112,7 +113,7 @@ void cGunTurret::think_turning()
         int clockwiseSteps = abs(counterClockwiseSteps - kTurretFacings);
 
         // it does not matter which way we go, so pick random direction
-        if (clockwiseSteps == counterClockwiseSteps) increment = -1 + (rnd(2));
+        if (clockwiseSteps == counterClockwiseSteps) increment = -1 + (RNG::rnd(2));
 
         // counterClockwise is longer than clockwise, so go clockwise (+1)
         if (counterClockwiseSteps > clockwiseSteps) increment = 1;
@@ -207,7 +208,7 @@ void cGunTurret::think_guard()
     TIMER_guard++;
 
     if (TIMER_guard > 10) {
-        TIMER_guard=0-rnd(20);
+        TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
         int iCellX = map.getCellX(c);

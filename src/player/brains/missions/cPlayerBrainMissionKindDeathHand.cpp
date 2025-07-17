@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "definitions.h"
 #include "player/cPlayer.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 namespace brains {
@@ -36,7 +36,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
 
         // enemy structure
         target = theStructure->getCell();
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             break; // this way we kind of have randomly another target...
         }
     }
@@ -51,7 +51,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
             if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
             // enemy unit
             target = i;
-            if (rnd(100) < 5) {
+            if (RNG::rnd(100) < 5) {
                 break; // this way we kind of have randomly another target...
             }
         }

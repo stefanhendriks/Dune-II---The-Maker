@@ -21,7 +21,7 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
-
+#include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
 
@@ -214,21 +214,21 @@ void cAbstractStructure::die()
                 map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2);
+                int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);
                 cParticle::create(posX + half, posY + half, iType, -1, -1);
 
                 // create smoke
-                if (rnd(100) < 15) {
-                    int randomX = -8 + rnd(16);
-                    int randomY = -8 + rnd(16);
+                if (RNG::rnd(100) < 15) {
+                    int randomX = -8 + RNG::rnd(16);
+                    int randomY = -8 + RNG::rnd(16);
 
                     cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                 }
 
                 // create fire
-                if (rnd(100) < 15) {
-                    int randomX = -8 + rnd(16);
-                    int randomY = -8 + rnd(16);
+                if (RNG::rnd(100) < 15) {
+                    int randomX = -8 + RNG::rnd(16);
+                    int randomY = -8 + RNG::rnd(16);
 
                     cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1,
                                       -1);
@@ -239,7 +239,7 @@ void cAbstractStructure::die()
     }
 
     // play sound
-    game.playSoundWithDistance(SOUND_CRUMBLE01 + rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
+    game.playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
     // remove from the playground
     map.remove_id(id, MAPID_STRUCTURES);
@@ -400,10 +400,10 @@ void cAbstractStructure::think_decay()
         return; // wait until timer is passed
     }
 
-    TIMER_decay = rnd(500) + 500;
+    TIMER_decay = RNG::rnd(500) + 500;
 
     // chance based (so it does not decay all the time)
-    if (rnd(100) < getPercentageNotPaved()) {
+    if (RNG::rnd(100) < getPercentageNotPaved()) {
         if (iHitPoints > (getStructureInfo().hp / 2)) {
             decay(1);
         }
@@ -501,7 +501,7 @@ void cAbstractStructure::damage(int hp, int originId)
         int iChance = getSmokeChance();
 
         // Structure on fire?
-        if (rnd(100) < iChance) {
+        if (RNG::rnd(100) < iChance) {
             long x = getRandomPosX();
             long y = getRandomPosY();
             int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
@@ -709,12 +709,12 @@ void cAbstractStructure::getsCapturedBy(cPlayer *pPlayer)
 
 int cAbstractStructure::getRandomPosX()
 {
-    return pos_x() + rnd(getWidthInPixels()); // posX = most left, so just increase
+    return pos_x() + RNG::rnd(getWidthInPixels()); // posX = most left, so just increase
 }
 
 int cAbstractStructure::getRandomPosY()
 {
-    return pos_y() + rnd(getHeightInPixels()); // posY = top coordinate, so just increase
+    return pos_y() + RNG::rnd(getHeightInPixels()); // posY = top coordinate, so just increase
 }
 
 void cAbstractStructure::startRepairing()
@@ -823,7 +823,7 @@ void cAbstractStructure::unitHeadsTowardsStructure(int unitId)
 
 int cAbstractStructure::getRandomStructureCell()
 {
-    return getCell() + rnd(getWidth()) + (rnd(getHeight()) * map.getWidth());
+    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * map.getWidth());
 }
 
 /**

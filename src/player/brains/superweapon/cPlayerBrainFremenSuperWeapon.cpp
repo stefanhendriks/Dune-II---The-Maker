@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "player/cPlayer.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -47,7 +47,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         if (pPlayer->isSameTeamAs(player)) continue; // skip same team players
 
         // some chance to skip this player...
-        if (rnd(100) > 70) {
+        if (RNG::rnd(100) > 70) {
             continue;
         }
 
@@ -56,7 +56,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         if (!unitIds.empty()) {
             std::shuffle(unitIds.begin(), unitIds.end(), g);
             cellToAttack = unit[unitIds.front()].getCell();
-            if (rnd(100) > 30) break;
+            if (RNG::rnd(100) > 30) break;
         }
 
         // or which structure
@@ -65,7 +65,7 @@ void cPlayerBrainFremenSuperWeapon::think()
             // pick structure to attack
             std::shuffle(structureIds.begin(), structureIds.end(), g);
             cellToAttack = structure[structureIds.front()]->getCell();
-            if (rnd(100) > 30) break;
+            if (RNG::rnd(100) > 30) break;
         }
     }
 

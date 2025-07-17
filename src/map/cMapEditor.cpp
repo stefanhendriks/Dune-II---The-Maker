@@ -3,7 +3,7 @@
 #include "data/gfxdata.h"
 #include "utils/common.h"
 #include "utils/d2tm_math.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 #include <cassert>
@@ -17,7 +17,7 @@ void cMapEditor::createCell(int cell, int terrainType, int tile)
 {
     int theTile = tile;
     if (terrainType == TERRAIN_SLAB) {
-        theTile = rnd(5);
+        theTile = RNG::rnd(5);
     }
     m_map.createCell(cell, terrainType, theTile);
 }
@@ -33,11 +33,11 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
     int y = m_map.getCellY(cell);
 
     if (x < 0) {
-        x = rnd(m_map.getWidth());
+        x = RNG::rnd(m_map.getWidth());
     }
 
     if (y < 0) {
-        y = rnd(m_map.getHeight());
+        y = RNG::rnd(m_map.getHeight());
     }
 
     if (terrainType == TERRAIN_ROCK && size < 0) {
@@ -58,8 +58,8 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
 
         iDist = ABS_length(x, y, iOrgX, iOrgY);
 
-        if (iDist > rnd(4) + 4) {
-            if (rnd(100) < 5) {
+        if (iDist > RNG::rnd(4) + 4) {
+            if (RNG::rnd(100) < 5) {
                 createRandomField(c, terrainType, 100);
             }
         }
@@ -89,14 +89,14 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
             }
         }
 
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             x = m_map.getCellX(cell);
             y = m_map.getCellY(cell);
         }
 
 
         // randomly shift the cell one coordinate up/down/left/right
-        switch (rnd(4)) {
+        switch (RNG::rnd(4)) {
             case 0:
                 x++;
                 break;

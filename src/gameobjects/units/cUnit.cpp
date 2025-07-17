@@ -23,7 +23,7 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
-
+#include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
 
@@ -242,7 +242,7 @@ void cUnit::createSquishedParticle()
     int iDieY = pos_y_centered();
     // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
-        int iType1 = D2TM_PARTICLE_SQUISH01 + rnd(2);
+        int iType1 = D2TM_PARTICLE_SQUISH01 + RNG::rnd(2);
         cParticle::create(iDieX, iDieY, iType1, iPlayer, iFrame);
         game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
@@ -264,12 +264,12 @@ void cUnit::createExplosionParticle()
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1);
         game.playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
 
-        if (rnd(100) < 30) {
+        if (RNG::rnd(100) < 30) {
             cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
         }
     }
 
-    if ((iType == SIEGETANK || iType == DEVASTATOR) && rnd(100) < 25) {
+    if ((iType == SIEGETANK || iType == DEVASTATOR) && RNG::rnd(100) < 25) {
         if (iBodyFacing == FACE_UPLEFT || iBodyFacing == FACE_DOWNRIGHT) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
         }
@@ -278,7 +278,7 @@ void cUnit::createExplosionParticle()
     if (iType == TANK || iType == SIEGETANK || iType == SONICTANK || iType == LAUNCHER || iType == DEVIATOR ||
             iType == HARVESTER || iType == ORNITHOPTER || iType == CARRYALL || iType == MCV || iType == FRIGATE) {
         // play quick 'boom' sound and show animation
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
             game.playSoundWithDistance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
         }
@@ -287,7 +287,7 @@ void cUnit::createExplosionParticle()
             game.playSoundWithDistance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
         }
 
-        if (rnd(100) < 30) {
+        if (RNG::rnd(100) < 30) {
             cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
         }
 
@@ -319,12 +319,12 @@ void cUnit::createExplosionParticle()
 
 
                 for (int i = 0; i < 2; i++) {
-                    int iType1 = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2);
+                    int iType1 = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);
                     cParticle::create(iDieX + (cx * 32), iDieY + (cy * 32), iType1, -1, -1);
                 }
 
-                if (rnd(100) < 35)
-                    game.playSoundWithDistance(SOUND_TANKDIE + rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
+                if (RNG::rnd(100) < 35)
+                    game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
                 // calculate cell and damage stuff around this
                 int cll = map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
@@ -369,7 +369,7 @@ void cUnit::createExplosionParticle()
                     assert(pStructure);
                     if (pStructure->getHitPoints() > 0) {
 
-                        int iDamage = 150 + rnd(100);
+                        int iDamage = 150 + RNG::rnd(100);
                         pStructure->damage(iDamage, -1); // no need to pass unit ID, as it is dead anyway
 
                         int iChance = 10;
@@ -378,9 +378,9 @@ void cUnit::createExplosionParticle()
                             iChance = 30;
                         }
 
-                        if (rnd(100) < iChance) {
-                            long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
-                            long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
+                        if (RNG::rnd(100) < iChance) {
+                            long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + RNG::rnd(16));
+                            long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + RNG::rnd(16));
                             cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                         }
                     }
@@ -394,7 +394,7 @@ void cUnit::createExplosionParticle()
 
                     if (map.getCellHealth(cll) < -25) {
                         map.smudge_increase(SMUDGE_ROCK, cll);
-                        map.cellGiveHealth(cll, rnd(25));
+                        map.cellGiveHealth(cll, RNG::rnd(25));
                     }
                 }
                 else if (cellType == TERRAIN_SAND ||
@@ -406,7 +406,7 @@ void cUnit::createExplosionParticle()
 
                     if (map.getCellHealth(cll) < -25) {
                         map.smudge_increase(SMUDGE_SAND, cll);
-                        map.cellGiveHealth(cll, rnd(25));
+                        map.cellGiveHealth(cll, RNG::rnd(25));
                     }
                 }
             }
@@ -425,7 +425,7 @@ void cUnit::createExplosionParticle()
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1);
 
-        game.playSoundWithDistance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
 
     if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
@@ -433,7 +433,7 @@ void cUnit::createExplosionParticle()
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
-        game.playSoundWithDistance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
 
@@ -718,7 +718,7 @@ void cUnit::draw()
 
     if (isSandworm()) {
     //     // randomize drawing shimmer effect, as it is expensive
-    //     if (rnd(100) < 15) {
+    //     if (RNG::rnd(100) < 15) {
     //         renderDrawer->shimmer(bmp_screen,TILESIZE_HEIGHT_PIXELS, center_draw_x(), center_draw_y(), mapCamera->divideByZoomLevel(4));
     //     }
         return;
@@ -791,7 +791,7 @@ void cUnit::draw()
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
 //	if (TIMER_blink > 0)
-//		if (rnd(100) < 15)
+//		if (RNG::rnd(100) < 15)
 //			mask_to_color(temp, Color{255,255,255));
 
     // when we want to be picked up..
@@ -887,7 +887,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
     iAttackStructure = structureId;
     iAttackUnit = unitId;
     this->iAttackCell = attackCell;
-    forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
+    forgetAboutCurrentPathAndPrepareToCreateNewOne(RNG::rnd(5));
 }
 
 void cUnit::attackAt(int cell)
@@ -1004,8 +1004,8 @@ void cUnit::thinkFast_guard()
     TIMER_bored++;
     if (TIMER_bored > 3500) {
         TIMER_bored = 0;
-        iBodyShouldFace = rnd(8);
-        iHeadShouldFace = rnd(8);
+        iBodyShouldFace = RNG::rnd(8);
+        iHeadShouldFace = RNG::rnd(8);
     }
 
     if (TIMER_guard > 0) {
@@ -1021,7 +1021,7 @@ void cUnit::thinkFast_guard()
     }
 
     // scan area
-    TIMER_guard = 20 + rnd(35); // do not scan all at the same time
+    TIMER_guard = 20 + RNG::rnd(35); // do not scan all at the same time
 
     updateCellXAndY();
 
@@ -1362,7 +1362,7 @@ int cUnit::determineNewFacing(int currentFacing, int desiredFacing)
 
     int toright = abs(toleft - 8);
 
-    if (toright == toleft) d = -1 + (rnd(2));
+    if (toright == toleft) d = -1 + (RNG::rnd(2));
     if (toleft > toright) d = 1;
     if (toright > toleft) d = -1;
 
@@ -1686,7 +1686,7 @@ void cUnit::thinkFast_move_airUnit()
             int maxSlowDown = 36;
             float slowDownStep = maxSlowDown / dist;
             if (iLength < dist) {
-                if (rnd(100) < 5) {
+                if (RNG::rnd(100) < 5) {
                     int cellType = map.getCellType(iCell);
                     if (cellType == TERRAIN_SAND ||
                             cellType == TERRAIN_SPICE ||
@@ -2108,7 +2108,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                 cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
-                game.playSoundWithDistance(SOUND_DIE01 + rnd(5),
+                game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5),
                                            distanceBetweenCellAndCenterOfScreen(iCell));
 
             }
@@ -2294,7 +2294,7 @@ void cUnit::think_attack_sandworm()
             takeDamage(1); // get below the thresh-hold to die/vanish
         }
         else {
-            TIMER_guard = (1000/5) * ((5*unitsEaten) + rnd((20*unitsEaten)));
+            TIMER_guard = (1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten)));
         }
 
         if (game.isDebugMode()) {
@@ -2382,10 +2382,10 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
                     int inaccuracy = ((unitType.range - distance) / 3) + 1; // at 'perfect' range, we always have a inaccuracy of 1 at minimum
 
                     dx -= inaccuracy;
-                    dx += rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
+                    dx += RNG::rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
                     dy -= inaccuracy;
-                    dy += rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
+                    dy += RNG::rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
                     shootCell = map.getCellWithMapDimensions(dx, dy);
                 }
@@ -2508,7 +2508,7 @@ void cUnit::thinkFast_move()
                             }
                             else {
                                 setGoalCell(iNewGoal);
-                                TIMER_movewait = rnd(20);
+                                TIMER_movewait = RNG::rnd(20);
                                 log("Found alternative goal");
                                 return;
                             }
@@ -3774,7 +3774,7 @@ void cUnit::think_harvester()
             if (map.getCellCredits(iCell) <= 0) {
                 if (cellType == TERRAIN_SPICEHILL) {
                     map.cellChangeType(iCell, TERRAIN_SPICE);
-                    map.cellGiveCredits(iCell, rnd(100));
+                    map.cellGiveCredits(iCell, RNG::rnd(100));
                 }
                 else {
                     map.cellChangeType(iCell, TERRAIN_SAND);
@@ -3963,8 +3963,8 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     newUnit.init(iNewId);
 
     newUnit.setCell(iCll);
-    newUnit.iBodyFacing = rnd(8);
-    newUnit.iHeadFacing = rnd(8);
+    newUnit.iBodyFacing = RNG::rnd(8);
+    newUnit.iHeadFacing = RNG::rnd(8);
 
     newUnit.iBodyShouldFace = newUnit.iBodyFacing;
     newUnit.iHeadShouldFace = newUnit.iHeadFacing;
@@ -3976,8 +3976,8 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     newUnit.bSelected = false;
     newUnit.bHovered = false;
 
-    newUnit.TIMER_bored = rnd(3000);
-    newUnit.TIMER_guard = 20 + rnd(70);
+    newUnit.TIMER_bored = RNG::rnd(3000);
+    newUnit.TIMER_guard = 20 + RNG::rnd(70);
     newUnit.recreateDimensions();
 
     // set (Correct!?) player id, when type is SANDWORM (!?)
@@ -4068,7 +4068,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
     // make sure not to create too many paths at once
     if (game.m_pathsCreated > 40) {
         pUnit.log("CREATE_PATH -- END 3");
-        pUnit.TIMER_movewait = (50 + rnd(50));
+        pUnit.TIMER_movewait = (50 + RNG::rnd(50));
         return -3;
     }
 
@@ -4084,7 +4084,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
     // when all around the unit there is no space, dont even bother
     if (pUnit.isUnableToMove()) {
         pUnit.log("CREATE_PATH -- END 5");
-        pUnit.TIMER_movewait = 30 + rnd(50);
+        pUnit.TIMER_movewait = 30 + RNG::rnd(50);
         return -2;
     }
 
@@ -4710,7 +4710,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
     int iStartX = cUnit.getCellX();
     int iStartY = cUnit.getCellY();
 
-    int iWidth = rnd(4);
+    int iWidth = RNG::rnd(4);
 
     if (cUnit.iType == HARVESTER)
         iWidth = 2;
@@ -4739,5 +4739,5 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 
     if (foundCoordinates < 1) return -1;
 
-    return iClls[rnd(foundCoordinates)]; // random cell
+    return iClls[RNG::rnd(foundCoordinates)]; // random cell
 }

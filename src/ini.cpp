@@ -25,7 +25,7 @@
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
 #include "gameobjects/units/cReinforcements.h"
-
+#include "utils/RNG.hpp"
 
 #include <fmt/core.h>
 #include <filesystem>
@@ -1407,7 +1407,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinf
                 if (game.isDebugMode()) {
                     logbook(fmt::format("[SCENARIO] Placing spice FIELD at cell : {}", fields[iB]));
                 }
-                mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (rnd(50)));
+                mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
             }
 
         }

@@ -1,7 +1,7 @@
 #include "cPlayerBrainMissionKindSaboteur.h"
 
 #include "d2tmc.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 namespace brains {
@@ -34,7 +34,7 @@ bool cPlayerBrainMissionKindSaboteur::think_SelectTarget()
 
         // enemy structure
         targetStructureID = theStructure->getStructureId();
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             break; // this way we kind of have randomly another target...
         }
     }

@@ -21,6 +21,7 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 #include <cmath>
 
@@ -301,8 +302,8 @@ void cBullet::arrivedAtDestinationLogic()
             }
 
             int half = 16;
-            int randomX = -8 + rnd(half);
-            int randomY = -8 + rnd(half);
+            int randomX = -8 + RNG::rnd(half);
+            int randomY = -8 + RNG::rnd(half);
             int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
             int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
@@ -332,11 +333,11 @@ void cBullet::arrivedAtDestinationLogic()
             if (iType == ROCKET_BIG) {
                 // HACK HACK: produce sounds here... should be taken from bullet data structure; or via events
                 // so that elsewhere this can be handled.
-                if (rnd(100) < 35) {
-                    game.playSoundWithDistance(SOUND_TANKDIE + rnd(2),
+                if (RNG::rnd(100) < 35) {
+                    game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2),
                                                distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
-                if (rnd(100) < 20) {
+                if (RNG::rnd(100) < 20) {
                     cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                 }
             }
@@ -484,7 +485,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
         game.playSoundWithDistance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(cell));
 
         // take over unit
-        if (rnd(100) < gets_Bullet().deviateProbability) {
+        if (RNG::rnd(100) < gets_Bullet().deviateProbability) {
             cUnit &ownerUnit = unit[iOwnerUnit];
             if (ownerUnit.isValid()) {
                 groundUnitTakingDamage.iPlayer = ownerUnit.iPlayer;
@@ -693,7 +694,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 int cBullet::getRandomY() const
 {
     int half = 16;
-    int randomY = -8 + rnd(half);
+    int randomY = -8 + RNG::rnd(half);
     return pos_y() + half + randomY;
 }
 
@@ -704,7 +705,7 @@ int cBullet::getRandomY() const
 int cBullet::getRandomX() const
 {
     int half = 16;
-    int randomX = -8 + rnd(half);
+    int randomX = -8 + RNG::rnd(half);
     return pos_x() + half + randomX;
 }
 
