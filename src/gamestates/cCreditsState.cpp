@@ -273,7 +273,7 @@ void cCreditsState::prepareCrawlerLines()
     });
     m_lines.push_back(s_CreditLine {
         .name = "Mira",
-        .txt = "for port of D2TM to SDL2",
+        .txt = "for porting D2TM to SDL2",
         .color = Color::white(),
         .height = fontHeightWithALittlePadding
     });
