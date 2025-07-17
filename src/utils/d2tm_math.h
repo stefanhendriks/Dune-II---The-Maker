@@ -10,7 +10,7 @@ int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap = false, int off
 // bullet only
 int bullet_face_angle(float angle);
 
-int rnd(int max);
+// int rnd(int max);
 
 // length calculation
 double ABS_length(int x1, int y1, int x2, int y2); // returns only value > -1
