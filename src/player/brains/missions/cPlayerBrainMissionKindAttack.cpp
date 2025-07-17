@@ -4,7 +4,7 @@
 #include "definitions.h"
 #include "utils/d2tm_math.h"
 #include "player/cPlayer.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 namespace brains {
@@ -22,7 +22,7 @@ cPlayerBrainMissionKindAttack::~cPlayerBrainMissionKindAttack()
 
 bool cPlayerBrainMissionKindAttack::think_SelectTarget()
 {
-    if (rnd(100) < 50) {
+    if (RNG::rnd(100) < 50) {
         targetStructureID = -1;
         targetUnitID = findEnemyUnit();
         if (targetUnitID < 0) {
@@ -52,7 +52,7 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 
         // enemy structure
         target =  theStructure->getStructureId();
-        if (rnd(100) < 10) {
+        if (RNG::rnd(100) < 10) {
             break; // this way we kind of have randomly another target...
         }
     }
@@ -72,7 +72,7 @@ int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 
         // enemy unit
         target = i;
-        if (rnd(100) < 5) {
+        if (RNG::rnd(100) < 5) {
             break; // this way we kind of have randomly another target...
         }
     }

@@ -13,7 +13,7 @@
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
-
+#include "utils/RNG.hpp"
 
 
 #include <cassert>
@@ -295,10 +295,10 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
 
                             int x = map.getCellX(iCll);
                             int y = map.getCellY(iCll);
-                            int amount = rnd(2) + 1;
+                            int amount = RNG::rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
-                            switch (rnd(4)) {
+                            switch (RNG::rnd(4)) {
                                 case 0:
                                     x += amount;
                                     break;

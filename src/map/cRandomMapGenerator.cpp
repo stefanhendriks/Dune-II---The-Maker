@@ -7,6 +7,7 @@
 #include "map/cMapEditor.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
+#include "utils/RNG.hpp"
 
 cRandomMapGenerator::cRandomMapGenerator()
 {
@@ -18,9 +19,9 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     map.init(128, 128);
     auto mapEditor = cMapEditor(map);
 
-    int a_spice = rnd((startingPoints * 8)) + (startingPoints * 12);
-    int a_rock = 32 + rnd(startingPoints * 3);
-    int a_hill = 2 + rnd(12);
+    int a_spice = RNG::rnd((startingPoints * 8)) + (startingPoints * 12);
+    int a_rock = 32 + RNG::rnd(startingPoints * 3);
+    int a_hill = 2 + RNG::rnd(12);
 
     // rock terrain is placed not near centre, also, we want 4 plateaus be
     // placed not too near to each other
@@ -78,13 +79,13 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 
         if (bOk) {
             progress += piece;
-            mapEditor.createRandomField(iCll, TERRAIN_ROCK, 5500 + rnd(3500));
+            mapEditor.createRandomField(iCll, TERRAIN_ROCK, 5500 + RNG::rnd(3500));
 
             if (iSpot < startingPoints) {
                 randomMapEntry.iStartCell[iSpot] = iCll;
             }
             else {
-                mapEditor.createRandomField(iCll, TERRAIN_MOUNTAIN, 5 + rnd(15));
+                mapEditor.createRandomField(iCll, TERRAIN_MOUNTAIN, 5 + RNG::rnd(15));
             }
 
             if (iSpot < maxRockSpots) {
@@ -133,7 +134,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 
     while (a_hill > 0) {
         int cell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
-        mapEditor.createRandomField(cell, TERRAIN_HILL, 500 + rnd(500));
+        mapEditor.createRandomField(cell, TERRAIN_HILL, 500 + RNG::rnd(500));
         a_hill--;
         progress += piece;
         // blit on screen

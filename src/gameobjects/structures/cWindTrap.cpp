@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "definitions.h"
 #include "player/cPlayer.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 // Constructor
@@ -13,7 +13,7 @@ cWindTrap::cWindTrap()
         logbook(fmt::format("(cWindTrap)(ID {}) Constructor", this->id));
     }
     // other variables (class specific)
-    iFade = rnd(63);
+    iFade = RNG::rnd(63);
     bFadeDir = true;
 
     // Timers

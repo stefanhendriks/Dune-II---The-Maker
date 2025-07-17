@@ -4,7 +4,7 @@
 #include "enums.h"
 #include "d2tmc.h"
 #include "player/cPlayer.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -19,7 +19,7 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
 //         timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        m_TIMER_rest = (10 * 60) * 4;
-    m_TIMER_rest = rnd(25); // todo: based on difficulty?
+    m_TIMER_rest = RNG::rnd(25); // todo: based on difficulty?
     if (game.m_noAiRest) {
         m_TIMER_rest = 10;
     }
@@ -27,16 +27,16 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
     m_TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
 
     // These are all kinds of things we can use to influence AI's behavior
-    int multiplier = 1 + rnd(3); // TODO: base this on difficulty setting?
+    int multiplier = 1 + RNG::rnd(3); // TODO: base this on difficulty setting?
     m_MOMENT_whenToBuildAdditionalRefinery = MOMENT_CONSIDER_ADDITIONAL_REFINERY * multiplier;
-    int randomizer = -400 + (rnd(800)); // TODO: base this on difficulty setting?
+    int randomizer = -400 + (RNG::rnd(800)); // TODO: base this on difficulty setting?
     m_TIMER_mayBuildAdditionalUnits = MOMENT_PRODUCE_ADDITIONAL_UNITS + randomizer;
     m_TIMER_additionalUnitsCooldown = 0;
     m_eagernessToBuildRandomUnits = 15; // TODO: base this on difficulty setting?
-    m_idealRefineriesCount = 2 + rnd(2); // TODO: base this on difficulty setting?
-    m_idealHarvesterCount = m_idealRefineriesCount * 2 + rnd(2); // TODO: base this on difficulty setting?
-    m_idealCarryallCount = 2 + rnd(2); // TODO: base this on difficulty setting?
-    m_idealOrnisCount = rnd(5); // TODO: base this on difficulty setting?
+    m_idealRefineriesCount = 2 + RNG::rnd(2); // TODO: base this on difficulty setting?
+    m_idealHarvesterCount = m_idealRefineriesCount * 2 + RNG::rnd(2); // TODO: base this on difficulty setting?
+    m_idealCarryallCount = 2 + RNG::rnd(2); // TODO: base this on difficulty setting?
+    m_idealOrnisCount = RNG::rnd(5); // TODO: base this on difficulty setting?
 
     m_myBase = std::vector<S_structurePosition>();
     m_buildOrders = std::vector<S_buildOrder>();
@@ -274,7 +274,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
 
         int cell = originUnit.getCell();
 
-        respondToThreat(&originUnit, nullptr, cell, 2 + rnd(4));
+        respondToThreat(&originUnit, nullptr, cell, 2 + RNG::rnd(4));
     }
 }
 
@@ -419,49 +419,49 @@ void cPlayerBrainSkirmish::thinkState_Missions()
                 int chance = m_eagernessToBuildRandomUnits + (m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD ? 15 : 5);
 
                 // time to try again... randomized (TODO: Can be difficulty setting?)
-                m_TIMER_additionalUnitsCooldown += rnd(15);
+                m_TIMER_additionalUnitsCooldown += RNG::rnd(15);
 
                 log(fmt::format("mayBuildAdditionalResources(): Will attempt to build additional resources. Chance = {}, new coolDown = {}", chance, m_TIMER_additionalUnitsCooldown));
 
                 // build units, as long as we have some money on the bank.
                 // these units are produced without a mission.
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     // when the player has it, it will be build
                     buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
                     buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
                     buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
                         buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
                     }
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
                         buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
                     }
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(QUAD) < 5) {
                         buildUnitIfICanAndNotAlreadyQueued(QUAD);
                     }
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(TANK) < 4) {
                         buildUnitIfICanAndNotAlreadyQueued(TANK);
                     }
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(ORNITHOPTER) < m_idealOrnisCount) {
                         buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
                     }
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(HARVESTER) < m_idealHarvesterCount) {
                         buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
                     }
                 }
-                if (rnd(100) < chance) {
+                if (RNG::rnd(100) < chance) {
                     if (player->getAmountOfUnitsForType(CARRYALL) < m_idealCarryallCount) {
                         buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
                     }
@@ -545,7 +545,7 @@ void cPlayerBrainSkirmish::produceEconomyImprovingMissions()
                     .ordered = 0,
                     .produced = 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER);
             }
         }
     }
@@ -563,7 +563,7 @@ void cPlayerBrainSkirmish::produceEconomyImprovingMissions()
                     .ordered = 0,
                     .produced = 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL);
             }
         }
     }
@@ -576,21 +576,21 @@ void cPlayerBrainSkirmish::produceSuperWeaponMissionsWhenApplicable()
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
-        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), SPECIAL_MISSION1);
+        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, RNG::rnd(10), SPECIAL_MISSION1);
     }
 
     if (player->couldBuildSpecial(SPECIAL_SABOTEUR) && !hasMission(SPECIAL_MISSION2)) {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
-        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), SPECIAL_MISSION2);
+        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, RNG::rnd(10), SPECIAL_MISSION2);
     }
 
     if (player->couldBuildSpecial(SPECIAL_FREMEN) && !hasMission(SPECIAL_MISSION3)) {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
-        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), SPECIAL_MISSION3);
+        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, RNG::rnd(10), SPECIAL_MISSION3);
     }
 }
 
@@ -626,7 +626,7 @@ void cPlayerBrainSkirmish::produceMissionsWhenEnemyDetected()
             .ordered = 0,
             .produced = 0,
         });
-        addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
+        addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, RNG::rnd(15), MISSION_GUARDFORCE);
     }
 
     // separate mission for air attacks
@@ -636,11 +636,11 @@ void cPlayerBrainSkirmish::produceMissionsWhenEnemyDetected()
             group.push_back(S_groupKind{
                 .buildType = UNIT,
                 .type = ORNITHOPTER,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15),
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15),
                        MISSION_ATTACK5);
         }
     }
@@ -660,7 +660,7 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
                 .produced = 0,
             });
 
-            addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15),
+            addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, RNG::rnd(15),
                        MISSION_SCOUT1);
         }
         else if (!hasMission(MISSION_SCOUT2)) {
@@ -674,7 +674,7 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
                 .produced = 0,
             });
 
-            addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15),
+            addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, RNG::rnd(15),
                        MISSION_SCOUT2);
         }
         else if (!hasMission(MISSION_SCOUT3)) {
@@ -688,7 +688,7 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
                 .produced = 0,
             });
 
-            addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT3);
+            addMission(PLAYERBRAINMISSION_KIND_EXPLORE, group, RNG::rnd(15), MISSION_SCOUT3);
         }
     }
 
@@ -709,7 +709,7 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
             .ordered = 0,
             .produced = 0,
         });
-        addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
+        addMission(PLAYERBRAINMISSION_KIND_DEFEND, group, RNG::rnd(15), MISSION_GUARDFORCE);
     }
 }
 
@@ -734,17 +734,17 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
         bigChance *= 1.25;
     }
 
-    if (rnd(100) < normalChance && player->canBuildUnitBool(SIEGETANK)) {
+    if (RNG::rnd(100) < normalChance && player->canBuildUnitBool(SIEGETANK)) {
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = SIEGETANK,
-            .required = 1+rnd(4),
+            .required = 1+RNG::rnd(4),
             .ordered = 0,
             .produced = 0,
         });
     }
 
-    if (rnd(100) < smallChance && player->hasAtleastOneStructure(WOR)) {
+    if (RNG::rnd(100) < smallChance && player->hasAtleastOneStructure(WOR)) {
         int trooperUnit = TROOPER;
         if (player->canBuildUnitBool(TROOPERS)) {
             trooperUnit = TROOPERS;
@@ -752,13 +752,13 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = trooperUnit,
-            .required = 1 + rnd(2),
+            .required = 1 + RNG::rnd(2),
             .ordered = 0,
             .produced = 0,
         });
     }
 
-    if (rnd(100) < smallChance && player->hasAtleastOneStructure(BARRACKS)) {
+    if (RNG::rnd(100) < smallChance && player->hasAtleastOneStructure(BARRACKS)) {
         int infantryUnit = INFANTRY;
         if (player->canBuildUnitBool(INFANTRY)) {
             infantryUnit = INFANTRY;
@@ -766,65 +766,65 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = infantryUnit,
-            .required = 1 + rnd(2),
+            .required = 1 + RNG::rnd(2),
             .ordered = 0,
             .produced = 0,
         });
     }
 
-    if (rnd(100) < bigChance && player->canBuildUnitBool(LAUNCHER)) {
+    if (RNG::rnd(100) < bigChance && player->canBuildUnitBool(LAUNCHER)) {
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = LAUNCHER,
-            .required = 1+rnd(3),
+            .required = 1+RNG::rnd(3),
             .ordered = 0,
             .produced = 0,
         });
     }
 
-    if (rnd(100) < bigChance && player->canBuildUnitBool(TANK)) {
+    if (RNG::rnd(100) < bigChance && player->canBuildUnitBool(TANK)) {
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = TANK,
-            .required = 1+rnd(4),
+            .required = 1+RNG::rnd(4),
             .ordered = 0,
             .produced = 0,
         });
     }
 
     int scoutingUnitType = player->getScoutingUnitType();
-    if (rnd(100) < smallChance && player->canBuildUnitBool(scoutingUnitType)) {
+    if (RNG::rnd(100) < smallChance && player->canBuildUnitBool(scoutingUnitType)) {
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = scoutingUnitType,
-            .required = 1+rnd(2),
+            .required = 1+RNG::rnd(2),
             .ordered = 0,
             .produced = 0,
         });
     }
 
-    if (QUAD != scoutingUnitType && player->canBuildUnitBool(QUAD) && rnd(100) < normalChance) {
+    if (QUAD != scoutingUnitType && player->canBuildUnitBool(QUAD) && RNG::rnd(100) < normalChance) {
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = QUAD,
-            .required = 1+rnd(3),
+            .required = 1+RNG::rnd(3),
             .ordered = 0,
             .produced = 0,
         });
     }
 
     int specialType = player->getSpecialUnitType();
-    if (rnd(100) < normalChance && player->canBuildUnitBool(specialType)) {
+    if (RNG::rnd(100) < normalChance && player->canBuildUnitBool(specialType)) {
         group.push_back(S_groupKind{
             .buildType = UNIT,
             .type = specialType,
-            .required = 1+rnd(2),
+            .required = 1+RNG::rnd(2),
             .ordered = 0,
             .produced = 0,
         });
     }
 
-    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), missionId);
+    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), missionId);
 }
 
 bool cPlayerBrainSkirmish::hasMission(const int id)
@@ -965,7 +965,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
     }
 
     int cellToAttack = -1;
-    if (rnd(100) < 50) {
+    if (RNG::rnd(100) < 50) {
         for (int i = 0; i < MAX_UNITS; i++) {
             cUnit &cUnit = unit[i];
             if (!cUnit.isValid()) continue;
@@ -973,7 +973,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
             if (!cUnit.isAttackingUnit()) continue; // skip units that cannot 'attack' stuff
             // enemy structure
             cellToAttack = cUnit.getCell();
-            if (rnd(100) < 5) {
+            if (RNG::rnd(100) < 5) {
                 break; // this way we kind of have randomly another target...
             }
         }
@@ -986,7 +986,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
             if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
             // enemy structure
             cellToAttack = theStructure->getCell();
-            if (rnd(100) < 10) {
+            if (RNG::rnd(100) < 10) {
                 break; // this way we kind of have randomly another target...
             }
         }
@@ -1244,7 +1244,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
                         if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + rnd(4));
+                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
@@ -1306,7 +1306,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                     cUnit &pUnit = unit[event.entityID];
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                         if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + rnd(4));
+                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
@@ -1427,13 +1427,13 @@ int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() co
 
     if (m_TIMER_ai > m_MOMENT_whenToBuildAdditionalRefinery) {
         // time to think about an additional refinery
-        if (rnd(100) < 50 && player->getAmountOfStructuresForType(REFINERY) < m_idealRefineriesCount) {
+        if (RNG::rnd(100) < 50 && player->getAmountOfStructuresForType(REFINERY) < m_idealRefineriesCount) {
             // build one
             return REFINERY;
         }
     }
 
-    if (player->hasAlmostReachMaxSpiceStorageCapacity() && rnd(100) < 15) {
+    if (player->hasAlmostReachMaxSpiceStorageCapacity() && RNG::rnd(100) < 15) {
         return SILO;
     }
 
@@ -1442,7 +1442,7 @@ int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() co
 
     // randomize the order a bit, but do make sure that we have both before continueing
     if (!player->hasAtleastOneStructure(RADAR) && !player->hasAtleastOneStructure(HEAVYFACTORY)) {
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             return RADAR;
         }
         else {
@@ -1454,7 +1454,7 @@ int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() co
         if (!player->hasAtleastOneStructure(HEAVYFACTORY)) return HEAVYFACTORY;
     }
 
-    if (rnd(100) < 15) {
+    if (RNG::rnd(100) < 15) {
         if (player->isStructureTypeAvailableForConstruction(WOR)) {
             if (!player->hasAtleastOneStructure(WOR)) return WOR;
         }
@@ -1464,57 +1464,57 @@ int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() co
     }
 
     // low chance on early palace (could be a specific "build profile" property?)
-    if (rnd(100) < 5) {
+    if (RNG::rnd(100) < 5) {
         if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
     }
 
-    if (rnd(100) < 35) {
+    if (RNG::rnd(100) < 35) {
         if (player->getAmountOfStructuresForType(TURRET) < 2) {
             return TURRET;
         }
     }
 
-    if (rnd(100) < 40) {
+    if (RNG::rnd(100) < 40) {
         if (player->isStructureTypeAvailableForConstruction(HIGHTECH)) {
             if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
         }
     }
 
     int chanceToBuildRocketTurrets = 60 - (player->getAmountOfStructuresForType(RTURRET) * 10);
-    if (rnd(100) < chanceToBuildRocketTurrets) {
+    if (RNG::rnd(100) < chanceToBuildRocketTurrets) {
         return RTURRET;
     }
 
     int chanceToBuildTurrets = 40 - (player->getAmountOfStructuresForType(TURRET) * 5);
-    if (rnd(100) < chanceToBuildTurrets)  {
+    if (RNG::rnd(100) < chanceToBuildTurrets)  {
         return TURRET;
     }
 
     if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
     if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
 
-    if (rnd(100) < 15) {
+    if (RNG::rnd(100) < 15) {
         if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
     }
 
     if (!player->hasAtleastOneStructure(IX))  return IX;
 
     // take a shot at building the palace
-    if (rnd(100) < 15) {
+    if (RNG::rnd(100) < 15) {
         if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
     }
 
     if (player->getAmountOfStructuresForType(RTURRET) < 8)  return RTURRET;
 
     // take another shot at building the palace
-    if (rnd(100) < 15) {
+    if (RNG::rnd(100) < 15) {
         if (!player->hasAtleastOneStructure(PALACE)) return PALACE;
     }
 
     if (!player->hasAtleastOneStructure(REPAIR))  return REPAIR;
 
     if (m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
-        if (rnd(100) < 30) {
+        if (RNG::rnd(100) < 30) {
             if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
         }
 
@@ -1573,7 +1573,7 @@ bool cPlayerBrainSkirmish::mayBuildAdditionalResources()
     bool goodEconomy = m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL ||
                        m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD;
 
-    return goodEconomy && rnd(100) < m_eagernessToBuildRandomUnits;
+    return goodEconomy && RNG::rnd(100) < m_eagernessToBuildRandomUnits;
 }
 
 void cPlayerBrainSkirmish::thinkFast()
@@ -1612,7 +1612,7 @@ void cPlayerBrainSkirmish::onMyUnitAttacked(const s_GameEvent &event)
 
     cUnit &victim = unit[event.entityID];
     if (victim.isHarvester()) {
-        respondToThreat(threat, &victim, event.atCell, 2 + rnd(4));
+        respondToThreat(threat, &victim, event.atCell, 2 + RNG::rnd(4));
     }
 }
 

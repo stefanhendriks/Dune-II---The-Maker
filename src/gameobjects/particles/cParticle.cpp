@@ -10,7 +10,7 @@
 */
 
 #include "cParticle.h"
-
+#include "utils/RNG.hpp"
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
@@ -214,7 +214,7 @@ void cParticle::thinkFast()
 
         if (TIMER_frame < 0) {
             frameIndex++;
-            TIMER_frame = 100 + rnd(100);
+            TIMER_frame = 100 + RNG::rnd(100);
 
             if (frameIndex > 5) {
                 die();
@@ -337,7 +337,7 @@ void cParticle::thinkFast()
         TIMER_dead--;
         if (TIMER_frame < 0) {
             TIMER_frame = 10;
-            if (rnd(100) < 10 && iAlpha > 192)
+            if (RNG::rnd(100) < 10 && iAlpha > 192)
                 iAlpha--;
 
             if (TIMER_dead > 0) {
@@ -688,8 +688,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     // trike exploding
     if (iType == D2TM_PARTICLE_EXPLOSION_FIRE) {
         pParticle.iAlpha = 255;
-        pParticle.TIMER_dead = 750 + rnd(500);
-        pParticle.iAlpha = rnd(255);
+        pParticle.TIMER_dead = 750 + RNG::rnd(500);
+        pParticle.iAlpha = RNG::rnd(255);
     }
 
     // tanks exploding
@@ -709,7 +709,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     if (iType == D2TM_PARTICLE_DEADINF01 || iType == D2TM_PARTICLE_DEADINF02) {
-        pParticle.TIMER_dead = 500 + rnd(500);
+        pParticle.TIMER_dead = 500 + RNG::rnd(500);
         pParticle.iAlpha = 255;
     }
 
@@ -726,7 +726,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     if (iType == D2TM_PARTICLE_SIEGEDIE) {
         pParticle.iAlpha = 255;
-        pParticle.TIMER_frame = 500 + rnd(300);
+        pParticle.TIMER_frame = 500 + RNG::rnd(300);
 
         create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1, iUnitID);
         create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1, iUnitID);
@@ -735,8 +735,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     if (iType == D2TM_PARTICLE_CARRYPUFF) {
         pParticle.frameIndex = 0;
-        pParticle.TIMER_frame = 50 + rnd(50);
-        pParticle.iAlpha = 96 + rnd(64);
+        pParticle.TIMER_frame = 50 + RNG::rnd(50);
+        pParticle.iAlpha = 96 + RNG::rnd(64);
     }
 
     if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
