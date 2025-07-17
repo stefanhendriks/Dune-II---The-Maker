@@ -14,6 +14,13 @@ public:
         return dist(getGenerator());
     }
 
+    static int rnd(int max) {
+        if (max<0)
+            return 0;
+        std::uniform_int_distribution<int> dist(0, max);
+        return dist(getGenerator());
+    }
+
     static double genDouble(double min, double max) {
         std::uniform_real_distribution<double> dist(min, max);
         return dist(getGenerator());
