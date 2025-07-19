@@ -319,12 +319,6 @@ void cCreditsState::prepareCrawlerLines()
         .color = Color::white(),
         .height = fontHeightWithALittlePadding
     });
-    m_lines.push_back(s_CreditLine {
-        .name = "Mira",
-        .txt = "for the pride of working on a big project in C++",
-        .color = Color::white(),
-        .height = fontHeightWithALittlePadding
-    });
 
     // spacer
     // and finally a thank you for the player
