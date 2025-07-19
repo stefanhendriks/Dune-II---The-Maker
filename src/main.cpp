@@ -78,7 +78,19 @@ int main(int argc, char **argv)
     
     //read prompt config
     cHandleArgument handleArg;
+    try {
         int parseResult = handleArg.handleArguments(argc, argv, settings.get());
+        if (parseResult < 0) {
+            cLogger::getInstance()->log(LOG_ERROR, COMP_GAMEINI, "HandleArgument", "Incorrect arguments");
+            return 1;
+        }
+    }
+    catch (std::runtime_error &e) {
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMEINI, "HandleArgument", fmt::format("Runtime_error on parsing : {}", e.what()));
+        std::cerr << fmt::format("Error: {}\n\n", e.what());
+        return 1;
+    }
+
     // apply to game
     game.applySettings(settings.get());
 
