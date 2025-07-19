@@ -72,8 +72,6 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
             case Options::USAGES:
                 settings->drawUsages = true;
                 break;
-            default:
-                break;
         }
     }
     return 0;
