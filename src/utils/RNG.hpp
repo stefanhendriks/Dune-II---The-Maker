@@ -15,7 +15,7 @@ public:
     }
 
     static int rnd(int max) {
-        if (max<0)
+        if (max<1)
             return 0;
         std::uniform_int_distribution<int> dist(0, max);
         return dist(getGenerator());
