@@ -9,7 +9,7 @@ public:
     cHandleArgument() = default;
     ~cHandleArgument() = default;
 
-    int handleArguments(int argc, char *argv[], GameSettings &settings);
+    int handleArguments(int argc, char *argv[], GameSettings *settings);
 
 private:
     enum class Options : char {

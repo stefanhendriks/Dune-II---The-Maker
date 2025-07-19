@@ -26,29 +26,33 @@
 
 #include <cmath>
 
-GameSettings loadSettingsFromIni(cIniFile *settings)
+std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& settingfileName)
 {
-    GameSettings gs;
-    if (!settings->hasSection("SETTINGS")) return gs;
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>(settingfileName, true);
+    std::unique_ptr<GameSettings> gs = std::make_unique<GameSettings>();
+    if (!settings->hasSection("SETTINGS")) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMEINI, settingfileName, "No section SETTIGNS in inifile");
+        return gs;
+    }
     const cSection &section = settings->getSection("SETTINGS");
     if (section.hasValue("ScreenWidth"))
-        gs.screenW = section.getInt("ScreenWidth");
+        gs->screenW = section.getInt("ScreenWidth");
     if (section.hasValue("ScreenHeight"))
-        gs.screenH = section.getInt("ScreenHeight");
+        gs->screenH = section.getInt("ScreenHeight");
     if (section.hasValue("CameraDragMoveSpeed"))
-        gs.cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+        gs->cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
     if (section.hasValue("CameraBorderOrKeyMoveSpeed"))
-        gs.cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+        gs->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     if (section.hasValue("CameraEdgeMove"))
-        gs.cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+        gs->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     if (section.hasValue("FullScreen"))
-        gs.windowed = !section.getBoolean("FullScreen");
+        gs->windowed = !section.getBoolean("FullScreen");
     if (section.hasValue("AllowRepeatingReinforcements"))
-        gs.allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+        gs->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
     if (section.hasValue("AllTurretsDownOnLowPower"))
-        gs.turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+        gs->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
     if (section.hasValue("RocketTurretsDownOnLowPower"))
-        gs.rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+        gs->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
     return gs;
 }
 

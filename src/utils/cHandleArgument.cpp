@@ -1,9 +1,9 @@
 #include "cHandleArgument.h"
 #include "utils/GameSettings.hpp"
 #include <iostream>
-#include <cstdlib> // pour atoi
+#include <string>
 
-int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings &settings)
+int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
 {
     if (argc < 2) {
         return 0;
@@ -24,53 +24,53 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings &setti
             case Options::GAME:
                 if ((i + 1) < argc) {
                     i++;
-                    settings.gameFilename = std::string(argv[i]);
+                    settings->gameFilename = std::string(argv[i]);
                 }
                 break;
             case Options::WINDOWED:
-                settings.windowed = true;
+                settings->windowed = true;
                 break;
             case Options::NOMUSIC:
-                settings.playMusic = false;
+                settings->playMusic = false;
                 break;
             case Options::NOSOUND:
-                settings.playSound = false;
+                settings->playSound = false;
                 break;
             case Options::DEBUG:
-                settings.debugMode = true;
+                settings->debugMode = true;
                 break;
             case Options::DEBUG_UNITS:
-                settings.drawUnitDebug = true;
+                settings->drawUnitDebug = true;
                 break;
             case Options::NOAI:
-                settings.disableAI = true;
+                settings->disableAI = true;
                 break;
             case Options::ONEAI:
-                settings.oneAi = true;
+                settings->oneAi = true;
                 break;
             case Options::NOWORMAI:
-                settings.disableWormAi = true;
+                settings->disableWormAi = true;
                 break;
             case Options::NOREINFORCEMENTS:
-                settings.disableReinforcements = true;
+                settings->disableReinforcements = true;
                 break;
             case Options::NOAIREST:
-                settings.noAiRest = true;
+                settings->noAiRest = true;
                 break;
             case Options::SCREENX:
                 if ((i + 1) < argc) {
                     i++;
-                    settings.screenW = std::atoi(argv[i]);
+                    settings->screenW = std::stoi(argv[i]);
                 }
                 break;
             case Options::SCREENY:
                 if ((i + 1) < argc) {
                     i++;
-                    settings.screenH = std::atoi(argv[i]);
+                    settings->screenH = std::stoi(argv[i]);
                 }
                 break;
             case Options::USAGES:
-                settings.drawUsages = true;
+                settings->drawUsages = true;
                 break;
             default:
                 break;

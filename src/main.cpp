@@ -74,14 +74,13 @@ TTF_Font *gr_bene_font; // benegesserit font for size XXL
 int main(int argc, char **argv)
 {
     // read file config
-    std::shared_ptr<cIniFile> settingsIniFile = std::make_shared<cIniFile>("settings.ini", true);
-    GameSettings settings = loadSettingsFromIni(settingsIniFile.get());
+    std::unique_ptr<GameSettings> settings = loadSettingsFromIni("settings.ini");
+    
     //read prompt config
     cHandleArgument handleArg;
-    int parseResult = handleArg.handleArguments(argc, argv, settings);
-    if (parseResult < 0) return 1; // Affiche l'aide ou erreur
+        int parseResult = handleArg.handleArguments(argc, argv, settings.get());
     // apply to game
-    game.applySettings(settings);
+    game.applySettings(settings.get());
 
     game.setGameFilename("game.ini");
     try {

@@ -88,27 +88,27 @@ cGame::cGame() : m_timeManager(*this)
     m_mentat = nullptr;
 }
 
-void cGame::applySettings(const GameSettings &gs)
+void cGame::applySettings(GameSettings *gs)
 {
-    m_screenW = gs.screenW;
-    m_screenH = gs.screenH;
-    m_cameraDragMoveSpeed = gs.cameraDragMoveSpeed;
-    m_cameraBorderOrKeyMoveSpeed = gs.cameraBorderOrKeyMoveSpeed;
-    m_cameraEdgeMove = gs.cameraEdgeMove;
-    m_windowed = gs.windowed;
-    m_allowRepeatingReinforcements = gs.allowRepeatingReinforcements;
-    m_turretsDownOnLowPower = gs.turretsDownOnLowPower;
-    m_rocketTurretsDownOnLowPower = gs.rocketTurretsDownOnLowPower;
-    m_playMusic = gs.playMusic;
-    m_playSound = gs.playSound;
-    m_debugMode = gs.debugMode;
-    m_drawUnitDebug = gs.drawUnitDebug;
-    m_disableAI = gs.disableAI;
-    m_oneAi = gs.oneAi;
-    m_disableWormAi = gs.disableWormAi;
-    m_disableReinforcements = gs.disableReinforcements;
-    m_noAiRest = gs.noAiRest;
-    m_drawUsages = gs.drawUsages;
+    m_screenW = gs->screenW;
+    m_screenH = gs->screenH;
+    m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
+    m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
+    m_cameraEdgeMove = gs->cameraEdgeMove;
+    m_windowed = gs->windowed;
+    m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
+    m_turretsDownOnLowPower = gs->turretsDownOnLowPower;
+    m_rocketTurretsDownOnLowPower = gs->rocketTurretsDownOnLowPower;
+    m_playMusic = gs->playMusic;
+    m_playSound = gs->playSound;
+    m_debugMode = gs->debugMode;
+    m_drawUnitDebug = gs->drawUnitDebug;
+    m_disableAI = gs->disableAI;
+    m_oneAi = gs->oneAi;
+    m_disableWormAi = gs->disableWormAi;
+    m_disableReinforcements = gs->disableReinforcements;
+    m_noAiRest = gs->noAiRest;
+    m_drawUsages = gs->drawUsages;
 }
 
 void cGame::init()

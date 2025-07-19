@@ -15,9 +15,9 @@
 
 #include <string>
 #include <array>
+#include <memory>
 #include <SDL2/SDL.h>
 
-class cIniFile;
 struct GameSettings;
 
 /**
@@ -56,4 +56,4 @@ int distanceBetweenCellAndCenterOfScreen(int iCell);
 
 const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
 
-GameSettings loadSettingsFromIni(cIniFile *settings);
+std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& settingfileName);

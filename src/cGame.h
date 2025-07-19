@@ -267,7 +267,7 @@ public:
     void setDebugMode(bool value) {
         m_debugMode = value;
     }
-    void applySettings(const GameSettings &gs);
+    void applySettings(GameSettings *gs);
 
 private:
     /**
