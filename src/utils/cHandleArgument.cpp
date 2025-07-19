@@ -2,6 +2,7 @@
 #include "utils/GameSettings.hpp"
 #include <iostream>
 #include <string>
+#include <fmt/core.h>
 
 int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
 {
@@ -14,7 +15,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
         auto itr = optionStrings.find(command);
         if (itr == optionStrings.end()) {
             std::cerr << "Unknown option " << command << ", use --help for instructions\n";
-            return -1;
+            throw std::runtime_error(fmt::format("invokes game with unknown option {}",command));
         }
 
         switch (itr->second) {
@@ -25,6 +26,8 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
                 if ((i + 1) < argc) {
                     i++;
                     settings->gameFilename = std::string(argv[i]);
+                } else {
+                    throw std::runtime_error("invokes game but no value assigned");
                 }
                 break;
             case Options::WINDOWED:
@@ -61,12 +64,16 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
                 if ((i + 1) < argc) {
                     i++;
                     settings->screenW = std::stoi(argv[i]);
+                } else {
+                    throw std::runtime_error("invokes screenX but no value assigned");
                 }
                 break;
             case Options::SCREENY:
                 if ((i + 1) < argc) {
                     i++;
                     settings->screenH = std::stoi(argv[i]);
+                } else {
+                    throw std::runtime_error("invokes screenY but no value assigned");
                 }
                 break;
             case Options::USAGES:
