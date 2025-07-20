@@ -1,7 +1,4 @@
 #include "HarkonnenMentat.h"
-
-// #include "cProceedButtonCommand.h"
-// #include "cRepeatButtonCommand.h"
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
@@ -13,8 +10,6 @@ HarkonnenMentat::HarkonnenMentat(bool allowMissionSelect) : AbstractMentat(allow
     iBackgroundFrame = MENTATH;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
-    // leftButtonCommand = new cRepeatButtonCommand();
-    // rightButtonCommand = new cProceedButtonCommand();
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("Repeat")
@@ -47,7 +42,6 @@ void HarkonnenMentat::draw()
 
 void HarkonnenMentat::draw_other()
 {
-
 }
 
 void HarkonnenMentat::draw_eyes()
@@ -59,8 +53,3 @@ void HarkonnenMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
 }
-
-// void cHarkonnenMentat::interact()
-// {
-//     cAbstractMentat::interact();
-// }

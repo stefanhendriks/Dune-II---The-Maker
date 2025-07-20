@@ -1,7 +1,5 @@
 #include "AtreidesMentat.h"
 
-// #include "cProceedButtonCommand.h"
-// #include "cRepeatButtonCommand.h"
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
@@ -15,8 +13,7 @@ AtreidesMentat::AtreidesMentat(bool allowMissionSelect) : AbstractMentat(allowMi
     iBackgroundFrame = MENTATA;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
-    // leftButtonCommand = new cRepeatButtonCommand();
-    // rightButtonCommand = new cProceedButtonCommand();
+
 
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
@@ -62,8 +59,3 @@ void AtreidesMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
 }
-
-// void cAtreidesMentat::interact()
-// {
-//     cAbstractMentat::interact();
-// }

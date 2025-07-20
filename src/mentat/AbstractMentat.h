@@ -29,7 +29,6 @@
 #include <memory>
 #include <SDL2/SDL_ttf.h>
 
-// class cButtonCommand;
 class GuiButton;
 
 struct SDL_Surface;
@@ -52,8 +51,6 @@ public:
 
     virtual void draw() = 0;
     virtual void think() = 0;
-
-    // virtual void interact() = 0;
 
     void loadScene(const std::string &scene);
 
@@ -114,16 +111,10 @@ protected:
     Texture *rightButtonBmp;
 
     void buildLeftButton(Texture *bmp, int x, int y);
-
     void buildRightButton(Texture *bmp, int x, int y);
-
-    // cButtonCommand *leftButtonCommand;
-    // cButtonCommand *rightButtonCommand;
     GuiButton *leftGuiButton;
     GuiButton *rightGuiButton;
-    // this is used for Bene Geserit house selection
     int house;
-
     int offsetX;
     int offsetY;
     int movieTopleftX;
