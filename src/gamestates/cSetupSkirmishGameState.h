@@ -81,8 +81,8 @@ private:
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
 
-    GuiButton *backButton;
-    GuiButton *startButton;
+    std::unique_ptr<GuiButton> backButton;
+    std::unique_ptr<GuiButton> startButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);

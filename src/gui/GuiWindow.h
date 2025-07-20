@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 class GuiWindow : protected GuiObject {
 public:
@@ -16,7 +17,7 @@ public:
 
     void draw() const override;
 
-    void addGuiObject(GuiObject *guiObject);
+    void addGuiObject(std::unique_ptr<GuiObject> guiObject);
 
     cRectangle getRelativeRect(int x, int y, int width, int height);
 
@@ -27,7 +28,7 @@ public:
         GuiObject::setTheme(_theme);
     }
 private:
-    std::vector<GuiObject *> gui_objects;
+    std::vector<std::unique_ptr<GuiObject>> gui_objects;
     std::string title;
     cTextDrawer textDrawer;
 };

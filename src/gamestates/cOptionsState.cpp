@@ -44,7 +44,7 @@ void cOptionsState::constructWindow(int prevState)
     int rows = 2;
     int toMainMenu = mainMenuHeight - ((buttonHeight*rows)+(margin*rows));// 424
     const cRectangle &toMainMenuRect = m_guiWindow->getRelativeRect(margin, toMainMenu, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_toMenu = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_toMenu = GuiButtonBuilder()
             .withRect(toMainMenuRect)        
             .withLabel("Back to main menu")
             .withTextDrawer(&m_textDrawer)    
@@ -60,13 +60,13 @@ void cOptionsState::constructWindow(int prevState)
     // gui_btn_toMenu->setOnLeftMouseButtonClickedAction([this]() 
     //     {game.setNextStateToTransitionTo(GAME_MENU);
     //     game.initiateFadingOut();});
-    m_guiWindow->addGuiObject(gui_btn_toMenu);
+    m_guiWindow->addGuiObject(std::move(gui_btn_toMenu));
 
     // QUIT game
     int quit = mainMenuHeight - (buttonHeight + margin);// 464
     int width = (buttonWidth / 2);
     const cRectangle &quitRect = m_guiWindow->getRelativeRect(margin, quit, width, buttonHeight);
-    GuiButton *gui_btn_Quit = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Quit = GuiButtonBuilder()
             .withRect(quitRect)        
             .withLabel("Quit game")
             .withTextDrawer(&m_textDrawer)    
@@ -81,13 +81,13 @@ void cOptionsState::constructWindow(int prevState)
     // gui_btn_Quit->setOnLeftMouseButtonClickedAction([this]() {
         // game.m_playing = false;
         // game.initiateFadingOut();});
-    m_guiWindow->addGuiObject(gui_btn_Quit);
+    m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
 
     // BACK to where we came from
     int back = mainMenuHeight - (buttonHeight + margin);// 444
     const cRectangle &backRect = m_guiWindow->getRelativeRect(margin + width + margin, back, (width - margin), buttonHeight);
     
-    GuiButton *gui_btn_Back = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Back = GuiButtonBuilder()
             .withRect(backRect)        
             .withLabel("Back")
             .withTextDrawer(&m_textDrawer)    
@@ -101,7 +101,7 @@ void cOptionsState::constructWindow(int prevState)
     // // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
     // gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() 
     //     {game.setNextStateToTransitionTo(prevState);});
-    m_guiWindow->addGuiObject(gui_btn_Back);
+    m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 
     // Mission select from options menu, only when playing the game
     if (m_prevState == GAME_PLAYING) {
@@ -109,7 +109,7 @@ void cOptionsState::constructWindow(int prevState)
         int toMissionSelect = mainMenuHeight - ((buttonHeight * rows) + (margin * rows));// 424
         const cRectangle &toMissionSelectRect = m_guiWindow->getRelativeRect(margin, toMissionSelect, buttonWidth,
                                                 buttonHeight);
-    GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withTextDrawer(&m_textDrawer)    
@@ -124,7 +124,7 @@ void cOptionsState::constructWindow(int prevState)
         // // cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
         // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() 
         //     {game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
-        m_guiWindow->addGuiObject(gui_btn_toMissionSelect);
+        m_guiWindow->addGuiObject(std::move(gui_btn_toMissionSelect));
     }
 }
 

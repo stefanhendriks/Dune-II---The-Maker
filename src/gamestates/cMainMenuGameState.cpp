@@ -92,7 +92,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     gui_window->setTheme(GuiTheme::Light());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_SelectHouse = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_SelectHouse = GuiButtonBuilder()
             .withRect(campaign)        
             .withLabel("Campaign")
             .withTextDrawer(&textDrawer)    
@@ -108,11 +108,11 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_SelectHouse->setOnLeftMouseButtonClickedAction([this]() {
     //     game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
     //     game.initiateFadingOut();});
-    gui_window->addGuiObject(gui_btn_SelectHouse);
+    gui_window->addGuiObject(std::move(gui_btn_SelectHouse));
 
     int skirmishY = 344;
     const cRectangle &skirmish = cRectangle(buttonsX, skirmishY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_Skirmish = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Skirmish = GuiButtonBuilder()
             .withRect(skirmish)        
             .withLabel("Skirmish")
             .withTextDrawer(&textDrawer)    
@@ -132,11 +132,11 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     //     game.initSkirmish();
     //     game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
     //     game.initiateFadingOut();});
-    gui_window->addGuiObject(gui_btn_Skirmish);
+    gui_window->addGuiObject(std::move(gui_btn_Skirmish));
 
     int multiplayerY = 364;
     const cRectangle &multiplayer = cRectangle(buttonsX, multiplayerY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_Multiplayer = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Multiplayer = GuiButtonBuilder()
             .withRect(multiplayer)        
             .withLabel("Multiplayer")
             .withTextDrawer(&textDrawer)    
@@ -150,12 +150,12 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Multiplayer->setTextAlignHorizontal(buttonTextAlignment);
     // // gui_btn_Multiplayer->setTextColorHover(colorInactiveHover);
     // gui_btn_Multiplayer->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
-    gui_window->addGuiObject(gui_btn_Multiplayer);
+    gui_window->addGuiObject(std::move(gui_btn_Multiplayer));
 
     // LOAD
     int loadY = 384;
     const cRectangle &load = cRectangle(buttonsX, loadY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_Load = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Load = GuiButtonBuilder()
             .withRect(load)        
             .withLabel("Load")
             .withTextDrawer(&textDrawer)    
@@ -169,12 +169,12 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Load->setTextAlignHorizontal(buttonTextAlignment);
     // // gui_btn_Load->setTextColorHover(colorInactiveHover);
     // gui_btn_Load->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
-    gui_window->addGuiObject(gui_btn_Load);
+    gui_window->addGuiObject(std::move(gui_btn_Load));
 
     // OPTIONS
     int optionsY = 404;
     const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_Options = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Options = GuiButtonBuilder()
             .withRect(options)        
             .withLabel("Options")
             .withTextDrawer(&textDrawer)
@@ -186,12 +186,12 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Options->setTheme(GuiTheme::Light());
     // gui_btn_Options->setTextAlignHorizontal(buttonTextAlignment);
     // gui_btn_Options->setOnLeftMouseButtonClickedAction([this](){game.setNextStateToTransitionTo(GAME_OPTIONS);});
-    gui_window->addGuiObject(gui_btn_Options);
+    gui_window->addGuiObject(std::move(gui_btn_Options));
 
     // HALL OF FAME
     int hofY = 424;
     const cRectangle &hof = cRectangle(buttonsX, hofY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_Hof = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Hof = GuiButtonBuilder()
             .withRect(hof)        
             .withLabel("Hall of Fame")
             .withTextDrawer(&textDrawer)    
@@ -205,12 +205,12 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Hof->setTextAlignHorizontal(buttonTextAlignment);
     // // gui_btn_Hof->setTextColorHover(colorInactiveHover);
     // gui_btn_Hof->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
-    gui_window->addGuiObject(gui_btn_Hof);
+    gui_window->addGuiObject(std::move(gui_btn_Hof));
 
     // EXIT
     int exitY = 444;
     const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
-    GuiButton *gui_btn_Exit = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Exit = GuiButtonBuilder()
             .withRect(exit)        
             .withLabel("Exit")
             .withTextDrawer(&textDrawer)    
@@ -226,13 +226,13 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     // gui_btn_Exit->setOnLeftMouseButtonClickedAction([this]() {
     //     game.m_playing = false;
     //     game.initiateFadingOut();});
-    gui_window->addGuiObject(gui_btn_Exit);
+    gui_window->addGuiObject(std::move(gui_btn_Exit));
 }
 
 cMainMenuGameState::~cMainMenuGameState()
 {
     delete gui_window;
-    delete gui_btn_credits;
+    // delete gui_btn_credits;
 }
 
 void cMainMenuGameState::thinkFast()

@@ -66,7 +66,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");
-    GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+    m_guiBtnToMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withTextDrawer(&textDrawer)    
@@ -81,7 +81,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
     // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
     //     game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
-    m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
+    // m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 
 void cSelectYourNextConquestState::calculateOffset()
@@ -92,7 +92,7 @@ void cSelectYourNextConquestState::calculateOffset()
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
 {
-    delete m_guiBtnToMissionSelect;
+    // delete m_guiBtnToMissionSelect;
 }
 
 void cSelectYourNextConquestState::thinkFast()

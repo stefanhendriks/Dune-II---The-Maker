@@ -57,7 +57,7 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
                                                 game.m_screenH - textDrawer.getFontHeight(),
                                                 "Mission select");
         
-        GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+        m_guiBtnToMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withTextDrawer(&textDrawer)    
@@ -66,7 +66,7 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();
-        m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
+        // m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
     }
     else {
         m_guiBtnToMissionSelect = nullptr;
@@ -87,11 +87,11 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
 
 AbstractMentat::~AbstractMentat()
 {
-    delete leftButton;
-    delete rightButton;
+    // delete leftButton;
+    // delete rightButton;
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
-    delete m_guiBtnToMissionSelect;
+    // delete m_guiBtnToMissionSelect;
 
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
@@ -352,15 +352,15 @@ void AbstractMentat::speak()
 
 void AbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
 {
-    delete leftButton;
-    leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
+    // delete leftButton;
+    leftButton = std::make_unique<cRectangle>(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
 void AbstractMentat::buildRightButton(Texture *bmp, int x, int y)
 {
-    delete rightButton;
-    rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
+    // delete rightButton;
+    rightButton = std::make_unique<cRectangle>(offsetX + x, offsetY + y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
 }
 

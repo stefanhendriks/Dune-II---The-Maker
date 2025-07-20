@@ -15,5 +15,5 @@ private:
     void draw_eyes() override;
     void draw_other() override;
     void draw() override;
-    cTextDrawer *textDrawer;
+    std::shared_ptr<cTextDrawer> textDrawer;
 };

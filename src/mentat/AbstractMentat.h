@@ -104,21 +104,21 @@ protected:
     eMentatState state;
     cTextDrawer textDrawer;
 
-    cRectangle *leftButton;
-    cRectangle *rightButton;
+    std::unique_ptr<cRectangle> leftButton;
+    std::unique_ptr<cRectangle> rightButton;
 
     Texture *leftButtonBmp;
     Texture *rightButtonBmp;
 
     void buildLeftButton(Texture *bmp, int x, int y);
     void buildRightButton(Texture *bmp, int x, int y);
-    GuiButton *leftGuiButton;
-    GuiButton *rightGuiButton;
+    std::unique_ptr<GuiButton> leftGuiButton;
+    std::unique_ptr<GuiButton> rightGuiButton;
     int house;
     int offsetX;
     int offsetY;
     int movieTopleftX;
     int movieTopleftY;
 
-    GuiButton *m_guiBtnToMissionSelect;
+    std::unique_ptr<GuiButton> m_guiBtnToMissionSelect;
 };

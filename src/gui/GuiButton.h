@@ -7,6 +7,7 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 struct GuiButtonParams {
     cTextDrawer* drawer = nullptr;
@@ -145,8 +146,8 @@ public:
         return *this;
     }
 
-    GuiButton* build() const {
-        GuiButton* btn = new GuiButton(params.rect, params.label);
+    std::unique_ptr<GuiButton> build() const {
+        std::unique_ptr<GuiButton> btn = std::make_unique<GuiButton>(params.rect, params.label);
         btn->setTextDrawer(params.drawer);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);

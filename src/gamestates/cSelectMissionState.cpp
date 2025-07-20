@@ -42,7 +42,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int y = 40;
     for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
-        GuiButton *btnMission = GuiButtonBuilder()
+        std::unique_ptr<GuiButton> btnMission = GuiButtonBuilder()
             .withRect(rect)        
             .withLabel(fmt::format("Mission {}", i))
             .withTextDrawer(&textDrawer)    
@@ -59,7 +59,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
         //     game.jumpToSelectYourNextConquestMission(i);
         //     game.setNextStateToTransitionTo(GAME_REGION);
         //     game.initiateFadingOut();});
-        gui_window->addGuiObject(btnMission);
+        gui_window->addGuiObject(std::move(btnMission));
 
         y += buttonHeight + margin;
     }
@@ -68,7 +68,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int back = mainMenuHeight - (buttonHeight + margin);
     width = buttonWidth;
     const cRectangle &backRect = gui_window->getRelativeRect(margin, back, (width - margin), buttonHeight);
-    GuiButton *gui_btn_Back = GuiButtonBuilder()
+    std::unique_ptr<GuiButton> gui_btn_Back = GuiButtonBuilder()
             .withRect(backRect)        
             .withLabel("Back")
             .withTextDrawer(&textDrawer)    
@@ -82,7 +82,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     // // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
     // gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() {
     //     game.setNextStateToTransitionTo(prevState);});
-    gui_window->addGuiObject(gui_btn_Back);
+    gui_window->addGuiObject(std::move(gui_btn_Back));
 }
 
 cSelectMissionState::~cSelectMissionState()

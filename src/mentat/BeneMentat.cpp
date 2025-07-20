@@ -43,7 +43,7 @@ BeneMentat::BeneMentat() : AbstractMentat(false)
                 players[HUMAN].setHouse(this->getHouse());
                game.initiateFadingOut();})
             .build();
-    textDrawer = new cTextDrawer(gr_bene_font);
+    textDrawer = std::make_shared<cTextDrawer>(gr_bene_font);
 
 }
 

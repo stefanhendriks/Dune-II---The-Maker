@@ -227,7 +227,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
 {
-    delete backButton;
+    // delete backButton;
 }
 
 void cSetupSkirmishGameState::thinkFast()

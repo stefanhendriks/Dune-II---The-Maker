@@ -5,6 +5,8 @@
 #include "definitions.h"
 #include "drawers/cTextDrawer.h"
 
+#include <memory>
+
 class cGame;
 class GuiButton;
 struct SDL_Surface;
@@ -100,7 +102,7 @@ private:
 
     bool fastForward = false;
 
-    GuiButton *m_guiBtnToMissionSelect;
+    std::unique_ptr<GuiButton> m_guiBtnToMissionSelect;
 
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;

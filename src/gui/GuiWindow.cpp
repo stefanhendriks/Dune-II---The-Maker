@@ -7,7 +7,7 @@
 GuiWindow::GuiWindow(const cRectangle &rect) : GuiObject(rect)
 {
     this->title = "";
-    gui_objects = std::vector<GuiObject *>(0);
+    // gui_objects = std::vector<GuiObject *>(0);
     this->textDrawer = cTextDrawer(bene_font);
     //Color colorYellow = Color{255, 207, 41,255};
     textDrawer.setTextColor(Color::yellow());
@@ -15,9 +15,9 @@ GuiWindow::GuiWindow(const cRectangle &rect) : GuiObject(rect)
 
 GuiWindow::~GuiWindow() noexcept
 {
-    for (auto gui_object : gui_objects) {
-        delete gui_object;
-    }
+    // for (auto gui_object : gui_objects) {
+    //     delete gui_object;
+    // }
 }
 
 void GuiWindow::draw() const
@@ -35,9 +35,9 @@ void GuiWindow::draw() const
     textDrawer.drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::yellow());
 }
 
-void GuiWindow::addGuiObject(GuiObject *guiObject)
+void GuiWindow::addGuiObject(std::unique_ptr<GuiObject> guiObject)
 {
-    gui_objects.push_back(guiObject);
+    gui_objects.push_back(std::move(guiObject));
 }
 
 
