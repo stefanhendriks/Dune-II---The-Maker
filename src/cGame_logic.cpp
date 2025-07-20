@@ -41,7 +41,7 @@
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "sidebar/cBuildingListFactory.h"
 #include "sidebar/cSideBarFactory.h"
-
+#include "utils/RNG.hpp"
 #include "utils/cLog.h"
 #include "utils/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
@@ -599,8 +599,8 @@ void cGame::shakeScreenAndBlitBuffer()
             int shakiness = std::min(m_TIMER_shake, 69);
             float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
 
-            m_shakeX = -abs(offset / 2) + rnd(offset);
-            m_shakeY = -abs(offset / 2) + rnd(offset);
+            m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
+            m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
 
             // @Mira recreate shake screen
             //renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
@@ -1323,7 +1323,7 @@ void cGame::prepareMentatForPlayer()
         INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             m_mentat->loadScene("win01");
         }
         else {
@@ -1332,7 +1332,7 @@ void cGame::prepareMentatForPlayer()
         INI_LOAD_BRIEFING(house, m_region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             m_mentat->loadScene("lose01");
         }
         else {
@@ -1509,8 +1509,8 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
             int mouseCellX = map.getCellX(iMouseCell) - precision;
             int mouseCellY = map.getCellY(iMouseCell) - precision;
 
-            int posX = mouseCellX + rnd((precision * 2) + 1);
-            int posY = mouseCellY + rnd((precision * 2) + 1);
+            int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
+            int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
             cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
 
             logbook(fmt::format(
@@ -1957,16 +1957,16 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
 
     int sampleId = MIDI_MENU;
     if (iType == MUSIC_WIN) {
-        sampleId = MIDI_WIN01 + rnd(3);
+        sampleId = MIDI_WIN01 + RNG::rnd(3);
     }
     else if (iType == MUSIC_LOSE) {
-        sampleId = MIDI_LOSE01 + rnd(6);
+        sampleId = MIDI_LOSE01 + RNG::rnd(6);
     }
     else if (iType == MUSIC_ATTACK) {
-        sampleId = MIDI_ATTACK01 + rnd(6);
+        sampleId = MIDI_ATTACK01 + RNG::rnd(6);
     }
     else if (iType == MUSIC_PEACE) {
-        sampleId = MIDI_BUILDING01 + rnd(9);
+        sampleId = MIDI_BUILDING01 + RNG::rnd(9);
     }
     else if (iType == MUSIC_MENU) {
         sampleId = MIDI_MENU;

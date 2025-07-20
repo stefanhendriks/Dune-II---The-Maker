@@ -21,7 +21,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "player/cPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -113,14 +113,14 @@ void cMap::smudge_increase(int iType, int iCell)
 
     if (pCell->smudgetype == SMUDGE_ROCK) {
         if (pCell->smudgetile < 0)
-            pCell->smudgetile = rnd(2);
+            pCell->smudgetile = RNG::rnd(2);
         else if (pCell->smudgetile + 2 < 6)
             pCell->smudgetile += 2;
     }
 
     if (pCell->smudgetype == SMUDGE_SAND) {
         if (pCell->smudgetile < 0)
-            pCell->smudgetile = rnd(2);
+            pCell->smudgetile = RNG::rnd(2);
         else if (pCell->smudgetile + 2 < 6)
             pCell->smudgetile += 2;
     }
@@ -962,7 +962,7 @@ bool cMap::isValidCell(int c) const
  */
 int cMap::getRandomCell()
 {
-    return rnd(maxCells);
+    return RNG::rnd(maxCells);
 }
 
 void cMap::createCell(int cell, int terrainType, int tile)
@@ -991,10 +991,10 @@ void cMap::createCell(int cell, int terrainType, int tile)
     map.cellChangeSmudgeType(cell, -1);
 
     if (terrainType == TERRAIN_SPICE) {
-        map.cellChangeCredits(cell, 50 + rnd(125));
+        map.cellChangeCredits(cell, 50 + RNG::rnd(125));
     }
     else if (terrainType == TERRAIN_SPICEHILL) {
-        map.cellChangeCredits(cell, 75 + rnd(150));
+        map.cellChangeCredits(cell, 75 + RNG::rnd(150));
     }
     else if (terrainType == TERRAIN_MOUNTAIN) {
         map.cellChangePassable(cell, false);
@@ -1049,8 +1049,8 @@ void cMap::resize(int width, int height)
 int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance)
 {
     return getCellWithMapBorders(
-               distance + rnd(width - (distance * 2)),
-               distance + rnd(height - (distance * 2))
+               distance + RNG::rnd(width - (distance * 2)),
+               distance + RNG::rnd(height - (distance * 2))
            );
 }
 
@@ -1131,7 +1131,7 @@ int cMap::findNearestSpiceBloom(int iCell)
     }
 
     // when finished, return bloom
-    return iTargets[rnd(iT)];
+    return iTargets[RNG::rnd(iT)];
 }
 
 bool cMap::isValidTerrainForStructureAtCell(int cll)
@@ -1158,8 +1158,8 @@ int cMap::getRandomCellFrom(int cell, int distance)
 {
     int startX = getCellX(cell);
     int startY = getCellY(cell);
-    int xDir = rnd(100) < 50 ? -1 : 1;
-    int yDir = rnd(100) < 50 ? -1 : 1;
+    int xDir = RNG::rnd(100) < 50 ? -1 : 1;
+    int yDir = RNG::rnd(100) < 50 ? -1 : 1;
     int newX = (startX - distance) + (xDir * distance);
     int newY = (startY - distance) + (yDir * distance);
     return getCellWithMapBorders(newX, newY);
@@ -1176,8 +1176,8 @@ int cMap::getRandomCellFromWithRandomDistance(int cell, int distance)
 {
     int startX = getCellX(cell);
     int startY = getCellY(cell);
-    int newX = (startX - distance) + (rnd(distance * 2));
-    int newY = (startY - distance) + (rnd(distance * 2));
+    int newX = (startX - distance) + (RNG::rnd(distance * 2));
+    int newY = (startY - distance) + (RNG::rnd(distance * 2));
     return getCellWithMapBorders(newX, newY);
 }
 
@@ -1368,7 +1368,7 @@ void cMap::cellTakeDamage(int cellNr, int damage)
                 smudge_increase(SMUDGE_SAND, cellNr);
             }
 
-            pCell->health += rnd(35);
+            pCell->health += RNG::rnd(35);
         }
     }
 }
@@ -1528,7 +1528,7 @@ void cMap::detonateSpiceBloom(int cell)
     // change type of terrain to sand
     auto mapEditor = cMapEditor(*this);
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
-    int size = 75 + (rnd(100));
+    int size = 75 + (RNG::rnd(100));
     mapEditor.createRandomField(cell, TERRAIN_SPICE, size);
     game.shakeScreen(20);
 
@@ -1554,7 +1554,7 @@ void cMap::onNotifyGameEvent(const s_GameEvent &event)
             if (m_bAutoDetonateSpiceBlooms) {
                 // 1000/5 = taking care of thinkFast 5ms loop. The second part
                 // is the actual amount of seconds we want to delay before blowing up the spice bloom
-                m_mBloomTimers[event.atCell] = (1000 / 5) * (45 + rnd(120));
+                m_mBloomTimers[event.atCell] = (1000 / 5) * (45 + RNG::rnd(120));
             }
             break;
         case eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW:
@@ -1610,7 +1610,7 @@ void cMap::setSandwormRespawnTimer()
         // is the actual amount of seconds we want to delay
 
         // give at least a minute (max 3) without that sandworm
-        m_iTIMER_respawnSandworms = (1000 / 5) * (60 + rnd(180));
+        m_iTIMER_respawnSandworms = (1000 / 5) * (60 + RNG::rnd(180));
 
         if (game.isDebugMode()) {
             logbook(fmt::format("cMap::setSandwormRespawnTimer set timer to {}", this->m_iTIMER_respawnSandworms));

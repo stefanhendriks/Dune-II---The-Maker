@@ -6,7 +6,7 @@
 #include "player/cPlayer.h"
 
 #include <fmt/core.h>
-
+#include "utils/RNG.hpp"
 #include <algorithm>
 
 namespace brains {
@@ -231,7 +231,7 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event)
 
     cUnit &victim = unit[event.entityID];
     if (victim.isHarvester()) {
-        respondToThreat(threat, &victim, event.atCell, 2 + rnd(4));
+        respondToThreat(threat, &victim, event.atCell, 2 + RNG::rnd(4));
     }
 }
 
@@ -258,7 +258,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
         }
 
         int cell = originUnit.getCell();
-        respondToThreat(&originUnit, nullptr, cell, 2 + rnd(4));
+        respondToThreat(&originUnit, nullptr, cell, 2 + RNG::rnd(4));
     }
 }
 
@@ -311,7 +311,7 @@ void cPlayerBrainCampaign::thinkState_Missions()
                 .produced = 0,
             });
 
-            cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), 99);
+            cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, RNG::rnd(5), 99);
             m_missions.push_back(someMission);
         }
     }
@@ -349,21 +349,21 @@ void cPlayerBrainCampaign::produceMissions()
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
             // no need to add resources to mission, they are auto-produced.
             // TODO: Think of a way to make this script/configurable
-            addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), SPECIAL_MISSION1);
+            addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, RNG::rnd(10), SPECIAL_MISSION1);
         }
 
         if (player->couldBuildSpecial(SPECIAL_SABOTEUR) && !hasMission(SPECIAL_MISSION2)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
             // no need to add resources to mission, they are auto-produced.
             // TODO: Think of a way to make this script/configurable
-            addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), SPECIAL_MISSION2);
+            addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, RNG::rnd(10), SPECIAL_MISSION2);
         }
 
         if (player->couldBuildSpecial(SPECIAL_FREMEN) && !hasMission(SPECIAL_MISSION3)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
             // no need to add resources to mission, they are auto-produced.
             // TODO: Think of a way to make this script/configurable
-            addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), SPECIAL_MISSION3);
+            addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, RNG::rnd(10), SPECIAL_MISSION3);
         }
     }
 
@@ -423,7 +423,7 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -432,17 +432,17 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
 
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
@@ -452,11 +452,11 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
             });
         }
         if (player->getHouse() != ORDOS) {
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = LAUNCHER,
-                    .required = 1 + rnd(2),
+                    .required = 1 + RNG::rnd(2),
                     .ordered = 0,
                     .produced = 0,
                 });
@@ -464,7 +464,7 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = TANK,
-                .required = 1 + rnd(4),
+                .required = 1 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -473,17 +473,17 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = TANK,
-                .required = 4 + rnd(2),
+                .required = 4 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 1);
     }
 
     if (!hasMission(2)) {
         // 25% chance we want another different attack force
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             group = std::vector<S_groupKind>();
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
@@ -493,30 +493,30 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
                 .produced = 0,
             });
             if (player->getHouse() != ORDOS) {
-                if (rnd(100) < 75) {
+                if (RNG::rnd(100) < 75) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = LAUNCHER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
                 }
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + RNG::rnd(10), 2);
         }
     }
     if (!hasMission(3)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = infantryKind,
-                .required = 2 + rnd(4),
+                .required = 2 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 3);
         }
     }
     // build additional harvester (we want 2 harvesters in total)
@@ -531,7 +531,7 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 4);
         }
         else {
             // we already have mission 4, meaning we have the additional harvester.
@@ -548,7 +548,7 @@ void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind
                         .produced = 0,
                     });
                     // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 5);
                 }
             }
         }
@@ -570,7 +570,7 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -579,17 +579,17 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
 
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
@@ -599,29 +599,29 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
             });
         }
         if (player->getHouse() != ORDOS) {
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = LAUNCHER,
-                    .required = 1 + rnd(3),
+                    .required = 1 + RNG::rnd(3),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = TANK,
-                    .required = 2 + rnd(4),
+                    .required = 2 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 3 + rnd(4),
+                    .required = 3 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
@@ -631,24 +631,24 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = TANK,
-                .required = 2 + rnd(4),
+                .required = 2 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = SIEGETANK,
-                .required = 3 + rnd(3),
+                .required = 3 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 1);
     }
 
     if (!hasMission(2)) {
         // 25% chance we want another different attack force
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             group = std::vector<S_groupKind>();
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
@@ -657,40 +657,40 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 1 + rnd(2),
+                    .required = 1 + RNG::rnd(2),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
-                if (rnd(100) < 75) {
+                if (RNG::rnd(100) < 75) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = LAUNCHER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
                 }
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + RNG::rnd(10), 2);
         }
     }
     if (!hasMission(3)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = infantryKind,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 3);
         }
     }
     // build additional harvester (we want 2 harvesters in total)
@@ -705,7 +705,7 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 4);
         }
         else {
             // we already have mission 4, meaning we have the additional harvester.
@@ -723,7 +723,7 @@ void cPlayerBrainCampaign::produceLevel6Missions(int trikeKind, int infantryKind
                         .produced = 0,
                     });
                     // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 5);
                 }
             }
         }
@@ -745,7 +745,7 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -754,17 +754,17 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
 
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
@@ -774,29 +774,29 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
             });
         }
         if (player->getHouse() != ORDOS) {
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = LAUNCHER,
-                    .required = 1 + rnd(3),
+                    .required = 1 + RNG::rnd(3),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = TANK,
-                    .required = 2 + rnd(4),
+                    .required = 2 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 3 + rnd(4),
+                    .required = 3 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
@@ -806,24 +806,24 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = TANK,
-                .required = 2 + rnd(4),
+                .required = 2 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = SIEGETANK,
-                .required = 3 + rnd(3),
+                .required = 3 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 1);
     }
 
     if (!hasMission(2)) {
         // 25% chance we want another different attack force
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             group = std::vector<S_groupKind>();
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
@@ -832,40 +832,40 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 1 + rnd(2),
+                    .required = 1 + RNG::rnd(2),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
-                if (rnd(100) < 75) {
+                if (RNG::rnd(100) < 75) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = LAUNCHER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
                 }
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + RNG::rnd(10), 2);
         }
     }
     if (!hasMission(3)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = infantryKind,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 3);
         }
     }
     // build additional harvester (we want 2 harvesters in total)
@@ -880,7 +880,7 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 4);
         }
         else {
             // we already have mission 4, meaning we have the additional harvester.
@@ -898,7 +898,7 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
                         .produced = 0,
                     });
                     // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 5);
                 }
             }
         }
@@ -908,15 +908,15 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
         if (player->hasAtleastOneStructure(HIGHTECH)) {
             if (!hasMission(6)) {
                 group = std::vector<S_groupKind>();
-                if (rnd(100) < 10) {
+                if (RNG::rnd(100) < 10) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = ORNITHOPTER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
-                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 6);
                 }
             }
         }
@@ -925,7 +925,7 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
     if (player->hasAtleastOneStructure(HIGHTECH)) {
         if (!hasMission(7)) {
             group = std::vector<S_groupKind>();
-            if (rnd(100) < 10) {
+            if (RNG::rnd(100) < 10) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = CARRYALL,
@@ -933,7 +933,7 @@ void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind
                     .ordered = 0,
                     .produced = 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(10), 7);
             }
         }
     }
@@ -954,7 +954,7 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -963,17 +963,17 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
 
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
@@ -983,29 +983,29 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
             });
         }
         if (player->getHouse() != ORDOS) {
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = LAUNCHER,
-                    .required = 1 + rnd(3),
+                    .required = 1 + RNG::rnd(3),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = TANK,
-                    .required = 2 + rnd(4),
+                    .required = 2 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 3 + rnd(4),
+                    .required = 3 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
@@ -1015,24 +1015,24 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = TANK,
-                .required = 2 + rnd(4),
+                .required = 2 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = SIEGETANK,
-                .required = 3 + rnd(3),
+                .required = 3 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 1);
     }
 
     if (!hasMission(2)) {
         // 25% chance we want another different attack force
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             group = std::vector<S_groupKind>();
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
@@ -1041,40 +1041,40 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 1 + rnd(2),
+                    .required = 1 + RNG::rnd(2),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
             if (player->getHouse() != ORDOS) {
-                if (rnd(100) < 75) {
+                if (RNG::rnd(100) < 75) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = LAUNCHER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
                 }
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + RNG::rnd(10), 2);
         }
     }
     if (!hasMission(3)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = infantryKind,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 3);
         }
     }
     // build additional harvester (we want 2 harvesters in total)
@@ -1089,7 +1089,7 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 4);
         }
         else {
             // we already have mission 4, meaning we have the additional harvester.
@@ -1107,7 +1107,7 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
                         .produced = 0,
                     });
                     // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 5);
                 }
             }
         }
@@ -1117,15 +1117,15 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
         if (player->hasAtleastOneStructure(HIGHTECH)) {
             if (!hasMission(6)) {
                 group = std::vector<S_groupKind>();
-                if (rnd(100) < 10) {
+                if (RNG::rnd(100) < 10) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = ORNITHOPTER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
-                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 6);
                 }
             }
         }
@@ -1134,7 +1134,7 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
     if (player->hasAtleastOneStructure(HIGHTECH)) {
         if (!hasMission(7)) {
             group = std::vector<S_groupKind>();
-            if (rnd(100) < 10) {
+            if (RNG::rnd(100) < 10) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = CARRYALL,
@@ -1142,7 +1142,7 @@ void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind
                     .ordered = 0,
                     .produced = 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(10), 7);
             }
         }
     }
@@ -1177,12 +1177,12 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
 
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
@@ -1195,15 +1195,15 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = LAUNCHER,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
-            if (rnd(100) < 35) {
+            if (RNG::rnd(100) < 35) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = TANK,
-                    .required = 2 + rnd(4),
+                    .required = 2 + RNG::rnd(4),
                     .ordered = 0,
                     .produced = 0,
                 });
@@ -1211,7 +1211,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = SIEGETANK,
-                .required = 3 + rnd(4),
+                .required = 3 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -1239,14 +1239,14 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = TANK,
-                .required = 2 + rnd(4),
+                .required = 2 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = SIEGETANK,
-                .required = 3 + rnd(3),
+                .required = 3 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -1258,12 +1258,12 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 1);
     }
 
     if (!hasMission(2)) {
         // 25% chance we want another different attack force
-        if (rnd(100) < 25) {
+        if (RNG::rnd(100) < 25) {
             group = std::vector<S_groupKind>();
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
@@ -1272,11 +1272,11 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            if (rnd(100) < 75) {
+            if (RNG::rnd(100) < 75) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = SIEGETANK,
-                    .required = 1 + rnd(2),
+                    .required = 1 + RNG::rnd(2),
                     .ordered = 0,
                     .produced = 0,
                 });
@@ -1285,25 +1285,25 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = LAUNCHER,
-                    .required = 1 + rnd(2),
+                    .required = 1 + RNG::rnd(2),
                     .ordered = 0,
                     .produced = 0,
                 });
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + RNG::rnd(10), 2);
         }
     }
     if (!hasMission(3)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 5) {
+        if (RNG::rnd(100) < 5) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = infantryKind,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 3);
         }
     }
     // build additional harvester (we want 2 harvesters in total)
@@ -1318,7 +1318,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 4);
         }
         else {
             // we already have mission 4, meaning we have the additional harvester.
@@ -1336,7 +1336,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                         .produced = 0,
                     });
                     // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 5);
                 }
             }
         }
@@ -1346,15 +1346,15 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
         if (player->hasAtleastOneStructure(HIGHTECH)) {
             if (!hasMission(6)) {
                 group = std::vector<S_groupKind>();
-                if (rnd(100) < 10) {
+                if (RNG::rnd(100) < 10) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = ORNITHOPTER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
-                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 6);
                 }
             }
         }
@@ -1363,7 +1363,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
     if (player->hasAtleastOneStructure(HIGHTECH)) {
         if (!hasMission(7)) {
             group = std::vector<S_groupKind>();
-            if (rnd(100) < 10) {
+            if (RNG::rnd(100) < 10) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = CARRYALL,
@@ -1371,7 +1371,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                     .ordered = 0,
                     .produced = 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(10), 7);
             }
         }
     }
@@ -1380,15 +1380,15 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
         if (player->hasAtleastOneStructure(HIGHTECH)) {
             if (!hasMission(6)) {
                 group = std::vector<S_groupKind>();
-                if (rnd(100) < 10) {
+                if (RNG::rnd(100) < 10) {
                     group.push_back(S_groupKind{
                         .buildType = eBuildType::UNIT,
                         .type = ORNITHOPTER,
-                        .required = 1 + rnd(2),
+                        .required = 1 + RNG::rnd(2),
                         .ordered = 0,
                         .produced = 0,
                     });
-                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 6);
                 }
             }
         }
@@ -1397,7 +1397,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
     if (player->hasAtleastOneStructure(HIGHTECH)) {
         if (!hasMission(7)) {
             group = std::vector<S_groupKind>();
-            if (rnd(100) < 10) {
+            if (RNG::rnd(100) < 10) {
                 group.push_back(S_groupKind{
                     .buildType = eBuildType::UNIT,
                     .type = CARRYALL,
@@ -1405,7 +1405,7 @@ void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind
                     .ordered = 0,
                     .produced = 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(10), 7);
             }
         }
     }
@@ -1419,14 +1419,14 @@ void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = trikeKind,
-                .required = 1 + rnd(1),
+                .required = 1 + RNG::rnd(1),
                 .ordered = 0,
                 .produced = 0,
             });
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(3),
+                .required = 1 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -1435,19 +1435,19 @@ void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 2 + rnd(2),
+                .required = 2 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
         group.push_back(S_groupKind{
             .buildType = eBuildType::UNIT,
             .type = TANK,
-            .required = 1 + rnd(3),
+            .required = 1 + RNG::rnd(3),
             .ordered = 0,
             .produced = 0,
         });
@@ -1458,19 +1458,19 @@ void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind
             .ordered = 0,
             .produced = 0,
         });
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + RNG::rnd(10), 1);
     }
     if (!hasMission(2)) {
         group = std::vector<S_groupKind>();
-        if (rnd(100) < 50) {
+        if (RNG::rnd(100) < 50) {
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = infantryKind,
-                .required = 2 + rnd(4),
+                .required = 2 + RNG::rnd(4),
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 2);
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 2);
         }
     }
 
@@ -1486,7 +1486,7 @@ void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind
                 .ordered = 0,
                 .produced = 0,
             });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 3);
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 3);
         }
         else {
             // we already have mission 3, meaning we have the additional harvester.
@@ -1503,7 +1503,7 @@ void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind
                         .produced = 0,
                     });
                     // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, RNG::rnd(25), 4);
                 }
             }
         }
@@ -1518,14 +1518,14 @@ void cPlayerBrainCampaign::produceLevel3Missions(int trikeKind, int soldierKind,
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 1 + rnd(2),
+                .required = 1 + RNG::rnd(2),
                 .ordered = 0,
                 .produced = 0,
             });
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = trikeKind,
-                .required = 1 + rnd(1),
+                .required = 1 + RNG::rnd(1),
                 .ordered = 0,
                 .produced = 0,
             });
@@ -1534,12 +1534,12 @@ void cPlayerBrainCampaign::produceLevel3Missions(int trikeKind, int soldierKind,
             group.push_back(S_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = QUAD,
-                .required = 2 + rnd(3),
+                .required = 2 + RNG::rnd(3),
                 .ordered = 0,
                 .produced = 0,
             });
         }
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(15), 0);
     }
     if (!hasMission(1)) {
         group = std::vector<S_groupKind>();
@@ -1547,18 +1547,18 @@ void cPlayerBrainCampaign::produceLevel3Missions(int trikeKind, int soldierKind,
         group.push_back(S_groupKind{
             .buildType = eBuildType::UNIT,
             .type = soldierKind,
-            .required = 1 + rnd(3),
+            .required = 1 + RNG::rnd(3),
             .ordered = 0,
             .produced = 0,
         });
         group.push_back(S_groupKind{
             .buildType = eBuildType::UNIT,
             .type = infantryKind,
-            .required = 1 + rnd(2),
+            .required = 1 + RNG::rnd(2),
             .ordered = 0,
             .produced = 0,
         });
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 1);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 1);
     }
 }
 
@@ -1569,18 +1569,18 @@ void cPlayerBrainCampaign::produceLevel2Missions(int soldierKind, int infantryKi
         group.push_back(S_groupKind{
             .buildType = eBuildType::UNIT,
             .type = soldierKind,
-            .required = 2 + rnd(1),
+            .required = 2 + RNG::rnd(1),
             .ordered = 0,
             .produced = 0,
         });
         group.push_back(S_groupKind{
             .buildType = eBuildType::UNIT,
             .type = infantryKind,
-            .required = 1 + rnd(1),
+            .required = 1 + RNG::rnd(1),
             .ordered = 0,
             .produced = 0,
         });
-        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 0);
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, RNG::rnd(10), 0);
     }
 }
 
@@ -1729,7 +1729,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
                         if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + rnd(4));
+                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
@@ -1788,7 +1788,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                     cUnit &pUnit = unit[event.entityID];
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                         if (m_centerOfBaseCell > -1 && map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + rnd(4));
+                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
