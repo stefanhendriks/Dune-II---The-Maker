@@ -54,8 +54,6 @@ private:
 
     cPoint m_position; // draw positions
     SDL_Surface *m_bmpBar;
-    // SDL_Surface *m_temp;
-
     int m_timeMessageIsVisible;
 
     messages::eMessageDrawerState m_state;

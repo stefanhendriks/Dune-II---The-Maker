@@ -16,7 +16,6 @@ cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
     m_map(map),
     m_player(player),
     m_camera(camera),
-    // m_BmpTemp(nullptr),
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
@@ -29,9 +28,6 @@ cMapDrawer::~cMapDrawer()
     m_map = nullptr;
     m_camera = nullptr;
     m_player = nullptr;
-    // if (m_BmpTemp) {
-    //     SDL_FreeSurface(m_BmpTemp);
-    // }
 }
 
 void cMapDrawer::drawShroud()
@@ -41,9 +37,6 @@ void cMapDrawer::drawShroud()
 
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
-
-    // SDL_Surface *temp = SDL_CreateRGBSurface(0,iTileWidth, iTileHeight,32,0,0,0,255);
-
     int iPl = m_player->getId();
 
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
@@ -90,16 +83,10 @@ void cMapDrawer::drawShroud()
             }
         }
     }
-
-    // SDL_FreeSurface(temp);
 }
 
 void cMapDrawer::drawTerrain()
 {
-    // if (m_BmpTemp == nullptr) {
-    //     m_BmpTemp = SDL_CreateRGBSurface(0,32, 32,32,0,0,0,255);
-    // }
-
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
 
@@ -166,9 +153,6 @@ void cMapDrawer::drawTerrain()
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                 renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
             }
-
-
-
 
             // Draw debugging information
             if (game.isDebugMode()) {
