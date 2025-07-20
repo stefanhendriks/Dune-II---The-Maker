@@ -7,7 +7,7 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -199,11 +199,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         }
 
         if (infantryAcknowledged) {
-            game.playSound(SOUND_MOVINGOUT + rnd(2));
+            game.playSound(SOUND_MOVINGOUT + RNG::rnd(2));
         }
 
         if (unitAcknowledged) {
-            game.playSound(SOUND_ACKNOWLEDGED + rnd(3));
+            game.playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
         }
     }
 

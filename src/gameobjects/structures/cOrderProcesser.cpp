@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 #include "cOrderProcesser.h"
-
+#include "utils/RNG.hpp"
 #include "d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
@@ -138,7 +138,7 @@ void cOrderProcesser::updatePricesForStarport()
             int id = item->getBuildId();
             int originalPrice = sUnitInfo[id].cost;
             int slice = originalPrice / 2;
-            int newPrice = (originalPrice - slice) + (rnd(slice * 2));
+            int newPrice = (originalPrice - slice) + (RNG::rnd(slice * 2));
             item->setBuildCost(newPrice);
         }
     }
@@ -213,7 +213,7 @@ void cOrderProcesser::placeOrder()
 
 int cOrderProcesser::getRandomizedSecondsToWait()
 {
-    return (45 + rnd(360));
+    return (45 + RNG::rnd(360));
 }
 
 void cOrderProcesser::sendFrigate()

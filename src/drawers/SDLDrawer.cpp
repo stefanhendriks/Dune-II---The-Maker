@@ -195,8 +195,8 @@ void SDLDrawer::renderDot(int x, int y, Color color, int size)
 
 //             gp = get_pixel(src, x1, y1); //ALLEGRO // use this inline function to speed up things.
 //             // Now choose random spot to 'switch' with.
-//             nx = (x1 - 1) + rnd(2);
-//             ny = (y1 - 1) + rnd(2);
+//             nx = (x1 - 1) + RNG::rnd(2);
+//             ny = (y1 - 1) + RNG::rnd(2);
 
 //             if (nx < 0) nx = 0;
 //             if (ny < 0) ny = 0;

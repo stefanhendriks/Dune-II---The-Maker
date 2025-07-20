@@ -517,11 +517,11 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
                 while (bOk == false) {
                     if (p > HUMAN) {
-                        iHouse = rnd(4) + 1;
+                        iHouse = RNG::rnd(4) + 1;
                         // cpu player
                     }
                     else {  // human may not be sardaukar
-                        iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
+                        iHouse = RNG::rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
                     }
 
                     bool houseInUse = false;
@@ -619,7 +619,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     // create units
     while (u < maxAmountOfStartingUnits) {
         // pick a random unit type
-        int iType = rnd(12);
+        int iType = RNG::rnd(12);
 
         for (int p = 0; p < MAX_PLAYERS; p++) {
             cPlayer &pPlayer = players[p];

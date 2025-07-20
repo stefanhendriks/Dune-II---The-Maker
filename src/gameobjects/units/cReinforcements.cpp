@@ -2,8 +2,8 @@
 #include "cReinforcements.h"
 #include "utils/common.h"
 #include "player/cPlayer.h"
+#include "utils/RNG.hpp"
 #include <algorithm>
-
 #include <fmt/core.h>
 
 
@@ -170,7 +170,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     int iStartCell = iFindCloseBorderCell(iStart);
 
     if (iStartCell < 0) {
-        iStart += rnd(64);
+        iStart += RNG::rnd(64);
         if (iStart >= map.getMaxCells())
             iStart -= 64;
 

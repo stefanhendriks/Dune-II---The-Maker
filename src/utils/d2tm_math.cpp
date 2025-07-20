@@ -219,13 +219,6 @@ int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap, int offset, int
     }
 }
 
-// return random number between 0 and 'max'
-int rnd(int max)
-{
-    if (max < 1) return 0;
-    return std::rand() % max;
-}
-
 /**
  * returns length between 2 points, always > 0. If x and y match, distance is 1.
  * @param x1
