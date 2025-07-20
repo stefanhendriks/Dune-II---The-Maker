@@ -11,5 +11,4 @@ private:
     void draw_eyes();
     void draw_other();
     void draw();
-    // void interact();
 };

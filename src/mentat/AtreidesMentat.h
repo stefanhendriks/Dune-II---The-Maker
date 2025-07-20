@@ -12,5 +12,4 @@ public:
     void draw_eyes() override;
     void draw_other() override;
     void draw() override;
-    // void interact() override;
 };

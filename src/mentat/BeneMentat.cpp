@@ -1,7 +1,5 @@
 #include "BeneMentat.h"
 
-// #include "cNoButtonCommand.h"
-// #include "cYesButtonCommand.h"
 #include "data/gfxmentat.h"
 #include "d2tmc.h"
 #include "player/cPlayer.h"
@@ -45,8 +43,6 @@ BeneMentat::BeneMentat() : AbstractMentat(false)
                 players[HUMAN].setHouse(this->getHouse());
                game.initiateFadingOut();})
             .build();
-    // leftButtonCommand = new cNoButtonCommand();
-    // rightButtonCommand = new cYesButtonCommand();
     textDrawer = new cTextDrawer(gr_bene_font);
 
 }
@@ -72,7 +68,6 @@ void BeneMentat::draw()
 
 void BeneMentat::draw_other()
 {
-
 }
 
 void BeneMentat::draw_eyes()
@@ -84,19 +79,3 @@ void BeneMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }
-
-// void cBeneMentat::interact()
-// {
-//     cAbstractMentat::interact();
-// }
-
-
-// void cBeneMentat::onNotifyMouseEvent(const s_MouseEvent &event)
-// {
-//     if (leftGuiButton) {
-//         leftGuiButton->onNotifyMouseEvent(event);
-//     }
-//     if (rightGuiButton) {
-//         rightGuiButton->onNotifyMouseEvent(event);
-//     }
-// }

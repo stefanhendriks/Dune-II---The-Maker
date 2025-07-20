@@ -1,7 +1,4 @@
 #include "OrdosMentat.h"
-
-// #include "cProceedButtonCommand.h"
-// #include "cRepeatButtonCommand.h"
 #include "d2tmc.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
@@ -13,8 +10,6 @@ OrdosMentat::OrdosMentat(bool allowMissionSelect) : AbstractMentat(allowMissionS
     iBackgroundFrame = MENTATO;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
-    // leftButtonCommand = new cRepeatButtonCommand();
-    // rightButtonCommand = new cProceedButtonCommand();
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("Repeat")
@@ -59,8 +54,3 @@ void OrdosMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }
-
-// void cOrdosMentat::interact()
-// {
-//     cAbstractMentat::interact();
-// }
