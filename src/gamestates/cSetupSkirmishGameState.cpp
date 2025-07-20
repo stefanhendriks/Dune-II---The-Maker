@@ -101,8 +101,6 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     screen_x = game.m_screenW;
     screen_y = game.m_screenH;
 
-    // @Mira render to texture !!!!!!!!!!!
-
     // Rectangles for GUI interaction
     int topBarWidth = screen_x + 4;
 
@@ -229,10 +227,6 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
 {
-    // if (background) {
-    //     SDL_FreeSurface(background);
-    //     background = nullptr;
-    // }
     delete backButton;
 }
 

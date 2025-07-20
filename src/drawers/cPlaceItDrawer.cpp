@@ -98,13 +98,10 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iDrawX = map.mouse_draw_x();
     int iDrawY = map.mouse_draw_y();
 
-    // SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
     if (!bWithinBuildDistance) {
         itemToPlaceColor = game.getColorPlaceBad();
     }
     else {
-        //clear_bitmap(temp);
-
         // Draw over it the mask for good/bad placing (decorates temp bitmap)
         for (int iX=0; iX < cellWidth; iX++) {
             for (int iY=0; iY < cellHeight; iY++) {
@@ -143,27 +140,15 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 }
 
                 // Draw bad gfx on spot
-
                 float desiredWidth = mapCamera->getZoomedTileWidth();
                 float desiredHeight = mapCamera->getZoomedTileHeight();
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                //allegroDrawer->drawRectangleFilled(temp, rectangle, placeColor);
-                //renderDrawer->renderRectFillColor(posX, posY, desiredWidth, desiredHeight,itemToPlaceColor);
                 renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
             }
         }
     }
-
-    // set_trans_blender(0, 0, 0, 64);
-
-    //renderDrawer->renderRectFillColor(iDrawX, iDrawY, scaledWidth, scaledHeight,itemToPlaceColor.r, itemToPlaceColor.g, itemToPlaceColor.b, 64 );
-
-    // reset to normal
-    // set_trans_blender(0, 0, 0, 128);
-
-    // destroy_bitmap(temp);
 }
 
 void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
@@ -181,9 +166,6 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
-    // SDL_Surface *temp = SDL_CreateRGBSurface(0,scaledWidth+1, scaledHeight+1,32,0,0,0,255);
-    // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
-
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
         bmp = gfxdata->getTexture(PLACE_SLAB1);
@@ -197,12 +179,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     else {
         bmp = player->getStructureBitmap(structureId);
     }
-
-    // renderDrawer->stretchBlit(bmp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
-    // renderDrawer->drawTransSprite(temp, temp, iDrawX, iDrawY);
     cRectangle src = { 0, 0, width, height};
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
     renderDrawer->renderStrechSprite(bmp, src, dest,96);
-
-    // SDL_FreeSurface(temp);
 }

@@ -92,8 +92,6 @@ void cSelectYourNextConquestState::calculateOffset()
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
 {
-    // SDL_FreeSurface(regionClickMapBmp);
-    // destroy();
     delete m_guiBtnToMissionSelect;
 }
 
@@ -104,13 +102,8 @@ void cSelectYourNextConquestState::thinkFast()
     if (state == eRegionState::REGSTATE_INIT) {
         // temp bitmap to read from
         regionClickMapBmp = gfxworld->getSurface(WORLD_DUNE_CLICK); // 8 bit bitmap
-        // select_palette(general_palette); // default palette
-        // renderDrawer->FillWithColor(regionClickMapBmp, Color{0,0,0,255});
-
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
-        // renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_CLICK), 16, 73);
-
         state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
         return;
     }
@@ -249,9 +242,6 @@ void cSelectYourNextConquestState::thinkFast()
 void cSelectYourNextConquestState::draw() const
 {
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
-
-    // renderDrawer->FillWithColor(bmp_screen, Color{48,28,0,255});
-
     // STEPS:
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
@@ -259,10 +249,6 @@ void cSelectYourNextConquestState::draw() const
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
     int iHouse = players[0].getHouse();
-
-    // PALETTE &humanPlayerPalette = players[0].pal;
-    // select_palette(humanPlayerPalette);
-
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
         drawStateIntroduction();
     }
@@ -313,23 +299,16 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 void cSelectYourNextConquestState::drawStateIntroduction() const
 {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
-        // renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
-
         // draw dune planet (being faded in)
         renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
         renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
-        // renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
-        // draw dune world map over Dune planet , transitioning
         renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
         renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-        // renderDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
-
-        // introduce the borders (world pieces), draw over world dune, transitioning
         renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
@@ -414,9 +393,6 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     }
 
     iNewReg += iReg;
-
-    //char msg[255];
-    //sprintf(msg, "Mission = %d", game.m_mission);
 
     game.missionInit();
     game.setNextStateToTransitionTo(GAME_BRIEFING);
@@ -517,7 +493,6 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
     if (regionPiece.bSelectable && state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
         int iHouse = players[HUMAN].getHouse();
         cPlayer &temp = players[iHouse];
-        // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
             regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
         }
@@ -539,10 +514,6 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
     }
     else {
         renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY,regionPiece.iAlpha);
-        // renderDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-        // renderDrawer->FillWithColor(regionPiece.bmpHighBit, Color{255,0,255,255});
-        // renderDrawer->drawSprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
-        // renderDrawer->drawTransSprite(regionPiece.bmpHighBit, regionPiece.bmpHighBit, regionX, regionY);
     }
 }
 // End of function
@@ -558,8 +529,8 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     int hCalc = round((mouseY-offsetY-73)*240.0/regionClickMapBmp->h);
     int c = getPixelColorIndexFromSurface(regionClickMapBmp, wCalc, hCalc);
     //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
+    // @Mira display text
     //alfont_textprintf(bmp_screen, bene_font, 17,17, Color{0,0,0), "region %d", c-1);
-    // @Mira fix color to region ?
     return c - 1;
 }
 
@@ -585,10 +556,6 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.iHouse = iHouse;
     region.iTile = iTile;
     region.bmp = gfxworld->getSurface(iTile);
-
-    // SDL_Surface *tempregion = SDL_CreateRGBSurface(0, region.bmp->w, region.bmp->h,32,0,0,0,255);
-    // renderDrawer->FillWithColor(tempregion, Color{255,0,255,255});
-    // region.bmpHighBit = tempregion;
 }
 
 void cSelectYourNextConquestState::INSTALL_WORLD()
@@ -659,17 +626,6 @@ void cSelectYourNextConquestState::transitionToNextRegionSceneState(eRegionScene
     regionSceneState = newSceneState;
     iRegionSceneAlpha = 0;
 }
-
-// void cSelectYourNextConquestState::destroy()
-// {
-    // for (int i = 0; i < 27; i++) {
-    //     cRegion &region = world[i];
-    //     if (region.bmpColor) {
-    //         // SDL_FreeSurface(region.bmpHighBit);
-    //         delete region.bmpColor;
-    //     }
-    // }
-// }
 
 void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
 {

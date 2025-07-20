@@ -72,8 +72,6 @@ public:
 
     void conquerRegions();
 
-    // void destroy();
-
     void calculateOffset();
 
     void fastForwardUntilMission(int missionNr, int house);
