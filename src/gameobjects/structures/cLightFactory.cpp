@@ -78,8 +78,6 @@ void cLightFactory::draw()
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
-        // renderDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-        // drawX, drawY, scaledWidth, scaledHeight);
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
         renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);

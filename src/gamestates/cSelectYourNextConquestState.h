@@ -71,8 +71,6 @@ public:
 
     void conquerRegions();
 
-    // void destroy();
-
     void calculateOffset();
 
     void fastForwardUntilMission(int missionNr, int house);
@@ -128,5 +126,4 @@ private:
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
-
 };

@@ -8,9 +8,8 @@
 #include "gui/actions/cGuiActionSelectMission.h"
 
 
-cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *background,*/ int prevState)
+cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     : cGameState(theGame)
-    // ,  background(background)
     ,  prevState(prevState)
     ,  textDrawer(cTextDrawer(bene_font))
 {
@@ -64,7 +63,6 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, /*SDL_Surface *backgrou
 cSelectMissionState::~cSelectMissionState()
 {
     delete gui_window;
-    // SDL_FreeSurface(background);
 }
 
 void cSelectMissionState::thinkFast()
@@ -74,8 +72,7 @@ void cSelectMissionState::thinkFast()
 
 void cSelectMissionState::draw() const
 {
-    // renderDrawer->drawSprite(bmp_screen, background, 0, 0);
-
+    // Mira: draw here screenTexture
     gui_window->draw();
 
     // MOUSE

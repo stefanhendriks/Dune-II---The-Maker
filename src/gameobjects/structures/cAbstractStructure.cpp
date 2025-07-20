@@ -122,12 +122,6 @@ Texture *cAbstractStructure::getBitmap()
     return this->getPlayer()->getStructureBitmap(getType());
 }
 
-// SDL_Surface *cAbstractStructure::getShadowBitmap()
-// {
-//     s_StructureInfo structureType = getStructureInfo();
-//     return structureType.shadow;
-// }
-
 cPlayer *cAbstractStructure::getPlayer()
 {
     assert(iPlayer >= HUMAN);
@@ -900,22 +894,6 @@ void cAbstractStructure::drawWithShadow()
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     Texture *bitmapToDraw = getBitmap();
-
-    // SDL_Surface *shadow = getShadowBitmap();
-    // if (shadow) {
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
-
-    // SDL_Surface *stretchedShadow = SDL_CreateRGBSurface(0, scaledWidth, scaledHeight,32,0,0,0,255);
-    // renderDrawer->FillWithColor(stretchedShadow, Color{255,0,255,255});
-
-    // renderDrawer->stretchBlit(shadow, 0, 0, pixelWidth, pixelHeight,
-    //                                 drawX, drawY, scaledWidth, scaledHeight);
-
-    // renderDrawer->drawTransSprite(stretchedShadow, stretchedShadow, drawX, drawY);
-
-    // SDL_FreeSurface(stretchedShadow);
-    // }
-    // renderDrawer->stretchBlit(bitmapToDraw, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 
     cRectangle src =  {0, iSourceY, pixelWidth, pixelHeight};
     cRectangle dest =  {drawX, drawY, scaledWidth, scaledHeight};

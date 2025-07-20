@@ -79,7 +79,6 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
     renderDrawer->renderSprite(gfxinter->getTexture(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
-    // @Mira fix trasnparency set_trans_blender(0,0,0,128);
     renderDrawer->renderSprite(gfxinter->getTexture(id), x, y,128);
 
     if (!list->isAvailable()) {
@@ -168,7 +167,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
-                //@Mira fix transparency // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
                 renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
                 renderDrawer->renderSprite(gfxinter->getTexture(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
             }
@@ -211,7 +209,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
-                // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
                 renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
@@ -248,7 +245,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
                 // payment/progress)
                 if (cannotPayIt) {
-                    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 64);
                     renderDrawer->renderSprite(gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
                     Color errorFadingColor = m_player->getErrorFadingColor();
                     renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
@@ -259,7 +255,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             // last built id
             if (list->getLastClickedId() == i) {
-                //_rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
                 renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
                 renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
             }
@@ -301,7 +296,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         // draw rectangle when mouse hovers over icon
         auto m_mouse = game.getMouse();
         if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
-            //_rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
             renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
             renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
         }
@@ -324,8 +318,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             iDrawY+=50;
         }
     }
-
-    // SDL_SetClipRect(bmp_screen, nullptr);
 }
 
 /**
@@ -355,20 +347,9 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
         iTile = GRID_3X3;
     }
 
-    // SDL_Surface *temp=SDL_CreateRGBSurface(0,19,19,32,0,0,0,255);
-
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 192);
-    //? draw empty ?
     renderDrawer->renderRectFillColor(x + 43, y + 20,19,19,0,0,0,192);
-
     renderDrawer->renderSprite(gfxinter->getTexture(GRID_0X0), x + 43, y + 20);
-
-    //renderDrawer->drawTransSprite(temp, temp, x + 43, y + 20);
-
     renderDrawer->renderSprite(gfxinter->getTexture(iTile), x + 43, y + 20);
-
-    // SDL_FreeSurface(temp);
-
 }
 
 bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY)
@@ -383,9 +364,6 @@ cBuildingListItem *cBuildingListDrawer::isOverItemCoordinates(cBuildingList *lis
 {
     assert(list != nullptr);
     // starting draw coordinates
-
-//	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
-//	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
     int iDrawX=getDrawX();
     int iDrawY=getDrawY();
 
