@@ -24,7 +24,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new GuiWindow(window);
+    gui_window = std::make_unique<GuiWindow>(window);
     gui_window->setTheme(GuiTheme::Light());
 
     //const GuiRenderKind buttonKinds = GuiRenderKind::OPAQUE_WITH_BORDER;
@@ -87,7 +87,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
 
 cSelectMissionState::~cSelectMissionState()
 {
-    delete gui_window;
+    // delete gui_window;
 }
 
 void cSelectMissionState::thinkFast()

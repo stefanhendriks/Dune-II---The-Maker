@@ -27,5 +27,5 @@ private:
 
     cTextDrawer textDrawer;
 
-    GuiWindow *gui_window;
+    std::unique_ptr<GuiWindow> gui_window;
 };

@@ -5,6 +5,7 @@
 #include "drawers/cTextDrawer.h"
 #include "gui/GuiWindow.h"
 #include "sMouseEvent.h"
+#include <memory>
 
 struct SDL_Surface;
 class cGame;
@@ -30,7 +31,7 @@ private:
 
     int m_prevState;
 
-    GuiWindow *m_guiWindow;
+    std::unique_ptr<GuiWindow> m_guiWindow;
 
     void constructWindow(int prevState);
 };

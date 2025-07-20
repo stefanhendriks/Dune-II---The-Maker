@@ -31,7 +31,7 @@ void cOptionsState::constructWindow(int prevState)
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    m_guiWindow = new GuiWindow(window);
+    m_guiWindow = std::make_unique<GuiWindow>(window);
     m_guiWindow->setTheme(GuiTheme::Light());
 
     //const GuiRenderKind buttonKinds = OPAQUE_WITH_BORDER;
@@ -130,7 +130,7 @@ void cOptionsState::constructWindow(int prevState)
 
 cOptionsState::~cOptionsState()
 {
-    delete m_guiWindow;
+    // delete m_guiWindow;
 }
 
 void cOptionsState::thinkFast()
@@ -173,7 +173,7 @@ void cOptionsState::setPrevState(int prevState)
 
 void cOptionsState::refresh()
 {
-    delete m_guiWindow;
-    m_guiWindow = nullptr;
+    // delete m_guiWindow;
+    // m_guiWindow = nullptr;
     constructWindow(m_prevState);
 }

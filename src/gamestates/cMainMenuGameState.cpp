@@ -88,7 +88,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new GuiWindow(window);
+    gui_window = std::make_unique<GuiWindow>(window);
     gui_window->setTheme(GuiTheme::Light());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
@@ -231,7 +231,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
 cMainMenuGameState::~cMainMenuGameState()
 {
-    delete gui_window;
+    // delete gui_window;
     // delete gui_btn_credits;
 }
 
