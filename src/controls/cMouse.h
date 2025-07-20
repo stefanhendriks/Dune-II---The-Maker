@@ -54,10 +54,6 @@ public:
         return coords.y;
     }
 
-    // int getZ() {
-    //     return z;
-    // }
-
     void setCursorPosition(SDL_Window *_windows, int x, int y);
 
     bool isOverRectangle(int x, int y, int width, int height);

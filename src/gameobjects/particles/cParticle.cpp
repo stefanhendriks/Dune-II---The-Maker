@@ -105,38 +105,9 @@ void cParticle::draw()
     int frameWidth = getFrameWidth();
     int frameHeight = getFrameHeight();
 
-    // valid in boundaries
-    // SDL_Surface *temp = SDL_CreateRGBSurface(0,frameWidth, frameHeight,32,0,0,0,255);
-    // transparency
-    // renderDrawer->FillWithColor(temp, Color{255,0,255,255});
-
-    // // now blit it
-    // if (iHousePal > -1) {
-    //     cPlayer &player = players[iHousePal];
-    //     // select_palette(player.pal);
-    // }
-
-    // if (bmp) {
-    //     // new behavior
-    //     renderDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
-    // }
-    // else {
-    //     // old behavior
-    //     renderDrawer->blitFromGfxData(iType, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
-    // }
-
     // create proper sized bitmap
     int bmp_width = mapCamera->factorZoomLevel(frameWidth);
     int bmp_height = mapCamera->factorZoomLevel(frameHeight);
-
-    // create bmp that is the stretched version of temp
-    // SDL_Surface *stretched = SDL_CreateRGBSurface(0,bmp_width + 1, bmp_height + 1,32,0,0,0,255);
-    // renderDrawer->FillWithColor(stretched, Color{255,0,255,255});
-
-    // renderDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
-
-    // temp is no longer needed
-    // SDL_FreeSurface(temp);
 
     int drawX = draw_x();
     int drawY = draw_y();
@@ -157,11 +128,6 @@ void cParticle::draw()
     else {
         renderDrawer->renderStrechSprite(bmp, src, dest,255);
     }
-    //std::cout << "draw particle on " << drawX << ":" << drawY << std::endl;
-
-    // @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
-
-    // SDL_FreeSurface(stretched);
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const
@@ -763,7 +729,6 @@ void cParticle::init(const s_ParticleInfo &particleInfo)
     init();
 
     if (particleInfo.bmpIndex > -1) {
-        //bmp = game.getDataRepository()->getBitmapAt(particleInfo.bmpIndex);
         bmp = gfxdata->getTexture(particleInfo.bmpIndex);
     }
 

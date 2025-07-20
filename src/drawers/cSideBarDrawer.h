@@ -37,11 +37,6 @@ private:
     cPlayer *m_player;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;
-
-    // the 'm_candybar' is the bar with the ball at the top. Colored with the house color.
-    // SDL_Surface *m_candybar;
-    // cTextDrawer m_textDrawer;
-
     Color m_sidebarColor;
 
     void createCandyBar();

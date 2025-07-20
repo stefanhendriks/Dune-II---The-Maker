@@ -8,7 +8,7 @@
 // Create only once and keep the object alive for the duration of the game.
 class cPlatformLayerInit {
 public:
-    cPlatformLayerInit(/*const std::string &path_to_config_file, const std::string &window_title*/);
+    cPlatformLayerInit();
     ~cPlatformLayerInit();
 
     cPlatformLayerInit &operator=(const cPlatformLayerInit &) = delete;

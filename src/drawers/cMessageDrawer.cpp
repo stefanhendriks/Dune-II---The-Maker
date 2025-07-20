@@ -16,7 +16,6 @@ cMessageDrawer::cMessageDrawer()
 {
     m_textDrawer.setApplyShadow(false);
     m_bmpBar = nullptr;
-    // m_temp = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
     init();
@@ -33,7 +32,6 @@ void cMessageDrawer::destroy()
     m_TIMER_message = 0;
     if (m_bmpBar!=nullptr)
         SDL_FreeSurface(m_bmpBar);
-    // SDL_FreeSurface(m_temp);
 }
 
 void cMessageDrawer::init()
@@ -53,10 +51,6 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
         SDL_FreeSurface(m_bmpBar);
     }
 
-    // if (m_temp) {
-    //     SDL_FreeSurface(m_temp);
-    // }
-
     m_bmpBar = SDL_CreateRGBSurface(0,desiredWidth, 30,32,0,0,0,255);
     auto color = SDL_MapRGBA(m_bmpBar->format,255,0,255,255);
     SDL_FillRect(m_bmpBar, nullptr, color);
@@ -72,9 +66,6 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
     auto tmp = cRectangle{m_bmpBar->w - 11, 0,src->w,src->h};
     SDL_Rect destRect = tmp.toSDL();
     SDL_BlitSurface(src, nullptr, m_bmpBar, &destRect);
-
-    // create this one which we use for actual drawing
-    // m_temp = SDL_CreateRGBSurface(0,m_bmpBar->w, m_bmpBar->h,32,0,0,0,255);
 }
 
 void cMessageDrawer::thinkFast()
@@ -130,18 +121,9 @@ void cMessageDrawer::draw()
     }
 
     if (m_alpha > -1) {
-        // @Mira fix trasnparency set_trans_blender(0, 0, 0, m_alpha);
-//        renderDrawer->FillWithColor(m_temp, Color{255,0,255,255});
         renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
-
         // draw message
-        //renderDrawer->setClippingFor(0, 0, m_bmpBar->w - 10, m_bmpBar->h);
-        //Mira TEXT alfont_textprintf(m_temp, game_font, 13, 21, Color{0, 0, 0), m_message.c_str());
         m_textDrawer.drawText(m_position.x+13, m_position.y+6, Color{0, 0, 0,Uint8(m_alpha)}, m_message);
-        //renderDrawer->resetClippingFor();
-
-        // draw temp
-        //renderDrawer->drawTransSprite(m_temp, m_temp, m_position.x, m_position.y);
     }
 }
 
