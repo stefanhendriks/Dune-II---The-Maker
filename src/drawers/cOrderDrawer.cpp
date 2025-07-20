@@ -21,26 +21,10 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
                             (game.m_screenH - halfOfHeightLeftForButton) - halfOfButtonHeight,
                             buttonBitmap->w, buttonBitmap->h);
     _isMouseOverOrderButton = false;
-
-    // greyedButtonBitmap = gfxinter->getSurface(BTN_ORDER);
-    /*
-    // @Mira fix ORDER button greyed
-    auto temp_bitmap = SDL_CreateRGBSurface(0,buttonRect.getWidth(), buttonRect.getHeight(),32,0,0,0,255);
-    clear_to_color(temp_bitmap, makecol(255,0,255));
-    draw_sprite(temp_bitmap, buttonBitmap, 0, 0);
-
-
-    greyedButtonBitmap = create_bitmap(buttonRect.getWidth(), buttonRect.getHeight());
-    clear_to_color(greyedButtonBitmap, makecol(0, 0, 0));
-    set_trans_blender(0, 0, 0, 128);
-    draw_trans_sprite(greyedButtonBitmap, temp_bitmap, 0, 0);*/
-
-    // SDL_FreeSurface(temp_bitmap);
 }
 
 cOrderDrawer::~cOrderDrawer()
 {
-    // SDL_FreeSurface(greyedButtonBitmap);
     if (buttonBitmap)
         delete buttonBitmap;
 }
