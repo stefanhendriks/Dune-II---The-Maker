@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RELEASE_NAME }}
-          path: build/d2tm.zip
+          path: bin/d2tm.zip
       - name: Generate index.html
         run: |
           echo '<!DOCTYPE html>' > out/index.html
