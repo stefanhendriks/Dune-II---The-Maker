@@ -147,6 +147,7 @@ jobs:
           path: bin/d2tm.zip
 
   Update-Github-Pages:
+    if: always()
     needs: [Ubuntu, MACOSX, MSYS2]
     runs-on: [ macos-15 ]
     steps:
