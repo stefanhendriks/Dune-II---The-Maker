@@ -40,10 +40,6 @@ void HarkonnenMentat::draw()
     AbstractMentat::draw();
 }
 
-void HarkonnenMentat::draw_other()
-{
-}
-
 void HarkonnenMentat::draw_eyes()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);

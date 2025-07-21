@@ -40,11 +40,6 @@ void OrdosMentat::draw()
     AbstractMentat::draw();
 }
 
-void OrdosMentat::draw_other()
-{
-
-}
-
 void OrdosMentat::draw_eyes()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);

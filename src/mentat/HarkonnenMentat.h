@@ -7,8 +7,7 @@ public:
     HarkonnenMentat(bool allowMissionSelect);
     void think();
 private:
-    void draw_mouth();
-    void draw_eyes();
-    void draw_other();
-    void draw();
+    void draw_mouth() override;
+    void draw_eyes() override;
+    void draw() override;
 };

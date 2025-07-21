@@ -74,7 +74,7 @@ protected:
 
     virtual void draw_eyes() = 0;
 
-    virtual void draw_other() = 0;
+    virtual void draw_other() {}
 
     void draw_movie();
 

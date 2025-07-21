@@ -45,11 +45,6 @@ void AtreidesMentat::draw()
     AbstractMentat::draw();
 }
 
-void AtreidesMentat::draw_other()
-{
-
-}
-
 void AtreidesMentat::draw_eyes()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(ATR_EYES01+ iMentatEyes),  offsetX + 80, offsetY + 241);

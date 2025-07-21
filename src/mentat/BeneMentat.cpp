@@ -66,10 +66,6 @@ void BeneMentat::draw()
     }
 }
 
-void BeneMentat::draw_other()
-{
-}
-
 void BeneMentat::draw_eyes()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);

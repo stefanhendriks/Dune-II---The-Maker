@@ -10,6 +10,5 @@ public:
     protected:
     void draw_mouth() override;
     void draw_eyes() override;
-    void draw_other() override;
     void draw() override;
 };
