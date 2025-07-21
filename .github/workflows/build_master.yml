@@ -36,7 +36,7 @@ jobs:
       - name: Produce binary
         run: |
           cd "${{ github.workspace }}"
-          create_release.bat
+          ./create_release.bat
   Ubuntu:
     name: Ubuntu (x86)
     runs-on: [ ubuntu-latest ]
