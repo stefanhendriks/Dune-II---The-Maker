@@ -80,4 +80,4 @@ You have various options:
 In the code there are several known concepts; see below for extra information
 about them:
 
-- [Angles: how to calculate and use them to draw things](doc/convertAngleToDrawIndex.md)
+- [Angles: how to calculate and use them to draw things](resources/doc/convertAngleToDrawIndex.md)
