@@ -53,55 +53,56 @@ jobs:
         with:
           name: ${{ env.RELEASE_NAME }}
           path: bin/d2tm.zip
-    Ubuntu:
-      name: Ubuntu (x86)
-      runs-on: [ ubuntu-latest ]
-      steps:
-        - name: Set up GCC
-          uses: egor-tensin/setup-gcc@v1
-          with:
-            version: 11
-            platform: x86
-        #          platform: x64
-        - name: Checkout
-          uses: actions/checkout@v2
-          with:
-            submodules: recursive
-        - name: Install dependencies
-          run: |
-            cd "${{ github.workspace }}"
-            chmod +x install_dependencies_ubuntu.sh
-            ./install_dependencies_ubuntu.sh
-        - name: Configure
-          run: |
-            cd "${{ github.workspace }}"
-            mkdir build
-            cd build
-            cmake ..
-        - name: Build
-          run: |
-            cd "${{ github.workspace }}/build"
-            make -j4
-        - name: Produce binary
-          run: |
-            cd "${{ github.workspace }}"
-            ./create_release.sh
-        - name: Zip binary
-          run: |
-            cd "${{ github.workspace }}/bin"
-            zip -vr d2tm.zip . -x "*.DS_Store"
-        - name: Produce release name
-          run: |
-            cd "${{ github.workspace }}"
-            mkdir -p out/nightly
-            FILE_NAME=D2TM-$(date +'%Y%m%d').linux.$(git rev-parse --short HEAD).zip
-            cp bin/d2tm.zip "out/nightly/$FILE_NAME"
-            echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
-        - name: Upload ZIP as artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: ${{ env.RELEASE_NAME }}
-            path: bin/d2tm.zip
+
+  Ubuntu:
+    name: Ubuntu (x86)
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 11
+          platform: x86
+      #          platform: x64
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          cd "${{ github.workspace }}"
+          chmod +x install_dependencies_ubuntu.sh
+          ./install_dependencies_ubuntu.sh
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
+      - name: Produce binary
+        run: |
+          cd "${{ github.workspace }}"
+          ./create_release.sh
+      - name: Zip binary
+        run: |
+          cd "${{ github.workspace }}/bin"
+          zip -vr d2tm.zip . -x "*.DS_Store"
+      - name: Produce release name
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir -p out/nightly
+          FILE_NAME=D2TM-$(date +'%Y%m%d').linux.$(git rev-parse --short HEAD).zip
+          cp bin/d2tm.zip "out/nightly/$FILE_NAME"
+          echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RELEASE_NAME }}
+          path: bin/d2tm.zip
 
   MACOSX:
     name: Mac OS X
