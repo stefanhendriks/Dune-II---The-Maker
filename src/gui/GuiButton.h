@@ -46,6 +46,7 @@ public:
     void setTextDrawer(cTextDrawer *cTextDrawer);
     void setRenderKind(GuiRenderKind value);
     void setTexture(Texture *tex);
+    void setEnabled(bool value);
 
     void nextRenderKind();
 
@@ -60,8 +61,6 @@ public:
     // [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
     void setOnRightMouseButtonClickedAction(std::function<void()> action);
-
-    void setEnabled(bool value);
 
 private:
     cTextDrawer *m_textDrawer;
