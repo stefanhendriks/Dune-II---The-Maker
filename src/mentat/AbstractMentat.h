@@ -30,8 +30,6 @@
 #include <SDL2/SDL_ttf.h>
 
 class GuiButton;
-
-struct SDL_Surface;
 class Texture;
 
 enum eMentatState {
