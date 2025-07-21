@@ -392,7 +392,7 @@ set(gitignore ${PROJECT_SOURCE_DIR}/.gitignore)
 if (FMT_MASTER_PROJECT AND EXISTS ${gitignore})
   # Get the list of ignored files from .gitignore.
   file (STRINGS ${gitignore} lines)
-  list(REMOVE_ITEM lines /doc/html)
+  list(REMOVE_ITEM lines /resources/doc/html)
   foreach (line ${lines})
     string(REPLACE "." "[.]" line "${line}")
     string(REPLACE "*" ".*" line "${line}")
