@@ -95,6 +95,12 @@ void cCreditsState::prepareCrawlerLines()
         .color = Color::white(),
         .height = fontHeightWithALittlePadding
     });
+        m_lines.push_back(s_CreditLine {
+        .name = "Mira",
+        .txt = "Developer",
+        .color = Color::white(),
+        .height = fontHeightWithALittlePadding
+    });
     m_lines.push_back(s_CreditLine {
         .name = "Rozmy",
         .txt = "Graphics",
@@ -262,6 +268,12 @@ void cCreditsState::prepareCrawlerLines()
     m_lines.push_back(s_CreditLine {
         .name = "Rene",
         .txt = "for the D2TM Java Map Editor",
+        .color = Color::white(),
+        .height = fontHeightWithALittlePadding
+    });
+    m_lines.push_back(s_CreditLine {
+        .name = "Mira",
+        .txt = "for porting D2TM to SDL2",
         .color = Color::white(),
         .height = fontHeightWithALittlePadding
     });
