@@ -6,70 +6,6 @@ on:
       - master
 
 jobs:
-#  MSYS2:
-#    name: Windows-msys2-mingw64
-#    runs-on: [windows-latest]
-#    defaults:
-#      run:
-#        shell: msys2 {0}
-#    steps:
-#      - name: Install MSYS2 with MinGW 64-bit
-#        uses: msys2/setup-msys2@v2
-#        with:
-#          msystem: MINGW64 # D2TM is built within a MinGW64 bit environment
-#          update: true
-#          install: mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          submodules: recursive
-#      - name: Configure
-#        run: |
-#          cd "${{ github.workspace }}"
-#          mkdir build
-#          cd build
-#          cmake .. -G "MinGW Makefiles"
-#      - name: Build
-#        run: |
-#          cd "${{ github.workspace }}\build"
-#          cmake --build . --target all -- -j -l 3
-#      - name: Produce binary
-#        run: |
-#          cd "${{ github.workspace }}"
-#          ./create_release.bat
-#  Ubuntu:
-#    name: Ubuntu (x86)
-#    runs-on: [ ubuntu-latest ]
-#    steps:
-#      - name: Set up GCC
-#        uses: egor-tensin/setup-gcc@v1
-#        with:
-#          version: 11
-#          platform: x86
-##          platform: x64
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#        with:
-#          submodules: recursive
-#      - name: Install dependencies
-#        run: |
-#          cd "${{ github.workspace }}"
-#          chmod +x install_dependencies_ubuntu.sh
-#          ./install_dependencies_ubuntu.sh
-#      - name: Configure
-#        run: |
-#          cd "${{ github.workspace }}"
-#          mkdir build
-#          cd build
-#          cmake ..
-#      - name: Build
-#        run: |
-#          cd "${{ github.workspace }}/build"
-#          make -j4
-#      - name: Produce binary
-#        run: |
-#          cd "${{ github.workspace }}"
-#          ./create_release.sh
   MACOSX:
     name: Mac OS X
     runs-on: [ macos-15 ]
@@ -99,13 +35,34 @@ jobs:
         run: |
           cd "${{ github.workspace }}/bin"
           zip -vr d2tm.zip . -x "*.DS_Store"
-      - name: Set nightly tag
+      - name: Produce release name
         run: |
-          echo "TAG_NAME=crysknife.$(date +'%Y%m%d').$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+          cd "${{ github.workspace }}"
+          mkdir -p out/nightly
+          FILE_NAME=D2TM-$(date +'%Y%m%d').$(git rev-parse --short HEAD).zip
+          cp bin/d2tm.zip "out/nightly/$FILE_NAME"
+          echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ env.TAG_NAME }}
-          name: "${{ env.TAG_NAME }}"
-          prerelease: true
-          files: bin/D2TM.zip
+          name: ${{ env.RELEASE_NAME }}
+          path: build/d2tm.zip
+      - name: Generate index.html
+        run: |
+          echo '<!DOCTYPE html>' > out/index.html
+          echo '<html><head><meta charset="UTF-8"><title>D2TM Nightly Builds</title></head><body>' >> out/index.html
+          echo '<h1>Dune 2 - The Maker: Nightly Builds</h1><ul>' >> out/index.html
+          
+          for zip in $(ls out/nightly/*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+          
+          echo '</ul></body></html>' >> out/index.html
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
