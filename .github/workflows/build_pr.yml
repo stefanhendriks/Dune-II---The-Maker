@@ -1,10 +1,6 @@
-name: CI
+name: Build PR's
 
-# Workflow file for windows
 on:
-  push:
-    branches:
-      - master
   pull_request: {}
 
 jobs:
