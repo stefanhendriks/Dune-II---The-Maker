@@ -150,6 +150,11 @@ jobs:
     needs: [Ubuntu, MACOSX, MSYS2]
     runs-on: [ macos-15 ]
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        submodules: recursive
     - name: Generate index.html
       run: |
         echo '<!DOCTYPE html>' > out/index.html
