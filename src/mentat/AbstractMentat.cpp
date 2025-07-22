@@ -15,6 +15,7 @@
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/GuiButton.hpp"
+#include "utils/RNG.hpp"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -161,7 +162,7 @@ void AbstractMentat::thinkEyes()
         TIMER_Eyes--;
     }
     else {
-        int i = rnd(100);
+        int i = RNG::rnd(100);
 
         int iWas = iMentatEyes;
 
@@ -177,11 +178,11 @@ void AbstractMentat::thinkEyes()
 
         // its the same
         if (iMentatEyes == iWas) {
-            iMentatEyes = rnd(4);
+            iMentatEyes = RNG::rnd(4);
         }
 
         if (iMentatEyes != 4) {
-            TIMER_Eyes = 90 + rnd(160);
+            TIMER_Eyes = 90 + RNG::rnd(160);
         }
         else {
             TIMER_Eyes = 30;
@@ -202,15 +203,15 @@ void AbstractMentat::thinkMouth()  // MOUTH
 
             if (iMentatMouth == 0) { // mouth is shut
                 // when mouth is shut, we wait a bit.
-                if (rnd(100) < 45) {
-                    iMentatMouth += (1 + rnd(4));
+                if (RNG::rnd(100) < 45) {
+                    iMentatMouth += (1 + RNG::rnd(4));
                 }
                 else {
                     TIMER_Mouth = 25; // wait
                 }
             }
             else {
-                iMentatMouth += (1 + rnd(4));
+                iMentatMouth += (1 + RNG::rnd(4));
             }
 
             // correct any frame
@@ -238,7 +239,7 @@ void AbstractMentat::thinkMouth()  // MOUTH
         }
 
         if (TIMER_Mouth <= 0) {
-            TIMER_Mouth = 13 + rnd(15);
+            TIMER_Mouth = 13 + RNG::rnd(15);
         }
     } // Animating mouth
 

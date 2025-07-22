@@ -1165,7 +1165,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
 
         // if we have found any we randomly abort
         if (!potentialCells.empty()) {
-            if (rnd(100) < 33) {
+            if (RNG::rnd(100) < 33) {
                 break;
             }
         }
@@ -1336,7 +1336,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
         log(fmt::format("Targets {}", maxTargets));
     }
 
-    return iTargets[rnd(maxTargets)];
+    return iTargets[RNG::rnd(maxTargets)];
 }
 
 int cPlayer::findRandomStructureTarget(int iAttackPlayer)
@@ -1364,7 +1364,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
         log(fmt::format("STR] Targets {}", iT));
     }
 
-    return (iTargets[rnd(iT)]);
+    return (iTargets[RNG::rnd(iT)]);
 }
 
 eCantBuildReason cPlayer::canBuildStructure(int iStructureType)

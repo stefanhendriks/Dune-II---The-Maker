@@ -23,7 +23,7 @@
 #include "map/cMapEditor.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
-
+#include "utils/RNG.hpp"
 #include <fmt/core.h>
 
 cStructureFactory::cStructureFactory()
@@ -159,10 +159,10 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     str->setOwner(iPlayer);
     str->setBuildingFase(1); // prebuild
     str->TIMER_prebuild = std::min(structureSize/16, 250); // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
-    str->TIMER_decay = rnd(1000) + 100;
+    str->TIMER_decay = RNG::rnd(1000) + 100;
     str->fConcrete = (1 - fPercent);
     str->setHitPoints((int)fHealth);
-    str->setFrame(rnd(1)); // random start frame (flag)
+    str->setFrame(RNG::rnd(1)); // random start frame (flag)
     str->setStructureId(iNewId);
     str->setWidth(structureInfo.bmp_width / TILESIZE_WIDTH_PIXELS);
     str->setHeight(structureInfo.bmp_height / TILESIZE_HEIGHT_PIXELS);
