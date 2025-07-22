@@ -54,6 +54,13 @@ jobs:
         with:
           name: ${{ env.RELEASE_NAME }}
           path: bin/d2tm.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
 
   Ubuntu:
     name: Ubuntu (x86)
@@ -104,6 +111,13 @@ jobs:
         with:
           name: ${{ env.RELEASE_NAME }}
           path: bin/d2tm.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
 
   MACOSX:
     name: Mac OS X
@@ -146,6 +160,13 @@ jobs:
         with:
           name: ${{ env.RELEASE_NAME }}
           path: bin/d2tm.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
 
   Update-Github-Pages:
     if: always()
