@@ -178,3 +178,14 @@ jobs:
           publish_dir: ./out
           publish_branch: gh-pages
           keep_files: true
+
+  Update-Github-Pages:
+    if: always()
+    needs: [ Ubuntu, MACOSX, MSYS2 ]
+    runs-on: [ macos-15 ]
+    steps:
+    - name: Trigger Generate GH Pages Index
+      uses: peter-evans/workflow-dispatch@v1
+      with:
+        workflow: publish_gh_pages.yml
+        ref: gh-pages
