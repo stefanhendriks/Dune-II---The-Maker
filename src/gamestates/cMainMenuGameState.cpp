@@ -2,12 +2,6 @@
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
-//#include "gui/actions/cGuiActionExitGame.h"
-// #include "gui/actions/cGuiActionFadeOutOnly.h"
-// #include "gui/actions/cGuiActionSelectHouse.h"
-// #include "gui/actions/cGuiActionSetupSkirmishGame.h"
-// #include "gui/actions/cGuiActionShowOptions.h"
-// #include "gui/actions/cGuiActionToGameState.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 
@@ -39,9 +33,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     logoY = mainMenuFrameY - (logoHeight)*1.2f;
 
-    //const GuiRenderKind buttonKinds = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
-    //const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
-
 //    /////////////////////////////////
 //    //// Credits (top)
 //    ////////////////////////////////
@@ -62,15 +53,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
                 game.initiateFadingOut();})
             .build();
 
-    // gui_btn_credits = new GuiButton(creditsRect, "CREDITS");
-    // gui_btn_credits->setTextDrawer(&textDrawer);
-    // gui_btn_credits->setTheme(GuiTheme::Light());
-    // gui_btn_credits->setTextAlignHorizontal(buttonTextAlignment);
-    // gui_btn_credits->setRenderKind(buttonKinds);
-    // gui_btn_credits->setOnLeftMouseButtonClickedAction([this]() {
-    //     game.setNextStateToTransitionTo(GAME_CREDITS);
-    //     game.initiateFadingOut();});
-
     /////////////////////////////////
     //// Main Menu
     //// Beneath title
@@ -78,9 +60,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
-
-    // Color colorInactiveHover = Color{128, 128, 128,255};
-    // Color colorInactive = Color{192, 192, 192,255};
 
     // PLAY
     int playY = 323;
@@ -102,12 +81,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
                 game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
                 game.initiateFadingOut();})
             .build();
-    // GuiButton *gui_btn_SelectHouse = new GuiButton(textDrawer, campaign, "Campaign", buttonKinds);
-    // gui_btn_SelectHouse->setTheme(GuiTheme::Light());
-    // gui_btn_SelectHouse->setTextAlignHorizontal(buttonTextAlignment);
-    // gui_btn_SelectHouse->setOnLeftMouseButtonClickedAction([this]() {
-    //     game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
-    //     game.initiateFadingOut();});
     gui_window->addGuiObject(std::move(gui_btn_SelectHouse));
 
     int skirmishY = 344;
@@ -124,14 +97,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
                 game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
                 game.initiateFadingOut();})
             .build();
-    // GuiButton *gui_btn_Skirmish = new GuiButton(textDrawer, skirmish, "Skirmish", buttonKinds);
-    // gui_btn_Skirmish->setTheme(GuiTheme::Light());
-    // gui_btn_Skirmish->setTextAlignHorizontal(buttonTextAlignment);
-    // gui_btn_Skirmish->setOnLeftMouseButtonClickedAction([this](){
-    //     game.loadSkirmishMaps();
-    //     game.initSkirmish();
-    //     game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-    //     game.initiateFadingOut();});
     gui_window->addGuiObject(std::move(gui_btn_Skirmish));
 
     int multiplayerY = 364;
@@ -144,12 +109,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.initiateFadingOut();})
             .build();
-    // GuiButton *gui_btn_Multiplayer = new GuiButton(textDrawer, multiplayer, "Multiplayer", buttonKinds);
-    // gui_btn_Multiplayer->setTheme(GuiTheme::Inactive());
-    // // gui_btn_Multiplayer->setTextColor(colorInactive);
-    // gui_btn_Multiplayer->setTextAlignHorizontal(buttonTextAlignment);
-    // // gui_btn_Multiplayer->setTextColorHover(colorInactiveHover);
-    // gui_btn_Multiplayer->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
     gui_window->addGuiObject(std::move(gui_btn_Multiplayer));
 
     // LOAD
@@ -163,12 +122,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.initiateFadingOut();})
             .build();
-    // GuiButton *gui_btn_Load = new GuiButton(textDrawer, load, "Load", buttonKinds);
-    // gui_btn_Load->setTheme(GuiTheme::Inactive());
-    // // gui_btn_Load->setTextColor(colorInactive);
-    // gui_btn_Load->setTextAlignHorizontal(buttonTextAlignment);
-    // // gui_btn_Load->setTextColorHover(colorInactiveHover);
-    // gui_btn_Load->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
     gui_window->addGuiObject(std::move(gui_btn_Load));
 
     // OPTIONS
@@ -182,10 +135,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.setNextStateToTransitionTo(GAME_OPTIONS);})
             .build();
-    // GuiButton *gui_btn_Options = new GuiButton(textDrawer, options, "Options", buttonKinds);
-    // gui_btn_Options->setTheme(GuiTheme::Light());
-    // gui_btn_Options->setTextAlignHorizontal(buttonTextAlignment);
-    // gui_btn_Options->setOnLeftMouseButtonClickedAction([this](){game.setNextStateToTransitionTo(GAME_OPTIONS);});
     gui_window->addGuiObject(std::move(gui_btn_Options));
 
     // HALL OF FAME
@@ -199,12 +148,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){game.initiateFadingOut();})
             .build();
-    // GuiButton *gui_btn_Hof = new GuiButton(textDrawer, hof, "Hall of Fame", buttonKinds);
-    // gui_btn_Hof->setTheme(GuiTheme::Inactive());
-    // // gui_btn_Hof->setTextColor(colorInactive);
-    // gui_btn_Hof->setTextAlignHorizontal(buttonTextAlignment);
-    // // gui_btn_Hof->setTextColorHover(colorInactiveHover);
-    // gui_btn_Hof->setOnLeftMouseButtonClickedAction([this](){game.initiateFadingOut();});
     gui_window->addGuiObject(std::move(gui_btn_Hof));
 
     // EXIT
@@ -220,19 +163,11 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
                 game.m_playing = false;
                 game.initiateFadingOut();})
             .build();    
-    // GuiButton *gui_btn_Exit = new GuiButton(textDrawer, exit, "Exit", buttonKinds);
-    // gui_btn_Exit->setTheme(GuiTheme::Light());
-    // gui_btn_Exit->setTextAlignHorizontal(buttonTextAlignment);
-    // gui_btn_Exit->setOnLeftMouseButtonClickedAction([this]() {
-    //     game.m_playing = false;
-    //     game.initiateFadingOut();});
     gui_window->addGuiObject(std::move(gui_btn_Exit));
 }
 
 cMainMenuGameState::~cMainMenuGameState()
 {
-    // delete gui_window;
-    // delete gui_btn_credits;
 }
 
 void cMainMenuGameState::thinkFast()

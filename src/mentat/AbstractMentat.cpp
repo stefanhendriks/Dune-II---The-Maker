@@ -66,7 +66,6 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();
-        // m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
     }
     else {
         m_guiBtnToMissionSelect = nullptr;
@@ -87,12 +86,8 @@ AbstractMentat::AbstractMentat(bool canMissionSelect)
 
 AbstractMentat::~AbstractMentat()
 {
-    // delete leftButton;
-    // delete rightButton;
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
-    // delete m_guiBtnToMissionSelect;
-
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
 

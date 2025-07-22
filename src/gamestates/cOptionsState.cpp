@@ -2,8 +2,6 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-// #include "gui/actions/cGuiActionExitGame.h"
-// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 
@@ -34,9 +32,6 @@ void cOptionsState::constructWindow(int prevState)
     m_guiWindow = std::make_unique<GuiWindow>(window);
     m_guiWindow->setTheme(GuiTheme::Light());
 
-    //const GuiRenderKind buttonKinds = OPAQUE_WITH_BORDER;
-    //const GuiTextAlignHorizontal buttonTextAlignment = CENTER;
-
     // Title
     m_guiWindow->setTitle("Dune II - The Maker - version " + game.m_version);
 
@@ -53,13 +48,6 @@ void cOptionsState::constructWindow(int prevState)
                 game.setNextStateToTransitionTo(GAME_MENU);
                 game.initiateFadingOut();})
             .build();   
-    // GuiButton *gui_btn_toMenu = new GuiButton(m_textDrawer, toMainMenuRect, "Back to main menu", buttonKinds);
-    // gui_btn_toMenu->setTheme(GuiTheme::Light());
-    // gui_btn_toMenu->setTextAlignHorizontal(buttonTextAlignment);
-    // // cGuiActionToGameState *action2 = new cGuiActionToGameState(GAME_MENU, true);
-    // gui_btn_toMenu->setOnLeftMouseButtonClickedAction([this]() 
-    //     {game.setNextStateToTransitionTo(GAME_MENU);
-    //     game.initiateFadingOut();});
     m_guiWindow->addGuiObject(std::move(gui_btn_toMenu));
 
     // QUIT game
@@ -75,12 +63,6 @@ void cOptionsState::constructWindow(int prevState)
                 game.m_playing = false;
                 game.initiateFadingOut();})
             .build();   
-    // GuiButton *gui_btn_Quit = new GuiButton(m_textDrawer, quitRect, "Quit game", buttonKinds);
-    // gui_btn_Quit->setTheme(GuiTheme::Light());
-    // gui_btn_Quit->setTextAlignHorizontal(buttonTextAlignment);
-    // gui_btn_Quit->setOnLeftMouseButtonClickedAction([this]() {
-        // game.m_playing = false;
-        // game.initiateFadingOut();});
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
 
     // BACK to where we came from
@@ -95,12 +77,6 @@ void cOptionsState::constructWindow(int prevState)
             .onClick([this,prevState](){
                 game.setNextStateToTransitionTo(prevState);})
             .build();   
-    // GuiButton *gui_btn_Back = new GuiButton(m_textDrawer, backRect, "Back", buttonKinds);
-    // gui_btn_Back->setTheme(GuiTheme::Light());
-    // gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
-    // // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    // gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() 
-    //     {game.setNextStateToTransitionTo(prevState);});
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 
     // Mission select from options menu, only when playing the game
@@ -117,20 +93,12 @@ void cOptionsState::constructWindow(int prevState)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();   
-        // GuiButton *gui_btn_toMissionSelect = new GuiButton(m_textDrawer, toMissionSelectRect, "Mission select",
-        //         buttonKinds);
-        // gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
-        // gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-        // // cGuiActionToGameState *action3 = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-        // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() 
-        //     {game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
         m_guiWindow->addGuiObject(std::move(gui_btn_toMissionSelect));
     }
 }
 
 cOptionsState::~cOptionsState()
 {
-    // delete m_guiWindow;
 }
 
 void cOptionsState::thinkFast()

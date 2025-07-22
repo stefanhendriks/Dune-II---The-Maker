@@ -9,7 +9,6 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 
@@ -58,10 +57,6 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     isFinishedConqueringRegions = true;
 
     // the quick-way to get to a mission select window
-    //const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
-    //const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
-
-//    cTextDrawer textDrawer(bene_font);
     int length = textDrawer.textLength("Mission select");
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
@@ -74,14 +69,6 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();   
-    // GuiButton *gui_btn_toMissionSelect = new GuiButton(textDrawer, toMissionSelectRect,
-    //         "Mission select", buttonKind);
-    // gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
-    // gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-    // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-    // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
-    //     game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
-    // m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 
 void cSelectYourNextConquestState::calculateOffset()
@@ -92,7 +79,6 @@ void cSelectYourNextConquestState::calculateOffset()
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
 {
-    // delete m_guiBtnToMissionSelect;
 }
 
 void cSelectYourNextConquestState::thinkFast()
@@ -481,7 +467,6 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
         // is the player we want to get the correct house collor for this piece...
         cPlayer &temp = players[regionPiece.iHouse];
-        // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
             regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
             regionPiece.oldHouse=regionPiece.iHouse;
