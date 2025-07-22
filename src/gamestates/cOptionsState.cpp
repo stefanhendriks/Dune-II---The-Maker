@@ -175,5 +175,6 @@ void cOptionsState::refresh()
 {
     // delete m_guiWindow;
     // m_guiWindow = nullptr;
+    m_guiWindow.reset();
     constructWindow(m_prevState);
 }
