@@ -3,7 +3,7 @@
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-#include "gui/GuiButton.h"
+#include "gui/GuiButton.hpp"
 
 HarkonnenMentat::HarkonnenMentat(bool allowMissionSelect) : AbstractMentat(allowMissionSelect)
 {

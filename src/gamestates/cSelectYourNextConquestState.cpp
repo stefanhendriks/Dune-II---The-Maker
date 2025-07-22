@@ -9,7 +9,7 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-#include "gui/GuiButton.h"
+#include "gui/GuiButton.hpp"
 #include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>

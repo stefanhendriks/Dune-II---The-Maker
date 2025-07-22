@@ -7,7 +7,7 @@
 #include "utils/Graphics.hpp"
 #include "drawers/cTextDrawer.h"
 #include <SDL2/SDL_ttf.h>
-#include "gui/GuiButton.h"
+#include "gui/GuiButton.hpp"
 #include <iostream>
 
 BeneMentat::BeneMentat() : AbstractMentat(false)

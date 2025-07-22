@@ -14,7 +14,7 @@
 #include "d2tmc.h"
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/GuiButton.h"
+#include "gui/GuiButton.hpp"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>

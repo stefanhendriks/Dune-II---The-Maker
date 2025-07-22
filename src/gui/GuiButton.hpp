@@ -72,6 +72,7 @@ private:
 
 class GuiButtonBuilder {
 public:
+    GuiButtonBuilder() = default;
     GuiButtonBuilder& withTextDrawer(cTextDrawer* drawer);
     GuiButtonBuilder& withRect(const cRectangle& rect);
     GuiButtonBuilder& withLabel(const std::string& label);

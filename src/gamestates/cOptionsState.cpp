@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/GuiButton.h"
+#include "gui/GuiButton.hpp"
 #include "gui/GuiWindow.h"
 
 
