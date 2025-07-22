@@ -112,7 +112,7 @@ jobs:
       - name: Make sure all is up to date
         run: |
           cd "${{ github.workspace }}"
-          git pull -r
+          git pull -r --autostash
       - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v4
         with:
