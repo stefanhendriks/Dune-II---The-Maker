@@ -58,6 +58,7 @@ private:
 
 class GuiLabelBuilder {
 public:
+    GuiLabelBuilder() = default;
     GuiLabelBuilder& withTextDrawer(cTextDrawer* drawer);
     GuiLabelBuilder& withRect(const cRectangle& rect);
     GuiLabelBuilder& withLabel(const std::string& label);

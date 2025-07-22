@@ -55,6 +55,7 @@ private:
 
 class GuiCheckBoxBuilder {
 public:
+    GuiCheckBoxBuilder() = default;
     GuiCheckBoxBuilder& withRect(const cRectangle& rect);
     GuiCheckBoxBuilder& withKind(GuiRenderKind kind);
     GuiCheckBoxBuilder& withTheme(const GuiTheme& theme);
