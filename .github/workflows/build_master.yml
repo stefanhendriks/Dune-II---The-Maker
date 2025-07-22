@@ -45,7 +45,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date +'%Y%m%d').windows.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').windows.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Upload ZIP as artifact
@@ -102,7 +102,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date +'%Y%m%d').linux.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').linux.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Upload ZIP as artifact
@@ -151,7 +151,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date +'%Y%m%d').maxosx.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').maxosx.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Upload ZIP as artifact
