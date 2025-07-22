@@ -48,6 +48,10 @@ jobs:
           FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').windows.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Make sure all is up to date
+        run: |
+          cd "${{ github.workspace }}"
+          git pull -r
       - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -105,6 +109,10 @@ jobs:
           FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').linux.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Make sure all is up to date
+        run: |
+          cd "${{ github.workspace }}"
+          git pull -r
       - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v4
         with:
@@ -154,6 +162,10 @@ jobs:
           FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').maxosx.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Make sure all is up to date
+        run: |
+          cd "${{ github.workspace }}"
+          git pull -r
       - name: Upload ZIP as artifact
         uses: actions/upload-artifact@v4
         with:
