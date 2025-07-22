@@ -3,8 +3,6 @@ cls
 echo.
 echo Prepare binary package (./bin) of D2TM. 
 echo.
-echo Will copy "d2tm.exe" from the Default dir created by Clion.
-echo Will copy DLL files from dll/mingw32
 echo.
 echo 1. Removing bin directory
 rd /S /Q bin
@@ -34,7 +32,6 @@ echo 6. Copying data files
 copy resources\bin\data\*.dat bin\data
 copy resources\bin\data\*.fon bin\data
 copy resources\bin\data\*.ttf bin\data
-copy resources\bin\data\bmp\*.* bin\data\bmp
 echo 7. Copying scenes
 copy resources\bin\data\scenes\*.* bin\data\scenes
 echo 8. Create save game directories
@@ -47,13 +44,13 @@ echo 9. Create skirmish directory
 mkdir bin\skirmish
 copy resources\bin\skirmish\*.ini bin\skirmish
 echo 10. Copying dll files
-copy resources\bin\dll\*.* bin
-echo 11. Copy executable from %1
-copy cmake-build-release-mingw\*.exe bin
+copy resources\dll\*.* bin
+echo 11. Copy executable from build dir
+copy build\*.exe bin
 echo 12. Copy game rules file (game.ini)
 copy resources\game.ini.org bin\game.ini
+copy resources\bin\settings.ini bin
 echo 13. Copy txt files
-copy *.txt bin
 copy resources\bin\doc\versionhistory.txt bin
 copy resources\bin\doc\controls.txt bin
 copy resources\bin\windowed.bat bin

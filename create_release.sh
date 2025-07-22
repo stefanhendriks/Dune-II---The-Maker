@@ -30,7 +30,6 @@ echo "6. Copying data files"
 cp resources/bin/data/*.dat bin/data
 cp resources/bin/data/*.fon bin/data
 cp resources/bin/data/*.ttf bin/data
-cp resources/bin/data/bmp/*.* bin/data/bmp
 echo "7. Copying scenes"
 cp resources/bin/data/scenes/*.* bin/data/scenes
 echo "8. Create save game directories"
