@@ -1,0 +1,53 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  Update-Github-Pages:
+    runs-on: [ macos-15 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          submodules: recursive
+      - name: Generate index.html
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir -p out
+          
+          echo '<!DOCTYPE html>' > out/index.html
+          echo '<html><head><meta charset="UTF-8"><title>D2TM Nightly Builds</title></head><body>' >> out/index.html
+          echo '<h1>Dune 2 - The Maker: Nightly Builds</h1>' >> out/index.html
+          
+          echo '<h2>Mac OS X</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*maxosx*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+          echo '</ul>' >> out/index.html
+          
+          echo '<h2>Windows</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*windows*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+          echo '</ul>' >> out/index.html
+          
+          echo '<h2>Linux</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*linux*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+          
+          echo '</ul></body></html>' >> out/index.html
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
