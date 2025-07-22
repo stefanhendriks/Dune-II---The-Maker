@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(d2tm)
 
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 #SET(OpenGL_GL_PREFERENCE "GLVND")
 
 if(APPLE)
@@ -107,10 +109,3 @@ target_compile_options(${PROJECT_NAME}
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-# if (NOT UNIX)
-#   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
-#     COMMAND_EXPAND_LISTS
-#   )
-# endif()
