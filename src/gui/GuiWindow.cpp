@@ -1,4 +1,4 @@
-#include "GuiWindow.h"
+#include "GuiWindow.hpp"
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"

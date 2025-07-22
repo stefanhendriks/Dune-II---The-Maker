@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/GuiButton.hpp"
-#include "gui/GuiWindow.h"
+#include "gui/GuiWindow.hpp"
 
 
 

@@ -4,7 +4,7 @@
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
 #include "gui/GuiButton.hpp"
-#include "gui/GuiWindow.h"
+#include "gui/GuiWindow.hpp"
 #include "sMouseEvent.h"
 
 #include <memory>
