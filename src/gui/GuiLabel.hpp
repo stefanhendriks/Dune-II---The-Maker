@@ -58,50 +58,14 @@ private:
 
 class GuiLabelBuilder {
 public:
-    GuiLabelBuilder& withTextDrawer(cTextDrawer* drawer) {
-        params.drawer = drawer;
-        return *this;
-    }
-
-    GuiLabelBuilder& withRect(const cRectangle& rect) {
-        params.rect = rect;
-        return *this;
-    }
-
-    GuiLabelBuilder& withLabel(const std::string& label) {
-        params.label = label;
-        return *this;
-    }
-
-    GuiLabelBuilder& withKind(GuiRenderKind kind) {
-        params.kind = kind;
-        return *this;
-    }
-
-    GuiLabelBuilder& withTheme(const GuiTheme& theme) {
-        params.theme = theme;
-        return *this;
-    }
-
-    GuiLabelBuilder& withTextAlign(GuiTextAlignHorizontal align) {
-        params.align = align;
-        return *this;
-    }
-
-    GuiLabelBuilder& withTexture(Texture* tex) {
-        params.tex = tex;
-        return *this;
-    }
-
-    GuiLabel* build() const {
-        GuiLabel* btn = new GuiLabel(params.rect, params.label);
-        btn->setTextDrawer(params.drawer);
-        btn->setRenderKind(params.kind);
-        btn->setTheme(params.theme);
-        btn->setTextAlignHorizontal(params.align);
-        btn->setTexture(params.tex);
-        return btn;
-    }
+    GuiLabelBuilder& withTextDrawer(cTextDrawer* drawer);
+    GuiLabelBuilder& withRect(const cRectangle& rect);
+    GuiLabelBuilder& withLabel(const std::string& label);
+    GuiLabelBuilder& withKind(GuiRenderKind kind);
+    GuiLabelBuilder& withTheme(const GuiTheme& theme);
+    GuiLabelBuilder& withTextAlign(GuiTextAlignHorizontal align);
+    GuiLabelBuilder& withTexture(Texture* tex);
+    std::unique_ptr<GuiLabel> build() const;
 
 private:
     GuiLabelParams params;

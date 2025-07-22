@@ -72,64 +72,17 @@ private:
 
 class GuiButtonBuilder {
 public:
-    GuiButtonBuilder& withTextDrawer(cTextDrawer* drawer) {
-        params.drawer = drawer;
-        return *this;
-    }
+    GuiButtonBuilder& withTextDrawer(cTextDrawer* drawer);
+    GuiButtonBuilder& withRect(const cRectangle& rect);
+    GuiButtonBuilder& withLabel(const std::string& label);
+    GuiButtonBuilder& withKind(GuiRenderKind kind);
+    GuiButtonBuilder& withTheme(const GuiTheme& theme);
+    GuiButtonBuilder& withTextAlign(GuiTextAlignHorizontal align);
+    GuiButtonBuilder& onClick(std::function<void()> callback);
+    GuiButtonBuilder& onRightClick(std::function<void()> callback);
+    GuiButtonBuilder& withTexture(Texture* tex);
 
-    GuiButtonBuilder& withRect(const cRectangle& rect) {
-        params.rect = rect;
-        return *this;
-    }
-
-    GuiButtonBuilder& withLabel(const std::string& label) {
-        params.label = label;
-        return *this;
-    }
-
-    GuiButtonBuilder& withKind(GuiRenderKind kind) {
-        params.kind = kind;
-        return *this;
-    }
-
-    GuiButtonBuilder& withTheme(const GuiTheme& theme) {
-        params.theme = theme;
-        return *this;
-    }
-
-    GuiButtonBuilder& withTextAlign(GuiTextAlignHorizontal align) {
-        params.align = align;
-        return *this;
-    }
-
-    GuiButtonBuilder& onClick(std::function<void()> callback) {
-        params.onLeftClick = std::move(callback);
-        return *this;
-    }
-
-    GuiButtonBuilder& onRightClick(std::function<void()> callback) {
-        params.onRightClick = std::move(callback);
-        return *this;
-    }
-
-    GuiButtonBuilder& withTexture(Texture* tex) {
-        params.tex = tex;
-        return *this;
-    }
-
-    std::unique_ptr<GuiButton> build() const {
-        std::unique_ptr<GuiButton> btn = std::make_unique<GuiButton>(params.rect, params.label);
-        btn->setTextDrawer(params.drawer);
-        btn->setRenderKind(params.kind);
-        btn->setTheme(params.theme);
-        btn->setTextAlignHorizontal(params.align);
-        btn->setTexture(params.tex);
-        if (params.onLeftClick)
-            btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
-        if (params.onRightClick)
-            btn->setOnRightMouseButtonClickedAction(params.onRightClick);
-        return btn;
-    }
+    std::unique_ptr<GuiButton> build() const;
 
 private:
     GuiButtonParams params;

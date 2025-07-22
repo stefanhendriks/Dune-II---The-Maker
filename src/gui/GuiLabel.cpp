@@ -127,3 +127,54 @@ void GuiLabel::setEnabled(bool value)
 
 void GuiLabel::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {}
+
+////////////////////////////////////////////////////////////////////////
+//
+//   GuiLabelBuilder
+//
+////////////////////////////////////////////////////////////////////////
+
+GuiLabelBuilder& GuiLabelBuilder::withTextDrawer(cTextDrawer* drawer) {
+    params.drawer = drawer;
+    return *this;
+}
+
+GuiLabelBuilder& GuiLabelBuilder::withRect(const cRectangle& rect) {
+    params.rect = rect;
+    return *this;
+}
+
+GuiLabelBuilder& GuiLabelBuilder::withLabel(const std::string& label) {
+    params.label = label;
+    return *this;
+}
+
+GuiLabelBuilder& GuiLabelBuilder::withKind(GuiRenderKind kind) {
+    params.kind = kind;
+    return *this;
+}
+
+GuiLabelBuilder& GuiLabelBuilder::withTheme(const GuiTheme& theme) {
+    params.theme = theme;
+    return *this;
+}
+
+GuiLabelBuilder& GuiLabelBuilder::withTextAlign(GuiTextAlignHorizontal align) {
+    params.align = align;
+    return *this;
+}
+
+GuiLabelBuilder& GuiLabelBuilder::withTexture(Texture* tex) {
+    params.tex = tex;
+    return *this;
+}
+
+std::unique_ptr<GuiLabel> GuiLabelBuilder::build() const {
+    auto btn = std::make_unique<GuiLabel>(params.rect, params.label);
+    btn->setTextDrawer(params.drawer);
+    btn->setRenderKind(params.kind);
+    btn->setTheme(params.theme);
+    btn->setTextAlignHorizontal(params.align);
+    btn->setTexture(params.tex);
+    return btn;
+}

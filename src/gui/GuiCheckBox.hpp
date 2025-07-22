@@ -55,41 +55,12 @@ private:
 
 class GuiCheckBoxBuilder {
 public:
-    GuiCheckBoxBuilder& withRect(const cRectangle& rect) {
-        params.rect = rect;
-        return *this;
-    }
-
-    GuiCheckBoxBuilder& withKind(GuiRenderKind kind) {
-        params.kind = kind;
-        return *this;
-    }
-
-    GuiCheckBoxBuilder& withTheme(const GuiTheme& theme) {
-        params.theme = theme;
-        return *this;
-    }
-
-    GuiCheckBoxBuilder& onCheck(std::function<void()> callback) {
-        params.onCheckAction = std::move(callback);
-        return *this;
-    }
-
-    GuiCheckBoxBuilder& onUnCheck(std::function<void()> callback) {
-        params.onUnCheckAction = std::move(callback);
-        return *this;
-    }
-
-    GuiCheckBox* build() const {
-        GuiCheckBox* btn = new GuiCheckBox(params.rect);
-        btn->setRenderKind(params.kind);
-        btn->setTheme(params.theme);
-        if (params.onCheckAction)
-            btn->setCheckAction(params.onCheckAction);
-        if (params.onUnCheckAction)
-            btn->setUnCheckAction(params.onUnCheckAction);
-        return btn;
-    }
+    GuiCheckBoxBuilder& withRect(const cRectangle& rect);
+    GuiCheckBoxBuilder& withKind(GuiRenderKind kind);
+    GuiCheckBoxBuilder& withTheme(const GuiTheme& theme);
+    GuiCheckBoxBuilder& onCheck(std::function<void()> callback);
+    GuiCheckBoxBuilder& onUnCheck(std::function<void()> callback);
+    std::unique_ptr<GuiCheckBox> build() const;
 
 private:
     GuiCheckBoxParams params;

@@ -3,6 +3,13 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 
+
+////////////////////////////////////////////////////////////////////////
+//
+//   GuiButton
+//
+////////////////////////////////////////////////////////////////////////
+
 GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
     : GuiObject(rect)
     , m_textDrawer(nullptr)
@@ -212,4 +219,69 @@ void GuiButton::setEnabled(bool value)
 
 void GuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+//   GuiButtonBuilder
+//
+////////////////////////////////////////////////////////////////////////
+
+GuiButtonBuilder& GuiButtonBuilder::withTextDrawer(cTextDrawer* drawer) {
+    params.drawer = drawer;
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::withRect(const cRectangle& rect) {
+    params.rect = rect;
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::withLabel(const std::string& label) {
+    params.label = label;
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::withKind(GuiRenderKind kind) {
+    params.kind = kind;
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::withTheme(const GuiTheme& theme) {
+    params.theme = theme;
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::withTextAlign(GuiTextAlignHorizontal align) {
+    params.align = align;
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::onClick(std::function<void()> callback) {
+    params.onLeftClick = std::move(callback);
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::onRightClick(std::function<void()> callback) {
+    params.onRightClick = std::move(callback);
+    return *this;
+}
+
+GuiButtonBuilder& GuiButtonBuilder::withTexture(Texture* tex) {
+    params.tex = tex;
+    return *this;
+}
+
+std::unique_ptr<GuiButton> GuiButtonBuilder::build() const {
+    std::unique_ptr<GuiButton> btn = std::make_unique<GuiButton>(params.rect, params.label);
+    btn->setTextDrawer(params.drawer);
+    btn->setRenderKind(params.kind);
+    btn->setTheme(params.theme);
+    btn->setTextAlignHorizontal(params.align);
+    btn->setTexture(params.tex);
+    if (params.onLeftClick)
+        btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
+    if (params.onRightClick)
+        btn->setOnRightMouseButtonClickedAction(params.onRightClick);
+    return btn;
 }

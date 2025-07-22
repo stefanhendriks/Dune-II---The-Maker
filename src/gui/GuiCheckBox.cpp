@@ -4,6 +4,12 @@
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
 
+////////////////////////////////////////////////////////////////////////
+//
+//   GuiCheckBox
+//
+////////////////////////////////////////////////////////////////////////
+
 GuiCheckBox::GuiCheckBox(const cRectangle &rect)
     : GuiObject(rect)
     , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
@@ -153,3 +159,48 @@ void GuiCheckBox::setEnabled(bool value)
 
 void GuiCheckBox::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//   GuiCheckBoxBuilder
+//
+////////////////////////////////////////////////////////////////////////
+
+
+
+GuiCheckBoxBuilder& GuiCheckBoxBuilder::withRect(const cRectangle& rect) {
+    params.rect = rect;
+    return *this;
+}
+
+GuiCheckBoxBuilder& GuiCheckBoxBuilder::withKind(GuiRenderKind kind) {
+    params.kind = kind;
+    return *this;
+}
+
+GuiCheckBoxBuilder& GuiCheckBoxBuilder::withTheme(const GuiTheme& theme) {
+    params.theme = theme;
+    return *this;
+}
+
+GuiCheckBoxBuilder& GuiCheckBoxBuilder::onCheck(std::function<void()> callback) {
+    params.onCheckAction = std::move(callback);
+    return *this;
+}
+
+GuiCheckBoxBuilder& GuiCheckBoxBuilder::onUnCheck(std::function<void()> callback) {
+    params.onUnCheckAction = std::move(callback);
+    return *this;
+}
+
+std::unique_ptr<GuiCheckBox> GuiCheckBoxBuilder::build() const {
+    auto btn = std::make_unique<GuiCheckBox>(params.rect);
+    btn->setRenderKind(params.kind);
+    btn->setTheme(params.theme);
+    if (params.onCheckAction)
+        btn->setCheckAction(params.onCheckAction);
+    if (params.onUnCheckAction)
+        btn->setUnCheckAction(params.onUnCheckAction);
+    return btn;
+}
