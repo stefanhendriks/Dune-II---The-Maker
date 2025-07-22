@@ -184,19 +184,21 @@ jobs:
 
         echo '<!DOCTYPE html>' > out/index.html
         echo '<html><head><meta charset="UTF-8"><title>D2TM Nightly Builds</title></head><body>' >> out/index.html
-        echo '<h1>Dune 2 - The Maker: Nightly Builds</h1><ul>' >> out/index.html
+        echo '<h1>Dune 2 - The Maker: Nightly Builds</h1>' >> out/index.html
 
         echo '<h2>Mac OS X</h1><ul>' >> out/index.html
         for zip in $(ls out/nightly/*maxosx*.zip | sort -r); do
           file=$(basename "$zip")
           echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
         done
+        echo '</ul>' >> out/index.html
 
         echo '<h2>Windows</h1><ul>' >> out/index.html
         for zip in $(ls out/nightly/*windows*.zip | sort -r); do
           file=$(basename "$zip")
           echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
         done
+        echo '</ul>' >> out/index.html
 
         echo '<h2>Linux</h1><ul>' >> out/index.html
         for zip in $(ls out/nightly/*linux*.zip | sort -r); do
