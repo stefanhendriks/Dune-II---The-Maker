@@ -40,7 +40,7 @@ jobs:
       - name: Zip binary
         run: |
           cd "${{ github.workspace }}/bin"
-          pacman -S zip
+          yes | pacman -S zip
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Produce release name
         run: |
