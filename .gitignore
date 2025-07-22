@@ -1,5 +1,3 @@
-bin/
-create_binary.bat
 tools/*.bmp
 log.txt
 *.mid
@@ -23,3 +21,4 @@ dependencies/allegro-src
 Release/
 /Default/
 .DS_Store
+/bin
