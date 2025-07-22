@@ -18,7 +18,7 @@ jobs:
         with:
           msystem: MINGW64 # D2TM is built within a MinGW64 bit environment
           update: true
-          install: mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake zip
+          install: mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -40,6 +40,7 @@ jobs:
       - name: Zip binary
         run: |
           cd "${{ github.workspace }}/bin"
+          pacman -S zip
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Produce release name
         run: |
@@ -159,7 +160,8 @@ jobs:
     - name: Generate index.html
       run: |
         cd "${{ github.workspace }}"
-        
+        mkdir -p out
+
         echo '<!DOCTYPE html>' > out/index.html
         echo '<html><head><meta charset="UTF-8"><title>D2TM Nightly Builds</title></head><body>' >> out/index.html
         echo '<h1>Dune 2 - The Maker: Nightly Builds</h1><ul>' >> out/index.html
