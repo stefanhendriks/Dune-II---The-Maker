@@ -473,7 +473,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         cPlayer &temp = players[regionPiece.iHouse];
         // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,IndTrans);
             regionPiece.oldHouse=regionPiece.iHouse;
         }
         drawRegion(regionPiece);
@@ -484,7 +484,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         int iHouse = players[HUMAN].getHouse();
         cPlayer &temp = players[iHouse];
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,IndTrans);
         }
         drawRegion(regionPiece);
     }

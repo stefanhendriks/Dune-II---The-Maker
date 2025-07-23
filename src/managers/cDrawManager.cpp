@@ -30,7 +30,7 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
 {
     assert(thePlayer);
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
-                gfxinter->getSurface(BTN_OPTIONS), 232);
+                gfxinter->getSurface(BTN_OPTIONS), IndTrans);
 }
 
 cDrawManager::~cDrawManager()
