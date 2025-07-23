@@ -27,6 +27,8 @@
 #include <memory>
 #include <SDL2/SDL_ttf.h>
 
+constexpr int IndTrans = 223;
+
 class cAbstractStructure;
 class SDLDrawer;
 class cBullet;
