@@ -256,8 +256,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
+        bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),IndTrans);
+        bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),IndTrans);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -265,7 +265,7 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = createTextureFromIndexedSurfaceWithPalette(structureType.bmp,232);
+            bmp_structure[i] = createTextureFromIndexedSurfaceWithPalette(structureType.bmp,IndTrans);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
@@ -277,7 +277,7 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash,232);
+                bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash,IndTrans);
             }
 
         }
@@ -287,13 +287,13 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, 232);
+            bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, IndTrans);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
             if (unitType.top) {
 
-                bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, 232);
+                bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, IndTrans);
             }
         }
     }

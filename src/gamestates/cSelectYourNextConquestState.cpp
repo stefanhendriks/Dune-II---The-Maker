@@ -468,7 +468,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         // is the player we want to get the correct house collor for this piece...
         cPlayer &temp = players[regionPiece.iHouse];
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,IndTrans);
             regionPiece.oldHouse=regionPiece.iHouse;
         }
         drawRegion(regionPiece);
@@ -479,7 +479,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
         int iHouse = players[HUMAN].getHouse();
         cPlayer &temp = players[iHouse];
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,232);
+            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp,IndTrans);
         }
         drawRegion(regionPiece);
     }
