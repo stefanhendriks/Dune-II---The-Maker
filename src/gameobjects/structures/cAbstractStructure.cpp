@@ -905,7 +905,7 @@ void cAbstractStructure::drawWithShadow()
     cRectangle dest =  {drawX, drawY, scaledWidth, scaledHeight};
     Texture *shadow = getShadowBitmap();
     if (shadow) {
-        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest,160);
+        renderDrawer->renderStrechSprite(shadow, src, dest,160);
     }
     renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
 }
