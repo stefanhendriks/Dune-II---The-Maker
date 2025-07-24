@@ -23,7 +23,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include <fmt/core.h>
+#include <format>
 
 cAbstractMentat::cAbstractMentat(bool canMissionSelect)
 {
@@ -348,7 +348,7 @@ void cAbstractMentat::initSentences()
 void cAbstractMentat::setSentence(int i, const char *text)
 {
     sprintf(sentence[i], "%s", text);
-    logbook(fmt::format("Sentence[{}]={}", i, text));
+    logbook(std::format("Sentence[{}]={}", i, text));
 }
 
 void cAbstractMentat::loadScene(const std::string &scene)
@@ -364,12 +364,12 @@ void cAbstractMentat::loadScene(const std::string &scene)
     iMovieFrame=0;
 
     if (gfxmovie != nullptr) {
-        logbook(fmt::format("Successful loaded scene [{}]", filename));
+        logbook(std::format("Successful loaded scene [{}]", filename));
         return;
     }
 
     gfxmovie=nullptr;
-    logbook(fmt::format("Failed to load scene [{}]", filename));
+    logbook(std::format("Failed to load scene [{}]", filename));
 }
 
 void cAbstractMentat::speak()

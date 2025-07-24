@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "sidebar/cBuildingList.h"
 
-#include <fmt/core.h>
+#include <format>
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
 {
@@ -41,7 +41,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     }
 
     if (game.isDebugMode()) {
-        logbook(fmt::format("cBuildingListItem constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
+        logbook(std::format("cBuildingListItem constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
                             getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
 
     }
@@ -399,24 +399,24 @@ std::string cBuildingListItem::getInfo()
 
     if (isTypeStructure()) {
         s_StructureInfo structureType = getStructureInfo();
-        msg = fmt::format("${} | {} | {} Power | {} Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+        msg = std::format("${} | {} | {} Power | {} Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
     }
     else if (isTypeUnit()) {
         s_UnitInfo unitType = getUnitInfo();
         if (getBuildCost() > 0) {
-            msg = fmt::format("${} | {} | {} Secs", getBuildCost(), unitType.name, seconds);
+            msg = std::format("${} | {} | {} Secs", getBuildCost(), unitType.name, seconds);
         }
         else {
-            msg = fmt::format("{} | {} Secs", sUnitInfo[getBuildId()].name, seconds);
+            msg = std::format("{} | {} Secs", sUnitInfo[getBuildId()].name, seconds);
         }
     }
     else if (isTypeUpgrade()) {
         s_UpgradeInfo upgrade = getUpgradeInfo();
-        msg = fmt::format("UPGRADE: ${} | {} | {} Secs", getBuildCost(), upgrade.description, seconds);
+        msg = std::format("UPGRADE: ${} | {} | {} Secs", getBuildCost(), upgrade.description, seconds);
     }
     else if (isTypeSpecial()) {
         s_SpecialInfo special = getSpecialInfo();
-        msg = fmt::format("${} | {} | {} Secs", getBuildCost(), special.description, seconds);
+        msg = std::format("${} | {} | {} Secs", getBuildCost(), special.description, seconds);
     }
     else {
         msg = "ERROR: UNKNOWN BUILD TYPE";

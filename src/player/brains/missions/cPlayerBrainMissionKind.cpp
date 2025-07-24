@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "player/cPlayer.h"
 
-#include <fmt/core.h>
+#include <format>
 
 namespace brains {
 
@@ -62,12 +62,12 @@ cPlayerBrainMissionKind::~cPlayerBrainMissionKind()
  */
 void cPlayerBrainMissionKind::log(const char *txt)
 {
-    mission->log(fmt::format("cPlayerBrainMissionKind | {}", txt).c_str());
+    mission->log(std::format("cPlayerBrainMissionKind | {}", txt).c_str());
 }
 
 void cPlayerBrainMissionKind::onNotifyGameEvent(const s_GameEvent &event)
 {
-    log(fmt::format("cPlayerBrainMissionKind::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
+    log(std::format("cPlayerBrainMissionKind::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     if (event.player == specificPlayerForEventToGoToSelectTargetState) {
         if (specificEventTypeToGoToSelectTargetState != eGameEventType::GAME_EVENT_NONE) {

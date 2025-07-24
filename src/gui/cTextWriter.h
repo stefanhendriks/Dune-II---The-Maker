@@ -11,7 +11,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
-#include <fmt/core.h>
+#include <format>
 
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
 // every new command it will start on a new line.
@@ -26,13 +26,13 @@ public:
     void write(const std::string &msg, Color color);
 
     template<typename... Args>
-    void writef(fmt::format_string<Args...> fmtStr, Args &&... args) {
-        write(fmt::format(fmtStr, std::forward<Args>(args)...));
+    void writef(std::format_string<Args...> fmtStr, Args &&... args) {
+        write(std::format(fmtStr, std::forward<Args>(args)...));
     }
 
     template<typename... Args>
-    void writef(Color color, fmt::format_string<Args...> fmtStr, Args &&... args) {
-        write(fmt::format(fmtStr, std::forward<Args>(args)...), color);
+    void writef(Color color, std::format_string<Args...> fmtStr, Args &&... args) {
+        write(std::format(fmtStr, std::forward<Args>(args)...), color);
     }
 
 protected:

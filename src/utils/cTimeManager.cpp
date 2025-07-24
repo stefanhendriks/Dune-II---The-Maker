@@ -5,7 +5,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
 
-#include <fmt/core.h>
+#include <format>
 #include <SDL2/SDL_timer.h>
 cTimeManager::cTimeManager(cGame &game)
     : m_timerUnits(0)
@@ -29,14 +29,14 @@ void cTimeManager::capTimers()
 
     if (m_timerUnits > 10) {
         if (m_game.isDebugMode()) {
-            logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits));
+            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits));
             m_timerUnits = 10;
         }
     }
 
     if (m_timerGlobal > 40) {
         if (m_game.isDebugMode()) {
-            logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGlobal));
+            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGlobal));
             m_timerGlobal = 40;
         }
     }
@@ -44,7 +44,7 @@ void cTimeManager::capTimers()
     /* Taking 10 seconds to render a frame? i hope not **/
     if (m_timerSecond > 10) {
         if (m_game.isDebugMode()) {
-            logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond));
+            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond));
             m_timerSecond = 10;
         }
     }

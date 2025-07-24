@@ -347,7 +347,7 @@ void cMouse::draw()
         if (game.isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
                 int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
-                m_textDrawer.drawText(0, cSideBar::TopBarHeight + 1, fmt::format("MouseCell {}", mouseCell));
+                m_textDrawer.drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
             }
         }
     }
@@ -393,7 +393,7 @@ cPoint cMouse::getDragLineEndPoint()
 void cMouse::setTile(int value)
 {
     if (value != mouse_tile) {
-        logbook(fmt::format("cMouse::setTile(): Changing mouse tile from {} ({}) to {} ({})", mouse_tile,
+        logbook(std::format("cMouse::setTile(): Changing mouse tile from {} ({}) to {} ({})", mouse_tile,
                             mouseTileName(mouse_tile).c_str(), value, mouseTileName(value).c_str()));
         mouse_tile = value;
     }

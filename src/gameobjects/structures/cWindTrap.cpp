@@ -4,13 +4,13 @@
 #include "definitions.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 // Constructor
 cWindTrap::cWindTrap()
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("(cWindTrap)(ID {}) Constructor", this->id));
+        logbook(std::format("(cWindTrap)(ID {}) Constructor", this->id));
     }
     // other variables (class specific)
     iFade = RNG::rnd(63);
@@ -28,7 +28,7 @@ int cWindTrap::getType() const
 cWindTrap::~cWindTrap()
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("(~cWindTrap)(ID {}) Destructor", this->id));
+        logbook(std::format("(~cWindTrap)(ID {}) Destructor", this->id));
     }
 }
 
@@ -101,5 +101,5 @@ int cWindTrap::getMaxPowerOut() const
 std::string cWindTrap::getStatusForMessageBar() const
 {
     int powerProduction = ((float)getPowerOut() / (float)getMaxPowerOut()) * (float)100;
-    return fmt::format("{} and producing at {} percent capacity", cAbstractStructure::getDefaultStatusMessageBar(), powerProduction);
+    return std::format("{} and producing at {} percent capacity", cAbstractStructure::getDefaultStatusMessageBar(), powerProduction);
 }
