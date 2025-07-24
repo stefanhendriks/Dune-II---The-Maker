@@ -5,7 +5,7 @@
 #include "utils/d2tm_math.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 namespace brains {
 
@@ -118,7 +118,7 @@ void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event)
 {
     cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
-    log(fmt::format("cPlayerBrainMissionKindAttack::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
+    log(std::format("cPlayerBrainMissionKindAttack::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     switch(event.eventType) {
         case GAME_EVENT_DESTROYED:

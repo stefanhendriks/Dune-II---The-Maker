@@ -147,7 +147,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             if (terrainType < 0) {
-                logbook(fmt::format(
+                logbook(std::format(
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
                 terrainType = TERRAIN_SAND;
@@ -194,7 +194,7 @@ void cPreviewMaps::loadSkirmishMaps()
         auto fullname = file.path().string();
         if (file.path().extension() == ".ini") {
             loadSkirmish(fullname);
-            logbook(fmt::format("Loading skirmish map: {}", fullname));
+            logbook(std::format("Loading skirmish map: {}", fullname));
         }
     }
 }

@@ -7,7 +7,7 @@
 #include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
-#include <fmt/core.h>
+#include <format>
 
 cBuildingListDrawer::cBuildingListDrawer(cPlayer *player) :
     m_textDrawer(game_font),
@@ -281,7 +281,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
             // draw
-            m_textDrawer.drawText(textX, textY, fmt::format("{}",amountToShow));
+            m_textDrawer.drawText(textX, textY, std::format("{}",amountToShow));
         }
 
         if (game.isDebugMode()) {
@@ -289,7 +289,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
 
-                m_textDrawer.drawText(textX, textY, fmt::format("{}",item->getSubList()));
+                m_textDrawer.drawText(textX, textY, std::format("{}",item->getSubList()));
             }
         }
 

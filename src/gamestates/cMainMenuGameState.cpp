@@ -13,7 +13,7 @@
 #include "utils/Graphics.hpp"
 
 #include <SDL2/SDL.h>
-#include <fmt/core.h>
+#include <format>
 
 cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
 {
@@ -166,7 +166,7 @@ void cMainMenuGameState::draw() const
 
     if (game.isDebugMode()) {
         auto m_mouse = game.getMouse();
-        textDrawer.drawText(0, 0, fmt::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
+        textDrawer.drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
 
     // MOUSE

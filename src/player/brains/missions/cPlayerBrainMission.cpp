@@ -9,7 +9,7 @@
 
 #include "d2tmc.h"
 
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 
@@ -65,11 +65,11 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
             break;
     }
 
-    log(fmt::format("Constructing cPlayerBrainMission of type {}", ePlayerBrainMissionKindString(kind)).c_str());
+    log(std::format("Constructing cPlayerBrainMission of type {}", ePlayerBrainMissionKindString(kind)).c_str());
 
     log("Items to produce for mission:");
     for (auto &item : group) {
-        log(fmt::format("Item buildType [{}], type/buildId[{}={}], amount required [{}]",
+        log(std::format("Item buildType [{}], type/buildId[{}={}], amount required [{}]",
                         eBuildTypeString(item.buildType), item.type, toStringBuildTypeSpecificType(item.buildType, item.type), item.required).c_str());
         assert(item.type > -1 && "type/buildId must be > -1 !");
     }
@@ -113,7 +113,7 @@ void cPlayerBrainMission::thinkFast()
 
 void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event)
 {
-    log(fmt::format("cPlayerBrainMission::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
+    log(std::format("cPlayerBrainMission::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     switch(event.eventType) {
         case GAME_EVENT_CANNOT_BUILD:
@@ -249,7 +249,7 @@ void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove)
     auto position = std::find(units.begin(), units.end(), unitIdToRemove);
     if (position != units.end()) {
         // found unit in our list, so someone of ours got destroyed!
-        log(fmt::format("removeUnitIdFromListIfPresent [{}] has removed unit from the list!", unitIdToRemove).c_str());
+        log(std::format("removeUnitIdFromListIfPresent [{}] has removed unit from the list!", unitIdToRemove).c_str());
         units.erase(position);
         unit[unitIdToRemove].unAssignMission();
         log("These units are still available:");
@@ -259,7 +259,7 @@ void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove)
 
 void cPlayerBrainMission::thinkState_InitialDelay()
 {
-    log(fmt::format("thinkState_InitialDelay(), delay = {}", TIMER_delay).c_str());
+    log(std::format("thinkState_InitialDelay(), delay = {}", TIMER_delay).c_str());
     if (TIMER_delay > 0) {
         TIMER_delay--;
     }
@@ -298,7 +298,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                         pUnit.assignMission(this->uniqueIdentifier);
                         units.push_back(pUnit.iID);
                         thingIWant.produced++; // update bookkeeping, no need to order it, we already have it
-                        log(fmt::format("Found idle unit [{}] to assign to mission [{}]", unitId, this->uniqueIdentifier).c_str());
+                        log(std::format("Found idle unit [{}] to assign to mission [{}]", unitId, this->uniqueIdentifier).c_str());
 
                         if (thingIWant.produced == thingIWant.required) break; // stop searching, we have everything
                     }
@@ -400,7 +400,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
             }
         }
         else {
-            log(fmt::format("Produced all required [{}] for type {}", thingIWant.produced,
+            log(std::format("Produced all required [{}] for type {}", thingIWant.produced,
                             toStringBuildTypeSpecificType(thingIWant.buildType, thingIWant.type)).c_str());
         }
     }
@@ -443,7 +443,7 @@ void cPlayerBrainMission::logUnits()
 {
     for (auto &myUnitId : units) {
         cUnit &myUnit = unit[myUnitId];
-        log(fmt::format("logUnits() : Unit {}, type {} ({})", myUnit.iID, myUnit.iType, myUnit.getUnitInfo().name).c_str());
+        log(std::format("logUnits() : Unit {}, type {} ({})", myUnit.iID, myUnit.iType, myUnit.getUnitInfo().name).c_str());
     }
 }
 
@@ -518,7 +518,7 @@ void cPlayerBrainMission::thinkState_Execute()
 void cPlayerBrainMission::thinkState_PrepareAwaitResources()
 {
     if (TIMER_awaitingGatheringResoures % 10 == 0) {
-        log(fmt::format("thinkState_PrepareAwaitResources() - TIMER_awaitingGatheringResoures = [{}]", TIMER_awaitingGatheringResoures).c_str());
+        log(std::format("thinkState_PrepareAwaitResources() - TIMER_awaitingGatheringResoures = [{}]", TIMER_awaitingGatheringResoures).c_str());
     }
 
     if (specialEventMakesStateSwitchToSelectTarget) {
@@ -561,7 +561,7 @@ bool cPlayerBrainMission::isEnded() const
 
 void cPlayerBrainMission::changeState(ePlayerBrainMissionState newState)
 {
-    log(fmt::format("changeState() - from {} to {}", ePlayerBrainMissionStateString(state),
+    log(std::format("changeState() - from {} to {}", ePlayerBrainMissionStateString(state),
                     ePlayerBrainMissionStateString(newState)).c_str());
     state = newState;
 }
@@ -637,7 +637,7 @@ bool cPlayerBrainMission::isDoneGatheringResources()
 
 void cPlayerBrainMission::log(const char *txt)
 {
-    player->log(fmt::format("cPlayerBrainMission [{}, {}, {}] | {}",
+    player->log(std::format("cPlayerBrainMission [{}, {}, {}] | {}",
                             uniqueIdentifier, ePlayerBrainMissionKindString(kind), ePlayerBrainMissionStateString(state), txt).c_str());
 }
 
@@ -656,7 +656,7 @@ void cPlayerBrainMission::onEventCannotBuild(const s_GameEvent &event)
                 if (thingIWant.type == event.entitySpecificType) {
                     // set to same value, so we don't want to produce it anymore.
                     thingIWant.produced = thingIWant.required;
-                    log(fmt::format("Cannot build [{}, {}], found a match and removed it from things I want.",
+                    log(std::format("Cannot build [{}, {}], found a match and removed it from things I want.",
                                     event.entitySpecificType, toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType)).c_str());
                 }
             }
