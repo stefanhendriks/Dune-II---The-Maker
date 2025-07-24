@@ -58,7 +58,7 @@ else()
     link_libraries(SDL2 SDL2_ttf SDL2_mixer SDL2_image)
 endif()
 
-add_subdirectory(dependencies)
+# add_subdirectory(dependencies)
 add_subdirectory(src)
 
 
@@ -73,21 +73,21 @@ target_include_directories(${PROJECT_NAME}
 if (APPLE)
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
-            fmt::fmt
+            # fmt::fmt
             ${SDL2_LIBRARIES}
             ${SDL2_IMAGE_LIBRARIES}
             ${SDL2_TTF_LIBRARIES}
             ${SDL2_MIXER_LIBRARIES}
 )
 elseif (UNIX)
-  	target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-      	fmt::fmt
-)
+  	# target_link_libraries(${PROJECT_NAME}
+    # PRIVATE
+    #   	fmt::fmt
+# )
 else()
   	target_link_libraries(${PROJECT_NAME}
   	PRIVATE
-    fmt::fmt
+    # fmt::fmt
     -static-libgcc
     -static-libstdc++
     -lmingw32
