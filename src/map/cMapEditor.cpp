@@ -4,7 +4,7 @@
 #include "utils/common.h"
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <cassert>
 
@@ -383,7 +383,7 @@ void cMapEditor::smoothCell(int cell)
         tile = 0; // always the same
     }
     else {
-        logbook(fmt::format("Unknown terrain type [{}] .", terrainType));
+        logbook(std::format("Unknown terrain type [{}] .", terrainType));
         m_map.cellChangeType(cell, TERRAIN_SAND);
         m_map.cellChangeTile(cell, 0);
         return;

@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 
-#include <fmt/core.h>
+#include <format>
 
 namespace brains {
 
@@ -51,7 +51,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
 void cPlayerBrainMissionKindExplore::onNotifyGameEvent(const s_GameEvent &event)
 {
     cPlayerBrainMissionKind::onNotifyGameEvent(event);
-    log(fmt::format("cPlayerBrainMissionKindExplore::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
+    log(std::format("cPlayerBrainMissionKindExplore::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 }
 
 cPlayerBrainMissionKind *cPlayerBrainMissionKindExplore::clone(cPlayer *player, cPlayerBrainMission *mission)

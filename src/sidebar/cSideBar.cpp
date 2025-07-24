@@ -7,7 +7,7 @@
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 
-#include <fmt/core.h>
+#include <format>
 
 #include <cassert>
 
@@ -102,7 +102,7 @@ bool cSideBar::startBuildingItemIfOk(eListType listType, int buildId) const
         return startBuildingItemIfOk(pItem);
     }
     else {
-        logbook(fmt::format("ERROR: startBuildingItemIfOk with listType[{}] and buildId[{}] did not find an item to build!",
+        logbook(std::format("ERROR: startBuildingItemIfOk with listType[{}] and buildId[{}] did not find an item to build!",
                             eListTypeAsInt(listType), buildId ));
     }
     return false;
@@ -375,7 +375,7 @@ cBuildingList *cSideBar::getSelectedList() const
 
 void cSideBar::findFirstActiveListAndSelectIt()
 {
-    logbook(fmt::format("cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [{}]", selectedListID));
+    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [{}]", selectedListID));
     for (int i = 0; i < LIST_MAX; i++) {
         cBuildingList *pList = lists[i];
         if (pList && pList->isAvailable()) {
@@ -383,12 +383,12 @@ void cSideBar::findFirstActiveListAndSelectIt()
             break;
         }
     }
-    logbook(fmt::format("cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [{}]", selectedListID));
+    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [{}]", selectedListID));
 }
 
 void cSideBar::setSelectedListId(eListType value)
 {
-    logbook(fmt::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]",
+    logbook(std::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]",
                         player->getId(), selectedListID, eListTypeAsInt(value)));
 
     int oldListId = selectedListID;

@@ -5,7 +5,7 @@
 #include "enums.h"
 #include "player/cPlayer.h"
 
-#include <fmt/core.h>
+#include <format>
 #include "utils/RNG.hpp"
 #include <algorithm>
 
@@ -93,20 +93,20 @@ void cPlayerBrainCampaign::addBuildOrder(S_buildOrder order)
     for (auto &buildOrder : m_buildOrders) {
         std::string msg;
         if (buildOrder.buildType == eBuildType::UNIT) {
-            msg = fmt::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
+            msg = std::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                               sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
-            msg = fmt::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
+            msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
                               buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
                               buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {
-            msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
+            msg = std::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                               sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::BULLET) {
-            msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
+            msg = std::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
                               buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         log(msg);
@@ -178,7 +178,7 @@ void cPlayerBrainCampaign::onMyStructureCreated(const s_GameEvent &event)
     }
 
     if (!foundExistingStructureInBase) {
-        log(fmt::format("onNotifyGameEvent() - concluded to add structure {} to base register",
+        log(std::format("onNotifyGameEvent() - concluded to add structure {} to base register",
                         pStructure->getStructureInfo().name));
 
         // new structure placed, update base register
@@ -253,7 +253,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
         cUnit originUnit = unit[unitIdThatAttacks];
         if (originUnit.getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
-            log(fmt::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
+            log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
             return;
         }
 
@@ -1695,7 +1695,7 @@ void cPlayerBrainCampaign::thinkState_ProcessBuildOrders()
 
 void cPlayerBrainCampaign::changeThinkStateTo(const ePlayerBrainCampaignThinkState &newState)
 {
-    log(fmt::format("changeThinkStateTo(), from {} to {}",
+    log(std::format("changeThinkStateTo(), from {} to {}",
                     ePlayerBrainCampaignThinkStateString(m_thinkState),
                     ePlayerBrainCampaignThinkStateString(newState)));
     this->m_thinkState = newState;
@@ -1705,7 +1705,7 @@ void cPlayerBrainCampaign::thinkState_Rest()
 {
     if (m_TIMER_rest > 0) {
         m_TIMER_rest--;
-        log(fmt::format("thinkState_Rest(), rest {}", m_TIMER_rest));
+        log(std::format("thinkState_Rest(), rest {}", m_TIMER_rest));
         return;
     }
 
@@ -1806,7 +1806,7 @@ void cPlayerBrainCampaign::thinkFast()
 
 void cPlayerBrainCampaign::log(const std::string &txt)
 {
-    player->log(fmt::format(
+    player->log(std::format(
                     "cPlayerBrainCampaign [m_state={}, m_TIMER_rest={}] | {}",
                     ePlayerBrainStateString(m_state),
                     this->m_TIMER_rest,

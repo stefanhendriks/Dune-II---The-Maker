@@ -161,7 +161,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             int facingAngle = faceAngle(degrees, facingAngles);
 
-            pMouse->addDebugLine(fmt::format("degrees = {}, faceAngle = {}", degrees, facingAngle));
+            pMouse->addDebugLine(std::format("degrees = {}, faceAngle = {}", degrees, facingAngle));
 
 //            int frame = convertAngleToDrawIndex(facingAngle, false, 4, 16);
             // override frame

@@ -13,7 +13,7 @@
 
 #include "data/gfxdata.h"
 
-#include <fmt/core.h>
+#include <format>
 #include <algorithm>
 
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
@@ -67,7 +67,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
 
         if (!ids.empty()) {
             if (ids.size() > 1) {
-                drawManager->setMessage(fmt::format("{} units selected", ids.size()));
+                drawManager->setMessage(std::format("{} units selected", ids.size()));
             }
             else {
                 cUnit &pUnit = unit[ids[0]];
@@ -246,7 +246,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
 void cMouseNormalState::setState(eMouseNormalState newState)
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("Setting state from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
+        logbook(std::format("Setting state from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
     }
     m_state = newState;
 }

@@ -1,5 +1,5 @@
 #include "cInteractionManager.h"
-#include <fmt/core.h>
+#include <format>
 
 #include "building/cItemBuilder.h"
 #include "cDrawManager.h"
@@ -28,7 +28,7 @@ void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer)
 {
     this->sidebar = thePlayer->getSideBar();
     this->player = thePlayer;
-    logbook(fmt::format("cInteractionManager::setPlayerToInteractFor for player [{}] [{}]", thePlayer->getId(), thePlayer->getHouseName()));
+    logbook(std::format("cInteractionManager::setPlayerToInteractFor for player [{}] [{}]", thePlayer->getId(), thePlayer->getHouseName()));
 }
 
 void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &)

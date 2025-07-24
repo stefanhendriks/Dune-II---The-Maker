@@ -51,7 +51,7 @@ void cCreditsState::prepareCrawlerLines()
 
     m_lines.push_back(s_CreditLine {
         .name = "",
-        .txt = fmt::format("Version {}", game.m_version),
+        .txt = std::format("Version {}", game.m_version),
         .color = Color::yellow(),
         .height = spacerAfterHeadline
     });

@@ -22,7 +22,7 @@
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 #include <cmath>
 
 static constexpr auto ANIMATION_SPEED = 12;
@@ -301,7 +301,7 @@ void cBullet::arrivedAtDestinationLogic()
             int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
             int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
-            logbook(fmt::format(
+            logbook(std::format(
                         "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
                         iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor));
 

@@ -2,7 +2,7 @@
 
 #include <string>
 #include <set>
-#include <fmt/core.h>
+#include <format>
 
 #include "utils/cPoint.h"
 #include "enums.h"
@@ -28,7 +28,7 @@ public:
     eKeyEventType eventType = eKeyEventType::NONE;
 
     inline const std::string toString() const {
-        std::string str= fmt::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(eventType));
+        std::string str= std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(eventType));
         str.append("[");
         for (auto aKey : keys) {
             str.append(SDL_GetScancodeName(aKey));

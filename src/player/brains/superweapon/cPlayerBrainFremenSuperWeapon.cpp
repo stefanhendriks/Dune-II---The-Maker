@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 #include <random>
@@ -32,7 +32,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         return;
     }
 
-    logbook(fmt::format("cPlayerBrainFremenSuperWeapon::think() AI[{}] - found {} idle unit(s) to attack with.",
+    logbook(std::format("cPlayerBrainFremenSuperWeapon::think() AI[{}] - found {} idle unit(s) to attack with.",
                         player->getId(), ids.size()));
 
     // attack things!
@@ -69,7 +69,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         }
     }
 
-    player->log(fmt::format("cPlayerBrainFremenSuperWeapon::think() - cellToAttack = {}", cellToAttack));
+    player->log(std::format("cPlayerBrainFremenSuperWeapon::think() - cellToAttack = {}", cellToAttack));
 
     // order units to attack!
     for (auto &id : ids) {

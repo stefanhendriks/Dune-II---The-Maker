@@ -4,7 +4,7 @@
 #include "sidebar/cBuildingListItem.h"
 #include "utils/common.h"
 
-#include <fmt/core.h>
+#include <format>
 
 #include <cassert>
 #include <string>
@@ -98,7 +98,7 @@ struct s_GameEvent {
     }
 
     static const std::string toString(const s_GameEvent &event) {
-        return fmt::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
+        return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
                            toString(event.eventType),
                            eBuildTypeString(event.entityType),
                            event.entityID,

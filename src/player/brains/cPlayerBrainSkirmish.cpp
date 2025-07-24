@@ -5,7 +5,7 @@
 #include "d2tmc.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 
@@ -113,20 +113,20 @@ void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order)
     for (auto &buildOrder : m_buildOrders) {
         std::string msg;
         if (buildOrder.buildType == eBuildType::UNIT) {
-            msg = fmt::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
+            msg = std::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                               sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
-            msg = fmt::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
+            msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
                               buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
                               buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {
-            msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
+            msg = std::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
                               sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::BULLET) {
-            msg = fmt::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
+            msg = std::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
                               buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         log(msg);
@@ -212,7 +212,7 @@ void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event)
     }
 
     if (!foundExistingStructureInBase) {
-        log(fmt::format("cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure {} to base register:",
+        log(std::format("cPlayerBrainSkirmish::onNotifyGameEvent() - concluded to add structure {} to base register:",
                         pStructure->getStructureInfo().name));
 
         // new structure placed, update base register
@@ -268,7 +268,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
         cUnit originUnit = unit[unitIdThatAttacks];
         if (originUnit.getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
-            log(fmt::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
+            log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
             return;
         }
 
@@ -421,7 +421,7 @@ void cPlayerBrainSkirmish::thinkState_Missions()
                 // time to try again... randomized (TODO: Can be difficulty setting?)
                 m_TIMER_additionalUnitsCooldown += RNG::rnd(15);
 
-                log(fmt::format("mayBuildAdditionalResources(): Will attempt to build additional resources. Chance = {}, new coolDown = {}", chance, m_TIMER_additionalUnitsCooldown));
+                log(std::format("mayBuildAdditionalResources(): Will attempt to build additional resources. Chance = {}, new coolDown = {}", chance, m_TIMER_additionalUnitsCooldown));
 
                 // build units, as long as we have some money on the bank.
                 // these units are produced without a mission.
@@ -505,7 +505,7 @@ void cPlayerBrainSkirmish::produceMissions()
 
     // if cooldown is set, do that, so we don't spam missions in a very short amount of time
     if (m_TIMER_produceMissionCooldown > 0) {
-        log(fmt::format("m_TIMER_produceMissionCooldown [{}] is in effect.", m_TIMER_produceMissionCooldown));
+        log(std::format("m_TIMER_produceMissionCooldown [{}] is in effect.", m_TIMER_produceMissionCooldown));
         m_TIMER_produceMissionCooldown--;
         return;
     }
@@ -715,7 +715,7 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
 
 void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
 {
-    log(fmt::format("produceSkirmishGroundAttackMission for mission id %d - called", missionId));
+    log(std::format("produceSkirmishGroundAttackMission for mission id %d - called", missionId));
     std::vector<S_groupKind> group = std::vector<S_groupKind>();
     int smallChance = 15;
     int normalChance = 50;
@@ -845,7 +845,7 @@ void cPlayerBrainSkirmish::addMission(ePlayerBrainMissionKind kind, std::vector<
         if (item.buildType == eBuildType::UNIT) {
             if (!player->canBuildUnitBool(item.type)) {
                 item.required = 0; // set it to required 0, so it won't be built
-                log(fmt::format("addMission - cannot build unit [{}] so setting required to 0, for mission kind [{}].",
+                log(std::format("addMission - cannot build unit [{}] so setting required to 0, for mission kind [{}].",
                                 toStringBuildTypeSpecificType(eBuildType::UNIT, item.type),
                                 ePlayerBrainMissionKindString(kind))
                    );
@@ -861,14 +861,14 @@ void cPlayerBrainSkirmish::addMission(ePlayerBrainMissionKind kind, std::vector<
     // is cooling down in 10 seconds.
     int cooldown = cPlayerBrain::RestTime;
     m_TIMER_produceMissionCooldown += cooldown;
-    log(fmt::format("addMission - upping cooldown with {} to a total of {}", cooldown, m_TIMER_produceMissionCooldown));
+    log(std::format("addMission - upping cooldown with {} to a total of {}", cooldown, m_TIMER_produceMissionCooldown));
     // rest for a few seconds before producing a new mission)
 
 }
 
 void cPlayerBrainSkirmish::thinkState_Evaluate()
 {
-    log(fmt::format("thinkState_Evaluate() : credits [{}], m_economyScore [{}], m_economyState [{}]",
+    log(std::format("thinkState_Evaluate() : credits [{}], m_economyScore [{}], m_economyState [{}]",
                     player->getCredits(),
                     m_economyScore,
                     ePlayerBrainSkirmishEconomyStateString(m_economyState))
@@ -895,7 +895,7 @@ void cPlayerBrainSkirmish::thinkState_Evaluate()
 void cPlayerBrainSkirmish::evaluateEconomyState()
 {
     ePlayerBrainSkirmishEconomyState state = determineEconomyState();
-    log(fmt::format("evaluateEconomyState: {} credits - {} score --> {}", player->getCredits(), m_economyScore, ePlayerBrainSkirmishEconomyStateString(m_economyState)));
+    log(std::format("evaluateEconomyState: {} credits - {} score --> {}", player->getCredits(), m_economyScore, ePlayerBrainSkirmishEconomyStateString(m_economyState)));
     changeEconomyStateTo(state);
 }
 
@@ -908,7 +908,7 @@ int cPlayerBrainSkirmish::calculateEconomyScore()
         economyScore = 100;
     }
 
-    log(fmt::format("calculateEconomyScore -> ideal = {}, current = {}, moneyScore = {}, m_economyScore = {}",
+    log(std::format("calculateEconomyScore -> ideal = {}, current = {}, moneyScore = {}, m_economyScore = {}",
                     idealMoneyCount, credits, economyScore, m_economyScore));
 
     return economyScore;
@@ -932,7 +932,7 @@ ePlayerBrainSkirmishEconomyState cPlayerBrainSkirmish::determineEconomyState()
         m_economyScore -= delta;
     }
 
-    log(fmt::format("determineEconomyState -> economyScore = {}, m_economyScore = {}, distance = {}, delta = {}", economyScore, m_economyScore, distance, delta));
+    log(std::format("determineEconomyState -> economyScore = {}, m_economyScore = {}, distance = {}, delta = {}", economyScore, m_economyScore, distance, delta));
 
     // Evaluate economy score
     if (m_economyScore < 15) {
@@ -1197,7 +1197,7 @@ void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_
 
 void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkState &newState)
 {
-    log(fmt::format("changeThinkStateTo(), from {} to {}",
+    log(std::format("changeThinkStateTo(), from {} to {}",
                     ePlayerBrainSkirmishThinkStateString(m_thinkState),
                     ePlayerBrainSkirmishThinkStateString(newState))
        );
@@ -1207,7 +1207,7 @@ void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkSta
 void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState)
 {
     if (newState != m_economyState) {
-        log(fmt::format("cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
+        log(std::format("cPlayerBrainSkirmish::changeEconomyStateTo(), from {} to {}",
                         ePlayerBrainSkirmishEconomyStateString(m_economyState),
                         ePlayerBrainSkirmishEconomyStateString(newState))
            );
@@ -1219,7 +1219,7 @@ void cPlayerBrainSkirmish::thinkState_Rest()
 {
     if (m_TIMER_rest > 0) {
         m_TIMER_rest--;
-        log(fmt::format("cPlayerBrainSkirmish::thinkState_Rest(), rest {}", m_TIMER_rest));
+        log(std::format("cPlayerBrainSkirmish::thinkState_Rest(), rest {}", m_TIMER_rest));
         return;
     }
 
@@ -1566,7 +1566,7 @@ bool cPlayerBrainSkirmish::mayBuildAdditionalResources()
 {
     if (m_TIMER_additionalUnitsCooldown > 0) {
         m_TIMER_additionalUnitsCooldown--;
-        log(fmt::format("mayBuildAdditionalResources() cooldown in effect ({})", m_TIMER_additionalUnitsCooldown));
+        log(std::format("mayBuildAdditionalResources() cooldown in effect ({})", m_TIMER_additionalUnitsCooldown));
         return false;
     }
 
@@ -1585,7 +1585,7 @@ void cPlayerBrainSkirmish::thinkFast()
 
 void cPlayerBrainSkirmish::log(const std::string &txt)
 {
-    player->log(fmt::format(
+    player->log(std::format(
                     "cPlayerBrainSkirmish [state={}, m_thinkState={}, m_economyState={}, m_TIMER_rest={}, m_TIMER_ai={}, m_economyScore={}] | {}",
                     ePlayerBrainStateString(m_state),
                     ePlayerBrainSkirmishThinkStateString(m_thinkState),

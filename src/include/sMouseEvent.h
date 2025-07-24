@@ -5,7 +5,7 @@
 
 #include <cassert>
 #include <string>
-#include <fmt/core.h>
+#include <format>
 
 // Rename to GUI_EVENT? Might be more appropriate
 struct s_MouseEvent {
@@ -13,7 +13,7 @@ struct s_MouseEvent {
     cPoint coords;
 
     static const std::string toString(const s_MouseEvent &event) {
-        std::string msg = fmt::format("s_MouseEvent [type={}], [x={}], [y={}]",
+        std::string msg = std::format("s_MouseEvent [type={}], [x={}], [y={}]",
                                       toStringMouseEventType(event.eventType),
                                       event.coords.x,
                                       event.coords.y);
