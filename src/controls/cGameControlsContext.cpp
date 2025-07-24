@@ -250,7 +250,7 @@ void cGameControlsContext::setMouseState(eMouseState newState)
             m_prevState = m_prevStateBeforeRepair;
         }
 
-        logbook(fmt::format("setMouseState() : changing state from [{}] to [{}] (prevState=[{}], prevStateBeforeRepair=[{}])", mouseStateString(m_state), mouseStateString(newState), mouseStateString(m_prevState), mouseStateString(m_prevStateBeforeRepair)));
+        logbook(std::format("setMouseState() : changing state from [{}] to [{}] (prevState=[{}], prevStateBeforeRepair=[{}])", mouseStateString(m_state), mouseStateString(newState), mouseStateString(m_prevState), mouseStateString(m_prevStateBeforeRepair)));
         m_state = newState;
         switch (m_state) {
             case MOUSESTATE_SELECT:

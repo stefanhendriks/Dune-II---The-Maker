@@ -27,7 +27,7 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "utils/RNG.hpp"
 
-#include <fmt/core.h>
+#include <format>
 #include <filesystem>
 namespace fs=std::filesystem;
 
@@ -167,7 +167,7 @@ std::string INI_SceneFileToScene(std::string scenefile)
     if (isInString(scenefile, "QUAD.WSA")) return "quad";
     if (isInString(scenefile, "LTANK.WSA")) return "ltank";
 
-    logbook(fmt::format("Failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
+    logbook(std::format("Failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
 
     return "unknown";
 }
@@ -1029,7 +1029,7 @@ int getStructureTypeFromChar(char *structure)
 void INI_Load_seed(int seed)
 {
 
-    logbook(fmt::format("Generating seed map with seed {}.", seed));
+    logbook(std::format("Generating seed map with seed {}.", seed));
 
     auto seedGenerator = cSeedMapGenerator(seed);
 
@@ -1082,7 +1082,7 @@ std::string INI_GetHouseDirectoryName(int iHouse)
 
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
-    auto filename = fmt::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
+    auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
     cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
 
     std::ifstream file(filename);
@@ -1191,7 +1191,7 @@ int getUnitTypeFromChar(char chunk[35])
     if (caseInsCompare(unitString, "ONEFREMEN")) return UNIT_FREMEN_ONE;
     if (caseInsCompare(unitString, "THREEFREMEN")) return UNIT_FREMEN_THREE;
 
-    logbook(fmt::format(
+    logbook(std::format(
                 "getUnitTypeFromChar could not determine what unit type '{}' (original is '{}') is. Returning -1; this will probably cause problems.",
                 unitString, chunk));
     return -1;
@@ -1207,7 +1207,7 @@ int getHouseFromChar(char chunk[25])
     if (strcmp(chunk, "Fremen") == 0) return FREMEN;
     if (strcmp(chunk, "Corrino") == 0) return CORRINO;
     if (strcmp(chunk, "General") == 0) return GENERALHOUSE;
-    logbook(fmt::format(
+    logbook(std::format(
                 "getHouseFromChar could not determine what house type '{}' is. Returning -1; this will probably cause problems.",
                 chunk));
     return -1;
@@ -1257,7 +1257,7 @@ std::string INI_GetScenarioFileName(int iHouse, int iRegion)
     if (iHouse == MERCENARY) cHouse = 'm';
     if (iHouse == FREMEN) cHouse = 'f';
 
-    return fmt::format("campaign/maps/scen{}{:03}.ini", cHouse, iRegion);
+    return std::format("campaign/maps/scen{}{:03}.ini", cHouse, iRegion);
 }
 
 
@@ -1270,7 +1270,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
 
     game.m_mission = getTechLevelByRegion(iRegion);
 
-    logbook(fmt::format("[SCENARIO] '{}' (Mission {})", filename, game.m_mission));
+    logbook(std::format("[SCENARIO] '{}' (Mission {})", filename, game.m_mission));
     logbook("[SCENARIO] Opening file");
 
     // declare some temp fields while reading the scenario file.
@@ -1321,7 +1321,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
                     // found a section
                     section = sectionType;
 
-                    logbook(fmt::format("[SCENARIO] found section '{}', resulting in section id [{}]", linesection, section));
+                    logbook(std::format("[SCENARIO] found section '{}', resulting in section id [{}]", linesection, section));
 
                     if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
                         iPlayerID++;
@@ -1340,7 +1340,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
 
                         iPl_house[iPlayerID] = house;
 
-                        logbook(fmt::format("[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID));
+                        logbook(std::format("[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID));
                     }
                 }
                 continue; // next line
@@ -1390,7 +1390,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
                 //   map.cell[blooms[iB]].tile = BLOOM;
 
                 if (game.isDebugMode()) {
-                    logbook(fmt::format("[SCENARIO] Placing spice BLOOM at cell : {}", blooms[iB]));
+                    logbook(std::format("[SCENARIO] Placing spice BLOOM at cell : {}", blooms[iB]));
                 }
 
                 mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
@@ -1405,7 +1405,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
             // when
             if (fields[iB] > -1) {
                 if (game.isDebugMode()) {
-                    logbook(fmt::format("[SCENARIO] Placing spice FIELD at cell : {}", fields[iB]));
+                    logbook(std::format("[SCENARIO] Placing spice FIELD at cell : {}", fields[iB]));
                 }
                 mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
             }
@@ -1448,7 +1448,7 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *lin
 int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed)
 {
     int iHumanID = -1;
-    logbook(fmt::format("Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]",
+    logbook(std::format("Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]",
                         iPlayerID, wordtype));
     // link house (found, because > -1)
     if (iPlayerID > -1) {
@@ -1457,11 +1457,11 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
             memset(cBrain, 0, sizeof(cBrain));
             INI_WordValueCHAR(linefeed, cBrain);
 
-            logbook(fmt::format("Brain is [{}]", cBrain));
+            logbook(std::format("Brain is [{}]", cBrain));
 
             // We know the human brain now, this should be player 0 in our game (!?)...
             if (strcmp(cBrain, "Human") == 0) {
-                logbook(fmt::format("Found human player for id [{}]", iPlayerID));
+                logbook(std::format("Found human player for id [{}]", iPlayerID));
                 iHumanID = iPlayerID;
             }
             else {
@@ -1470,7 +1470,7 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
         }
         else if (wordtype == WORD_CREDITS) {
             int credits = INI_WordValueINT(linefeed) - 1;
-            logbook(fmt::format("Set credits for player id [{}] to [{}]", iPlayerID, credits));
+            logbook(std::format("Set credits for player id [{}] to [{}]", iPlayerID, credits));
 
             iPl_credits[iPlayerID] = credits;
         }
@@ -1911,7 +1911,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
                 }
 
                 if (iController < 0) {
-                    logbook(fmt::format("WARNING: Cannot identify house/controller -> STRING '{}'", chunk));
+                    logbook(std::format("WARNING: Cannot identify house/controller -> STRING '{}'", chunk));
                 }
 
             }
@@ -1954,13 +1954,13 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
 
     for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) { // till 6 , since player 6 itself is sandworm
         int houseForPlayer = iPl_house[playerIndex];
-        logbook(fmt::format("House for id [{}] is [{}] - human id is [{}]", playerIndex, houseForPlayer, iHumanID));
+        logbook(std::format("House for id [{}] is [{}] - human id is [{}]", playerIndex, houseForPlayer, iHumanID));
         if (houseForPlayer > -1) {
             int creditsPlayer = iPl_credits[playerIndex];
             int quota = iPl_quota[playerIndex];
 
             if (playerIndex == iHumanID) {
-                logbook(fmt::format("INI: Setting up human player, credits to [{}], house [{}] and team [{}]", creditsPlayer, houseForPlayer, 0));
+                logbook(std::format("INI: Setting up human player, credits to [{}], house [{}] and team [{}]", creditsPlayer, houseForPlayer, 0));
                 players[HUMAN].setCredits(creditsPlayer);
                 players[HUMAN].setHouse(houseForPlayer);
                 players[HUMAN].setTeam(0);
@@ -1995,7 +1995,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
 
                 players[iCPUId].setTeam(teamIndexAI);
 
-                logbook(fmt::format("INI: Setting up CPU player, credits to [{}], house to [{}] and team [{}]",
+                logbook(std::format("INI: Setting up CPU player, credits to [{}], house to [{}] and team [{}]",
                                     creditsPlayer, houseForPlayer, teamIndexAI));
 
                 players[iCPUId].setCredits(creditsPlayer);
@@ -2039,7 +2039,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
     logbook(path);
 
     if (game.isDebugMode()) {
-        logbook(fmt::format("Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind));
+        logbook(std::format("Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind));
     }
 
     int iScenario = 0;
@@ -2114,7 +2114,7 @@ void INI_Install_Game(std::string filename)
     int wordtype = WORD_NONE;
     int id = -1;
 
-    logbook(fmt::format("Opening game settings from : {}", filename));
+    logbook(std::format("Opening game settings from : {}", filename));
 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];

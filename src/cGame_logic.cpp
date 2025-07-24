@@ -56,7 +56,7 @@
 #include "player/cHousesInfo.h"
 #include "utils/Graphics.hpp"
 #include "utils/GameSettings.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 #include <random>
@@ -524,7 +524,7 @@ void cGame::drawStateCombat()
     drawManager->drawCombatState();
     if (m_drawFps) {
         // TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
-        textDrawer->drawText(180,8, Color::black(), fmt::format("FPS/REST: {}/{}", game.getFps(), iRest));
+        textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", game.getFps(), iRest));
     }
 
     // for now, call this on game class.
@@ -807,7 +807,7 @@ bool cGame::setupGame()
 
     logger->logHeader("Version information");
     logger->log(LOG_INFO, COMP_VERSION, "Initializing",
-                fmt::format("Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__));
+                std::format("Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__));
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
@@ -846,7 +846,7 @@ bool cGame::setupGame()
     }
 
     // GAME.INI
-    const auto title = fmt::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
+    const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
     // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
     // global anymore, because it needs to be destructed before main exits.
@@ -969,7 +969,7 @@ bool cGame::setupGame()
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
-    logbook(fmt::format("Seed is {}", t));
+    logbook(std::format("Seed is {}", t));
     srand(t);
 
     game.m_playing = true;
@@ -1096,7 +1096,7 @@ void cGame::setState(int newState)
         return;
     }
 
-    logbook(fmt::format("Setting state from {}(={}) to {}(={})", m_state, stateString(m_state), newState, stateString(newState)));
+    logbook(std::format("Setting state from {}(={}) to {}(={})", m_state, stateString(m_state), newState, stateString(newState)));
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
@@ -1502,7 +1502,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
             cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
 
-            logbook(fmt::format(
+            logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
@@ -1603,7 +1603,7 @@ Color cGame::getColorPlaceGood()
 void cGame::setWinFlags(int value)
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("Changing m_winFlags from {} to {}", m_winFlags, value));
+        logbook(std::format("Changing m_winFlags from {} to {}", m_winFlags, value));
     }
     m_winFlags = value;
 }
@@ -1611,7 +1611,7 @@ void cGame::setWinFlags(int value)
 void cGame::setLoseFlags(int value)
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("Changing m_loseFlags from {} to {}", m_loseFlags, value));
+        logbook(std::format("Changing m_loseFlags from {} to {}", m_loseFlags, value));
     }
     m_loseFlags = value;
 }
@@ -1697,7 +1697,7 @@ void cGame::drawCombatMouse()
 
 void cGame::saveBmpScreenToDisk()
 {
-    std::string filename = fmt::format("{}x{}_{:0>4}.bmp", m_screenW, m_screenH, m_screenshot);
+    std::string filename = std::format("{}x{}_{:0>4}.bmp", m_screenW, m_screenH, m_screenshot);
     SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
         std::cerr << "Erreur lors de la création de la surface: " << SDL_GetError() << std::endl;
@@ -1709,14 +1709,14 @@ void cGame::saveBmpScreenToDisk()
         SDL_FreeSurface(surface);
         return;
     }
-    std::string name = fmt::format("screenshot{}.bmp",m_screenshot);
+    std::string name = std::format("screenshot{}.bmp",m_screenshot);
     SDL_SaveBMP(surface, filename.c_str());
     SDL_FreeSurface(surface);
 
     // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
     // a Quake console perhaps?
     cPlayer &humanPlayer = players[HUMAN];
-    humanPlayer.addNotification(fmt::format("Screenshot saved {}.", filename), eNotificationType::NEUTRAL);
+    humanPlayer.addNotification(std::format("Screenshot saved {}.", filename), eNotificationType::NEUTRAL);
 
     m_screenshot++;
 }
@@ -1904,7 +1904,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
     int iVolFactored = volumeFactor * volume;
 
     if (game.isDebugMode()) {
-        logbook(fmt::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+        logbook(std::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
                             iDistance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
     }
 
@@ -1932,17 +1932,17 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         return false;
     }
 
-    logbook(fmt::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
+    logbook(std::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
 
     if (triggerWithVoice) {
         if (iType == m_musicType) {
-            logbook(fmt::format("m_musicType = {}, iType is {}, so bailing", m_musicType, iType));
+            logbook(std::format("m_musicType = {}, iType is {}, so bailing", m_musicType, iType));
             return false;
         }
     }
 
     m_musicType = iType;
-    logbook(fmt::format("m_musicType = {}", m_musicType));
+    logbook(std::format("m_musicType = {}", m_musicType));
 
     if (!m_playMusic) {
         return false; // todo: have a 'no-sound soundplayer' instead of doing this :/

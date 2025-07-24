@@ -4,7 +4,7 @@
 #include "definitions.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 namespace brains {
 
@@ -89,7 +89,7 @@ void cPlayerBrainMissionKindDeathHand::onNotifyGameEvent(const s_GameEvent &even
 {
     cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
-    log(fmt::format("cPlayerBrainMissionKindDeathHand::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
+    log(std::format("cPlayerBrainMissionKindDeathHand::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED) {
         onBuildItemCancelled(event);

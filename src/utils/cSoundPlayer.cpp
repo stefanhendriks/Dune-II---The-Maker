@@ -4,7 +4,7 @@
 #include "utils/cLog.h"
 
 #include "utils/DataPack.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 #include <cassert>
@@ -91,14 +91,14 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
         }
 
         if (Mix_AllocateChannels(nr_voices) >= kMinNrVoices) {
-            auto msg = fmt::format("Successfully installed sound. {} voices reserved", nr_voices);
+            auto msg = std::format("Successfully installed sound. {} voices reserved", nr_voices);
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 
             voices.resize(nr_voices - 1, kNoVoice);
             break;
         }
         else {
-            auto msg = fmt::format("Failed installing sound. {} voices reserved", nr_voices);
+            auto msg = std::format("Failed installing sound. {} voices reserved", nr_voices);
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
         }
     }

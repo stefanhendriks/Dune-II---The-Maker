@@ -40,7 +40,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
         std::unique_ptr<GuiButton> btnMission = GuiButtonBuilder()
             .withRect(rect)        
-            .withLabel(fmt::format("Mission {}", i))
+            .withLabel(std::format("Mission {}", i))
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,i]() {

@@ -8,7 +8,7 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 #include <string>
@@ -370,7 +370,7 @@ void cMouseUnitsSelectedState::evaluateSelectedUnits()
 void cMouseUnitsSelectedState::setState(eMouseUnitsSelectedState newState)
 {
     if (newState != m_state) {
-        logbook(fmt::format("cMouseUnitsSelectedState: Changed state from [{}] to [{}]", mouseUnitsSelectedStateString(m_state),
+        logbook(std::format("cMouseUnitsSelectedState: Changed state from [{}] to [{}]", mouseUnitsSelectedStateString(m_state),
                             mouseUnitsSelectedStateString(newState)));
         this->m_prevState = this->m_state;
         this->m_state = newState;

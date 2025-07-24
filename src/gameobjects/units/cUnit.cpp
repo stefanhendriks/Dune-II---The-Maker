@@ -25,8 +25,9 @@
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
-#include <fmt/core.h>
+#include <format>
 #include "drawers/cTextDrawer.h"
+
 #include <cmath>
 
 // Path creation definitions / var
@@ -766,7 +767,7 @@ void cUnit::draw()
         renderDrawer->renderStrechSprite(bitmap,src, dest);
     }
     else {
-        log(fmt::format("unit of iType [{}] did not have a bitmap!?", iType));
+        log(std::format("unit of iType [{}] did not have a bitmap!?", iType));
     }
 
 
@@ -826,19 +827,19 @@ void cUnit::attackUnit(int targetUnit)
 
 void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
 {
-    log(fmt::format("attackUnit() : targetUnit is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
+    log(std::format("attackUnit() : targetUnit is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
     attack(unit[targetUnit].iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure)
 {
-    log(fmt::format("attackStructure() : target is [{}]", targetStructure));
+    log(std::format("attackStructure() : target is [{}]", targetStructure));
     attack(structure[targetStructure]->getCell(), -1, targetStructure, -1, true);
 }
 
 void cUnit::attackCell(int cell)
 {
-    log(fmt::format("attackCell() : cell target is [{}]", cell));
+    log(std::format("attackCell() : cell target is [{}]", cell));
     attack(cell, -1, -1, cell, true);
 }
 
@@ -848,7 +849,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
-    log(fmt::format("Attacking UNIT ID [{}], STRUCTURE ID [{}], ATTACKCLL [{}], GoalCell [{}]",
+    log(std::format("Attacking UNIT ID [{}], STRUCTURE ID [{}], ATTACKCLL [{}], GoalCell [{}]",
                     unitId, structureId, attackCell, goalCell));
 
     if (unitId < 0 && structureId < 0 && attackCell < 0) {
@@ -873,7 +874,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
 
 void cUnit::attackAt(int cell)
 {
-    log(fmt::format("attackAt() : cell target is [{}]", cell));
+    log(std::format("attackAt() : cell target is [{}]", cell));
 
     if (!map.isWithinBoundaries(cell)) {
         log("attackAt() : Invalid cell, aborting");
@@ -883,7 +884,7 @@ void cUnit::attackAt(int cell)
     int unitId = map.getCellIdUnitLayer(cell);
     int structureId = map.getCellIdStructuresLayer(cell);
     int wormId = map.getCellIdWormsLayer(cell);
-    log(fmt::format("attackAt() : cell target is [{}], structureId [{}], unitId [{}], wormId [{}]", cell, structureId, unitId, wormId));
+    log(std::format("attackAt() : cell target is [{}], structureId [{}], unitId [{}], wormId [{}]", cell, structureId, unitId, wormId));
 
     if (structureId > -1) {
         attackStructure(structureId);
@@ -915,7 +916,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         return;
     }
 
-    log(fmt::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
+    log(std::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
                     iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
 
     setGoalCell(iCll);
@@ -2100,7 +2101,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
-    players[iPlayer].log(fmt::format("[UNIT[{}]: type = {}(={}), iCell = {}, iGoalCell = {}] '{}'",
+    players[iPlayer].log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, iGoalCell = {}] '{}'",
                                      iID, iType, sUnitInfo[iType].name, iCell, iGoalCell, txt));
 }
 
@@ -2279,7 +2280,7 @@ void cUnit::think_attack_sandworm()
         }
 
         if (game.isDebugMode()) {
-            logbook(fmt::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
+            logbook(std::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
                                 unitsEaten, TIMER_guard));
         }
         return;
@@ -2460,7 +2461,7 @@ void cUnit::thinkFast_move()
             // when we do have a different goal, we should get a path:
             if (iGoalCell != iCell) {
                 int iResult = CREATE_PATH(iID, 0); // do not take units into account yet
-                log(fmt::format("Create path ... result = {}", iResult));
+                log(std::format("Create path ... result = {}", iResult));
 
                 // On fail:
                 if (iResult < 0) {
@@ -3153,7 +3154,7 @@ void cUnit::setCell(int cll)
 
 void cUnit::assignMission(int aMission)
 {
-    log(fmt::format("I'm being assigned to mission {} (prev mission was {})", aMission, mission));
+    log(std::format("I'm being assigned to mission {} (prev mission was {})", aMission, mission));
     mission = aMission;
 }
 
@@ -3298,7 +3299,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
         return eHeadTowardsStructureResult::NOOP_ALREADY_BUSY;
     }
 
-    log(fmt::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
+    log(std::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
                     sStructureInfo[structureType].name));
 
     const sFindBestStructureResult &result = findBestStructureCandidateToHeadTo(structureType);
@@ -3782,13 +3783,13 @@ void cUnit::think_harvester()
 
 void cUnit::setGoalCell(int goalCell)
 {
-    log(fmt::format("setGoalCell() from {} to {}", iGoalCell, goalCell));
+    log(std::format("setGoalCell() from {} to {}", iGoalCell, goalCell));
     iGoalCell = goalCell;
 }
 
 void cUnit::setAction(eActionType action)
 {
-    log(fmt::format("setAction() from {} to {}", eActionTypeString(m_action), eActionTypeString(action)));
+    log(std::format("setAction() from {} to {}", eActionTypeString(m_action), eActionTypeString(action)));
     m_action = action;
 }
 
@@ -3811,7 +3812,7 @@ std::string cUnit::getHarvesterStatusForMessageBar()
 {
     s_UnitInfo &info = getUnitInfo();
     int harvested = ((float)iCredits/info.credit_capacity)*100;
-    return fmt::format("{} at {} percent health and {} percent harvested", info.name, getHealthNormalized()*100, harvested);
+    return std::format("{} at {} percent health and {} percent harvested", info.name, getHealthNormalized()*100, harvested);
 }
 
 std::string cUnit::getUnitStatusForMessageBar()
@@ -3821,7 +3822,7 @@ std::string cUnit::getUnitStatusForMessageBar()
         case HARVESTER:
             return getHarvesterStatusForMessageBar();
         default:
-            return fmt::format("{} at {} percent health", info.name, getHealthNormalized()*100);
+            return std::format("{} at {} percent health", info.name, getHealthNormalized()*100);
     }
 
 }
@@ -4261,7 +4262,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                     continue;
                 }
 
-//                pUnit.log(fmt::format("CREATE_PATH: cll [{}] != [{}] && temp_map[cll].state [{}] and good [{}]",
+//                pUnit.log(std::format("CREATE_PATH: cll [{}] != [{}] && temp_map[cll].state [{}] and good [{}]",
 //                                      cll, iCell, temp_map[cll].state, good));
 
                 // it is the goal cell
@@ -4286,7 +4287,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                     int tempCost = temp_map[cll].cost;
                     double distanceCost = map.distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
-//                        pUnit.log(fmt::format(
+//                        pUnit.log(std::format(
 //                                "CREATE_PATH: tempCost [{}] + distanceCost [{}] = newCost = [{}] vs current cost [{}]",
 //                                tempCost, distanceCost, newCost, cost));
 
@@ -4297,12 +4298,12 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                         cost = newCost;
                         // found a new cell, now decrease ipathcountunits
                         iPathCountUnits--;
-//                            pUnit.log(fmt::format(
+//                            pUnit.log(std::format(
 //                                    "CREATE_PATH: Waypoint found : cell {} - goalcell = {}, iPathCountUnits = {}", cll,
 //                                    goal_cell, iPathCountUnits));
                     }
                     else {
-//                            pUnit.log(fmt::format(
+//                            pUnit.log(std::format(
 //                                    "CREATE_PATH: Waypoint found : cell {} - goalcell = {}, iPathCountUnits = {}", cll,
 //                                    goal_cell, iPathCountUnits));
                     }
@@ -4319,7 +4320,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
 
         // When found a new c(e)ll;
         if (the_cll > -1) {
-            pUnit.log(fmt::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
+            pUnit.log(std::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
             // Open this one, so we do not check it again
             temp_map[the_cll].state = OPEN;
             temp_map[the_cll].parent = iCell;
@@ -4356,10 +4357,10 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
 //                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
 //
 //                _renderDrawer->renderLine(screen, iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0));
-//                pUnit.log(fmt::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
+//                pUnit.log(std::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
 //                iCell = prevCell; // back track
 //            } else {
-            pUnit.log(fmt::format("Failed to find new cell, backtracking failed!"));
+            pUnit.log(std::format("Failed to find new cell, backtracking failed!"));
             valid = false;
             success = false;
             pUnit.log("FAILED TO CREATE PATH - nothing found to continue");
@@ -4386,12 +4387,12 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
         temp_path[pi] = sc;
         pi++;
 
-        pUnit.log(fmt::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
+        pUnit.log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
 
         // while we should create a path
         while (cp) {
             int tmp = temp_map[sc].parent;
-            pUnit.log(fmt::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
+            pUnit.log(std::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
             if (tmp > -1) {
                 // found terminator (PARENT=CURRENT)
                 if (tmp == sc) {
@@ -4403,7 +4404,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                     temp_path[pi] = tmp;
                     sc = temp_map[sc].parent;
                     pi++;
-                    pUnit.log(fmt::format("Backtraced. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
+                    pUnit.log(std::format("Backtraced. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
                 }
             }
             else {
@@ -4471,7 +4472,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             for (int i = 0; i < MAX_PATH_SIZE; i++) {
                 int pathCell = pUnit.iPath[i];
                 if (pathCell > -1) {
-                    pUnit.log(fmt::format("WAYPOINT {} = {} ", i, pathCell));
+                    pUnit.log(std::format("WAYPOINT {} = {} ", i, pathCell));
                 }
             }
         }

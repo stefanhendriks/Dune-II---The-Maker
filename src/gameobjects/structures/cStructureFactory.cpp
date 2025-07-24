@@ -24,7 +24,7 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 cStructureFactory::cStructureFactory()
 {
@@ -146,7 +146,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     float fHealth = hp * fPercent;
 
     if (game.isDebugMode()) {
-        logbook(fmt::format("Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth));
+        logbook(std::format("Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth));
     }
 
     int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;

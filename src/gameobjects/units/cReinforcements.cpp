@@ -4,7 +4,7 @@
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <algorithm>
-#include <fmt/core.h>
+#include <format>
 
 
 /// Reinforcement class
@@ -83,7 +83,7 @@ void cReinforcements::init()
 
 void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat)
 {
-    logbook(fmt::format("Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat));
+    logbook(std::format("Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat));
 
     cReinforcement reinforcement(delayInSeconds, unitType, playerId, targetCell, repeat);
     reinforcements.push_back(reinforcement);
@@ -182,7 +182,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
         return;
     }
 
-    logbook(fmt::format("REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}",
+    logbook(std::format("REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}",
                         iTpe, iPlr, iStartCell, iCll));
 
     // STEP 2: create carryall

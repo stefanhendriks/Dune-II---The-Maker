@@ -16,7 +16,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 
-#include <fmt/core.h>
+#include <format>
 #include <algorithm>
 
 static bool mouse_within_rect(int x, int y, int width, int height)
@@ -316,7 +316,7 @@ void cSetupSkirmishGameState::draw() const
 void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const
 {
     Color textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
-    textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, fmt::format("{}", sSkirmishPlayer.team));
+    textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, std::format("{}", sSkirmishPlayer.team));
 }
 
 void
@@ -326,14 +326,14 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
 
     Color textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
     textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor,
-                        fmt::format("{}", sSkirmishPlayer.startingUnits));
+                        std::format("{}", sSkirmishPlayer.startingUnits));
 }
 
 void
 cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
 {
     Color textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
-    textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, fmt::format("{}", sSkirmishPlayer.iCredits));
+    textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, std::format("{}", sSkirmishPlayer.iCredits));
 }
 
 Color
@@ -384,7 +384,7 @@ void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
         textColor = colorDisabled;
     }
 
-    textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor,fmt::format("Startpoints: {}",iStartingPoints));
+    textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor,std::format("Startpoints: {}",iStartingPoints));
 }
 
 void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const
@@ -426,7 +426,7 @@ void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloom
     if (spawnBlooms) {
         Color textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor,
-                            fmt::format("Auto-detonate : {}", detonateBlooms ? "YES" : "NO"));
+                            std::format("Auto-detonate : {}", detonateBlooms ? "YES" : "NO"));
     }
     else {
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), colorDisabled, "Auto-detonate : -");
@@ -437,14 +437,14 @@ void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const
 {
     Color textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
     textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor,
-                        fmt::format("Spice blooms : {}", spawnBlooms ? "YES" : "NO"));
+                        std::format("Spice blooms : {}", spawnBlooms ? "YES" : "NO"));
 }
 
 void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const
 {
     Color textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
     textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor,
-                        fmt::format("Worms? : {}", spawnWorms));
+                        std::format("Worms? : {}", spawnWorms));
 }
 
 void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
@@ -483,7 +483,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     if (game.isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-            logbook(fmt::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
+            logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
         }
     }
 
@@ -493,7 +493,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     if (game.isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-            logbook(fmt::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
+            logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
         }
     }
 
@@ -655,7 +655,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
             UNIT_CREATE(cell, iPlayerUnitType, p, true);
 
             cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
-                                        fmt::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
+                                        std::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
                                         OUTC_NONE, p, pPlayer.getHouse());
         }
 
@@ -706,7 +706,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         int maxDistance = worms * 32; // 128 / 4
         int wormCell = map.getRandomCell();
         int failures = 0;
-        logbook(fmt::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
+        logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
             int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                        SANDWORM);
@@ -720,7 +720,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
                 }
                 continue;
             }
-            logbook(fmt::format("Spawning sandworm at {}", cell));
+            logbook(std::format("Spawning sandworm at {}", cell));
             UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
             wormCell = cell; // start from here to spawn new worm
             worms--;

@@ -7,7 +7,7 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 
-#include <fmt/core.h>
+#include <format>
 
 cStructureUtils::cStructureUtils()
 {
@@ -107,7 +107,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer *pPlayer, int structureTy
     int playerId = pPlayer->getId();
 
     if (game.isDebugMode()) {
-        logbook(fmt::format(
+        logbook(std::format(
                     "Looking for primary building (type {}, name {}, pPlayer {})", structureType, sStructureInfo[structureType].name, playerId));
     }
 
@@ -205,7 +205,7 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const
         case CARRYALL:
             return HIGHTECH;
         default:
-            logbook(fmt::format("Item buildId is [{}], which is not mapped", unitBuildId));
+            logbook(std::format("Item buildId is [{}], which is not mapped", unitBuildId));
             assert(false);
             return -1;
     }

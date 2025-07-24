@@ -23,7 +23,7 @@
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
-#include <fmt/core.h>
+#include <format>
 
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() :
@@ -74,7 +74,7 @@ cAbstractStructure::cAbstractStructure() :
     dead = false;
 
     if (game.isDebugMode()) {
-        logbook(fmt::format("(cAbstractStructure)(ID {}) Constructor", this->id));
+        logbook(std::format("(cAbstractStructure)(ID {}) Constructor", this->id));
     }
 }
 
@@ -82,7 +82,7 @@ cAbstractStructure::~cAbstractStructure()
 {
     // destructor
     if (game.isDebugMode()) {
-        logbook(fmt::format("(cAbstractStructure)(ID {}) Destructor", this->id));
+        logbook(std::format("(cAbstractStructure)(ID {}) Destructor", this->id));
     }
     iHitPoints = -1;
     iCell = -1;
@@ -491,7 +491,7 @@ void cAbstractStructure::damage(int hp, int originId)
     }
 
     iHitPoints -= damage; // do damage
-    logbook(fmt::format("cAbstractStructure::damage() - Structure [{}] received [{}] damage from originId [{}], HP is now [{}]", id, damage, originId, iHitPoints));
+    logbook(std::format("cAbstractStructure::damage() - Structure [{}] received [{}] damage from originId [{}], HP is now [{}]", id, damage, originId, iHitPoints));
 
     if (iHitPoints < 1) {
         // TODO: update statistics? (structure lost)
@@ -534,7 +534,7 @@ void cAbstractStructure::setHitPoints(int hp)
     int maxHp = sStructureInfo[getType()].hp;
 
     if (iHitPoints > maxHp) {
-        logbook(fmt::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
+        logbook(std::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
 
         // will fail (uncomment to let it be capped)
         assert(iHitPoints <= maxHp); // may never be more than the maximum of that structure
@@ -957,5 +957,5 @@ std::string cAbstractStructure::getDefaultStatusMessageBar() const
 {
     s_StructureInfo info = getStructureInfo();
     int health = getHealthNormalized() * 100;
-    return fmt::format("{} at {} percent health", info.name, health);
+    return std::format("{} at {} percent health", info.name, health);
 }

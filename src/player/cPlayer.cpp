@@ -29,7 +29,7 @@ cPlayer::cPlayer()
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
     // no log(), because we can't assume player is fully initialized yet
-    logbook(fmt::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
+    logbook(std::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
                         MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
     memset(bmp_structure, 0, sizeof(bmp_structure));
     memset(bmp_unit, 0, sizeof(bmp_unit));
@@ -186,7 +186,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain)
 {
     if (id < 0 || id >= MAX_PLAYERS) {
         // no log(), as house still has to be set up
-        logbook(fmt::format("Error initializing player, id {} is not valid.", id));
+        logbook(std::format("Error initializing player, id {} is not valid.", id));
     }
     assert(id >= HUMAN);
     assert(id < MAX_PLAYERS);
@@ -238,7 +238,7 @@ void cPlayer::setHouse(int iHouse)
 {
     int currentHouse = house;
     // not yet set up house properly.. so use logbook instead of log()
-    logbook(fmt::format("cPlayer[{}]::setHouse - Current house is [{}/{}], setting house to [{}/{}]",
+    logbook(std::format("cPlayer[{}]::setHouse - Current house is [{}/{}], setting house to [{}/{}]",
                         this->id, currentHouse, getHouseNameForId(currentHouse), iHouse, getHouseNameForId(iHouse)));
     house = iHouse; // use rules of this house
 
@@ -249,7 +249,7 @@ void cPlayer::setHouse(int iHouse)
     difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
 
     if (currentHouse != iHouse) {
-        logbook(fmt::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
+        logbook(std::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
 
         // now set the different colors based upon house
         minimapColor = m_HousesInfo->getMinimapColor(house);
@@ -352,7 +352,7 @@ bool cPlayer::hasRadarAndEnoughPower() const
 
 std::string cPlayer::asString() const
 {
-    return fmt::format("Player [id={}, human={}, sidebar={}]", this->id, this->m_Human, fmt::ptr(this->sidebar));
+    return std::format("Player [id={}, human={}, sidebar={}]", this->id, this->m_Human, fmt::ptr(this->sidebar));
 }
 
 /**
@@ -669,7 +669,7 @@ void cPlayer::increaseStructureAmount(int structureType)
     if (structureType >= MAX_STRUCTURETYPES) return;
     iStructures[structureType]++;
 
-    log(fmt::format("increaseStructureAmount result: iStructures[{}(={})]={}",
+    log(std::format("increaseStructureAmount result: iStructures[{}(={})]={}",
                     structureType, sStructureInfo[structureType].name, iStructures[structureType]));
 }
 
@@ -680,7 +680,7 @@ void cPlayer::decreaseStructureAmount(int structureType)
 
     iStructures[structureType]--;
 
-    log(fmt::format("decreaseStructureAmount result: iStructures[{}(={})]={}",
+    log(std::format("decreaseStructureAmount result: iStructures[{}(={})]={}",
                     structureType, sStructureInfo[structureType].name, iStructures[structureType]));
 }
 
@@ -876,7 +876,7 @@ bool cPlayer::canBuildUnitType(int iUnitType) const
     eListType listType = sUnitInfo[iUnitType].listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iUnitType);
     bool result = pItem != nullptr;
-    log(fmt::format("canBuildUnitType(unitType={}) -> {}", iUnitType, result ? "TRUE" : "FALSE"));
+    log(std::format("canBuildUnitType(unitType={}) -> {}", iUnitType, result ? "TRUE" : "FALSE"));
     return result;
 }
 
@@ -887,7 +887,7 @@ bool cPlayer::canBuildSpecialType(int iType) const
 
     bool result = pItem != nullptr;
 
-    log(fmt::format("canBuildSpecialType(iType={}) -> {}", iType, result ? "TRUE" : "FALSE"));
+    log(std::format("canBuildSpecialType(iType={}) -> {}", iType, result ? "TRUE" : "FALSE"));
 
     return result;
 }
@@ -991,7 +991,7 @@ cBuildingListItem *cPlayer::isUpgradingList(eListType listType, int sublistId) c
     int listId = eListTypeAsInt(listType);
     cBuildingList *upgradesList = sidebar->getList(eListType::LIST_UPGRADES);
     if (upgradesList == nullptr) {
-        log(fmt::format("isUpgradingList for listType [{}] and sublistId [{}], could not find upgradesList!? - will return nullptr.",
+        log(std::format("isUpgradingList for listType [{}] and sublistId [{}], could not find upgradesList!? - will return nullptr.",
                         listId, sublistId));
         assert(false);
         return nullptr;
@@ -1033,8 +1033,8 @@ bool cPlayer::startBuildingUnit(int iUnitType) const
 
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
-        log(fmt::format("Wanting to build unit [{}] iUnitType = [{}], with listType[{}] - {}",
-                        unitType.name, iUnitType, listType, result));
+        log(std::format("Wanting to build unit [{}] iUnitType = [{}], with listType[{}] - {}",
+                        unitType.name, iUnitType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }
@@ -1047,8 +1047,8 @@ bool cPlayer::startBuildingStructure(int iStructureType) const
 
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
-        log(fmt::format("Wanting to build structure [{}] iStructureType = [{}], with listType[{}] - {}",
-                        sStructureInfo[iStructureType].name, iStructureType, listType, startedBuilding));
+        log(std::format("Wanting to build structure [{}] iStructureType = [{}], with listType[{}] - {}",
+                        sStructureInfo[iStructureType].name, iStructureType, eListTypeAsInt(listType), startedBuilding));
     }
     return startedBuilding;
 }
@@ -1061,8 +1061,8 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const
 
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
-        log(fmt::format("Wanting to build special [{}] iSpecialType = [{}], with listType[{}] - {}",
-                        sSpecialInfo[iSpecialType].description, iSpecialType, listType, result));
+        log(std::format("Wanting to build special [{}] iSpecialType = [{}], with listType[{}] - {}",
+                        sSpecialInfo[iSpecialType].description, iSpecialType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }
@@ -1074,8 +1074,8 @@ bool cPlayer::startUpgrading(int iUpgradeType) const
 
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
-        log(fmt::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
-                        sUpgradeInfo[iUpgradeType].description, iUpgradeType, listType, result));
+        log(std::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
+                        sUpgradeInfo[iUpgradeType].description, iUpgradeType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }
@@ -1248,12 +1248,12 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
 {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    log(fmt::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, sUnitInfo[iUnitType].name));
+    log(std::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, sUnitInfo[iUnitType].name));
 
     // CHECK 1: Do we have the money?
     if (checkIfAffordable) {
         if (!hasEnoughCreditsForUnit(iUnitType)) {
-            log(fmt::format("canBuildUnit: FALSE, because cost {} higher than credits {}", sUnitInfo[iUnitType].cost, getCredits()));
+            log(std::format("canBuildUnit: FALSE, because cost {} higher than credits {}", sUnitInfo[iUnitType].cost, getCredits()));
             return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
         }
     }
@@ -1268,14 +1268,14 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
 
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(iStrucType)) {
-        log(fmt::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for this unit: [{}]",
+        log(std::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for this unit: [{}]",
                         sStructureInfo[iStrucType].name, sUnitInfo[iUnitType].name));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
     if (iUnitType == DEVASTATOR || iUnitType == SONICTANK || iUnitType == DEVIATOR) {
         if (!hasAtleastOneStructure(IX)) {
-            log(fmt::format("canBuildUnit: FALSE, because we do not own the required ADDITIONAL structure type [{}] for this unit: [{}]",
+            log(std::format("canBuildUnit: FALSE, because we do not own the required ADDITIONAL structure type [{}] for this unit: [{}]",
                             sStructureInfo[IX].name, sUnitInfo[iUnitType].name));
             return eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE;
         }
@@ -1284,8 +1284,8 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
     if (!canBuildUnitType(iUnitType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
-        log(fmt::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this unit: [{}]",
-                        sUnitInfo[iUnitType].listType, sUnitInfo[iUnitType].name));
+        log(std::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this unit: [{}]",
+                        eListTypeAsInt(sUnitInfo[iUnitType].listType), sUnitInfo[iUnitType].name));
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
@@ -1299,12 +1299,12 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType)
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     s_SpecialInfo &special = sSpecialInfo[iType];
-    log(fmt::format("canBuildSpecial: Wanting to build iType = [{}(={})] allowed?...", iType, special.description));
+    log(std::format("canBuildSpecial: Wanting to build iType = [{}(={})] allowed?...", iType, special.description));
 
     // Do we have the building needed?
     int iStrucType = PALACE; // TODO: get from "special" data structure?
     if (!hasAtleastOneStructure(iStrucType)) {
-        log(fmt::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for [{}]",
+        log(std::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for [{}]",
                         sStructureInfo[iStrucType].name, special.description));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
@@ -1318,8 +1318,8 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType)
     if (!canBuildSpecialType(iType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
-        log(fmt::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this special: [{}]",
-                        special.listType, special.description));
+        log(std::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this special: [{}]",
+                        eListTypeAsInt(special.listType), special.description));
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
@@ -1355,7 +1355,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
         bool isVisibleForPlayer = map.isVisible(cUnit.getCell(), this);
 
         if (game.isDebugMode()) {
-            log(fmt::format("Visible = {}", isVisibleForPlayer));
+            log(std::format("Visible = {}", isVisibleForPlayer));
         }
 
         // HACK HACK: the AI player does not need to discover an enemy player yet
@@ -1369,7 +1369,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
     }
 
     if (game.isDebugMode()) {
-        log(fmt::format("Targets {}", maxTargets));
+        log(std::format("Targets {}", maxTargets));
     }
 
     return iTargets[RNG::rnd(maxTargets)];
@@ -1397,7 +1397,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
                 }
 
     if (game.isDebugMode()) {
-        log(fmt::format("STR] Targets {}", iT));
+        log(std::format("STR] Targets {}", iT));
     }
 
     return (iTargets[RNG::rnd(iT)]);
@@ -1405,7 +1405,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
 
 eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
 {
-    log(fmt::format("canBuildStructure: Wanting to build iStructureType = [{}]", iStructureType));
+    log(std::format("canBuildStructure: Wanting to build iStructureType = [{}]", iStructureType));
 
     assert(iStructureType > -1 && "Structure type must be > -1");
     assert(iStructureType < MAX_STRUCTURETYPES && "Structure type must be < MAX_STRUCTURETYPES");
@@ -1413,19 +1413,19 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     const s_StructureInfo &structureType = sStructureInfo[iStructureType];
-    log(fmt::format("canBuildStructure: Wanting to build iStructureType = [{}(={})], allowed?...",
+    log(std::format("canBuildStructure: Wanting to build iStructureType = [{}(={})], allowed?...",
                     iStructureType, structureType.name));
 
     // CHECK 1: Do we have the money?
     if (!hasEnoughCreditsForStructure(iStructureType)) {
-        log(fmt::format("canBuildStructure: FALSE, reason NOT_ENOUGH_MONEY: because cost {} > credits {}",
+        log(std::format("canBuildStructure: FALSE, reason NOT_ENOUGH_MONEY: because cost {} > credits {}",
                         structureType.cost, getCredits()));
         return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
     }
 
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(CONSTYARD)) {
-        log(fmt::format("canBuildStructure: FALSE, reason REQUIRES_STRUCTURE: we do not own the required structure type [{}] for this structure: [{}]",
+        log(std::format("canBuildStructure: FALSE, reason REQUIRES_STRUCTURE: we do not own the required structure type [{}] for this structure: [{}]",
                         sStructureInfo[CONSTYARD].name, structureType.name));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
@@ -1509,18 +1509,18 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
 {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.eventType == eGameEventType::GAME_EVENT_PLAYER_DEFEATED) {
-        auto msg = fmt::format("Player {} ({}) has been defeated.", event.player->getId(), event.player->getHouseName());
+        auto msg = std::format("Player {} ({}) has been defeated.", event.player->getId(), event.player->getHouseName());
         addNotification(msg, eNotificationType::BAD);
     }
 
     if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED) {
-        auto msg = fmt::format("{} launched!", event.buildingListItem->getNameString());
+        auto msg = std::format("{} launched!", event.buildingListItem->getNameString());
         addNotification(msg, eNotificationType::BAD);
     }
 
     if (event.player == this) {
         if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET) {
-            auto msg = fmt::format("{} is ready for deployment.", event.buildingListItem->getNameString());
+            auto msg = std::format("{} is ready for deployment.", event.buildingListItem->getNameString());
             addNotification(msg, eNotificationType::PRIORITY);
         }
 
@@ -1548,7 +1548,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
 
         if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED) {
             if (event.entityType == eBuildType::UPGRADE) {
-                auto msg = fmt::format("Upgrade: {} completed.", event.buildingListItem->getNameString());
+                auto msg = std::format("Upgrade: {} completed.", event.buildingListItem->getNameString());
                 addNotification(msg, eNotificationType::PRIORITY);
             }
         }
@@ -1667,7 +1667,7 @@ void cPlayer::logStructures()
 {
     log("cPlayer::logStructures() START");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-        log(fmt::format("[{}] amount [{}]", sStructureInfo[i].name, iStructures[i]));
+        log(std::format("[{}] amount [{}]", sStructureInfo[i].name, iStructures[i]));
     }
     log("cPlayer::logStructures() END");
 }
@@ -1797,7 +1797,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 void cPlayer::log(const std::string &txt) const
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
+        logbook(std::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
     }
 }
 
@@ -2161,7 +2161,7 @@ void cPlayer::addNotification(const std::string &msg, eNotificationType type)
         return lhs.getTimer() > rhs.getTimer();
     });
     if (game.isDebugMode()) {
-        log(fmt::format("addNotification : type {} - {}", eNotificationTypeString(type), msg));
+        log(std::format("addNotification : type {} - {}", eNotificationTypeString(type), msg));
     }
 }
 
@@ -2333,7 +2333,7 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
     if (m_HousesInfo->getSwapColor(house) > -1) {
         int start = m_HousesInfo->getSwapColor(house);
         int s = 144;                // original position (harkonnen)
-        logbook(fmt::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
+        logbook(std::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
         //get palette from surface and write color from player
         SDL_Palette *palette = modifiableSurface->format->palette;
         for (int j = start; j < (start + 7); j++) {
