@@ -13,7 +13,7 @@
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
-#include <fmt/format.h>
+#include <format>
 #include <iostream>
 
 #include <vector>
@@ -352,7 +352,7 @@ bool cPlayer::hasRadarAndEnoughPower() const
 
 std::string cPlayer::asString() const
 {
-    return std::format("Player [id={}, human={}, sidebar={}]", this->id, this->m_Human, fmt::ptr(this->sidebar));
+    return std::format("Player [id={}, human={}, sidebar={:#x}]", this->id, this->m_Human, reinterpret_cast<std::uintptr_t>(this->sidebar));
 }
 
 /**
