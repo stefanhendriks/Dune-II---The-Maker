@@ -26,34 +26,38 @@
 
 #include <cmath>
 
-std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& settingfileName)
+std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
 {
-    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>(settingfileName, true);
-    std::unique_ptr<GameSettings> gs = std::make_unique<GameSettings>();
-    if (!settings->hasSection("SETTINGS")) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMEINI, settingfileName, "No section SETTIGNS in inifile");
-        return gs;
+    std::shared_ptr<cIniFile> file = std::make_shared<cIniFile>(filename, true);
+    std::unique_ptr<GameSettings> gameSettings = std::make_unique<GameSettings>();
+
+    if (!file->hasSection("SETTINGS")) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMEINI, filename, "Expected to find [SETTINGS] in file.ini file");
+        return gameSettings;
     }
-    const cSection &section = settings->getSection("SETTINGS");
+
+    const cSection &section = file->getSection("SETTINGS");
+
     if (section.hasValue("ScreenWidth"))
-        gs->screenW = section.getInt("ScreenWidth");
+        gameSettings->screenW = section.getInt("ScreenWidth");
     if (section.hasValue("ScreenHeight"))
-        gs->screenH = section.getInt("ScreenHeight");
+        gameSettings->screenH = section.getInt("ScreenHeight");
     if (section.hasValue("CameraDragMoveSpeed"))
-        gs->cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+        gameSettings->cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
     if (section.hasValue("CameraBorderOrKeyMoveSpeed"))
-        gs->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+        gameSettings->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     if (section.hasValue("CameraEdgeMove"))
-        gs->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+        gameSettings->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     if (section.hasValue("FullScreen"))
-        gs->windowed = !section.getBoolean("FullScreen");
+        gameSettings->windowed = !section.getBoolean("FullScreen");
     if (section.hasValue("AllowRepeatingReinforcements"))
-        gs->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+        gameSettings->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
     if (section.hasValue("AllTurretsDownOnLowPower"))
-        gs->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+        gameSettings->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
     if (section.hasValue("RocketTurretsDownOnLowPower"))
-        gs->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
-    return gs;
+        gameSettings->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+
+    return gameSettings;
 }
 
 

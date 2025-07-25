@@ -56,4 +56,4 @@ int distanceBetweenCellAndCenterOfScreen(int iCell);
 
 const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
 
-std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& settingfileName);
+std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename);
