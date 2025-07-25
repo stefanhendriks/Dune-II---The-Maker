@@ -35,7 +35,7 @@ class cScreenInit;
 class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
-class GameSettings;
+struct GameSettings;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -264,9 +264,11 @@ public:
     bool isDebugMode() {
         return m_debugMode;
     }
+
     void setDebugMode(bool value) {
         m_debugMode = value;
     }
+
     void applySettings(GameSettings *gs);
 
 private:
