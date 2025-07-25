@@ -21,5 +21,5 @@ struct GameSettings {
     bool disableReinforcements = false;
     bool noAiRest = false;
     bool drawUsages = false;
-    std::string gameFilename;
+    std::string gameFilename = "game.ini";
 };

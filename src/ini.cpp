@@ -2107,7 +2107,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
 // Game.ini loader
 void INI_Install_Game(std::string filename)
 {
-    logbook("[GAME.INI] Opening file");
+    logbook("[GameRules] Opening file");
 
     FILE *stream;
     int section = INI_GAME;

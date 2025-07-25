@@ -56,6 +56,8 @@ std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
         gameSettings->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
     if (section.hasValue("RocketTurretsDownOnLowPower"))
         gameSettings->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+    if (section.hasValue("GameRules"))
+        gameSettings->gameFilename = section.getStringValue("GameRules");
 
     return gameSettings;
 }

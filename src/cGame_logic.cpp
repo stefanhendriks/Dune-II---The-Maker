@@ -109,6 +109,7 @@ void cGame::applySettings(GameSettings *gs)
     m_disableReinforcements = gs->disableReinforcements;
     m_noAiRest = gs->noAiRest;
     m_drawUsages = gs->drawUsages;
+    m_gameFilename = gs->gameFilename;
 }
 
 void cGame::init()
@@ -812,7 +813,9 @@ bool cGame::setupGame()
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini", m_debugMode);
+
+    // TODO(SETTINGS) -> The game rules file is loaded via here, but *also* via `INSTALL_GAME()`!
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
     map.setReinforcements(m_reinforcements);

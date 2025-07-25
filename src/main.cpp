@@ -73,10 +73,9 @@ TTF_Font *gr_bene_font; // benegesserit font for size XXL
 */
 int main(int argc, char **argv)
 {
-    // read file config
     std::unique_ptr<GameSettings> settings = loadSettingsFromIni("settings.ini");
     
-    //read prompt config
+    // read command-line arguments, can override settings.ini
     cHandleArgument handleArg;
     try {
         int parseResult = handleArg.handleArguments(argc, argv, settings.get());
@@ -91,10 +90,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // apply to game
     game.applySettings(settings.get());
 
-    game.setGameFilename("game.ini");
     try {
         if (game.setupGame()) {
             game.run();
