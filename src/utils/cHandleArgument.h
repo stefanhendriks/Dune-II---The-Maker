@@ -2,19 +2,14 @@
 
 #include <map>
 #include <string>
-
-class cGame;
+#include "utils/GameSettings.hpp"
 
 class cHandleArgument {
-
 public:
-    explicit cHandleArgument(cGame *game);
+    cHandleArgument() = default;
+    ~cHandleArgument() = default;
 
-    ~cHandleArgument();
-
-    int handleArguments(int argc, char *argv[]);
-
-    void applyArguments();
+    int handleArguments(int argc, char *argv[], GameSettings *settings);
 
 private:
     enum class Options : char {
@@ -53,11 +48,6 @@ private:
         {"--help",            Options::HELP}
     };
 
-    cGame *m_game = nullptr;
-
-    std::map<Options, bool> m_optionToHandleAfter;
-
-    int m_argumentScreenX, m_argumentScreenY;
 
     void printInstructions() const;
 };

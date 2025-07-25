@@ -22,8 +22,46 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cIniFile.h"
 #include "utils/Graphics.hpp"
+#include "utils/GameSettings.hpp"
 
 #include <cmath>
+
+std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
+{
+    std::shared_ptr<cIniFile> file = std::make_shared<cIniFile>(filename, true);
+    std::unique_ptr<GameSettings> gameSettings = std::make_unique<GameSettings>();
+
+    if (!file->hasSection("SETTINGS")) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMERULES, filename, "Expected to find [SETTINGS] in file.ini file");
+        return gameSettings;
+    }
+
+    const cSection &section = file->getSection("SETTINGS");
+
+    if (section.hasValue("ScreenWidth"))
+        gameSettings->screenW = section.getInt("ScreenWidth");
+    if (section.hasValue("ScreenHeight"))
+        gameSettings->screenH = section.getInt("ScreenHeight");
+    if (section.hasValue("CameraDragMoveSpeed"))
+        gameSettings->cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    if (section.hasValue("CameraBorderOrKeyMoveSpeed"))
+        gameSettings->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    if (section.hasValue("CameraEdgeMove"))
+        gameSettings->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    if (section.hasValue("FullScreen"))
+        gameSettings->windowed = !section.getBoolean("FullScreen");
+    if (section.hasValue("AllowRepeatingReinforcements"))
+        gameSettings->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+    if (section.hasValue("AllTurretsDownOnLowPower"))
+        gameSettings->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+    if (section.hasValue("RocketTurretsDownOnLowPower"))
+        gameSettings->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+    if (section.hasValue("GameRules"))
+        gameSettings->gameFilename = section.getStringValue("GameRules");
+
+    return gameSettings;
+}
+
 
 /**
  * Default printing in logs. Only will be done if game.isDebugMode() is true.

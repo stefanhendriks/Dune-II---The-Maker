@@ -21,6 +21,9 @@
 #include "drawers/SDLDrawer.hpp"
 
 #include "utils/Graphics.hpp"
+
+#include "utils/cHandleArgument.h"
+#include "utils/common.h"
 #include <string>
 
 #include <iostream>
@@ -65,17 +68,29 @@ TTF_Font *bene_font;	// benegesserit font.
 TTF_Font *small_font;	// small font.
 TTF_Font *gr_bene_font; // benegesserit font for size XXL
 
-
 /**
 	Entry point of the game
 */
 int main(int argc, char **argv)
 {
-    game.setGameFilename("game.ini");
-
-    if (game.handleArguments(argc, argv) < 0) {
-        return 0;
+    std::unique_ptr<GameSettings> settings = loadSettingsFromIni("settings.ini");
+    
+    // read command-line arguments, can override settings.ini
+    cHandleArgument handleArg;
+    try {
+        int parseResult = handleArg.handleArguments(argc, argv, settings.get());
+        if (parseResult < 0) {
+            cLogger::getInstance()->log(LOG_ERROR, COMP_GAMERULES, "HandleArgument", "Incorrect arguments");
+            return 1;
+        }
     }
+    catch (std::runtime_error &e) {
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMERULES, "HandleArgument", fmt::format("Runtime_error on parsing : {}", e.what()));
+        std::cerr << fmt::format("Error: {}\n\n", e.what());
+        return 1;
+    }
+
+    game.applySettings(settings.get());
 
     try {
         if (game.setupGame()) {

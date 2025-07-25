@@ -15,7 +15,7 @@ enum eLogLevel {
 enum eLogComponent {
     COMP_UNITS,
     COMP_STRUCTURES,
-    COMP_GAMEINI,
+    COMP_GAMERULES,
     COMP_SCENARIOINI,
     COMP_PARTICLE,
     COMP_BULLET,

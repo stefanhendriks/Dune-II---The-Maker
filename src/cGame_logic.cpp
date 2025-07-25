@@ -51,11 +51,10 @@
 #include "utils/Color.hpp"
 
 #include "utils/cFileValidator.h"
-#include "utils/cHandleArgument.h"
 #include "utils/cIniFile.h"
 #include "player/cHousesInfo.h"
 #include "utils/Graphics.hpp"
-
+#include "utils/GameSettings.hpp"
 #include <fmt/core.h>
 
 #include <algorithm>
@@ -87,9 +86,31 @@ cGame::cGame() : m_timeManager(*this)
     m_version = "0.7.0";
 
     m_mentat = nullptr;
-    m_handleArgument = std::make_unique<cHandleArgument>(this);
 }
 
+void cGame::applySettings(GameSettings *gs)
+{
+    m_screenW = gs->screenW;
+    m_screenH = gs->screenH;
+    m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
+    m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
+    m_cameraEdgeMove = gs->cameraEdgeMove;
+    m_windowed = gs->windowed;
+    m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
+    m_turretsDownOnLowPower = gs->turretsDownOnLowPower;
+    m_rocketTurretsDownOnLowPower = gs->rocketTurretsDownOnLowPower;
+    m_playMusic = gs->playMusic;
+    m_playSound = gs->playSound;
+    m_debugMode = gs->debugMode;
+    m_drawUnitDebug = gs->drawUnitDebug;
+    m_disableAI = gs->disableAI;
+    m_oneAi = gs->oneAi;
+    m_disableWormAi = gs->disableWormAi;
+    m_disableReinforcements = gs->disableReinforcements;
+    m_noAiRest = gs->noAiRest;
+    m_drawUsages = gs->drawUsages;
+    m_gameFilename = gs->gameFilename;
+}
 
 void cGame::init()
 {
@@ -156,27 +177,6 @@ void cGame::init()
     INI_Install_Game(m_gameFilename);
 }
 
-bool cGame::loadSettings(std::shared_ptr<cIniFile> settings)
-{
-    if (!settings->hasSection(SECTION_SETTINGS)) {
-        std::cerr << "No [SETTINGS] section found in settings.ini file" << std::endl;
-        return false;
-    }
-
-    const cSection &section = settings->getSection(SECTION_SETTINGS);
-    game.m_screenW = section.getInt("ScreenWidth");
-    game.m_screenH = section.getInt("ScreenHeight");
-    game.m_cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
-    game.m_cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
-    game.m_cameraEdgeMove = section.getBoolean("CameraEdgeMove");
-    game.m_windowed = !section.getBoolean("FullScreen");
-    game.m_allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
-    game.m_turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
-    game.m_rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
-
-    return true;
-}
-
 // TODO: Bad smell (duplicate code)
 // initialize for missions
 void cGame::missionInit()
@@ -207,12 +207,6 @@ void cGame::missionInit()
 
     drawManager->missionInit();
 }
-
-int cGame::handleArguments(int argc, char **argv)
-{
-    return m_handleArgument->handleArguments(argc,argv);
-}
-
 
 void cGame::initPlayers(bool rememberHouse) const
 {
@@ -819,18 +813,14 @@ bool cGame::setupGame()
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>("game.ini", m_debugMode);
+
+    // TODO(SETTINGS) -> The game rules file is loaded via here, but *also* via `INSTALL_GAME()`!
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
     map.setReinforcements(m_reinforcements);
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
-
-    bool loadSettingsResult = game.loadSettings(settings);
-    if (!loadSettingsResult) {
-        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Error loading settings.ini", OUTC_FAILED);
-        return false;
-    }
 
     const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
     std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
@@ -947,6 +937,7 @@ bool cGame::setupGame()
     }
     else {
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
+        // memcpy(general_palette, gfxdata[PALETTE_D2TM], sizeof general_palette);
     }
 
     gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
