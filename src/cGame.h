@@ -268,6 +268,8 @@ public:
     void setDebugMode(bool value) {
         m_debugMode = value;
     }
+    void execute(AbstractMentat &mentat);
+    
     void applySettings(GameSettings *gs);
 
 private:
