@@ -32,8 +32,8 @@ std::string getLogComponentString(eLogComponent component)
             return "UNITS";
         case COMP_STRUCTURES:
             return "STRUCTURES";
-        case COMP_GAMEINI:
-            return "GAMEINI";
+        case COMP_GAMERULES:
+            return "GAMERULES";
         case COMP_SCENARIOINI:
             return "SCENARIOINI";
         case COMP_PARTICLE:

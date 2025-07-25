@@ -15,24 +15,23 @@ mkdir bin/campaign/maps
 mkdir bin/campaign/maps/seed
 mkdir bin/campaign/briefings
 echo "4. Copying campaign files"
-cp campaign/atreides/*.* bin/campaign/atreides
-cp campaign/ordos/*.* bin/campaign/ordos
-cp campaign/harkonnen/*.* bin/campaign/harkonnen
-cp campaign/maps/*.* bin/campaign/maps
-cp campaign/maps/seed/*.* bin/campaign/maps/seed
-cp campaign/briefings/*.* bin/campaign/briefings
-cp campaign/info.txt bin/campaign/info.txt
+cp resources/bin/campaign/atreides/*.* bin/campaign/atreides
+cp resources/bin/campaign/ordos/*.* bin/campaign/ordos
+cp resources/bin/campaign/harkonnen/*.* bin/campaign/harkonnen
+cp resources/bin/campaign/maps/*.* bin/campaign/maps
+cp resources/bin/campaign/maps/seed/*.* bin/campaign/maps/seed
+cp resources/bin/campaign/briefings/*.* bin/campaign/briefings
+cp resources/bin/campaign/info.txt bin/campaign/info.txt
 echo "5. Creating new data directory"
 mkdir bin/data
 mkdir bin/data/scenes
 mkdir bin/data/bmp
 echo "6. Copying data files"
-cp data/*.dat bin/data
-cp data/*.fon bin/data
-cp data/*.ttf bin/data
-cp data/bmp/*.* bin/data/bmp
+cp resources/bin/data/*.dat bin/data
+cp resources/bin/data/*.fon bin/data
+cp resources/bin/data/*.ttf bin/data
 echo "7. Copying scenes"
-cp data/scenes/*.* bin/data/scenes
+cp resources/bin/data/scenes/*.* bin/data/scenes
 echo "8. Create save game directories"
 mkdir bin/save
 mkdir bin/save/atreides
@@ -41,18 +40,16 @@ mkdir bin/save/ordos
 mkdir bin/save/skirmish
 echo "9. Create skirmish directory"
 mkdir bin/skirmish
-cp skirmish/*.ini bin/skirmish
+cp resources/bin/skirmish/*.ini bin/skirmish
 echo "10. Copying dll files"
-# cp dll/mingw32\*.* bin
+echo "TODO TODO TODO"
 echo "11. Copy executable"
 cp build/d2tm bin
 echo "12. Copy game rules file (game.ini)"
-cp game.ini.org bin/game.ini
-cp settings.ini bin
+cp resources/game.ini.org bin/game.ini
+cp resources/bin/settings.ini bin
 echo "13. Copy txt files"
-cp *.txt bin
-cp doc/versionhistory.txt bin
-cp doc/controls.txt bin
-cp d2tm.cfg bin
-rm bin/CMakeLists.txt
+cp resources/bin/doc/versionhistory.txt bin
+cp resources/bin/doc/controls.txt bin
+cp resources/bin/d2tm.cfg bin
 echo "Done."

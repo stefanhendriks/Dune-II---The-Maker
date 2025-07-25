@@ -17,7 +17,7 @@ int RNG::rnd(int max)
 {
     if (max<1)
         return 0;
-    std::uniform_int_distribution<int> dist(0, max);
+    std::uniform_int_distribution<int> dist(0, max-1);
         return dist(getGenerator());
 }
 

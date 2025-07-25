@@ -32,10 +32,10 @@ class cPlatformLayerInit;
 class cPlayer;
 class cSoundPlayer;
 class cScreenInit;
-class cHandleArgument;
 class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
+struct GameSettings;
 
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -58,8 +58,6 @@ public:
     void setGameFilename(const std::string &filename) {
         m_gameFilename = filename;
     }
-
-    int handleArguments(int argc, char **argv);
 
     bool m_windowed;			    // windowed
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
@@ -266,10 +264,12 @@ public:
     bool isDebugMode() {
         return m_debugMode;
     }
+
     void setDebugMode(bool value) {
         m_debugMode = value;
     }
-    void execute(AbstractMentat &mentat);
+    void applySettings(GameSettings *gs);
+
 private:
     /**
      * Variables start here
@@ -304,7 +304,6 @@ private:
 
     cTimeManager m_timeManager;
 
-    std::unique_ptr<cHandleArgument> m_handleArgument;
     std::shared_ptr<cHousesInfo> m_Houses;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
@@ -341,7 +340,6 @@ private:
 
     cGameState *m_states[GAME_MAX_STATES];
 
-    bool loadSettings(std::shared_ptr<cIniFile> settings);
     void updateMouseAndKeyboardState();
     void updateGamePlaying();
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet

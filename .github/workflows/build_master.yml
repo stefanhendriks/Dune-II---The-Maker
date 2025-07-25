@@ -1,0 +1,228 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  MSYS2:
+    name: Windows-msys2-mingw64
+    runs-on: [ windows-latest ]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Install MSYS2 with MinGW 64-bit
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64 # D2TM is built within a MinGW64 bit environment
+          update: true
+          install: git gzip zip unzip mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake .. -G "MinGW Makefiles"
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}\build"
+          cmake --build . --target all -- -j -l 3
+      - name: Produce binary
+        run: |
+          cd "${{ github.workspace }}"
+          ./create_release.bat
+      - name: Zip binary
+        run: |
+          cd "${{ github.workspace }}/bin"
+          zip -vr d2tm.zip . -x "*.DS_Store"
+      - name: Produce release name
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir -p out/nightly
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').windows.$(git rev-parse --short HEAD).zip
+          cp bin/d2tm.zip "out/nightly/$FILE_NAME"
+          echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Make sure all is up to date
+        run: |
+          cd "${{ github.workspace }}"
+          git pull -r
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RELEASE_NAME }}
+          path: bin/d2tm.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
+
+  Ubuntu:
+    name: Ubuntu (x86)
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 11
+          platform: x86
+      #          platform: x64
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          cd "${{ github.workspace }}"
+          chmod +x install_dependencies_ubuntu.sh
+          ./install_dependencies_ubuntu.sh
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
+      - name: Produce binary
+        run: |
+          cd "${{ github.workspace }}"
+          ./create_release.sh
+      - name: Zip binary
+        run: |
+          cd "${{ github.workspace }}/bin"
+          zip -vr d2tm.zip . -x "*.DS_Store"
+      - name: Produce release name
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir -p out/nightly
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').linux.$(git rev-parse --short HEAD).zip
+          cp bin/d2tm.zip "out/nightly/$FILE_NAME"
+          echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Make sure all is up to date
+        run: |
+          cd "${{ github.workspace }}"
+          git pull -r --autostash
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RELEASE_NAME }}
+          path: bin/d2tm.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
+
+  MACOSX:
+    name: Mac OS X
+    runs-on: [ macos-15 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          ./install_dependencies_macosx.sh
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
+      - name: Produce binary
+        run: |
+          cd "${{ github.workspace }}"
+          ./create_release.sh
+      - name: Zip binary
+        run: |
+          cd "${{ github.workspace }}/bin"
+          zip -vr d2tm.zip . -x "*.DS_Store"
+      - name: Produce release name
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir -p out/nightly
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').maxosx.$(git rev-parse --short HEAD).zip
+          cp bin/d2tm.zip "out/nightly/$FILE_NAME"
+          echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Make sure all is up to date
+        run: |
+          cd "${{ github.workspace }}"
+          git pull -r
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RELEASE_NAME }}
+          path: bin/d2tm.zip
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true
+
+  Update-Github-Pages:
+    if: always()
+    needs: [Ubuntu, MACOSX, MSYS2]
+    runs-on: [ macos-15 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+          submodules: recursive
+      - name: Generate index.html
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir -p out
+  
+          echo '<!DOCTYPE html>' > out/index.html
+          echo '<html><head><meta charset="UTF-8"><title>D2TM Nightly Builds</title></head><body>' >> out/index.html
+          echo '<h1>Dune 2 - The Maker: Bleeding Edge Builds</h1>' >> out/index.html
+  
+          echo '<h2>Windows</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*windows*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+          echo '</ul>' >> out/index.html
+  
+          echo '<h2>Mac OS X</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*maxosx*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+          echo '</ul>' >> out/index.html
+  
+          echo '<h2>Linux</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*linux*.zip | sort -r); do
+            file=$(basename "$zip")
+            echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
+          done
+  
+          echo '</ul></body></html>' >> out/index.html
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          keep_files: true

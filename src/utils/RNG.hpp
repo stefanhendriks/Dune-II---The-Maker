@@ -9,7 +9,7 @@ public:
     static std::mt19937& getGenerator();
     //Returns an integer between min (included) and max (included)
     static int genInt(int min, int max);
-    //Returns an integer between 0 (included) and max(included)
+    //Returns an integer between 0 (included) and max(excluded)
     static int rnd(int max);
     // Returns a decimal number between min (included) and max (included)
     static double genDouble(double min, double max);
