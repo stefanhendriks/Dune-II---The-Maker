@@ -32,7 +32,7 @@ std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
     std::unique_ptr<GameSettings> gameSettings = std::make_unique<GameSettings>();
 
     if (!file->hasSection("SETTINGS")) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMEINI, filename, "Expected to find [SETTINGS] in file.ini file");
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMERULES, filename, "Expected to find [SETTINGS] in file.ini file");
         return gameSettings;
     }
 
