@@ -3,8 +3,9 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiWindow.hpp"
 #include "sMouseEvent.h"
+#include <memory>
 
 struct SDL_Surface;
 class cGame;
@@ -30,7 +31,7 @@ private:
 
     int m_prevState;
 
-    cGuiWindow *m_guiWindow;
+    std::unique_ptr<GuiWindow> m_guiWindow;
 
     void constructWindow(int prevState);
 };

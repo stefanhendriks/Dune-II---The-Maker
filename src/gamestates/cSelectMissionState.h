@@ -3,7 +3,7 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiWindow.hpp"
 #include "sMouseEvent.h"
 
 struct SDL_Surface;
@@ -25,7 +25,7 @@ public:
 private:
     int prevState;
 
-    const cTextDrawer textDrawer;
+    cTextDrawer textDrawer;
 
-    cGuiWindow *gui_window;
+    std::unique_ptr<GuiWindow> gui_window;
 };

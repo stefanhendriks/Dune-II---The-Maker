@@ -3,7 +3,6 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/actions/cGuiActionToGameState.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
@@ -181,24 +180,37 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int backButtonY = screen_y - topBarHeight;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-    backButton = new cGuiButton(textDrawer, backButtonRect, " BACK");
-    backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
-    backButton->setOnLeftMouseButtonClickedAction(action);
+    backButton = GuiButtonBuilder()
+            .withRect(backButtonRect)        
+            .withLabel("BACK")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                game.setNextStateToTransitionTo(GAME_MENU);
+                game.initiateFadingOut();})
+            .build();
 
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
     cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
-    startButton = new cGuiButton(textDrawer, startButtonRect, "START");
-    startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-
+    startButton = GuiButtonBuilder()
+            .withRect(startButtonRect)        
+            .withLabel("START")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                if (iSkirmishMap > -1) {
+                    prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+                };})
+            .build();
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
 {
-    delete backButton;
 }
 
 void cSetupSkirmishGameState::thinkFast()
@@ -833,7 +845,6 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
     onMouseLeftButtonClickedAtSpawnBlooms();
     onMouseLeftButtonClickedAtDetonateBlooms();
     onMouseLeftButtonClickedAtPlayerList();
-    onMouseLeftButtonClickedAtStartButton();
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()
@@ -949,26 +960,6 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
             spawnWorms = 0;
         }
     }
-}
-
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
-{
-    int topBarHeight = 21;
-    int screen_y = game.m_screenH;
-    int screen_x = game.m_screenW;
-
-    int startButtonWidth = textDrawer.textLength("START");
-    int startButtonHeight = topBarHeight;
-    int startButtonY = screen_y - topBarHeight;
-    int startButtonX = screen_x - startButtonWidth;
-
-    if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-        // START
-        if (iSkirmishMap > -1) {
-            prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-        }
-    } // mouse hovers over "START"
-
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
@@ -1102,7 +1093,6 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms()
 
 void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &)
 {
-
 }
 
 void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
