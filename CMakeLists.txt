@@ -15,8 +15,6 @@ else()
     SET(D2TM_VERSION "unset")
 endif()
 
-string(TIMESTAMP D2TM_BUILD_DATE "%Y-%m-%d")
-
 CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h"

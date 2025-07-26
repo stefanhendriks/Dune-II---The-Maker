@@ -5,4 +5,3 @@
 #include <string>
 
 constexpr std::string D2TM_VERSION = "@D2TM_VERSION@";
-constexpr std::string D2TM_BUILD_DATE = "@D2TM_BUILD_DATE@";
