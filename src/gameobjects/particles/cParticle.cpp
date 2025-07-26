@@ -120,7 +120,7 @@ void cParticle::draw()
             renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
         else {
-            renderDrawer->renderStrechSprite(bmp, src, dest,255);
+            renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
     }
     else {
