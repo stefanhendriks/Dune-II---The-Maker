@@ -19,11 +19,11 @@ cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
 {
     assert(player);
     candyBarBall = m_player->createTextureFromIndexedSurfaceWithPalette(
-                    gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), 232);
+            gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
     candyBarPiece = m_player->createTextureFromIndexedSurfaceWithPalette(
-                    gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), 232);
+            gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
     candyHorizonBar = m_player->createTextureFromIndexedSurfaceWithPalette(
-                    gfxinter->getSurface(HORIZONTAL_CANDYBAR),232);
+            gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
     candiBarRenderer = renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_screenH-40);
     renderDrawer->beginDrawingToTexture(candiBarRenderer);

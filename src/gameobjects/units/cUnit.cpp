@@ -735,11 +735,23 @@ void cUnit::draw()
     const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
+    Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
+    int roundedScaledWidth = static_cast<int>(round(scaledWidth));
+    int roundedScaledHeight = static_cast<int>(round(scaledHeight));
+    if (shadow) {
+        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
+        if (iType == CARRYALL) {
+            dest = {ux, uy+24, roundedScaledWidth, roundedScaledHeight};
+        }
+        renderDrawer->renderStrechSprite(shadow,src, dest, ShadowTrans);
+    }
+
     // Draw BODY
     Texture *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
-        cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
+        cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
         renderDrawer->renderStrechSprite(bitmap,src, dest);
     }
     else {

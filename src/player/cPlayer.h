@@ -214,6 +214,9 @@ public:
 
     Texture *getUnitTopBitmap(int index);
 
+    // SDL_Surface *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
+    Texture *getUnitShadowBitmap(int index);
+
     void destroyAllegroBitmaps();
 
     bool hasWor() const;
@@ -484,7 +487,7 @@ public:
 
     void deselectUnit(const int &unitId);
 
-    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int transparentIndex);
+    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency);
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 

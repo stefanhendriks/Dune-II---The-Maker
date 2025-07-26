@@ -256,8 +256,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
+        bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE), TransparentColorIndex);
+        bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE), TransparentColorIndex);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -265,7 +265,7 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = createTextureFromIndexedSurfaceWithPalette(structureType.bmp,232);
+            bmp_structure[i] = createTextureFromIndexedSurfaceWithPalette(structureType.bmp, TransparentColorIndex);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
@@ -277,7 +277,7 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash,232);
+                bmp_structure[j] = createTextureFromIndexedSurfaceWithPalette(structureType.flash, TransparentColorIndex);
             }
 
         }
@@ -287,13 +287,13 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = sUnitInfo[i];
 
-            bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, 232);
+            bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, TransparentColorIndex);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
             if (unitType.top) {
 
-                bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, 232);
+                bmp_unit_top[i] = createTextureFromIndexedSurfaceWithPalette(unitType.top, TransparentColorIndex);
             }
         }
     }
@@ -519,6 +519,42 @@ Texture *cPlayer::getUnitTopBitmap(int index)
     }
     return nullptr;
 }
+
+/**
+ * Returns the shadow bitmap of unit type "index", using bodyFacing and animationFrame.
+ * !!! Be sure to destroy the bitmap returned from here !!!
+ * @param index
+ * @return
+ */
+// SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
+// {
+// if (sUnitInfo[index].shadow) {
+// int bmp_width = sUnitInfo[index].bmp_width;
+// int bmp_height = sUnitInfo[index].bmp_height;
+// int start_x = bodyFacing * bmp_width;
+// int start_y = bmp_height * animationFrame;
+//
+// //Carry-all has a bit different offset for shadow
+// if (index == CARRYALL) {
+// start_x += 2;
+// start_y += 2;
+// }
+//
+// SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
+// renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
+// renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+// return shadow;
+// }
+// return nullptr;
+// }
+Texture *cPlayer::getUnitShadowBitmap(int index)
+{
+    if (sUnitInfo[index].shadow) {
+        return sUnitInfo[index].shadow;
+    } else
+        return nullptr;
+}
+
 
 bool cPlayer::hasWor() const
 {
@@ -2262,14 +2298,14 @@ void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
 }
 
 
-Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int transparentIndex)
+Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency)
 {
     SDL_Renderer *_renderer = renderDrawer->getRenderer();
 
     // Step 1: Create a copy of the surface (same INDEX8 format)
     SDL_Surface *modifiableSurface = SDL_CreateRGBSurfaceWithFormat(0, referenceSurface->w, referenceSurface->h, 8, SDL_PIXELFORMAT_INDEX8);
     if (!modifiableSurface) {
-        SDL_Log("Erreur copie surface : %s", SDL_GetError());
+        SDL_Log("Error copying surface : %s", SDL_GetError());
         return NULL;
     }
 
@@ -2290,7 +2326,7 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
     else {
         SDL_Log("No palette in the original image!");
         SDL_FreeSurface(modifiableSurface);
-        return NULL;
+        return nullptr;
     }
 
     // Step 2: Apply the new palette (256 colors)
@@ -2312,15 +2348,15 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
         if (SDL_SetPaletteColors(modifiableSurface->format->palette, colors, 0, 256) != 0) {
             SDL_Log("Error setting palette colors : %s", SDL_GetError());
             SDL_FreeSurface(modifiableSurface);
-            return NULL;
+            return nullptr;
         }
     }
 
     // Step 3: Set the transparency index
-    if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, transparentIndex) != 0) {
+    if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, paletteIndexForTransparency) != 0) {
         SDL_Log("SDL_SetColorKey error : %s", SDL_GetError());
         SDL_FreeSurface(modifiableSurface);
-        return NULL;
+        return nullptr;
     }
 
     // Step 4: Convert to RGBA8888 to create the texture with alpha
@@ -2328,17 +2364,17 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
     SDL_FreeSurface(modifiableSurface);
     if (!rgbaSurface) {
         SDL_Log("SDL_ConvertSurfaceFormat error : %s", SDL_GetError());
-        return NULL;
+        return nullptr;
     }
 
     // Step 5: Create the final texture
     SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, rgbaSurface);
     if (!texture) {
         SDL_Log("SDL_CreateTextureFromSurface error : %s", SDL_GetError());
-        return NULL;
+        return nullptr;
     }
-    Texture *newTexture = new Texture(texture, rgbaSurface->w, rgbaSurface->h);
-    SDL_FreeSurface(rgbaSurface);
 
+    auto *newTexture = new Texture(texture, rgbaSurface->w, rgbaSurface->h);
+    SDL_FreeSurface(rgbaSurface);
     return newTexture;
 }

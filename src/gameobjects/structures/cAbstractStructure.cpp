@@ -122,6 +122,12 @@ Texture *cAbstractStructure::getBitmap()
     return this->getPlayer()->getStructureBitmap(getType());
 }
 
+Texture *cAbstractStructure::getShadowBitmap()
+{
+    s_StructureInfo structureType = getStructureInfo();
+    return structureType.shadow;
+}
+
 cPlayer *cAbstractStructure::getPlayer()
 {
     assert(iPlayer >= HUMAN);
@@ -897,6 +903,10 @@ void cAbstractStructure::drawWithShadow()
 
     cRectangle src =  {0, iSourceY, pixelWidth, pixelHeight};
     cRectangle dest =  {drawX, drawY, scaledWidth, scaledHeight};
+    Texture *shadow = getShadowBitmap();
+    if (shadow) {
+        renderDrawer->renderStrechSprite(shadow, src, dest, ShadowTrans);
+    }
     renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
 }
 

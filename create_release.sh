@@ -49,7 +49,7 @@ echo "12. Copy game rules file (game.ini)"
 cp resources/game.ini.org bin/game.ini
 cp resources/bin/settings.ini bin
 echo "13. Copy txt files"
-cp resources/bin/doc/versionhistory.txt bin
-cp resources/bin/doc/controls.txt bin
+cp resources/doc/versionhistory.txt bin
+cp resources/doc/controls.txt bin
 cp resources/bin/d2tm.cfg bin
 echo "Done."
