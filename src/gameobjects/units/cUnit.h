@@ -17,6 +17,8 @@
 #include "structs.h"
 #include "utils/cRectangle.h"
 
+#include <memory>
+
 enum class eTransferType {
     NONE,                               // nothing to transfer
     NEW_STAY,                           // bring a new unit, and let the carryall stay
@@ -166,6 +168,7 @@ public:
     void draw_health();
     void draw_experience();
     void draw_spice();
+    void draw_group();
     void draw();
     void draw_path() const;
     bool isValid() const;     // valid unit?

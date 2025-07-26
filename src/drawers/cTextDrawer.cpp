@@ -132,7 +132,7 @@ void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int ma
     drawText(margin, y, color, msg);
 }
 
-int cTextDrawer::textLength(const std::string &msg) const
+int cTextDrawer::getTextLength(const std::string &msg) const
 {
     int w,h;
     TTF_SizeUTF8(font, msg.c_str(), &w, &h);
@@ -147,10 +147,10 @@ void cTextDrawer::setFont(TTF_Font *theFont)
 
 cRectangle cTextDrawer::getRect(int x, int y, const std::string &msg) const
 {
-    return cRectangle(x, y, textLength(msg), getFontHeight());
+    return cRectangle(x, y, getTextLength(msg), getFontHeight());
 }
 
 cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) const
 {
-    return new cRectangle(x, y, textLength(msg), getFontHeight());
+    return new cRectangle(x, y, getTextLength(msg), getFontHeight());
 }

@@ -146,16 +146,7 @@ void cMouseDrawer::drawToolTipBackground()
 
     if (context->isMouseOverStructure()) {
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
-
         color = theStructure->getPlayer()->getMinimapColor();
-
-        // TODO: Think about this, it does not really look nice to me, rather see house color
-//		// make grey when not our own
-//		if (theStructure->getPlayer()->getId() != player->getId()) {
-//			red = 64;
-//			green = 64;
-//			blue = 64;
-//		}
     }
 
     unsigned char red = color.r;
@@ -168,12 +159,8 @@ void cMouseDrawer::drawToolTipBackground()
     blue = std::max(blue - 64, 0);
 
     color = Color{red, green, blue,128};
-    // @Mira what do this code ?
-    auto black = Color::black(); //renderDrawer->getColor_BLACK();
+    auto black = Color::black();
     black.a = 128;
-    // const auto white = Color{255, 255, 255,255};
-    //_rect(bmp_screen, x, y, x+(width-1), y + (height-1), white);
-    //renderDrawer->drawRect(bmp_screen, x, y, width-1, height-1, white);
     renderDrawer->renderRectFillColor(x, y, width, height, color);
     int shadowX = x + width;
     int shadowY = y + height;

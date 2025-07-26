@@ -214,7 +214,6 @@ public:
 
     Texture *getUnitTopBitmap(int index);
 
-    // SDL_Surface *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
     Texture *getUnitShadowBitmap(int index);
 
     void destroyAllegroBitmaps();

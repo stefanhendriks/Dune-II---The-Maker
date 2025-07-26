@@ -46,7 +46,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 //    /////////////////////////////////
 //    //// Credits (top)
 //    ////////////////////////////////
-    int buttonWidth = 12; //Mira TEXT alfont_text_length(bene_font, "CREDITS") / 2;
+    int buttonWidth = textDrawer.getTextLength("CREDITS") / 2;
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
     int creditsX = (game.m_screenW / 2) - buttonWidth;
