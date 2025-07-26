@@ -744,7 +744,7 @@ void cUnit::draw()
         if (iType == CARRYALL) {
             dest = {ux, uy+24, roundedScaledWidth, roundedScaledHeight};
         }
-        renderDrawer->renderStrechSprite(shadow,src, dest, 160);
+        renderDrawer->renderStrechSprite(shadow,src, dest, ShadowTrans);
     }
 
     // Draw BODY
