@@ -516,6 +516,7 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
     // @Mira display text
     //alfont_textprintf(bmp_screen, bene_font, 17,17, Color{0,0,0), "region %d", c-1);
+    drawManager->setMessage(fmt::format("region {}",c-1));
     return c - 1;
 }
 
