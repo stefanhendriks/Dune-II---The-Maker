@@ -1,6 +1,7 @@
 #include "cSelectMissionState.h"
 
 #include "d2tmc.h"
+#include "config.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/cGuiButton.h"
@@ -30,7 +31,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
 
     // Title
-    gui_window->setTitle("Dune II - The Maker - version " + game.m_version);
+    gui_window->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
 
 
     // QUIT game

@@ -1,6 +1,7 @@
 #include "cOptionsState.h"
 
 #include "d2tmc.h"
+#include "config.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/actions/cGuiActionExitGame.h"
 #include "gui/actions/cGuiActionToGameState.h"
@@ -37,7 +38,7 @@ void cOptionsState::constructWindow(int prevState)
     const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
     // Title
-    m_guiWindow->setTitle("Dune II - The Maker - version " + game.m_version);
+    m_guiWindow->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
 
     // EXIT
     int rows = 2;

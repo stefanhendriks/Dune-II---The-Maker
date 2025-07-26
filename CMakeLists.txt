@@ -7,6 +7,21 @@ project(d2tm)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 #SET(OpenGL_GL_PREFERENCE "GLVND")
+if(DEFINED ENV{ENV_D2TM_VERSION})
+    SET(D2TM_VERSION "$ENV{ENV_D2TM_VERSION}")
+elseif(DEFINED ENV{GITHUB_SHA})
+    SET(D2TM_VERSION "$ENV{GITHUB_SHA}")
+else()
+    SET(D2TM_VERSION "unset")
+endif()
+
+message(STATUS "D2TM-Version determined to be: ${D2TM_VERSION}")
+
+CONFIGURE_FILE (
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.h"
+)
+
 
 if(APPLE)
     message(STATUS "Using pkg-config to locate SDL2 libraries on macOS")
