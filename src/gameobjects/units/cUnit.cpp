@@ -602,10 +602,20 @@ void cUnit::draw_health()
     if (height_y > 2) {
         renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,255);
     }
+}
 
+void cUnit::draw_group()
+{
+    if (iHitPoints < 0) return;
+
+    // draw units health
+    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
+    int height_y = mapCamera->factorZoomLevel(4);
+    int drawx = draw_x();
+    int drawy = draw_y() - (height_y + 2);
     // draw group
-    if (iGroup > 0 &&
-            iPlayer == HUMAN) {
+    if (iGroup > 0 && iPlayer == HUMAN) {
+        // @mira I don't fix group name without acces to textDrawer: fixed on ctx branch
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, Color{0, 0, 0), "%d", iGroup);
         textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),fmt::format("{}",iGroup));
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, Color{255, 255, 255), "%d", iGroup);
