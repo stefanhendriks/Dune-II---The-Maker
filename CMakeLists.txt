@@ -15,6 +15,8 @@ else()
     SET(D2TM_VERSION "unset")
 endif()
 
+message(STATUS "D2TM-Version determined to be: ${D2TM_VERSION}")
+
 CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h"
