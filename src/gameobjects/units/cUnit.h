@@ -17,6 +17,8 @@
 #include "structs.h"
 #include "utils/cRectangle.h"
 
+#include <memory>
+
 enum class eTransferType {
     NONE,                               // nothing to transfer
     NEW_STAY,                           // bring a new unit, and let the carryall stay
@@ -75,6 +77,8 @@ inline std::string eActionTypeString(eActionType actionType)
     }
     return "";
 }
+
+class cTextDrawer;
 
 class cUnit {
 
@@ -440,6 +444,8 @@ public:
     bool canUnload();
 
 private:
+    std::shared_ptr<cTextDrawer> textDrawer;
+
     eActionType m_action;
     eUnitActionIntent intent;
 

@@ -26,7 +26,7 @@
 #include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
-
+#include "drawers/cTextDrawer.h"
 #include <cmath>
 
 // Path creation definitions / var
@@ -607,7 +607,9 @@ void cUnit::draw_health()
     if (iGroup > 0 &&
             iPlayer == HUMAN) {
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, Color{0, 0, 0), "%d", iGroup);
+        textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),fmt::format("{}",iGroup));
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, Color{255, 255, 255), "%d", iGroup);
+        textDrawer->drawText(drawx + 26, drawy - 12, Color::white(),fmt::format("{}",iGroup));
     }
 
 }
@@ -3016,6 +3018,7 @@ bool cUnit::isInfantryUnit() const
 
 cUnit::cUnit()
 {
+    textDrawer = std::make_shared<cTextDrawer>(bene_font);
     mission = -1;
     init(-1);
 }
