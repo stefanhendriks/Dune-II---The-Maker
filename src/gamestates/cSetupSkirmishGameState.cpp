@@ -175,7 +175,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int detonateHitBoxHeight = 16;
     detonateBloomsRect = cRectangle(detonateX, detonateY, detonateHitBoxWidth, detonateHitBoxHeight);
 
-    int backButtonWidth = textDrawer.textLength(" BACK");
+    int backButtonWidth = textDrawer.getTextLength(" BACK");
     int backButtonHeight = topBarHeight;
     int backButtonY = screen_y - topBarHeight;
     int backButtonX = 0;
@@ -191,7 +191,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
                 game.initiateFadingOut();})
             .build();
 
-    int startButtonWidth = textDrawer.textLength("START");
+    int startButtonWidth = textDrawer.getTextLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
