@@ -27,7 +27,14 @@
 #include <memory>
 #include <SDL2/SDL_ttf.h>
 
-constexpr int IndTrans = 223;
+/**
+ * This is the palette index (in the 8 bit palette of D2TM/Dune 2) that is meant to be rendered as a 'shadow'
+ */
+constexpr int TransparentColorIndex = 223;
+
+/**
+ * The transparency (value between 0-255) when rendering a bitmap/texture with transparency
+ */
 constexpr int ShadowTrans = 160;
 
 class cAbstractStructure;
