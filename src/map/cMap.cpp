@@ -596,6 +596,7 @@ void cMap::draw_units_2nd()
         if (pUnit.isHidden()) continue;
 
         pUnit.draw_health();
+        pUnit.draw_group();
         pUnit.draw_experience();
         if (pUnit.iType == HARVESTER) {
             pUnit.draw_spice();
