@@ -78,8 +78,6 @@ inline std::string eActionTypeString(eActionType actionType)
     return "";
 }
 
-class cTextDrawer;
-
 class cUnit {
 
 public:
@@ -445,8 +443,6 @@ public:
     bool canUnload();
 
 private:
-    std::shared_ptr<cTextDrawer> textDrawer;
-
     eActionType m_action;
     eUnitActionIntent intent;
 
