@@ -548,12 +548,12 @@ void cUnit::draw_spice()
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,255);
-    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,255);
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,160);
+    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,160);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,255);
+        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,160);
     }
 }
 
@@ -595,12 +595,12 @@ void cUnit::draw_health()
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,255);
-    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,255);
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,160);
+    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,160);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,255);
+        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,160);
     }
 }
 
@@ -674,7 +674,7 @@ void cUnit::draw_experience()
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        renderDrawer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy);
+        renderDrawer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, 160);
     }
 }
 
@@ -3397,9 +3397,9 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug()
 {
-    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,255});
-    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,255},1);
-    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255), "%d", iID);
+    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,160});
+    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,160},1);
+    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255,160}, "%d", iID);
 
     if (isSandworm()) {
         //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
