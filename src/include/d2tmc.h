@@ -28,6 +28,7 @@
 #include <SDL2/SDL_ttf.h>
 
 constexpr int IndTrans = 223;
+constexpr int StructureShadowTrans = 160;
 
 class cAbstractStructure;
 class SDLDrawer;
