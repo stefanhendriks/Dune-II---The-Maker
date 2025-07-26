@@ -4,4 +4,4 @@
 #pragma once
 #include <string>
 
-constexpr std::string D2TM_VERSION = "@D2TM_VERSION@";
+const std::string D2TM_VERSION = "@D2TM_VERSION@";
