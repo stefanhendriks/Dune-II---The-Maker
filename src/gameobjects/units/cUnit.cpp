@@ -754,14 +754,16 @@ void cUnit::draw()
         SDL_FreeSurface(stretchedShadow);
     }*/
     Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
+    int roundedScaledWidth = static_cast<int>(round(scaledWidth));
+    int roundedScaledHeight = static_cast<int>(round(scaledHeight));
     if (shadow) {
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
+        cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
         if (iType == CARRYALL) {
             // start_x += 2;
             // start_y += 2;
-            src = {start_x+2, start_y+2, bmp_width, bmp_height};
+            dest = {ux, uy+24, roundedScaledWidth, roundedScaledHeight};
         }
-        cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
         renderDrawer->renderStrechSprite(shadow,src, dest, 160);
     }
 
@@ -769,7 +771,7 @@ void cUnit::draw()
     Texture *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
-        cRectangle dest = {ux, uy, static_cast<int>(round(scaledWidth)), static_cast<int>(round(scaledHeight))};
+        cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
         renderDrawer->renderStrechSprite(bitmap,src, dest);
     }
     else {
