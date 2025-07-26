@@ -72,7 +72,7 @@ jobs:
       - name: Set up GCC
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 11
+          version: 14
           platform: x86
       #          platform: x64
       - name: Checkout
