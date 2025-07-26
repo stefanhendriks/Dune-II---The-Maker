@@ -15,8 +15,8 @@ void GuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
     int width = m_rect.getWidth();
     int height = m_rect.getHeight();
     renderDrawer->renderRectColor(m_rect,borderRect);
-    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height,borderBottomRight);
-    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, borderBottomRight);
+    renderDrawer->renderLine(x1+width-1, y1, x1+width-1, y1+height,borderBottomRight);
+    renderDrawer->renderLine(x1, y1+height-1, x1+width, y1+height-1, borderBottomRight);
 }
 
 void GuiObject::drawRectFillBorder(const GuiTheme& theme) const
