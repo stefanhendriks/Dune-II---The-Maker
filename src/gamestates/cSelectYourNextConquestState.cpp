@@ -62,7 +62,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
     cTextDrawer textDrawer(bene_font);
-    int length = textDrawer.textLength("Mission select");
+    int length = textDrawer.getTextLength("Mission select");
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");

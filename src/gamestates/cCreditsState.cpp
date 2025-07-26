@@ -378,7 +378,7 @@ void cCreditsState::draw() const
             int spaceBetween = 4;
             // both name and line given, then we render them differently.
             m_textDrawer.drawText(halfScreen+spaceBetween, textCrawlY, line.txt.c_str());
-            int widthOfName = m_textDrawer.textLength(line.name.c_str());
+            int widthOfName = m_textDrawer.getTextLength(line.name.c_str());
             m_textDrawer.drawText(halfScreen - (widthOfName + spaceBetween), textCrawlY, line.name.c_str());
         }
         textCrawlY += line.height;
