@@ -70,8 +70,9 @@ constexpr auto kMaxAlpha = 255;
 
 }
 
-cGame::cGame() : m_timeManager(*this)
+cGame::cGame()
 {
+    m_timeManager = std::make_unique<cTimeManager>(this);   
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;
@@ -675,7 +676,7 @@ void cGame::run()
     screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
-        m_timeManager.processTime();
+        m_timeManager->processTime();
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
