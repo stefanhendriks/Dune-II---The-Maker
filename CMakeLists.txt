@@ -91,8 +91,8 @@ else()
     -static-libgcc
     -static-libstdc++
     -lmingw32
-    -lSDL2
     -lSDL2main
+    -lSDL2
     -mwindows
   )
 endif()
