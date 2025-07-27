@@ -2,7 +2,7 @@
 #include "utils/GameSettings.hpp"
 #include <iostream>
 #include <string>
-#include <fmt/core.h>
+#include <format>
 
 int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
 {

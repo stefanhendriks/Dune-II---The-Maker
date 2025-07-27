@@ -85,8 +85,8 @@ int main(int argc, char **argv)
         }
     }
     catch (std::runtime_error &e) {
-        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMERULES, "HandleArgument", fmt::format("Runtime_error on parsing : {}", e.what()));
-        std::cerr << fmt::format("Error: {}\n\n", e.what());
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMERULES, "HandleArgument", std::format("Runtime_error on parsing : {}", e.what()));
+        std::cerr << std::format("Error: {}\n\n", e.what());
         return 1;
     }
 
