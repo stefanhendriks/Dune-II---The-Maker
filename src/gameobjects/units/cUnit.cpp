@@ -3396,9 +3396,9 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug()
 {
-    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,160});
-    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,160},1);
-    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255,160}, "%d", iID);
+    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,ShadowTrans});
+    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
+    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, "%d", iID);
 
     if (isSandworm()) {
         //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
