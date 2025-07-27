@@ -38,9 +38,9 @@ private:
 
 public:
 
-    explicit cTimeManager(cGame &game);
+    explicit cTimeManager(cGame *game);
 
-    cGame &m_game;
+    cGame *m_game;
     int m_gameTime;		/** Definition of game time (= in seconds) **/
 
     void processTime();
