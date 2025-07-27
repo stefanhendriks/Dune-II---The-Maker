@@ -174,7 +174,7 @@ void CreditsDrawer::draw()
 {
     auto *tex = gfxinter->getTexture(CREDITS_BAR);
     renderDrawer->renderSprite(tex, drawX, drawY);
-    renderDrawer->setClippingFor(drawX+1, drawY+1, drawX+tex->w-1, drawY+tex->h-1);
+    renderDrawer->setClippingFor(drawX+1, drawY+5, drawX+tex->w-1, drawY+tex->h-5);
     drawCurrentCredits(drawX, drawY);
     drawPreviousCredits(drawX, drawY);
     renderDrawer->resetClippingFor();
