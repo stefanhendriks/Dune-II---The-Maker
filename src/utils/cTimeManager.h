@@ -27,7 +27,7 @@ private:
     // gametime timer is called every 100 ms, try to keep up with that.
     void handleTimerUnits();
     // gametime timer is called every 1000 ms, try to keep up with that.
-    void handleTimerAllegroTimerSeconds();
+    void handleTimerSecond();
     // gametime timer is called every 5 ms, try to keep up with that.
     void handleTimerGameTime();
   	// system capping to avoid extremely high timers

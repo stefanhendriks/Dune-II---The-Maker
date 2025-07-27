@@ -1,7 +1,6 @@
 #include "cTimeManager.h"
 
 #include "cGame.h"
-// #include "timers.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
 
@@ -53,7 +52,7 @@ void cTimeManager::capTimers()
 /**
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerAllegroTimerSeconds()
+void cTimeManager::handleTimerSecond()
 {
     while (m_timerSecond > 0) {
         m_gameTime++;
@@ -124,7 +123,7 @@ void cTimeManager::processTime()
         m_lastSecondsTick += 1000;
     }
     capTimers();
-    handleTimerAllegroTimerSeconds();
+    handleTimerSecond();
     handleTimerUnits();
     handleTimerGameTime();
 }
