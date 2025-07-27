@@ -38,7 +38,7 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
     assert(orderProcesser);
     if (orderProcesser->isOrderPlaced()) { //grey
         renderDrawer->renderSprite(buttonBitmap, buttonRect.getX(), buttonRect.getY());
-        renderDrawer->renderRectColor(buttonRect,0,0,0,128);
+        renderDrawer->renderRectFillColor(buttonRect,Color::black(),128);
     }
     else {
         renderDrawer->renderSprite(buttonBitmap, buttonRect.getX(), buttonRect.getY());
