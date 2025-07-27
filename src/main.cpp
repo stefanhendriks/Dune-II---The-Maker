@@ -28,7 +28,7 @@
 
 #include <iostream>
 #include <SDL2/SDL_ttf.h>
-int	iRest = 1;	// default rest value
+// int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
 cGame          				game;
