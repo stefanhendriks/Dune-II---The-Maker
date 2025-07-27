@@ -525,7 +525,7 @@ void cGame::drawStateCombat()
     drawManager->drawCombatState();
     if (m_drawFps) {
         // TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
-        textDrawer->drawText(180,8, Color::black(), fmt::format("FPS/REST: {}/{}", game.getFps(), iRest));
+        textDrawer->drawText(180,8, Color::black(), fmt::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()));
     }
 
     // for now, call this on game class.
@@ -564,12 +564,12 @@ void cGame::loadSkirmishMaps() const
 }
 
 
-void cGame::handleTimeSlicing()
-{
-    if (iRest > 0) {
-        SDL_Delay(iRest);
-    }
-}
+// void cGame::handleTimeSlicing()
+// {
+//     if (iRest > 0) {
+//         SDL_Delay(iRest);
+//     }
+// }
 
 void cGame::shakeScreenAndBlitBuffer()
 {
@@ -700,7 +700,7 @@ void cGame::run()
         updateMouseAndKeyboardState();
 
         updateGamePlaying();
-        handleTimeSlicing(); // handle time diff (needs to change!)
+        // handleTimeSlicing(); // handle time diff (needs to change!)
 
         renderDrawer->beginDrawingToTexture(actualRenderer);
         renderDrawer->renderClearToColor();
@@ -711,7 +711,8 @@ void cGame::run()
         renderDrawer->endDrawingToTexture();
         renderDrawer->renderSprite(actualRenderer,0,0);
         SDL_RenderPresent(renderer);
-        m_frameCount++;
+        m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
+        ///m_frameCount++;
     }
 }
 
@@ -858,7 +859,7 @@ bool cGame::setupGame()
 
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
-    m_frameCount = m_fps = 0;
+    /// m_frameCount = 0;
 
     m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
     if (!m_windowed) {
@@ -1617,15 +1618,15 @@ void cGame::setLoseFlags(int value)
     m_loseFlags = value;
 }
 
-bool cGame::isRunningAtIdealFps()
-{
-    return m_fps > IDEAL_FPS;
-}
+// bool cGame::isRunningAtIdealFps()
+// {
+//     return m_fps > IDEAL_FPS;
+// }
 
-int cGame::getFps()
-{
-    return m_fps;
-}
+// int cGame::getFps()
+// {
+//     return m_fps;
+// }
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 {
@@ -2038,18 +2039,22 @@ void cGame::thinkSlow()
 {
     thinkSlow_state();
 
-    m_fps = m_frameCount;
+    m_timeManager->capFps();
+    // m_fps = m_frameCount;
+    // m_frameCount = 0;
 
-    // 'auto resting' / giving CPU some time for other processes
-    if (isRunningAtIdealFps()) {
-        iRest += 1; // give CPU a bit more slack
-    }
-    else {
-        if (iRest > 0) iRest -= 1;
-        if (iRest < 0) iRest = 0;
-    }
+    // // 'auto resting' / giving CPU some time for other processes
+    // if (isRunningAtIdealFps()) {
+    //     iRest += 1; // give CPU a bit more slack
+    // }
+    // else {
+    //     if (iRest > 0) iRest -= 1;
+    //     if (iRest < 0) iRest = 0;
+    // }
 
-    m_frameCount = 0;
+    m_timeManager->adaptWaitingTime();
+
+
 }
 
 void cGame::thinkSlow_state()
