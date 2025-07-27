@@ -5,7 +5,7 @@
 #define MOUSECELL_MINIMAP -2
 #define MOUSECELL_SIDEBAR -3
 
-#define IDEAL_FPS	60
+// #define IDEAL_FPS	60
 
 // MAP ID
 #define MAPID_UNITS  0

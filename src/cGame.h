@@ -17,7 +17,7 @@
 #include "mentat/cAbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-#include "utils/cTimeManager.h"
+#include "utils/TimeManager.hpp"
 #include "utils/cIniFile.h"
 
 #include <memory>
@@ -234,10 +234,6 @@ public:
     void setMissionLost();
     void setMissionWon();
 
-    // FPS related
-    bool isRunningAtIdealFps();
-    int getFps();
-
     void prepareMentatToTellAboutHouse(int house);
 
     void drawCombatMouse();
@@ -301,8 +297,7 @@ private:
     Texture *screenTexture=nullptr;
     Texture *actualRenderer= nullptr;
     std::unique_ptr<cTextDrawer> textDrawer;
-
-    cTimeManager m_timeManager;
+    std::unique_ptr<TimeManager> m_timeManager;
 
     std::shared_ptr<cHousesInfo> m_Houses;
 
@@ -331,8 +326,6 @@ private:
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
 
-    int m_frameCount, m_fps;            // fps and such
-
     int m_nextState;
 
     // the current game state we are running
@@ -355,7 +348,6 @@ private:
     void drawStateMentat(cAbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
-    void handleTimeSlicing();
 
     void initPlayers(bool rememberHouse) const;
 

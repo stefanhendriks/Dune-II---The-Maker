@@ -1,17 +1,21 @@
-#include "cTimeManager.h"
+#include "utils/TimeManager.hpp"
 
 #include "cGame.h"
-// #include "timers.h"
-#include "utils/cSoundPlayer.h"
+//#include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
 
 #include <fmt/core.h>
 #include <SDL2/SDL_timer.h>
-cTimeManager::cTimeManager(cGame &game)
-    : m_timerUnits(0)
+
+
+constexpr int IDEAL_FPS = 60; // ideal frames per second
+
+
+TimeManager::TimeManager(cGame *game)
+    : m_game(game)
+    , m_timerUnits(0)
     , m_timerSecond(0)
     , m_timerGlobal(0)
-    , m_game(game)
     , m_gameTime(0)
 {
 }
@@ -23,19 +27,19 @@ cTimeManager::cTimeManager(cGame &game)
 
 	In most cases this is not nescesary.
 **/
-void cTimeManager::capTimers()
+void TimeManager::capTimers()
 {
     auto logger = cLogger::getInstance();
 
     if (m_timerUnits > 10) {
-        if (m_game.isDebugMode()) {
+        if (m_game->isDebugMode()) {
             logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits));
             m_timerUnits = 10;
         }
     }
 
     if (m_timerGlobal > 40) {
-        if (m_game.isDebugMode()) {
+        if (m_game->isDebugMode()) {
             logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGlobal));
             m_timerGlobal = 40;
         }
@@ -43,7 +47,7 @@ void cTimeManager::capTimers()
 
     /* Taking 10 seconds to render a frame? i hope not **/
     if (m_timerSecond > 10) {
-        if (m_game.isDebugMode()) {
+        if (m_game->isDebugMode()) {
             logger->log(LOG_WARN, COMP_NONE, "Timer", fmt::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond));
             m_timerSecond = 10;
         }
@@ -53,11 +57,11 @@ void cTimeManager::capTimers()
 /**
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerAllegroTimerSeconds()
+void TimeManager::handleTimerSecond()
 {
     while (m_timerSecond > 0) {
         m_gameTime++;
-        m_game.thinkSlow();
+        m_game->thinkSlow();
         m_timerSecond--; // done!
     }
 
@@ -66,12 +70,12 @@ void cTimeManager::handleTimerAllegroTimerSeconds()
 /**
  * gametime timer is called every 5 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerGameTime()
+void TimeManager::handleTimerGameTime()
 {
     // keep up with time cycles
     while (m_timerGlobal > 0) {
-        m_game.think_fading();
-        m_game.thinkFast_state();
+        m_game->think_fading();
+        m_game->thinkFast_state();
 
         m_timerGlobal--;
     }
@@ -80,10 +84,10 @@ void cTimeManager::handleTimerGameTime()
 /**
  * units timer is called every 100 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerUnits()
+void TimeManager::handleTimerUnits()
 {
     while (m_timerUnits > 0) {
-        m_game.think_state();
+        m_game->think_state();
         m_timerUnits--;
     }
 }
@@ -101,7 +105,7 @@ void cTimeManager::handleTimerUnits()
     expect this function to be called by the main update function. Heck, even per state this would be different - which
     is now not the case.
 */
-void cTimeManager::processTime()
+void TimeManager::processTime()
 {
 //    syncFromAllegroTimers();
     uint64_t now = SDL_GetTicks64();
@@ -124,7 +128,39 @@ void cTimeManager::processTime()
         m_lastSecondsTick += 1000;
     }
     capTimers();
-    handleTimerAllegroTimerSeconds();
+    handleTimerSecond();
     handleTimerUnits();
     handleTimerGameTime();
+}
+
+int TimeManager::getFps() const
+{
+    return m_fps;
+}
+
+void TimeManager::waitForCPU()
+{
+    if (waitingTime > 0) {
+        SDL_Delay(waitingTime);
+    }
+    frameCount++;
+    //std::cout << fmt::format("waitingTime: {}", waitingTime) << std::endl;
+}
+
+void TimeManager::capFps()
+{
+    m_fps = frameCount;
+    frameCount = 0;
+}
+
+void TimeManager::adaptWaitingTime()
+{
+    if (m_fps > IDEAL_FPS) {
+        waitingTime += 1;
+    } else {
+        waitingTime -= 1;
+        if (waitingTime < 1) {
+            waitingTime = 1; // never wait less than 1 ms
+        }
+    }
 }
