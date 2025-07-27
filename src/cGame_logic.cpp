@@ -1814,7 +1814,7 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_M)) {
+    if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
         game.m_playMusic = !game.m_playMusic;
         if (!game.m_playMusic) {
             m_soundPlayer->stopMusic();
@@ -1824,11 +1824,11 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_O)) {
+    if (event.hasKey(SDL_SCANCODE_O) || event.hasKey(SDL_SCANCODE_VOLUMEDOWN)) {
         m_soundPlayer->changeMusicVolume(-10);
     }
 
-    if (event.hasKey(SDL_SCANCODE_P)) {
+    if (event.hasKey(SDL_SCANCODE_P) || event.hasKey(SDL_SCANCODE_VOLUMEUP) ) {
         m_soundPlayer->changeMusicVolume(10);
     }
 
