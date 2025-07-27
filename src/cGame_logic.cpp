@@ -1844,6 +1844,16 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
+    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_RETURN)) {
+        if (m_windowed) {
+            m_Screen->setFullScreenMode();
+            m_windowed = false;
+        } else {
+            m_Screen->setWindowMode();
+            m_windowed = true;
+        }
+    }
+
     cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
     if (selectedStructure) {
         // depending on type of structure, a key could mean a different thing?
