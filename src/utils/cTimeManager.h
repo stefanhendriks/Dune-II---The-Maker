@@ -10,23 +10,28 @@
 
   */
 
-/**
-	Time management is done in this class
-*/
 
 #pragma once
 #include <stdint.h>
 class cGame;
 
+/**
+	Time management is done in this class
+*/
 class cTimeManager {
 public:
     explicit cTimeManager(cGame *game);
     void processTime();
 
+    // returns the current FPS
     int getFps() const;
+    // return time to wait for CPU
     int getWaitingTime() const { return waitingTime; }
+    // wait for CPU to catch up
     void waitForCPU();
+    // get after 1s the FPS
     void capFps();
+    // adapt waiting time based on FPS
     void adaptWaitingTime();
 
 private:
