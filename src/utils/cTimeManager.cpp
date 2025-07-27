@@ -6,6 +6,11 @@
 
 #include <format>
 #include <SDL2/SDL_timer.h>
+
+
+constexpr int IDEAL_FPS = 60; // ideal frames per second
+
+
 cTimeManager::cTimeManager(cGame *game)
     : m_game(game)
     , m_timerUnits(0)
@@ -126,4 +131,36 @@ void cTimeManager::processTime()
     handleTimerSecond();
     handleTimerUnits();
     handleTimerGameTime();
+}
+
+int cTimeManager::getFps() const
+{
+    return m_fps;
+}
+
+void cTimeManager::waitForCPU()
+{
+    if (waitingTime > 0) {
+        SDL_Delay(waitingTime);
+    }
+    frameCount++;
+    std::cout << fmt::format("waitingTime: {}", waitingTime) << std::endl;
+}
+
+void cTimeManager::capFps()
+{
+    m_fps = frameCount;
+    frameCount = 0;
+}
+
+void cTimeManager::adaptWaitingTime()
+{
+    if (m_fps > IDEAL_FPS) {
+        waitingTime += 1;
+    } else {
+        waitingTime -= 1;
+        if (waitingTime < 1) {
+            waitingTime = 1; // never wait less than 1 ms
+        }
+    }
 }

@@ -23,6 +23,12 @@ public:
     explicit cTimeManager(cGame *game);
     void processTime();
 
+    int getFps() const;
+    int getWaitingTime() const { return waitingTime; }
+    void waitForCPU();
+    void capFps();
+    void adaptWaitingTime();
+
 private:
     // gametime timer is called every 100 ms, try to keep up with that.
     void handleTimerUnits();
@@ -39,6 +45,9 @@ private:
     int m_timerGlobal;
     int m_gameTime;		/** Definition of game time (= in seconds) **/
 
+    int m_fps = 0;			/** Frames per second **/
+    int frameCount = 0;		/** Frame count for FPS calculation **/
+    int waitingTime = 10;	/** Waiting time in ms, used to adapt FPS **/
     uint64_t m_lastUnitsTick = 0;
     uint64_t m_lastGameTimeTick = 0;
     uint64_t m_lastSecondsTick = 0;
