@@ -256,8 +256,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),232);
-        bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_SMALL),232);
+        bmp_flag = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_LARGE),TransparentColorIndex);
+        bmp_flag_small = createTextureFromIndexedSurfaceWithPalette(gfxdata->getSurface(BUILDING_FLAG_SMALL),TransparentColorIndex);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
