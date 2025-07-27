@@ -8,10 +8,10 @@
 #include <format>
 #include <SDL2/SDL_timer.h>
 cTimeManager::cTimeManager(cGame *game)
-    : m_timerUnits(0)
+    : m_game(game)
+    , m_timerUnits(0)
     , m_timerSecond(0)
     , m_timerGlobal(0)
-    , m_game(game)
     , m_gameTime(0)
 {
 }
