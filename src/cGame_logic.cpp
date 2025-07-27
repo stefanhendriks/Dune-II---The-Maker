@@ -72,7 +72,7 @@ constexpr auto kMaxAlpha = 255;
 
 cGame::cGame()
 {
-    m_timeManager = std::make_unique<cTimeManager>(this);   
+    m_timeManager = std::make_unique<TimeManager>(this);   
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;

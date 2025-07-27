@@ -1,7 +1,7 @@
-#include "cTimeManager.h"
+#include "utils/TimeManager.hpp"
 
 #include "cGame.h"
-#include "utils/cSoundPlayer.h"
+//#include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
 
 #include <fmt/core.h>
@@ -11,7 +11,7 @@
 constexpr int IDEAL_FPS = 60; // ideal frames per second
 
 
-cTimeManager::cTimeManager(cGame *game)
+TimeManager::TimeManager(cGame *game)
     : m_game(game)
     , m_timerUnits(0)
     , m_timerSecond(0)
@@ -27,7 +27,7 @@ cTimeManager::cTimeManager(cGame *game)
 
 	In most cases this is not nescesary.
 **/
-void cTimeManager::capTimers()
+void TimeManager::capTimers()
 {
     auto logger = cLogger::getInstance();
 
@@ -57,7 +57,7 @@ void cTimeManager::capTimers()
 /**
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerSecond()
+void TimeManager::handleTimerSecond()
 {
     while (m_timerSecond > 0) {
         m_gameTime++;
@@ -70,7 +70,7 @@ void cTimeManager::handleTimerSecond()
 /**
  * gametime timer is called every 5 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerGameTime()
+void TimeManager::handleTimerGameTime()
 {
     // keep up with time cycles
     while (m_timerGlobal > 0) {
@@ -84,7 +84,7 @@ void cTimeManager::handleTimerGameTime()
 /**
  * units timer is called every 100 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerUnits()
+void TimeManager::handleTimerUnits()
 {
     while (m_timerUnits > 0) {
         m_game->think_state();
@@ -105,7 +105,7 @@ void cTimeManager::handleTimerUnits()
     expect this function to be called by the main update function. Heck, even per state this would be different - which
     is now not the case.
 */
-void cTimeManager::processTime()
+void TimeManager::processTime()
 {
 //    syncFromAllegroTimers();
     uint64_t now = SDL_GetTicks64();
@@ -133,12 +133,12 @@ void cTimeManager::processTime()
     handleTimerGameTime();
 }
 
-int cTimeManager::getFps() const
+int TimeManager::getFps() const
 {
     return m_fps;
 }
 
-void cTimeManager::waitForCPU()
+void TimeManager::waitForCPU()
 {
     if (waitingTime > 0) {
         SDL_Delay(waitingTime);
@@ -147,13 +147,13 @@ void cTimeManager::waitForCPU()
     std::cout << fmt::format("waitingTime: {}", waitingTime) << std::endl;
 }
 
-void cTimeManager::capFps()
+void TimeManager::capFps()
 {
     m_fps = frameCount;
     frameCount = 0;
 }
 
-void cTimeManager::adaptWaitingTime()
+void TimeManager::adaptWaitingTime()
 {
     if (m_fps > IDEAL_FPS) {
         waitingTime += 1;

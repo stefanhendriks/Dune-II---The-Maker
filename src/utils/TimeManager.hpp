@@ -18,9 +18,9 @@ class cGame;
 /**
 	Time management is done in this class
 */
-class cTimeManager {
+class TimeManager {
 public:
-    explicit cTimeManager(cGame *game);
+    explicit TimeManager(cGame *game);
     void processTime();
 
     // returns the current FPS
