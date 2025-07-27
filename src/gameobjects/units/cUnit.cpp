@@ -548,12 +548,12 @@ void cUnit::draw_spice()
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,160);
-    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,160);
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,TransparentColorIndex);
+    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,TransparentColorIndex);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,160);
+        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,TransparentColorIndex);
     }
 }
 
@@ -595,12 +595,12 @@ void cUnit::draw_health()
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,160);
-    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,160);
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,TransparentColorIndex);
+    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,TransparentColorIndex);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,160);
+        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,TransparentColorIndex);
     }
 }
 
