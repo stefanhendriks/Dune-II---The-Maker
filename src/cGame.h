@@ -303,8 +303,7 @@ private:
     Texture *screenTexture=nullptr;
     Texture *actualRenderer= nullptr;
     std::unique_ptr<cTextDrawer> textDrawer;
-
-    cTimeManager m_timeManager;
+    std::unique_ptr<cTimeManager> m_timeManager;
 
     std::shared_ptr<cHousesInfo> m_Houses;
 

@@ -7,7 +7,7 @@
 
 #include <format>
 #include <SDL2/SDL_timer.h>
-cTimeManager::cTimeManager(cGame &game)
+cTimeManager::cTimeManager(cGame *game)
     : m_timerUnits(0)
     , m_timerSecond(0)
     , m_timerGlobal(0)
@@ -28,14 +28,14 @@ void cTimeManager::capTimers()
     auto logger = cLogger::getInstance();
 
     if (m_timerUnits > 10) {
-        if (m_game.isDebugMode()) {
+        if (m_game->isDebugMode()) {
             logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits));
             m_timerUnits = 10;
         }
     }
 
     if (m_timerGlobal > 40) {
-        if (m_game.isDebugMode()) {
+        if (m_game->isDebugMode()) {
             logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGlobal));
             m_timerGlobal = 40;
         }
@@ -43,7 +43,7 @@ void cTimeManager::capTimers()
 
     /* Taking 10 seconds to render a frame? i hope not **/
     if (m_timerSecond > 10) {
-        if (m_game.isDebugMode()) {
+        if (m_game->isDebugMode()) {
             logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond));
             m_timerSecond = 10;
         }
@@ -57,7 +57,7 @@ void cTimeManager::handleTimerAllegroTimerSeconds()
 {
     while (m_timerSecond > 0) {
         m_gameTime++;
-        m_game.thinkSlow();
+        m_game->thinkSlow();
         m_timerSecond--; // done!
     }
 
@@ -70,8 +70,8 @@ void cTimeManager::handleTimerGameTime()
 {
     // keep up with time cycles
     while (m_timerGlobal > 0) {
-        m_game.think_fading();
-        m_game.thinkFast_state();
+        m_game->think_fading();
+        m_game->thinkFast_state();
 
         m_timerGlobal--;
     }
@@ -83,7 +83,7 @@ void cTimeManager::handleTimerGameTime()
 void cTimeManager::handleTimerUnits()
 {
     while (m_timerUnits > 0) {
-        m_game.think_state();
+        m_game->think_state();
         m_timerUnits--;
     }
 }
