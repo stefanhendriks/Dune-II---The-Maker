@@ -159,7 +159,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').maxosx.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').macosx.$(git rev-parse --short HEAD).zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Make sure all is up to date
@@ -205,8 +205,8 @@ jobs:
           done
           echo '</ul>' >> out/index.html
   
-          echo '<h2>Mac OS X</h1><ul>' >> out/index.html
-          for zip in $(ls nightly/*maxosx*.zip | sort -r); do
+          echo '<h2>MacOS</h1><ul>' >> out/index.html
+          for zip in $(ls nightly/*macosx*.zip | sort -r); do
             file=$(basename "$zip")
             echo "<li><a href=\"nightly/$file\">$file</a></li>" >> out/index.html
           done
