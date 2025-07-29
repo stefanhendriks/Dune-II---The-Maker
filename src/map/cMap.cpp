@@ -584,9 +584,6 @@ void cMap::drawUnitDebug(cUnit &pUnit) const
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
 void cMap::draw_units_2nd()
 {
-    // Mira SDL2 blender
-    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
-
     // draw health of units
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &pUnit = unit[i];
@@ -596,6 +593,7 @@ void cMap::draw_units_2nd()
         if (pUnit.isHidden()) continue;
 
         pUnit.draw_health();
+        pUnit.draw_group();
         pUnit.draw_experience();
         if (pUnit.iType == HARVESTER) {
             pUnit.draw_spice();
@@ -618,8 +616,6 @@ void cMap::draw_units_2nd()
         }
 
     }
-    // Mira SDL2 blender
-    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 128);
 }
 
 int cMap::mouse_draw_x()

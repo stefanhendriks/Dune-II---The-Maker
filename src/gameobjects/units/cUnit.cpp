@@ -26,7 +26,7 @@
 #include "utils/RNG.hpp"
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
-
+#include "drawers/cTextDrawer.h"
 #include <cmath>
 
 // Path creation definitions / var
@@ -548,12 +548,12 @@ void cUnit::draw_spice()
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,255);
-    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,255);
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
+    renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,ShadowTrans);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,255);
+        renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,ShadowTrans);
     }
 }
 
@@ -595,21 +595,32 @@ void cUnit::draw_health()
     if (r > 255) r = 255;
 
     // bar itself
-    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,255);
-    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,255);
+    renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
+    renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,ShadowTrans);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,255);
+        renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,ShadowTrans);
     }
+}
 
+void cUnit::draw_group()
+{
+    if (iHitPoints < 0) return;
+
+    // draw units health
+    /// float width_x = mapCamera->factorZoomLevel(getBmpWidth());
+    /// int height_y = mapCamera->factorZoomLevel(4);
+    /// int drawx = draw_x();
+    /// int drawy = draw_y() - (height_y + 2);
     // draw group
-    if (iGroup > 0 &&
-            iPlayer == HUMAN) {
+    if (iGroup > 0 && iPlayer == HUMAN) {
+        // @mira I don't fix group name without acces to textDrawer: fixed on ctx branch
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, Color{0, 0, 0), "%d", iGroup);
+        //textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),fmt::format("{}",iGroup));
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, Color{255, 255, 255), "%d", iGroup);
+        //textDrawer->drawText(drawx + 26, drawy - 12, Color::white(),fmt::format("{}",iGroup));
     }
-
 }
 
 // this method returns the amount of percent extra damage may be done
@@ -662,7 +673,7 @@ void cUnit::draw_experience()
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        renderDrawer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy);
+        renderDrawer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
@@ -3385,9 +3396,9 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug()
 {
-    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,255});
-    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,255},1);
-    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255), "%d", iID);
+    renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,ShadowTrans});
+    renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
+    //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, "%d", iID);
 
     if (isSandworm()) {
         //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);

@@ -57,7 +57,7 @@ public:
     void setTextColor(Color value) {
         textColor = value;
     }
-    int textLength(const std::string &msg) const;
+    int getTextLength(const std::string &msg) const;
     int getFontHeight() const;
 
     cRectangle getRect(int x, int y, const std::string &msg) const;

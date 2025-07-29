@@ -13,8 +13,8 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)
 {
     assert(thePlayer);
     // bmp = NULL;
-    memset(offset_credit, 0, sizeof(offset_credit));
-    memset(offset_direction, 0, sizeof(offset_direction));
+    offset_credit.fill(0.0f);
+    offset_direction.fill(0);
     initial = true;
     soundType = -1;
     rollSpeed = 0.0F;
@@ -44,8 +44,8 @@ void CreditsDrawer::setCredits(int amount)
     initial = true;
     previousCredits = amount;
     currentCredits = amount;
-    memset(offset_credit, 0, sizeof(offset_credit));
-    memset(offset_direction, 0, sizeof(offset_direction));
+    offset_credit.fill(0.0f);
+    offset_direction.fill(0);
 }
 
 // timer based method
@@ -55,9 +55,8 @@ void CreditsDrawer::thinkFast()
     if (hasDrawnCurrentCredits() || initial) {
         soundsMade = 0;
 
-        memset(offset_credit, 0, sizeof(offset_credit));
-        memset(offset_direction, 0, sizeof(offset_direction));
-
+        offset_credit.fill(0.0f);
+        offset_direction.fill(0);
         // determine new currentCredits
         // TODO: make it 'roll' instead of 'jump' to the newest credits?
         previousCredits = currentCredits;
@@ -115,12 +114,8 @@ void CreditsDrawer::thinkFast()
 // it has to go 'up' or 'down'
 void CreditsDrawer::thinkAboutIndividualCreditOffsets()
 {
-    char current_credits[9];
-    char previous_credits[9];
-    memset(current_credits, 0, sizeof(current_credits));
-    memset(previous_credits, 0, sizeof(previous_credits));
-    sprintf(current_credits, "%d", currentCredits);
-    sprintf(previous_credits, "%d", previousCredits);
+    std::string current_credits = std::to_string(currentCredits);
+    std::string previous_credits = std::to_string(previousCredits);
 
     for (int i = 0; i < 6; i++) {
         int currentId = getCreditDrawId(current_credits[i]);
@@ -159,7 +154,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
             }
             // it is fully 'moved'. Now update the array.
             previous_credits[i] = current_credits[i];
-            previousCredits = atoi(previous_credits);
+            previousCredits = std::stoi(previous_credits);
         }
         else {
             offset_credit[i] += 1.0F * rollSpeed;
@@ -174,7 +169,7 @@ void CreditsDrawer::draw()
 {
     auto *tex = gfxinter->getTexture(CREDITS_BAR);
     renderDrawer->renderSprite(tex, drawX, drawY);
-    renderDrawer->setClippingFor(drawX+1, drawY+1, drawX+tex->w-1, drawY+tex->h-1);
+    renderDrawer->setClippingFor(drawX+1, drawY+5, drawX+tex->w-1, drawY+tex->h-5);
     drawCurrentCredits(drawX, drawY);
     drawPreviousCredits(drawX, drawY);
     renderDrawer->resetClippingFor();

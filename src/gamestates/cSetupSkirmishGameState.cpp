@@ -176,7 +176,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int detonateHitBoxHeight = 16;
     detonateBloomsRect = cRectangle(detonateX, detonateY, detonateHitBoxWidth, detonateHitBoxHeight);
 
-    int backButtonWidth = textDrawer.textLength(" BACK");
+    int backButtonWidth = textDrawer.getTextLength(" BACK");
     int backButtonHeight = topBarHeight;
     int backButtonY = screen_y - topBarHeight;
     int backButtonX = 0;
@@ -186,7 +186,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
     backButton->setOnLeftMouseButtonClickedAction(action);
 
-    int startButtonWidth = textDrawer.textLength("START");
+    int startButtonWidth = textDrawer.getTextLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
@@ -957,7 +957,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
     int screen_y = game.m_screenH;
     int screen_x = game.m_screenW;
 
-    int startButtonWidth = textDrawer.textLength("START");
+    int startButtonWidth = textDrawer.getTextLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;

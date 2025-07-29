@@ -117,12 +117,10 @@ void cParticle::draw()
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
-            // @Mira fix transparency set_add_blender(0, 0, 0, iAlpha);
             renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
-            //std::cout << "renderStrechSprite " << particleInfo.bmpIndex << std::endl;
         }
         else {
-            renderDrawer->renderStrechSprite(bmp, src, dest,255);
+            renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
     }
     else {

@@ -74,6 +74,7 @@ int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
 void cGameControlsContext::determineToolTip()
 {
     // @Mira : magical call to key ...
+    // @mira: this function activate drawToolTip with GUI branch
     // m_drawToolTip = false;
     // if (key[SDL_SCANCODE_T] && isMouseOnBattleField()) { // TODO: this gets removed later, when we redo tooltips anyway
     // m_drawToolTip = true;
