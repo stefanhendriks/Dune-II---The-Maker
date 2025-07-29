@@ -172,8 +172,8 @@ void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure
 {
     assert(theStructure);
     if (theStructure->belongsTo(player)) {
-        textWriter.write(fmt::format("Sight : {}", theStructure->getSight()));
-        textWriter.write(fmt::format("Range : {}", theStructure->getRange()));
+        textWriter.write(std::format("Sight : {}", theStructure->getSight()));
+        textWriter.write(std::format("Range : {}", theStructure->getRange()));
     }
     else {
         textWriter.write("Sight : Unknown");
@@ -188,10 +188,10 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
 
     std::string description;
     if (theStructure->isPrimary()) {
-        description=fmt::format("{} (PRIMARY)", structureType.name);
+        description=std::format("{} (PRIMARY)", structureType.name);
     }
     else {
-        description=fmt::format("{}", structureType.name);
+        description=std::format("{}", structureType.name);
     }
     textWriter.write(description.c_str(), Color{255, 255, 0,255});
     textWriter.writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());

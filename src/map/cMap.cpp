@@ -22,7 +22,7 @@
 #include "player/cPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 #include <algorithm>
 #include <cmath>
@@ -341,7 +341,7 @@ void cMap::thinkAboutRespawningWorms()
                 failures++;
                 continue;
             }
-            logbook(fmt::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
+            logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
             UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
             break;
         }
@@ -1592,7 +1592,7 @@ void cMap::evaluateIfWeShouldSetTimerToRespawnWorm()
         // until a worm has been destroyed (either by enemy units or by withdrawal of worm)
         m_iTIMER_respawnSandworms = -1;
         if (game.isDebugMode()) {
-            logbook(fmt::format("cMap::evaluateIfWeShouldSetTimerToRespawnWorm set m_iTIMER_respawnSandworms to -1, because current amount sandworms ({}) == desired amount ({})",
+            logbook(std::format("cMap::evaluateIfWeShouldSetTimerToRespawnWorm set m_iTIMER_respawnSandworms to -1, because current amount sandworms ({}) == desired amount ({})",
                                 currentAmountOfWorms, m_iDesiredAmountOfWorms));
         }
     }
@@ -1609,12 +1609,12 @@ void cMap::setSandwormRespawnTimer()
         m_iTIMER_respawnSandworms = (1000 / 5) * (60 + RNG::rnd(180));
 
         if (game.isDebugMode()) {
-            logbook(fmt::format("cMap::setSandwormRespawnTimer set timer to {}", this->m_iTIMER_respawnSandworms));
+            logbook(std::format("cMap::setSandwormRespawnTimer set timer to {}", this->m_iTIMER_respawnSandworms));
         }
     }
     else {
         if (game.isDebugMode()) {
-            logbook(fmt::format("cMap::setSandwormRespawnTimer did not change value because timer was already set (value = {})",
+            logbook(std::format("cMap::setSandwormRespawnTimer did not change value because timer was already set (value = {})",
                                 this->m_iTIMER_respawnSandworms));
         }
     }
@@ -1623,7 +1623,7 @@ void cMap::setSandwormRespawnTimer()
 void cMap::setDesiredAmountOfWorms(int value)
 {
     if (game.isDebugMode()) {
-        logbook(fmt::format("cMap::setDesiredAmountOfWorms changed value from {} to {}", this->m_iDesiredAmountOfWorms, value));
+        logbook(std::format("cMap::setDesiredAmountOfWorms changed value from {} to {}", this->m_iDesiredAmountOfWorms, value));
     }
     m_iDesiredAmountOfWorms = value;
     evaluateIfWeShouldSetTimerToRespawnWorm();

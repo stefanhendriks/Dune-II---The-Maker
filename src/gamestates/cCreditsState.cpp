@@ -52,7 +52,7 @@ void cCreditsState::prepareCrawlerLines()
 
     m_lines.push_back(s_CreditLine {
         .name = "",
-        .txt = fmt::format("Version {}", D2TM_VERSION),
+        .txt = std::format("Version {}", D2TM_VERSION),
         .color = Color::yellow(),
         .height = spacerAfterHeadline
     });

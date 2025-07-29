@@ -2,7 +2,7 @@
 #include "cLog.h"
 #include <fstream>
 #include <algorithm>
-#include <fmt/core.h>
+#include <format>
 #include <algorithm>
 
 
@@ -28,7 +28,7 @@ cSection::cSection(const std::string &secName, bool debugMode) : m_debugMode(deb
 
 bool cSection::addValue(const std::string &key, const std::string &value, int id = 0)
 {
-    std::string realKey = fmt::format("{}-{}", key, id);
+    std::string realKey = std::format("{}-{}", key, id);
     if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
         // multiple values are allowed in ini files (ie skirmish maps)
         // so we accept this for now. And don't log anything about this; unless
@@ -38,7 +38,7 @@ bool cSection::addValue(const std::string &key, const std::string &value, int id
                       << std::endl;
             cLogger *logger = cLogger::getInstance();
             logger->log(LOG_INFO, COMP_GAMERULES, "(cSection)",
-                        fmt::format("Key {} already exist on section {}", key, m_sectionName));
+                        std::format("Key {} already exist on section {}", key, m_sectionName));
         }
         return addValue(key, value, ++id);
     }
@@ -54,7 +54,7 @@ bool cSection::addData(const std::string &data)
 
 bool cSection::hasValue(const std::string &key, int id) const
 {
-    std::string realKey = fmt::format("{}-{}", key, id);
+    std::string realKey = std::format("{}-{}", key, id);
     if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
         return true;
     }
@@ -71,7 +71,7 @@ bool cSection::hasValue(const std::string &key, int id) const
  */
 std::string cSection::getStringValue(const std::string &key, int id) const
 {
-    std::string realKey = fmt::format("{}-{}", key, id);
+    std::string realKey = std::format("{}-{}", key, id);
     if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
         return m_sectionConf.at(realKey);
     }
@@ -79,7 +79,7 @@ std::string cSection::getStringValue(const std::string &key, int id) const
         if (m_debugMode) {
             cLogger *logger = cLogger::getInstance();
             logger->log(LOG_WARN, COMP_GAMERULES, "(cSection)",
-                        fmt::format("Key {} ({}) didn't exist on section {}", key, realKey, m_sectionName));
+                        std::format("Key {} ({}) didn't exist on section {}", key, realKey, m_sectionName));
         }
         return std::string();
     }
@@ -146,13 +146,13 @@ bool cIniFile::load(const std::string &config)
 {
     cLogger *logger = cLogger::getInstance();
     m_fileName = config;
-    logger->log(LOG_INFO, COMP_GAMERULES, "(cIniFile)", fmt::format("Load file {}", m_fileName));
+    logger->log(LOG_INFO, COMP_GAMERULES, "(cIniFile)", std::format("Load file {}", m_fileName));
     std::ifstream in(m_fileName.c_str());
     if (!in) {
         // throw and catch so we can dump more information about why it failed
         // see also: https://stackoverflow.com/a/51118995/214597
         try {
-            throw std::system_error(errno, std::system_category(), fmt::format("Unable to open file {}", m_fileName));
+            throw std::system_error(errno, std::system_category(), std::format("Unable to open file {}", m_fileName));
         }
         catch (std::runtime_error &e) {
             std::cerr << e.what() << std::endl;
@@ -176,7 +176,7 @@ bool cIniFile::load(const std::string &config)
             if (m_mapConfig.find(m_actualSection) != m_mapConfig.end()) {
                 if (m_debugMode) {
                     logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)",
-                                fmt::format("section {} already exist", m_actualSection));
+                                std::format("section {} already exist", m_actualSection));
                 }
                 continue;
             }
@@ -194,7 +194,7 @@ bool cIniFile::load(const std::string &config)
             m_mapConfig[m_actualSection].addData(line);
             continue;
         }
-        logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)", fmt::format("Error {} or no section found", line));
+        logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)", std::format("Error {} or no section found", line));
     }
     return true;
 }
@@ -259,7 +259,7 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
             std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
             cLogger *logger = cLogger::getInstance();
             logger->log(LOG_ERROR, COMP_GAMERULES, "(cIniFile)",
-                        fmt::format(" getStringValue section {} didn't exist", section));
+                        std::format(" getStringValue section {} didn't exist", section));
         }
         return std::string();
     }
@@ -277,6 +277,6 @@ cSection cIniFile::getSection(const std::string &section) const
         return m_mapConfig.at(section);
     }
     else {
-        throw std::invalid_argument(fmt::format("Section {} not found in file {}", section, this->m_fileName));
+        throw std::invalid_argument(std::format("Section {} not found in file {}", section, this->m_fileName));
     }
 }

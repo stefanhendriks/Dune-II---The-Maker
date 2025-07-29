@@ -2,7 +2,7 @@
 #include "utils/GameSettings.hpp"
 #include <iostream>
 #include <string>
-#include <fmt/core.h>
+#include <format>
 
 int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
 {
@@ -15,7 +15,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
         auto itr = optionStrings.find(command);
         if (itr == optionStrings.end()) {
             std::cerr << "Unknown option " << command << ", use --help for instructions\n";
-            throw std::runtime_error(fmt::format("invokes game with unknown option {}",command));
+            throw std::runtime_error(std::format("invokes game with unknown option {}",command));
         }
 
         switch (itr->second) {

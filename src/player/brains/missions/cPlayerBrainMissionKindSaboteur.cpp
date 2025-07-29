@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "utils/RNG.hpp"
-#include <fmt/core.h>
+#include <format>
 
 namespace brains {
 
@@ -71,7 +71,7 @@ void cPlayerBrainMissionKindSaboteur::onNotifyGameEvent(const s_GameEvent &event
 {
     cPlayerBrainMissionKind::onNotifyGameEvent(event);
 
-    log(fmt::format("cPlayerBrainMissionKindSaboteur::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
+    log(std::format("cPlayerBrainMissionKindSaboteur::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     if (event.eventType == GAME_EVENT_DESTROYED) {
         onEventDestroyed(event);

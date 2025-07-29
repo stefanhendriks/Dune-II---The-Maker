@@ -5,7 +5,7 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 
-#include <fmt/core.h>
+#include <format>
 
 #include <cassert>
 
@@ -65,7 +65,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
     int techLevel = player->getTechLevel();
 
     cLogger::getInstance()->log(LOG_TRACE, COMP_STRUCTURES, "onStructureCreatedCampaignMode",
-                                fmt::format("For player [{}], structureType [{}], techlevel [{}], house [{}]", player->getId(), structureType, techLevel, house));
+                                std::format("For player [{}], structureType [{}], techlevel [{}], house [{}]", player->getId(), structureType, techLevel, house));
 
     assert(listConstYard);
     assert(listFootUnits);
@@ -490,7 +490,7 @@ void cBuildingListUpdater::evaluateUpgrades()
 
         if (!(upgradeInfo.house & player->getHouseBitFlag())) {
             // house specific upgradeInfo, player house does not match
-            player->log(fmt::format("Upgrade [{}] has not same house.", upgradeInfo.description));
+            player->log(std::format("Upgrade [{}] has not same house.", upgradeInfo.description));
             continue;
         }
 
@@ -500,7 +500,7 @@ void cBuildingListUpdater::evaluateUpgrades()
         bool hasRequiredStructureType = player->hasAtleastOneStructure(upgradeInfo.structureType);
         if (!hasRequiredStructureType) {
             addToUpgradesList = false;
-            player->log(fmt::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
+            player->log(std::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
                                     upgradeInfo.description, sStructureInfo[upgradeInfo.structureType].name));
         }
 
@@ -509,7 +509,7 @@ void cBuildingListUpdater::evaluateUpgrades()
             hasRequiredStructureType = player->hasAtleastOneStructure(upgradeInfo.needsStructureType);
             if (!hasRequiredStructureType) {
                 addToUpgradesList = false;
-                player->log(fmt::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
+                player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
                                         upgradeInfo.description, sStructureInfo[upgradeInfo.needsStructureType].name));
             }
         }
@@ -524,18 +524,18 @@ void cBuildingListUpdater::evaluateUpgrades()
                 // but only if we have the required structure(s)
                 if (hasRequiredStructureType) {
                     applyUpgrade(upgradeInfo);
-                    player->log(fmt::format(
+                    player->log(std::format(
                                     "Upgrade [{}] has already been achieved, so re-apply. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={}.",
                                     upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
                 }
                 else {
-                    player->log(fmt::format(
+                    player->log(std::format(
                                     "Upgrade [{}] has already been achieved, But will not be re-applied because required (additional) structure type is/are present.",
                                     upgradeInfo.description));
                 }
             }
             addToUpgradesList = false;
-            player->log(fmt::format(
+            player->log(std::format(
                             "Upgrade [{}] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={} not required additional structureType (upgradeInfo.needsStructureType).",
                             upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
         }

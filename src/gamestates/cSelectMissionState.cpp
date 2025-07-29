@@ -42,7 +42,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int y = 40;
     for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
-        cGuiButton *btnMission = new cGuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
+        cGuiButton *btnMission = new cGuiButton(textDrawer, rect, std::format("Mission {}", i), buttonKinds);
         btnMission->setTextAlignHorizontal(buttonTextAlignment);
         btnMission->setOnLeftMouseButtonClickedAction(new cGuiActionSelectMission(i));
         gui_window->addGuiObject(btnMission);
