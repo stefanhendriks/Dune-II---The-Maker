@@ -6,7 +6,6 @@
  */
 
 #pragma once
-#include <array>
 
 class cPlayer;
 struct SDL_Surface;
@@ -43,8 +42,8 @@ private:
     int previousCredits;	// previous credits we wanted to draw
 
     // the offset of the current 'credit' being drawn (the Y offset)
-    std::array<float, 7> offset_credit;
-    std::array<int, 7> offset_direction; // direction (0 = not yet determined / finished, 1 = UP, 2 = DOWN , 3 = DO NOTHING
+    float offset_credit[7];
+    int offset_direction[7]; // direction (0 = not yet determined / finished, 1 = UP, 2 = DOWN , 3 = DO NOTHING
 
     bool hasDrawnCurrentCredits();	// returns true whenever the new state has been finalized.
 
