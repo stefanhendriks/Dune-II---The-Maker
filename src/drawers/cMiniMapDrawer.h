@@ -58,7 +58,7 @@ protected:
 private:
     void onMouseAt(const s_MouseEvent &event);
     void onMousePressedLeft(const s_MouseEvent &event);
-
+    void cleanDrawTerrain();
     int getMouseCell(int mouseX, int mouseY);
 
     bool m_isMouseOver;
