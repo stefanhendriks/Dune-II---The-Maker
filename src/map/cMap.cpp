@@ -1034,13 +1034,13 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     return isVisible(iCell, playerId);
 }
 
-void cMap::resize(int width, int height)
-{
-    maxCells = width * height;
-    this->width = width;
-    this->height = height;
-    cell.resize(maxCells);
-}
+// void cMap::resize(int width, int height)
+// {
+//     maxCells = width * height;
+//     this->width = width;
+//     this->height = height;
+//     cell.resize(maxCells);
+// }
 
 int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance)
 {
