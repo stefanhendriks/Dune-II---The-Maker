@@ -232,9 +232,9 @@ void cUnit::die(bool bBlowUp, bool bSquish)
 
     init(iID);    // re-init
 
-    map.remove_id(iID, MAPID_UNITS);
-    map.remove_id(iID, MAPID_AIR);
-    map.remove_id(iID, MAPID_WORMS);
+    global_map.remove_id(iID, MAPID_UNITS);
+    global_map.remove_id(iID, MAPID_AIR);
+    global_map.remove_id(iID, MAPID_WORMS);
 }
 
 void cUnit::createSquishedParticle()
@@ -258,7 +258,7 @@ void cUnit::createExplosionParticle()
     int iDieX = pos_x_centered();
     int iDieY = pos_y_centered();
 
-    auto mapEditor = cMapEditor(map);
+    auto mapEditor = cMapEditor(global_map);
 
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
@@ -328,27 +328,27 @@ void cUnit::createExplosionParticle()
                     game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
                 // calculate cell and damage stuff around this
-                int cll = map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
+                int cll = global_map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
 
                 if (cll < 0 || cll == iCell)
                     continue; // do not do own cell
 
-                if (map.getCellType(cll) == TERRAIN_WALL) {
+                if (global_map.getCellType(cll) == TERRAIN_WALL) {
                     // damage this type of wall...
-                    map.cellTakeDamage(cll, 150);
+                    global_map.cellTakeDamage(cll, 150);
 
-                    if (map.getCellHealth(cll) < 0) {
+                    if (global_map.getCellHealth(cll) < 0) {
                         // remove wall, turn into smudge:
                         mapEditor.createCell(cll, TERRAIN_ROCK, 0);
 
                         mapEditor.smoothAroundCell(cll);
 
-                        map.smudge_increase(SMUDGE_WALL, cll);
+                        global_map.smudge_increase(SMUDGE_WALL, cll);
                     }
                 }
 
                 // damage surrounding units
-                int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+                int idOfUnitAtCell = global_map.getCellIdUnitLayer(cll);
                 if (idOfUnitAtCell > -1) {
                     int id = idOfUnitAtCell;
 
@@ -361,7 +361,7 @@ void cUnit::createExplosionParticle()
                     } // only die when the unit is going to die
                 }
 
-                int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
+                int idOfStructureAtCell = global_map.getCellIdStructuresLayer(cll);
                 if (idOfStructureAtCell > -1) {
                     // structure hit!
                     int id = idOfStructureAtCell;
@@ -388,14 +388,14 @@ void cUnit::createExplosionParticle()
                 }
 
 
-                int cellType = map.getCellType(cll);
+                int cellType = global_map.getCellType(cll);
                 if (cellType == TERRAIN_ROCK) {
                     if (cellType != TERRAIN_WALL)
-                        map.cellTakeDamage(cll, 30);
+                        global_map.cellTakeDamage(cll, 30);
 
-                    if (map.getCellHealth(cll) < -25) {
-                        map.smudge_increase(SMUDGE_ROCK, cll);
-                        map.cellGiveHealth(cll, RNG::rnd(25));
+                    if (global_map.getCellHealth(cll) < -25) {
+                        global_map.smudge_increase(SMUDGE_ROCK, cll);
+                        global_map.cellGiveHealth(cll, RNG::rnd(25));
                     }
                 }
                 else if (cellType == TERRAIN_SAND ||
@@ -403,11 +403,11 @@ void cUnit::createExplosionParticle()
                          cellType == TERRAIN_SPICE ||
                          cellType == TERRAIN_SPICEHILL) {
                     if (cellType != TERRAIN_WALL)
-                        map.cellTakeDamage(cll, 30);
+                        global_map.cellTakeDamage(cll, 30);
 
-                    if (map.getCellHealth(cll) < -25) {
-                        map.smudge_increase(SMUDGE_SAND, cll);
-                        map.cellGiveHealth(cll, RNG::rnd(25));
+                    if (global_map.getCellHealth(cll) < -25) {
+                        global_map.smudge_increase(SMUDGE_SAND, cll);
+                        global_map.cellGiveHealth(cll, RNG::rnd(25));
                     }
                 }
             }
@@ -469,7 +469,7 @@ bool cUnit::isValid() const
         return false;
 
     // invalid cell, not good
-    if (iCell < 0 || iCell >= map.getMaxCells())
+    if (iCell < 0 || iCell >= global_map.getMaxCells())
         return false;
 
     // not marked (not dying) so do a health check. Else, don't care about health check.
@@ -812,8 +812,8 @@ void cUnit::draw()
 // TODO: only do this when iCell is updated
 void cUnit::updateCellXAndY()
 {
-    iCellX = map.getCellX(iCell);
-    iCellY = map.getCellY(iCell);
+    iCellX = global_map.getCellX(iCell);
+    iCellY = global_map.getCellY(iCell);
 }
 
 /**
@@ -876,14 +876,14 @@ void cUnit::attackAt(int cell)
 {
     log(std::format("attackAt() : cell target is [{}]", cell));
 
-    if (!map.isWithinBoundaries(cell)) {
+    if (!global_map.isWithinBoundaries(cell)) {
         log("attackAt() : Invalid cell, aborting");
         return;
     }
 
-    int unitId = map.getCellIdUnitLayer(cell);
-    int structureId = map.getCellIdStructuresLayer(cell);
-    int wormId = map.getCellIdWormsLayer(cell);
+    int unitId = global_map.getCellIdUnitLayer(cell);
+    int structureId = global_map.getCellIdStructuresLayer(cell);
+    int wormId = global_map.getCellIdWormsLayer(cell);
     log(std::format("attackAt() : cell target is [{}], structureId [{}], unitId [{}], wormId [{}]", cell, structureId, unitId, wormId));
 
     if (structureId > -1) {
@@ -1158,9 +1158,9 @@ void cUnit::thinkActionAgnostic()
         return;
 
     // when any non-airborn, non-sandworm unit is on a spice bloom, it dies
-    int cellType = map.getCellType(iCell);
+    int cellType = global_map.getCellType(iCell);
     if (!isAirbornUnit() && !isSandworm() && cellType == TERRAIN_BLOOM) {
-        map.detonateSpiceBloom(iCell);
+        global_map.detonateSpiceBloom(iCell);
         die(true, false);
         return;
     }
@@ -1184,17 +1184,17 @@ void cUnit::thinkActionAgnostic()
 
 cAbstractStructure *cUnit::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType)
 {
-    return map.findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(iCell, structureType, getPlayer());
+    return global_map.findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(iCell, structureType, getPlayer());
 }
 
 cAbstractStructure *cUnit::findClosestAvailableStructureType(int structureType)
 {
-    return map.findClosestAvailableStructureType(iCell, structureType, getPlayer());
+    return global_map.findClosestAvailableStructureType(iCell, structureType, getPlayer());
 }
 
 cAbstractStructure *cUnit::findClosestStructureType(int structureType)
 {
-    return map.findClosestStructureType(iCell, structureType, getPlayer());
+    return global_map.findClosestStructureType(iCell, structureType, getPlayer());
 }
 
 void cUnit::think_carryAll()  // A carry-all has something when:
@@ -1251,7 +1251,7 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
 
             // not ours and its visible
             if (target.iPlayer != iPlayer &&
-                    map.isVisible(target.iCell, iPlayer) &&
+                    global_map.isVisible(target.iCell, iPlayer) &&
                     !target.isAirbornUnit()) { // for now, to prevent orni's taking down carry-alls?
                 int distance = ABS_length(iCellX, iCellY, target.iCellX, target.iCellY);
 
@@ -1287,9 +1287,9 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
 
             // not ours and its visible
             if (pStructure->getPlayerId() != iPlayer && // enemy
-                    map.isStructureVisible(pStructure, iPlayer)) {
+                    global_map.isStructureVisible(pStructure, iPlayer)) {
                 int c = pStructure->getCell();
-                int distance = map.distance(iCell, c);
+                int distance = global_map.distance(iCell, c);
 
                 // attack closest structure
                 if (distance < iDistance) {
@@ -1313,14 +1313,14 @@ void cUnit::think_turn_to_desired_body_facing()
     float turnspeed = sUnitInfo[iType].turnspeed;
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
-        double distance = map.distance(iCell, iGoalCell);
+        double distance = global_map.distance(iCell, iGoalCell);
         int distanceInCells = 8;
         if (distance < distanceInCells) {
             turnspeed = (turnspeed/distanceInCells) * distance;
         }
         else {
             // when close to a border, then reduce turnspeed so that orni's wont crash over the map borders
-            if ((iCellX < 4 || iCellX >= (map.getWidth()-4)) || (iCellY < 4 || iCellY >= (map.getHeight()-4))) {
+            if ((iCellX < 4 || iCellX >= (global_map.getWidth()-4)) || (iCellY < 4 || iCellY >= (global_map.getHeight()-4))) {
                 turnspeed = 0;
             }
         }
@@ -1373,7 +1373,7 @@ void cUnit::thinkFast_move_airUnit()
 
     iNextCell = getNextCellToMoveTo();
 
-    if (!map.isValidCell(iCell)) {
+    if (!global_map.isValidCell(iCell)) {
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
@@ -1384,7 +1384,7 @@ void cUnit::thinkFast_move_airUnit()
         return;
     }
 
-    if (map.isAtMapBoundaries(iCell)) {
+    if (global_map.isAtMapBoundaries(iCell)) {
         if (!isReinforcement) {
             // let unit face directly to ideal angle, so it won't fly into its doom (out of map)
             iBodyFacing = iBodyShouldFace;
@@ -1392,16 +1392,16 @@ void cUnit::thinkFast_move_airUnit()
         }
     }
 
-    if (!map.isValidCell(iNextCell))
+    if (!global_map.isValidCell(iNextCell))
         iNextCell = iCell;
 
-    if (!map.isValidCell(iGoalCell)) {
+    if (!global_map.isValidCell(iGoalCell)) {
         setGoalCell(iCell);
     }
 
     // same cell (no goal specified or something)
     if (iNextCell == iCell) {
-        bool isWithinMapBoundaries = map.isWithinBoundaries(iCellX, iCellY);
+        bool isWithinMapBoundaries = global_map.isWithinBoundaries(iCellX, iCellY);
 
         // reinforcement stuff happens here...
         if (m_transferType == eTransferType::DIE) {
@@ -1441,7 +1441,7 @@ void cUnit::thinkFast_move_airUnit()
                                 unitToPickupOrDrop.iHitPoints = -1;
 
                                 // remove unit from map id (so it wont block other units)
-                                map.cellResetIdFromLayer(iCell, MAPID_UNITS);
+                                global_map.cellResetIdFromLayer(iCell, MAPID_UNITS);
 
                                 // now move air unit to the 'bring target'
                                 setGoalCell(iBringTarget);
@@ -1478,12 +1478,12 @@ void cUnit::thinkFast_move_airUnit()
                         lastDroppedOffCell = iCell; // remember this cell
 
                         // check if its valid for this unit...
-                        if (!map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
+                        if (!global_map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
                             // valid structure
                             cAbstractStructure *structureUnitWantsToEnter = unitToPickupOrDrop.getStructureUnitWantsToEnter();
 
                             if (structureUnitWantsToEnter) {
-                                bool isAttemptingDeployingAtStructure = map.getCellIdStructuresLayer(iCell) == structureUnitWantsToEnter->getStructureId();
+                                bool isAttemptingDeployingAtStructure = global_map.getCellIdStructuresLayer(iCell) == structureUnitWantsToEnter->getStructureId();
 
                                 if (isAttemptingDeployingAtStructure) {
                                     if (structureUnitWantsToEnter->isInProcessOfBeingEnteredOrOccupiedByUnit(unitToPickupOrDrop.iID)) {
@@ -1500,7 +1500,7 @@ void cUnit::thinkFast_move_airUnit()
                                         }
                                         else {
                                             // !?
-                                            int dropLocation = map.findNearByValidDropLocation(iCell, 3, unitToPickupOrDrop.iType);
+                                            int dropLocation = global_map.findNearByValidDropLocation(iCell, 3, unitToPickupOrDrop.iType);
 //                                            carryAll_transferUnitTo(iUnitID, dropLocation);
                                             setGoalCell(dropLocation);
                                             iBringTarget = dropLocation;
@@ -1514,7 +1514,7 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.setCell(iCell);
                             unitToPickupOrDrop.setGoalCell(iCell);
                             unitToPickupOrDrop.updateCellXAndY(); // update cellx and celly
-                            map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
+                            global_map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
 
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
@@ -1529,7 +1529,7 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
 
                             // clear spot
-                            map.clearShroud(iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
+                            global_map.clearShroud(iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
 
                             int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
@@ -1570,7 +1570,7 @@ void cUnit::thinkFast_move_airUnit()
             // bring a new unit
 
             if (iType == FRIGATE) {
-                int iStrucId = map.getCellIdStructuresLayer(iCell);
+                int iStrucId = global_map.getCellIdStructuresLayer(iCell);
 
                 if (iStrucId > -1) {
                     setGoalCell(iFindCloseBorderCell(iCell));
@@ -1598,10 +1598,10 @@ void cUnit::thinkFast_move_airUnit()
                 return; // override for frigates
             }
 
-            bool canDeployAtCell = map.occupied(iCell, iID) == false;
+            bool canDeployAtCell = global_map.occupied(iCell, iID) == false;
 
             if (iNewUnitType > -1) {
-                canDeployAtCell = map.canDeployUnitAtCell(iCell, iID);
+                canDeployAtCell = global_map.canDeployUnitAtCell(iCell, iID);
             }
 
             // first check if this cell is clear
@@ -1611,7 +1611,7 @@ void cUnit::thinkFast_move_airUnit()
                     int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true, isReinforcement);
 
                     if (id > -1) {
-                        map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
+                        global_map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
                     }
                 }
 
@@ -1646,7 +1646,7 @@ void cUnit::thinkFast_move_airUnit()
         if (cell < 0) {
             cell = getPlayer()->getFocusCell();
         }
-        setGoalCell(map.getRandomCellFromWithRandomDistance(cell, 12));
+        setGoalCell(global_map.getRandomCellFromWithRandomDistance(cell, 12));
         return;
     }
 
@@ -1654,8 +1654,8 @@ void cUnit::thinkFast_move_airUnit()
     TIMER_move++;
 
     // now move
-    int goalCellX = map.getCellX(iGoalCell);
-    int goalCellY = map.getCellY(iGoalCell);
+    int goalCellX = global_map.getCellX(iGoalCell);
+    int goalCellY = global_map.getCellY(iGoalCell);
 
     // use this when picking something up
     if (iUnitID > -1 || (m_transferType != eTransferType::DIE && m_transferType != eTransferType::NONE)) {
@@ -1669,7 +1669,7 @@ void cUnit::thinkFast_move_airUnit()
             float slowDownStep = maxSlowDown / dist;
             if (iLength < dist) {
                 if (RNG::rnd(100) < 5) {
-                    int cellType = map.getCellType(iCell);
+                    int cellType = global_map.getCellType(iCell);
                     if (cellType == TERRAIN_SAND ||
                             cellType == TERRAIN_SPICE ||
                             cellType == TERRAIN_HILL ||
@@ -1756,7 +1756,7 @@ void cUnit::thinkFast_move_airUnit()
 
     iHeadFacing = f;
 
-    map.cellResetIdFromLayer(iCell, MAPID_AIR);
+    global_map.cellResetIdFromLayer(iCell, MAPID_AIR);
 
 //    int movespeed = getUnitInfo().speed;
     int movespeed = 2; // 2 pixels, the actual 'speed' is done by the delay above using TIMER_move! :/
@@ -1769,7 +1769,7 @@ void cUnit::thinkFast_move_airUnit()
     iCell = mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
 
     updateCellXAndY();
-    map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+    global_map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
 }
 
 void cUnit::setPosX(float newVal)
@@ -1819,12 +1819,12 @@ cAbstractStructure *cUnit::getStructureUnitWantsToEnter() const
 
 int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const
 {
-    int dropLocation = map.findNearByValidDropLocation(cell, 4, unitTypeToDrop);
+    int dropLocation = global_map.findNearByValidDropLocation(cell, 4, unitTypeToDrop);
     if (dropLocation < 0) {
-        dropLocation = map.findNearByValidDropLocation(cell, 8, unitTypeToDrop);
+        dropLocation = global_map.findNearByValidDropLocation(cell, 8, unitTypeToDrop);
     }
     if (dropLocation < 0) {
-        dropLocation = map.findNearByValidDropLocation(cell, 16, unitTypeToDrop);
+        dropLocation = global_map.findNearByValidDropLocation(cell, 16, unitTypeToDrop);
     }
     return dropLocation;
 }
@@ -1904,7 +1904,7 @@ void cUnit::shoot(int iTargetCell)
     int bulletType = unitInfo.bulletType;
     // if secondary fire is configured properly
     if (unitInfo.fireSecondaryWithinRange > -1 && unitInfo.bulletTypeSecondary > -1) {
-        if (map.distance(iCell, iTargetCell) <= unitInfo.fireSecondaryWithinRange) {
+        if (global_map.distance(iCell, iTargetCell) <= unitInfo.fireSecondaryWithinRange) {
             bulletType = unitInfo.bulletTypeSecondary;
         }
     }
@@ -2001,10 +2001,10 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                             double distance = 9999;
                             if (iGoalCell != iCell && m_action == eActionType::MOVE) {
                                 // moving towards a goal already
-                                distance = map.distance(iCell, unitCellWhichShotMe);
+                                distance = global_map.distance(iCell, unitCellWhichShotMe);
                             }
                             // found a unit closer to squish, so move towards it
-                            if (distance < map.distance(iCell, iGoalCell)) {
+                            if (distance < global_map.distance(iCell, iGoalCell)) {
                                 // AI tries to run over infantry units that attack it
                                 move_to(unitCellWhichShotMe);
                             }
@@ -2013,7 +2013,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                     else {
                         if (!unitWhoShotMeIsAirborn) {
                             if (isSandworm()) {
-                                if (map.isCellPassableForWorm(unitWhoShotMe.iCell)) {
+                                if (global_map.isCellPassableForWorm(unitWhoShotMe.iCell)) {
                                     attackUnit(iShotUnit);
                                 }
                                 else {
@@ -2043,7 +2043,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                             }
                         }
 
-                        if (map.distance(iCell, iDestCell) < getRange()) {
+                        if (global_map.distance(iCell, iDestCell) < getRange()) {
                             // within range, don't move (just prepare retaliation fire)
                         }
                         else {
@@ -2161,11 +2161,11 @@ void cUnit::think_attack()
         setGoalCell(iAttackCell);
 
         bool isBloomOrWallTerrain =
-            map.getCellType(iAttackCell) == TERRAIN_BLOOM || map.getCellType(iAttackCell) == TERRAIN_WALL;
+            global_map.getCellType(iAttackCell) == TERRAIN_BLOOM || global_map.getCellType(iAttackCell) == TERRAIN_WALL;
 
         if (isBloomOrWallTerrain) {
             // stop attacking a spice bloom or a wall when it got destroyed
-            if (map.getCellHealth(iAttackCell) < 0) {
+            if (global_map.getCellHealth(iAttackCell) < 0) {
                 actionGuard();
                 return;
             }
@@ -2180,7 +2180,7 @@ void cUnit::think_attack()
     }
 
     // Distance check
-    int distance = map.distance(iCell, iGoalCell);
+    int distance = global_map.distance(iCell, iGoalCell);
 
     if (isAirbornUnit()) {
         // AIRBORN UNITS ATTACK THINKING
@@ -2189,14 +2189,14 @@ void cUnit::think_attack()
         if (distance > minDistance && distance <= getRange()) {
             // when this function returns true, it is done firing bullets
             if (setAngleTowardsTargetAndFireBullets(distance)) {
-                int randomCellFrom = map.getRandomCellFrom(iGoalCell, 16);
-                int rx = map.getCellX(randomCellFrom);
-                int ry = map.getCellY(randomCellFrom);
+                int randomCellFrom = global_map.getRandomCellFrom(iGoalCell, 16);
+                int rx = global_map.getCellX(randomCellFrom);
+                int ry = global_map.getCellY(randomCellFrom);
 
                 iAttackUnit = -1;
                 iAttackStructure = -1;
                 setAction(eActionType::MOVE);
-                setGoalCell(map.getCellWithMapDimensions(rx, ry));
+                setGoalCell(global_map.getCellWithMapDimensions(rx, ry));
             }
         }
         else {
@@ -2286,7 +2286,7 @@ void cUnit::think_attack_sandworm()
         return;
     }
 
-    if (attackUnit->isIdle() && !map.isCellPassableForWorm(attackUnit->iCell)) {
+    if (attackUnit->isIdle() && !global_map.isCellPassableForWorm(attackUnit->iCell)) {
         // forget about unit that is not reachable
         actionGuard();
         return;
@@ -2306,7 +2306,7 @@ void cUnit::actionGuard()
 
 int cUnit::getFaceAngleToCell(int cell) const
 {
-    int d = fDegrees(iCellX, iCellY, map.getCellX(cell), map.getCellY(cell));
+    int d = fDegrees(iCellX, iCellY, global_map.getCellX(cell), global_map.getCellY(cell));
     return faceAngle(d); // get the angle
 }
 
@@ -2358,8 +2358,8 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
 
             if (iType == LAUNCHER || iType == DEVIATOR) {
                 if (distance < unitType.range) {
-                    int dx = map.getCellX(shootCell);
-                    int dy = map.getCellY(shootCell);
+                    int dx = global_map.getCellX(shootCell);
+                    int dy = global_map.getCellY(shootCell);
 
                     int inaccuracy = ((unitType.range - distance) / 3) + 1; // at 'perfect' range, we always have a inaccuracy of 1 at minimum
 
@@ -2369,7 +2369,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
                     dy -= inaccuracy;
                     dy += RNG::rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
-                    shootCell = map.getCellWithMapDimensions(dx, dy);
+                    shootCell = global_map.getCellWithMapDimensions(dx, dy);
                 }
             }
 
@@ -2468,8 +2468,8 @@ void cUnit::thinkFast_move()
                     // simply failed
                     if (iResult == -1) {
                         // Check why, is our goal cell occupied?
-                        int uID = map.getCellIdUnitLayer(iGoalCell);
-                        int sID = map.getCellIdStructuresLayer(iGoalCell);
+                        int uID = global_map.getCellIdUnitLayer(iGoalCell);
+                        int sID = global_map.getCellIdStructuresLayer(iGoalCell);
 
                         // Other unit is on goal cell, do something about it.
 
@@ -2568,7 +2568,7 @@ void cUnit::thinkFast_move()
     // check
     bool bOccupied = false;
 
-    int idOfUnitAtNextCell = map.getCellIdUnitLayer(iNextCell);
+    int idOfUnitAtNextCell = global_map.getCellIdUnitLayer(iNextCell);
 
     // Cell is occupied, not by self, so it is occupied...
     if (idOfUnitAtNextCell > -1 &&
@@ -2590,7 +2590,7 @@ void cUnit::thinkFast_move()
     }
 
     // structure is NOT matching our structure ID, then its blocking us
-    int idOfStructureAtNextCell = map.getCellIdStructuresLayer(iNextCell);
+    int idOfStructureAtNextCell = global_map.getCellIdStructuresLayer(iNextCell);
 
     if (idOfStructureAtNextCell > -1) {
         if (iStructureID < 0) {
@@ -2673,7 +2673,7 @@ void cUnit::thinkFast_move()
         }
     }
 
-    int cellTypeAtNextCell = map.getCellType(iNextCell);
+    int cellTypeAtNextCell = global_map.getCellType(iNextCell);
     if (!isInfantryUnit()) {
         if (cellTypeAtNextCell == TERRAIN_MOUNTAIN) {
             bOccupied = true;
@@ -2735,7 +2735,7 @@ void cUnit::thinkFast_move()
         if (result == eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL ||
                 result == eUnitMoveToCellResult::MOVERESULT_AT_CELL) {
             // not occupied cell;
-            int idOfStructureAtCurrentCell = map.getCellIdStructuresLayer(iCell);
+            int idOfStructureAtCurrentCell = global_map.getCellIdStructuresLayer(iCell);
 
             // we wanted to enter this structure
             if (iStructureID > -1 &&
@@ -2794,8 +2794,8 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int bToLeft = -1;         // 0 = go left, 1 = go right
     int bToDown = -1;         // 0 = go down, 1 = go up
 
-    int iNextX = map.getCellX(iNextCell);
-    int iNextY = map.getCellY(iNextCell);
+    int iNextX = global_map.getCellX(iNextCell);
+    int iNextY = global_map.getCellY(iNextCell);
 
     // Compare X, Y coordinates
     if (iNextX < iCellX)
@@ -2817,8 +2817,8 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
 
     // Influenced by the terrain type
-    int cellType = map.getCellType(iCell);
-    int iSlowDown = map.getCellSlowDown(iCell);
+    int cellType = global_map.getCellType(iCell);
+    int iSlowDown = global_map.getCellSlowDown(iCell);
 
     cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
     if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
@@ -2830,10 +2830,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     // from here on, set the map id, so no other unit can take its place
     if (!isSandworm()) {
         // note, no AIRBORN here (27/03/2021 - I guess this is because this method is not called by thinkFast_move_airUnit())
-        map.cellSetIdForLayer(iNextCell, MAPID_UNITS, iID);
+        global_map.cellSetIdForLayer(iNextCell, MAPID_UNITS, iID);
     }
     else {
-        map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
+        global_map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
     }
 
     // 100% on cell, no offset
@@ -2926,10 +2926,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
         // movement to cell complete
         if (isSandworm()) {
-            map.cellResetIdFromLayer(iCell, MAPID_WORMS);
+            global_map.cellResetIdFromLayer(iCell, MAPID_WORMS);
         }
         else {
-            map.cellResetIdFromLayer(iCell, MAPID_UNITS);
+            global_map.cellResetIdFromLayer(iCell, MAPID_UNITS);
         }
 
         setCell(iNextCell);
@@ -2963,10 +2963,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         if (iPlayer == AI_CPU5 && players[HUMAN].isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            map.clearShroud(iCell, sUnitInfo[iType].sight, HUMAN);
+            global_map.clearShroud(iCell, sUnitInfo[iType].sight, HUMAN);
         }
 
-        map.clearShroud(iCell, sUnitInfo[iType].sight, iPlayer);
+        global_map.clearShroud(iCell, sUnitInfo[iType].sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (bCalculateNewPath) {
@@ -3103,8 +3103,8 @@ void cUnit::move_to(int iGoalCell)
     int structureID = -1;
     int unitID = -1;
     if (iGoalCell > -1) {
-        structureID = map.getCellIdStructuresLayer(iGoalCell);
-        unitID = map.getCellIdUnitLayer(iGoalCell);
+        structureID = global_map.getCellIdStructuresLayer(iGoalCell);
+        unitID = global_map.getCellIdUnitLayer(iGoalCell);
     }
 
     if (structureID > -1) {
@@ -3148,8 +3148,8 @@ void cUnit::move_to(int iGoalCell)
 void cUnit::setCell(int cll)
 {
     this->iCell = cll;
-    setPosX(map.getAbsoluteXPositionFromCell(cll));
-    setPosY(map.getAbsoluteYPositionFromCell(cll));
+    setPosX(global_map.getAbsoluteXPositionFromCell(cll));
+    setPosY(global_map.getAbsoluteYPositionFromCell(cll));
 }
 
 void cUnit::assignMission(int aMission)
@@ -3211,14 +3211,14 @@ std::string cUnit::eUnitActionIntentString(eUnitActionIntent intent)
  */
 bool cUnit::isUnableToMove()
 {
-    if (map.occupied(map.getCellLeft(iCell), iID) &&
-            map.occupied(map.getCellRight(iCell), iID) &&
-            map.occupied(map.getCellAbove(iCell), iID) &&
-            map.occupied(map.getCellBelow(iCell), iID) &&
-            map.occupied(map.getCellLowerLeft(iCell), iID) &&
-            map.occupied(map.getCellLowerRight(iCell), iID) &&
-            map.occupied(map.getCellUpperRight(iCell), iID) &&
-            map.occupied(map.getCellUpperLeft(iCell), iID)) {
+    if (global_map.occupied(global_map.getCellLeft(iCell), iID) &&
+            global_map.occupied(global_map.getCellRight(iCell), iID) &&
+            global_map.occupied(global_map.getCellAbove(iCell), iID) &&
+            global_map.occupied(global_map.getCellBelow(iCell), iID) &&
+            global_map.occupied(global_map.getCellLowerLeft(iCell), iID) &&
+            global_map.occupied(global_map.getCellLowerRight(iCell), iID) &&
+            global_map.occupied(global_map.getCellUpperRight(iCell), iID) &&
+            global_map.occupied(global_map.getCellUpperLeft(iCell), iID)) {
         return true;
     }
 
@@ -3319,7 +3319,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
         // try to get a carry-all to help when a bit bigger distance
         int distanceWeAllowDriving = 4;
-        if (map.distance(iCell, destCell) > distanceWeAllowDriving) {
+        if (global_map.distance(iCell, destCell) > distanceWeAllowDriving) {
             if (findAndOrderCarryAllToBringMeToStructureAtCell(pStructure, destCell)) {
                 return eHeadTowardsStructureResult::SUCCESS_AWAITING_CARRYALL;
             }
@@ -3516,7 +3516,7 @@ void cUnit::thinkFast_guard_sandworm()
         if (potentialDinner.isAirbornUnit()) continue;
         if (potentialDinner.isSandworm()) continue; // don't eat other worms
 
-        double distance = map.distance(iCell, potentialDinner.iCell);
+        double distance = global_map.distance(iCell, potentialDinner.iCell);
 
         if (distance <= getSight() && distance < iDistance) {
             iDistance = distance;
@@ -3566,9 +3566,9 @@ int cUnit::findNearbyGroundUnitToAttack(int range)
         if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
         if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
         if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+        if (!global_map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-        int distance = map.distance(iCell, potentialThreat.iCell);
+        int distance = global_map.distance(iCell, potentialThreat.iCell);
 
         if (distance <= range && distance < iDistance) {
             iDistance = distance;
@@ -3592,9 +3592,9 @@ int cUnit::findNearbyAirUnitToAttack(int range)
         if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
         if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
         if (!potentialThreat.isAttackableAirUnit()) continue;
-        if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+        if (!global_map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-        int distance = map.distance(iCell, potentialThreat.iCell);
+        int distance = global_map.distance(iCell, potentialThreat.iCell);
 
         if (distance <= range &&
                 distance < iDistance) { // closer than found thus far
@@ -3620,14 +3620,14 @@ int cUnit::findNearbyStructureThatCanDamageUnitsToAttack(int range)
         if (!pStructure) continue;
         if (!pStructure->isValid()) continue;
         if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
-        if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+        if (!global_map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
 
         // ignore structures which cannot attack air or ground units
         if (!pStructure->canAttackAirUnits()) continue;
         if (!pStructure->canAttackGroundUnits()) continue;
 
         // see big comment about this in findNearbyStructureToAttack
-        int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+        int distance = global_map.distance(iCell, pStructure->getRandomStructureCell());
 
         if (distance <= range && distance < iDistance) {
             iDistance = distance;
@@ -3652,7 +3652,7 @@ int cUnit::findNearbyStructureToAttack(int range)
         if (!pStructure) continue;
         if (!pStructure->isValid()) continue;
         if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
-        if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+        if (!global_map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
 
         // TODO: this is a bit tricky and hacky
         // basically you want to check against the 'closest' cell from that structure.
@@ -3670,7 +3670,7 @@ int cUnit::findNearbyStructureToAttack(int range)
         // cells to evaluate. For every unit * 10 = 240 cells to evaluate.
         //
         // Regardless, this is something to think about. There are probably better/smarter ways to do this.
-        int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+        int distance = global_map.distance(iCell, pStructure->getRandomStructureCell());
 
         if (distance <= range && distance < iDistance) {
             iDistance = distance;
@@ -3714,7 +3714,7 @@ void cUnit::think_harvester()
 
     // cell = goal cell (doing nothing)
     if (iCell == iGoalCell) {
-        int cellType = map.getCellType(iCell);
+        int cellType = global_map.getCellType(iCell);
         // when on spice, harvest
         if (cellType == TERRAIN_SPICE ||
                 cellType == TERRAIN_SPICEHILL) {
@@ -3750,22 +3750,22 @@ void cUnit::think_harvester()
                 iFrame = 1;
 
             iCredits += sUnitInfo[iType].harvesting_amount;
-            map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
+            global_map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
 
             // turn into sand/spice (when spicehill)
-            if (map.getCellCredits(iCell) <= 0) {
+            if (global_map.getCellCredits(iCell) <= 0) {
                 if (cellType == TERRAIN_SPICEHILL) {
-                    map.cellChangeType(iCell, TERRAIN_SPICE);
-                    map.cellGiveCredits(iCell, RNG::rnd(100));
+                    global_map.cellChangeType(iCell, TERRAIN_SPICE);
+                    global_map.cellGiveCredits(iCell, RNG::rnd(100));
                 }
                 else {
-                    map.cellChangeType(iCell, TERRAIN_SAND);
-                    map.cellChangeTile(iCell, 0);
+                    global_map.cellChangeType(iCell, TERRAIN_SAND);
+                    global_map.cellChangeTile(iCell, 0);
                 }
 
                 move_to(UNIT_find_harvest_spot(iID), -1, -1);
 
-                cMapEditor(map).smoothAroundCell(iCell);
+                cMapEditor(global_map).smoothAroundCell(iCell);
             }
         }
 
@@ -3897,7 +3897,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart)
  */
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
 {
-    if (!map.isValidCell(iCll)) {
+    if (!global_map.isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
     }
@@ -3905,7 +3905,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     s_UnitInfo &sUnitType = sUnitInfo[unitType];
 
     // check if unit already exists on location
-    if (!sUnitType.airborn && map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
+    if (!sUnitType.airborn && global_map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
         return -1; // cannot place unit, structure exists at location
     }
 
@@ -3918,18 +3918,18 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     }
 
     // check if unit already exists on location
-    if (map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
+    if (global_map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
         return -1; // cannot place unit
     }
 
     // check if placed on invalid terrain type
     if (unitType == SANDWORM) {
-        if (!map.isCellPassableForWorm(iCll)) {
+        if (!global_map.isCellPassableForWorm(iCll)) {
             return -1;
         }
     }
 
-    bool validCell = map.canDeployUnitTypeAtCell(iCll, unitType);
+    bool validCell = global_map.canDeployUnitTypeAtCell(iCll, unitType);
     if (!validCell) {
         return -1;
     }
@@ -3983,11 +3983,11 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     }
 
     // Put on map too!:
-    map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
+    global_map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
     newUnit.updateCellXAndY();
 
-    map.clearShroud(iCll, sUnitType.sight, iPlayer);
+    global_map.clearShroud(iCll, sUnitType.sight, iPlayer);
 
     s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_CREATED,
@@ -4088,11 +4088,11 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
     the_cll = -1;
     ex = -1;
     ey = -1;
-    cx = map.getCellX(iCell);
-    cy = map.getCellY(iCell);
+    cx = global_map.getCellX(iCell);
+    cy = global_map.getCellY(iCell);
 
     // set very first... our start cell
-    temp_map[iCell].cost = ABS_length(cx, cy, map.getCellX(goal_cell), map.getCellY(goal_cell));
+    temp_map[iCell].cost = ABS_length(cx, cy, global_map.getCellX(goal_cell), global_map.getCellY(goal_cell));
     temp_map[iCell].parent = -1;
     temp_map[iCell].state = OPEN; // this one is opened by default
 
@@ -4111,7 +4111,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             break;
         }
 
-        int idOfStructureAtCell = map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
+        int idOfStructureAtCell = global_map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
         if (pUnit.iStructureID > -1) {
             if (idOfStructureAtCell == pUnit.iStructureID) {
                 valid = false;
@@ -4130,8 +4130,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             }
         }
 
-        cx = map.getCellX(iCell);
-        cy = map.getCellY(iCell);
+        cx = global_map.getCellX(iCell);
+        cy = global_map.getCellY(iCell);
 
         // starting position is cx-1 and cy-1
         sx = cx - 1;
@@ -4142,8 +4142,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
         ey = cy + 1;
 
         // boundaries
-        cPoint::split(sx, sy) = map.fixCoordinatesToBeWithinPlayableMap(sx, sy);
-        cPoint::split(ex, ey) = map.fixCoordinatesToBeWithinPlayableMap(ex, ey);
+        cPoint::split(sx, sy) = global_map.fixCoordinatesToBeWithinPlayableMap(sx, sy);
+        cPoint::split(ex, ey) = global_map.fixCoordinatesToBeWithinPlayableMap(ex, ey);
 
 //        if (ex <= cx)
 //            pUnit.log("CX = EX");
@@ -4161,7 +4161,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = map.getCellWithMapBorders(cx, cy);
+                int cll = global_map.getCellWithMapBorders(cx, cy);
 
                 // skip invalid cells
                 if (cll < 0)
@@ -4179,15 +4179,15 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                 bool good = false; // not good by default
 
                 // not a sandworm
-                int cellType = map.getCellType(cll);
+                int cellType = global_map.getCellType(cll);
                 if (!pUnit.isSandworm()) {
                     // Step by step determine if its good
                     // 2 fases:
                     // 1 -> Occupation by unit/structures
                     // 2 -> Occupation by terrain (but only when it is visible, since we do not want to have an
                     //      advantage or some super intelligence by units for unknown territories!)
-                    int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
-                    int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
+                    int idOfUnitAtCell = global_map.getCellIdUnitLayer(cll);
+                    int idOfStructureAtCell = global_map.getCellIdStructuresLayer(cll);
 
                     if (idOfUnitAtCell == -1 && idOfStructureAtCell == -1) {
                         // there is nothing on this cell, that is good
@@ -4236,7 +4236,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                     }
 
                     // is not visible, always good (since we don't know yet if its blocked!)
-                    if (map.isVisible(cll, controller) == false) {
+                    if (global_map.isVisible(cll, controller) == false) {
                         good = true;
                     }
                     else {
@@ -4255,7 +4255,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                 }
                 else {
                     // Sandworm only cares about terrain type for good/bad cells
-                    good = map.isCellPassableForWorm(cll);
+                    good = global_map.isCellPassableForWorm(cll);
                 }
 
                 if (!good) {
@@ -4280,12 +4280,12 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                 // the cell is CLOSED (not checked yet)
                 if (cll != iCell &&         // not checking on our own
                         isClosed) {            // and is closed (else it's not valid to check)
-                    int gcx = map.getCellX(goal_cell);
-                    int gcy = map.getCellY(goal_cell);
+                    int gcx = global_map.getCellX(goal_cell);
+                    int gcy = global_map.getCellY(goal_cell);
 
                     // calculate the cost
                     int tempCost = temp_map[cll].cost;
-                    double distanceCost = map.distance(cx, cy, gcx, gcy);
+                    double distanceCost = global_map.distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
 //                        pUnit.log(std::format(
 //                                "CREATE_PATH: tempCost [{}] + distanceCost [{}] = newCost = [{}] vs current cost [{}]",
@@ -4432,7 +4432,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                     for (int sz = z; sz > 0; sz--) {
                         if (temp_path[sz] > -1) {
 
-                            if (map.isCellAdjacentToOtherCell(iPrevCell, temp_path[sz])) {
+                            if (global_map.isCellAdjacentToOtherCell(iPrevCell, temp_path[sz])) {
                                 iGoodZ = sz;
                             }
                             //if (ABS_length(iCellGiveX(iPrevCell), iCellGiveY(iPrevCell), iCellGiveX(temp_path[sz]), iCellGiveY(temp_path[sz])) <= 1)
@@ -4461,7 +4461,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
             int pathCell = pUnit.iPath[i];
             if (pathCell > -1) {
-                if (map.isCellAdjacentToOtherCell(pUnit.getCell(), pathCell)) {
+                if (global_map.isCellAdjacentToOtherCell(pUnit.getCell(), pathCell)) {
                     pUnit.iPathIndex = i;
                 }
             }
@@ -4502,44 +4502,44 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
 {
     //
     int iSize = 1;
-    int iStartX = map.getCellX(iCll) - iSize;
-    int iStartY = map.getCellY(iCll) - iSize;
-    int iEndX = map.getCellX(iCll) + iSize;
-    int iEndY = map.getCellX(iCll) + iSize;
+    int iStartX = global_map.getCellX(iCll) - iSize;
+    int iStartY = global_map.getCellY(iCll) - iSize;
+    int iEndX = global_map.getCellX(iCll) + iSize;
+    int iEndY = global_map.getCellX(iCll) + iSize;
 
     float dDistance = 9999;
 
-    int ix = map.getCellX(iMyCell);
-    int iy = map.getCellY(iMyCell);
+    int ix = global_map.getCellX(iMyCell);
+    int iy = global_map.getCellY(iMyCell);
 
     bool bSearch = true;
 
     int iTheClosest = -1;
 
     while (bSearch) {
-        iStartX = map.getCellX(iCll) - iSize;
-        iStartY = map.getCellY(iCll) - iSize;
-        iEndX = map.getCellX(iCll) + iSize;
-        iEndY = map.getCellY(iCll) + iSize;
+        iStartX = global_map.getCellX(iCll) - iSize;
+        iStartY = global_map.getCellY(iCll) - iSize;
+        iEndX = global_map.getCellX(iCll) + iSize;
+        iEndY = global_map.getCellY(iCll) + iSize;
 
         // Fix boundaries
-        cPoint::split(iStartX, iStartY) = map.fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
-        cPoint::split(iEndX, iEndY) = map.fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
+        cPoint::split(iStartX, iStartY) = global_map.fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
+        cPoint::split(iEndX, iEndY) = global_map.fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
 
         // search
         for (int iSX = iStartX; iSX < iEndX; iSX++)
             for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
-                int cll = map.getCellWithMapDimensions(iSX, iSY);
+                int cll = global_map.getCellWithMapDimensions(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
-                int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
-                int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+                int idOfStructureAtCell = global_map.getCellIdStructuresLayer(cll);
+                int idOfUnitAtCell = global_map.getCellIdUnitLayer(cll);
 
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
-                    int cellType = map.getCellType(cll);
+                    int cellType = global_map.getCellType(cll);
                     if (sUnitInfo[unit[iID].iType].infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
@@ -4586,14 +4586,14 @@ int UNIT_find_harvest_spot(int id)
     int TargetSpiceHillDistance = 40;
 
 
-    for (int i = 0; i < map.getMaxCells(); i++)
-        if (map.getCellCredits(i) > 0 && i != cUnit.getCell()) {
+    for (int i = 0; i < global_map.getMaxCells(); i++)
+        if (global_map.getCellCredits(i) > 0 && i != cUnit.getCell()) {
             // check if its not out of reach
-            int dx = map.getCellX(i);
-            int dy = map.getCellY(i);
+            int dx = global_map.getCellX(i);
+            int dy = global_map.getCellY(i);
 
             // skip bordered ones
-            if (map.isWithinBoundaries(dx, dy) == false)
+            if (global_map.isWithinBoundaries(dx, dy) == false)
                 continue;
 
             /*
@@ -4606,16 +4606,16 @@ int UNIT_find_harvest_spot(int id)
             if (dy >= (game.map_height-1))
               continue;*/
 
-            int idOfUnitAtCell = map.getCellIdUnitLayer(i);
+            int idOfUnitAtCell = global_map.getCellIdUnitLayer(i);
             if (idOfUnitAtCell > -1)
                 continue;
 
-            if (map.occupied(i, id))
+            if (global_map.occupied(i, id))
                 continue; // occupied
 
-            int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
+            int d = ABS_length(cx, cy, global_map.getCellX(i), global_map.getCellY(i));
 
-            int cellType = map.getCellType(i);
+            int cellType = global_map.getCellType(i);
             if (cellType == TERRAIN_SPICE) {
                 if (d < TargetSpiceDistance) {
                     TargetSpice = i;
@@ -4709,9 +4709,9 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cll = map.getCellWithMapBorders(x, y);
+            int cll = global_map.getCellWithMapBorders(x, y);
 
-            if (cll > -1 && !map.occupied(cll)) {
+            if (cll > -1 && !global_map.occupied(cll)) {
                 iClls[foundCoordinates] = cll;
                 foundCoordinates++;
             }
