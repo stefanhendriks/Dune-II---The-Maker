@@ -27,19 +27,24 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
     assert(thePlayer);
     assert(theMapCamera);
 
+    int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
+    int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
+    std::cout << "Minimap report: " << reportX << " " << reportY << std::endl;
+    factorZoom = std::min(reportX, reportY);
+
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
     int topLeftX = game.m_screenW - cSideBar::WidthOfMinimap;
-    drawX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
+    drawX = topLeftX + (halfWidthOfMinimap - factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
     int halfHeightOfMap = getMapHeightInPixels() / 2;
     int topLeftY = cSideBar::TopBarHeight;
-    drawY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
+    drawY = topLeftY + (halfHeightOfMinimap - factorZoom*halfHeightOfMap);
 
-    m_RectMinimap = cRectangle(drawX, drawY, getMapWidthInPixels(), getMapHeightInPixels());
+    m_RectMinimap = cRectangle(drawX, drawY, factorZoom*getMapWidthInPixels(), factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
-    std::cout << "Minimap at: " << drawX << " " << drawY << " " << getMapWidthInPixels() << " " << getMapHeightInPixels() << std::endl;
+    std::cout << "Minimap at: " << drawX << " " << drawY << " " << m_RectMinimap.getEndX()-drawX << " " << m_RectMinimap.getEndY()-drawY << std::endl;
     std::cout << "Full minimap at: " << m_RectFullMinimap.getX() << " " << m_RectFullMinimap.getY() << " "
               << m_RectFullMinimap.getWidth() << " " << m_RectFullMinimap.getHeight() << std::endl;
     mipMapTex = renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
