@@ -174,6 +174,14 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, Color{255, 255, 255,255});
         }
     }
+    if (previewMap.terrain!= nullptr){
+        SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), previewMap.terrain);
+        if (out == nullptr) {
+            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            return;
+        }
+        previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
+    }
 }
 
 /*
