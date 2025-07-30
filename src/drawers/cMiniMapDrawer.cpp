@@ -274,7 +274,8 @@ void cMiniMapDrawer::drawStaticFrame()
     if (status == eMinimapStatus::LOWPOWER) return;
 
     if (status == eMinimapStatus::POWERDOWN) {
-        renderDrawer->renderSprite(gfxinter->getTexture(iStaticFrame), drawX, drawY);
+        cRectangle src= cRectangle(0, 0, gfxinter->getTexture(iStaticFrame)->w, gfxinter->getTexture(iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap);
         return;
     }
 
@@ -289,7 +290,9 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (iStaticFrame != STAT01) {
-        renderDrawer->renderSprite(gfxinter->getTexture(iStaticFrame), drawX, drawY, iTrans);
+        cRectangle src= cRectangle(0, 0, gfxinter->getTexture(iStaticFrame)->w, gfxinter->getTexture(iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap,iTrans);
+        // renderDrawer->renderSprite(gfxinter->getTexture(iStaticFrame), drawX, drawY, iTrans);
     }
 }
 
