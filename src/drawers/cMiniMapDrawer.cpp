@@ -78,14 +78,14 @@ void cMiniMapDrawer::drawViewPortRectangle()
     // int pixelSize = 2;
 
     // if (map->getWidth() > 64 || map->getHeight() > 64) {
-    int pixelSize = 1;
+    int pixelSize = factorZoom;
     // }
 
     int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
     int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
 
-    int minimapWidth = (iWidth * pixelSize) + 1;
-    int minimapHeight = (iHeight * pixelSize) + 1;
+    int minimapWidth = iWidth * (pixelSize+1);
+    int minimapHeight = iHeight * (pixelSize+1);
 
     //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, Color{255, 255, 255));
     renderDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
