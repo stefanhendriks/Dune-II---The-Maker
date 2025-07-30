@@ -330,9 +330,8 @@ void cMiniMapDrawer::drawStaticFrame()
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
 {
     // the minimap can be 128x128 pixels at the bottom right of the screen.
-    int mouseMiniMapX = mouseX - centerX;
-    int mouseMiniMapY = mouseY - centerY;
-    std::cout << "Mouse at minimap: " << mouseMiniMapX << " " << mouseMiniMapY << std::endl;
+    int mouseMiniMapX = mouseX - drawX;
+    int mouseMiniMapY = mouseY - drawY;
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
     // if (map->getHeight() > 64 || map->getWidth() > 64) {
