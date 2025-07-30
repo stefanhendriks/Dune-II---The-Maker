@@ -412,7 +412,19 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
                 if (selectedMap.terrain) {
-                    renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    //renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
+                    cRectangle dst;
+                    if (selectedMap.previewTex->w > selectedMap.previewTex->h) {
+                        dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
+                                         previewMapRect.getWidth(), previewMapRect.getWidth() * selectedMap.previewTex->h / selectedMap.previewTex->w);
+                    }
+                    else {
+                        dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
+                                         previewMapRect.getHeight() * selectedMap.previewTex->w / selectedMap.previewTex->h, previewMapRect.getHeight());
+
+                    }
+                    renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
                 }
             }
         }
