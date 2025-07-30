@@ -29,7 +29,7 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
 
     int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
     int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
-    std::cout << "Minimap report: " << reportX << " " << reportY << std::endl;
+    //std::cout << "Minimap report: " << reportX << " " << reportY << std::endl;
     factorZoom = std::min(reportX, reportY);
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
@@ -47,10 +47,10 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
 
     m_RectMinimap = cRectangle(drawX, drawY, factorZoom*getMapWidthInPixels(), factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
-    std::cout << "Minimap at: " << drawX << " " << drawY << " " << m_RectMinimap.getEndX()-drawX << " " << m_RectMinimap.getEndY()-drawY << std::endl;
-    std::cout << "Full minimap at: " << m_RectFullMinimap.getX() << " " << m_RectFullMinimap.getY() << " "
-              << m_RectFullMinimap.getWidth() << " " << m_RectFullMinimap.getHeight() << std::endl;
-    std::cout << "Minimap center: " << centerX << " " << centerY << std::endl;
+    // std::cout << "Minimap at: " << drawX << " " << drawY << " " << m_RectMinimap.getEndX()-drawX << " " << m_RectMinimap.getEndY()-drawY << std::endl;
+    // std::cout << "Full minimap at: " << m_RectFullMinimap.getX() << " " << m_RectFullMinimap.getY() << " "
+    //           << m_RectFullMinimap.getWidth() << " " << m_RectFullMinimap.getHeight() << std::endl;
+    // std::cout << "Minimap center: " << centerX << " " << centerY << std::endl;
     mipMapTex = renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
@@ -90,6 +90,8 @@ void cMiniMapDrawer::drawViewPortRectangle()
 
     int minimapWidth = iWidth * (pixelSize)+1;
     int minimapHeight = iHeight * (pixelSize)+1;
+    // std::cout << "Viewport rectangle i: " << iWidth << " " << iHeight << std::endl;
+    // std::cout << "Viewport rectangle before: " << startX << " " << startY << " " << minimapWidth << " " << minimapHeight << std::endl;
     //cap the rectangle to the minimap size
     if (startX < m_RectFullMinimap.getX()) {
         minimapWidth += startX - m_RectFullMinimap.getX();
@@ -105,7 +107,7 @@ void cMiniMapDrawer::drawViewPortRectangle()
     if (startY + minimapHeight > m_RectFullMinimap.getEndY()) {
         minimapHeight = m_RectFullMinimap.getEndY() - startY;
     }
-
+    // std::cout << "Viewport rectangle after: " << startX << " " << startY << " " << minimapWidth << " " << minimapHeight << std::endl;
     //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, Color{255, 255, 255));
     renderDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
 }
@@ -332,6 +334,8 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     // the minimap can be 128x128 pixels at the bottom right of the screen.
     int mouseMiniMapX = mouseX - drawX;
     int mouseMiniMapY = mouseY - drawY;
+    //std::cout << "centerX: " << drawX << " centerY: " << drawY << std::endl;
+    //std::cout << "Mouse at: " << mouseX << " " << mouseY << " -> MiniMap: " << mouseMiniMapX << " " << mouseMiniMapY << std::endl;
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
     // if (map->getHeight() > 64 || map->getWidth() > 64) {
@@ -344,7 +348,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     // }
     mouseMiniMapX /= factorZoom;
     mouseMiniMapY /= factorZoom;
-
+    //std::cout << "After mouse at: " << mouseX << " " << mouseY << " -> MiniMap: " << mouseMiniMapX << " " << mouseMiniMapY << std::endl;
     auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     return map->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
