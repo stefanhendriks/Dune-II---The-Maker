@@ -77,6 +77,7 @@ private:
 
     // the top left coordinates for the minimap
     int drawX, drawY;
+    int centerX, centerY; // the center of the minimap
 
     // bool isBigMap;
     int factorZoom = 1; // factor to zoom the minimap, based on the map size and the minimap size

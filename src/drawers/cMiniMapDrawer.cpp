@@ -42,11 +42,15 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
     int topLeftY = cSideBar::TopBarHeight;
     drawY = topLeftY + (halfHeightOfMinimap - factorZoom*halfHeightOfMap);
 
+    centerX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
+    centerY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
+
     m_RectMinimap = cRectangle(drawX, drawY, factorZoom*getMapWidthInPixels(), factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
     std::cout << "Minimap at: " << drawX << " " << drawY << " " << m_RectMinimap.getEndX()-drawX << " " << m_RectMinimap.getEndY()-drawY << std::endl;
     std::cout << "Full minimap at: " << m_RectFullMinimap.getX() << " " << m_RectFullMinimap.getY() << " "
               << m_RectFullMinimap.getWidth() << " " << m_RectFullMinimap.getHeight() << std::endl;
+    std::cout << "Minimap center: " << centerX << " " << centerY << std::endl;
     mipMapTex = renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
@@ -327,8 +331,8 @@ void cMiniMapDrawer::drawStaticFrame()
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
 {
     // the minimap can be 128x128 pixels at the bottom right of the screen.
-    int mouseMiniMapX = mouseX - drawX;
-    int mouseMiniMapY = mouseY - drawY;
+    int mouseMiniMapX = mouseX - centerX;
+    int mouseMiniMapY = mouseY - centerY;
     std::cout << "Mouse at minimap: " << mouseMiniMapX << " " << mouseMiniMapY << std::endl;
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
@@ -340,6 +344,8 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     //     mouseMiniMapX /= 2;
     //     mouseMiniMapY /= 2;
     // }
+    mouseMiniMapX /= factorZoom;
+    mouseMiniMapY /= factorZoom;
 
     auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
