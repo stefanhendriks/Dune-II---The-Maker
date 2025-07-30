@@ -1511,10 +1511,10 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell)
  * Returns true if map is wider or higher than 64 cells
  * @return
  */
-bool cMap::isBigMap()
-{
-    return getWidth() > 64 || getHeight() > 64;
-}
+// bool cMap::isBigMap()
+// {
+//     return getWidth() > 64 || getHeight() > 64;
+// }
 
 void cMap::detonateSpiceBloom(int cell)
 {
