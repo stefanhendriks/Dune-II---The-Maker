@@ -87,6 +87,22 @@ void cMiniMapDrawer::drawViewPortRectangle()
     int minimapWidth = iWidth * (pixelSize+1);
     int minimapHeight = iHeight * (pixelSize+1);
 
+    //cap the rectangle to the minimap size
+    if (startX < m_RectFullMinimap.getX()) {
+        minimapWidth += startX - m_RectFullMinimap.getX();
+        startX = m_RectFullMinimap.getX();
+    }
+    if (startY < m_RectFullMinimap.getY()) {
+        minimapHeight += startY - m_RectFullMinimap.getY();
+        startY = m_RectFullMinimap.getY();
+    }
+    if (startX + minimapWidth > m_RectFullMinimap.getEndX()) {
+        minimapWidth = m_RectFullMinimap.getEndX() - startX;
+    }
+    if (startY + minimapHeight > m_RectFullMinimap.getEndY()) {
+        minimapHeight = m_RectFullMinimap.getEndY() - startY;
+    }
+
     //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, Color{255, 255, 255));
     renderDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
 }
