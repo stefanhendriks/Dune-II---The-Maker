@@ -88,9 +88,8 @@ void cMiniMapDrawer::drawViewPortRectangle()
     int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
     int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
 
-    int minimapWidth = iWidth * (pixelSize+1);
-    int minimapHeight = iHeight * (pixelSize+1);
-
+    int minimapWidth = iWidth * (pixelSize)+1;
+    int minimapHeight = iHeight * (pixelSize)+1;
     //cap the rectangle to the minimap size
     if (startX < m_RectFullMinimap.getX()) {
         minimapWidth += startX - m_RectFullMinimap.getX();
