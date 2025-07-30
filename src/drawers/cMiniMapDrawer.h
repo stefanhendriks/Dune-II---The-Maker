@@ -79,4 +79,5 @@ private:
     int drawX, drawY;
 
     // bool isBigMap;
+    int factorZoom = 1; // factor to zoom the minimap, based on the map size and the minimap size
 };
