@@ -1656,18 +1656,18 @@ float health_bar(float max_w, int i, int w)
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll)
 {
-    return map.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
+    return global_map.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 }
 
 
 int distanceBetweenCellAndCenterOfScreen(int iCell)
 {
-    if (map.isValidCell(iCell)) {
+    if (global_map.isValidCell(iCell)) {
         int centerX = mapCamera->getViewportCenterX();
         int centerY = mapCamera->getViewportCenterY();
 
-        int cellX = map.getAbsoluteXPositionFromCell(iCell);
-        int cellY = map.getAbsoluteYPositionFromCell(iCell);
+        int cellX = global_map.getAbsoluteXPositionFromCell(iCell);
+        int cellY = global_map.getAbsoluteYPositionFromCell(iCell);
 
         return ABS_length(centerX, centerY, cellX, cellY);
     }
@@ -1706,19 +1706,19 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(fromCell);
-    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(fromCell);
+    newBullet.posX = global_map.getAbsoluteXPositionFromCellCentered(fromCell);
+    newBullet.posY = global_map.getAbsoluteYPositionFromCellCentered(fromCell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(targetCell);
-    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(targetCell);
+    newBullet.targetX = global_map.getAbsoluteXPositionFromCellCentered(targetCell);
+    newBullet.targetY = global_map.getAbsoluteYPositionFromCellCentered(targetCell);
 
     // if we start firing from a mountain, flag it so the bullet won't be blocked by mountains along
     // the way
-    newBullet.bStartedFromMountain = map.getCell(fromCell)->type == TERRAIN_MOUNTAIN;
+    newBullet.bStartedFromMountain = global_map.getCell(fromCell)->type == TERRAIN_MOUNTAIN;
 
-    int structureIdAtTargetCell = map.getCellIdStructuresLayer(targetCell);
+    int structureIdAtTargetCell = global_map.getCellIdStructuresLayer(targetCell);
     if (structureIdAtTargetCell > -1) {
         cAbstractStructure *pStructure = structure[structureIdAtTargetCell];
         if (pStructure && pStructure->isValid()) {
@@ -1737,7 +1737,7 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
         newBullet.iPlayer = cUnit.iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {
-            map.clearShroudForAllPlayers(fromCell, 2);
+            global_map.clearShroudForAllPlayers(fromCell, 2);
         }
     }
 
@@ -1745,18 +1745,18 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
         cAbstractStructure *pStructure = structure[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
 
-        int unitIdAtTargetCell = map.getCellIdUnitLayer(targetCell);
+        int unitIdAtTargetCell = global_map.getCellIdUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
             cUnit &unitTarget = unit[unitIdAtTargetCell];
             // reveal for player which is being attacked
-            map.clearShroud(fromCell, 2, unitTarget.iPlayer);
+            global_map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
 
-        unitIdAtTargetCell = map.getCellIdAirUnitLayer(targetCell);
+        unitIdAtTargetCell = global_map.getCellIdAirUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
             cUnit &unitTarget = unit[unitIdAtTargetCell];
             // reveal for player which is being attacked
-            map.clearShroud(fromCell, 2, unitTarget.iPlayer);
+            global_map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
     }
 

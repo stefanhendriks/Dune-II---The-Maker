@@ -40,9 +40,9 @@ void cPlayerBrainSandworm::findRandomValidLocationToMoveToAndGoThere(cUnit &pSan
 {
     // find new spot to go to
     for (int iTries = 0; iTries < 5; iTries++) {
-        int iMoveTo = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+        int iMoveTo = global_map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
 
-        if (map.isCellPassableForWorm(iMoveTo)) {
+        if (global_map.isCellPassableForWorm(iMoveTo)) {
             pSandWorm.move_to(iMoveTo);
             // found a spot, break out of this 'tries' loop
             break;

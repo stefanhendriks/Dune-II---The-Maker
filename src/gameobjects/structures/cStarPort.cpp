@@ -97,7 +97,7 @@ void cStarPort::think_deploy()
                         // assume that the cell to drop is the location of the structure itself
                         cellToDeployTo = getCell();
                     }
-                    int cellAtBorderOfMap = map.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
+                    int cellAtBorderOfMap = global_map.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
                     REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
                 }
             }
