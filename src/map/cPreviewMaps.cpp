@@ -3,7 +3,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMap.h"
 #include "include/d2tmc.h"
-
+#include "include/Texture.hpp"
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -102,7 +102,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
     if (previewMap.terrain == nullptr) {
-        previewMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+        previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
     }
     renderDrawer->FillWithColor(previewMap.terrain, Color{0,0,0,255});
 
@@ -155,10 +155,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             previewMap.terrainType[iCll] = terrainType;
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
@@ -168,10 +165,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = map.getCellX(startCell);
             int y = map.getCellY(startCell);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color{255, 255, 255,255});
         }
     }
     if (previewMap.terrain!= nullptr){
