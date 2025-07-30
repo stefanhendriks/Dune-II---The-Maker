@@ -289,6 +289,7 @@ void cMiniMapDrawer::draw()
     }
 
     if (status == eMinimapStatus::LOWPOWER) {
+        cleanDrawTerrain();
         drawUnitsAndStructures(true);
     }
     cRectangle src = cRectangle(0, 0, mipMapTex->w, mipMapTex->h);
@@ -298,6 +299,14 @@ void cMiniMapDrawer::draw()
 
     drawViewPortRectangle();
     // SDL_SetClipRect(bmp_screen, nullptr);
+}
+
+void cMiniMapDrawer::cleanDrawTerrain()
+{
+    // clear the minimap texture
+    renderDrawer->beginDrawingToTexture(mipMapTex);
+    renderDrawer->renderClearToColor(Color::black());
+    renderDrawer->endDrawingToTexture();
 }
 
 void cMiniMapDrawer::drawStaticFrame()
