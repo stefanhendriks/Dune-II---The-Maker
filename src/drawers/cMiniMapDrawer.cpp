@@ -42,6 +42,7 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
     std::cout << "Minimap at: " << drawX << " " << drawY << " " << getMapWidthInPixels() << " " << getMapHeightInPixels() << std::endl;
     std::cout << "Full minimap at: " << m_RectFullMinimap.getX() << " " << m_RectFullMinimap.getY() << " "
               << m_RectFullMinimap.getWidth() << " " << m_RectFullMinimap.getHeight() << std::endl;
+    mipMapTex = renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
 cMiniMapDrawer::~cMiniMapDrawer()
@@ -105,6 +106,7 @@ int cMiniMapDrawer::getMapHeightInPixels()
 
 void cMiniMapDrawer::drawTerrain()
 {
+    renderDrawer->beginDrawingToTexture(mipMapTex);
     Color iColor = Color{0, 0, 0,255};
 
     for (int x = 0; x < (map->getWidth()); x++) {
@@ -122,17 +124,18 @@ void cMiniMapDrawer::drawTerrain()
                 iColor = Color{0, 0, 0,255};
             }
 
-            int iDrawX = drawX + x;
-            int iDrawY = drawY + y;
+            // int iDrawX = drawX + x;
+            // int iDrawY = drawY + y;
 
             // if (!isBigMap) {
                 // //double sized 'pixels'.
                 // iDrawX += x;
                 // iDrawY += y;
             // }
-            renderDrawer->renderDot(iDrawX, iDrawY, iColor, 1 /*isBigMap ? 1 : 2*/);
+            renderDrawer->renderDot(x, y, iColor, 1 /*isBigMap ? 1 : 2*/);
         }
     }
+    renderDrawer->endDrawingToTexture();
 }
 
 /**
@@ -142,6 +145,7 @@ void cMiniMapDrawer::drawTerrain()
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
 {
+    renderDrawer->beginDrawingToTexture(mipMapTex);
     Color iColor = Color{0,0,0,255};
     const Color black = Color::black(); //renderDrawer->getColor_BLACK();
     for (int x = 0; x < map->getWidth(); x++) {
@@ -198,8 +202,8 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             if (iColor.r == black.r && iColor.g == black.g && iColor.b == black.b) {
                 continue;
             }
-            int iDrawX = drawX + x;
-            int iDrawY = drawY + y;
+            // int iDrawX = drawX + x;
+            // int iDrawY = drawY + y;
             // if (!isBigMap) {
             //     iDrawX += x;
             //     iDrawY += y;
@@ -207,9 +211,10 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             //     std::cout << "Draw " << iDrawX << " " << iDrawY << " " << static_cast<int>(iColor.r)<< " "
             //         << static_cast<int>(iColor.g)<< " "<< static_cast<int>(iColor.b) 
             //         << " "<< static_cast<int>(iColor.a) << std::endl;
-            renderDrawer->renderDot(iDrawX, iDrawY, iColor, 1 /*isBigMap ? 1 : 2*/);
+            renderDrawer->renderDot(x, y, iColor, 1 /*isBigMap ? 1 : 2*/);
         }
     }
+    renderDrawer->endDrawingToTexture();
 }
 
 
@@ -260,6 +265,8 @@ void cMiniMapDrawer::draw()
     if (status == eMinimapStatus::LOWPOWER) {
         drawUnitsAndStructures(true);
     }
+    cRectangle src = cRectangle(0, 0, mipMapTex->w, mipMapTex->h);
+    renderDrawer->renderStrechSprite(mipMapTex, src , m_RectMinimap);
 
     drawStaticFrame();
 

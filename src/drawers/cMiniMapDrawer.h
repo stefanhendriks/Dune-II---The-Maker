@@ -13,6 +13,7 @@
 #include "utils/Color.hpp"
 
 class cPlayer;
+class Texture;
 
 // the BuildingListItemState
 enum eMinimapStatus {
@@ -67,6 +68,7 @@ private:
     cMapCamera *mapCamera;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
+    Texture *mipMapTex;
 
     eMinimapStatus status;
 
