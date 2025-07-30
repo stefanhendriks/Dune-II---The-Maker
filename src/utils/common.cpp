@@ -58,7 +58,10 @@ std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
         gameSettings->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
     if (section.hasValue("GameRules"))
         gameSettings->gameFilename = section.getStringValue("GameRules");
-
+    if (section.hasValue("NoAI"))
+        gameSettings->disableAI = section.getBoolean("NoAI");
+    if (section.hasValue("Debug"))
+        gameSettings->debugMode = section.getBoolean("Debug");
     return gameSettings;
 }
 
