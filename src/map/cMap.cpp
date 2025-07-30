@@ -368,7 +368,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     int totalSpiceBloomsCount = blooms.size();
 
     // When no blooms are detected, we must 'spawn' one
-    int desiredAmountOfSpiceBloomsInMap = isBigMap() ? 6 : 3;
+    // @mira: do better than width*height>64*64
+    int desiredAmountOfSpiceBloomsInMap = (width*height>64*64) ? 6 : 3;
 
     if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
         // randomly create a new spice bloom somewhere on the map

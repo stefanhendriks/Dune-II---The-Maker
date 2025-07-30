@@ -1072,7 +1072,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 void cSetupSkirmishGameState::generateRandomMap()
 {
     randomMapGenerator.generateRandomMap(iStartingPoints, m_previewMaps->getMap(0) );
-    spawnWorms = global_map.isBigMap() ? 4 : 2;
+    // @mira do better than (global_map.getWidth() * global_map.getHeight() > 64 * 64)
+    spawnWorms = (global_map.getWidth() * global_map.getHeight() > 64 * 64) ? 4 : 2;
 }
 
 void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
