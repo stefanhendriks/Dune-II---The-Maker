@@ -76,5 +76,5 @@ private:
     // the top left coordinates for the minimap
     int drawX, drawY;
 
-    bool isBigMap;
+    // bool isBigMap;
 };

@@ -548,7 +548,7 @@ public:
 
     bool isValidTerrainForConcreteAtCell(int cell);
 
-    bool isBigMap();
+    // bool isBigMap();
 
     void detonateSpiceBloom(int cell);
 
