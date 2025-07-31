@@ -279,7 +279,7 @@ void cMiniMapDrawer::draw()
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
     // m_RectFullMinimap
-    renderDrawer->renderRectFillColor(m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight(), Color{255, 0, 255,255});
+    renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::black());
     //auto tmp = cRectangle{m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight()};
     // SDL_SetClipRect(bmp_screen, &tmp);
 
