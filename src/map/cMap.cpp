@@ -903,6 +903,22 @@ int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
     return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
 }
 
+int cMap::makeCell(int x, int y) //rip
+{
+    assert(x > -1 && "makeCell x must be > -1");
+    assert(x < width && "makeCell x must be < width"); // should never be higher!
+    assert(y > -1 && "makeCell y must be > -1");
+    assert(y < height && "makeCell y must be < height");
+
+    // create cell
+    int result = getCellWithMapDimensions(x, y);
+
+    assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
+    assert(result > -1); // may never be < 0
+
+    return result;
+}
+
 double cMap::distance(int cell1, int cell2) //rip
 {
     int x1 = getCellX(cell1);
@@ -911,6 +927,33 @@ double cMap::distance(int cell1, int cell2) //rip
     int x2 = getCellX(cell2);
     int y2 = getCellY(cell2);
     return ABS_length(x1, y1, x2, y2);
+}
+
+int cMap::getCellWithMapBorders(int x, int y) //rip
+{
+    // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
+    int maxHeight = (height - 2); // hence the -2!
+    int maxWidth = (width - 2);
+
+    if (x < 1) return -1;
+    if (y < 1) return -1;
+    if (x > maxWidth) return -1;
+    if (y > maxHeight) return -1;
+
+    return getCellWithMapDimensions(x, y);
+}
+
+int cMap::getCellWithMapDimensions(int x, int y) //rip
+{
+    int mapWidth = width;
+    int mapHeight = height;
+    // (over the) boundaries result in cell -1
+    if (x < 0) return -1;
+    if (x >= mapWidth) return -1;
+    if (y < 0) return -1;
+    if (y >= mapHeight) return -1;
+
+    return (y * mapWidth) + x;
 }
 
 bool cMap::isValidCell(int c) const //rip
