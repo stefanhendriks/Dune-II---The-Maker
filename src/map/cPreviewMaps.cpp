@@ -61,7 +61,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 
     int maxWidth = vecmap[0].size();
     int maxHeight = vecmap.size();
-    int maxCells = (maxWidth + 1) * (maxHeight + 1);
+    int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
     for (int i = 0; i < 5; i++) {
@@ -93,11 +93,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
-    previewMap.width = maxWidth + 1;
-    previewMap.height = maxHeight + 1;
+    previewMap.width = maxWidth + 2;
+    previewMap.height = maxHeight + 2;
 
     cMap map;
-    map.init(maxWidth + 1, maxHeight + 1);
+    map.init(previewMap.width , previewMap.height);
 
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
