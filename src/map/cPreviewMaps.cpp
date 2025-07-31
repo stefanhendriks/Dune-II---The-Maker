@@ -104,7 +104,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap.terrain == nullptr) {
         previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
     }
-    renderDrawer->FillWithColor(previewMap.terrain, Color{0,0,0,255});
+    renderDrawer->FillWithColor(previewMap.terrain, Color::black());
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -151,7 +151,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
                 terrainType = TERRAIN_SAND;
-                iColor = Color{255, 255, 255,255}; // show as purple to indicate wrong char
+                iColor = Color{160, 32, 240, 255}; // show as purple to indicate wrong char
             }
 
             previewMap.terrainType[iCll] = terrainType;
@@ -165,7 +165,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = map.getCellX(startCell);
             int y = map.getCellY(startCell);
-            renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
         }
     }
     if (previewMap.terrain!= nullptr){
