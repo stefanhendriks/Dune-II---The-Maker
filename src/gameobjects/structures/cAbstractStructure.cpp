@@ -193,25 +193,25 @@ void cAbstractStructure::die()
     }
 
     int iCll=iCell;
-    int iCX= map.getCellX(iCll);
-    int iCY= map.getCellY(iCll);
+    int iCX= global_map.getCellX(iCll);
+    int iCY= global_map.getCellY(iCll);
 
     // create destroy particles
     for (int w = 0; w < iWidth; w++) {
         for (int h = 0; h < iHeight; h++) {
-            iCll= map.makeCell(iCX + w, iCY + h);
+            iCll= global_map.makeCell(iCX + w, iCY + h);
 
-            map.cellChangeType(iCll, TERRAIN_ROCK);
-            cMapEditor(map).smoothAroundCell(iCll);
+            global_map.cellChangeType(iCll, TERRAIN_ROCK);
+            cMapEditor(global_map).smoothAroundCell(iCll);
 
             int half = 16;
-            int posX = map.getAbsoluteXPositionFromCell(iCll);
-            int posY = map.getAbsoluteYPositionFromCell(iCll);
+            int posX = global_map.getAbsoluteXPositionFromCell(iCll);
+            int posY = global_map.getAbsoluteYPositionFromCell(iCll);
 
             cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++) {
-                map.smudge_increase(SMUDGE_ROCK, iCll);
+                global_map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
                 int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);
@@ -242,7 +242,7 @@ void cAbstractStructure::die()
     game.playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
     // remove from the playground
-    map.remove_id(id, MAPID_STRUCTURES);
+    global_map.remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
     game.shakeScreen((iWidth * iHeight) * 20);
@@ -278,8 +278,8 @@ void cAbstractStructure::think_prebuild()
 
 std::vector<int> cAbstractStructure::getCellsAroundStructure()
 {
-    int iStartX = map.getCellX(iCell);
-    int iStartY = map.getCellY(iCell);
+    int iStartX = global_map.getCellX(iCell);
+    int iStartY = global_map.getCellY(iCell);
 
     int iEndX = (iStartX + iWidth) + 1;
     int iEndY = (iStartY + iHeight) + 1;
@@ -291,7 +291,7 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure()
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cell = map.getCellWithMapBorders(x, y);
+            int cell = global_map.getCellWithMapBorders(x, y);
             if (cell > -1) {
                 cells.push_back(cell);
             }
@@ -307,8 +307,8 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure()
  */
 std::vector<int> cAbstractStructure::getCellsOfStructure()
 {
-    int iStartX = map.getCellX(iCell);
-    int iStartY = map.getCellY(iCell);
+    int iStartX = global_map.getCellX(iCell);
+    int iStartY = global_map.getCellY(iCell);
 
     int iEndX = (iStartX + iWidth);
     int iEndY = (iStartY + iHeight);
@@ -317,7 +317,7 @@ std::vector<int> cAbstractStructure::getCellsOfStructure()
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cell = map.getCellWithMapBorders(x, y);
+            int cell = global_map.getCellWithMapBorders(x, y);
             if (cell > -1) {
                 cells.push_back(cell);
             }
@@ -337,7 +337,7 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure()
     const std::vector<int> &cells = getCellsAroundStructure();
 
     for (auto &cll : cells) {
-        if (!map.occupied(cll)) {
+        if (!global_map.occupied(cll)) {
             return cll;
         }
     }
@@ -427,7 +427,7 @@ void cAbstractStructure::setHeight(int height)
 void cAbstractStructure::setRallyPoint(int cell)
 {
     assert(cell > -2); // -1 is allowed (means disable);
-    assert(cell < map.getMaxCells());
+    assert(cell < global_map.getMaxCells());
     iRallyPoint = cell;
 }
 
@@ -547,8 +547,8 @@ void cAbstractStructure::setHitPoints(int hp)
 void cAbstractStructure::setCell(int cell)
 {
     iCell = cell;
-    posX = map.getAbsoluteXPositionFromCell(iCell);
-    posY = map.getAbsoluteYPositionFromCell(iCell);
+    posX = global_map.getAbsoluteXPositionFromCell(iCell);
+    posY = global_map.getAbsoluteYPositionFromCell(iCell);
 }
 
 void cAbstractStructure::setOwner(int player)
@@ -637,7 +637,7 @@ bool cAbstractStructure::isValid()
     if (dead) // flagged for deletion, so no longer 'valid'
         return false;
 
-    if (!map.isValidCell(iCell))
+    if (!global_map.isValidCell(iCell))
         return false;
 
     return true;
@@ -769,7 +769,7 @@ void cAbstractStructure::enterStructure(int unitId)
     pUnit.setCell(getCell());
     pUnit.updateCellXAndY();
 
-    map.remove_id(unitId, MAPID_UNITS);
+    global_map.remove_id(unitId, MAPID_UNITS);
 }
 
 void cAbstractStructure::unitLeavesStructure()
@@ -802,7 +802,7 @@ void cAbstractStructure::unitLeavesStructure()
         unitToLeave.move_to(getRallyPoint(), -1, -1);
     }
 
-    map.cellSetIdForLayer(unitToLeave.getCell(), MAPID_UNITS, iUnitIDWithinStructure);
+    global_map.cellSetIdForLayer(unitToLeave.getCell(), MAPID_UNITS, iUnitIDWithinStructure);
 
     setUnitIdWithin(-1);
     setUnitIdHeadingTowards(-1);
@@ -823,7 +823,7 @@ void cAbstractStructure::unitHeadsTowardsStructure(int unitId)
 
 int cAbstractStructure::getRandomStructureCell()
 {
-    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * map.getWidth());
+    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * global_map.getWidth());
 }
 
 /**

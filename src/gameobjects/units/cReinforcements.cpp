@@ -161,7 +161,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     if (iPlr < 0 || iTpe < 0)
         return;
 
-    if (map.isValidCell(iCll) == false)
+    if (global_map.isValidCell(iCll) == false)
         return;
 
     if (iStart < 0)
@@ -171,7 +171,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
 
     if (iStartCell < 0) {
         iStart += RNG::rnd(64);
-        if (iStart >= map.getMaxCells())
+        if (iStart >= global_map.getMaxCells())
             iStart -= 64;
 
         iStartCell = iFindCloseBorderCell(iStart);
@@ -194,10 +194,10 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     }
 
     // STEP 3: assign order to carryall
-    int iCellX = map.getCellX(iStartCell);
-    int iCellY = map.getCellY(iStartCell);
-    int cx = map.getCellX(iCll);
-    int cy = map.getCellY(iCll);
+    int iCellX = global_map.getCellX(iStartCell);
+    int iCellY = global_map.getCellY(iStartCell);
+    int cx = global_map.getCellX(iCll);
+    int cy = global_map.getCellY(iCll);
 
     int d = fDegrees(iCellX, iCellY, cx, cy);
     int f = faceAngle(d); // get the angle

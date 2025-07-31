@@ -31,10 +31,10 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
-#include "mentat/cAtreidesMentat.h"
-#include "mentat/cBeneMentat.h"
-#include "mentat/cHarkonnenMentat.h"
-#include "mentat/cOrdosMentat.h"
+#include "mentat/AtreidesMentat.h"
+#include "mentat/BeneMentat.h"
+#include "mentat/HarkonnenMentat.h"
+#include "mentat/OrdosMentat.h"
 #include "player/cPlayer.h"
 #include "player/brains/cPlayerBrainCampaign.h"
 #include "player/brains/cPlayerBrainSandworm.h"
@@ -158,7 +158,7 @@ void cGame::init()
     m_cameraBorderOrKeyMoveSpeed=0.5;
     m_cameraEdgeMove = true;
 
-    map.init(64, 64);
+    global_map.init(64, 64);
 
     initPlayers(false);
 
@@ -199,7 +199,7 @@ void cGame::missionInit()
     m_shakeY = 0;
     m_TIMER_shake = 0;
 
-    map.init(64, 64);
+    global_map.init(64, 64);
 
     initPlayers(true);
 
@@ -536,12 +536,12 @@ void cGame::drawStateCombat()
 }
 
 // drawStateMentat logic + drawing mouth/eyes
-void cGame::drawStateMentat(cAbstractMentat *mentat)
+void cGame::drawStateMentat(AbstractMentat *mentat)
 {
     m_mouse->setTile(MOUSE_NORMAL);
 
     mentat->draw();
-    mentat->interact();
+    // mentat->interact();
 
     m_mouse->draw();
 }
@@ -816,7 +816,7 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
-    map.setReinforcements(m_reinforcements);
+    global_map.setReinforcements(m_reinforcements);
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
@@ -999,7 +999,7 @@ bool cGame::setupGame()
     install_particles();
 
     delete mapCamera;
-    mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
+    mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     INI_Install_Game(m_gameFilename);
     // Now we are ready for the menu state
@@ -1336,17 +1336,17 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new cAtreidesMentat(allowMissionSelect);
+        m_mentat = new AtreidesMentat(allowMissionSelect);
     }
     else if (houseIndex == HARKONNEN) {
-        m_mentat = new cHarkonnenMentat(allowMissionSelect);
+        m_mentat = new HarkonnenMentat(allowMissionSelect);
     }
     else if (houseIndex == ORDOS) {
-        m_mentat = new cOrdosMentat(allowMissionSelect);
+        m_mentat = new OrdosMentat(allowMissionSelect);
     }
     else {
         // fallback
-        m_mentat = new cBeneMentat();
+        m_mentat = new BeneMentat();
     }
     prepareMentatForPlayer();
     m_mentat->speak();
@@ -1355,7 +1355,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     delete m_mentat;
-    m_mentat = new cBeneMentat();
+    m_mentat = new BeneMentat();
     m_mentat->setHouse(house);
     // create new drawStateMentat
     if (house == ATREIDES) {
@@ -1432,7 +1432,7 @@ void cGame::thinkFast_combat()
         }
     }
 
-    map.thinkFast();
+    global_map.thinkFast();
 
     game.reduceShaking();
 
@@ -1464,7 +1464,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 {
     logbook(s_GameEvent::toString(event));
 
-    map.onNotifyGameEvent(event);
+    global_map.onNotifyGameEvent(event);
 
     // game itself handles events
     switch (event.eventType) {
@@ -1495,19 +1495,19 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
         }
         else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
             int precision = special.deployTargetPrecision;
-            int mouseCellX = map.getCellX(iMouseCell) - precision;
-            int mouseCellY = map.getCellY(iMouseCell) - precision;
+            int mouseCellX = global_map.getCellX(iMouseCell) - precision;
+            int mouseCellY = global_map.getCellY(iMouseCell) - precision;
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
+            cPoint::split(posX, posY) = global_map.fixCoordinatesToBeWithinMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = map.makeCell(posX, posY);
+            deployCell = global_map.makeCell(posX, posY);
         }
 
 
@@ -1633,14 +1633,14 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
         m_currentState->onNotifyMouseEvent(event);
     }
 
-    if (m_state == GAME_BRIEFING ||
-            m_state == GAME_WINBRIEF ||
-            m_state == GAME_LOSEBRIEF
-       ) {
+    // if (m_state == GAME_BRIEFING ||
+    //         m_state == GAME_WINBRIEF ||
+    //         m_state == GAME_LOSEBRIEF
+    //    ) {
         if (m_mentat) {
             m_mentat->onNotifyMouseEvent(event);
         }
-    }
+    // }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
@@ -1760,7 +1760,7 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_F4)) {
             int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
-                map.clearShroud(mouseCell, 6, HUMAN);
+                global_map.clearShroud(mouseCell, 6, HUMAN);
             }
         }
 
@@ -1894,7 +1894,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = mapCamera->divideByZoomLevel(map.getMaxDistanceInPixels() / 2);
+    float maxDistance = mapCamera->divideByZoomLevel(global_map.getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
@@ -2131,17 +2131,17 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 unit[idOfUnitAtCell].die(true, false);
             }
 
-            int idOfStructureAtCell = map.getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
                 structure[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = map.getCellIdWormsLayer(mc);
+            idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
                 unit[idOfUnitAtCell].die(false, false);
             }
@@ -2152,7 +2152,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 cUnit &pUnit = unit[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
@@ -2165,7 +2165,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     else {
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
-            map.clear_all(HUMAN);
+            global_map.clear_all(HUMAN);
         }
     }
 
@@ -2188,4 +2188,65 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 void cGame::setMousePosition(int w, int h)
 {
     m_mouse->setCursorPosition(window, w,h);
+}
+
+void cGame::execute(AbstractMentat &mentat)
+{
+    if (game.isState(GAME_BRIEFING)) {
+        // proceed, play mission (it is already loaded before we got here)
+        game.setNextStateToTransitionTo(GAME_PLAYING);
+        drawManager->missionInit();
+
+        // CENTER MOUSE
+        game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
+
+        game.initiateFadingOut();
+
+        game.playMusicByType(MUSIC_PEACE);
+        return;
+    }
+
+    if (game.m_skirmish) {
+        if (game.isState(GAME_WINBRIEF) || game.isState(GAME_LOSEBRIEF)) {
+            // regardless of drawStateWinning or drawStateLosing, always go back to main menu
+            game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
+            game.initSkirmish();
+            game.initiateFadingOut();
+        }
+        else {
+            logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
+        }
+        return;
+    }
+
+    // NOT a skirmish game
+
+    // won mission, transition to region selection (Select your next Conquest)
+    if (game.isState(GAME_WINBRIEF)) {
+        game.setNextStateToTransitionTo(GAME_REGION);
+
+        game.initiateFadingOut();
+        return;
+    }
+
+    // lost mission
+    if (game.isState(GAME_LOSEBRIEF)) {
+        game.missionInit();
+        // lost mission > 1, so we go back to region select
+        if (game.m_mission > 1)   {
+            game.setNextStateToTransitionTo(GAME_REGION);
+
+            game.m_mission--; // we did not win
+        }
+        else {
+            // mission 1 failed, really?..., back to mentat with briefing
+            game.setNextStateToTransitionTo(GAME_BRIEFING);
+            game.prepareMentatForPlayer();
+            game.playMusicByType(MUSIC_BRIEFING);
+            mentat.resetSpeak();
+        }
+
+        game.initiateFadingOut();
+        return;
+    }
 }

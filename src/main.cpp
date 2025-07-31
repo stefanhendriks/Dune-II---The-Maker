@@ -34,7 +34,7 @@ int	iRest = 1;	// default rest value
 cGame          				game;
 
 cStructureUtils 			structureUtils;
-cMap           				map;
+cMap           				global_map;
 cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     		*structure[MAX_STRUCTURES];

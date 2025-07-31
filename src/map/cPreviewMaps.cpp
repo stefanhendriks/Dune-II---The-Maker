@@ -3,7 +3,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMap.h"
 #include "include/d2tmc.h"
-
+#include "include/Texture.hpp"
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -61,7 +61,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 
     int maxWidth = vecmap[0].size();
     int maxHeight = vecmap.size();
-    int maxCells = (maxWidth + 1) * (maxHeight + 1);
+    int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
     for (int i = 0; i < 5; i++) {
@@ -93,18 +93,18 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
-    previewMap.width = maxWidth + 1;
-    previewMap.height = maxHeight + 1;
+    previewMap.width = maxWidth + 2;
+    previewMap.height = maxHeight + 2;
 
     cMap map;
-    map.init(maxWidth + 1, maxHeight + 1);
+    map.init(previewMap.width , previewMap.height);
 
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
     if (previewMap.terrain == nullptr) {
-        previewMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+        previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
     }
-    renderDrawer->FillWithColor(previewMap.terrain, Color{0,0,0,255});
+    renderDrawer->FillWithColor(previewMap.terrain, Color::black());
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -151,14 +151,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
                 terrainType = TERRAIN_SAND;
-                iColor = Color{255, 255, 255,255}; // show as purple to indicate wrong char
+                iColor = Color{160, 32, 240, 255}; // show as purple to indicate wrong char
             }
 
             previewMap.terrainType[iCll] = terrainType;
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
@@ -168,11 +165,16 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = map.getCellX(startCell);
             int y = map.getCellY(startCell);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, Color{255, 255, 255,255});
+            renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
         }
+    }
+    if (previewMap.terrain!= nullptr){
+        SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), previewMap.terrain);
+        if (out == nullptr) {
+            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            return;
+        }
+        previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
     }
 }
 

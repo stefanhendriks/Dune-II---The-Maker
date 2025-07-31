@@ -57,7 +57,7 @@ extern int		iRest;	// rest value
 // game
 extern cGame		  game;
 
-extern cMap           map;
+extern cMap           global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
