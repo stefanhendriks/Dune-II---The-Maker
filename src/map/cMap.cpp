@@ -757,7 +757,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     return iStartCell;
 }
 
-double cMap::distance(int x1, int y1, int x2, int y2)
+double cMap::distance(int x1, int y1, int x2, int y2)  //rip
 {
     if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
@@ -766,7 +766,7 @@ double cMap::distance(int x1, int y1, int x2, int y2)
     return sqrt((double) (A + B)); // get C from A and B
 }
 
-int cMap::getCellY(int c)
+int cMap::getCellY(int c) //rip
 {
     if (c < 0 || c >= maxCells) {
         return -1;
@@ -775,7 +775,7 @@ int cMap::getCellY(int c)
     return (c / width);
 }
 
-int cMap::getCellX(int c)
+int cMap::getCellX(int c) //rip
 {
     if (c < 0 || c >= maxCells) {
         return -1;
@@ -873,29 +873,29 @@ int cMap::getCellAbove(int c)
     return cellAbove;
 }
 
-int cMap::getAbsoluteYPositionFromCell(int cell)
+int cMap::getAbsoluteYPositionFromCell(int cell) //rip
 {
     if (cell < 0) return -1;
     return getCellY(cell) * TILESIZE_HEIGHT_PIXELS;
 }
 
-int cMap::getAbsoluteXPositionFromCell(int cell)
+int cMap::getAbsoluteXPositionFromCell(int cell)  //rip
 {
     if (cell < 0) return -1;
     return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
 }
 
-int cMap::getAbsoluteXPositionFromCellCentered(int cell)
+int cMap::getAbsoluteXPositionFromCellCentered(int cell)  //rip
 {
     return getAbsoluteXPositionFromCell(cell) + (TILESIZE_WIDTH_PIXELS / 2);
 }
 
-int cMap::getAbsoluteYPositionFromCellCentered(int cell)
+int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
 {
     return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
 }
 
-int cMap::makeCell(int x, int y)
+int cMap::makeCell(int x, int y) //rip
 {
     assert(x > -1 && "makeCell x must be > -1");
     assert(x < width && "makeCell x must be < width"); // should never be higher!
@@ -911,7 +911,7 @@ int cMap::makeCell(int x, int y)
     return result;
 }
 
-double cMap::distance(int cell1, int cell2)
+double cMap::distance(int cell1, int cell2) //rip
 {
     int x1 = getCellX(cell1);
     int y1 = getCellY(cell1);
@@ -921,7 +921,7 @@ double cMap::distance(int cell1, int cell2)
     return ABS_length(x1, y1, x2, y2);
 }
 
-int cMap::getCellWithMapBorders(int x, int y)
+int cMap::getCellWithMapBorders(int x, int y) //rip
 {
     // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
     int maxHeight = (height - 2); // hence the -2!
@@ -935,7 +935,7 @@ int cMap::getCellWithMapBorders(int x, int y)
     return getCellWithMapDimensions(x, y);
 }
 
-int cMap::getCellWithMapDimensions(int x, int y)
+int cMap::getCellWithMapDimensions(int x, int y) //rip
 {
     int mapWidth = width;
     int mapHeight = height;
@@ -948,7 +948,7 @@ int cMap::getCellWithMapDimensions(int x, int y)
     return (y * mapWidth) + x;
 }
 
-bool cMap::isValidCell(int c) const
+bool cMap::isValidCell(int c) const //rip
 {
     return !(c < 0 || c >= maxCells);
 }
@@ -957,7 +957,7 @@ bool cMap::isValidCell(int c) const
  * Returns a random cell, disregards playable borders
  * @return
  */
-int cMap::getRandomCell()
+int cMap::getRandomCell() //rip
 {
     return RNG::rnd(maxCells);
 }
@@ -1043,7 +1043,7 @@ int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance)
            );
 }
 
-bool cMap::isWithinBoundaries(int c)
+bool cMap::isWithinBoundaries(int c) //rip
 {
     return isWithinBoundaries(getCellX(c), getCellY(c));
 }
@@ -1143,7 +1143,7 @@ bool cMap::isValidTerrainForStructureAtCell(int cll)
  * @param cell
  * @param distance
  */
-int cMap::getRandomCellFrom(int cell, int distance)
+int cMap::getRandomCellFrom(int cell, int distance) //rip
 {
     int startX = getCellX(cell);
     int startY = getCellY(cell);
@@ -1161,7 +1161,7 @@ int cMap::getRandomCellFrom(int cell, int distance)
  * @param distance
  * @return
  */
-int cMap::getRandomCellFromWithRandomDistance(int cell, int distance)
+int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) //rip
 {
     int startX = getCellX(cell);
     int startY = getCellY(cell);
@@ -1206,7 +1206,7 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
     return false;
 }
 
-bool cMap::isAtMapBoundaries(int cell)
+bool cMap::isAtMapBoundaries(int cell)  //rip
 {
     bool validCell = isValidCell(cell);
     if (!validCell) return false;
@@ -1223,12 +1223,12 @@ bool cMap::isAtMapBoundaries(int cell)
     return false;
 }
 
-cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const
+cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const //rip
 {
     return {std::clamp(x, 1, getWidth() - 2), std::clamp(y, 1, getHeight() - 2)};
 }
 
-cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const
+cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const //rip
 {
     return {std::clamp(x, 0, getWidth() - 1), std::clamp(y, 0, getHeight() - 1)};
 }
