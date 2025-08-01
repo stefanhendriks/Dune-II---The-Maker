@@ -14,7 +14,7 @@
 #include <string>
 
 class cReinforcements;
-class cAbstractMentat;
+class AbstractMentat;
 class cSelectYourNextConquestState;
 
 // Sections
@@ -163,9 +163,9 @@ class cSelectYourNextConquestState;
 
 // Scenario loading
 //void INI_Load_scenario(bool bOrDune, char filename[30] );
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat,cReinforcements *reinforcements);
+void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat,cReinforcements *reinforcements);
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);
-void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat);
+void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);

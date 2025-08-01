@@ -3,9 +3,10 @@
 #include "definitions.h"
 #include "cGameState.h"
 #include "definitions.h"
+#include "drawers/cTextDrawer.h"
 
 class cGame;
-class cGuiButton;
+class GuiButton;
 struct SDL_Surface;
 class Texture;
 
@@ -99,7 +100,7 @@ private:
 
     bool fastForward = false;
 
-    cGuiButton *m_guiBtnToMissionSelect;
+    GuiButton *m_guiBtnToMissionSelect;
 
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;
@@ -126,4 +127,5 @@ private:
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    cTextDrawer textDrawer;
 };

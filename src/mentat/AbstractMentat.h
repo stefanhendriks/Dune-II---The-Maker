@@ -29,8 +29,7 @@
 #include <memory>
 #include <SDL2/SDL_ttf.h>
 
-class cButtonCommand;
-class cGuiButton;
+class GuiButton;
 
 struct SDL_Surface;
 class Texture;
@@ -42,8 +41,34 @@ enum eMentatState {
     DESTROY,            // the mentat became 'invalid' (BeneGeserit-><house> transition)
 };
 
-class cAbstractMentat : public cInputObserver {
+class AbstractMentat : public cInputObserver {
+public:
+    AbstractMentat(bool canMissionSelect);
+    virtual ~AbstractMentat();
 
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+
+    virtual void draw() = 0;
+    virtual void think() = 0;
+
+    void loadScene(const std::string &scene);
+
+    Texture *getBackgroundBitmap() const;
+
+    void initSentences();
+    void speak();
+    void setSentence(int i, const char text[256]);
+    void thinkMouth();
+    void thinkEyes();
+    void thinkMovie();
+    void setHouse(int value) {
+        house = value;
+    }
+    int getHouse() {
+        return house;
+    }
+    void resetSpeak();
 protected:
     virtual void draw_mouth() = 0;
 
@@ -86,59 +111,14 @@ protected:
     Texture *rightButtonBmp;
 
     void buildLeftButton(Texture *bmp, int x, int y);
-
     void buildRightButton(Texture *bmp, int x, int y);
-
-    cButtonCommand *leftButtonCommand;
-    cButtonCommand *rightButtonCommand;
-
-    // this is used for Bene Geserit house selection
+    GuiButton *leftGuiButton;
+    GuiButton *rightGuiButton;
     int house;
-
     int offsetX;
     int offsetY;
-
-public:
-    void onNotifyMouseEvent(const s_MouseEvent &event) override;
-    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-
-    virtual void draw() = 0;
-
-    virtual void think() = 0;
-
-    virtual void interact() = 0;
-
-    void loadScene(const std::string &scene);
-
-    cAbstractMentat(bool canMissionSelect);
-
-    virtual ~cAbstractMentat();
-
-    Texture *getBackgroundBitmap() const;
-
-    void initSentences();
-
-    void speak();
-
-    void setSentence(int i, const char text[256]);
-
-    void thinkMouth();
-
-    void thinkEyes();
-
-    void thinkMovie();
-
-    void setHouse(int value) {
-        house = value;
-    }
-
-    int getHouse() {
-        return house;
-    }
-
-    void resetSpeak();
-
-    cGuiButton *m_guiBtnToMissionSelect;
     int movieTopleftX;
     int movieTopleftY;
+
+    GuiButton *m_guiBtnToMissionSelect;
 };
