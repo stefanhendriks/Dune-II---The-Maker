@@ -47,11 +47,11 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     if (startingPoints == 3) iDistance = 26;
     if (startingPoints == 4) iDistance = 22;
 
-    float progress = 0;
+    // float progress = 0;
 
     // x = 160
     // y = 180
-    renderDrawer->renderFromSurface(gfxinter->getSurface(BMP_GENERATING), 160, 180);
+    //renderDrawer->renderFromSurface(gfxinter->getSurface(BMP_GENERATING), 160, 180);
 
     // draw
     while (a_rock > 0) {
@@ -79,7 +79,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
         }
 
         if (bOk) {
-            progress += piece;
+            // progress += piece;
             mapEditor.createRandomField(iCll, TERRAIN_ROCK, 5500 + RNG::rnd(3500));
 
             if (iSpot < startingPoints) {
@@ -97,7 +97,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
             a_rock--;
 
             // blit on screen
-            drawProgress(progress);
+            //drawProgress(progress);
         }
 
     }
@@ -106,35 +106,35 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     mapEditor.removeSingleRockSpots();
 
     // blit on screen
-    drawProgress(progress);
+    //drawProgress(progress);
 
     mapEditor.removeSingleRockSpots();
 
 
     // blit on screen
-    drawProgress(progress);
+    //drawProgress(progress);
 
     mapEditor.removeSingleRockSpots();
 
     // blit on screen
-    drawProgress(progress);
+    //drawProgress(progress);
 
     while (a_spice > 0) {
         int iCll = global_map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createRandomField(iCll, TERRAIN_SPICE, 2500);
-        progress += piece;
+        // progress += piece;
         a_spice--;
         // blit on screen
-        drawProgress(progress);
+        //drawProgress(progress);
     }
 
     while (a_hill > 0) {
         int cell = global_map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createRandomField(cell, TERRAIN_HILL, 500 + RNG::rnd(500));
         a_hill--;
-        progress += piece;
+        // progress += piece;
         // blit on screen
-        drawProgress(progress);
+        //drawProgress(progress);
     }
 
 
@@ -148,15 +148,15 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     mapEditor.smoothMap();
 
     // blit on screen
-    progress += 25;
-    drawProgress(progress);
+    // progress += 25;
+    //drawProgress(progress);
     renderDrawer->FillWithColor(randomMapEntry.terrain, Color{0,0,0,255});
 
     // now put in previewmap 0
     for (int x = 0; x < global_map.getWidth(); x++)
         for (int y = 0; y < global_map.getHeight(); y++) {
 
-            drawProgress(progress);
+            //drawProgress(progress);
 
             int cll = global_map.getGeometry().getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
@@ -187,11 +187,11 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
         }
 
     // blit on screen
-    drawProgress(progress);
+    //drawProgress(progress);
 }
 
-void cRandomMapGenerator::drawProgress(float progress) const
-{
-    int iProgress = progress * 211;
-    renderDrawer->renderRectFillColor(216, 225, iProgress, 257-225, Color{255, 0, 0,255});
-}
+// void cRandomMapGenerator::drawProgress(float progress) const
+// {
+//     int iProgress = progress * 211;
+//     renderDrawer->renderRectFillColor(216, 225, iProgress, 257-225, Color{255, 0, 0,255});
+// }
