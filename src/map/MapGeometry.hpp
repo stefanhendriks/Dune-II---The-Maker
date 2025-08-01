@@ -7,6 +7,7 @@ class MapGeometry
 public:
     MapGeometry(int mapWidth, int mapHeight);
     ~MapGeometry() = default;
+    void resize(int mapWidth, int mapHeight);
 
     int getCellX(int c) const;
     int getCellY(int c) const;
