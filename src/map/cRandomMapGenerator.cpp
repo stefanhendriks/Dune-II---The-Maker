@@ -14,10 +14,10 @@ cRandomMapGenerator::cRandomMapGenerator()
 {
 }
 
-void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry)
+void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry)
 {
     // create random map
-    global_map.init(128, 128);
+    global_map.init(width, height);
     auto mapEditor = cMapEditor(global_map);
 
     int a_spice = RNG::rnd((startingPoints * 8)) + (startingPoints * 12);
@@ -37,8 +37,9 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     int iFails = 0;
 
     //s_PreviewMap &randomMapEntry = PreviewMap[0];
-    randomMapEntry.width = 128;
-    randomMapEntry.height = 128;
+    
+    randomMapEntry.width = width;
+    randomMapEntry.height = height;
     memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
 
     int iDistance = 16;
