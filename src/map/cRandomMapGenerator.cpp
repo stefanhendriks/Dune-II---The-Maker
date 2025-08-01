@@ -150,7 +150,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
     // blit on screen
     // progress += 25;
     //drawProgress(progress);
-    renderDrawer->FillWithColor(randomMapEntry.terrain, Color{0,0,0,255});
+    renderDrawer->FillWithColor(randomMapEntry.terrain, Color::black());
 
     // now put in previewmap 0
     for (int x = 0; x < global_map.getWidth(); x++)
@@ -179,7 +179,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
                     int sy = global_map.getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
-                        iColor = Color{255, 255, 255,255};
+                        iColor = Color::white();
                 }
             }
 
