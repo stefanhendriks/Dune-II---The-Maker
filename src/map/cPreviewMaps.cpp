@@ -223,11 +223,16 @@ void cPreviewMaps::initPreviews()
         previewMap.iStartCell[3] = -1;
         previewMap.iStartCell[4] = -1;
     }
+    initRandomMap();
+}
 
-    int maxCells = 128 * 128;
+
+void cPreviewMaps::initRandomMap()
+{
     s_PreviewMap &firstSkirmishMap = PreviewMap[0];
-
-    firstSkirmishMap.terrainType = std::vector<int>(maxCells, -1);
     firstSkirmishMap.name = "Random map";
-    firstSkirmishMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+    firstSkirmishMap.validMap = false;
+    // int maxCells = -1;
+    // firstSkirmishMap.terrainType = std::vector<int>(1, -1);
+    // firstSkirmishMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
 }
