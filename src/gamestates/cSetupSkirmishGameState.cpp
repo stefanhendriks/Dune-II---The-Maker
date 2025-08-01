@@ -1072,9 +1072,17 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 
 void cSetupSkirmishGameState::generateRandomMap()
 {
-    randomMapGenerator.generateRandomMap(iStartingPoints, m_previewMaps->getMap(0) );
+    auto &randomMap = m_previewMaps->getMap(0);
+    int randomMapWidth = 128;
+    int randomMapHeight = 128;
+    int maxCells = randomMapWidth * randomMapHeight;
+    randomMap.terrainType = std::vector<int>(maxCells, -1);
+    if (randomMap.terrain == nullptr)
+        randomMap.terrain = SDL_CreateRGBSurface(0,randomMapWidth, randomMapHeight,32,0,0,0,255);
+    randomMapGenerator->generateRandomMap(randomMapWidth,randomMapHeight, iStartingPoints, randomMap);
     // @mira do better than (global_map.getWidth() * global_map.getHeight() > 64 * 64)
     spawnWorms = (global_map.getWidth() * global_map.getHeight() > 64 * 64) ? 4 : 2;
+    randomMap.validMap = true;
 }
 
 void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
