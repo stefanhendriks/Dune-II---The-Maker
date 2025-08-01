@@ -15,6 +15,13 @@ MapGeometry::MapGeometry(int _mapWidth, int _mapHeight)
 {
 }
 
+void MapGeometry::resize(int _mapWidth, int _mapHeight)
+{
+    mapWidth = _mapWidth;
+    mapHeight = _mapHeight;
+    maxCells = mapWidth * mapHeight;
+}
+
 int MapGeometry::getCellX(int c) const
 {
     assert(c > -1 && c < maxCells);
