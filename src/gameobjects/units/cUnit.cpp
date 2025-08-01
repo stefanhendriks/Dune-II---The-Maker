@@ -20,6 +20,7 @@
 #include "gameobjects/structures/cStarPort.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
+#include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
@@ -328,7 +329,7 @@ void cUnit::createExplosionParticle()
                     game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
                 // calculate cell and damage stuff around this
-                int cll = global_map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
+                int cll = global_map.getGeometry()->getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
 
                 if (cll < 0 || cll == iCell)
                     continue; // do not do own cell
@@ -2196,7 +2197,7 @@ void cUnit::think_attack()
                 iAttackUnit = -1;
                 iAttackStructure = -1;
                 setAction(eActionType::MOVE);
-                setGoalCell(global_map.getCellWithMapDimensions(rx, ry));
+                setGoalCell(global_map.getGeometry()->getCellWithMapDimensions(rx, ry));
             }
         }
         else {
@@ -2369,7 +2370,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
                     dy -= inaccuracy;
                     dy += RNG::rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
-                    shootCell = global_map.getCellWithMapDimensions(dx, dy);
+                    shootCell = global_map.getGeometry()->getCellWithMapDimensions(dx, dy);
                 }
             }
 
@@ -4161,7 +4162,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = global_map.getCellWithMapBorders(cx, cy);
+                int cll = global_map.getGeometry()->getCellWithMapBorders(cx, cy);
 
                 // skip invalid cells
                 if (cll < 0)
@@ -4530,7 +4531,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
         for (int iSX = iStartX; iSX < iEndX; iSX++)
             for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
-                int cll = global_map.getCellWithMapDimensions(iSX, iSY);
+                int cll = global_map.getGeometry()->getCellWithMapDimensions(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
@@ -4709,7 +4710,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cll = global_map.getCellWithMapBorders(x, y);
+            int cll = global_map.getGeometry()->getCellWithMapBorders(x, y);
 
             if (cll > -1 && !global_map.occupied(cll)) {
                 iClls[foundCoordinates] = cll;

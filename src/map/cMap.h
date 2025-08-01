@@ -54,7 +54,7 @@ public:
      * @param y
      * @return
      */
-    int getCellWithMapDimensions(int x, int y);
+    // int getCellWithMapDimensions(int x, int y);
 
     /**
     * Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return
@@ -64,7 +64,7 @@ public:
     * @param y
     * @return
     */
-    int getCellWithMapBorders(int x, int y);
+    // int getCellWithMapBorders(int x, int y);
 
     int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance);
 
