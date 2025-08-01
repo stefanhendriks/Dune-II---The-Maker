@@ -14,7 +14,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
-
+#include "map/MapGeometry.hpp"
 
 #include <cassert>
 
@@ -315,7 +315,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                             // change cell
                             cPoint::split(x, y) = global_map.fixCoordinatesToBeWithinMap(x, y);
 
-                            iCll = global_map.makeCell(x, y);
+                            iCll = global_map.getGeometry()->makeCell(x, y);
                         }
                     }
                     item->stopBuilding();

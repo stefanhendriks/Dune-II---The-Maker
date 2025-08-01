@@ -5,7 +5,7 @@
 #include "controls/cGameControlsContext.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
-
+#include "map/MapGeometry.hpp"
 #include <algorithm>
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
@@ -136,7 +136,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 return false;
             }
 
-            int iCll = global_map.makeCell(cellX, cellY);
+            int iCll = global_map.getGeometry()->makeCell(cellX, cellY);
 
             // occupied by units or structures
             int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCll);

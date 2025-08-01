@@ -19,6 +19,7 @@
 #include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
+#include "map/MapGeometry.hpp"
 #include "mentat/AbstractMentat.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
@@ -1040,7 +1041,7 @@ void INI_Load_seed(int seed)
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
-            int iCell = global_map.makeCell(mapX, mapY);
+            int iCell = global_map.getGeometry()->makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -1524,7 +1525,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = global_map.makeCell(iCellX, iCellY);
+                d2tm_cell = global_map.getGeometry()->makeCell(iCellX, iCellY);
                 blooms[iBloomID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -1577,7 +1578,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = global_map.makeCell(iCellX, iCellY);
+                d2tm_cell = global_map.getGeometry()->makeCell(iCellX, iCellY);
                 fields[iFieldID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 

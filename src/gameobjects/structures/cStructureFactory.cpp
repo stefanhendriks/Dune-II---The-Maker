@@ -21,6 +21,7 @@
 #include "d2tmc.h"
 #include "data/gfxdata.h"
 #include "map/cMapEditor.h"
+#include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
@@ -278,7 +279,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
     for (int x = iCellX; x < iCellXMax; x++) {
         for (int y = iCellY; y < iCellYMax; y++) {
-            global_map.clearShroud(global_map.makeCell(x, y), iSight, iPlayer);
+            global_map.clearShroud(global_map.getGeometry()->makeCell(x, y), iSight, iPlayer);
         }
     }
 }
