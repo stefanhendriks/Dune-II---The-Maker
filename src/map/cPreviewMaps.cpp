@@ -63,17 +63,32 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
+    previewMap.terrain = nullptr;
     for (int i = 0; i < 5; i++) {
         previewMap.iStartCell[i] = -1;
-        previewMap.terrain = nullptr;
     }
 
-    for (int i = 0; i < MAX_SKIRMISHMAP_PLAYERS; i++) {
-        if (!section.hasValue("StartCell", i)) continue;
-
-        const std::string &string = section.getStringValue("StartCell", i);
+    // extract StartCell values
+    std::vector<int> numbers;
+    std::stringstream ss(section.getStringValue("StartCell"));
+    std::string segment;
+    while(std::getline(ss, segment, ',')) {
         try {
-            int startCell = std::stoi(string);
+            numbers.push_back(std::stoi(segment));
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Could not convert (invalid argument): " << segment << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Could not convert (out of bounds): " << segment << std::endl;
+        }
+    }
+    for (int i = 0; i < std::min(static_cast<int>(numbers.size()), MAX_SKIRMISHMAP_PLAYERS); i++) {
+
+        // if (!section.hasValue("StartCell", i)) continue;
+// 
+        // const std::string &string = section.getStringValue("StartCell", i);
+        try {
+            // int startCell = std::stoi(string);
+            int startCell = numbers[i];
             if (startCell < 0 || startCell >= maxCells) {
                 previewMap.validMap = false;
                 if (m_debugMode) {
@@ -87,7 +102,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         catch (std::invalid_argument const &e) {
             // could not perform conversion
             if (m_debugMode) {
-                std::cerr << "Could not convert startCell [" << string << "] to an int. Reason:" << e.what() << "\n";
+                std::cerr << "Could not convert startCell [" << numbers[i] << "] to an int. Reason:" << e.what() << "\n";
             }
         }
     }
