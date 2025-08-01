@@ -22,6 +22,7 @@
 #include "player/cPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "utils/RNG.hpp"
+#include "map/MapGeometry.hpp"
 #include <format>
 
 #include <algorithm>
@@ -35,6 +36,7 @@ cMap::cMap()
     m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
+    mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
 }
 
@@ -50,6 +52,11 @@ cMap::~cMap()
         // clear pointer
         structure[i] = nullptr;
     }
+}
+
+MapGeometry *cMap::getGeometry() const
+{
+    return mapGeometry.get();
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
@@ -98,6 +105,7 @@ void cMap::init(int width, int height)
 
     this->width = width;
     this->height = height;
+    mapGeometry->resize(this->width,this->height);
 }
 
 void cMap::smudge_increase(int iType, int iCell)

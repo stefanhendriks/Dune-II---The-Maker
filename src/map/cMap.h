@@ -26,6 +26,8 @@
 #define TILESIZE_HEIGHT_PIXELS 32
 
 class cReinforcements;
+class MapGeometry;
+
 class cMap : public cScenarioObserver {
 
 public:
@@ -561,10 +563,14 @@ public:
     cPoint getAbsolutePositionFromCell(int cell);
 
     void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
+
+    MapGeometry *getGeometry() const;
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
     std::vector<tCell> cell;
+
+    std::unique_ptr<MapGeometry> mapGeometry;
 
     // Spice Blooms related
     bool m_bAutoSpawnSpiceBlooms;
