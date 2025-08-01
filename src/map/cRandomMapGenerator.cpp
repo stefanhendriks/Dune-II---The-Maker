@@ -37,7 +37,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     int iFails = 0;
 
     //s_PreviewMap &randomMapEntry = PreviewMap[0];
-    
+
     randomMapEntry.width = width;
     randomMapEntry.height = height;
     memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
