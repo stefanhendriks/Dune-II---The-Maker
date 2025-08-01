@@ -1,7 +1,8 @@
 #include "cPreviewMaps.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-#include "map/cMap.h"
+//#include "map/cMap.h"
+#include "map/MapGeometry.hpp"
 #include "include/d2tmc.h"
 #include "include/Texture.hpp"
 #include <filesystem>
@@ -93,8 +94,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     previewMap.width = maxWidth + 2;
     previewMap.height = maxHeight + 2;
 
-    cMap map;
-    map.init(previewMap.width , previewMap.height);
+    // cMap map;
+    // map.init(previewMap.width , previewMap.height);
+    MapGeometry mapGeom(previewMap.width , previewMap.height);
+
 
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
@@ -106,7 +109,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
         for (int iX = 0; iX < maxWidth; iX++) {
-            int iCll = map.makeCell((iX + 1), (iY + 1));
+            int iCll = mapGeom.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
             Color iColor = Color::white(); //Color{255,255,255,255};
@@ -160,8 +163,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     for (int i = 0; i < 5; i++) {
         int startCell = previewMap.iStartCell[i];
         if (startCell > -1) {
-            int x = map.getCellX(startCell);
-            int y = map.getCellY(startCell);
+            int x = mapGeom.getCellX(startCell);
+            int y = mapGeom.getCellY(startCell);
             renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
         }
     }

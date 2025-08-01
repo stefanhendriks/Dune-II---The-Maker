@@ -903,21 +903,21 @@ int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
     return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
 }
 
-int cMap::makeCell(int x, int y) //rip
-{
-    assert(x > -1 && "makeCell x must be > -1");
-    assert(x < width && "makeCell x must be < width"); // should never be higher!
-    assert(y > -1 && "makeCell y must be > -1");
-    assert(y < height && "makeCell y must be < height");
+// int cMap::makeCell(int x, int y) //rip
+// {
+//     assert(x > -1 && "makeCell x must be > -1");
+//     assert(x < width && "makeCell x must be < width"); // should never be higher!
+//     assert(y > -1 && "makeCell y must be > -1");
+//     assert(y < height && "makeCell y must be < height");
 
-    // create cell
-    int result = getCellWithMapDimensions(x, y);
+//     // create cell
+//     int result = getCellWithMapDimensions(x, y);
 
-    assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
-    assert(result > -1); // may never be < 0
+//     assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
+//     assert(result > -1); // may never be < 0
 
-    return result;
-}
+//     return result;
+// }
 
 double cMap::distance(int cell1, int cell2) //rip
 {

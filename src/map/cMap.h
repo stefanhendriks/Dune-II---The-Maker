@@ -88,7 +88,7 @@ public:
         Use <b>getCellWithMapBorders</b> if you want a safe way to get a cell within the <i>playable</i> map boundaries.
         Use <b>getCellWithMapDimensions</b> if you want a safe way to get a cell within the <i>maximum</i> map boundaries.
     **/
-    int makeCell(int x, int y);
+    // int makeCell(int x, int y);
 
     int getAbsoluteXPositionFromCell(int cell);
 

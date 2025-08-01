@@ -27,6 +27,7 @@ enum eMinimapStatus {
 class cMiniMapDrawer {
 public:
     cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
+    //cMiniMapDrawer() = delete;
     ~cMiniMapDrawer();
 
     void draw();
@@ -63,6 +64,7 @@ private:
 
     bool m_isMouseOver;
 
+    //@mira : where is map ? Where is this initialisation ?
     cMap *map;	// the minimap drawer reads data from here
     cPlayer *player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
     cMapCamera *mapCamera;

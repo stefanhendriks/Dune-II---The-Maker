@@ -49,6 +49,7 @@
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 #include "map/cPreviewMaps.h"
+#include "map/MapGeometry.hpp"
 #include "utils/Color.hpp"
 
 #include "utils/cFileValidator.h"
@@ -1504,7 +1505,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = global_map.makeCell(posX, posY);
+            deployCell = global_map.getGeometry()->makeCell(posX, posY);
         }
 
 

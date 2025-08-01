@@ -4,6 +4,7 @@
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
+#include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
@@ -114,7 +115,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     continue;
                 }
 
-                int iCll = global_map.makeCell(cellX, cellY);
+                int iCll = global_map.getGeometry()->makeCell(cellX, cellY);
 
                 if (!global_map.isCellPassable(iCll) || global_map.getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = game.getColorPlaceBad();
