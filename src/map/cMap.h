@@ -47,25 +47,6 @@ public:
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
 
-    /**
-     * Returns cell , taking given map width/height into account. This includes the invisible border around the map.
-     * If you want to take the invisible border into account use getCellWithMapBorders instead.
-     * @param x
-     * @param y
-     * @return
-     */
-    // int getCellWithMapDimensions(int x, int y);
-
-    /**
-    * Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return
-    * -1. If you want to include the invisible map borders, use getCellWithMapDimensions instead.
-    *
-    * @param x
-    * @param y
-    * @return
-    */
-    // int getCellWithMapBorders(int x, int y);
-
     int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance);
 
     /**
