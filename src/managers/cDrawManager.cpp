@@ -209,6 +209,7 @@ void cDrawManager::drawCombatMouse()
     drawMouse();
 
     cGameControlsContext *context = m_player->getGameControlsContext();
+    //context->isMouseRightButtonPressed()
     if (context->shouldDrawToolTip()) {
         m_mouseDrawer.drawToolTip();
     }

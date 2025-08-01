@@ -19,7 +19,7 @@
 #include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
-#include "mentat/cAbstractMentat.h"
+#include "mentat/AbstractMentat.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
@@ -54,7 +54,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
 
 int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed);
 
-void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, int wordtype, char *linefeed);
+void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed);
 
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
@@ -1261,7 +1261,7 @@ std::string INI_GetScenarioFileName(int iHouse, int iRegion)
 }
 
 
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinforcements *reinforcements)
+void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
 {
     game.m_skirmish = false;
     game.missionInit();
@@ -1419,7 +1419,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinf
     map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
-void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, int wordtype, char *linefeed)
+void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed)
 {
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
@@ -2020,7 +2020,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
     players[AI_WORM].setTeam(2); // the WORM player is nobody's ally, ever
 }
 
-void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat)
+void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
 {
     logbook("[BRIEFING] Opening file");
 

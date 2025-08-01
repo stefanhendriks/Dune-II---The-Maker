@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "cMouseToolTip.h"
+#include "MouseToolTip.h"
 
 #include <cassert>
 
