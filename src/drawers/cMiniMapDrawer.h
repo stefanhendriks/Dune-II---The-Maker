@@ -26,8 +26,8 @@ enum eMinimapStatus {
 
 class cMiniMapDrawer {
 public:
-    cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
-    //cMiniMapDrawer() = delete;
+    explicit cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
+    cMiniMapDrawer() = delete;
     ~cMiniMapDrawer();
 
     void draw();
