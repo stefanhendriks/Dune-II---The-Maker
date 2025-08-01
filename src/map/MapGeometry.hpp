@@ -11,7 +11,16 @@ public:
 
     int getCellX(int c) const;
     int getCellY(int c) const;
+    /**
+        Returns cell , taking given map width/height into account. This includes the invisible border around the map.
+        If you want to take the invisible border into account use getCellWithMapBorders instead.
+    **/
     int getCellWithMapDimensions(int x, int y) const;
+    /**
+        Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return -1
+        If you want to include the invisible map borders, use getCellWithMapDimensions instead.
+    **/
+    int getCellWithMapBorders(int x, int y) const;
     /**
         Return a cell from an X,Y coordinate.
 
@@ -33,7 +42,6 @@ public:
     bool isWithinBoundaries(int c) const;
     // ...
     double distance(int cell1, int cell2) const;
-    int getCellWithMapBorders(int x, int y) const;
 
     int getMaxCells() const { return maxCells; }
 

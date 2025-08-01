@@ -292,7 +292,7 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure()
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cell = global_map.getCellWithMapBorders(x, y);
+            int cell = global_map.getGeometry()->getCellWithMapBorders(x, y);
             if (cell > -1) {
                 cells.push_back(cell);
             }
@@ -318,7 +318,7 @@ std::vector<int> cAbstractStructure::getCellsOfStructure()
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cell = global_map.getCellWithMapBorders(x, y);
+            int cell = global_map.getGeometry()->getCellWithMapBorders(x, y);
             if (cell > -1) {
                 cells.push_back(cell);
             }

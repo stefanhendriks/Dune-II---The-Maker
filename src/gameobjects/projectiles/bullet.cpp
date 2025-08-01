@@ -18,6 +18,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
+#include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
@@ -284,7 +285,7 @@ void cBullet::arrivedAtDestinationLogic()
     float maxDistanceFromCenter = halfExplosionSize + 0.5f;
     for (int sx = startX; sx < endX; sx++) {
         for (int sy = startY; sy < endY; sy++) {
-            int cellToDamage = global_map.getCellWithMapBorders(sx, sy);
+            int cellToDamage = global_map.getGeometry()->getCellWithMapBorders(sx, sy);
             if (cellToDamage < 0) continue;
 
             float actualDistance = ABS_length(sx, sy, x, y);

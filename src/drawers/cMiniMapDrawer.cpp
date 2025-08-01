@@ -301,7 +301,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     mouseMiniMapY /= factorZoom;
     auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
-    return map->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
+    return map->getGeometry()->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
 
 // TODO: Respond to game events instead of using the "think" function (tell, don't ask)

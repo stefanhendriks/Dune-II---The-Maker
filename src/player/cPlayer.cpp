@@ -12,6 +12,7 @@
 #include "utils/Graphics.hpp"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
+#include "map/MapGeometry.hpp"
 #include <SDL2/SDL.h>
 #include <format>
 #include <iostream>
@@ -1147,7 +1148,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
 
         // check: from top left to top right
         for (int sx = topLeftX; sx < iEndX; sx++) {
-            int cell = global_map.getCellWithMapBorders(sx, topLeftY);
+            int cell = global_map.getGeometry()->getCellWithMapBorders(sx, topLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1161,7 +1162,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int bottomLeftY = iEndY;
         // check: from bottom left to bottom right
         for (int sx = bottomLeftX; sx < iEndX; sx++) {
-            int cell = global_map.getCellWithMapBorders(sx, bottomLeftY);
+            int cell = global_map.getGeometry()->getCellWithMapBorders(sx, bottomLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1175,7 +1176,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justLeftX = topLeftX;
         int justLeftY = iStartY - (iHeight - 1);
         for (int sy = justLeftY; sy < iEndY; sy++) {
-            int cell = global_map.getCellWithMapBorders(justLeftX, sy);
+            int cell = global_map.getGeometry()->getCellWithMapBorders(justLeftX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1189,7 +1190,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justRightX = iEndX;
         int justRightY = iStartY - (iHeight - 1);
         for (int sy = justRightY; sy < iEndY; sy++) {
-            int cell = global_map.getCellWithMapBorders(justRightX, sy);
+            int cell = global_map.getGeometry()->getCellWithMapBorders(justRightX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1759,7 +1760,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = global_map.getCellWithMapBorders(cx + x, cy + y);
+            int cll = global_map.getGeometry()->getCellWithMapBorders(cx + x, cy + y);
 
             if (!result.badTerrain && !global_map.isValidTerrainForStructureAtCell(cll)) {
                 result.badTerrain = true;
