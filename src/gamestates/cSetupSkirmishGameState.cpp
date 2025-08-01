@@ -78,6 +78,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     iSkirmishMap = -1;
 
     textDrawer = cTextDrawer(bene_font);
+    randomMapGenerator = std::make_unique<cRandomMapGenerator>();
+    generateRandomMap();
 
     mouse = game.getMouse();
 

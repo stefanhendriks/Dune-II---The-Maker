@@ -15,6 +15,7 @@ struct SDL_Surface;
 class cGame;
 class cMouse;
 class cPreviewMaps;
+class cRandomMapGenerator;
 
 struct s_SkirmishPlayer {
     bool bHuman;
@@ -43,6 +44,7 @@ private:
     cTextDrawer textDrawer;
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     std::shared_ptr<cPreviewMaps> m_previewMaps;
+    std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
     cMouse *mouse;
 

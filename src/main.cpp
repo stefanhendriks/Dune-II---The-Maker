@@ -15,7 +15,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
-#include "map/cRandomMapGenerator.h"
+// #include "map/cRandomMapGenerator.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "drawers/SDLDrawer.hpp"
@@ -35,7 +35,7 @@ cGame          				game;
 
 cStructureUtils 			structureUtils;
 cMap           				global_map;
-cRandomMapGenerator 		randomMapGenerator;
+// cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     		*structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
