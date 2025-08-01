@@ -47,25 +47,6 @@ public:
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
 
-    /**
-     * Returns cell , taking given map width/height into account. This includes the invisible border around the map.
-     * If you want to take the invisible border into account use getCellWithMapBorders instead.
-     * @param x
-     * @param y
-     * @return
-     */
-    // int getCellWithMapDimensions(int x, int y);
-
-    /**
-    * Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return
-    * -1. If you want to include the invisible map borders, use getCellWithMapDimensions instead.
-    *
-    * @param x
-    * @param y
-    * @return
-    */
-    // int getCellWithMapBorders(int x, int y);
-
     int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance);
 
     /**
@@ -73,22 +54,6 @@ public:
     and runs the normal distance method to get the distance.
     **/
     double distance(int cell1, int cell2);
-
-    /**
-        Return a cell from an X,Y coordinate.
-
-        Remember that coordinates are 1-64 based. While the array in Map (tCell) is 0-till 4096.
-
-        This means that the coordinate 1,1 is NOT the first row, but it is : 0,0. This also means the
-        MAX at the right is *not* MAP_W_MAX, but it is MAP_W_MAX - 1.
-        (it is 0-63 instead of 1-64).
-
-        This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
-
-        Use <b>getCellWithMapBorders</b> if you want a safe way to get a cell within the <i>playable</i> map boundaries.
-        Use <b>getCellWithMapDimensions</b> if you want a safe way to get a cell within the <i>maximum</i> map boundaries.
-    **/
-    // int makeCell(int x, int y);
 
     int getAbsoluteXPositionFromCell(int cell);
 
