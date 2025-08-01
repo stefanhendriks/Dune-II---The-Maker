@@ -9,6 +9,5 @@ public:
     void generateRandomMap(int startingPoints, s_PreviewMap &randomMapEntry);
 
 private:
-
-    void drawProgress(float progress) const;
+    //void drawProgress(float progress) const;
 };
