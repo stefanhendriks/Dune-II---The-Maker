@@ -25,6 +25,10 @@ void cPreviewMaps::destroy()
             SDL_FreeSurface(previewMap.terrain);
             previewMap.terrain = nullptr;
         }
+        if (previewMap.previewTex) {
+            delete previewMap.previewTex;
+            previewMap.previewTex = nullptr;
+        }
     }
 }
 
@@ -197,14 +201,10 @@ void cPreviewMaps::loadSkirmishMaps()
 // Skirmish map initialization
 void cPreviewMaps::initPreviews()
 {
+    //reset all ressources
+    destroy();
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
-
-        if (previewMap.terrain != nullptr) {
-            SDL_FreeSurface(previewMap.terrain);
-            previewMap.terrain = nullptr;
-        }
-
         // clear out name
         previewMap.name.clear();
 
