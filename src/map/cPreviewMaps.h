@@ -38,7 +38,7 @@ public:
 
 private:
     void loadSkirmish(const std::string &filename);
-
+    void initRandomMap();
     void initPreviews();
 
     s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];
