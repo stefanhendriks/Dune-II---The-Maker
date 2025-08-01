@@ -12,6 +12,20 @@ public:
     int getCellX(int c) const;
     int getCellY(int c) const;
     int getCellWithMapDimensions(int x, int y) const;
+    /**
+        Return a cell from an X,Y coordinate.
+
+        Remember that coordinates are 1-64 based. While the array in Map (tCell) is 0-till 4096.
+
+        This means that the coordinate 1,1 is NOT the first row, but it is : 0,0. This also means the
+        MAX at the right is *not* MAP_W_MAX, but it is MAP_W_MAX - 1.
+        (it is 0-63 instead of 1-64).
+
+        This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
+
+        Use <b>getCellWithMapBorders</b> if you want a safe way to get a cell within the <i>playable</i> map boundaries.
+        Use <b>getCellWithMapDimensions</b> if you want a safe way to get a cell within the <i>maximum</i> map boundaries.
+    **/
     int makeCell(int x, int y) const;
 
     bool isValidCell(int c) const;

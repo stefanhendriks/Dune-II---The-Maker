@@ -713,7 +713,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(iX, 0);
+            cll = mapGeometry->makeCell(iX, 0);
 
             if (global_map.occupied(cll) == false) {
                 iStartCell = cll;
@@ -726,7 +726,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(iX, height - 1);
+            cll = mapGeometry->makeCell(iX, height - 1);
 
             if (global_map.occupied(cll) == false) {
                 iStartCell = cll;
@@ -742,7 +742,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(0, iY);
+            cll = mapGeometry->makeCell(0, iY);
 
             if (global_map.occupied(cll) == false) {
                 iStartCell = cll;
@@ -754,7 +754,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
-            cll = makeCell(width - 1, iY);
+            cll = mapGeometry->makeCell(width - 1, iY);
 
             if (global_map.occupied(cll) == false) {
                 iStartCell = cll;
