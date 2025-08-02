@@ -17,6 +17,8 @@ struct s_PreviewMap {
     int iStartCell[MAX_SKIRMISHMAP_PLAYERS];      // starting locations
     bool validMap = true;           // is this a valid map? (is false, when map can be loaded but has invalid data)
     std::string name;               // name of map
+    std::string author;             // author of map
+    std::string description;        // description of map
     Texture *previewTex = nullptr; // texture for the map preview
 };
 
