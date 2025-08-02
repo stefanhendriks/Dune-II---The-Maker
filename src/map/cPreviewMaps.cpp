@@ -54,6 +54,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     const cSection &section = conf.getSection("SKIRMISH");
     s_PreviewMap &previewMap = PreviewMap[iNew];
     previewMap.name = section.getStringValue("Title");
+    previewMap.author = section.getStringValue("Author");
+    previewMap.description = section.getStringValue("Description");
 
     const cSection &mapSection = conf.getSection("MAP");
     std::vector<std::string> vecmap = mapSection.getData();
