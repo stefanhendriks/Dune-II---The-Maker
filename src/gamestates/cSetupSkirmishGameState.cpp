@@ -164,9 +164,9 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
-    std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
+    // std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
     maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
-    std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
+    // std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
     int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = topBarHeight + 6;
     int startPointHitBoxWidth = 130;
