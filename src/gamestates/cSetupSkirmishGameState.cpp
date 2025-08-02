@@ -119,14 +119,14 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     // this is the box at the right from the Player list
     int topRightBoxWidth = widthOfSidebar;
-    int topRightBoxHeight = playerTitleBarHeight + previewMapHeight;
+    int topRightBoxHeight = playerTitleBarHeight + previewMapHeight+playerTitleBarHeight;
     int topRightBoxX = screen_x - topRightBoxWidth;
     int topRightBoxY = topBarHeight;
     topRightBox = cRectangle(topRightBoxX, topRightBoxY, topRightBoxWidth, topRightBoxHeight);
 
     // player list
     int playerListBarWidth = playerTitleBarWidth;
-    int playerListBarHeight = topRightBoxHeight;
+    int playerListBarHeight = playerTitleBarHeight + previewMapHeight;
     int playerListBarX = 0;
     int playerListBarY = playerTitleBarY + topBarHeight;
     playerList = cRectangle(playerListBarX, playerListBarY, playerListBarWidth, playerListBarHeight);
@@ -134,13 +134,12 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     // map list
 
     // title bar
-    int mapListFrameX = screen_x - topRightBoxWidth;
-    int mapListFrameY = (playerListBarY + playerListBarHeight) - playerTitleBarHeight;
-    int mapListFrameWidth = screen_x - mapListFrameX;
+    int mapListFrameX = 0;
+    int mapListFrameY = playerListBarY + playerListBarHeight;
+    int mapListFrameWidth = screen_x - mapListFrameX-widthOfRightColumn;
     int mapListFrameHeight = topBarHeight;
-
     // rectangle for map list
-    mapListTitle = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
+    mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
 
     // actual list of maps
     int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
