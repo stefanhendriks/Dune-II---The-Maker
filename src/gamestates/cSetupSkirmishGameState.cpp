@@ -142,6 +142,30 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int mapListFrameHeight = topBarHeight;
     // rectangle for map list
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
+    cRectangle previousMaps(mapListFrameX, mapListFrameY, 60, mapListFrameHeight);
+    cRectangle nextMaps(mapListFrameX + playerTitleBarWidth - 50, mapListFrameY, 50, mapListFrameHeight);
+    nextMapButton = GuiButtonBuilder()
+            .withRect(nextMaps)
+            .withLabel("Next")
+            .withTextDrawer(&textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                mapIndexToDisplay+=maxMapsInSelectArea;
+})
+            .build();
+    previousMapButton = GuiButtonBuilder()
+            .withRect(previousMaps)
+            .withLabel("Previous")
+            .withTextDrawer(&textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                mapIndexToDisplay-=maxMapsInSelectArea;
+                if (mapIndexToDisplay < 0) {
+                    mapIndexToDisplay = 0;
+                }})
+            .build();
 
     // preview map
     int previewMapFrameX = screen_x - widthOfSidebar;
@@ -243,6 +267,9 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
 {
     delete backButton;
+    delete startButton;
+    delete nextMapButton;
+    delete previousMapButton;
 }
 
 void cSetupSkirmishGameState::thinkFast()
@@ -342,6 +369,8 @@ void cSetupSkirmishGameState::draw() const
 
     backButton->draw();
     startButton->draw();
+    nextMapButton->draw();
+    previousMapButton->draw();
 
     // MOUSE
     mouse->draw();
@@ -814,6 +843,8 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     backButton->onNotifyMouseEvent(event);
     startButton->onNotifyMouseEvent(event);
+    nextMapButton->onNotifyMouseEvent(event);
+    previousMapButton->onNotifyMouseEvent(event);
 }
 
 void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &)
