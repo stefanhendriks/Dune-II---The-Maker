@@ -251,7 +251,13 @@ void cPreviewMaps::initRandomMap()
     firstSkirmishMap.validMap = false;
     // int maxCells = -1;
     firstSkirmishMap.terrainType = std::vector<int>(1, -1);
+    if (firstSkirmishMap.terrain != nullptr) {
+        SDL_FreeSurface(firstSkirmishMap.terrain);
+    }
     firstSkirmishMap.terrain = nullptr;//SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+    if (firstSkirmishMap.previewTex != nullptr) {
+        delete firstSkirmishMap.previewTex;
+    }
     firstSkirmishMap.previewTex = nullptr;
 }
 
