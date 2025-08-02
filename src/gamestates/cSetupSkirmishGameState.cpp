@@ -158,8 +158,11 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
     int previewMapX = screen_x - widthOfSidebar;
-    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, widthOfRightColumn+50);
+    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, widthOfRightColumn+65);
     previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
+
+    selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
+    std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
 
     int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = topBarHeight + 6;
@@ -266,6 +269,7 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     textDrawer.drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
     renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    renderDrawer->gui_DrawRect(selectArea, Color::red(), Color::green(), Color::blue());
     ///////
     /// DRAW PREVIEW MAP
     //////
@@ -281,7 +285,7 @@ void cSetupSkirmishGameState::draw() const
     drawBlooms(bloomsRect);
 
     drawDetonateBlooms(detonateBloomsRect);
-    drawMapList(mapList);
+    drawMapList(selectArea);
 
     // Header text for players
     textDrawer.drawText(4, 25, "Player      House      Credits       Units    Team");
