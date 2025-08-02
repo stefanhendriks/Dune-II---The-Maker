@@ -78,6 +78,7 @@ private:
     cRectangle mapList;
     cRectangle mapListTitle;
     cRectangle previewMapTitle;
+    cRectangle previewMap;
     cRectangle previewMapRect;
     cRectangle startPointsRect;
     cRectangle wormsRect;
