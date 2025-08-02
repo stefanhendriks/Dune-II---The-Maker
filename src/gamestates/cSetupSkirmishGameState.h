@@ -84,6 +84,7 @@ private:
     cRectangle wormsRect;
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
+    cRectangle selectArea;
 
     GuiButton *backButton;
     GuiButton *startButton;
