@@ -240,11 +240,11 @@ void cSetupSkirmishGameState::thinkFast()
 void cSetupSkirmishGameState::draw() const
 {
     // @Mira rwrite it on Texture
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
+    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
-    for (int dy = 0; dy < game.m_screenH; dy += 4) {
-        renderDrawer->renderRectFillColor(0, dy, screen_x, 2, Color{0, 0, 0,255});
-    }
+    // for (int dy = 0; dy < game.m_screenH; dy += 4) {
+    //     renderDrawer->renderRectFillColor(0, dy, screen_x, 2, Color{0, 0, 0,255});
+    // }
 
     renderDrawer->gui_DrawRect(topBar);
 
