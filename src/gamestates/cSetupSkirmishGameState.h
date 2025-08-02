@@ -47,6 +47,7 @@ private:
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
     cMouse *mouse;
+    mutable int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list
 
     int iSkirmishMap;			// what map is selected
     int spawnWorms;
