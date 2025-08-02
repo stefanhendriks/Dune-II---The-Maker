@@ -48,13 +48,13 @@ private:
 
     cMouse *mouse;
     mutable int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list
+    int maxMapsInSelectArea;    // maximum number of maps that can be displayed in the select area
 
     int iSkirmishMap;			// what map is selected
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
     int iStartingPoints;
-
 
     // Colors
     Color colorDarkishBackground;
@@ -67,6 +67,8 @@ private:
     int previewMapHeight;
     int previewMapWidth;
     int widthOfRightColumn;
+    int mapItemButtonHeight;
+    int mapItemButtonWidth;
 
     // screen
     int screen_x, screen_y;
