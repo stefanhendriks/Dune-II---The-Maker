@@ -99,7 +99,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     previewMapHeight = 129;
     previewMapWidth = 129;
     widthOfRightColumn = 300;
-
+    mapItemButtonHeight = 175;
+    mapItemButtonWidth = 145;
     // Screen
     screen_x = game.m_screenW;
     screen_y = game.m_screenH;
@@ -164,7 +165,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
     std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
-
+    maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
+    std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
     int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = topBarHeight + 6;
     int startPointHitBoxWidth = 130;
@@ -1053,10 +1055,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 {
     int const margin = 5;
-    int const mapItemButtonHeight = 175;
-    int const mapItemButtonWidth = 145;
     int iDrawX = selectArea.getX() + margin;
-    int maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
     mapIndexToDisplay = 0;
     // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
     for (int j = 0; j < maxMapsInSelectArea; j++) {
@@ -1137,8 +1136,6 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
     int const mapItemButtonHeight = 175;
     int const mapItemButtonWidth = 145;
     int iDrawX = mapRect.getX() + margin;
-
-    int maxMapsInSelectArea = mapRect.getWidth() / (mapItemButtonWidth+15);
     mapIndexToDisplay = 0;
     // for every map that we read , draw here
     for (int j = 0; j < maxMapsInSelectArea; j++) {
