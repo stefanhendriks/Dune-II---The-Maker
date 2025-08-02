@@ -146,7 +146,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int previewMapFrameY = playerListBarY + playerListBarHeight;
     int previewMapFrameWidth = widthOfSidebar;
     int previewMapFrameHeight = topBarHeight;
-    previewMap = cRectangle(previewMapFrameX, previewMapFrameY,previewMapFrameWidth, previewMapFrameHeight);
+    previewMapTitle = cRectangle(previewMapFrameX, previewMapFrameY,previewMapFrameWidth, previewMapFrameHeight);
 
     // actual list of maps
     int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
@@ -262,8 +262,8 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     renderDrawer->gui_DrawRect(mapList);
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
-    renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    textDrawer.drawTextCentered("Preview", previewMap.getX(), previewMap.getWidth(), previewMap.getY() + 4, Color::yellow());
+    renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    textDrawer.drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
     ///////
     /// DRAW PREVIEW MAP
     //////
