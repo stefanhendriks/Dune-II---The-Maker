@@ -1229,6 +1229,15 @@ void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             game.setNextStateToTransitionTo(GAME_MENU);
             game.initiateFadingOut();
         }
+        if (event.hasKey(SDL_SCANCODE_LEFT)) {
+            mapIndexToDisplay-=maxMapsInSelectArea;
+            if (mapIndexToDisplay < 0) {
+                mapIndexToDisplay = 0;
+            }
+        }
+        if (event.hasKey(SDL_SCANCODE_RIGHT)) {
+            mapIndexToDisplay+=maxMapsInSelectArea;
+        }
     }
 }
 
