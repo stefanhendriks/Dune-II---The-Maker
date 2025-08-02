@@ -254,3 +254,20 @@ void cPreviewMaps::initRandomMap()
     firstSkirmishMap.terrain = nullptr;//SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
     firstSkirmishMap.previewTex = nullptr;
 }
+
+std::string cPreviewMaps::getMapSize(int i) const {
+    if (i > MAX_SKIRMISHMAPS) {
+        return "Invalid";
+    }
+    int playableCells = (PreviewMap[i].width-2) * (PreviewMap[i].height-2);
+    if (playableCells < 32 *32) {
+        return "SMALL";
+    }
+    if (playableCells < 64 * 64) {
+        return "MEDIUM";
+    }
+    if (playableCells < 128 * 128) {
+        return "LARGE";
+    }
+    return "HUGE";
+}

@@ -38,6 +38,8 @@ public:
         return PreviewMap[i];
     }
 
+    std::string getMapSize(int i) const;
+
 private:
     void loadSkirmish(const std::string &filename);
     void initRandomMap();
