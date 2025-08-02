@@ -136,7 +136,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     // title bar
     int mapListFrameX = 0;
     int mapListFrameY = playerListBarY + playerListBarHeight;
-    int mapListFrameWidth = screen_x - mapListFrameX-widthOfRightColumn;
+    int mapListFrameWidth = (screen_x - mapListFrameX-widthOfRightColumn)/2;
     int mapListFrameHeight = topBarHeight;
     // rectangle for map list
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
@@ -150,18 +150,19 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     // actual list of maps
     int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
-    int mapListWidth = mapListTitle.getWidth();
+    int mapListWidth = mapListFrameWidth;
     int mapListTopX = mapListTitle.getX();
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
 
     mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
 
-    int previewMapY = topBarHeight + 6;
-    int previewMapX = screen_x - (previewMapWidth + 6);
-    previewMapRect = cRectangle(previewMapX, previewMapY, previewMapWidth, previewMapHeight);
+    int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
+    int previewMapX = screen_x - widthOfSidebar;
+    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, widthOfRightColumn+50);
+    previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
 
     int startPointsX = screen_x - widthOfRightColumn;
-    int startPointsY = previewMapY;
+    int startPointsY = topBarHeight + 6;
     int startPointHitBoxWidth = 130;
     int startPointHitBoxHeight = 16;
     startPointsRect = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
@@ -262,8 +263,9 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     renderDrawer->gui_DrawRect(mapList);
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
-    renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     textDrawer.drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
+    renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
     /// DRAW PREVIEW MAP
     //////
