@@ -1205,6 +1205,15 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         textDrawer.drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap.name.c_str());
+        Texture *tex = previewMap.previewTex;
+        if (mapIndexToDisplay+i==0) {
+            // random map, render the 'random map' texture
+            tex = gfxinter->getTexture(BMP_UNKNOWNMAP);
+        } else {
+            tex = previewMap.previewTex;
+        }
+        renderDrawer->renderStrechSprite(tex, cRectangle(0, 0, tex->w, tex->h),
+            cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24));
         i+=1;
 
         // second element on top
@@ -1229,6 +1238,8 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         textDrawer.drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
+        renderDrawer->renderStrechSprite(previewMap2.previewTex, cRectangle(0, 0, previewMap2.previewTex->w, previewMap2.previewTex->h),
+                                           cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24));
         i+=1;
         // next drawX position
         iDrawX += mapItemButtonWidth+15;
