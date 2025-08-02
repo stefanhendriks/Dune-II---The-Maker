@@ -138,7 +138,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     // title bar
     int mapListFrameX = 0;
     int mapListFrameY = playerListBarY + playerListBarHeight;
-    int mapListFrameWidth = (screen_x - mapListFrameX-widthOfRightColumn)/2;
+    // int mapListFrameWidth = (screen_x - mapListFrameX-widthOfRightColumn)/2;
     int mapListFrameHeight = topBarHeight;
     // rectangle for map list
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
@@ -151,12 +151,12 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     previewMapTitle = cRectangle(previewMapFrameX, previewMapFrameY,previewMapFrameWidth, previewMapFrameHeight);
 
     // actual list of maps
-    int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
-    int mapListWidth = mapListFrameWidth;
-    int mapListTopX = mapListTitle.getX();
+    // int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
+    // int mapListWidth = mapListFrameWidth;
+    // int mapListTopX = mapListTitle.getX();
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
 
-    mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
+    // mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
 
     int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
     int previewMapX = screen_x - widthOfSidebar;
@@ -267,7 +267,7 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(topRightBox);
     renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    renderDrawer->gui_DrawRect(mapList);
+    // renderDrawer->gui_DrawRect(mapList);
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
     renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     textDrawer.drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
