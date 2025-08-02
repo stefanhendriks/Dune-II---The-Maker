@@ -91,6 +91,8 @@ private:
 
     GuiButton *backButton;
     GuiButton *startButton;
+    GuiButton *nextMapButton;
+    GuiButton *previousMapButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
