@@ -65,7 +65,7 @@ private:
     int topBarHeight;
     int previewMapHeight;
     int previewMapWidth;
-    int widthOfSomething;
+    int widthOfRightColumn;
 
     // screen
     int screen_x, screen_y;
