@@ -1055,10 +1055,10 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
     int const mapItemButtonHeight = 175;
     int const mapItemButtonWidth = 145;
     int iDrawX = selectArea.getX() + margin;
-    int maxMapsInList = selectArea.getWidth() / (mapItemButtonWidth+15);
+    int maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
     int mapIndexToDisplay = 0;
     // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
-    for (int j = 0; j < maxMapsInList; j++) {
+    for (int j = 0; j < maxMapsInSelectArea; j++) {
         // first element on top
         s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay);
         if (previewMap.name.empty()) continue;
@@ -1137,10 +1137,10 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
     int const mapItemButtonWidth = 145;
     int iDrawX = mapRect.getX() + margin;
 
-    int maxMapsInList = mapRect.getWidth() / (mapItemButtonWidth+15);
+    int maxMapsInSelectArea = mapRect.getWidth() / (mapItemButtonWidth+15);
     int mapIndexToDisplay = 0;
     // for every map that we read , draw here
-    for (int j = 0; j < maxMapsInList; j++) {
+    for (int j = 0; j < maxMapsInSelectArea; j++) {
 
         // first element on top
         s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay);
