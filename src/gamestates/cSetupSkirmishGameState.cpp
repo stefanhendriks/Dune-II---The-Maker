@@ -97,7 +97,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     topBarHeight = 21;
     previewMapHeight = 129;
     previewMapWidth = 129;
-    widthOfSomething = 300; //??
+    widthOfRightColumn = 300;
 
     // Screen
     screen_x = game.m_screenW;
@@ -110,7 +110,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     topBar = cRectangle(-1, -1, topBarWidth, topBarHeight);
 
     // Players title bar
-    int widthOfSidebar = widthOfSomething + 2;
+    int widthOfSidebar = widthOfRightColumn + 2;
     int playerTitleBarWidth = screen_x - widthOfSidebar;
     int playerTitleBarHeight = topBarHeight;
     int playerTitleBarX = 0;
@@ -154,25 +154,25 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int previewMapX = screen_x - (previewMapWidth + 6);
     previewMapRect = cRectangle(previewMapX, previewMapY, previewMapWidth, previewMapHeight);
 
-    int startPointsX = screen_x - widthOfSomething;
+    int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = previewMapY;
     int startPointHitBoxWidth = 130;
     int startPointHitBoxHeight = 16;
     startPointsRect = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
 
-    int wormsX = screen_x - widthOfSomething;
+    int wormsX = screen_x - widthOfRightColumn;
     int wormsY = startPointsY + 32;
     int wormsHitBoxWidth = 130;
     int wormsHitBoxHeight = 16;
     wormsRect = cRectangle(wormsX, wormsY, wormsHitBoxWidth, wormsHitBoxHeight);
 
-    int bloomsX = screen_x - widthOfSomething;
+    int bloomsX = screen_x - widthOfRightColumn;
     int bloomsY = wormsY + 32;
     int bloomsHitBoxWidth = 130;
     int bloomsHitBoxHeight = 16;
     bloomsRect = cRectangle(bloomsX, bloomsY, bloomsHitBoxWidth, bloomsHitBoxHeight);
 
-    int detonateX = screen_x - widthOfSomething;
+    int detonateX = screen_x - widthOfRightColumn;
     int detonateY = bloomsY + 32;
     int detonateHitBoxWidth = 130;
     int detonateHitBoxHeight = 16;
