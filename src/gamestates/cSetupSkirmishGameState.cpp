@@ -475,22 +475,26 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
         }
         else {
             // render the 'random generated skirmish map'
-
-            // when mouse is hovering, draw it, else do not
+            cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
+            cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
-                if (selectedMap.name[0] != '\0') {
-                    if (selectedMap.terrain) {
-                        renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
-                    }
-                }
+                    renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
             }
+            //     if (selectedMap.name[0] != '\0') {
+            //         if (selectedMap.terrain) {
+            //             renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+            //         }
+            //     }
+            // }
             else {
-                if (selectedMap.name[0] != '\0') {
-                    if (selectedMap.terrain) {
-                        renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(), previewMapRect.getY());
-                    }
-                }
+                renderDrawer->renderStrechSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), src, dst);
             }
+            //     if (selectedMap.name[0] != '\0') {
+            //         if (selectedMap.terrain) {
+            //             renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(), previewMapRect.getY());
+            //         }
+            //     }
+            // }
         }
         textDrawer.drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
                             Color::yellow(), std::format("Name: {}", selectedMap.name));
@@ -1155,10 +1159,19 @@ void cSetupSkirmishGameState::generateRandomMap()
     randomMap.terrainType = std::vector<int>(maxCells, -1);
     if (randomMap.terrain == nullptr)
         randomMap.terrain = SDL_CreateRGBSurface(0,randomMapWidth, randomMapHeight,32,0,0,0,255);
+    if (randomMap.previewTex != nullptr) {
+        delete randomMap.previewTex;
+    }
     randomMapGenerator->generateRandomMap(randomMapWidth,randomMapHeight, iStartingPoints, randomMap);
     // @mira do better than (global_map.getWidth() * global_map.getHeight() > 64 * 64)
     spawnWorms = (global_map.getWidth() * global_map.getHeight() > 64 * 64) ? 4 : 2;
     randomMap.validMap = true;
+    SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
+        if (out == nullptr) {
+            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            return;
+        }
+        randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
 }
 
 void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
