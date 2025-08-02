@@ -77,7 +77,7 @@ private:
     cRectangle playerList;
     cRectangle mapList;
     cRectangle mapListTitle;
-    cRectangle previewMap;
+    cRectangle previewMapTitle;
     cRectangle previewMapRect;
     cRectangle startPointsRect;
     cRectangle wormsRect;
