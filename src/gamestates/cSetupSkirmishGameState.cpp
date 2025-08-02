@@ -1051,28 +1051,24 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 {
-    int const topBarHeight = 21;
-    int const margin = 2;
-    int const mapItemButtonHeight = topBarHeight;
-    int const mapItemButtonWidth = mapList.getWidth() - (margin * 2);
-    int const iDrawX = mapList.getX() + margin;
-
-
-    // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight) - 1), MAX_SKIRMISHMAPS);
-
-    // for every map that we read , draw here
-    for (int i = 0; i < maxMapsInList; i++) {
+    int const margin = 5;
+    int const mapItemButtonHeight = 175;
+    int const mapItemButtonWidth = 145;
+    int iDrawX = selectArea.getX() + margin;
+    int maxMapsInList = selectArea.getWidth() / (mapItemButtonWidth+15);
+    int i = 0;
+    // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
+    for (int j = 0; j < maxMapsInList; j++) {
+        // first element on top
         s_PreviewMap &previewMap = m_previewMaps->getMap(i);
         if (previewMap.name.empty()) continue;
 
-        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+        int iDrawY = selectArea.getY() + 5;
 
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         if (bHover && previewMap.validMap) {
             iSkirmishMap = i;
-
             if (i == 0) {
                 generateRandomMap();
             }
@@ -1088,6 +1084,34 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
                 }
             }
         }
+        i+=1;
+
+        // second element on top 
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(i);
+        if (previewMap2.name.empty()) continue;
+
+        iDrawY = selectArea.getY() + mapItemButtonHeight + 15;
+
+        bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        if (bHover && previewMap2.validMap) {
+            iSkirmishMap = i;
+            if (i == 0) {
+                generateRandomMap();
+            }
+            else {
+                if (previewMap.name[0] != '\0') {
+                    iStartingPoints = 0;
+                    // count starting points
+                    for (int s: previewMap.iStartCell) {
+                        if (s > -1) {
+                            iStartingPoints++;
+                        }
+                    }
+                }
+            }
+        }
+        i+=1;
+        iDrawX += mapItemButtonWidth+15;
     }
 }
 
@@ -1106,33 +1130,30 @@ void cSetupSkirmishGameState::generateRandomMap()
     randomMap.validMap = true;
 }
 
-void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
+void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
 {
-    int const margin = 2;
-    int const mapItemButtonHeight = topBarHeight;
-    int const mapItemButtonWidth = mapList.getWidth() - (margin*2);
-    int iDrawX = mapList.getX() + margin;
+    int const margin = 5;
+    int const mapItemButtonHeight = 175;
+    int const mapItemButtonWidth = 145;
+    int iDrawX = mapRect.getX() + margin;
 
-    // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight)-1), MAX_SKIRMISHMAPS);
-
+    int maxMapsInList = mapRect.getWidth() / (mapItemButtonWidth+15);
+    int i = 0;
     // for every map that we read , draw here
-    for (int i = 0; i < maxMapsInList; i++) {
+    for (int j = 0; j < maxMapsInList; j++) {
+
+        // first element on top
         s_PreviewMap &previewMap = m_previewMaps->getMap(i);
         if (previewMap.name.empty()) continue;
-        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
-
+        int iDrawY = mapRect.getY() + 5;
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-
         Color textColor = bHover ? Color::red() : Color::white();
         if (!previewMap.validMap) {
             textColor = colorDisabled;
         }
-
         if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
-
         // selected map, always render as pressed
         if (i == iSkirmishMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
@@ -1141,8 +1162,34 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
             }
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
+        textDrawer.drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap.name.c_str());
+        i+=1;
 
-        textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, previewMap.name.c_str());
+        // second element on top
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(i);
+        if (previewMap2.name.empty()) continue;
+        iDrawY = mapRect.getY() + mapItemButtonHeight + 15;
+
+        bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        textColor = bHover ? Color::red() : Color::white();
+        if (!previewMap2.validMap) {
+            textColor = colorDisabled;
+        }
+        if (bHover && previewMap2.validMap && mouse->isLeftButtonClicked()) {
+            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+        // selected map, always render as pressed
+        if (i == iSkirmishMap) {
+            textColor = bHover ? colorDarkerYellow : Color::yellow();
+            if (!previewMap2.validMap) {
+                textColor = colorDisabled;
+            }
+            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+        textDrawer.drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
+        i+=1;
+        // next drawX position
+        iDrawX += mapItemButtonWidth+15;
     }
 }
 
