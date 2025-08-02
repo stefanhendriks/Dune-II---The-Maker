@@ -19,7 +19,8 @@
 #include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
-#include "mentat/cAbstractMentat.h"
+#include "map/MapGeometry.hpp"
+#include "mentat/AbstractMentat.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
@@ -54,7 +55,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
 
 int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed);
 
-void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, int wordtype, char *linefeed);
+void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed);
 
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
@@ -1036,11 +1037,11 @@ void INI_Load_seed(int seed)
     auto seedMap = seedGenerator.generateSeedMap();
     logbook("Seedmap generated");
 
-    auto mapEditor = cMapEditor(map);
+    auto mapEditor = cMapEditor(global_map);
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
-            int iCell = map.makeCell(mapX, mapY);
+            int iCell = global_map.getGeometry()->makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -1261,7 +1262,7 @@ std::string INI_GetScenarioFileName(int iHouse, int iRegion)
 }
 
 
-void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinforcements *reinforcements)
+void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
 {
     game.m_skirmish = false;
     game.missionInit();
@@ -1292,7 +1293,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinf
     memset(iPl_house, -1, sizeof(iPl_house));
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
-    auto mapEditor = cMapEditor(map);
+    auto mapEditor = cMapEditor(global_map);
 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
@@ -1416,10 +1417,10 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat, cReinf
     }
 
     mapEditor.smoothMap();
-    map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
+    global_map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
-void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, int wordtype, char *linefeed)
+void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed)
 {
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
@@ -1483,7 +1484,7 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
 
 void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed)
 {
-    map.init(64, 64);
+    global_map.init(64, 64);
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
@@ -1524,7 +1525,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = map.makeCell(iCellX, iCellY);
+                d2tm_cell = global_map.getGeometry()->makeCell(iCellX, iCellY);
                 blooms[iBloomID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -1577,7 +1578,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = map.makeCell(iCellX, iCellY);
+                d2tm_cell = global_map.getGeometry()->makeCell(iCellX, iCellY);
                 fields[iFieldID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -2020,7 +2021,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
     players[AI_WORM].setTeam(2); // the WORM player is nobody's ally, ever
 }
 
-void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat)
+void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
 {
     logbook("[BRIEFING] Opening file");
 

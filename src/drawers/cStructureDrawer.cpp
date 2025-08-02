@@ -151,11 +151,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
-            int mouseCellX = map.getCellX(pContext->getMouseCell());
-            int mouseCellY = map.getCellY(pContext->getMouseCell());
+            int mouseCellX = global_map.getCellX(pContext->getMouseCell());
+            int mouseCellY = global_map.getCellY(pContext->getMouseCell());
 
-            int cellX = map.getCellX(structure->getCell());
-            int cellY = map.getCellY(structure->getCell());
+            int cellX = global_map.getCellX(structure->getCell());
+            int cellY = global_map.getCellY(structure->getCell());
 
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
 

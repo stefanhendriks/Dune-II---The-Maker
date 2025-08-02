@@ -4,7 +4,7 @@
 #include "controls/cKeyboardEvent.h"
 #include "definitions.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiButton.h"
+#include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 #include "map/cPreviewMaps.h"
@@ -15,6 +15,7 @@ struct SDL_Surface;
 class cGame;
 class cMouse;
 class cPreviewMaps;
+class cRandomMapGenerator;
 
 struct s_SkirmishPlayer {
     bool bHuman;
@@ -43,6 +44,7 @@ private:
     cTextDrawer textDrawer;
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     std::shared_ptr<cPreviewMaps> m_previewMaps;
+    std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
     cMouse *mouse;
 
@@ -81,8 +83,8 @@ private:
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
 
-    cGuiButton *backButton;
-    cGuiButton *startButton;
+    GuiButton *backButton;
+    GuiButton *startButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
@@ -117,25 +119,20 @@ private:
 
     void generateRandomMap();
 
-    void onMouseLeftButtonClickedAtMapList();
-
-    void onMouseLeftButtonClickedAtStartPoints();
-
     void onMouseRightButtonClicked(const s_MouseEvent &event);
 
+    void onMouseLeftButtonClickedAtStartPoints();
     void onMouseRightButtonClickedAtStartPoints();
 
-    void onMouseLeftButtonClickedAtStartButton();
+    // void onMouseLeftButtonClickedAtStartButton();
 
     void onMouseLeftButtonClickedAtWorms();
-
     void onMouseRightButtonClickedAtWorms();
 
+    void onMouseLeftButtonClickedAtMapList();
     void onMouseLeftButtonClickedAtSpawnBlooms();
-
     void onMouseLeftButtonClickedAtDetonateBlooms();
 
-    void onMouseRightButtonClickedAtPlayerList();
-
     void onMouseLeftButtonClickedAtPlayerList();
+    void onMouseRightButtonClickedAtPlayerList();
 };
