@@ -47,7 +47,7 @@ private:
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
     cMouse *mouse;
-    mutable int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list
+    int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list
     int maxMapsInSelectArea;    // maximum number of maps that can be displayed in the select area
 
     int iSkirmishMap;			// what map is selected

@@ -1056,11 +1056,11 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 {
     int const margin = 5;
     int iDrawX = selectArea.getX() + margin;
-    mapIndexToDisplay = 0;
+    int i = 0;
     // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
     for (int j = 0; j < maxMapsInSelectArea; j++) {
         // first element on top
-        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay);
+        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay+i);
         if (previewMap.name.empty()) continue;
 
         int iDrawY = selectArea.getY() + 5;
@@ -1068,8 +1068,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         if (bHover && previewMap.validMap) {
-            iSkirmishMap = mapIndexToDisplay;
-            if (mapIndexToDisplay == 0) {
+            iSkirmishMap = mapIndexToDisplay+i;
+            if (mapIndexToDisplay+i == 0) {
                 generateRandomMap();
             }
             else {
@@ -1084,18 +1084,18 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
                 }
             }
         }
-        mapIndexToDisplay+=1;
+        i+=1;
 
         // second element on top 
-        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay);
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay+i);
         if (previewMap2.name.empty()) continue;
 
         iDrawY = selectArea.getY() + mapItemButtonHeight + 15;
 
         bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         if (bHover && previewMap2.validMap) {
-            iSkirmishMap = mapIndexToDisplay;
-            if (mapIndexToDisplay == 0) {
+            iSkirmishMap = mapIndexToDisplay+i;
+            if (mapIndexToDisplay+i == 0) {
                 generateRandomMap();
             }
             else {
@@ -1110,7 +1110,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
                 }
             }
         }
-        mapIndexToDisplay+=1;
+        i+=1;
         iDrawX += mapItemButtonWidth+15;
     }
 }
@@ -1136,12 +1136,12 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
     int const mapItemButtonHeight = 175;
     int const mapItemButtonWidth = 145;
     int iDrawX = mapRect.getX() + margin;
-    mapIndexToDisplay = 0;
+    int i = 0;
     // for every map that we read , draw here
     for (int j = 0; j < maxMapsInSelectArea; j++) {
 
         // first element on top
-        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay);
+        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay+i);
         if (previewMap.name.empty()) continue;
         int iDrawY = mapRect.getY() + 5;
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
@@ -1153,7 +1153,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         // selected map, always render as pressed
-        if (mapIndexToDisplay == iSkirmishMap) {
+        if (mapIndexToDisplay+i == iSkirmishMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             if (!previewMap.validMap) {
                 textColor = colorDisabled;
@@ -1161,10 +1161,10 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         textDrawer.drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap.name.c_str());
-        mapIndexToDisplay+=1;
+        i+=1;
 
         // second element on top
-        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay);
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay+i);
         if (previewMap2.name.empty()) continue;
         iDrawY = mapRect.getY() + mapItemButtonHeight + 15;
 
@@ -1177,7 +1177,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         // selected map, always render as pressed
-        if (mapIndexToDisplay == iSkirmishMap) {
+        if (mapIndexToDisplay+i == iSkirmishMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             if (!previewMap2.validMap) {
                 textColor = colorDisabled;
@@ -1185,7 +1185,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         textDrawer.drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
-        mapIndexToDisplay+=1;
+        i+=1;
         // next drawX position
         iDrawX += mapItemButtonWidth+15;
     }
