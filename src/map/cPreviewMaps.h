@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <string>
+#include <array>
 
 class Texture;
 
@@ -14,7 +15,8 @@ struct s_PreviewMap {
     SDL_Surface *terrain = nullptr;      // terrain bitmap (for showing preview at top right)
     int width, height;              // width & height of map
     std::vector<int> terrainType;   // terrainType per cell (for map creation)
-    int iStartCell[MAX_SKIRMISHMAP_PLAYERS];      // starting locations
+    // int iStartCell[MAX_SKIRMISHMAP_PLAYERS];      // starting locations
+    std::array<int, MAX_SKIRMISHMAP_PLAYERS> iStartCell; // starting locations
     bool validMap = true;           // is this a valid map? (is false, when map can be loaded but has invalid data)
     std::string name;               // name of map
     std::string author;             // author of map
