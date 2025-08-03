@@ -10,6 +10,7 @@
 #include "map/cPreviewMaps.h"
 
 #include <memory>
+#include <functional>
 
 struct SDL_Surface;
 class cGame;
@@ -45,6 +46,9 @@ private:
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
+
+    std::function<void()> nextFunction;
+    std::function<void()> previousFunction;
 
     cMouse *mouse;
     int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list

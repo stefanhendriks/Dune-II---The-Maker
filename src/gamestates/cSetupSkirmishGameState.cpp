@@ -74,6 +74,18 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
+    nextFunction = [this]() {
+        // Go to the next map
+        if (mapIndexToDisplay < (m_previewMaps->getMapCount()/maxMapsInSelectArea)+maxMapsInSelectArea) {
+            mapIndexToDisplay += maxMapsInSelectArea;
+        }
+    };
+    previousFunction = [this]() {
+        // Go back to the previous map
+        if (mapIndexToDisplay > 0) {
+            mapIndexToDisplay -= maxMapsInSelectArea;
+        }
+    };
     iStartingPoints = 2;
     iSkirmishMap = -1;
     mapIndexToDisplay = 0;
@@ -150,9 +162,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .withTextDrawer(&textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                mapIndexToDisplay+=maxMapsInSelectArea;
-})
+            .onClick(nextFunction)
             .build();
     previousMapButton = GuiButtonBuilder()
             .withRect(previousMaps)
@@ -160,11 +170,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .withTextDrawer(&textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                mapIndexToDisplay-=maxMapsInSelectArea;
-                if (mapIndexToDisplay < 0) {
-                    mapIndexToDisplay = 0;
-                }})
+            .onClick(previousFunction)
             .build();
 
     // preview map
@@ -1285,13 +1291,10 @@ void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             game.initiateFadingOut();
         }
         if (event.hasKey(SDL_SCANCODE_LEFT)) {
-            mapIndexToDisplay-=maxMapsInSelectArea;
-            if (mapIndexToDisplay < 0) {
-                mapIndexToDisplay = 0;
-            }
+            previousFunction();
         }
         if (event.hasKey(SDL_SCANCODE_RIGHT)) {
-            mapIndexToDisplay+=maxMapsInSelectArea;
+            nextFunction();
         }
     }
 }
