@@ -51,7 +51,8 @@ private:
     void initPreviews();
     int numberOfMaps = 0; // number of maps loaded
 
-    s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];
+    // s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];
+    std::array<s_PreviewMap, MAX_SKIRMISHMAPS> PreviewMap;
 
     bool m_debugMode;
 };
