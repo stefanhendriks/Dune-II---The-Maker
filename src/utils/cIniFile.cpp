@@ -26,23 +26,16 @@ cSection::~cSection()
 
 cSection::cSection(const std::string &secName, bool debugMode) : m_debugMode(debugMode), m_sectionName(secName) {}
 
-bool cSection::addValue(const std::string &key, const std::string &value, int id = 0)
+bool cSection::addValue(const std::string &key, const std::string &value)
 {
-    std::string realKey = std::format("{}-{}", key, id);
-    if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
-        // multiple values are allowed in ini files (ie skirmish maps)
-        // so we accept this for now. And don't log anything about this; unless
-        // we are in debug mode
+    if (m_sectionConf.find(key) != m_sectionConf.end()) {
+        // disable multiple values in ini files (to many bug with it)
         if (m_debugMode) {
-            std::cout << "Key " << key << " / " << realKey << " - already exist on section " << m_sectionName
-                      << std::endl;
-            cLogger *logger = cLogger::getInstance();
-            logger->log(LOG_INFO, COMP_GAMERULES, "(cSection)",
+            cLogger::getInstance()->log(LOG_INFO, COMP_GAMERULES, "(cSection)",
                         std::format("Key {} already exist on section {}", key, m_sectionName));
         }
-        return addValue(key, value, ++id);
     }
-    m_sectionConf[realKey] = value;
+    m_sectionConf[key] = value;
     return true;
 }
 
@@ -52,10 +45,9 @@ bool cSection::addData(const std::string &data)
     return true;
 }
 
-bool cSection::hasValue(const std::string &key, int id) const
+bool cSection::hasValue(const std::string &key) const
 {
-    std::string realKey = std::format("{}-{}", key, id);
-    if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
+    if (m_sectionConf.find(key) != m_sectionConf.end()) {
         return true;
     }
     return false;
@@ -69,17 +61,15 @@ bool cSection::hasValue(const std::string &key, int id) const
  * @param key
  * @return
  */
-std::string cSection::getStringValue(const std::string &key, int id) const
+std::string cSection::getStringValue(const std::string &key) const
 {
-    std::string realKey = std::format("{}-{}", key, id);
-    if (m_sectionConf.find(realKey) != m_sectionConf.end()) {
-        return m_sectionConf.at(realKey);
+    if (m_sectionConf.find(key) != m_sectionConf.end()) {
+        return m_sectionConf.at(key);
     }
     else {
         if (m_debugMode) {
-            cLogger *logger = cLogger::getInstance();
-            logger->log(LOG_WARN, COMP_GAMERULES, "(cSection)",
-                        std::format("Key {} ({}) didn't exist on section {}", key, realKey, m_sectionName));
+            cLogger::getInstance()->log(LOG_WARN, COMP_GAMERULES, "(cSection)",
+                        std::format("Key {} didn't exist on section {}", key, m_sectionName));
         }
         return std::string();
     }
@@ -94,38 +84,34 @@ T cSection::FromString(std::string value) const
     return res;
 }
 
-int cSection::getInt(const std::string &key, int id) const
+int cSection::getInt(const std::string &key) const
 {
-    const std::string &value = getStringValue(key, id);
+    const std::string &value = getStringValue(key);
     if (!value.empty()) {
         return FromString<int>(value);
     }
-
     return 0;
 }
 
-bool cSection::getBoolean(const std::string &key, int id) const
+bool cSection::getBoolean(const std::string &key) const
 {
-    std::string value = getStringValue(key, id);
+    std::string value = getStringValue(key);
     if (!value.empty()) {
         std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
             return std::tolower(c);
         });
-
         if (value == "on" || value == "1" || value == "true")
             return true;
     }
-
     return false;
 }
 
-double cSection::getDouble(const std::string &key, int id) const
+double cSection::getDouble(const std::string &key) const
 {
-    const std::string &value = getStringValue(key, id);
+    const std::string &value = getStringValue(key);
     if (!value.empty()) {
         return FromString<double>(value);
     }
-
     return 0;
 }
 

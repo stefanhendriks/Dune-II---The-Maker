@@ -22,6 +22,7 @@
 #include "player/cPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "utils/RNG.hpp"
+#include "map/MapGeometry.hpp"
 #include <format>
 
 #include <algorithm>
@@ -35,6 +36,7 @@ cMap::cMap()
     m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
+    mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
 }
 
@@ -50,6 +52,11 @@ cMap::~cMap()
         // clear pointer
         structure[i] = nullptr;
     }
+}
+
+MapGeometry *cMap::getGeometry() const
+{
+    return mapGeometry.get();
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
@@ -98,6 +105,7 @@ void cMap::init(int width, int height)
 
     this->width = width;
     this->height = height;
+    mapGeometry->resize(this->width,this->height);
 }
 
 void cMap::smudge_increase(int iType, int iCell)
@@ -136,18 +144,18 @@ bool cMap::occupiedByWallOrMountain(int iCell)
 {
     if (iCell < 0 || iCell >= maxCells) return false;
 
-    if (map.getCellType(iCell) == TERRAIN_WALL) return true;
-    if (map.getCellType(iCell) == TERRAIN_MOUNTAIN) return true;
+    if (getCellType(iCell) == TERRAIN_WALL) return true;
+    if (getCellType(iCell) == TERRAIN_MOUNTAIN) return true;
 
     return false;
 }
 
 bool cMap::occupiedInDimension(int iCell, int dimension)
 {
-    if (!map.isValidCell(iCell)) return false;
+    if (!isValidCell(iCell)) return false;
     if (dimension < 0 || dimension >= MAPID_MAX) return false;
 
-    return map.cell[iCell].id[dimension] > -1;
+    return cell[iCell].id[dimension] > -1;
 }
 
 bool cMap::occupiedByUnit(int iCell)
@@ -188,12 +196,12 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType)
 
     if (isWorm) {
         int wormId = getCellIdWormsLayer(iCell);
-        return map.isCellPassableForWorm(iCell) && wormId < 0;
+        return isCellPassableForWorm(iCell) && wormId < 0;
     }
 
-    if (isInfantryUnit && map.isCellPassableForFootUnits(iCell)) return true;
+    if (isInfantryUnit && isCellPassableForFootUnits(iCell)) return true;
 
-    if (!map.isCellPassable(iCell)) return false;
+    if (!isCellPassable(iCell)) return false;
 
     int strucId = getCellIdStructuresLayer(iCell);
     int unitId = getCellIdUnitLayer(iCell);
@@ -217,7 +225,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
     if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
     if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
-    int structureIdOnMap = map.getCellIdStructuresLayer(iCell);
+    int structureIdOnMap = getCellIdStructuresLayer(iCell);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter (for repairment?)
         if (pUnit.iStructureID > -1) {
@@ -236,19 +244,19 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
     bool isInfantryUnit = unitToDeploy.infantry;
 
     if (!isAirbornUnit) {
-        int cellIdOnMap = map.getCellIdUnitLayer(iCell);
+        int cellIdOnMap = getCellIdUnitLayer(iCell);
         if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
             return false; // other unit at cell
         }
     }
 
     // walls block as do mountains
-    if (map.getCellType(iCell) == TERRAIN_WALL) {
+    if (getCellType(iCell) == TERRAIN_WALL) {
         return false;
     }
 
     // mountains only block infantry
-    if (map.getCellType(iCell) == TERRAIN_MOUNTAIN) {
+    if (getCellType(iCell) == TERRAIN_MOUNTAIN) {
         // we can deploy infantry types on mountains, airborn units can fly over
         if (!isInfantryUnit && !isAirbornUnit) {
             return false;
@@ -272,7 +280,7 @@ bool cMap::occupied(int iCll, int iUnitID)
 
     cUnit &pUnit = unit[iUnitID];
 
-    int structureIdOnMap = map.getCellIdStructuresLayer(iCll);
+    int structureIdOnMap = getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter
         if (pUnit.iStructureID > -1) {
@@ -288,19 +296,19 @@ bool cMap::occupied(int iCll, int iUnitID)
 
     // non airborn units can block each other
     if (!pUnit.isAirbornUnit() && !pUnit.isSandworm()) {
-        int cellIdOnMap = map.getCellIdUnitLayer(iCll);
+        int cellIdOnMap = getCellIdUnitLayer(iCll);
         if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
             return true; // other unit at cell
         }
     }
 
     // walls block as do mountains
-    if (map.getCellType(iCll) == TERRAIN_WALL) {
+    if (getCellType(iCll) == TERRAIN_WALL) {
         return true;
     }
 
     // mountains only block infantry
-    if (map.getCellType(iCll) == TERRAIN_MOUNTAIN) {
+    if (getCellType(iCll) == TERRAIN_MOUNTAIN) {
         if (!pUnit.isInfantryUnit() && !pUnit.isAirbornUnit()) {
             return true;
         }
@@ -336,8 +344,8 @@ void cMap::thinkAboutRespawningWorms()
         // spawn one worm, set timer again
         int failures = 0;
         while (failures < 10) {
-            int cell = map.getRandomCell();
-            if (!map.isCellPassableForWorm(cell)) {
+            int cell = getRandomCell();
+            if (!isCellPassableForWorm(cell)) {
                 failures++;
                 continue;
             }
@@ -368,7 +376,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     int totalSpiceBloomsCount = blooms.size();
 
     // When no blooms are detected, we must 'spawn' one
-    int desiredAmountOfSpiceBloomsInMap = isBigMap() ? 6 : 3;
+    // @mira: do better than width*height>64*64
+    int desiredAmountOfSpiceBloomsInMap = (width*height>64*64) ? 6 : 3;
 
     if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
         // randomly create a new spice bloom somewhere on the map
@@ -408,7 +417,7 @@ void cMap::thinkAutoDetonateSpiceBlooms()  // let spice bloom detonate after X a
         m_mBloomTimers[key] -= 1; // decrease timer
         if (m_mBloomTimers[key] < 1) {
             // detonate spice bloom
-            map.detonateSpiceBloom(key);
+            detonateSpiceBloom(key);
         }
     }
 }
@@ -439,17 +448,17 @@ void cMap::clearShroudForAllPlayers(int c, int size)
 
 void cMap::clearShroud(int c, int size, int playerId)
 {
-    if (!map.isWithinBoundaries(c)) return;
+    if (!isWithinBoundaries(c)) return;
 
-    map.setVisibleFor(c, playerId);
+    setVisibleFor(c, playerId);
 
     // go around 360 fDegrees and calculate new stuff.
     for (float dr = 1; dr < size; dr++) {
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = map.getAbsoluteXPositionFromCellCentered(c);
-            int y = map.getAbsoluteYPositionFromCellCentered(c);
+            int x = getAbsoluteXPositionFromCellCentered(c);
+            int y = getAbsoluteYPositionFromCellCentered(c);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -462,10 +471,10 @@ void cMap::clearShroud(int c, int size, int playerId)
 
             if (cl < 0) continue;
 
-            if (!map.isVisible(cl, playerId)) {
-                map.setVisibleFor(cl, playerId);
+            if (!isVisible(cl, playerId)) {
+                setVisibleFor(cl, playerId);
 
-                int structureId = map.getCellIdStructuresLayer(cl);
+                int structureId = getCellIdStructuresLayer(cl);
                 if (structureId > -1) {
                     cAbstractStructure *pStructure = structure[structureId];
                     s_GameEvent event{
@@ -480,7 +489,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                     game.onNotifyGameEvent(event);
                 }
 
-                int unitId = map.getCellIdUnitLayer(cl);
+                int unitId = getCellIdUnitLayer(cl);
                 if (unitId > -1) {
                     cUnit &cUnit = unit[unitId];
                     if (cUnit.isValid()) {
@@ -670,7 +679,7 @@ std::vector<int> cMap::getAllCellsOfType(int cellType)
 
 int cMap::getCellSlowDown(int iCell)
 {
-    int cellType = map.getCellType(iCell);
+    int cellType = getCellType(iCell);
 
     if (cellType == TERRAIN_SAND) return 2;
     if (cellType == TERRAIN_MOUNTAIN) return 5;
@@ -704,9 +713,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(iX, 0);
+            cll = mapGeometry->makeCell(iX, 0);
 
-            if (map.occupied(cll) == false) {
+            if (occupied(cll) == false) {
                 iStartCell = cll;
             }
         }
@@ -717,9 +726,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(iX, height - 1);
+            cll = mapGeometry->makeCell(iX, height - 1);
 
-            if (map.occupied(cll) == false) {
+            if (occupied(cll) == false) {
                 iStartCell = cll;
             }
         }
@@ -733,9 +742,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(0, iY);
+            cll = mapGeometry->makeCell(0, iY);
 
-            if (map.occupied(cll) == false) {
+            if (occupied(cll) == false) {
                 iStartCell = cll;
             }
         }
@@ -745,9 +754,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
-            cll = makeCell(width - 1, iY);
+            cll = mapGeometry->makeCell(width - 1, iY);
 
-            if (map.occupied(cll) == false) {
+            if (occupied(cll) == false) {
                 iStartCell = cll;
             }
         }
@@ -756,7 +765,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     return iStartCell;
 }
 
-double cMap::distance(int x1, int y1, int x2, int y2)
+double cMap::distance(int x1, int y1, int x2, int y2)  //rip
 {
     if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
@@ -765,7 +774,7 @@ double cMap::distance(int x1, int y1, int x2, int y2)
     return sqrt((double) (A + B)); // get C from A and B
 }
 
-int cMap::getCellY(int c)
+int cMap::getCellY(int c) //rip
 {
     if (c < 0 || c >= maxCells) {
         return -1;
@@ -774,7 +783,7 @@ int cMap::getCellY(int c)
     return (c / width);
 }
 
-int cMap::getCellX(int c)
+int cMap::getCellX(int c) //rip
 {
     if (c < 0 || c >= maxCells) {
         return -1;
@@ -872,45 +881,29 @@ int cMap::getCellAbove(int c)
     return cellAbove;
 }
 
-int cMap::getAbsoluteYPositionFromCell(int cell)
+int cMap::getAbsoluteYPositionFromCell(int cell) //rip
 {
     if (cell < 0) return -1;
     return getCellY(cell) * TILESIZE_HEIGHT_PIXELS;
 }
 
-int cMap::getAbsoluteXPositionFromCell(int cell)
+int cMap::getAbsoluteXPositionFromCell(int cell)  //rip
 {
     if (cell < 0) return -1;
     return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
 }
 
-int cMap::getAbsoluteXPositionFromCellCentered(int cell)
+int cMap::getAbsoluteXPositionFromCellCentered(int cell)  //rip
 {
     return getAbsoluteXPositionFromCell(cell) + (TILESIZE_WIDTH_PIXELS / 2);
 }
 
-int cMap::getAbsoluteYPositionFromCellCentered(int cell)
+int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
 {
     return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
 }
 
-int cMap::makeCell(int x, int y)
-{
-    assert(x > -1 && "makeCell x must be > -1");
-    assert(x < width && "makeCell x must be < width"); // should never be higher!
-    assert(y > -1 && "makeCell y must be > -1");
-    assert(y < height && "makeCell y must be < height");
-
-    // create cell
-    int result = getCellWithMapDimensions(x, y);
-
-    assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
-    assert(result > -1); // may never be < 0
-
-    return result;
-}
-
-double cMap::distance(int cell1, int cell2)
+double cMap::distance(int cell1, int cell2) //rip
 {
     int x1 = getCellX(cell1);
     int y1 = getCellY(cell1);
@@ -920,34 +913,7 @@ double cMap::distance(int cell1, int cell2)
     return ABS_length(x1, y1, x2, y2);
 }
 
-int cMap::getCellWithMapBorders(int x, int y)
-{
-    // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
-    int maxHeight = (height - 2); // hence the -2!
-    int maxWidth = (width - 2);
-
-    if (x < 1) return -1;
-    if (y < 1) return -1;
-    if (x > maxWidth) return -1;
-    if (y > maxHeight) return -1;
-
-    return getCellWithMapDimensions(x, y);
-}
-
-int cMap::getCellWithMapDimensions(int x, int y)
-{
-    int mapWidth = width;
-    int mapHeight = height;
-    // (over the) boundaries result in cell -1
-    if (x < 0) return -1;
-    if (x >= mapWidth) return -1;
-    if (y < 0) return -1;
-    if (y >= mapHeight) return -1;
-
-    return (y * mapWidth) + x;
-}
-
-bool cMap::isValidCell(int c) const
+bool cMap::isValidCell(int c) const //rip
 {
     return !(c < 0 || c >= maxCells);
 }
@@ -956,7 +922,7 @@ bool cMap::isValidCell(int c) const
  * Returns a random cell, disregards playable borders
  * @return
  */
-int cMap::getRandomCell()
+int cMap::getRandomCell() //rip
 {
     return RNG::rnd(maxCells);
 }
@@ -975,34 +941,34 @@ void cMap::createCell(int cell, int terrainType, int tile)
     assert(tile < 17);
 
     // Set
-    map.cellChangeType(cell, terrainType);
-    map.cellChangeTile(cell, tile);
-    map.cellChangeCredits(cell, 0);
-    map.cellChangeHealth(cell, 0);
+    cellChangeType(cell, terrainType);
+    cellChangeTile(cell, tile);
+    cellChangeCredits(cell, 0);
+    cellChangeHealth(cell, 0);
 
-    map.cellChangePassable(cell, true);
-    map.cellChangePassableFoot(cell, true);
+    cellChangePassable(cell, true);
+    cellChangePassableFoot(cell, true);
 
-    map.cellChangeSmudgeTile(cell, -1);
-    map.cellChangeSmudgeType(cell, -1);
+    cellChangeSmudgeTile(cell, -1);
+    cellChangeSmudgeType(cell, -1);
 
     if (terrainType == TERRAIN_SPICE) {
-        map.cellChangeCredits(cell, 50 + RNG::rnd(125));
+        cellChangeCredits(cell, 50 + RNG::rnd(125));
     }
     else if (terrainType == TERRAIN_SPICEHILL) {
-        map.cellChangeCredits(cell, 75 + RNG::rnd(150));
+        cellChangeCredits(cell, 75 + RNG::rnd(150));
     }
     else if (terrainType == TERRAIN_MOUNTAIN) {
-        map.cellChangePassable(cell, false);
-        map.cellChangePassableFoot(cell, true);
+        cellChangePassable(cell, false);
+        cellChangePassableFoot(cell, true);
     }
     else if (terrainType == TERRAIN_WALL) {
-        map.cellChangeHealth(cell, 100);
-        map.cellChangePassable(cell, false);
-        map.cellChangePassableFoot(cell, false);
+        cellChangeHealth(cell, 100);
+        cellChangePassable(cell, false);
+        cellChangePassableFoot(cell, false);
     }
     else if (terrainType == TERRAIN_BLOOM) {
-        map.cellChangeCredits(cell, -23);
+        cellChangeCredits(cell, -23);
 
         s_GameEvent event{
             .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED,
@@ -1034,23 +1000,15 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     return isVisible(iCell, playerId);
 }
 
-void cMap::resize(int width, int height)
+int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) //rip
 {
-    maxCells = width * height;
-    this->width = width;
-    this->height = height;
-    cell.resize(maxCells);
-}
-
-int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance)
-{
-    return getCellWithMapBorders(
+    return mapGeometry->getCellWithMapBorders(
                distance + RNG::rnd(width - (distance * 2)),
                distance + RNG::rnd(height - (distance * 2))
            );
 }
 
-bool cMap::isWithinBoundaries(int c)
+bool cMap::isWithinBoundaries(int c) //rip
 {
     return isWithinBoundaries(getCellX(c), getCellY(c));
 }
@@ -1078,23 +1036,23 @@ int cMap::findNearestSpiceBloom(int iCell)
 
     if (iCell < 0) {
         // use cell at center
-        iCell = map.getCellWithMapDimensions(halfWidth, halfHeight);
-        iDistance = map.getWidth();
+        iCell = getGeometry()->getCellWithMapDimensions(halfWidth, halfHeight);
+        iDistance = getWidth();
     }
 
     int cx, cy;
     int closestBloomFoundSoFar = -1;
     int bloomsEvaluated = 0;
 
-    cx = map.getCellX(iCell);
-    cy = map.getCellY(iCell);
+    cx = getCellX(iCell);
+    cy = getCellY(iCell);
 
-    for (int i = 0; i < map.getMaxCells(); i++) {
-        int cellType = map.getCellType(i);
+    for (int i = 0; i < getMaxCells(); i++) {
+        int cellType = getCellType(i);
         if (cellType != TERRAIN_BLOOM) continue;
         bloomsEvaluated++;
 
-        int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
+        int d = ABS_length(cx, cy, getCellX(i), getCellY(i));
 
         if (d < iDistance) {
             closestBloomFoundSoFar = i;
@@ -1117,8 +1075,8 @@ int cMap::findNearestSpiceBloom(int iCell)
     memset(iTargets, -1, sizeof(iTargets));
     int iT = 0;
 
-    for (int i = 0; i < map.getMaxCells(); i++) {
-        int cellType = map.getCellType(i);
+    for (int i = 0; i < getMaxCells(); i++) {
+        int cellType = getCellType(i);
         if (cellType == TERRAIN_BLOOM) {
             iTargets[iT] = i;
             iT++;
@@ -1150,7 +1108,7 @@ bool cMap::isValidTerrainForStructureAtCell(int cll)
  * @param cell
  * @param distance
  */
-int cMap::getRandomCellFrom(int cell, int distance)
+int cMap::getRandomCellFrom(int cell, int distance) //rip
 {
     int startX = getCellX(cell);
     int startY = getCellY(cell);
@@ -1158,7 +1116,7 @@ int cMap::getRandomCellFrom(int cell, int distance)
     int yDir = RNG::rnd(100) < 50 ? -1 : 1;
     int newX = (startX - distance) + (xDir * distance);
     int newY = (startY - distance) + (yDir * distance);
-    return getCellWithMapBorders(newX, newY);
+    return mapGeometry->getCellWithMapBorders(newX, newY);
 }
 
 /**
@@ -1168,13 +1126,13 @@ int cMap::getRandomCellFrom(int cell, int distance)
  * @param distance
  * @return
  */
-int cMap::getRandomCellFromWithRandomDistance(int cell, int distance)
+int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) //rip
 {
     int startX = getCellX(cell);
     int startY = getCellY(cell);
     int newX = (startX - distance) + (RNG::rnd(distance * 2));
     int newY = (startY - distance) + (RNG::rnd(distance * 2));
-    return getCellWithMapBorders(newX, newY);
+    return mapGeometry->getCellWithMapBorders(newX, newY);
 }
 
 /**
@@ -1205,7 +1163,7 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
     // iterate over all cells of structure
     const std::vector<int> &cells = pStructure->getCellsOfStructure();
     for (auto &cll: cells) {
-        if (map.isVisible(cll, iPlayer)) {
+        if (isVisible(cll, iPlayer)) {
             return true;
         }
     }
@@ -1213,7 +1171,7 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
     return false;
 }
 
-bool cMap::isAtMapBoundaries(int cell)
+bool cMap::isAtMapBoundaries(int cell)  //rip
 {
     bool validCell = isValidCell(cell);
     if (!validCell) return false;
@@ -1230,12 +1188,12 @@ bool cMap::isAtMapBoundaries(int cell)
     return false;
 }
 
-cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const
+cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const //rip
 {
     return {std::clamp(x, 1, getWidth() - 2), std::clamp(y, 1, getHeight() - 2)};
 }
 
-cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const
+cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const //rip
 {
     return {std::clamp(x, 0, getWidth() - 1), std::clamp(y, 0, getHeight() - 1)};
 }
@@ -1252,8 +1210,8 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = map.getAbsoluteXPositionFromCellCentered(cell);
-            int y = map.getAbsoluteYPositionFromCellCentered(cell);
+            int x = getAbsoluteXPositionFromCellCentered(cell);
+            int y = getAbsoluteYPositionFromCellCentered(cell);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -1265,9 +1223,9 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
-            if (!map.isWithinBoundaries(cl)) continue;
+            if (!isWithinBoundaries(cl)) continue;
 
-            if (map.canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
+            if (canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
                 return cl;
             }
         }
@@ -1287,8 +1245,8 @@ int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDr
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = map.getAbsoluteXPositionFromCellCentered(cell);
-            int y = map.getAbsoluteYPositionFromCellCentered(cell);
+            int x = getAbsoluteXPositionFromCellCentered(cell);
+            int y = getAbsoluteYPositionFromCellCentered(cell);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -1301,7 +1259,7 @@ int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDr
 
             if (cl < 0) continue;
 
-            if (map.canDeployUnitAtCell(cell, unitIDToDrop)) {
+            if (canDeployUnitAtCell(cell, unitIDToDrop)) {
                 return cell;
             }
         }
@@ -1330,12 +1288,12 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
 
-        long distance = map.distance(cell, pStructure->getCell());
+        long _distance = distance(cell, pStructure->getCell());
 
         // if distance is lower than last found distance, it is the closest for now.
-        if (distance < shortestDistance) {
+        if (_distance < shortestDistance) {
             foundStructureId = i;
-            shortestDistance = distance;
+            shortestDistance = _distance;
         }
     }
 
@@ -1425,12 +1383,12 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
         if (pStructure->getType() != structureType) continue;
         if (pStructure->hasUnitWithin()) continue; // already occupied
 
-        long distance = map.distance(cell, pStructure->getCell());
+        long _distance = distance(cell, pStructure->getCell());
 
         // if distance is lower than last found distance, it is the closest for now.
-        if (distance < shortestDistance) {
+        if (_distance < shortestDistance) {
             foundStructureId = i;
-            shortestDistance = distance;
+            shortestDistance = _distance;
         }
     }
 
@@ -1462,12 +1420,12 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
         if (pStructure->hasUnitWithin()) continue; // already occupied
 
         if (!pStructure->hasUnitHeadingTowards()) {    // no other unit is heading to this structure
-            long distance = map.distance(cell, pStructure->getCell());
+            long _distance = distance(cell, pStructure->getCell());
 
             // if distance is lower than last found distance, it is the closest for now.
-            if (distance < shortestDistance) {
+            if (_distance < shortestDistance) {
                 foundStructureId = i;
-                shortestDistance = distance;
+                shortestDistance = _distance;
             }
         }
     }
@@ -1504,15 +1462,6 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell)
     }
 
     return true;
-}
-
-/**
- * Returns true if map is wider or higher than 64 cells
- * @return
- */
-bool cMap::isBigMap()
-{
-    return getWidth() > 64 || getHeight() > 64;
 }
 
 void cMap::detonateSpiceBloom(int cell)
