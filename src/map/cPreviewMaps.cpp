@@ -66,9 +66,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
     previewMap.terrain = nullptr;
-    for (int i = 0; i < 5; i++) {
-        previewMap.iStartCell[i] = -1;
-    }
+    // for (int i = 0; i < 5; i++) {
+    //     previewMap.iStartCell[i] = -1;
+    // }
+    previewMap.iStartCell.fill(-1); // set all starting cells to -1
 
     // extract StartCell values
     std::vector<int> numbers;
@@ -240,11 +241,12 @@ void cPreviewMaps::initPreviews()
         previewMap.width = 0;
         previewMap.height = 0;
 
-        previewMap.iStartCell[0] = -1;
-        previewMap.iStartCell[1] = -1;
-        previewMap.iStartCell[2] = -1;
-        previewMap.iStartCell[3] = -1;
-        previewMap.iStartCell[4] = -1;
+        previewMap.iStartCell.fill(-1); // set all starting cells to -1
+        // previewMap.iStartCell[0] = -1;
+        // previewMap.iStartCell[1] = -1;
+        // previewMap.iStartCell[2] = -1;
+        // previewMap.iStartCell[3] = -1;
+        // previewMap.iStartCell[4] = -1;
     }
     initRandomMap();
 }

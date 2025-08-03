@@ -40,7 +40,8 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
 
     randomMapEntry.width = width;
     randomMapEntry.height = height;
-    memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
+    // memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
+    randomMapEntry.iStartCell.fill(-1); // set all starting cells to -1
 
     int iDistance = 16;
 
