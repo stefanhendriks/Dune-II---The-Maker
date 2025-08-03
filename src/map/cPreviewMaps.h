@@ -39,11 +39,15 @@ public:
     }
 
     std::string getMapSize(int i) const;
+    int getMapCount() const {
+        return numberOfMaps;
+    }
 
 private:
     void loadSkirmish(const std::string &filename);
     void initRandomMap();
     void initPreviews();
+    int numberOfMaps = 0; // number of maps loaded
 
     s_PreviewMap PreviewMap[MAX_SKIRMISHMAPS];
 

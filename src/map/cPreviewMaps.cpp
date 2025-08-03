@@ -190,6 +190,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
         previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
     }
+    numberOfMaps++;
+    if (m_debugMode) {
+        logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",
+                            previewMap.name, previewMap.width, previewMap.height));
+    }
 }
 
 /*
@@ -202,6 +207,7 @@ Scanning of skirmish maps:
 */
 void cPreviewMaps::loadSkirmishMaps()
 {
+    numberOfMaps = 0; // reset number of maps
     // scans for all ini files
     initPreviews(); // clear all of them
 
