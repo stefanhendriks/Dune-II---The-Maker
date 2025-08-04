@@ -9,9 +9,10 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-#include "gui/actions/cGuiActionToGameState.h"
-#include "gui/cGuiButton.h"
+// #include "gui/actions/cGuiActionToGameState.h"
+#include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -40,8 +41,9 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame)
+cSelectYourNextConquestState::cSelectYourNextConquestState(GameContext*ctx, cGame &theGame) : cGameState(theGame), textDrawer(bene_font)
 {
+    gfxworld = ctx->getGraphicsContext()->gfxworld.get();
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 
@@ -59,19 +61,28 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     isFinishedConqueringRegions = true;
 
     // the quick-way to get to a mission select window
-    const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
+    //const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
+    //const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
-    cTextDrawer textDrawer(bene_font);
     int length = textDrawer.getTextLength("Mission select");
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");
-    cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect,
-            "Mission select", buttonKind);
-    gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-    gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
+    GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+            .withRect(toMissionSelectRect)        
+            .withLabel("Mission select")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .onClick([this]() {
+                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+            .build();   
+    // GuiButton *gui_btn_toMissionSelect = new GuiButton(textDrawer, toMissionSelectRect,
+    //         "Mission select", buttonKind);
+    // gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
+    // gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
+    // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
+    // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
+    //     game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
     m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 

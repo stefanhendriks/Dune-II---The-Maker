@@ -61,13 +61,13 @@ void cGunTurret::think_attack()
 {
     cUnit &unitTarget = unit[iTargetID];
     if (unitTarget.isValid() && !unitTarget.isDead()) {
-        int iCellX = map.getCellX(getCell());
-        int iCellY = map.getCellY(getCell());
+        int iCellX = global_map.getCellX(getCell());
+        int iCellY = global_map.getCellY(getCell());
 
         int unitCell = unitTarget.getCell();
 
-        int iTargetX = map.getCellX(unitCell);
-        int iTargetY = map.getCellY(unitCell);
+        int iTargetX = global_map.getCellX(unitCell);
+        int iTargetY = global_map.getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int facingAngle = faceAngle(d, kTurretFacings); // get the angle
@@ -140,7 +140,7 @@ void cGunTurret::think_fire()
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         TIMER_fire++;
 
-        int iDistance = map.distance(getCell(), unitTarget.getCell());
+        int iDistance = global_map.distance(getCell(), unitTarget.getCell());
 
         if (iDistance > getSight()) {
             iTargetID = -1;
@@ -211,8 +211,8 @@ void cGunTurret::think_guard()
         TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
-        int iCellX = map.getCellX(c);
-        int iCellY = map.getCellY(c);
+        int iCellX = global_map.getCellX(c);
+        int iCellY = global_map.getCellY(c);
 
         int iDistance=9999; // closest distance
 
@@ -236,7 +236,7 @@ void cGunTurret::think_guard()
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
             if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
-            if (!map.isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
+            if (!global_map.isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
 
             if (!canAttackAirUnits()) {
                 if (cUnit.isAirbornUnit()) {
@@ -254,7 +254,7 @@ void cGunTurret::think_guard()
             }
 
             int c1 = cUnit.getCell();
-            int distance = ABS_length(iCellX, iCellY, map.getCellX(c1), map.getCellY(c1));
+            int distance = ABS_length(iCellX, iCellY, global_map.getCellX(c1), global_map.getCellY(c1));
 
             if (distance <= distanceForAttacking) {
                 if (cUnit.isAttackableAirUnit()) {

@@ -4,17 +4,19 @@
 #include "controls/cKeyboardEvent.h"
 #include "definitions.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiButton.h"
+#include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 #include "map/cPreviewMaps.h"
 
 #include <memory>
+#include <functional>
 
 struct SDL_Surface;
 class cGame;
 class cMouse;
 class cPreviewMaps;
+class cRandomMapGenerator;
 
 struct s_SkirmishPlayer {
     bool bHuman;
@@ -43,15 +45,20 @@ private:
     cTextDrawer textDrawer;
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     std::shared_ptr<cPreviewMaps> m_previewMaps;
+    std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
+
+    std::function<void()> nextFunction;
+    std::function<void()> previousFunction;
 
     cMouse *mouse;
+    int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list
+    int maxMapsInSelectArea;    // maximum number of maps that can be displayed in the select area
 
     int iSkirmishMap;			// what map is selected
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
     int iStartingPoints;
-
 
     // Colors
     Color colorDarkishBackground;
@@ -63,7 +70,9 @@ private:
     int topBarHeight;
     int previewMapHeight;
     int previewMapWidth;
-    int widthOfSomething;
+    int widthOfRightColumn;
+    int mapItemButtonHeight;
+    int mapItemButtonWidth;
 
     // screen
     int screen_x, screen_y;
@@ -75,14 +84,19 @@ private:
     cRectangle playerList;
     cRectangle mapList;
     cRectangle mapListTitle;
+    cRectangle previewMapTitle;
+    cRectangle previewMap;
     cRectangle previewMapRect;
     cRectangle startPointsRect;
     cRectangle wormsRect;
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
+    cRectangle selectArea;
 
-    cGuiButton *backButton;
-    cGuiButton *startButton;
+    GuiButton *backButton;
+    GuiButton *startButton;
+    GuiButton *nextMapButton;
+    GuiButton *previousMapButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
@@ -117,25 +131,20 @@ private:
 
     void generateRandomMap();
 
-    void onMouseLeftButtonClickedAtMapList();
-
-    void onMouseLeftButtonClickedAtStartPoints();
-
     void onMouseRightButtonClicked(const s_MouseEvent &event);
 
+    void onMouseLeftButtonClickedAtStartPoints();
     void onMouseRightButtonClickedAtStartPoints();
 
-    void onMouseLeftButtonClickedAtStartButton();
+    // void onMouseLeftButtonClickedAtStartButton();
 
     void onMouseLeftButtonClickedAtWorms();
-
     void onMouseRightButtonClickedAtWorms();
 
+    void onMouseLeftButtonClickedAtMapList();
     void onMouseLeftButtonClickedAtSpawnBlooms();
-
     void onMouseLeftButtonClickedAtDetonateBlooms();
 
-    void onMouseRightButtonClickedAtPlayerList();
-
     void onMouseLeftButtonClickedAtPlayerList();
+    void onMouseRightButtonClickedAtPlayerList();
 };

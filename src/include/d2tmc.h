@@ -57,7 +57,7 @@ extern int		iRest;	// rest value
 // game
 extern cGame		  game;
 
-extern cMap           map;
+extern cMap           global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
@@ -88,5 +88,5 @@ extern TTF_Font *gr_bene_font;
 // DATAFILES
 extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 extern std::shared_ptr<Graphics> gfxinter;		// interface graphics
-extern std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
-extern std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
+// extern std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
+// extern std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
