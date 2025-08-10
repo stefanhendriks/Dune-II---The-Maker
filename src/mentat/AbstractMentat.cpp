@@ -10,22 +10,19 @@
 
   */
 
-#include "cAbstractMentat.h"
-
-#include "cButtonCommand.h"
+#include "AbstractMentat.h"
 #include "d2tmc.h"
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/RNG.hpp"
-#include "gui/cGuiButton.h"
-#include "gui/actions/cGuiActionToGameState.h"
+#include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
 #include <format>
 
-cAbstractMentat::cAbstractMentat(bool canMissionSelect)
+AbstractMentat::AbstractMentat(bool canMissionSelect)
 {
     iMentatSentence = -1;
 
@@ -49,14 +46,10 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
     // the mentat does not *own* the bitmaps
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
-    leftButtonCommand = nullptr;
-    rightButtonCommand = nullptr;
+    leftGuiButton = nullptr;
+    rightGuiButton = nullptr;
 
     textDrawer.setFont(bene_font);
-
-    // the quick-way to get to a mission select window
-    const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
     if (canMissionSelect) {
 
@@ -64,11 +57,16 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
         const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                                 game.m_screenH - textDrawer.getFontHeight(),
                                                 "Mission select");
-        cGuiButton *gui_btn_toMissionSelect = new cGuiButton(textDrawer, toMissionSelectRect, "Mission select",
-                buttonKind);
-        gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-        cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-        gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction(action);
+        
+        GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+            .withRect(toMissionSelectRect)        
+            .withLabel("Mission select")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+            .build();
         m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
     }
     else {
@@ -88,22 +86,18 @@ cAbstractMentat::cAbstractMentat(bool canMissionSelect)
     logbook("cAbstractMentat::cAbstractMentat()");
 }
 
-cAbstractMentat::~cAbstractMentat()
+AbstractMentat::~AbstractMentat()
 {
     delete leftButton;
     delete rightButton;
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
-
-    delete leftButtonCommand;
-    delete rightButtonCommand;
-
     delete m_guiBtnToMissionSelect;
 
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
 
-void cAbstractMentat::think()
+void AbstractMentat::think()
 {
     if (state == INIT) {
         // no thinking for init state
@@ -151,7 +145,7 @@ void cAbstractMentat::think()
     thinkMovie();
 }
 
-void cAbstractMentat::thinkMovie()
+void AbstractMentat::thinkMovie()
 {
     if (gfxmovie != nullptr) {
         TIMER_movie++;
@@ -167,7 +161,7 @@ void cAbstractMentat::thinkMovie()
     }
 }
 
-void cAbstractMentat::thinkEyes()
+void AbstractMentat::thinkEyes()
 {
     if (TIMER_Eyes > 0) {
         TIMER_Eyes--;
@@ -201,7 +195,7 @@ void cAbstractMentat::thinkEyes()
     }
 }
 
-void cAbstractMentat::thinkMouth()  // MOUTH
+void AbstractMentat::thinkMouth()  // MOUTH
 {
     if (TIMER_Mouth > 0) {
         TIMER_Mouth--;
@@ -256,7 +250,7 @@ void cAbstractMentat::thinkMouth()  // MOUTH
 
 }
 
-void cAbstractMentat::draw()
+void AbstractMentat::draw()
 {
     renderDrawer->renderClearToColor(Color{7,7,15,255});
     renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
@@ -286,8 +280,12 @@ void cAbstractMentat::draw()
     }
 
     if (state == AWAITING_RESPONSE) {
-        renderDrawer->renderSprite(leftButtonBmp, leftButton->getX(),leftButton->getY());
-        renderDrawer->renderSprite(rightButtonBmp, rightButton->getX(),rightButton->getY());
+        if (leftGuiButton) {
+            leftGuiButton->draw();
+        }
+        if (rightGuiButton){
+            rightGuiButton->draw();
+        }
     }
 
     if (m_guiBtnToMissionSelect) {
@@ -295,13 +293,13 @@ void cAbstractMentat::draw()
     }
 }
 
-Texture *cAbstractMentat::getBackgroundBitmap() const
+Texture *AbstractMentat::getBackgroundBitmap() const
 {
     if (iBackgroundFrame < 0) return nullptr;
     return gfxmentat->getTexture(iBackgroundFrame);
 }
 
-void cAbstractMentat::draw_movie()
+void AbstractMentat::draw_movie()
 {
     if (gfxmovie == nullptr) return;
     if (iMovieFrame < 0) return;
@@ -313,45 +311,18 @@ void cAbstractMentat::draw_movie()
     renderDrawer->renderStrechSprite(tmp, src, dest);
 }
 
-void cAbstractMentat::interact()
-{
-    if (state == INIT) return;
-    if (state == SPEAKING) {
-        if (game.getMouse()->isLeftButtonClicked()) {
-            if (TIMER_Speaking > 0) {
-                TIMER_Speaking = 1;
-            }
-        }
-        return;
-    }
-    if (state != AWAITING_RESPONSE) return;
-
-    auto m_mouse = game.getMouse();
-    if (m_mouse->isLeftButtonClicked()) {
-        // execute left button logic
-        if (leftButton && leftButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-            leftButtonCommand->execute(*this);
-        }
-
-        // execute right button logic
-        if (rightButton && rightButton->isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-            rightButtonCommand->execute(*this);
-        }
-    }
-}
-
-void cAbstractMentat::initSentences()
+void AbstractMentat::initSentences()
 {
     memset(sentence, 0, sizeof(sentence));
 }
 
-void cAbstractMentat::setSentence(int i, const char *text)
+void AbstractMentat::setSentence(int i, const char *text)
 {
     sprintf(sentence[i], "%s", text);
     logbook(std::format("Sentence[{}]={}", i, text));
 }
 
-void cAbstractMentat::loadScene(const std::string &scene)
+void AbstractMentat::loadScene(const std::string &scene)
 {
     gfxmovie = nullptr;
 
@@ -372,7 +343,7 @@ void cAbstractMentat::loadScene(const std::string &scene)
     logbook(std::format("Failed to load scene [{}]", filename));
 }
 
-void cAbstractMentat::speak()
+void AbstractMentat::speak()
 {
     TIMER_Speaking = 0;
     TIMER_Mouth = 0;
@@ -380,33 +351,47 @@ void cAbstractMentat::speak()
     state = SPEAKING;
 }
 
-void cAbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
+void AbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
 {
     delete leftButton;
     leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
-void cAbstractMentat::buildRightButton(Texture *bmp, int x, int y)
+void AbstractMentat::buildRightButton(Texture *bmp, int x, int y)
 {
     delete rightButton;
     rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
 }
 
-void cAbstractMentat::resetSpeak()
+void AbstractMentat::resetSpeak()
 {
     speak();
 }
 
-void cAbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
+void AbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (state == SPEAKING) {
+        if (event.eventType==MOUSE_LEFT_BUTTON_CLICKED) {
+            if (TIMER_Speaking > 0) {
+                TIMER_Speaking = 1;
+            }
+        }
+    }
+
     if (m_guiBtnToMissionSelect) {
         m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
     }
+    if (leftGuiButton) {
+        leftGuiButton->onNotifyMouseEvent(event);
+    }
+    if (rightGuiButton) {
+        rightGuiButton->onNotifyMouseEvent(event);
+    }
 }
 
-void cAbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void AbstractMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (m_guiBtnToMissionSelect) {
         m_guiBtnToMissionSelect->onNotifyKeyboardEvent(event);

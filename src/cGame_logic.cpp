@@ -31,10 +31,10 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
-#include "mentat/cAtreidesMentat.h"
-#include "mentat/cBeneMentat.h"
-#include "mentat/cHarkonnenMentat.h"
-#include "mentat/cOrdosMentat.h"
+#include "mentat/AtreidesMentat.h"
+#include "mentat/BeneMentat.h"
+#include "mentat/HarkonnenMentat.h"
+#include "mentat/OrdosMentat.h"
 #include "player/cPlayer.h"
 #include "player/brains/cPlayerBrainCampaign.h"
 #include "player/brains/cPlayerBrainSandworm.h"
@@ -536,13 +536,10 @@ void cGame::drawStateCombat()
 }
 
 // drawStateMentat logic + drawing mouth/eyes
-void cGame::drawStateMentat(cAbstractMentat *mentat)
+void cGame::drawStateMentat(AbstractMentat *mentat)
 {
     m_mouse->setTile(MOUSE_NORMAL);
-
     mentat->draw();
-    mentat->interact();
-
     m_mouse->draw();
 }
 
@@ -1336,17 +1333,17 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new cAtreidesMentat(allowMissionSelect);
+        m_mentat = new AtreidesMentat(allowMissionSelect);
     }
     else if (houseIndex == HARKONNEN) {
-        m_mentat = new cHarkonnenMentat(allowMissionSelect);
+        m_mentat = new HarkonnenMentat(allowMissionSelect);
     }
     else if (houseIndex == ORDOS) {
-        m_mentat = new cOrdosMentat(allowMissionSelect);
+        m_mentat = new OrdosMentat(allowMissionSelect);
     }
     else {
         // fallback
-        m_mentat = new cBeneMentat();
+        m_mentat = new BeneMentat();
     }
     prepareMentatForPlayer();
     m_mentat->speak();
@@ -1355,7 +1352,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     delete m_mentat;
-    m_mentat = new cBeneMentat();
+    m_mentat = new BeneMentat();
     m_mentat->setHouse(house);
     // create new drawStateMentat
     if (house == ATREIDES) {
@@ -1633,14 +1630,14 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
         m_currentState->onNotifyMouseEvent(event);
     }
 
-    if (m_state == GAME_BRIEFING ||
-            m_state == GAME_WINBRIEF ||
-            m_state == GAME_LOSEBRIEF
-       ) {
+    // if (m_state == GAME_BRIEFING ||
+    //         m_state == GAME_WINBRIEF ||
+    //         m_state == GAME_LOSEBRIEF
+    //    ) {
         if (m_mentat) {
             m_mentat->onNotifyMouseEvent(event);
         }
-    }
+    // }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
@@ -2188,4 +2185,65 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 void cGame::setMousePosition(int w, int h)
 {
     m_mouse->setCursorPosition(window, w,h);
+}
+
+void cGame::execute(AbstractMentat &mentat)
+{
+    if (game.isState(GAME_BRIEFING)) {
+        // proceed, play mission (it is already loaded before we got here)
+        game.setNextStateToTransitionTo(GAME_PLAYING);
+        drawManager->missionInit();
+
+        // CENTER MOUSE
+        game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
+
+        game.initiateFadingOut();
+
+        game.playMusicByType(MUSIC_PEACE);
+        return;
+    }
+
+    if (game.m_skirmish) {
+        if (game.isState(GAME_WINBRIEF) || game.isState(GAME_LOSEBRIEF)) {
+            // regardless of drawStateWinning or drawStateLosing, always go back to main menu
+            game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
+            game.initSkirmish();
+            game.initiateFadingOut();
+        }
+        else {
+            logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
+        }
+        return;
+    }
+
+    // NOT a skirmish game
+
+    // won mission, transition to region selection (Select your next Conquest)
+    if (game.isState(GAME_WINBRIEF)) {
+        game.setNextStateToTransitionTo(GAME_REGION);
+
+        game.initiateFadingOut();
+        return;
+    }
+
+    // lost mission
+    if (game.isState(GAME_LOSEBRIEF)) {
+        game.missionInit();
+        // lost mission > 1, so we go back to region select
+        if (game.m_mission > 1)   {
+            game.setNextStateToTransitionTo(GAME_REGION);
+
+            game.m_mission--; // we did not win
+        }
+        else {
+            // mission 1 failed, really?..., back to mentat with briefing
+            game.setNextStateToTransitionTo(GAME_BRIEFING);
+            game.prepareMentatForPlayer();
+            game.playMusicByType(MUSIC_BRIEFING);
+            mentat.resetSpeak();
+        }
+
+        game.initiateFadingOut();
+        return;
+    }
 }
