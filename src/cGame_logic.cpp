@@ -539,10 +539,7 @@ void cGame::drawStateCombat()
 void cGame::drawStateMentat(AbstractMentat *mentat)
 {
     m_mouse->setTile(MOUSE_NORMAL);
-
     mentat->draw();
-    // mentat->interact();
-
     m_mouse->draw();
 }
 
