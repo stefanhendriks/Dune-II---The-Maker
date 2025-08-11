@@ -144,7 +144,7 @@ void cTimeManager::waitForCPU()
         SDL_Delay(waitingTime);
     }
     frameCount++;
-    std::cout << std::format("waitingTime: {}", waitingTime) << std::endl;
+    //std::cout << std::format("waitingTime: {}", waitingTime) << std::endl;
 }
 
 void cTimeManager::capFps()
