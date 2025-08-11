@@ -265,3 +265,15 @@ void GuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
 
 }
+
+void GuiButton::setOnEnterAction(std::function<void()> action)
+{
+    m_onEnterAction = std::move(action);
+}
+
+void GuiButton::OnEnter()
+{
+    if (m_onEnterAction) {
+        m_onEnterAction();
+    }
+}
