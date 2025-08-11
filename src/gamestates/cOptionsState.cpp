@@ -7,6 +7,9 @@
 // #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
+#include "gui/GuiLabel.hpp"
+#include "gui/GuiCheckBox.hpp"
+//#include "gui/GuiSlider.hpp"
 #include "context/GameContext.hpp"
 
 
@@ -129,6 +132,62 @@ void cOptionsState::constructWindow(int prevState)
         //     {game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
         m_guiWindow->addGuiObject(gui_btn_toMissionSelect);
     }
+    const cRectangle &musicRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50, buttonHeight);
+    GuiLabel *gui_MusicLabel = GuiLabelBuilder()
+            .withLabel("Music")
+            .withTextDrawer(&m_textDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withRect(musicRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_MusicLabel);
+
+    const cRectangle &musicCheckRect = m_guiWindow->getRelativeRect(5+75, 5+buttonHeight, buttonHeight, buttonHeight);
+    GuiCheckBox *gui_MusicCheckLabel = GuiCheckBoxBuilder()
+            .withRect(musicCheckRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_MusicCheckLabel);
+
+    const cRectangle &musicVolumeRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50+buttonWidth/2, buttonHeight);
+    GuiLabel *gui_MusicVolumeLabel = GuiLabelBuilder()
+            .withLabel("Volume")
+            .withTextDrawer(&m_textDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withRect(musicVolumeRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_MusicVolumeLabel);
+
+    const cRectangle &soundRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50, buttonHeight);
+    GuiLabel *gui_SoundLabel = GuiLabelBuilder()
+            .withLabel("Sound")
+            .withTextDrawer(&m_textDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withRect(soundRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_SoundLabel);
+
+    const cRectangle &soundCheckRect = m_guiWindow->getRelativeRect(5+75, (5+buttonHeight)*2, buttonHeight, buttonHeight);
+    GuiCheckBox *gui_SoundCheckLabel = GuiCheckBoxBuilder()
+            .withRect(soundCheckRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_SoundCheckLabel);
+
+    const cRectangle &soundVolumeRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50+buttonWidth/2, buttonHeight);
+    GuiLabel *gui_SoundVolumeLabel = GuiLabelBuilder()
+            .withLabel("Volume")
+            .withTextDrawer(&m_textDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withRect(soundVolumeRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_SoundVolumeLabel);
+
+    const cRectangle &difficultyRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*3, 50, buttonHeight);
+    GuiLabel *gui_DifficultyLabel = GuiLabelBuilder()
+            .withLabel("Speed")
+            .withTextDrawer(&m_textDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withRect(difficultyRect)
+            .build();
+    m_guiWindow->addGuiObject(gui_DifficultyLabel);
 }
 
 cOptionsState::~cOptionsState()
