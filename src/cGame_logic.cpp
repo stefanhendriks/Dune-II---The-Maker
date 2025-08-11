@@ -1226,7 +1226,7 @@ void cGame::setState(int newState)
                 }
 
                 // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, /*background,*/ m_state);
+                newStatePtr = new cOptionsState(*this, ctx.get(), /*background,*/ m_state);
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
