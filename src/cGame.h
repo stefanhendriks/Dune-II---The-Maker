@@ -236,11 +236,6 @@ public:
     void setMissionLost();
     void setMissionWon();
 
-    // FPS related
-    // bool isRunningAtIdealFps();
-    // int getFps();
-    // int	iRest = 1;
-
     void prepareMentatToTellAboutHouse(int house);
 
     void drawCombatMouse();
@@ -333,8 +328,6 @@ private:
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
 
-    // int m_frameCount, m_fps;            // fps and such
-
     int m_nextState;
 
     // the current game state we are running
@@ -357,7 +350,6 @@ private:
     void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
-    // void handleTimeSlicing();
 
     void initPlayers(bool rememberHouse) const;
 

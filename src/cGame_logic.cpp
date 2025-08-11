@@ -565,14 +565,6 @@ void cGame::loadSkirmishMaps() const
     m_PreviewMaps->loadSkirmishMaps();
 }
 
-
-// void cGame::handleTimeSlicing()
-// {
-//     if (iRest > 0) {
-//         SDL_Delay(iRest);
-//     }
-// }
-
 void cGame::shakeScreenAndBlitBuffer()
 {
     if (m_TIMER_shake == 0) {
@@ -700,9 +692,7 @@ void cGame::run()
             }
         }
         updateMouseAndKeyboardState();
-
         updateGamePlaying();
-        // handleTimeSlicing(); // handle time diff (needs to change!)
 
         renderDrawer->beginDrawingToTexture(actualRenderer);
         renderDrawer->renderClearToColor();
@@ -714,7 +704,6 @@ void cGame::run()
         renderDrawer->renderSprite(actualRenderer,0,0);
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
-        ///m_frameCount++;
     }
 }
 
@@ -861,7 +850,6 @@ bool cGame::setupGame()
 
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
-    /// m_frameCount = 0;
 
     m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
     if (!m_windowed) {
@@ -1627,16 +1615,6 @@ void cGame::setLoseFlags(int value)
     m_loseFlags = value;
 }
 
-// bool cGame::isRunningAtIdealFps()
-// {
-//     return m_fps > IDEAL_FPS;
-// }
-
-// int cGame::getFps()
-// {
-//     return m_fps;
-// }
-
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     // pass through any classes that are interested
@@ -2059,21 +2037,7 @@ void cGame::thinkSlow()
     thinkSlow_state();
 
     m_timeManager->capFps();
-    // m_fps = m_frameCount;
-    // m_frameCount = 0;
-
-    // // 'auto resting' / giving CPU some time for other processes
-    // if (isRunningAtIdealFps()) {
-    //     iRest += 1; // give CPU a bit more slack
-    // }
-    // else {
-    //     if (iRest > 0) iRest -= 1;
-    //     if (iRest < 0) iRest = 0;
-    // }
-
     m_timeManager->adaptWaitingTime();
-
-
 }
 
 void cGame::thinkSlow_state()
