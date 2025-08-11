@@ -156,6 +156,15 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_MusicVolumeLabel);
 
+    const cRectangle &btn_musicVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, 5+buttonHeight, buttonHeight*2, buttonHeight);
+    GuiButton *gui_btn_musicVolumeRect = GuiButtonBuilder()
+            .withRect(btn_musicVolumeRect)
+            .withLabel("5")
+            .withTextDrawer(&m_textDrawer)
+            .withTheme(GuiTheme::Light())
+            .build();
+    m_guiWindow->addGuiObject(gui_btn_musicVolumeRect);
+
     const cRectangle &soundRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50, buttonHeight);
     GuiLabel *gui_SoundLabel = GuiLabelBuilder()
             .withLabel("Sound")
@@ -180,6 +189,15 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_SoundVolumeLabel);
 
+    const cRectangle &btn_soundVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, (5+buttonHeight)*2, buttonHeight*2, buttonHeight);
+    GuiButton *gui_btn_soundVolumeRect = GuiButtonBuilder()
+            .withRect(btn_soundVolumeRect)
+            .withLabel("3")
+            .withTextDrawer(&m_textDrawer)
+            .withTheme(GuiTheme::Light())
+            .build();
+    m_guiWindow->addGuiObject(gui_btn_soundVolumeRect);
+
     const cRectangle &difficultyRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*3, 50, buttonHeight);
     GuiLabel *gui_DifficultyLabel = GuiLabelBuilder()
             .withLabel("Speed")
@@ -188,6 +206,15 @@ void cOptionsState::constructWindow(int prevState)
             .withRect(difficultyRect)
             .build();
     m_guiWindow->addGuiObject(gui_DifficultyLabel);
+
+    const cRectangle &btn_difficultyRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
+    GuiButton *gui_btn_difficultyRect = GuiButtonBuilder()
+            .withRect(btn_difficultyRect)
+            .withLabel("slow")
+            .withTextDrawer(&m_textDrawer)
+            .withTheme(GuiTheme::Light())
+            .build();
+    m_guiWindow->addGuiObject(gui_btn_difficultyRect);
 }
 
 cOptionsState::~cOptionsState()
