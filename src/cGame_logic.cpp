@@ -75,7 +75,6 @@ constexpr auto kMaxAlpha = 255;
 
 cGame::cGame()
 {
-    m_timeManager = std::make_unique<cTimeManager>(this);   
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;
@@ -90,6 +89,15 @@ cGame::cGame()
     context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
+
+    // create GameContext
+    ctx = std::make_unique<GameContext>();
+    // create TimeManager
+    std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(this);
+    //local usage
+    m_timeManager = timeManager.get();
+    //send to GameContext
+    ctx->setTimeManager(std::move(timeManager));
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -861,8 +869,6 @@ bool cGame::setupGame()
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
 
-    // create GameContext
-    ctx = std::make_unique<GameContext>();
     // create ressources from scratch
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
     // share them to all class what use ctx !
