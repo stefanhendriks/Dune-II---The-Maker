@@ -7,14 +7,16 @@
 // #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
+#include "context/GameContext.hpp"
 
 
 
-cOptionsState::cOptionsState(cGame &theGame, int prevState)
+cOptionsState::cOptionsState(cGame &theGame, GameContext *context, int prevState)
     : cGameState(theGame)
     , m_textDrawer(cTextDrawer(bene_font))
     , m_prevState(prevState)
     , m_guiWindow(nullptr)
+    , m_context(context)
 {
     refresh();
 }
