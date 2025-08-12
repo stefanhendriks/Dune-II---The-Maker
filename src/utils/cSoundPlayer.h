@@ -28,6 +28,13 @@ public:
     bool isMusicPlaying() const;
 
     void setMusicVolume(int vol);
+    int getMusicVolume() const {
+        return musicVolume;
+    }
+    void setSoundVolume(int vol);
+    int getSoundVolume() const {
+        return soundVolume;
+    }
     void changeMusicVolume(int delta);
     // think about voices, clear voices, etc.
     void think();
@@ -49,6 +56,7 @@ private:
     // std::vector<int> voices;
     std::unique_ptr<cSoundData> soundData;
     int musicVolume;
+    int soundVolume;
     bool isMusicMuted;
     bool isSoundMuted;
 };
