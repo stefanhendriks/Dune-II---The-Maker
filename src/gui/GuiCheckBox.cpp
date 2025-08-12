@@ -118,8 +118,10 @@ void GuiCheckBox::onMouseLeftButtonPressed(const s_MouseEvent &)
 
 void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &)
 {
-    if (!m_focus || !m_enabled )
+    if (!m_focus || !m_enabled ) {
+        //std::cout << "!m_focus || !m_enabled" << std::endl;
         return;
+    }
         
     if (m_checked) {
         std::cout << "to false" << std::endl;
@@ -150,6 +152,12 @@ void GuiCheckBox::setEnabled(bool value)
 {
     m_enabled = value;
 }
+
+void GuiCheckBox::setChecked(bool value)
+{
+    m_checked = value;
+}
+
 
 void GuiCheckBox::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {}
