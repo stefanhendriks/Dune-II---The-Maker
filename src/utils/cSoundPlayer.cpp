@@ -108,7 +108,8 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerIni
         }
     // }
     musicVolume = MaxVolume/2;
-    Mix_MasterVolume(MaxVolume/2);
+    soundVolume = MaxVolume/2;
+    Mix_MasterVolume(soundVolume);
     Mix_VolumeMusic(musicVolume);
 }
 
@@ -189,3 +190,8 @@ void cSoundPlayer::changeMusicVolume(int delta)
     this->setMusicVolume(musicVolume);
 }
 
+void cSoundPlayer::setSoundVolume(int vol)
+{
+    soundVolume = std::clamp(vol, 0, MaxVolume);
+    Mix_MasterVolume(musicVolume);
+}
