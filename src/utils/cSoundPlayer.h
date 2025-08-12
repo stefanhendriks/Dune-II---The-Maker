@@ -37,7 +37,7 @@ public:
     }
     void changeMusicVolume(int delta);
     // think about voices, clear voices, etc.
-    void think();
+    // void think();
 
     void setMusicEnable(bool mm) {
         isMusicEnable = mm;
