@@ -11,6 +11,7 @@
 #include "gui/GuiCheckBox.hpp"
 //#include "gui/GuiSlider.hpp"
 #include "context/GameContext.hpp"
+#include "utils/cSoundPlayer.h"
 
 
 
@@ -144,7 +145,14 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &musicCheckRect = m_guiWindow->getRelativeRect(5+75, 5+buttonHeight, buttonHeight, buttonHeight);
     GuiCheckBox *gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
+            .onCheck([this]() {
+                m_context->getSoundPlayer()->setMusicMuted(true);
+            })
+            .onUnCheck([this]() {
+                m_context->getSoundPlayer()->setMusicMuted(false);
+            })
             .build();
+    gui_MusicCheckLabel->setChecked(m_context->getSoundPlayer()->getMusicMuted());
     m_guiWindow->addGuiObject(gui_MusicCheckLabel);
 
     const cRectangle &musicVolumeRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50+buttonWidth/2, buttonHeight);
