@@ -127,8 +127,8 @@ int cSoundPlayer::getMaxVolume()
     return MaxVolume;
 }
 
-void cSoundPlayer::think()
-{}
+// void cSoundPlayer::think()
+// {}
 
 void cSoundPlayer::playSound(int sampleId)
 {

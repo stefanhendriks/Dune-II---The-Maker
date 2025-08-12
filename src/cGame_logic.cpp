@@ -485,7 +485,7 @@ void cGame::think_mentat()
 // think function belongs to combat state (tbd)
 void cGame::think_audio()
 {
-    m_soundPlayer->think();
+    // m_soundPlayer->think();
 
     if (!game.m_playMusic) // no music enabled, so no need to think
         return;
