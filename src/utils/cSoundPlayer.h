@@ -32,8 +32,17 @@ public:
     // think about voices, clear voices, etc.
     void think();
 
+    void setMusicMuted(bool mm) {
+        isMusicMuted = mm;
+    }
+    void setSoundMuted(bool sm) {
+        isSoundMuted = sm;
+    }
+
 private:
     // std::vector<int> voices;
     std::unique_ptr<cSoundData> soundData;
     int musicVolume;
+    bool isMusicMuted;
+    bool isSoundMuted;
 };
