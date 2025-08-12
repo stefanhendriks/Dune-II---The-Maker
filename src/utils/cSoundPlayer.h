@@ -12,7 +12,7 @@ class cSoundPlayer {
 public:
     // Initialize the platform layer before creating this object.
     explicit cSoundPlayer(const cPlatformLayerInit &init);
-    cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
+    // cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
     ~cSoundPlayer();
 
     static int getMaxVolume();
@@ -33,7 +33,7 @@ public:
     void think();
 
 private:
-    std::vector<int> voices;
+    // std::vector<int> voices;
     std::unique_ptr<cSoundData> soundData;
     int musicVolume;
 };

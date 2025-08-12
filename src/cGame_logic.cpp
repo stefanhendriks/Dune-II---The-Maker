@@ -909,12 +909,14 @@ bool cGame::setupGame()
     textDrawer = std::make_unique<cTextDrawer>(game_font);
     textDrawer->setApplyShadow(false);
 
-    if (!m_playSound) {
-        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);
+    m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
+    /*if (!m_playSound) {
+        m_soundPlayer->setSoundMuted(true);
     }
-    else {
-        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
+    if (!m_playMusic) {
+        m_soundPlayer->setMusicMuted(true);
     }
+        */
 
     // do it here, because it depends on fonts to be loaded
     m_mouse = new cMouse();
