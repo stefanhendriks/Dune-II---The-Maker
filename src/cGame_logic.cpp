@@ -779,7 +779,7 @@ void cGame::shutdown()
 
     delete renderDrawer;
     // delete m_dataRepository;
-    m_soundPlayer.reset();
+    // m_soundPlayer.reset();
     delete m_mouse;
     delete m_keyboard;
 
@@ -909,7 +909,9 @@ bool cGame::setupGame()
     textDrawer = std::make_unique<cTextDrawer>(game_font);
     textDrawer->setApplyShadow(false);
 
-    m_soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
+    std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
+    m_soundPlayer = soundPlayer.get();
+    ctx->setSoundPlayer(std::move(soundPlayer));
     if (!m_playSound) {
         m_soundPlayer->setSoundMuted(true);
     }
