@@ -17,19 +17,20 @@
 
 namespace {
 
-constexpr int kAllegroMaxNrVoices = 256;
-constexpr int kAllegroMaxVolume = 255;
-constexpr int kAllegroPanCenter = 128;
+// constexpr int kAllegroMaxNrVoices = 256;
+// constexpr int kAllegroMaxVolume = 255;
+// constexpr int kAllegroPanCenter = 128;
 
-constexpr int kFinishedPLaying = -1;
-constexpr int kNoVoiceAvailable = -1;
-constexpr int kNoVoice = -1;
+// constexpr int kFinishedPLaying = -1;
+// constexpr int kNoVoiceAvailable = -1;
+// constexpr int kNoVoice = -1;
 constexpr int kNoLoop = 0;
 
-constexpr int kMinNrVoices = 4;
-constexpr int kMaxVolume = 220;
+// constexpr int kMinNrVoices = 4;
+// constexpr int kMaxVolume = 220;
 constexpr int MinVolume = 0;
 constexpr int MaxVolume = MIX_MAX_VOLUME;
+constexpr int MaxNbrVoices = 64;
 }
 
 class cSoundData {
@@ -62,11 +63,11 @@ private:
     std::unique_ptr<DataPack> gfxaudio;
 };
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &init) : cSoundPlayer(init, kAllegroMaxNrVoices)
-{
-}
+// cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &init) : cSoundPlayer(init, MaxNrVoices)
+// {
+// }
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
+cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &) //, int maxNrVoices)
     : soundData(std::make_unique<cSoundData>())
 {
     // The platform layer init object is not used here, but since it needs to be passed, it tells
@@ -74,34 +75,37 @@ cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &, int maxNrVoices)
 
     auto logger = cLogger::getInstance();
 
-    if (maxNrVoices < kMinNrVoices) {
-        logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Muting all sound.", OUTC_SUCCESS);
-        return;
-    }
+    // if (maxNrVoices < MaxNbrVoices) {
+    //     logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Muting all sound.", OUTC_SUCCESS);
+    //     return;
+    // }
 
-    int nr_voices = maxNrVoices;
-    while (true) {
-        if (nr_voices < kMinNrVoices) {
-            logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
-            return;
-        }
+    // int nr_voices = MaxNbrVoices;
+    // while (true) {
+        // if (nr_voices < kMinNrVoices) {
+            // logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
+            // return;
+        // }
 
         if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
             logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
+        } else {
+            logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL2_mixer succes", OUTC_SUCCESS);
         }
 
-        if (Mix_AllocateChannels(nr_voices) >= kMinNrVoices) {
-            auto msg = std::format("Successfully installed sound. {} voices reserved", nr_voices);
+        int nr_voices = Mix_AllocateChannels(MaxNbrVoices);
+        if (nr_voices != MaxNbrVoices) {
+            auto msg = std::format("AllocateChannels: {} voices reserved, on {} required", nr_voices,MaxNbrVoices);
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 
-            voices.resize(nr_voices - 1, kNoVoice);
-            break;
+            // voices.resize(nr_voices - 1, kNoVoice);
+            // break;
         }
         else {
-            auto msg = std::format("Failed installing sound. {} voices reserved", nr_voices);
-            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+            auto msg = std::format("AllocateChannels: {} voices reserved", nr_voices);
+            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
         }
-    }
+    // }
     musicVolume = MaxVolume/2;
     Mix_MasterVolume(MaxVolume/2);
     Mix_VolumeMusic(musicVolume);
@@ -130,7 +134,7 @@ void cSoundPlayer::playSound(int sampleId, int vol)
     if (vol <= 0) {
         return;
     }
-   vol = std::clamp(vol, 0, kAllegroMaxVolume);
+   vol = std::clamp(vol, 0, MIX_MAX_VOLUME);
 
     Mix_Chunk *sample = soundData->getSample(sampleId);
     Mix_PlayChannel(-1, sample, 0); // -1 means play on any available channel
@@ -172,5 +176,6 @@ void cSoundPlayer::setMusicVolume(int vol)
 void cSoundPlayer::changeMusicVolume(int delta)
 {
     musicVolume = std::clamp(musicVolume + delta, 0, MaxVolume);
-    this ->setMusicVolume(musicVolume);
+    this->setMusicVolume(musicVolume);
 }
+
