@@ -126,18 +126,24 @@ void cSoundPlayer::think()
 
 void cSoundPlayer::playSound(int sampleId)
 {
+    if (isSoundMuted) {
+        return;
+    }
     playSound(sampleId, musicVolume);
 }
 
 void cSoundPlayer::playSound(int sampleId, int vol)
 {
-    if (vol <= 0) {
+    if (vol <= 0 || isSoundMuted) {
         return;
     }
    vol = std::clamp(vol, 0, MIX_MAX_VOLUME);
 
     Mix_Chunk *sample = soundData->getSample(sampleId);
-    Mix_PlayChannel(-1, sample, 0); // -1 means play on any available channel
+    int tmp = Mix_PlayChannel(-1, sample, 0); // -1 means play on any available channel
+    if (tmp<0) {
+        cLogger::getInstance()->log(LOG_WARN, COMP_SOUND, "sample ignored", "All channels used");
+    }
 }
 
 void cSoundPlayer::playVoice(int sampleId, int house)
@@ -154,6 +160,9 @@ void cSoundPlayer::playVoice(int sampleId, int house)
 
 void cSoundPlayer::playMusic(int sampleId)
 {
+    if (isMusicMuted) {
+        return;
+    }
     Mix_PlayMusic(soundData->getMusic(sampleId), kNoLoop);
 }
 
