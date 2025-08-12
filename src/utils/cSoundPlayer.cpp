@@ -67,7 +67,7 @@ private:
 // {
 // }
 
-cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &) //, int maxNrVoices)
+cSoundPlayer::cSoundPlayer(/*const cPlatformLayerInit &*/) //, int maxNrVoices)
     : soundData(std::make_unique<cSoundData>())
 {
     // The platform layer init object is not used here, but since it needs to be passed, it tells
