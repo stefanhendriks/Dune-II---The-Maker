@@ -35,9 +35,15 @@ public:
     void setMusicMuted(bool mm) {
         isMusicMuted = mm;
     }
+    bool getMusicMuted() const {
+        return isMusicMuted;
+    }
     void setSoundMuted(bool sm) {
         isSoundMuted = sm;
     }
+    bool getSoundMuted() const {
+        return isSoundMuted;
+    }    
 
 private:
     // std::vector<int> voices;
