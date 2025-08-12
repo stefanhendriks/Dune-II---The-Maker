@@ -909,7 +909,7 @@ bool cGame::setupGame()
     textDrawer = std::make_unique<cTextDrawer>(game_font);
     textDrawer->setApplyShadow(false);
 
-    m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
+    m_soundPlayer = std::make_unique<cSoundPlayer>(/**m_PLInit*/);
     if (!m_playSound) {
         m_soundPlayer->setSoundMuted(true);
     }

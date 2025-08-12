@@ -11,7 +11,7 @@ class cSoundData;
 class cSoundPlayer {
 public:
     // Initialize the platform layer before creating this object.
-    explicit cSoundPlayer(const cPlatformLayerInit &init);
+    explicit cSoundPlayer(/*const cPlatformLayerInit &init*/);
     // cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
     ~cSoundPlayer();
 
