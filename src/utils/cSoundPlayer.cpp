@@ -35,18 +35,19 @@ constexpr int MaxNbrVoices = 64;
 
 class cSoundData {
 public:
-    cSoundData()
+    cSoundData(const std::string &audiofile)
     {
         auto logger = cLogger::getInstance();
 
-        gfxaudio = std::make_unique<DataPack>("data/sdl_audio.dat");
+        gfxaudio = std::make_unique<DataPack>(audiofile);
         if (gfxaudio == nullptr) {
-            static auto msg = "Could not hook/load datafile: sdl_audio.dat.";
+            auto msg = std::format("Could not hook/load datafile: {}", audiofile);
             logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
             throw std::runtime_error(msg);
         }
         else {
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Hooked datafile: sdl_audio.dat.", OUTC_SUCCESS);
+            auto msg = std::format("Hooked audiofile: {}", audiofile);
+            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg , OUTC_SUCCESS);
         }
     }
 
@@ -67,8 +68,8 @@ private:
 // {
 // }
 
-cSoundPlayer::cSoundPlayer(/*const cPlatformLayerInit &*/) //, int maxNrVoices)
-    : soundData(std::make_unique<cSoundData>())
+cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerInit &*/) //, int maxNrVoices)
+    : soundData(std::make_unique<cSoundData>(datafile))
 {
     // The platform layer init object is not used here, but since it needs to be passed, it tells
     // the caller that the initialization needs to be performed first.
