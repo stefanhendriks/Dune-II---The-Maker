@@ -286,7 +286,7 @@ private:
     std::unique_ptr<cScreenInit> m_Screen;
     std::unique_ptr<cInteractionManager> m_interactionManager;
 
-    std::unique_ptr<cSoundPlayer> m_soundPlayer;
+    cSoundPlayer* m_soundPlayer;
 
     std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
