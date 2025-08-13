@@ -40,7 +40,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = new GuiWindow(window);
     m_guiWindow->setTheme(GuiTheme::Light());
-
+    cSoundPlayer* soundPlayer = m_context->getSoundPlayer();
     //const GuiRenderKind buttonKinds = OPAQUE_WITH_BORDER;
     //const GuiTextAlignHorizontal buttonTextAlignment = CENTER;
 
@@ -145,14 +145,14 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &musicCheckRect = m_guiWindow->getRelativeRect(5+75, 5+buttonHeight, buttonHeight, buttonHeight);
     GuiCheckBox *gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
-            .onCheck([this]() {
-                m_context->getSoundPlayer()->setMusicEnable(true);
+            .onCheck([this, soundPlayer]() {
+                soundPlayer->setMusicEnable(true);
             })
-            .onUnCheck([this]() {
-                m_context->getSoundPlayer()->setMusicEnable(false);
+            .onUnCheck([this, soundPlayer]() {
+                soundPlayer->setMusicEnable(false);
             })
             .build();
-    gui_MusicCheckLabel->setChecked(m_context->getSoundPlayer()->getMusicEnable());
+    gui_MusicCheckLabel->setChecked(soundPlayer->getMusicEnable());
     m_guiWindow->addGuiObject(gui_MusicCheckLabel);
 
     const cRectangle &musicVolumeRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50+buttonWidth/2, buttonHeight);
