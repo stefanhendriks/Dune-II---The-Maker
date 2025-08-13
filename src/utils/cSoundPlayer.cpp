@@ -198,8 +198,24 @@ void cSoundPlayer::changeMusicVolume(int delta)
 
 void cSoundPlayer::setSoundVolume(int _vol)
 {
-    //std::cout << "sound volume" << vol << "\n";
+    //std::cout << "sound volume" << _vol << "\n";
     int vol = _vol*128/10;
     soundVolume = std::clamp(vol, 0, MaxVolume);
-    Mix_MasterVolume(musicVolume);
+    Mix_MasterVolume(soundVolume);
+}
+
+void cSoundPlayer::setSoundEnable(bool sm)
+{
+    isSoundEnable = sm;
+    if (!isSoundEnable) {
+        Mix_HaltChannel(-1);
+    }
+}
+
+void cSoundPlayer::setMusicEnable(bool mm)
+{
+    isMusicEnable = mm;
+    if (!isMusicEnable) {
+        Mix_HaltMusic();
+    }
 }
