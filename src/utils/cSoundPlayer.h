@@ -40,16 +40,16 @@ public:
     void think();
 
     void setMusicEnable(bool mm) {
-        isMusicMuted = mm;
+        isMusicEnable = mm;
     }
     bool getMusicEnable() const {
-        return isMusicMuted;
+        return isMusicEnable;
     }
     void setSoundEnable(bool sm) {
-        isSoundMuted = sm;
+        isSoundEnable = sm;
     }
     bool getSoundEnable() const {
-        return isSoundMuted;
+        return isSoundEnable;
     }    
 
 private:
@@ -57,6 +57,6 @@ private:
     std::unique_ptr<cSoundData> soundData;
     int musicVolume;
     int soundVolume;
-    bool isMusicMuted;
-    bool isSoundMuted;
+    bool isMusicEnable;
+    bool isSoundEnable;
 };

@@ -128,7 +128,7 @@ void cSoundPlayer::think()
 
 void cSoundPlayer::playSound(int sampleId)
 {
-    if (isSoundMuted) {
+    if (!isSoundEnable) {
         return;
     }
     playSound(sampleId, musicVolume);
@@ -136,7 +136,7 @@ void cSoundPlayer::playSound(int sampleId)
 
 void cSoundPlayer::playSound(int sampleId, int vol)
 {
-    if (vol <= 0 || isSoundMuted) {
+    if (vol <= 0 || !isSoundEnable) {
         return;
     }
    vol = std::clamp(vol, 0, MIX_MAX_VOLUME);
@@ -162,7 +162,7 @@ void cSoundPlayer::playVoice(int sampleId, int house)
 
 void cSoundPlayer::playMusic(int sampleId)
 {
-    if (isMusicMuted) {
+    if (!isMusicEnable) {
         return;
     }
     Mix_PlayMusic(soundData->getMusic(sampleId), kNoLoop);
