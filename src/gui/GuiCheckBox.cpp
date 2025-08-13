@@ -14,12 +14,12 @@ GuiCheckBox::GuiCheckBox(const cRectangle &rect)
     , m_enabled(true)
     , m_checked(true)
 {
-    std::cout << "creation\n";
+//    std::cout << "creation\n";
 }
 
 GuiCheckBox::~GuiCheckBox()
 {
-    std::cout << "destruction\n";
+    //std::cout << "destruction\n";
 }
 
 void GuiCheckBox::draw() const
@@ -124,14 +124,14 @@ void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &)
     }
         
     if (m_checked) {
-        std::cout << "to false" << std::endl;
+        //std::cout << "to false" << std::endl;
         m_checked = false;
         if (m_onUnCheckAction) {
             m_onUnCheckAction();
         }
     } else {
         m_checked = true;
-        std::cout << "to true" << std::endl;
+        //std::cout << "to true" << std::endl;
         if (m_onCheckAction) {
             m_onCheckAction();
         }
