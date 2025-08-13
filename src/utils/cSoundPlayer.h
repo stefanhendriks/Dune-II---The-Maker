@@ -29,11 +29,11 @@ public:
 
     void setMusicVolume(int vol);
     int getMusicVolume() const {
-        return musicVolume;
+        return musicVolume*10/128;
     }
     void setSoundVolume(int vol);
     int getSoundVolume() const {
-        return soundVolume;
+        return soundVolume*10/128;
     }
     void changeMusicVolume(int delta);
     // think about voices, clear voices, etc.
