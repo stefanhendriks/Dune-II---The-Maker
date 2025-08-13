@@ -10,38 +10,68 @@
 
   */
 
-/**
-	Time management is done in this class
-*/
 
 #pragma once
 #include <stdint.h>
 class cGame;
 
+/**
+  Time management is done in this class
+*/
 class cTimeManager {
+public:
+    explicit cTimeManager(cGame *game);
+    void processTime();
+
+    // returns the current FPS
+    int getFps() const;
+    // return time to wait for CPU
+    int getWaitingTime() const { return waitingTime; }
+    // wait for CPU to catch up
+    void waitForCPU();
+    // get after 1s the FPS
+    void capFps();
+    // adapt waiting time based on FPS
+    void adaptWaitingTime();
+    // change global speed
+    void setGlobalSpeed(int speed);
+    // get global speed
+    uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
 
 private:
+    // gametime timer is called every 100 ms, try to keep up with that.
+    void handleTimerUnits();
+    // gametime timer is called every 1000 ms, try to keep up with that.
+    void handleTimerSecond();
+    // gametime timer is called every 5 ms, try to keep up with that.
+    void handleTimerGameTime();
+    // system capping to avoid extremely high timers
+    void capTimers();
 
+    cGame *m_game;
     int m_timerUnits;		/** !!Specificly!! used for units **/
     int m_timerSecond;
     int m_timerGlobal;
+    int m_gameTime;		/** Definition of game time (= in seconds) **/
 
+    int m_fps = 0;			/** Frames per second **/
+    int frameCount = 0;		/** Frame count for FPS calculation **/
+    int waitingTime = 10;	/** Waiting time in ms, used to adapt FPS **/
     uint64_t m_lastUnitsTick = 0;
     uint64_t m_lastGameTimeTick = 0;
     uint64_t m_lastSecondsTick = 0;
 
-    void handleTimerUnits();
-    void handleTimerAllegroTimerSeconds();
-    void handleTimerGameTime();
+    struct DurationTime {
+      uint64_t gameTickDuration;  // 5 
+      uint64_t unitTickDuration;  // 100
+      uint64_t secondTickDuration; // 1000
 
-    void capTimers();
+    void init(int value) {
+      gameTickDuration = value;
+      unitTickDuration = value * 20;
+      secondTickDuration = value * 200;
+    }
+    };
 
-public:
-
-    explicit cTimeManager(cGame &game);
-
-    cGame &m_game;
-    int m_gameTime;		/** Definition of game time (= in seconds) **/
-
-    void processTime();
+  DurationTime durationTime;
 };

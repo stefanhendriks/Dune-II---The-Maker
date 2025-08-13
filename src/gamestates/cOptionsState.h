@@ -3,15 +3,16 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiWindow.h"
 #include "sMouseEvent.h"
 
 struct SDL_Surface;
 class cGame;
+class GameContext;
 
 class cOptionsState : public cGameState {
 public:
-    explicit cOptionsState(cGame &theGame, int prevState);
+    explicit cOptionsState(cGame &theGame, GameContext *context, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -30,7 +31,8 @@ private:
 
     int m_prevState;
 
-    cGuiWindow *m_guiWindow;
+    GuiWindow *m_guiWindow;
 
     void constructWindow(int prevState);
+    GameContext *m_context;
 };

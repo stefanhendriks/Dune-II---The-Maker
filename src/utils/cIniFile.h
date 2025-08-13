@@ -17,19 +17,19 @@ public:
 
     ~cSection();
 
-    bool addValue(const std::string &key, const std::string &value, int id);
+    bool addValue(const std::string &key, const std::string &value);
 
-    bool hasValue(const std::string &key, int id = 0) const;
+    [[nodiscard]] bool hasValue(const std::string &key) const;
 
     bool addData(const std::string &data);
 
-    [[nodiscard]] std::string getStringValue(const std::string &key, int id = 0) const;
+    [[nodiscard]] std::string getStringValue(const std::string &key) const;
 
-    [[nodiscard]] int getInt(const std::string &key, int id = 0) const;
+    [[nodiscard]] int getInt(const std::string &key) const;
 
-    [[nodiscard]] double getDouble(const std::string &key, int id = 0) const;
+    [[nodiscard]] double getDouble(const std::string &key) const;
 
-    [[nodiscard]] bool getBoolean(const std::string &key, int id = 0) const;
+    [[nodiscard]] bool getBoolean(const std::string &key) const;
 
     [[nodiscard]] std::vector<std::string> getData() const {
         return m_dataConfs;
@@ -66,9 +66,7 @@ public:
     }
 
 private:
-
     bool isSectionName(std::string inputLine);
-
     bool isKeyValue(std::string inputLine);
 
     bool m_loadSuccess;

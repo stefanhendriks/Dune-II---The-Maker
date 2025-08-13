@@ -15,7 +15,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
-#include "map/cRandomMapGenerator.h"
+// #include "map/cRandomMapGenerator.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "drawers/SDLDrawer.hpp"
@@ -28,14 +28,14 @@
 
 #include <iostream>
 #include <SDL2/SDL_ttf.h>
-int	iRest = 1;	// default rest value
+// int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
 cGame          				game;
 
 cStructureUtils 			structureUtils;
-cMap           				map;
-cRandomMapGenerator 		randomMapGenerator;
+cMap           				global_map;
+// cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     		*structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
@@ -59,8 +59,8 @@ s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 std::shared_ptr<Graphics> gfxinter;		// interface graphics
-std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
-std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
+// std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
+// std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 
 // FONT stuff
 TTF_Font *game_font; 	// arrakeen.fon

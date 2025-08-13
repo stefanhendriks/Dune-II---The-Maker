@@ -11,8 +11,8 @@ class cSoundData;
 class cSoundPlayer {
 public:
     // Initialize the platform layer before creating this object.
-    explicit cSoundPlayer(const cPlatformLayerInit &init);
-    cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
+    explicit cSoundPlayer(const std::string &datafile /*const cPlatformLayerInit &init*/);
+    // cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
     ~cSoundPlayer();
 
     static int getMaxVolume();
@@ -28,12 +28,31 @@ public:
     bool isMusicPlaying() const;
 
     void setMusicVolume(int vol);
+    int getMusicVolume() const {
+        return musicVolume*10/128;
+    }
+    void setSoundVolume(int vol);
+    int getSoundVolume() const {
+        return soundVolume*10/128;
+    }
     void changeMusicVolume(int delta);
     // think about voices, clear voices, etc.
-    void think();
+    // void think();
+
+    void setMusicEnable(bool mm);
+    bool getMusicEnable() const {
+        return isMusicEnable;
+    }
+    void setSoundEnable(bool sm);
+    bool getSoundEnable() const {
+        return isSoundEnable;
+    }    
 
 private:
-    std::vector<int> voices;
+    // std::vector<int> voices;
     std::unique_ptr<cSoundData> soundData;
     int musicVolume;
+    int soundVolume;
+    bool isMusicEnable;
+    bool isSoundEnable;
 };

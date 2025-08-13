@@ -3,8 +3,8 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiButton.h"
-#include "gui/cGuiWindow.h"
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 #include "sMouseEvent.h"
 
 class Texture;
@@ -32,11 +32,11 @@ private:
     int mainMenuWidth;
     int mainMenuHeight;
 
-    const cTextDrawer textDrawer;
+    cTextDrawer textDrawer;
     cRectangle sdl2power;
 
-    cGuiWindow *gui_window;
-    cGuiButton *gui_btn_credits;
+    GuiWindow *gui_window;
+    GuiButton *gui_btn_credits;
 
     Texture *bmp_D2TM_Title;
 };

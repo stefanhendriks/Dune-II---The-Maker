@@ -3,11 +3,16 @@
 #include "definitions.h"
 #include "cGameState.h"
 #include "definitions.h"
+#include "drawers/cTextDrawer.h"
 
 class cGame;
-class cGuiButton;
+class GuiButton;
 struct SDL_Surface;
+
 class Texture;
+class Graphics;
+class GameContext;
+
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
@@ -41,7 +46,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(cGame &theGame);
+    explicit cSelectYourNextConquestState(GameContext *ctx, cGame &theGame);
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;
@@ -99,7 +104,7 @@ private:
 
     bool fastForward = false;
 
-    cGuiButton *m_guiBtnToMissionSelect;
+    GuiButton *m_guiBtnToMissionSelect;
 
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;
@@ -126,4 +131,6 @@ private:
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    cTextDrawer textDrawer;
+    Graphics* gfxworld;
 };

@@ -3,7 +3,7 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/actions/cGuiActionToGameState.h"
+// #include "gui/actions/cGuiActionToGameState.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
@@ -74,10 +74,25 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
+    nextFunction = [this]() {
+        // Go to the next map
+        if (mapIndexToDisplay < (m_previewMaps->getMapCount()/maxMapsInSelectArea)+maxMapsInSelectArea) {
+            mapIndexToDisplay += maxMapsInSelectArea;
+        }
+    };
+    previousFunction = [this]() {
+        // Go back to the previous map
+        if (mapIndexToDisplay > 0) {
+            mapIndexToDisplay -= maxMapsInSelectArea;
+        }
+    };
     iStartingPoints = 2;
     iSkirmishMap = -1;
-
+    mapIndexToDisplay = 0;
+    
     textDrawer = cTextDrawer(bene_font);
+    randomMapGenerator = std::make_unique<cRandomMapGenerator>();
+    generateRandomMap();
 
     mouse = game.getMouse();
 
@@ -95,8 +110,9 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     topBarHeight = 21;
     previewMapHeight = 129;
     previewMapWidth = 129;
-    widthOfSomething = 300; //??
-
+    widthOfRightColumn = 300;
+    mapItemButtonHeight = 175;
+    mapItemButtonWidth = 145;
     // Screen
     screen_x = game.m_screenW;
     screen_y = game.m_screenH;
@@ -108,7 +124,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     topBar = cRectangle(-1, -1, topBarWidth, topBarHeight);
 
     // Players title bar
-    int widthOfSidebar = widthOfSomething + 2;
+    int widthOfSidebar = widthOfRightColumn + 2;
     int playerTitleBarWidth = screen_x - widthOfSidebar;
     int playerTitleBarHeight = topBarHeight;
     int playerTitleBarX = 0;
@@ -117,14 +133,14 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     // this is the box at the right from the Player list
     int topRightBoxWidth = widthOfSidebar;
-    int topRightBoxHeight = playerTitleBarHeight + previewMapHeight;
+    int topRightBoxHeight = playerTitleBarHeight + previewMapHeight+playerTitleBarHeight;
     int topRightBoxX = screen_x - topRightBoxWidth;
     int topRightBoxY = topBarHeight;
     topRightBox = cRectangle(topRightBoxX, topRightBoxY, topRightBoxWidth, topRightBoxHeight);
 
     // player list
     int playerListBarWidth = playerTitleBarWidth;
-    int playerListBarHeight = topRightBoxHeight;
+    int playerListBarHeight = playerTitleBarHeight + previewMapHeight;
     int playerListBarX = 0;
     int playerListBarY = playerTitleBarY + topBarHeight;
     playerList = cRectangle(playerListBarX, playerListBarY, playerListBarWidth, playerListBarHeight);
@@ -132,45 +148,74 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     // map list
 
     // title bar
-    int mapListFrameX = screen_x - topRightBoxWidth;
-    int mapListFrameY = (playerListBarY + playerListBarHeight) - playerTitleBarHeight;
-    int mapListFrameWidth = screen_x - mapListFrameX;
+    int mapListFrameX = 0;
+    int mapListFrameY = playerListBarY + playerListBarHeight;
+    // int mapListFrameWidth = (screen_x - mapListFrameX-widthOfRightColumn)/2;
     int mapListFrameHeight = topBarHeight;
-
     // rectangle for map list
-    mapListTitle = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
+    mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
+    cRectangle previousMaps(mapListFrameX, mapListFrameY, 60, mapListFrameHeight);
+    cRectangle nextMaps(mapListFrameX + playerTitleBarWidth - 50, mapListFrameY, 50, mapListFrameHeight);
+    nextMapButton = GuiButtonBuilder()
+            .withRect(nextMaps)
+            .withLabel("Next")
+            .withTextDrawer(&textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick(nextFunction)
+            .build();
+    previousMapButton = GuiButtonBuilder()
+            .withRect(previousMaps)
+            .withLabel("Previous")
+            .withTextDrawer(&textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick(previousFunction)
+            .build();
+
+    // preview map
+    int previewMapFrameX = screen_x - widthOfSidebar;
+    int previewMapFrameY = playerListBarY + playerListBarHeight;
+    int previewMapFrameWidth = widthOfSidebar;
+    int previewMapFrameHeight = topBarHeight;
+    previewMapTitle = cRectangle(previewMapFrameX, previewMapFrameY,previewMapFrameWidth, previewMapFrameHeight);
 
     // actual list of maps
-    int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
-    int mapListWidth = mapListTitle.getWidth();
-    int mapListTopX = mapListTitle.getX();
+    // int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
+    // int mapListWidth = mapListFrameWidth;
+    // int mapListTopX = mapListTitle.getX();
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
 
-    mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
+    // mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
 
-    int previewMapY = topBarHeight + 6;
-    int previewMapX = screen_x - (previewMapWidth + 6);
-    previewMapRect = cRectangle(previewMapX, previewMapY, previewMapWidth, previewMapHeight);
+    int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
+    int previewMapX = screen_x - widthOfSidebar;
+    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, widthOfRightColumn+65);
+    previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
 
-    int startPointsX = screen_x - widthOfSomething;
-    int startPointsY = previewMapY;
+    selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
+    // std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
+    maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
+    // std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
+    int startPointsX = screen_x - widthOfRightColumn;
+    int startPointsY = topBarHeight + 6;
     int startPointHitBoxWidth = 130;
     int startPointHitBoxHeight = 16;
     startPointsRect = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
 
-    int wormsX = screen_x - widthOfSomething;
+    int wormsX = screen_x - widthOfRightColumn;
     int wormsY = startPointsY + 32;
     int wormsHitBoxWidth = 130;
     int wormsHitBoxHeight = 16;
     wormsRect = cRectangle(wormsX, wormsY, wormsHitBoxWidth, wormsHitBoxHeight);
 
-    int bloomsX = screen_x - widthOfSomething;
+    int bloomsX = screen_x - widthOfRightColumn;
     int bloomsY = wormsY + 32;
     int bloomsHitBoxWidth = 130;
     int bloomsHitBoxHeight = 16;
     bloomsRect = cRectangle(bloomsX, bloomsY, bloomsHitBoxWidth, bloomsHitBoxHeight);
 
-    int detonateX = screen_x - widthOfSomething;
+    int detonateX = screen_x - widthOfRightColumn;
     int detonateY = bloomsY + 32;
     int detonateHitBoxWidth = 130;
     int detonateHitBoxHeight = 16;
@@ -181,24 +226,56 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     int backButtonY = screen_y - topBarHeight;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-    backButton = new cGuiButton(textDrawer, backButtonRect, " BACK");
-    backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
-    backButton->setOnLeftMouseButtonClickedAction(action);
+    backButton = GuiButtonBuilder()
+            .withRect(backButtonRect)        
+            .withLabel("BACK")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                game.setNextStateToTransitionTo(GAME_MENU);
+                game.initiateFadingOut();})
+            .build();
+    // backButton = new GuiButton(textDrawer, backButtonRect, " BACK");
+    // backButton->setTheme(GuiTheme::Light());
+    // backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
+    // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
+    // backButton->setOnLeftMouseButtonClickedAction([this]() {
+    //     game.setNextStateToTransitionTo(GAME_MENU);
+    //     game.initiateFadingOut();});
 
     int startButtonWidth = textDrawer.getTextLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
     cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
-    startButton = new cGuiButton(textDrawer, startButtonRect, "START");
-    startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-
+    startButton = GuiButtonBuilder()
+            .withRect(startButtonRect)        
+            .withLabel("START")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                if (iSkirmishMap > -1) {
+                    prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+                };})
+            .build();
+    // startButton = new GuiButton(textDrawer, startButtonRect, "START");
+    // startButton->setTheme(GuiTheme::Light());
+    // startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
+    // startButton->setOnLeftMouseButtonClickedAction([this]() {
+    //     //std::cout << "click" << std::endl;
+    //     if (iSkirmishMap > -1) {
+    //         prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+    //     };});
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
 {
     delete backButton;
+    delete startButton;
+    delete nextMapButton;
+    delete previousMapButton;
 }
 
 void cSetupSkirmishGameState::thinkFast()
@@ -209,11 +286,11 @@ void cSetupSkirmishGameState::thinkFast()
 void cSetupSkirmishGameState::draw() const
 {
     // @Mira rwrite it on Texture
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
+    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
 
-    for (int dy = 0; dy < game.m_screenH; dy += 4) {
-        renderDrawer->renderRectFillColor(0, dy, screen_x, 2, Color{0, 0, 0,255});
-    }
+    // for (int dy = 0; dy < game.m_screenH; dy += 4) {
+    //     renderDrawer->renderRectFillColor(0, dy, screen_x, 2, Color{0, 0, 0,255});
+    // }
 
     renderDrawer->gui_DrawRect(topBar);
 
@@ -223,10 +300,12 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(topRightBox);
     renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    renderDrawer->gui_DrawRect(mapList);
-
+    // renderDrawer->gui_DrawRect(mapList);
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
-
+    renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
+    textDrawer.drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
+    renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    renderDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
     /// DRAW PREVIEW MAP
     //////
@@ -242,7 +321,7 @@ void cSetupSkirmishGameState::draw() const
     drawBlooms(bloomsRect);
 
     drawDetonateBlooms(detonateBloomsRect);
-    drawMapList(mapList);
+    drawMapList(selectArea);
 
     // Header text for players
     textDrawer.drawText(4, 25, "Player      House      Credits       Units    Team");
@@ -296,6 +375,8 @@ void cSetupSkirmishGameState::draw() const
 
     backButton->draw();
     startButton->draw();
+    nextMapButton->draw();
+    previousMapButton->draw();
 
     // MOUSE
     mouse->draw();
@@ -383,29 +464,54 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
                 if (selectedMap.terrain) {
-                    renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    //renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
+                    cRectangle dst;
+                    if (selectedMap.previewTex->w > selectedMap.previewTex->h) {
+                        dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
+                                         previewMapRect.getWidth(), previewMapRect.getWidth() * selectedMap.previewTex->h / selectedMap.previewTex->w);
+                    }
+                    else {
+                        dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
+                                         previewMapRect.getHeight() * selectedMap.previewTex->w / selectedMap.previewTex->h, previewMapRect.getHeight());
+
+                    }
+                    renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
                 }
             }
         }
         else {
             // render the 'random generated skirmish map'
-
-            // when mouse is hovering, draw it, else do not
+            cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
+            cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
-                if (selectedMap.name[0] != '\0') {
-                    if (selectedMap.terrain) {
-                        renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
-                    }
-                }
+                    renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
             }
+            //     if (selectedMap.name[0] != '\0') {
+            //         if (selectedMap.terrain) {
+            //             renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+            //         }
+            //     }
+            // }
             else {
-                if (selectedMap.name[0] != '\0') {
-                    if (selectedMap.terrain) {
-                        renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(), previewMapRect.getY());
-                    }
-                }
+                renderDrawer->renderStrechSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), src, dst);
             }
+            //     if (selectedMap.name[0] != '\0') {
+            //         if (selectedMap.terrain) {
+            //             renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(), previewMapRect.getY());
+            //         }
+            //     }
+            // }
         }
+        textDrawer.drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
+                            Color::yellow(), std::format("Name: {}", selectedMap.name));
+        textDrawer.drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+8,
+                            Color::white(), std::format("Author: {}", selectedMap.author));
+        textDrawer.drawText(previewMapRect.getEndX() -50, previewMapRect.getY() + previewMapRect.getHeight() + 16,
+                            Color{225, 177, 21,255}, std::format("{}", m_previewMaps->getMapSize(iSkirmishMap)));
+        textDrawer.drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+30,
+                            Color::white(), std::format("{}", selectedMap.description));
+        
     }
 }
 
@@ -460,10 +566,10 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     startCellsOnSkirmishMap = iStartPositions.size();
 
     // REGENERATE MAP DATA FROM INFO
-    map.init(selectedMap.width, selectedMap.height);
+    global_map.init(selectedMap.width, selectedMap.height);
 
-    auto mapEditor = cMapEditor(map);
-    for (int c = 0; c < map.getMaxCells(); c++) {
+    auto mapEditor = cMapEditor(global_map);
+    for (int c = 0; c < global_map.getMaxCells(); c++) {
         mapEditor.createCell(c, selectedMap.terrainType[c], 0);
     }
     mapEditor.smoothMap();
@@ -635,7 +741,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
             int minRange = 3;
             int maxRange = 12;
-            int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+            int cell = global_map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
                        minRange,
                        maxRange,
                        iPlayerUnitType);
@@ -683,20 +789,20 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
     game.playMusicByType(MUSIC_PEACE);
 
-    map.setAutoSpawnSpiceBlooms(spawnBlooms);
-    map.setAutoDetonateSpiceBlooms(detonateBlooms);
-    map.setDesiredAmountOfWorms(spawnWorms);
+    global_map.setAutoSpawnSpiceBlooms(spawnBlooms);
+    global_map.setAutoDetonateSpiceBlooms(detonateBlooms);
+    global_map.setDesiredAmountOfWorms(spawnWorms);
 
     // spawn requested amount of worms at start
     if (spawnWorms > 0) {
         int worms = spawnWorms;
         int minDistance = worms * 12; // so on 64x64 maps this still could work
         int maxDistance = worms * 32; // 128 / 4
-        int wormCell = map.getRandomCell();
+        int wormCell = global_map.getRandomCell();
         int failures = 0;
         logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
-            int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
+            int cell = global_map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                        SANDWORM);
             if (cell < 0) {
                 // retry
@@ -748,6 +854,8 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     backButton->onNotifyMouseEvent(event);
     startButton->onNotifyMouseEvent(event);
+    nextMapButton->onNotifyMouseEvent(event);
+    previousMapButton->onNotifyMouseEvent(event);
 }
 
 void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &)
@@ -833,7 +941,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
     onMouseLeftButtonClickedAtSpawnBlooms();
     onMouseLeftButtonClickedAtDetonateBlooms();
     onMouseLeftButtonClickedAtPlayerList();
-    onMouseLeftButtonClickedAtStartButton();
+    //onMouseLeftButtonClickedAtStartButton();
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()
@@ -951,25 +1059,25 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
-{
-    int topBarHeight = 21;
-    int screen_y = game.m_screenH;
-    int screen_x = game.m_screenW;
+// void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
+// {
+//     int topBarHeight = 21;
+//     int screen_y = game.m_screenH;
+//     int screen_x = game.m_screenW;
 
-    int startButtonWidth = textDrawer.getTextLength("START");
-    int startButtonHeight = topBarHeight;
-    int startButtonY = screen_y - topBarHeight;
-    int startButtonX = screen_x - startButtonWidth;
+//     int startButtonWidth = textDrawer.textLength("START");
+//     int startButtonHeight = topBarHeight;
+//     int startButtonY = screen_y - topBarHeight;
+//     int startButtonX = screen_x - startButtonWidth;
 
-    if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-        // START
-        if (iSkirmishMap > -1) {
-            prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-        }
-    } // mouse hovers over "START"
+//     if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
+//         // START
+//         if (iSkirmishMap > -1) {
+//             prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+//         }
+//     } // mouse hovers over "START"
 
-}
+// }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
 {
@@ -988,29 +1096,22 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
 {
-    int const topBarHeight = 21;
-    int const margin = 2;
-    int const mapItemButtonHeight = topBarHeight;
-    int const mapItemButtonWidth = mapList.getWidth() - (margin * 2);
-    int const iDrawX = mapList.getX() + margin;
-
-
-    // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight) - 1), MAX_SKIRMISHMAPS);
-
-    // for every map that we read , draw here
-    for (int i = 0; i < maxMapsInList; i++) {
-        s_PreviewMap &previewMap = m_previewMaps->getMap(i);
+    int const margin = 5;
+    int iDrawX = selectArea.getX() + margin;
+    int i = 0;
+    // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
+    for (int j = 0; j < maxMapsInSelectArea; j++) {
+        // first element on top
+        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay+i);
         if (previewMap.name.empty()) continue;
 
-        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+        int iDrawY = selectArea.getY() + 5;
 
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         if (bHover && previewMap.validMap) {
-            iSkirmishMap = i;
-
-            if (i == 0) {
+            iSkirmishMap = mapIndexToDisplay+i;
+            if (mapIndexToDisplay+i == 0) {
                 generateRandomMap();
             }
             else {
@@ -1025,52 +1126,130 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
                 }
             }
         }
+        i+=1;
+
+        // second element on top 
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay+i);
+        if (previewMap2.name.empty()) continue;
+
+        iDrawY = selectArea.getY() + mapItemButtonHeight + 15;
+
+        bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        if (bHover && previewMap2.validMap) {
+            iSkirmishMap = mapIndexToDisplay+i;
+            if (mapIndexToDisplay+i == 0) {
+                generateRandomMap();
+            }
+            else {
+                if (previewMap.name[0] != '\0') {
+                    iStartingPoints = 0;
+                    // count starting points
+                    for (int s: previewMap.iStartCell) {
+                        if (s > -1) {
+                            iStartingPoints++;
+                        }
+                    }
+                }
+            }
+        }
+        i+=1;
+        iDrawX += mapItemButtonWidth+15;
     }
 }
 
 void cSetupSkirmishGameState::generateRandomMap()
 {
-    randomMapGenerator.generateRandomMap(iStartingPoints, m_previewMaps->getMap(0) );
-    spawnWorms = map.isBigMap() ? 4 : 2;
+    auto &randomMap = m_previewMaps->getMap(0);
+    int randomMapWidth = 128;
+    int randomMapHeight = 128;
+    int maxCells = randomMapWidth * randomMapHeight;
+    randomMap.terrainType = std::vector<int>(maxCells, -1);
+    if (randomMap.terrain == nullptr)
+        randomMap.terrain = SDL_CreateRGBSurface(0,randomMapWidth, randomMapHeight,32,0,0,0,255);
+    if (randomMap.previewTex != nullptr) {
+        delete randomMap.previewTex;
+    }
+    randomMapGenerator->generateRandomMap(randomMapWidth,randomMapHeight, iStartingPoints, randomMap);
+    // @mira do better than (global_map.getWidth() * global_map.getHeight() > 64 * 64)
+    spawnWorms = (global_map.getWidth() * global_map.getHeight() > 64 * 64) ? 4 : 2;
+    randomMap.validMap = true;
+    SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
+        if (out == nullptr) {
+            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            return;
+        }
+        randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
 }
 
-void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const
+void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
 {
-    int const margin = 2;
-    int const mapItemButtonHeight = topBarHeight;
-    int const mapItemButtonWidth = mapList.getWidth() - (margin*2);
-    int iDrawX = mapList.getX() + margin;
-
-    // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight)-1), MAX_SKIRMISHMAPS);
-
+    int const margin = 5;
+    int const mapItemButtonHeight = 175;
+    int const mapItemButtonWidth = 145;
+    int iDrawX = mapRect.getX() + margin;
+    int i = 0;
     // for every map that we read , draw here
-    for (int i = 0; i < maxMapsInList; i++) {
-        s_PreviewMap &previewMap = m_previewMaps->getMap(i);
+    for (int j = 0; j < maxMapsInSelectArea; j++) {
+
+        // first element on top
+        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay+i);
         if (previewMap.name.empty()) continue;
-        int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
-
+        int iDrawY = mapRect.getY() + 5;
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-
         Color textColor = bHover ? Color::red() : Color::white();
         if (!previewMap.validMap) {
             textColor = colorDisabled;
         }
-
         if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
-
         // selected map, always render as pressed
-        if (i == iSkirmishMap) {
+        if (mapIndexToDisplay+i == iSkirmishMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             if (!previewMap.validMap) {
                 textColor = colorDisabled;
             }
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
+        textDrawer.drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap.name.c_str());
+        Texture *tex = previewMap.previewTex;
+        if (mapIndexToDisplay+i==0) {
+            // random map, render the 'random map' texture
+            tex = gfxinter->getTexture(BMP_UNKNOWNMAP);
+        } else {
+            tex = previewMap.previewTex;
+        }
+        renderDrawer->renderStrechSprite(tex, cRectangle(0, 0, tex->w, tex->h),
+            cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24));
+        i+=1;
 
-        textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, previewMap.name.c_str());
+        // second element on top
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay+i);
+        if (previewMap2.name.empty()) continue;
+        iDrawY = mapRect.getY() + mapItemButtonHeight + 15;
+
+        bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        textColor = bHover ? Color::red() : Color::white();
+        if (!previewMap2.validMap) {
+            textColor = colorDisabled;
+        }
+        if (bHover && previewMap2.validMap && mouse->isLeftButtonClicked()) {
+            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+        // selected map, always render as pressed
+        if (mapIndexToDisplay+i == iSkirmishMap) {
+            textColor = bHover ? colorDarkerYellow : Color::yellow();
+            if (!previewMap2.validMap) {
+                textColor = colorDisabled;
+            }
+            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        }
+        textDrawer.drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
+        renderDrawer->renderStrechSprite(previewMap2.previewTex, cRectangle(0, 0, previewMap2.previewTex->w, previewMap2.previewTex->h),
+                                           cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24));
+        i+=1;
+        // next drawX position
+        iDrawX += mapItemButtonWidth+15;
     }
 }
 
@@ -1111,6 +1290,12 @@ void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
             game.setNextStateToTransitionTo(GAME_MENU);
             game.initiateFadingOut();
+        }
+        if (event.hasKey(SDL_SCANCODE_LEFT)) {
+            previousFunction();
+        }
+        if (event.hasKey(SDL_SCANCODE_RIGHT)) {
+            nextFunction();
         }
     }
 }
