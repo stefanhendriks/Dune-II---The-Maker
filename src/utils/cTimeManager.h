@@ -57,5 +57,17 @@ private:
     uint64_t m_lastGameTimeTick = 0;
     uint64_t m_lastSecondsTick = 0;
 
+    struct DurationTime {
+		uint64_t gameTickDuration;  // 5 
+    	uint64_t unitTickDuration;  // 100
+	  	uint64_t secondTickDuration; // 1000
 
+		void init(int value) {
+			gameTickDuration = value;
+			unitTickDuration = value * 20;
+			secondTickDuration = value * 200;
+		}
+    };
+
+	DurationTime durationTime;
 };
