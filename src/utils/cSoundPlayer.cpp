@@ -182,8 +182,10 @@ void cSoundPlayer::stopMusic()
     Mix_HaltMusic();
 }
 
-void cSoundPlayer::setMusicVolume(int vol)
+void cSoundPlayer::setMusicVolume(int _vol)
 {
+    //std::cout << "music volume" << vol << "\n";
+    int vol = _vol*128/10;
     musicVolume = std::clamp(vol, 0, MaxVolume);
     Mix_VolumeMusic(musicVolume);
 }
@@ -194,8 +196,10 @@ void cSoundPlayer::changeMusicVolume(int delta)
     this->setMusicVolume(musicVolume);
 }
 
-void cSoundPlayer::setSoundVolume(int vol)
+void cSoundPlayer::setSoundVolume(int _vol)
 {
+    //std::cout << "sound volume" << vol << "\n";
+    int vol = _vol*128/10;
     soundVolume = std::clamp(vol, 0, MaxVolume);
     Mix_MasterVolume(musicVolume);
 }
