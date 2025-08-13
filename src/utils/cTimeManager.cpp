@@ -18,6 +18,8 @@ cTimeManager::cTimeManager(cGame *game)
     , m_timerGlobal(0)
     , m_gameTime(0)
 {
+    // we fix time to 5 100 1000
+    durationTime.init(5);
 }
 
 /**
@@ -111,21 +113,21 @@ void cTimeManager::processTime()
     uint64_t now = SDL_GetTicks64();
 
     // 100 ms pour allegro_timerunits
-    while (now - m_lastUnitsTick >= 100) {
+    while (now - m_lastUnitsTick >= durationTime.unitTickDuration) {
         m_timerUnits++;
-        m_lastUnitsTick += 100;
+        m_lastUnitsTick += durationTime.unitTickDuration;
     }
 
     // 5 ms pour allegro_timergametime
-    while (now - m_lastGameTimeTick >= 5) {
+    while (now - m_lastGameTimeTick >= durationTime.gameTickDuration) {
         m_timerGlobal++;
-        m_lastGameTimeTick += 5;
+        m_lastGameTimeTick += durationTime.gameTickDuration;
     }
 
     // 1000 ms pour allegro_timerseconds
-    while (now - m_lastSecondsTick >= 1000) {
+    while (now - m_lastSecondsTick >= durationTime.secondTickDuration) {
         m_timerSecond++;
-        m_lastSecondsTick += 1000;
+        m_lastSecondsTick += durationTime.secondTickDuration;
     }
     capTimers();
     handleTimerSecond();
