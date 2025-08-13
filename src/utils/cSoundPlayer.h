@@ -39,15 +39,11 @@ public:
     // think about voices, clear voices, etc.
     // void think();
 
-    void setMusicEnable(bool mm) {
-        isMusicEnable = mm;
-    }
+    void setMusicEnable(bool mm);
     bool getMusicEnable() const {
         return isMusicEnable;
     }
-    void setSoundEnable(bool sm) {
-        isSoundEnable = sm;
-    }
+    void setSoundEnable(bool sm);
     bool getSoundEnable() const {
         return isSoundEnable;
     }    
