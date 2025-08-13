@@ -185,7 +185,14 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &soundCheckRect = m_guiWindow->getRelativeRect(5+75, (5+buttonHeight)*2, buttonHeight, buttonHeight);
     GuiCheckBox *gui_SoundCheckLabel = GuiCheckBoxBuilder()
             .withRect(soundCheckRect)
+            .onCheck([this,soundPlayer]() {
+                soundPlayer->setSoundEnable(true);
+            })
+            .onUnCheck([this,soundPlayer]() {
+                soundPlayer->setSoundEnable(false);
+            })
             .build();
+    gui_SoundCheckLabel->setChecked(soundPlayer->getSoundEnable());
     m_guiWindow->addGuiObject(gui_SoundCheckLabel);
 
     const cRectangle &soundVolumeRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50+buttonWidth/2, buttonHeight);
