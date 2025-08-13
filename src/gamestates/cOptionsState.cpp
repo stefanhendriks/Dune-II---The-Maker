@@ -146,13 +146,13 @@ void cOptionsState::constructWindow(int prevState)
     GuiCheckBox *gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
             .onCheck([this]() {
-                m_context->getSoundPlayer()->setMusicMuted(true);
+                m_context->getSoundPlayer()->setMusicEnable(true);
             })
             .onUnCheck([this]() {
-                m_context->getSoundPlayer()->setMusicMuted(false);
+                m_context->getSoundPlayer()->setMusicEnable(false);
             })
             .build();
-    gui_MusicCheckLabel->setChecked(m_context->getSoundPlayer()->getMusicMuted());
+    gui_MusicCheckLabel->setChecked(m_context->getSoundPlayer()->getMusicEnable());
     m_guiWindow->addGuiObject(gui_MusicCheckLabel);
 
     const cRectangle &musicVolumeRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50+buttonWidth/2, buttonHeight);

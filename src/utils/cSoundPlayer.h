@@ -39,16 +39,16 @@ public:
     // think about voices, clear voices, etc.
     void think();
 
-    void setMusicMuted(bool mm) {
+    void setMusicEnable(bool mm) {
         isMusicMuted = mm;
     }
-    bool getMusicMuted() const {
+    bool getMusicEnable() const {
         return isMusicMuted;
     }
-    void setSoundMuted(bool sm) {
+    void setSoundEnable(bool sm) {
         isSoundMuted = sm;
     }
-    bool getSoundMuted() const {
+    bool getSoundEnable() const {
         return isSoundMuted;
     }    
 
