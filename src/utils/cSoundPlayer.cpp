@@ -90,8 +90,12 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerIni
 
         if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
             logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
+            isMusicEnable = false;
+            isSoundEnable = false;
         } else {
             logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL2_mixer succes", OUTC_SUCCESS);
+            isMusicEnable = true;
+            isSoundEnable = true;
         }
 
         int nr_voices = Mix_AllocateChannels(MaxNbrVoices);
