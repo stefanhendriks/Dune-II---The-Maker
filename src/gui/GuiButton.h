@@ -17,7 +17,6 @@ struct GuiButtonParams {
     GuiTextAlignHorizontal align = GuiTextAlignHorizontal::CENTER;
     std::function<void()> onLeftClick = nullptr;
     std::function<void()> onRightClick = nullptr;
-    std::function<void()> onEnter = nullptr;
     Texture *tex = nullptr;
 };
 
@@ -60,7 +59,6 @@ public:
     // [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
     void setOnRightMouseButtonClickedAction(std::function<void()> action);
-    void setOnEnterAction(std::function<void()> action);
 
     void setEnabled(bool value);
 
@@ -72,7 +70,6 @@ private:
     // cGuiAction *m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onRightMouseButtonClickedAction;
-    std::function<void()> m_onEnterAction;
     Texture *m_tex;
 
     bool m_focus;
@@ -93,7 +90,7 @@ private:
     void drawText() const;
 
     void onMouseMovedTo(const s_MouseEvent &event);
-    void OnEnter();
+
     void onMouseRightButtonPressed(const s_MouseEvent &event);
     void onMouseRightButtonClicked(const s_MouseEvent &event);
     void onMouseLeftButtonPressed(const s_MouseEvent &event);
@@ -138,11 +135,6 @@ public:
         return *this;
     }
 
-    GuiButtonBuilder& onEnter(std::function<void()> callback) {
-        params.onEnter = std::move(callback);
-        return *this;
-    }
-
     GuiButtonBuilder& onRightClick(std::function<void()> callback) {
         params.onRightClick = std::move(callback);
         return *this;
@@ -164,8 +156,7 @@ public:
             btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
         if (params.onRightClick)
             btn->setOnRightMouseButtonClickedAction(params.onRightClick);
-        if (params.onEnter)
-            btn->setOnEnterAction(params.onEnter);
+        
         return btn;
     }
 
