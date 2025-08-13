@@ -33,6 +33,10 @@ public:
     void capFps();
     // adapt waiting time based on FPS
     void adaptWaitingTime();
+    // change global speed
+    void setGlobalSpeed(int speed);
+    // get global speed
+    uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
 
 private:
     // gametime timer is called every 100 ms, try to keep up with that.

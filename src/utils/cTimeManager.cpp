@@ -6,7 +6,7 @@
 
 #include <format>
 #include <SDL2/SDL_timer.h>
-
+#include <algorithm>
 
 constexpr int IDEAL_FPS = 60; // ideal frames per second
 
@@ -165,4 +165,10 @@ void cTimeManager::adaptWaitingTime()
             waitingTime = 1; // never wait less than 1 ms
         }
     }
+}
+
+void cTimeManager::setGlobalSpeed(int speed)
+{
+    speed = std::clamp(speed, 1, 10);
+    durationTime.init(speed);
 }
