@@ -221,23 +221,27 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_sld_soundVolumeRect);
 
-    const cRectangle &difficultyRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*3, 50, buttonHeight);
+    const cRectangle &speedRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*3, 50, buttonHeight);
     GuiLabel *gui_DifficultyLabel = GuiLabelBuilder()
             .withLabel("Speed")
             .withTextDrawer(&m_textDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .withRect(difficultyRect)
+            .withRect(speedRect)
             .build();
     m_guiWindow->addGuiObject(gui_DifficultyLabel);
 
-    const cRectangle &btn_difficultyRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
-    GuiSlider *gui_sld_difficultyRect = GuiSliderBuilder()
-            .withRect(btn_difficultyRect)
-            .withMinValue(3)
-            .withMaxValue(7)
-            .withInitialValue(5)
+    cTimeManager* timeManager = m_context->getTimeManager();
+    const cRectangle &sld_speedRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
+    GuiSlider *gui_sld_speedRect = GuiSliderBuilder()
+            .withRect(sld_speedRect)
+            .withMinValue(2)
+            .withMaxValue(10)
+            .withInitialValue(timeManager->getGlobalSpeed())
+            .onValueChanged([this, timeManager](int newValue) {
+                timeManager->setGlobalSpeed(newValue);
+            })
             .build();
-    m_guiWindow->addGuiObject(gui_sld_difficultyRect);
+    m_guiWindow->addGuiObject(gui_sld_speedRect);
 }
 
 cOptionsState::~cOptionsState()
