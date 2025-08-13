@@ -16,7 +16,7 @@
 class cGame;
 
 /**
-	Time management is done in this class
+  Time management is done in this class
 */
 class cTimeManager {
 public:
@@ -41,7 +41,7 @@ private:
     void handleTimerSecond();
     // gametime timer is called every 5 ms, try to keep up with that.
     void handleTimerGameTime();
-  	// system capping to avoid extremely high timers
+    // system capping to avoid extremely high timers
     void capTimers();
 
     cGame *m_game;
@@ -58,16 +58,16 @@ private:
     uint64_t m_lastSecondsTick = 0;
 
     struct DurationTime {
-		uint64_t gameTickDuration;  // 5 
-    	uint64_t unitTickDuration;  // 100
-	  	uint64_t secondTickDuration; // 1000
+      uint64_t gameTickDuration;  // 5 
+      uint64_t unitTickDuration;  // 100
+      uint64_t secondTickDuration; // 1000
 
-		void init(int value) {
-			gameTickDuration = value;
-			unitTickDuration = value * 20;
-			secondTickDuration = value * 200;
-		}
+    void init(int value) {
+      gameTickDuration = value;
+      unitTickDuration = value * 20;
+      secondTickDuration = value * 200;
+    }
     };
 
-	DurationTime durationTime;
+  DurationTime durationTime;
 };
