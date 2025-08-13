@@ -9,7 +9,7 @@
 #include "gui/GuiWindow.h"
 #include "gui/GuiLabel.hpp"
 #include "gui/GuiCheckBox.hpp"
-//#include "gui/GuiSlider.hpp"
+#include "gui/GuiSlider.hpp"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 
@@ -164,14 +164,19 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_MusicVolumeLabel);
 
-    const cRectangle &btn_musicVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, 5+buttonHeight, buttonHeight*2, buttonHeight);
-    GuiButton *gui_btn_musicVolumeRect = GuiButtonBuilder()
+    const cRectangle &btn_musicVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, 5+buttonHeight, buttonHeight*5, buttonHeight);
+    GuiSlider *gui_sld_musicVolumeRect = GuiSliderBuilder()
             .withRect(btn_musicVolumeRect)
-            .withLabel("5")
-            .withTextDrawer(&m_textDrawer)
-            .withTheme(GuiTheme::Light())
+            .withMinValue(0)
+            .withMaxValue(10)
+            .withInitialValue(soundPlayer->getMusicVolume())
+            .onValueChanged([this, soundPlayer](int newValue) {
+                soundPlayer->setMusicVolume(newValue);
+            })
             .build();
-    m_guiWindow->addGuiObject(gui_btn_musicVolumeRect);
+    m_guiWindow->addGuiObject(gui_sld_musicVolumeRect);
+
+
 
     const cRectangle &soundRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50, buttonHeight);
     GuiLabel *gui_SoundLabel = GuiLabelBuilder()
@@ -204,14 +209,17 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_SoundVolumeLabel);
 
-    const cRectangle &btn_soundVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, (5+buttonHeight)*2, buttonHeight*2, buttonHeight);
-    GuiButton *gui_btn_soundVolumeRect = GuiButtonBuilder()
+    const cRectangle &btn_soundVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, (5+buttonHeight)*2, buttonHeight*5, buttonHeight);
+    GuiSlider *gui_sld_soundVolumeRect = GuiSliderBuilder()
             .withRect(btn_soundVolumeRect)
-            .withLabel("3")
-            .withTextDrawer(&m_textDrawer)
-            .withTheme(GuiTheme::Light())
+            .withMinValue(0)
+            .withMaxValue(10)
+            .withInitialValue(soundPlayer->getSoundVolume())
+            .onValueChanged([this, soundPlayer](int newValue) {
+                soundPlayer->setSoundVolume(newValue);
+            })
             .build();
-    m_guiWindow->addGuiObject(gui_btn_soundVolumeRect);
+    m_guiWindow->addGuiObject(gui_sld_soundVolumeRect);
 
     const cRectangle &difficultyRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*3, 50, buttonHeight);
     GuiLabel *gui_DifficultyLabel = GuiLabelBuilder()
@@ -223,13 +231,13 @@ void cOptionsState::constructWindow(int prevState)
     m_guiWindow->addGuiObject(gui_DifficultyLabel);
 
     const cRectangle &btn_difficultyRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
-    GuiButton *gui_btn_difficultyRect = GuiButtonBuilder()
+    GuiSlider *gui_sld_difficultyRect = GuiSliderBuilder()
             .withRect(btn_difficultyRect)
-            .withLabel("slow")
-            .withTextDrawer(&m_textDrawer)
-            .withTheme(GuiTheme::Light())
+            .withMinValue(3)
+            .withMaxValue(7)
+            .withInitialValue(5)
             .build();
-    m_guiWindow->addGuiObject(gui_btn_difficultyRect);
+    m_guiWindow->addGuiObject(gui_sld_difficultyRect);
 }
 
 cOptionsState::~cOptionsState()
