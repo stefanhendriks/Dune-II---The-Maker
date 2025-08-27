@@ -1,9 +1,10 @@
 #include "cPreviewMaps.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-#include "map/cMap.h"
+//#include "map/cMap.h"
+#include "map/MapGeometry.hpp"
 #include "include/d2tmc.h"
-
+#include "include/Texture.hpp"
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -27,6 +28,10 @@ void cPreviewMaps::destroy()
         if (previewMap.terrain) {
             SDL_FreeSurface(previewMap.terrain);
             previewMap.terrain = nullptr;
+        }
+        if (previewMap.previewTex) {
+            delete previewMap.previewTex;
+            previewMap.previewTex = nullptr;
         }
     }
 }
@@ -61,7 +66,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 
     int maxWidth = vecmap[0].size();
     int maxHeight = vecmap.size();
-    int maxCells = (maxWidth + 1) * (maxHeight + 1);
+    int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
     //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
     for (int i = 0; i < 5; i++) {
@@ -93,23 +98,25 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
-    previewMap.width = maxWidth + 1;
-    previewMap.height = maxHeight + 1;
+    previewMap.width = maxWidth + 2;
+    previewMap.height = maxHeight + 2;
 
-    cMap map;
-    map.init(maxWidth + 1, maxHeight + 1);
+    // cMap map;
+    // map.init(previewMap.width , previewMap.height);
+    MapGeometry mapGeom(previewMap.width , previewMap.height);
+
 
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
     if (previewMap.terrain == nullptr) {
-        previewMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+        previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
     }
-    renderDrawer->FillWithColor(previewMap.terrain, Color{0,0,0,255});
+    renderDrawer->FillWithColor(previewMap.terrain, Color::black());
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
         for (int iX = 0; iX < maxWidth; iX++) {
-            int iCll = map.makeCell((iX + 1), (iY + 1));
+            int iCll = mapGeom.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
             Color iColor = Color::white(); //Color{255,255,255,255};
@@ -151,14 +158,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
                             "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
                             letter));
                 terrainType = TERRAIN_SAND;
-                iColor = Color{255, 255, 255,255}; // show as purple to indicate wrong char
+                iColor = Color{160, 32, 240, 255}; // show as purple to indicate wrong char
             }
 
             previewMap.terrainType[iCll] = terrainType;
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2), iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2), iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2) + 1, 1 + (iY * 2) + 1, iColor);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (iX * 2), 1 + (iY * 2) + 1, iColor);
+            renderDrawer->setPixel(previewMap.terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
@@ -166,13 +170,18 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     for (int i = 0; i < 5; i++) {
         int startCell = previewMap.iStartCell[i];
         if (startCell > -1) {
-            int x = map.getCellX(startCell);
-            int y = map.getCellY(startCell);
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2), Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2), Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2) + 1, 1 + (y * 2) + 1, Color{255, 255, 255,255});
-            renderDrawer->setPixel(previewMap.terrain, 1 + (x * 2), 1 + (y * 2) + 1, Color{255, 255, 255,255});
+            int x = mapGeom.getCellX(startCell);
+            int y = mapGeom.getCellY(startCell);
+            renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
         }
+    }
+    if (previewMap.terrain!= nullptr){
+        SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), previewMap.terrain);
+        if (out == nullptr) {
+            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            return;
+        }
+        previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
     }
 }
 
@@ -202,14 +211,10 @@ void cPreviewMaps::loadSkirmishMaps()
 // Skirmish map initialization
 void cPreviewMaps::initPreviews()
 {
+    //reset all ressources
+    destroy();
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         s_PreviewMap &previewMap = PreviewMap[i];
-
-        if (previewMap.terrain != nullptr) {
-            SDL_FreeSurface(previewMap.terrain);
-            previewMap.terrain = nullptr;
-        }
-
         // clear out name
         previewMap.name.clear();
 
@@ -228,11 +233,17 @@ void cPreviewMaps::initPreviews()
         previewMap.iStartCell[3] = -1;
         previewMap.iStartCell[4] = -1;
     }
+    initRandomMap();
+}
 
-    int maxCells = 128 * 128;
+
+void cPreviewMaps::initRandomMap()
+{
     s_PreviewMap &firstSkirmishMap = PreviewMap[0];
-
-    firstSkirmishMap.terrainType = std::vector<int>(maxCells, -1);
     firstSkirmishMap.name = "Random map";
-    firstSkirmishMap.terrain = SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+    firstSkirmishMap.validMap = false;
+    // int maxCells = -1;
+    firstSkirmishMap.terrainType = std::vector<int>(1, -1);
+    firstSkirmishMap.terrain = nullptr;//SDL_CreateRGBSurface(0,128, 128,32,0,0,0,255);
+    firstSkirmishMap.previewTex = nullptr;
 }
