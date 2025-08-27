@@ -13,6 +13,7 @@
 #include "utils/Color.hpp"
 
 class cPlayer;
+class Texture;
 
 // the BuildingListItemState
 enum eMinimapStatus {
@@ -57,7 +58,7 @@ protected:
 private:
     void onMouseAt(const s_MouseEvent &event);
     void onMousePressedLeft(const s_MouseEvent &event);
-
+    void cleanDrawTerrain();
     int getMouseCell(int mouseX, int mouseY);
 
     bool m_isMouseOver;
@@ -67,6 +68,7 @@ private:
     cMapCamera *mapCamera;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
+    Texture *mipMapTex;
 
     eMinimapStatus status;
 
@@ -75,6 +77,8 @@ private:
 
     // the top left coordinates for the minimap
     int drawX, drawY;
+    int centerX, centerY; // the center of the minimap
 
-    bool isBigMap;
+    // bool isBigMap;
+    int factorZoom = 1; // factor to zoom the minimap, based on the map size and the minimap size
 };

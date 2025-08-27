@@ -1036,11 +1036,11 @@ void INI_Load_seed(int seed)
     auto seedMap = seedGenerator.generateSeedMap();
     logbook("Seedmap generated");
 
-    auto mapEditor = cMapEditor(map);
+    auto mapEditor = cMapEditor(global_map);
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
-            int iCell = map.makeCell(mapX, mapY);
+            int iCell = global_map.makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -1292,7 +1292,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     memset(iPl_house, -1, sizeof(iPl_house));
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
-    auto mapEditor = cMapEditor(map);
+    auto mapEditor = cMapEditor(global_map);
 
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
@@ -1416,7 +1416,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     }
 
     mapEditor.smoothMap();
-    map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
+    global_map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
 void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed)
@@ -1483,7 +1483,7 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
 
 void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed)
 {
-    map.init(64, 64);
+    global_map.init(64, 64);
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
@@ -1524,7 +1524,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = map.makeCell(iCellX, iCellY);
+                d2tm_cell = global_map.makeCell(iCellX, iCellY);
                 blooms[iBloomID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -1577,7 +1577,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = map.makeCell(iCellX, iCellY);
+                d2tm_cell = global_map.makeCell(iCellX, iCellY);
                 fields[iFieldID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 

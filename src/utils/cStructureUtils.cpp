@@ -225,12 +225,12 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
     for (int w = 0; w < theStructure->getWidth(); w++) {
         for (int h = 0; h < theStructure->getHeight(); h++)	{
-            int xOfStructureCell = map.getCellX(cellOfStructure);
-            int yOfStructureCell = map.getCellY(cellOfStructure);
+            int xOfStructureCell = global_map.getCellX(cellOfStructure);
+            int yOfStructureCell = global_map.getCellY(cellOfStructure);
 
-            int iCell = map.makeCell(xOfStructureCell + w, yOfStructureCell + h);
+            int iCell = global_map.makeCell(xOfStructureCell + w, yOfStructureCell + h);
 
-            map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
+            global_map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
         }
     }
 }

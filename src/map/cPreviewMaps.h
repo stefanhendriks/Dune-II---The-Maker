@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+class Texture;
+
 static constexpr int MAX_SKIRMISHMAP_PLAYERS = 5;
 
 struct s_PreviewMap {
@@ -15,6 +17,7 @@ struct s_PreviewMap {
     int iStartCell[MAX_SKIRMISHMAP_PLAYERS];      // starting locations
     bool validMap = true;           // is this a valid map? (is false, when map can be loaded but has invalid data)
     std::string name;               // name of map
+    Texture *previewTex = nullptr; // texture for the map preview
 };
 
 class cPreviewMaps {

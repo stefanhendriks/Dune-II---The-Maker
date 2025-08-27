@@ -177,8 +177,8 @@ void cBullet::thinkFast()
         if (iHoming > -1) {
             if (unit[iHoming].isValid()) {
                 int cll = unit[iHoming].getCell();
-                targetX = map.getAbsoluteXPositionFromCell(cll);
-                targetY = map.getAbsoluteYPositionFromCell(cll);
+                targetX = global_map.getAbsoluteXPositionFromCell(cll);
+                targetY = global_map.getAbsoluteYPositionFromCell(cll);
             }
         }
     }
@@ -191,11 +191,11 @@ void cBullet::think_move()
 {
     iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
 
-    int iCellX = map.getCellX(iCell);
-    int iCellY = map.getCellY(iCell);
+    int iCellX = global_map.getCellX(iCell);
+    int iCellY = global_map.getCellY(iCell);
 
     // out of bounds somehow; then die
-    if (!map.isWithinBoundaries(iCellX, iCellY)) {
+    if (!global_map.isWithinBoundaries(iCellX, iCellY)) {
         die();
         return;
     }
@@ -208,8 +208,8 @@ void cBullet::think_move()
         return;
     }
 
-    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
-    int cellTypeAtCell = map.getCellType(iCell);
+    int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCell);
+    int cellTypeAtCell = global_map.getCellType(iCell);
 
     if (!isGroundBullet()) {
         return;
@@ -272,8 +272,8 @@ void cBullet::arrivedAtDestinationLogic()
     const s_BulletInfo &sBullet = gets_Bullet();
 
     // damage is inflicted to size of explosion
-    int x = map.getCellX(iCell);
-    int y = map.getCellY(iCell);
+    int x = global_map.getCellX(iCell);
+    int y = global_map.getCellY(iCell);
 
     int halfExplosionSize = std::round((float)(sBullet.explosionSize / 2));
     int startX = (x - halfExplosionSize);
@@ -284,7 +284,7 @@ void cBullet::arrivedAtDestinationLogic()
     float maxDistanceFromCenter = halfExplosionSize + 0.5f;
     for (int sx = startX; sx < endX; sx++) {
         for (int sy = startY; sy < endY; sy++) {
-            int cellToDamage = map.getCellWithMapBorders(sx, sy);
+            int cellToDamage = global_map.getCellWithMapBorders(sx, sy);
             if (cellToDamage < 0) continue;
 
             float actualDistance = ABS_length(sx, sy, x, y);
@@ -298,8 +298,8 @@ void cBullet::arrivedAtDestinationLogic()
             int half = 16;
             int randomX = -8 + RNG::rnd(half);
             int randomY = -8 + RNG::rnd(half);
-            int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
-            int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
+            int posX = global_map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
+            int posY = global_map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
             logbook(std::format(
                         "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
@@ -354,21 +354,21 @@ void cBullet::arrivedAtDestinationLogic()
  */
 void cBullet::damageTerrain(int cell, double factor) const
 {
-    if (!map.isValidCell(cell)) return;
+    if (!global_map.isValidCell(cell)) return;
     if (!canDamageGround()) return;
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
-    int idOfStructureAtCell = map.getCellIdStructuresLayer(cell);
-    int cellTypeAtCell = map.getCellType(cell);
+    int idOfStructureAtCell = global_map.getCellIdStructuresLayer(cell);
+    int cellTypeAtCell = global_map.getCellType(cell);
 
-    map.cellTakeDamage(cell, iDamage);
+    global_map.cellTakeDamage(cell, iDamage);
 
     if (cellTypeAtCell == TERRAIN_SLAB) {
         // change into rock, get destroyed. But only when we did not hit a structure.
         if (idOfStructureAtCell < 0) {
-            map.cellChangeType(cell, TERRAIN_ROCK);
-            cMapEditor(map).smoothAroundCell(cell);
+            global_map.cellChangeType(cell, TERRAIN_ROCK);
+            cMapEditor(global_map).smoothAroundCell(cell);
         }
     }
 }
@@ -418,9 +418,9 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
  */
 bool cBullet::damageAirUnit(int cell, double factor) const
 {
-    if (!map.isValidCell(cell)) return false;
+    if (!global_map.isValidCell(cell)) return false;
     if (!canDamageAirUnits()) return false;
-    int unitIdOnAirLayer = map.getCellIdAirUnitLayer(cell);
+    int unitIdOnAirLayer = global_map.getCellIdAirUnitLayer(cell);
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
@@ -440,8 +440,8 @@ bool cBullet::damageAirUnit(int cell, double factor) const
  */
 bool cBullet::damageGroundUnit(int cell, double factor) const
 {
-    if (!map.isValidCell(cell)) return false;
-    int id = map.getCellIdUnitLayer(cell);
+    if (!global_map.isValidCell(cell)) return false;
+    int id = global_map.getCellIdUnitLayer(cell);
     if (id < 0) return false;
     if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
 
@@ -534,13 +534,13 @@ float cBullet::getDamageToInflictToInfantry() const
  */
 void cBullet::detonateSpiceBloom(int cell) const
 {
-    map.detonateSpiceBloom(cell);
+    global_map.detonateSpiceBloom(cell);
 }
 
 void cBullet::damageSandworm(int cell, double factor) const
 {
-    if (!map.isValidCell(cell)) return;
-    int id = map.getCellIdWormsLayer(cell);
+    if (!global_map.isValidCell(cell)) return;
+    int id = global_map.getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
     cUnit &worm = unit[id];
@@ -563,20 +563,20 @@ bool cBullet::isAtDestination() const
  */
 void cBullet::damageWall(int cell, double factor) const
 {
-    if (!map.isValidCell(cell)) return;
-    int cellTypeAtCell = map.getCellType(cell);
+    if (!global_map.isValidCell(cell)) return;
+    int cellTypeAtCell = global_map.getCellType(cell);
     if (cellTypeAtCell != TERRAIN_WALL) return;
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
-    map.cellTakeDamage(cell, iDamage);
+    global_map.cellTakeDamage(cell, iDamage);
 
-    if (map.getCellHealth(cell) < 0) {
+    if (global_map.getCellHealth(cell) < 0) {
         // remove wall, turn into smudge:
-        auto mapEditor = cMapEditor(map);
+        auto mapEditor = cMapEditor(global_map);
         mapEditor.createCell(cell, TERRAIN_ROCK, 0);
         mapEditor.smoothAroundCell(cell);
-        map.smudge_increase(SMUDGE_WALL, cell);
+        global_map.smudge_increase(SMUDGE_WALL, cell);
     }
 }
 
@@ -646,8 +646,8 @@ cPlayer *cBullet::getPlayer() const
  */
 void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 {
-    if (!map.isValidCell(idOfStructureAtCell)) return;
-    int id = map.getCellIdStructuresLayer(idOfStructureAtCell);
+    if (!global_map.isValidCell(idOfStructureAtCell)) return;
+    int id = global_map.getCellIdStructuresLayer(idOfStructureAtCell);
     if (id < 0) return; // bail
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();

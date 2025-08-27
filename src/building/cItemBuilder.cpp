@@ -281,10 +281,10 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+                        int iCll = global_map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
-                            bool passable = map.isCellPassableForFootUnits(iCll);
+                            bool passable = global_map.isCellPassableForFootUnits(iCll);
 
                             if (passable) {
                                 UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
@@ -293,8 +293,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = map.getCellX(iCll);
-                            int y = map.getCellY(iCll);
+                            int x = global_map.getCellX(iCll);
+                            int y = global_map.getCellY(iCll);
                             int amount = RNG::rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
@@ -313,9 +313,9 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                     break;
                             }
                             // change cell
-                            cPoint::split(x, y) = map.fixCoordinatesToBeWithinMap(x, y);
+                            cPoint::split(x, y) = global_map.fixCoordinatesToBeWithinMap(x, y);
 
-                            iCll = map.makeCell(x, y);
+                            iCll = global_map.makeCell(x, y);
                         }
                     }
                     item->stopBuilding();
