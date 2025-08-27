@@ -49,6 +49,7 @@
 #include "utils/cScreenInit.h"
 #include "utils/d2tm_math.h"
 #include "map/cPreviewMaps.h"
+#include "map/MapGeometry.hpp"
 #include "utils/Color.hpp"
 
 #include "utils/cFileValidator.h"
@@ -57,6 +58,8 @@
 #include "utils/Graphics.hpp"
 #include "utils/GameSettings.hpp"
 #include <format>
+#include "context/GameContext.hpp"
+#include "context/ContextCreator.hpp"
 
 #include <algorithm>
 #include <random>
@@ -70,7 +73,7 @@ constexpr auto kMaxAlpha = 255;
 
 }
 
-cGame::cGame() : m_timeManager(*this)
+cGame::cGame()
 {
     memset(m_states, 0, sizeof(cGameState *));
 
@@ -83,7 +86,18 @@ cGame::cGame() : m_timeManager(*this)
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
     m_playMusic = true;
+    context = nullptr;
+    ctx = nullptr;
     m_mentat = nullptr;
+
+    // create GameContext
+    ctx = std::make_unique<GameContext>();
+    // create TimeManager
+    std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(this);
+    //local usage
+    m_timeManager = timeManager.get();
+    //send to GameContext
+    ctx->setTimeManager(std::move(timeManager));
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -158,7 +172,7 @@ void cGame::init()
     m_cameraBorderOrKeyMoveSpeed=0.5;
     m_cameraEdgeMove = true;
 
-    map.init(64, 64);
+    global_map.init(64, 64);
 
     initPlayers(false);
 
@@ -199,7 +213,7 @@ void cGame::missionInit()
     m_shakeY = 0;
     m_TIMER_shake = 0;
 
-    map.init(64, 64);
+    global_map.init(64, 64);
 
     initPlayers(true);
 
@@ -471,7 +485,7 @@ void cGame::think_mentat()
 // think function belongs to combat state (tbd)
 void cGame::think_audio()
 {
-    m_soundPlayer->think();
+    // m_soundPlayer->think();
 
     if (!game.m_playMusic) // no music enabled, so no need to think
         return;
@@ -524,7 +538,7 @@ void cGame::drawStateCombat()
     drawManager->drawCombatState();
     if (m_drawFps) {
         // TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
-        textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", game.getFps(), iRest));
+        textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()));
     }
 
     // for now, call this on game class.
@@ -557,14 +571,6 @@ void cGame::initSkirmish() const
 void cGame::loadSkirmishMaps() const
 {
     m_PreviewMaps->loadSkirmishMaps();
-}
-
-
-void cGame::handleTimeSlicing()
-{
-    if (iRest > 0) {
-        SDL_Delay(iRest);
-    }
 }
 
 void cGame::shakeScreenAndBlitBuffer()
@@ -672,7 +678,7 @@ void cGame::run()
     screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
-        m_timeManager.processTime();
+        m_timeManager->processTime();
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -694,9 +700,7 @@ void cGame::run()
             }
         }
         updateMouseAndKeyboardState();
-
         updateGamePlaying();
-        handleTimeSlicing(); // handle time diff (needs to change!)
 
         renderDrawer->beginDrawingToTexture(actualRenderer);
         renderDrawer->renderClearToColor();
@@ -707,7 +711,7 @@ void cGame::run()
         renderDrawer->endDrawingToTexture();
         renderDrawer->renderSprite(actualRenderer,0,0);
         SDL_RenderPresent(renderer);
-        m_frameCount++;
+        m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
 }
 
@@ -775,7 +779,7 @@ void cGame::shutdown()
 
     delete renderDrawer;
     // delete m_dataRepository;
-    m_soundPlayer.reset();
+    // m_soundPlayer.reset();
     delete m_mouse;
     delete m_keyboard;
 
@@ -813,7 +817,7 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
-    map.setReinforcements(m_reinforcements);
+    global_map.setReinforcements(m_reinforcements);
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
@@ -834,7 +838,7 @@ bool cGame::setupGame()
     }
 
     // circumvent: -Werror=unused-function :/
-    eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
+    //eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
 
     if (!settingsValidator->fileExists()) {
         logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
@@ -854,7 +858,6 @@ bool cGame::setupGame()
 
     /* set up the interrupt routines... */
     game.m_TIMER_shake = 0;
-    m_frameCount = m_fps = 0;
 
     m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
     if (!m_windowed) {
@@ -865,6 +868,11 @@ bool cGame::setupGame()
     m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
+
+    // create ressources from scratch
+    context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
+    // share them to all class what use ctx !
+    ctx->setGraphicsContext(context->createGraphicsContext());
 
     game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
     //Mira TEXT if (game_font != nullptr) {
@@ -901,11 +909,14 @@ bool cGame::setupGame()
     textDrawer = std::make_unique<cTextDrawer>(game_font);
     textDrawer->setApplyShadow(false);
 
+    std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
+    m_soundPlayer = soundPlayer.get();
+    ctx->setSoundPlayer(std::move(soundPlayer));
     if (!m_playSound) {
-        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit, 0);
+        m_soundPlayer->setSoundEnable(true);
     }
-    else {
-        m_soundPlayer = std::make_unique<cSoundPlayer>(*m_PLInit);
+    if (!m_playMusic) {
+        m_soundPlayer->setMusicEnable(true);
     }
 
     // do it here, because it depends on fonts to be loaded
@@ -944,23 +955,23 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
     }
 
-    gfxworld = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
-    if (gfxworld == nullptr) {
-        logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
-        return false;
-    }
-    else {
-        logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
-    }
+    // gfxworld = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
+    // if (gfxworld == nullptr) {
+    //     logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
+    //     return false;
+    // }
+    // else {
+    //     logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
+    // }
 
-    gfxmentat = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
-    if (gfxworld == nullptr) {
-        logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
-        return false;
-    }
-    else {
-        logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
-    }
+    // gfxmentat = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
+    // if (gfxworld == nullptr) {
+    //     logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
+    //     return false;
+    // }
+    // else {
+    //     logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
+    // }
 
     renderDrawer = new SDLDrawer(renderer);
 
@@ -996,7 +1007,7 @@ bool cGame::setupGame()
     install_particles();
 
     delete mapCamera;
-    mapCamera = new cMapCamera(&map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
+    mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     INI_Install_Game(m_gameFilename);
     // Now we are ready for the menu state
@@ -1069,7 +1080,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(ctx.get(),game);
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
@@ -1170,7 +1181,7 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(ctx.get(),game);
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
@@ -1218,7 +1229,7 @@ void cGame::setState(int newState)
                 }
 
                 // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, /*background,*/ m_state);
+                newStatePtr = new cOptionsState(*this, ctx.get(), /*background,*/ m_state);
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
@@ -1333,17 +1344,17 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
     delete m_mentat;
     int houseIndex = players[HUMAN].getHouse();
     if (houseIndex == ATREIDES) {
-        m_mentat = new AtreidesMentat(allowMissionSelect);
+        m_mentat = new AtreidesMentat(ctx.get(), allowMissionSelect);
     }
     else if (houseIndex == HARKONNEN) {
-        m_mentat = new HarkonnenMentat(allowMissionSelect);
+        m_mentat = new HarkonnenMentat(ctx.get(), allowMissionSelect);
     }
     else if (houseIndex == ORDOS) {
-        m_mentat = new OrdosMentat(allowMissionSelect);
+        m_mentat = new OrdosMentat(ctx.get(), allowMissionSelect);
     }
     else {
         // fallback
-        m_mentat = new BeneMentat();
+        m_mentat = new BeneMentat(ctx.get());
     }
     prepareMentatForPlayer();
     m_mentat->speak();
@@ -1352,7 +1363,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     delete m_mentat;
-    m_mentat = new BeneMentat();
+    m_mentat = new BeneMentat(ctx.get());
     m_mentat->setHouse(house);
     // create new drawStateMentat
     if (house == ATREIDES) {
@@ -1429,7 +1440,7 @@ void cGame::thinkFast_combat()
         }
     }
 
-    map.thinkFast();
+    global_map.thinkFast();
 
     game.reduceShaking();
 
@@ -1461,7 +1472,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 {
     logbook(s_GameEvent::toString(event));
 
-    map.onNotifyGameEvent(event);
+    global_map.onNotifyGameEvent(event);
 
     // game itself handles events
     switch (event.eventType) {
@@ -1492,19 +1503,19 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
         }
         else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
             int precision = special.deployTargetPrecision;
-            int mouseCellX = map.getCellX(iMouseCell) - precision;
-            int mouseCellY = map.getCellY(iMouseCell) - precision;
+            int mouseCellX = global_map.getCellX(iMouseCell) - precision;
+            int mouseCellY = global_map.getCellY(iMouseCell) - precision;
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = map.fixCoordinatesToBeWithinMap(posX, posY);
+            cPoint::split(posX, posY) = global_map.fixCoordinatesToBeWithinMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = map.makeCell(posX, posY);
+            deployCell = global_map.getGeometry()->makeCell(posX, posY);
         }
 
 
@@ -1611,16 +1622,6 @@ void cGame::setLoseFlags(int value)
         logbook(std::format("Changing m_loseFlags from {} to {}", m_loseFlags, value));
     }
     m_loseFlags = value;
-}
-
-bool cGame::isRunningAtIdealFps()
-{
-    return m_fps > IDEAL_FPS;
-}
-
-int cGame::getFps()
-{
-    return m_fps;
 }
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -1757,7 +1758,7 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_F4)) {
             int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
-                map.clearShroud(mouseCell, 6, HUMAN);
+                global_map.clearShroud(mouseCell, 6, HUMAN);
             }
         }
 
@@ -1891,7 +1892,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = mapCamera->divideByZoomLevel(map.getMaxDistanceInPixels() / 2);
+    float maxDistance = mapCamera->divideByZoomLevel(global_map.getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
@@ -2044,18 +2045,8 @@ void cGame::thinkSlow()
 {
     thinkSlow_state();
 
-    m_fps = m_frameCount;
-
-    // 'auto resting' / giving CPU some time for other processes
-    if (isRunningAtIdealFps()) {
-        iRest += 1; // give CPU a bit more slack
-    }
-    else {
-        if (iRest > 0) iRest -= 1;
-        if (iRest < 0) iRest = 0;
-    }
-
-    m_frameCount = 0;
+    m_timeManager->capFps();
+    m_timeManager->adaptWaitingTime();
 }
 
 void cGame::thinkSlow_state()
@@ -2128,17 +2119,17 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 unit[idOfUnitAtCell].die(true, false);
             }
 
-            int idOfStructureAtCell = map.getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
                 structure[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = map.getCellIdWormsLayer(mc);
+            idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
                 unit[idOfUnitAtCell].die(false, false);
             }
@@ -2149,7 +2140,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 cUnit &pUnit = unit[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
@@ -2162,7 +2153,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     else {
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
-            map.clear_all(HUMAN);
+            global_map.clear_all(HUMAN);
         }
     }
 

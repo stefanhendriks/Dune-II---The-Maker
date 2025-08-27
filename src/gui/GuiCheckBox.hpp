@@ -32,7 +32,10 @@ public:
     void setCheckAction(std::function<void()> checkAction);
     void setUnCheckAction(std::function<void()> unCheckAction);
 
+    // disable CheckBox
     void setEnabled(bool value);
+    // tells the component what initial state it should be in
+    void setChecked(bool value);
 
 private:
     GuiRenderKind m_renderKind;

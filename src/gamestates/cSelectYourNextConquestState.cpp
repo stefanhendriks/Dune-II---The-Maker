@@ -12,6 +12,7 @@
 // #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -40,8 +41,9 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame), textDrawer(bene_font)
+cSelectYourNextConquestState::cSelectYourNextConquestState(GameContext*ctx, cGame &theGame) : cGameState(theGame), textDrawer(bene_font)
 {
+    gfxworld = ctx->getGraphicsContext()->gfxworld.get();
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 

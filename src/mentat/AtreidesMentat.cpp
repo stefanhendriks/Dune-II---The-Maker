@@ -8,7 +8,7 @@
 #include <iostream>
 
 
-AtreidesMentat::AtreidesMentat(bool allowMissionSelect) : AbstractMentat(allowMissionSelect)
+AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx,allowMissionSelect)
 {
     iBackgroundFrame = MENTATA;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);

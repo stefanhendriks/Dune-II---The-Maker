@@ -8,9 +8,10 @@
 #include "drawers/cTextDrawer.h"
 #include <SDL2/SDL_ttf.h>
 #include "gui/GuiButton.h"
+#include "context/GameContext.hpp"
 #include <iostream>
 
-BeneMentat::BeneMentat() : AbstractMentat(false)
+BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
 {
     iBackgroundFrame = MENTATM;
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);

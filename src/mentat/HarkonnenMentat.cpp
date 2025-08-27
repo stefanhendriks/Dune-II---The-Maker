@@ -4,8 +4,9 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "gui/GuiButton.h"
+#include "context/GameContext.hpp"
 
-HarkonnenMentat::HarkonnenMentat(bool allowMissionSelect) : AbstractMentat(allowMissionSelect)
+HarkonnenMentat::HarkonnenMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx, allowMissionSelect)
 {
     iBackgroundFrame = MENTATH;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);

@@ -37,6 +37,8 @@ class cReinforcements;
 class cPreviewMaps;
 struct GameSettings;
 
+class ContextCreator;
+class GameContext;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -234,10 +236,6 @@ public:
     void setMissionLost();
     void setMissionWon();
 
-    // FPS related
-    bool isRunningAtIdealFps();
-    int getFps();
-
     void prepareMentatToTellAboutHouse(int house);
 
     void drawCombatMouse();
@@ -288,7 +286,7 @@ private:
     std::unique_ptr<cScreenInit> m_Screen;
     std::unique_ptr<cInteractionManager> m_interactionManager;
 
-    std::unique_ptr<cSoundPlayer> m_soundPlayer;
+    cSoundPlayer* m_soundPlayer;
 
     std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
@@ -301,8 +299,7 @@ private:
     Texture *screenTexture=nullptr;
     Texture *actualRenderer= nullptr;
     std::unique_ptr<cTextDrawer> textDrawer;
-
-    cTimeManager m_timeManager;
+    cTimeManager* m_timeManager;
 
     std::shared_ptr<cHousesInfo> m_Houses;
 
@@ -331,8 +328,6 @@ private:
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
 
-    int m_frameCount, m_fps;            // fps and such
-
     int m_nextState;
 
     // the current game state we are running
@@ -355,7 +350,6 @@ private:
     void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
-    void handleTimeSlicing();
 
     void initPlayers(bool rememberHouse) const;
 
@@ -393,4 +387,7 @@ private:
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 
     void fadeOutOrBlitScreenBuffer() const;
+
+    std::unique_ptr<GameContext> ctx;
+    std::unique_ptr<ContextCreator> context;
 };

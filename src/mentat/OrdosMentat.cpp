@@ -4,8 +4,9 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "gui/GuiButton.h"
+#include "context/GameContext.hpp"
 
-OrdosMentat::OrdosMentat(bool allowMissionSelect) : AbstractMentat(allowMissionSelect)
+OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx, allowMissionSelect)
 {
     iBackgroundFrame = MENTATO;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
