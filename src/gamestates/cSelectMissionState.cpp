@@ -3,10 +3,10 @@
 #include "d2tmc.h"
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/actions/cGuiActionToGameState.h"
-#include "gui/cGuiButton.h"
-#include "gui/cGuiWindow.h"
-#include "gui/actions/cGuiActionSelectMission.h"
+// #include "gui/actions/cGuiActionToGameState.h"
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
+// #include "gui/actions/cGuiActionSelectMission.h"
 
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
@@ -25,10 +25,11 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new cGuiWindow(window);
+    gui_window = new GuiWindow(window);
+    gui_window->setTheme(GuiTheme::Light());
 
-    const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
-    const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
+    //const GuiRenderKind buttonKinds = GuiRenderKind::OPAQUE_WITH_BORDER;
+    //const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
 
     // Title
     gui_window->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
@@ -42,9 +43,23 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int y = 40;
     for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
-        cGuiButton *btnMission = new cGuiButton(textDrawer, rect, std::format("Mission {}", i), buttonKinds);
-        btnMission->setTextAlignHorizontal(buttonTextAlignment);
-        btnMission->setOnLeftMouseButtonClickedAction(new cGuiActionSelectMission(i));
+        GuiButton *btnMission = GuiButtonBuilder()
+            .withRect(rect)        
+            .withLabel(std::format("Mission {}", i))
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .onClick([this,i]() {
+                game.jumpToSelectYourNextConquestMission(i);
+                game.setNextStateToTransitionTo(GAME_REGION);
+                game.initiateFadingOut();})
+            .build();   
+        // GuiButton *btnMission = new GuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
+        // btnMission->setTheme(GuiTheme::Light());
+        // btnMission->setTextAlignHorizontal(buttonTextAlignment);
+        // btnMission->setOnLeftMouseButtonClickedAction([this,i]() {
+        //     game.jumpToSelectYourNextConquestMission(i);
+        //     game.setNextStateToTransitionTo(GAME_REGION);
+        //     game.initiateFadingOut();});
         gui_window->addGuiObject(btnMission);
 
         y += buttonHeight + margin;
@@ -54,10 +69,20 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     int back = mainMenuHeight - (buttonHeight + margin);
     width = buttonWidth;
     const cRectangle &backRect = gui_window->getRelativeRect(margin, back, (width - margin), buttonHeight);
-    cGuiButton *gui_btn_Back = new cGuiButton(textDrawer, backRect, "Back", buttonKinds);
-    gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    gui_btn_Back->setOnLeftMouseButtonClickedAction(action);
+    GuiButton *gui_btn_Back = GuiButtonBuilder()
+            .withRect(backRect)        
+            .withLabel("Back")
+            .withTextDrawer(&textDrawer)    
+            .withTheme(GuiTheme::Light())
+            .onClick([this,prevState]() {
+                game.setNextStateToTransitionTo(prevState);})
+            .build();  
+    // GuiButton *gui_btn_Back = new GuiButton(textDrawer, backRect, "Back", buttonKinds);
+    // gui_btn_Back->setTheme(GuiTheme::Light());
+    // gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
+    // // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
+    // gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() {
+    //     game.setNextStateToTransitionTo(prevState);});
     gui_window->addGuiObject(gui_btn_Back);
 }
 

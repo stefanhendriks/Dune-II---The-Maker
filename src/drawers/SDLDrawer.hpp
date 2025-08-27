@@ -18,11 +18,13 @@ public:
     void renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity = 255);
     void renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity = 255);
 
-    void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
+    void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity=255);
     void renderRectFillColor(int x, int y, int width, int height, Color color);
-    void renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
+    void renderRectFillColor(const cRectangle &rect, Color color, Uint8 opacity = 255);
+    void renderRectColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity=255);
     void renderRectColor(int x, int y, int width, int height, Color color);
-    void renderRectColor(const cRectangle &pRectangle, Uint8 r, Uint8 g, Uint8 b, unsigned char opacyty=255);
+    void renderRectColor(const cRectangle &rect, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity=255);
+    void renderRectColor(const cRectangle &rect, Color color, unsigned char opacity=255);
 
     void resetClippingFor();
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);

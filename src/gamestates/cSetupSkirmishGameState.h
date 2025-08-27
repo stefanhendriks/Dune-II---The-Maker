@@ -4,7 +4,7 @@
 #include "controls/cKeyboardEvent.h"
 #include "definitions.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/cGuiButton.h"
+#include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 #include "map/cPreviewMaps.h"
@@ -81,8 +81,8 @@ private:
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
 
-    cGuiButton *backButton;
-    cGuiButton *startButton;
+    GuiButton *backButton;
+    GuiButton *startButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
@@ -117,25 +117,20 @@ private:
 
     void generateRandomMap();
 
-    void onMouseLeftButtonClickedAtMapList();
-
-    void onMouseLeftButtonClickedAtStartPoints();
-
     void onMouseRightButtonClicked(const s_MouseEvent &event);
 
+    void onMouseLeftButtonClickedAtStartPoints();
     void onMouseRightButtonClickedAtStartPoints();
 
-    void onMouseLeftButtonClickedAtStartButton();
+    // void onMouseLeftButtonClickedAtStartButton();
 
     void onMouseLeftButtonClickedAtWorms();
-
     void onMouseRightButtonClickedAtWorms();
 
+    void onMouseLeftButtonClickedAtMapList();
     void onMouseLeftButtonClickedAtSpawnBlooms();
-
     void onMouseLeftButtonClickedAtDetonateBlooms();
 
-    void onMouseRightButtonClickedAtPlayerList();
-
     void onMouseLeftButtonClickedAtPlayerList();
+    void onMouseRightButtonClickedAtPlayerList();
 };

@@ -53,7 +53,7 @@ int cMouseDrawer::getWidthToolTip()
     cGameControlsContext *context = player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
-        return 150;
+        return 250;
     }
 
     return 0;
