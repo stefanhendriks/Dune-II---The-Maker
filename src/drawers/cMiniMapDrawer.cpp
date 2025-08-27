@@ -9,8 +9,9 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
-
+#include "map/MapGeometry.hpp"
 #include <cassert>
+#include <iostream>
 
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
     m_isMouseOver(false),
@@ -19,25 +20,38 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *the
     mapCamera(theMapCamera),
     status(eMinimapStatus::NOTAVAILABLE),
     iStaticFrame(STAT14),
-    iTrans(0),
-    isBigMap(theMap->isBigMap())
+    iTrans(0)
+    // isBigMap(theMap->isBigMap())
 {
     assert(theMap);
     assert(thePlayer);
     assert(theMapCamera);
 
+    int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
+    int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
+    //std::cout << "Minimap report: " << reportX << " " << reportY << std::endl;
+    factorZoom = std::min(reportX, reportY);
+
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
     int topLeftX = game.m_screenW - cSideBar::WidthOfMinimap;
-    drawX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
+    drawX = topLeftX + (halfWidthOfMinimap - factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
     int halfHeightOfMap = getMapHeightInPixels() / 2;
     int topLeftY = cSideBar::TopBarHeight;
-    drawY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
+    drawY = topLeftY + (halfHeightOfMinimap - factorZoom*halfHeightOfMap);
 
-    m_RectMinimap = cRectangle(drawX, drawY, getMapWidthInPixels(), getMapHeightInPixels());
+    centerX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
+    centerY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
+
+    m_RectMinimap = cRectangle(drawX, drawY, factorZoom*getMapWidthInPixels(), factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
+    // std::cout << "Minimap at: " << drawX << " " << drawY << " " << m_RectMinimap.getEndX()-drawX << " " << m_RectMinimap.getEndY()-drawY << std::endl;
+    // std::cout << "Full minimap at: " << m_RectFullMinimap.getX() << " " << m_RectFullMinimap.getY() << " "
+    //           << m_RectFullMinimap.getWidth() << " " << m_RectFullMinimap.getHeight() << std::endl;
+    // std::cout << "Minimap center: " << centerX << " " << centerY << std::endl;
+    mipMapTex = renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
 cMiniMapDrawer::~cMiniMapDrawer()
@@ -53,7 +67,7 @@ void cMiniMapDrawer::init()
     status = eMinimapStatus::NOTAVAILABLE;
     iStaticFrame = STAT14;
     iTrans = 0;
-    isBigMap = map->isBigMap();
+    // isBigMap = map->isBigMap();
     m_isMouseOver = false;
 }
 
@@ -65,18 +79,35 @@ void cMiniMapDrawer::drawViewPortRectangle()
     iWidth--;
     iHeight--;
 
-    int pixelSize = 2;
+    // int pixelSize = 2;
 
-    if (map->getWidth() > 64 || map->getHeight() > 64) {
-        pixelSize = 1;
-    }
+    // if (map->getWidth() > 64 || map->getHeight() > 64) {
+    int pixelSize = factorZoom;
+    // }
 
     int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
     int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
 
-    int minimapWidth = (iWidth * pixelSize) + 1;
-    int minimapHeight = (iHeight * pixelSize) + 1;
-
+    int minimapWidth = iWidth * (pixelSize)+1;
+    int minimapHeight = iHeight * (pixelSize)+1;
+    // std::cout << "Viewport rectangle i: " << iWidth << " " << iHeight << std::endl;
+    // std::cout << "Viewport rectangle before: " << startX << " " << startY << " " << minimapWidth << " " << minimapHeight << std::endl;
+    //cap the rectangle to the minimap size
+    if (startX < m_RectFullMinimap.getX()) {
+        minimapWidth += startX - m_RectFullMinimap.getX();
+        startX = m_RectFullMinimap.getX();
+    }
+    if (startY < m_RectFullMinimap.getY()) {
+        minimapHeight += startY - m_RectFullMinimap.getY();
+        startY = m_RectFullMinimap.getY();
+    }
+    if (startX + minimapWidth > m_RectFullMinimap.getEndX()) {
+        minimapWidth = m_RectFullMinimap.getEndX() - startX;
+    }
+    if (startY + minimapHeight > m_RectFullMinimap.getEndY()) {
+        minimapHeight = m_RectFullMinimap.getEndY() - startY;
+    }
+    // std::cout << "Viewport rectangle after: " << startX << " " << startY << " " << minimapWidth << " " << minimapHeight << std::endl;
     //_rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, Color{255, 255, 255));
     renderDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
 }
@@ -84,29 +115,31 @@ void cMiniMapDrawer::drawViewPortRectangle()
 int cMiniMapDrawer::getMapWidthInPixels()
 {
     // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
-    if (map->isBigMap()) {
+    // if (map->isBigMap()) {
         return map->getWidth();
-    }
-    return map->getWidth() * 2; // double pixel size
+    // }
+    // return map->getWidth() * 2; // double pixel size
 }
 
 int cMiniMapDrawer::getMapHeightInPixels()
 {
     // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
-    if (map->isBigMap()) {
+    // if (map->isBigMap()) {
         return map->getHeight();
-    }
-    return map->getHeight() * 2;
+    // }
+    // return map->getHeight() * 2;
 }
 
 void cMiniMapDrawer::drawTerrain()
 {
+    renderDrawer->beginDrawingToTexture(mipMapTex);
     Color iColor = Color{0, 0, 0,255};
 
     for (int x = 0; x < (map->getWidth()); x++) {
         for (int y = 0; y < (map->getHeight()); y++) {
             iColor = Color{0, 0, 0,255};
-            int iCll = map->makeCell(x, y);
+            //@mira where is map ?
+            int iCll = map->getGeometry()->makeCell(x, y);
 
             if (map->isVisible(iCll, player->getId())) {
                 iColor = getRGBColorForTerrainType(map->getCellType(iCll));
@@ -118,17 +151,18 @@ void cMiniMapDrawer::drawTerrain()
                 iColor = Color{0, 0, 0,255};
             }
 
-            int iDrawX = drawX + x;
-            int iDrawY = drawY + y;
+            // int iDrawX = drawX + x;
+            // int iDrawY = drawY + y;
 
-            if (!isBigMap) {
-                // double sized 'pixels'.
-                iDrawX += x;
-                iDrawY += y;
-            }
-            renderDrawer->renderDot(iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+            // if (!isBigMap) {
+                // //double sized 'pixels'.
+                // iDrawX += x;
+                // iDrawY += y;
+            // }
+            renderDrawer->renderDot(x, y, iColor, 1 /*isBigMap ? 1 : 2*/);
         }
     }
+    renderDrawer->endDrawingToTexture();
 }
 
 /**
@@ -138,6 +172,7 @@ void cMiniMapDrawer::drawTerrain()
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
 {
+    renderDrawer->beginDrawingToTexture(mipMapTex);
     Color iColor = Color{0,0,0,255};
     const Color black = Color::black(); //renderDrawer->getColor_BLACK();
     for (int x = 0; x < map->getWidth(); x++) {
@@ -145,7 +180,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             // do not show the helper border
             if (!map->isWithinBoundaries(x, y)) continue;
 
-            int iCll = map->makeCell(x, y);
+            int iCll = map->getGeometry()->makeCell(x, y);
 
             if (!map->isVisible(iCll, player->getId())) {
                 // invisible cell
@@ -194,18 +229,19 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly)
             if (iColor.r == black.r && iColor.g == black.g && iColor.b == black.b) {
                 continue;
             }
-            int iDrawX = drawX + x;
-            int iDrawY = drawY + y;
-            if (!isBigMap) {
-                iDrawX += x;
-                iDrawY += y;
-            }
+            // int iDrawX = drawX + x;
+            // int iDrawY = drawY + y;
+            // if (!isBigMap) {
+            //     iDrawX += x;
+            //     iDrawY += y;
+            // }
             //     std::cout << "Draw " << iDrawX << " " << iDrawY << " " << static_cast<int>(iColor.r)<< " "
             //         << static_cast<int>(iColor.g)<< " "<< static_cast<int>(iColor.b) 
             //         << " "<< static_cast<int>(iColor.a) << std::endl;
-            renderDrawer->renderDot(iDrawX, iDrawY, iColor, isBigMap ? 1 : 2);
+            renderDrawer->renderDot(x, y, iColor, 1 /*isBigMap ? 1 : 2*/);
         }
     }
+    renderDrawer->endDrawingToTexture();
 }
 
 
@@ -244,7 +280,7 @@ void cMiniMapDrawer::draw()
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
     // m_RectFullMinimap
-    renderDrawer->renderRectFillColor(m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight(), Color{0, 0, 0,255});
+    renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::black());
     //auto tmp = cRectangle{m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getWidth(), m_RectFullMinimap.getHeight()};
     // SDL_SetClipRect(bmp_screen, &tmp);
 
@@ -254,13 +290,24 @@ void cMiniMapDrawer::draw()
     }
 
     if (status == eMinimapStatus::LOWPOWER) {
+        cleanDrawTerrain();
         drawUnitsAndStructures(true);
     }
+    cRectangle src = cRectangle(0, 0, mipMapTex->w, mipMapTex->h);
+    renderDrawer->renderStrechSprite(mipMapTex, src , m_RectMinimap);
 
     drawStaticFrame();
 
     drawViewPortRectangle();
     // SDL_SetClipRect(bmp_screen, nullptr);
+}
+
+void cMiniMapDrawer::cleanDrawTerrain()
+{
+    // clear the minimap texture
+    renderDrawer->beginDrawingToTexture(mipMapTex);
+    renderDrawer->renderClearToColor(Color::black());
+    renderDrawer->endDrawingToTexture();
 }
 
 void cMiniMapDrawer::drawStaticFrame()
@@ -270,7 +317,8 @@ void cMiniMapDrawer::drawStaticFrame()
     if (status == eMinimapStatus::LOWPOWER) return;
 
     if (status == eMinimapStatus::POWERDOWN) {
-        renderDrawer->renderSprite(gfxinter->getTexture(iStaticFrame), drawX, drawY);
+        cRectangle src= cRectangle(0, 0, gfxinter->getTexture(iStaticFrame)->w, gfxinter->getTexture(iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap);
         return;
     }
 
@@ -285,7 +333,9 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (iStaticFrame != STAT01) {
-        renderDrawer->renderSprite(gfxinter->getTexture(iStaticFrame), drawX, drawY, iTrans);
+        cRectangle src= cRectangle(0, 0, gfxinter->getTexture(iStaticFrame)->w, gfxinter->getTexture(iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap,iTrans);
+        // renderDrawer->renderSprite(gfxinter->getTexture(iStaticFrame), drawX, drawY, iTrans);
     }
 }
 
@@ -294,21 +344,24 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     // the minimap can be 128x128 pixels at the bottom right of the screen.
     int mouseMiniMapX = mouseX - drawX;
     int mouseMiniMapY = mouseY - drawY;
-
+    //std::cout << "centerX: " << drawX << " centerY: " << drawY << std::endl;
+    //std::cout << "Mouse at: " << mouseX << " " << mouseY << " -> MiniMap: " << mouseMiniMapX << " " << mouseMiniMapY << std::endl;
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
-    if (map->getHeight() > 64 || map->getWidth() > 64) {
-        // do nothing (assume, 1 cell = 1 pixel)
-    }
-    else {
-        // old behavior assumes 1 cell = 2x2 pixels
-        mouseMiniMapX /= 2;
-        mouseMiniMapY /= 2;
-    }
-
+    // if (map->getHeight() > 64 || map->getWidth() > 64) {
+    //     // do nothing (assume, 1 cell = 1 pixel)
+    // }
+    // else {
+    //     // old behavior assumes 1 cell = 2x2 pixels
+    //     mouseMiniMapX /= 2;
+    //     mouseMiniMapY /= 2;
+    // }
+    mouseMiniMapX /= factorZoom;
+    mouseMiniMapY /= factorZoom;
+    //std::cout << "After mouse at: " << mouseX << " " << mouseY << " -> MiniMap: " << mouseMiniMapX << " " << mouseMiniMapY << std::endl;
     auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
-    return map->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
+    return map->getGeometry()->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
 
 // TODO: Respond to game events instead of using the "think" function (tell, don't ask)

@@ -227,7 +227,7 @@ void cOrderProcesser::sendFrigate()
         structure[structureId]->setAnimating(true);
         int destinationCell = structure[structureId]->getCell();
 
-        int iStartCell = map.findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+        int iStartCell = global_map.findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
         if (iStartCell < 0) {
             logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");
@@ -242,10 +242,10 @@ void cOrderProcesser::sendFrigate()
             }
 
             // STEP 2b: make sure its facing the starport directly
-            int iCellX = map.getCellX(iStartCell);
-            int iCellY = map.getCellY(iStartCell);
-            int cx = map.getCellX(destinationCell);
-            int cy = map.getCellY(destinationCell);
+            int iCellX = global_map.getCellX(iStartCell);
+            int iCellY = global_map.getCellY(iStartCell);
+            int cx = global_map.getCellX(destinationCell);
+            int cy = global_map.getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
             int f = faceAngle(d); // get the angle

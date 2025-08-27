@@ -17,8 +17,8 @@ cDrawManager::cDrawManager(cPlayer *thePlayer)
     : m_sidebarDrawer(thePlayer)
     , m_creditsDrawer(thePlayer)
     , m_orderDrawer(thePlayer)
-    , m_mapDrawer(&map, thePlayer, mapCamera)
-    , miniMapDrawer(&map, thePlayer, mapCamera)
+    , m_mapDrawer(&global_map, thePlayer, mapCamera)
+    , miniMapDrawer(&global_map, thePlayer, mapCamera)
     , m_particleDrawer()
     , m_messageDrawer()
     , m_placeitDrawer(thePlayer)
@@ -52,13 +52,13 @@ void cDrawManager::drawCombatState()
     m_particleDrawer.determineParticlesToDraw(*game.m_mapViewport);
     m_particleDrawer.drawLowerLayer();
 
-    map.draw_units();
+    global_map.draw_units();
 
-    map.draw_bullets();
+    global_map.draw_bullets();
 
     m_structureDrawer.drawStructuresSecondLayer();
 
-    map.draw_units_2nd();
+    global_map.draw_units_2nd();
 
     m_particleDrawer.drawTopLayer();
     m_structureDrawer.drawStructuresHealthBars();
