@@ -48,17 +48,17 @@ protected:
 
     void drawTerrain();
     void drawViewPortRectangle();
-    void drawUnitsAndStructures(bool playerOnly);
+    void drawUnitsAndStructures(bool playerOnly) const;
 
     Color getRGBColorForTerrainType(int terrainType);
 
-    int getMapHeightInPixels();
-    int getMapWidthInPixels();
+    int getMapHeightInPixels() const;
+    int getMapWidthInPixels() const;
 
 private:
     void onMouseAt(const s_MouseEvent &event);
     void onMousePressedLeft(const s_MouseEvent &event);
-    void cleanDrawTerrain();
+    void cleanDrawTerrain() const;
     int getMouseCell(int mouseX, int mouseY);
 
     bool m_isMouseOver;

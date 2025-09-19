@@ -503,8 +503,6 @@ public:
 
     void clearAllCells();
 
-    // void resize(int width, int height);
-
     /**
      * Finds the nearest spice Bloom near cell. If param <b>iCell</b> &lt; 0 then use middle of map.
      * If no close cell is found
@@ -547,8 +545,6 @@ public:
     bool isCellPassableForWorm(int cell);
 
     bool isValidTerrainForConcreteAtCell(int cell);
-
-    // bool isBigMap();
 
     void detonateSpiceBloom(int cell);
 
