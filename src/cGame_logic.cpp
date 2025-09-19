@@ -1505,7 +1505,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = global_map.getGeometry()->makeCell(posX, posY);
+            deployCell = global_map.getGeometry().makeCell(posX, posY);
         }
 
 

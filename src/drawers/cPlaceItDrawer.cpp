@@ -71,7 +71,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     // Determine if structure to be placed is within build distance
     for (int iX=iStartX; iX < iEndX; iX++) {
         for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = global_map.getGeometry()->getCellWithMapDimensions(iX, iY);
+            int iCll = global_map.getGeometry().getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
                 int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCll);
@@ -115,7 +115,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     continue;
                 }
 
-                int iCll = global_map.getGeometry()->makeCell(cellX, cellY);
+                int iCll = global_map.getGeometry().makeCell(cellX, cellY);
 
                 if (!global_map.isCellPassable(iCll) || global_map.getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = game.getColorPlaceBad();

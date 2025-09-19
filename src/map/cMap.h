@@ -529,7 +529,7 @@ public:
 
     void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
 
-    MapGeometry *getGeometry() const;
+    [[nodiscard]] MapGeometry &getGeometry() const;
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

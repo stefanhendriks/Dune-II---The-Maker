@@ -315,7 +315,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                             // change cell
                             cPoint::split(x, y) = global_map.fixCoordinatesToBeWithinMap(x, y);
 
-                            iCll = global_map.getGeometry()->makeCell(x, y);
+                            iCll = global_map.getGeometry().makeCell(x, y);
                         }
                     }
                     item->stopBuilding();

@@ -115,7 +115,7 @@ void cMiniMapDrawer::drawTerrain()
         for (int y = 0; y < (map->getHeight()); y++) {
             iColor = Color{0, 0, 0,255};
             //@mira where is map ?
-            int iCll = map->getGeometry()->makeCell(x, y);
+            int iCll = map->getGeometry().makeCell(x, y);
 
             if (map->isVisible(iCll, player->getId())) {
                 iColor = getRGBColorForTerrainType(map->getCellType(iCll));
@@ -146,7 +146,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             // do not show the helper border
             if (!map->isWithinBoundaries(x, y)) continue;
 
-            int iCll = map->getGeometry()->makeCell(x, y);
+            int iCll = map->getGeometry().makeCell(x, y);
 
             if (!map->isVisible(iCll, player->getId())) {
                 // invisible cell
@@ -301,7 +301,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     mouseMiniMapY /= factorZoom;
     auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
-    return map->getGeometry()->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
+    return map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
 
 // TODO: Respond to game events instead of using the "think" function (tell, don't ask)
