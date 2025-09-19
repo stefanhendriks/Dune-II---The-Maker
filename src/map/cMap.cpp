@@ -1035,14 +1035,6 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     return isVisible(iCell, playerId);
 }
 
-// void cMap::resize(int width, int height)
-// {
-//     maxCells = width * height;
-//     this->width = width;
-//     this->height = height;
-//     cell.resize(maxCells);
-// }
-
 int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance)
 {
     return getCellWithMapBorders(
@@ -1506,15 +1498,6 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell)
 
     return true;
 }
-
-/**
- * Returns true if map is wider or higher than 64 cells
- * @return
- */
-// bool cMap::isBigMap()
-// {
-//     return getWidth() > 64 || getHeight() > 64;
-// }
 
 void cMap::detonateSpiceBloom(int cell)
 {

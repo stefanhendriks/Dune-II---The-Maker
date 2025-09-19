@@ -17,9 +17,6 @@ cPreviewMaps::cPreviewMaps(bool debugMode) : m_debugMode(debugMode)
 
 }
 
-/**
- * Make sure to destroy all Allegro bitmaps
- */
 void cPreviewMaps::destroy()
 {
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {

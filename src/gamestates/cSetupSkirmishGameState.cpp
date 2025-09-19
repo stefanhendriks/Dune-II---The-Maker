@@ -412,7 +412,6 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
                 if (selectedMap.terrain) {
-                    //renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                     cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
                     cRectangle dst;
                     if (selectedMap.previewTex->w > selectedMap.previewTex->h) {
