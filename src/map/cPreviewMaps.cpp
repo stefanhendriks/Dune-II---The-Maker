@@ -1,7 +1,6 @@
 #include "cPreviewMaps.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-//#include "map/cMap.h"
 #include "map/MapGeometry.hpp"
 #include "include/d2tmc.h"
 #include "include/Texture.hpp"
@@ -31,8 +30,6 @@ void cPreviewMaps::destroy()
 
 void cPreviewMaps::loadSkirmish(const std::string &filename)
 {
-    // std::cout << filename << std::endl;
-
     int iNew = -1;
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
         if (PreviewMap[i].name[0] == '\0') {
@@ -94,11 +91,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     previewMap.width = maxWidth + 2;
     previewMap.height = maxHeight + 2;
 
-    // cMap map;
-    // map.init(previewMap.width , previewMap.height);
     MapGeometry mapGeom(previewMap.width , previewMap.height);
-
-
     previewMap.terrainType = std::vector<int>(maxCells, -1);
 
     if (previewMap.terrain == nullptr) {
