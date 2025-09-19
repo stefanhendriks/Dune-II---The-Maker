@@ -158,7 +158,7 @@ void cRandomMapGenerator::generateRandomMap(int startingPoints, s_PreviewMap &ra
 
             drawProgress(progress);
 
-            int cll = global_map.getGeometry()->getCellWithMapDimensions(x, y);
+            int cll = global_map.getGeometry().getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             Color iColor = Color{194, 125, 60,255};

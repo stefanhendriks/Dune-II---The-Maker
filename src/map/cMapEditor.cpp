@@ -55,7 +55,7 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
     int iOrgY = y;
 
     for (int i = 0; i < size; i++) {
-        int c = m_map.getGeometry()->getCellWithMapBorders(x, y);
+        int c = m_map.getGeometry().getCellWithMapBorders(x, y);
 
         iDist = ABS_length(x, y, iOrgX, iOrgY);
 
@@ -131,7 +131,7 @@ void cMapEditor::createSquaredField(int cell, int terrainType, int size)
 
     for (int fx = x; fx < x+size; fx++) {
         for (int fy = y; fy < y+size; fy++) {
-            int c = m_map.getGeometry()->getCellWithMapBorders(fx,fy);
+            int c = m_map.getGeometry().getCellWithMapBorders(fx,fy);
             createCell(c, terrainType, 0);
         }
     }
@@ -418,7 +418,7 @@ void cMapEditor::removeSingleRockSpots()
 
     for (int y = startY; y < endY; y++) {
         for (int x = startX; x < endX; x++) {
-            int cll = m_map.getGeometry()->getCellWithMapDimensions(x, y);
+            int cll = m_map.getGeometry().getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             int terrainType = m_map.getCellType(cll);

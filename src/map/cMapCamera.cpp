@@ -167,7 +167,7 @@ void cMapCamera::setViewportPosition(int x, int y)
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y)
 {
-    return global_map.getGeometry()->getCellWithMapDimensions((x / 32), (y / 32));
+    return global_map.getGeometry().getCellWithMapDimensions((x / 32), (y / 32));
 }
 
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)

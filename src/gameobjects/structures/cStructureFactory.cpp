@@ -279,7 +279,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
     for (int x = iCellX; x < iCellXMax; x++) {
         for (int y = iCellY; y < iCellYMax; y++) {
-            global_map.clearShroud(global_map.getGeometry()->makeCell(x, y), iSight, iPlayer);
+            global_map.clearShroud(global_map.getGeometry().makeCell(x, y), iSight, iPlayer);
         }
     }
 }
@@ -326,7 +326,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = global_map.getGeometry()->getCellWithMapBorders(cx + x, cy + y);
+            int cll = global_map.getGeometry().getCellWithMapBorders(cx + x, cy + y);
 
             if (cll < 0) {
                 continue;
@@ -358,7 +358,7 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
     auto mapEditor = cMapEditor(global_map);
     for (int y = cellY; y < endCellY; y++) {
         for (int x = cellX; x < endCellX; x++) {
-            int cell = global_map.getGeometry()->getCellWithMapDimensions(x, y);
+            int cell = global_map.getGeometry().getCellWithMapDimensions(x, y);
             mapEditor.createCell(cell, TERRAIN_SLAB, 0);
         }
     }
@@ -398,7 +398,7 @@ void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer)
 
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            createStructure(global_map.getGeometry()->getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
+            createStructure(global_map.getGeometry().getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
         }
     }
 }

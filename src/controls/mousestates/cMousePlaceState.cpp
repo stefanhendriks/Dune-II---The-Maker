@@ -95,7 +95,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     // Determine if structure to be placed is within build distance
     for (int iX = iStartX; iX < iEndX; iX++) {
         for (int iY = iStartY; iY < iEndY; iY++) {
-            int iCll = global_map.getGeometry()->getCellWithMapDimensions(iX, iY);
+            int iCll = global_map.getGeometry().getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
                 int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCll);
@@ -136,7 +136,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 return false;
             }
 
-            int iCll = global_map.getGeometry()->makeCell(cellX, cellY);
+            int iCll = global_map.getGeometry().makeCell(cellX, cellY);
 
             // occupied by units or structures
             int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCll);

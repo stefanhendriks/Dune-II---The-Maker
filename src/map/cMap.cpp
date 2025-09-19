@@ -54,9 +54,9 @@ cMap::~cMap()
     }
 }
 
-MapGeometry *cMap::getGeometry() const
+MapGeometry &cMap::getGeometry() const
 {
-    return mapGeometry.get();
+    return *mapGeometry;
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
@@ -1036,7 +1036,7 @@ int cMap::findNearestSpiceBloom(int iCell)
 
     if (iCell < 0) {
         // use cell at center
-        iCell = getGeometry()->getCellWithMapDimensions(halfWidth, halfHeight);
+        iCell = getGeometry().getCellWithMapDimensions(halfWidth, halfHeight);
         iDistance = getWidth();
     }
 

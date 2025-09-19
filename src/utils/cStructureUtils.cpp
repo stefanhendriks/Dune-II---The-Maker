@@ -229,7 +229,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
             int xOfStructureCell = global_map.getCellX(cellOfStructure);
             int yOfStructureCell = global_map.getCellY(cellOfStructure);
 
-            int iCell = global_map.getGeometry()->makeCell(xOfStructureCell + w, yOfStructureCell + h);
+            int iCell = global_map.getGeometry().makeCell(xOfStructureCell + w, yOfStructureCell + h);
 
             global_map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
         }
