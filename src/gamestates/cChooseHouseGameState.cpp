@@ -77,8 +77,7 @@ void cChooseHouseGameState::draw() const
     renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
 
     // BACK (bottom right
-    Color color = hoversOverBackButton ? Color{255, 0, 0,255} :
-                      Color{255, 255, 255,255};
+    Color color = hoversOverBackButton ? Color{255, 0, 0,255} : Color{255, 255, 255,255};
     textDrawer.drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE

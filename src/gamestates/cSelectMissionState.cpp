@@ -3,10 +3,8 @@
 #include "d2tmc.h"
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
-// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
-// #include "gui/actions/cGuiActionSelectMission.h"
 
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
@@ -28,16 +26,11 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
     gui_window = new GuiWindow(window);
     gui_window->setTheme(GuiTheme::Light());
 
-    //const GuiRenderKind buttonKinds = GuiRenderKind::OPAQUE_WITH_BORDER;
-    //const GuiTextAlignHorizontal buttonTextAlignment = GuiTextAlignHorizontal::CENTER;
-
     // Title
     gui_window->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
 
 
     // QUIT game
-//    int quit = mainMenuHeight - (buttonHeight + margin);// 464
-//    int width = (buttonWidth / 2);
     int width = buttonWidth;
 
     int y = 40;
@@ -53,13 +46,6 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
                 game.setNextStateToTransitionTo(GAME_REGION);
                 game.initiateFadingOut();})
             .build();   
-        // GuiButton *btnMission = new GuiButton(textDrawer, rect, fmt::format("Mission {}", i), buttonKinds);
-        // btnMission->setTheme(GuiTheme::Light());
-        // btnMission->setTextAlignHorizontal(buttonTextAlignment);
-        // btnMission->setOnLeftMouseButtonClickedAction([this,i]() {
-        //     game.jumpToSelectYourNextConquestMission(i);
-        //     game.setNextStateToTransitionTo(GAME_REGION);
-        //     game.initiateFadingOut();});
         gui_window->addGuiObject(btnMission);
 
         y += buttonHeight + margin;
@@ -77,12 +63,6 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, int prevState)
             .onClick([this,prevState]() {
                 game.setNextStateToTransitionTo(prevState);})
             .build();  
-    // GuiButton *gui_btn_Back = new GuiButton(textDrawer, backRect, "Back", buttonKinds);
-    // gui_btn_Back->setTheme(GuiTheme::Light());
-    // gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
-    // // cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    // gui_btn_Back->setOnLeftMouseButtonClickedAction([this,prevState]() {
-    //     game.setNextStateToTransitionTo(prevState);});
     gui_window->addGuiObject(gui_btn_Back);
 }
 

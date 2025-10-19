@@ -3,7 +3,6 @@
 #include "d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-// #include "gui/actions/cGuiActionToGameState.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
@@ -150,7 +149,6 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     // title bar
     int mapListFrameX = 0;
     int mapListFrameY = playerListBarY + playerListBarHeight;
-    // int mapListFrameWidth = (screen_x - mapListFrameX-widthOfRightColumn)/2;
     int mapListFrameHeight = topBarHeight;
     // rectangle for map list
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
@@ -182,7 +180,6 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
 
     // actual list of maps
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
-
     int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
     int previewMapX = screen_x - widthOfSidebar;
     previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, widthOfRightColumn+65);
@@ -267,6 +264,8 @@ void cSetupSkirmishGameState::thinkFast()
 
 void cSetupSkirmishGameState::draw() const
 {
+    // @Mira rwrite it on Texture
+    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
     renderDrawer->gui_DrawRect(topBar);
 
     textDrawer.drawTextCentered("Skirmish", 1);
@@ -275,7 +274,7 @@ void cSetupSkirmishGameState::draw() const
     renderDrawer->gui_DrawRect(topRightBox);
     renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    // renderDrawer->gui_DrawRect(mapList);
+
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
     renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     textDrawer.drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
@@ -310,7 +309,6 @@ void cSetupSkirmishGameState::draw() const
 
         if (p < iStartingPoints) {
             // player playing or not
-
             cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
             drawPlayerBrain(sSkirmishPlayer, brainRect);
 
@@ -902,7 +900,6 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
     onMouseLeftButtonClickedAtSpawnBlooms();
     onMouseLeftButtonClickedAtDetonateBlooms();
     onMouseLeftButtonClickedAtPlayerList();
-    //onMouseLeftButtonClickedAtStartButton();
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()

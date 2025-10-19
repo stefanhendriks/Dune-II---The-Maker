@@ -9,7 +9,6 @@
 #include "ini.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-// #include "gui/actions/cGuiActionToGameState.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
@@ -60,10 +59,6 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(GameContext*ctx, cGam
     regionMouseIsHoveringOver = -1;
     isFinishedConqueringRegions = true;
 
-    // the quick-way to get to a mission select window
-    //const eGuiButtonRenderKind buttonKind = TRANSPARENT_WITHOUT_BORDER;
-    //const eGuiTextAlignHorizontal buttonTextAlignment = CENTER;
-
     int length = textDrawer.getTextLength("Mission select");
     const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
                                             game.m_screenH - textDrawer.getFontHeight(),
@@ -76,13 +71,6 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(GameContext*ctx, cGam
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();   
-    // GuiButton *gui_btn_toMissionSelect = new GuiButton(textDrawer, toMissionSelectRect,
-    //         "Mission select", buttonKind);
-    // gui_btn_toMissionSelect->setTheme(GuiTheme::Light());
-    // gui_btn_toMissionSelect->setTextAlignHorizontal(buttonTextAlignment);
-    // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MISSIONSELECT, false);
-    // gui_btn_toMissionSelect->setOnLeftMouseButtonClickedAction([this]() {
-    //     game.setNextStateToTransitionTo(GAME_MISSIONSELECT);});
     m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 
@@ -407,8 +395,6 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     // load map
     game.loadScenario();
 
-    //sprintf(msg, "Mission = %d", game.m_mission);
-
     game.playMusicByType(MUSIC_BRIEFING);
 
     state = REGSTATE_FADEOUT;
@@ -531,8 +517,6 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     int hCalc = round((mouseY-offsetY-73)*240.0/regionClickMapBmp->h);
     int c = getPixelColorIndexFromSurface(regionClickMapBmp, wCalc, hCalc);
     //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
-    // @Mira display text
-    //alfont_textprintf(bmp_screen, bene_font, 17,17, Color{0,0,0), "region %d", c-1);
     drawManager->setMessage(std::format("region {}",c-1));
     return c - 1;
 }
