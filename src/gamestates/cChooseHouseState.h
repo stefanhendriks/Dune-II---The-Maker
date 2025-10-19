@@ -10,10 +10,10 @@ struct SDL_Surface;
 class Texture;
 class cGame;
 
-class cChooseHouseGameState : public cGameState {
+class cChooseHouseState : public cGameState {
 public:
-    explicit cChooseHouseGameState(cGame &theGame);
-    ~cChooseHouseGameState() override;
+    explicit cChooseHouseState(cGame &theGame);
+    ~cChooseHouseState() override;
 
     void thinkFast() override;
     void draw() const override;

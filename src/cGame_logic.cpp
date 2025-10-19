@@ -21,7 +21,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
-#include "gamestates/cChooseHouseGameState.h"
+#include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cMainMenuState.h"
 #include "gamestates/cSelectMissionState.h"
@@ -1209,7 +1209,7 @@ void cGame::setState(int newState)
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_SELECT_HOUSE) {
-                newStatePtr = new cChooseHouseGameState(*this);
+                newStatePtr = new cChooseHouseState(*this);
             }
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
