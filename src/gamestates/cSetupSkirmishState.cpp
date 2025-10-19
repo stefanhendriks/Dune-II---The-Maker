@@ -1,4 +1,4 @@
-#include "cSetupSkirmishGameState.h"
+#include "gamestates/cSetupSkirmishState.h"
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
@@ -53,7 +53,7 @@ static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 }
 
 
-cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame)
+cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame)
 {
     m_previewMaps = previewMaps;
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -249,7 +249,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .build();
 }
 
-cSetupSkirmishGameState::~cSetupSkirmishGameState()
+cSetupSkirmishState::~cSetupSkirmishState()
 {
     delete backButton;
     delete startButton;
@@ -257,12 +257,12 @@ cSetupSkirmishGameState::~cSetupSkirmishGameState()
     delete previousMapButton;
 }
 
-void cSetupSkirmishGameState::thinkFast()
+void cSetupSkirmishState::thinkFast()
 {
 
 }
 
-void cSetupSkirmishGameState::draw() const
+void cSetupSkirmishState::draw() const
 {
     // @Mira rwrite it on Texture
     // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
@@ -355,14 +355,14 @@ void cSetupSkirmishGameState::draw() const
     mouse->draw();
 }
 
-void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const
+void cSetupSkirmishState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const
 {
     Color textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
     textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, std::format("{}", sSkirmishPlayer.team));
 }
 
 void
-cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
+cSetupSkirmishState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
         const cRectangle &startingUnitsRect) const
 {
 
@@ -372,14 +372,14 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
 }
 
 void
-cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
+cSetupSkirmishState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
 {
     Color textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
     textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, std::format("{}", sSkirmishPlayer.iCredits));
 }
 
 Color
-cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
+cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
     if (rect.isPointWithin(mouse->getX(), mouse->getY())) {
         Color colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
@@ -394,7 +394,7 @@ cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPl
     return sSkirmishPlayer.bPlaying ? Color::white() : colorDisabled;
 }
 
-void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const
+void cSetupSkirmishState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const
 {
     Color textColor = getTextColorForRect(sSkirmishPlayer, houseRec);
     const std::string &cPlayerHouseString = cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse);
@@ -403,7 +403,7 @@ void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer,
 }
 
 void
-cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const
+cSetupSkirmishState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const
 {
     if (sSkirmishPlayer.bHuman) {
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
@@ -414,7 +414,7 @@ cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer
     }
 }
 
-void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const
+void cSetupSkirmishState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const
 {
     Color textColor = Color::white();
     if (iSkirmishMap == 0) { // random map selected
@@ -429,7 +429,7 @@ void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
     textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor,std::format("Startpoints: {}",iStartingPoints));
 }
 
-void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const
+void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const
 {
     if (iSkirmishMap > -1) {
         s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
@@ -474,7 +474,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
     }
 }
 
-void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const
+void cSetupSkirmishState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const
 {
     if (spawnBlooms) {
         Color textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
@@ -486,21 +486,21 @@ void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloom
     }
 }
 
-void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const
+void cSetupSkirmishState::drawBlooms(const cRectangle &bloomsRect) const
 {
     Color textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
     textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor,
                         std::format("Spice blooms : {}", spawnBlooms ? "YES" : "NO"));
 }
 
-void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const
+void cSetupSkirmishState::drawWorms(const cRectangle &wormsRect) const
 {
     Color textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
     textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor,
                         std::format("Worms? : {}", spawnWorms));
 }
 
-void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
+void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
 {
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
@@ -790,12 +790,12 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
 }
 
-eGameStateType cSetupSkirmishGameState::getType()
+eGameStateType cSetupSkirmishState::getType()
 {
     return GAMESTATE_SETUP_SKIRMISH;
 }
 
-void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event)
+void cSetupSkirmishState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
@@ -817,14 +817,14 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event)
     previousMapButton->onNotifyMouseEvent(event);
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &)
+void cSetupSkirmishState::onMouseRightButtonClicked(const s_MouseEvent &)
 {
     onMouseRightButtonClickedAtStartPoints();
     onMouseRightButtonClickedAtWorms();
     onMouseRightButtonClickedAtPlayerList();
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList()  // draw players who will be playing ;)
+void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw players who will be playing ;)
 {
     for (int p = 0; p < (AI_WORM - 1); p++) {
         const int iDrawY = playerList.getY() + 4 + (p * 22);
@@ -892,7 +892,7 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList()  // draw p
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
+void cSetupSkirmishState::onMouseLeftButtonClicked(const s_MouseEvent &)
 {
     onMouseLeftButtonClickedAtMapList();
     onMouseLeftButtonClickedAtStartPoints();
@@ -902,7 +902,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &)
     onMouseLeftButtonClickedAtPlayerList();
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
 {
     for (int p = 0; p < (AI_WORM - 1); p++) {
         int iDrawY = playerList.getY() + 4 + (p * 22);
@@ -991,7 +991,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList()
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtDetonateBlooms()
 {
     if (spawnBlooms) {
         if (detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY())) {
@@ -1000,14 +1000,14 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms()
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtSpawnBlooms()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtSpawnBlooms()
 {
     if (bloomsRect.isPointWithin(mouse->getX(), mouse->getY())) {
         spawnBlooms = !spawnBlooms;
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtWorms()
 {
     if (wormsRect.isPointWithin(mouse->getX(), mouse->getY())) {
         spawnWorms += 1;
@@ -1017,7 +1017,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse->getX(), mouse->getY())) {
@@ -1032,7 +1032,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
     }
 }
 
-void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
 {
     int const margin = 5;
     int iDrawX = selectArea.getX() + margin;
@@ -1095,7 +1095,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList()
     }
 }
 
-void cSetupSkirmishGameState::generateRandomMap()
+void cSetupSkirmishState::generateRandomMap()
 {
     auto &randomMap = m_previewMaps->getMap(0);
     int randomMapWidth = 128;
@@ -1119,7 +1119,7 @@ void cSetupSkirmishGameState::generateRandomMap()
         randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
 }
 
-void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
+void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
 {
     int const margin = 5;
     int const mapItemButtonHeight = 175;
@@ -1191,7 +1191,7 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapRect) const
     }
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints()
+void cSetupSkirmishState::onMouseRightButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse->getX(), mouse->getY())) {
@@ -1206,7 +1206,7 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints()
     }
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms()
+void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 {
     if (wormsRect.isPointWithin(mouse->getX(), mouse->getY())) {
         spawnWorms -= 1;
@@ -1217,12 +1217,12 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms()
 }
 
 
-void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &)
+void cSetupSkirmishState::onMouseMovedTo(const s_MouseEvent &)
 {
 
 }
 
-void cSetupSkirmishGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
