@@ -92,7 +92,7 @@ void cSelectMissionState::onNotifyMouseEvent(const s_MouseEvent &event)
 
 eGameStateType cSelectMissionState::getType()
 {
-    return GAMESTATE_MISSION_SELECT;
+    return GAMESTATE_SELECT_MISSION;
 }
 
 void cSelectMissionState::onNotifyKeyboardEvent(const cKeyboardEvent &)
