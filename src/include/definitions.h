@@ -12,15 +12,7 @@
 #define MAPID_WORMS  3
 #define MAPID_MAX	 4 // used for clearing all
 
-// Game modes
-// #define MOD_DUNE2		0
-// #define MOD_D2TM		1
-//#define MOD_MINE		2		// own made mod
-
 #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
-
-// Font size
-// #define GAME_FONTSIZE 8
 
 // Max length of a path (per unit)
 #define MAX_PATH_SIZE    256
@@ -62,8 +54,6 @@
 #define MAX_BULLETS      300     // max of bullets in the game at once
 #define MAX_PARTICLES    600	 // max of particles in the game at once
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
-// #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
-//#define HOUSE_SLOTS       10      // amount of House 'types'
 
 // Game states (state machine)
 #define GAME_INITIALIZE  -1      // initialize game
@@ -254,13 +244,6 @@
 #define ROCKET_RTURRET	  13	// rocket turrets have weaker turrets!
 #define BULLET_SAB        14    // a fake bullet , to make it easier to blow up stuff
 #define ROCKET_SMALL_FREMEN     15   // small rocket (trooper/troopers) - FOR FREMEN
-
-// Special bullets (explosions) (Particle types)
-// #define EXPL_ONE          21  // 2 types of explosion
-// #define EXPL_TWO          22  // for structures
-// #define EXPL_TRIKE        23  // explosion for trike/quad
-// #define EXPL_TANK         24  // explosion for a tank/siege/devastator
-// #define EXPL_TANK_TWO     25  // another explosion of a tank etc
 
 // Particle types
 const int D2TM_PARTICLE_MOVE	                = 1; // particle used for indicating when move order has been received
