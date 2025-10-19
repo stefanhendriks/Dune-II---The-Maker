@@ -7,7 +7,6 @@ cKeyboard::cKeyboard() :
     _keyboardObserver(nullptr),
     keysPressed()
 {
-
 }
 
 void cKeyboard::handleEvent(const SDL_Event &event)

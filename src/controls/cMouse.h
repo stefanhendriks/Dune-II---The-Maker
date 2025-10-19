@@ -115,8 +115,6 @@ private:
 
     cPoint coords;
     cPoint coordsOnClick;
-    // int z;    // z = scroll wheel value
-    // int zValuePreviousFrame;
 
     // Mouse information - for select box and dragging, etc
     int mouse_co_x1;        // coordinates
