@@ -28,7 +28,6 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
 
     // adjust x and y according to resolution, we can add because the above values
     // assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
-//    mainMenuFrameX = 257 + logoX;
     mainMenuFrameX = centerOfScreen -(mainMenuWidth/2);
     mainMenuFrameY = 319;
 
@@ -163,7 +162,7 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
             .onClick([this]() {
                 game.m_playing = false;
                 game.initiateFadingOut();})
-            .build();    
+            .build();
     gui_window->addGuiObject(gui_btn_Exit);
 }
 

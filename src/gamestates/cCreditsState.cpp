@@ -34,19 +34,14 @@ cCreditsState::cCreditsState(cGame &theGame) :
 
 void cCreditsState::prepareCrawlerLines()
 {
-    // Color colorYellow = Color{255, 207, 41,255};
-    // Color ColorWhite = Color{255, 255, 255,255};
-    // Color colorGreen = Color{0, 255, 0,255};
-    // Color colorRed = Color{255, 0, 0,255};
-
-    Color colorHeadlines = Color::green(); //colorGreen;
+    Color colorHeadlines = Color::green();
 
     int fontHeightWithALittlePadding = m_textDrawer.getFontHeight() + 4;
     int spacerAfterHeadline = fontHeightWithALittlePadding + m_textDrawer.getFontHeight();
     auto spacer = s_CreditLine {
         .name = "",
         .txt = "",
-        .color = Color::black(), //Color{0,0,0,255},
+        .color = Color::black(),
         .height = 40
     };
 

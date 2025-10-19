@@ -55,7 +55,7 @@ void cOptionsState::constructWindow(int prevState)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MENU);
                 game.initiateFadingOut();})
-            .build();   
+            .build();
     m_guiWindow->addGuiObject(gui_btn_toMenu);
 
     // QUIT game
@@ -70,7 +70,7 @@ void cOptionsState::constructWindow(int prevState)
             .onClick([this]() {
                 game.m_playing = false;
                 game.initiateFadingOut();})
-            .build();   
+            .build();
     m_guiWindow->addGuiObject(gui_btn_Quit);
 
     // BACK to where we came from
@@ -84,7 +84,7 @@ void cOptionsState::constructWindow(int prevState)
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState](){
                 game.setNextStateToTransitionTo(prevState);})
-            .build();   
+            .build();
     m_guiWindow->addGuiObject(gui_btn_Back);
 
     // Mission select from options menu, only when playing the game
@@ -100,7 +100,7 @@ void cOptionsState::constructWindow(int prevState)
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
-            .build();   
+            .build();
         m_guiWindow->addGuiObject(gui_btn_toMissionSelect);
     }
     const cRectangle &musicRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50, buttonHeight);

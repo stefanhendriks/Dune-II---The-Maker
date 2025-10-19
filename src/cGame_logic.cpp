@@ -1263,7 +1263,6 @@ void cGame::setState(int newState)
             m_currentState = newStatePtr;
         }
     }
-
     m_state = newState;
 }
 
