@@ -10,10 +10,10 @@
 class Texture;
 class cGame;
 
-class cMainMenuGameState : public cGameState {
+class cMainMenuState : public cGameState {
 public:
-    explicit cMainMenuGameState(cGame &theGame);
-    ~cMainMenuGameState() override;
+    explicit cMainMenuState(cGame &theGame);
+    ~cMainMenuState() override;
 
     void thinkFast() override;
     void draw() const override;
