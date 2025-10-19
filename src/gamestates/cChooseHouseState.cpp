@@ -1,4 +1,4 @@
-#include "cChooseHouseGameState.h"
+#include "gamestates/cChooseHouseState.h"
 
 #include "d2tmc.h"
 #include "data/gfxinter.h"
@@ -45,7 +45,7 @@ cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     hoversOverBackButton = false;
 }
 
-cChooseHouseGameState::~cChooseHouseGameState()
+cChooseHouseState::~cChooseHouseState()
 {
     delete backButtonRect;
 
@@ -57,12 +57,12 @@ cChooseHouseGameState::~cChooseHouseGameState()
     bmp_HouseHarkonnen = nullptr;
 }
 
-void cChooseHouseGameState::thinkFast()
+void cChooseHouseState::thinkFast()
 {
 
 }
 
-void cChooseHouseGameState::draw() const
+void cChooseHouseState::draw() const
 {
     cMouse *mouse = game.getMouse();
 
@@ -84,12 +84,12 @@ void cChooseHouseGameState::draw() const
     mouse->draw();
 }
 
-eGameStateType cChooseHouseGameState::getType()
+eGameStateType cChooseHouseState::getType()
 {
     return GAMESTATE_SELECT_YOUR_NEXT_CONQUEST;
 }
 
-void cChooseHouseGameState::onNotifyMouseEvent(const s_MouseEvent &event)
+void cChooseHouseState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
@@ -103,7 +103,7 @@ void cChooseHouseGameState::onNotifyMouseEvent(const s_MouseEvent &event)
     }
 }
 
-void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) const
+void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) const
 {
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
@@ -130,12 +130,12 @@ void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) 
     }
 }
 
-void cChooseHouseGameState::onMouseMoved(const s_MouseEvent &event)
+void cChooseHouseState::onMouseMoved(const s_MouseEvent &event)
 {
     hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
 }
 
-void cChooseHouseGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
