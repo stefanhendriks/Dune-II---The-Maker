@@ -300,7 +300,6 @@ void cGame::thinkSlow_stateCombat_evaluatePlayerStatus()
 
                 game.onNotifyGameEvent(event);
             }
-
             // TODO: event : Player joined/became alive, etc?
         }
         m_TIMER_evaluatePlayerStatus = 2;
@@ -525,7 +524,6 @@ void cGame::updateGamePlaying()
     if (m_state != GAME_PLAYING) {
         return;
     }
-
     // Mission playing state logic
     // TODO: Move this to combat state object
     for (auto &pPlayer : players) {
@@ -598,8 +596,6 @@ void cGame::shakeScreenAndBlitBuffer()
             m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
 
             // @Mira recreate shake screen
-            //renderDrawer->blit(bmp_screen, bmp_throttle, 0, 0, 0 + m_shakeX, 0 + m_shakeY, m_screenW, m_screenH);
-            //renderDrawer->blit(bmp_throttle, bmp_screen, 0, 0, 0, 0, m_screenW, m_screenH);
         }
         else {
             fadeOutOrBlitScreenBuffer();
@@ -778,8 +774,6 @@ void cGame::shutdown()
     }
 
     delete renderDrawer;
-    // delete m_dataRepository;
-    // m_soundPlayer.reset();
     delete m_mouse;
     delete m_keyboard;
 
@@ -836,9 +830,6 @@ bool cGame::setupGame()
         m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
         settingsValidator->addResources(std::move(m_transfertMap));
     }
-
-    // circumvent: -Werror=unused-function :/
-    //eGameDirFileNameString(eGameDirFileName::ARRAKEEN);
 
     if (!settingsValidator->fileExists()) {
         logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
@@ -943,7 +934,6 @@ bool cGame::setupGame()
     }
     else {
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
-        // memcpy(general_palette, gfxdata[PALETTE_D2TM], sizeof general_palette);
     }
 
     gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
@@ -1213,13 +1203,10 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                //SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
-                // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cSelectMissionState(*this, /*background,*/ m_state);
+                newStatePtr = new cSelectMissionState(*this, m_state);
             }
             else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                //SDL_Surface *background = SDL_CreateRGBSurface(0,m_screenW, m_screenH,32,0,0,0,255);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
                     drawManager->drawCombatState();
@@ -1228,8 +1215,7 @@ void cGame::setState(int newState)
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
 
-                // renderDrawer->drawSprite(background, bmp_screen, 0, 0);
-                newStatePtr = new cOptionsState(*this, ctx.get(), /*background,*/ m_state);
+                newStatePtr = new cOptionsState(*this, ctx.get(), m_state);
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
@@ -1288,7 +1274,6 @@ void cGame::think_fading()
     static constexpr float fadeSelectIncrement = 1 / 256.0f;
     if (m_fadeSelectDir) {
         m_fadeSelect += fadeSelectIncrement;
-
         // when 255, then fade back
         if (m_fadeSelect > 0.99) {
             m_fadeSelect = 1.0f;
@@ -1299,8 +1284,7 @@ void cGame::think_fading()
     }
 
     m_fadeSelect -= fadeSelectIncrement;
-    // not too dark,
-    // 0.03125
+    // not too dark, 0.03125
     if (m_fadeSelect < 0.3125f) {
         m_fadeSelectDir = true;
     }
@@ -1422,7 +1406,7 @@ void cGame::thinkFast_combat()
     for (cAbstractStructure *pStructure : structure) {
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
-            pStructure->thinkFast();           // think about actions going on
+            pStructure->thinkFast();       // think about actions going on
             pStructure->think_animation(); // think about animating
             pStructure->think_guard();     // think about 'guarding' the area (turrets only)
         }
@@ -1629,15 +1613,9 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
     }
-
-    // if (m_state == GAME_BRIEFING ||
-    //         m_state == GAME_WINBRIEF ||
-    //         m_state == GAME_LOSEBRIEF
-    //    ) {
-        if (m_mentat) {
-            m_mentat->onNotifyMouseEvent(event);
-        }
-    // }
+    if (m_mentat) {
+        m_mentat->onNotifyMouseEvent(event);
+    }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
@@ -1762,7 +1740,6 @@ void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event)
         }
 
     }
-
 
     if (event.hasKey(SDL_SCANCODE_Z)) {
         mapCamera->resetZoom();
@@ -2019,7 +1996,6 @@ int cGame::getMaxVolume()
 void cGame::think_state()
 {
     if (game.isState(GAME_PLAYING)) {
-        // TODO: state->think()
         // units think
         for (int i = 0; i < MAX_UNITS; i++) {
             cUnit &cUnit = unit[i];
@@ -2166,7 +2142,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_F7)) {
-//        shakeScreen(200); // shake for 1 second (fast timer)
+        // shakeScreen(200); // shake for 1 second (fast timer)
         game.m_TIMER_shake = 200;
     }
 
