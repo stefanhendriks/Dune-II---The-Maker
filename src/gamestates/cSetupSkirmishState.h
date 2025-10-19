@@ -27,11 +27,11 @@ struct s_SkirmishPlayer {
     int team;
 };
 
-class cSetupSkirmishGameState : public cGameState {
+class cSetupSkirmishState : public cGameState {
 
 public:
-    explicit cSetupSkirmishGameState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps);
-    ~cSetupSkirmishGameState() override;
+    explicit cSetupSkirmishState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps);
+    ~cSetupSkirmishState() override;
 
     void thinkFast() override;
     void draw() const override;
