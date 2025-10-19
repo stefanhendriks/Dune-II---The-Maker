@@ -792,7 +792,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
 eGameStateType cSetupSkirmishGameState::getType()
 {
-    return GAMESTATE_SETUP_SKIRMISH_GAME;
+    return GAMESTATE_SETUP_SKIRMISH;
 }
 
 void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event)
