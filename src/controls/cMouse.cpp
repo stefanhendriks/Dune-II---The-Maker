@@ -14,7 +14,6 @@
 
 cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
 {
-    // z=0;
     leftButtonPressed=false;
     rightButtonPressed=false;
     leftButtonReleased=false;
