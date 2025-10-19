@@ -23,7 +23,7 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "gamestates/cChooseHouseGameState.h"
 #include "gamestates/cCreditsState.h"
-#include "gamestates/cMainMenuGameState.h"
+#include "gamestates/cMainMenuState.h"
 #include "gamestates/cSelectMissionState.h"
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectYourNextConquestState.h"
@@ -1205,7 +1205,7 @@ void cGame::setState(int newState)
                 newStatePtr = new cCreditsState(*this);
             }
             else if (newState == GAME_MENU) {
-                newStatePtr = new cMainMenuGameState(*this);
+                newStatePtr = new cMainMenuState(*this);
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_SELECT_HOUSE) {

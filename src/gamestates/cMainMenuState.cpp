@@ -1,4 +1,4 @@
-#include "cMainMenuGameState.h"
+#include "cMainMenuState.h"
 
 #include "d2tmc.h"
 #include "config.h"
@@ -9,7 +9,7 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
+cMainMenuState::cMainMenuState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
 {
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -166,17 +166,17 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     gui_window->addGuiObject(gui_btn_Exit);
 }
 
-cMainMenuGameState::~cMainMenuGameState()
+cMainMenuState::~cMainMenuState()
 {
     delete gui_window;
     delete gui_btn_credits;
 }
 
-void cMainMenuGameState::thinkFast()
+void cMainMenuState::thinkFast()
 {
 }
 
-void cMainMenuGameState::draw() const
+void cMainMenuState::draw() const
 {
     if (game.isDebugMode()) {
         for (int x = 0; x < game.m_screenW; x += 60) {
@@ -205,18 +205,18 @@ void cMainMenuGameState::draw() const
 
 }
 
-void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event)
+void cMainMenuState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     gui_window->onNotifyMouseEvent(event);
     gui_btn_credits->onNotifyMouseEvent(event);
 }
 
-eGameStateType cMainMenuGameState::getType()
+eGameStateType cMainMenuState::getType()
 {
     return GAMESTATE_MAIN_MENU;
 }
 
-void cMainMenuGameState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.eventType == eKeyEventType::PRESSED) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
