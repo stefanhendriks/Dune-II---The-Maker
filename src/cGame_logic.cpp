@@ -983,8 +983,8 @@ bool cGame::setupGame()
         players[i].init(i, nullptr);
         players[i].setHousesInfo(m_Houses);
     }
-    logbook("Setup:  BITMAPS");
-    install_bitmaps();
+    // logbook("Setup:  BITMAPS");
+    // install_bitmaps();
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
@@ -1563,10 +1563,10 @@ void cGame::reduceShaking()
     }
 }
 
-void cGame::install_bitmaps()
-{
-    //Mira rip this function
-}
+// void cGame::install_bitmaps()
+// {
+//     //Mira rip this function
+// }
 
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
