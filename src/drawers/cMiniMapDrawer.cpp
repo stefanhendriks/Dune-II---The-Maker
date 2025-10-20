@@ -197,7 +197,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             if (iColor.r == black.r && iColor.g == black.g && iColor.b == black.b) {
                 continue;
             }
-            renderDrawer->renderDot(x, y, iColor, 1 /*isBigMap ? 1 : 2*/);
+            renderDrawer->renderDot(x, y, iColor, 1);
         }
     }
     renderDrawer->endDrawingToTexture();
@@ -258,7 +258,6 @@ void cMiniMapDrawer::draw()
     renderDrawer->renderStrechSprite(mipMapTex, src , m_RectMinimap);
 
     drawStaticFrame();
-
     drawViewPortRectangle();
 }
 
