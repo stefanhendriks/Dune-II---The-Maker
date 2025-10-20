@@ -26,8 +26,7 @@ void cFlag::draw()
     int drawX = mapCamera->getWindowXPosition(absCoords.x);
     int drawY = mapCamera->getWindowYPosition(absCoords.y);
 
-    if ((drawX >= 0 && drawX < game.m_screenW) &&
-            (drawY >= 0 && drawY < game.m_screenH)) { // within screen
+    if ((drawX >= 0 && drawX < game.m_screenW) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
 
         int pixelWidth = flagBitmap->w;
@@ -42,8 +41,6 @@ void cFlag::draw()
         cRectangle src = {0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
 
-        // renderDrawer->maskedStretchBlit(flagBitmap, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-        //                                 drawX, drawY, scaledWidth, scaledHeight);
         renderDrawer->renderStrechSprite(flagBitmap, src, dest);
     }
 }
