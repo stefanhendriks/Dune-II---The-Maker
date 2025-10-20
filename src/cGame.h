@@ -150,17 +150,17 @@ public:
         return getColorFadeSelected(r, g, b, true, true, true);
     }
 
-    Color getColorFadeSelectedRed(int r, int g, int b) {
-        return getColorFadeSelected(r, g, b, true, false, false);
-    }
+    // Color getColorFadeSelectedRed(int r, int g, int b) {
+    //     return getColorFadeSelected(r, g, b, true, false, false);
+    // }
 
-    Color getColorFadeSelectedGreen(int r, int g, int b) {
-        return getColorFadeSelected(r, g, b, false, true, false);
-    }
+    // Color getColorFadeSelectedGreen(int r, int g, int b) {
+    //     return getColorFadeSelected(r, g, b, false, true, false);
+    // }
 
-    Color getColorFadeSelectedBlue(int r, int g, int b) {
-        return getColorFadeSelected(r, g, b, false, false, true);
-    }
+    // Color getColorFadeSelectedBlue(int r, int g, int b) {
+    //     return getColorFadeSelected(r, g, b, false, false, true);
+    // }
 
     Color getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag);
 
