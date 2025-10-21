@@ -635,14 +635,14 @@ void cGame::drawState()
     }
 
     switch (m_state) {
+        case GAME_BRIEFING:
+        case GAME_LOSEBRIEF:
         case GAME_TELLHOUSE:
+        case GAME_WINBRIEF:
             drawStateMentat(m_mentat);
             break;
         case GAME_PLAYING:
             drawStateCombat();
-            break;
-        case GAME_BRIEFING:
-            drawStateMentat(m_mentat);
             break;
         // case GAME_MENU:
         //     drawStateMenu();
@@ -653,14 +653,8 @@ void cGame::drawState()
         case GAME_LOSING:
             drawStateLosing();
             break;
-        case GAME_WINBRIEF:
-            drawStateMentat(m_mentat);
-            break;
-        case GAME_LOSEBRIEF:
-            drawStateMentat(m_mentat);
-            break;
         default:
-            std::cout << "m_state unknown in drawState() " << m_state << std::endl;
+            std::cout << "m_state registered in drawState() " << m_state << std::endl;
             m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
     }
