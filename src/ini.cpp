@@ -1058,10 +1058,13 @@ void INI_Load_seed(int seed)
  * @param linefeed
  * @return
  */
-bool isCommentLine(char linefeed[MAX_LINE_LENGTH])
+bool isCommentLine(const std::string& linefeed)
 {
-    return linefeed[0] == ';' || linefeed[0] == '#' || (linefeed[0] == '/' && linefeed[1] == '/') ||
-           linefeed[0] == '\n' || linefeed[0] == '\0';
+    if (linefeed.empty()) return true;
+    char first = linefeed[0];
+    if (first == ';' || first == '#' || first == '\n' || first == '\0') return true;
+    if (first == '/' && linefeed.size() > 1 && linefeed[1] == '/') return true;
+    return false;
 }
 
 /**
@@ -1106,7 +1109,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
         line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 
         // Sauter les lignes de commentaire ou vides
-        if (line.empty() || isCommentLine(const_cast<char *>(line.c_str()))) {
+        if (line.empty() || isCommentLine(line)) {
             continue;
         }
 
