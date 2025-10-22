@@ -63,7 +63,21 @@ const std::unordered_map<std::string, int> houseMap = {
     {"General", GENERALHOUSE}
 };
 
-int INI_SectionType(char section[30], int last);
+const std::unordered_map<std::string, int> sectionTypeMap = {
+    {"MAP", INI_MAP},
+    {"SKIRMISH", INI_SKIRMISH},
+    {"DESCRIPTION", INI_DESCRIPTION},
+    {"SCEN", INI_SCEN},
+    {"BRIEFING", INI_BRIEFING},
+    {"WIN", INI_WIN},
+    {"LOSE", INI_LOSE},
+    {"ADVICE", INI_ADVICE},
+    {"HOUSES", INI_HOUSES},
+    {"UNITS", INI_UNITS},
+    {"STRUCTURES", INI_STRUCTURES}
+};
+
+int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 int getHouseFromString(const std::string& chunk);
 int getUnitTypeFromChar(char chunk[25]);
@@ -710,47 +724,18 @@ int GAME_INI_SectionType(char section[30], int last)
 }
 
 // Reads out section[], does a string compare and returns type id
-int INI_SectionType(char section[30], int last)
+int INI_SectionType(const std::string& section, int last)
 {
-    if (strcmp(section, "MAP") == 0)
-        return INI_MAP;
-
-    if (strcmp(section, "SKIRMISH") == 0)
-        return INI_SKIRMISH;
-
-    if (strcmp(section, "DESCRIPTION") == 0)
-        return INI_DESCRIPTION;
-
-    if (strcmp(section, "SCEN") == 0)
-        return INI_SCEN;
-
-    if (strcmp(section, "BRIEFING") == 0)
-        return INI_BRIEFING;
-
-    if (strcmp(section, "WIN") == 0)
-        return INI_WIN;
-
-    if (strcmp(section, "LOSE") == 0)
-        return INI_LOSE;
-
-    if (strcmp(section, "ADVICE") == 0)
-        return INI_ADVICE;
-
-    if (strcmp(section, "HOUSES") == 0)
-        return INI_HOUSES;
-
-    if (strcmp(section, "UNITS") == 0)
-        return INI_UNITS;
-
-    if (strcmp(section, "STRUCTURES") == 0) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Structure Section found", section);
-        return INI_STRUCTURES;
+    for (const auto& [key, value] : sectionTypeMap) {
+        if (caseInsCompare(section, key)) {
+            if (key == "STRUCTURES") {
+                cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Structure Section found", section);
+            }
+            return value;
+        }
     }
 
     cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "No SECTION id found, assuming its an ID nested in section", section);
-
-    // When nothing found; we assume its just a new ID tag for some unit or structure
-    // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
     return last;
 }
 
