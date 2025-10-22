@@ -65,7 +65,7 @@ const std::unordered_map<std::string, int> houseMap = {
 
 int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
-int getHouseFromChar(const std::string& chunk);
+int getHouseFromString(const std::string& chunk);
 int getUnitTypeFromChar(char chunk[25]);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
@@ -1176,7 +1176,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
                 INI_WordValueCHAR(const_cast<char *>(line.c_str()), cHouseRegion);
 
                 logbook("Region house");
-                int iH = getHouseFromChar(cHouseRegion);
+                int iH = getHouseFromString(cHouseRegion);
 
                 if (iRegionNumber > -1) {
                     world[iRegionNumber].iHouse = iH;
@@ -1243,7 +1243,7 @@ int getUnitTypeFromChar(char chunk[25])
     return -1;
 }
 
-int getHouseFromChar(const std::string& chunk)
+int getHouseFromString(const std::string& chunk)
 {
     for (const auto& [key, value] : houseMap) {
         if (caseInsCompare(chunk, key)) {
@@ -1690,7 +1690,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             iPart++;
 
             if (iPart == 0) {
-                int iHouse = getHouseFromChar(std::string(chunk));
+                int iHouse = getHouseFromString(std::string(chunk));
 
                 if (iHouse > -1) {
                     // Search for a player with this house
@@ -1806,7 +1806,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             // this line is not GENXXX
             if (bGen == false) {
                 if (iPart == 0) {
-                    int iHouse = getHouseFromChar(std::string(chunk));
+                    int iHouse = getHouseFromString(std::string(chunk));
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1839,7 +1839,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             }
             else {
                 if (iPart == 0) {
-                    int iHouse = getHouseFromChar(std::string(chunk));
+                    int iHouse = getHouseFromString(std::string(chunk));
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1941,7 +1941,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
             iPart++;
 
             if (iPart == INI_UNITS_PART_CONTROLLER) {
-                int iHouse = getHouseFromChar(std::string(chunk));
+                int iHouse = getHouseFromString(std::string(chunk));
 
                 // Search for a player with this house
                 for (int i = 0; i < MAX_PLAYERS; i++) {
