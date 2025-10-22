@@ -35,10 +35,37 @@ namespace fs=std::filesystem;
 #include <string>
 #include <algorithm>
 #include <utility>
+#include <unordered_map>
+
+const std::unordered_map<std::string, int> sectionMap = {
+    {"UNITS", INI_UNITS},
+    {"SKIRMISH", INI_SKIRMISH},
+    {"STRUCTURES", INI_STRUCTURES},
+    {"REINFORCEMENTS", INI_REINFORCEMENTS},
+    {"MAP", INI_MAP},
+    {"BASIC", INI_BASIC},
+    {"Atreides", INI_HOUSEATREIDES},
+    {"Ordos", INI_HOUSEORDOS},
+    {"Harkonnen", INI_HOUSEHARKONNEN},
+    {"Sardaukar", INI_HOUSESARDAUKAR},
+    {"Fremen", INI_HOUSEFREMEN},
+    {"Mercenary", INI_HOUSEMERCENARY}
+};
+
+const std::unordered_map<std::string, int> houseMap = {
+    {"Atreides", ATREIDES},
+    {"Harkonnen", HARKONNEN},
+    {"Ordos", ORDOS},
+    {"Sardaukar", SARDAUKAR},
+    {"Mercenary", MERCENARY},
+    {"Fremen", FREMEN},
+    {"Corrino", CORRINO},
+    {"General", GENERALHOUSE}
+};
 
 int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
-int getHouseFromChar(char chunk[25]);
+int getHouseFromChar(const std::string& chunk);
 int getUnitTypeFromChar(char chunk[25]);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
@@ -1216,19 +1243,15 @@ int getUnitTypeFromChar(char chunk[25])
     return -1;
 }
 
-int getHouseFromChar(char chunk[25])
+int getHouseFromChar(const std::string& chunk)
 {
-    if (strcmp(chunk, "Atreides") == 0) return ATREIDES;
-    if (strcmp(chunk, "Harkonnen") == 0) return HARKONNEN;
-    if (strcmp(chunk, "Ordos") == 0) return ORDOS;
-    if (strcmp(chunk, "Sardaukar") == 0) return SARDAUKAR;
-    if (strcmp(chunk, "Mercenary") == 0) return MERCENARY;
-    if (strcmp(chunk, "Fremen") == 0) return FREMEN;
-    if (strcmp(chunk, "Corrino") == 0) return CORRINO;
-    if (strcmp(chunk, "General") == 0) return GENERALHOUSE;
+    for (const auto& [key, value] : houseMap) {
+        if (caseInsCompare(chunk, key)) {
+            return value;
+        }
+    }
     logbook(std::format(
-                "getHouseFromChar could not determine what house type '{}' is. Returning -1; this will probably cause problems.",
-                chunk));
+        "getHouseFromChar could not determine what house type '{}' is. Returning -1; this will probably cause problems.", chunk));
     return -1;
 }
 
@@ -1667,7 +1690,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             iPart++;
 
             if (iPart == 0) {
-                int iHouse = getHouseFromChar(chunk);
+                int iHouse = getHouseFromChar(std::string(chunk));
 
                 if (iHouse > -1) {
                     // Search for a player with this house
@@ -1783,7 +1806,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             // this line is not GENXXX
             if (bGen == false) {
                 if (iPart == 0) {
-                    int iHouse = getHouseFromChar(chunk);
+                    int iHouse = getHouseFromChar(std::string(chunk));
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1816,7 +1839,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             }
             else {
                 if (iPart == 0) {
-                    int iHouse = getHouseFromChar(chunk);;
+                    int iHouse = getHouseFromChar(std::string(chunk));
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1918,7 +1941,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
             iPart++;
 
             if (iPart == INI_UNITS_PART_CONTROLLER) {
-                int iHouse = getHouseFromChar(chunk);
+                int iHouse = getHouseFromChar(std::string(chunk));
 
                 // Search for a player with this house
                 for (int i = 0; i < MAX_PLAYERS; i++) {
