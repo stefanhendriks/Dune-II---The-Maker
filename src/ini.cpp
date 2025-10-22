@@ -60,18 +60,17 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *lin
 
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
-/*
- Read a line in the INI file and put it into currentLine
-*/
-inline bool caseInsCharCompareN(char a, char b)
-{
-    return (toupper(a) == toupper(b));
-}
 
-bool caseInsCompare(const std::string &s1, const std::string &s2)
+bool caseInsCompare(const std::string& s1, const std::string& s2)
 {
-    return ((s1.size() == s2.size()) &&
-            equal(s1.begin(), s1.end(), s2.begin(), caseInsCharCompareN));
+    if (s1.size() != s2.size()) return false;
+    return std::equal(
+        s1.begin(), s1.end(),
+        s2.begin(),
+        [](char a, char b) {
+            return std::toupper(static_cast<unsigned char>(a)) == std::toupper(static_cast<unsigned char>(b));
+        }
+    );
 }
 
 // Reads out an entire sentence and returns it
