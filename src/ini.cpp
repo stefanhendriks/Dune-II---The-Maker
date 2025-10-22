@@ -1072,13 +1072,16 @@ bool isCommentLine(char linefeed[MAX_LINE_LENGTH])
  */
 std::string INI_GetHouseDirectoryName(int iHouse)
 {
-    if (iHouse == ATREIDES) return "atreides";
-    if (iHouse == HARKONNEN) return "harkonnen";
-    if (iHouse == SARDAUKAR) return "sardaukar";
-    if (iHouse == ORDOS) return "ordos";
-    if (iHouse == FREMEN) return "fremen";
-    if (iHouse == MERCENARY) return "mercenary";
-    return "unknown";
+    using namespace std::string_view_literals;
+    switch (iHouse) {
+        case ATREIDES:   return "atreides";
+        case HARKONNEN:  return "harkonnen";
+        case SARDAUKAR:  return "sardaukar";
+        case ORDOS:      return "ordos";
+        case FREMEN:     return "fremen";
+        case MERCENARY:  return "mercenary";
+        default:         return "unknown";
+    }
 }
 
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
