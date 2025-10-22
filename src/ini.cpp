@@ -34,6 +34,7 @@ namespace fs=std::filesystem;
 
 #include <string>
 #include <algorithm>
+#include <utility>
 
 int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
@@ -138,6 +139,18 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[30])
         word[word_pos] = '\0'; // terminate string
     }
 }
+
+std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
+{
+    auto pos = input.find('=');
+    if (pos == std::string::npos) {
+        return {input, ""}; // Pas de '=' trouvé, tout à gauche
+    }
+    std::string left = input.substr(0, pos);
+    std::string right = input.substr(pos + 1);
+    return {left, right};
+}
+
 
 /**
  * Return true when string "toFind" is in source string. Else return false.
