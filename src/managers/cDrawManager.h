@@ -19,6 +19,7 @@
 class cPlayer;
 struct SDL_Surface;
 class Texture;
+class GameContext;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
@@ -27,7 +28,7 @@ class Texture;
 class cDrawManager : cInputObserver {
 
 public:
-    explicit cDrawManager(cPlayer *thePlayer);
+    explicit cDrawManager(GameContext *ctx, cPlayer *thePlayer);
     ~cDrawManager();
 
     void drawCombatState();
@@ -118,7 +119,7 @@ private:
     Texture *btnOptions;
 
     // TODO: bullet/projectile drawer
-
+    GameContext *m_ctx;
     cPlayer *m_player;
     cTextDrawer m_textDrawer;
 

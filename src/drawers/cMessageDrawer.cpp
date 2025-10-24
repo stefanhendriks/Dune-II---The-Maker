@@ -4,6 +4,8 @@
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 
 #include <SDL2/SDL.h>
 
@@ -11,8 +13,8 @@
 // this class has to be abstracted in such a way so it is used in both those states, yet without the wonky init
 // functions
 
-cMessageDrawer::cMessageDrawer()
-    : m_textDrawer(game_font)
+cMessageDrawer::cMessageDrawer(GameContext* ctx)
+    : m_textDrawer(game_font), m_ctx(ctx)
 {
     m_textDrawer.setApplyShadow(false);
     m_bmpBar = nullptr;

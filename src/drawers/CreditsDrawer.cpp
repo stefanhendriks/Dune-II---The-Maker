@@ -7,11 +7,13 @@
 #include "utils/cSoundPlayer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 #include <SDL2/SDL.h>
 
 #include "data/gfxaudio.h"
 
-CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) : player(thePlayer)
+CreditsDrawer::CreditsDrawer(GameContext* _ctx, cPlayer *thePlayer) : player(thePlayer),  ctx(_ctx)
 {
     assert(thePlayer);
     // bmp = NULL;

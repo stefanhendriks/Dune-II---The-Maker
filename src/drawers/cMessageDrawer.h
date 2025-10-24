@@ -5,6 +5,7 @@
 #include <string>
 
 struct SDL_Surface;
+class GameContext;
 
 namespace messages {
 enum eMessageDrawerState {
@@ -20,7 +21,7 @@ enum eMessageDrawerFadingState {
 
 class cMessageDrawer {
 public:
-    cMessageDrawer();
+    explicit cMessageDrawer(GameContext* ctx);
     ~cMessageDrawer();
 
     void draw();
@@ -59,6 +60,7 @@ private:
     messages::eMessageDrawerState m_state;
     messages::eMessageDrawerFadingState m_fadeState;
     cTextDrawer m_textDrawer;
+    GameContext* m_ctx;
 
     void createMessageBarBmp(int desiredWidth);
 };

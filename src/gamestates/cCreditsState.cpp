@@ -6,6 +6,8 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "include/Texture.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
 

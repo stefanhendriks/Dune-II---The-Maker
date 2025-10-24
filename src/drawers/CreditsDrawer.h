@@ -7,6 +7,7 @@
 
 #pragma once
 
+class GameContext;
 class cPlayer;
 struct SDL_Surface;
 
@@ -14,7 +15,7 @@ struct SDL_Surface;
 
 class CreditsDrawer {
 public:
-    explicit CreditsDrawer(cPlayer *thePlayer);
+    explicit CreditsDrawer(GameContext* _ctx, cPlayer *thePlayer);
     virtual ~CreditsDrawer();
 
     void thinkFast(); // set animation counters and such, time based. Also make sound when needed.
@@ -26,6 +27,7 @@ public:
 
 private:
     cPlayer *player;  //
+    GameContext* ctx;
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);

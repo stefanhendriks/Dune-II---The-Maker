@@ -15,6 +15,8 @@
 #include "utils/cLog.h"
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 
 #include <format>
 #include <algorithm>

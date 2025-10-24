@@ -8,12 +8,14 @@
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
-
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 #include <algorithm>
 
-cSideBarDrawer::cSideBarDrawer(cPlayer *player) :
+cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
-    m_buildingListDrawer(player),
+    m_ctx(ctx),
+    m_buildingListDrawer(ctx, player),
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
 {

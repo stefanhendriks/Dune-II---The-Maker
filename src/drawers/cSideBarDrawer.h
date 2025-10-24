@@ -8,10 +8,11 @@
 
 class Texture;
 class cPlayer;
+class GameContext;
 
 class cSideBarDrawer : cInputObserver {
 public:
-    explicit cSideBarDrawer(cPlayer *player);
+    explicit cSideBarDrawer(GameContext *ctx, cPlayer *player);
     ~cSideBarDrawer() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -35,6 +36,7 @@ protected:
 
 private:
     cPlayer *m_player;
+    GameContext *m_ctx;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;
     Color m_sidebarColor;

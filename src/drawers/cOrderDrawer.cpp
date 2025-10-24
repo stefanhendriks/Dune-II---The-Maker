@@ -7,10 +7,11 @@
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
-
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 #include <SDL2/SDL.h>
 
-cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer)
+cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *thePlayer) : m_ctx(ctx), player(thePlayer)
 {
     buttonBitmap = thePlayer->createTextureFromIndexedSurfaceWithPalette(gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = buttonBitmap->w / 2;

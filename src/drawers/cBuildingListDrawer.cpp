@@ -5,13 +5,16 @@
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 
 #include <SDL2/SDL.h>
 #include <format>
 
-cBuildingListDrawer::cBuildingListDrawer(cPlayer *player) :
+cBuildingListDrawer::cBuildingListDrawer(GameContext *_ctx, cPlayer *player) :
     m_textDrawer(game_font),
     m_player(player),
+    m_ctx(_ctx),
     m_renderListIds(false)
 {
 }

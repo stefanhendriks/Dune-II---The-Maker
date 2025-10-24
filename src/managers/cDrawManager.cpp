@@ -9,22 +9,25 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 
 #include <SDL2/SDL.h>
 #include <cassert>
 
-cDrawManager::cDrawManager(cPlayer *thePlayer)
-    : m_sidebarDrawer(thePlayer)
-    , m_creditsDrawer(thePlayer)
-    , m_orderDrawer(thePlayer)
+cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer)
+    : m_sidebarDrawer(ctx, thePlayer)
+    , m_creditsDrawer(ctx, thePlayer)
+    , m_orderDrawer(ctx, thePlayer)
     , m_mapDrawer(&global_map, thePlayer, mapCamera)
-    , miniMapDrawer(&global_map, thePlayer, mapCamera)
+    , miniMapDrawer(ctx, &global_map, thePlayer, mapCamera)
     , m_particleDrawer()
-    , m_messageDrawer()
+    , m_messageDrawer(ctx)
     , m_placeitDrawer(thePlayer)
-    , m_structureDrawer()
+    , m_structureDrawer(ctx)
     , m_mouseDrawer(thePlayer)
     , m_sidebarColor(Color{214, 149, 20,255})
+    , m_ctx(ctx)
     , m_player(thePlayer)
     , m_textDrawer(game_font)
 {
