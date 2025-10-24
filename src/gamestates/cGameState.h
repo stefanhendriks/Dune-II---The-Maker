@@ -5,6 +5,7 @@
 #include "sMouseEvent.h"
 
 class cGame;
+class GameContext;
 
 enum eGameStateType {
     GAMESTATE_CHOOSE_HOUSE,                 // #define GAME_SELECT_HOUSE  8		// pick a house
@@ -33,7 +34,7 @@ enum eGameStateType {
 class cGameState : cInputObserver {
 
 public:
-    explicit cGameState(cGame &theGame);
+    explicit cGameState(cGame &theGame, GameContext* ctx);
     virtual ~cGameState() = default;
 
     virtual void thinkFast() = 0;
@@ -48,6 +49,7 @@ public:
 protected:
     // the state of the game itself
     cGame &game;
+    GameContext* ctx=nullptr;
 
 private:
 

@@ -8,10 +8,11 @@
 
 struct SDL_Surface;
 class cGame;
+class GameContext;
 
 class cSelectMissionState : public cGameState {
 public:
-    cSelectMissionState(cGame &theGame, int prevState);
+    cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState);
     ~cSelectMissionState() override;
 
     void thinkFast() override;

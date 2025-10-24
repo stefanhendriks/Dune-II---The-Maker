@@ -30,7 +30,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishState : public cGameState {
 
 public:
-    explicit cSetupSkirmishState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps);
+    explicit cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps);
     ~cSetupSkirmishState() override;
 
     void thinkFast() override;

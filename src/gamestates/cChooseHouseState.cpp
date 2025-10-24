@@ -11,8 +11,8 @@
 
 #include "data/gfxaudio.h"
 
-cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
-    cGameState(theGame),
+cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
+    cGameState(theGame, ctx),
     textDrawer(cTextDrawer(bene_font))
 {
     backButtonRect = textDrawer.getAsRectangle(0, game.m_screenH - textDrawer.getFontHeight(), " BACK");

@@ -53,7 +53,7 @@ static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 }
 
 
-cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame)
+cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame, ctx)
 {
     m_previewMaps = previewMaps;
     for (int i = 0; i < MAX_PLAYERS; i++) {

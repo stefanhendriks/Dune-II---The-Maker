@@ -1065,7 +1065,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(ctx.get(),game);
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get());
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
@@ -1166,7 +1166,7 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(ctx.get(),game);
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get());
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
@@ -1183,22 +1183,22 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
-                newStatePtr = new cSetupSkirmishState(*this, m_PreviewMaps);
+                newStatePtr = new cSetupSkirmishState(*this, ctx.get(), m_PreviewMaps);
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_CREDITS) {
-                newStatePtr = new cCreditsState(*this);
+                newStatePtr = new cCreditsState(*this, ctx.get());
             }
             else if (newState == GAME_MENU) {
-                newStatePtr = new cMainMenuState(*this);
+                newStatePtr = new cMainMenuState(*this, ctx.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_SELECT_HOUSE) {
-                newStatePtr = new cChooseHouseState(*this);
+                newStatePtr = new cChooseHouseState(*this, ctx.get());
             }
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                newStatePtr = new cSelectMissionState(*this, m_state);
+                newStatePtr = new cSelectMissionState(*this, ctx.get(), m_state);
             }
             else if (newState == GAME_OPTIONS) {
                 m_mouse->setTile(MOUSE_NORMAL);

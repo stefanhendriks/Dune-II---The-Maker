@@ -9,8 +9,8 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-cCreditsState::cCreditsState(cGame &theGame) :
-    cGameState(theGame),
+cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
+    cGameState(theGame, ctx),
     m_moveSpeed(0.15f),
     m_textDrawer(cTextDrawer(bene_font)),
     m_duneBmp(gfxinter->getTexture(BMP_GAME_DUNE)),

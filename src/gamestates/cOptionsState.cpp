@@ -14,7 +14,7 @@
 
 
 cOptionsState::cOptionsState(cGame &theGame, GameContext *context, int prevState)
-    : cGameState(theGame)
+    : cGameState(theGame, context)
     , m_textDrawer(cTextDrawer(bene_font))
     , m_prevState(prevState)
     , m_guiWindow(nullptr)
