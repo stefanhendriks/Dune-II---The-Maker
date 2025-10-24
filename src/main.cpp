@@ -15,7 +15,6 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
-// #include "map/cRandomMapGenerator.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "drawers/SDLDrawer.hpp"
@@ -31,21 +30,19 @@
 
 // the ultimate game variable(s)
 cGame          				game;
-
 cStructureUtils 			structureUtils;
 cMap           				global_map;
-// cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     		*structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
-cMapCamera					*mapCamera;
 cPlayer        				players[MAX_PLAYERS];             // player is
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
-cDrawManager   				*drawManager = nullptr;
 
+cDrawManager   				*drawManager = nullptr;
 SDLDrawer                   *renderDrawer = nullptr;
+cMapCamera					*mapCamera;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
@@ -58,8 +55,6 @@ s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 std::shared_ptr<Graphics> gfxinter;		// interface graphics
-// std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
-// std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
 
 // FONT stuff
 TTF_Font *game_font; 	// arrakeen.fon
