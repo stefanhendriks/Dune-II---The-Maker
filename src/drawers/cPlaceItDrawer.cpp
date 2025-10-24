@@ -44,11 +44,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     assert(structureId > -1);
 
     bool bWithinBuildDistance = false;
-
-    // int width = sStructureInfo[structureId].bmp_width;
-    // int height = sStructureInfo[structureId].bmp_height;
-    // int scaledWidth = mapCamera->factorZoomLevel(width);
-    // int scaledHeight = mapCamera->factorZoomLevel(height);
     int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureId);
     int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureId);
 
