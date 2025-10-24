@@ -13,12 +13,11 @@
 
 
 
-cOptionsState::cOptionsState(cGame &theGame, GameContext *context, int prevState)
-    : cGameState(theGame, context)
+cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
+    : cGameState(theGame, ctx)
     , m_textDrawer(cTextDrawer(bene_font))
     , m_prevState(prevState)
     , m_guiWindow(nullptr)
-    , m_context(context)
 {
     refresh();
 }
@@ -38,7 +37,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = new GuiWindow(window);
     m_guiWindow->setTheme(GuiTheme::Light());
-    cSoundPlayer* soundPlayer = m_context->getSoundPlayer();
+    cSoundPlayer* soundPlayer = ctx->getSoundPlayer();
 
     // Title
     m_guiWindow->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
@@ -198,7 +197,7 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_DifficultyLabel);
 
-    cTimeManager* timeManager = m_context->getTimeManager();
+    cTimeManager* timeManager = ctx->getTimeManager();
     const cRectangle &sld_speedRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
     int convertedForSlider = 2 - timeManager->getGlobalSpeed() + 10;
     GuiSlider *gui_sld_speedRect = GuiSliderBuilder()

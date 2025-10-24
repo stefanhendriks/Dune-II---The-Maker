@@ -12,7 +12,7 @@ class GameContext;
 
 class cOptionsState : public cGameState {
 public:
-    explicit cOptionsState(cGame &theGame, GameContext *context, int prevState);
+    explicit cOptionsState(cGame &theGame, GameContext *ctx, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -34,5 +34,4 @@ private:
     GuiWindow *m_guiWindow;
 
     void constructWindow(int prevState);
-    GameContext *m_context;
 };
