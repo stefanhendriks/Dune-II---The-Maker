@@ -9,10 +9,11 @@
 struct SDL_Surface;
 class Texture;
 class cGame;
+class GameContext;
 
 class cChooseHouseState : public cGameState {
 public:
-    explicit cChooseHouseState(cGame &theGame);
+    explicit cChooseHouseState(cGame &theGame, GameContext* ctx);
     ~cChooseHouseState() override;
 
     void thinkFast() override;

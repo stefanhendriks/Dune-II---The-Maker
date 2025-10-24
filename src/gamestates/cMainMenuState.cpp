@@ -9,7 +9,7 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cMainMenuState::cMainMenuState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font))
+cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx), textDrawer(cTextDrawer(bene_font))
 {
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 

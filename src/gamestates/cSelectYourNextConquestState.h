@@ -46,7 +46,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(GameContext *ctx, cGame &theGame);
+    explicit cSelectYourNextConquestState(cGame &theGame, GameContext *ctx);
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;

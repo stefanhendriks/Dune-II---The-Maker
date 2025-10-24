@@ -12,7 +12,7 @@ class cGame;
 
 class cMainMenuState : public cGameState {
 public:
-    explicit cMainMenuState(cGame &theGame);
+    explicit cMainMenuState(cGame &theGame, GameContext* ctx);
     ~cMainMenuState() override;
 
     void thinkFast() override;

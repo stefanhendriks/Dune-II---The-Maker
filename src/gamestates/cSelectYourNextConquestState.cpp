@@ -40,7 +40,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(GameContext*ctx, cGame &theGame) : cGameState(theGame), textDrawer(bene_font)
+cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) : cGameState(theGame, ctx), textDrawer(bene_font)
 {
     gfxworld = ctx->getGraphicsContext()->gfxworld.get();
     state = eRegionState::REGSTATE_INIT;
