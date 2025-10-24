@@ -31,6 +31,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer)
     , m_player(thePlayer)
     , m_textDrawer(game_font)
 {
+    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     assert(thePlayer);
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
             gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
