@@ -5,11 +5,12 @@
 #include "sidebar/cBuildingList.h"
 
 class cPlayer;
+class GameContext;
 
 class cBuildingListDrawer : cInputObserver {
 
 public:
-    explicit cBuildingListDrawer(cPlayer *player);
+    explicit cBuildingListDrawer(GameContext *ctx, cPlayer *player);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -32,6 +33,7 @@ private:
     cTextDrawer m_textDrawer;
 
     cPlayer *m_player;
+    GameContext *m_ctx;
 
     bool m_renderListIds;
 

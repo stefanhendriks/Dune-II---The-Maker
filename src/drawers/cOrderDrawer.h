@@ -6,10 +6,11 @@
 class cPlayer;
 struct SDL_Surface;
 class Texture;
+class GameContext;
 
 class cOrderDrawer {
 public:
-    explicit cOrderDrawer(cPlayer *thePlayer);
+    explicit cOrderDrawer(GameContext *ctx, cPlayer *thePlayer);
 
     ~cOrderDrawer();
 
@@ -26,7 +27,7 @@ private:
     void onMouseClickedLeft(const s_MouseEvent &event);
 
     bool _isMouseOverOrderButton;
-
+    GameContext *m_ctx;
     cPlayer *player;
     cRectangle buttonRect;
     Texture *buttonBitmap;

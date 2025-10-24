@@ -10,13 +10,16 @@
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include "map/MapGeometry.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 #include <cassert>
 #include <iostream>
 
 #include "data/gfxaudio.h"
 
-cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
+cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
     m_isMouseOver(false),
+    m_ctx(ctx),
     map(theMap),
     player(thePlayer),
     mapCamera(theMapCamera),

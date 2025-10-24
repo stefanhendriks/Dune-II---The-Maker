@@ -1,11 +1,14 @@
 #pragma once
 
+class GameContext;
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
 #include "utils/Color.hpp"
 
 class cStructureDrawer {
 public:
+    explicit cStructureDrawer(GameContext *context);
+    ~cStructureDrawer() = default;
     void drawStructuresFirstLayer();
     void drawStructuresSecondLayer();
     void drawStructuresHealthBars();
@@ -23,6 +26,7 @@ protected:
     int determinePreBuildAnimationIndex(cAbstractStructure *structure);
 
 private:
+    GameContext *m_ctx;
     cStructureUtils structureUtils;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;

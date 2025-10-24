@@ -14,6 +14,7 @@
 
 class cPlayer;
 class Texture;
+class GameContext;
 
 // the BuildingListItemState
 enum eMinimapStatus {
@@ -26,7 +27,7 @@ enum eMinimapStatus {
 
 class cMiniMapDrawer {
 public:
-    explicit cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
+    explicit cMiniMapDrawer(GameContext *ctx, cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
     cMiniMapDrawer() = delete;
     ~cMiniMapDrawer();
 
@@ -65,6 +66,7 @@ private:
     bool m_isMouseOver;
 
     //@mira : where is map ? Where is this initialisation ?
+    GameContext *m_ctx;
     cMap *map;	// the minimap drawer reads data from here
     cPlayer *player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
     cMapCamera *mapCamera;

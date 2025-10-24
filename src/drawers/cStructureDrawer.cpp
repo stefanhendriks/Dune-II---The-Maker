@@ -11,7 +11,13 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
+#include "context/EntityContext.hpp"
 #include <SDL2/SDL.h>
+
+cStructureDrawer::cStructureDrawer(GameContext *context) : m_ctx(context) 
+{}
+
 
 void cStructureDrawer::drawStructuresFirstLayer()
 {
