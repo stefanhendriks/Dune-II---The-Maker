@@ -13,6 +13,7 @@
 
 cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *thePlayer) : m_ctx(ctx), player(thePlayer)
 {
+    auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     buttonBitmap = thePlayer->createTextureFromIndexedSurfaceWithPalette(gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;

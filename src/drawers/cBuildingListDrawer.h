@@ -6,6 +6,7 @@
 
 class cPlayer;
 class GameContext;
+class Graphics;
 
 class cBuildingListDrawer : cInputObserver {
 
@@ -31,6 +32,7 @@ protected:
 private:
     // the list to draw
     cTextDrawer m_textDrawer;
+    Graphics* gfxinter;
 
     cPlayer *m_player;
     GameContext *m_ctx;

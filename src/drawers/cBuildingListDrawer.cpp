@@ -17,6 +17,7 @@ cBuildingListDrawer::cBuildingListDrawer(GameContext *_ctx, cPlayer *player) :
     m_ctx(_ctx),
     m_renderListIds(false)
 {
+    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
