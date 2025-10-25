@@ -36,5 +36,6 @@ std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
     auto gtx = std::make_unique<GraphicsContext>();
     gtx->gfxmentat = gfxmentat;
     gtx->gfxworld = gfxworld;
+    gtx->gfxinter = gfxinter;
     return gtx;
 }
