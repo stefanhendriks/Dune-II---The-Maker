@@ -6,6 +6,7 @@
 
 struct SDL_Surface;
 class GameContext;
+class Graphics;
 
 namespace messages {
 enum eMessageDrawerState {
@@ -61,6 +62,7 @@ private:
     messages::eMessageDrawerFadingState m_fadeState;
     cTextDrawer m_textDrawer;
     GameContext* m_ctx;
+    Graphics* gfxinter;
 
     void createMessageBarBmp(int desiredWidth);
 };

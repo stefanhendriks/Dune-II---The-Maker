@@ -21,6 +21,7 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx)
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
     init();
+    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 }
 
 cMessageDrawer::~cMessageDrawer()

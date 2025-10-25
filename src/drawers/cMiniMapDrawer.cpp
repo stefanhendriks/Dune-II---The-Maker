@@ -30,6 +30,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *theMap, cPlayer *thePlaye
     assert(theMap);
     assert(thePlayer);
     assert(theMapCamera);
+    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 
     int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
     int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();

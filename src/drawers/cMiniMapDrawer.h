@@ -15,6 +15,7 @@
 class cPlayer;
 class Texture;
 class GameContext;
+class Graphics;
 
 // the BuildingListItemState
 enum eMinimapStatus {
@@ -73,6 +74,7 @@ private:
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *mipMapTex;
+    Graphics *gfxinter;
 
     eMinimapStatus status;
 
