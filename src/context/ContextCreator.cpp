@@ -21,6 +21,14 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     else {
         cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
     }
+
+    gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
+    if (gfxinter == nullptr) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
+    }
+    else {
+        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
+    }
 }
 
 std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
