@@ -20,6 +20,7 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_sidebarColor(Color{214, 149, 20,255})
 {
     assert(player);
+    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     candyBarBall = m_player->createTextureFromIndexedSurfaceWithPalette(
             gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
     candyBarPiece = m_player->createTextureFromIndexedSurfaceWithPalette(

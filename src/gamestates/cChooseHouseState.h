@@ -10,6 +10,7 @@ struct SDL_Surface;
 class Texture;
 class cGame;
 class GameContext;
+class Graphics;
 
 class cChooseHouseState : public cGameState {
 public:
@@ -26,6 +27,7 @@ public:
 
 private:
     cTextDrawer textDrawer;
+    Graphics *gfxinter;
     cRectangle *backButtonRect;
 
     Texture *bmp_Dune;

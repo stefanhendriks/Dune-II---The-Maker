@@ -17,6 +17,7 @@ cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
     textDrawer(cTextDrawer(bene_font))
 {
+    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     backButtonRect = textDrawer.getAsRectangle(0, game.m_screenH - textDrawer.getFontHeight(), " BACK");
 
     bmp_Dune = gfxinter->getTexture(BMP_GAME_DUNE);
