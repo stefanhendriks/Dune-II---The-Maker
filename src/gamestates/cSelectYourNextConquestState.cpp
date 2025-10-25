@@ -43,6 +43,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) : cGameState(theGame, ctx), textDrawer(bene_font)
 {
     gfxworld = ctx->getGraphicsContext()->gfxworld.get();
+    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 

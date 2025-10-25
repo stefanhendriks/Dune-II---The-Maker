@@ -12,6 +12,7 @@
 
 cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx), textDrawer(cTextDrawer(bene_font))
 {
+    auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
     int logoWidth = bmp_D2TM_Title->w;
