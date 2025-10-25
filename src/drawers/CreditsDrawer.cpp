@@ -16,6 +16,7 @@
 CreditsDrawer::CreditsDrawer(GameContext* _ctx, cPlayer *thePlayer) : player(thePlayer),  ctx(_ctx)
 {
     assert(thePlayer);
+    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     // bmp = NULL;
     memset(offset_credit, 0, sizeof(offset_credit));
     memset(offset_direction, 0, sizeof(offset_direction));

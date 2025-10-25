@@ -1,6 +1,8 @@
 #pragma once
 
 class GameContext;
+class Graphics;
+
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
 #include "utils/Color.hpp"
@@ -27,6 +29,7 @@ protected:
 
 private:
     GameContext *m_ctx;
+    Graphics *gfxinter;
     cStructureUtils structureUtils;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;

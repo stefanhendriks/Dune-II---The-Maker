@@ -8,6 +8,7 @@
 #pragma once
 
 class GameContext;
+class Graphics;
 class cPlayer;
 struct SDL_Surface;
 
@@ -28,6 +29,7 @@ public:
 private:
     cPlayer *player;  //
     GameContext* ctx;
+    Graphics* gfxinter;
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);
