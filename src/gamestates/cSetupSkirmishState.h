@@ -17,6 +17,7 @@ class cGame;
 class cMouse;
 class cPreviewMaps;
 class cRandomMapGenerator;
+class Graphics;
 
 struct s_SkirmishPlayer {
     bool bHuman;
@@ -97,6 +98,7 @@ private:
     GuiButton *startButton;
     GuiButton *nextMapButton;
     GuiButton *previousMapButton;
+    Graphics* gfxinter;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);

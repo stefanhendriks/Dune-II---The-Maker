@@ -133,4 +133,5 @@ private:
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
     cTextDrawer textDrawer;
     Graphics* gfxworld;
+    Graphics* gfxinter;
 };

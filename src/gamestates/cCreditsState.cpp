@@ -14,10 +14,11 @@
 cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
     m_moveSpeed(0.15f),
-    m_textDrawer(cTextDrawer(bene_font)),
-    m_duneBmp(gfxinter->getTexture(BMP_GAME_DUNE)),
-    m_titleBmp(gfxinter->getTexture(BMP_D2TM))
+    m_textDrawer(cTextDrawer(bene_font))
 {
+    auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
+    m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
+    m_titleBmp = gfxinter->getTexture(BMP_D2TM);
     int duneAtTheRight = game.m_screenW - (m_duneBmp->w * 1.1f);
     int duneAlmostAtBottom = game.m_screenH - (m_duneBmp->h * 1.1f);
     m_duneCoordinates = cPoint(duneAtTheRight, duneAlmostAtBottom);
