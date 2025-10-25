@@ -54,7 +54,7 @@ s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
-std::shared_ptr<Graphics> gfxinter;		// interface graphics
+// std::shared_ptr<Graphics> gfxinter;		// interface graphics
 
 // FONT stuff
 TTF_Font *game_font; 	// arrakeen.fon

@@ -86,6 +86,6 @@ extern TTF_Font *gr_bene_font;
 
 // DATAFILES
 extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
-extern std::shared_ptr<Graphics> gfxinter;		// interface graphics
+// extern std::shared_ptr<Graphics> gfxinter;		// interface graphics
 // extern std::shared_ptr<Graphics> gfxworld;		// world/pieces graphics
 // extern std::shared_ptr<Graphics> gfxmentat;	// mentat graphics
