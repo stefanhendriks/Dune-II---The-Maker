@@ -931,14 +931,14 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
 
-    gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
-    if (gfxinter == nullptr) {
-        logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
-        return false;
-    }
-    else {
-        logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
-    }
+    // gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
+    // if (gfxinter == nullptr) {
+    //     logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
+    //     return false;
+    // }
+    // else {
+    //     logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
+    // }
 
     // gfxworld = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
     // if (gfxworld == nullptr) {
@@ -2228,7 +2228,7 @@ void cGame::drawStateLosing()
     if (screenTexture)
         renderDrawer->renderSprite(screenTexture,0,0);
 
-    auto tex = gfxinter->getTexture(BMP_LOSING);
+    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
     int posW = (m_screenW-tex->w)/2;
     int posH = (m_screenH-tex->h)/2;
     renderDrawer->renderSprite(tex,posW, posH);
@@ -2250,7 +2250,7 @@ void cGame::drawStateWinning()
     if (screenTexture)
         renderDrawer->renderSprite(screenTexture,0,0);
         
-    auto tex = gfxinter->getTexture(BMP_WINNING);
+    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
     int posW = (m_screenW-tex->w)/2;
     int posH = (m_screenH-tex->h)/2;
     renderDrawer->renderSprite(tex,posW, posH);
