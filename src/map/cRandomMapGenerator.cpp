@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
-#include "data/gfxinter.h"
+//#include "data/gfxinter.h"
 #include "map/cMap.h"
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"
