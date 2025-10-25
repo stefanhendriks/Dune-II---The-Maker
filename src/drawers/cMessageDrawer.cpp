@@ -16,12 +16,12 @@
 cMessageDrawer::cMessageDrawer(GameContext* ctx)
     : m_textDrawer(game_font), m_ctx(ctx)
 {
+    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_textDrawer.setApplyShadow(false);
     m_bmpBar = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
     init();
-    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 }
 
 cMessageDrawer::~cMessageDrawer()
