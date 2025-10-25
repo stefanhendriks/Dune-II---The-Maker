@@ -181,12 +181,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
     previewMapTitle = cRectangle(previewMapFrameX, previewMapFrameY,previewMapFrameWidth, previewMapFrameHeight);
 
     // actual list of maps
-    // int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
-    // int mapListWidth = mapListFrameWidth;
-    // int mapListTopX = mapListTitle.getX();
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
-
-    // mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
 
     int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
     int previewMapX = screen_x - widthOfSidebar;
@@ -234,15 +229,9 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 game.setNextStateToTransitionTo(GAME_MENU);
-                game.initiateFadingOut();})
+                game.initiateFadingOut();
+            })
             .build();
-    // backButton = new GuiButton(textDrawer, backButtonRect, " BACK");
-    // backButton->setTheme(GuiTheme::Light());
-    // backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-    // // cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
-    // backButton->setOnLeftMouseButtonClickedAction([this]() {
-    //     game.setNextStateToTransitionTo(GAME_MENU);
-    //     game.initiateFadingOut();});
 
     int startButtonWidth = textDrawer.getTextLength("START");
     int startButtonHeight = topBarHeight;
@@ -258,16 +247,9 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame, std::shared_ptr
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-                };})
+                }
+            })
             .build();
-    // startButton = new GuiButton(textDrawer, startButtonRect, "START");
-    // startButton->setTheme(GuiTheme::Light());
-    // startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-    // startButton->setOnLeftMouseButtonClickedAction([this]() {
-    //     //std::cout << "click" << std::endl;
-    //     if (iSkirmishMap > -1) {
-    //         prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-    //     };});
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState()
@@ -285,13 +267,6 @@ void cSetupSkirmishGameState::thinkFast()
 
 void cSetupSkirmishGameState::draw() const
 {
-    // @Mira rwrite it on Texture
-    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
-
-    // for (int dy = 0; dy < game.m_screenH; dy += 4) {
-    //     renderDrawer->renderRectFillColor(0, dy, screen_x, 2, Color{0, 0, 0,255});
-    // }
-
     renderDrawer->gui_DrawRect(topBar);
 
     textDrawer.drawTextCentered("Skirmish", 1);
@@ -485,22 +460,9 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
                     renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
-            }
-            //     if (selectedMap.name[0] != '\0') {
-            //         if (selectedMap.terrain) {
-            //             renderDrawer->renderFromSurface(selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
-            //         }
-            //     }
-            // }
-            else {
+            } else {
                 renderDrawer->renderStrechSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), src, dst);
             }
-            //     if (selectedMap.name[0] != '\0') {
-            //         if (selectedMap.terrain) {
-            //             renderDrawer->renderSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), previewMapRect.getX(), previewMapRect.getY());
-            //         }
-            //     }
-            // }
         }
         textDrawer.drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
                             Color::yellow(), std::format("Name: {}", selectedMap.name));
@@ -1057,26 +1019,6 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms()
         }
     }
 }
-
-// void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton()
-// {
-//     int topBarHeight = 21;
-//     int screen_y = game.m_screenH;
-//     int screen_x = game.m_screenW;
-
-//     int startButtonWidth = textDrawer.textLength("START");
-//     int startButtonHeight = topBarHeight;
-//     int startButtonY = screen_y - topBarHeight;
-//     int startButtonX = screen_x - startButtonWidth;
-
-//     if (mouse_within_rect(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-//         // START
-//         if (iSkirmishMap > -1) {
-//             prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-//         }
-//     } // mouse hovers over "START"
-
-// }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints()
 {

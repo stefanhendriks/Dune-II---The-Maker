@@ -64,14 +64,9 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     int maxHeight = vecmap.size();
     int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
-    //ugly code to transform "1254,5421,4523" to 1254 , 5421 , 4523
     previewMap.terrain = nullptr;
-    // for (int i = 0; i < 5; i++) {
-    //     previewMap.iStartCell[i] = -1;
-    // }
     previewMap.iStartCell.fill(-1); // set all starting cells to -1
 
-    // extract StartCell values
     std::vector<int> numbers;
     std::stringstream ss(section.getStringValue("StartCell"));
     std::string segment;
@@ -84,13 +79,9 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             std::cerr << "Could not convert (out of bounds): " << segment << std::endl;
         }
     }
-    for (int i = 0; i < std::min(static_cast<int>(numbers.size()), MAX_SKIRMISHMAP_PLAYERS); i++) {
 
-        // if (!section.hasValue("StartCell", i)) continue;
-// 
-        // const std::string &string = section.getStringValue("StartCell", i);
+    for (int i = 0; i < std::min(static_cast<int>(numbers.size()), MAX_SKIRMISHMAP_PLAYERS); i++) {
         try {
-            // int startCell = std::stoi(string);
             int startCell = numbers[i];
             if (startCell < 0 || startCell >= maxCells) {
                 previewMap.validMap = false;
@@ -127,7 +118,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int iCll = mapGeom.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
-            Color iColor = Color::white(); //Color{255,255,255,255};
+            Color iColor = Color::white();
             int terrainType = -1; // unknown
 
             char letter = mapLine[iX];
@@ -209,7 +200,6 @@ Scanning of skirmish maps:
 void cPreviewMaps::loadSkirmishMaps()
 {
     numberOfMaps = 0; // reset number of maps
-    // scans for all ini files
     initPreviews(); // clear all of them
 
     const std::filesystem::path pathfile{"skirmish"};
@@ -242,11 +232,6 @@ void cPreviewMaps::initPreviews()
         previewMap.height = 0;
 
         previewMap.iStartCell.fill(-1); // set all starting cells to -1
-        // previewMap.iStartCell[0] = -1;
-        // previewMap.iStartCell[1] = -1;
-        // previewMap.iStartCell[2] = -1;
-        // previewMap.iStartCell[3] = -1;
-        // previewMap.iStartCell[4] = -1;
     }
     initRandomMap();
 }
