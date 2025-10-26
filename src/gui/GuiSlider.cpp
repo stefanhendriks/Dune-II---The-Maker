@@ -19,13 +19,11 @@ void GuiSlider::draw() const {
 }
 
 void GuiSlider::drawTrack() const {
-    // Dessine la piste (track)
     renderDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
     drawRectBorder(m_theme.borderLight, m_theme.borderDark);
 }
 
 void GuiSlider::drawKnob() const {
-    // Position horizontale du knob en fonction de la valeur
     float t = float(m_value - m_minValue) / float(m_maxValue - m_minValue);
     int knobX = m_rect.getX() + int(t * (m_rect.getWidth() - 10)); // knob = 10px large
     int knobY = m_rect.getY();
