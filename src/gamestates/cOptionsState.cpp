@@ -2,10 +2,6 @@
 
 #include "d2tmc.h"
 #include "config.h"
-#include "drawers/SDLDrawer.hpp"
-// #include "gui/actions/cGuiActionExitGame.h"
-// #include "gui/actions/cGuiActionToGameState.h"
-#include <iostream>
 
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
@@ -233,7 +229,6 @@ void cOptionsState::constructWindow(int prevState)
     cTimeManager* timeManager = m_context->getTimeManager();
     const cRectangle &sld_speedRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
     int convertedForSlider = 2 - timeManager->getGlobalSpeed() + 10;
-    std::cout << "Converted globalSpeed " << timeManager->getGlobalSpeed() << " to slider " << convertedForSlider << std::endl;
     GuiSlider *gui_sld_speedRect = GuiSliderBuilder()
             .withRect(sld_speedRect)
             .withMinValue(2)
@@ -241,7 +236,6 @@ void cOptionsState::constructWindow(int prevState)
             .withInitialValue(convertedForSlider)
             .onValueChanged([this, timeManager](int newValue) {
                 int globalSpeed = 10 - newValue + 2;
-                std::cout << "Converted value from slider " << newValue << " to globalSpeed " << globalSpeed << std::endl;
                 // higher means slower, so convert into opposite
                 timeManager->setGlobalSpeed(globalSpeed);
             })
