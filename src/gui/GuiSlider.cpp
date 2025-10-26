@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
+static constexpr auto GUI_KNOB_WIDTH = 12;
+
 GuiSlider::GuiSlider(const cRectangle &rect, int minValue, int maxValue, int initialValue)
     : GuiObject(rect)
     , m_minValue(minValue)
@@ -25,10 +27,11 @@ void GuiSlider::drawTrack() const {
 
 void GuiSlider::drawKnob() const {
     float t = float(m_value - m_minValue) / float(m_maxValue - m_minValue);
-    int knobX = m_rect.getX() + int(t * (m_rect.getWidth() - 10)); // knob = 10px large
+
+    int knobX = m_rect.getX() + int(t * (m_rect.getWidth() - GUI_KNOB_WIDTH));
     int knobY = m_rect.getY();
 
-    cRectangle knobRect(knobX, knobY, 10, m_rect.getHeight());
+    cRectangle knobRect(knobX, knobY, GUI_KNOB_WIDTH, m_rect.getHeight());
     renderDrawer->renderRectFillColor(knobRect, m_theme.borderDark);
     renderDrawer->gui_DrawRectBorder(knobRect, m_theme.borderLight, m_theme.borderDark);
 }
@@ -38,7 +41,6 @@ void GuiSlider::setValue(int value) {
     if (clamped != m_value) {
         m_value = clamped;
         if (m_onValueChanged) {
-            std::cout << "change with value " << clamped << "\n";
             m_onValueChanged(m_value);
         }
     }
@@ -74,9 +76,14 @@ void GuiSlider::onNotifyMouseEvent(const s_MouseEvent &event) {
 }
 
 void GuiSlider::updateValueFromMouse(int mouseX) {
-    float t = float(mouseX - m_rect.getX()) / float(m_rect.getWidth());
-    t = std::clamp(t, 0.0f, 1.0f);
-    setValue(int(m_minValue + t * (m_maxValue - m_minValue)));
+    int positionInTrack = mouseX - m_rect.getX();
+    float normalizedValueInTrack = float(positionInTrack) / float(m_rect.getWidth());
+    normalizedValueInTrack = std::clamp(normalizedValueInTrack, 0.0f, 1.0f);
+
+    int maxAmountOfValues = (m_maxValue - m_minValue);
+
+    float newValueNormalized = normalizedValueInTrack * maxAmountOfValues;
+    setValue(int(m_minValue + newValueNormalized));
 }
 
 
