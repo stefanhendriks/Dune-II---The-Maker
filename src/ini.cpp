@@ -160,6 +160,14 @@ const std::unordered_map<std::string, int> unitNameMap = {
     {"THREEFREMEN", UNIT_FREMEN_THREE}
 };
 
+const std::unordered_map<int, char> houseLetterMap = {
+    {ATREIDES,   'a'},
+    {HARKONNEN,  'h'},
+    {ORDOS,      'o'},
+    {SARDAUKAR,  's'},
+    {MERCENARY,  'm'},
+    {FREMEN,     'f'}
+};
 
 int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
@@ -1267,15 +1275,10 @@ int getTechLevelByRegion(int iRegion)
 std::string INI_GetScenarioFileName(int iHouse, int iRegion)
 {
     char cHouse = ' ';
-
-    // each house has a letter for the scenario file
-    if (iHouse == ATREIDES) cHouse = 'a';
-    if (iHouse == HARKONNEN) cHouse = 'h';
-    if (iHouse == ORDOS) cHouse = 'o';
-    if (iHouse == SARDAUKAR) cHouse = 's';
-    if (iHouse == MERCENARY) cHouse = 'm';
-    if (iHouse == FREMEN) cHouse = 'f';
-
+    auto it = houseLetterMap.find(iHouse);
+    if (it != houseLetterMap.end()) {
+        cHouse = it->second;
+    }
     return std::format("campaign/maps/scen{}{:03}.ini", cHouse, iRegion);
 }
 
