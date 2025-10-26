@@ -333,10 +333,8 @@ int INI_StructureType(char word[256])
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(char word[25], int section)
 {
-//	char msg[255];
-//	memset(msg, 0, sizeof(msg));
-//	sprintf(msg, "Going to find word-type for [%s]", word);
-//	logbook(msg);
+    logbook(std::format("Going to find word-type for [{}]", word));
+
     if (section == SEC_REGION) {
         if (strcmp(word, "Region") == 0)            return WORD_REGION;
         if (strcmp(word, "RegionConquer") == 0)     return WORD_REGIONCONQUER;
@@ -464,10 +462,7 @@ int INI_WordType(char word[25], int section)
         if (strcmp(word, "DumpSpeed") == 0)         return WORD_DUMPSPEED;
     }
 
-    //  char msg[255];
-    //  memset(msg, 0, sizeof(msg));
-    //  sprintf(msg, "Could not find word-type for [%s]", word);
-    //  logbook(msg);
+    logbook(std::format("Could not find word-type for [{}]", word));
     return WORD_NONE;
 }
 
