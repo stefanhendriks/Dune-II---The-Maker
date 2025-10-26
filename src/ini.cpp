@@ -111,6 +111,25 @@ const std::unordered_map<std::string, int> structureMap = {
     {"WALL", WALL}
 };
 
+const std::unordered_map<std::string, int> structureNameMap = {
+    {"Const Yard", CONSTYARD},
+    {"Palace", PALACE},
+    {"Heavy Fctry", HEAVYFACTORY},
+    {"Light Fctry", LIGHTFACTORY},
+    {"Windtrap", WINDTRAP},
+    {"Spice Silo", SILO},
+    {"Hi-Tech", HIGHTECH},
+    {"IX", IX},
+    {"Repair", REPAIR},
+    {"Outpost", RADAR},
+    {"Refinery", REFINERY},
+    {"WOR", WOR},
+    {"Barracks", BARRACKS},
+    {"Starport", STARPORT},
+    {"Turret", TURRET},
+    {"R-Turret", RTURRET}
+};
+
 int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 int getHouseFromString(const std::string& chunk);
@@ -1001,58 +1020,14 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
 }
 
 // return ID of structure
-int getStructureTypeFromChar(char *structure)
+int getStructureTypeFromChar(const std::string& structureStr)
 {
-    if (strcmp(structure, "Const Yard") == 0)
-        return CONSTYARD;
-
-    if (strcmp(structure, "Palace") == 0)
-        return PALACE;
-
-    if (strcmp(structure, "Heavy Fctry") == 0)
-        return HEAVYFACTORY;
-
-    if (strcmp(structure, "Light Fctry") == 0)
-        return LIGHTFACTORY;
-
-    if (strcmp(structure, "Windtrap") == 0)
-        return WINDTRAP;
-
-    if (strcmp(structure, "Spice Silo") == 0)
-        return SILO;
-
-    if (strcmp(structure, "Hi-Tech") == 0)
-        return HIGHTECH;
-
-    if (strcmp(structure, "IX") == 0)
-        return IX;
-
-    if (strcmp(structure, "Repair") == 0)
-        return REPAIR;
-
-    if (strcmp(structure, "Outpost") == 0)
-        return RADAR;
-
-    if (strcmp(structure, "Refinery") == 0)
-        return REFINERY;
-
-    if (strcmp(structure, "WOR") == 0)
-        return WOR;
-
-    if (strcmp(structure, "Barracks") == 0)
-        return BARRACKS;
-
-    if (strcmp(structure, "Starport") == 0)
-        return STARPORT;
-
-    if (strcmp(structure, "Turret") == 0)
-        return TURRET;
-
-    if (strcmp(structure, "R-Turret") == 0)
-        return RTURRET;
-
-    logbook("Could not find structure:");
-    logbook(structure);
+    for (const auto& [key, value] : structureNameMap) {
+        if (caseInsCompare(structureStr, key)) {
+            return value;
+        }
+    }
+    logbook(std::format("Could not find structure: {}", structureStr));
     return CONSTYARD;
 }
 
@@ -1824,7 +1799,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
                     }
                 }
                 else if (iPart == 1) {
-                    iType = getStructureTypeFromChar(chunk);
+                    iType = getStructureTypeFromChar(std::string(chunk));
                 }
                 else if (iPart == 3) {
                     iCell = atoi(chunk);
