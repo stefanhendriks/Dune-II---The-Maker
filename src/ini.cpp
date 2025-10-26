@@ -11,6 +11,7 @@
   */
 
 #include "ini.h"
+#include "iniDefine.h"
 #include "utils/cIniUtils.h"
 
 #include "d2tmc.h"

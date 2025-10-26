@@ -29,6 +29,7 @@
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishState.h"
 #include "ini.h"
+#include "iniDefine.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
 #include "mentat/AtreidesMentat.h"
