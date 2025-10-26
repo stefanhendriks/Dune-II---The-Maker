@@ -14,23 +14,10 @@
 #include <SDL2/SDL_mixer.h>
 #include <algorithm> // for std::clamp
 
-
 namespace {
-
-// constexpr int kAllegroMaxNrVoices = 256;
-// constexpr int kAllegroMaxVolume = 255;
-// constexpr int kAllegroPanCenter = 128;
-
-// constexpr int kFinishedPLaying = -1;
-// constexpr int kNoVoiceAvailable = -1;
-// constexpr int kNoVoice = -1;
-constexpr int kNoLoop = 0;
-
-// constexpr int kMinNrVoices = 4;
-// constexpr int kMaxVolume = 220;
-constexpr int MinVolume = 0;
-constexpr int MaxVolume = MIX_MAX_VOLUME;
-constexpr int MaxNbrVoices = 64;
+    constexpr int kNoLoop = 0;
+    constexpr int MaxVolume = MIX_MAX_VOLUME;
+    constexpr int MaxNbrVoices = 64;
 }
 
 class cSoundData {
@@ -64,10 +51,6 @@ private:
     std::unique_ptr<DataPack> gfxaudio;
 };
 
-// cSoundPlayer::cSoundPlayer(const cPlatformLayerInit &init) : cSoundPlayer(init, MaxNrVoices)
-// {
-// }
-
 cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerInit &*/) //, int maxNrVoices)
     : soundData(std::make_unique<cSoundData>(datafile))
 {
@@ -76,41 +59,29 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerIni
 
     auto logger = cLogger::getInstance();
 
-    // if (maxNrVoices < MaxNbrVoices) {
-    //     logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Muting all sound.", OUTC_SUCCESS);
-    //     return;
-    // }
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
+        logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
+        isMusicEnable = false;
+        isSoundEnable = false;
+    } else {
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL2_mixer succes", OUTC_SUCCESS);
+        isMusicEnable = true;
+        isSoundEnable = true;
+    }
 
-    // int nr_voices = MaxNbrVoices;
-    // while (true) {
-        // if (nr_voices < kMinNrVoices) {
-            // logger->log(LOG_WARN, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
-            // return;
-        // }
+    int nr_voices = Mix_AllocateChannels(MaxNbrVoices);
+    if (nr_voices != MaxNbrVoices) {
+        auto msg = std::format("AllocateChannels: {} voices reserved, on {} required", nr_voices,MaxNbrVoices);
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 
-        if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
-            logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
-            isMusicEnable = false;
-            isSoundEnable = false;
-        } else {
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL2_mixer succes", OUTC_SUCCESS);
-            isMusicEnable = true;
-            isSoundEnable = true;
-        }
+        // voices.resize(nr_voices - 1, kNoVoice);
+        // break;
+    }
+    else {
+        auto msg = std::format("AllocateChannels: {} voices reserved", nr_voices);
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+    }
 
-        int nr_voices = Mix_AllocateChannels(MaxNbrVoices);
-        if (nr_voices != MaxNbrVoices) {
-            auto msg = std::format("AllocateChannels: {} voices reserved, on {} required", nr_voices,MaxNbrVoices);
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-
-            // voices.resize(nr_voices - 1, kNoVoice);
-            // break;
-        }
-        else {
-            auto msg = std::format("AllocateChannels: {} voices reserved", nr_voices);
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-        }
-    // }
     musicVolume = MaxVolume/2;
     soundVolume = MaxVolume/2;
     Mix_MasterVolume(soundVolume);
@@ -126,9 +97,6 @@ int cSoundPlayer::getMaxVolume()
     // TODO: This will become configurable (so you can set your own max volume for sounds, etc)
     return MaxVolume;
 }
-
-// void cSoundPlayer::think()
-// {}
 
 void cSoundPlayer::playSound(int sampleId)
 {
