@@ -52,7 +52,6 @@ class Graphics;
 struct SDL_Surface;
 
 // Process 'extern' stuff, so we can access our classes
-// extern int		iRest;	// rest value
 
 // game
 extern cGame		  game;
