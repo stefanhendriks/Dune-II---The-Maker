@@ -333,28 +333,16 @@ int INI_StructureType(char word[256])
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(char word[25], int section)
 {
-
 //	char msg[255];
 //	memset(msg, 0, sizeof(msg));
 //	sprintf(msg, "Going to find word-type for [%s]", word);
 //	logbook(msg);
-
     if (section == SEC_REGION) {
-        if (strcmp(word, "Region") == 0)
-            return WORD_REGION;
-
-        if (strcmp(word, "RegionConquer") == 0)
-            return WORD_REGIONCONQUER;
-
-        if (strcmp(word, "House") == 0)
-            return WORD_REGIONHOUSE;
-
-        if (strcmp(word, "Text") == 0)
-            return WORD_REGIONTEXT;
-
-        if (strcmp(word, "Select") == 0)
-            return WORD_REGIONSELECT;
-
+        if (strcmp(word, "Region") == 0)            return WORD_REGION;
+        if (strcmp(word, "RegionConquer") == 0)     return WORD_REGIONCONQUER;
+        if (strcmp(word, "House") == 0)             return WORD_REGIONHOUSE;
+        if (strcmp(word, "Text") == 0)              return WORD_REGIONTEXT;
+        if (strcmp(word, "Select") == 0)            return WORD_REGIONSELECT;
         return WORD_NONE;
     }
 
@@ -364,64 +352,32 @@ int INI_WordType(char word[25], int section)
             section == INI_ADVICE ||
             section == INI_LOSE ||
             section == INI_WIN) {
-        if (strcmp(word, "Number") == 0)
-            return WORD_NUMBER;
-
-        if (strcmp(word, "Text") == 0)
-            return WORD_REGIONTEXT;
-
+        if (strcmp(word, "Number") == 0)            return WORD_NUMBER;
+        if (strcmp(word, "Text") == 0)              return WORD_REGIONTEXT;
         return WORD_NONE;
     }
 
     if (section == INI_SKIRMISH) {
-        if (strcmp(word, "Title") == 0)
-            return WORD_MAPNAME;
-
-
-        if (strcmp(word, "StartCell") == 0)
-            return WORD_STARTCELL;
-
+        if (strcmp(word, "Title") == 0)             return WORD_MAPNAME;
+        if (strcmp(word, "StartCell") == 0)         return WORD_STARTCELL;
     }
 
     if (section == INI_GAME) {
-        if (strcmp(word, "ModId") == 0)
-            return WORD_MODID;
+        if (strcmp(word, "ModId") == 0)             return WORD_MODID;
     }
     else if (section == INI_BASIC) {
-        if (strcmp(word, "CursorPos") == 0)
-            return WORD_FOCUS;
-
-        if (strcmp(word, "BriefPicture") == 0)
-            return WORD_BRIEFPICTURE;
-
-        if (strcmp(word, "WinFlags") == 0)
-            return WORD_WINFLAGS;
-
-        if (strcmp(word, "LoseFlags") == 0)
-            return WORD_LOSEFLAGS;
-
+        if (strcmp(word, "CursorPos") == 0)         return WORD_FOCUS;
+        if (strcmp(word, "BriefPicture") == 0)      return WORD_BRIEFPICTURE;
+        if (strcmp(word, "WinFlags") == 0)          return WORD_WINFLAGS;
+        if (strcmp(word, "LoseFlags") == 0)         return WORD_LOSEFLAGS;
     }
     else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-        if (strcmp(word, "Team") == 0)
-            return WORD_TEAM;
-
-        if (strcmp(word, "Credits") == 0)
-            return WORD_CREDITS;
-
-        if (strcmp(word, "Quota") == 0)
-            return WORD_QUOTA;
-
-        if (strcmp(word, "Brain") == 0)
-            return WORD_BRAIN;
-
-        //if (strcmp(word, "Skill") == 0)
-        //return WORD_SKILL;
-
-        if (strcmp(word, "House") == 0)
-            return WORD_HOUSE;
-
-        if (strcmp(word, "Focus") == 0)
-            return WORD_FOCUS;
+        if (strcmp(word, "Team") == 0)              return WORD_TEAM;
+        if (strcmp(word, "Credits") == 0)           return WORD_CREDITS;
+        if (strcmp(word, "Quota") == 0)             return WORD_QUOTA;
+        if (strcmp(word, "Brain") == 0)             return WORD_BRAIN;
+        if (strcmp(word, "House") == 0)             return WORD_HOUSE;
+        if (strcmp(word, "Focus") == 0)             return WORD_FOCUS;
     }
     /*
     else if (section == INI_MENU)
@@ -481,251 +437,94 @@ int INI_WordType(char word[25], int section)
         return WORD_MOUSEDEPLOY;
     }*/
     else if (section == INI_MAP) {
-        // When reading [MAP], interpet the 'width' and 'height' for default width and height
-        // for the Map Editor
-
-        // Map width
-        if (strcmp(word, "Width") == 0)
-            return WORD_MAPWIDTH;
-
-        // Map heigth
-        if (strcmp(word, "Height") == 0)
-            return WORD_MAPHEIGHT;
-
-        // Dune II scens have a seed
-        if (strcmp(word, "Seed") == 0)
-            return WORD_MAPSEED;
-
-        // Dune II scens have spice blooms
-        if (strcmp(word, "Bloom") == 0)
-            return WORD_MAPBLOOM;
-
-        // Dune II scens have spice blooms
-        if (strcmp(word, "Field") == 0)
-            return WORD_MAPFIELD;
-
-
+        // When reading [MAP], interpet the 'width' and 'height' for default width and height for the Map Editor
+        if (strcmp(word, "Width") == 0)             return WORD_MAPWIDTH;
+        if (strcmp(word, "Height") == 0)            return WORD_MAPHEIGHT;
+        if (strcmp(word, "Seed") == 0)              return WORD_MAPSEED;
+        if (strcmp(word, "Bloom") == 0)             return WORD_MAPBLOOM;
+        if (strcmp(word, "Field") == 0)             return WORD_MAPFIELD;
     }
     else if (section == INI_BULLETS) {
-        // Bitmap
-        if (strcmp(word, "Bitmap") == 0)
-            return WORD_BITMAP;
-
-        // Dead Animation Bitmap
-        if (strcmp(word, "BitmapExplosion") == 0)
-            return WORD_BITMAP_DEAD;
-
-        // Bitmap width
-        if (strcmp(word, "BitmapWidth") == 0)
-            return WORD_BITMAP_WIDTH;
-
-        // Frames
-        if (strcmp(word, "BitmapFrames") == 0)
-            return WORD_BITMAP_FRAMES;
-
-        // Dead frames
-        if (strcmp(word, "BitmapExplFrames") == 0)
-            return WORD_BITMAP_DEADFRAMES;
-
-        // Damage
-        if (strcmp(word, "Damage") == 0)
-            return WORD_DAMAGE;
-
-        // Definition
-        if (strcmp(word, "Definition") == 0)
-            return WORD_DEFINITION;
-
-        if (strcmp(word, "Sound") == 0)
-            return WORD_SOUND;
-
+        if (strcmp(word, "Bitmap") == 0)            return WORD_BITMAP;
+        if (strcmp(word, "BitmapExplosion") == 0)   return WORD_BITMAP_DEAD;
+        if (strcmp(word, "BitmapWidth") == 0)       return WORD_BITMAP_WIDTH;
+        if (strcmp(word, "BitmapFrames") == 0)      return WORD_BITMAP_FRAMES;
+        if (strcmp(word, "BitmapExplFrames") == 0)  return WORD_BITMAP_DEADFRAMES;
+        if (strcmp(word, "Damage") == 0)            return WORD_DAMAGE;
+        if (strcmp(word, "Definition") == 0)        return WORD_DEFINITION;
+        if (strcmp(word, "Sound") == 0)             return WORD_SOUND;
     }
     else if (section == INI_STRUCTURES) {
-        // HitPoints
-        if (strcmp(word, "HitPoints") == 0)
-            return WORD_HITPOINTS;
-
-        // 'getting fixed 'HitPoints
-        if (strcmp(word, "FixPoints") == 0)
-            return WORD_FIXHP;
-
-        // Power drain
-        if (strcmp(word, "PowerDrain") == 0)
-            return WORD_POWERDRAIN;
-
-        // Power give
-        if (strcmp(word, "PowerGive") == 0)
-            return WORD_POWERGIVE;
-
-        // Cost
-        if (strcmp(word, "Cost") == 0)
-            return WORD_COST;
-
-        // Build time
-        if (strcmp(word, "BuildTime") == 0)
-            return WORD_BUILDTIME;
-
+        if (strcmp(word, "HitPoints") == 0)         return WORD_HITPOINTS;
+        if (strcmp(word, "FixPoints") == 0)         return WORD_FIXHP;
+        if (strcmp(word, "PowerDrain") == 0)        return WORD_POWERDRAIN;
+        if (strcmp(word, "PowerGive") == 0)         return WORD_POWERGIVE;
+        if (strcmp(word, "Cost") == 0)              return WORD_COST;
+        if (strcmp(word, "BuildTime") == 0)         return WORD_BUILDTIME;
     }
     else if (section == INI_UNITS) {
-        // Bitmap
-        if (strcmp(word, "Bitmap") == 0)
-            return WORD_BITMAP;
-
-        // TOP Bitmap
-        if (strcmp(word, "BitmapTop") == 0)
-            return WORD_BITMAP_TOP;
-
-        // ICON Bitmap
-        if (strcmp(word, "Icon") == 0)
-            return WORD_ICON;
-
-        // WIDTH and HEIGHT of a bitmap
-        if (strcmp(word, "BitmapWidth") == 0)
-            return WORD_BITMAP_WIDTH;
-
-        // Bitmap Height
-        if (strcmp(word, "BitmapHeight") == 0)
-            return WORD_BITMAP_HEIGHT;
-
-        // HitPoints
-        if (strcmp(word, "HitPoints") == 0)
-            return WORD_HITPOINTS;
-
-        // Appetite
-        if (strcmp(word, "Appetite") == 0)
-            return WORD_APPETITE;
-
-        // Cost
-        if (strcmp(word, "Cost") == 0)
-            return WORD_COST;
-
-        // Bullet Type
-        if (strcmp(word, "BulletType") == 0)
-            return WORD_BULLETTYPE;
-
-        // Move speed
-        if (strcmp(word, "MoveSpeed") == 0)
-            return WORD_MOVESPEED;
-
-        // Turn speed
-        if (strcmp(word, "TurnSpeed") == 0)
-            return WORD_TURNSPEED;
-
+        if (strcmp(word, "Bitmap") == 0)            return WORD_BITMAP;
+        if (strcmp(word, "BitmapTop") == 0)         return WORD_BITMAP_TOP;
+        if (strcmp(word, "Icon") == 0)              return WORD_ICON;
+        if (strcmp(word, "BitmapWidth") == 0)       return WORD_BITMAP_WIDTH;
+        if (strcmp(word, "BitmapHeight") == 0)      return WORD_BITMAP_HEIGHT;
+        if (strcmp(word, "HitPoints") == 0)         return WORD_HITPOINTS;
+        if (strcmp(word, "Appetite") == 0)          return WORD_APPETITE;
+        if (strcmp(word, "Cost") == 0)              return WORD_COST;
+        if (strcmp(word, "BulletType") == 0)        return WORD_BULLETTYPE;
+        if (strcmp(word, "MoveSpeed") == 0)         return WORD_MOVESPEED;
+        if (strcmp(word, "TurnSpeed") == 0)         return WORD_TURNSPEED;
         // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
-        if (strcmp(word, "AttackFrequency") == 0)
-            return WORD_ATTACKFREQ;
-
+        if (strcmp(word, "AttackFrequency") == 0)   return WORD_ATTACKFREQ;
         // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
-        if (strcmp(word, "NextAttackFrequency") == 0)
-            return WORD_NEXTATTACKFREQ;
-
-        // Sight
-        if (strcmp(word, "Sight") == 0)
-            return WORD_SIGHT;
-
-        // Range
-        if (strcmp(word, "Range") == 0)
-            return WORD_RANGE;
-
-        // Build time
-        if (strcmp(word, "BuildTime") == 0)
-            return WORD_BUILDTIME;
-
-        // Description
-        if (strcmp(word, "Description") == 0)
-            return WORD_DESCRIPTION;
-
+        if (strcmp(word, "NextAttackFrequency") == 0)   return WORD_NEXTATTACKFREQ;
+        if (strcmp(word, "Sight") == 0)            return WORD_SIGHT;
+        if (strcmp(word, "Range") == 0)            return WORD_RANGE;
+        if (strcmp(word, "BuildTime") == 0)        return WORD_BUILDTIME;
+        if (strcmp(word, "Description") == 0)      return WORD_DESCRIPTION;
         // BOOLEANS
-        if (strcmp(word, "IsHarvester") == 0)
-            return WORD_ISHARVESTER;
-
-        if (strcmp(word, "FireTwice") == 0)
-            return WORD_FIRETWICE;
-
-        if (strcmp(word, "IsInfantry") == 0)
-            return WORD_ISINFANTRY;
-
-        if (strcmp(word, "Squishable") == 0)
-            return WORD_ISSQUISHABLE;
-
-        if (strcmp(word, "CanSquish") == 0)
-            return WORD_CANSQUISH;
-
-        if (strcmp(word, "IsAirborn") == 0)
-            return WORD_ISAIRBORN;
-
-        if (strcmp(word, "AbleToCarry") == 0)
-            return WORD_ABLETOCARRY;
-
-        if (strcmp(word, "FreeRoam") == 0)
-            return WORD_FREEROAM;
-
-        // what structure type produces this kind of unit?
-        if (strcmp(word, "Producer") == 0) return WORD_PRODUCER;
-
-        // HARVESTER
-        if (strcmp(word, "MaxCredits") == 0) return WORD_HARVESTLIMIT;
-        if (strcmp(word, "HarvestSpeed") == 0) return WORD_HARVESTSPEED;
-        if (strcmp(word, "HarvestAmount") == 0) return WORD_HARVESTAMOUNT;
+        if (strcmp(word, "IsHarvester") == 0)       return WORD_ISHARVESTER;
+        if (strcmp(word, "FireTwice") == 0)         return WORD_FIRETWICE;
+        if (strcmp(word, "IsInfantry") == 0)        return WORD_ISINFANTRY;
+        if (strcmp(word, "Squishable") == 0)        return WORD_ISSQUISHABLE;
+        if (strcmp(word, "CanSquish") == 0)         return WORD_CANSQUISH;
+        if (strcmp(word, "IsAirborn") == 0)         return WORD_ISAIRBORN;
+        if (strcmp(word, "AbleToCarry") == 0)       return WORD_ABLETOCARRY;
+        if (strcmp(word, "FreeRoam") == 0)          return WORD_FREEROAM;
+        if (strcmp(word, "Producer") == 0)          return WORD_PRODUCER;
+        if (strcmp(word, "MaxCredits") == 0)        return WORD_HARVESTLIMIT;
+        if (strcmp(word, "HarvestSpeed") == 0)      return WORD_HARVESTSPEED;
+        if (strcmp(word, "HarvestAmount") == 0)     return WORD_HARVESTAMOUNT;
     }
     else if (section == INI_STRUCTURES) {
         if (strlen(word) > 1) {
-            // Structure properties
-            if (strcmp(word, "PreBuild") == 0)
-                return WORD_PREBUILD;
-
-            if (strcmp(word, "Description") == 0)
-                return WORD_DESCRIPTION;
-
-            if (strcmp(word, "Power") == 0)
-                return WORD_POWER;        // What power it takes
-
+            if (strcmp(word, "PreBuild") == 0)      return WORD_PREBUILD;
+            if (strcmp(word, "Description") == 0)   return WORD_DESCRIPTION;
+            if (strcmp(word, "Power") == 0)         return WORD_POWER;        // What power it takes
         }
         else
             return WORD_NONE;
     }
     else if (section == INI_HOUSES) {
         // each house has properties..
-
-        if (strcmp(word, "ColorR") == 0)
-            return WORD_RED;
-
-        if (strcmp(word, "ColorG") == 0)
-            return WORD_GREEN;
-
-        if (strcmp(word, "ColorB") == 0)
-            return WORD_BLUE;
-
+        if (strcmp(word, "ColorR") == 0)            return WORD_RED;
+        if (strcmp(word, "ColorG") == 0)            return WORD_GREEN;
+        if (strcmp(word, "ColorB") == 0)            return WORD_BLUE;
         // and specific stuff:
-        if (strcmp(word, "FirePower") == 0)
-            return WORD_FIREPOWER;
-
-        if (strcmp(word, "FireRate") == 0)
-            return WORD_FIRERATE;
-
-        if (strcmp(word, "StructPrice") == 0)
-            return WORD_STRUCTPRICE;
-
-        if (strcmp(word, "UnitPrice") == 0)
-            return WORD_UNITPRICE;
-
-        if (strcmp(word, "Speed") == 0)
-            return WORD_SPEED;
-
-        if (strcmp(word, "BuildSpeed") == 0)
-            return WORD_BUILDSPEED;
-
-        if (strcmp(word, "HarvestSpeed") == 0)
-            return WORD_HARVESTSPEED;
-
-        if (strcmp(word, "DumpSpeed") == 0)
-            return WORD_DUMPSPEED;
+        if (strcmp(word, "FirePower") == 0)         return WORD_FIREPOWER;
+        if (strcmp(word, "FireRate") == 0)          return WORD_FIRERATE;
+        if (strcmp(word, "StructPrice") == 0)       return WORD_STRUCTPRICE;
+        if (strcmp(word, "UnitPrice") == 0)         return WORD_UNITPRICE;
+        if (strcmp(word, "Speed") == 0)             return WORD_SPEED;
+        if (strcmp(word, "BuildSpeed") == 0)        return WORD_BUILDSPEED;
+        if (strcmp(word, "HarvestSpeed") == 0)      return WORD_HARVESTSPEED;
+        if (strcmp(word, "DumpSpeed") == 0)         return WORD_DUMPSPEED;
     }
 
-//  char msg[255];
-//  memset(msg, 0, sizeof(msg));
-//  sprintf(msg, "Could not find word-type for [%s]", word);
-//  logbook(msg);
-
+    //  char msg[255];
+    //  memset(msg, 0, sizeof(msg));
+    //  sprintf(msg, "Could not find word-type for [%s]", word);
+    //  logbook(msg);
     return WORD_NONE;
 }
 
