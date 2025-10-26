@@ -26,6 +26,8 @@
 #include <format>
 #include <cmath>
 
+#include "data/gfxaudio.h"
+
 static constexpr auto ANIMATION_SPEED = 12;
 
 void cBullet::init()

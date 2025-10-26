@@ -13,6 +13,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "data/gfxaudio.h"
+
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
     m_isMouseOver(false),
     map(theMap),

@@ -12,6 +12,8 @@
 #include "utils/cSoundPlayer.h"
 #include <format>
 
+#include "data/gfxaudio.h"
+
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
 {
     assert(thePlayer);

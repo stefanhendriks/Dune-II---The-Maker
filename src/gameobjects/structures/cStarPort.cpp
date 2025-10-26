@@ -3,6 +3,7 @@
 #include "cOrderProcesser.h"
 #include "d2tmc.h"
 #include "definitions.h"
+#include "data/gfxaudio.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "gameobjects/units/cReinforcements.h"

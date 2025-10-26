@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <string>
 
+#include "data/gfxaudio.h"
+
 namespace {
 
 std::string mouseUnitsSelectedStateString(eMouseUnitsSelectedState state)

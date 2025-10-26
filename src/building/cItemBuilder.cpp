@@ -18,6 +18,8 @@
 
 #include <cassert>
 
+#include "data/gfxaudio.h"
+
 cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingListUpdater) :
     m_player(thePlayer),
     m_buildingListUpdater(buildingListUpdater),

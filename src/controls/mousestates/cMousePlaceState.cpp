@@ -8,6 +8,8 @@
 #include "map/MapGeometry.hpp"
 #include <algorithm>
 
+#include "data/gfxaudio.h"
+
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {

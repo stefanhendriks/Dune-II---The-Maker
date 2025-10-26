@@ -11,6 +11,8 @@
 
 #include <cassert>
 
+#include "data/gfxaudio.h"
+
 cSideBar::cSideBar(cPlayer *thePlayer) : player(thePlayer)
 {
     assert(thePlayer != nullptr && "Expected player to be not null!");

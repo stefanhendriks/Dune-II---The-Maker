@@ -66,6 +66,8 @@
 #include <vector>
 #include <iostream>
 
+#include "data/gfxaudio.h"
+
 namespace {
 
 constexpr auto kMinAlpha = 0;

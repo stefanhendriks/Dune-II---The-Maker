@@ -31,6 +31,8 @@
 
 #include <cmath>
 
+#include "data/gfxaudio.h"
+
 // Path creation definitions / var
 #define CLOSED        -1
 #define OPEN          0
