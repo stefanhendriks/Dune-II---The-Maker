@@ -5,46 +5,46 @@
 GameContext::~GameContext() {
 }
 
-void GameContext::setGraphicsContext(std::unique_ptr<GraphicsContext> newGfxCtx) {
-    if (!newGfxCtx) {
+void GameContext::setGraphicsContext(std::unique_ptr<GraphicsContext> graphicsContext) {
+    if (!graphicsContext) {
         throw std::runtime_error("GraphicsContext is not initialized!");
     }
-    gCtx = std::move(newGfxCtx);
+    m_graphicsContext = std::move(graphicsContext);
 }
 
 GraphicsContext *GameContext::getGraphicsContext() const {
-    if (gCtx) {
-        return gCtx.get();
+    if (m_graphicsContext) {
+        return m_graphicsContext.get();
     } else {
-        throw std::runtime_error("GraphicsContext not define");
+        throw std::runtime_error("GraphicsContext not defined");
     }
 }
 
-void GameContext::setTimeManager(std::unique_ptr<cTimeManager> newTimeManager) {
-    if (!newTimeManager) {
+void GameContext::setTimeManager(std::unique_ptr<cTimeManager> timeManager) {
+    if (!timeManager) {
         throw std::runtime_error("cTimeManager is not initialized!");
     }
-    timeManager = std::move(newTimeManager);
+    m_timeManager = std::move(timeManager);
 }
 
 cTimeManager *GameContext::getTimeManager() const {
-    if (timeManager) {
-        return timeManager.get();
+    if (m_timeManager) {
+        return m_timeManager.get();
     }
     throw std::runtime_error("cTimeManager not defined");
 }
 
-void GameContext::setSoundPlayer(std::unique_ptr<cSoundPlayer> newSoundPlayer) {
-    if (!newSoundPlayer) {
-        throw std::runtime_error("cTimeManager is not initialized!");
+void GameContext::setSoundPlayer(std::unique_ptr<cSoundPlayer> soundPlayer) {
+    if (!soundPlayer) {
+        throw std::runtime_error("cSoundPlayer is not initialized!");
     }
-    soundPlayer = std::move(newSoundPlayer);
+    m_soundPlayer = std::move(soundPlayer);
 }
 
 
 cSoundPlayer *GameContext::getSoundPlayer() const {
-    if (soundPlayer) {
-        return soundPlayer.get();
+    if (m_soundPlayer) {
+        return m_soundPlayer.get();
     }
-    throw std::runtime_error("soundPlayer not defined");
+    throw std::runtime_error("cSoundPlayer not defined");
 }
