@@ -77,6 +77,19 @@ const std::unordered_map<std::string, int> sectionTypeMap = {
     {"STRUCTURES", INI_STRUCTURES}
 };
 
+const std::unordered_map<std::string, std::string> sceneFileMap = {
+    {"HARVEST.WSA", "harvest"},
+    {"IX.WSA", "ix"},
+    {"SARDUKAR.WSA", "sardukar"},
+    {"PALACE.WSA", "palace"},
+    {"REPAIR.WSA", "repair"},
+    {"HVYFTRY.WSA", "hvyftry"},
+    {"HEADQRTS.WSA", "headqrts"},
+    {"QUAD.WSA", "quad"},
+    {"LTANK.WSA", "ltank"}
+};
+
+
 int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 int getHouseFromString(const std::string& chunk);
@@ -211,18 +224,12 @@ bool isInString(std::string source, std::string toFind)
 std::string INI_SceneFileToScene(std::string scenefile)
 {
     // wsa / data
-    if (isInString(scenefile, "HARVEST.WSA")) return "harvest";
-    if (isInString(scenefile, "IX.WSA")) return "ix";
-    if (isInString(scenefile, "SARDUKAR.WSA")) return "sardukar";
-    if (isInString(scenefile, "PALACE.WSA")) return "palace";
-    if (isInString(scenefile, "REPAIR.WSA")) return "repair";
-    if (isInString(scenefile, "HVYFTRY.WSA")) return "hvyftry";
-    if (isInString(scenefile, "HEADQRTS.WSA")) return "headqrts";
-    if (isInString(scenefile, "QUAD.WSA")) return "quad";
-    if (isInString(scenefile, "LTANK.WSA")) return "ltank";
-
+    for (const auto& [key, value] : sceneFileMap) {
+        if (caseInsCompare(scenefile, key)) {
+            return value;
+        }
+    }
     logbook(std::format("Failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
-
     return "unknown";
 }
 
