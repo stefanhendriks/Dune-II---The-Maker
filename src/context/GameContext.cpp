@@ -2,8 +2,8 @@
 #include "utils/cTimeManager.h"
 #include "utils/cSoundPlayer.h"
 
-GameContext::~GameContext()
-{}
+GameContext::~GameContext() {
+}
 
 void GameContext::setGraphicsContext(std::unique_ptr<GraphicsContext> newGfxCtx) {
     if (!newGfxCtx) {
@@ -12,7 +12,7 @@ void GameContext::setGraphicsContext(std::unique_ptr<GraphicsContext> newGfxCtx)
     gCtx = std::move(newGfxCtx);
 }
 
-GraphicsContext* GameContext::getGraphicsContext() const {
+GraphicsContext *GameContext::getGraphicsContext() const {
     if (gCtx) {
         return gCtx.get();
     } else {
@@ -27,27 +27,24 @@ void GameContext::setTimeManager(std::unique_ptr<cTimeManager> newTimeManager) {
     timeManager = std::move(newTimeManager);
 }
 
-cTimeManager* GameContext::getTimeManager() const {
+cTimeManager *GameContext::getTimeManager() const {
     if (timeManager) {
         return timeManager.get();
-    } else {
-        throw std::runtime_error("cTimeManager not defined");
     }
+    throw std::runtime_error("cTimeManager not defined");
 }
 
-void GameContext::setSoundPlayer(std::unique_ptr<cSoundPlayer> newSoundPlayer)
-{
+void GameContext::setSoundPlayer(std::unique_ptr<cSoundPlayer> newSoundPlayer) {
     if (!newSoundPlayer) {
         throw std::runtime_error("cTimeManager is not initialized!");
     }
-    soundPlayer = std::move(newSoundPlayer);  
+    soundPlayer = std::move(newSoundPlayer);
 }
 
 
-cSoundPlayer* GameContext::getSoundPlayer() const {
+cSoundPlayer *GameContext::getSoundPlayer() const {
     if (soundPlayer) {
         return soundPlayer.get();
-    } else {
-        throw std::runtime_error("soundPlayer not defined");
     }
+    throw std::runtime_error("soundPlayer not defined");
 }
