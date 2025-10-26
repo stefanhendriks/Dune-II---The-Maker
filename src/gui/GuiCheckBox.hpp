@@ -50,7 +50,6 @@ private:
     bool m_enabled;
     bool m_checked;
 
-    // Functions
     void drawBox() const;
     void onMouseMovedTo(const s_MouseEvent &event);
     void onMouseRightButtonPressed(const s_MouseEvent &);
