@@ -14,12 +14,10 @@ GuiCheckBox::GuiCheckBox(const cRectangle &rect)
     , m_enabled(true)
     , m_checked(true)
 {
-//    std::cout << "creation\n";
 }
 
 GuiCheckBox::~GuiCheckBox()
 {
-    //std::cout << "destruction\n";
 }
 
 void GuiCheckBox::draw() const
@@ -46,13 +44,43 @@ void GuiCheckBox::draw() const
     }
 }
 
+void GuiCheckBox::renderChecked() const {
+    renderDrawer->renderLine(
+        m_rect.getX() + 2,
+        m_rect.getY() + 3,
+        m_rect.getX() + (m_rect.getWidth() - 3),
+        m_rect.getY() + (m_rect.getHeight()- 2),
+        m_theme.textColorShadow
+    );
+    renderDrawer->renderLine(
+        m_rect.getX() + 2,
+        m_rect.getY() + (m_rect.getHeight()-2),
+        m_rect.getX() + (m_rect.getWidth()-3),
+        m_rect.getY() + 3,
+        m_theme.textColorShadow
+    );
+
+    renderDrawer->renderLine(
+        m_rect.getX() + 2,
+        m_rect.getY() + 2,
+        m_rect.getX() + (m_rect.getWidth() - 3),
+        m_rect.getY() + (m_rect.getHeight()- 3),
+        m_theme.textColor
+    );
+    renderDrawer->renderLine(
+        m_rect.getX() + 2,
+        m_rect.getY() + (m_rect.getHeight()-3),
+        m_rect.getX() + (m_rect.getWidth()-3),
+        m_rect.getY() + 2,
+        m_theme.textColor
+    );
+}
+
 void GuiCheckBox::drawBox() const
 {
+    drawRectBorder(m_theme.borderLight, m_theme.borderDark);
     if (m_checked) {
-        renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.borderDark);
-        renderDrawer->renderRectColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.borderLight);
-    } else {
-        renderDrawer->renderRectColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.borderLight);
+        renderChecked();
     }
 }
 
@@ -122,7 +150,7 @@ void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &)
         //std::cout << "!m_focus || !m_enabled" << std::endl;
         return;
     }
-        
+
     if (m_checked) {
         //std::cout << "to false" << std::endl;
         m_checked = false;
