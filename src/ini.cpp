@@ -11,6 +11,7 @@
   */
 
 #include "ini.h"
+#include "utils/cIniUtils.h"
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
@@ -37,142 +38,8 @@ namespace fs=std::filesystem;
 #include <utility>
 #include <unordered_map>
 
-const std::unordered_map<std::string, int> sectionMap = {
-    {"UNITS", INI_UNITS},
-    {"SKIRMISH", INI_SKIRMISH},
-    {"STRUCTURES", INI_STRUCTURES},
-    {"REINFORCEMENTS", INI_REINFORCEMENTS},
-    {"MAP", INI_MAP},
-    {"BASIC", INI_BASIC},
-    {"Atreides", INI_HOUSEATREIDES},
-    {"Ordos", INI_HOUSEORDOS},
-    {"Harkonnen", INI_HOUSEHARKONNEN},
-    {"Sardaukar", INI_HOUSESARDAUKAR},
-    {"Fremen", INI_HOUSEFREMEN},
-    {"Mercenary", INI_HOUSEMERCENARY}
-};
 
-const std::unordered_map<std::string, int> houseMap = {
-    {"Atreides", ATREIDES},
-    {"Harkonnen", HARKONNEN},
-    {"Ordos", ORDOS},
-    {"Sardaukar", SARDAUKAR},
-    {"Mercenary", MERCENARY},
-    {"Fremen", FREMEN},
-    {"Corrino", CORRINO},
-    {"General", GENERALHOUSE}
-};
-
-const std::unordered_map<std::string, int> sectionTypeMap = {
-    {"MAP", INI_MAP},
-    {"SKIRMISH", INI_SKIRMISH},
-    {"DESCRIPTION", INI_DESCRIPTION},
-    {"SCEN", INI_SCEN},
-    {"BRIEFING", INI_BRIEFING},
-    {"WIN", INI_WIN},
-    {"LOSE", INI_LOSE},
-    {"ADVICE", INI_ADVICE},
-    {"HOUSES", INI_HOUSES},
-    {"UNITS", INI_UNITS},
-    {"STRUCTURES", INI_STRUCTURES}
-};
-
-const std::unordered_map<std::string, std::string> sceneFileMap = {
-    {"HARVEST.WSA", "harvest"},
-    {"IX.WSA", "ix"},
-    {"SARDUKAR.WSA", "sardukar"},
-    {"PALACE.WSA", "palace"},
-    {"REPAIR.WSA", "repair"},
-    {"HVYFTRY.WSA", "hvyftry"},
-    {"HEADQRTS.WSA", "headqrts"},
-    {"QUAD.WSA", "quad"},
-    {"LTANK.WSA", "ltank"}
-};
-
-const std::unordered_map<std::string, int> structureMap = {
-    {"WINDTRAP", WINDTRAP},
-    {"PALACE", PALACE},
-    {"HEAVYFACTORY", HEAVYFACTORY},
-    {"LIGHTFACTORY", LIGHTFACTORY},
-    {"CONSTYARD", CONSTYARD},
-    {"SILO", SILO},
-    {"HIGHTECH", HIGHTECH},
-    {"IX", IX},
-    {"REPAIR", REPAIR},
-    {"RADAR", RADAR},
-    {"REFINERY", REFINERY},
-    {"WOR", WOR},
-    {"BARRACKS", BARRACKS},
-    {"STARPORT", STARPORT},
-    {"TURRET", TURRET},
-    {"ROCKETTURRET", RTURRET},
-    {"SLAB", SLAB1},
-    {"4SLAB", SLAB4},
-    {"WALL", WALL}
-};
-
-const std::unordered_map<std::string, int> structureNameMap = {
-    {"Const Yard", CONSTYARD},
-    {"Palace", PALACE},
-    {"Heavy Fctry", HEAVYFACTORY},
-    {"Light Fctry", LIGHTFACTORY},
-    {"Windtrap", WINDTRAP},
-    {"Spice Silo", SILO},
-    {"Hi-Tech", HIGHTECH},
-    {"IX", IX},
-    {"Repair", REPAIR},
-    {"Outpost", RADAR},
-    {"Refinery", REFINERY},
-    {"WOR", WOR},
-    {"Barracks", BARRACKS},
-    {"Starport", STARPORT},
-    {"Turret", TURRET},
-    {"R-Turret", RTURRET}
-};
-
-const std::unordered_map<std::string, int> unitNameMap = {
-    {"Harvester", HARVESTER},
-    {"Tank", TANK},
-    {"COMBATTANK", TANK},
-    {"Siege Tank", SIEGETANK},
-    {"SIEGETANK", SIEGETANK},
-    {"Launcher", LAUNCHER},
-    {"Trooper", TROOPER},
-    {"Troopers", TROOPERS},
-    {"Sonic Tank", SONICTANK},
-    {"SONICTANK", SONICTANK},
-    {"Quad", QUAD},
-    {"Trike", TRIKE},
-    {"Raider Trike", RAIDER},
-    {"RAIDER", RAIDER},
-    {"Soldier", SOLDIER},
-    {"Infantry", INFANTRY},
-    {"Devastator", DEVASTATOR},
-    {"Deviator", DEVIATOR},
-    {"MCV", MCV},
-    {"Trike", TRIKE},
-    {"Soldier", SOLDIER},
-    {"CarryAll", CARRYALL},
-    {"Ornithopter", ORNITHOPTER},
-    {"Sandworm", SANDWORM},
-    {"Saboteur", SABOTEUR},
-    {"ONEFREMEN", UNIT_FREMEN_ONE},
-    {"THREEFREMEN", UNIT_FREMEN_THREE}
-};
-
-const std::unordered_map<int, char> houseLetterMap = {
-    {ATREIDES,   'a'},
-    {HARKONNEN,  'h'},
-    {ORDOS,      'o'},
-    {SARDAUKAR,  's'},
-    {MERCENARY,  'm'},
-    {FREMEN,     'f'}
-};
-
-int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
-int getHouseFromString(const std::string& chunk);
-int getUnitTypeFromString(const std::string& chunk);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
 class cReinforcements;
@@ -194,17 +61,7 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *lin
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
 
-bool caseInsCompare(const std::string& s1, const std::string& s2)
-{
-    if (s1.size() != s2.size()) return false;
-    return std::equal(
-        s1.begin(), s1.end(),
-        s2.begin(),
-        [](char a, char b) {
-            return std::toupper(static_cast<unsigned char>(a)) == std::toupper(static_cast<unsigned char>(b));
-        }
-    );
-}
+
 
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
@@ -300,35 +157,14 @@ bool isInString(std::string source, std::string toFind)
     return false; // not found in string
 }
 
-std::string INI_SceneFileToScene(std::string scenefile)
-{
-    // wsa / data
-    for (const auto& [key, value] : sceneFileMap) {
-        if (caseInsCompare(scenefile, key)) {
-            return value;
-        }
-    }
-    logbook(std::format("Failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
-    return "unknown";
-}
 
-int INI_StructureType(std::string structureName)
-{
-    for (const auto& [key, value] : structureMap) {
-        if (caseInsCompare(structureName, key)){
-            return value;
-        }
-    }
-    logbook(std::format("Could not find structure type for [{}]", structureName));
-    return 0; // just in case some miracle happened, we need to go on and not crash everything.
-}
 
-// Reads out word[], checks structure type, and returns actual source-id
-int INI_StructureType(char word[256])
-{
-    std::string wordAsString(word);
-    return INI_StructureType(wordAsString);
-}
+// // Reads out word[], checks structure type, and returns actual source-id
+// int INI_StructureType(char word[256])
+// {
+//     std::string wordAsString(word);
+//     return cIniUtils::getStructureType(wordAsString);
+// }
 
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(char word[25], int section)
@@ -336,11 +172,11 @@ int INI_WordType(char word[25], int section)
     logbook(std::format("Going to find word-type for [{}]", word));
 
     if (section == SEC_REGION) {
-        if (caseInsCompare(word, "Region"))            return WORD_REGION;
-        if (caseInsCompare(word, "RegionConquer"))     return WORD_REGIONCONQUER;
-        if (caseInsCompare(word, "House"))             return WORD_REGIONHOUSE;
-        if (caseInsCompare(word, "Text"))              return WORD_REGIONTEXT;
-        if (caseInsCompare(word, "Select"))            return WORD_REGIONSELECT;
+        if (cIniUtils::caseInsCompare(word, "Region"))            return WORD_REGION;
+        if (cIniUtils::caseInsCompare(word, "RegionConquer"))     return WORD_REGIONCONQUER;
+        if (cIniUtils::caseInsCompare(word, "House"))             return WORD_REGIONHOUSE;
+        if (cIniUtils::caseInsCompare(word, "Text"))              return WORD_REGIONTEXT;
+        if (cIniUtils::caseInsCompare(word, "Select"))            return WORD_REGIONSELECT;
         return WORD_NONE;
     }
 
@@ -350,116 +186,116 @@ int INI_WordType(char word[25], int section)
             section == INI_ADVICE ||
             section == INI_LOSE ||
             section == INI_WIN) {
-        if (caseInsCompare(word, "Number"))            return WORD_NUMBER;
-        if (caseInsCompare(word, "Text"))              return WORD_REGIONTEXT;
+        if (cIniUtils::caseInsCompare(word, "Number"))            return WORD_NUMBER;
+        if (cIniUtils::caseInsCompare(word, "Text"))              return WORD_REGIONTEXT;
         return WORD_NONE;
     }
 
     if (section == INI_SKIRMISH) {
-        if (caseInsCompare(word, "Title"))             return WORD_MAPNAME;
-        if (caseInsCompare(word, "StartCell"))         return WORD_STARTCELL;
+        if (cIniUtils::caseInsCompare(word, "Title"))             return WORD_MAPNAME;
+        if (cIniUtils::caseInsCompare(word, "StartCell"))         return WORD_STARTCELL;
     }
 
     if (section == INI_GAME) {
-        if (caseInsCompare(word, "ModId"))             return WORD_MODID;
+        if (cIniUtils::caseInsCompare(word, "ModId"))             return WORD_MODID;
     }
     else if (section == INI_BASIC) {
-        if (caseInsCompare(word, "CursorPos"))         return WORD_FOCUS;
-        if (caseInsCompare(word, "BriefPicture"))      return WORD_BRIEFPICTURE;
-        if (caseInsCompare(word, "WinFlags"))          return WORD_WINFLAGS;
-        if (caseInsCompare(word, "LoseFlags"))         return WORD_LOSEFLAGS;
+        if (cIniUtils::caseInsCompare(word, "CursorPos"))         return WORD_FOCUS;
+        if (cIniUtils::caseInsCompare(word, "BriefPicture"))      return WORD_BRIEFPICTURE;
+        if (cIniUtils::caseInsCompare(word, "WinFlags"))          return WORD_WINFLAGS;
+        if (cIniUtils::caseInsCompare(word, "LoseFlags"))         return WORD_LOSEFLAGS;
     }
     else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-        if (caseInsCompare(word, "Team"))              return WORD_TEAM;
-        if (caseInsCompare(word, "Credits"))           return WORD_CREDITS;
-        if (caseInsCompare(word, "Quota"))             return WORD_QUOTA;
-        if (caseInsCompare(word, "Brain"))             return WORD_BRAIN;
-        if (caseInsCompare(word, "House"))             return WORD_HOUSE;
-        if (caseInsCompare(word, "Focus"))             return WORD_FOCUS;
+        if (cIniUtils::caseInsCompare(word, "Team"))              return WORD_TEAM;
+        if (cIniUtils::caseInsCompare(word, "Credits"))           return WORD_CREDITS;
+        if (cIniUtils::caseInsCompare(word, "Quota"))             return WORD_QUOTA;
+        if (cIniUtils::caseInsCompare(word, "Brain"))             return WORD_BRAIN;
+        if (cIniUtils::caseInsCompare(word, "House"))             return WORD_HOUSE;
+        if (cIniUtils::caseInsCompare(word, "Focus"))             return WORD_FOCUS;
     }
     else if (section == INI_MAP) {
         // When reading [MAP], interpet the 'width' and 'height' for default width and height for the Map Editor
-        if (caseInsCompare(word, "Width"))             return WORD_MAPWIDTH;
-        if (caseInsCompare(word, "Height"))            return WORD_MAPHEIGHT;
-        if (caseInsCompare(word, "Seed"))              return WORD_MAPSEED;
-        if (caseInsCompare(word, "Bloom"))             return WORD_MAPBLOOM;
-        if (caseInsCompare(word, "Field"))             return WORD_MAPFIELD;
+        if (cIniUtils::caseInsCompare(word, "Width"))             return WORD_MAPWIDTH;
+        if (cIniUtils::caseInsCompare(word, "Height"))            return WORD_MAPHEIGHT;
+        if (cIniUtils::caseInsCompare(word, "Seed"))              return WORD_MAPSEED;
+        if (cIniUtils::caseInsCompare(word, "Bloom"))             return WORD_MAPBLOOM;
+        if (cIniUtils::caseInsCompare(word, "Field"))             return WORD_MAPFIELD;
     }
     else if (section == INI_BULLETS) {
-        if (caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
-        if (caseInsCompare(word, "BitmapExplosion"))   return WORD_BITMAP_DEAD;
-        if (caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
-        if (caseInsCompare(word, "BitmapFrames"))      return WORD_BITMAP_FRAMES;
-        if (caseInsCompare(word, "BitmapExplFrames"))  return WORD_BITMAP_DEADFRAMES;
-        if (caseInsCompare(word, "Damage"))            return WORD_DAMAGE;
-        if (caseInsCompare(word, "Definition"))        return WORD_DEFINITION;
-        if (caseInsCompare(word, "Sound"))             return WORD_SOUND;
+        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
+        if (cIniUtils::caseInsCompare(word, "BitmapExplosion"))   return WORD_BITMAP_DEAD;
+        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
+        if (cIniUtils::caseInsCompare(word, "BitmapFrames"))      return WORD_BITMAP_FRAMES;
+        if (cIniUtils::caseInsCompare(word, "BitmapExplFrames"))  return WORD_BITMAP_DEADFRAMES;
+        if (cIniUtils::caseInsCompare(word, "Damage"))            return WORD_DAMAGE;
+        if (cIniUtils::caseInsCompare(word, "Definition"))        return WORD_DEFINITION;
+        if (cIniUtils::caseInsCompare(word, "Sound"))             return WORD_SOUND;
     }
     else if (section == INI_STRUCTURES) {
-        if (caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
-        if (caseInsCompare(word, "FixPoints"))         return WORD_FIXHP;
-        if (caseInsCompare(word, "PowerDrain"))        return WORD_POWERDRAIN;
-        if (caseInsCompare(word, "PowerGive"))         return WORD_POWERGIVE;
-        if (caseInsCompare(word, "Cost"))              return WORD_COST;
-        if (caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
+        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
+        if (cIniUtils::caseInsCompare(word, "FixPoints"))         return WORD_FIXHP;
+        if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return WORD_POWERDRAIN;
+        if (cIniUtils::caseInsCompare(word, "PowerGive"))         return WORD_POWERGIVE;
+        if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
+        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
     }
     else if (section == INI_UNITS) {
-        if (caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
-        if (caseInsCompare(word, "BitmapTop"))         return WORD_BITMAP_TOP;
-        if (caseInsCompare(word, "Icon"))              return WORD_ICON;
-        if (caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
-        if (caseInsCompare(word, "BitmapHeight"))      return WORD_BITMAP_HEIGHT;
-        if (caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
-        if (caseInsCompare(word, "Appetite"))          return WORD_APPETITE;
-        if (caseInsCompare(word, "Cost"))              return WORD_COST;
-        if (caseInsCompare(word, "BulletType"))        return WORD_BULLETTYPE;
-        if (caseInsCompare(word, "MoveSpeed"))         return WORD_MOVESPEED;
-        if (caseInsCompare(word, "TurnSpeed"))         return WORD_TURNSPEED;
+        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
+        if (cIniUtils::caseInsCompare(word, "BitmapTop"))         return WORD_BITMAP_TOP;
+        if (cIniUtils::caseInsCompare(word, "Icon"))              return WORD_ICON;
+        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
+        if (cIniUtils::caseInsCompare(word, "BitmapHeight"))      return WORD_BITMAP_HEIGHT;
+        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
+        if (cIniUtils::caseInsCompare(word, "Appetite"))          return WORD_APPETITE;
+        if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
+        if (cIniUtils::caseInsCompare(word, "BulletType"))        return WORD_BULLETTYPE;
+        if (cIniUtils::caseInsCompare(word, "MoveSpeed"))         return WORD_MOVESPEED;
+        if (cIniUtils::caseInsCompare(word, "TurnSpeed"))         return WORD_TURNSPEED;
         // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
-        if (caseInsCompare(word, "AttackFrequency"))   return WORD_ATTACKFREQ;
+        if (cIniUtils::caseInsCompare(word, "AttackFrequency"))   return WORD_ATTACKFREQ;
         // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
-        if (caseInsCompare(word, "NextAttackFrequency"))   return WORD_NEXTATTACKFREQ;
-        if (caseInsCompare(word, "Sight"))            return WORD_SIGHT;
-        if (caseInsCompare(word, "Range"))            return WORD_RANGE;
-        if (caseInsCompare(word, "BuildTime"))        return WORD_BUILDTIME;
-        if (caseInsCompare(word, "Description"))      return WORD_DESCRIPTION;
+        if (cIniUtils::caseInsCompare(word, "NextAttackFrequency"))   return WORD_NEXTATTACKFREQ;
+        if (cIniUtils::caseInsCompare(word, "Sight"))            return WORD_SIGHT;
+        if (cIniUtils::caseInsCompare(word, "Range"))            return WORD_RANGE;
+        if (cIniUtils::caseInsCompare(word, "BuildTime"))        return WORD_BUILDTIME;
+        if (cIniUtils::caseInsCompare(word, "Description"))      return WORD_DESCRIPTION;
         // BOOLEANS
-        if (caseInsCompare(word, "IsHarvester"))       return WORD_ISHARVESTER;
-        if (caseInsCompare(word, "FireTwice"))         return WORD_FIRETWICE;
-        if (caseInsCompare(word, "IsInfantry"))        return WORD_ISINFANTRY;
-        if (caseInsCompare(word, "Squishable"))        return WORD_ISSQUISHABLE;
-        if (caseInsCompare(word, "CanSquish"))         return WORD_CANSQUISH;
-        if (caseInsCompare(word, "IsAirborn"))         return WORD_ISAIRBORN;
-        if (caseInsCompare(word, "AbleToCarry"))       return WORD_ABLETOCARRY;
-        if (caseInsCompare(word, "FreeRoam"))          return WORD_FREEROAM;
-        if (caseInsCompare(word, "Producer"))          return WORD_PRODUCER;
-        if (caseInsCompare(word, "MaxCredits"))        return WORD_HARVESTLIMIT;
-        if (caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
-        if (caseInsCompare(word, "HarvestAmount"))     return WORD_HARVESTAMOUNT;
+        if (cIniUtils::caseInsCompare(word, "IsHarvester"))       return WORD_ISHARVESTER;
+        if (cIniUtils::caseInsCompare(word, "FireTwice"))         return WORD_FIRETWICE;
+        if (cIniUtils::caseInsCompare(word, "IsInfantry"))        return WORD_ISINFANTRY;
+        if (cIniUtils::caseInsCompare(word, "Squishable"))        return WORD_ISSQUISHABLE;
+        if (cIniUtils::caseInsCompare(word, "CanSquish"))         return WORD_CANSQUISH;
+        if (cIniUtils::caseInsCompare(word, "IsAirborn"))         return WORD_ISAIRBORN;
+        if (cIniUtils::caseInsCompare(word, "AbleToCarry"))       return WORD_ABLETOCARRY;
+        if (cIniUtils::caseInsCompare(word, "FreeRoam"))          return WORD_FREEROAM;
+        if (cIniUtils::caseInsCompare(word, "Producer"))          return WORD_PRODUCER;
+        if (cIniUtils::caseInsCompare(word, "MaxCredits"))        return WORD_HARVESTLIMIT;
+        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
+        if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return WORD_HARVESTAMOUNT;
     }
     else if (section == INI_STRUCTURES) {
         if (strlen(word) > 1) {
-            if (caseInsCompare(word, "PreBuild"))      return WORD_PREBUILD;
-            if (caseInsCompare(word, "Description"))   return WORD_DESCRIPTION;
-            if (caseInsCompare(word, "Power"))         return WORD_POWER;        // What power it takes
+            if (cIniUtils::caseInsCompare(word, "PreBuild"))      return WORD_PREBUILD;
+            if (cIniUtils::caseInsCompare(word, "Description"))   return WORD_DESCRIPTION;
+            if (cIniUtils::caseInsCompare(word, "Power"))         return WORD_POWER;        // What power it takes
         }
         else
             return WORD_NONE;
     }
     else if (section == INI_HOUSES) {
         // each house has properties..
-        if (caseInsCompare(word, "ColorR"))            return WORD_RED;
-        if (caseInsCompare(word, "ColorG"))            return WORD_GREEN;
-        if (caseInsCompare(word, "ColorB"))            return WORD_BLUE;
+        if (cIniUtils::caseInsCompare(word, "ColorR"))            return WORD_RED;
+        if (cIniUtils::caseInsCompare(word, "ColorG"))            return WORD_GREEN;
+        if (cIniUtils::caseInsCompare(word, "ColorB"))            return WORD_BLUE;
         // and specific stuff:
-        if (caseInsCompare(word, "FirePower"))         return WORD_FIREPOWER;
-        if (caseInsCompare(word, "FireRate"))          return WORD_FIRERATE;
-        if (caseInsCompare(word, "StructPrice"))       return WORD_STRUCTPRICE;
-        if (caseInsCompare(word, "UnitPrice"))         return WORD_UNITPRICE;
-        if (caseInsCompare(word, "Speed"))             return WORD_SPEED;
-        if (caseInsCompare(word, "BuildSpeed"))        return WORD_BUILDSPEED;
-        if (caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
-        if (caseInsCompare(word, "DumpSpeed"))         return WORD_DUMPSPEED;
+        if (cIniUtils::caseInsCompare(word, "FirePower"))         return WORD_FIREPOWER;
+        if (cIniUtils::caseInsCompare(word, "FireRate"))          return WORD_FIRERATE;
+        if (cIniUtils::caseInsCompare(word, "StructPrice"))       return WORD_STRUCTPRICE;
+        if (cIniUtils::caseInsCompare(word, "UnitPrice"))         return WORD_UNITPRICE;
+        if (cIniUtils::caseInsCompare(word, "Speed"))             return WORD_SPEED;
+        if (cIniUtils::caseInsCompare(word, "BuildSpeed"))        return WORD_BUILDSPEED;
+        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
+        if (cIniUtils::caseInsCompare(word, "DumpSpeed"))         return WORD_DUMPSPEED;
     }
 
     logbook(std::format("Could not find word-type for [{}]", word));
@@ -528,21 +364,7 @@ int GAME_INI_SectionType(char section[30], int last)
     return last;
 }
 
-// Reads out section[], does a string compare and returns type id
-int INI_SectionType(const std::string& section, int last)
-{
-    for (const auto& [key, value] : sectionTypeMap) {
-        if (caseInsCompare(section, key)) {
-            if (key == "STRUCTURES") {
-                cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Structure Section found", section);
-            }
-            return value;
-        }
-    }
 
-    cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "No SECTION id found, assuming its an ID nested in section", section);
-    return last;
-}
 
 // Reads out 'result' and will return the value after the '='. Returns float.
 // UGLY COPY/PASTE OF INI_WORDVALUEINT function, because we will completely
@@ -792,20 +614,10 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
     INI_WordValueCHAR(result, val);
 
     // When its TRUE , return true
-    return caseInsCompare(val, "true");
+    return cIniUtils::caseInsCompare(val, "true");
 }
 
-// return ID of structure
-int getStructureTypeFromString(const std::string& structureStr)
-{
-    for (const auto& [key, value] : structureNameMap) {
-        if (caseInsCompare(structureStr, key)) {
-            return value;
-        }
-    }
-    logbook(std::format("Could not find structure: {}", structureStr));
-    return CONSTYARD;
-}
+
 
 /**
  * Create seed map.
@@ -922,7 +734,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
                 INI_WordValueCHAR(const_cast<char *>(line.c_str()), cHouseRegion);
 
                 logbook("Region house");
-                int iH = getHouseFromString(cHouseRegion);
+                int iH = cIniUtils::getHouseFromString(cHouseRegion);
 
                 if (iRegionNumber > -1) {
                     world[iRegionNumber].iHouse = iH;
@@ -952,31 +764,6 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
     logbook("[CAMPAIGN] Done");
 }
 
-// SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
-int getUnitTypeFromString(const std::string& chunk)
-{
-    for (const auto& [key, value] : unitNameMap) {
-        if (caseInsCompare(chunk, key)) {
-            return value;
-        }
-    }
-    logbook(std::format(
-                "getUnitTypeFromChar could not determine what unit type '{}' is. Returning -1.", chunk));
-    return -1;
-}
-
-int getHouseFromString(const std::string& chunk)
-{
-    for (const auto& [key, value] : houseMap) {
-        if (caseInsCompare(chunk, key)) {
-            return value;
-        }
-    }
-    logbook(std::format(
-        "getHouseFromChar could not determine what house type '{}' is. Returning -1; this will probably cause problems.", chunk));
-    return -1;
-}
-
 /**
  * Taken the region conquered by player, in sequential form (meaning, the 1st region the
  * player conquers, corresponds with techlevel 1. While the 8th, 9th or 10th region correspond
@@ -1002,30 +789,13 @@ int getTechLevelByRegion(int iRegion)
     return 9;
 }
 
-/**
- * Returns a string, containing the relative path to the scenario file for
- * the given house and region id.
- * @param iHouse
- * @param iRegion
- * @return
- */
-std::string INI_GetScenarioFileName(int iHouse, int iRegion)
-{
-    char cHouse = ' ';
-    auto it = houseLetterMap.find(iHouse);
-    if (it != houseLetterMap.end()) {
-        cHouse = it->second;
-    }
-    return std::format("campaign/maps/scen{}{:03}.ini", cHouse, iRegion);
-}
-
 
 void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
 {
     game.m_skirmish = false;
     game.missionInit();
 
-    std::string filename = INI_GetScenarioFileName(iHouse, iRegion);
+    std::string filename = cIniUtils::getScenarioFileName(iHouse, iRegion);
 
     game.m_mission = getTechLevelByRegion(iRegion);
 
@@ -1183,9 +953,9 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *lin
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
         std::string scenefile = INI_WordValueString(linefeed);
-        std::string scene = INI_SceneFileToScene(scenefile);
+        std::string scene = cIniUtils::getSceneFileToScene(scenefile);
 
-        scene = INI_SceneFileToScene(scenefile);
+        scene = cIniUtils::getSceneFileToScene(scenefile);
 
         if (!isInString(scene, "unknown")) {
             pMentat->loadScene(scene);
@@ -1300,8 +1070,6 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
 
             }
         }
-
-
     }
     // Loaded before SEED
     else if (wordtype == WORD_MAPFIELD) {
@@ -1353,8 +1121,6 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
 
             }
         }
-
-
     }
 }
 
@@ -1407,7 +1173,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
             iPart++;
 
             if (iPart == 0) {
-                int iHouse = getHouseFromString(std::string(chunk));
+                int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
 
                 if (iHouse > -1) {
                     // Search for a player with this house
@@ -1420,7 +1186,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
                 }
             }
             else if (iPart == 1) {
-                unitType = getUnitTypeFromString(std::string(chunk));
+                unitType = cIniUtils::getUnitTypeFromString(std::string(chunk));
             }
             else if (iPart == 2) {
                 // Homebase is home of that house
@@ -1523,7 +1289,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             // this line is not GENXXX
             if (bGen == false) {
                 if (iPart == 0) {
-                    int iHouse = getHouseFromString(std::string(chunk));
+                    int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1546,7 +1312,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
                     }
                 }
                 else if (iPart == 1) {
-                    iType = getStructureTypeFromString(std::string(chunk));
+                    iType = cIniUtils::getStructureTypeFromString(std::string(chunk));
                 }
                 else if (iPart == 3) {
                     iCell = atoi(chunk);
@@ -1556,7 +1322,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             }
             else {
                 if (iPart == 0) {
-                    int iHouse = getHouseFromString(std::string(chunk));
+                    int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1658,7 +1424,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
             iPart++;
 
             if (iPart == INI_UNITS_PART_CONTROLLER) {
-                int iHouse = getHouseFromString(std::string(chunk));
+                int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
 
                 // Search for a player with this house
                 for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -1675,7 +1441,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
 
             }
             else if (iPart == INI_UNITS_PART_TYPE) {
-                iType = getUnitTypeFromString(std::string(chunk));
+                iType = cIniUtils::getUnitTypeFromString(std::string(chunk));
             }
             else if (iPart == INI_UNITS_PART_HP) {
                 // do nothing in part 2 (for now!?)
@@ -1821,7 +1587,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
 
             if (linesection[0] != '\0' && strlen(linesection) > 1) {
                 // until we found the right sections/parts, keep searching
-                iSection = INI_SectionType(linesection, iSection);
+                iSection = cIniUtils::getSectionType(linesection, iSection);
             }
 
             if (iSection == INI_SCEN) {
@@ -1935,7 +1701,7 @@ void INI_Install_Game(std::string filename)
                             }
                         }
 
-                        id = getUnitTypeFromString(std::string(name_unit));
+                        id = cIniUtils::getUnitTypeFromString(std::string(name_unit));
                         if (id >= MAX_UNITTYPES) id--;
 
                     } // found a new unit type
@@ -1965,7 +1731,7 @@ void INI_Install_Game(std::string filename)
                                 break; // get out
                         }
 
-                        id = INI_StructureType(name_structure);
+                        id = cIniUtils::getStructureType(name_structure);
                         if (id >= MAX_STRUCTURETYPES) id--;
 
                     } // found a new structure type
@@ -2024,8 +1790,7 @@ void INI_Install_Game(std::string filename)
                     if (wordtype == WORD_PRODUCER) {
                         std::string producerString = INI_WordValueString(linefeed);
                         // determine structure type from that
-                        int type = INI_StructureType(producerString);
-//        	  int type = INI_StructureType(producerString.c_str());
+                        int type = cIniUtils::getStructureType(producerString);
                         unitInfo.structureTypeItLeavesFrom = type;
                     }
                 }
