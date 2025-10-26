@@ -130,10 +130,41 @@ const std::unordered_map<std::string, int> structureNameMap = {
     {"R-Turret", RTURRET}
 };
 
+const std::unordered_map<std::string, int> unitNameMap = {
+    {"Harvester", HARVESTER},
+    {"Tank", TANK},
+    {"COMBATTANK", TANK},
+    {"Siege Tank", SIEGETANK},
+    {"SIEGETANK", SIEGETANK},
+    {"Launcher", LAUNCHER},
+    {"Trooper", TROOPER},
+    {"Troopers", TROOPERS},
+    {"Sonic Tank", SONICTANK},
+    {"SONICTANK", SONICTANK},
+    {"Quad", QUAD},
+    {"Trike", TRIKE},
+    {"Raider Trike", RAIDER},
+    {"RAIDER", RAIDER},
+    {"Soldier", SOLDIER},
+    {"Infantry", INFANTRY},
+    {"Devastator", DEVASTATOR},
+    {"Deviator", DEVIATOR},
+    {"MCV", MCV},
+    {"Trike", TRIKE},
+    {"Soldier", SOLDIER},
+    {"CarryAll", CARRYALL},
+    {"Ornithopter", ORNITHOPTER},
+    {"Sandworm", SANDWORM},
+    {"Saboteur", SABOTEUR},
+    {"ONEFREMEN", UNIT_FREMEN_ONE},
+    {"THREEFREMEN", UNIT_FREMEN_THREE}
+};
+
+
 int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 int getHouseFromString(const std::string& chunk);
-int getUnitTypeFromChar(char chunk[25]);
+int getUnitTypeFromChar(const std::string& chunk);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
 class cReinforcements;
@@ -1175,41 +1206,17 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
 
     logbook("[CAMPAIGN] Done");
 }
-// SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
-int getUnitTypeFromChar(char chunk[25])
-{
-    std::string unitString(chunk);
-    if (caseInsCompare(unitString, "Harvester")) return HARVESTER;
-    if (caseInsCompare(unitString, "Tank")) return TANK;
-    if (caseInsCompare(unitString, "COMBATTANK")) return TANK;
-    if (caseInsCompare(unitString, "Siege Tank")) return SIEGETANK;
-    if (caseInsCompare(unitString, "SIEGETANK")) return SIEGETANK;
-    if (caseInsCompare(unitString, "Launcher")) return LAUNCHER;
-    if (caseInsCompare(unitString, "Trooper")) return TROOPER;
-    if (caseInsCompare(unitString, "Troopers")) return TROOPERS;
-    if (caseInsCompare(unitString, "Sonic Tank")) return SONICTANK;
-    if (caseInsCompare(unitString, "SONICTANK")) return SONICTANK;
-    if (caseInsCompare(unitString, "Quad")) return QUAD;
-    if (caseInsCompare(unitString, "Trike")) return TRIKE;
-    if (caseInsCompare(unitString, "Raider Trike")) return RAIDER;
-    if (caseInsCompare(unitString, "RAIDER")) return RAIDER;
-    if (caseInsCompare(unitString, "Soldier")) return SOLDIER;
-    if (caseInsCompare(unitString, "Infantry")) return INFANTRY;
-    if (caseInsCompare(unitString, "Devastator")) return DEVASTATOR;
-    if (caseInsCompare(unitString, "Deviator")) return DEVIATOR;
-    if (caseInsCompare(unitString, "MCV")) return MCV;
-    if (caseInsCompare(unitString, "Trike")) return TRIKE;
-    if (caseInsCompare(unitString, "Soldier")) return SOLDIER;
-    if (caseInsCompare(unitString, "CarryAll")) return CARRYALL;
-    if (caseInsCompare(unitString, "Ornithopter")) return ORNITHOPTER;
-    if (caseInsCompare(unitString, "Sandworm")) return SANDWORM;
-    if (caseInsCompare(unitString, "Saboteur")) return SABOTEUR;
-    if (caseInsCompare(unitString, "ONEFREMEN")) return UNIT_FREMEN_ONE;
-    if (caseInsCompare(unitString, "THREEFREMEN")) return UNIT_FREMEN_THREE;
 
+// SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
+int getUnitTypeFromChar(const std::string& chunk)
+{
+    for (const auto& [key, value] : unitNameMap) {
+        if (caseInsCompare(chunk, key)) {
+            return value;
+        }
+    }
     logbook(std::format(
-                "getUnitTypeFromChar could not determine what unit type '{}' (original is '{}') is. Returning -1; this will probably cause problems.",
-                unitString, chunk));
+                "getUnitTypeFromChar could not determine what unit type '{}' is. Returning -1.", chunk));
     return -1;
 }
 
@@ -1673,7 +1680,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
                 }
             }
             else if (iPart == 1) {
-                unitType = getUnitTypeFromChar(chunk);
+                unitType = getUnitTypeFromChar(std::string(chunk));
             }
             else if (iPart == 2) {
                 // Homebase is home of that house
@@ -1928,7 +1935,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
 
             }
             else if (iPart == INI_UNITS_PART_TYPE) {
-                iType = getUnitTypeFromChar(chunk);
+                iType = getUnitTypeFromChar(std::string(chunk));
             }
             else if (iPart == INI_UNITS_PART_HP) {
                 // do nothing in part 2 (for now!?)
@@ -2188,7 +2195,7 @@ void INI_Install_Game(std::string filename)
                             }
                         }
 
-                        id = getUnitTypeFromChar(name_unit);
+                        id = getUnitTypeFromChar(std::string(name_unit));
                         if (id >= MAX_UNITTYPES) id--;
 
                     } // found a new unit type
