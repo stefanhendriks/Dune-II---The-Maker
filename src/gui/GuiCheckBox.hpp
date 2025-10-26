@@ -26,6 +26,9 @@ public:
 
     // From GuiObject
     void draw() const override;
+
+    void renderChecked() const;
+
     void setRenderKind(GuiRenderKind value);
 
     void nextRenderKind();
