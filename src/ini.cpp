@@ -1051,7 +1051,7 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
 }
 
 // return ID of structure
-int getStructureTypeFromChar(const std::string& structureStr)
+int getStructureTypeFromString(const std::string& structureStr)
 {
     for (const auto& [key, value] : structureNameMap) {
         if (caseInsCompare(structureStr, key)) {
@@ -1806,7 +1806,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
                     }
                 }
                 else if (iPart == 1) {
-                    iType = getStructureTypeFromChar(std::string(chunk));
+                    iType = getStructureTypeFromString(std::string(chunk));
                 }
                 else if (iPart == 3) {
                     iCell = atoi(chunk);
