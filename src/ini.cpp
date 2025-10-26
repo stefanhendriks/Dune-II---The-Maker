@@ -164,7 +164,7 @@ const std::unordered_map<std::string, int> unitNameMap = {
 int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 int getHouseFromString(const std::string& chunk);
-int getUnitTypeFromChar(const std::string& chunk);
+int getUnitTypeFromString(const std::string& chunk);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
 
 class cReinforcements;
@@ -1208,7 +1208,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
 }
 
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
-int getUnitTypeFromChar(const std::string& chunk)
+int getUnitTypeFromString(const std::string& chunk)
 {
     for (const auto& [key, value] : unitNameMap) {
         if (caseInsCompare(chunk, key)) {
@@ -1680,7 +1680,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
                 }
             }
             else if (iPart == 1) {
-                unitType = getUnitTypeFromChar(std::string(chunk));
+                unitType = getUnitTypeFromString(std::string(chunk));
             }
             else if (iPart == 2) {
                 // Homebase is home of that house
@@ -1935,7 +1935,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
 
             }
             else if (iPart == INI_UNITS_PART_TYPE) {
-                iType = getUnitTypeFromChar(std::string(chunk));
+                iType = getUnitTypeFromString(std::string(chunk));
             }
             else if (iPart == INI_UNITS_PART_HP) {
                 // do nothing in part 2 (for now!?)
@@ -2195,7 +2195,7 @@ void INI_Install_Game(std::string filename)
                             }
                         }
 
-                        id = getUnitTypeFromChar(std::string(name_unit));
+                        id = getUnitTypeFromString(std::string(name_unit));
                         if (id >= MAX_UNITTYPES) id--;
 
                     } // found a new unit type
