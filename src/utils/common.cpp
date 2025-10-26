@@ -26,6 +26,8 @@
 
 #include <cmath>
 
+#include "data/gfxaudio.h"
+
 std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
 {
     std::shared_ptr<cIniFile> file = std::make_shared<cIniFile>(filename, true);

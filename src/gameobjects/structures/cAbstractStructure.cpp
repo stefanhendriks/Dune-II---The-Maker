@@ -26,6 +26,8 @@
 #include <SDL2/SDL.h>
 #include <format>
 
+#include "data/gfxaudio.h"
+
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() :
     flags(std::vector<cFlag *>())

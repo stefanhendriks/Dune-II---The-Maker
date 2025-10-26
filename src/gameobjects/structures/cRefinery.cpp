@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "definitions.h"
+#include "data/gfxaudio.h"
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"

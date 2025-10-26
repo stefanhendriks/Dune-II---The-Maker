@@ -20,6 +20,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "data/gfxaudio.h"
+
 cPlayer::cPlayer()
 {
     itemBuilder = nullptr;

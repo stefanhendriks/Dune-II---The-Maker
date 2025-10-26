@@ -9,6 +9,8 @@
 #include "include/Texture.hpp"
 #include <algorithm>
 
+#include "data/gfxaudio.h"
+
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) :
     cGameState(theGame),
     textDrawer(cTextDrawer(bene_font))

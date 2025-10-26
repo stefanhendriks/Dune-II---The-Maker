@@ -16,6 +16,8 @@
 #include <format>
 #include <algorithm>
 
+#include "data/gfxaudio.h"
+
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse),
     m_state(SELECT_STATE_NORMAL)
