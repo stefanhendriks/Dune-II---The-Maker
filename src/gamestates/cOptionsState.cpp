@@ -5,6 +5,8 @@
 #include "drawers/SDLDrawer.hpp"
 // #include "gui/actions/cGuiActionExitGame.h"
 // #include "gui/actions/cGuiActionToGameState.h"
+#include <iostream>
+
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 #include "gui/GuiLabel.hpp"
@@ -176,8 +178,6 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_sld_musicVolumeRect);
 
-
-
     const cRectangle &soundRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50, buttonHeight);
     GuiLabel *gui_SoundLabel = GuiLabelBuilder()
             .withLabel("Sound")
@@ -232,13 +232,18 @@ void cOptionsState::constructWindow(int prevState)
 
     cTimeManager* timeManager = m_context->getTimeManager();
     const cRectangle &sld_speedRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
+    int convertedForSlider = 2 - timeManager->getGlobalSpeed() + 10;
+    std::cout << "Converted globalSpeed " << timeManager->getGlobalSpeed() << " to slider " << convertedForSlider << std::endl;
     GuiSlider *gui_sld_speedRect = GuiSliderBuilder()
             .withRect(sld_speedRect)
             .withMinValue(2)
             .withMaxValue(10)
-            .withInitialValue(timeManager->getGlobalSpeed())
+            .withInitialValue(convertedForSlider)
             .onValueChanged([this, timeManager](int newValue) {
-                timeManager->setGlobalSpeed(newValue);
+                int globalSpeed = 10 - newValue + 2;
+                std::cout << "Converted value from slider " << newValue << " to globalSpeed " << globalSpeed << std::endl;
+                // higher means slower, so convert into opposite
+                timeManager->setGlobalSpeed(globalSpeed);
             })
             .build();
     m_guiWindow->addGuiObject(gui_sld_speedRect);
