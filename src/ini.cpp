@@ -379,63 +379,6 @@ int INI_WordType(char word[25], int section)
         if (strcmp(word, "House") == 0)             return WORD_HOUSE;
         if (strcmp(word, "Focus") == 0)             return WORD_FOCUS;
     }
-    /*
-    else if (section == INI_MENU)
-    {
-      if (strcmp(word, "TitleBitmap") == 0)
-        return WORD_TITLEBITMAP;
-
-      if (strcmp(word, "ClickSound") == 0)
-        return WORD_MENUCLICKSOUND;
-    }
-    else if (section == INI_MOD)
-    {
-      // Title of mod
-      if (strcmp(word, "Title") == 0)
-        return WORD_TITLE;
-
-      // Version of mod
-      if (strcmp(word, "Version") == 0)
-        return WORD_VERSION;
-
-      // Dir of mod
-      if (strcmp(word, "Dir") == 0)
-        return WORD_DIR;
-
-    }
-    else if (section == INI_SIDEBAR)
-    {
-      if (strcmp(word, "ColorRed") == 0)
-        return WORD_RED;
-
-      if (strcmp(word, "ColorBlue") == 0)
-        return WORD_BLUE;
-
-      if (strcmp(word, "ColorGreen") == 0)
-        return WORD_GREEN;
-    }
-    else if (section == INI_MOUSE)
-    {
-      // normal mouse
-      if (strcmp(word, "Normal") == 0)
-        return WORD_MOUSENORMAL;
-
-      // cannot move
-      if (strcmp(word, "CannotMove") == 0)
-        return WORD_MOUSENOMOVE;
-
-      // Move
-      if (strcmp(word, "Move") == 0)
-        return WORD_MOUSEMOVE;
-
-      // Attack
-      if (strcmp(word, "Attack") == 0)
-        return WORD_MOUSEATTACK;
-
-      // Deploy
-      if (strcmp(word, "Deploy") == 0)
-        return WORD_MOUSEDEPLOY;
-    }*/
     else if (section == INI_MAP) {
         // When reading [MAP], interpet the 'width' and 'height' for default width and height for the Map Editor
         if (strcmp(word, "Width") == 0)             return WORD_MAPWIDTH;
