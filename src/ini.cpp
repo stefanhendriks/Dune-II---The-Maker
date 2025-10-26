@@ -89,6 +89,27 @@ const std::unordered_map<std::string, std::string> sceneFileMap = {
     {"LTANK.WSA", "ltank"}
 };
 
+const std::unordered_map<std::string, int> structureMap = {
+    {"WINDTRAP", WINDTRAP},
+    {"PALACE", PALACE},
+    {"HEAVYFACTORY", HEAVYFACTORY},
+    {"LIGHTFACTORY", LIGHTFACTORY},
+    {"CONSTYARD", CONSTYARD},
+    {"SILO", SILO},
+    {"HIGHTECH", HIGHTECH},
+    {"IX", IX},
+    {"REPAIR", REPAIR},
+    {"RADAR", RADAR},
+    {"REFINERY", REFINERY},
+    {"WOR", WOR},
+    {"BARRACKS", BARRACKS},
+    {"STARPORT", STARPORT},
+    {"TURRET", TURRET},
+    {"ROCKETTURRET", RTURRET},
+    {"SLAB", SLAB1},
+    {"4SLAB", SLAB4},
+    {"WALL", WALL}
+};
 
 int INI_SectionType(const std::string& section, int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
@@ -235,30 +256,12 @@ std::string INI_SceneFileToScene(std::string scenefile)
 
 int INI_StructureType(std::string structureName)
 {
-
-    if (isInString(structureName, "WINDTRAP")) return WINDTRAP;
-    if (isInString(structureName, "PALACE")) return PALACE;
-    if (isInString(structureName, "HEAVYFACTORY")) return HEAVYFACTORY;
-    if (isInString(structureName, "LIGHTFACTORY")) return LIGHTFACTORY;
-    if (isInString(structureName, "CONSTYARD")) return CONSTYARD;
-    if (isInString(structureName, "SILO")) return SILO;
-    if (isInString(structureName, "HIGHTECH")) return HIGHTECH;
-    if (isInString(structureName, "IX")) return IX;
-    if (isInString(structureName, "REPAIR")) return REPAIR;
-    if (isInString(structureName, "RADAR")) return RADAR;
-    if (isInString(structureName, "REFINERY")) return REFINERY;
-    if (isInString(structureName, "WOR")) return WOR;
-    if (isInString(structureName, "BARRACKS")) return BARRACKS;
-    if (isInString(structureName, "STARPORT")) return STARPORT;
-    if (isInString(structureName, "TURRET")) return TURRET;
-    if (isInString(structureName, "ROCKETTURRET")) return RTURRET;
-    if (isInString(structureName, "STARPORT")) return STARPORT;
-    if (isInString(structureName, "SLAB")) return SLAB1;
-    if (isInString(structureName, "4SLAB")) return SLAB4;
-    if (isInString(structureName, "WALL")) return WALL;
-
-    assert(false); // no recognition is fail.
-
+    for (const auto& [key, value] : structureMap) {
+        if (caseInsCompare(structureName, key)){
+            return value;
+        }
+    }
+    logbook(std::format("Could not find structure type for [{}]", structureName));
     return 0; // just in case some miracle happened, we need to go on and not crash everything.
 }
 
