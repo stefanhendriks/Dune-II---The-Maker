@@ -1,4 +1,4 @@
-#include "ini.h"
+#include "iniDefine.h"
 #include "d2tmc.h"
 
 #include "utils/cIniUtils.h"
