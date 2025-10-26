@@ -1,8 +1,5 @@
 #pragma once
 
-#include "cPlatformLayerInit.h"
-#include "data/gfxaudio.h" // Use IDs from this file to play samples
-
 #include <memory>
 #include <vector>
 
@@ -11,8 +8,7 @@ class cSoundData;
 class cSoundPlayer {
 public:
     // Initialize the platform layer before creating this object.
-    explicit cSoundPlayer(const std::string &datafile /*const cPlatformLayerInit &init*/);
-    // cSoundPlayer(const cPlatformLayerInit &init, int maxNrVoices);
+    explicit cSoundPlayer(const std::string &datafile);
     ~cSoundPlayer();
 
     static int getMaxVolume();
@@ -22,37 +18,35 @@ public:
 
     // Pass the sample ID of the Atreides voice
     void playVoice(int sampleId, int house);
-
     void playMusic(int sampleId);
+
     void stopMusic();
     bool isMusicPlaying() const;
 
     void setMusicVolume(int vol);
     int getMusicVolume() const {
-        return musicVolume*10/128;
+        return m_musicVolume*10/128;
     }
+
     void setSoundVolume(int vol);
     int getSoundVolume() const {
-        return soundVolume*10/128;
+        return m_soundVolume*10/128;
     }
     void changeMusicVolume(int delta);
-    // think about voices, clear voices, etc.
-    // void think();
 
-    void setMusicEnable(bool mm);
-    bool getMusicEnable() const {
-        return isMusicEnable;
+    void setMusicEnabled(bool mm);
+    bool getMusicEnabled() const {
+        return m_isMusicEnabled;
     }
-    void setSoundEnable(bool sm);
-    bool getSoundEnable() const {
-        return isSoundEnable;
+    void setSoundEnabled(bool sm);
+    bool getSoundEnabled() const {
+        return m_isSoundEnabled;
     }    
 
 private:
-    // std::vector<int> voices;
     std::unique_ptr<cSoundData> soundData;
-    int musicVolume;
-    int soundVolume;
-    bool isMusicEnable;
-    bool isSoundEnable;
+    int m_musicVolume;
+    int m_soundVolume;
+    bool m_isMusicEnabled;
+    bool m_isSoundEnabled;
 };

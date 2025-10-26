@@ -51,7 +51,7 @@ private:
     std::unique_ptr<DataPack> gfxaudio;
 };
 
-cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerInit &*/) //, int maxNrVoices)
+cSoundPlayer::cSoundPlayer(const std::string &datafile)
     : soundData(std::make_unique<cSoundData>(datafile))
 {
     // The platform layer init object is not used here, but since it needs to be passed, it tells
@@ -61,12 +61,12 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerIni
 
     if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
         logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
-        isMusicEnable = false;
-        isSoundEnable = false;
+        m_isMusicEnabled = false;
+        m_isSoundEnabled = false;
     } else {
         logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL2_mixer succes", OUTC_SUCCESS);
-        isMusicEnable = true;
-        isSoundEnable = true;
+        m_isMusicEnabled = true;
+        m_isSoundEnabled = true;
     }
 
     int nr_voices = Mix_AllocateChannels(MaxNbrVoices);
@@ -82,10 +82,10 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile /*const cPlatformLayerIni
         logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
     }
 
-    musicVolume = MaxVolume/2;
-    soundVolume = MaxVolume/2;
-    Mix_MasterVolume(soundVolume);
-    Mix_VolumeMusic(musicVolume);
+    m_musicVolume = MaxVolume/2;
+    m_soundVolume = MaxVolume/2;
+    Mix_MasterVolume(m_soundVolume);
+    Mix_VolumeMusic(m_musicVolume);
 }
 
 cSoundPlayer::~cSoundPlayer()
@@ -100,15 +100,15 @@ int cSoundPlayer::getMaxVolume()
 
 void cSoundPlayer::playSound(int sampleId)
 {
-    if (!isSoundEnable) {
+    if (!m_isSoundEnabled) {
         return;
     }
-    playSound(sampleId, musicVolume);
+    playSound(sampleId, m_musicVolume);
 }
 
 void cSoundPlayer::playSound(int sampleId, int vol)
 {
-    if (vol <= 0 || !isSoundEnable) {
+    if (vol <= 0 || !m_isSoundEnabled) {
         return;
     }
    vol = std::clamp(vol, 0, MIX_MAX_VOLUME);
@@ -134,7 +134,7 @@ void cSoundPlayer::playVoice(int sampleId, int house)
 
 void cSoundPlayer::playMusic(int sampleId)
 {
-    if (!isMusicEnable) {
+    if (!m_isMusicEnabled) {
         return;
     }
     Mix_PlayMusic(soundData->getMusic(sampleId), kNoLoop);
@@ -154,36 +154,36 @@ void cSoundPlayer::setMusicVolume(int _vol)
 {
     //std::cout << "music volume" << vol << "\n";
     int vol = _vol*128/10;
-    musicVolume = std::clamp(vol, 0, MaxVolume);
-    Mix_VolumeMusic(musicVolume);
+    m_musicVolume = std::clamp(vol, 0, MaxVolume);
+    Mix_VolumeMusic(m_musicVolume);
 }
 
 void cSoundPlayer::changeMusicVolume(int delta)
 {
-    musicVolume = std::clamp(musicVolume + delta, 0, MaxVolume);
-    this->setMusicVolume(musicVolume);
+    m_musicVolume = std::clamp(m_musicVolume + delta, 0, MaxVolume);
+    this->setMusicVolume(m_musicVolume);
 }
 
 void cSoundPlayer::setSoundVolume(int _vol)
 {
     //std::cout << "sound volume" << _vol << "\n";
     int vol = _vol*128/10;
-    soundVolume = std::clamp(vol, 0, MaxVolume);
-    Mix_MasterVolume(soundVolume);
+    m_soundVolume = std::clamp(vol, 0, MaxVolume);
+    Mix_MasterVolume(m_soundVolume);
 }
 
-void cSoundPlayer::setSoundEnable(bool sm)
+void cSoundPlayer::setSoundEnabled(bool sm)
 {
-    isSoundEnable = sm;
-    if (!isSoundEnable) {
+    m_isSoundEnabled = sm;
+    if (!m_isSoundEnabled) {
         Mix_HaltChannel(-1);
     }
 }
 
-void cSoundPlayer::setMusicEnable(bool mm)
+void cSoundPlayer::setMusicEnabled(bool mm)
 {
-    isMusicEnable = mm;
-    if (!isMusicEnable) {
+    m_isMusicEnabled = mm;
+    if (!m_isMusicEnabled) {
         Mix_HaltMusic();
     }
 }
