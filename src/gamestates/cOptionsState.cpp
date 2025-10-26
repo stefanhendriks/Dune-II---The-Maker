@@ -116,13 +116,13 @@ void cOptionsState::constructWindow(int prevState)
     GuiCheckBox *gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
             .onCheck([this, soundPlayer]() {
-                soundPlayer->setMusicEnable(true);
+                soundPlayer->setMusicEnabled(true);
             })
             .onUnCheck([this, soundPlayer]() {
-                soundPlayer->setMusicEnable(false);
+                soundPlayer->setMusicEnabled(false);
             })
             .build();
-    gui_MusicCheckLabel->setChecked(soundPlayer->getMusicEnable());
+    gui_MusicCheckLabel->setChecked(soundPlayer->getMusicEnabled());
     m_guiWindow->addGuiObject(gui_MusicCheckLabel);
 
     const cRectangle &musicVolumeRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50+buttonWidth/2, buttonHeight);
@@ -159,13 +159,13 @@ void cOptionsState::constructWindow(int prevState)
     GuiCheckBox *gui_SoundCheckLabel = GuiCheckBoxBuilder()
             .withRect(soundCheckRect)
             .onCheck([this,soundPlayer]() {
-                soundPlayer->setSoundEnable(true);
+                soundPlayer->setSoundEnabled(true);
             })
             .onUnCheck([this,soundPlayer]() {
-                soundPlayer->setSoundEnable(false);
+                soundPlayer->setSoundEnabled(false);
             })
             .build();
-    gui_SoundCheckLabel->setChecked(soundPlayer->getSoundEnable());
+    gui_SoundCheckLabel->setChecked(soundPlayer->getSoundEnabled());
     m_guiWindow->addGuiObject(gui_SoundCheckLabel);
 
     const cRectangle &soundVolumeRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50+buttonWidth/2, buttonHeight);
