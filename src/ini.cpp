@@ -96,7 +96,7 @@ static bool ToBool(const std::string& str)
     }
 }
 
-std::string ToTrim(const std::string& input)
+static std::string ToTrim(const std::string& input)
 {
     std::string section = input; 
     while (!section.empty() && std::isspace(static_cast<unsigned char>(section.front()))) {
