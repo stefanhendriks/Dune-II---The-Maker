@@ -351,6 +351,7 @@ int SCEN_INI_SectionType(const std::string& section)
     if (cIniUtils::caseInsCompare(section, "Sardaukar"))      return INI_HOUSESARDAUKAR;
     if (cIniUtils::caseInsCompare(section, "Fremen"))         return INI_HOUSEFREMEN;
     if (cIniUtils::caseInsCompare(section, "Mercenary"))      return INI_HOUSEMERCENARY;
+    logbook(std::format("SCEN_INI_SectionType: Could not find section type for [{}]", section));
     return -1;
 }
 
