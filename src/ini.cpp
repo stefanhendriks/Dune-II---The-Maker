@@ -126,36 +126,6 @@ void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
 // Reads out INPUT , will check for a [ at [0] and then checks till ], it will fill section[]
 // with the chars in between. So : [MAP] -> section = 'MAP'. Use function INI_SectionType(..)
 // to get the correct ID for that.
-void INI_Section(char input[MAX_LINE_LENGTH], char section[30])
-{
-
-    int pos = 0;
-    int end_pos = -1;
-
-    memset(section, '\0', strlen(section));
-
-    // check if the first character is a '['
-    if (input[0] == '[') {
-        pos = 1; // Begin at character 1
-
-        // find the ending ]
-        while (pos < (MAX_LINE_LENGTH - 1)) {
-            if (input[pos] == ']') {
-                end_pos = pos - 1;
-                break;
-            }
-            pos++;
-        }
-
-        if (end_pos > 1 && end_pos < 29) {
-            for (int wc = 0; wc < end_pos; wc++) {
-                section[wc] = input[wc + 1];
-            }
-            section[end_pos] = '\0'; // terminate string
-        }
-    }
-}
-
 std::string extractSectionName(const std::string& line)
 {
     auto start = line.find('[');
@@ -849,10 +819,9 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
-        char linesection[30];
+        std::string linesection;
 
         memset(lineword, '\0', sizeof(lineword));
-        memset(linesection, '\0', sizeof(linesection));
         memset(linefeed, '\0', sizeof(linefeed));
 
         // infinite loop baby
@@ -864,10 +833,10 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
             if (isCommentLine(linefeed)) continue;   // Skip
 
             // Every line is checked for a new section.
-            INI_Section(linefeed, linesection);
+            linesection = extractSectionName(linefeed);
 
             // line is not starting empty and section is found
-            if (linesection[0] != '\0' && strlen(linesection) > 1) {
+            if (!linesection.empty()) {
                 int sectionType = SCEN_INI_SectionType(linesection);
                 if (sectionType > -1) {
                     // found a section
@@ -1597,7 +1566,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
     if ((stream = fopen(path.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
-        char linesection[30];
+        std::string linesection;
 
         while (!feof(stream)) {
             INI_Sentence(stream, linefeed);
@@ -1606,9 +1575,9 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
             // character (which is "//", ";" or "#"), or an empty line, then skip it
             if (isCommentLine(linefeed)) continue;   // Skip
 
-            INI_Section(linefeed, linesection);
+            linesection = extractSectionName(linefeed);
 
-            if (linesection[0] != '\0' && strlen(linesection) > 1) {
+            if (!linesection.empty()) {
                 // until we found the right sections/parts, keep searching
                 iSection = cIniUtils::getSectionType(linesection, iSection);
             }
@@ -1667,7 +1636,7 @@ void INI_Install_Game(std::string filename)
     if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
-        char linesection[30];
+        std::string linesection;
 
         // infinite loop baby
         while (!feof(stream)) {
@@ -1681,9 +1650,9 @@ void INI_Install_Game(std::string filename)
             wordtype = WORD_NONE;
 
             // Every line is checked for a new section.
-            INI_Section(linefeed, linesection);
+            linesection = extractSectionName(linefeed);
 
-            if (linesection[0] != '\0' && strlen(linesection) > 1) {
+            if (!linesection.empty()) {
                 int last = section;
 
                 // determine section
