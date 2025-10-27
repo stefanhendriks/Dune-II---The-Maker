@@ -305,44 +305,20 @@ int INI_WordType(const std::string& word, int section)
 
 
 // Scenario section types
-int SCEN_INI_SectionType(char section[30])
+int SCEN_INI_SectionType(const std::string& section)
 {
-    if (strcmp(section, "UNITS") == 0)
-        return INI_UNITS;
-
-    if (strcmp(section, "SKIRMISH") == 0)
-        return INI_SKIRMISH;
-
-    if (strcmp(section, "STRUCTURES") == 0)
-        return INI_STRUCTURES;
-
-    if (strcmp(section, "REINFORCEMENTS") == 0)
-        return INI_REINFORCEMENTS;
-
-    if (strcmp(section, "MAP") == 0)
-        return INI_MAP;
-
-    if (strcmp(section, "BASIC") == 0)
-        return INI_BASIC;
-
-    if (strcmp(section, "Atreides") == 0)
-        return INI_HOUSEATREIDES;
-
-    if (strcmp(section, "Ordos") == 0)
-        return INI_HOUSEORDOS;
-
-    if (strcmp(section, "Harkonnen") == 0)
-        return INI_HOUSEHARKONNEN;
-
-    if (strcmp(section, "Sardaukar") == 0)
-        return INI_HOUSESARDAUKAR;
-
-    if (strcmp(section, "Fremen") == 0)
-        return INI_HOUSEFREMEN;
-
-    if (strcmp(section, "Mercenary") == 0)
-        return INI_HOUSEMERCENARY;
-
+    if (cIniUtils::caseInsCompare(section, "UNITS"))          return INI_UNITS;
+    if (cIniUtils::caseInsCompare(section, "SKIRMISH"))       return INI_SKIRMISH;
+    if (cIniUtils::caseInsCompare(section, "STRUCTURES"))     return INI_STRUCTURES;
+    if (cIniUtils::caseInsCompare(section, "REINFORCEMENTS")) return INI_REINFORCEMENTS;
+    if (cIniUtils::caseInsCompare(section, "MAP"))            return INI_MAP;
+    if (cIniUtils::caseInsCompare(section, "BASIC"))          return INI_BASIC;
+    if (cIniUtils::caseInsCompare(section, "Atreides"))       return INI_HOUSEATREIDES;
+    if (cIniUtils::caseInsCompare(section, "Ordos"))          return INI_HOUSEORDOS;
+    if (cIniUtils::caseInsCompare(section, "Harkonnen"))      return INI_HOUSEHARKONNEN;
+    if (cIniUtils::caseInsCompare(section, "Sardaukar"))      return INI_HOUSESARDAUKAR;
+    if (cIniUtils::caseInsCompare(section, "Fremen"))         return INI_HOUSEFREMEN;
+    if (cIniUtils::caseInsCompare(section, "Mercenary"))      return INI_HOUSEMERCENARY;
     return -1;
 }
 
