@@ -754,6 +754,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
             }
         }
     }
+    file.close();
     logbook("[CAMPAIGN] Done");
 }
 
