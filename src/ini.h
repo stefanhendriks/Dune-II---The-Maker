@@ -25,3 +25,24 @@ void INI_Load_seed(int seed);
 void INI_Install_Game(std::string filename);
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
 void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
+
+
+bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+                                 const int *iPl_quota, const char *linefeed);
+
+bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+                                      const int *iPl_quota, char *linefeed);
+
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements *reinforcements);
+
+void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed);
+
+int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed);
+
+void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed);
+
+void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
+
+
+
+
