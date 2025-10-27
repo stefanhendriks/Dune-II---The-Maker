@@ -96,6 +96,18 @@ static bool ToBool(const std::string& str)
     }
 }
 
+std::string ToTrim(const std::string& input)
+{
+    std::string section = input; 
+    while (!section.empty() && std::isspace(static_cast<unsigned char>(section.front()))) {
+        section.erase(0, 1);
+    }
+    while (!section.empty() && std::isspace(static_cast<unsigned char>(section.back()))) {
+        section.pop_back();
+    }
+    return section;
+}
+
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
 {
