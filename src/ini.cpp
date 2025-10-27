@@ -801,7 +801,11 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     memset(blooms, -1, sizeof(blooms));
     memset(fields, -1, sizeof(fields));
 
-    FILE *stream;
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        logbook("[SCENARIO] Error, could not open file");
+        return;
+    }
     int section = INI_NONE;
     int wordtype = WORD_NONE;
     int iPlayerID = -1;
@@ -816,25 +820,21 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
     auto mapEditor = cMapEditor(global_map);
-
-    if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
         std::string linesection;
-
         memset(lineword, '\0', sizeof(lineword));
-        memset(linefeed, '\0', sizeof(linefeed));
 
-        // infinite loop baby
-        while (!feof(stream)) {
-            INI_Sentence(stream, linefeed);
 
-            // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-            // character (which is "//", ";" or "#"), or an empty line, then skip it
-            if (isCommentLine(linefeed)) continue;   // Skip
+        std::string slinefeed;
+        while (std::getline(file, slinefeed)) {
+            slinefeed.erase(std::remove(slinefeed.begin(), slinefeed.end(), '\r'), slinefeed.end());
+
+            if (isCommentLine(slinefeed)) continue;   // Skip
 
             // Every line is checked for a new section.
-            linesection = extractSectionName(linefeed);
+            linesection = extractSectionName(slinefeed);
+            strcpy(linefeed, slinefeed.c_str());
 
             // line is not starting empty and section is found
             if (!linesection.empty()) {
@@ -901,7 +901,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
             wordtype = WORD_NONE;
         }
 
-        fclose(stream);
+        file.close();
 
         mapEditor.smoothMap();
 
@@ -935,7 +935,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
         }
 
         logbook("[SCENARIO] Done reading");
-    }
+    // }
 
     mapEditor.smoothMap();
     global_map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
