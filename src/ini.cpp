@@ -134,7 +134,7 @@ std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
 {
     auto pos = input.find('=');
     if (pos == std::string::npos) {
-        return {input, ""}; // Pas de '=' trouvé, tout à gauche
+        return {input, ""}; // No '=' found, everything to the left
     }
     std::string left = input.substr(0, pos);
     std::string right = input.substr(pos + 1);
