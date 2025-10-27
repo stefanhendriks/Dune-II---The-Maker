@@ -711,37 +711,35 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
             continue;
         }
 
-        char lineword[30] = {0};
+        auto [word_left, word_right] = INI_SplitWord(line);
+        if (word_left.empty() || word_right.empty()) {
+            logbook(std::format("Skipping invalid line: '{}'", line));
+            continue;
+        }
 
-        INI_Word(const_cast<char *>(line.c_str()), lineword);
-        wordtype = INI_WordType(lineword, SEC_REGION);
+        wordtype = INI_WordType(word_left, SEC_REGION);
 
         if (wordtype == WORD_REGION) {
             iRegionNumber = -1;
             iRegionConquer = -1;
-            iRegionNumber = INI_WordValueINT(const_cast<char *>(line.c_str())) - 1;
+            iRegionNumber = ToInt(word_right) - 1;
         }
         else if (wordtype == WORD_REGIONCONQUER) {
             iRegionNumber = -1;
             iRegionConquer = -1;
             iRegionIndex++;
-            iRegionConquer = INI_WordValueINT(const_cast<char *>(line.c_str())) - 1;
+            iRegionConquer = ToInt(word_right) - 1;
             selectYourNextConquestState->setRegionConquer(iRegionIndex, iRegionConquer);
         }
 
         if (iRegionIndex > -1 || iRegionNumber > -1) {
             if (wordtype == WORD_REGIONHOUSE) {
-                char cHouseRegion[256] = {0};
-                INI_WordValueCHAR(const_cast<char *>(line.c_str()), cHouseRegion);
-
                 logbook("Region house");
-                int iH = cIniUtils::getHouseFromString(cHouseRegion);
-
+                int iH = cIniUtils::getHouseFromString(word_right);
                 if (iRegionNumber > -1) {
                     world[iRegionNumber].iHouse = iH;
                     world[iRegionNumber].iAlpha = 255;
                 }
-
                 if (iRegionConquer > -1) {
                     selectYourNextConquestState->setRegionHouse(iRegionIndex, iH);
                 }
@@ -749,19 +747,18 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
 
             if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
                 char cHouseText[256] = {0};
-                INI_WordValueSENTENCE(const_cast<char *>(line.c_str()), cHouseText);
+                INI_WordValueSENTENCE(const_cast<char *>(word_right.c_str()), cHouseText);
                 selectYourNextConquestState->setRegionText(iRegionIndex, cHouseText);
             }
 
             if (wordtype == WORD_REGIONSELECT) {
                 if (iRegionNumber > -1) {
-                    world[iRegionNumber].bSelectable = INI_WordValueBOOL(const_cast<char *>(line.c_str()));
+                    world[iRegionNumber].bSelectable = ToBool(word_right);
                     world[iRegionNumber].iAlpha = 1;
                 }
             }
         }
     }
-
     logbook("[CAMPAIGN] Done");
 }
 
