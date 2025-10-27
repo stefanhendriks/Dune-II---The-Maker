@@ -156,6 +156,18 @@ void INI_Section(char input[MAX_LINE_LENGTH], char section[30])
     }
 }
 
+std::string extractSectionName(const std::string& line)
+{
+    auto start = line.find('[');
+    auto end = line.find(']', start);
+    if (start != std::string::npos && end != std::string::npos && end > start + 1) {
+        std::string section = ToTrim(line.substr(start + 1, end - start - 1));
+        if (!section.empty())
+            return section;
+    }
+    return "";
+}
+
 // Reads out INPUT and will check for an '=' Everything at the left of the
 // '=' IS a word and will be put in 'word[]'. Use function INI_WordType(char word[25]) to get
 // the correct ID tag.
