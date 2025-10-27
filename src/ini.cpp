@@ -1555,37 +1555,31 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
     logbook("[BRIEFING] Opening file");
 
     std::string filename;
-
     if (iHouse == ATREIDES) filename = "mentata.ini";
     if (iHouse == ORDOS) filename = "mentato.ini";
     if (iHouse == HARKONNEN) filename = "mentath.ini";
 
-    FILE *stream;
-
     // clear mentat
     pMentat->initSentences();
-
     auto path = std::string("campaign/briefings/") + filename;
-    logbook(path);
 
-    if (game.isDebugMode()) {
-        logbook(std::format("Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind));
-    }
+    logbook(path);
+    logbook(std::format("Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind));
 
     int iScenario = 0;
     int iSection = 0;
     int iLine = 0; // max 8 lines
 
-    if ((stream = fopen(path.c_str(), "r+t")) != nullptr) {
-        char linefeed[MAX_LINE_LENGTH];
-        char lineword[30];
-        std::string linesection;
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        logbook("[BRIEFING] Error, could not open file");
+        return;
+    }
 
-        while (!feof(stream)) {
-            INI_Sentence(stream, linefeed);
-
-            // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-            // character (which is "//", ";" or "#"), or an empty line, then skip it
+    std::string linesection;
+    std::string linefeed;
+        while (std::getline(file, linefeed)) {
+            linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
             if (isCommentLine(linefeed)) continue;   // Skip
 
             linesection = extractSectionName(linefeed);
@@ -1596,40 +1590,31 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
             }
 
             if (iSection == INI_SCEN) {
-                INI_Word(linefeed, lineword);
-                int wordtype = INI_WordType(lineword, iSection);
+                auto [word_left, word_right] = INI_SplitWord(linefeed);
+                int wordtype = INI_WordType(word_left, iSection);
 
                 if (wordtype == WORD_NUMBER) {
-                    iScenario = INI_WordValueINT(linefeed);
+                    iScenario = ToInt(word_right);
                     continue;
                 }
             }
 
             if (iScenario == iScenarioFind) {
                 if (iSection == iSectionFind) {
-                    INI_Word(linefeed, lineword);
-
-                    int wordtype = INI_WordType(lineword, iSection);
+                    auto [word_left, word_right] = INI_SplitWord(linefeed);
+                    int wordtype = INI_WordType(word_left, iSection);
 
                     if (wordtype == WORD_REGIONTEXT) {
-                        char cHouseText[256];
-                        INI_WordValueSENTENCE(linefeed, cHouseText);
-
-                        // this is not a comment, add this....
-                        pMentat->setSentence(iLine, cHouseText);
+                        word_right = removeQuote(word_right);
+                        pMentat->setSentence(iLine, word_right.c_str());
                         iLine++;
-
                         if (iLine > 9)
                             break;
                     }
                 }
             }
         }
-
-        fclose(stream);
-    }
-
-
+        file.close();
     logbook("[BRIEFING] File opened");
 }
 
