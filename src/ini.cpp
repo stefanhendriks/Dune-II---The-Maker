@@ -120,20 +120,6 @@ static std::string removeQuote(const std::string& input)
     return result;
 }
 
-// Reads out an entire sentence and returns it
-void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
-{
-    if (fgets(result, MAX_LINE_LENGTH, f) == nullptr) {
-        result[0] = '\0'; // EOF ou erreur
-        return;
-    }
-    // get out \r and/or \n final for DOS/UNIX compatibility
-    size_t len = strlen(result);
-    while (len > 0 && (result[len-1] == '\n' || result[len-1] == '\r')) {
-        result[--len] = '\0';
-    }
-}
-
 /*********************************************************************************/
 // Reads out INPUT , will check for a [ at [0] and then checks till ], it will fill section[]
 // with the chars in between. So : [MAP] -> section = 'MAP'. Use function INI_SectionType(..)
