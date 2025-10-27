@@ -23,7 +23,7 @@
 #include "structs.h"
 #include "utils/cStructureUtils.h"
 
-#include "utils/DataPack.hpp"
+#include "utils/cDataPack.hpp"
 #include <memory>
 #include <SDL2/SDL_ttf.h>
 
