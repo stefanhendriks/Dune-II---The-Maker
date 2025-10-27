@@ -196,7 +196,7 @@ bool isInString(std::string source, std::string toFind)
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(const std::string& word, int section)
 {
-    logbook(std::format("Going to find word-type for [{}]", word));
+    //logbook(std::format("Going to find word-type for [{}]", word));
 
     if (section == SEC_REGION) {
         if (cIniUtils::caseInsCompare(word, "Region"))            return WORD_REGION;
