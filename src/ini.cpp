@@ -108,6 +108,18 @@ std::string ToTrim(const std::string& input)
     return section;
 }
 
+static std::string removeQuote(const std::string& input)
+{
+    std::string result = input;
+    if (!result.empty() && result.front() == '"') {
+        result.erase(0, 1);
+    }
+    if (!result.empty() && result.back() == '"') {
+        result.pop_back();
+    }
+    return result;
+}
+
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
 {
