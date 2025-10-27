@@ -168,7 +168,7 @@ bool isInString(std::string source, std::string toFind)
 // }
 
 // Reads out word[], does a string compare and returns type id
-int INI_WordType(char word[25], int section)
+int INI_WordType(const std::string& word, int section)
 {
     logbook(std::format("Going to find word-type for [{}]", word));
 
@@ -275,7 +275,7 @@ int INI_WordType(char word[25], int section)
         if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return WORD_HARVESTAMOUNT;
     }
     else if (section == INI_STRUCTURES) {
-        if (strlen(word) > 1) {
+        if (word.length() > 1) {
             if (cIniUtils::caseInsCompare(word, "PreBuild"))      return WORD_PREBUILD;
             if (cIniUtils::caseInsCompare(word, "Description"))   return WORD_DESCRIPTION;
             if (cIniUtils::caseInsCompare(word, "Power"))         return WORD_POWER;        // What power it takes
