@@ -183,14 +183,6 @@ bool isInString(std::string source, std::string toFind)
 }
 
 
-
-// // Reads out word[], checks structure type, and returns actual source-id
-// int INI_StructureType(char word[256])
-// {
-//     std::string wordAsString(word);
-//     return cIniUtils::getStructureType(wordAsString);
-// }
-
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(const std::string& word, int section)
 {
@@ -471,59 +463,6 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH])
     return 0; // No value, return 0
 }
 
-
-// void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
-// {
-//     int pos = 0;
-//     int is_pos = -1;
-
-//     // clear out entire string
-//     memset(value, 0, strlen(value));
-
-//     for (int i = 0; i < MAX_LINE_LENGTH; i++)
-//         value[i] = '\0';
-
-
-//     while (pos < (MAX_LINE_LENGTH - 1)) {
-//         if (result[pos] == '"') {
-//             is_pos = pos;
-//             break;
-//         }
-//         pos++;
-//     }
-
-//     if (is_pos > -1) {
-//         // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
-//         // space.
-//         int end_pos = -1;
-//         pos++;
-
-//         while (pos < (MAX_LINE_LENGTH - 1)) {
-//             if (result[pos] == '"') {
-//                 end_pos = pos;
-//                 break;
-//             }
-//             pos++;
-//         }
-
-//         // End position found!
-//         if (end_pos > -1) {
-//             // We know the END position. We will use that piece of string to read out a number.
-
-//             // Copy the part to 'value', Make sure we won't get outside the array of the character.
-//             int cp = is_pos + 1;
-//             int c = 0;
-//             while (cp < end_pos) {
-//                 value[c] = result[cp];
-//                 c++;
-//                 cp++;
-//                 if (c > 254)
-//                     break;
-//             }
-//         }
-//     }
-// }
-
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c)
 {
     std::string resultString(result);
@@ -696,10 +635,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
 
     std::string line;
     while (std::getline(file, line)) {
-        // Nettoyage des fins de ligne DOS/UNIX
         line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-
-        // Sauter les lignes de commentaire ou vides
         if (line.empty() || isCommentLine(line)) {
             continue;
         }
@@ -739,8 +675,6 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
             }
 
             if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
-                // char cHouseText[256] = {0};
-                // INI_WordValueSENTENCE(const_cast<char *>(word_right.c_str()), cHouseText);
                 std::string reword_right = removeQuote(word_right);
                 selectYourNextConquestState->setRegionText(iRegionIndex, reword_right.c_str());
             }
@@ -900,7 +834,6 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
             }
             wordtype = WORD_NONE;
         }
-
         file.close();
 
         mapEditor.smoothMap();
@@ -919,9 +852,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
 
             }
         }
-
         // At this point, show list of unit types
-
         // now add the fields
         for (int iB = 0; iB < 30; iB++) {
             // when
@@ -1219,7 +1150,6 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
 
             bClearChunk = true;
         }
-
         // found the = mark, this means we start chopping now!
         if (linefeed[c] == '=') {
             bSkipped = true;
@@ -1273,7 +1203,6 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
             chunk[iC] = linefeed[c];
             iC++;
         }
-
 
         // , means next part. A ' ' means end
         if (linefeed[c] == ',' || linefeed[c] == '\0') {
@@ -1346,10 +1275,8 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
                     break;
                 }
             }
-
             bClearChunk = true;
         }
-
         // found the = mark, this means we start chopping now!
         if (linefeed[c] == '=') {
             bSkipped = true;
@@ -1397,7 +1324,6 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
     int iC = -1;
 
     for (int c = 0; c < MAX_LINE_LENGTH; c++) {
-
         // clear chunk
         if (bClearChunk) {
             for (int ic = 0; ic < 25; ic++)
@@ -1405,7 +1331,6 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
             iC = 0;
             bClearChunk = false;
         }
-
         // Fill in chunk
         if (iC < 25 && bSkipped && linefeed[c] != ',') {
             chunk[iC] = linefeed[c];
@@ -1446,10 +1371,8 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
                 // we don't seem to care about facings...
                 break;
             }
-
             bClearChunk = true;
         }
-
         // found the = mark, this means we start chopping now!
         if (linefeed[c] == '=')
             bSkipped = true;
@@ -1458,7 +1381,6 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
     if (iController > -1) {
         UNIT_CREATE(iCell, iType, iController, true);
     }
-
     return bSetUpPlayers;
 }
 
@@ -1625,9 +1547,6 @@ void INI_Install_Game(std::string filename)
         logbook("[BRIEFING] Error, could not open file");
         return;
     }
-    // if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
-        // char linefeed[MAX_LINE_LENGTH];
-        // char lineword[30];
         std::string linesection;
 
         std::string linefeed;
@@ -1666,7 +1585,6 @@ void INI_Install_Game(std::string filename)
                 // New unit type
                 if (section == INI_UNITS) {
                     // check if we found a new [UNIT part!
-                    //if (strstr(linefeed, "[UNIT:") != nullptr) {
                     if (linefeed.find("[UNIT:") != std::string::npos) {
                         // Get the name of the unit:
                         // [UNIT: <NAME>]
@@ -1698,7 +1616,6 @@ void INI_Install_Game(std::string filename)
                 // New structure type
                 if (section == INI_STRUCTURES) {
                     // check if we found a new [STRUCTURE: part!
-                    // if (strstr(linefeed, "[STRUCTURE:") != nullptr) {
                     if (linefeed.find("[STRUCTURE:") != std::string::npos) {
                         // Get the name of the unit:
                         // [STRUCTURE: <NAME>]
@@ -1722,17 +1639,13 @@ void INI_Install_Game(std::string filename)
 
                         id = cIniUtils::getStructureType(name_structure);
                         if (id >= MAX_STRUCTURETYPES) id--;
-
                     } // found a new structure type
                 }
-
                 continue; // next line
             }
 
             // Check word only when in a section
             if (section != INI_GAME) {
-                // INI_Word(linefeed, lineword);
-                // wordtype = INI_WordType(lineword, section);
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
 
@@ -1759,8 +1672,6 @@ void INI_Install_Game(std::string filename)
 
                     // Unit description
                     if (wordtype == WORD_DESCRIPTION) {
-                        // char n[256];
-                        // INI_WordValueCHAR(linefeed, n);
                         strncpy(unitInfo.name, word_right.c_str(), sizeof(unitInfo.name) - 1);
                         unitInfo.name[sizeof(unitInfo.name) - 1] = '\0';
                     }
@@ -1773,14 +1684,11 @@ void INI_Install_Game(std::string filename)
                     if (wordtype == WORD_FREEROAM) unitInfo.free_roam = ToBool(word_right);
                     if (wordtype == WORD_ISAIRBORN) unitInfo.airborn = ToBool(word_right);
 
-                    // Harvester specific properties.
                     if (wordtype == WORD_HARVESTLIMIT) unitInfo.credit_capacity = ToInt(word_right);
                     if (wordtype == WORD_HARVESTSPEED) unitInfo.harvesting_speed = ToInt(word_right);
                     if (wordtype == WORD_HARVESTAMOUNT) unitInfo.harvesting_amount = ToInt(word_right);
 
                     if (wordtype == WORD_PRODUCER) {
-                        // std::string producerString = INI_WordValueString(linefeed);
-                        // determine structure type from that
                         int type = cIniUtils::getStructureType(word_right);
                         unitInfo.structureTypeItLeavesFrom = type;
                     }
@@ -1801,9 +1709,7 @@ void INI_Install_Game(std::string filename)
                 if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = ToInt(word_right);
             }
         } // while
-
         file.close();
-    // } // if
 
     logbook("[GAME.INI] Done");
 }
