@@ -323,19 +323,11 @@ int SCEN_INI_SectionType(const std::string& section)
 }
 
 
-// GAME Section Types
-int GAME_INI_SectionType(char section[30], int last)
+int GAME_INI_SectionType(const std::string& section, int last)
 {
-
-// if (strcmp(section, "BULLETS") == 0)
-//   return INI_BULLETS;
-
-    if (strcmp(section, "UNITS") == 0)
-        return INI_UNITS;
-
-    if (strcmp(section, "STRUCTURES") == 0)
-        return INI_STRUCTURES;
-
+    //if (cIniUtils::caseInsCompare(section, "BULLETS"))   return INI_BULLETS; @Mira: we will need  it in future
+    if (cIniUtils::caseInsCompare(section, "UNITS"))        return INI_UNITS;
+    if (cIniUtils::caseInsCompare(section, "STRUCTURES"))   return INI_STRUCTURES;
     // When nothing found; we assume its just a new ID tag for some unit or structure
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
     return last;
