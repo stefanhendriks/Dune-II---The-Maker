@@ -38,6 +38,7 @@ namespace fs=std::filesystem;
 #include <algorithm>
 #include <utility>
 #include <unordered_map>
+#include <charconv>
 
 
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
@@ -62,7 +63,38 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *lin
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
 
+static int ToInt(const std::string& str)
+{
+    int value = 0;
+    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
+    if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
+        return value;
+    } else {
+        logbook(std::format("ToInt: Failed to convert '{}' to int, 0 returned.", str));
+        return 0; 
+    }
+}
 
+static float ToFloat(const std::string& str)
+{
+    float value = 0.0f;
+    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
+    if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
+        return value;
+    } else {
+        logbook(std::format("ToFloat: Failed to convert '{}' to float, 0.0f returned.", str));
+        return 0.0f; 
+    }
+}
+
+static bool ToBool(const std::string& str)
+{
+    if (str == "1" || cIniUtils::caseInsCompare(str, "true") || cIniUtils::caseInsCompare(str, "yes")) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
