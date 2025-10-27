@@ -66,7 +66,7 @@ public:
         iRegionHouse[iRegionIndex] = iHouse;
     }
 
-    void setRegionText(int iRegionIndex, char *txt) {
+    void setRegionText(int iRegionIndex, const char *txt) {
         snprintf(cRegionText[iRegionIndex], sizeof(cRegionText[iRegionIndex]), "%s", txt);
     }
 
