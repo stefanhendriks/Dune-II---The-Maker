@@ -828,8 +828,9 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
         std::string slinefeed;
         while (std::getline(file, slinefeed)) {
             slinefeed.erase(std::remove(slinefeed.begin(), slinefeed.end(), '\r'), slinefeed.end());
-
-            if (isCommentLine(slinefeed)) continue;   // Skip
+            if (slinefeed.empty() || isCommentLine(slinefeed)) {
+                continue;
+            }
 
             // Every line is checked for a new section.
             linesection = extractSectionName(slinefeed);
@@ -1567,7 +1568,9 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
     std::string linefeed;
         while (std::getline(file, linefeed)) {
             linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
-            if (isCommentLine(linefeed)) continue;   // Skip
+            if (linefeed.empty() || isCommentLine(linefeed)) {
+                continue;
+            }
 
             linesection = extractSectionName(linefeed);
 
@@ -1630,6 +1633,9 @@ void INI_Install_Game(std::string filename)
         std::string linefeed;
         while (std::getline(file, linefeed)) {
             linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
+            if (linefeed.empty() || isCommentLine(linefeed)) {
+                continue;
+            }
 
             // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
             // character (which is "//", ";" or "#"), or an empty line, then skip it
