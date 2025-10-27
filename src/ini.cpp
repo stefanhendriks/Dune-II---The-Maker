@@ -1624,21 +1624,25 @@ void INI_Install_Game(std::string filename)
 {
     logbook("[GameRules] Opening file");
 
-    FILE *stream;
     int section = INI_GAME;
     int wordtype = WORD_NONE;
     int id = -1;
 
     logbook(std::format("Opening game settings from : {}", filename));
 
-    if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
-        char linefeed[MAX_LINE_LENGTH];
-        char lineword[30];
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        logbook("[BRIEFING] Error, could not open file");
+        return;
+    }
+    // if ((stream = fopen(filename.c_str(), "r+t")) != nullptr) {
+        // char linefeed[MAX_LINE_LENGTH];
+        // char lineword[30];
         std::string linesection;
 
-        // infinite loop baby
-        while (!feof(stream)) {
-            INI_Sentence(stream, linefeed);
+        std::string linefeed;
+        while (std::getline(file, linefeed)) {
+            linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
 
             // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
             // character (which is "//", ";" or "#"), or an empty line, then skip it
@@ -1669,7 +1673,8 @@ void INI_Install_Game(std::string filename)
                 // New unit type
                 if (section == INI_UNITS) {
                     // check if we found a new [UNIT part!
-                    if (strstr(linefeed, "[UNIT:") != nullptr) {
+                    //if (strstr(linefeed, "[UNIT:") != nullptr) {
+                    if (linefeed.find("[UNIT:") != std::string::npos) {
                         // Get the name of the unit:
                         // [UNIT: <NAME>]
                         // 1234567890123...]
@@ -1700,7 +1705,8 @@ void INI_Install_Game(std::string filename)
                 // New structure type
                 if (section == INI_STRUCTURES) {
                     // check if we found a new [STRUCTURE: part!
-                    if (strstr(linefeed, "[STRUCTURE:") != nullptr) {
+                    // if (strstr(linefeed, "[STRUCTURE:") != nullptr) {
+                    if (linefeed.find("[STRUCTURE:") != std::string::npos) {
                         // Get the name of the unit:
                         // [STRUCTURE: <NAME>]
                         // 123456789012345678]
@@ -1732,8 +1738,10 @@ void INI_Install_Game(std::string filename)
 
             // Check word only when in a section
             if (section != INI_GAME) {
-                INI_Word(linefeed, lineword);
-                wordtype = INI_WordType(lineword, section);
+                // INI_Word(linefeed, lineword);
+                // wordtype = INI_WordType(lineword, section);
+                auto [word_left, word_right] = INI_SplitWord(linefeed);
+                wordtype = INI_WordType(word_left, section);
 
                 /**** [UNITS] ****/
                 // Valid ID
@@ -1741,46 +1749,46 @@ void INI_Install_Game(std::string filename)
                     // Unit properties
                     s_UnitInfo &unitInfo = sUnitInfo[id];
 
-                    if (wordtype == WORD_HITPOINTS) unitInfo.hp = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_APPETITE) unitInfo.appetite = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HITPOINTS) unitInfo.hp = ToInt(word_right);
+                    if (wordtype == WORD_APPETITE) unitInfo.appetite = ToInt(word_right);
 
-                    if (wordtype == WORD_COST) unitInfo.cost = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_COST) unitInfo.cost = ToInt(word_right);
 
-                    if (wordtype == WORD_MOVESPEED) unitInfo.speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_MOVESPEED) unitInfo.speed = ToInt(word_right);
+                    if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = ToInt(word_right);
+                    if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = ToInt(word_right);
+                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = ToInt(word_right);
 
-                    if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_SIGHT) unitInfo.sight = ToInt(word_right);
 
-                    if (wordtype == WORD_RANGE) unitInfo.range = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_BUILDTIME) unitInfo.buildTime = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_RANGE) unitInfo.range = ToInt(word_right);
+                    if (wordtype == WORD_BUILDTIME) unitInfo.buildTime = ToInt(word_right);
 
                     // Unit description
                     if (wordtype == WORD_DESCRIPTION) {
-                        char n[256];
-                        INI_WordValueCHAR(linefeed, n);
-                        strncpy(unitInfo.name, n, sizeof(unitInfo.name) - 1);
+                        // char n[256];
+                        // INI_WordValueCHAR(linefeed, n);
+                        strncpy(unitInfo.name, word_right.c_str(), sizeof(unitInfo.name) - 1);
                         unitInfo.name[sizeof(unitInfo.name) - 1] = '\0';
                     }
 
                     // Booleans
-                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_FREEROAM) unitInfo.free_roam = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISAIRBORN) unitInfo.airborn = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = ToBool(word_right);
+                    if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = ToBool(word_right);
+                    if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = ToBool(word_right);
+                    if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = ToBool(word_right);
+                    if (wordtype == WORD_FREEROAM) unitInfo.free_roam = ToBool(word_right);
+                    if (wordtype == WORD_ISAIRBORN) unitInfo.airborn = ToBool(word_right);
 
                     // Harvester specific properties.
-                    if (wordtype == WORD_HARVESTLIMIT) unitInfo.credit_capacity = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTSPEED) unitInfo.harvesting_speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTAMOUNT) unitInfo.harvesting_amount = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTLIMIT) unitInfo.credit_capacity = ToInt(word_right);
+                    if (wordtype == WORD_HARVESTSPEED) unitInfo.harvesting_speed = ToInt(word_right);
+                    if (wordtype == WORD_HARVESTAMOUNT) unitInfo.harvesting_amount = ToInt(word_right);
 
                     if (wordtype == WORD_PRODUCER) {
-                        std::string producerString = INI_WordValueString(linefeed);
+                        // std::string producerString = INI_WordValueString(linefeed);
                         // determine structure type from that
-                        int type = cIniUtils::getStructureType(producerString);
+                        int type = cIniUtils::getStructureType(word_right);
                         unitInfo.structureTypeItLeavesFrom = type;
                     }
                 }
@@ -1788,21 +1796,21 @@ void INI_Install_Game(std::string filename)
 
             // Structure w0h00
             if (section == INI_STRUCTURES && id > -1) {
+                auto [word_left, word_right] = INI_SplitWord(linefeed);
+                wordtype = INI_WordType(word_left, section);
                 if (wordtype == WORD_HITPOINTS) {
-                    sStructureInfo[id].hp = INI_WordValueINT(linefeed);
+                    sStructureInfo[id].hp = ToInt(word_right);
                 }
-                if (wordtype == WORD_FIXHP) sStructureInfo[id].fixhp = INI_WordValueINT(linefeed);
-
-                if (wordtype == WORD_POWERDRAIN) sStructureInfo[id].power_drain = INI_WordValueINT(linefeed);
-                if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = INI_WordValueINT(linefeed);
-
-                if (wordtype == WORD_COST) sStructureInfo[id].cost = INI_WordValueINT(linefeed);
-                if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_FIXHP) sStructureInfo[id].fixhp = ToInt(word_right);
+                if (wordtype == WORD_POWERDRAIN) sStructureInfo[id].power_drain = ToInt(word_right);
+                if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = ToInt(word_right);
+                if (wordtype == WORD_COST) sStructureInfo[id].cost = ToInt(word_right);
+                if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = ToInt(word_right);
             }
         } // while
 
-        fclose(stream);
-    } // if
+        file.close();
+    // } // if
 
     logbook("[GAME.INI] Done");
 }
