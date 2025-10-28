@@ -62,7 +62,7 @@ private:
     messages::eMessageDrawerFadingState m_fadeState;
     cTextDrawer m_textDrawer;
     GameContext* m_ctx;
-    Graphics* gfxinter;
+    Graphics* m_gfxinter;
 
     void createMessageBarBmp(int desiredWidth);
 };
