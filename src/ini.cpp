@@ -1466,6 +1466,8 @@ void INI_Install_Game(std::string filename)
                 if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = ToInt(word_right);
                 if (wordtype == WORD_COST) sStructureInfo[id].cost = ToInt(word_right);
                 if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = ToInt(word_right);
+                if (wordtype == WORD_CANATTACKAIRUNITS) sStructureInfo[id].canAttackAirUnits = ToBool(word_right);
+                if (wordtype == WORD_CANATTACKUNITS) sStructureInfo[id].canAttackGroundUnits = ToBool(word_right);
             }
         } // while
         file.close();
