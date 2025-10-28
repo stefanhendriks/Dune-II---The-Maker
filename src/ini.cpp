@@ -235,6 +235,7 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
         if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return WORD_HARVESTAMOUNT;
 
+        if (cIniUtils::caseInsCompare(word, "squish"))            return WORD_SQUISH;
         if (cIniUtils::caseInsCompare(word, "SmokeHpFactor"))     return WORD_SMOKEHFACTOR;
     }
     else if (section == INI_STRUCTURES) {
@@ -1440,6 +1441,7 @@ void INI_Install_Game(std::string filename)
                     if (wordtype == WORD_HARVESTAMOUNT) unitInfo.harvesting_amount = ToInt(word_right);
 
                     if (wordtype == WORD_SMOKEHFACTOR) unitInfo.smokeHpFactor = ToFloat(word_right);
+                    if (wordtype == WORD_SQUISH) unitInfo.canBeSquished = ToBool(word_right);
 
                     if (wordtype == WORD_PRODUCER) {
                         int type = cIniUtils::getStructureType(word_right);
