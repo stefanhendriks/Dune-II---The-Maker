@@ -734,22 +734,23 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
     auto mapEditor = cMapEditor(global_map);
-        char linefeed[MAX_LINE_LENGTH];
+        // char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
         std::string linesection;
         memset(lineword, '\0', sizeof(lineword));
+        std::string word_left;
+        std::string word_right;
 
-
-        std::string slinefeed;
-        while (std::getline(file, slinefeed)) {
-            slinefeed.erase(std::remove(slinefeed.begin(), slinefeed.end(), '\r'), slinefeed.end());
-            if (slinefeed.empty() || isCommentLine(slinefeed)) {
+        std::string linefeed;
+        while (std::getline(file, linefeed)) {
+            linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
+            if (linefeed.empty() || isCommentLine(linefeed)) {
                 continue;
             }
 
             // Every line is checked for a new section.
-            linesection = extractSectionName(slinefeed);
-            strcpy(linefeed, slinefeed.c_str());
+            linesection = extractSectionName(linefeed);
+            // strcpy(linefeed, linefeed.c_str());
 
             // line is not starting empty and section is found
             if (!linesection.empty()) {
@@ -785,17 +786,21 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
 
             // Okay, we found a new section; if its NOT [GAME] then we remember this one!
             if (section != INI_NONE) {
-                INI_Word(linefeed, lineword);
-                wordtype = INI_WordType(lineword, section);
+                // INI_Word(linefeed, lineword);
+                // wordtype = INI_WordType(lineword, section);
+                std::tie(word_left, word_right) = INI_SplitWord(linefeed);
+                wordtype = INI_WordType(word_left, section);
+            } else {
+                std::tie(word_left, word_right) = INI_SplitWord(linefeed);
             }
 
             if (section == INI_BASIC) {
-                INI_Scenario_Section_Basic(pMentat, wordtype, linefeed);
+                INI_Scenario_Section_Basic(pMentat, wordtype, word_right);
             }
 
             // Dune 2 house found, load player data
             if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-                int result = INI_Scenario_Section_House(wordtype, iPlayerID, iPl_credits, iPl_quota, linefeed);
+                int result = INI_Scenario_Section_House(wordtype, iPlayerID, iPl_credits, iPl_quota, word_right);
                 if (result > -1) {
                     iHumanID = result;
                 }
@@ -853,33 +858,33 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     global_map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
-void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, char *linefeed)
+void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
 {
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
-        std::string scenefile = INI_WordValueString(linefeed);
-        std::string scene = cIniUtils::getSceneFileToScene(scenefile);
+        // std::string scenefile = INI_WordValueString(linefeed);
+        std::string scene = cIniUtils::getSceneFileToScene(linefeed);
 
-        scene = cIniUtils::getSceneFileToScene(scenefile);
+        scene = cIniUtils::getSceneFileToScene(linefeed);
 
         if (!isInString(scene, "unknown")) {
             pMentat->loadScene(scene);
         }
     }
     else if (wordtype == WORD_FOCUS) {
-        int focusCell = INI_WordValueINT(linefeed);
+        int focusCell = ToInt(linefeed);
         players[0].setFocusCell(focusCell);
         mapCamera->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
-        game.setWinFlags(INI_WordValueINT(linefeed));
+        game.setWinFlags(ToInt(linefeed));
     }
     else if (wordtype == WORD_LOSEFLAGS) {
-        game.setLoseFlags(INI_WordValueINT(linefeed));
+        game.setLoseFlags(ToInt(linefeed));
     }
 }
 
-int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed)
+int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, const std::string& linefeed)
 {
     int iHumanID = -1;
     logbook(std::format("Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]",
@@ -887,14 +892,14 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
     // link house (found, because > -1)
     if (iPlayerID > -1) {
         if (wordtype == WORD_BRAIN) {
-            char cBrain[256];
-            memset(cBrain, 0, sizeof(cBrain));
-            INI_WordValueCHAR(linefeed, cBrain);
+            // char cBrain[256];
+            // memset(cBrain, 0, sizeof(cBrain));
+            // INI_WordValueCHAR(linefeed, cBrain);
 
-            logbook(std::format("Brain is [{}]", cBrain));
+            logbook(std::format("Brain is [{}]", linefeed));
 
             // We know the human brain now, this should be player 0 in our game (!?)...
-            if (strcmp(cBrain, "Human") == 0) {
+            if (linefeed == "Human") {
                 logbook(std::format("Found human player for id [{}]", iPlayerID));
                 iHumanID = iPlayerID;
             }
@@ -903,26 +908,27 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
             }
         }
         else if (wordtype == WORD_CREDITS) {
-            int credits = INI_WordValueINT(linefeed) - 1;
+            int credits = ToInt(linefeed) - 1;
             logbook(std::format("Set credits for player id [{}] to [{}]", iPlayerID, credits));
 
             iPl_credits[iPlayerID] = credits;
         }
         else if (wordtype == WORD_QUOTA) {
-            iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
+            iPl_quota[iPlayerID] = ToInt(linefeed);
         }
     }
     return iHumanID;
 }
 
-void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed)
+void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
 {
     global_map.init(64, 64);
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
         logbook("[SCENARIO] -> [MAP] Seed=");
-        INI_Load_seed(INI_WordValueINT(linefeed));
+        auto [word, seek] = INI_SplitWord(slinefeed);
+        INI_Load_seed(ToInt(seek));
     }
 
     // Loaded before SEED
@@ -933,13 +939,15 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
         logbook("[SCENARIO] -> [MAP] Bloom=");
 
         int iBloomID = 0;
-        int iStringID = 6;    // B L O O M = <6>
+        unsigned int iStringID = 6;    // B L O O M = <6>
         int iWordID = 0;
 
         char word[10];
         memset(word, 0, sizeof(word)); // clear string
 
-        for (; iStringID < MAX_LINE_LENGTH; iStringID++) {
+        // C style code to parse the line
+        const char* linefeed = slinefeed.c_str();
+        for (; iStringID < slinefeed.length()+1; iStringID++) {
             // until we encounter a "," ...
 
             char letter[1];
@@ -984,13 +992,15 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
 
         logbook("[SCENARIO] -> [MAP] Field=");
         int iFieldID = 0;
-        int iStringID = 6;    // F I E L D = <6>
+        unsigned int iStringID = 6;    // F I E L D = <6>
         int iWordID = 0;
 
         char word[10];
         memset(word, 0, sizeof(word)); // clear string
 
-        for (; iStringID < MAX_LINE_LENGTH; iStringID++) {
+        // C style code to parse the line
+        const char* linefeed = slinefeed.c_str();
+        for (; iStringID < slinefeed.length()+1; iStringID++) {
             // until we encounter a "," ...
 
             char letter[1];
@@ -1029,7 +1039,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *line
     }
 }
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cReinforcements *reinforcements)
+void INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
 {
     logbook("[SCENARIO] -> REINFORCEMENTS");
 
@@ -1048,8 +1058,9 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
     bool bClearChunk = true;
     bool bSkipped = false;
     int iC = -1;
-
-    for (int c = 0; c < MAX_LINE_LENGTH; c++) {
+    // C style code to parse the line
+    const char* linefeed = slinefeed.c_str();
+    for (unsigned int c = 0; c < slinefeed.length()+1; c++) {
         // clear chunk
         if (bClearChunk) {
             memset(chunk, 0, sizeof(chunk));
@@ -1140,7 +1151,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed, cRein
 
 bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                      const int *iPl_quota,
-                                     char *linefeed)  // ORIGINAL DUNE 2 MISSION. (duplicate code?)
+                                     const std::string& slinefeed)  // ORIGINAL DUNE 2 MISSION. (duplicate code?)
 {
     if (bSetUpPlayers) {
         INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
@@ -1166,9 +1177,12 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
     int iIS = -1;
 
     // check if this is a 'gen'
-    if (strstr(linefeed, "GEN") != nullptr) bGen = true;
-
-    for (int c = 0; c < MAX_LINE_LENGTH; c++) {
+    if (slinefeed.find("GEN") != std::string::npos) {
+        bGen = true;
+    }
+    // C style code to parse the line
+    const char* linefeed = slinefeed.c_str();
+    for (unsigned int c = 0; c < slinefeed.length()+1; c++) {
         // clear chunk
         if (bClearChunk) {
             for (int ic = 0; ic < 25; ic++) {
@@ -1275,9 +1289,8 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
 }
 
 bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
-                                const int *iPl_quota, const char *linefeed)  // ORIGINAL DUNE 2 MISSION.
+                                const int *iPl_quota, const std::string& linefeed)  // ORIGINAL DUNE 2 MISSION.
 {
-
     // setupPlayers is required, because we do matching based on name of house, hence, once
     // we encounter either a UNITS or STRUCTURES section, the assumption is made that all HOUSE information
     // has been isProcessed.
