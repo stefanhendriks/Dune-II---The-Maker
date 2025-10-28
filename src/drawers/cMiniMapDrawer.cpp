@@ -11,7 +11,7 @@
 #include <SDL2/SDL.h>
 #include "map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 #include <cassert>
 #include <iostream>
 

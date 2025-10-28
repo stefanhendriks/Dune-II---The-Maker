@@ -9,7 +9,7 @@
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
 #include "context/GameContext.hpp"
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 #include <algorithm>
 
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :

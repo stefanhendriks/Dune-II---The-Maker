@@ -8,7 +8,7 @@
 #include <SDL2/SDL.h>
 #include "include/Texture.hpp"
 #include "context/GameContext.hpp"
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 #include <algorithm>
 
 #include "data/gfxaudio.h"

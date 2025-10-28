@@ -5,7 +5,7 @@
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 
 #include <SDL2/SDL.h>
 

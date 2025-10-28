@@ -16,7 +16,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 
 #include <format>
 #include <algorithm>
