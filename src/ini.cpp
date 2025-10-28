@@ -40,8 +40,6 @@ namespace fs=std::filesystem;
 #include <unordered_map>
 #include <charconv>
 
-int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
-
 class cReinforcements;
 
 static int ToInt(const std::string& str)
@@ -117,24 +115,7 @@ std::string extractSectionName(const std::string& line)
     return "";
 }
 
-// Reads out INPUT and will check for an '=' Everything at the left of the
-// '=' IS a word and will be put in 'word[]'. Use function INI_WordType(char word[25]) to get
-// the correct ID tag.
-void INI_Word(char input[MAX_LINE_LENGTH], char word[30])
-{
-    int word_pos = INI_GetPositionOfCharacter(input, '=');
-
-    memset(word, '\0', strlen(word));
-
-    if (word_pos > -1 && word_pos < 28) {
-        for (int wc = 0; wc < word_pos; wc++) {
-            word[wc] = input[wc];
-        }
-
-        word[word_pos] = '\0'; // terminate string
-    }
-}
-
+// Reads out INPUT and will check for an '=' Use function INI_WordType(char word[25]) to get the correct ID tag.
 std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
 {
     auto pos = input.find('=');
@@ -144,23 +125,6 @@ std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
     std::string left = input.substr(0, pos);
     std::string right = input.substr(pos + 1);
     return {left, right};
-}
-
-
-/**
- * Return true when string "toFind" is in source string. Else return false.
- *
- * @param source
- * @param toFind
- * @return
- */
-bool isInString(std::string source, std::string toFind)
-{
-    std::string::size_type loc = source.find(toFind, 0);
-    if (loc == 0) {
-        return true;
-    }
-    return false; // not found in string
 }
 
 
@@ -330,207 +294,6 @@ int GAME_INI_SectionType(const std::string& section, int last)
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
     return last;
 }
-
-
-
-// Reads out 'result' and will return the value after the '='. Returns float.
-// UGLY COPY/PASTE OF INI_WORDVALUEINT function, because we will completely
-// rewrite this ini parsing abomination somewhere in the future.
-float INI_WordValueFloat(char result[MAX_LINE_LENGTH], float defaultValue)
-{
-    int pos = 0;
-    int is_pos = -1;
-
-    while (pos < (MAX_LINE_LENGTH - 1)) {
-        if (result[pos] == '=') {
-            is_pos = pos;
-            break;
-        }
-        pos++;
-    }
-
-    if (is_pos > -1) {
-        // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
-        // space.
-        int end_pos = -1;
-
-        while (pos < (MAX_LINE_LENGTH - 1)) {
-            if (result[pos] == '\0') {
-                end_pos = pos;
-                break;
-            }
-            pos++;
-        }
-
-        // End position found!
-        if (end_pos > -1) {
-            // We know the END position. We will use that piece of string to read out a number.
-            char number[10];
-
-            // clear out entire string
-            for (int i = 0; i < 10; i++)
-                number[i] = '\0';
-
-            // Copy the part to 'number', Make sure we won't get outside the array of the character.
-            int cp = is_pos + 1;
-            int c = 0;
-            while (cp < end_pos) {
-                number[c] = result[cp];
-                c++;
-                cp++;
-                if (c > 9)
-                    break;
-            }
-            return atof(number);
-        }
-        // nothing here, so we return nullptr at the end
-    }
-
-    return defaultValue; // no value found, return this
-}
-
-// Reads out 'result' and will return the value after the '='. Returns integer.
-// For CHAR returns see "INI_WordValueCHAR(char result[80]);
-int INI_WordValueINT(char result[MAX_LINE_LENGTH])
-{
-    int pos = 0;
-    int is_pos = -1;
-
-    while (pos < (MAX_LINE_LENGTH - 1)) {
-        if (result[pos] == '=') {
-            is_pos = pos;
-            break;
-        }
-        pos++;
-    }
-
-    if (is_pos > -1) {
-        // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
-        // space.
-        int end_pos = -1;
-
-        while (pos < (MAX_LINE_LENGTH - 1)) {
-            if (result[pos] == '\0') {
-                end_pos = pos;
-                break;
-            }
-            pos++;
-        }
-
-        // End position found!
-        if (end_pos > -1) {
-            // We know the END position. We will use that piece of string to read out a number.
-            char number[10];
-
-            // clear out entire string
-            for (int i = 0; i < 10; i++)
-                number[i] = '\0';
-
-            // Copy the part to 'number', Make sure we won't get outside the array of the character.
-            int cp = is_pos + 1;
-            int c = 0;
-            while (cp < end_pos) {
-                number[c] = result[cp];
-                c++;
-                cp++;
-                if (c > 9)
-                    break;
-            }
-            return atoi(number);
-        }
-        // nothing here, so we return nullptr at the end
-    }
-
-    return 0; // No value, return 0
-}
-
-int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c)
-{
-    std::string resultString(result);
-    return resultString.find_first_of(c, 0);
-}
-
-
-/**
- * Return the part after the = sign as string.
- *
- * @param result
- * @return
- */
-std::string INI_WordValueString(char result[MAX_LINE_LENGTH])
-{
-    std::string resultAsString(result);
-    int isPos = INI_GetPositionOfCharacter(result, '=');
-    return resultAsString.substr(isPos + 1);
-}
-
-
-// Reads out 'result' and will return the value after the '='. Returns nothing but will put
-// the result in 'value[25]'. Max argument may be 256 characters!
-void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256])
-{
-    int pos = 0;
-    int is_pos = -1;
-
-    // clear out entire string
-    memset(value, 0, strlen(value));
-    for (int i = 0; i < 256; i++) {
-        value[i] = '\0';
-    }
-
-    while (pos < (MAX_LINE_LENGTH - 1)) {
-        if (result[pos] == '=') {
-            is_pos = pos;
-            break;
-        }
-        pos++;
-    }
-
-    if (is_pos > -1) {
-        // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
-        // space.
-        int end_pos = -1;
-
-        while (pos < (MAX_LINE_LENGTH - 1)) {
-            if (result[pos] == '\0' || result[pos] == '\n') {
-                end_pos = (pos - 1);
-                break;
-            }
-            pos++;
-        }
-
-        // End position found!
-        if (end_pos > -1) {
-            // We know the END position. We will use that piece of string to read out a number.
-
-            // Copy the part to 'value', Make sure we won't get outside the array of the character.
-            int cp = is_pos + 1;
-            int c = 0;
-            while (cp <= end_pos) {
-                value[c] = result[cp];
-                c++;
-                cp++;
-                if (c > 80) {
-                    break;
-                }
-            }
-        }
-    }
-}
-
-
-// Reads out 'result' and will return TRUE when its 'TRUE' or FALSE when its 'FALSE' , else
-// returns nullptr
-bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
-{
-    // use INI_WordValueCHAR to know if its 'true'
-    char val[256];
-    INI_WordValueCHAR(result, val);
-
-    // When its TRUE , return true
-    return cIniUtils::caseInsCompare(val, "true");
-}
-
 
 
 /**
@@ -786,8 +549,6 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
 
             // Okay, we found a new section; if its NOT [GAME] then we remember this one!
             if (section != INI_NONE) {
-                // INI_Word(linefeed, lineword);
-                // wordtype = INI_WordType(lineword, section);
                 std::tie(word_left, word_right) = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
             } else {
@@ -862,12 +623,11 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std
 {
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
-        // std::string scenefile = INI_WordValueString(linefeed);
         std::string scene = cIniUtils::getSceneFileToScene(linefeed);
 
         scene = cIniUtils::getSceneFileToScene(linefeed);
 
-        if (!isInString(scene, "unknown")) {
+        if (!cIniUtils::caseInsCompare(scene, "unknown")) {
             pMentat->loadScene(scene);
         }
     }
@@ -892,10 +652,6 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
     // link house (found, because > -1)
     if (iPlayerID > -1) {
         if (wordtype == WORD_BRAIN) {
-            // char cBrain[256];
-            // memset(cBrain, 0, sizeof(cBrain));
-            // INI_WordValueCHAR(linefeed, cBrain);
-
             logbook(std::format("Brain is [{}]", linefeed));
 
             // We know the human brain now, this should be player 0 in our game (!?)...
@@ -1042,7 +798,6 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std:
 void INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
 {
     logbook("[SCENARIO] -> REINFORCEMENTS");
-
     int iPart = -1; /*
                 0 = Controller
                 1 = Type
