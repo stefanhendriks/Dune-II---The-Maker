@@ -17,20 +17,20 @@
 
 #include "data/gfxaudio.h"
 
-cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera) :
+cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
     m_ctx(ctx),
-    map(theMap),
-    player(thePlayer),
-    mapCamera(theMapCamera),
+    map(map),
+    m_player(player),
+    m_mapCamera(mapCamera),
     status(eMinimapStatus::NOTAVAILABLE),
     iStaticFrame(STAT14),
     iTrans(0)
 {
-    assert(theMap);
-    assert(thePlayer);
-    assert(theMapCamera);
-    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
+    assert(map);
+    assert(player);
+    assert(mapCamera);
+    m_gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 
     int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
     int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
@@ -57,7 +57,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *theMap, cPlayer *thePlaye
 cMiniMapDrawer::~cMiniMapDrawer()
 {
     map = nullptr;
-    mapCamera = nullptr;
+    m_mapCamera = nullptr;
     iStaticFrame = STAT14;
     status = eMinimapStatus::NOTAVAILABLE;
 }
@@ -73,15 +73,15 @@ void cMiniMapDrawer::init()
 void cMiniMapDrawer::drawViewPortRectangle()
 {
     // Draw the magic rectangle (viewport)
-    int iWidth = (mapCamera->getViewportWidth()) / TILESIZE_WIDTH_PIXELS;
-    int iHeight = (mapCamera->getViewportHeight()) / TILESIZE_HEIGHT_PIXELS;
+    int iWidth = (m_mapCamera->getViewportWidth()) / TILESIZE_WIDTH_PIXELS;
+    int iHeight = (m_mapCamera->getViewportHeight()) / TILESIZE_HEIGHT_PIXELS;
     iWidth--;
     iHeight--;
 
     int pixelSize = factorZoom;
 
-    int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
-    int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
+    int startX = drawX + ((m_mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
+    int startY = drawY + ((m_mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
 
     int minimapWidth = iWidth * (pixelSize) + 1;
     int minimapHeight = iHeight * (pixelSize) + 1;
@@ -123,7 +123,7 @@ void cMiniMapDrawer::drawTerrain()
             //@mira where is map ?
             int iCll = map->getGeometry().makeCell(x, y);
 
-            if (map->isVisible(iCll, player->getId())) {
+            if (map->isVisible(iCll, m_player->getId())) {
                 iColor = getRGBColorForTerrainType(map->getCellType(iCll));
             }
 
@@ -154,7 +154,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int iCll = map->getGeometry().makeCell(x, y);
 
-            if (!map->isVisible(iCll, player->getId())) {
+            if (!map->isVisible(iCll, m_player->getId())) {
                 // invisible cell
                 continue;
             }
@@ -166,7 +166,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             if (idOfStructureAtCell > -1) {
                 int iPlr = structure[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
-                    if (iPlr != player->getId()) continue; // skip non player units
+                    if (iPlr != m_player->getId()) continue; // skip non player units
                 }
                 iColor = players[iPlr].getMinimapColor();
             }
@@ -175,7 +175,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             if (idOfUnitAtCell > -1) {
                 int iPlr = unit[idOfUnitAtCell].iPlayer;
                 if (playerOnly) {
-                    if (iPlr != player->getId()) continue; // skip non player units
+                    if (iPlr != m_player->getId()) continue; // skip non player units
                 }
                 iColor = players[iPlr].getMinimapColor();
             }
@@ -184,7 +184,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             if (idOfAirUnitAtCell > -1) {
                 int iPlr = unit[idOfAirUnitAtCell].iPlayer;
                 if (playerOnly) {
-                    if (iPlr != player->getId()) continue; // skip non player units
+                    if (iPlr != m_player->getId()) continue; // skip non player units
                 }
                 iColor = players[iPlr].getMinimapColor();
             }
@@ -194,7 +194,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 if (playerOnly) {
                     continue; // skip sandworms
                 }
-                iColor = player->getSelectFadingColor();
+                iColor = m_player->getSelectFadingColor();
             }
 
             // no need to draw black on black background
@@ -278,8 +278,8 @@ void cMiniMapDrawer::drawStaticFrame()
     if (status == eMinimapStatus::LOWPOWER) return;
 
     if (status == eMinimapStatus::POWERDOWN) {
-        cRectangle src= cRectangle(0, 0, gfxinter->getTexture(iStaticFrame)->w, gfxinter->getTexture(iStaticFrame)->h);
-        renderDrawer->renderStrechSprite(gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap);
+        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(iStaticFrame)->w, m_gfxinter->getTexture(iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap);
         return;
     }
 
@@ -293,8 +293,8 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (iStaticFrame != STAT01) {
-        cRectangle src= cRectangle(0, 0, gfxinter->getTexture(iStaticFrame)->w, gfxinter->getTexture(iStaticFrame)->h);
-        renderDrawer->renderStrechSprite(gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap,iTrans);
+        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(iStaticFrame)->w, m_gfxinter->getTexture(iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap,iTrans);
     }
 }
 
@@ -312,7 +312,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
 // TODO: Respond to game events instead of using the "think" function (tell, don't ask)
 void cMiniMapDrawer::think()
 {
-    if (player->hasAtleastOneStructure(RADAR)) {
+    if (m_player->hasAtleastOneStructure(RADAR)) {
         if (status == eMinimapStatus::NOTAVAILABLE) {
             status = eMinimapStatus::POWERUP;
         }
@@ -323,7 +323,7 @@ void cMiniMapDrawer::think()
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    bool hasRadarAndEnoughPower = (player->getAmountOfStructuresForType(RADAR) > 0) && player->bEnoughPower();
+    bool hasRadarAndEnoughPower = (m_player->getAmountOfStructuresForType(RADAR) > 0) && m_player->bEnoughPower();
 
     // minimap state is enough power
     if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP) {
@@ -331,7 +331,7 @@ void cMiniMapDrawer::think()
             // go to state power down (not enough power)
             status = eMinimapStatus::POWERDOWN;
             // "Radar de-activated""
-            game.playVoice(SOUND_VOICE_04_ATR, player->getId());
+            game.playVoice(SOUND_VOICE_04_ATR, m_player->getId());
         }
     }
 
@@ -342,7 +342,7 @@ void cMiniMapDrawer::think()
             status = eMinimapStatus::POWERUP;
             game.playSound(SOUND_RADAR);
             // "Radar activated"
-            game.playVoice(SOUND_VOICE_03_ATR, player->getId());
+            game.playVoice(SOUND_VOICE_03_ATR, m_player->getId());
         }
     }
 
@@ -378,7 +378,7 @@ bool cMiniMapDrawer::isMouseOver()
 
 void cMiniMapDrawer::setPlayer(cPlayer *thePlayer)
 {
-    this->player = thePlayer;
+    this->m_player = thePlayer;
 }
 
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
@@ -387,10 +387,10 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
             !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
        ) {
 
-        if (player->hasAtleastOneStructure(RADAR)) {
+        if (m_player->hasAtleastOneStructure(RADAR)) {
             auto m_mouse = game.getMouse();
             int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
-            mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
+            m_mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
     }
 }
