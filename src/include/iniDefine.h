@@ -100,6 +100,7 @@
 #define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
 #define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
 #define WORD_APPETITE     191    // game.ini (How much appetite has a sandworm?)
+#define WORD_SMOKEHFACTOR 192    // game.ini (Smoke HP Factor)
 
 //
 #define WORD_HOUSE			60
