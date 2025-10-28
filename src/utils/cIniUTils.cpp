@@ -156,7 +156,7 @@ std::string cIniUtils::getSceneFileToScene(const std::string& scenefile)
             return value;
         }
     }
-    logbook(std::format("Failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
+    logbook(std::format("getSceneFileToScene: failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
     return "unknown";
 }
 
@@ -167,7 +167,7 @@ int cIniUtils::getStructureType(const std::string& structureName)
             return value;
         }
     }
-    logbook(std::format("Could not find structure type for [{}]", structureName));
+    logbook(std::format("getStructureType: could not find structure type for [{}]", structureName));
     return 0; // just in case some miracle happened, we need to go on and not crash everything.
 }
 
@@ -180,7 +180,7 @@ int cIniUtils::getUnitTypeFromString(const std::string& chunk)
         }
     }
     logbook(std::format(
-                "getUnitTypeFromChar could not determine what unit type '{}' is. Returning -1.", chunk));
+                "getUnitTypeFromString could not determine what unit type '{}' is. Returning -1.", chunk));
     return -1;
 }
 
@@ -192,7 +192,7 @@ int cIniUtils::getHouseFromString(const std::string& chunk)
         }
     }
     logbook(std::format(
-        "getHouseFromChar could not determine what house type '{}' is. Returning -1; this will probably cause problems.", chunk));
+        "getHouseFromString could not determine what house type '{}' is. Returning -1.", chunk));
     return -1;
 }
 
@@ -224,8 +224,7 @@ int cIniUtils::getSectionType(const std::string& section, int last)
             return value;
         }
     }
-
-    cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "No SECTION id found, assuming its an ID nested in section", section);
+    cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "getSectionType: no SECTION id found.", section);
     return last;
 }
 
@@ -237,7 +236,7 @@ int cIniUtils::getStructureTypeFromString(const std::string& structureStr)
             return value;
         }
     }
-    logbook(std::format("Could not find structure: {}", structureStr));
+    logbook(std::format("getStructureTypeFromString: could not find structure: {}", structureStr));
     return CONSTYARD;
 }
 
