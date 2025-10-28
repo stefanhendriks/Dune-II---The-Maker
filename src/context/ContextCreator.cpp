@@ -2,7 +2,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/cLog.h"
 #include "utils/cFileValidator.h"
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 
 ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator)
 {

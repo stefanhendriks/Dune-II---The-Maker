@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <memory>
 
-#include "context/EntityContext.hpp"
+#include "context/GraphicsContext.hpp"
 
 class cTimeManager;
 class cSoundPlayer;
