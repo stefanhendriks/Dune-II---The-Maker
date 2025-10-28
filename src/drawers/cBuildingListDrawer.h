@@ -11,7 +11,7 @@ class Graphics;
 class cBuildingListDrawer : cInputObserver {
 
 public:
-    explicit cBuildingListDrawer(GameContext *ctx, cPlayer *player);
+    explicit cBuildingListDrawer(const GameContext *ctx, cPlayer *player);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -32,10 +32,9 @@ protected:
 private:
     // the list to draw
     cTextDrawer m_textDrawer;
-    Graphics* gfxinter;
+    Graphics* m_gfxinter;
 
     cPlayer *m_player;
-    GameContext *m_ctx;
 
     bool m_renderListIds;
 
