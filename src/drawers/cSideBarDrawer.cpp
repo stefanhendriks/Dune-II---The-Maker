@@ -15,18 +15,19 @@
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
     m_ctx(ctx),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_buildingListDrawer(ctx, player),
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
 {
     assert(player);
-    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
+
     candyBarBall = m_player->createTextureFromIndexedSurfaceWithPalette(
-            gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
+        m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
     candyBarPiece = m_player->createTextureFromIndexedSurfaceWithPalette(
-            gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
+        m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
     candyHorizonBar = m_player->createTextureFromIndexedSurfaceWithPalette(
-            gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
+        m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
     candiBarRenderer = renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_screenH-40);
     renderDrawer->beginDrawingToTexture(candiBarRenderer);
@@ -47,43 +48,33 @@ cSideBarDrawer::~cSideBarDrawer()
         delete candiBarRenderer;
 }
 
-void cSideBarDrawer::drawCandybar()
+void cSideBarDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
 {
-    renderDrawer->renderSprite(candiBarRenderer,game.m_screenW - cSideBar::SidebarWidth,40);
+    m_buildingListDrawer.onNotifyMouseEvent(event);
 }
 
-void cSideBarDrawer::createCandyBar()
+void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
-    // ball first
-    renderDrawer->renderSprite(candyBarBall, 0,0); // height of ball = 25
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
-    // now draw pieces untill the end (height of piece is 23 pixels)
-    int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
-    int heightMinimap = cSideBar::HeightOfMinimap;
-    // auto tmp = cRectangle{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
-    for (int y = startY; y < (heightMinimap); y += 24) {
-        renderDrawer->renderSprite(candyBarPiece, 0, y);
-    }
-    // note: no need to take top bar into account because 'm_candybar' is a separate bitmap so coords start at 0,0
-    // ball is 6 pixels higher than horizontal m_candybar
-    int ballY = (heightMinimap) - 6;
+    m_buildingListDrawer.onNotifyKeyboardEvent(event);
+}
 
-    // draw bottom m_candybar
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
+// draws the sidebar on screen
+void cSideBarDrawer::draw()
+{
+    // black out sidebar
+    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, Color{0, 0, 0,255});
 
-    // draw ball
-    renderDrawer->renderSprite(candyBarBall, 0, ballY); // height of ball = 25
+    drawCandybar();
 
-    // draw top m_candybar again
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
+    drawMinimap();
+    drawCapacities();
+    drawBuildingLists();
+}
 
-    startY = ballY + 26 + 10;
-    for (int y = startY; y < (heightInPixels + 23); y += 24) {
-        renderDrawer->renderSprite(candyBarPiece, 0, y);
-    }
-    // draw bottom
-    renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
+void cSideBarDrawer::setPlayer(cPlayer *pPlayer)
+{
+    m_player = pPlayer;
+    m_buildingListDrawer.setPlayer(pPlayer);
 }
 
 void cSideBarDrawer::drawBuildingLists()
@@ -105,7 +96,7 @@ void cSideBarDrawer::drawBuildingLists()
     }
 
     // draw background of buildlist
-    Texture *backgroundSprite = gfxinter->getTexture(BMP_GERALD_ICONLIST_BACKGROUND);
+    Texture *backgroundSprite = m_gfxinter->getTexture(BMP_GERALD_ICONLIST_BACKGROUND);
 
     int drawX = game.m_screenW - cSideBar::SidebarWidthWithoutCandyBar + 1;
 
@@ -124,7 +115,7 @@ void cSideBarDrawer::drawBuildingLists()
     int iDrawX = m_buildingListDrawer.getDrawX();
     int iDrawY = m_buildingListDrawer.getDrawY();
 
-    Texture *horBar = gfxinter->getTexture(BMP_GERALD_SIDEBAR_PIECE);
+    Texture *horBar = m_gfxinter->getTexture(BMP_GERALD_SIDEBAR_PIECE);
     renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-38); // above sublist buttons
     renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-5); // above normal icons
 
@@ -191,139 +182,15 @@ void cSideBarDrawer::drawBuildingLists()
     }
 }
 
-// draws the sidebar on screen
-void cSideBarDrawer::draw()
-{
-    // black out sidebar
-    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, Color{0, 0, 0,255});
-
-    drawCandybar();
-
-    drawMinimap();
-    drawCapacities();
-    drawBuildingLists();
-}
-
 void cSideBarDrawer::drawCapacities()
 {
     drawPowerUsage();
     drawCreditsUsage();
 }
 
-void cSideBarDrawer::drawCreditsUsage()
+void cSideBarDrawer::drawCandybar()
 {
-    int barTotalHeight = (cSideBar::HeightOfMinimap - 76);
-    int barX = (game.m_screenW - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
-    int barY = cSideBar::TopBarHeight + 48;
-    int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
-    // cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
-
-    // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
-    // and so forth.
-
-    // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
-    int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
-    int structuresWithSpice = m_player->getAmountOfStructuresForType(REFINERY) + m_player->getAmountOfStructuresForType(SILO);
-    float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
-    float maxSpice = m_player->getMaxCredits() / totalSpiceCapacity;
-    float spiceStored = static_cast<float>(m_player->getCredits()) / totalSpiceCapacity;
-
-    float barHeightToDraw = barTotalHeight * maxSpice;
-    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
-    int powerInY = barY + (barTotalHeight - barHeightToDraw);
-
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
-
-    barHeightToDraw = barTotalHeight * spiceStored;
-    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
-    int powerOutY = barY + (barTotalHeight - barHeightToDraw);
-
-    auto spiceCapacityRatio = static_cast<float>(m_player->getCredits() + 1) / (m_player->getMaxCredits() + 1);
-    spiceCapacityRatio = std::clamp(spiceCapacityRatio, 0.0f, 1.0f);
-    int r = spiceCapacityRatio * 255;
-    int g = (1.1 - spiceCapacityRatio) * 255;
-
-    if (r > 255) r = 255;
-    if (g > 255) g = 255;
-
-    if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
-    }
-    else {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
-    }
-
-    renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
-
-    // draw darker 'sides' at the left and top
-    Color darker = Color{89, 56, 0,255};
-    renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
-
-    if (spiceCapacityRatio>0.95) {
-        renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
-    } else  if (spiceCapacityRatio<0.05) {
-        renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
-    } else {
-        renderDrawer->renderSprite(gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
-    }
-}
-
-void cSideBarDrawer::drawPowerUsage() const
-{
-    int arbitraryMargin = 6;
-    int barTotalHeight = game.m_screenH - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
-    int barX = (game.m_screenW - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
-    int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
-    int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
-    //cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::black()); //renderDrawer->getColor_BLACK());
-
-    // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
-    int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
-    float totalPowerOutput = (1 + (m_player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
-    float powerIn = (float)m_player->getPowerProduced() / totalPowerOutput;
-    float powerUse = (float)m_player->getPowerUsage() / totalPowerOutput;
-
-    float barHeightToDraw = barTotalHeight * powerIn;
-    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
-    int powerInY = barY + (barTotalHeight - barHeightToDraw);
-
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
-
-    barHeightToDraw = barTotalHeight * powerUse;
-    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
-    int powerOutY = barY + (barTotalHeight - barHeightToDraw);
-
-    float powerUsageRatio = ((float)m_player->getPowerUsage() + 1) / ((float)m_player->getPowerProduced() + 1);
-    int r = powerUsageRatio * 255;
-    int g = (1.1 - powerUsageRatio) * 255;
-
-    if (r > 255) r = 255;
-    if (g > 255) g = 255;
-
-    if (m_player->bEnoughPower()) {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
-    }
-    else {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
-    }
-
-    renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
-
-    renderDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
-
-    // draw darker 'sides' at the left and top
-    Color darker = Color{89, 56, 0,255};
-    renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
-    if (m_player->bEnoughPower()) {
-        renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
-    }
-    else {
-        renderDrawer->renderSprite(gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
-    }
+    renderDrawer->renderSprite(candiBarRenderer,game.m_screenW - cSideBar::SidebarWidth,40);
 }
 
 void cSideBarDrawer::drawMinimap()
@@ -378,22 +245,156 @@ void cSideBarDrawer::drawMinimap()
 
         cRectangle src = {srcX, srcY, emblemWidth,emblemHeight};
         cRectangle dest = {drawX, drawY, emblemDesiredWidth, emblemDesiredHeight};
-        renderDrawer->renderStrechSprite(gfxinter->getTexture(bitmapId), src, dest);
+        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(bitmapId), src, dest);
     }
 }
 
-void cSideBarDrawer::setPlayer(cPlayer *pPlayer)
+void cSideBarDrawer::createCandyBar()
 {
-    m_player = pPlayer;
-    m_buildingListDrawer.setPlayer(pPlayer);
+    int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
+    // ball first
+    renderDrawer->renderSprite(candyBarBall, 0,0); // height of ball = 25
+    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
+    // now draw pieces untill the end (height of piece is 23 pixels)
+    int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
+    int heightMinimap = cSideBar::HeightOfMinimap;
+    // auto tmp = cRectangle{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
+    for (int y = startY; y < (heightMinimap); y += 24) {
+        renderDrawer->renderSprite(candyBarPiece, 0, y);
+    }
+    // note: no need to take top bar into account because 'm_candybar' is a separate bitmap so coords start at 0,0
+    // ball is 6 pixels higher than horizontal m_candybar
+    int ballY = (heightMinimap) - 6;
+
+    // draw bottom m_candybar
+    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
+
+    // draw ball
+    renderDrawer->renderSprite(candyBarBall, 0, ballY); // height of ball = 25
+
+    // draw top m_candybar again
+    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
+
+    startY = ballY + 26 + 10;
+    for (int y = startY; y < (heightInPixels + 23); y += 24) {
+        renderDrawer->renderSprite(candyBarPiece, 0, y);
+    }
+    // draw bottom
+    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
 }
 
-void cSideBarDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
+void cSideBarDrawer::drawPowerUsage() const
 {
-    m_buildingListDrawer.onNotifyMouseEvent(event);
+    int arbitraryMargin = 6;
+    int barTotalHeight = game.m_screenH - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
+    int barX = (game.m_screenW - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
+    int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
+    //cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
+    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::black()); //renderDrawer->getColor_BLACK());
+
+    // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
+    int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
+    float totalPowerOutput = (1 + (m_player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
+    float powerIn = (float)m_player->getPowerProduced() / totalPowerOutput;
+    float powerUse = (float)m_player->getPowerUsage() / totalPowerOutput;
+
+    float barHeightToDraw = barTotalHeight * powerIn;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerInY = barY + (barTotalHeight - barHeightToDraw);
+
+    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
+
+    barHeightToDraw = barTotalHeight * powerUse;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerOutY = barY + (barTotalHeight - barHeightToDraw);
+
+    float powerUsageRatio = ((float)m_player->getPowerUsage() + 1) / ((float)m_player->getPowerProduced() + 1);
+    int r = powerUsageRatio * 255;
+    int g = (1.1 - powerUsageRatio) * 255;
+
+    if (r > 255) r = 255;
+    if (g > 255) g = 255;
+
+    if (m_player->bEnoughPower()) {
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
+    }
+    else {
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
+    }
+
+    renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
+
+    renderDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
+
+    // draw darker 'sides' at the left and top
+    Color darker = Color{89, 56, 0,255};
+    renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
+    if (m_player->bEnoughPower()) {
+        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
+    }
+    else {
+        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
+    }
 }
 
-void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void cSideBarDrawer::drawCreditsUsage()
 {
-    m_buildingListDrawer.onNotifyKeyboardEvent(event);
+    int barTotalHeight = (cSideBar::HeightOfMinimap - 76);
+    int barX = (game.m_screenW - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barY = cSideBar::TopBarHeight + 48;
+    int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
+    // cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
+    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
+
+    // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
+    // and so forth.
+
+    // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
+    int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
+    int structuresWithSpice = m_player->getAmountOfStructuresForType(REFINERY) + m_player->getAmountOfStructuresForType(SILO);
+    float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
+    float maxSpice = m_player->getMaxCredits() / totalSpiceCapacity;
+    float spiceStored = static_cast<float>(m_player->getCredits()) / totalSpiceCapacity;
+
+    float barHeightToDraw = barTotalHeight * maxSpice;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerInY = barY + (barTotalHeight - barHeightToDraw);
+
+    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
+
+    barHeightToDraw = barTotalHeight * spiceStored;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerOutY = barY + (barTotalHeight - barHeightToDraw);
+
+    auto spiceCapacityRatio = static_cast<float>(m_player->getCredits() + 1) / (m_player->getMaxCredits() + 1);
+    spiceCapacityRatio = std::clamp(spiceCapacityRatio, 0.0f, 1.0f);
+    int r = spiceCapacityRatio * 255;
+    int g = (1.1 - spiceCapacityRatio) * 255;
+
+    if (r > 255) r = 255;
+    if (g > 255) g = 255;
+
+    if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
+    }
+    else {
+        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
+    }
+
+    renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
+
+    // draw darker 'sides' at the left and top
+    Color darker = Color{89, 56, 0,255};
+    renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
+
+    if (spiceCapacityRatio>0.95) {
+        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
+    } else  if (spiceCapacityRatio<0.05) {
+        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
+    } else {
+        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
+    }
 }
