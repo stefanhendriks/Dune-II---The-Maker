@@ -331,7 +331,7 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
 
     // Vérrouiller la surface avant de modifier les pixels
     if (SDL_LockSurface(bmp) < 0) {
-        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
+        fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
         return;
     }
     set_pixel(bmp,x,y,mappedColor);
@@ -342,7 +342,7 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
 Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
 {
     if (SDL_LockSurface(surface) < 0) {
-        fprintf(stderr, "Erreur lors du verrouillage de la surface: %s\n", SDL_GetError());
+        fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
         return Color{0,0,0,255};
     }
     auto tmpColor = get_pixel(surface,x,y);
@@ -385,7 +385,7 @@ void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
 
     if (SDL_SetRenderTarget(renderer, targetTexture->tex) < 0) {
         renderTargetStack.pop();
-        throw std::runtime_error("Erreur lors du changement de cible de rendu: " + std::string(SDL_GetError()));
+        throw std::runtime_error("Error changing render target: " + std::string(SDL_GetError()));
     }
 }
 
@@ -397,6 +397,6 @@ void SDLDrawer::endDrawingToTexture()
     SDL_Texture* previousTarget = renderTargetStack.top();
     renderTargetStack.pop();
     if (SDL_SetRenderTarget(renderer, previousTarget) < 0) {
-        throw std::runtime_error("Erreur lors de la restauration de la cible de rendu par défaut: " + std::string(SDL_GetError()));
+        throw std::runtime_error("Error restoring default render target: " + std::string(SDL_GetError()));
     }
 }
