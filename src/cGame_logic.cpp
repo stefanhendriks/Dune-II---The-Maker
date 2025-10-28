@@ -654,7 +654,7 @@ void cGame::drawState()
             drawStateLosing();
             break;
         default:
-            std::cout << "m_state registered in drawState() " << m_state << std::endl;
+            // std::cout << "m_state registered in drawState() " << m_state << std::endl;
             m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
     }
