@@ -11,10 +11,10 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cBuildingListDrawer::cBuildingListDrawer(GameContext *_ctx, cPlayer *player) :
+cBuildingListDrawer::cBuildingListDrawer(GameContext *ctx, cPlayer *player) :
     m_textDrawer(game_font),
     m_player(player),
-    m_ctx(_ctx),
+    m_ctx(ctx),
     m_renderListIds(false)
 {
     gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
