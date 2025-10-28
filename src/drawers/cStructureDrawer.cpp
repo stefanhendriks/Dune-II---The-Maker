@@ -15,9 +15,10 @@
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
 
-cStructureDrawer::cStructureDrawer(GameContext *context) : m_ctx(context) 
+cStructureDrawer::cStructureDrawer(GameContext *ctx) :
+    m_ctx(ctx),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 }
 
 
@@ -275,8 +276,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cUnit &pUnit = unit[unitId];
     int iconId = pUnit.getUnitInfo().icon;
 
-    int iconWidth = (gfxinter->getSurface(iconId))->w;
-    int iconHeight = (gfxinter->getSurface(iconId))->h;
+    int iconWidth = (m_gfxinter->getSurface(iconId))->w;
+    int iconHeight = (m_gfxinter->getSurface(iconId))->h;
 
     // draw health bar of unit on top of icon?
     int draw_x = 3;
@@ -310,7 +311,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
     cRectangle src = {0,0,iconWidth, iconHeight};
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(gfxinter->getTexture(iconId), src, dest);
+    renderDrawer->renderStrechSprite(m_gfxinter->getTexture(iconId), src, dest);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)

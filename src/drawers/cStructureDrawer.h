@@ -9,7 +9,7 @@ class Graphics;
 
 class cStructureDrawer {
 public:
-    explicit cStructureDrawer(GameContext *context);
+    explicit cStructureDrawer(GameContext *ctx);
     ~cStructureDrawer() = default;
     void drawStructuresFirstLayer();
     void drawStructuresSecondLayer();
@@ -29,7 +29,7 @@ protected:
 
 private:
     GameContext *m_ctx;
-    Graphics *gfxinter;
+    Graphics *m_gfxinter;
     cStructureUtils structureUtils;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
