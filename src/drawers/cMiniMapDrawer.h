@@ -28,7 +28,7 @@ enum eMinimapStatus {
 
 class cMiniMapDrawer {
 public:
-    explicit cMiniMapDrawer(GameContext *ctx, cMap *theMap, cPlayer *thePlayer, cMapCamera *theMapCamera);
+    explicit cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera);
     cMiniMapDrawer() = delete;
     ~cMiniMapDrawer();
 
@@ -69,12 +69,12 @@ private:
     //@mira : where is map ? Where is this initialisation ?
     GameContext *m_ctx;
     cMap *map;	// the minimap drawer reads data from here
-    cPlayer *player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
-    cMapCamera *mapCamera;
+    cPlayer *m_player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
+    cMapCamera *m_mapCamera;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *mipMapTex;
-    Graphics *gfxinter;
+    Graphics *m_gfxinter;
 
     eMinimapStatus status;
 
