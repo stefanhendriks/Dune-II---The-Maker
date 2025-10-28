@@ -10,7 +10,7 @@ class GameContext;
 
 class cOrderDrawer {
 public:
-    explicit cOrderDrawer(GameContext *ctx, cPlayer *thePlayer);
+    explicit cOrderDrawer(GameContext *ctx, cPlayer *player);
 
     ~cOrderDrawer();
 
@@ -26,9 +26,9 @@ private:
     void onMouseAt(const s_MouseEvent &event);
     void onMouseClickedLeft(const s_MouseEvent &event);
 
-    bool _isMouseOverOrderButton;
+    bool m_isMouseOverOrderButton;
     GameContext *m_ctx;
-    cPlayer *player;
-    cRectangle buttonRect;
-    Texture *buttonBitmap;
+    cPlayer *m_player;
+    cRectangle m_buttonRect;
+    Texture *m_buttonBitmap;
 };
