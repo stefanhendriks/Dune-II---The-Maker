@@ -237,6 +237,8 @@ int INI_WordType(const std::string& word, int section)
 
         if (cIniUtils::caseInsCompare(word, "squish"))            return WORD_SQUISH;
         if (cIniUtils::caseInsCompare(word, "SmokeHpFactor"))     return WORD_SMOKEHFACTOR;
+        if (cIniUtils::caseInsCompare(word, "CanAttackAirUnits")) return WORD_CANATTACKAIRUNITS;
+        if (cIniUtils::caseInsCompare(word, "CanAttackUnits"))    return WORD_CANATTACKUNITS;
     }
     else if (section == INI_STRUCTURES) {
         if (word.length() > 1) {
@@ -1442,6 +1444,8 @@ void INI_Install_Game(std::string filename)
 
                     if (wordtype == WORD_SMOKEHFACTOR) unitInfo.smokeHpFactor = ToFloat(word_right);
                     if (wordtype == WORD_SQUISH) unitInfo.canBeSquished = ToBool(word_right);
+                    if (wordtype == WORD_CANATTACKAIRUNITS) unitInfo.canAttackAirUnits = ToBool(word_right);
+                    if (wordtype == WORD_CANATTACKUNITS) unitInfo.canAttackUnits = ToBool(word_right);
 
                     if (wordtype == WORD_PRODUCER) {
                         int type = cIniUtils::getStructureType(word_right);
