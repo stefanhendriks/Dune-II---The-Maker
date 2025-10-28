@@ -13,11 +13,13 @@
 
 #include "data/gfxaudio.h"
 
-CreditsDrawer::CreditsDrawer(GameContext* _ctx, cPlayer *thePlayer) : player(thePlayer),  ctx(_ctx)
+CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
+    m_player(player),
+    m_ctx(ctx),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    assert(thePlayer);
-    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
-    // bmp = NULL;
+    assert(player);
+
     memset(offset_credit, 0, sizeof(offset_credit));
     memset(offset_direction, 0, sizeof(offset_direction));
     initial = true;
@@ -29,7 +31,7 @@ CreditsDrawer::CreditsDrawer(GameContext* _ctx, cPlayer *thePlayer) : player(the
     previousCredits = 0;
 
     // center credits bar within sidebar
-    int widthCreditsBar = (gfxinter->getSurface(CREDITS_BAR))->w;
+    int widthCreditsBar = (m_gfxinter->getSurface(CREDITS_BAR))->w;
     drawX = game.m_screenW - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     drawY = 0;
 }
@@ -41,7 +43,7 @@ CreditsDrawer::~CreditsDrawer()
 
 void CreditsDrawer::setCredits()
 {
-    setCredits(player->getCredits());
+    setCredits(m_player->getCredits());
 }
 
 void CreditsDrawer::setCredits(int amount)
@@ -66,7 +68,7 @@ void CreditsDrawer::thinkFast()
         // determine new currentCredits
         // TODO: make it 'roll' instead of 'jump' to the newest credits?
         previousCredits = currentCredits;
-        auto newCurrentCredits = player->getCredits();
+        auto newCurrentCredits = m_player->getCredits();
 
         if (newCurrentCredits != previousCredits) {
             int diff = newCurrentCredits - previousCredits;
@@ -177,7 +179,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
  */
 void CreditsDrawer::draw()
 {
-    auto *tex = gfxinter->getTexture(CREDITS_BAR);
+    auto *tex = m_gfxinter->getTexture(CREDITS_BAR);
     renderDrawer->renderSprite(tex, drawX, drawY);
     renderDrawer->setClippingFor(drawX+1, drawY+5, drawX+tex->w-1, drawY+tex->h-5);
     drawCurrentCredits(drawX, drawY);
@@ -290,7 +292,7 @@ bool CreditsDrawer::hasDrawnCurrentCredits()
 
 void CreditsDrawer::setPlayer(cPlayer *thePlayer)
 {
-    this->player = thePlayer;
+    this->m_player = thePlayer;
 }
 
 
