@@ -16,7 +16,7 @@ struct SDL_Surface;
 
 class CreditsDrawer {
 public:
-    explicit CreditsDrawer(GameContext* _ctx, cPlayer *thePlayer);
+    explicit CreditsDrawer(GameContext* ctx, cPlayer *player);
     virtual ~CreditsDrawer();
 
     void thinkFast(); // set animation counters and such, time based. Also make sound when needed.
@@ -27,9 +27,9 @@ public:
     void setPlayer(cPlayer *thePlayer);
 
 private:
-    cPlayer *player;  //
-    GameContext* ctx;
-    Graphics* gfxinter;
+    cPlayer *m_player;  //
+    GameContext* m_ctx;
+    Graphics* m_gfxinter;
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);
