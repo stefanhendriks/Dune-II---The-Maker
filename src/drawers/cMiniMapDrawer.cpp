@@ -20,17 +20,17 @@
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
     m_ctx(ctx),
-    map(map),
+    m_map(map),
     m_player(player),
     m_mapCamera(mapCamera),
-    status(eMinimapStatus::NOTAVAILABLE),
-    iStaticFrame(STAT14),
-    iTrans(0)
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_status(eMinimapStatus::NOTAVAILABLE),
+    m_iStaticFrame(STAT14),
+    m_iTrans(0)
 {
     assert(map);
     assert(player);
     assert(mapCamera);
-    m_gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
 
     int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
     int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
@@ -56,18 +56,186 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
 cMiniMapDrawer::~cMiniMapDrawer()
 {
-    map = nullptr;
+    m_map = nullptr;
     m_mapCamera = nullptr;
-    iStaticFrame = STAT14;
-    status = eMinimapStatus::NOTAVAILABLE;
+    m_iStaticFrame = STAT14;
+    m_status = eMinimapStatus::NOTAVAILABLE;
+}
+
+void cMiniMapDrawer::draw()
+{
+    if (!m_map) {
+        return;
+    }
+
+    if (m_status == eMinimapStatus::NOTAVAILABLE) {
+        return;
+    }
+
+    renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::black());
+
+    if (m_status == eMinimapStatus::POWERUP || m_status == eMinimapStatus::RENDERMAP || m_status == eMinimapStatus::POWERDOWN) {
+        drawTerrain();
+        drawUnitsAndStructures(false);
+    }
+
+    if (m_status == eMinimapStatus::LOWPOWER) {
+        cleanDrawTerrain();
+        drawUnitsAndStructures(true);
+    }
+    cRectangle src = cRectangle(0, 0, mipMapTex->w, mipMapTex->h);
+    renderDrawer->renderStrechSprite(mipMapTex, src , m_RectMinimap);
+
+    drawStaticFrame();
+    drawViewPortRectangle();
+}
+
+void cMiniMapDrawer::drawStaticFrame()
+{
+    if (m_status == eMinimapStatus::NOTAVAILABLE) return;
+    if (m_status == eMinimapStatus::RENDERMAP) return;
+    if (m_status == eMinimapStatus::LOWPOWER) return;
+
+    if (m_status == eMinimapStatus::POWERDOWN) {
+        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(m_iStaticFrame)->w, m_gfxinter->getTexture(m_iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(m_iStaticFrame), src, m_RectFullMinimap);
+        return;
+    }
+
+    // Draw static info
+    // < STAT01 frames are going from very transparent to opaque
+    if (m_iStaticFrame < STAT10) {
+        m_iTrans = 255 - health_bar(192, (STAT12 - m_iStaticFrame), 12);
+    } else {
+        m_iTrans = 255;
+    }
+
+    // non-stat01 frames are drawn transparent
+    if (m_iStaticFrame != STAT01) {
+        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(m_iStaticFrame)->w, m_gfxinter->getTexture(m_iStaticFrame)->h);
+        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(m_iStaticFrame), src, m_RectFullMinimap,m_iTrans);
+    }
 }
 
 void cMiniMapDrawer::init()
 {
-    status = eMinimapStatus::NOTAVAILABLE;
-    iStaticFrame = STAT14;
-    iTrans = 0;
+    m_status = eMinimapStatus::NOTAVAILABLE;
+    m_iStaticFrame = STAT14;
+    m_iTrans = 0;
     m_isMouseOver = false;
+}
+
+// TODO: Respond to game events instead of using the "think" function (tell, don't ask)
+void cMiniMapDrawer::think()
+{
+    if (m_player->hasAtleastOneStructure(RADAR)) {
+        if (m_status == eMinimapStatus::NOTAVAILABLE) {
+            m_status = eMinimapStatus::POWERUP;
+        }
+    }
+    else {
+        m_status = eMinimapStatus::NOTAVAILABLE;
+    }
+
+    if (m_status == eMinimapStatus::NOTAVAILABLE) return;
+
+    bool hasRadarAndEnoughPower = (m_player->getAmountOfStructuresForType(RADAR) > 0) && m_player->bEnoughPower();
+
+    // minimap state is enough power
+    if (m_status == eMinimapStatus::POWERUP || m_status == eMinimapStatus::RENDERMAP) {
+        if (!hasRadarAndEnoughPower) {
+            // go to state power down (not enough power)
+            m_status = eMinimapStatus::POWERDOWN;
+            // "Radar de-activated""
+            game.playVoice(SOUND_VOICE_04_ATR, m_player->getId());
+        }
+    }
+
+    // minimap state is not enough power
+    if (m_status == eMinimapStatus::POWERDOWN || m_status == eMinimapStatus::LOWPOWER) {
+        if (hasRadarAndEnoughPower) {
+            // go to state power up (enough power)
+            m_status = eMinimapStatus::POWERUP;
+            game.playSound(SOUND_RADAR);
+            // "Radar activated"
+            game.playVoice(SOUND_VOICE_03_ATR, m_player->getId());
+        }
+    }
+
+    // think about the animation
+
+    if (m_status == eMinimapStatus::POWERDOWN) {
+        if (m_iStaticFrame < STAT21) {
+            m_iStaticFrame++;
+        }
+        else {
+            m_status = eMinimapStatus::LOWPOWER;
+        }
+    }
+    else if (m_status == eMinimapStatus::POWERUP) {
+        if (m_iStaticFrame > STAT01) {
+            m_iStaticFrame--;
+        }
+        else {
+            m_status = eMinimapStatus::RENDERMAP;
+        }
+    }
+}
+
+bool cMiniMapDrawer::isMouseOver()
+{
+    return m_isMouseOver;
+}
+
+void cMiniMapDrawer::setPlayer(cPlayer *thePlayer)
+{
+    this->m_player = thePlayer;
+}
+
+
+void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
+{
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMousePressedLeft(event); // click has same behavior as 'press'
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
+            onMousePressedLeft(event);
+            return;
+        default:
+            return;
+    }
+
+}
+
+void cMiniMapDrawer::drawTerrain()
+{
+    renderDrawer->beginDrawingToTexture(mipMapTex);
+    Color iColor = Color{0, 0, 0,255};
+
+    for (int x = 0; x < (m_map->getWidth()); x++) {
+        for (int y = 0; y < (m_map->getHeight()); y++) {
+            iColor = Color{0, 0, 0,255};
+            //@mira where is map ?
+            int iCll = m_map->getGeometry().makeCell(x, y);
+
+            if (m_map->isVisible(iCll, m_player->getId())) {
+                iColor = getRGBColorForTerrainType(m_map->getCellType(iCll));
+            }
+
+            // TODO: make flexible map borders
+            // do not show the helper border
+            if (!m_map->isWithinBoundaries(x, y)) {
+                iColor = Color{0, 0, 0,255};
+            }
+
+            renderDrawer->renderDot(x, y, iColor, 1);
+        }
+    }
+    renderDrawer->endDrawingToTexture();
 }
 
 void cMiniMapDrawer::drawViewPortRectangle()
@@ -104,41 +272,6 @@ void cMiniMapDrawer::drawViewPortRectangle()
     renderDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
 }
 
-int cMiniMapDrawer::getMapWidthInPixels() const {
-    return map->getWidth();
-}
-
-int cMiniMapDrawer::getMapHeightInPixels() const {
-    return map->getHeight();
-}
-
-void cMiniMapDrawer::drawTerrain()
-{
-    renderDrawer->beginDrawingToTexture(mipMapTex);
-    Color iColor = Color{0, 0, 0,255};
-
-    for (int x = 0; x < (map->getWidth()); x++) {
-        for (int y = 0; y < (map->getHeight()); y++) {
-            iColor = Color{0, 0, 0,255};
-            //@mira where is map ?
-            int iCll = map->getGeometry().makeCell(x, y);
-
-            if (map->isVisible(iCll, m_player->getId())) {
-                iColor = getRGBColorForTerrainType(map->getCellType(iCll));
-            }
-
-            // TODO: make flexible map borders
-            // do not show the helper border
-            if (!map->isWithinBoundaries(x, y)) {
-                iColor = Color{0, 0, 0,255};
-            }
-
-            renderDrawer->renderDot(x, y, iColor, 1);
-        }
-    }
-    renderDrawer->endDrawingToTexture();
-}
-
 /**
  * Draws minimap units and structures.
  *
@@ -147,14 +280,14 @@ void cMiniMapDrawer::drawTerrain()
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     renderDrawer->beginDrawingToTexture(mipMapTex);
     const Color black = Color::black();
-    for (int x = 0; x < map->getWidth(); x++) {
-        for (int y = 0; y < map->getHeight(); y++) {
+    for (int x = 0; x < m_map->getWidth(); x++) {
+        for (int y = 0; y < m_map->getHeight(); y++) {
             // do not show the helper border
-            if (!map->isWithinBoundaries(x, y)) continue;
+            if (!m_map->isWithinBoundaries(x, y)) continue;
 
-            int iCll = map->getGeometry().makeCell(x, y);
+            int iCll = m_map->getGeometry().makeCell(x, y);
 
-            if (!map->isVisible(iCll, m_player->getId())) {
+            if (!m_map->isVisible(iCll, m_player->getId())) {
                 // invisible cell
                 continue;
             }
@@ -162,7 +295,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             // default : black
             Color iColor = Color{0,0,0,255};
 
-            int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
+            int idOfStructureAtCell = m_map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
                 int iPlr = structure[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
@@ -171,7 +304,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 iColor = players[iPlr].getMinimapColor();
             }
 
-            int idOfUnitAtCell = map->getCellIdUnitLayer(iCll);
+            int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
                 int iPlr = unit[idOfUnitAtCell].iPlayer;
                 if (playerOnly) {
@@ -180,7 +313,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 iColor = players[iPlr].getMinimapColor();
             }
 
-            int idOfAirUnitAtCell = map->getCellIdAirUnitLayer(iCll);
+            int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
                 int iPlr = unit[idOfAirUnitAtCell].iPlayer;
                 if (playerOnly) {
@@ -189,7 +322,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 iColor = players[iPlr].getMinimapColor();
             }
 
-            int idOfWormAtCell = map->getCellIdWormsLayer(iCll);
+            int idOfWormAtCell = m_map->getCellIdWormsLayer(iCll);
             if (idOfWormAtCell > -1) {
                 if (playerOnly) {
                     continue; // skip sandworms
@@ -206,7 +339,6 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     }
     renderDrawer->endDrawingToTexture();
 }
-
 
 Color cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
 {
@@ -237,133 +369,12 @@ Color cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
     }
 }
 
-void cMiniMapDrawer::draw()
-{
-    if (!map) {
-        return;
-    }
-
-    if (status == eMinimapStatus::NOTAVAILABLE) {
-        return;
-    }
-
-    renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::black());
-
-    if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP || status == eMinimapStatus::POWERDOWN) {
-        drawTerrain();
-        drawUnitsAndStructures(false);
-    }
-
-    if (status == eMinimapStatus::LOWPOWER) {
-        cleanDrawTerrain();
-        drawUnitsAndStructures(true);
-    }
-    cRectangle src = cRectangle(0, 0, mipMapTex->w, mipMapTex->h);
-    renderDrawer->renderStrechSprite(mipMapTex, src , m_RectMinimap);
-
-    drawStaticFrame();
-    drawViewPortRectangle();
+int cMiniMapDrawer::getMapHeightInPixels() const {
+    return m_map->getHeight();
 }
 
-void cMiniMapDrawer::cleanDrawTerrain() const {
-    renderDrawer->beginDrawingToTexture(mipMapTex);
-    renderDrawer->renderClearToColor(Color::black());
-    renderDrawer->endDrawingToTexture();
-}
-
-void cMiniMapDrawer::drawStaticFrame()
-{
-    if (status == eMinimapStatus::NOTAVAILABLE) return;
-    if (status == eMinimapStatus::RENDERMAP) return;
-    if (status == eMinimapStatus::LOWPOWER) return;
-
-    if (status == eMinimapStatus::POWERDOWN) {
-        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(iStaticFrame)->w, m_gfxinter->getTexture(iStaticFrame)->h);
-        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap);
-        return;
-    }
-
-    // Draw static info
-    // < STAT01 frames are going from very transparent to opaque
-    if (iStaticFrame < STAT10) {
-        iTrans = 255 - health_bar(192, (STAT12 - iStaticFrame), 12);
-    } else {
-        iTrans = 255;
-    }
-
-    // non-stat01 frames are drawn transparent
-    if (iStaticFrame != STAT01) {
-        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(iStaticFrame)->w, m_gfxinter->getTexture(iStaticFrame)->h);
-        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(iStaticFrame), src, m_RectFullMinimap,iTrans);
-    }
-}
-
-int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
-{
-    int mouseMiniMapX = mouseX - drawX;
-    int mouseMiniMapY = mouseY - drawY;
-    mouseMiniMapX /= factorZoom;
-    mouseMiniMapY /= factorZoom;
-    auto mouseMiniMapPoint = map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
-
-    return map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
-}
-
-// TODO: Respond to game events instead of using the "think" function (tell, don't ask)
-void cMiniMapDrawer::think()
-{
-    if (m_player->hasAtleastOneStructure(RADAR)) {
-        if (status == eMinimapStatus::NOTAVAILABLE) {
-            status = eMinimapStatus::POWERUP;
-        }
-    }
-    else {
-        status = eMinimapStatus::NOTAVAILABLE;
-    }
-
-    if (status == eMinimapStatus::NOTAVAILABLE) return;
-
-    bool hasRadarAndEnoughPower = (m_player->getAmountOfStructuresForType(RADAR) > 0) && m_player->bEnoughPower();
-
-    // minimap state is enough power
-    if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP) {
-        if (!hasRadarAndEnoughPower) {
-            // go to state power down (not enough power)
-            status = eMinimapStatus::POWERDOWN;
-            // "Radar de-activated""
-            game.playVoice(SOUND_VOICE_04_ATR, m_player->getId());
-        }
-    }
-
-    // minimap state is not enough power
-    if (status == eMinimapStatus::POWERDOWN || status == eMinimapStatus::LOWPOWER) {
-        if (hasRadarAndEnoughPower) {
-            // go to state power up (enough power)
-            status = eMinimapStatus::POWERUP;
-            game.playSound(SOUND_RADAR);
-            // "Radar activated"
-            game.playVoice(SOUND_VOICE_03_ATR, m_player->getId());
-        }
-    }
-
-    // think about the animation
-
-    if (status == eMinimapStatus::POWERDOWN) {
-        if (iStaticFrame < STAT21) {
-            iStaticFrame++;
-        }
-        else {
-            status = eMinimapStatus::LOWPOWER;
-        }
-    }
-    else if (status == eMinimapStatus::POWERUP) {
-        if (iStaticFrame > STAT01) {
-            iStaticFrame--;
-        }
-        else {
-            status = eMinimapStatus::RENDERMAP;
-        }
-    }
+int cMiniMapDrawer::getMapWidthInPixels() const {
+    return m_map->getWidth();
 }
 
 void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event)
@@ -371,21 +382,11 @@ void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event)
     m_isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
 }
 
-bool cMiniMapDrawer::isMouseOver()
-{
-    return m_isMouseOver;
-}
-
-void cMiniMapDrawer::setPlayer(cPlayer *thePlayer)
-{
-    this->m_player = thePlayer;
-}
-
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
 {
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
-            !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
-       ) {
+        !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
+    ) {
 
         if (m_player->hasAtleastOneStructure(RADAR)) {
             auto m_mouse = game.getMouse();
@@ -395,20 +396,19 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
     }
 }
 
-void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
-{
-    switch (event.eventType) {
-        case eMouseEventType::MOUSE_MOVED_TO:
-            onMouseAt(event);
-            return;
-        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
-            onMousePressedLeft(event); // click has same behavior as 'press'
-            return;
-        case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
-            onMousePressedLeft(event);
-            return;
-        default:
-            return;
-    }
+void cMiniMapDrawer::cleanDrawTerrain() const {
+    renderDrawer->beginDrawingToTexture(mipMapTex);
+    renderDrawer->renderClearToColor(Color::black());
+    renderDrawer->endDrawingToTexture();
+}
 
+int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
+{
+    int mouseMiniMapX = mouseX - drawX;
+    int mouseMiniMapY = mouseY - drawY;
+    mouseMiniMapX /= factorZoom;
+    mouseMiniMapY /= factorZoom;
+    auto mouseMiniMapPoint = m_map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+
+    return m_map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
