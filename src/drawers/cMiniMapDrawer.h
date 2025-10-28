@@ -68,7 +68,7 @@ private:
 
     //@mira : where is map ? Where is this initialisation ?
     GameContext *m_ctx;
-    cMap *map;	// the minimap drawer reads data from here
+    cMap *m_map;	// the minimap drawer reads data from here
     cPlayer *m_player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
     cMapCamera *m_mapCamera;
     cRectangle m_RectMinimap; // the minimap (map) itself
@@ -76,10 +76,10 @@ private:
     Texture *mipMapTex;
     Graphics *m_gfxinter;
 
-    eMinimapStatus status;
+    eMinimapStatus m_status;
 
-    int iStaticFrame;
-    int iTrans;							// transparancy
+    int m_iStaticFrame;
+    int m_iTrans;							// transparancy
 
     // the top left coordinates for the minimap
     int drawX, drawY;
