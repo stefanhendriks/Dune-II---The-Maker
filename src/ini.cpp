@@ -292,7 +292,7 @@ int SCEN_INI_SectionType(const std::string& section)
 
 int GAME_INI_SectionType(const std::string& section, int last)
 {
-    //if (cIniUtils::caseInsCompare(section, "BULLETS"))   return INI_BULLETS; @Mira: we will need  it in future
+    if (cIniUtils::caseInsCompare(section, "BULLETS"))   return INI_BULLETS;
     if (cIniUtils::caseInsCompare(section, "UNITS"))        return INI_UNITS;
     if (cIniUtils::caseInsCompare(section, "STRUCTURES"))   return INI_STRUCTURES;
     // When nothing found; we assume its just a new ID tag for some unit or structure
@@ -1334,6 +1334,7 @@ void INI_Install_Game(std::string filename)
                     // Show in log file we entered a new section
                     if (section == INI_UNITS) logbook("[GAME.INI] -> [UNITS]");
                     if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
+                    if (section == INI_BULLETS) logbook("[GAME.INI] -> [BULLETS]");
                 }
 
                 // New unit type
@@ -1394,6 +1395,35 @@ void INI_Install_Game(std::string filename)
                         id = cIniUtils::getStructureType(name_structure);
                         if (id >= MAX_STRUCTURETYPES) id--;
                     } // found a new structure type
+                }
+
+                // New bullet type
+                if (section == INI_BULLETS) {
+                    // check if we found a new [BULLET: part!
+                    if (linefeed.find("[BULLET:") != std::string::npos) {
+                        // Get the name of the bullet:
+                        // [BULLET: <NAME>]
+                        // 123456789012345678]
+                        char name_bullet[45];
+
+                        for (int nu = 0; nu < 45; nu++)
+                            name_bullet[nu] = '\0';
+
+                        int c = 9, uc = 0;
+                        while (c < (MAX_LINE_LENGTH - 1)) {
+                            if (linefeed[c] != ' ' &&
+                                    linefeed[c] != ']') { // skip close bracket
+                                name_bullet[uc] = linefeed[c];
+                                uc++;
+                                c++;
+                            }
+                            else
+                                break; // get out
+                        }
+
+                        id = cIniUtils::getBulletTypeFromString(name_bullet);
+                        if (id >= MAX_BULLET_TYPES) id--;
+                    } // found a new bullet type
                 }
                 continue; // next line
             }
@@ -1469,6 +1499,15 @@ void INI_Install_Game(std::string filename)
                 if (wordtype == WORD_CANATTACKAIRUNITS) sStructureInfo[id].canAttackAirUnits = ToBool(word_right);
                 if (wordtype == WORD_CANATTACKUNITS) sStructureInfo[id].canAttackGroundUnits = ToBool(word_right);
             }
+
+            if (section == INI_BULLETS && id > -1) {
+                auto [word_left, word_right] = INI_SplitWord(linefeed);
+                wordtype = INI_WordType(word_left, section);
+            
+                // Bullet properties
+            }
+
+
         } // while
         file.close();
 
