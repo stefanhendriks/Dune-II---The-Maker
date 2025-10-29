@@ -193,6 +193,9 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "DamageInfantry"))    return WORD_DAMAGE_INFANTRY;
         if (cIniUtils::caseInsCompare(word, "Definition"))        return WORD_DEFINITION;
         if (cIniUtils::caseInsCompare(word, "Sound"))             return WORD_SOUND;
+        if (cIniUtils::caseInsCompare(word, "ExplosionSize"))     return WORD_EXPLOSION_SIZE;
+        if (cIniUtils::caseInsCompare(word, "DeviateProbability"))return WORD_DEVIATE_PROBABILITY;
+        if (cIniUtils::caseInsCompare(word, "GroundBullet"))      return WORD_GROUND_BULLET;
     }
     else if (section == INI_STRUCTURES) {
         if (cIniUtils::caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
@@ -1508,6 +1511,9 @@ void INI_Install_Game(std::string filename)
                 // Bullet properties
                 if (wordtype == WORD_DAMAGE_VEHICLE) sBulletInfo[id].damage_vehicles = ToInt(word_right);
                 if (wordtype == WORD_DAMAGE_INFANTRY) sBulletInfo[id].damage_infantry = ToInt(word_right);
+                if (wordtype == WORD_DEVIATE_PROBABILITY) sBulletInfo[id].deviateProbability = ToInt(word_right);
+                if (wordtype == WORD_EXPLOSION_SIZE) sBulletInfo[id].explosionSize = ToInt(word_right);
+                if (wordtype == WORD_GROUND_BULLET) sBulletInfo[id].groundBullet = ToBool(word_right);
             }
 
         } // while
