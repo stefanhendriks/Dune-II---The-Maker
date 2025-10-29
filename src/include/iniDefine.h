@@ -71,7 +71,7 @@
 #define WORD_BITMAP_HEIGHT 30     // game.ini
 #define WORD_BITMAP_FRAMES 31     // game.ini
 #define WORD_BITMAP_DEADFRAMES 32 // game.ini
-#define WORD_DAMAGE       33    // game.ini
+#define WORD_DAMAGE_VEHICLE 33    // game.ini
 #define WORD_DEFINITION   34    // game.ini
 #define WORD_BITMAP_DEAD  35    // game.ini
 #define WORD_BITMAP_TOP   36    // game.ini
@@ -104,6 +104,7 @@
 #define WORD_SQUISH       193    // game.ini (Can squish infantry?)
 #define WORD_CANATTACKAIRUNITS 194 // game.ini (Can attack air units?)
 #define WORD_CANATTACKUNITS 195    // game.ini (Can attack ground units?)
+#define WORD_DAMAGE_INFANTRY 196    // game.ini (Damage to infantry)
 
 //
 #define WORD_HOUSE			60
