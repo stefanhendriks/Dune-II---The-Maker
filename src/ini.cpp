@@ -189,7 +189,8 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
         if (cIniUtils::caseInsCompare(word, "BitmapFrames"))      return WORD_BITMAP_FRAMES;
         if (cIniUtils::caseInsCompare(word, "BitmapExplFrames"))  return WORD_BITMAP_DEADFRAMES;
-        if (cIniUtils::caseInsCompare(word, "Damage"))            return WORD_DAMAGE;
+        if (cIniUtils::caseInsCompare(word, "DamageVehicle"))     return WORD_DAMAGE_VEHICLE;
+        if (cIniUtils::caseInsCompare(word, "DamageInfantry"))    return WORD_DAMAGE_INFANTRY;
         if (cIniUtils::caseInsCompare(word, "Definition"))        return WORD_DEFINITION;
         if (cIniUtils::caseInsCompare(word, "Sound"))             return WORD_SOUND;
     }
@@ -1505,8 +1506,9 @@ void INI_Install_Game(std::string filename)
                 wordtype = INI_WordType(word_left, section);
             
                 // Bullet properties
+                if (wordtype == WORD_DAMAGE_VEHICLE) sBulletInfo[id].damage_vehicles = ToInt(word_right);
+                if (wordtype == WORD_DAMAGE_INFANTRY) sBulletInfo[id].damage_infantry = ToInt(word_right);
             }
-
 
         } // while
         file.close();
