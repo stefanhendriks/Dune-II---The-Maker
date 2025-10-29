@@ -105,6 +105,10 @@
 #define WORD_CANATTACKAIRUNITS 194 // game.ini (Can attack air units?)
 #define WORD_CANATTACKUNITS 195    // game.ini (Can attack ground units?)
 #define WORD_DAMAGE_INFANTRY 196    // game.ini (Damage to infantry)
+#define WORD_EXPLOSION_SIZE 197    // game.ini (Explosion size)
+#define WORD_DEVIATE_PROBABILITY 199  // game.ini (Deviation probability)
+#define WORD_GROUND_BULLET 200  // game.ini (blocked by montains, walls, structures)
+
 
 //
 #define WORD_HOUSE			60
