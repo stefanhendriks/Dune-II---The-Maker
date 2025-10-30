@@ -31,7 +31,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishState : public cGameState {
 
 public:
-    explicit cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps);
+    explicit cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps);
     ~cSetupSkirmishState() override;
 
     void thinkFast() override;
@@ -98,7 +98,7 @@ private:
     GuiButton *startButton;
     GuiButton *nextMapButton;
     GuiButton *previousMapButton;
-    Graphics* gfxinter;
+    Graphics* m_gfxinter;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);

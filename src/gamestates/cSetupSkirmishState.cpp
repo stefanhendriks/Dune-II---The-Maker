@@ -55,9 +55,10 @@ static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 }
 
 
-cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps) : cGameState(theGame, ctx)
+cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps) :
+    cGameState(game, ctx),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     m_previewMaps = previewMaps;
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
@@ -462,7 +463,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
                     renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
             } else {
-                renderDrawer->renderStrechSprite(gfxinter->getTexture(BMP_UNKNOWNMAP), src, dst);
+                renderDrawer->renderStrechSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), src, dst);
             }
         }
         textDrawer.drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
@@ -1156,7 +1157,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
         Texture *tex = previewMap.previewTex;
         if (mapIndexToDisplay+i==0) {
             // random map, render the 'random map' texture
-            tex = gfxinter->getTexture(BMP_UNKNOWNMAP);
+            tex = m_gfxinter->getTexture(BMP_UNKNOWNMAP);
         } else {
             tex = previewMap.previewTex;
         }
