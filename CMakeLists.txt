@@ -6,7 +6,6 @@ project(d2tm)
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-#SET(OpenGL_GL_PREFERENCE "GLVND")
 if(DEFINED ENV{ENV_D2TM_VERSION})
     SET(D2TM_VERSION "$ENV{ENV_D2TM_VERSION}")
 elseif(DEFINED ENV{GITHUB_SHA})
@@ -58,9 +57,7 @@ else()
     link_libraries(SDL2 SDL2_ttf SDL2_mixer SDL2_image)
 endif()
 
-# add_subdirectory(dependencies)
 add_subdirectory(src)
-
 
 add_executable(${PROJECT_NAME} ${D2TM_SRC} Script.rc)
 
@@ -73,18 +70,49 @@ target_include_directories(${PROJECT_NAME}
 if (APPLE)
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
-            # fmt::fmt
             ${SDL2_LIBRARIES}
             ${SDL2_IMAGE_LIBRARIES}
             ${SDL2_TTF_LIBRARIES}
             ${SDL2_MIXER_LIBRARIES}
-)
+    )
+    target_compile_options(${PROJECT_NAME}
+      PRIVATE
+        ${D2TM_OPTMIZATION}
+        "-Wall"
+        "-Wextra"
+        "-Wno-dangling-reference"
+        "-Wpedantic"
+        "-Wuseless-cast"
+        "-Wredundant-tags"
+        "-Wzero-as-null-pointer-constant"
+        "-Wextra-semi"
+    )
 elseif (UNIX)
-  	# target_link_libraries(${PROJECT_NAME}
-    # PRIVATE
-    #   	fmt::fmt
-# )
+    target_compile_options(${PROJECT_NAME}
+      PRIVATE
+        ${D2TM_OPTMIZATION}
+        "-Wall"
+        "-Wextra"
+        "-Wno-dangling-reference"
+        "-Wpedantic"
+        "-Wuseless-cast"
+        "-Wredundant-tags"
+        "-Wzero-as-null-pointer-constant"
+        "-Wextra-semi"
+    )
 else()
+    target_compile_options(${PROJECT_NAME}
+      PRIVATE
+        ${D2TM_OPTMIZATION}
+        "-Wall"
+        "-Wextra"
+        "-Wno-dangling-reference"
+        "-Wpedantic"
+        "-Wuseless-cast"
+        "-Wredundant-tags"
+        "-Wzero-as-null-pointer-constant"
+        "-Wextra-semi"
+    )
   	target_link_libraries(${PROJECT_NAME}
   	PRIVATE
     # fmt::fmt
@@ -108,19 +136,6 @@ endif()
 
 SET(CMAKE_CXX_FLAGS "-g")
 
-target_compile_options(${PROJECT_NAME}
-  PRIVATE
-    ${D2TM_OPTMIZATION}
-    "-Wall"
-    "-Wextra"
-    "-Wno-dangling-reference"
-    # "-Wno-deprecated"
-    "-Wpedantic"
-    #"-Wnon-virtual-dtor"
-    "-Wuseless-cast"
-    "-Wredundant-tags"
-    "-Wzero-as-null-pointer-constant"
-    "-Wextra-semi"
-)
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
