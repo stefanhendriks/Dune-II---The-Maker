@@ -40,10 +40,12 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) : cGameState(theGame, ctx), textDrawer(bene_font)
+cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) :
+    cGameState(theGame, ctx),
+    textDrawer(bene_font),
+    m_gfxworld(ctx->getGraphicsContext()->gfxworld.get()),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    gfxworld = ctx->getGraphicsContext()->gfxworld.get();
-    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 
@@ -92,7 +94,7 @@ void cSelectYourNextConquestState::thinkFast()
     // First time INIT
     if (state == eRegionState::REGSTATE_INIT) {
         // temp bitmap to read from
-        regionClickMapBmp = gfxworld->getSurface(WORLD_DUNE_CLICK); // 8 bit bitmap
+        regionClickMapBmp = m_gfxworld->getSurface(WORLD_DUNE_CLICK); // 8 bit bitmap
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
         state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
@@ -255,7 +257,7 @@ void cSelectYourNextConquestState::draw() const
 
 
     // Draw this last
-    renderDrawer->renderSprite(gfxworld->getTexture(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
+    renderDrawer->renderSprite(m_gfxworld->getTexture(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
     drawManager->drawMessageBar();
 
@@ -280,10 +282,10 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 
     // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
-        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX, offsetY);
-        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);
-        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX, offsetY + (480) - 64);
-        renderDrawer->renderSprite(gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY + (480) - 64);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
     }
 }
 
@@ -291,26 +293,26 @@ void cSelectYourNextConquestState::drawStateIntroduction() const
 {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
         // draw dune planet (being faded in)
-        renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
+        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-        renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
-        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
+        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
+        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
-        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
-        renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
     }
 }
 
 void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dune first
 {
-    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
@@ -325,8 +327,8 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dun
 
 void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
 {
-    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-    renderDrawer->renderSprite(gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
@@ -543,7 +545,7 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.iAlpha = iAlpha;
     region.iHouse = iHouse;
     region.iTile = iTile;
-    region.bmp = gfxworld->getSurface(iTile);
+    region.bmp = m_gfxworld->getSurface(iTile);
 }
 
 void cSelectYourNextConquestState::INSTALL_WORLD()
