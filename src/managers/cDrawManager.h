@@ -123,7 +123,7 @@ private:
     GameContext *m_ctx;
     cPlayer *m_player;
     cTextDrawer m_textDrawer;
-    Graphics* gfxinter;
+    Graphics* m_gfxinter;
 
     void onKeyDown(const cKeyboardEvent &event);
 

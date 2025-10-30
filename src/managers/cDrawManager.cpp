@@ -15,26 +15,28 @@
 #include <SDL2/SDL.h>
 #include <cassert>
 
-cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer)
-    : m_sidebarDrawer(ctx, thePlayer)
-    , m_creditsDrawer(ctx, thePlayer)
-    , m_orderDrawer(ctx, thePlayer)
-    , m_mapDrawer(&global_map, thePlayer, mapCamera)
-    , miniMapDrawer(ctx, &global_map, thePlayer, mapCamera)
-    , m_particleDrawer()
-    , m_messageDrawer(ctx)
-    , m_placeitDrawer(thePlayer)
-    , m_structureDrawer(ctx)
-    , m_mouseDrawer(thePlayer)
-    , m_sidebarColor(Color{214, 149, 20,255})
-    , m_ctx(ctx)
-    , m_player(thePlayer)
-    , m_textDrawer(game_font)
+cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
+    m_sidebarDrawer(ctx, thePlayer),
+    m_creditsDrawer(ctx, thePlayer),
+    m_orderDrawer(ctx, thePlayer),
+    m_mapDrawer(&global_map, thePlayer, mapCamera),
+    miniMapDrawer(ctx, &global_map, thePlayer, mapCamera),
+    m_particleDrawer(),
+    m_messageDrawer(ctx),
+    m_placeitDrawer(thePlayer),
+    m_structureDrawer(ctx),
+    m_mouseDrawer(thePlayer),
+    m_sidebarColor(Color{214, 149, 20,255}),
+    m_ctx(ctx),
+    m_player(thePlayer),
+    m_textDrawer(game_font),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     assert(thePlayer);
+
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
-            gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
+        m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
+    );
 }
 
 cDrawManager::~cDrawManager()
@@ -226,7 +228,7 @@ void cDrawManager::drawMouse()
 
 void cDrawManager::drawTopBarBackground()
 {
-    Texture *topbarPiece = gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
+    Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
     for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
         renderDrawer->renderSprite(topbarPiece, x, 0);
     }
@@ -257,7 +259,7 @@ void cDrawManager::drawOptionBar()
     renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
 
     for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-        renderDrawer->renderSprite(gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
 
