@@ -15,25 +15,25 @@
 
 cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
-    textDrawer(cTextDrawer(bene_font))
+    textDrawer(cTextDrawer(bene_font)),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     backButtonRect = textDrawer.getAsRectangle(0, m_game.m_screenH - textDrawer.getFontHeight(), " BACK");
 
-    bmp_Dune = gfxinter->getTexture(BMP_GAME_DUNE);
+    bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
     int duneAtTheRight = m_game.m_screenW - bmp_Dune->w;
     int duneAlmostAtBottom = m_game.m_screenH - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
-    bmp_SelectYourHouseTitle = gfxinter->getTexture(BMP_SELECT_YOUR_HOUSE);
+    bmp_SelectYourHouseTitle = m_gfxinter->getTexture(BMP_SELECT_YOUR_HOUSE);
 
     selectYourHouseXCentered = (m_game.m_screenW / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
-    bmp_HouseAtreides = gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
-    bmp_HouseOrdos = gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
-    bmp_HouseHarkonnen = gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
+    bmp_HouseAtreides = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
+    bmp_HouseOrdos = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
+    bmp_HouseHarkonnen = m_gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
 
     int selectYourHouseY = m_game.m_screenH * 0.25f;
 
