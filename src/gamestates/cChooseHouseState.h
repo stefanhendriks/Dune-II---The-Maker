@@ -27,7 +27,7 @@ public:
 
 private:
     cTextDrawer textDrawer;
-    Graphics *gfxinter;
+    Graphics *m_gfxinter;
     cRectangle *backButtonRect;
 
     Texture *bmp_Dune;
