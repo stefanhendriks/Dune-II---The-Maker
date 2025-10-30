@@ -80,10 +80,7 @@ if (APPLE)
         ${D2TM_OPTMIZATION}
         "-Wall"
         "-Wextra"
-        "-Wno-dangling-reference"
         "-Wpedantic"
-        "-Wuseless-cast"
-        "-Wredundant-tags"
         "-Wzero-as-null-pointer-constant"
         "-Wextra-semi"
     )
