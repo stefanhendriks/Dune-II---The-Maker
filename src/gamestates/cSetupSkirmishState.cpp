@@ -96,7 +96,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::
     randomMapGenerator = std::make_unique<cRandomMapGenerator>();
     generateRandomMap();
 
-    mouse = game.getMouse();
+    mouse = m_game.getMouse();
 
     spawnWorms = 2;
     spawnBlooms = true;
@@ -116,8 +116,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::
     mapItemButtonHeight = 175;
     mapItemButtonWidth = 145;
     // Screen
-    screen_x = game.m_screenW;
-    screen_y = game.m_screenH;
+    screen_x = m_game.m_screenW;
+    screen_y = m_game.m_screenH;
 
     // Rectangles for GUI interaction
     int topBarWidth = screen_x + 4;
@@ -228,8 +228,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &theGame, GameContext* ctx, std::
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_MENU);
-                game.initiateFadingOut();
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();
             })
             .build();
 
@@ -385,8 +385,8 @@ Color
 cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
     if (rect.isPointWithin(mouse->getX(), mouse->getY())) {
-        Color colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
-        Color colorDisabledFade = game.getColorFadeSelected(128, 128, 128);
+        Color colorSelectedRedFade = m_game.getColorFadeSelected(255, 0, 0);
+        Color colorDisabledFade = m_game.getColorFadeSelected(128, 128, 128);
         return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
     }
 
@@ -508,12 +508,12 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
-    game.m_mission = 9; // high tech level (TODO: make this customizable)
+    m_game.m_mission = 9; // high tech level (TODO: make this customizable)
 
-    game.setupPlayers();
+    m_game.setupPlayers();
 
     // Starting skirmish mode
-    game.m_skirmish = true;
+    m_game.m_skirmish = true;
 
     /* set up starting positions */
     std::vector<int> iStartPositions;
@@ -536,7 +536,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
     mapEditor.smoothMap();
 
-    if (game.isDebugMode()) {
+    if (m_game.isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -546,7 +546,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     logbook("Shuffling starting positions");
     std::shuffle(iStartPositions.begin(), iStartPositions.end(), RNG::getGenerator());
 
-    if (game.isDebugMode()) {
+    if (m_game.isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -554,11 +554,11 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     int maxThinkingAIs = MAX_PLAYERS;
-    if (game.m_oneAi) {
+    if (m_game.m_oneAi) {
         maxThinkingAIs = 1;
     }
 
-    if (game.m_disableAI) {
+    if (m_game.m_disableAI) {
         maxThinkingAIs = 0;
     }
 
@@ -631,7 +631,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         }
         else if (p == AI_CPU6) {
-            if (!game.m_disableWormAi) {
+            if (!m_game.m_disableWormAi) {
                 pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
             }
             else {
@@ -746,10 +746,10 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
 
     // default flags (destroy everyone but me/my team)
-    game.setWinFlags(3);
-    game.setLoseFlags(1);
+    m_game.setWinFlags(3);
+    m_game.setLoseFlags(1);
 
-    game.playMusicByType(MUSIC_PEACE);
+    m_game.playMusicByType(MUSIC_PEACE);
 
     global_map.setAutoSpawnSpiceBlooms(spawnBlooms);
     global_map.setAutoDetonateSpiceBlooms(detonateBlooms);
@@ -789,8 +789,8 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     drawManager->missionInit();
 
-    game.initiateFadingOut();
-    game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
+    m_game.initiateFadingOut();
+    m_game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
 }
 
 eGameStateType cSetupSkirmishState::getType()
@@ -1229,8 +1229,8 @@ void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
-            game.setNextStateToTransitionTo(GAME_MENU);
-            game.initiateFadingOut();
+            m_game.setNextStateToTransitionTo(GAME_MENU);
+            m_game.initiateFadingOut();
         }
         if (event.hasKey(SDL_SCANCODE_LEFT)) {
             previousFunction();

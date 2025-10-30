@@ -18,26 +18,26 @@ cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     textDrawer(cTextDrawer(bene_font))
 {
     gfxinter = ctx->getGraphicsContext()->gfxinter.get();
-    backButtonRect = textDrawer.getAsRectangle(0, game.m_screenH - textDrawer.getFontHeight(), " BACK");
+    backButtonRect = textDrawer.getAsRectangle(0, m_game.m_screenH - textDrawer.getFontHeight(), " BACK");
 
     bmp_Dune = gfxinter->getTexture(BMP_GAME_DUNE);
 
-    int duneAtTheRight = game.m_screenW - bmp_Dune->w;
-    int duneAlmostAtBottom = game.m_screenH - (bmp_Dune->h * 0.90);
+    int duneAtTheRight = m_game.m_screenW - bmp_Dune->w;
+    int duneAlmostAtBottom = m_game.m_screenH - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
     bmp_SelectYourHouseTitle = gfxinter->getTexture(BMP_SELECT_YOUR_HOUSE);
 
-    selectYourHouseXCentered = (game.m_screenW / 2) - bmp_SelectYourHouseTitle->w / 2;
+    selectYourHouseXCentered = (m_game.m_screenW / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
     bmp_HouseAtreides = gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
     bmp_HouseOrdos = gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
     bmp_HouseHarkonnen = gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
 
-    int selectYourHouseY = game.m_screenH * 0.25f;
+    int selectYourHouseY = m_game.m_screenH * 0.25f;
 
-    int columnWidth = game.m_screenW / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
+    int columnWidth = m_game.m_screenW / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
 
     int offset = (columnWidth / 2) - (bmp_HouseAtreides->w / 2);
 
@@ -67,7 +67,7 @@ void cChooseHouseState::thinkFast()
 
 void cChooseHouseState::draw() const
 {
-    cMouse *mouse = game.getMouse();
+    cMouse *mouse = m_game.getMouse();
 
     // Render the planet Dune a bit downward
     renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
@@ -110,26 +110,26 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
 {
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
-        game.prepareMentatToTellAboutHouse(ATREIDES);
-        game.playSound(SOUND_ATREIDES);
-        game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        game.initiateFadingOut();
+        m_game.prepareMentatToTellAboutHouse(ATREIDES);
+        m_game.playSound(SOUND_ATREIDES);
+        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseOrdos)) {
-        game.prepareMentatToTellAboutHouse(ORDOS);
-        game.playSound(SOUND_ORDOS);
-        game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        game.initiateFadingOut();
+        m_game.prepareMentatToTellAboutHouse(ORDOS);
+        m_game.playSound(SOUND_ORDOS);
+        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
-        game.prepareMentatToTellAboutHouse(HARKONNEN);
-        game.playSound(SOUND_HARKONNEN);
-        game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        game.initiateFadingOut();
+        m_game.prepareMentatToTellAboutHouse(HARKONNEN);
+        m_game.playSound(SOUND_HARKONNEN);
+        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
-        game.setNextStateToTransitionTo(GAME_MENU);
-        game.initiateFadingOut();
+        m_game.setNextStateToTransitionTo(GAME_MENU);
+        m_game.initiateFadingOut();
     }
 }
 
@@ -142,8 +142,8 @@ void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
-            game.setNextStateToTransitionTo(GAME_MENU);
-            game.initiateFadingOut();
+            m_game.setNextStateToTransitionTo(GAME_MENU);
+            m_game.initiateFadingOut();
         }
     }
 }

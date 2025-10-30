@@ -18,7 +18,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
 
-    int centerOfScreen = game.m_screenW / 2;
+    int centerOfScreen = m_game.m_screenW / 2;
 
     logoX = centerOfScreen - (logoWidth / 2);
     logoY = (logoHeight/10);
@@ -41,7 +41,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     int buttonWidth = textDrawer.getTextLength("CREDITS") / 2;
     int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
 
-    int creditsX = (game.m_screenW / 2) - buttonWidth;
+    int creditsX = (m_game.m_screenW / 2) - buttonWidth;
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
 
     gui_btn_credits = GuiButtonBuilder()
@@ -51,8 +51,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_CREDITS);
-                game.initiateFadingOut();})
+                m_game.setNextStateToTransitionTo(GAME_CREDITS);
+                m_game.initiateFadingOut();})
             .build();
 
     /////////////////////////////////
@@ -80,8 +80,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
-                game.initiateFadingOut();})
+                m_game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
+                m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_SelectHouse);
 
@@ -94,10 +94,10 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                game.loadSkirmishMaps();
-                game.initSkirmish();
-                game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-                game.initiateFadingOut();})
+                m_game.loadSkirmishMaps();
+                m_game.initSkirmish();
+                m_game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
+                m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Skirmish);
 
@@ -109,7 +109,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){game.initiateFadingOut();})
+            .onClick([this](){m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Multiplayer);
 
@@ -122,7 +122,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){game.initiateFadingOut();})
+            .onClick([this](){m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Load);
 
@@ -135,7 +135,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTextDrawer(&textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){game.setNextStateToTransitionTo(GAME_OPTIONS);})
+            .onClick([this](){m_game.setNextStateToTransitionTo(GAME_OPTIONS);})
             .build();
     gui_window->addGuiObject(gui_btn_Options);
 
@@ -148,7 +148,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){game.initiateFadingOut();})
+            .onClick([this](){m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Hof);
 
@@ -162,8 +162,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                game.m_playing = false;
-                game.initiateFadingOut();})
+                m_game.m_playing = false;
+                m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Exit);
 }
@@ -180,9 +180,9 @@ void cMainMenuState::thinkFast()
 
 void cMainMenuState::draw() const
 {
-    if (game.isDebugMode()) {
-        for (int x = 0; x < game.m_screenW; x += 60) {
-            for (int y = 0; y < game.m_screenH; y += 20) {
+    if (m_game.isDebugMode()) {
+        for (int x = 0; x < m_game.m_screenW; x += 60) {
+            for (int y = 0; y < m_game.m_screenH; y += 20) {
                 textDrawer.drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
@@ -197,13 +197,13 @@ void cMainMenuState::draw() const
     textDrawer.drawTextBottomRight(D2TM_VERSION,20);
     textDrawer.drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
-    if (game.isDebugMode()) {
-        auto m_mouse = game.getMouse();
+    if (m_game.isDebugMode()) {
+        auto m_mouse = m_game.getMouse();
         textDrawer.drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
 
     // MOUSE
-    game.getMouse()->draw();
+    m_game.getMouse()->draw();
 
 }
 
@@ -222,7 +222,7 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.eventType == eKeyEventType::PRESSED) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
-            game.m_playing=false;
+            m_game.m_playing=false;
         }
     }
 }

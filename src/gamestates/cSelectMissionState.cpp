@@ -12,11 +12,11 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     ,  prevState(prevState)
     ,  textDrawer(cTextDrawer(bene_font))
 {
-    int margin = game.m_screenH * 0.3;
+    int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = game.m_screenW - (margin * 2);
-    int mainMenuHeight = game.m_screenH - (margin * 2);
+    int mainMenuWidth = m_game.m_screenW - (margin * 2);
+    int mainMenuHeight = m_game.m_screenH - (margin * 2);
 
     margin = 4;
     int buttonHeight = (textDrawer.getFontHeight() + margin);
@@ -42,9 +42,9 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,i]() {
-                game.jumpToSelectYourNextConquestMission(i);
-                game.setNextStateToTransitionTo(GAME_REGION);
-                game.initiateFadingOut();})
+                m_game.jumpToSelectYourNextConquestMission(i);
+                m_game.setNextStateToTransitionTo(GAME_REGION);
+                m_game.initiateFadingOut();})
             .build();   
         gui_window->addGuiObject(btnMission);
 
@@ -61,7 +61,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState]() {
-                game.setNextStateToTransitionTo(prevState);})
+                m_game.setNextStateToTransitionTo(prevState);})
             .build();  
     gui_window->addGuiObject(gui_btn_Back);
 }
@@ -82,7 +82,7 @@ void cSelectMissionState::draw() const
     gui_window->draw();
 
     // MOUSE
-    game.getMouse()->draw();
+    m_game.getMouse()->draw();
 }
 
 void cSelectMissionState::onNotifyMouseEvent(const s_MouseEvent &event)

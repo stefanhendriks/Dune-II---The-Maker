@@ -48,8 +48,8 @@ public:
 
 protected:
     // the state of the game itself
-    cGame &game;
-    GameContext* ctx=nullptr;
+    cGame &m_game;
+    GameContext* m_ctx=nullptr;
 
 private:
 
