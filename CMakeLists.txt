@@ -96,6 +96,9 @@ elseif (UNIX)
         "-Wredundant-tags"
         "-Wzero-as-null-pointer-constant"
         "-Wextra-semi"
+        #"-Wsuggest-override"
+        #"-Wmismatched-tags"
+        #"-Wdeprecated-declarations"
     )
 else()
     target_compile_options(${PROJECT_NAME}
