@@ -61,8 +61,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     isFinishedConqueringRegions = true;
 
     int length = textDrawer.getTextLength("Mission select");
-    const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
-                                            game.m_screenH - textDrawer.getFontHeight(),
+    const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(m_game.m_screenW - length,
+                                            m_game.m_screenH - textDrawer.getFontHeight(),
                                             "Mission select");
     GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
@@ -70,15 +70,15 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+                m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();   
     m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
 }
 
 void cSelectYourNextConquestState::calculateOffset()
 {
-    offsetX = (game.m_screenW - 640) / 2;
-    offsetY = (game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetX = (m_game.m_screenW - 640) / 2;
+    offsetY = (m_game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
 }
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
@@ -109,7 +109,7 @@ void cSelectYourNextConquestState::thinkFast()
         }
 
         int iHouse = players[0].getHouse();
-        int iMission = game.m_mission;
+        int iMission = m_game.m_mission;
 
         bool hasMessage = drawManager->hasMessage();
 
@@ -148,7 +148,7 @@ void cSelectYourNextConquestState::thinkFast()
                 regionPiece.iAlpha += 3;
 
                 // speed up when holding mouse button
-                if (game.getMouse()->isLeftButtonPressed()) {
+                if (m_game.getMouse()->isLeftButtonPressed()) {
                     regionPiece.iAlpha += 3;
                 }
             }
@@ -232,7 +232,7 @@ void cSelectYourNextConquestState::thinkFast()
 
 void cSelectYourNextConquestState::draw() const
 {
-    game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
+    m_game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
     // STEPS:
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
@@ -331,7 +331,7 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
         pRegion->iAlpha = 256;
-        game.getMouse()->setTile(MOUSE_ATTACK);
+        m_game.getMouse()->setTile(MOUSE_ATTACK);
     }
 
     // draw here stuff
@@ -385,21 +385,21 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
 
     iNewReg += iReg;
 
-    game.missionInit();
-    game.setNextStateToTransitionTo(GAME_BRIEFING);
-    game.m_region = iNewReg;
-    game.m_mission++;                        // FINALLY ADD MISSION NUMBER...
+    m_game.missionInit();
+    m_game.setNextStateToTransitionTo(GAME_BRIEFING);
+    m_game.m_region = iNewReg;
+    m_game.m_mission++;                        // FINALLY ADD MISSION NUMBER...
 
     // set up drawStateMentat
-    game.createAndPrepareMentatForHumanPlayer();
+    m_game.createAndPrepareMentatForHumanPlayer();
 
     // load map
-    game.loadScenario();
+    m_game.loadScenario();
 
-    game.playMusicByType(MUSIC_BRIEFING);
+    m_game.playMusicByType(MUSIC_BRIEFING);
 
     state = REGSTATE_FADEOUT;
-    game.initiateFadingOut();
+    m_game.initiateFadingOut();
 }
 
 cRegion *cSelectYourNextConquestState::getRegionMouseIsOver() const
@@ -642,7 +642,7 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event)
     cRegion *region = getRegionMouseIsOver();
     if (region && region->bSelectable) {
         region->iAlpha = 255;
-        game.getMouse()->setTile(MOUSE_ATTACK);
+        m_game.getMouse()->setTile(MOUSE_ATTACK);
     }
 }
 
@@ -653,7 +653,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
-        loadScenarioAndTransitionToNextState(game.m_mission);
+        loadScenarioAndTransitionToNextState(m_game.m_mission);
     }
 }
 
@@ -661,7 +661,7 @@ void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &e
 {
     if (event.eventType == eKeyEventType::PRESSED) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
-            game.setNextStateToTransitionTo(GAME_OPTIONS);
+            m_game.setNextStateToTransitionTo(GAME_OPTIONS);
         }
     }
 }

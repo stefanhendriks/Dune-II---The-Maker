@@ -24,11 +24,11 @@ cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
 
 void cOptionsState::constructWindow(int prevState)
 {
-    int margin = game.m_screenH * 0.3;
+    int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = game.m_screenW - (margin * 2);
-    int mainMenuHeight = game.m_screenH - (margin * 2);
+    int mainMenuWidth = m_game.m_screenW - (margin * 2);
+    int mainMenuHeight = m_game.m_screenH - (margin * 2);
 
     margin = 4;
     int buttonHeight = (m_textDrawer.getFontHeight() + margin);
@@ -37,7 +37,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = new GuiWindow(window);
     m_guiWindow->setTheme(GuiTheme::Light());
-    cSoundPlayer* soundPlayer = ctx->getSoundPlayer();
+    cSoundPlayer* soundPlayer = m_ctx->getSoundPlayer();
 
     // Title
     m_guiWindow->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
@@ -52,8 +52,8 @@ void cOptionsState::constructWindow(int prevState)
             .withTextDrawer(&m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_MENU);
-                game.initiateFadingOut();})
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();})
             .build();
     m_guiWindow->addGuiObject(gui_btn_toMenu);
 
@@ -67,8 +67,8 @@ void cOptionsState::constructWindow(int prevState)
             .withTextDrawer(&m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
-                game.m_playing = false;
-                game.initiateFadingOut();})
+                m_game.m_playing = false;
+                m_game.initiateFadingOut();})
             .build();
     m_guiWindow->addGuiObject(gui_btn_Quit);
 
@@ -82,7 +82,7 @@ void cOptionsState::constructWindow(int prevState)
             .withTextDrawer(&m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState](){
-                game.setNextStateToTransitionTo(prevState);})
+                m_game.setNextStateToTransitionTo(prevState);})
             .build();
     m_guiWindow->addGuiObject(gui_btn_Back);
 
@@ -98,7 +98,7 @@ void cOptionsState::constructWindow(int prevState)
             .withTextDrawer(&m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+                m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();
         m_guiWindow->addGuiObject(gui_btn_toMissionSelect);
     }
@@ -197,7 +197,7 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_DifficultyLabel);
 
-    cTimeManager* timeManager = ctx->getTimeManager();
+    cTimeManager* timeManager = m_ctx->getTimeManager();
     const cRectangle &sld_speedRect = m_guiWindow->getRelativeRect(5 + 75, (5+buttonHeight)*3, 100, buttonHeight);
     int convertedForSlider = 2 - timeManager->getGlobalSpeed() + 10;
     GuiSlider *gui_sld_speedRect = GuiSliderBuilder()
@@ -230,7 +230,7 @@ void cOptionsState::draw() const
     m_guiWindow->draw();
 
     // MOUSE
-    game.getMouse()->draw();
+    m_game.getMouse()->draw();
 }
 
 void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event)
