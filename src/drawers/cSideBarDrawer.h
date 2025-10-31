@@ -37,7 +37,6 @@ protected:
 
 private:
     cPlayer *m_player;
-    GameContext *m_ctx;
     Graphics *m_gfxinter;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;

@@ -67,7 +67,7 @@ public:
     }
 
     void setRegionText(int iRegionIndex, char *txt) {
-        sprintf(cRegionText[iRegionIndex], "%s", txt);
+        snprintf(cRegionText[iRegionIndex], sizeof(cRegionText[iRegionIndex]), "%s", txt);
     }
 
     void REGION_SETUP_LOST_MISSION();

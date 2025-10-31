@@ -9,7 +9,7 @@
 class GuiWindow : protected GuiObject {
 public:
     explicit GuiWindow(const cRectangle &rect);
-    ~GuiWindow();
+    ~GuiWindow() noexcept override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;

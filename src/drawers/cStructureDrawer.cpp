@@ -16,7 +16,6 @@
 #include <SDL2/SDL.h>
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx) :
-    m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
 }

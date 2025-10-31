@@ -3,7 +3,9 @@
 #include <memory>
 class Graphics;
 
-struct GraphicsContext {
+class GraphicsContext {
+
+public:
     std::shared_ptr<Graphics> gfxmentat;
     std::shared_ptr<Graphics> gfxworld;
     std::shared_ptr<Graphics> gfxinter;

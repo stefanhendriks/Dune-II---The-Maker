@@ -19,7 +19,6 @@
 
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
-    m_ctx(ctx),
     m_map(map),
     m_player(player),
     m_mapCamera(mapCamera),

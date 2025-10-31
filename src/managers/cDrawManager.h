@@ -115,12 +115,10 @@ private:
     cStructureDrawer m_structureDrawer;
     cMouseDrawer m_mouseDrawer;
 
-    SDL_Cursor *defaultCursor;
     Color m_sidebarColor;
     Texture *btnOptions;
 
     // TODO: bullet/projectile drawer
-    GameContext *m_ctx;
     cPlayer *m_player;
     cTextDrawer m_textDrawer;
     Graphics* m_gfxinter;

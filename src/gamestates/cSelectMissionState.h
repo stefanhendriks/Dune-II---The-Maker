@@ -24,8 +24,6 @@ public:
     eGameStateType getType() override;
 
 private:
-    int prevState;
-
     cTextDrawer textDrawer;
 
     GuiWindow *gui_window;

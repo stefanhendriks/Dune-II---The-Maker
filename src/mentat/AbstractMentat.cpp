@@ -66,8 +66,9 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+            .onClick([] {
+                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);
+            })
             .build();
         m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
     }
@@ -320,7 +321,7 @@ void AbstractMentat::initSentences()
 
 void AbstractMentat::setSentence(int i, const char *text)
 {
-    sprintf(sentence[i], "%s", text);
+    snprintf(sentence[i], sizeof(sentence[i]), "%s", text);
     logbook(std::format("Sentence[{}]={}", i, text));
 }
 
@@ -329,7 +330,7 @@ void AbstractMentat::loadScene(const std::string &scene)
     gfxmovie = nullptr;
 
     char filename[255];
-    sprintf(filename, "data/scenes/sdl_%s.dat", scene.c_str());
+    snprintf(filename, sizeof(filename), "data/scenes/sdl_%s.dat", scene.c_str());
 
     gfxmovie = std::make_shared<Graphics>(renderDrawer->getRenderer(),filename);
 
