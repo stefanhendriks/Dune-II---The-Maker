@@ -260,13 +260,14 @@ void AbstractMentat::draw()
     renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
     renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
 
+    // movie
+    draw_movie();
+
     Texture *tmp = getBackgroundBitmap();
     cRectangle src = {0,0,tmp->w, tmp->h};
     cRectangle dest = {offsetX, offsetY,640, 480};
     renderDrawer->renderStrechSprite(tmp, src, dest);
 
-    // movie
-    draw_movie();
     draw_eyes();
     draw_mouth();
     draw_other();
