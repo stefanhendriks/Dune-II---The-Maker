@@ -61,6 +61,29 @@ Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
     make -j4
 ```
 
+### MacOS
+- git clone this project
+- run `./install_dependencies_macosx.sh` (only required once)
+- create a `build` dir
+```
+    mkdir build
+    cd build
+    cmake ..
+    make -j4
+```
+
+### Clion
+#### Mac OS
+Make sure you set up your toolchain to use `gcc-15` and `g++-15`. Ie, change your default toolchain
+OR create a new one (and make sure CMake points to that one), with the following values:
+
+| Field        | Value                    |
+|--------------|--------------------------|
+| C-Compiler   | /opt/homebrew/bin/gcc-15 |
+| C++-Compiler | /opt/homebrew/bin/g++-15 |
+
+Then make sure to (re)load `CmakeLists.txt`
+
 ## Running
 Easiest is to run the executable from the root. Shared libraries that are required are: libalfont.dll, alleg42.dll, libwinpthread-1.dll and mscvr70.dll.
 The required pre-built library (Allegro 4) is in the [dll folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/dll/mingw32).
