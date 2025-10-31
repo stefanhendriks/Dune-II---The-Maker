@@ -14,7 +14,6 @@
 
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
-    m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_buildingListDrawer(ctx, player),
     m_sidebar(nullptr),

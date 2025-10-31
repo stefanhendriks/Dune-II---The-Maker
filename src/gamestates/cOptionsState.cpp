@@ -114,10 +114,10 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &musicCheckRect = m_guiWindow->getRelativeRect(5+75, 5+buttonHeight, buttonHeight, buttonHeight);
     GuiCheckBox *gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
-            .onCheck([this, soundPlayer]() {
+            .onCheck([soundPlayer]() {
                 soundPlayer->setMusicEnabled(true);
             })
-            .onUnCheck([this, soundPlayer]() {
+            .onUnCheck([soundPlayer]() {
                 soundPlayer->setMusicEnabled(false);
             })
             .build();
@@ -139,7 +139,7 @@ void cOptionsState::constructWindow(int prevState)
             .withMinValue(0)
             .withMaxValue(10)
             .withInitialValue(soundPlayer->getMusicVolume())
-            .onValueChanged([this, soundPlayer](int newValue) {
+            .onValueChanged([soundPlayer](int newValue) {
                 soundPlayer->setMusicVolume(newValue);
             })
             .build();
@@ -157,10 +157,10 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &soundCheckRect = m_guiWindow->getRelativeRect(5+75, (5+buttonHeight)*2, buttonHeight, buttonHeight);
     GuiCheckBox *gui_SoundCheckLabel = GuiCheckBoxBuilder()
             .withRect(soundCheckRect)
-            .onCheck([this,soundPlayer]() {
+            .onCheck([soundPlayer]() {
                 soundPlayer->setSoundEnabled(true);
             })
-            .onUnCheck([this,soundPlayer]() {
+            .onUnCheck([soundPlayer]() {
                 soundPlayer->setSoundEnabled(false);
             })
             .build();
@@ -182,7 +182,7 @@ void cOptionsState::constructWindow(int prevState)
             .withMinValue(0)
             .withMaxValue(10)
             .withInitialValue(soundPlayer->getSoundVolume())
-            .onValueChanged([this, soundPlayer](int newValue) {
+            .onValueChanged([soundPlayer](int newValue) {
                 soundPlayer->setSoundVolume(newValue);
             })
             .build();
@@ -205,7 +205,7 @@ void cOptionsState::constructWindow(int prevState)
             .withMinValue(2)
             .withMaxValue(10)
             .withInitialValue(convertedForSlider)
-            .onValueChanged([this, timeManager](int newValue) {
+            .onValueChanged([timeManager](int newValue) {
                 int globalSpeed = 10 - newValue + 2;
                 // higher means slower, so convert into opposite
                 timeManager->setGlobalSpeed(globalSpeed);

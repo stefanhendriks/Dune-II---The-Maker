@@ -156,8 +156,6 @@ protected:
     // nothing
 
 private:
-    int TIMER_progress;    // timer for upping progress
-
     int lastClickedId;    // last clicked item id
     int buttonIconIdPressed;    // the button to draw at the left of the list when pressed (selected)
     int buttonIconIdUnpressed;    // the button to draw at the left of the list when unpressed

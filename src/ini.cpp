@@ -1161,7 +1161,7 @@ void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState 
     logbook("[CAMPAIGN] Done");
 }
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
-int getUnitTypeFromChar(char chunk[35])
+int getUnitTypeFromChar(char chunk[25])
 {
     std::string unitString(chunk);
     if (caseInsCompare(unitString, "Harvester")) return HARVESTER;

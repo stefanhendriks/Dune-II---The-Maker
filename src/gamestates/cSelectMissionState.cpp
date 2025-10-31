@@ -7,10 +7,9 @@
 #include "gui/GuiWindow.h"
 
 
-cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState)
-    : cGameState(theGame, ctx)
-    ,  prevState(prevState)
-    ,  textDrawer(cTextDrawer(bene_font))
+cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState) :
+    cGameState(theGame, ctx),
+    textDrawer(cTextDrawer(bene_font))
 {
     int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
@@ -61,7 +60,8 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
             .withTextDrawer(&textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState]() {
-                m_game.setNextStateToTransitionTo(prevState);})
+                m_game.setNextStateToTransitionTo(prevState);
+            })
             .build();  
     gui_window->addGuiObject(gui_btn_Back);
 }

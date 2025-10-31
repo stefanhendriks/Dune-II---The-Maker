@@ -126,8 +126,8 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
     char previous_credits[9];
     memset(current_credits, 0, sizeof(current_credits));
     memset(previous_credits, 0, sizeof(previous_credits));
-    sprintf(current_credits, "%d", currentCredits);
-    sprintf(previous_credits, "%d", previousCredits);
+    snprintf(current_credits, sizeof(current_credits), "%d", currentCredits);
+    snprintf(previous_credits, sizeof(previous_credits), "%d", previousCredits);
 
     for (int i = 0; i < 6; i++) {
         int currentId = getCreditDrawId(current_credits[i]);
@@ -223,7 +223,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
 
     char credits[9];
     memset(credits, 0, sizeof(credits));
-    sprintf(credits, "%d", currentCredits);
+    snprintf(credits, sizeof(credits), "%d", currentCredits);
 
     int offset = getXDrawingOffset(currentCredits);
 
@@ -258,7 +258,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
 
     char credits[9];
     memset(credits, 0, sizeof(credits));
-    sprintf(credits, "%d", previousCredits);
+    snprintf(credits, sizeof(credits), "%d", previousCredits);
 
     int offset = getXDrawingOffset(previousCredits);
 

@@ -27,7 +27,6 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_structureDrawer(ctx),
     m_mouseDrawer(thePlayer),
     m_sidebarColor(Color{214, 149, 20,255}),
-    m_ctx(ctx),
     m_player(thePlayer),
     m_textDrawer(game_font),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())

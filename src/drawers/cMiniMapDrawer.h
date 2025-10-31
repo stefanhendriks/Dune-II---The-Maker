@@ -67,7 +67,6 @@ private:
     bool m_isMouseOver;
 
     //@mira : where is map ? Where is this initialisation ?
-    GameContext *m_ctx;
     cMap *m_map;	// the minimap drawer reads data from here
     cPlayer *m_player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
     cMapCamera *m_mapCamera;

@@ -102,7 +102,7 @@ public:
 
     void thinkFast();
 
-    void onNotifyGameEvent(const s_GameEvent &event);
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
     bool isEnded() const;
 

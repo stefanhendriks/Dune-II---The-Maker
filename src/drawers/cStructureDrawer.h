@@ -28,7 +28,6 @@ protected:
     int determinePreBuildAnimationIndex(cAbstractStructure *structure);
 
 private:
-    GameContext *m_ctx;
     Graphics *m_gfxinter;
     cStructureUtils structureUtils;
 

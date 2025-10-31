@@ -22,12 +22,13 @@ BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
             .withLabel("No")
             .withTexture(gfxmentat->getTexture(BTN_NO))
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([this]() {
+            .onClick([]() {
                 logbook("cNoButtonCommand::execute()");
                 // head back to choose house
                 players[HUMAN].setHouse(GENERALHOUSE);
                 game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
-                game.initiateFadingOut();})
+                game.initiateFadingOut();
+            })
             .build();
 
     rightGuiButton = GuiButtonBuilder()
