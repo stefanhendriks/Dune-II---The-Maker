@@ -903,10 +903,10 @@ bool cGame::setupGame()
     m_soundPlayer = soundPlayer.get();
     ctx->setSoundPlayer(std::move(soundPlayer));
     if (!m_playSound) {
-        m_soundPlayer->setSoundEnabled(true);
+        m_soundPlayer->setSoundEnabled(false);
     }
     if (!m_playMusic) {
-        m_soundPlayer->setMusicEnabled(true);
+        m_soundPlayer->setMusicEnabled(false);
     }
 
     // do it here, because it depends on fonts to be loaded
