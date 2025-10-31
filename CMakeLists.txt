@@ -32,6 +32,26 @@ if(APPLE)
     pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
     pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
 
+    set(HOMEBREW_PREFIX "/opt/homebrew")
+
+    set(CMAKE_PREFIX_PATH
+            "${HOMEBREW_PREFIX}"
+            # These libraries are keg-only and not loaded into
+            # the root prefix by default (to avoid clashes).
+            "${HOMEBREW_PREFIX}/opt/lapack"
+            "${HOMEBREW_PREFIX}/opt/openblas"
+            "${HOMEBREW_PREFIX}/opt/gcc/lib/gcc/15"
+    )
+
+    set(CMAKE_C_COMPILER "${HOMEBREW_PREFIX}/bin/gcc-15")
+    set(CMAKE_CXX_COMPILER "${HOMEBREW_PREFIX}/bin/g++-15")
+
+    message(STATUS "Mac GCC C compiler: ${CMAKE_C_COMPILER}")
+    message(STATUS "Mac GCC C++ compiler: ${CMAKE_CXX_COMPILER}")
+
+    add_compile_options(-stdlib=libstdc++)
+    add_link_options(-stdlib=libstdc++)
+
     include_directories(
       ${SDL2_INCLUDE_DIRS}
       ${SDL2_IMAGE_INCLUDE_DIRS}
@@ -68,6 +88,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 if (APPLE)
+
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
             ${SDL2_LIBRARIES}
