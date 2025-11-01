@@ -331,9 +331,7 @@ void cGame::setMissionWon()
 
     playMusicByType(MUSIC_WIN);
 
-    renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    takeBackGroundScreen();
 }
 
 void cGame::setMissionLost()
@@ -350,9 +348,7 @@ void cGame::setMissionLost()
 
     playMusicByType(MUSIC_LOSE);
 
-    renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    takeBackGroundScreen();
 }
 
 bool cGame::isMissionFailed() const
@@ -1150,7 +1146,7 @@ void cGame::setState(int newState)
                 // This feels awkward. For now, I'll keep it (if it works), but this will change
                 // once we have a proper game playing state and we need to transition properly between
                 // states
-
+                takeBackGroundScreen();
                 auto *pState = dynamic_cast<cOptionsState *>(existingStatePtr);
                 // you cannot 'go back' to mission select
                 if (m_state != GAME_MISSIONSELECT) {
@@ -1202,6 +1198,7 @@ void cGame::setState(int newState)
                 newStatePtr = new cSelectMissionState(*this, ctx.get(), m_state);
             }
             else if (newState == GAME_OPTIONS) {
+                takeBackGroundScreen();
                 m_mouse->setTile(MOUSE_NORMAL);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
@@ -1215,6 +1212,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
+                    takeBackGroundScreen();
                     // we came from options menu, notify mouse
                     humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
                 }
@@ -2268,3 +2266,9 @@ void cGame::drawStateWinning()
     }
 }
 
+void cGame::takeBackGroundScreen()
+{
+    renderDrawer->beginDrawingToTexture(screenTexture);
+    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
+    renderDrawer->endDrawingToTexture();
+}

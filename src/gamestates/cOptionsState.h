@@ -34,4 +34,5 @@ private:
     GuiWindow *m_guiWindow;
 
     void constructWindow(int prevState);
+    Texture *m_backgroundTexture;
 };
