@@ -267,6 +267,11 @@ public:
     void applySettings(GameSettings *gs);
     void execute(AbstractMentat &mentat);
 
+    Texture* getScreenTexture() const {
+        return screenTexture;
+    }
+    void takeBackGroundScreen();
+
     std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
 private:
     /**
