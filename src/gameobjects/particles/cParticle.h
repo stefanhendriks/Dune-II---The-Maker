@@ -75,7 +75,8 @@ private:
     bool bAlive;        // alive
 
     // Drawing effects
-    Texture *bmp;          // pointer to bitmap to draw (not owner of bitmap!)
+    Texture *bmp;          // pointer to bitmap to draw (not owner of bitmap, except if flag bmpOwner is activated!)
+    bool bmpOwner = false; // some particle have distinct texture linked to House color
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw
@@ -106,4 +107,5 @@ private:
     bool isUsingAlphaChannel() const;
 
     void recreateDimensions();
+    void customiseColor(int iHouse);
 };
