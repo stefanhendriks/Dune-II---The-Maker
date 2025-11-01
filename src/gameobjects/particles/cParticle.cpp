@@ -578,11 +578,6 @@ void cParticle::thinkFast()
  * @param iFrame
  * @return
  */
-// int cParticle::create(long x, long y, int iType, int iHouse, int iFrame)
-// {
-//     return create(x, y, iType, iHouse, iFrame, -1);
-// }
-
 int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID)
 {
     int iNewId = findNewSlot();
