@@ -17,7 +17,7 @@
 #include "player/cPlayer.h"
 #include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
-#include <iostream>
+// #include <iostream>
 
 cParticle::cParticle()
 {
@@ -27,6 +27,10 @@ cParticle::cParticle()
 
 cParticle::~cParticle()
 {
+    if (bmpOwner && bmp) {
+        //std::cout << "texture removed" << std::endl;
+        delete bmp;
+    }
     bmp = nullptr;
     if (dimensions) delete dimensions;
 }
@@ -45,8 +49,12 @@ void cParticle::init()
     y = 0;              // x and y position to draw (absolute numbers)
     frameIndex = 0;
     iType = 0;          // type
-
+    if (bmpOwner && bmp) {
+        //std::cout << "texture removed" << std::endl;
+        delete bmp;
+    }
     bmp = nullptr;
+    bmpOwner = false;
     drawXBmpOffset = drawYBmpOffset = 0;
 
     iHousePal = -1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
@@ -675,6 +683,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     if (iType == D2TM_PARTICLE_DEADINF01 || iType == D2TM_PARTICLE_DEADINF02) {
         pParticle.TIMER_dead = 500 + RNG::rnd(500);
         pParticle.iAlpha = 255;
+        pParticle.customiseColor(iHouse);
     }
 
     if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT) {
@@ -818,4 +827,13 @@ void cParticle::die()
         }
     }
     boundParticleID = -1;
+}
+
+
+void cParticle::customiseColor(int iHouse)
+{
+    cPlayer &player = players[iHouse];
+    auto tex = gfxdata->getSurface(sParticleInfo[iType].bmpIndex);
+    bmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex );
+    bmpOwner = true;
 }
