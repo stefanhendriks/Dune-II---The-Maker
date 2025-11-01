@@ -521,7 +521,7 @@ float cBullet::getDamageToInflictToInfantry() const
 {
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float result = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_inf);
+    float result = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_infantry);
 
     if (iOwnerUnit > -1) {
         float fDam = unit[iOwnerUnit].fExpDamage() * result;
@@ -609,7 +609,7 @@ float cBullet::getDamageToInflictToNonInfantry() const
 {
     cPlayerDifficultySettings *pDifficultySettings = getDifficultySettings();
     const s_BulletInfo &sBullet = gets_Bullet();
-    float iDamage = pDifficultySettings->getInflictDamage(sBullet.damage);
+    float iDamage = pDifficultySettings->getInflictDamage(sBullet.damage_vehicles);
 
     // increase damage by experience of unit
     if (iOwnerUnit > -1) {
@@ -655,7 +655,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float iDamage = difficultySettings->getInflictDamage(sBulletInfo[iType].damage) * factor;
+    float iDamage = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_vehicles) * factor;
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {

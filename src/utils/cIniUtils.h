@@ -19,9 +19,12 @@ public:
     static int getSectionType(const std::string& section, int last);
     // Returns the structure type ID for the given structure name string (alternative to getStructureType).
     static int getStructureTypeFromString(const std::string& structureStr); 
+    // Returns the bullet type ID for the given bullet name string.
+    static int getBulletTypeFromString(const std::string& chunk);
     // Compares two strings case-insensitively. Returns true if they are equal.
     static bool caseInsCompare(const std::string& s1, const std::string& s2);
     // unordered_map IDs to their corresponding objects.
+
     static const std::unordered_map<std::string, int> sectionMap;
     static const std::unordered_map<std::string, int> houseMap;
     static const std::unordered_map<std::string, int> structureMap;
@@ -29,5 +32,6 @@ public:
     static const std::unordered_map<std::string, std::string> sceneFileMap;
     static const std::unordered_map<std::string, int> structureNameMap;
     static const std::unordered_map<std::string, int> unitNameMap;
+    static const std::unordered_map<std::string, int> bulletNameMap;
     static const std::unordered_map<int, char> houseLetterMap;
 };

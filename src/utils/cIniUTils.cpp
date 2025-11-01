@@ -136,6 +136,24 @@ const std::unordered_map<int, char> cIniUtils::houseLetterMap = {
     {FREMEN,     'f'}
 };
 
+const std::unordered_map<std::string, int> cIniUtils::bulletNameMap = {
+    {"ROCKET_SMALL",  ROCKET_SMALL },
+    {"ROCKET_NORMAL", ROCKET_NORMAL },
+    {"ROCKET_BIG",ROCKET_BIG },
+    {"BULLET_SMALL",  BULLET_SMALL },
+    {"BULLET_TRIKE",  BULLET_TRIKE },
+    {"BULLET_QUAD",   BULLET_QUAD },
+    {"BULLET_TANK",   BULLET_TANK },
+    {"BULLET_SIEGE",  BULLET_SIEGE },
+    {"BULLET_DEVASTATOR", BULLET_DEVASTATOR },
+    {"BULLET_GAS",    BULLET_GAS },
+    {"BULLET_TURRET", BULLET_TURRET },
+    {"BULLET_SHIMMER",BULLET_SHIMMER },
+    {"ROCKET_SMALL_ORNI", ROCKET_SMALL_ORNI },
+    {"ROCKET_RTURRET",ROCKET_RTURRET },
+    {"ROCKET_SMALL_FREMEN", ROCKET_SMALL_FREMEN }
+};
+
 bool cIniUtils::caseInsCompare(const std::string& s1, const std::string& s2)
 {
     if (s1.size() != s2.size()) return false;
@@ -238,5 +256,18 @@ int cIniUtils::getStructureTypeFromString(const std::string& structureStr)
     }
     logbook(std::format("getStructureTypeFromString: could not find structure: {}", structureStr));
     return CONSTYARD;
+}
+
+
+// return ID of bullet
+int cIniUtils::getBulletTypeFromString(const std::string& chunk)
+{
+    for (const auto& [key, value] : bulletNameMap) {
+        if (cIniUtils::caseInsCompare(chunk, key)) {
+            return value;
+        }
+    }
+    logbook(std::format("getBulletTypeFromString: could not find bullet: {}", chunk));
+    return -1;
 }
 

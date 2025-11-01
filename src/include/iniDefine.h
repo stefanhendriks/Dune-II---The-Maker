@@ -71,7 +71,7 @@
 #define WORD_BITMAP_HEIGHT 30     // game.ini
 #define WORD_BITMAP_FRAMES 31     // game.ini
 #define WORD_BITMAP_DEADFRAMES 32 // game.ini
-#define WORD_DAMAGE       33    // game.ini
+#define WORD_DAMAGE_VEHICLE 33    // game.ini
 #define WORD_DEFINITION   34    // game.ini
 #define WORD_BITMAP_DEAD  35    // game.ini
 #define WORD_BITMAP_TOP   36    // game.ini
@@ -100,6 +100,15 @@
 #define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
 #define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
 #define WORD_APPETITE     191    // game.ini (How much appetite has a sandworm?)
+#define WORD_SMOKEHFACTOR 192    // game.ini (Smoke HP Factor)
+#define WORD_SQUISH       193    // game.ini (Can squish infantry?)
+#define WORD_CANATTACKAIRUNITS 194 // game.ini (Can attack air units?)
+#define WORD_CANATTACKUNITS 195    // game.ini (Can attack ground units?)
+#define WORD_DAMAGE_INFANTRY 196    // game.ini (Damage to infantry)
+#define WORD_EXPLOSION_SIZE 197    // game.ini (Explosion size)
+#define WORD_DEVIATE_PROBABILITY 199  // game.ini (Deviation probability)
+#define WORD_GROUND_BULLET 200  // game.ini (blocked by montains, walls, structures)
+
 
 //
 #define WORD_HOUSE			60
@@ -109,8 +118,8 @@
 #define WORD_MAPBLOOM       68   // scen.ini (spice blooms for DUNE 2 maps)
 #define WORD_MAPFIELD       78   // scen.ini (spice fields for DUNE 2 maps)
 #define WORD_QUOTA          79
-#define WORD_WINFLAGS       192
-#define WORD_LOSEFLAGS      193
+#define WORD_WINFLAGS       592
+#define WORD_LOSEFLAGS      593
 
 #define WORD_BRIEFPICTURE   80
 
@@ -118,7 +127,6 @@
 #define WORD_TEAM			65
 #define WORD_SKILL			66
 #define WORD_FIXHP			67	// fix hp
-
 #define WORD_POWERDRAIN			68	// power
 #define WORD_POWERGIVE			69	// power
 
