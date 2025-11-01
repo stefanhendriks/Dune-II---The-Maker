@@ -334,9 +334,7 @@ void cGame::setMissionWon()
 
     playMusicByType(MUSIC_WIN);
 
-    renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    takeBackGroundScreen();
 }
 
 void cGame::setMissionLost()
@@ -353,9 +351,7 @@ void cGame::setMissionLost()
 
     playMusicByType(MUSIC_LOSE);
 
-    renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    takeBackGroundScreen();
 }
 
 bool cGame::isMissionFailed() const
@@ -2271,6 +2267,13 @@ void cGame::drawStateWinning()
         // FADE OUT
         initiateFadingOut();
     }
+}
+
+void cGame::takeBackGroundScreen()
+{
+    renderDrawer->beginDrawingToTexture(screenTexture);
+    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
+    renderDrawer->endDrawingToTexture();
 }
 
 std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
