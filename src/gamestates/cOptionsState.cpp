@@ -20,6 +20,8 @@ cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
     , m_guiWindow(nullptr)
 {
     refresh();
+    if (m_game.getScreenTexture() != nullptr)
+        m_backgroundTexture = m_game.getScreenTexture();
 }
 
 void cOptionsState::constructWindow(int prevState)
@@ -227,6 +229,8 @@ void cOptionsState::thinkFast()
 void cOptionsState::draw() const
 {
     //@Mira draw here screenTexture
+    if (m_backgroundTexture)
+        renderDrawer->renderSprite(m_backgroundTexture,0,0);
     m_guiWindow->draw();
 
     // MOUSE
@@ -262,4 +266,5 @@ void cOptionsState::refresh()
     delete m_guiWindow;
     m_guiWindow = nullptr;
     constructWindow(m_prevState);
+    m_backgroundTexture = nullptr;
 }
