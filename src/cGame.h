@@ -268,6 +268,10 @@ public:
 
     void applySettings(GameSettings *gs);
     void execute(AbstractMentat &mentat);
+    Texture* getScreenTexture() const {
+        return screenTexture;
+    }
+    void takeBackGroundScreen();
 private:
     /**
      * Variables start here
