@@ -25,8 +25,8 @@ public:
     ~cParticle();
 
     // Factory methods
-    static int create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID);
-    static int create(long x, long y, int iType, int iHouse, int iFrame);
+    static int create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID = -1);
+    // static int create(long x, long y, int iType, int iHouse, int iFrame);
     static int findNewSlot();
 
     void init();
