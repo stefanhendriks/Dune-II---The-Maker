@@ -115,8 +115,8 @@
 #define MAX_ITEMS		MAX_ICONS   // because in theory the item builder should be able to build each icon simultaniously
 
 // #TIMERS
-#define TIMER_GUARD         10
-#define TIMER_UNIT_BULLET   5
+// #define TIMER_GUARD         10
+// #define TIMER_UNIT_BULLET   5
 
 // FACING
 #define FACE_UP           0
