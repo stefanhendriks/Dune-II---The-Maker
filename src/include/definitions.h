@@ -37,13 +37,13 @@
 #define SCENE_BEGINS	11		// your battle for dune begins.. NOW!
 
 // Indexes for keeping score
-#define INDEX_KILLS_UNITS   0
-#define INDEX_KILLS_STRUCTURES 1
+// #define INDEX_KILLS_UNITS   0
+// #define INDEX_KILLS_STRUCTURES 1
 
 // VISIBILITY (on a map)
-#define MAP_VISIBLE       0
-#define MAP_FOW           1   // fog of war
-#define MAP_FOG           2   // area is still fogged
+// #define MAP_VISIBLE       0
+// #define MAP_FOW           1   // fog of war
+// #define MAP_FOG           2   // area is still fogged
 
 // SCROLLING (on a map)
 #define MAP_SCROLLSPEED   TILE_SIZE_PIXELS   // pixels per frames scrolling.
