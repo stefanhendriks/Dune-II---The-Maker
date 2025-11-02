@@ -39,4 +39,5 @@ private:
     GuiButton *gui_btn_credits;
 
     Texture *bmp_D2TM_Title;
+    Texture *backGroundDebug;
 };

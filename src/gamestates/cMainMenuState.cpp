@@ -166,12 +166,27 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
                 m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Exit);
+
+    // prepare to drawing in cache texture
+    if (m_game.isDebugMode()) {
+        backGroundDebug = renderDrawer->createRenderTargetTexture(m_game.m_screenW, m_game.m_screenH);
+        renderDrawer->beginDrawingToTexture(backGroundDebug);
+        for (int x = 0; x < m_game.m_screenW; x += 60) {
+            for (int y = 0; y < m_game.m_screenH; y += 20) {
+                textDrawer.drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
+            }
+        }
+        renderDrawer->endDrawingToTexture();
+    }
 }
 
 cMainMenuState::~cMainMenuState()
 {
     delete gui_window;
     delete gui_btn_credits;
+    if (m_game.isDebugMode()) {
+        delete backGroundDebug;
+    }
 }
 
 void cMainMenuState::thinkFast()
@@ -181,11 +196,7 @@ void cMainMenuState::thinkFast()
 void cMainMenuState::draw() const
 {
     if (m_game.isDebugMode()) {
-        for (int x = 0; x < m_game.m_screenW; x += 60) {
-            for (int y = 0; y < m_game.m_screenH; y += 20) {
-                textDrawer.drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
-            }
-        }
+        renderDrawer->renderSprite(backGroundDebug,0,0);
     }
 
     renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
