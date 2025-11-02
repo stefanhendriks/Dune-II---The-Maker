@@ -17,24 +17,24 @@
 // Max length of a path (per unit)
 #define MAX_PATH_SIZE    256
 
-// INTRO SCENES:
-#define SCENE_NONE		-1
-#define SCENE_DUNE		0
-#define SCENE_ARRAKIS	1		// the planet arrakis... known as dune
-#define SCENE_LANDSAND	2		// land of sand (home of the spice melange)
-#define SCENE_SPICE		3		// the spice controls the empire, whoever controls dune, controls the spice
-#define SCENE_EMPEROR	4		// the emperor has proposed a challange to each of the houses
-#define SCENE_EMPTALK	5		// The House that produces the most spice, whill control dune. There are no set
-// territories and no rules of engagement
-#define SCENE_ARMIES	6		// vast armies have arrived
+// // INTRO SCENES:
+// #define SCENE_NONE		-1
+// #define SCENE_DUNE		0
+// #define SCENE_ARRAKIS	1		// the planet arrakis... known as dune
+// #define SCENE_LANDSAND	2		// land of sand (home of the spice melange)
+// #define SCENE_SPICE		3		// the spice controls the empire, whoever controls dune, controls the spice
+// #define SCENE_EMPEROR	4		// the emperor has proposed a challange to each of the houses
+// #define SCENE_EMPTALK	5		// The House that produces the most spice, whill control dune. There are no set
+// // territories and no rules of engagement
+// #define SCENE_ARMIES	6		// vast armies have arrived
 
-// now 3 houses fight, for control of dune (no image, blank)
+// // now 3 houses fight, for control of dune (no image, blank)
 
-#define SCENE_ATREIDES	7		// the noble atreides
-#define SCENE_ORDOS		8		// the insidious ordos
-#define SCENE_HARKONNEN	9		// the evil harkonnen
-#define SCENE_FIRE		10		// only one house will prevail...
-#define SCENE_BEGINS	11		// your battle for dune begins.. NOW!
+// #define SCENE_ATREIDES	7		// the noble atreides
+// #define SCENE_ORDOS		8		// the insidious ordos
+// #define SCENE_HARKONNEN	9		// the evil harkonnen
+// #define SCENE_FIRE		10		// only one house will prevail...
+// #define SCENE_BEGINS	11		// your battle for dune begins.. NOW!
 
 // Indexes for keeping score
 // #define INDEX_KILLS_UNITS   0
