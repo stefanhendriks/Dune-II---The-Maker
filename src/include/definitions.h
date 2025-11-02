@@ -168,7 +168,6 @@
 #define UPGRADE_TYPE_CONSTYARD_SLAB4              0 // 4SLAB upgrade
 #define UPGRADE_TYPE_CONSTYARD_RTURRET            1 // Rturret
 #define UPGRADE_TYPE_LIGHTFCTRY_QUAD              2 // upgrade LightFctry to get Quad
-
 // Heavy Factory: harkonnen / atreides / ordos
 #define UPGRADE_TYPE_HEAVYFCTRY_MVC               3 // upgrade HeavyFctry to get MVC
 // Heavy Factory: harkonnen / atreides only
@@ -176,13 +175,10 @@
 #define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK         5 // upgrade HeavyFctry to get Siege Tank
 // Heavy Factory: ordos only (ordos can only access Launcher via Starport)
 #define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD     6 // upgrade HeavyFctry to get Siege Tank (later techlevel, after MVC)
-
 // Hi-Tech:
 #define UPGRADE_TYPE_HITECH_ORNI                  7 // upgrade HiTech to get Ornithopter
-
 // WOR (Harkonnen & Ordos)
 #define UPGRADE_TYPE_WOR_TROOPERS                 8 // upgrade WOR to get Troopers
-
 // Barracks (Atreides & Ordos)
 #define UPGRADE_TYPE_BARRACKS_INFANTRY            9 // upgrade BARRACKS to get Infantry
 
