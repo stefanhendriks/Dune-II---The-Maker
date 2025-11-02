@@ -36,7 +36,7 @@ public:
     void thinkFast();
 
     bool isValid() const;
-    int getLayer();
+    RenderLayerParticle getLayer();
 
     void bindToUnit(int unitID);
 
