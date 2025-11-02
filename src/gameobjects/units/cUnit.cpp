@@ -347,7 +347,7 @@ void cUnit::createExplosionParticle()
 
                         mapEditor.smoothAroundCell(cll);
 
-                        global_map.smudge_increase(SMUDGE_WALL, cll);
+                        global_map.smudge_increase(SmudgeType::S_WALL, cll);
                     }
                 }
 
@@ -398,7 +398,7 @@ void cUnit::createExplosionParticle()
                         global_map.cellTakeDamage(cll, 30);
 
                     if (global_map.getCellHealth(cll) < -25) {
-                        global_map.smudge_increase(SMUDGE_ROCK, cll);
+                        global_map.smudge_increase(SmudgeType::S_ROCK, cll);
                         global_map.cellGiveHealth(cll, RNG::rnd(25));
                     }
                 }
@@ -410,7 +410,7 @@ void cUnit::createExplosionParticle()
                         global_map.cellTakeDamage(cll, 30);
 
                     if (global_map.getCellHealth(cll) < -25) {
-                        global_map.smudge_increase(SMUDGE_SAND, cll);
+                        global_map.smudge_increase(SmudgeType::S_SAND, cll);
                         global_map.cellGiveHealth(cll, RNG::rnd(25));
                     }
                 }

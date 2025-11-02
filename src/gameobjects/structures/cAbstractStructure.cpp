@@ -214,7 +214,7 @@ void cAbstractStructure::die()
             cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++) {
-                global_map.smudge_increase(SMUDGE_ROCK, iCll);
+                global_map.smudge_increase(SmudgeType::S_ROCK, iCll);
 
                 // create particle
                 int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);

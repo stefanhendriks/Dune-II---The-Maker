@@ -146,7 +146,7 @@ public:
     void draw_units();
     void draw_bullets();
 
-    void smudge_increase(int iType, int iCell);
+    void smudge_increase(SmudgeType iType, int iCell);
 
     void thinkFast();
 
@@ -366,7 +366,7 @@ public:
         if (pCell) pCell->smudgetile = value;
     }
 
-    void cellChangeSmudgeType(int cellNr, int value) {
+    void cellChangeSmudgeType(int cellNr, std::optional<SmudgeType> value) {
         tCell *pCell = getCell(cellNr);
         if (pCell) pCell->smudgetype = value;
     }

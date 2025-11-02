@@ -2,13 +2,14 @@
 #define CCELL_H_
 
 #include "definitions.h"
+#include <optional>
 
 struct tCell {
     int credits;        // amount of credits that can be harvested from this tile
     int type;           // refers to gfxdata (terrain type)
     int tile;           // the tile to draw
     int smudgetile;     // smudge tile id (drawn upon the tile)
-    int smudgetype;     // smudge type id
+    std::optional<SmudgeType> smudgetype;     // smudge type id
     int health;         // hitpoints for specific tile (used for walls)
     bool passable;      // passable? > pathfinder (TRUE = default) (passable for ground units, non infantry)
     bool passableFoot;  // passable for foot units? > pathfinder (TRUE = default)

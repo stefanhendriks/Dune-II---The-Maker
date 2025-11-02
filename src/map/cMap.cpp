@@ -114,25 +114,25 @@ void cMap::init(int width, int height)
     mapGeometry->resize(this->width,this->height);
 }
 
-void cMap::smudge_increase(int iType, int iCell)
+void cMap::smudge_increase(SmudgeType iType, int iCell)
 {
     if (!isValidCell(iCell)) return;
     tCell *pCell = getCell(iCell);
 
-    if (pCell->smudgetype < 0)
+    if ( !pCell->smudgetype.has_value() )
         pCell->smudgetype = iType;
 
-    if (pCell->smudgetype == SMUDGE_WALL)
+    if (pCell->smudgetype == SmudgeType::S_WALL)
         pCell->smudgetile = 0;
 
-    if (pCell->smudgetype == SMUDGE_ROCK) {
+    if (pCell->smudgetype == SmudgeType::S_ROCK) {
         if (pCell->smudgetile < 0)
             pCell->smudgetile = RNG::rnd(2);
         else if (pCell->smudgetile + 2 < 6)
             pCell->smudgetile += 2;
     }
 
-    if (pCell->smudgetype == SMUDGE_SAND) {
+    if (pCell->smudgetype == SmudgeType::S_SAND) {
         if (pCell->smudgetile < 0)
             pCell->smudgetile = RNG::rnd(2);
         else if (pCell->smudgetile + 2 < 6)
@@ -956,7 +956,7 @@ void cMap::createCell(int cell, int terrainType, int tile)
     cellChangePassableFoot(cell, true);
 
     cellChangeSmudgeTile(cell, -1);
-    cellChangeSmudgeType(cell, -1);
+    cellChangeSmudgeType(cell, std::nullopt);
 
     if (terrainType == TERRAIN_SPICE) {
         cellChangeCredits(cell, RNG::genInt(m_terrainInfo->terrainSpiceMinSpice,m_terrainInfo->terrainSpiceMaxSpice));
@@ -1318,14 +1318,14 @@ void cMap::cellTakeDamage(int cellNr, int damage)
 
         if (pCell->health < -25) {
             if (pCell->type == TERRAIN_ROCK) {
-                smudge_increase(SMUDGE_ROCK, cellNr);
+                smudge_increase(SmudgeType::S_ROCK, cellNr);
             }
 
             if (pCell->type == TERRAIN_SAND ||
                     pCell->type == TERRAIN_HILL ||
                     pCell->type == TERRAIN_SPICE ||
                     pCell->type == TERRAIN_SPICEHILL) {
-                smudge_increase(SMUDGE_SAND, cellNr);
+                smudge_increase(SmudgeType::S_SAND, cellNr);
             }
 
             pCell->health += RNG::rnd(35);
@@ -1362,7 +1362,7 @@ void cMap::cellInit(int cellNr)
     pCell->type = TERRAIN_SAND;    // refers to gfxdata!
 
     pCell->smudgetile = -1;
-    pCell->smudgetype = -1;
+    pCell->smudgetype = std::nullopt;
 
     // clear out the ID stuff
     memset(pCell->id, -1, sizeof(pCell->id));
