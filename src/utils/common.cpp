@@ -644,7 +644,7 @@ void install_particles()
         particleInfo.startAlpha = -1;
         particleInfo.usesAdditiveBlending = false;
 
-        particleInfo.layer = D2TM_RENDER_LAYER_PARTICLE_TOP;
+        particleInfo.layer = RenderLayerParticle::TOP;
 
         // default to 32x32 (for now)
         particleInfo.frameWidth = 32;
@@ -683,19 +683,19 @@ void install_particles()
     sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
 
     sParticleInfo[D2TM_PARTICLE_TRACK_DIA].bmpIndex = TRACK_DIA;
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
 
     sParticleInfo[D2TM_PARTICLE_TRACK_HOR].bmpIndex = TRACK_HOR;
-    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
 
     sParticleInfo[D2TM_PARTICLE_TRACK_VER].bmpIndex = TRACK_VER;
-    sParticleInfo[D2TM_PARTICLE_TRACK_VER].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_TRACK_VER].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
 
     sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = TRACK_DIA2;
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
 
     sParticleInfo[D2TM_PARTICLE_BULLET_PUF].bmpIndex = BULLET_PUF;
@@ -736,16 +736,16 @@ void install_particles()
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
 
     sParticleInfo[D2TM_PARTICLE_WORMTRAIL].bmpIndex = OBJECT_WORMTRAIL;
-    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
     sParticleInfo[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
     sParticleInfo[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
 
     sParticleInfo[D2TM_PARTICLE_DEADINF01].bmpIndex = OBJECT_DEADINF01;
-    sParticleInfo[D2TM_PARTICLE_DEADINF01].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_DEADINF01].layer = RenderLayerParticle::BOTTOM;
 
     sParticleInfo[D2TM_PARTICLE_DEADINF02].bmpIndex = OBJECT_DEADINF02;
-    sParticleInfo[D2TM_PARTICLE_DEADINF02].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_DEADINF02].layer = RenderLayerParticle::BOTTOM;
 
     sParticleInfo[D2TM_PARTICLE_TANKSHOOT].bmpIndex = OBJECT_TANKSHOOT;
     sParticleInfo[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
@@ -758,25 +758,25 @@ void install_particles()
     sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
 
     sParticleInfo[D2TM_PARTICLE_SQUISH01].bmpIndex = EXPLOSION_SQUISH01;
-    sParticleInfo[D2TM_PARTICLE_SQUISH01].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_SQUISH01].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
     sParticleInfo[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
     sParticleInfo[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
 
     sParticleInfo[D2TM_PARTICLE_SQUISH02].bmpIndex = EXPLOSION_SQUISH02;
-    sParticleInfo[D2TM_PARTICLE_SQUISH02].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_SQUISH02].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
     sParticleInfo[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
     sParticleInfo[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
 
     sParticleInfo[D2TM_PARTICLE_SQUISH03].bmpIndex = EXPLOSION_SQUISH03;
-    sParticleInfo[D2TM_PARTICLE_SQUISH03].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_SQUISH03].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
     sParticleInfo[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
     sParticleInfo[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
 
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = EXPLOSION_ORNI;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
@@ -784,7 +784,7 @@ void install_particles()
     sParticleInfo[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
 
     sParticleInfo[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
-    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].layer = D2TM_RENDER_LAYER_PARTICLE_BOTTOM;
+    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].layer = RenderLayerParticle::BOTTOM;
     sParticleInfo[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
     sParticleInfo[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
 
