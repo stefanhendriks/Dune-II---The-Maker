@@ -283,9 +283,9 @@ const int D2TM_PARTICLE_SMOKE_WITH_SHADOW       = 35;
 // const int D2TM_RENDER_LAYER_PARTICLE_BOTTOM     = 1;
 
 // smudge
-#define SMUDGE_ROCK 0
-#define SMUDGE_SAND 1
-#define SMUDGE_WALL 2
+// #define SMUDGE_ROCK 0
+// #define SMUDGE_SAND 1
+// #define SMUDGE_WALL 2
 
 // Win/lose bit flags, borrowed from Dune Legacy's implementation
 #define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01

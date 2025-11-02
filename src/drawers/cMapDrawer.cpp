@@ -148,8 +148,8 @@ void cMapDrawer::drawTerrain()
             }
 
             // draw Smudge if necessary
-            if (cell->smudgetype > -1 && cell->smudgetile > -1) {
-                const cRectangle src_pos = {cell->smudgetile * 32, cell->smudgetype * 32,32, 32};
+            if (cell->smudgetype.has_value() && cell->smudgetile > -1) {
+                const cRectangle src_pos = {cell->smudgetile * 32, static_cast<int>(cell->smudgetype.value()) * 32,32, 32};
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                 renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
             }

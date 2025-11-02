@@ -343,3 +343,10 @@ enum class RenderLayerParticle : char {
     TOP =0,     // top (over unit)
     BOTTOM = 1  // bottom (beneath unit)
 };
+
+enum class SmudgeType : char {
+    S_ROCK = 0,
+    S_SAND = 1,
+    S_WALL = 2,
+    MAX
+};

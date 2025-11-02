@@ -579,7 +579,7 @@ void cBullet::damageWall(int cell, double factor) const
         auto mapEditor = cMapEditor(global_map);
         mapEditor.createCell(cell, TERRAIN_ROCK, 0);
         mapEditor.smoothAroundCell(cell);
-        global_map.smudge_increase(SMUDGE_WALL, cell);
+        global_map.smudge_increase(SmudgeType::S_WALL, cell);
     }
 }
 
