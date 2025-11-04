@@ -38,6 +38,7 @@ cMap::cMap()
     m_iTIMER_respawnSandworms = -1;
     mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
+    m_terrainInfo = nullptr;
 }
 
 cMap::~cMap()
@@ -62,6 +63,11 @@ MapGeometry &cMap::getGeometry() const
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
 {
     m_reinforcements = reinforcements;
+}
+
+void cMap::setTerrainInfo(std::shared_ptr<sTerrainInfo> terrainInfo)
+{
+    m_terrainInfo = terrainInfo;
 }
 
 void cMap::init(int width, int height)
@@ -106,6 +112,10 @@ void cMap::init(int width, int height)
     this->width = width;
     this->height = height;
     mapGeometry->resize(this->width,this->height);
+
+    //std::cout << "first ?" << std::endl;
+    //m_iTIMER_blooms = m_terrainInfo->BloomTimerDuration;
+    //std::cout << "bloom " << m_iTIMER_blooms  << std::endl;
 }
 
 void cMap::smudge_increase(int iType, int iCell)
@@ -370,7 +380,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     }
 
     // Evaluate every 30 seconds orso
-    m_iTIMER_blooms = (1000 / 5) * 30;
+    //m_iTIMER_blooms = (1000 / 5) * 30;
+    m_iTIMER_blooms = m_terrainInfo->BloomTimerDuration * 30;
 
     const std::vector<int> &blooms = getAllCellsOfType(TERRAIN_BLOOM);
     int totalSpiceBloomsCount = blooms.size();
@@ -953,17 +964,19 @@ void cMap::createCell(int cell, int terrainType, int tile)
     cellChangeSmudgeType(cell, -1);
 
     if (terrainType == TERRAIN_SPICE) {
-        cellChangeCredits(cell, 50 + RNG::rnd(125));
+        // cellChangeCredits(cell, 50 + RNG::rnd(125));
+        cellChangeCredits(cell, RNG::genInt(m_terrainInfo->TerrainSpiceMinSpice,m_terrainInfo->TerrainSpiceMaxSpice));
     }
     else if (terrainType == TERRAIN_SPICEHILL) {
-        cellChangeCredits(cell, 75 + RNG::rnd(150));
+        //cellChangeCredits(cell, 75 + RNG::rnd(150));
+        cellChangeCredits(cell, RNG::genInt(m_terrainInfo->TerrainSpiceHillMinSpice,m_terrainInfo->TerrainSpiceHillMaxSpice));
     }
     else if (terrainType == TERRAIN_MOUNTAIN) {
         cellChangePassable(cell, false);
         cellChangePassableFoot(cell, true);
     }
     else if (terrainType == TERRAIN_WALL) {
-        cellChangeHealth(cell, 100);
+        cellChangeHealth(cell, m_terrainInfo->TerrainWallHp);
         cellChangePassable(cell, false);
         cellChangePassableFoot(cell, false);
     }

@@ -39,6 +39,8 @@ struct GameSettings;
 
 class ContextCreator;
 class GameContext;
+
+struct sTerrainInfo;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -268,6 +270,8 @@ public:
 
     void applySettings(GameSettings *gs);
     void execute(AbstractMentat &mentat);
+
+    std::shared_ptr<sTerrainInfo> getTerrainInfo() const;
 private:
     /**
      * Variables start here
@@ -302,6 +306,7 @@ private:
     cTimeManager* m_timeManager;
 
     std::shared_ptr<cHousesInfo> m_Houses;
+    std::shared_ptr<sTerrainInfo> m_TerrainInfo;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

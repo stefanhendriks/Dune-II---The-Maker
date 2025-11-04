@@ -301,6 +301,7 @@ int GAME_INI_SectionType(const std::string& section, int last)
     if (cIniUtils::caseInsCompare(section, "STRUCTURES"))   return INI_STRUCTURES;
     // When nothing found; we assume its just a new ID tag for some unit or structure
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
+    if (cIniUtils::caseInsCompare(section, "TERRAINS"))   return INI_TERRAINS;
     return last;
 }
 
@@ -1486,6 +1487,14 @@ void INI_Install_Game(std::string filename)
                         unitInfo.structureTypeItLeavesFrom = type;
                     }
                 }
+            }
+
+            // read 
+            if (section == INI_TERRAINS && id > -1) {
+                auto [word_left, word_right] = INI_SplitWord(linefeed);
+                wordtype = INI_WordType(word_left, section);
+
+                if (wordtype == WORD_BLOOMTIMERDURATION) game.getTerrainInfo()->BloomTimerDuration = ToInt(word_right);
             }
 
             // Structure w0h00
