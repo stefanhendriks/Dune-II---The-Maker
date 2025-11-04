@@ -101,6 +101,8 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     //send to GameContext
     ctx->setTimeManager(std::move(timeManager));
+
+    m_TerrainInfo = std::make_shared<sTerrainInfo>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -129,6 +131,7 @@ void cGame::applySettings(GameSettings *gs)
 
 void cGame::init()
 {
+    global_map.setTerrainInfo(m_TerrainInfo);
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -991,6 +994,8 @@ bool cGame::setupGame()
     install_specials();
     logbook("Setup:  PARTICLES");
     install_particles();
+    logbook("Setup:  TERRAINS");
+    install_terrain(m_TerrainInfo);
 
     delete mapCamera;
     mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
@@ -2268,3 +2273,7 @@ void cGame::drawStateWinning()
     }
 }
 
+std::shared_ptr<sTerrainInfo> cGame::getTerrainInfo() const
+{
+    return m_TerrainInfo;
+}
