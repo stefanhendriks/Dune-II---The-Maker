@@ -2336,7 +2336,7 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
     if (m_HousesInfo->getSwapColor(house) > -1) {
         int start = m_HousesInfo->getSwapColor(house);
         int s = 144;                // original position (harkonnen)
-        logbook(std::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
+        //logbook(std::format("cPlayer[{}]::setHouse - Swap_color index is {}.", this->id, start));
         //get palette from surface and write color from player
         SDL_Palette *palette = modifiableSurface->format->palette;
         for (int j = start; j < (start + 7); j++) {
