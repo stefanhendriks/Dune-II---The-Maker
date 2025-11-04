@@ -1495,6 +1495,11 @@ void INI_Install_Game(std::string filename)
                 wordtype = INI_WordType(word_left, section);
 
                 if (wordtype == WORD_BLOOMTIMERDURATION) game.getTerrainInfo()->BloomTimerDuration = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MINSPICE) game.getTerrainInfo()->TerrainSpiceMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MAXSPICE) game.getTerrainInfo()->TerrainSpiceMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MINSPICE) game.getTerrainInfo()->TerrainSpiceHillMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MAXSPICE) game.getTerrainInfo()->TerrainSpiceHillMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINWALL_HP) game.getTerrainInfo()->TerrainWallHp = ToInt(word_right);
             }
 
             // Structure w0h00
