@@ -111,7 +111,12 @@
 #define WORD_GROUND_BULLET 200  // game.ini (blocked by montains, walls, structures)
 
 
-#define WORD_BLOOMTIMERDURATION 241 // BLOOM TIMER DURATION
+#define WORD_BLOOMTIMERDURATION 241 // game.ini BLOOM TIMER DURATION
+#define WORD_TERRAIN_MINSPICE 242   // game.ini minimal spice on SPICETERRAIN
+#define WORD_TERRAIN_MAXSPICE 243   // game.ini maximal spice on SPICETERRAIN
+#define WORD_TERRAINHILL_MINSPICE 244 // game.ini minimal spice on SPICEHILL
+#define WORD_TERRAINHILL_MAXSPICE 245 // game.ini maximal spice on SPICEHILL
+#define WORD_TERRAINWALL_HP 246  //game.ini HP of TERRAINWALL
 
 //
 #define WORD_HOUSE			60
