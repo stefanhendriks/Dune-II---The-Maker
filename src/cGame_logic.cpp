@@ -97,11 +97,11 @@ cGame::cGame()
     ctx = std::make_unique<GameContext>();
     // create TimeManager
     std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(this);
-    //local usage
+    // local usage
     m_timeManager = timeManager.get();
-    //send to GameContext
+    // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
-
+    // initailisation terrainInfo
     m_TerrainInfo = std::make_shared<sTerrainInfo>();
 }
 
