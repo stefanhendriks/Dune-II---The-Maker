@@ -259,3 +259,12 @@ struct s_BulletInfo {
 
     bool canDamageGround; // when true, this bullet can damage ground (ie walls, concrete, etc)
 };
+
+struct sTerrainInfo {
+    int BloomTimerDuration;         // duration from bloom timer
+    int TerrainSpiceMinSpice;       // minimal spice in TERRAIN_SPICE cells
+    int TerrainSpiceMaxSpice;       // maximal spice in TERRAIN_SPICE cells
+    int TerrainSpiceHillMinSpice;   // minimal spice in TERRAIN_SPICEHILL cells
+    int TerrainSpiceHillMaxSpice;   // maximal spice in TERRAIN_SPICEHILL cells
+    int TerrainWallHp;              // HP of a terrain WALL
+};

@@ -19,6 +19,7 @@
 #define INI_STRUCTURES 2
 #define INI_GENERAL    3
 #define INI_MAP        4
+#define INI_TERRAINS   222
 
 #define INI_NEWID      10
 #define INI_GAME       11       // mod.ini / game.ini
@@ -109,6 +110,8 @@
 #define WORD_DEVIATE_PROBABILITY 199  // game.ini (Deviation probability)
 #define WORD_GROUND_BULLET 200  // game.ini (blocked by montains, walls, structures)
 
+
+#define WORD_BLOOMTIMERDURATION 241 // BLOOM TIMER DURATION
 
 //
 #define WORD_HOUSE			60
