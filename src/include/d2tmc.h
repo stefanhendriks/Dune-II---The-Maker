@@ -60,7 +60,7 @@ extern cMap           global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
-extern cRandomMapGenerator randomMapGenerator;
+// extern cRandomMapGenerator randomMapGenerator;
 extern cMapCamera	  *mapCamera;
 extern cPlayer        players[MAX_PLAYERS];
 extern cParticle      particle[MAX_PARTICLES];
