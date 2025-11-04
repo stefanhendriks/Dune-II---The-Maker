@@ -264,9 +264,9 @@ public:
         return m_debugMode;
     }
 
-    void setDebugMode(bool value) {
-        m_debugMode = value;
-    }
+    // void setDebugMode(bool value) {
+    //     m_debugMode = value;
+    // }
 
     void applySettings(GameSettings *gs);
     void execute(AbstractMentat &mentat);
