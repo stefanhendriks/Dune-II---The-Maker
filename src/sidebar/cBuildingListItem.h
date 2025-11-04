@@ -114,7 +114,7 @@ public:
     s_UnitInfo &getUnitInfo();
     s_StructureInfo &getStructureInfo();
 
-    int getCosts();
+    // int getCosts();
 
     float getCreditsPerProgressTime() {
         return creditsPerProgressTime;
