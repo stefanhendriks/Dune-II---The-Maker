@@ -43,7 +43,7 @@ public:
     eGameStateType getType() override;
 
 private:
-    cTextDrawer textDrawer;
+    cTextDrawer* m_textDrawer = nullptr;
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
