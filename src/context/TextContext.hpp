@@ -5,7 +5,7 @@ class cTextDrawer;
 
 class TextContext {
 public:
-    std::shared_ptr<cTextDrawer> smallTextDrawer;
-    std::shared_ptr<cTextDrawer> beneTextDrawer;
-    std::shared_ptr<cTextDrawer> gameTextDrawer;
+    std::unique_ptr<cTextDrawer> smallTextDrawer;
+    std::unique_ptr<cTextDrawer> beneTextDrawer;
+    std::unique_ptr<cTextDrawer> gameTextDrawer;
 };

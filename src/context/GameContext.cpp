@@ -1,6 +1,7 @@
 #include "context/GameContext.hpp"
 #include "utils/cTimeManager.h"
 #include "utils/cSoundPlayer.h"
+#include "drawers/cTextDrawer.h"
 
 GameContext::~GameContext() {
 }
