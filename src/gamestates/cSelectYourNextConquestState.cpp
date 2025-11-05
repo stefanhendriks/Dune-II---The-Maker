@@ -42,10 +42,10 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) :
     cGameState(theGame, ctx),
-    textDrawer(bene_font),
     m_gfxworld(ctx->getGraphicsContext()->gfxworld.get()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 
@@ -62,15 +62,15 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     regionMouseIsHoveringOver = -1;
     isFinishedConqueringRegions = true;
 
-    int length = textDrawer.getTextLength("Mission select");
-    const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(m_game.m_screenW - length,
-                                            m_game.m_screenH - textDrawer.getFontHeight(),
+    int length = m_textDrawer->getTextLength("Mission select");
+    const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_game.m_screenW - length,
+                                            m_game.m_screenH - m_textDrawer->getFontHeight(),
                                             "Mission select");
     GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
