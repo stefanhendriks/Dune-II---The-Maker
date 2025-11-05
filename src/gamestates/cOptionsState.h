@@ -27,7 +27,7 @@ public:
     void refresh();
 
 private:
-    cTextDrawer m_textDrawer;
+    cTextDrawer* m_textDrawer = nullptr;
 
     int m_prevState;
 
