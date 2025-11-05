@@ -32,7 +32,7 @@ private:
     int mainMenuWidth;
     int mainMenuHeight;
 
-    cTextDrawer textDrawer;
+    cTextDrawer* m_textDrawer=nullptr;
     cRectangle sdl2power;
 
     GuiWindow *gui_window;
