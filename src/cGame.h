@@ -303,7 +303,7 @@ private:
     SDL_Renderer *renderer;
     Texture *screenTexture=nullptr;
     Texture *actualRenderer= nullptr;
-    std::shared_ptr<cTextDrawer> textDrawer = nullptr;
+    std::shared_ptr<cTextDrawer> m_textDrawer = nullptr;
     cTimeManager* m_timeManager;
 
     std::shared_ptr<cHousesInfo> m_Houses;
