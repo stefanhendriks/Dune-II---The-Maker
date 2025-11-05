@@ -17,6 +17,7 @@ public:
     ~ContextCreator() = default;
 
     std::unique_ptr<GraphicsContext> createGraphicsContext();
+    std::unique_ptr<TextContext> createTextContext();
 
 private:
     std::shared_ptr<Graphics> gfxmentat;
