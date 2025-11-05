@@ -4,7 +4,6 @@
 class Graphics;
 
 class GraphicsContext {
-
 public:
     std::shared_ptr<Graphics> gfxmentat;
     std::shared_ptr<Graphics> gfxworld;
