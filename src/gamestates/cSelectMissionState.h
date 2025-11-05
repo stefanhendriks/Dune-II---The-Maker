@@ -24,7 +24,7 @@ public:
     eGameStateType getType() override;
 
 private:
-    cTextDrawer textDrawer;
+    cTextDrawer *m_textDrawer = nullptr;
 
     GuiWindow *gui_window;
 };
