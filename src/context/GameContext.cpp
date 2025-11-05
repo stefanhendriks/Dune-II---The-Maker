@@ -48,3 +48,18 @@ cSoundPlayer *GameContext::getSoundPlayer() const {
     }
     throw std::runtime_error("cSoundPlayer not defined");
 }
+
+void GameContext::setTextContext(std::unique_ptr<TextContext> textContext) {
+    if (!textContext) {
+        throw std::runtime_error("textContext is not initialized!");
+    }
+    m_textContext = std::move(textContext);
+}
+
+TextContext *GameContext::getTextContext() const {
+    if (m_textContext) {
+        return m_textContext.get();
+    } else {
+        throw std::runtime_error("TextContext not defined");
+    }
+}
