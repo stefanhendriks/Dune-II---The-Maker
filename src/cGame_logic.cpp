@@ -894,7 +894,7 @@ bool cGame::setupGame()
     //Mira TEXT     return false;
     //Mira TEXT }
 
-    m_textDrawer = ctx->getTextContext()->gameTextDrawer;
+    m_textDrawer = ctx->getTextContext()->gameTextDrawer.get();
     m_textDrawer->setApplyShadow(false);
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));

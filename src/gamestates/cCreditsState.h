@@ -40,7 +40,7 @@ private:
     float m_moveSpeed;
     int m_titleHeight;
 
-    std::shared_ptr<cTextDrawer> m_textDrawer = nullptr;
+    cTextDrawer* m_textDrawer = nullptr;
 
     std::vector<s_CreditLine> m_lines;
 
