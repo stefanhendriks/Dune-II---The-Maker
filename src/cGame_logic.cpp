@@ -857,8 +857,10 @@ bool cGame::setupGame()
 
     // create ressources from scratch
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
-    // share them to all class what use ctx !
+    // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
+    // share Text to all class what use ctx !
+    ctx->setTextContext(context->createTextContext());
 
     game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
     //Mira TEXT if (game_font != nullptr) {

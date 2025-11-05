@@ -3,6 +3,8 @@
 #include "utils/cLog.h"
 #include "utils/cFileValidator.h"
 #include "context/GraphicsContext.hpp"
+#include "context/TextContext.hpp"
+#include "drawers/cTextDrawer.h"
 
 ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator)
 {
@@ -77,4 +79,13 @@ std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
     gtx->gfxinter = gfxinter;
     gtx->gfxdata = gfxdata;
     return gtx;
+}
+
+std::unique_ptr<TextContext> ContextCreator::createTextContext()
+{
+    auto ttx = std::make_unique<TextContext>();
+    ttx->smallTextDrawer = std::make_shared<cTextDrawer>(small_font);
+    ttx->beneTextDrawer = std::make_shared<cTextDrawer>(bene_font);
+    ttx->gameTextDrawer = std::make_shared<cTextDrawer>(game_font);
+    return ttx;
 }
