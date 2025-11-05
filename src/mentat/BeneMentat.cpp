@@ -45,8 +45,7 @@ BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
                 players[HUMAN].setHouse(this->getHouse());
                game.initiateFadingOut();})
             .build();
-    textDrawer = new cTextDrawer(gr_bene_font);
-
+    textDrawer = new cTextDrawer(bene_font);
 }
 
 void BeneMentat::think()
