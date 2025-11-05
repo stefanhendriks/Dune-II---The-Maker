@@ -10,8 +10,9 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx), textDrawer(cTextDrawer(bene_font))
+cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -38,8 +39,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
 //    /////////////////////////////////
 //    //// Credits (top)
 //    ////////////////////////////////
-    int buttonWidth = textDrawer.getTextLength("CREDITS") / 2;
-    int buttonHeight = textDrawer.getFontHeight() + 4; // a bit more space
+    int buttonWidth = m_textDrawer->getTextLength("CREDITS") / 2;
+    int buttonHeight = m_textDrawer->getFontHeight() + 4; // a bit more space
 
     int creditsX = (m_game.m_screenW / 2) - buttonWidth;
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
@@ -47,7 +48,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     gui_btn_credits = GuiButtonBuilder()
             .withRect(creditsRect)        
             .withLabel("CREDITS")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -76,7 +77,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_SelectHouse = GuiButtonBuilder()
             .withRect(campaign)        
             .withLabel("Campaign")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -90,7 +91,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_Skirmish = GuiButtonBuilder()
             .withRect(skirmish)        
             .withLabel("Skirmish")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -106,7 +107,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_Multiplayer = GuiButtonBuilder()
             .withRect(multiplayer)        
             .withLabel("Multiplayer")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
@@ -119,7 +120,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_Load = GuiButtonBuilder()
             .withRect(load)        
             .withLabel("Load")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
@@ -132,7 +133,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_Options = GuiButtonBuilder()
             .withRect(options)        
             .withLabel("Options")
-            .withTextDrawer(&textDrawer)
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_OPTIONS);})
@@ -145,7 +146,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_Hof = GuiButtonBuilder()
             .withRect(hof)        
             .withLabel("Hall of Fame")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
@@ -158,7 +159,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
     GuiButton *gui_btn_Exit = GuiButtonBuilder()
             .withRect(exit)        
             .withLabel("Exit")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -205,12 +206,12 @@ void cMainMenuState::draw() const
     gui_btn_credits->draw();
 
     // draw version
-    textDrawer.drawTextBottomRight(D2TM_VERSION,20);
-    textDrawer.drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
+    m_textDrawer->drawTextBottomRight(D2TM_VERSION,20);
+    m_textDrawer->drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
     if (m_game.isDebugMode()) {
         auto m_mouse = m_game.getMouse();
-        textDrawer.drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
+        m_textDrawer->drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
 
     // MOUSE
