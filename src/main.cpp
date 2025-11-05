@@ -60,7 +60,7 @@ std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 TTF_Font *game_font; 	// arrakeen.fon
 TTF_Font *bene_font;	// benegesserit font.
 TTF_Font *small_font;	// small font.
-TTF_Font *gr_bene_font; // benegesserit font for size XXL
+// TTF_Font *gr_bene_font; // benegesserit font for size XXL
 
 /**
 	Entry point of the game
