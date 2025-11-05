@@ -131,7 +131,7 @@ private:
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
-    cTextDrawer textDrawer;
+    cTextDrawer* m_textDrawer = nullptr;
     Graphics* m_gfxworld;
     Graphics* m_gfxinter;
 };
