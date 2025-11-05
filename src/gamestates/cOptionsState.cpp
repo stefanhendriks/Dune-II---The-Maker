@@ -15,10 +15,10 @@
 
 cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
     : cGameState(theGame, ctx)
-    , m_textDrawer(cTextDrawer(bene_font))
     , m_prevState(prevState)
     , m_guiWindow(nullptr)
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     refresh();
     if (m_game.getScreenTexture() != nullptr)
         m_backgroundTexture = m_game.getScreenTexture();
@@ -33,7 +33,7 @@ void cOptionsState::constructWindow(int prevState)
     int mainMenuHeight = m_game.m_screenH - (margin * 2);
 
     margin = 4;
-    int buttonHeight = (m_textDrawer.getFontHeight() + margin);
+    int buttonHeight = (m_textDrawer->getFontHeight() + margin);
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
@@ -51,7 +51,7 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_toMenu = GuiButtonBuilder()
             .withRect(toMainMenuRect)        
             .withLabel("Back to main menu")
-            .withTextDrawer(&m_textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MENU);
@@ -66,7 +66,7 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_Quit = GuiButtonBuilder()
             .withRect(quitRect)        
             .withLabel("Quit game")
-            .withTextDrawer(&m_textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
                 m_game.m_playing = false;
@@ -81,7 +81,7 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_Back = GuiButtonBuilder()
             .withRect(backRect)        
             .withLabel("Back")
-            .withTextDrawer(&m_textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState](){
                 m_game.setNextStateToTransitionTo(prevState);})
@@ -97,7 +97,7 @@ void cOptionsState::constructWindow(int prevState)
     GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
-            .withTextDrawer(&m_textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
@@ -107,7 +107,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &musicRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50, buttonHeight);
     GuiLabel *gui_MusicLabel = GuiLabelBuilder()
             .withLabel("Music")
-            .withTextDrawer(&m_textDrawer)
+            .withTextDrawer(m_textDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(musicRect)
             .build();
@@ -129,7 +129,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &musicVolumeRect = m_guiWindow->getRelativeRect(5, 5+buttonHeight, 50+buttonWidth/2, buttonHeight);
     GuiLabel *gui_MusicVolumeLabel = GuiLabelBuilder()
             .withLabel("Volume")
-            .withTextDrawer(&m_textDrawer)
+            .withTextDrawer(m_textDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(musicVolumeRect)
             .build();
@@ -150,7 +150,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &soundRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50, buttonHeight);
     GuiLabel *gui_SoundLabel = GuiLabelBuilder()
             .withLabel("Sound")
-            .withTextDrawer(&m_textDrawer)
+            .withTextDrawer(m_textDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(soundRect)
             .build();
@@ -172,7 +172,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &soundVolumeRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*2, 50+buttonWidth/2, buttonHeight);
     GuiLabel *gui_SoundVolumeLabel = GuiLabelBuilder()
             .withLabel("Volume")
-            .withTextDrawer(&m_textDrawer)
+            .withTextDrawer(m_textDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(soundVolumeRect)
             .build();
@@ -193,7 +193,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &speedRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*3, 50, buttonHeight);
     GuiLabel *gui_DifficultyLabel = GuiLabelBuilder()
             .withLabel("Speed")
-            .withTextDrawer(&m_textDrawer)
+            .withTextDrawer(m_textDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(speedRect)
             .build();
