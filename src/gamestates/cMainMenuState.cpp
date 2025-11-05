@@ -14,6 +14,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
     m_textDrawer(ctx->getTextContext()->beneTextDrawer.get())
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
