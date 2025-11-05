@@ -13,9 +13,10 @@
 
 cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
-    m_moveSpeed(0.15f),
-    m_textDrawer(cTextDrawer(bene_font))
+    m_moveSpeed(0.15f)
+    // m_textDrawer(cTextDrawer(bene_font))
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer;
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);
@@ -39,8 +40,8 @@ void cCreditsState::prepareCrawlerLines()
 {
     Color colorHeadlines = Color::green();
 
-    int fontHeightWithALittlePadding = m_textDrawer.getFontHeight() + 4;
-    int spacerAfterHeadline = fontHeightWithALittlePadding + m_textDrawer.getFontHeight();
+    int fontHeightWithALittlePadding = m_textDrawer->getFontHeight() + 4;
+    int spacerAfterHeadline = fontHeightWithALittlePadding + m_textDrawer->getFontHeight();
     auto spacer = s_CreditLine {
         .name = "",
         .txt = "",
@@ -367,17 +368,17 @@ void cCreditsState::draw() const
     int textCrawlY = m_crawlerY + m_titleHeight;
     for (auto &line : m_lines) {
         if (line.name.empty()) {
-            m_textDrawer.drawTextCentered(line.txt.c_str(), textCrawlY, line.color);
+            m_textDrawer->drawTextCentered(line.txt.c_str(), textCrawlY, line.color);
         }
         else if (line.txt.empty()) {
-            m_textDrawer.drawTextCentered(line.name.c_str(), textCrawlY, line.color);
+            m_textDrawer->drawTextCentered(line.name.c_str(), textCrawlY, line.color);
         }
         else {
             int spaceBetween = 4;
             // both name and line given, then we render them differently.
-            m_textDrawer.drawText(halfScreen+spaceBetween, textCrawlY, line.txt.c_str());
-            int widthOfName = m_textDrawer.getTextLength(line.name.c_str());
-            m_textDrawer.drawText(halfScreen - (widthOfName + spaceBetween), textCrawlY, line.name.c_str());
+            m_textDrawer->drawText(halfScreen+spaceBetween, textCrawlY, line.txt.c_str());
+            int widthOfName = m_textDrawer->getTextLength(line.name.c_str());
+            m_textDrawer->drawText(halfScreen - (widthOfName + spaceBetween), textCrawlY, line.name.c_str());
         }
         textCrawlY += line.height;
     }
