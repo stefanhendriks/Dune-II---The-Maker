@@ -1,5 +1,5 @@
 #include "cSelectMissionState.h"
-
+#include "context/GameContext.hpp"
 #include "d2tmc.h"
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
@@ -8,9 +8,9 @@
 
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState) :
-    cGameState(theGame, ctx),
-    textDrawer(cTextDrawer(bene_font))
+    cGameState(theGame, ctx)
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
@@ -18,7 +18,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int mainMenuHeight = m_game.m_screenH - (margin * 2);
 
     margin = 4;
-    int buttonHeight = (textDrawer.getFontHeight() + margin);
+    int buttonHeight = (m_textDrawer->getFontHeight() + margin);
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
@@ -38,7 +38,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
         GuiButton *btnMission = GuiButtonBuilder()
             .withRect(rect)        
             .withLabel(std::format("Mission {}", i))
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,i]() {
                 m_game.jumpToSelectYourNextConquestMission(i);
@@ -57,7 +57,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     GuiButton *gui_btn_Back = GuiButtonBuilder()
             .withRect(backRect)        
             .withLabel("Back")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState]() {
                 m_game.setNextStateToTransitionTo(prevState);
