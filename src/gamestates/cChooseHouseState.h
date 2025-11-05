@@ -26,7 +26,7 @@ public:
     eGameStateType getType() override;
 
 private:
-    cTextDrawer textDrawer;
+    cTextDrawer* m_textDrawer = nullptr;
     Graphics *m_gfxinter;
     cRectangle *backButtonRect;
 
