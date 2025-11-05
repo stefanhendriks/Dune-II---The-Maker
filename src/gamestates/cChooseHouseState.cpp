@@ -15,11 +15,10 @@
 
 cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
-    textDrawer(cTextDrawer(bene_font)),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    backButtonRect = textDrawer.getAsRectangle(0, m_game.m_screenH - textDrawer.getFontHeight(), " BACK");
-
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
+    backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_screenH - m_textDrawer->getFontHeight(), " BACK");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
     int duneAtTheRight = m_game.m_screenW - bmp_Dune->w;
@@ -81,7 +80,7 @@ void cChooseHouseState::draw() const
 
     // BACK (bottom right
     Color color = hoversOverBackButton ? Color{255, 0, 0,255} : Color{255, 255, 255,255};
-    textDrawer.drawText(backButtonRect->getTopLeft(), color, " BACK");
+    m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE
     mouse->draw();
