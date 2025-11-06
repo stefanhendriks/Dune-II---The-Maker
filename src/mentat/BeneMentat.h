@@ -15,5 +15,5 @@ private:
     void draw_eyes() override;
     void draw_other() override;
     void draw() override;
-    cTextDrawer *textDrawer;
+    // cTextDrawer *textDrawer;
 };

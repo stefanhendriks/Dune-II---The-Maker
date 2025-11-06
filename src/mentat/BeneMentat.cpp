@@ -45,7 +45,7 @@ BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
                 players[HUMAN].setHouse(this->getHouse());
                game.initiateFadingOut();})
             .build();
-    textDrawer = new cTextDrawer(bene_font);
+    // textDrawer = new cTextDrawer(bene_font);
 }
 
 void BeneMentat::think()
@@ -62,8 +62,8 @@ void BeneMentat::draw()
     if (state == AWAITING_RESPONSE) {
         std::string houseName = cPlayer::getHouseNameForId(house);
         std::string msg = std::format("Do you wish to join house {} ?", houseName);
-        textDrawer->drawText(offsetX + 17, offsetY + 17, Color{0, 0, 0,255}, msg);
-        textDrawer->drawText(offsetX + 16, offsetY + 16, Color{255, 214, 137,255}, msg);
+        m_textDrawer->drawText(offsetX + 17, offsetY + 17, Color{0, 0, 0,255}, msg);
+        m_textDrawer->drawText(offsetX + 16, offsetY + 16, Color{255, 214, 137,255}, msg);
     }
 }
 
