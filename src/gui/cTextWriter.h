@@ -15,11 +15,9 @@
 
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
 // every new command it will start on a new line.
-
-
 class cTextWriter {
 public:
-    cTextWriter(cTextDrawer* _textDrawer,/*TTF_Font *theFont,*/ int theFontSize);
+    cTextWriter(cTextDrawer* _textDrawer,int theFontSize);
     ~cTextWriter();
 
     void write(const std::string &msg);
@@ -42,10 +40,7 @@ protected:
 
 private:
     cTextDrawer *textDrawer;
-    // TTF_Font *font;
     int fontSize;
-    // int originalX;
-    // int originalY;
     int drawY;
     int drawX;
 };

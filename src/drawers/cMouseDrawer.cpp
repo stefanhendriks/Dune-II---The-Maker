@@ -88,7 +88,6 @@ int cMouseDrawer::getHeightToolTip()
                 height = 50;
                 break;
         }
-
         return height;
     }
 
@@ -110,8 +109,7 @@ void cMouseDrawer::drawToolTip()
     cGameControlsContext *context = player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
-        //auto textWriter = cTextWriter((x + 2), (y + 2), /*small_font,*/ 12);
-        textWriter->moveTo((x + 2), (y + 2));
+        textWriter->moveTo(x + 2, y + 2);
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
 
         drawToolTipBackground();

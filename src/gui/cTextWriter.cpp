@@ -1,22 +1,17 @@
 #include "cTextWriter.h"
 #include <cassert>
 
-cTextWriter::cTextWriter(cTextDrawer* _textDrawer,/*TTF_Font *theFont,*/ int theFontSize)
+cTextWriter::cTextWriter(cTextDrawer* _textDrawer, int theFontSize)
 {
-    // assert(theFont);
     assert(theFontSize > 0);
-    // originalX=x;
     drawX=-1;
-    // originalY=y;
     drawY=-1;
-    // font = theFont;
     fontSize = theFontSize;
-    textDrawer = _textDrawer;//new cTextDrawer();
+    textDrawer = _textDrawer;
 }
 
 cTextWriter::~cTextWriter()
 {
-    // font=nullptr;
     delete textDrawer;
 }
 
