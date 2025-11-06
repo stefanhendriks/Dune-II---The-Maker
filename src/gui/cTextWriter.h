@@ -19,7 +19,7 @@
 
 class cTextWriter {
 public:
-    cTextWriter(int x, int y, /*TTF_Font *theFont,*/ int theFontSize);
+    cTextWriter(cTextDrawer* _textDrawer,/*TTF_Font *theFont,*/ int theFontSize);
     ~cTextWriter();
 
     void write(const std::string &msg);
@@ -34,6 +34,8 @@ public:
     void writef(Color color, std::format_string<Args...> fmtStr, Args &&... args) {
         write(std::format(fmtStr, std::forward<Args>(args)...), color);
     }
+
+    void moveTo(int x, int y);
 
 protected:
     void updateDrawY();

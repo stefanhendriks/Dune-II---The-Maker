@@ -12,28 +12,29 @@ RIGHT mouse button -> deselect / cancel
 GAME KEYS:
 ----------
 
-ESC			- In main menu: quits game
-            - In house select/setup skirmish: goes to main menu
-            - In Options menu: does nothing
-            - All else: opens options menu
+ESC		- In main menu: quits game
+        	- In house select/setup skirmish: goes to main menu
+        	- In Options menu: does nothing
+        	- All else: opens options menu
 
 Arrow keys	- move map camera. See settings.ini for adjusting camera speed.
 
-F11			- Take screenshot
+F11		- Take screenshot
 
 Mouse wheel - Map zooming. Press Z to restore.
 
-R			- Press to enable Repair mode, press again to get out of Repair mode.
-              - Once in repair mode: hover above damaged structures OR units. Mouse will turn into repair icon, click
+R		- Press to enable Repair mode, press again to get out of Repair mode.
+              	- Once in repair mode: hover above damaged structures OR units. Mouse will turn into repair icon, click
                 to either repair structure or order unit to repair. (units can also be just moved into repair facility)
-F			- Show FPS
-D		    - When harvester selected, it will return to refinery (carryall will pickup if possible)
-            - When Const Yard selected, it will deploy
+F		- Show FPS
+D		- When harvester selected, it will return to refinery (carryall will pickup if possible)
+            	- When Const Yard selected, it will deploy
 SHIFT		- Hold and click on other units to add/remove them to your selection
-H			- Set screen to Construction Yard / Start location
+H		- Set screen to Construction Yard / Start location
 CTRL-<NR>	- Create group of selected units (till nr 5)
 <number>	- Select created group
-Z           - Restore zoom factor.
+Z       	- Restore zoom factor.
+T		- Shows More Info Box
 
 
 DEBUG MODE KEYS
@@ -59,3 +60,12 @@ D		- Show all non-passable cells (keep key pressed)
 				   BLUE= IMPASSABLE UNIT
 				   GREEN=IMPASSABLE STRUCTURE
 D		- Show ID's of unit/Structures (keep key pressed)
+
+G		- Shows Grid
+
+Additional Debug Keys found
+
+Tab+0 - View|Control Human Player
+Tab+1 - View|Control AI Player 1
+Tab+2 - View|Control AI Player 2
+Tab+3 - View|Control AI Player 3

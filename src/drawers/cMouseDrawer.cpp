@@ -13,10 +13,11 @@
 
 #include <algorithm>
 
-cMouseDrawer::cMouseDrawer(cPlayer *thePlayer) : m_mouseToolTip(thePlayer), player(thePlayer)
+cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_mouseToolTip(thePlayer), player(thePlayer)
 {
     assert(thePlayer);
     mouseX = mouseY = 0;
+    textWriter = new cTextWriter(textDrawer,12);
 }
 
 void cMouseDrawer::draw()
@@ -109,25 +110,25 @@ void cMouseDrawer::drawToolTip()
     cGameControlsContext *context = player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
-        auto textWriter = cTextWriter((x + 2), (y + 2), /*small_font,*/ 12);
-
+        //auto textWriter = cTextWriter((x + 2), (y + 2), /*small_font,*/ 12);
+        textWriter->moveTo((x + 2), (y + 2));
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
 
         drawToolTipBackground();
-        drawToolTipGeneralInformation(theStructure, textWriter);
+        drawToolTipGeneralInformation(theStructure);
 
 //		// depending on structure type give more info
         int structureType = theStructure->getType();
         if (structureType == WINDTRAP) {
             cWindTrap *windTrap = dynamic_cast<cWindTrap *>(theStructure);
             assert(windTrap);
-            drawToolTipWindTrapInformation(windTrap, textWriter);
+            drawToolTipWindTrapInformation(windTrap);
         }
         else if (structureType == SILO || structureType == REFINERY) {
-            drawToolTipSiloInformation(theStructure, textWriter);
+            drawToolTipSiloInformation(theStructure);
         }
         else if (structureType == TURRET || structureType == RTURRET) {
-            drawToolTipTurretInformation(theStructure, textWriter);
+            drawToolTipTurretInformation(theStructure);
         }
     }
 }
@@ -168,20 +169,20 @@ void cMouseDrawer::drawToolTipBackground()
     renderDrawer->renderRectFillColor(shadowX, y + 4, 4, height, black);
 }
 
-void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure, cTextWriter &textWriter)
+void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure)
 {
     assert(theStructure);
     if (theStructure->belongsTo(player)) {
-        textWriter.write(std::format("Sight : {}", theStructure->getSight()));
-        textWriter.write(std::format("Range : {}", theStructure->getRange()));
+        textWriter->write(std::format("Sight : {}", theStructure->getSight()));
+        textWriter->write(std::format("Range : {}", theStructure->getRange()));
     }
     else {
-        textWriter.write("Sight : Unknown");
-        textWriter.write("Range : Unknown");
+        textWriter->write("Sight : Unknown");
+        textWriter->write("Range : Unknown");
     }
 }
 
-void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructure, cTextWriter &textWriter)
+void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructure)
 {
     assert(theStructure);
     const s_StructureInfo &structureType = theStructure->getStructureInfo();
@@ -193,13 +194,13 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
     else {
         description=std::format("{}", structureType.name);
     }
-    textWriter.write(description.c_str(), Color{255, 255, 0,255});
-    textWriter.writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());
-    textWriter.writef("Armor : {}", theStructure->getArmor());
-    textWriter.writef("Protected : {}%%", (100-theStructure->getPercentageNotPaved()));
+    textWriter->write(description.c_str(), Color{255, 255, 0,255});
+    textWriter->writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());
+    textWriter->writef("Armor : {}", theStructure->getArmor());
+    textWriter->writef("Protected : {}%%", (100-theStructure->getPercentageNotPaved()));
 }
 
-void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap, cTextWriter &textWriter)
+void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap)
 {
     assert(theWindTrap);
     if (theWindTrap->getOwner() == HUMAN) {
@@ -207,20 +208,20 @@ void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap, cTextW
         int powerUse = theWindTrap->getPlayer()->getPowerUsage();
 
         if (powerUse <= powerOut) {
-            textWriter.writef("Total usage : {}/{} (OK)", powerUse, powerOut);
+            textWriter->writef("Total usage : {}/{} (OK)", powerUse, powerOut);
         }
         else {
-            textWriter.writef("Total usage : {}/{} (LOW)", powerUse, powerOut);
+            textWriter->writef("Total usage : {}/{} (LOW)", powerUse, powerOut);
         }
-        textWriter.writef("Windtrap outage : {}/{}", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
+        textWriter->writef("Windtrap outage : {}/{}", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
     }
     else {
-        textWriter.write("Total usage : Unknown");
-        textWriter.write("Windtrap outage : Unknown");
+        textWriter->write("Total usage : Unknown");
+        textWriter->write("Windtrap outage : Unknown");
     }
 }
 
-void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure, cTextWriter &textWriter)
+void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure)
 {
     assert(theStructure);
 
@@ -243,15 +244,15 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure, 
         int maxSpice = thePlayer->getMaxCredits();
         int currentSpice =  thePlayer->getCredits();
         if (currentSpice <= maxSpice) {
-            textWriter.writef("Total usage : {}/{} (OK)", currentSpice, maxSpice);
+            textWriter->writef("Total usage : {}/{} (OK)", currentSpice, maxSpice);
         }
         else {
-            textWriter.writef("Total usage : {}/{} (NOK)", currentSpice, maxSpice);
+            textWriter->writef("Total usage : {}/{} (NOK)", currentSpice, maxSpice);
         }
-        textWriter.writef("Silo capacity : {}/{}", spiceCapacityOfStructure, 1000);
+        textWriter->writef("Silo capacity : {}/{}", spiceCapacityOfStructure, 1000);
     }
     else {
-        textWriter.write("Spice usage : Unknown");
+        textWriter->write("Spice usage : Unknown");
     }
 }
 
