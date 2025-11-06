@@ -59,7 +59,6 @@ private:
 
     // pressed state
     bool m_pressed;
-
     bool m_enabled;
 
     // Functions
