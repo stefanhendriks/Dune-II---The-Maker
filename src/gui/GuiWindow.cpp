@@ -4,12 +4,12 @@
 #include "drawers/SDLDrawer.hpp"
 
 
-GuiWindow::GuiWindow(const cRectangle &rect) : GuiObject(rect)
+GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer ) : GuiObject(rect)
 {
     this->title = "";
     gui_objects = std::vector<GuiObject *>(0);
-    this->textDrawer = cTextDrawer(bene_font);
-    textDrawer.setTextColor(Color::yellow());
+    m_textDrawer = _textDrawer;
+    m_textDrawer->setTextColor(Color::yellow());
 }
 
 GuiWindow::~GuiWindow() noexcept
@@ -21,16 +21,14 @@ GuiWindow::~GuiWindow() noexcept
 
 void GuiWindow::draw() const
 {
-    //Color colorYellow = Color{255, 207, 41,255};
     // draw window itself...
     drawRectFillBorder(m_theme);
-
     for (auto &guiObject : gui_objects) {
         guiObject->draw();
     }
 
     // draw title
-    textDrawer.drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::yellow());
+    m_textDrawer->drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::yellow());
 }
 
 void GuiWindow::addGuiObject(GuiObject *guiObject)

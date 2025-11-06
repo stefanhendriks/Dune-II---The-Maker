@@ -37,7 +37,7 @@ void cOptionsState::constructWindow(int prevState)
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    m_guiWindow = new GuiWindow(window);
+    m_guiWindow = new GuiWindow(window, m_textDrawer);
     m_guiWindow->setTheme(GuiTheme::Light());
     cSoundPlayer* soundPlayer = m_ctx->getSoundPlayer();
 

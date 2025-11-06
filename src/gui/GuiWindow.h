@@ -8,7 +8,7 @@
 
 class GuiWindow : protected GuiObject {
 public:
-    explicit GuiWindow(const cRectangle &rect);
+    explicit GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer);
     ~GuiWindow() noexcept override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -29,6 +29,6 @@ public:
 private:
     std::vector<GuiObject *> gui_objects;
     std::string title;
-    cTextDrawer textDrawer;
+    cTextDrawer* m_textDrawer = nullptr;
 };
 
