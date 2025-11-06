@@ -72,7 +72,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new GuiWindow(window);
+    gui_window = new GuiWindow(window, m_textDrawer);
     gui_window->setTheme(GuiTheme::Light());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
