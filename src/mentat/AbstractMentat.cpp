@@ -52,7 +52,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     leftGuiButton = nullptr;
     rightGuiButton = nullptr;
 
-    m_textDrawer->setFont(bene_font);
+    // m_textDrawer->setFont(bene_font);
 
     if (canMissionSelect) {
 
