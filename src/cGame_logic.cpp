@@ -880,7 +880,7 @@ bool cGame::setupGame()
     //Mira TEXT     return false;
     //Mira TEXT }
 
-    small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
+    // small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
     //Mira TEXT if (small_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(small_font, 10); // set size
