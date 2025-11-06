@@ -14,7 +14,7 @@ class ContextCreator {
 public:
     ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator);
     ContextCreator() = delete;
-    ~ContextCreator() = default;
+    ~ContextCreator();
 
     std::unique_ptr<GraphicsContext> createGraphicsContext();
     std::unique_ptr<TextContext> createTextContext();

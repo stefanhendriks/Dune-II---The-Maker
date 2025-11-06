@@ -71,6 +71,13 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     }  
 }
 
+ContextCreator::~ContextCreator()
+{
+    TTF_CloseFont(game_font);
+    TTF_CloseFont(bene_font);
+    TTF_CloseFont(small_font);
+}
+
 std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
 {
     auto gtx = std::make_unique<GraphicsContext>();
