@@ -120,7 +120,7 @@ private:
 
     // TODO: bullet/projectile drawer
     cPlayer *m_player;
-    cTextDrawer m_textDrawer;
+    cTextDrawer *m_textDrawer = nullptr;
     Graphics* m_gfxinter;
 
     void onKeyDown(const cKeyboardEvent &event);

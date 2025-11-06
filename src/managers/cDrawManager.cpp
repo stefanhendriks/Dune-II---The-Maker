@@ -28,11 +28,10 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_mouseDrawer(thePlayer),
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
-    m_textDrawer(game_font),
+    m_textDrawer(ctx->getTextContext()->gameTextDrawer.get()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
     assert(thePlayer);
-
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
@@ -134,10 +133,10 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int startY = 74;
     int height = 14;
-    m_textDrawer.drawText(0, startY, std::format("Units {}/{}", unitsUsed, MAX_UNITS));
-    m_textDrawer.drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer.drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, MAX_BULLETS));
-    m_textDrawer.drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, MAX_PARTICLES));
+    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, MAX_UNITS));
+    m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
+    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, MAX_BULLETS));
+    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, MAX_PARTICLES));
 }
 
 void cDrawManager::drawCredits()
@@ -268,7 +267,7 @@ void cDrawManager::drawNotifications()
 //    int y = cSideBar::TopBarHeight + 14; // 12 pixels
     int y = game.m_screenH - 44;
     for (auto &notification : notifications) {
-        m_textDrawer.drawText(4, y, notification.getColor(), notification.getMessage().c_str());
+        m_textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;
     }
 }
