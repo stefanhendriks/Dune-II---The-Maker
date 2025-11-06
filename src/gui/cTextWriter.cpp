@@ -7,12 +7,12 @@ cTextWriter::cTextWriter(cTextDrawer* _textDrawer, int theFontSize)
     drawX=-1;
     drawY=-1;
     fontSize = theFontSize;
-    textDrawer = _textDrawer;
+    m_textDrawer = _textDrawer;
 }
 
 cTextWriter::~cTextWriter()
 {
-    delete textDrawer;
+    delete m_textDrawer;
 }
 
 void cTextWriter::moveTo(int x, int y)
@@ -23,13 +23,13 @@ void cTextWriter::moveTo(int x, int y)
 
 void cTextWriter::write(const std::string &msg)
 {
-    textDrawer->drawText(drawX, drawY, msg);
+    m_textDrawer->drawText(drawX, drawY, msg);
     updateDrawY();
 }
 
 void cTextWriter::write(const std::string &msg, Color color)
 {
-    textDrawer->drawText(drawX, drawY, color, msg);
+    m_textDrawer->drawText(drawX, drawY, color, msg);
     updateDrawY();
 }
 

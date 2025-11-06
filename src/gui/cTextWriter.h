@@ -39,7 +39,7 @@ protected:
     void updateDrawY();
 
 private:
-    cTextDrawer *textDrawer;
+    cTextDrawer *m_textDrawer;
     int fontSize;
     int drawY;
     int drawX;
