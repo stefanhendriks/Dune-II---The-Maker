@@ -109,7 +109,7 @@ void cMouseDrawer::drawToolTip()
     cGameControlsContext *context = player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
-        auto textWriter = cTextWriter((x + 2), (y + 2), small_font, 12);
+        auto textWriter = cTextWriter((x + 2), (y + 2), /*small_font,*/ 12);
 
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
 

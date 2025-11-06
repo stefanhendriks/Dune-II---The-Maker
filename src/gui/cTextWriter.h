@@ -19,7 +19,7 @@
 
 class cTextWriter {
 public:
-    cTextWriter(int x, int y, TTF_Font *theFont, int theFontSize);
+    cTextWriter(int x, int y, /*TTF_Font *theFont,*/ int theFontSize);
     ~cTextWriter();
 
     void write(const std::string &msg);
@@ -40,10 +40,10 @@ protected:
 
 private:
     cTextDrawer *textDrawer;
-    TTF_Font *font;
+    // TTF_Font *font;
     int fontSize;
-    int originalX;
-    int originalY;
+    // int originalX;
+    // int originalY;
     int drawY;
     int drawX;
 };
