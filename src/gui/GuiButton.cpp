@@ -13,37 +13,13 @@ GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
     , m_onRightMouseButtonClickedAction(nullptr)
     , m_tex(nullptr)
     , m_focus(false)
-    // , m_guiColorButton(Color{176, 176, 196,255})
-    // , m_guiColorBorderLight(Color{252, 252, 252,255})
-    // , m_guiColorBorderDark(Color{84, 84, 120,255})
-    // , m_textColor(Color{255, 255, 255,255}) // default white color
-    // , m_textColorHover(Color{255, 0, 0,255})
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
 }
 
-/*
-GuiButton::GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
-                       eGuiButtonRenderKind renderKind)
-    : GuiButton(textDrawer, rect, btnText)
-{
-    m_renderKind = renderKind;
-}
-*/
-
-// cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
-//                        Color gui_colorBorderLight, Color gui_colorBorderDark)
-//     : cGuiButton(textDrawer, rect, btnText)
-// {
-//     m_guiColorButton = gui_colorButton;
-//     m_guiColorBorderLight = gui_colorBorderLight;
-//     m_guiColorBorderDark = gui_colorBorderDark;
-// }
-
 GuiButton::~GuiButton()
 {
-    // delete m_onLeftMouseButtonClickedAction;
 }
 
 void GuiButton::draw() const
@@ -80,11 +56,6 @@ void GuiButton::draw() const
             break;
     }
 }
-
-// bool GuiButton::hasFocus()
-// {
-//     return m_focus;
-// }
 
 void GuiButton::setTextAlignHorizontal(GuiTextAlignHorizontal value)
 {
@@ -158,21 +129,6 @@ void GuiButton::toggleTextAlignHorizontal()
         m_textAlignHorizontal = GuiTextAlignHorizontal::CENTER;
     }
 }
-
-// void cGuiButton::setGui_ColorButton(Color value)
-// {
-//     m_guiColorButton = value;
-// }
-
-// void cGuiButton::setTextColor(Color value)
-// {
-//     m_textColor = value;
-// }
-
-// void cGuiButton::setTextColorHover(Color value)
-// {
-//     m_textColorHover = value;
-// }
 
 void GuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
 {
@@ -249,13 +205,6 @@ void GuiButton::setOnRightMouseButtonClickedAction(std::function<void()> action)
     m_onRightMouseButtonClickedAction = std::move(action);
 }
 
-// void GuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action)
-// {
-//     m_onLeftMouseButtonClickedAction = [action]() {
-//         if (action) action->execute();
-//     };
-// }
-
 void GuiButton::setEnabled(bool value)
 {
     m_enabled = value;
@@ -263,5 +212,4 @@ void GuiButton::setEnabled(bool value)
 
 void GuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
-
 }
