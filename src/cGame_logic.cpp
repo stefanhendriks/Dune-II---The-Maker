@@ -772,10 +772,6 @@ void cGame::shutdown()
     delete m_mouse;
     delete m_keyboard;
 
-    TTF_CloseFont(game_font);
-    TTF_CloseFont(bene_font);
-    TTF_CloseFont(small_font);
-
     logbook("Allegro FONT library shut down.");
 
     // Release the game dev framework, so that it can do cleanup
