@@ -869,24 +869,12 @@ bool cGame::setupGame()
     //Mira TEXT }
 
     bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
-
-    // gr_bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),20);
     //Mira TEXT if (bene_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(bene_font, 10); // set size
     //Mira TEXT } else {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
     //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
-    //Mira TEXT     return false;
-    //Mira TEXT }
-
-    // small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
-    //Mira TEXT if (small_font != nullptr) {
-    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_SUCCESS);
-    //Mira TEXT     alfont_set_font_size(small_font, 10); // set size
-    //Mira TEXT } else {
-    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getFullName(eGameDirFileName::SMALL), OUTC_FAILED);
-    //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
     //Mira TEXT     return false;
     //Mira TEXT }
 
@@ -929,33 +917,6 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
 
-    // gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
-    // if (gfxinter == nullptr) {
-    //     logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_FAILED);
-    //     return false;
-    // }
-    // else {
-    //     logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER), OUTC_SUCCESS);
-    // }
-
-    // gfxworld = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
-    // if (gfxworld == nullptr) {
-    //     logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_FAILED);
-    //     return false;
-    // }
-    // else {
-    //     logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD), OUTC_SUCCESS);
-    // }
-
-    // gfxmentat = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
-    // if (gfxworld == nullptr) {
-    //     logger->log(LOG_ERROR, COMP_ALLEGRO, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_FAILED);
-    //     return false;
-    // }
-    // else {
-    //     logger->log(LOG_INFO, COMP_ALLEGRO, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT), OUTC_SUCCESS);
-    // }
-
     renderDrawer = new SDLDrawer(renderer);
 
     // randomize timer
@@ -976,8 +937,6 @@ bool cGame::setupGame()
         players[i].init(i, nullptr);
         players[i].setHousesInfo(m_Houses);
     }
-    // logbook("Setup:  BITMAPS");
-    // install_bitmaps();
     logbook("Setup:  STRUCTURES");
     install_structures();
     logbook("Setup:  PROJECTILES");
