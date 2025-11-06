@@ -102,7 +102,7 @@ protected:
     TTF_Font *font;
 
     eMentatState state;
-    cTextDrawer textDrawer;
+    cTextDrawer* m_textDrawer = nullptr;
 
     cRectangle *leftButton;
     cRectangle *rightButton;

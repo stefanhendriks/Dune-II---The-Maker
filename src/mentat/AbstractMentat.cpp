@@ -26,6 +26,7 @@
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     iMentatSentence = -1;
 
     TIMER_Speaking = -1;
@@ -51,19 +52,19 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     leftGuiButton = nullptr;
     rightGuiButton = nullptr;
 
-    textDrawer.setFont(bene_font);
+    m_textDrawer->setFont(bene_font);
 
     if (canMissionSelect) {
 
-        int length = textDrawer.getTextLength("Mission select");
-        const cRectangle &toMissionSelectRect = *textDrawer.getAsRectangle(game.m_screenW - length,
-                                                game.m_screenH - textDrawer.getFontHeight(),
+        int length = m_textDrawer->getTextLength("Mission select");
+        const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(game.m_screenW - length,
+                                                game.m_screenH - m_textDrawer->getFontHeight(),
                                                 "Mission select");
         
         GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
-            .withTextDrawer(&textDrawer)    
+            .withTextDrawer(m_textDrawer)    
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([] {
@@ -275,11 +276,11 @@ void AbstractMentat::draw()
     if (state == SPEAKING) {
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            textDrawer.drawText(offsetX + 17, offsetY + 17,Color{0, 0, 0,255},sentence[iMentatSentence]);
-            textDrawer.drawText(offsetX + 17, offsetY + 17,Color{255, 255, 255,255},sentence[iMentatSentence]);
+            m_textDrawer->drawText(offsetX + 17, offsetY + 17,Color{0, 0, 0,255},sentence[iMentatSentence]);
+            m_textDrawer->drawText(offsetX + 17, offsetY + 17,Color{255, 255, 255,255},sentence[iMentatSentence]);
 
-            textDrawer.drawText(offsetX + 17, offsetY + 37,Color{0, 0, 0,255},sentence[iMentatSentence+1]);
-            textDrawer.drawText(offsetX + 17, offsetY + 36,Color{255, 255, 255,255},sentence[iMentatSentence+1]);
+            m_textDrawer->drawText(offsetX + 17, offsetY + 37,Color{0, 0, 0,255},sentence[iMentatSentence+1]);
+            m_textDrawer->drawText(offsetX + 17, offsetY + 36,Color{255, 255, 255,255},sentence[iMentatSentence+1]);
         }
     }
 
