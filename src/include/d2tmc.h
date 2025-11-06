@@ -56,7 +56,7 @@ struct SDL_Surface;
 // game
 extern cGame		  game;
 
-extern cMap           global_map;
+extern cMap       global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
@@ -80,7 +80,6 @@ extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
 // GAME FONT
 extern TTF_Font *game_font;
 extern TTF_Font *bene_font;
-// extern TTF_Font *small_font;
 
 // DATAFILES
 extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
