@@ -46,7 +46,7 @@ public:
     }
 
     cMouseDrawer *getMouseDrawer() {
-        return &m_mouseDrawer;
+        return m_mouseDrawer;
     }
 
     cPlaceItDrawer *getPlaceItDrawer() {
@@ -113,8 +113,6 @@ private:
     cMessageDrawer m_messageDrawer;
     cPlaceItDrawer m_placeitDrawer;
     cStructureDrawer m_structureDrawer;
-    cMouseDrawer m_mouseDrawer;
-
     Color m_sidebarColor;
     Texture *btnOptions;
 
@@ -122,6 +120,7 @@ private:
     cPlayer *m_player;
     cTextDrawer *m_textDrawer = nullptr;
     Graphics* m_gfxinter;
+    cMouseDrawer* m_mouseDrawer = nullptr;
 
     void onKeyDown(const cKeyboardEvent &event);
 

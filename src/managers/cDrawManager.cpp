@@ -25,7 +25,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_messageDrawer(ctx),
     m_placeitDrawer(thePlayer),
     m_structureDrawer(ctx),
-    m_mouseDrawer(thePlayer),
+    //m_mouseDrawer(thePlayer),
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
     m_textDrawer(ctx->getTextContext()->gameTextDrawer.get()),
@@ -35,6 +35,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
+    m_mouseDrawer = new cMouseDrawer(thePlayer, ctx->getTextContext()->smallTextDrawer.get() );
 }
 
 cDrawManager::~cDrawManager()
@@ -215,13 +216,13 @@ void cDrawManager::drawCombatMouse()
     cGameControlsContext *context = m_player->getGameControlsContext();
     //context->isMouseRightButtonPressed()
     if (context->shouldDrawToolTip()) {
-        m_mouseDrawer.drawToolTip();
+        m_mouseDrawer->drawToolTip();
     }
 }
 
 void cDrawManager::drawMouse()
 {
-    m_mouseDrawer.draw();
+    m_mouseDrawer->draw();
 }
 
 void cDrawManager::drawTopBarBackground()

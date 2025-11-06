@@ -10,7 +10,7 @@ class cWindTrap;
 
 class cMouseDrawer {
 public:
-    explicit cMouseDrawer(cPlayer *thePlayer);
+    explicit cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer);
 
     void draw();
 
@@ -20,10 +20,10 @@ public:
 
 protected:
     void drawToolTipBackground();
-    void drawToolTipGeneralInformation(cAbstractStructure *theStructure, cTextWriter &textWriter);
-    void drawToolTipWindTrapInformation(cWindTrap *theWindTrap, cTextWriter &textWriter);
-    void drawToolTipSiloInformation(cAbstractStructure *theStructure, cTextWriter &textWriter);
-    void drawToolTipTurretInformation(cAbstractStructure *theStructure, cTextWriter &textWriter);
+    void drawToolTipGeneralInformation(cAbstractStructure *theStructure);
+    void drawToolTipWindTrapInformation(cWindTrap *theWindTrap);
+    void drawToolTipSiloInformation(cAbstractStructure *theStructure);
+    void drawToolTipTurretInformation(cAbstractStructure *theStructure);
 
     int getDrawXToolTip(int width);
     int getDrawYToolTip(int height);
@@ -36,5 +36,6 @@ private:
     cMouseToolTip m_mouseToolTip;
     cPlayer *player;
     int mouseX, mouseY;
+    cTextWriter* textWriter = nullptr;
 };
 
