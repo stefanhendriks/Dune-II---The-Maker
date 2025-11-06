@@ -60,7 +60,7 @@ private:
 
     messages::eMessageDrawerState m_state;
     messages::eMessageDrawerFadingState m_fadeState;
-    cTextDrawer m_textDrawer;
+    cTextDrawer* m_textDrawer=nullptr;
     GameContext* m_ctx;
     Graphics* m_gfxinter;
 
