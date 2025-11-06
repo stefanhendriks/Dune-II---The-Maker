@@ -15,7 +15,6 @@
 
 class cTextDrawer {
 public:
-    // cTextDrawer();
     cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
