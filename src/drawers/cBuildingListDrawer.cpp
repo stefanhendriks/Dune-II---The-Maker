@@ -12,7 +12,8 @@
 #include <format>
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
-    m_textDrawer(game_font),
+    m_gameTextDrawer(ctx->getTextContext()->gameTextDrawer.get()),
+    m_smallTextDrawer(ctx->getTextContext()->smallTextDrawer.get()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_player(player),
     m_renderListIds(false)
@@ -222,9 +223,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     Color red = Color{255, 0, 0,255};
-                    m_textDrawer.setFont(small_font);
-                    m_textDrawer.drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
-                    m_textDrawer.setFont(game_font);
+                    m_smallTextDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
                 }
 
                 // Pending building (ie: a build is progressing, blocking the upgrade)
@@ -235,12 +234,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     Color red = Color{255, 0, 0, 255};
-                    m_textDrawer.setFont(small_font);
                     int height = heightOfIcon / 3;
-                    m_textDrawer.drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
-                    m_textDrawer.drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, red);
-                    m_textDrawer.drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, red);
-                    m_textDrawer.setFont(game_font);
+                    m_smallTextDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
+                    m_smallTextDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, red);
+                    m_smallTextDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, red);
                 }
             }
 
@@ -284,7 +281,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
             // draw
-            m_textDrawer.drawText(textX, textY, std::format("{}",amountToShow));
+            m_gameTextDrawer->drawText(textX, textY, std::format("{}",amountToShow));
         }
 
         if (game.isDebugMode()) {
@@ -292,7 +289,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
 
-                m_textDrawer.drawText(textX, textY, std::format("{}",item->getSubList()));
+                m_gameTextDrawer->drawText(textX, textY, std::format("{}",item->getSubList()));
             }
         }
 

@@ -31,7 +31,8 @@ protected:
 
 private:
     // the list to draw
-    cTextDrawer m_textDrawer;
+    cTextDrawer* m_gameTextDrawer;
+    cTextDrawer* m_smallTextDrawer;
     Graphics* m_gfxinter;
 
     cPlayer *m_player;
