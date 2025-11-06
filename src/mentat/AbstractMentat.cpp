@@ -79,7 +79,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
     state = INIT;
 
-    font = bene_font;
+    // font = bene_font;
 
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
     offsetX = (game.m_screenW - 640) / 2;
