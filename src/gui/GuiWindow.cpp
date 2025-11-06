@@ -9,7 +9,6 @@ GuiWindow::GuiWindow(const cRectangle &rect) : GuiObject(rect)
     this->title = "";
     gui_objects = std::vector<GuiObject *>(0);
     this->textDrawer = cTextDrawer(bene_font);
-    //Color colorYellow = Color{255, 207, 41,255};
     textDrawer.setTextColor(Color::yellow());
 }
 
@@ -24,7 +23,6 @@ void GuiWindow::draw() const
 {
     //Color colorYellow = Color{255, 207, 41,255};
     // draw window itself...
-    // renderDrawer->gui_DrawRect(m_rect);
     drawRectFillBorder(m_theme);
 
     for (auto &guiObject : gui_objects) {

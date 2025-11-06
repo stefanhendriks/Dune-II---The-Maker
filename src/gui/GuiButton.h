@@ -23,13 +23,7 @@ struct GuiButtonParams {
 
 class GuiButton : public GuiObject {
 public:
-    GuiButton(/*const cTextDrawer &textDrawer,*/ const cRectangle &rect, const std::string &btnText);
-
-    //GuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, eGuiButtonRenderKind renderKind);
-
-    // cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, Color gui_colorButton,
-    //            Color gui_colorBorderLight, Color gui_colorBorderDark);
-
+    GuiButton(const cRectangle &rect, const std::string &btnText);
     ~GuiButton();
 
     // From cInputObserver
@@ -38,8 +32,6 @@ public:
 
     // From GuiObject
     void draw() const override;
-
-    // bool hasFocus();
 
     void setTextAlignHorizontal(GuiTextAlignHorizontal value);
     void setTextDrawer(cTextDrawer *cTextDrawer);
@@ -50,13 +42,6 @@ public:
 
     void toggleTextAlignHorizontal();
 
-    // void setGui_ColorButton(Color value);
-
-    // void setTextColor(Color value);
-
-    // void setTextColorHover(Color value);
-
-    // [[deprecated]] void setOnLeftMouseButtonClickedAction(cGuiAction *action);
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
     void setOnRightMouseButtonClickedAction(std::function<void()> action);
 
@@ -67,19 +52,11 @@ private:
     std::string m_buttonText;
     GuiRenderKind m_renderKind;
     GuiTextAlignHorizontal m_textAlignHorizontal;
-    // cGuiAction *m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onRightMouseButtonClickedAction;
     Texture *m_tex;
 
     bool m_focus;
-
-    // Color m_guiColorButton;
-    // Color m_guiColorBorderLight;
-    // Color m_guiColorBorderDark;
-
-    // Color m_textColor;
-    // Color m_textColorHover;
 
     // pressed state
     bool m_pressed;
