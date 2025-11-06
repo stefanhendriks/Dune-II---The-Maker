@@ -52,8 +52,6 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     leftGuiButton = nullptr;
     rightGuiButton = nullptr;
 
-    // m_textDrawer->setFont(bene_font);
-
     if (canMissionSelect) {
 
         int length = m_textDrawer->getTextLength("Mission select");
@@ -78,8 +76,6 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     }
 
     state = INIT;
-
-    // font = bene_font;
 
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
     offsetX = (game.m_screenW - 640) / 2;

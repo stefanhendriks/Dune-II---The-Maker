@@ -18,8 +18,6 @@ public:
     cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
-    // void setFont(TTF_Font *theFont);
-
     void drawText(int x, int y, const std::string &msg) const;
     void drawText(cPoint &coords, Color color, const std::string &msg) const;
     void drawText(int x, int y, Color color, const std::string &msg) const;

@@ -99,7 +99,6 @@ protected:
     int iMentatEyes;
 
     std::shared_ptr<Graphics> gfxmovie;
-    // TTF_Font *font;
 
     eMentatState state;
     cTextDrawer* m_textDrawer = nullptr;
