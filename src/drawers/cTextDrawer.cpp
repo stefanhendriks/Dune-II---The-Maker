@@ -14,8 +14,8 @@ cTextDrawer::cTextDrawer(TTF_Font *theFont)
     textColor = Color{255, 255, 255,255};
 }
 
-cTextDrawer::cTextDrawer() : cTextDrawer(small_font)
-{}
+// cTextDrawer::cTextDrawer() : cTextDrawer(small_font)
+// {}
 
 cTextDrawer::~cTextDrawer()
 {
