@@ -136,12 +136,6 @@ int cTextDrawer::getTextLength(const std::string &msg) const
     return w;
 }
 
-// void cTextDrawer::setFont(TTF_Font *theFont)
-// {
-//     if (theFont == nullptr) return; // do not allow null
-//     this->font = theFont;
-// }
-
 cRectangle cTextDrawer::getRect(int x, int y, const std::string &msg) const
 {
     return cRectangle(x, y, getTextLength(msg), getFontHeight());
