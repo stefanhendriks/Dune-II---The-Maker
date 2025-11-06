@@ -18,9 +18,9 @@
 #include "context/GameContext.hpp"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-
 #include <format>
 
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
@@ -114,7 +114,6 @@ void AbstractMentat::think()
         }
         else if (TIMER_Speaking == 0) {
             // calculate speaking stuff
-
             iMentatSentence += 2; // makes 0, 2, etc.
 
             // done talking

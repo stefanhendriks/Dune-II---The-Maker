@@ -43,7 +43,6 @@ void OrdosMentat::draw()
 
 void OrdosMentat::draw_other()
 {
-
 }
 
 void OrdosMentat::draw_eyes()

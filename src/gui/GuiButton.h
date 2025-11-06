@@ -1,6 +1,5 @@
 #pragma once
 
-// #include "GuiAction.h"
 #include "GuiObject.h"
 #include "utils/cRectangle.h"
 #include "drawers/cTextDrawer.h"
