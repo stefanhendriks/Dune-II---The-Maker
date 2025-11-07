@@ -36,9 +36,9 @@ void cParticleDrawer::drawTopLayer()
     }
 }
 
-void cParticleDrawer::drawDebugInfo()
+void cParticleDrawer::drawDebugInfo(cTextDrawer* textDrawer)
 {
-    cTextDrawer textDrawer(game_font);
-    textDrawer.drawText(0, 100,
+    //cTextDrawer textDrawer(game_font);
+    textDrawer->drawText(0, 100,
                         std::format("Visible particles BOTTOM: {}/ TOP: {}", particlesLowerLayer.size(), particlesTopLayer.size()));
 }

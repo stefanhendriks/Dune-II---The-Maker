@@ -94,7 +94,7 @@ void cDrawManager::drawCombatState()
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
-        m_particleDrawer.drawDebugInfo();
+        m_particleDrawer.drawDebugInfo(m_textDrawer);
     }
 }
 
