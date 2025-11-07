@@ -95,7 +95,7 @@ void cMapDrawer::drawTerrain()
 
     int iPl = m_player->getId();
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
-    cTextDrawer textDrawer = cTextDrawer(bene_font);
+    // cTextDrawer textDrawer = cTextDrawer(bene_font);
 
     // cache for invalid terran
     auto invalidTile = SDL_CreateRGBSurfaceWithFormat(0, 32, 32, 32, SDL_PIXELFORMAT_ARGB8888);

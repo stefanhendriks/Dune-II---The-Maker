@@ -535,7 +535,6 @@ void cGame::drawStateCombat()
 {
     drawManager->drawCombatState();
     if (m_drawFps) {
-        // TEXT alfont_textprintf(bmp_screen, game_font, 0, 44, Color{255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
         m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()));
     }
 
