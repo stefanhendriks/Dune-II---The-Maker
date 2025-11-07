@@ -609,22 +609,22 @@ void cUnit::draw_health()
     }
 }
 
-void cUnit::draw_group()
+void cUnit::draw_group(cTextDrawer* textDrawer)
 {
     if (iHitPoints < 0) return;
 
     // draw units health
-    /// float width_x = mapCamera->factorZoomLevel(getBmpWidth());
-    /// int height_y = mapCamera->factorZoomLevel(4);
-    /// int drawx = draw_x();
-    /// int drawy = draw_y() - (height_y + 2);
+    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
+    int height_y = mapCamera->factorZoomLevel(4);
+    int drawx = draw_x();
+    int drawy = draw_y() - (height_y + 2);
     // draw group
     if (iGroup > 0 && iPlayer == HUMAN) {
         // @mira I don't fix group name without acces to textDrawer: fixed on ctx branch
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, Color{0, 0, 0), "%d", iGroup);
-        //textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),fmt::format("{}",iGroup));
+        textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),std::format("{}",iGroup));
         //Mira TEXT alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, Color{255, 255, 255), "%d", iGroup);
-        //textDrawer->drawText(drawx + 26, drawy - 12, Color::white(),fmt::format("{}",iGroup));
+        textDrawer->drawText(drawx + 26, drawy - 12, Color::white(),std::format("{}",iGroup));
     }
 }
 
