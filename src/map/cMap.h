@@ -28,6 +28,7 @@
 class cReinforcements;
 class MapGeometry;
 struct s_TerrainInfo;
+class GameContext;
 
 class cMap : public cScenarioObserver {
 
@@ -55,6 +56,8 @@ public:
     and runs the normal distance method to get the distance.
     **/
     double distance(int cell1, int cell2);
+
+    void getContext(GameContext* ctx);
 
     int getAbsoluteXPositionFromCell(int cell);
 
@@ -537,6 +540,8 @@ private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
     std::vector<tCell> cell;
+    GameContext *m_ctx = nullptr;
+    cTextDrawer *m_textDrawer = nullptr;
 
     std::unique_ptr<MapGeometry> mapGeometry;
 
