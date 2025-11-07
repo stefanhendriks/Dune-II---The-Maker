@@ -369,14 +369,3 @@ bool cDrawManager::hasMessage()
 {
     return m_messageDrawer.hasMessage();
 }
-
-
-//int points[] =
-//{
-//    0,0,
-//    100,100,
-//    540,100,
-//    640,0
-//};
-//
-//spline(bmp_screen, points, Color{255,255,255));//will draw a nice loopy curve

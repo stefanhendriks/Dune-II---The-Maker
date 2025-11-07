@@ -16,7 +16,6 @@
 cMouse::cMouse(GameContext *ctx) :m_ctx(ctx), coords(cPoint(0,0))
 {
     m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
-    //m_textDrawer(bene_font)
     leftButtonPressed=false;
     rightButtonPressed=false;
     leftButtonReleased=false;
