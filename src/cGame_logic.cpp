@@ -892,7 +892,7 @@ bool cGame::setupGame()
     }
 
     // do it here, because it depends on fonts to be loaded
-    m_mouse = new cMouse();
+    m_mouse = new cMouse(ctx.get());
 
     /***
      * Viewport(s)
