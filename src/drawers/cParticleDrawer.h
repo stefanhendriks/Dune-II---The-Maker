@@ -3,11 +3,13 @@
 #include <vector>
 #include "utils/cRectangle.h"
 
+class cTextDrawer;
+
 class cParticleDrawer {
 public:
     void drawLowerLayer();
     void drawTopLayer();
-    void drawDebugInfo();
+    void drawDebugInfo(cTextDrawer* textDrawer);
 
     void determineParticlesToDraw(const cRectangle &viewport);
 
