@@ -600,7 +600,7 @@ void cMap::drawUnitDebug(cUnit &pUnit) const
 {
     if (!game.m_drawUnitDebug) return;
 
-    pUnit.draw_debug();
+    pUnit.draw_debug(m_textDrawer);
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)

@@ -3399,14 +3399,15 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
     return dimensions.isOverlapping(viewport);
 }
 
-void cUnit::draw_debug()
+void cUnit::draw_debug(cTextDrawer* textDrawer)
 {
     renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,ShadowTrans});
     renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
     //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, "%d", iID);
-
+    textDrawer->drawText(draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, std::format("{}", iID));
     if (isSandworm()) {
         //Mira TEXT alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, Color{255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
+        textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, TIMER_guard, TIMER_movewait));
     }
 }
 

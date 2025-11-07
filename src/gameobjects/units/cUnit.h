@@ -19,6 +19,8 @@
 
 #include <memory>
 
+class cTextDrawer;
+
 enum class eTransferType {
     NONE,                               // nothing to transfer
     NEW_STAY,                           // bring a new unit, and let the carryall stay
@@ -417,7 +419,7 @@ public:
 
     bool isMarkedForRemoval();
 
-    void draw_debug();
+    void draw_debug(cTextDrawer* textDrawer);
 
     void setBoundParticleId(int particleId);
 
