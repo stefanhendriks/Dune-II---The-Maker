@@ -78,8 +78,8 @@ extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
 
 // GAME FONT
-extern TTF_Font *game_font;
-extern TTF_Font *bene_font;
+// extern TTF_Font *game_font;
+// extern TTF_Font *bene_font;
 
 // DATAFILES
 extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)

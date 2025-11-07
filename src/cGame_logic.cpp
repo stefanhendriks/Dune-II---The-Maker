@@ -858,7 +858,7 @@ bool cGame::setupGame()
     ctx->setTextContext(context->createTextContext());
     global_map.getContext(ctx.get());
 
-    game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
+    // game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
     //Mira TEXT if (game_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
@@ -868,7 +868,7 @@ bool cGame::setupGame()
     //Mira TEXT     return false;
     //Mira TEXT }
 
-    bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
+    // bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
     //Mira TEXT if (bene_font != nullptr) {
     //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
     //Mira TEXT     alfont_set_font_size(bene_font, 10); // set size
