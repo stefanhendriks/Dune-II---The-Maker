@@ -858,26 +858,6 @@ bool cGame::setupGame()
     ctx->setTextContext(context->createTextContext());
     global_map.getContext(ctx.get());
 
-    // game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
-    //Mira TEXT if (game_font != nullptr) {
-    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_SUCCESS);
-    //Mira TEXT     alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
-    //Mira TEXT } else {
-    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::ARRAKEEN), OUTC_FAILED);
-    //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
-    //Mira TEXT     return false;
-    //Mira TEXT }
-
-    // bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
-    //Mira TEXT if (bene_font != nullptr) {
-    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded " + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_SUCCESS);
-    //Mira TEXT     alfont_set_font_size(bene_font, 10); // set size
-    //Mira TEXT } else {
-    //Mira TEXT     logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load " + settingsValidator->getName(eGameDirFileName::BENEGESS) , OUTC_FAILED);
-    //Mira TEXT     std::cerr << ("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
-    //Mira TEXT     return false;
-    //Mira TEXT }
-
     m_textDrawer = ctx->getTextContext()->gameTextDrawer.get();
     m_textDrawer->setApplyShadow(false);
 
