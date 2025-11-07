@@ -170,7 +170,7 @@ public:
     void draw_health();
     void draw_experience();
     void draw_spice();
-    void draw_group();
+    void draw_group(cTextDrawer* textDrawer);
     void draw();
     void draw_path() const;
     bool isValid() const;     // valid unit?
