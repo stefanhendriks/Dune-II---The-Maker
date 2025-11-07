@@ -23,6 +23,7 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
+#include "context/GameContext.hpp"
 #include <format>
 
 #include <algorithm>
@@ -58,6 +59,12 @@ cMap::~cMap()
 MapGeometry &cMap::getGeometry() const
 {
     return *mapGeometry;
+}
+
+void cMap::getContext(GameContext* ctx)
+{
+    m_ctx = ctx;
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
