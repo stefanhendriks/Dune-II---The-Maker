@@ -9,11 +9,14 @@
 #include "sidebar/cSideBar.h"
 #include "utils/d2tm_math.h"
 #include "utils/Graphics.hpp"
+#include "context/GameContext.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
 
-cMouse::cMouse() : m_textDrawer(bene_font), coords(cPoint(0,0))
+cMouse::cMouse(GameContext *ctx) :m_ctx(ctx), coords(cPoint(0,0))
 {
+    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
+    //m_textDrawer(bene_font)
     leftButtonPressed=false;
     rightButtonPressed=false;
     leftButtonReleased=false;
@@ -346,7 +349,7 @@ void cMouse::draw()
         if (game.isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
                 int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
-                m_textDrawer.drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
+                m_textDrawer->drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
             }
         }
     }
@@ -356,8 +359,8 @@ void cMouse::draw()
     if (game.isDebugMode()) {
         int y = mouseDrawY;
         for (auto line: debugLines) {
-            m_textDrawer.drawText(mouseDrawX + 32, y, line.c_str());
-            y += m_textDrawer.getFontHeight() + 2;
+            m_textDrawer->drawText(mouseDrawX + 32, y, line.c_str());
+            y += m_textDrawer->getFontHeight() + 2;
         }
     }
 }

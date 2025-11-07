@@ -9,11 +9,12 @@
 #include <vector>
 
 class cRectangle;
+class GameContext;
 
 class cMouse {
 
 public:
-    cMouse();
+    cMouse(GameContext *ctx);
 
     ~cMouse();
 
@@ -94,8 +95,9 @@ public:
 
 private:
     cInputObserver *_mouseObserver;
+    GameContext* m_ctx = nullptr;
+    cTextDrawer* m_textDrawer = nullptr;
 
-    cTextDrawer m_textDrawer;
 
     bool leftButtonPressed;
     bool rightButtonPressed;
