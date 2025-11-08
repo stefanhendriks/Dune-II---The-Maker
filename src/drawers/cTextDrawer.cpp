@@ -30,36 +30,28 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
 
     auto textKeyInstance = textKey{msg, color};
     auto it = m_textCache.find(textKeyInstance);
-    if (it != m_textCache.end()) {
-        // found in cache
-        auto &cacheEntry = it->second;
-        if (applyShadow) {
-            renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
-        }
-        renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
-    } else {
+    if (it == m_textCache.end()) {
         // not found, create it
         auto newCacheEntry = std::make_unique<textCacheEntry>();
         // create shadow texture if needed
         SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
-        newCacheEntry->width = textSurface->w;
-        newCacheEntry->height = textSurface->h;
         newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
         SDL_FreeSurface(textSurface);
         // create main texture
         textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
         newCacheEntry->texture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+        newCacheEntry->width = textSurface->w;
+        newCacheEntry->height = textSurface->h;
         SDL_FreeSurface(textSurface);
-        // store in cache
-        m_textCache[textKeyInstance] = std::move(newCacheEntry);
-
-        // draw it now
-        auto &cacheEntry = m_textCache[textKeyInstance];
-        if (applyShadow) {
-            renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
-        }
-        renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
+        // store in cache at end
+        auto result = m_textCache.emplace(textKeyInstance, std::move(newCacheEntry));
+        it = result.first;
     }
+    auto &cacheEntry = it->second;
+    if (applyShadow) {
+        renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
+    }
+    renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
 }
 
 void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow) const
