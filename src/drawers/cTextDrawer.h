@@ -12,6 +12,34 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
+#include <unordered_map>
+#include <memory>
+
+struct textKey {
+    std::string msg;
+    Color color;
+};
+
+struct textKeyHash {
+    std::size_t operator()(const textKey &k) const {
+        return std::hash<std::string>()(k.msg) ^ std::hash<uint32_t>()( (k.color.r << 24) | (k.color.g <<16) | (k.color.b <<8) | (k.color.a) );
+    }
+};
+
+struct textKeyEqual {
+    bool operator()(const textKey &lhs, const textKey &rhs) const {
+        return lhs.msg == rhs.msg && lhs.color.r == rhs.color.r && lhs.color.g == rhs.color.g &&
+               lhs.color.b == rhs.color.b && lhs.color.a == rhs.color.a;
+    }
+};
+
+struct textCacheEntry {
+    SDL_Texture *texture;
+    SDL_Texture *shadowsTexture;
+    int width;
+    int height;
+};
+
 
 class cTextDrawer {
 public:
@@ -65,4 +93,5 @@ private:
     TTF_Font *m_font;
     // bool applyShadow;
     // Color textColor;
+    mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
 };
