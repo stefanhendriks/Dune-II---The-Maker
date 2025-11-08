@@ -17,6 +17,7 @@ public:
     void renderSprite(Texture *src,int x, int y,Uint8 opacity = 255);
     void renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity = 255);
     void renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity = 255);
+    void renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint8 opacity = 255);
 
     void renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, unsigned char opacity=255);
     void renderRectFillColor(int x, int y, int width, int height, Color color);
