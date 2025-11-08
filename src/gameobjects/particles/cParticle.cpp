@@ -666,7 +666,6 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     if (iType == D2TM_PARTICLE_DEADINF01 || iType == D2TM_PARTICLE_DEADINF02) {
         pParticle.TIMER_dead = 500 + RNG::rnd(500);
         pParticle.iAlpha = 255;
-        pParticle.customiseColor(iHouse);
     }
 
     if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT) {
@@ -701,6 +700,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, iUnitID);
     }
 
+    pParticle.recolorForHouseIfGiven();
     return iNewId;
 }
 
@@ -813,10 +813,13 @@ void cParticle::die()
 }
 
 
-void cParticle::customiseColor(int iHouse)
-{
-    cPlayer &player = players[iHouse];
+void cParticle::recolorForHouseIfGiven() {
+    if (this->iHousePal < 0) {
+        return;
+    }
+
+    cPlayer &player = players[this->iHousePal];
     auto tex = gfxdata->getSurface(sParticleInfo[iType].bmpIndex);
-    bmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex );
+    bmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
     bmpOwner = true;
 }

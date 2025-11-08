@@ -105,5 +105,5 @@ private:
     bool isUsingAlphaChannel() const;
 
     void recreateDimensions();
-    void customiseColor(int iHouse);
+    void recolorForHouseIfGiven();
 };
