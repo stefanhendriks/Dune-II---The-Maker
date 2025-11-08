@@ -31,6 +31,18 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
     SDL_RenderCopy(renderer, src->tex, NULL, &tmp);
 }
 
+void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint8 opacity)
+{
+    if (tex == nullptr) return;
+    SDL_Rect tmp = SDL_Rect{x,y,w,h};
+    SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    if (SDL_SetTextureAlphaMod(tex, opacity)<0) {
+        std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
+    }
+    SDL_RenderCopy(renderer, tex, NULL, &tmp);
+}
+
 void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 {
     SDL_Rect tmp = {x,y,src->w, src->h};
