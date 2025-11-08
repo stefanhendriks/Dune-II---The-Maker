@@ -1331,8 +1331,7 @@ void INI_Install_Game(std::string filename)
                 // determine section
                 section = GAME_INI_SectionType(linesection, section);
 
-                // When we changed section and its a section with adding ID's. We should reset
-                // the ID var
+                // When we changed section, and it's a section with adding ID's, reset the ID var
                 if (last != section) {
                     id = -1;
 
