@@ -376,7 +376,6 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     }
 
     // Evaluate every 30 seconds orso
-    //m_iTIMER_blooms = (1000 / 5) * 30;
     m_iTIMER_blooms = m_terrainInfo->bloomTimerDuration * 30;
 
     const std::vector<int> &blooms = getAllCellsOfType(TERRAIN_BLOOM);
@@ -960,11 +959,9 @@ void cMap::createCell(int cell, int terrainType, int tile)
     cellChangeSmudgeType(cell, -1);
 
     if (terrainType == TERRAIN_SPICE) {
-        // cellChangeCredits(cell, 50 + RNG::rnd(125));
         cellChangeCredits(cell, RNG::genInt(m_terrainInfo->terrainSpiceMinSpice,m_terrainInfo->terrainSpiceMaxSpice));
     }
     else if (terrainType == TERRAIN_SPICEHILL) {
-        //cellChangeCredits(cell, 75 + RNG::rnd(150));
         cellChangeCredits(cell, RNG::genInt(m_terrainInfo->terrainSpiceHillMinSpice,m_terrainInfo->terrainSpiceHillMaxSpice));
     }
     else if (terrainType == TERRAIN_MOUNTAIN) {
