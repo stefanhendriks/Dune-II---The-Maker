@@ -17,7 +17,6 @@
 #include "player/cPlayer.h"
 #include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
-// #include <iostream>
 
 cParticle::cParticle()
 {
@@ -28,7 +27,6 @@ cParticle::cParticle()
 cParticle::~cParticle()
 {
     if (bmpOwner && bmp) {
-        //std::cout << "texture removed" << std::endl;
         delete bmp;
     }
     bmp = nullptr;
@@ -50,7 +48,6 @@ void cParticle::init()
     frameIndex = 0;
     iType = 0;          // type
     if (bmpOwner && bmp) {
-        //std::cout << "texture removed" << std::endl;
         delete bmp;
     }
     bmp = nullptr;
