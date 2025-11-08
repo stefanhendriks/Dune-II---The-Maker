@@ -27,7 +27,7 @@
 
 class cReinforcements;
 class MapGeometry;
-struct sTerrainInfo;
+struct s_TerrainInfo;
 
 class cMap : public cScenarioObserver {
 
@@ -532,7 +532,7 @@ public:
 
     [[nodiscard]] MapGeometry &getGeometry() const;
 
-    void setTerrainInfo(std::shared_ptr<sTerrainInfo> terrainInfo);
+    void setTerrainInfo(std::shared_ptr<s_TerrainInfo> terrainInfo);
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
@@ -547,7 +547,7 @@ private:
     std::map<int, int> m_mBloomTimers;
 
     std::shared_ptr<cReinforcements> m_reinforcements;
-    std::shared_ptr<sTerrainInfo> m_terrainInfo;
+    std::shared_ptr<s_TerrainInfo> m_terrainInfo;
     // Sandworms related
     int m_iDesiredAmountOfWorms;
     int m_iTIMER_respawnSandworms;

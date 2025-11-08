@@ -102,7 +102,7 @@ cGame::cGame()
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
     // initailisation terrainInfo
-    m_TerrainInfo = std::make_shared<sTerrainInfo>();
+    m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -2273,7 +2273,7 @@ void cGame::drawStateWinning()
     }
 }
 
-std::shared_ptr<sTerrainInfo> cGame::getTerrainInfo() const
+std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
 {
     return m_TerrainInfo;
 }
