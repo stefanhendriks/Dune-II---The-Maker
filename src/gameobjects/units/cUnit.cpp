@@ -244,14 +244,15 @@ void cUnit::createSquishedParticle()
 {
     int iDieX = pos_x_centered();
     int iDieY = pos_y_centered();
+    int iHouse = getPlayer()->getHouse();
     // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
         int iType1 = D2TM_PARTICLE_SQUISH01 + RNG::rnd(2);
-        cParticle::create(iDieX, iDieY, iType1, iPlayer, iFrame);
+        cParticle::create(iDieX, iDieY, iType1, iHouse, iFrame);
         game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
     else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
-        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, iFrame);
+        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iHouse, iFrame);
         game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
