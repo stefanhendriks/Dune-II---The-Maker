@@ -51,9 +51,9 @@ public:
     //     applyShadow = value;
     // }
 
-    void setTextColor(Color value) {
-        textColor = value;
-    }
+    // void setTextColor(Color value) {
+    //     textColor = value;
+    // }
     int getTextLength(const std::string &msg) const;
     int getFontHeight() const;
 
@@ -64,5 +64,5 @@ protected:
 private:
     TTF_Font *font;
     // bool applyShadow;
-    Color textColor;
+    // Color textColor;
 };

@@ -7,8 +7,7 @@
 #include <cassert>
 
 cTextDrawer::cTextDrawer(TTF_Font *theFont) :
-    font(theFont),
-    textColor(Color::white())
+    font(theFont)
 {
 }
 
@@ -38,12 +37,12 @@ void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, 
 
 void cTextDrawer::drawText(int x, int y, const std::string &msg, bool applyShadow) const
 {
-    drawText(x, y, textColor, msg, applyShadow);
+    drawText(x, y, Color::white() , msg, applyShadow);
 }
 
 void cTextDrawer::drawTextCentered(const std::string &msg, int y) const
 {
-    drawTextCentered(msg, y, textColor);
+    drawTextCentered(msg, y, Color::white());
 }
 
 void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) const
@@ -94,12 +93,12 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int
 
 void cTextDrawer::drawTextBottomRight(const std::string &msg, int margin) const
 {
-    drawTextBottomRight(textColor, msg, margin);
+    drawTextBottomRight(Color::white(), msg, margin);
 }
 
 void cTextDrawer::drawTextBottomLeft(const std::string &msg, int margin) const
 {
-    drawTextBottomLeft(textColor, msg, margin);
+    drawTextBottomLeft(Color::white(), msg, margin);
 }
 
 void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int margin) const
