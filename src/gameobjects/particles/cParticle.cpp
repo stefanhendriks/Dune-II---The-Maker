@@ -674,7 +674,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     if (iType == D2TM_PARTICLE_SQUISH01 || iType == D2TM_PARTICLE_SQUISH02 ||
-            iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+        iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         pParticle.frameIndex = 0;
         pParticle.TIMER_frame = 50;
     }
@@ -821,8 +821,7 @@ void cParticle::recolorForHouseIfGiven() {
     cPlayer &player = players[this->iHousePal];
     int bmpIndex = sParticleInfo[iType].bmpIndex;
     auto tex = gfxdata->getSurface(bmpIndex);
-    auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
-    if (recoloredBmp) {
+    if (auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex)) {
         bmp = recoloredBmp;
         bmpOwner = true;
     } else {
