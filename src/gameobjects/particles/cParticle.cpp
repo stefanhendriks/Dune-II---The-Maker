@@ -821,8 +821,9 @@ void cParticle::recolorForHouseIfGiven() {
     cPlayer &player = players[this->iHousePal];
     int bmpIndex = sParticleInfo[iType].bmpIndex;
     auto tex = gfxdata->getSurface(bmpIndex);
-    bmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
-    if (bmp) {
+    auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
+    if (recoloredBmp) {
+        bmp = recoloredBmp;
         bmpOwner = true;
     } else {
         logbook(std::format("Texture, from bmpIndex [{}] could not get recolored. For particle type [{}]", bmpIndex, iType));
