@@ -101,7 +101,7 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
-    // initailisation terrainInfo
+    // initialisation terrainInfo
     m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 }
 
