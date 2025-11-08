@@ -76,13 +76,6 @@ public:
     void drawTextBottomRight(Color color, const std::string &msg,int margin =0) const;
     void drawTextBottomLeft(Color color, const std::string &msg,int margin =0) const;
 
-    // void setApplyShadow(bool value) {
-    //     applyShadow = value;
-    // }
-
-    // void setTextColor(Color value) {
-    //     textColor = value;
-    // }
     int getTextLength(const std::string &msg) const;
     int getFontHeight() const;
     void resetCache();
@@ -93,7 +86,5 @@ protected:
 
 private:
     TTF_Font *m_font;
-    // bool applyShadow;
-    // Color textColor;
     mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
 };
