@@ -2321,7 +2321,8 @@ Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refere
     SDL_UnlockSurface(modifiableSurface);
 
     // copy palette
-    if (referenceSurface->format->palette && referenceSurface->format->palette->ncolors > 0) {
+    if (referenceSurface->format->palette &&
+        referenceSurface->format->palette->ncolors > 0) {
         SDL_SetPaletteColors(modifiableSurface->format->palette,
                              referenceSurface->format->palette->colors,
                              0,
