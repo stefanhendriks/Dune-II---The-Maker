@@ -535,7 +535,7 @@ void cGame::drawStateCombat()
 {
     drawManager->drawCombatState();
     if (m_drawFps) {
-        m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()));
+        m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
     }
 
     // for now, call this on game class.
@@ -859,7 +859,7 @@ bool cGame::setupGame()
     global_map.setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->gameTextDrawer.get();
-    m_textDrawer->setApplyShadow(false);
+    //m_textDrawer->setApplyShadow(false);
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
     m_soundPlayer = soundPlayer.get();

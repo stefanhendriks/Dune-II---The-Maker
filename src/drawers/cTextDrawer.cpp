@@ -8,7 +8,6 @@
 
 cTextDrawer::cTextDrawer(TTF_Font *theFont) :
     font(theFont),
-    applyShadow(true),
     textColor(Color::white())
 {
 }
@@ -18,7 +17,7 @@ cTextDrawer::~cTextDrawer()
     font = nullptr; // do not delete, because we are not the owner of it
 }
 
-void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg) const
+void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bool applyShadow) const
 {
     if (msg.empty()) return;
     if (applyShadow) {
@@ -32,14 +31,14 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg) co
     SDL_FreeSurface(texte);
 }
 
-void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg) const
+void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow) const
 {
-    drawText(coords.x, coords.y, color, msg);
+    drawText(coords.x, coords.y, color, msg, applyShadow);
 }
 
-void cTextDrawer::drawText(int x, int y, const std::string &msg) const
+void cTextDrawer::drawText(int x, int y, const std::string &msg, bool applyShadow) const
 {
-    drawText(x, y, textColor, msg);
+    drawText(x, y, textColor, msg, applyShadow);
 }
 
 void cTextDrawer::drawTextCentered(const std::string &msg, int y) const

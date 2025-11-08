@@ -22,7 +22,7 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx) :
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    m_textDrawer->setApplyShadow(false);
+    //m_textDrawer->setApplyShadow(false);
     m_bmpBar = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
@@ -43,7 +43,7 @@ void cMessageDrawer::draw()
     if (m_alpha > -1) {
         renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
         // draw message
-        m_textDrawer->drawText(m_position.x+13, m_position.y+6, Color{0, 0, 0,Uint8(m_alpha)}, m_message);
+        m_textDrawer->drawText(m_position.x+13, m_position.y+6, Color{0, 0, 0,Uint8(m_alpha)}, m_message, false);
     }
 }
 
