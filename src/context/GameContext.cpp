@@ -64,3 +64,18 @@ TextContext *GameContext::getTextContext() const {
         throw std::runtime_error("TextContext not defined");
     }
 }
+
+void GameContext::resetCache()
+{
+    if (m_textContext) {
+        if (m_textContext->smallTextDrawer) {
+            m_textContext->smallTextDrawer->resetCache();
+        }
+        if (m_textContext->beneTextDrawer) {
+            m_textContext->beneTextDrawer->resetCache();
+        }
+        if (m_textContext->gameTextDrawer) {
+            m_textContext->gameTextDrawer->resetCache();
+        }
+    }
+}

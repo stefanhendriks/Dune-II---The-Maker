@@ -1960,6 +1960,11 @@ void cGame::thinkSlow()
     m_timeManager->adaptWaitingTime();
 }
 
+void cGame::think_minute()
+{
+    ctx->resetCache();
+}
+
 void cGame::thinkSlow_state()
 {
     if (isState(GAME_PLAYING)) {

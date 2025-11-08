@@ -47,10 +47,13 @@ private:
     void handleTimerGameTime();
     // system capping to avoid extremely high timers
     void capTimers();
+    // start every 60000 ms
+    void handleTimerMinute();
 
     cGame *m_game;
     int m_timerUnits;		/** !!Specificly!! used for units **/
     int m_timerSecond;
+    int m_timerMinute;
     int m_timerGlobal;
     int m_gameTime;		/** Definition of game time (= in seconds) **/
 
@@ -60,16 +63,19 @@ private:
     uint64_t m_lastUnitsTick = 0;
     uint64_t m_lastGameTimeTick = 0;
     uint64_t m_lastSecondsTick = 0;
+    uint64_t m_lastMinuteTick = 0;
 
     struct DurationTime {
       uint64_t gameTickDuration;  // 5 
       uint64_t unitTickDuration;  // 100
       uint64_t secondTickDuration; // 1000
+      uint64_t minTickDuration; // 60000
 
     void init(int value) {
       gameTickDuration = value;
       unitTickDuration = value * 20;
       secondTickDuration = value * 200;
+      minTickDuration = 60000;
     }
     };
 

@@ -15,6 +15,7 @@ cTimeManager::cTimeManager(cGame *game)
     : m_game(game)
     , m_timerUnits(0)
     , m_timerSecond(0)
+    , m_timerMinute(0)
     , m_timerGlobal(0)
     , m_gameTime(0)
 {
@@ -95,6 +96,17 @@ void cTimeManager::handleTimerUnits()
 }
 
 /**
+ * units timer is called every 100 ms, try to keep up with that.
+ */
+void cTimeManager::handleTimerMinute()
+{
+    if (m_timerMinute > 0) {
+        m_game->think_minute();
+        m_timerMinute--;
+    }
+}
+
+/**
 	This function is called by the game class in the run() function.
 
 	It is important that this function is called first, as it will make sure
@@ -129,10 +141,17 @@ void cTimeManager::processTime()
         m_timerSecond++;
         m_lastSecondsTick += durationTime.secondTickDuration;
     }
+
+    // 60000 ms pour allegro_timerseconds
+    while (now - m_lastMinuteTick >= durationTime.minTickDuration) {
+        m_timerMinute++;
+        m_lastMinuteTick += durationTime.minTickDuration;
+    }
     capTimers();
     handleTimerSecond();
     handleTimerUnits();
     handleTimerGameTime();
+    handleTimerMinute();
 }
 
 int cTimeManager::getFps() const
