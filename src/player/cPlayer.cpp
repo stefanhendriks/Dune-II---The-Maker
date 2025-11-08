@@ -2303,6 +2303,7 @@ void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
 
 Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency)
 {
+    assert(referenceSurface && "referenceSurface must be given");
     SDL_Renderer *_renderer = renderDrawer->getRenderer();
 
     // Step 1: Create a copy of the surface (same INDEX8 format)
