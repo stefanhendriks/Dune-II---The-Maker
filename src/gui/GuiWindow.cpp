@@ -9,7 +9,7 @@ GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer ) : GuiObj
     this->title = "";
     gui_objects = std::vector<GuiObject *>(0);
     m_textDrawer = _textDrawer;
-    m_textDrawer->setTextColor(Color::yellow());
+    // m_textDrawer->setTextColor(Color::yellow());
 }
 
 GuiWindow::~GuiWindow() noexcept
