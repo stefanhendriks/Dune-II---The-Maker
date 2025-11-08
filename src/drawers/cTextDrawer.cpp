@@ -13,21 +13,53 @@ cTextDrawer::cTextDrawer(TTF_Font *theFont) :
 
 cTextDrawer::~cTextDrawer()
 {
+    for (auto &pair : m_textCache) {
+        if (pair.second->texture) {
+            SDL_DestroyTexture(pair.second->texture);
+        }
+        if (pair.second->shadowsTexture) {
+            SDL_DestroyTexture(pair.second->shadowsTexture);
+        }
+    }
     m_font = nullptr; // do not delete, because we are not the owner of it
 }
 
 void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bool applyShadow) const
 {
     if (msg.empty()) return;
-    if (applyShadow) {
-        SDL_Surface *texte = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
-        assert(texte);
-        renderDrawer->renderFromSurface(texte,x+1,y+1);
-        SDL_FreeSurface(texte);
+
+    auto textKeyInstance = textKey{msg, color};
+    auto it = m_textCache.find(textKeyInstance);
+    if (it != m_textCache.end()) {
+        // found in cache
+        auto &cacheEntry = it->second;
+        if (applyShadow) {
+            renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
+        }
+        renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
+    } else {
+        // not found, create it
+        auto newCacheEntry = std::make_unique<textCacheEntry>();
+        // create shadow texture if needed
+        SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
+        newCacheEntry->width = textSurface->w;
+        newCacheEntry->height = textSurface->h;
+        newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+        SDL_FreeSurface(textSurface);
+        // create main texture
+        textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
+        newCacheEntry->texture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+        SDL_FreeSurface(textSurface);
+        // store in cache
+        m_textCache[textKeyInstance] = std::move(newCacheEntry);
+
+        // draw it now
+        auto &cacheEntry = m_textCache[textKeyInstance];
+        if (applyShadow) {
+            renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
+        }
+        renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
     }
-    SDL_Surface *texte = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
-    renderDrawer->renderFromSurface(texte,x,y);
-    SDL_FreeSurface(texte);
 }
 
 void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow) const
