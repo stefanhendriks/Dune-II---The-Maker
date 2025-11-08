@@ -117,22 +117,6 @@ cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, int subList
 {
 }
 
-// int cBuildingListItem::getCosts()
-// {
-//     int costs = 0;
-
-//     if (type == UNIT) {
-//         costs = sUnitInfo[buildId].cost;
-//     }
-//     else if (type == STRUCTURE) {
-//         costs = sStructureInfo[buildId].cost;
-//     }
-//     else if (type == UPGRADE) {
-//         costs = sUpgradeInfo[buildId].cost;
-//     }
-//     return costs;
-// }
-
 /**
  * Return the amount of money the player gets back
  * @return
