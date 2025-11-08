@@ -38,6 +38,7 @@ struct textCacheEntry {
     SDL_Texture *shadowsTexture;
     int width;
     int height;
+    int lifeCounter;
 };
 
 
