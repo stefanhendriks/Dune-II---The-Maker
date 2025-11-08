@@ -1799,8 +1799,8 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
 
 void install_terrain(std::shared_ptr<s_TerrainInfo>& terrainInfo)
 {
-    terrainInfo->iBloomTimerDuration = 200;
-    terrainInfo->iTerrainSpiceMinSpice = 50;
+    terrainInfo->bloomTimerDuration = 200;
+    terrainInfo->terrainSpiceMinSpice = 50;
     terrainInfo->terrainSpiceMaxSpice = 125;
     terrainInfo->terrainSpiceHillMinSpice = 75;
     terrainInfo->terrainSpiceHillMaxSpice = 150;
