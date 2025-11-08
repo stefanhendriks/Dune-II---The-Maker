@@ -3,29 +3,29 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Color.hpp"
-
+#include <iostream>
 #include <cassert>
 
 cTextDrawer::cTextDrawer(TTF_Font *theFont) :
-    font(theFont)
+    m_font(theFont)
 {
 }
 
 cTextDrawer::~cTextDrawer()
 {
-    font = nullptr; // do not delete, because we are not the owner of it
+    m_font = nullptr; // do not delete, because we are not the owner of it
 }
 
 void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bool applyShadow) const
 {
     if (msg.empty()) return;
     if (applyShadow) {
-        SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), Color::black().toSDL());
+        SDL_Surface *texte = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
         assert(texte);
         renderDrawer->renderFromSurface(texte,x+1,y+1);
         SDL_FreeSurface(texte);
     }
-    SDL_Surface *texte = TTF_RenderText_Blended(font, msg.c_str(), color.toSDL());
+    SDL_Surface *texte = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
     renderDrawer->renderFromSurface(texte,x,y);
     SDL_FreeSurface(texte);
 }
@@ -49,7 +49,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) c
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(font, msg.c_str(), &w, &h);
+    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int half = w / 2;
     int xPos = (game.m_screenW / 2) - half;
     drawText(xPos, y, color, msg);
@@ -59,7 +59,7 @@ void cTextDrawer::drawTextCenteredInBox(const std::string &msg, int x, int y, in
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(font, msg.c_str(), &w, &h);
+    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
     int heightInPixels = h;
 
@@ -84,7 +84,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(font, msg.c_str(), &w, &h);
+    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
     int half = lenghtInPixels / 2;
     int xPos = x + ((width / 2) - half);
@@ -105,7 +105,7 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(font, msg.c_str(), &w, &h);
+    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
     int x = game.m_screenW - lenghtInPixels-margin;
     int y = game.m_screenH - getFontHeight()-20-margin;
@@ -114,14 +114,14 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
 
 int cTextDrawer::getFontHeight() const
 {
-    return TTF_FontHeight(font);
+    return TTF_FontHeight(m_font);
 }
 
 void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int margin) const
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(font, msg.c_str(), &w, &h);
+    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int y = game.m_screenH - h-20-margin;
     drawText(margin, y, color, msg);
 }
@@ -129,7 +129,7 @@ void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int ma
 int cTextDrawer::getTextLength(const std::string &msg) const
 {
     int w,h;
-    TTF_SizeUTF8(font, msg.c_str(), &w, &h);
+    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     return w;
 }
 

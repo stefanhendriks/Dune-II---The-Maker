@@ -62,7 +62,7 @@ public:
 protected:
 
 private:
-    TTF_Font *font;
+    TTF_Font *m_font;
     // bool applyShadow;
     // Color textColor;
 };
