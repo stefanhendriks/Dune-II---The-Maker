@@ -1,6 +1,8 @@
 #ifndef CCELL_H_
 #define CCELL_H_
 
+#include "definitions.h"
+
 struct tCell {
     int credits;        // amount of credits that can be harvested from this tile
     int type;           // refers to gfxdata (terrain type)
