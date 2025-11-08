@@ -18,9 +18,9 @@ public:
     cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
-    void drawText(int x, int y, const std::string &msg) const;
-    void drawText(cPoint &coords, Color color, const std::string &msg) const;
-    void drawText(int x, int y, Color color, const std::string &msg) const;
+    void drawText(int x, int y, const std::string &msg, bool applyShadow = true) const;
+    void drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow = true) const;
+    void drawText(int x, int y, Color color, const std::string &msg, bool applyShadow = true) const;
 
     void drawTextCentered(const std::string &msg, int y) const;
     void drawTextCentered(const std::string &msg, int y, Color color) const;
@@ -47,9 +47,9 @@ public:
     void drawTextBottomRight(Color color, const std::string &msg,int margin =0) const;
     void drawTextBottomLeft(Color color, const std::string &msg,int margin =0) const;
 
-    void setApplyShadow(bool value) {
-        applyShadow = value;
-    }
+    // void setApplyShadow(bool value) {
+    //     applyShadow = value;
+    // }
 
     void setTextColor(Color value) {
         textColor = value;
@@ -63,6 +63,6 @@ protected:
 
 private:
     TTF_Font *font;
-    bool applyShadow;
+    // bool applyShadow;
     Color textColor;
 };
