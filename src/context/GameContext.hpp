@@ -25,6 +25,8 @@ public:
 
     void setTextContext(std::unique_ptr<TextContext> textContext);
     TextContext* getTextContext() const;
+
+    void resetCache();
 private:
     std::unique_ptr<GraphicsContext> m_graphicsContext;
     std::unique_ptr<cTimeManager> m_timeManager;

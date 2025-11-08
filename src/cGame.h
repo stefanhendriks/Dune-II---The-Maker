@@ -245,6 +245,7 @@ public:
     void think_state();
 
     void thinkSlow();
+    void think_minute();
 
     bool isTurretsDownOnLowPower() {
         return m_turretsDownOnLowPower;

@@ -167,3 +167,8 @@ cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) co
 {
     return new cRectangle(x, y, getTextLength(msg), getFontHeight());
 }
+
+void cTextDrawer::resetCache()
+{
+    
+}
