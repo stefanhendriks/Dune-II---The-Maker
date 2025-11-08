@@ -112,10 +112,6 @@ void cMap::init(int width, int height)
     this->width = width;
     this->height = height;
     mapGeometry->resize(this->width,this->height);
-
-    //std::cout << "first ?" << std::endl;
-    //m_iTIMER_blooms = m_terrainInfo->BloomTimerDuration;
-    //std::cout << "bloom " << m_iTIMER_blooms  << std::endl;
 }
 
 void cMap::smudge_increase(int iType, int iCell)
@@ -1374,10 +1370,6 @@ void cMap::cellInit(int cellNr)
     // clear out the ID stuff
     memset(pCell->id, -1, sizeof(pCell->id));
     memset(pCell->iVisible, 0, sizeof(pCell->iVisible));
-
-    // for (int i = 0; i < MAX_PLAYERS; i++) {
-    //     setVisible(cellNr, i, false);
-    // }
 }
 
 cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer)
