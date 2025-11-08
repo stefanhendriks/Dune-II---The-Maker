@@ -47,6 +47,7 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
         auto result = m_textCache.emplace(textKeyInstance, std::move(newCacheEntry));
         it = result.first;
     }
+    // draw it yet.
     auto &cacheEntry = it->second;
     if (applyShadow) {
         renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
