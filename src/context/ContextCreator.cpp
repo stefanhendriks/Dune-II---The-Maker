@@ -55,7 +55,7 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     }  
 
     bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
-    if (game_font == nullptr) {
+    if (bene_font == nullptr) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load font:" + settingsValidator->getName(eGameDirFileName::BENEGESS), OUTC_FAILED);
     }
     else {
@@ -63,7 +63,7 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     }  
 
     small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
-    if (game_font == nullptr) {
+    if (small_font == nullptr) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load font:" + settingsValidator->getName(eGameDirFileName::SMALL), OUTC_FAILED);
     }
     else {
