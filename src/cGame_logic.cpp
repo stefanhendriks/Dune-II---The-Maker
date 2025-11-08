@@ -774,7 +774,7 @@ void cGame::shutdown()
     logbook("Allegro FONT library shut down.");
 
     // Release the game dev framework, so that it can do cleanup
-    m_PLInit.reset();
+    //m_PLInit.reset();
 }
 
 
