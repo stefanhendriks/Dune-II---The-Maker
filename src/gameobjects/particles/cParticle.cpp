@@ -30,17 +30,16 @@ cParticle::~cParticle()
         delete bmp;
     }
     bmp = nullptr;
-    if (dimensions) delete dimensions;
+    delete dimensions;
 }
 
 
-// init
 void cParticle::init()
 {
     boundUnitID = -1;
     boundParticleID = -1;
     oldParticle = true;
-    bAlive = false;       // alive (if yes, it is in use, if not it can be used)
+    bAlive = false;         // alive (if yes, it is in use, if not it can be used)
     iAlpha = -1;            // alpha number
 
     x = 0;
@@ -62,23 +61,19 @@ void cParticle::init()
 
     TIMER_dead = 0;     // when > -1, this timer will determine when the thing dies
 
-    if (dimensions) delete dimensions;
+    delete dimensions;
     dimensions = nullptr;
 }
 
-// valid
-bool cParticle::isValid()
-{
+bool cParticle::isValid() const {
     return bAlive;
 }
 
-int cParticle::draw_x()
-{
+int cParticle::draw_x() const {
     return mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
-int cParticle::draw_y()
-{
+int cParticle::draw_y() const {
     return mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
 }
 
@@ -133,22 +128,18 @@ void cParticle::draw()
     }
 }
 
-s_ParticleInfo &cParticle::getParticleInfo() const
-{
+s_ParticleInfo &cParticle::getParticleInfo() const {
     s_ParticleInfo &particleInfo = sParticleInfo[iType];
     return particleInfo;
 }
 
-bool cParticle::isUsingAlphaChannel() const
-{
+bool cParticle::isUsingAlphaChannel() const {
     return iAlpha > -1 && iAlpha < 255;
 }
 
-bool cParticle::isWithinViewport(const cRectangle &viewport)
-{
+bool cParticle::isWithinViewport(const cRectangle &viewport) const {
     return dimensions->isOverlapping(viewport);
 }
-
 
 // called every 5 ms
 void cParticle::thinkFast()

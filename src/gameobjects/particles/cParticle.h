@@ -31,11 +31,11 @@ public:
 
     void draw();
 
-    bool isWithinViewport(const cRectangle &viewport);
+    bool isWithinViewport(const cRectangle &viewport) const;
 
     void thinkFast();
 
-    bool isValid();
+    bool isValid() const;
     int getLayer();
 
     void bindToUnit(int unitID);
@@ -95,9 +95,9 @@ private:
     int boundUnitID;
     int boundParticleID; // when particles are 'tied together'
 
-    int draw_x();
+    int draw_x() const;
 
-    int draw_y();
+    int draw_y() const;
 
     void init(const s_ParticleInfo &particleInfo);
     void think_position();
