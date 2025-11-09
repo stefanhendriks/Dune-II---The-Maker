@@ -1,5 +1,8 @@
 #pragma once
 
+// Taken from cmath.h - An easy way to be cross-platform compatible, see also https://stackoverflow.com/a/6563891/214597
+#define M_PI        3.14159265358979323846264338327950288   /* pi             */
+
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);
 float fRadians(int x1, int y1, int x2, int y2);
