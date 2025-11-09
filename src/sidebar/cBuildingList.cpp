@@ -262,12 +262,12 @@ bool cBuildingList::isOverButton(int x, int y)
  * Ie, the index in the array corresponds with the subList id. Meaning, result[1] = 5 means sublist 1 is building something
  * of ID 5. (depending on the TYPE, it is either a structure or a unit).
  *
- * @return std::array<int, 5>
+ * @return std::array<int, 6>
  */
-std::array<int, 5> cBuildingList::isBuildingItem()
+std::array<int, 6> cBuildingList::isBuildingItem()
 {
-    std::array<int, 5> subListIds;
-    for (int i = 0; i < 5; i++) {
+    std::array<int, 6> subListIds;
+    for (int i = 0; i < 6; i++) {
         subListIds[i] = -1;
     }
     for (int i = 0 ; i < MAX_ITEMS; i++) {
