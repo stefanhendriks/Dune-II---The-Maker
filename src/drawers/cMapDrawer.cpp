@@ -149,9 +149,12 @@ void cMapDrawer::drawTerrain()
 
             // draw Smudge if necessary
             if (cell->smudgetype.has_value() && cell->smudgetile > -1) {
-                const cRectangle src_pos = {cell->smudgetile * 32, static_cast<int>(cell->smudgetype.value()) * 32,32, 32};
-                cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
+                cell->smudgetype.transform([&](const auto &smudgeType) {
+                    const cRectangle src_pos = {cell->smudgetile * 32, static_cast<int>(smudgeType) * 32,32, 32};
+                    cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                    renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
+                    return std::monostate{}; // needed with GCC15, with GCC16 not needed to return anything.
+                });
             }
 
             // Draw debugging information
