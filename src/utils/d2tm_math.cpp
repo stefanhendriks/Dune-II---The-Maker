@@ -22,7 +22,6 @@
 #include "common.h"
 
 #include <cassert>
-#include <cmath>
 #include <cstdlib>
 
 // returns in fRadians
