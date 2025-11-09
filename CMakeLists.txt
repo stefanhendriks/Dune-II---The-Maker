@@ -16,6 +16,11 @@ endif()
 
 message(STATUS "D2TM-Version determined to be: ${D2TM_VERSION}")
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.h"
