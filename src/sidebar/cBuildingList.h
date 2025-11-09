@@ -83,7 +83,7 @@ public:
         return maxItems > 0;
     }
 
-    std::array<int, 5> isBuildingItem();
+    std::array<int, 6> isBuildingItem();
 
     cBuildingListItem *getItemByBuildId(int buildId);
 

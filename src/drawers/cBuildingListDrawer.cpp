@@ -134,7 +134,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
     int end = MAX_ITEMS;
 
     // is building an item in the list?
-    std::array<int, 5> isBuildingItemInList = list->isBuildingItem();
+    std::array<int, 6> isBuildingItemInList = list->isBuildingItem();
 
     // Start drawing the 'icons grid'
     int withOfIcon = 63;
