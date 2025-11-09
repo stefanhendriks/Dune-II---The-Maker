@@ -825,6 +825,8 @@ void cParticle::recolorForHouseIfGiven() {
         bmp = recoloredBmp;
         bmpOwner = true;
     } else {
+        bmp = gfxdata->getTexture(bmpIndex);
+        bmpOwner = false;
         logbook(std::format("Texture, from bmpIndex [{}] could not get recolored. For particle type [{}]", bmpIndex, iType));
     }
 }
