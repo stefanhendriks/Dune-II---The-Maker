@@ -311,7 +311,7 @@ int GAME_INI_SectionType(const std::string& section, int last)
  *
  * @param seed
  */
-void INI_Load_seed(int seed)
+void cIni::INI_Load_seed(int seed)
 {
 
     logbook(std::format("Generating seed map with seed {}.", seed));
@@ -371,7 +371,7 @@ std::string INI_GetHouseDirectoryName(int iHouse)
     }
 }
 
-void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
+void cIni::INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
     auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
     cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
@@ -471,7 +471,7 @@ int getTechLevelByRegion(int iRegion)
 }
 
 
-void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
+void cIni::INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
 {
     game.m_skirmish = false;
     game.missionInit();
@@ -629,7 +629,7 @@ void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinfo
     global_map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
-void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
+void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
 {
     if (wordtype == WORD_BRIEFPICTURE) {
         // Load name, and load proper briefingpicture
@@ -654,7 +654,7 @@ void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std
     }
 }
 
-int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, const std::string& linefeed)
+int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, const std::string& linefeed)
 {
     int iHumanID = -1;
     logbook(std::format("Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]",
@@ -686,7 +686,7 @@ int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, in
     return iHumanID;
 }
 
-void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
+void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
 {
     global_map.init(64, 64);
 
@@ -805,7 +805,7 @@ void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std:
     }
 }
 
-void INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
+void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
 {
     logbook("[SCENARIO] -> REINFORCEMENTS");
     int iPart = -1; /*
@@ -914,7 +914,7 @@ void INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefee
     }
 }
 
-bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                      const int *iPl_quota,
                                      const std::string& slinefeed)  // ORIGINAL DUNE 2 MISSION. (duplicate code?)
 {
@@ -1053,7 +1053,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
     return bSetUpPlayers;
 }
 
-bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
                                 const int *iPl_quota, const std::string& linefeed)  // ORIGINAL DUNE 2 MISSION.
 {
     // setupPlayers is required, because we do matching based on name of house, hence, once
@@ -1143,7 +1143,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
     return bSetUpPlayers;
 }
 
-void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota)
+void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota)
 {
     logbook("INI: Going to setup players");
     int iCPUId = 1; // index for CPU's, starts at 1 because ID 0 is HUMAN player
@@ -1219,7 +1219,7 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
     players[AI_WORM].setTeam(2); // the WORM player is nobody's ally, ever
 }
 
-void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
+void cIni::INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
 {
     logbook("[BRIEFING] Opening file");
 
@@ -1291,7 +1291,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Abstract
 
 
 // Game.ini loader
-void INI_Install_Game(std::string filename)
+void cIni::INI_Install_Game(std::string filename)
 {
     logbook("[GameRules] Opening file");
 
