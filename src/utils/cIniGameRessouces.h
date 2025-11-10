@@ -6,11 +6,14 @@
 
 struct s_TerrainInfo;
 
-void install_structures();
-void install_units();
-void install_bullets();
-void install_upgrades();
-void install_specials();
-void install_particles();
+class IniGameRessources {
+public:
+    static void install_structures();
+    static void install_units();
+    static void install_bullets();
+    static void install_upgrades();
+    static void install_specials();
+    static void install_particles();
+    static void install_terrain(std::shared_ptr<s_TerrainInfo>& terrainInfo);
+};
 
-void install_terrain(std::shared_ptr<s_TerrainInfo>& terrainInfo);
