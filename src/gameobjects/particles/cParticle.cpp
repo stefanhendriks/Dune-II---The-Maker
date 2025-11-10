@@ -18,6 +18,10 @@
 #include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
 
+#include <iostream>
+
+std::map<std::pair<int, int>, Texture*> cParticle::particleTextureCache = {};
+
 cParticle::cParticle()
 {
     dimensions = nullptr;
@@ -26,9 +30,9 @@ cParticle::cParticle()
 
 cParticle::~cParticle()
 {
-    if (bmpOwner && bmp) {
-        delete bmp;
-    }
+    // if (bmpOwner && bmp) {
+    //     delete bmp;
+    // }
     bmp = nullptr;
     delete dimensions;
 }
@@ -46,11 +50,11 @@ void cParticle::init()
     y = 0;              // x and y position to draw (absolute numbers)
     frameIndex = 0;
     iType = 0;          // type
-    if (bmpOwner && bmp) {
-        delete bmp;
-    }
+    // if (bmpOwner && bmp) {
+    //     delete bmp;
+    // }
     bmp = nullptr;
-    bmpOwner = false;
+    // bmpOwner = false;
     drawXBmpOffset = drawYBmpOffset = 0;
 
     iHousePal = -1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
@@ -63,6 +67,8 @@ void cParticle::init()
 
     delete dimensions;
     dimensions = nullptr;
+
+    std::cout << "cParticle initialized: size cache " << particleTextureCache.size() << std::endl;
 }
 
 bool cParticle::isValid() const {
@@ -700,7 +706,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, iUnitID);
     }
 
-    //pParticle.recolorForHouseIfGiven();
+    pParticle.recolorForHouseIfGiven();
     return iNewId;
 }
 
@@ -818,19 +824,29 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
 
-    cPlayer &player = players[this->iHousePal];
     int bmpIndex = sParticleInfo[iType].bmpIndex;
     if (renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }
+    auto cacheKey = std::make_pair(bmpIndex, iHousePal);
+
+    // Cache test if Texture allready created
+    auto it = particleTextureCache.find(cacheKey);
+    if (it != particleTextureCache.end()) {
+        bmp = it->second;
+        return;
+    }
+    
+    cPlayer &player = players[this->iHousePal];
     auto tex = gfxdata->getSurface(bmpIndex);
-    if (auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex)) {
+    auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
+    if (recoloredBmp != nullptr) {
         bmp = recoloredBmp;
-        bmpOwner = true;
+        particleTextureCache[cacheKey] = recoloredBmp;
     } else {
         bmp = gfxdata->getTexture(bmpIndex);
-        bmpOwner = false;
-        logbook(std::format("Texture, from bmpIndex [{}] could not get recolored. For particle type [{}]", bmpIndex, iType));
+        //bmpOwner = false;
+        //logbook(std::format("Texture, from bmpIndex [{}] could not get recolored. For particle type [{}]", bmpIndex, iType));
     }
 }
