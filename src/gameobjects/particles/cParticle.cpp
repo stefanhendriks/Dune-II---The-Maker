@@ -700,7 +700,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, iUnitID);
     }
 
-    pParticle.recolorForHouseIfGiven();
+    //pParticle.recolorForHouseIfGiven();
     return iNewId;
 }
 
