@@ -21,13 +21,13 @@ class cSelectYourNextConquestState;
 class cIni {
 public:
     // Read game.ini file
-    static void INI_Install_Game(std::string filename);
+    static void installGame(std::string filename);
     // Load original scenario ini file
-    static void INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat,cReinforcements *reinforcements);
+    static void loadScenario(int iHouse, int iRegion, AbstractMentat *pMentat,cReinforcements *reinforcements);
     // Load briefing for original scenario
-    static void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
+    static void loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
     // Load regionfile for original scenario
-    static void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
+    static void loadRegionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
 
 
 private:

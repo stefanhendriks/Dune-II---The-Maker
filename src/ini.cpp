@@ -371,7 +371,7 @@ std::string INI_GetHouseDirectoryName(int iHouse)
     }
 }
 
-void cIni::INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
+void cIni::loadRegionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
     auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
     cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
@@ -471,7 +471,7 @@ int getTechLevelByRegion(int iRegion)
 }
 
 
-void cIni::INI_Load_scenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
+void cIni::loadScenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
 {
     game.m_skirmish = false;
     game.missionInit();
@@ -1219,7 +1219,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
     players[AI_WORM].setTeam(2); // the WORM player is nobody's ally, ever
 }
 
-void cIni::INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
+void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
 {
     logbook("[BRIEFING] Opening file");
 
@@ -1291,7 +1291,7 @@ void cIni::INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, Ab
 
 
 // Game.ini loader
-void cIni::INI_Install_Game(std::string filename)
+void cIni::installGame(std::string filename)
 {
     logbook("[GameRules] Opening file");
 
