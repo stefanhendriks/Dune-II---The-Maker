@@ -48,6 +48,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 
     cIniFile conf = cIniFile(filename, m_debugMode);
     if (!conf.isLoadSuccess()) {
+        std::cerr << "Could not load file : " << filename << std::endl;
         return; // skip this map loading
     }
 
