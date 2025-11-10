@@ -44,6 +44,7 @@ public:
     void renderDot(int x, int y, Color color, int size);
 
     // void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);
+    bool isSurface8BitPaletted(SDL_Surface *bmp);
 
     void FillWithColor(SDL_Surface *src, Color color);
     Color getPixel(SDL_Surface *surface, int x, int y);

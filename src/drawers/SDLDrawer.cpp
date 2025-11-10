@@ -197,6 +197,14 @@ void SDLDrawer::renderDot(int x, int y, Color color, int size)
     }
 }
 
+bool SDLDrawer::isSurface8BitPaletted(SDL_Surface *bmp)
+{
+    if (bmp == nullptr) {
+        return false;
+    }
+    return bmp->format->BitsPerPixel == 8 && bmp->format->palette != nullptr;
+}
+
 // void SDLDrawer::shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom)
 // {
 //     int x1, y1;
