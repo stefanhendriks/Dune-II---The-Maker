@@ -702,6 +702,7 @@ void cGame::shakeScreen(int duration)
 */
 void cGame::shutdown()
 {
+    cParticle::reset();
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("SHUTDOWN");
 
@@ -1221,7 +1222,8 @@ void cGame::think_fading()
 }
 
 cGame::~cGame()
-{}
+{
+}
 
 void cGame::prepareMentatForPlayer()
 {
