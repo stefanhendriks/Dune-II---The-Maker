@@ -19,7 +19,7 @@
 #include <SDL2/SDL.h>
 
 struct GameSettings;
-struct s_TerrainInfo;
+
 
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
@@ -40,13 +40,7 @@ void logbook(const std::string &txt);
 
 // Color makeColFromString(std::string colorStr);
 
-void install_structures();
-void install_units();
-void install_bullets();
-void install_upgrades();
-void install_specials();
-void install_particles();
-void install_terrain(std::shared_ptr<s_TerrainInfo>& terrainInfo);
+
 
 float health_bar(float max_w, int i, int w);
 
