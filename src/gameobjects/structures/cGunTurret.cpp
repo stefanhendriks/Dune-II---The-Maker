@@ -180,7 +180,7 @@ void cGunTurret::think_fire()
                 }
             }
 
-            int iBull = create_bullet(bulletType, getCell(), iTargetCell, -1, id);
+            int iBull = createBullet(bulletType, getCell(), iTargetCell, -1, id);
 
             // only rockets are homing
             if (unitTarget.isAirbornUnit()) {

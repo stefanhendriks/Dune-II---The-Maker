@@ -247,7 +247,7 @@ int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress()
 {
     // frame to draw (for building in progress)
 //    int iFrame = health_bar(31, progress, getTotalBuildTime());
-    int iFrame = health_bar(31, progress, getTotalBuildTime());
+    int iFrame = healthBar(31, progress, getTotalBuildTime());
 
     if (iFrame > 31) {
         iFrame = 31;

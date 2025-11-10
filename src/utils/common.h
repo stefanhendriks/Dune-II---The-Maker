@@ -42,11 +42,11 @@ void logbook(const std::string &txt);
 
 
 
-float health_bar(float max_w, int i, int w);
+float healthBar(float max_w, int i, int w);
 
 int iFindCloseBorderCell(int iCll);
 
-int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots);
+int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots);
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 

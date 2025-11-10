@@ -104,7 +104,7 @@ void cMiniMapDrawer::drawStaticFrame()
     // Draw static info
     // < STAT01 frames are going from very transparent to opaque
     if (m_iStaticFrame < STAT10) {
-        m_iTrans = 255 - health_bar(192, (STAT12 - m_iStaticFrame), 12);
+        m_iTrans = 255 - healthBar(192, (STAT12 - m_iStaticFrame), 12);
     } else {
         m_iTrans = 255;
     }
