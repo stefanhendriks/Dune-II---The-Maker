@@ -62,6 +62,7 @@
 #include <format>
 #include "context/GameContext.hpp"
 #include "context/ContextCreator.hpp"
+#include "utils/cIniGameRessouces.h"
 
 #include <algorithm>
 #include <random>
