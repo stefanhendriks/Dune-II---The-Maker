@@ -1489,7 +1489,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     int width = sStructureInfo[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
     int surface = width * height;
 
-    int healthPercentage = 50 + health_bar(50, slabbed, surface); // the minimum is 50% (with no slabs)
+    int healthPercentage = 50 + healthBar(50, slabbed, surface); // the minimum is 50% (with no slabs)
 
     cAbstractStructure *pStructure = pStructureFactory->createStructure(destinationCell,
                                      iStructureTypeId,

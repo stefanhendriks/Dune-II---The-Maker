@@ -1433,7 +1433,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
                 cAbstractStructure *pStructure = structure[structureId];
                 if (pStructure && pStructure->isValid()) {
                     m_soundPlayer->playSound(SOUND_PLACE);
-                    create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
+                    createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
                     s_GameEvent newEvent{
