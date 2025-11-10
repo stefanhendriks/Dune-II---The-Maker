@@ -820,6 +820,10 @@ void cParticle::recolorForHouseIfGiven() {
 
     cPlayer &player = players[this->iHousePal];
     int bmpIndex = sParticleInfo[iType].bmpIndex;
+    if (renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
+        std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
+        return;
+    }
     auto tex = gfxdata->getSurface(bmpIndex);
     if (auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex)) {
         bmp = recoloredBmp;
