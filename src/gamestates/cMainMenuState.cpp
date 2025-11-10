@@ -174,7 +174,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
         renderDrawer->beginDrawingToTexture(backGroundDebug);
         for (int x = 0; x < m_game.m_screenW; x += 60) {
             for (int y = 0; y < m_game.m_screenH; y += 20) {
-                ctx->getTextContext()->beneTextDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
+                m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
         renderDrawer->endDrawingToTexture();
