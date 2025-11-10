@@ -276,8 +276,7 @@ void cSetupSkirmishState::thinkFast()
 
 void cSetupSkirmishState::draw() const
 {
-    // @Mira rwrite it on Texture
-    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
+    // @Mira rewrite it on Texture
     renderDrawer->gui_DrawRect(topBar);
 
     m_textDrawer->drawTextCentered("Skirmish", 1);
@@ -1129,7 +1128,6 @@ void cSetupSkirmishState::generateRandomMap()
     randomMap.validMap = true;
     SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
         if (out == nullptr) {
-            //std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
             logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;
         }
