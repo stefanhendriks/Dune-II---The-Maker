@@ -192,9 +192,9 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
-    std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
+    // std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
     maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
-    std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
+    // std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
     int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = topBarHeight + 6;
     int startPointHitBoxWidth = 130;
@@ -1129,7 +1129,8 @@ void cSetupSkirmishState::generateRandomMap()
     randomMap.validMap = true;
     SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
         if (out == nullptr) {
-            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            //std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;
         }
         randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
