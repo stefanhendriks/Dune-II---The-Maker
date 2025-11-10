@@ -30,9 +30,6 @@ cParticle::cParticle()
 
 cParticle::~cParticle()
 {
-    // if (bmpOwner && bmp) {
-    //     delete bmp;
-    // }
     bmp = nullptr;
     delete dimensions;
 }
@@ -59,11 +56,7 @@ void cParticle::init()
     y = 0;              // x and y position to draw (absolute numbers)
     frameIndex = 0;
     iType = 0;          // type
-    // if (bmpOwner && bmp) {
-    //     delete bmp;
-    // }
     bmp = nullptr;
-    // bmpOwner = false;
     drawXBmpOffset = drawYBmpOffset = 0;
 
     iHousePal = -1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
@@ -76,8 +69,7 @@ void cParticle::init()
 
     delete dimensions;
     dimensions = nullptr;
-
-    std::cout << "cParticle initialized: size cache " << particleTextureCache.size() << std::endl;
+    //std::cout << "cParticle initialized: size cache " << particleTextureCache.size() << std::endl;
 }
 
 bool cParticle::isValid() const {
@@ -772,7 +764,6 @@ void cParticle::recreateDimensions()
 
 void cParticle::think_new()
 {
-
 }
 
 void cParticle::bindToUnit(int unitID)
@@ -835,7 +826,7 @@ void cParticle::recolorForHouseIfGiven() {
 
     int bmpIndex = sParticleInfo[iType].bmpIndex;
     if (renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
-        std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
+        //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }
     auto cacheKey = std::make_pair(bmpIndex, iHousePal);
@@ -851,11 +842,10 @@ void cParticle::recolorForHouseIfGiven() {
     auto tex = gfxdata->getSurface(bmpIndex);
     auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {
+        // but why did createTextureFromIndexedSurfaceWithPalette give an error ?
         bmp = recoloredBmp;
         particleTextureCache[cacheKey] = recoloredBmp;
     } else {
         bmp = gfxdata->getTexture(bmpIndex);
-        //bmpOwner = false;
-        //logbook(std::format("Texture, from bmpIndex [{}] could not get recolored. For particle type [{}]", bmpIndex, iType));
     }
 }

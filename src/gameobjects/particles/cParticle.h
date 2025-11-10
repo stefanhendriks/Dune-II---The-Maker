@@ -78,8 +78,7 @@ private:
     bool bAlive;        // alive
 
     // Drawing effects
-    Texture *bmp;          // pointer to bitmap to draw (not owner of bitmap, except if flag bmpOwner is activated!)
-    //bool bmpOwner = false; // some particle have distinct texture linked to House color
+    Texture *bmp;          // pointer to bitmap to draw (not owner of bitmap)
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw
