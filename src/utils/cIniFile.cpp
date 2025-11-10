@@ -8,6 +8,9 @@
 
 static void Trim(std::string &str)
 {
+    if (!str.empty() && str.back() == '\r') {
+        str.pop_back(); 
+    }
     str.erase(str.find_last_not_of(" \t\"")+1);         //suffixing spaces
     str.erase(0, str.find_first_not_of(" \t\""));       //prefixing spaces
 }
