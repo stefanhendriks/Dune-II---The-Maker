@@ -15,7 +15,7 @@
 /*****************************
  Unit Rules
  *****************************/
-void install_units()
+void IniGameRessources::install_units()
 {
     logbook("Installing:  UNITS");
     // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
@@ -537,7 +537,7 @@ void install_units()
 
 }
 
-void install_particles()
+void IniGameRessources::install_particles()
 {
     for (int i = 0; i < MAX_PARTICLE_TYPES; i++) {
         s_ParticleInfo &particleInfo = sParticleInfo[i];
@@ -715,7 +715,7 @@ void install_particles()
 
 }
 
-void install_specials()
+void IniGameRessources::install_specials()
 {
 
     for (int i = 0; i < MAX_SPECIALTYPES; i++) {
@@ -787,7 +787,7 @@ void install_specials()
 /****************
  Install bullets
  ****************/
-void install_bullets()
+void IniGameRessources::install_bullets()
 {
     logbook("Installing:  BULLET TYPES");
 
@@ -1007,7 +1007,7 @@ void install_bullets()
 }
 
 
-void install_upgrades()
+void IniGameRessources::install_upgrades()
 {
     logbook("Installing:  UPGRADES");
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
@@ -1201,7 +1201,7 @@ void install_upgrades()
 /*****************************
  Structure Rules
  *****************************/
-void install_structures()
+void IniGameRessources::install_structures()
 {
 
     logbook("Installing:  STRUCTURES");
@@ -1534,3 +1534,13 @@ void install_structures()
 
 }
 
+
+void IniGameRessources::install_terrain(std::shared_ptr<s_TerrainInfo>& terrainInfo)
+{
+    terrainInfo->bloomTimerDuration = 200;
+    terrainInfo->terrainSpiceMinSpice = 50;
+    terrainInfo->terrainSpiceMaxSpice = 125;
+    terrainInfo->terrainSpiceHillMinSpice = 75;
+    terrainInfo->terrainSpiceHillMaxSpice = 150;
+    terrainInfo->terrainWallHp = 100;
+}
