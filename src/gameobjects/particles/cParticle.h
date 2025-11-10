@@ -16,6 +16,9 @@
 #include "utils/cRectangle.h"
 #include "utils/common.h"
 
+#include <map>
+#include <tuple>
+
 class Texture;
 
 class cParticle {
@@ -26,6 +29,8 @@ public:
     // Factory methods
     static int create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID = -1);
     static int findNewSlot();
+    // resets the particle system (frees all particles textures colored for houses)
+    static void reset();
 
     void init();
 
@@ -74,7 +79,7 @@ private:
 
     // Drawing effects
     Texture *bmp;          // pointer to bitmap to draw (not owner of bitmap, except if flag bmpOwner is activated!)
-    bool bmpOwner = false; // some particle have distinct texture linked to House color
+    //bool bmpOwner = false; // some particle have distinct texture linked to House color
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw
@@ -106,4 +111,6 @@ private:
 
     void recreateDimensions();
     void recolorForHouseIfGiven();
+
+    static std::map<std::pair<int, int>, Texture*> particleTextureCache;
 };
