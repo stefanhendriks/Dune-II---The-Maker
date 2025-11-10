@@ -8,7 +8,6 @@
 
 namespace fs = std::filesystem;
 
-#include <iostream>
 #include <algorithm>
 #include "utils/cIniFile.h"
 
@@ -48,7 +47,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 
     cIniFile conf = cIniFile(filename, m_debugMode);
     if (!conf.isLoadSuccess()) {
-        std::cerr << "Could not load file : " << filename << std::endl;
+        // std::cerr << "Could not load file : " << filename << std::endl;
+        logbook(std::format("Could not load file : {} ", filename));
         return; // skip this map loading
     }
 
@@ -75,9 +75,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         try {
             numbers.push_back(std::stoi(segment));
         } catch (const std::invalid_argument& e) {
-            std::cerr << "Could not convert (invalid argument): " << segment << std::endl;
+            // std::cerr << "Could not convert (invalid argument): " << segment << std::endl;
+            logbook(std::format("Could not convert (invalid argument): {}",segment));
         } catch (const std::out_of_range& e) {
-            std::cerr << "Could not convert (out of bounds): " << segment << std::endl;
+            // std::cerr << "Could not convert (out of bounds): " << segment << std::endl;
+            logbook(std::format("Could not convert (out of bounds): {}",segment));
         }
     }
 
@@ -87,7 +89,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             if (startCell < 0 || startCell >= maxCells) {
                 previewMap.validMap = false;
                 if (m_debugMode) {
-                    std::cerr << "StartCell [" << startCell << "] invalid. (value must be between range [0-" << maxCells << ")]. For map " << filename << " - marking map as invalid.\n";
+                    // std::cerr << "StartCell [" << startCell << "] invalid. (value must be between range [0-" << maxCells << ")]. For map " << filename << " - marking map as invalid.\n";
+                    logbook(std::format("StartCell [{}] invalid. (value must be between range [0-{}]), Map {}- is invalid" , startCell , maxCells, filename));
                 }
             }
             else {
@@ -97,7 +100,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         catch (std::invalid_argument const &e) {
             // could not perform conversion
             if (m_debugMode) {
-                std::cerr << "Could not convert startCell [" << numbers[i] << "] to an int. Reason:" << e.what() << "\n";
+                // std::cerr << "Could not convert startCell [" << numbers[i] << "] to an int. Reason:" << e.what() << "\n";
+                logbook(std::format("Could not convert startCell [{}] to an int. Reason: {}", numbers[i], e.what()));
             }
         }
     }
@@ -178,7 +182,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap.terrain!= nullptr){
         SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), previewMap.terrain);
         if (out == nullptr) {
-            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            //std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;
         }
         previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
