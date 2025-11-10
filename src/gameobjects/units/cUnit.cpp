@@ -550,7 +550,7 @@ void cUnit::draw_spice()
     int drawy = draw_y() - ((height_y * 2) + 2);
 
     int max = getUnitInfo().credit_capacity;
-    int w = health_bar(width_x, iCredits, max);
+    int w = healthBar(width_x, iCredits, max);
 
     // bar itself
     renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
@@ -1914,7 +1914,7 @@ void cUnit::shoot(int iTargetCell)
 
     if (bulletType < 0) return; // no bullet type to spawn
 
-    int iBull = create_bullet(bulletType, iCell, iTargetCell, iID, -1);
+    int iBull = createBullet(bulletType, iCell, iTargetCell, iID, -1);
 
     cUnit *attackUnit = nullptr;
     if (iAttackUnit > -1) {

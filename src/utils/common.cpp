@@ -110,7 +110,7 @@ int fastThinkMsToTicks(int desiredMs)
 // MAX_W = pixels maxed
 // I = How much we have (CURRENT STATE)
 // W = MAX it can have
-float health_bar(float max_w, int i, int w)
+float healthBar(float max_w, int i, int w)
 {
     float flHP   = i;
     float flMAX  = w;
@@ -157,7 +157,7 @@ int distanceBetweenCellAndCenterOfScreen(int iCell)
  * @param structureWhichShoots
  * @return
  */
-int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots)
+int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots)
 {
     int new_id = -1;
 
