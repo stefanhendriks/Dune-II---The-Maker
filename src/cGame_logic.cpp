@@ -193,7 +193,7 @@ void cGame::init()
 
     // Units & Structures are already initialized in map.init()
     // Load properties
-    INI_Install_Game(m_gameFilename);
+    cIni::INI_Install_Game(m_gameFilename);
 }
 
 // TODO: Bad smell (duplicate code)
@@ -914,7 +914,7 @@ bool cGame::setupGame()
     delete mapCamera;
     mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
-    INI_Install_Game(m_gameFilename);
+    cIni::INI_Install_Game(m_gameFilename);
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
@@ -1222,8 +1222,8 @@ void cGame::prepareMentatForPlayer()
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        INI_Load_scenario(house, m_region, m_mentat, m_reinforcements.get());
-        INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
+        cIni::INI_Load_scenario(house, m_region, m_mentat, m_reinforcements.get());
+        cIni::INI_LOAD_BRIEFING(house, m_region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
         if (RNG::rnd(100) < 50) {
@@ -1232,7 +1232,7 @@ void cGame::prepareMentatForPlayer()
         else {
             m_mentat->loadScene("win02");
         }
-        INI_LOAD_BRIEFING(house, m_region, INI_WIN, m_mentat);
+        cIni::INI_LOAD_BRIEFING(house, m_region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
         if (RNG::rnd(100) < 50) {
@@ -1241,7 +1241,7 @@ void cGame::prepareMentatForPlayer()
         else {
             m_mentat->loadScene("lose02");
         }
-        INI_LOAD_BRIEFING(house, m_region, INI_LOSE, m_mentat);
+        cIni::INI_LOAD_BRIEFING(house, m_region, INI_LOSE, m_mentat);
     }
 }
 
@@ -1273,15 +1273,15 @@ void cGame::prepareMentatToTellAboutHouse(int house)
     m_mentat->setHouse(house);
     // create new drawStateMentat
     if (house == ATREIDES) {
-        INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
+        cIni::INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
         m_mentat->loadScene("platr"); // load planet of atreides
     }
     else if (house == HARKONNEN) {
-        INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
+        cIni::INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
         m_mentat->loadScene("plhar"); // load planet of harkonnen
     }
     else if (house == ORDOS) {
-        INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, m_mentat);
+        cIni::INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, m_mentat);
         m_mentat->loadScene("plord"); // load planet of ordos
     }
     else {
@@ -1294,7 +1294,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     int iHouse = players[HUMAN].getHouse();
-    INI_Load_scenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
+    cIni::INI_Load_scenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
 }
 
 void cGame::thinkFast_state()
