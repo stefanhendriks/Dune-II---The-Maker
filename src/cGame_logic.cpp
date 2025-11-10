@@ -919,17 +919,17 @@ bool cGame::setupGame()
         players[i].setHousesInfo(m_Houses);
     }
     logbook("Setup:  STRUCTURES");
-    install_structures();
+    IniGameRessources::install_structures();
     logbook("Setup:  PROJECTILES");
-    install_bullets();
+    IniGameRessources::install_bullets();
     logbook("Setup:  UNITS");
-    install_units();
+    IniGameRessources::install_units();
     logbook("Setup:  SPECIALS");
-    install_specials();
+    IniGameRessources::install_specials();
     logbook("Setup:  PARTICLES");
-    install_particles();
+    IniGameRessources::install_particles();
     logbook("Setup:  TERRAINS");
-    install_terrain(m_TerrainInfo);
+    IniGameRessources::install_terrain(m_TerrainInfo);
 
     delete mapCamera;
     mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
@@ -940,7 +940,7 @@ bool cGame::setupGame()
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
-    install_upgrades();
+    IniGameRessources::install_upgrades();
     cPlayer *humanPlayer = &players[HUMAN];
 
     delete drawManager;
