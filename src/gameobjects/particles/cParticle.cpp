@@ -37,6 +37,15 @@ cParticle::~cParticle()
     delete dimensions;
 }
 
+void cParticle::reset()
+{
+    for (auto & [key, texture] : particleTextureCache) {
+        if (texture) {
+            delete texture;
+        }
+    }
+    particleTextureCache.clear();
+}
 
 void cParticle::init()
 {
