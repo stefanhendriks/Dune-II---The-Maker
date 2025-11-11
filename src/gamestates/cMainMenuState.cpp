@@ -7,6 +7,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "utils/cSoundPlayer.h"
 #include <SDL2/SDL.h>
 #include <format>
 
@@ -238,5 +239,14 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
             m_game.m_playing=false;
         }
+
+        if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
+        auto m_soundPlayer = m_ctx->getSoundPlayer();
+        game.m_playMusic = !game.m_playMusic;
+        if (!game.m_playMusic) {
+            m_soundPlayer->stopMusic();
+            //humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
+        }
+    }
     }
 }
