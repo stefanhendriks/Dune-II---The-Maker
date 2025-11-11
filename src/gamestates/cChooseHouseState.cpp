@@ -15,9 +15,9 @@
 
 cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
+    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_screenH - m_textDrawer->getFontHeight(), " BACK");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
@@ -79,6 +79,7 @@ void cChooseHouseState::draw() const
     renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
 
     // BACK (bottom right
+    // TODO: Use actual cGuiButton
     Color color = hoversOverBackButton ? Color{255, 0, 0,255} : Color{255, 255, 255,255};
     m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " BACK");
 
