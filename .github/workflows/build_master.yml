@@ -185,6 +185,7 @@ jobs:
         with:
           ref: gh-pages
           submodules: recursive
+          fetch-depth: 0   # fetch full history to see all files
       - name: Generate index.html
         run: |
           cd "${{ github.workspace }}"
