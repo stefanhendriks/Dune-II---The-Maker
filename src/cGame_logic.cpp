@@ -990,7 +990,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
-    pState->INSTALL_WORLD();
+    pState->installWorld();
 
     cPlayer &humanPlayer = players[HUMAN];
     int missionZeroBased = missionNr - 1;
@@ -1000,7 +1000,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
     // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
     // meaning we have to use the 'zero based' value here
     pState->fastForwardUntilMission(missionZeroBased, humanPlayer.getHouse());
-    pState->REGION_SETUP_NEXT_MISSION(missionZeroBased, humanPlayer.getHouse());
+    pState->regionSetupNextMission(missionZeroBased, humanPlayer.getHouse());
 }
 
 void cGame::setState(int newState)
@@ -1058,11 +1058,11 @@ void cGame::setState(int newState)
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
+                        pState->regionSetupNextMission(game.m_mission, humanPlayer.getHouse());
                     }
                     else {
                         // OR: did not win
-                        pState->REGION_SETUP_LOST_MISSION();
+                        pState->regionSetupLostMission();
                     }
                 }
             }
@@ -1091,12 +1091,12 @@ void cGame::setState(int newState)
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
-                pState->INSTALL_WORLD();
+                pState->installWorld();
                 if (game.m_mission > 1) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->REGION_SETUP_NEXT_MISSION(game.m_mission, humanPlayer.getHouse());
+                pState->regionSetupNextMission(game.m_mission, humanPlayer.getHouse());
 
                 playMusicByTypeForStateTransition(MUSIC_CONQUEST);
 
