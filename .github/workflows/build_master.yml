@@ -175,9 +175,39 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
 
+  Cleanup-GH-Pages:
+    needs: MACOSX
+    name: Cleanup old GH Pages builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0   # fetch full history to see all files
+
+      - name: Remove builds older than 3 months
+        run: |
+          cd out/nightly
+          # find and delete files older than 90 days
+          find . -type f -name "*.zip" -mtime +90 -print -delete
+          cd ../..
+
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Cleanup old nightly builds (>3 months)"
+
+      - name: Push cleanup
+        run: git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   Update-Github-Pages:
     if: always()
-    needs: [MACOSX]
+    needs: [Cleanup-GH-Pages]
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
