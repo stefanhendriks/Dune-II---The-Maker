@@ -70,9 +70,9 @@ public:
         snprintf(cRegionText[iRegionIndex], sizeof(cRegionText[iRegionIndex]), "%s", txt);
     }
 
-    void REGION_SETUP_LOST_MISSION();
-    void REGION_SETUP_NEXT_MISSION(int iMission, int iHouse);
-    void INSTALL_WORLD();
+    void regionSetupLostMission();
+    void regionSetupNextMission(int iMission, int iHouse);
+    void installWorld();
 
     void conquerRegions();
 

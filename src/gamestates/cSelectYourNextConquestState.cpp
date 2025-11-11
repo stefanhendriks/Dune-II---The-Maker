@@ -117,7 +117,7 @@ void cSelectYourNextConquestState::thinkFast()
         bool hasMessage = drawManager->hasMessage();
 
         if (regionSceneState == SCENE_INIT) {
-            REGION_SETUP_NEXT_MISSION(iMission, iHouse);
+            regionSetupNextMission(iMission, iHouse);
             drawManager->setMessage("3 Houses have come to Dune.");
             transitionToNextRegionSceneState(SCENE_THREE_HOUSES_COME_FOR_DUNE);
         }
@@ -413,7 +413,7 @@ cRegion *cSelectYourNextConquestState::getRegionMouseIsOver() const
     return &world[regionMouseIsHoveringOver];
 }
 
-void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION()
+void cSelectYourNextConquestState::regionSetupLostMission()
 {
     drawManager->regionInit(offsetX, offsetY);
 
@@ -428,7 +428,7 @@ void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION()
     return;
 }
 
-void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int iHouse)
+void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHouse)
 {
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. That's what this function takes care off
@@ -549,7 +549,7 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     region.bmp = m_gfxworld->getSurface(iTile);
 }
 
-void cSelectYourNextConquestState::INSTALL_WORLD()
+void cSelectYourNextConquestState::installWorld()
 {
     // create regions
     for (int i = 0; i < MAX_REGIONS; i++) {
@@ -673,7 +673,7 @@ void cSelectYourNextConquestState::fastForwardUntilMission(int missionNr, int ho
 {
     fastForward = true;
     for (int m = 1; m < missionNr; m++) {
-        REGION_SETUP_NEXT_MISSION(m, house);
+        regionSetupNextMission(m, house);
 
         for (int i = 0; i < MAX_REGIONS; i++) {
             if (iRegionConquer[i] < 0) continue;
