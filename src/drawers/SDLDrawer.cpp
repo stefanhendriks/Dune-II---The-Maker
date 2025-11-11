@@ -70,6 +70,15 @@ void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle 
     SDL_RenderCopy(renderer, src->tex, &srcRect, &destRect);
 }
 
+void SDLDrawer::renderStrechFullSprite(Texture *src, cRectangle dest_pos, Uint8 opacity)
+{
+    if (SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND) < 0) {
+        std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
+    }
+    SDL_SetTextureAlphaMod(src->tex, opacity);
+    SDL_Rect destRect = dest_pos.toSDL();
+    SDL_RenderCopy(renderer, src->tex, nullptr, &destRect);
+}
 
 void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, Uint8 opacity)
 {
