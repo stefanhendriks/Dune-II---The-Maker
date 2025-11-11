@@ -183,7 +183,7 @@ jobs:
           keep_files: true
 
   Cleanup-GH-Pages:
-    needs: MACOSX
+    needs: [MSYS2, Ubuntu, MACOSX]  # all builds must be completed successfully
     name: Cleanup old GH Pages builds
     runs-on: ubuntu-latest
     steps:
