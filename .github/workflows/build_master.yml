@@ -73,6 +73,7 @@ jobs:
 
   Ubuntu:
     name: Ubuntu (x86)
+    needs: MSYS2
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Set up GCC
@@ -134,6 +135,7 @@ jobs:
 
   MACOSX:
     name: Mac OS X
+    needs: Ubuntu
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
