@@ -96,7 +96,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     iStartingPoints = 2;
     iSkirmishMap = -1;
     mapIndexToDisplay = 0;
-    
+
     randomMapGenerator = std::make_unique<cRandomMapGenerator>();
     generateRandomMap();
 
@@ -235,7 +235,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     backButton = GuiButtonBuilder()
             .withRect(backButtonRect)        
             .withLabel("BACK")
-            .withTextDrawer(m_textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -252,7 +252,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     startButton = GuiButtonBuilder()
             .withRect(startButtonRect)        
             .withLabel("START")
-            .withTextDrawer(m_textDrawer)    
+            .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -448,7 +448,6 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
         if (iSkirmishMap > 0) {
             if (selectedMap.name[0] != '\0') {
                 if (selectedMap.terrain) {
-                    cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
                     cRectangle dst;
                     if (selectedMap.previewTex->w > selectedMap.previewTex->h) {
                         dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
@@ -459,18 +458,17 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
                                          previewMapRect.getHeight() * selectedMap.previewTex->w / selectedMap.previewTex->h, previewMapRect.getHeight());
 
                     }
-                    renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
+                    renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
                 }
             }
         }
         else {
             // render the 'random generated skirmish map'
-            cRectangle src = cRectangle(0,0,selectedMap.previewTex->w, selectedMap.previewTex->h);
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
-                    renderDrawer->renderStrechSprite(selectedMap.previewTex, src, dst);
+                    renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
             } else {
-                renderDrawer->renderStrechSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), src, dst);
+                renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
             }
         }
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
@@ -1177,8 +1175,8 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
         } else {
             tex = previewMap.previewTex;
         }
-        renderDrawer->renderStrechSprite(tex, cRectangle(0, 0, tex->w, tex->h),
-            cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24));
+        cRectangle dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
+        renderDrawer->renderStrechFullSprite(tex, dest);
         i+=1;
 
         // second element on top
@@ -1203,8 +1201,8 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         m_textDrawer->drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
-        renderDrawer->renderStrechSprite(previewMap2.previewTex, cRectangle(0, 0, previewMap2.previewTex->w, previewMap2.previewTex->h),
-                                           cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24));
+        dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
+        renderDrawer->renderStrechFullSprite(previewMap2.previewTex, dest);
         i+=1;
         // next drawX position
         iDrawX += mapItemButtonWidth+15;
