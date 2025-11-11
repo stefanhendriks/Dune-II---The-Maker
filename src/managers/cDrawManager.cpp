@@ -160,9 +160,8 @@ void cDrawManager::drawRallyPoint()
 
     int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
-    cRectangle src = {0,0,mouseMoveBitmap->w,mouseMoveBitmap->h};
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
-    renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_MOVE), src, dest);
+    renderDrawer->renderStrechFullSprite(gfxdata->getTexture(MOUSE_MOVE), dest);
 
     int startX = theStructure->iDrawX() + mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
