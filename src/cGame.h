@@ -277,6 +277,8 @@ public:
     void takeBackGroundScreen();
 
     std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
+
+    void goingToLoseBrief();
 private:
     /**
      * Variables start here
