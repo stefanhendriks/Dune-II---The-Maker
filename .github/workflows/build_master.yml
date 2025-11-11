@@ -33,6 +33,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+          fetch-depth: 0   # fetch full history to see all files
       - name: Configure
         run: |
           cd "${{ github.workspace }}"
@@ -86,6 +87,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+          fetch-depth: 0   # fetch full history to see all files
       - name: Install dependencies
         run: |
           cd "${{ github.workspace }}"
@@ -138,6 +140,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+          fetch-depth: 0   # fetch full history to see all files
       - name: Install dependencies
         run: |
           ./install_dependencies_macosx.sh
