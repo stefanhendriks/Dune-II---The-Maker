@@ -189,7 +189,7 @@ jobs:
 
   Update-Github-Pages:
     if: always()
-    needs: [Ubuntu, MACOSX, MSYS2]
+    needs: [MACOSX]
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
