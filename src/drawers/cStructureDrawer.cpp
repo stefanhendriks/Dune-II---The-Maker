@@ -71,9 +71,8 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
-    cRectangle src = {0,0,gfxdata->getTexture(iDrawPreBuild)->w, gfxdata->getTexture(iDrawPreBuild)->h};
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(gfxdata->getTexture(iDrawPreBuild), src, dest);
+    renderDrawer->renderStrechFullSprite(gfxdata->getTexture(iDrawPreBuild), dest);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -262,9 +261,8 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-    cRectangle src = {0,0,iconWidth,iconHeight};
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(gfxdata->getTexture(MOUSE_REPAIR), src, dest);
+    renderDrawer->renderStrechFullSprite(gfxdata->getTexture(MOUSE_REPAIR), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
@@ -308,9 +306,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-    cRectangle src = {0,0,iconWidth, iconHeight};
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(m_gfxinter->getTexture(iconId), src, dest);
+    renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
