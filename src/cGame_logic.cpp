@@ -1731,9 +1731,11 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         game.m_playMusic = !game.m_playMusic;
         if (!game.m_playMusic) {
             m_soundPlayer->stopMusic();
+            humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
         }
         else {
             m_soundPlayer->playMusic(m_newMusicSample);
+            humanPlayer.addNotification("Music enabled", eNotificationType::NEUTRAL);
         }
     }
 
