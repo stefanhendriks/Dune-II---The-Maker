@@ -14,14 +14,13 @@
 
 
 cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
-    : cGameState(theGame, ctx)
-    , m_prevState(prevState)
-    , m_guiWindow(nullptr)
+    : cGameState(theGame, ctx),
+    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    m_prevState(prevState),
+    m_guiWindow(nullptr)
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     refresh();
-    if (m_game.getScreenTexture() != nullptr)
-        m_backgroundTexture = m_game.getScreenTexture();
+    m_backgroundTexture = m_game.getScreenTexture();
 }
 
 void cOptionsState::constructWindow(int prevState)
@@ -228,9 +227,9 @@ void cOptionsState::thinkFast()
 
 void cOptionsState::draw() const
 {
-    //@Mira draw here screenTexture
-    if (m_backgroundTexture)
+    if (m_backgroundTexture) {
         renderDrawer->renderSprite(m_backgroundTexture,0,0);
+    }
     m_guiWindow->draw();
 
     // MOUSE
