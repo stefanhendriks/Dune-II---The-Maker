@@ -19,6 +19,12 @@ jobs:
           msystem: MINGW64 # D2TM is built within a MinGW64 bit environment
           update: true
           install: git gzip zip unzip mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake
+      - name: configure Pagefile
+        uses: al-cheb/configure-pagefile-action@v1.2
+        with:
+          minimum-size: 16GB
+          maximum-size: 16GB
+          disk-root: "C:"
       - name: Checkout
         uses: actions/checkout@v2
         with:
