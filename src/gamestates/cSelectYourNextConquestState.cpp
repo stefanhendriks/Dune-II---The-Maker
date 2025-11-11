@@ -317,7 +317,7 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dun
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
-        REGION_DRAW(world[i]);
+        regionDraw(world[i]);
     }
 
     // Animate here (so add regions that are conquered)
@@ -339,7 +339,7 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
-        REGION_DRAW(world[i]);
+        regionDraw(world[i]);
     }
 
     // Animate here (so add regions that are conquered)
@@ -460,7 +460,7 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
     return;
 }
 
-void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const
+void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
 {
     if (regionPiece.iAlpha <= 0) {
         // no alpha, no use in drawing
@@ -510,7 +510,7 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
 }
 // End of function
 
-int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
+int cSelectYourNextConquestState::regionOver(int mouseX, int mouseY)
 {
     // when mouse is not even on the map, return -1
     cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
@@ -525,7 +525,7 @@ int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY)
     return c - 1;
 }
 
-void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile)
+void cSelectYourNextConquestState::regionNew(int x, int y, int iAlpha, int iHouse, int iTile)
 {
     int iNew = -1;
 
@@ -566,39 +566,39 @@ void cSelectYourNextConquestState::installWorld()
     // Now create the regions (x,y wise)
 
     // FIRST ROW (EASY, SAME Y AXIS)
-    REGION_NEW(16, 73, 1, -1, PIECE_DUNE_001);
-    REGION_NEW(126, 73, 1, -1, PIECE_DUNE_002);
-    REGION_NEW(210, 73, 1, -1, PIECE_DUNE_003);
-    REGION_NEW(306, 73, 1, -1, PIECE_DUNE_004);
-    REGION_NEW(438, 73, 1, -1, PIECE_DUNE_005);
-    REGION_NEW(510, 73, 1, -1, PIECE_DUNE_006);
+    regionNew(16, 73, 1, -1, PIECE_DUNE_001);
+    regionNew(126, 73, 1, -1, PIECE_DUNE_002);
+    regionNew(210, 73, 1, -1, PIECE_DUNE_003);
+    regionNew(306, 73, 1, -1, PIECE_DUNE_004);
+    regionNew(438, 73, 1, -1, PIECE_DUNE_005);
+    regionNew(510, 73, 1, -1, PIECE_DUNE_006);
 
     // SECOND ROW, HARDER FROM NOW ON (DIFFERENT Y AXIS ALL THE TIME)
-    REGION_NEW(16, 91, 1, -1, PIECE_DUNE_007);
-    REGION_NEW(158, 149, 1, -1, PIECE_DUNE_008);
-    REGION_NEW(282, 135, 1, -1, PIECE_DUNE_009);
-    REGION_NEW(362, 105, 1, -1, PIECE_DUNE_010);
-    REGION_NEW(456, 117, 1, -1, PIECE_DUNE_011);
-    REGION_NEW(544, 105, 1, -1, PIECE_DUNE_012);
+    regionNew(16, 91, 1, -1, PIECE_DUNE_007);
+    regionNew(158, 149, 1, -1, PIECE_DUNE_008);
+    regionNew(282, 135, 1, -1, PIECE_DUNE_009);
+    regionNew(362, 105, 1, -1, PIECE_DUNE_010);
+    regionNew(456, 117, 1, -1, PIECE_DUNE_011);
+    regionNew(544, 105, 1, -1, PIECE_DUNE_012);
 
     // THIRD ROW
-    REGION_NEW(16, 155, 1, -1, PIECE_DUNE_013);
-    REGION_NEW(58, 165, 1, -1, PIECE_DUNE_014);
-    REGION_NEW(190, 213, 1, -1, PIECE_DUNE_015);
-    REGION_NEW(312, 163, 1, -1, PIECE_DUNE_016);
-    REGION_NEW(388, 163, 1, -1, PIECE_DUNE_017);
-    REGION_NEW(502, 167, 1, -1, PIECE_DUNE_018);
-    REGION_NEW(576, 167, 1, -1, PIECE_DUNE_019);
+    regionNew(16, 155, 1, -1, PIECE_DUNE_013);
+    regionNew(58, 165, 1, -1, PIECE_DUNE_014);
+    regionNew(190, 213, 1, -1, PIECE_DUNE_015);
+    regionNew(312, 163, 1, -1, PIECE_DUNE_016);
+    regionNew(388, 163, 1, -1, PIECE_DUNE_017);
+    regionNew(502, 167, 1, -1, PIECE_DUNE_018);
+    regionNew(576, 167, 1, -1, PIECE_DUNE_019);
 
     // FOURTH ROW
-    REGION_NEW(16, 237, 1, -1, PIECE_DUNE_020);
-    REGION_NEW(62, 255, 1, -1, PIECE_DUNE_021);
-    REGION_NEW(134, 245, 1, -1, PIECE_DUNE_022);
-    REGION_NEW(282, 257, 1, -1, PIECE_DUNE_023);
-    REGION_NEW(360, 253, 1, -1, PIECE_DUNE_024);
-    REGION_NEW(406, 213, 1, -1, PIECE_DUNE_025);
-    REGION_NEW(448, 269, 1, -1, PIECE_DUNE_026);
-    REGION_NEW(514, 227, 1, -1, PIECE_DUNE_027);
+    regionNew(16, 237, 1, -1, PIECE_DUNE_020);
+    regionNew(62, 255, 1, -1, PIECE_DUNE_021);
+    regionNew(134, 245, 1, -1, PIECE_DUNE_022);
+    regionNew(282, 257, 1, -1, PIECE_DUNE_023);
+    regionNew(360, 253, 1, -1, PIECE_DUNE_024);
+    regionNew(406, 213, 1, -1, PIECE_DUNE_025);
+    regionNew(448, 269, 1, -1, PIECE_DUNE_026);
+    regionNew(514, 227, 1, -1, PIECE_DUNE_027);
 }
 
 eGameStateType cSelectYourNextConquestState::getType()
@@ -640,7 +640,7 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event)
     // no interaction unless we select next conquest
     if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
 
-    this->regionMouseIsHoveringOver = REGION_OVER(event.coords.x, event.coords.y);
+    this->regionMouseIsHoveringOver = regionOver(event.coords.x, event.coords.y);
 
     cRegion *region = getRegionMouseIsOver();
     if (region && region->bSelectable) {

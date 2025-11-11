@@ -107,7 +107,7 @@ private:
     GuiButton *m_guiBtnToMissionSelect;
 
     // Functions
-    void REGION_DRAW(cRegion &regionPiece) const;
+    void regionDraw(cRegion &regionPiece) const;
 
     void drawStateSelectYourNextConquest() const;
 
@@ -123,8 +123,8 @@ private:
 
     void onMouseMove(const s_MouseEvent &event);
 
-    int REGION_OVER(int mouseX, int mouseY);
-    void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
+    int regionOver(int mouseX, int mouseY);
+    void regionNew(int x, int y, int iAlpha, int iHouse, int iTile);
 
     cRegion *getRegionMouseIsOver() const;
 
