@@ -14,14 +14,6 @@ public:
 
     void draw();
 
-    int pos_x() const;
-
-    int pos_y() const;
-
-    int draw_x();
-
-    int draw_y();
-
     void thinkFast();       // think (when dying, doing damage, etc)
     void think_move();  // thinking for movement
 
@@ -51,6 +43,10 @@ public:
     int TIMER_frame;
 
 private:
+    int pos_x() const;
+    int pos_y() const;
+    int draw_x();
+    int draw_y();
 
     int getBulletBmpWidth() const;
 
