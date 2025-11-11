@@ -260,9 +260,8 @@ void AbstractMentat::draw()
     draw_movie();
 
     Texture *tmp = getBackgroundBitmap();
-    cRectangle src = {0,0,tmp->w, tmp->h};
     cRectangle dest = {offsetX, offsetY,640, 480};
-    renderDrawer->renderStrechSprite(tmp, src, dest);
+    renderDrawer->renderStrechFullSprite(tmp, dest);
 
     draw_eyes();
     draw_mouth();
@@ -306,9 +305,8 @@ void AbstractMentat::draw_movie()
 
     // drawing only, circulating is done in think function
     Texture *tmp = gfxmovie->getTexture(iMovieFrame);
-    cRectangle src = {0,0,tmp->w, tmp->h};
     cRectangle dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
-    renderDrawer->renderStrechSprite(tmp, src, dest);
+    renderDrawer->renderStrechFullSprite(tmp, dest);
 }
 
 void AbstractMentat::initSentences()
