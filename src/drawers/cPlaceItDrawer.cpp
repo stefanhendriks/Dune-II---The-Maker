@@ -175,7 +175,6 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     else {
         bmp = player->getStructureBitmap(structureId);
     }
-    cRectangle src = { 0, 0, width, height};
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(bmp, src, dest,96);
+    renderDrawer->renderStrechFullSprite(bmp, dest,96);
 }

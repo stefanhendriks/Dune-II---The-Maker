@@ -82,8 +82,7 @@ void cMiniMapDrawer::draw()
         cleanDrawTerrain();
         drawUnitsAndStructures(true);
     }
-    cRectangle src = cRectangle(0, 0, mipMapTex->w, mipMapTex->h);
-    renderDrawer->renderStrechSprite(mipMapTex, src , m_RectMinimap);
+    renderDrawer->renderStrechFullSprite(mipMapTex, m_RectMinimap);
 
     drawStaticFrame();
     drawViewPortRectangle();
@@ -96,8 +95,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (m_status == eMinimapStatus::LOWPOWER) return;
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(m_iStaticFrame)->w, m_gfxinter->getTexture(m_iStaticFrame)->h);
-        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(m_iStaticFrame), src, m_RectFullMinimap);
+        renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap);
         return;
     }
 
@@ -111,8 +109,7 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (m_iStaticFrame != STAT01) {
-        cRectangle src= cRectangle(0, 0, m_gfxinter->getTexture(m_iStaticFrame)->w, m_gfxinter->getTexture(m_iStaticFrame)->h);
-        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(m_iStaticFrame), src, m_RectFullMinimap,m_iTrans);
+        renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap,m_iTrans);
     }
 }
 
