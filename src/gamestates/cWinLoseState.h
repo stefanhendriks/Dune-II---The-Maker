@@ -22,5 +22,6 @@ public:
     eGameStateType getType() override;
 
 private:
-
+    Texture *m_backgroundTexture;
+    void onMouseLeftButtonClicked(const s_MouseEvent &event) const;
 };

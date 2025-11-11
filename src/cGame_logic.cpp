@@ -2224,3 +2224,9 @@ std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
 {
     return m_TerrainInfo;
 }
+
+void cGame::goingToLoseBrief()
+{
+    setState(GAME_LOSEBRIEF);
+    createAndPrepareMentatForHumanPlayer(!m_skirmish);
+}
