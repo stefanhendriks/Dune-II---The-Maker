@@ -64,6 +64,28 @@ std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
         gameSettings->disableAI = section.getBoolean("NoAI");
     if (section.hasValue("Debug"))
         gameSettings->debugMode = section.getBoolean("Debug");
+
+    if (section.hasValue("playMusic"))
+        gameSettings->playMusic = section.getBoolean("playMusic");
+    if (section.hasValue("playSound"))
+        gameSettings->playSound = section.getBoolean("playSound");
+    if (section.hasValue("Debug"))
+        gameSettings->debugMode = section.getBoolean("Debug");
+
+    if (section.hasValue("drawUnitDebug"))
+        gameSettings->drawUnitDebug = section.getBoolean("drawUnitDebug");
+    if (section.hasValue("oneAi"))
+        gameSettings->oneAi = section.getBoolean("oneAi");
+    if (section.hasValue("disableWormAi"))
+        gameSettings->disableWormAi = section.getBoolean("disableWormAi");
+
+    if (section.hasValue("disableReinforcements"))
+        gameSettings->disableReinforcements = section.getBoolean("disableReinforcements");
+    if (section.hasValue("noAiRest"))
+        gameSettings->noAiRest = section.getBoolean("noAiRest");
+    if (section.hasValue("drawUsages"))
+        gameSettings->drawUsages = section.getBoolean("drawUsages");
+
     return gameSettings;
 }
 
