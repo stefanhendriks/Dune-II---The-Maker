@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: master-builds
+  cancel-in-progress: false   # wait until the current run finishes
+
 jobs:
   MSYS2:
     name: Windows-msys2-mingw64
