@@ -8,9 +8,9 @@
 
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState) :
-    cGameState(theGame, ctx)
+    cGameState(theGame, ctx),
+    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get())
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
@@ -18,7 +18,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int mainMenuHeight = m_game.m_screenH - (margin * 2);
 
     margin = 4;
-    int buttonHeight = (m_textDrawer->getFontHeight() + margin);
+    int buttonHeight = m_textDrawer->getFontHeight() + margin;
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);

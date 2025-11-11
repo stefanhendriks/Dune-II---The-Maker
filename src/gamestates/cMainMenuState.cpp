@@ -10,9 +10,10 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
+cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
+    cGameState(theGame, ctx),
+    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get())
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -36,9 +37,9 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) : cGameState(th
 
     logoY = mainMenuFrameY - (logoHeight)*1.2f;
 
-//    /////////////////////////////////
-//    //// Credits (top)
-//    ////////////////////////////////
+    /////////////////////////////////
+    //// Credits (top)
+    ////////////////////////////////
     int buttonWidth = m_textDrawer->getTextLength("CREDITS") / 2;
     int buttonHeight = m_textDrawer->getFontHeight() + 4; // a bit more space
 

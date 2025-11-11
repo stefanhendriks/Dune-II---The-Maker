@@ -58,10 +58,10 @@ static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 
 cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps) :
     cGameState(game, ctx),
+    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    m_previewMaps(std::move(previewMaps)),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
-    m_previewMaps = std::move(previewMaps);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.
