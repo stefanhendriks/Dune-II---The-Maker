@@ -1724,6 +1724,15 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
+    if (event.hasKey(SDL_SCANCODE_KP_PLUS)) {
+        auto timerManager = ctx->getTimeManager();
+        timerManager->setGlobalSpeedVariation(-1);
+    }
+    if (event.hasKey(SDL_SCANCODE_KP_MINUS)) {
+        auto timerManager = ctx->getTimeManager();
+        timerManager->setGlobalSpeedVariation(1);
+    }
+
     // Center on the selected structure
     if (event.hasKey(SDL_SCANCODE_C)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
