@@ -190,3 +190,13 @@ void cTimeManager::setGlobalSpeed(int speed)
     speed = std::clamp(speed, 1, 10);
     durationTime.init(speed);
 }
+
+void cTimeManager::setGlobalSpeedVariation(int variation)
+{
+    int speed = durationTime.gameTickDuration;
+    if (variation>0)
+        speed +=1;
+    if (variation<0)
+        speed -=1;
+    setGlobalSpeed(speed);
+}

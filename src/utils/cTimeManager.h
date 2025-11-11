@@ -35,6 +35,7 @@ public:
     void adaptWaitingTime();
     // change global speed
     void setGlobalSpeed(int speed);
+    void setGlobalSpeedVariation(int variation);
     // get global speed
     uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
 
