@@ -69,8 +69,6 @@ std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
         gameSettings->playMusic = section.getBoolean("playMusic");
     if (section.hasValue("playSound"))
         gameSettings->playSound = section.getBoolean("playSound");
-    if (section.hasValue("Debug"))
-        gameSettings->debugMode = section.getBoolean("Debug");
 
     if (section.hasValue("drawUnitDebug"))
         gameSettings->drawUnitDebug = section.getBoolean("drawUnitDebug");
