@@ -796,9 +796,8 @@ void cUnit::draw()
         int x = draw_x(bmp_width);
         int y = draw_y(bmp_height);
 
-        cRectangle src = {0, 0, bmp_width, bmp_height};
         cRectangle dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
-        renderDrawer->renderStrechSprite(gfxdata->getTexture(FOCUS), src, dest);
+        renderDrawer->renderStrechFullSprite(gfxdata->getTexture(FOCUS), dest);
     }
 
     if (game.m_drawUnitDebug) {
