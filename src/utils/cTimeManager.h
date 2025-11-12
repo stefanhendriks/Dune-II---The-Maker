@@ -13,6 +13,7 @@
 
 #pragma once
 #include <stdint.h>
+#include <string>
 class cGame;
 
 /**
@@ -37,6 +38,8 @@ public:
     void setGlobalSpeed(int speed);
     // get global speed
     uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
+    // get current local Time
+    std::string getCurrentTime() const;
 
 private:
     // gametime timer is called every 100 ms, try to keep up with that.
