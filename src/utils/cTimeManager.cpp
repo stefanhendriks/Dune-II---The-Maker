@@ -30,6 +30,18 @@ std::string cTimeManager::getCurrentTime() const
     return std::format("{:%H:%M:%S}", now_seconds);
 }
 
+std::string cTimeManager::getCurrentPartyTimer() const
+{
+    auto duration = std::chrono::seconds(durationPartyTimer);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration - hours);
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration - hours - minutes);
+    return std::format("{:02}:{:02}:{:02}", 
+                       hours.count(), 
+                       minutes.count(), 
+                       seconds.count());
+}
+
 /**
 	In case the system locks up, or the computer is on heavy duty. The capping
 	makes sure the computer will not cause a chainreaction (getting extremely high timers
@@ -73,6 +85,10 @@ void cTimeManager::handleTimerSecond()
         m_gameTime++;
         m_game->thinkSlow();
         m_timerSecond--; // done!
+        if (isPartyTimer) {
+            durationPartyTimer += durationTime.secondTickDuration/1000;
+            //std::cout << durationTime.secondTickDuration << std::endl;
+        }
     }
 
 }
@@ -178,4 +194,23 @@ void cTimeManager::setGlobalSpeed(int speed)
 {
     speed = std::clamp(speed, 1, 10);
     durationTime.init(speed);
+}
+
+void cTimeManager::startPartyTimer()
+{
+    std::cout << "StartParty" << std::endl;
+    isPartyTimer = true;
+    durationPartyTimer = 0;
+}
+
+void cTimeManager::stopPartyTimer()
+{
+    std::cout << "StopParty" << std::endl;
+    isPartyTimer = false;
+}
+
+void cTimeManager::restartPartyTimer()
+{
+    std::cout << "restartParty" << std::endl;
+    isPartyTimer = true;
 }
