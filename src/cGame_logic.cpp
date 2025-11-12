@@ -88,6 +88,7 @@ cGame::cGame()
     memset(m_states, 0, sizeof(cGameState *));
 
     m_drawFps = false;
+    m_drawTime = false;
     m_nextState = -1;
     m_currentState = nullptr;
     m_screenW = -1;
@@ -534,6 +535,10 @@ void cGame::drawStateCombat()
     // TODO: move this "combat" state into own game state class
     drawCombatMouse();
 
+    if (m_drawTime) {
+        auto time = m_timeManager->getCurrentTime();
+        m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
+    }
     // MOUSE
     drawManager->drawCombatMouse();
 }
@@ -1674,6 +1679,10 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
     if (event.hasKey(SDL_SCANCODE_F)) {
         m_drawFps = false;
+    }
+
+    if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
+        m_drawTime = ! m_drawTime;
     }
 
     if (event.hasKey(SDL_SCANCODE_D)) {
