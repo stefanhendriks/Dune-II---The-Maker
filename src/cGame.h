@@ -322,6 +322,7 @@ private:
     bool m_fadeSelectDir;               // fade select direction
 
     bool m_drawFps;
+    bool m_drawTime;
 
     // screen shaking
     int m_shakeX;
