@@ -3,6 +3,7 @@
 #include "cGame.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
+#include "utils/cTimeCounter.h"
 
 #include <format>
 #include <chrono>
@@ -22,6 +23,7 @@ cTimeManager::cTimeManager(cGame *game)
 {
     // we fix time to 5 100 1000
     durationTime.init(5);
+    m_timeCounter = std::make_unique<cTimeCounter>();
 }
 
 std::string cTimeManager::getCurrentTime() const
@@ -33,7 +35,7 @@ std::string cTimeManager::getCurrentTime() const
 
 std::string cTimeManager::getCurrentPartyTimer() const
 {
-    auto duration = std::chrono::seconds(durationPartyTimer);
+    auto duration = std::chrono::seconds(m_timeCounter->getTime());
     auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
     auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration - hours);
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration - hours - minutes);
@@ -86,12 +88,8 @@ void cTimeManager::handleTimerSecond()
         m_gameTime++;
         m_game->thinkSlow();
         m_timerSecond--; // done!
-        if (isPartyTimer) {
-            durationPartyTimer += durationTime.secondTickDuration/1000;
-            //std::cout << durationTime.secondTickDuration << std::endl;
-        }
+        m_timeCounter->addTime(durationTime.secondTickDuration/1000);
     }
-
 }
 
 /**
@@ -217,21 +215,17 @@ void cTimeManager::setGlobalSpeed(int speed)
 
 void cTimeManager::startPartyTimer()
 {
-    std::cout << "StartParty" << std::endl;
-    isPartyTimer = true;
-    durationPartyTimer = 0;
+    m_timeCounter->start();
 }
 
 void cTimeManager::stopPartyTimer()
 {
-    std::cout << "StopParty" << std::endl;
-    isPartyTimer = false;
+    m_timeCounter->pause();
 }
 
 void cTimeManager::restartPartyTimer()
 {
-    std::cout << "restartParty" << std::endl;
-    isPartyTimer = true;
+    m_timeCounter->restart();
 }
 void cTimeManager::setGlobalSpeedVariation(int variation)
 {
