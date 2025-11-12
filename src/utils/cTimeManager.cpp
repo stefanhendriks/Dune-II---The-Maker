@@ -33,7 +33,7 @@ std::string cTimeManager::getCurrentTime() const
     return std::format("{:%H:%M:%S}", now_seconds);
 }
 
-std::string cTimeManager::getCurrentPartyTimer() const
+std::string cTimeManager::getCurrentTimer() const
 {
     auto duration = std::chrono::seconds(m_timeCounter->getTime());
     auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
@@ -213,17 +213,17 @@ void cTimeManager::setGlobalSpeed(int speed)
     durationTime.init(speed);
 }
 
-void cTimeManager::startPartyTimer()
+void cTimeManager::startTimer()
 {
     m_timeCounter->start();
 }
 
-void cTimeManager::stopPartyTimer()
+void cTimeManager::pauseTimer()
 {
     m_timeCounter->pause();
 }
 
-void cTimeManager::restartPartyTimer()
+void cTimeManager::restartTimer()
 {
     m_timeCounter->restart();
 }
