@@ -538,6 +538,8 @@ void cGame::drawStateCombat()
     if (m_drawTime) {
         auto time = m_timeManager->getCurrentTime();
         m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
+        time = m_timeManager->getCurrentPartyTimer();
+        m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
     }
     // MOUSE
     drawManager->drawCombatMouse();
@@ -1078,6 +1080,7 @@ void cGame::setState(int newState)
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
                     drawManager->drawCombatState();
+                    m_timeManager->stopPartyTimer();
                 }
                 else {
                     // we fall back what was on screen, (which includes mouse cursor for now)
@@ -1087,6 +1090,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
+                    m_timeManager->restartPartyTimer();
                     takeBackGroundScreen();
                     // we came from options menu, notify mouse
                     humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
@@ -1111,6 +1115,7 @@ void cGame::setState(int newState)
                     };
                     // the game is about to begin!
                     game.onNotifyGameEvent(event);
+                    m_timeManager->startPartyTimer();
                 }
             } 
             else if (newState == GAME_LOSING) {
