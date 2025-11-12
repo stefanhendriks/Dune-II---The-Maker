@@ -3,8 +3,10 @@
 #include "cGame.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
+#include "utils/cTimeCounter.h"
 
 #include <format>
+#include <chrono>
 #include <SDL2/SDL_timer.h>
 #include <algorithm>
 
@@ -20,6 +22,26 @@ cTimeManager::cTimeManager(cGame *game)
 {
     // we fix time to 5 100 1000
     durationTime.init(5);
+    m_timeCounter = std::make_unique<cTimeCounter>();
+}
+
+std::string cTimeManager::getCurrentTime() const
+{
+    auto now = std::chrono::system_clock::now();
+    auto now_seconds = std::chrono::time_point_cast<std::chrono::seconds>(now);
+    return std::format("{:%H:%M:%S}", now_seconds);
+}
+
+std::string cTimeManager::getCurrentTimer() const
+{
+    auto duration = std::chrono::seconds(m_timeCounter->getTime());
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration - hours);
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration - hours - minutes);
+    return std::format("{:02}:{:02}:{:02}", 
+                       hours.count(), 
+                       minutes.count(), 
+                       seconds.count());
 }
 
 /**
@@ -65,8 +87,8 @@ void cTimeManager::handleTimerSecond()
         m_gameTime++;
         m_game->thinkSlow();
         m_timerSecond--; // done!
+        m_timeCounter->addTime(durationTime.secondTickDuration/1000);
     }
-
 }
 
 /**
@@ -170,4 +192,19 @@ void cTimeManager::setGlobalSpeed(int speed)
 {
     speed = std::clamp(speed, 1, 10);
     durationTime.init(speed);
+}
+
+void cTimeManager::startTimer()
+{
+    m_timeCounter->start();
+}
+
+void cTimeManager::pauseTimer()
+{
+    m_timeCounter->pause();
+}
+
+void cTimeManager::restartTimer()
+{
+    m_timeCounter->restart();
 }

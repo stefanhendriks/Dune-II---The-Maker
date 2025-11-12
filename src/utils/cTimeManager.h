@@ -13,7 +13,11 @@
 
 #pragma once
 #include <stdint.h>
+#include <string>
+#include <memory>
+
 class cGame;
+class cTimeCounter;
 
 /**
   Time management is done in this class
@@ -37,6 +41,17 @@ public:
     void setGlobalSpeed(int speed);
     // get global speed
     uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
+    // get current local Time
+    std::string getCurrentTime() const;
+    // returns the stored timer value on time format
+    std::string getCurrentTimer() const;
+
+    // start timer control
+    void startTimer();
+    // take a pause
+    void pauseTimer();
+    // restart Timer
+    void restartTimer();
 
 private:
     // gametime timer is called every 100 ms, try to keep up with that.
@@ -62,16 +77,17 @@ private:
     uint64_t m_lastSecondsTick = 0;
 
     struct DurationTime {
-      uint64_t gameTickDuration;  // 5 
-      uint64_t unitTickDuration;  // 100
-      uint64_t secondTickDuration; // 1000
+        uint64_t gameTickDuration;  // 5 
+        uint64_t unitTickDuration;  // 100
+        uint64_t secondTickDuration; // 1000
 
-    void init(int value) {
-      gameTickDuration = value;
-      unitTickDuration = value * 20;
-      secondTickDuration = value * 200;
-    }
+        void init(int value) {
+            gameTickDuration = value;
+            unitTickDuration = value * 20;
+            secondTickDuration = value * 200;
+        }
     };
 
-  DurationTime durationTime;
+    std::unique_ptr<cTimeCounter> m_timeCounter;
+    DurationTime durationTime;
 };
