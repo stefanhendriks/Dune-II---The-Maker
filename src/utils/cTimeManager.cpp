@@ -50,7 +50,7 @@ std::string cTimeManager::getCurrentTimer() const
                        seconds.count());
 }
 
-std::string cTimeManager::getCurrentPartyTimer() const
+std::string cTimeManager::getCurrentTimer() const
 {
     auto duration = std::chrono::seconds(durationPartyTimer);
     auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
