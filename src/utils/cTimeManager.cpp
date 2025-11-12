@@ -5,6 +5,7 @@
 #include "utils/cLog.h"
 
 #include <format>
+#include <chrono>
 #include <SDL2/SDL_timer.h>
 #include <algorithm>
 
@@ -21,6 +22,13 @@ cTimeManager::cTimeManager(cGame *game)
 {
     // we fix time to 5 100 1000
     durationTime.init(5);
+}
+
+std::string cTimeManager::getCurrentTime() const
+{
+    auto now = std::chrono::system_clock::now();
+    auto now_seconds = std::chrono::time_point_cast<std::chrono::seconds>(now);
+    return std::format("{:%H:%M:%S}", now_seconds);
 }
 
 /**
