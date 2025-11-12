@@ -44,11 +44,15 @@ public:
     uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
     // get current local Time
     std::string getCurrentTime() const;
-    std::string getCurrentPartyTimer() const;
+    // returns the stored timer value on time format
+    std::string getCurrentTimer() const;
 
-    void startPartyTimer();
-    void stopPartyTimer();
-    void restartPartyTimer();
+    // start timer control
+    void startTimer();
+    // take a pause
+    void pauseTimer();
+    // restart Timer
+    void restartTimer();
 
 private:
     // gametime timer is called every 100 ms, try to keep up with that.
