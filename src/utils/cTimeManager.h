@@ -14,7 +14,10 @@
 #pragma once
 #include <stdint.h>
 #include <string>
+#include <memory>
+
 class cGame;
+class cTimeCounter;
 
 /**
   Time management is done in this class
@@ -88,8 +91,6 @@ private:
         }
     };
 
-    uint64_t durationPartyTimer = 0;
-    bool isPartyTimer = false;
-
+    std::unique_ptr<cTimeCounter> m_timeCounter;
     DurationTime durationTime;
 };
