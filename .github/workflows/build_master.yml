@@ -195,10 +195,10 @@ jobs:
 
       - name: Remove builds older than 3 months
         run: |
-          cd out/nightly
+          cd out
           # find and delete files older than 90 days
           find . -type f -name "*.zip" -mtime +90 -print -delete
-          cd ../..
+          cd ..
 
       - name: Commit cleanup
         run: |
