@@ -106,6 +106,7 @@ private:
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    void onMouseRightButtonClicked(const s_MouseEvent &event);    
 
     void drawMapList(const cRectangle &mapList) const;
 
@@ -135,7 +136,6 @@ private:
 
     void generateRandomMap();
 
-    void onMouseRightButtonClicked(const s_MouseEvent &event);
 
     void onMouseLeftButtonClickedAtStartPoints();
     void onMouseRightButtonClickedAtStartPoints();
