@@ -78,7 +78,7 @@ public:
 
     int getTextLength(const std::string &msg) const;
     int getFontHeight() const;
-    void resetCache();
+    void resetCache() const;
 
     cRectangle getRect(int x, int y, const std::string &msg) const;
     cRectangle *getAsRectangle(int x, int y, const std::string &msg) const;

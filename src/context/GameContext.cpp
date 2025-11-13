@@ -16,9 +16,8 @@ void GameContext::setGraphicsContext(std::unique_ptr<GraphicsContext> graphicsCo
 GraphicsContext *GameContext::getGraphicsContext() const {
     if (m_graphicsContext) {
         return m_graphicsContext.get();
-    } else {
-        throw std::runtime_error("GraphicsContext not defined");
     }
+    throw std::runtime_error("GraphicsContext not defined");
 }
 
 void GameContext::setTimeManager(std::unique_ptr<cTimeManager> timeManager) {
@@ -60,22 +59,13 @@ void GameContext::setTextContext(std::unique_ptr<TextContext> textContext) {
 TextContext *GameContext::getTextContext() const {
     if (m_textContext) {
         return m_textContext.get();
-    } else {
-        throw std::runtime_error("TextContext not defined");
     }
+    throw std::runtime_error("TextContext not defined");
 }
 
-void GameContext::resetCache()
-{
-    if (m_textContext) {
-        if (m_textContext->smallTextDrawer) {
-            m_textContext->smallTextDrawer->resetCache();
-        }
-        if (m_textContext->beneTextDrawer) {
-            m_textContext->beneTextDrawer->resetCache();
-        }
-        if (m_textContext->gameTextDrawer) {
-            m_textContext->gameTextDrawer->resetCache();
-        }
+void GameContext::resetCache() const {
+    if (m_textContext == nullptr) {
+        return;
     }
+    m_textContext->resetCache();
 }

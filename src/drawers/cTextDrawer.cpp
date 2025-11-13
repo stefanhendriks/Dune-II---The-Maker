@@ -170,20 +170,21 @@ cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) co
     return new cRectangle(x, y, getTextLength(msg), getFontHeight());
 }
 
-void cTextDrawer::resetCache()
-{
+void cTextDrawer::resetCache() const {
     auto it = m_textCache.begin(); 
     while (it != m_textCache.end()) {
-        if (it->second->lifeCounter == 0) {
-            if (it->second->texture) {
-                SDL_DestroyTexture(it->second->texture);
+        auto cacheEntry = std::move(it->second);
+
+        if (cacheEntry->lifeCounter == 0) {
+            if (cacheEntry->texture) {
+                SDL_DestroyTexture(cacheEntry->texture);
             }
-            if (it->second->shadowsTexture) {
-                SDL_DestroyTexture(it->second->shadowsTexture);
+            if (cacheEntry->shadowsTexture) {
+                SDL_DestroyTexture(cacheEntry->shadowsTexture);
             }
             it = m_textCache.erase(it); 
          } else {
-            it->second->lifeCounter = 0;
+            cacheEntry->lifeCounter = 0;
             ++it; 
         }
     }
