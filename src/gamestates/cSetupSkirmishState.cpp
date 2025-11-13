@@ -101,6 +101,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     mouse = m_game.getMouse();
 
     spawnWorms = 2;
+    techlevel = 9;
     spawnBlooms = true;
     detonateBlooms = true;
 
@@ -218,6 +219,12 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     int detonateHitBoxHeight = 16;
     detonateBloomsRect = cRectangle(detonateX, detonateY, detonateHitBoxWidth, detonateHitBoxHeight);
 
+    int techLevelX = screen_x - widthOfRightColumn;
+    int techLevelY = detonateY + 32;
+    int techLevelHitBoxWidth = 130;
+    int techLevelHitBoxHeight = 16;
+    techLevelRect = cRectangle(techLevelX, techLevelY, techLevelHitBoxWidth, techLevelHitBoxHeight);
+
     int backButtonWidth = m_textDrawer->getTextLength(" BACK");
     int backButtonHeight = topBarHeight;
     int backButtonY = screen_y - topBarHeight;
@@ -300,6 +307,7 @@ void cSetupSkirmishState::draw() const
     drawBlooms(bloomsRect);
 
     drawDetonateBlooms(detonateBloomsRect);
+    drawTechLevel(techLevelRect);
     drawMapList(selectArea);
 
     // Header text for players
@@ -501,12 +509,19 @@ void cSetupSkirmishState::drawWorms(const cRectangle &wormsRect) const
                         std::format("Worms? : {}", spawnWorms));
 }
 
+void cSetupSkirmishState::drawTechLevel(const cRectangle &techLevelRect) const
+{
+    Color textColor = techLevelRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
+    m_textDrawer->drawText(techLevelRect.getX(), techLevelRect.getY(), textColor,
+                        std::format("TechLevel : {}", techlevel));
+}
+
 void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
 {
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
-    m_game.m_mission = 9; // high tech level (TODO: make this customizable)
+    m_game.m_mission = techlevel; // high tech level (TODO: make this customizable)
 
     m_game.setupPlayers();
 
@@ -823,6 +838,7 @@ void cSetupSkirmishState::onMouseRightButtonClicked(const s_MouseEvent &)
     onMouseRightButtonClickedAtStartPoints();
     onMouseRightButtonClickedAtWorms();
     onMouseRightButtonClickedAtPlayerList();
+    onMouseRightButtonClickedAtTechLevel();
 }
 
 void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw players who will be playing ;)
@@ -901,6 +917,7 @@ void cSetupSkirmishState::onMouseLeftButtonClicked(const s_MouseEvent &)
     onMouseLeftButtonClickedAtSpawnBlooms();
     onMouseLeftButtonClickedAtDetonateBlooms();
     onMouseLeftButtonClickedAtPlayerList();
+    onMouseLeftButtonClickedAtTechLevel();
 }
 
 void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
@@ -1218,9 +1235,29 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 }
 
 
+void cSetupSkirmishState::onMouseRightButtonClickedAtTechLevel()
+{
+    if (techLevelRect.isPointWithin(mouse->getX(), mouse->getY())) {
+        techlevel--;
+
+        if (techlevel < 2) { // < 2 techlevel is not allowed
+            techlevel = 9; // wrap around to max
+        }
+    }
+}
+
+void cSetupSkirmishState::onMouseLeftButtonClickedAtTechLevel()
+{
+    if (techLevelRect.isPointWithin(mouse->getX(), mouse->getY())) {
+        techlevel++;
+        if (techlevel >9) {
+            techlevel = 2;
+        }
+    }
+}
+
 void cSetupSkirmishState::onMouseMovedTo(const s_MouseEvent &)
 {
-
 }
 
 void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
