@@ -57,7 +57,7 @@ public:
     **/
     double distance(int cell1, int cell2);
 
-    void getContext(GameContext* ctx);
+    void setGameContext(GameContext* ctx);
 
     int getAbsoluteXPositionFromCell(int cell);
 

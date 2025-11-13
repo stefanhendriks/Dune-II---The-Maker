@@ -61,7 +61,7 @@ MapGeometry &cMap::getGeometry() const
     return *mapGeometry;
 }
 
-void cMap::getContext(GameContext* ctx)
+void cMap::setGameContext(GameContext* ctx)
 {
     m_ctx = ctx;
     m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
