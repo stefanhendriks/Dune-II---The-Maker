@@ -13,9 +13,11 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-cMouse::cMouse(GameContext *ctx) :m_ctx(ctx), coords(cPoint(0,0))
+cMouse::cMouse(GameContext *ctx) :
+    m_ctx(ctx),
+    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    coords(cPoint(0,0))
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     leftButtonPressed=false;
     rightButtonPressed=false;
     leftButtonReleased=false;
