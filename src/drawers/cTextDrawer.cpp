@@ -6,12 +6,11 @@
 
 #include <cassert>
 
-cTextDrawer::cTextDrawer(TTF_Font *theFont)
+cTextDrawer::cTextDrawer(TTF_Font *theFont) :
+    font(theFont),
+    applyShadow(true),
+    textColor(Color::white())
 {
-    assert(theFont);
-    font = theFont;
-    applyShadow=true;
-    textColor = Color{255, 255, 255,255};
 }
 
 cTextDrawer::~cTextDrawer()
