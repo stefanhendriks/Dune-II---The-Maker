@@ -366,8 +366,7 @@ void cSetupSkirmishState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, con
     m_textDrawer->drawText(teamsRect.getX(), teamsRect.getY(), textColor, std::format("{}", sSkirmishPlayer.team));
 }
 
-void
-cSetupSkirmishState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
+void cSetupSkirmishState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
         const cRectangle &startingUnitsRect) const
 {
 
@@ -376,15 +375,13 @@ cSetupSkirmishState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
                         std::format("{}", sSkirmishPlayer.startingUnits));
 }
 
-void
-cSetupSkirmishState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
+void cSetupSkirmishState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const
 {
     Color textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
     m_textDrawer->drawText(creditsRect.getX(), creditsRect.getY(), textColor, std::format("{}", sSkirmishPlayer.iCredits));
 }
 
-Color
-cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
+Color cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
     if (rect.isPointWithin(mouse->getX(), mouse->getY())) {
         Color colorSelectedRedFade = m_game.getColorFadeSelected(255, 0, 0);
@@ -407,8 +404,7 @@ void cSetupSkirmishState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, con
     m_textDrawer->drawText(houseRec.getX(), houseRec.getY(), textColor, cHouse);
 }
 
-void
-cSetupSkirmishState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const
+void cSetupSkirmishState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const
 {
     if (sSkirmishPlayer.bHuman) {
         m_textDrawer->drawText(brainRect.getX(), brainRect.getY(), "Human");
