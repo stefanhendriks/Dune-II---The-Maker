@@ -856,7 +856,7 @@ bool cGame::setupGame()
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext());
-    global_map.getContext(ctx.get());
+    global_map.setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->gameTextDrawer.get();
     m_textDrawer->setApplyShadow(false);
