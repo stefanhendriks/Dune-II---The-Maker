@@ -8,9 +8,12 @@
 class Texture;
 class cGame;
 
+enum class Outcome : char {Win, Lose};
+
+
 class cWinLoseState : public cGameState {
 public:
-    explicit cWinLoseState(cGame &theGame, GameContext* ctx);
+    explicit cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value);
     ~cWinLoseState() override;
 
     void thinkFast() override;
