@@ -555,12 +555,6 @@ void cGame::drawStateMentat(AbstractMentat *mentat)
     m_mouse->draw();
 }
 
-// draw menu
-// void cGame::drawStateMenu()
-// {
-//     m_currentState->draw();
-// }
-
 void cGame::initSkirmish() const
 {
     game.missionInit();
@@ -644,17 +638,7 @@ void cGame::drawState()
         case GAME_PLAYING:
             drawStateCombat();
             break;
-        // case GAME_MENU:
-        //     drawStateMenu();
-        //     break;
-        // case GAME_WINNING:
-        //     drawStateWinning();
-        //     break;
-        // case GAME_LOSING:
-        //     drawStateLosing();
-        //     break;
         default:
-            // std::cout << "m_state registered in drawState() " << m_state << std::endl;
             m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
     }
@@ -773,9 +757,6 @@ void cGame::shutdown()
     delete m_keyboard;
 
     logbook("Allegro FONT library shut down.");
-
-    // Release the game dev framework, so that it can do cleanup
-    //m_PLInit.reset();
 }
 
 
@@ -860,7 +841,6 @@ bool cGame::setupGame()
     global_map.setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->gameTextDrawer.get();
-    //m_textDrawer->setApplyShadow(false);
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
     m_soundPlayer = soundPlayer.get();
@@ -1506,10 +1486,6 @@ void cGame::reduceShaking()
     }
 }
 
-// void cGame::install_bitmaps()
-// {
-//     //Mira rip this function
-// }
 
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
