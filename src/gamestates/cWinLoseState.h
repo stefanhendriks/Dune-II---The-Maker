@@ -26,5 +26,7 @@ public:
 
 private:
     Texture *m_backgroundTexture;
+    Texture *m_tex;
+    Outcome m_statement;
     void onMouseLeftButtonClicked(const s_MouseEvent &event) const;
 };

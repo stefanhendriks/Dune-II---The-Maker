@@ -2215,8 +2215,8 @@ std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
     return m_TerrainInfo;
 }
 
-void cGame::goingToLoseBrief()
+void cGame::goingToWinLoseBrief(int value)
 {
-    setState(GAME_LOSEBRIEF);
+    setState(value);
     createAndPrepareMentatForHumanPlayer(!m_skirmish);
 }
