@@ -14,11 +14,12 @@ cTextDrawer::cTextDrawer(TTF_Font *theFont) :
 cTextDrawer::~cTextDrawer()
 {
     for (auto &pair : m_textCache) {
-        if (pair.second->texture) {
-            SDL_DestroyTexture(pair.second->texture);
+        auto &cacheEntry = pair.second;
+        if (cacheEntry->texture) {
+            SDL_DestroyTexture(cacheEntry->texture);
         }
-        if (pair.second->shadowsTexture) {
-            SDL_DestroyTexture(pair.second->shadowsTexture);
+        if (cacheEntry->shadowsTexture) {
+            SDL_DestroyTexture(cacheEntry->shadowsTexture);
         }
     }
     m_font = nullptr; // do not delete, because we are not the owner of it
