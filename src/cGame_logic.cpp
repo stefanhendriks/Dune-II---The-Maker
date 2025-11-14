@@ -625,9 +625,9 @@ void cGame::drawState()
         // case GAME_MENU:
         //     drawStateMenu();
         //     break;
-        case GAME_WINNING:
-            drawStateWinning();
-            break;
+        // case GAME_WINNING:
+        //     drawStateWinning();
+        //     break;
         // case GAME_LOSING:
         //     drawStateLosing();
         //     break;
@@ -1162,6 +1162,9 @@ void cGame::setState(int newState)
             } 
             else if (newState == GAME_LOSING) {
                 newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
+            }
+            else if (newState == GAME_WINNING) {
+                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
             }
 
             m_states[newState] = newStatePtr;
@@ -2181,27 +2184,27 @@ void cGame::initiateFadingOut()
 // }
 
 // this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateWinning()
-{
-    if (screenTexture)
-        renderDrawer->renderSprite(screenTexture,0,0);
+// void cGame::drawStateWinning()
+// {
+//     if (screenTexture)
+//         renderDrawer->renderSprite(screenTexture,0,0);
         
-    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
-    int posW = (m_screenW-tex->w)/2;
-    int posH = (m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
-    renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
+//     auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
+//     int posW = (m_screenW-tex->w)/2;
+//     int posH = (m_screenH-tex->h)/2;
+//     renderDrawer->renderSprite(tex,posW, posH);
+//     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
-    if (m_mouse->isLeftButtonClicked()) {
-        // Mentat will be happy, after that enter "Select your next Conquest"
-        m_state = GAME_WINBRIEF;
+//     if (m_mouse->isLeftButtonClicked()) {
+//         // Mentat will be happy, after that enter "Select your next Conquest"
+//         m_state = GAME_WINBRIEF;
 
-        createAndPrepareMentatForHumanPlayer(!m_skirmish);
+//         createAndPrepareMentatForHumanPlayer(!m_skirmish);
 
-        // FADE OUT
-        initiateFadingOut();
-    }
-}
+//         // FADE OUT
+//         initiateFadingOut();
+//     }
+// }
 
 void cGame::takeBackGroundScreen()
 {
