@@ -69,7 +69,11 @@ void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &event) const
 {
-    game.goingToWinLoseBrief(GAME_LOSEBRIEF);
+    if (m_statement == Outcome::Lose) {
+        game.goingToWinLoseBrief(GAME_LOSEBRIEF);
+    } else {
+        game.goingToWinLoseBrief(GAME_WINBRIEF);
+    }
     // FADE OUT
     game.initiateFadingOut();
 }
