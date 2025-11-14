@@ -47,8 +47,6 @@ public:
     cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
-    std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
-
     void drawText(int x, int y, const std::string &msg, bool applyShadow = true) const;
     void drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow = true) const;
     void drawText(int x, int y, Color color, const std::string &msg, bool applyShadow = true) const;
@@ -87,6 +85,8 @@ public:
 protected:
 
 private:
+    std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
+    textCacheEntry* findOrCreate(Color color, const std::string &msg, textKey textKeyInstance) const;
     TTF_Font *m_font;
     mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
 };

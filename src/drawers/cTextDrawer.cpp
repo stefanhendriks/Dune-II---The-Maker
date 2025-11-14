@@ -41,19 +41,22 @@ std::unique_ptr<textCacheEntry> cTextDrawer::createCacheEntry(Color color, const
     return newCacheEntry;
 }
 
+textCacheEntry* cTextDrawer::findOrCreate(Color color, const std::string &msg, textKey textKeyInstance) const {
+    auto it = m_textCache.find(textKeyInstance);
+    if (it == m_textCache.end()) {
+        auto newCacheEntry = createCacheEntry(color, msg);
+        auto result = m_textCache.emplace(textKeyInstance, std::move(newCacheEntry));
+        return result.first->second.get();
+    }
+    return it->second.get();
+}
+
 void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bool applyShadow) const
 {
     if (msg.empty()) return;
 
     auto textKeyInstance = textKey{msg, color};
-    auto it = m_textCache.find(textKeyInstance);
-    if (it == m_textCache.end()) {
-        auto newCacheEntry = createCacheEntry(color, msg);
-        auto result = m_textCache.emplace(textKeyInstance, std::move(newCacheEntry));
-        it = result.first;
-    }
-    // draw it yet.
-    auto &cacheEntry = it->second;
+    auto cacheEntry = findOrCreate(color, msg, textKeyInstance);
     cacheEntry->lifeCounter += 1;
     if (applyShadow) {
         renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
