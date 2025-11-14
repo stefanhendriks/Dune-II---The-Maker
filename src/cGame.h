@@ -352,7 +352,7 @@ private:
     void drawStateWinning();    // drawStateWinning (during combat you get the window "you have been successful"),
     // after clicking you get to debrief
 
-    void drawStateLosing();     // drawStateLosing (during combat you get the window "you have lost"),
+    // void drawStateLosing();     // drawStateLosing (during combat you get the window "you have lost"),
     // after clicking you get to debrief
 
 
