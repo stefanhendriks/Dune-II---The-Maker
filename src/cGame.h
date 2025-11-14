@@ -353,8 +353,6 @@ private:
 
     void initPlayers(bool rememberHouse) const;
 
-    // void install_bitmaps();
-
     [[nodiscard]] bool isMissionWon() const;
 
     [[nodiscard]] bool isMissionFailed() const;
