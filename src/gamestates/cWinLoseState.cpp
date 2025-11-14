@@ -11,10 +11,16 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value) : cGameState(theGame, ctx)
+cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value) : cGameState(theGame, ctx), m_statement(value)
 {
     if (m_game.getScreenTexture() != nullptr)
         m_backgroundTexture = m_game.getScreenTexture();
+    
+    if (m_statement == Outcome::Lose) {
+        m_tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
+    } else {
+        m_tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
+    }
 }
 
 cWinLoseState::~cWinLoseState()
@@ -31,10 +37,10 @@ void cWinLoseState::draw() const
     if (m_backgroundTexture)
         renderDrawer->renderSprite(m_backgroundTexture,0,0);
 
-    auto tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
-    int posW = (game.m_screenW-tex->w)/2;
-    int posH = (game.m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
+    // auto tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
+    int posW = (game.m_screenW-m_tex->w)/2;
+    int posH = (game.m_screenH-m_tex->h)/2;
+    renderDrawer->renderSprite(m_tex,posW, posH);
 
     // MOUSE
     m_game.getMouse()->draw();
@@ -63,7 +69,7 @@ void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &event) const
 {
-    game.goingToLoseBrief();
+    game.goingToWinLoseBrief(GAME_LOSEBRIEF);
     // FADE OUT
     game.initiateFadingOut();
 }
