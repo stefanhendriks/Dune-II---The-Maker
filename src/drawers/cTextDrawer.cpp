@@ -50,7 +50,7 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
     }
     // draw it yet.
     auto &cacheEntry = it->second;
-    it->second->lifeCounter += 1;
+    cacheEntry->lifeCounter += 1;
     if (applyShadow) {
         renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
     }
@@ -173,7 +173,7 @@ cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) co
 void cTextDrawer::resetCache() const {
     auto it = m_textCache.begin(); 
     while (it != m_textCache.end()) {
-        auto cacheEntry = std::move(it->second);
+        auto &cacheEntry = it->second;
 
         if (cacheEntry->lifeCounter == 0) {
             if (cacheEntry->texture) {
@@ -182,7 +182,7 @@ void cTextDrawer::resetCache() const {
             if (cacheEntry->shadowsTexture) {
                 SDL_DestroyTexture(cacheEntry->shadowsTexture);
             }
-            it = m_textCache.erase(it); 
+            it = m_textCache.erase(it);
          } else {
             cacheEntry->lifeCounter = 0;
             ++it; 
