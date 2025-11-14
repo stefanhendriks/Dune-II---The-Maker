@@ -11,7 +11,7 @@
 #include <SDL2/SDL.h>
 #include <format>
 
-cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
+cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value) : cGameState(theGame, ctx)
 {
     if (m_game.getScreenTexture() != nullptr)
         m_backgroundTexture = m_game.getScreenTexture();
