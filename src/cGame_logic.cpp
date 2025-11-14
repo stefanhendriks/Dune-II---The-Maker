@@ -2175,51 +2175,6 @@ void cGame::initiateFadingOut()
     renderDrawer->endDrawingToTexture();
 }
 
-// this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
-// void cGame::drawStateLosing()
-// {
-//     if (screenTexture)
-//         renderDrawer->renderSprite(screenTexture,0,0);
-
-//     auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
-//     int posW = (m_screenW-tex->w)/2;
-//     int posH = (m_screenH-tex->h)/2;
-//     renderDrawer->renderSprite(tex,posW, posH);
-//     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
-
-//     if (m_mouse->isLeftButtonClicked()) {
-//         m_state = GAME_LOSEBRIEF;
-
-//         createAndPrepareMentatForHumanPlayer(!m_skirmish);
-
-//         // FADE OUT
-//         initiateFadingOut();
-//     }
-// }
-
-// this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
-// void cGame::drawStateWinning()
-// {
-//     if (screenTexture)
-//         renderDrawer->renderSprite(screenTexture,0,0);
-        
-//     auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
-//     int posW = (m_screenW-tex->w)/2;
-//     int posH = (m_screenH-tex->h)/2;
-//     renderDrawer->renderSprite(tex,posW, posH);
-//     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
-
-//     if (m_mouse->isLeftButtonClicked()) {
-//         // Mentat will be happy, after that enter "Select your next Conquest"
-//         m_state = GAME_WINBRIEF;
-
-//         createAndPrepareMentatForHumanPlayer(!m_skirmish);
-
-//         // FADE OUT
-//         initiateFadingOut();
-//     }
-// }
-
 void cGame::takeBackGroundScreen()
 {
     renderDrawer->beginDrawingToTexture(screenTexture);
