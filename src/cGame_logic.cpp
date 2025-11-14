@@ -28,6 +28,7 @@
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishState.h"
+#include "gamestates/cWinLoseState.h"
 #include "ini.h"
 #include "iniDefine.h"
 #include "managers/cDrawManager.h"
@@ -625,9 +626,9 @@ void cGame::drawState()
         case GAME_WINNING:
             drawStateWinning();
             break;
-        case GAME_LOSING:
-            drawStateLosing();
-            break;
+        // case GAME_LOSING:
+        //     drawStateLosing();
+        //     break;
         default:
             // std::cout << "m_state registered in drawState() " << m_state << std::endl;
             m_currentState->draw();
@@ -1156,6 +1157,9 @@ void cGame::setState(int newState)
                     game.onNotifyGameEvent(event);
                     m_timeManager->startTimer();
                 }
+            } 
+            else if (newState == GAME_LOSING) {
+                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
             }
 
             m_states[newState] = newStatePtr;
@@ -2197,26 +2201,26 @@ void cGame::initiateFadingOut()
 }
 
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateLosing()
-{
-    if (screenTexture)
-        renderDrawer->renderSprite(screenTexture,0,0);
+// void cGame::drawStateLosing()
+// {
+//     if (screenTexture)
+//         renderDrawer->renderSprite(screenTexture,0,0);
 
-    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
-    int posW = (m_screenW-tex->w)/2;
-    int posH = (m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
-    renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
+//     auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
+//     int posW = (m_screenW-tex->w)/2;
+//     int posH = (m_screenH-tex->h)/2;
+//     renderDrawer->renderSprite(tex,posW, posH);
+//     renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
 
-    if (m_mouse->isLeftButtonClicked()) {
-        m_state = GAME_LOSEBRIEF;
+//     if (m_mouse->isLeftButtonClicked()) {
+//         m_state = GAME_LOSEBRIEF;
 
-        createAndPrepareMentatForHumanPlayer(!m_skirmish);
+//         createAndPrepareMentatForHumanPlayer(!m_skirmish);
 
-        // FADE OUT
-        initiateFadingOut();
-    }
-}
+//         // FADE OUT
+//         initiateFadingOut();
+//     }
+// }
 
 // this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::drawStateWinning()
