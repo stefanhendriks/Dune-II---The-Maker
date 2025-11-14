@@ -275,7 +275,7 @@ public:
 
     std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
 
-    void goingToLoseBrief();
+    void goingToWinLoseBrief(int value);
 private:
     /**
      * Variables start here
