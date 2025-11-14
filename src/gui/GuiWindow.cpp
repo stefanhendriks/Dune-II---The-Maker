@@ -4,12 +4,12 @@
 #include "drawers/SDLDrawer.hpp"
 
 
-GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer ) : GuiObject(rect)
+GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer) :
+    GuiObject(rect),
+    gui_objects(std::vector<GuiObject *>(0)),
+    title(""),
+    m_textDrawer(_textDrawer)
 {
-    this->title = "";
-    gui_objects = std::vector<GuiObject *>(0);
-    m_textDrawer = _textDrawer;
-    // m_textDrawer->setTextColor(Color::yellow());
 }
 
 GuiWindow::~GuiWindow() noexcept
