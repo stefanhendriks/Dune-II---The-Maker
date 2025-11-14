@@ -47,6 +47,8 @@ public:
     cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
+    std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
+
     void drawText(int x, int y, const std::string &msg, bool applyShadow = true) const;
     void drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow = true) const;
     void drawText(int x, int y, Color color, const std::string &msg, bool applyShadow = true) const;

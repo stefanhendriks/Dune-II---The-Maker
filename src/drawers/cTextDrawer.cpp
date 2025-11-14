@@ -25,6 +25,22 @@ cTextDrawer::~cTextDrawer()
     m_font = nullptr; // do not delete, because we are not the owner of it
 }
 
+std::unique_ptr<textCacheEntry> cTextDrawer::createCacheEntry(Color color, const std::string &msg) const {
+    auto newCacheEntry = std::make_unique<textCacheEntry>();
+    // create shadow texture if needed
+    SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
+    newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+    SDL_FreeSurface(textSurface);
+    // create main texture
+    textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
+    newCacheEntry->texture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+    newCacheEntry->width = textSurface->w;
+    newCacheEntry->height = textSurface->h;
+    newCacheEntry->lifeCounter = 10;
+    SDL_FreeSurface(textSurface);
+    return newCacheEntry;
+}
+
 void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bool applyShadow) const
 {
     if (msg.empty()) return;
@@ -32,20 +48,7 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
     auto textKeyInstance = textKey{msg, color};
     auto it = m_textCache.find(textKeyInstance);
     if (it == m_textCache.end()) {
-        // not found, create it
-        auto newCacheEntry = std::make_unique<textCacheEntry>();
-        // create shadow texture if needed
-        SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
-        newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
-        SDL_FreeSurface(textSurface);
-        // create main texture
-        textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
-        newCacheEntry->texture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
-        newCacheEntry->width = textSurface->w;
-        newCacheEntry->height = textSurface->h;
-        newCacheEntry->lifeCounter = 10;
-        SDL_FreeSurface(textSurface);
-        // store in cache at end
+        auto newCacheEntry = createCacheEntry(color, msg);
         auto result = m_textCache.emplace(textKeyInstance, std::move(newCacheEntry));
         it = result.first;
     }
