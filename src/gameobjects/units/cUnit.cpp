@@ -613,12 +613,11 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
 {
     if (iHitPoints < 0) return;
 
-    // draw units health
-    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y() - (height_y + 2);
     // draw group
+    // TODO: make text smaller depending on zoom factor?
     if (iGroup > 0 && iPlayer == HUMAN) {
         // @mira I don't fix group name without acces to textDrawer: fixed on ctx branch
         textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),std::format("{}",iGroup));
