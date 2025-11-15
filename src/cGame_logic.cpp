@@ -2034,7 +2034,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_F7)) {
-        m_screenShake->shake(200);
+        m_screenShake->shake(200/3); // fix bug temporary with 3*5ms
     }
 
 }
