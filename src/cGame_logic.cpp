@@ -683,10 +683,10 @@ void cGame::run()
         renderDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
-        shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
+        shakeScreenAndBlitBuffer();
 
         renderDrawer->endDrawingToTexture();
-        renderDrawer->renderSprite(actualRenderer,0,0);
+        renderDrawer->renderSprite(actualRenderer,m_shakeX,m_shakeY);
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
