@@ -41,7 +41,7 @@ public:
 
     std::string getMapSize(int i) const;
     int getMapCount() const {
-        return numberOfMaps;
+        return numberOfMaps+1;
     }
 
 private:
