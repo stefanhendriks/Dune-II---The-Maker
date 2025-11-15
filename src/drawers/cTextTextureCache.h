@@ -35,15 +35,15 @@ struct textCacheEntry {
 
 class cTextTextureCache {
 public:
+    // Constructor, initializes the cache with a TTF font
     cTextTextureCache(TTF_Font *font);
     ~cTextTextureCache();
-
+    // Finds a cached entry for the given color and message, or creates it if not present
     textCacheEntry* findOrCreate(Color color, const std::string &msg) const;
+    // Clears the cache, destroying all stored textures
     void resetCache() const;
-
 private:
     std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
-
     TTF_Font *m_font;
     mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
 };
