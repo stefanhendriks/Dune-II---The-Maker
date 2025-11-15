@@ -29,6 +29,7 @@
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishState.h"
 #include "gamestates/cWinLoseState.h"
+#include "gamestates/cTellHouseState.h"
 #include "ini.h"
 #include "iniDefine.h"
 #include "managers/cDrawManager.h"
@@ -643,7 +644,7 @@ void cGame::drawState()
     switch (m_state) {
         case GAME_BRIEFING:
         case GAME_LOSEBRIEF:
-        case GAME_TELLHOUSE:
+        //case GAME_TELLHOUSE: //here
         case GAME_WINBRIEF:
             drawStateMentat(m_mentat);
             break;
@@ -1180,6 +1181,11 @@ void cGame::setState(int newState)
             else if (newState == GAME_WINNING) {
                 newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
             }
+            else if (newState == GAME_TELLHOUSE) {
+                int house = players[HUMAN].getHouse();
+                newStatePtr = new cTellHouseState(*this, ctx.get(), house);
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            }
 
             m_states[newState] = newStatePtr;
             m_currentState = newStatePtr;
@@ -1282,27 +1288,32 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    delete m_mentat;
-    m_mentat = new BeneMentat(ctx.get());
-    m_mentat->setHouse(house);
-    // create new drawStateMentat
-    if (house == ATREIDES) {
-        cIni::loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("platr"); // load planet of atreides
+    // delete m_mentat;
+    // m_mentat = new BeneMentat(ctx.get());
+    // m_mentat->setHouse(house);
+    // // create new drawStateMentat
+    // if (house == ATREIDES) {
+    //     cIni::loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
+    //     m_mentat->loadScene("platr"); // load planet of atreides
+    // }
+    // else if (house == HARKONNEN) {
+    //     cIni::loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
+    //     m_mentat->loadScene("plhar"); // load planet of harkonnen
+    // }
+    // else if (house == ORDOS) {
+    //     cIni::loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat);
+    //     m_mentat->loadScene("plord"); // load planet of ordos
+    // }
+    // else {
+    //     m_mentat->setSentence(0, "Looks like you choose an unknown house");
+    // }
+    // // todo: Sardaukar, etc? (Super Dune 2 features)
+    // m_mentat->speak();
+    players[HUMAN].setHouse(house);
+    if (!m_states[GAME_TELLHOUSE]) {
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), house);
+        playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
-    else if (house == HARKONNEN) {
-        cIni::loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("plhar"); // load planet of harkonnen
-    }
-    else if (house == ORDOS) {
-        cIni::loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("plord"); // load planet of ordos
-    }
-    else {
-        m_mentat->setSentence(0, "Looks like you choose an unknown house");
-    }
-    // todo: Sardaukar, etc? (Super Dune 2 features)
-    m_mentat->speak();
 }
 
 void cGame::loadScenario()
