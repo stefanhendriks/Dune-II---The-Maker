@@ -1170,7 +1170,7 @@ void cGame::setState(int newState)
                         cPlayer &player = players[i];
                         player.evaluateStillAlive();
                     }
-
+                    cParticle::reset();
                     // in-between solution until we have a proper combat state object
                     drawManager->init();
 
