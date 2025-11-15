@@ -65,6 +65,8 @@
 #include "context/ContextCreator.hpp"
 #include "utils/cIniGameRessouces.h"
 
+#include "utils/cScreenShake.h"
+
 #include <algorithm>
 #include <random>
 #include <vector>
@@ -106,6 +108,8 @@ cGame::cGame()
     ctx->setTimeManager(std::move(timeManager));
     // initialisation terrainInfo
     m_TerrainInfo = std::make_shared<s_TerrainInfo>();
+
+    m_screenShake = std::make_unique<cScreenShake>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -171,9 +175,10 @@ void cGame::init()
     m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
     m_mission = 0;         // calculated by mission loading (region -> mission calculation)
 
-    m_shakeX = 0;
-    m_shakeY = 0;
-    m_TIMER_shake = 0;
+    // m_shakeX = 0;
+    // m_shakeY = 0;
+    // m_TIMER_shake = 0;
+    m_screenShake->reset();
 
     m_musicType = -1;
 
@@ -218,9 +223,10 @@ void cGame::missionInit()
 
     m_fadeSelectDir = true;    // fade select direction
 
-    m_shakeX = 0;
-    m_shakeY = 0;
-    m_TIMER_shake = 0;
+    // m_shakeX = 0;
+    // m_shakeY = 0;
+    // m_TIMER_shake = 0;
+    m_screenShake->reset();
 
     global_map.init(64, 64);
 
@@ -328,9 +334,10 @@ void cGame::setMissionWon()
     m_missionWasWon = true;
     setState(GAME_WINNING);
 
-    m_shakeX = 0;
-    m_shakeY = 0;
-    m_TIMER_shake = 0;
+    // m_shakeX = 0;
+    // m_shakeY = 0;
+    // m_TIMER_shake = 0;
+    m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
     m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, players[HUMAN].getHouse());
@@ -345,9 +352,10 @@ void cGame::setMissionLost()
     m_missionWasWon = false;
     setState(GAME_LOSING);
 
-    m_shakeX = 0;
-    m_shakeY = 0;
-    m_TIMER_shake = 0;
+    // m_shakeX = 0;
+    // m_shakeY = 0;
+    // m_TIMER_shake = 0;
+    m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
     m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, players[HUMAN].getHouse());
@@ -567,36 +575,43 @@ void cGame::loadSkirmishMaps() const
     m_PreviewMaps->loadSkirmishMaps();
 }
 
+// void cGame::shakeScreenAndBlitBuffer()
+// {
+//     if (m_TIMER_shake == 0) {
+//         m_TIMER_shake = -1;
+//     }
+
+//     // only in playing state we shake screen
+//     if (m_state == GAME_PLAYING) {
+//         // TODO: move the shaking part of the rendering in the playing state object at some time
+//         // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
+//         // always at some point in the main loop, and does not need to know about the shaking logic.
+
+//         // blitSprite on screen
+//         if (m_TIMER_shake > 0) {
+//             // the more we get to the 'end' the less we 'throttle'.
+//             // Structure explosions are 6 time units per cell.
+//             // Max is 9 cells (9*6=54)
+//             // the max border is then 9. So, we do time / 6
+//             int shakiness = std::min(m_TIMER_shake, 69);
+//             float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
+
+//             m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
+//             m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
+
+//             // @Mira recreate shake screen
+            
+//         }
+//         else {
+//             fadeOutOrBlitScreenBuffer();
+//         }
+//     }
+//     fadeOutOrBlitScreenBuffer();
+// }
+
 void cGame::shakeScreenAndBlitBuffer()
 {
-    if (m_TIMER_shake == 0) {
-        m_TIMER_shake = -1;
-    }
-
-    // only in playing state we shake screen
-    if (m_state == GAME_PLAYING) {
-        // TODO: move the shaking part of the rendering in the playing state object at some time
-        // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
-        // always at some point in the main loop, and does not need to know about the shaking logic.
-
-        // blitSprite on screen
-        if (m_TIMER_shake > 0) {
-            // the more we get to the 'end' the less we 'throttle'.
-            // Structure explosions are 6 time units per cell.
-            // Max is 9 cells (9*6=54)
-            // the max border is then 9. So, we do time / 6
-            int shakiness = std::min(m_TIMER_shake, 69);
-            float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
-
-            m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
-            m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
-
-            // @Mira recreate shake screen
-        }
-        else {
-            fadeOutOrBlitScreenBuffer();
-        }
-    }
+    m_screenShake->update(m_state, GAME_PLAYING, mapCamera);
     fadeOutOrBlitScreenBuffer();
 }
 
@@ -686,7 +701,7 @@ void cGame::run()
         shakeScreenAndBlitBuffer();
 
         renderDrawer->endDrawingToTexture();
-        renderDrawer->renderSprite(actualRenderer,m_shakeX,m_shakeY);
+        renderDrawer->renderSprite(actualRenderer,m_screenShake->getX(),m_screenShake->getY());
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
@@ -694,7 +709,9 @@ void cGame::run()
 
 void cGame::shakeScreen(int duration)
 {
-    game.m_TIMER_shake += duration;
+    // game.m_TIMER_shake += duration;
+    m_screenShake->shake(duration);
+
 }
 
 /**
@@ -823,7 +840,7 @@ bool cGame::setupGame()
     logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
     /* set up the interrupt routines... */
-    game.m_TIMER_shake = 0;
+    // game.m_TIMER_shake = 0;
 
     m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
     if (!m_windowed) {
@@ -1474,9 +1491,10 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
 
 void cGame::reduceShaking()
 {
-    if (m_TIMER_shake > 0) {
-        m_TIMER_shake--;
-    }
+    // if (m_TIMER_shake > 0) {
+        // m_TIMER_shake--;
+    // }
+    m_screenShake->reduce();
 }
 
 
@@ -2071,7 +2089,8 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.hasKey(SDL_SCANCODE_F7)) {
         // shakeScreen(200); // shake for 1 second (fast timer)
-        game.m_TIMER_shake = 200;
+        // game.m_TIMER_shake = 200;
+        m_screenShake->shake(200);
     }
 
 }
