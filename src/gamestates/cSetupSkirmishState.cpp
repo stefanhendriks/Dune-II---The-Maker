@@ -81,15 +81,21 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
-    nextFunction = [this]() {
+    int qMaps = m_previewMaps->getMapCount()/(maxMapsInSelectArea*2);
+    int rMaps = m_previewMaps->getMapCount()%(maxMapsInSelectArea*2);
+    if (rMaps > 0) {
+        qMaps++;
+    }
+
+    nextFunction = [this, qMaps]() {
         // Go to the next map
-        if (mapIndexToDisplay < (m_previewMaps->getMapCount()/maxMapsInSelectArea*2)+maxMapsInSelectArea*3) {
+        if (mapIndexToDisplay <= qMaps*maxMapsInSelectArea*2) {
             mapIndexToDisplay += maxMapsInSelectArea*2;
         }
     };
     previousFunction = [this]() {
         // Go back to the previous map
-        if (mapIndexToDisplay > 0) {
+        if (mapIndexToDisplay >= maxMapsInSelectArea*2) {
             mapIndexToDisplay -= maxMapsInSelectArea*2;
         }
     };
