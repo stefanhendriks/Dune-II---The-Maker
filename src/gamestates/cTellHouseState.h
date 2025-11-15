@@ -15,7 +15,7 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    eGameStateType getType() override { return eGameStateType::GAMESTATE_MAIN_MENU; } // À adapter si besoin
+    eGameStateType getType() override;
     void prepareMentat(int house);
 
 private:
