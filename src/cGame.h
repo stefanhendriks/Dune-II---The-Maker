@@ -327,10 +327,6 @@ private:
 
     bool m_drawFps;
 
-    // screen shaking
-    // int m_shakeX;
-    // int m_shakeY;
-    // int m_TIMER_shake;                  // time to shake screen, using fast timer (every 5 ms called, so 200 = 1 second)
     std::unique_ptr<cScreenShake> m_screenShake;
 
     int m_TIMER_evaluatePlayerStatus;
