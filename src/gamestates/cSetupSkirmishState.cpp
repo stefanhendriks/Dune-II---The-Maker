@@ -1092,7 +1092,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
                 if (previewMap.name[0] != '\0') {
                     iStartingPoints = 0;
                     // count starting points
-                    for (int s: previewMap.iStartCell) {
+                    for (int s: previewMap2.iStartCell) {
                         if (s > -1) {
                             iStartingPoints++;
                         }
