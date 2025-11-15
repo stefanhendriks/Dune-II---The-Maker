@@ -17,11 +17,18 @@ cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, int house)
     prepareMentat(house);
 }
 
-cTellHouseState::~cTellHouseState() {
+cTellHouseState::~cTellHouseState()
+{
     delete m_mentat;
 }
 
-void cTellHouseState::prepareMentat(int house) {
+eGameStateType cTellHouseState::getType()
+{
+     return eGameStateType::GAMESTATE_TELLHOUSE; 
+}
+
+void cTellHouseState::prepareMentat(int house)
+{
     m_house = house;
     delete m_mentat;
     m_mentat = new BeneMentat(m_ctx);
