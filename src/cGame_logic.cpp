@@ -1288,27 +1288,6 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    // delete m_mentat;
-    // m_mentat = new BeneMentat(ctx.get());
-    // m_mentat->setHouse(house);
-    // // create new drawStateMentat
-    // if (house == ATREIDES) {
-    //     cIni::loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
-    //     m_mentat->loadScene("platr"); // load planet of atreides
-    // }
-    // else if (house == HARKONNEN) {
-    //     cIni::loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
-    //     m_mentat->loadScene("plhar"); // load planet of harkonnen
-    // }
-    // else if (house == ORDOS) {
-    //     cIni::loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat);
-    //     m_mentat->loadScene("plord"); // load planet of ordos
-    // }
-    // else {
-    //     m_mentat->setSentence(0, "Looks like you choose an unknown house");
-    // }
-    // // todo: Sardaukar, etc? (Super Dune 2 features)
-    // m_mentat->speak();
     players[HUMAN].setHouse(house);
     if (!m_states[GAME_TELLHOUSE]) {
         m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), house);
