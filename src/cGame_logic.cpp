@@ -1729,9 +1729,11 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         game.m_playMusic = !game.m_playMusic;
         if (!game.m_playMusic) {
             m_soundPlayer->stopMusic();
+            humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
         }
         else {
             m_soundPlayer->playMusic(m_newMusicSample);
+            humanPlayer.addNotification("Music enabled", eNotificationType::NEUTRAL);
         }
     }
 
@@ -1745,6 +1747,15 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
     if (event.hasKey(SDL_SCANCODE_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+    }
+
+    if (event.hasKey(SDL_SCANCODE_KP_PLUS)) {
+        auto timerManager = ctx->getTimeManager();
+        timerManager->setGlobalSpeedVariation(-1);
+    }
+    if (event.hasKey(SDL_SCANCODE_KP_MINUS)) {
+        auto timerManager = ctx->getTimeManager();
+        timerManager->setGlobalSpeedVariation(1);
     }
 
     // Center on the selected structure
