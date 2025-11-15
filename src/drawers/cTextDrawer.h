@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <memory>
 
+/*
 struct textKey {
     std::string msg;
     Color color;
@@ -39,8 +40,9 @@ struct textCacheEntry {
     int width;
     int height;
     int lifeCounter;
-};
+};*/
 
+class cTextTextureCache;
 
 class cTextDrawer {
 public:
@@ -85,8 +87,9 @@ public:
 protected:
 
 private:
-    std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
-    textCacheEntry* findOrCreate(Color color, const std::string &msg, textKey textKeyInstance) const;
+    //std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
+    //textCacheEntry* findOrCreate(Color color, const std::string &msg, textKey textKeyInstance) const;
     TTF_Font *m_font;
-    mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
+    std::unique_ptr<cTextTextureCache> m_textCache;
+    //mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
 };
