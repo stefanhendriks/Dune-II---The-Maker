@@ -570,6 +570,40 @@ void cGame::loadSkirmishMaps() const
     m_PreviewMaps->loadSkirmishMaps();
 }
 
+// void cGame::shakeScreenAndBlitBuffer()
+// {
+//     if (m_TIMER_shake == 0) {
+//         m_TIMER_shake = -1;
+//     }
+
+//     // only in playing state we shake screen
+//     if (m_state == GAME_PLAYING) {
+//         // TODO: move the shaking part of the rendering in the playing state object at some time
+//         // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
+//         // always at some point in the main loop, and does not need to know about the shaking logic.
+
+//         // blitSprite on screen
+//         if (m_TIMER_shake > 0) {
+//             // the more we get to the 'end' the less we 'throttle'.
+//             // Structure explosions are 6 time units per cell.
+//             // Max is 9 cells (9*6=54)
+//             // the max border is then 9. So, we do time / 6
+//             int shakiness = std::min(m_TIMER_shake, 69);
+//             float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
+
+//             m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
+//             m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
+
+//             // @Mira recreate shake screen
+            
+//         }
+//         else {
+//             fadeOutOrBlitScreenBuffer();
+//         }
+//     }
+//     fadeOutOrBlitScreenBuffer();
+// }
+
 void cGame::shakeScreenAndBlitBuffer()
 {
     m_screenShake->update(m_state, GAME_PLAYING, mapCamera);
