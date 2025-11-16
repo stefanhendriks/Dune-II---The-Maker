@@ -7,7 +7,7 @@
 class cBounceInt {
 public:
     // constructor take min and max value for oscillation
-    cBounceInt(int minVal, int maxVal);
+    explicit cBounceInt(int minVal, int maxVal);
     // update oscillator from 1
     void update();
     // return current value
