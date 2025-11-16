@@ -241,12 +241,11 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         }
 
         if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
-        auto m_soundPlayer = m_ctx->getSoundPlayer();
-        game.m_playMusic = !game.m_playMusic;
-        if (!game.m_playMusic) {
-            m_soundPlayer->stopMusic();
-            //humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
+            auto m_soundPlayer = m_ctx->getSoundPlayer();
+            game.m_playMusic = !game.m_playMusic;
+            if (!game.m_playMusic) {
+                m_soundPlayer->stopMusic();
+            }
         }
-    }
     }
 }
