@@ -7,8 +7,10 @@
 #include "include/Texture.hpp"
 #include "utils/cBounceInt.h"
 
+#include <iostream>
+
 cLowPower::cLowPower(cPlayer *player, cPoint &absCoords)
-    : player(player),absCoords(absCoords),  intensity(std::make_unique<cBounceInt>(8,32))
+    : player(player), absCoords(absCoords),  intensity(std::make_unique<cBounceInt>(64,256))
 {
 }
 
@@ -19,6 +21,7 @@ void cLowPower::draw()
 
     int drawX = mapCamera->getWindowXPosition(absCoords.x);
     int drawY = mapCamera->getWindowYPosition(absCoords.y);
+    //std::cout << "lowPower " << drawX << " " << drawY << std::endl;
 
     if ((drawX >= 0 && drawX < game.m_screenW) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
@@ -30,12 +33,14 @@ void cLowPower::draw()
         int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
         cRectangle src = {0, 0, pixelWidth, pixelHeight};
         cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
-        renderDrawer->renderStrechSprite(flagBitmap, src, dest, Uint8(8*intensity->get()));
+        //std::cout << "lowPower " << drawX << " " << drawY << " " << Uint8(8*intensity->get()) << std::endl;
+        renderDrawer->renderStrechSprite(flagBitmap, src, dest, Uint8(intensity->get()));
     }
 }
 
 void cLowPower::thinkFast()
 {
+    //std::cout << "lowpower update" << std::endl; 
     intensity->update();
 }
 
