@@ -495,6 +495,11 @@ Texture *cPlayer::getFlagSmallBitmap()
     return bmp_flag_small;
 }
 
+Texture *cPlayer::getLowPowerBitmap()
+{
+    return gfxdata->getTexture(ICON_LOWPOWER);
+}
+
 /**
  * Returns the bitmap for unit type "index", this unit has been colorized beforehand for this player and is
  * in same color depth as bmp_screen.

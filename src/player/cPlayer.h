@@ -216,6 +216,8 @@ public:
 
     Texture *getUnitShadowBitmap(int index);
 
+    Texture *getLowPowerBitmap();
+
     void destroyAllegroBitmaps();
 
     bool hasWor() const;

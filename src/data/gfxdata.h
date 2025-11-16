@@ -170,4 +170,5 @@
 #define UNIT_TRIPLEFREMEN                164      /* BMP  */
 #define UNIT_TROOPER                     165      /* BMP  */
 #define UNIT_TROOPERS                    166      /* BMP  */
+#define ICON_LOWPOWER                    167
 
