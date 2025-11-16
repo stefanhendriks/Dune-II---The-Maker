@@ -23,8 +23,10 @@
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
+#include "gameobjects/cLowPower.h"
 #include <SDL2/SDL.h>
 #include <format>
+#include <iostream>
 
 #include "data/gfxaudio.h"
 
@@ -393,6 +395,10 @@ void cAbstractStructure::think_flag_new()
     // iterate over all flags and think
     for (auto flag : flags) {
         flag->thinkFast();
+    }
+
+    if (lowPower) {
+        lowPower->thinkFast();
     }
 }
 
@@ -879,6 +885,10 @@ void cAbstractStructure::drawFlags()
 {
     for (auto flag : flags) {
         flag->draw();
+    }
+    if (lowPower) {
+        //std::cout << "lowPower" << std::endl;
+        lowPower->draw();
     }
 }
 

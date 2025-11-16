@@ -25,6 +25,7 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
+#include "gameobjects/cLowPower.h"
 #include <format>
 
 cStructureFactory::cStructureFactory()
@@ -167,6 +168,20 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     str->setStructureId(iNewId);
     str->setWidth(structureInfo.bmp_width / TILESIZE_WIDTH_PIXELS);
     str->setHeight(structureInfo.bmp_height / TILESIZE_HEIGHT_PIXELS);
+
+    if (structureInfo.lowPowerPosition.has_value()) {
+        auto flag = structureInfo.lowPowerPosition.value();
+        cPoint pos = cPoint(
+                         absTopLeft.x + flag.x,
+                         absTopLeft.y + flag.y-16
+                     );
+        //std::cout << "Point "<< flag.x << " " << flag.y << std::endl;
+        str->setLowPower(new cLowPower(player, pos));
+        //cLowPower = structureInfo
+    } else {
+        str->setLowPower(nullptr);
+    }
+
 
     // clear fog around structure
     clearFogForStructureType(iCell, str);

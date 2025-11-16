@@ -20,6 +20,7 @@
 
 class cPlayer;
 class Texture;
+class cLowPower;
 
 class cAbstractStructure : public cScenarioObserver {
 
@@ -64,6 +65,7 @@ protected:
 
     // flags, if any
     std::vector<cFlag *> flags;
+    cLowPower *lowPower=nullptr;
 
     // draw structure with shadow
     void drawWithShadow();
@@ -234,6 +236,9 @@ public:
         return getStructureInfo().canAttackGroundUnits;
     }
 
+    void setLowPower(cLowPower *lowpower) {
+        lowPower = lowpower;
+    }
     void setHeight(int height);
     void setWidth(int width);
     void setHitPoints(int hp);
