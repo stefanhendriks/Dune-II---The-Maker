@@ -1,9 +1,11 @@
 #pragma once
 
 #include "enums.h"
+#include "utils/cPoint.h"
 
 #include <vector>
 #include <string>
+#include <optional>
 
 #include <SDL2/SDL.h>
 
@@ -105,6 +107,7 @@ struct s_StructureInfo {
     SDL_Surface *flash;	   // a pointer to the flash bitmap (used to overlay when unit exits building for light/heavy fctry)
 
     std::vector<s_FlagInfo> flags;
+    std::optional<cPoint> lowPowerPosition;
 
     int bmp_width;       // width structure (in pixels)
     int bmp_height;      // height structure (in pixels)
