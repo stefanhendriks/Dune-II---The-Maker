@@ -655,7 +655,7 @@ void cGame::run()
         shakeScreenAndBlitBuffer();
 
         renderDrawer->endDrawingToTexture();
-        renderDrawer->renderSprite(actualRenderer,m_screenShake->getX(),m_screenShake->getY());
+        renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
@@ -1438,8 +1438,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
     game.onNotifyGameEvent(newEvent);
 }
 
-void cGame::reduceShaking()
-{
+void cGame::reduceShaking() const {
     m_screenShake->reduce();
 }
 
@@ -2032,11 +2031,6 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
             pUnit.die(true, false);
         }
     }
-
-    if (event.hasKey(SDL_SCANCODE_F7)) {
-        m_screenShake->shake(200/3); // fix bug temporary with 3*5ms
-    }
-
 }
 
 void cGame::setMousePosition(int w, int h)
