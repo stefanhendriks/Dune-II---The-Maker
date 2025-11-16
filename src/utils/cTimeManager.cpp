@@ -194,9 +194,9 @@ void cTimeManager::setGlobalSpeed(int speed)
 void cTimeManager::setGlobalSpeedVariation(int variation)
 {
     int speed = durationTime.gameTickDuration;
-    if (variation>0)
-        speed +=1;
-    if (variation<0)
-        speed -=1;
+    if (variation > 0)
+        speed += 1;
+    if (variation < 0)
+        speed -= 1;
     setGlobalSpeed(speed);
 }
