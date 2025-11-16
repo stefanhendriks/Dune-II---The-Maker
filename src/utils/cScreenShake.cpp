@@ -37,11 +37,6 @@ int cScreenShake::getY() const
     return m_shakeY;
 }
 
-int cScreenShake::getTimer() const
-{
-    return m_timer;
-}
-
 void cScreenShake::update(int state, int playingState, cMapCamera *mapCamera)
 {
     if (m_timer == 0) {

@@ -225,7 +225,7 @@ public:
     }
 
     void shakeScreen(int duration);
-    void reduceShaking();
+    void reduceShaking() const;
 
     Color getColorPlaceNeutral();
 

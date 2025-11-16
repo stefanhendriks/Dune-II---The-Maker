@@ -19,8 +19,6 @@ public:
     int getX() const;
     // Gets the current Y offset for the shake effect.
     int getY() const;
-    // Gets the current shake timer value.
-    int getTimer() const;
     // Updates the shake offsets based on the current state and camera zoom.
     void update(int state, int playingState, cMapCamera *mapCamera);
 
