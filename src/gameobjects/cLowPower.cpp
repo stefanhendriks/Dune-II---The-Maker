@@ -10,7 +10,7 @@
 #include <iostream>
 
 cLowPower::cLowPower(cPlayer *player, cPoint &absCoords)
-    : player(player), absCoords(absCoords),  intensity(std::make_unique<cBounceInt>(64,256))
+    : player(player), absCoords(absCoords),  intensity(std::make_unique<cBounceInt>(64,512))
 {
 }
 
@@ -34,7 +34,7 @@ void cLowPower::draw()
         cRectangle src = {0, 0, pixelWidth, pixelHeight};
         cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
         //std::cout << "lowPower " << drawX << " " << drawY << " " << Uint8(8*intensity->get()) << std::endl;
-        renderDrawer->renderStrechSprite(flagBitmap, src, dest, Uint8(intensity->get()));
+        renderDrawer->renderStrechSprite(flagBitmap, src, dest, Uint8(intensity->get()/2));
     }
 }
 
