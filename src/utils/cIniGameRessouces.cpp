@@ -1211,6 +1211,7 @@ void IniGameRessources::install_structures()
         structureInfo.shadow = nullptr;
         structureInfo.flash = nullptr;
         structureInfo.flags = std::vector<s_FlagInfo>();
+        structureInfo.lowPowerPosition = std::nullopt;
         structureInfo.sight = 1;
         structureInfo.bmp_width = 32 * 2;
         structureInfo.bmp_height = 32 * 2;
@@ -1274,6 +1275,7 @@ void IniGameRessources::install_structures()
         .relX = 53,
         .relY = 37
     });
+    sStructureInfo[WINDTRAP].lowPowerPosition = cPoint(25,37);
     strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
 
     // Structure    : Heavy Factory
@@ -1291,6 +1293,7 @@ void IniGameRessources::install_structures()
         .relX = 25,
         .relY = 3
     });
+    sStructureInfo[HEAVYFACTORY].lowPowerPosition = cPoint(13,34);
     strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
 
     // Structure    : Hight Tech Factory (for aircraft only)
@@ -1307,6 +1310,7 @@ void IniGameRessources::install_structures()
         .relX = 19,
         .relY = 36
     });
+    sStructureInfo[HIGHTECH].lowPowerPosition = cPoint(43,42);
     strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
 
     // Structure    : Repair
@@ -1323,6 +1327,7 @@ void IniGameRessources::install_structures()
         .relX = 41,
         .relY = 3
     });
+    sStructureInfo[REPAIR].lowPowerPosition = cPoint(62,20);
     strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
 
     // Structure    : Palace
@@ -1338,6 +1343,7 @@ void IniGameRessources::install_structures()
         .relX = 28,
         .relY = 14
     });
+    sStructureInfo[PALACE].lowPowerPosition = cPoint(36,62);
     strcpy(sStructureInfo[PALACE].name, "Palace");
 
     // Structure    : Light Factory
@@ -1355,6 +1361,7 @@ void IniGameRessources::install_structures()
         .relX = 41,
         .relY = 2
     });
+    sStructureInfo[LIGHTFACTORY].lowPowerPosition = cPoint(44,31);
     strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
 
     // Structure    : Radar
@@ -1378,6 +1385,7 @@ void IniGameRessources::install_structures()
         .relX = 12,
         .relY = 46
     });
+    sStructureInfo[RADAR].lowPowerPosition = cPoint(14,26);
     strcpy(sStructureInfo[RADAR].name, "Outpost");
 
     // Structure    : Barracks
@@ -1399,6 +1407,7 @@ void IniGameRessources::install_structures()
         .relX = 51,
         .relY = 50
     });
+    sStructureInfo[BARRACKS].lowPowerPosition = cPoint(41,29);
     strcpy(sStructureInfo[BARRACKS].name, "Barracks");
 
     // Structure    : WOR
@@ -1415,6 +1424,7 @@ void IniGameRessources::install_structures()
         .relX = 21,
         .relY = 31
     });
+    sStructureInfo[WOR].lowPowerPosition = cPoint(43,52);
     strcpy(sStructureInfo[WOR].name, "WOR");
 
 
@@ -1433,6 +1443,7 @@ void IniGameRessources::install_structures()
         .relX = 43,
         .relY = 20
     });
+    sStructureInfo[SILO].lowPowerPosition = cPoint(12,21);
     strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
 
     // Structure    : Refinery
@@ -1449,6 +1460,7 @@ void IniGameRessources::install_structures()
         .relX = 45,
         .relY = 12
     });
+    sStructureInfo[REFINERY].lowPowerPosition = cPoint(25,36);
     strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
 
     // Structure    : Construction Yard
@@ -1463,6 +1475,7 @@ void IniGameRessources::install_structures()
         .relX = 14,
         .relY = 14
     });
+    sStructureInfo[CONSTYARD].lowPowerPosition = cPoint(48,16);
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
     sStructureInfo[CONSTYARD].configured = true;
@@ -1482,6 +1495,7 @@ void IniGameRessources::install_structures()
         .relX = 16,
         .relY = 3
     });
+    sStructureInfo[STARPORT].lowPowerPosition = cPoint(41,19);
     strcpy(sStructureInfo[STARPORT].name, "Starport");
 
     // Structure    : House of IX
@@ -1498,6 +1512,7 @@ void IniGameRessources::install_structures()
         .relX = 60, // 60
         .relY = 40  // 40
     });
+    sStructureInfo[IX].lowPowerPosition = cPoint(26,53);
     strcpy(sStructureInfo[IX].name, "House of IX");
 
     // Structure    : Normal Turret
@@ -1527,11 +1542,8 @@ void IniGameRessources::install_structures()
     sStructureInfo[RTURRET].canAttackAirUnits = true;
     sStructureInfo[RTURRET].canAttackGroundUnits = true;
     sStructureInfo[RTURRET].fireRate = 350;
+    sStructureInfo[RTURRET].lowPowerPosition = cPoint(8,23);
     strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
-
-    // Structure    : Windtrap
-    // Description  : <none>
-
 }
 
 
