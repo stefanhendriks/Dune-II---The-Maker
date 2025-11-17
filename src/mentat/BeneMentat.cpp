@@ -2,6 +2,7 @@
 
 #include "data/gfxmentat.h"
 #include "d2tmc.h"
+#include "include/sDataCampaign.h"
 #include "player/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -11,7 +12,7 @@
 #include "context/GameContext.hpp"
 #include <iostream>
 
-BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
+BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, false), m_dataCampaign(dataCampaign)
 {
     iBackgroundFrame = MENTATM;
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
@@ -38,8 +39,8 @@ void BeneMentat::onYesButtonPressed()
 {
     logbook("cYesButtonCommand::execute()");
     game.setNextStateToTransitionTo(GAME_BRIEFING);
-    game.m_mission = 1; // first mission
-    game.m_region  = 1; // and the first "region" so to speak
+    m_dataCampaign->m_mission = 1; // first mission
+    m_dataCampaign->m_region  = 1; // and the first "region" so to speak
     game.missionInit();
     players[HUMAN].setHouse(this->getHouse());
     game.initiateFadingOut();
