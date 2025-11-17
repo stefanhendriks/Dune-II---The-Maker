@@ -480,9 +480,9 @@ void cIni::loadScenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinf
 
     std::string filename = cIniUtils::getScenarioFileName(iHouse, iRegion);
 
-    dataCampaign->m_mission = getTechLevelByRegion(iRegion);
+    dataCampaign->mission = getTechLevelByRegion(iRegion);
 
-    logbook(std::format("[SCENARIO] '{}' (Mission {})", filename, dataCampaign->m_mission));
+    logbook(std::format("[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission));
     logbook("[SCENARIO] Opening file");
 
     // declare some temp fields while reading the scenario file.
