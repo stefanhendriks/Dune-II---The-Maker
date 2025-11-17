@@ -114,7 +114,7 @@ void cSelectYourNextConquestState::thinkFast()
         }
 
         int iHouse = players[0].getHouse();
-        int iMission = m_dataCompaign->m_mission;
+        int iMission = m_dataCompaign->mission;
 
         bool hasMessage = drawManager->hasMessage();
 
@@ -392,8 +392,8 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
 
     m_game.missionInit();
     m_game.setNextStateToTransitionTo(GAME_BRIEFING);
-    m_dataCompaign->m_region = iNewReg;
-    m_dataCompaign->m_mission++;                        // FINALLY ADD MISSION NUMBER...
+    m_dataCompaign->region = iNewReg;
+    m_dataCompaign->mission++;                        // FINALLY ADD MISSION NUMBER...
 
     // set up drawStateMentat
     m_game.createAndPrepareMentatForHumanPlayer();
@@ -658,7 +658,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
-        loadScenarioAndTransitionToNextState(m_dataCompaign->m_mission);
+        loadScenarioAndTransitionToNextState(m_dataCompaign->mission);
     }
 }
 
