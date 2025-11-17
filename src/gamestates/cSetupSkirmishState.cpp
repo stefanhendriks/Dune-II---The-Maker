@@ -79,16 +79,22 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
-    nextFunction = [this]() {
+    int qMaps = m_previewMaps->getMapCount()/(maxMapsInSelectArea*2);
+    int rMaps = m_previewMaps->getMapCount()%(maxMapsInSelectArea*2);
+    if (rMaps > 0) {
+        qMaps++;
+    }
+
+    nextFunction = [this, qMaps]() {
         // Go to the next map
-        if (mapIndexToDisplay < (m_previewMaps->getMapCount()/maxMapsInSelectArea)+maxMapsInSelectArea) {
-            mapIndexToDisplay += maxMapsInSelectArea;
+        if (mapIndexToDisplay <= qMaps*maxMapsInSelectArea*2) {
+            mapIndexToDisplay += maxMapsInSelectArea*2;
         }
     };
     previousFunction = [this]() {
         // Go back to the previous map
-        if (mapIndexToDisplay > 0) {
-            mapIndexToDisplay -= maxMapsInSelectArea;
+        if (mapIndexToDisplay >= maxMapsInSelectArea*2) {
+            mapIndexToDisplay -= maxMapsInSelectArea*2;
         }
     };
     iStartingPoints = 2;
@@ -269,8 +275,7 @@ void cSetupSkirmishState::thinkFast()
 
 void cSetupSkirmishState::draw() const
 {
-    // @Mira rwrite it on Texture
-    // renderDrawer->renderSprite(gfxinter->getTexture(BMP_GAME_DUNE), game.m_screenW * 0.2, (game.m_screenH * 0.5));
+    // @Mira rewrite it on Texture
     renderDrawer->gui_DrawRect(topBar);
 
     m_textDrawer->drawTextCentered("Skirmish", 1);
@@ -1087,7 +1092,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
                 if (previewMap.name[0] != '\0') {
                     iStartingPoints = 0;
                     // count starting points
-                    for (int s: previewMap.iStartCell) {
+                    for (int s: previewMap2.iStartCell) {
                         if (s > -1) {
                             iStartingPoints++;
                         }
@@ -1118,7 +1123,7 @@ void cSetupSkirmishState::generateRandomMap()
     randomMap.validMap = true;
     SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
         if (out == nullptr) {
-            std::cerr << "Error creating texture from surface: " << SDL_GetError() << std::endl;
+            logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;
         }
         randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
