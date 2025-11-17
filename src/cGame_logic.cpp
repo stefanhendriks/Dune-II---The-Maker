@@ -32,6 +32,7 @@
 #include "gamestates/cTellHouseState.h"
 #include "ini.h"
 #include "iniDefine.h"
+#include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
 #include "mentat/AtreidesMentat.h"
@@ -112,6 +113,8 @@ cGame::cGame()
     m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 
     m_screenShake = std::make_unique<cScreenShake>();
+
+    m_dataCampaign = std::make_unique<s_DataCampaign>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -174,8 +177,11 @@ void cGame::init()
 
     m_fadeSelectDir = true;    // fade select direction
 
-    m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
-    m_mission = 0;         // calculated by mission loading (region -> mission calculation)
+    // m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
+    // m_mission = 0;         // calculated by mission loading (region -> mission calculation)
+    m_dataCampaign->housePlayer = -1;
+    m_dataCampaign->m_mission = 0;
+    m_dataCampaign->m_region = 1;
 
     m_screenShake->reset();
 
@@ -254,7 +260,7 @@ void cGame::initPlayers(bool rememberHouse) const
                         brain = new brains::cPlayerBrainSkirmish(&pPlayer);
                     }
                     else {
-                        brain = new brains::cPlayerBrainCampaign(&pPlayer);
+                        brain = new brains::cPlayerBrainCampaign(&pPlayer, m_dataCampaign.get());
                         autoSlabStructures = true;  // campaign based AI's autoslab structures...
                     }
                 }
@@ -976,7 +982,7 @@ void cGame::setupPlayers()
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
-        thePlayer->setTechLevel(game.m_mission);
+        thePlayer->setTechLevel(m_dataCampaign->m_mission);
     }
     setPlayerToInteractFor(&players[0]);
 }
@@ -994,7 +1000,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get());
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get(), m_dataCampaign.get());
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
@@ -1002,7 +1008,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
 
     cPlayer &humanPlayer = players[HUMAN];
     int missionZeroBased = missionNr - 1;
-    m_mission = missionZeroBased;
+    m_dataCampaign->m_mission = missionZeroBased;
 
     // a 'missionX.ini' file is from 1 til (including) 8
     // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
@@ -1060,13 +1066,13 @@ void cGame::setState(int newState)
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
                     auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
-                    if (game.m_mission > 1) {
+                    if (m_dataCampaign->m_mission > 1) {
                         pState->conquerRegions();
                     }
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->regionSetupNextMission(game.m_mission, humanPlayer.getHouse());
+                        pState->regionSetupNextMission(m_dataCampaign->m_mission, humanPlayer.getHouse());
                     }
                     else {
                         // OR: did not win
@@ -1095,16 +1101,16 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get());
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get(), m_dataCampaign.get());
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
                 pState->installWorld();
-                if (game.m_mission > 1) {
+                if (m_dataCampaign->m_mission > 1) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->regionSetupNextMission(game.m_mission, humanPlayer.getHouse());
+                pState->regionSetupNextMission(m_dataCampaign->m_mission, humanPlayer.getHouse());
 
                 playMusicByTypeForStateTransition(MUSIC_CONQUEST);
 
@@ -1112,7 +1118,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
-                newStatePtr = new cSetupSkirmishState(*this, ctx.get(), m_PreviewMaps);
+                newStatePtr = new cSetupSkirmishState(*this, ctx.get(), m_PreviewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_CREDITS) {
@@ -1181,7 +1187,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_TELLHOUSE) {
                 int house = players[HUMAN].getHouse();
-                newStatePtr = new cTellHouseState(*this, ctx.get(), house);
+                newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
 
@@ -1240,8 +1246,8 @@ void cGame::prepareMentatForPlayer()
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        cIni::loadScenario(house, m_region, m_mentat, m_reinforcements.get());
-        cIni::loadBriefing(house, m_region, INI_BRIEFING, m_mentat);
+        cIni::loadScenario(house, m_dataCampaign->m_region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+        cIni::loadBriefing(house, m_dataCampaign->m_region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
         if (RNG::rnd(100) < 50) {
@@ -1250,7 +1256,7 @@ void cGame::prepareMentatForPlayer()
         else {
             m_mentat->loadScene("win02");
         }
-        cIni::loadBriefing(house, m_region, INI_WIN, m_mentat);
+        cIni::loadBriefing(house, m_dataCampaign->m_region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
         if (RNG::rnd(100) < 50) {
@@ -1259,7 +1265,7 @@ void cGame::prepareMentatForPlayer()
         else {
             m_mentat->loadScene("lose02");
         }
-        cIni::loadBriefing(house, m_region, INI_LOSE, m_mentat);
+        cIni::loadBriefing(house, m_dataCampaign->m_region, INI_LOSE, m_mentat);
     }
 }
 
@@ -1278,7 +1284,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
     }
     else {
         // fallback
-        m_mentat = new BeneMentat(ctx.get());
+        m_mentat = new BeneMentat(ctx.get(), m_dataCampaign.get());
     }
     prepareMentatForPlayer();
     m_mentat->speak();
@@ -1288,7 +1294,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 {
     players[HUMAN].setHouse(house);
     if (!m_states[GAME_TELLHOUSE]) {
-        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), house);
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
 }
@@ -1296,7 +1302,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     int iHouse = players[HUMAN].getHouse();
-    cIni::loadScenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
+    cIni::loadScenario(iHouse, m_dataCampaign->m_region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
 }
 
 void cGame::thinkFast_state()
@@ -2172,10 +2178,10 @@ void cGame::execute(AbstractMentat &mentat)
     if (game.isState(GAME_LOSEBRIEF)) {
         game.missionInit();
         // lost mission > 1, so we go back to region select
-        if (game.m_mission > 1)   {
+        if (m_dataCampaign->m_mission > 1)   {
             game.setNextStateToTransitionTo(GAME_REGION);
 
-            game.m_mission--; // we did not win
+            m_dataCampaign->m_mission--; // we did not win
         }
         else {
             // mission 1 failed, really?..., back to mentat with briefing
