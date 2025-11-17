@@ -17,6 +17,7 @@
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "include/sDataCampaign.h"
 
 #include <format>
 #include <algorithm>
@@ -56,11 +57,12 @@ static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 }
 
 
-cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps) :
+cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
     cGameState(game, ctx),
     m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
     m_previewMaps(std::move(previewMaps)),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_dataCampaign(dataCompaign)
 {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
@@ -510,7 +512,8 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
-    m_game.m_mission = 9; // high tech level (TODO: make this customizable)
+    //m_game.m_mission = 9; // high tech level (TODO: make this customizable)
+    m_dataCampaign->m_mission = 9;
 
     m_game.setupPlayers();
 

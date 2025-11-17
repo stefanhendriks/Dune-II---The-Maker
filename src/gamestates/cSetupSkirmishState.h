@@ -19,6 +19,8 @@ class cPreviewMaps;
 class cRandomMapGenerator;
 class Graphics;
 
+struct s_DataCampaign;
+
 struct s_SkirmishPlayer {
     bool bHuman;
     bool bPlaying;
@@ -31,7 +33,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishState : public cGameState {
 
 public:
-    explicit cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps);
+    explicit cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps, s_DataCampaign* dataCompaign);
     ~cSetupSkirmishState() override;
 
     void thinkFast() override;
@@ -147,4 +149,5 @@ private:
 
     void onMouseLeftButtonClickedAtPlayerList();
     void onMouseRightButtonClickedAtPlayerList();
+    s_DataCampaign* m_dataCampaign;
 };

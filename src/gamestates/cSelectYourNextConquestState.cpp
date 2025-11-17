@@ -7,6 +7,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
 #include "ini.h"
+#include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "gui/GuiButton.h"
@@ -40,11 +41,12 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) :
+cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx, s_DataCampaign* dataCompaign) :
     cGameState(theGame, ctx),
     m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
     m_gfxworld(ctx->getGraphicsContext()->gfxworld.get()),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_dataCompaign(dataCompaign)
 {
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
@@ -112,7 +114,7 @@ void cSelectYourNextConquestState::thinkFast()
         }
 
         int iHouse = players[0].getHouse();
-        int iMission = m_game.m_mission;
+        int iMission = m_dataCompaign->m_mission;
 
         bool hasMessage = drawManager->hasMessage();
 
@@ -390,8 +392,8 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
 
     m_game.missionInit();
     m_game.setNextStateToTransitionTo(GAME_BRIEFING);
-    m_game.m_region = iNewReg;
-    m_game.m_mission++;                        // FINALLY ADD MISSION NUMBER...
+    m_dataCompaign->m_region = iNewReg;
+    m_dataCompaign->m_mission++;                        // FINALLY ADD MISSION NUMBER...
 
     // set up drawStateMentat
     m_game.createAndPrepareMentatForHumanPlayer();
@@ -656,7 +658,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
-        loadScenarioAndTransitionToNextState(m_game.m_mission);
+        loadScenarioAndTransitionToNextState(m_dataCompaign->m_mission);
     }
 }
 
