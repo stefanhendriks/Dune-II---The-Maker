@@ -43,6 +43,7 @@ void BeneMentat::onYesButtonPressed()
     m_dataCampaign->region  = 1; // and the first "region" so to speak
     game.missionInit();
     players[HUMAN].setHouse(this->getHouse());
+    m_dataCampaign->housePlayer = this->getHouse();
     game.initiateFadingOut();
 }
 
