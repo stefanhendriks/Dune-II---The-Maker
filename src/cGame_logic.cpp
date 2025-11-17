@@ -178,8 +178,8 @@ void cGame::init()
     // m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
     // m_mission = 0;         // calculated by mission loading (region -> mission calculation)
     m_dataCampaign->housePlayer = -1;
-    m_dataCampaign->m_mission = 0;
-    m_dataCampaign->m_region = 1;
+    m_dataCampaign->mission = 0;
+    m_dataCampaign->region = 1;
 
     m_screenShake->reset();
 
@@ -942,7 +942,7 @@ void cGame::setupPlayers()
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
-        thePlayer->setTechLevel(m_dataCampaign->m_mission);
+        thePlayer->setTechLevel(m_dataCampaign->mission);
     }
     setPlayerToInteractFor(&players[0]);
 }
@@ -968,7 +968,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
 
     cPlayer &humanPlayer = players[HUMAN];
     int missionZeroBased = missionNr - 1;
-    m_dataCampaign->m_mission = missionZeroBased;
+    m_dataCampaign->mission = missionZeroBased;
 
     // a 'missionX.ini' file is from 1 til (including) 8
     // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
@@ -1026,13 +1026,13 @@ void cGame::setState(int newState)
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
                     auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
-                    if (m_dataCampaign->m_mission > 1) {
+                    if (m_dataCampaign->mission > 1) {
                         pState->conquerRegions();
                     }
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->regionSetupNextMission(m_dataCampaign->m_mission, humanPlayer.getHouse());
+                        pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer.getHouse());
                     }
                     else {
                         // OR: did not win
@@ -1066,11 +1066,11 @@ void cGame::setState(int newState)
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
                 pState->installWorld();
-                if (m_dataCampaign->m_mission > 1) {
+                if (m_dataCampaign->mission > 1) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->regionSetupNextMission(m_dataCampaign->m_mission, humanPlayer.getHouse());
+                pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer.getHouse());
 
                 playMusicByTypeForStateTransition(MUSIC_CONQUEST);
 
@@ -1203,8 +1203,8 @@ void cGame::prepareMentatForPlayer()
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        cIni::loadScenario(house, m_dataCampaign->m_region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
-        cIni::loadBriefing(house, m_dataCampaign->m_region, INI_BRIEFING, m_mentat);
+        cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+        cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
         if (RNG::rnd(100) < 50) {
@@ -1213,7 +1213,7 @@ void cGame::prepareMentatForPlayer()
         else {
             m_mentat->loadScene("win02");
         }
-        cIni::loadBriefing(house, m_dataCampaign->m_region, INI_WIN, m_mentat);
+        cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
         if (RNG::rnd(100) < 50) {
@@ -1222,7 +1222,7 @@ void cGame::prepareMentatForPlayer()
         else {
             m_mentat->loadScene("lose02");
         }
-        cIni::loadBriefing(house, m_dataCampaign->m_region, INI_LOSE, m_mentat);
+        cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
     }
 }
 
@@ -1259,7 +1259,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     int iHouse = players[HUMAN].getHouse();
-    cIni::loadScenario(iHouse, m_dataCampaign->m_region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+    cIni::loadScenario(iHouse, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
 }
 
 void cGame::thinkFast_state()
@@ -2087,10 +2087,10 @@ void cGame::execute(AbstractMentat &mentat)
     if (game.isState(GAME_LOSEBRIEF)) {
         game.missionInit();
         // lost mission > 1, so we go back to region select
-        if (m_dataCampaign->m_mission > 1)   {
+        if (m_dataCampaign->mission > 1)   {
             game.setNextStateToTransitionTo(GAME_REGION);
 
-            m_dataCampaign->m_mission--; // we did not win
+            m_dataCampaign->mission--; // we did not win
         }
         else {
             // mission 1 failed, really?..., back to mentat with briefing
