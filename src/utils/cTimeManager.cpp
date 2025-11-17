@@ -28,9 +28,14 @@ cTimeManager::cTimeManager(cGame *game)
 
 std::string cTimeManager::getCurrentTime() const
 {
-    auto now = std::chrono::system_clock::now();
-    auto now_seconds = std::chrono::time_point_cast<std::chrono::seconds>(now);
-    return std::format("{:%H:%M:%S}", now_seconds);
+    auto now_utc = std::chrono::system_clock::now();
+    auto now_local = std::chrono::zoned_time(std::chrono::current_zone(), now_utc);
+    auto local_time_seconds = std::chrono::time_point_cast<std::chrono::seconds>(now_local.get_local_time());
+    auto time_of_day = std::chrono::hh_mm_ss{local_time_seconds.time_since_epoch()};
+    return std::format("{:02}:{:02}:{:02}",
+                       time_of_day.hours().count()%24,
+                       time_of_day.minutes().count(),
+                       time_of_day.seconds().count());
 }
 
 std::string cTimeManager::getCurrentTimer() const
