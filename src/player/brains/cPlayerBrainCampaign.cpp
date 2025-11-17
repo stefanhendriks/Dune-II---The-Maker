@@ -369,42 +369,42 @@ void cPlayerBrainCampaign::produceMissions()
         }
     }
 
-    if (m_dataCampaign->m_mission == 2) {
+    if (m_dataCampaign->mission == 2) {
         produceLevel2Missions(soldierKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 3) {
+    if (m_dataCampaign->mission == 3) {
         produceLevel3Missions(trikeKind, soldierKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 4) {
+    if (m_dataCampaign->mission == 4) {
         produceLevel4Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 5) {
+    if (m_dataCampaign->mission == 5) {
         produceLevel5Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 6) {
+    if (m_dataCampaign->mission == 6) {
         produceLevel6Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 7) {
+    if (m_dataCampaign->mission == 7) {
         produceLevel7Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 8) {
+    if (m_dataCampaign->mission == 8) {
         produceLevel8Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (m_dataCampaign->m_mission == 9) {
+    if (m_dataCampaign->mission == 9) {
         produceLevel9Missions(trikeKind, infantryKind);
         return;
     }

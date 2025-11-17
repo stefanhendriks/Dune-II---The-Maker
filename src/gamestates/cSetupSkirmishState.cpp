@@ -549,7 +549,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     // this needs to be before setupPlayers :/
     //m_game.m_mission = 9; // high tech level (TODO: make this customizable)
-    m_dataCampaign->m_mission = techLevel;
+    m_dataCampaign->mission = techLevel;
 
     m_game.setupPlayers();
 
