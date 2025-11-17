@@ -548,7 +548,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
-    m_game.m_mission = techLevel;
+    m_dataCampaign->mission = techLevel;
 
     m_game.setupPlayers();
 
