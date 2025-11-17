@@ -7,12 +7,13 @@
 #include "ini.h"
 #include "include/d2tmc.h"
 #include "include/iniDefine.h"
+#include "include/sDataCampaign.h"
 #include "data/gfxdata.h"
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
 
-cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, int house)
-    : cGameState(game, ctx), m_house(house)
+cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* dataCampaign, int house)
+    : cGameState(game, ctx), m_house(house), m_dataCampaign(dataCampaign)
 {
     prepareMentat(house);
 }
@@ -31,7 +32,7 @@ void cTellHouseState::prepareMentat(int house)
 {
     m_house = house;
     delete m_mentat;
-    m_mentat = new BeneMentat(m_ctx);
+    m_mentat = new BeneMentat(m_ctx, m_dataCampaign);
     m_mentat->setHouse(house);
     if (house == ATREIDES) {
         cIni::loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat);

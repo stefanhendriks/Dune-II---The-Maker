@@ -42,6 +42,7 @@ class GameContext;
 class cScreenShake;
 
 struct s_TerrainInfo;
+struct s_DataCampaign;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -92,8 +93,8 @@ public:
     bool m_skirmish;                // playing a skirmish game or not
     int m_screenshot;				// screenshot taking number
 
-    int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
-    int m_mission;		            // what mission are we playing? (= techlevel)
+    // int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
+    // int m_mission;		            // what mission are we playing? (= techlevel)
 
     int m_pathsCreated;
 
@@ -388,4 +389,5 @@ private:
 
     std::unique_ptr<GameContext> ctx;
     std::unique_ptr<ContextCreator> context;
+    std::unique_ptr<s_DataCampaign> m_dataCampaign;
 };
