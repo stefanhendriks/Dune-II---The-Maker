@@ -1,18 +1,9 @@
-/*
- * TextDrawer.h
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
 #pragma once
 
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
-#include <unordered_map>
 #include <memory>
 
 class cTextTextureCache;
@@ -20,7 +11,7 @@ class cTextTextureCache;
 class cTextDrawer {
 public:
     // Constructor, initializes the drawer with a TTF font
-    cTextDrawer(TTF_Font *theFont);
+    explicit cTextDrawer(TTF_Font *theFont);
     ~cTextDrawer();
 
     // Draws text at (x, y) in white, with optional shadow
@@ -61,9 +52,9 @@ public:
     // Clears the text texture cache
     void resetCache() const;
     // Returns a rectangle bounding the text at (x, y)
-    cRectangle getRect(int x, int y, const std::string &msg) const;
+    [[nodiscard]] cRectangle getRect(int x, int y, const std::string &msg) const;
     // Returns a pointer to a rectangle bounding the text at (x, y)
-    cRectangle *getAsRectangle(int x, int y, const std::string &msg) const;
+    [[nodiscard]] cRectangle *getAsRectangle(int x, int y, const std::string &msg) const;
 protected:
 
 private:
