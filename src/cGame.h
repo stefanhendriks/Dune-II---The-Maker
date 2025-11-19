@@ -278,6 +278,8 @@ public:
     std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
 
     void goingToWinLoseBrief(int value);
+
+    cReinforcements* getReinforcements() const;
 private:
     /**
      * Variables start here

@@ -34,7 +34,7 @@ void cMentatState::prepareMentat() {
             else m_mentat = new BeneMentat(m_ctx, m_dataCampaign);
             m_game.missionInit();
             m_game.setupPlayers();
-            cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_game.m_reinforcements.get());
+            cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_game.getReinforcements(),m_dataCampaign);
             cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
             break;
         case MentatMode::WinBrief:
