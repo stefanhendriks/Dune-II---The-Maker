@@ -2135,3 +2135,8 @@ void cGame::goingToWinLoseBrief(int value)
     setState(value);
     createAndPrepareMentatForHumanPlayer(!m_skirmish);
 }
+
+cReinforcements* cGame::getReinforcements() const
+{
+    return m_reinforcements.get();
+}
