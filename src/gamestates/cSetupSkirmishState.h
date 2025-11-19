@@ -60,6 +60,7 @@ private:
     bool spawnBlooms;
     bool detonateBlooms;
     int iStartingPoints;
+    int techlevel;
 
     // Colors
     Color colorDarkishBackground;
@@ -92,6 +93,7 @@ private:
     cRectangle wormsRect;
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
+    cRectangle techLevelRect;
     cRectangle selectArea;
 
     GuiButton *backButton;
@@ -104,6 +106,7 @@ private:
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    void onMouseRightButtonClicked(const s_MouseEvent &event);    
 
     void drawMapList(const cRectangle &mapList) const;
 
@@ -129,11 +132,12 @@ private:
 
     void drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const;
 
+    void drawTechLevel(const cRectangle &techRect) const;
+
     void onMouseMovedTo(const s_MouseEvent &event);
 
     void generateRandomMap();
 
-    void onMouseRightButtonClicked(const s_MouseEvent &event);
 
     void onMouseLeftButtonClickedAtStartPoints();
     void onMouseRightButtonClickedAtStartPoints();
@@ -147,4 +151,7 @@ private:
 
     void onMouseLeftButtonClickedAtPlayerList();
     void onMouseRightButtonClickedAtPlayerList();
+
+    void onMouseLeftButtonClickedAtTechLevel();
+    void onMouseRightButtonClickedAtTechLevel();
 };
