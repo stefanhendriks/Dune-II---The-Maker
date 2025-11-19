@@ -36,10 +36,10 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
     return newCacheEntry;
 }
 
-textCacheEntry* cTextTextureCache::findOrCreate(Color color, const std::string &msg) const 
+textCacheEntry* cTextTextureCache::findOrCreate(const Color color, const std::string &msg) const
 {
     textKey key{msg, color};
-    auto it = m_textCache.find(key);
+    const auto it = m_textCache.find(key);
     if (it == m_textCache.end()) {
         auto newCacheEntry = createCacheEntry(color, msg);
         auto result = m_textCache.emplace(key, std::move(newCacheEntry));

@@ -36,7 +36,7 @@ struct textCacheEntry {
 class cTextTextureCache {
 public:
     // Constructor, initializes the cache with a TTF font
-    cTextTextureCache(TTF_Font *font);
+    explicit cTextTextureCache(TTF_Font *font);
     ~cTextTextureCache();
     // Finds a cached entry for the given color and message, or creates it if not present
     textCacheEntry* findOrCreate(Color color, const std::string &msg) const;

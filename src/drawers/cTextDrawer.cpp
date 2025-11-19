@@ -8,7 +8,8 @@
 #include <cassert>
 
 cTextDrawer::cTextDrawer(TTF_Font *theFont) :
-    m_font(theFont), m_textCache(std::make_unique<cTextTextureCache>(theFont))
+    m_font(theFont),
+    m_textCache(std::make_unique<cTextTextureCache>(theFont))
 {
 }
 
