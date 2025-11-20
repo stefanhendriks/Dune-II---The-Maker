@@ -22,7 +22,11 @@ cMentatState::~cMentatState() {
     delete m_mentat;
 }
 
-void cMentatState::prepareMentat() {
+eGameStateType cMentatState::getType()
+{
+    return eGameStateType::GAMESTATE_MENTAT;
+}
+
     int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
     bool allowMissionSelect = !m_game.m_skirmish; 
     delete m_mentat;
