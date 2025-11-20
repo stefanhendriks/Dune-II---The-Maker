@@ -18,7 +18,8 @@ cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_Dat
     prepareMentat();
 }
 
-cMentatState::~cMentatState() {
+cMentatState::~cMentatState()
+{
     delete m_mentat;
 }
 
@@ -27,6 +28,8 @@ eGameStateType cMentatState::getType()
     return eGameStateType::GAMESTATE_MENTAT;
 }
 
+void cMentatState::prepareMentat()
+{
     int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
     bool allowMissionSelect = !m_game.m_skirmish; 
     delete m_mentat;
@@ -63,11 +66,13 @@ eGameStateType cMentatState::getType()
     m_mentat->speak();
 }
 
-void cMentatState::thinkFast() {
+void cMentatState::thinkFast()
+{
     if (m_mentat) m_mentat->think();
 }
 
-void cMentatState::draw() const {
+void cMentatState::draw() const
+{
     m_game.getMouse()->setTile(MOUSE_NORMAL);
     if (m_mentat) m_mentat->draw();
     m_game.getMouse()->draw();
