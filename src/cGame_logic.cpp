@@ -30,6 +30,7 @@
 #include "gamestates/cSetupSkirmishState.h"
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cTellHouseState.h"
+#include "gamestates/cMentatState.h"
 #include "ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
@@ -1147,6 +1148,16 @@ void cGame::setState(int newState)
                 newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
+            else if (newState == GAME_BRIEFING) {
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            } else if (newState == GAME_WINBRIEF) {
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            } else if (newState == GAME_LOSEBRIEF) {
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            }
 
             m_states[newState] = newStatePtr;
             m_currentState = newStatePtr;
@@ -2133,7 +2144,7 @@ std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
 void cGame::goingToWinLoseBrief(int value)
 {
     setState(value);
-    createAndPrepareMentatForHumanPlayer(!m_skirmish);
+    // createAndPrepareMentatForHumanPlayer(!m_skirmish);
 }
 
 cReinforcements* cGame::getReinforcements() const
