@@ -1218,21 +1218,21 @@ void cGame::prepareMentatForPlayer()
         cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
-        if (RNG::rnd(100) < 50) {
-            m_mentat->loadScene("win01");
-        }
-        else {
-            m_mentat->loadScene("win02");
-        }
+        //if (RNG::rnd(100) < 50) {
+            //m_mentat->loadScene("win01");
+        //}
+        //else {
+            //m_mentat->loadScene("win02");
+        //}
         cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
-        if (RNG::rnd(100) < 50) {
-            m_mentat->loadScene("lose01");
-        }
-        else {
-            m_mentat->loadScene("lose02");
-        }
+        //if (RNG::rnd(100) < 50) {
+            //m_mentat->loadScene("lose01");
+        //}
+        //else {
+            //m_mentat->loadScene("lose02");
+        //}
         cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
     }
 }
@@ -1265,6 +1265,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
         m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
+    playMusicByTypeForStateTransition(MUSIC_BRIEFING);
 }
 
 void cGame::loadScenario()
