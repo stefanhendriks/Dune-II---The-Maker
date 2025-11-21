@@ -111,20 +111,20 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
         m_game.prepareMentatToTellAboutHouse(ATREIDES);
-        m_game.playSound(SOUND_ATREIDES);
         m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        m_game.playSound(SOUND_ATREIDES);
         m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseOrdos)) {
         m_game.prepareMentatToTellAboutHouse(ORDOS);
-        m_game.playSound(SOUND_ORDOS);
         m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        m_game.playSound(SOUND_ORDOS);
         m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         m_game.prepareMentatToTellAboutHouse(HARKONNEN);
-        m_game.playSound(SOUND_HARKONNEN);
         m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        m_game.playSound(SOUND_HARKONNEN);
         m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
