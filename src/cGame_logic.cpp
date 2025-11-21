@@ -607,12 +607,12 @@ void cGame::drawState()
     }
 
     switch (m_state) {
-        case GAME_BRIEFING:
-        case GAME_LOSEBRIEF:
+        // case GAME_BRIEFING:
+        // case GAME_LOSEBRIEF:
         //case GAME_TELLHOUSE: //here
-        case GAME_WINBRIEF:
-            drawStateMentat(m_mentat);
-            break;
+        // case GAME_WINBRIEF:
+        //     drawMentatState(m_mentat);
+        //     break;
         case GAME_PLAYING:
             drawStateCombat();
             break;
