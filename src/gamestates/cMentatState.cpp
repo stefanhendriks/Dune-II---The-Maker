@@ -35,31 +35,50 @@ void cMentatState::prepareMentat()
     delete m_mentat;
     switch (m_mode) {
         case MentatMode::Briefing:
-            if (house == ATREIDES) m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
-            else if (house == HARKONNEN) m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
-            else if (house == ORDOS) m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
-            else m_mentat = new BeneMentat(m_ctx, m_dataCampaign);
+            if (house == ATREIDES)
+                m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
+            else if (house == HARKONNEN)
+                m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
+            else if (house == ORDOS)
+                m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
+            else 
+                m_mentat = new BeneMentat(m_ctx, m_dataCampaign);
             m_game.missionInit();
             m_game.setupPlayers();
             cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_game.getReinforcements(),m_dataCampaign);
             cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
             break;
         case MentatMode::WinBrief:
-            if (house == ATREIDES) m_mentat = new AtreidesMentat(m_ctx, true);
-            else if (house == HARKONNEN) m_mentat = new HarkonnenMentat(m_ctx, true);
-            else if (house == ORDOS) m_mentat = new OrdosMentat(m_ctx, true);
-            else m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
-            if (RNG::rnd(100) < 50) m_mentat->loadScene("win01");
-            else m_mentat->loadScene("win02");
+            if (house == ATREIDES)
+                m_mentat = new AtreidesMentat(m_ctx, true);
+            else if (house == HARKONNEN)
+                m_mentat = new HarkonnenMentat(m_ctx, true);
+            else if (house == ORDOS) 
+                m_mentat = new OrdosMentat(m_ctx, true);
+            else 
+                m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
+            
+            if (RNG::rnd(100) < 50)
+                m_mentat->loadScene("win01");
+            else
+                m_mentat->loadScene("win02");
             cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
             break;
         case MentatMode::LoseBrief:
-            if (house == ATREIDES) m_mentat = new AtreidesMentat(m_ctx, true);
-            else if (house == HARKONNEN) m_mentat = new HarkonnenMentat(m_ctx, true);
-            else if (house == ORDOS) m_mentat = new OrdosMentat(m_ctx, true);
-            else m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
-            if (RNG::rnd(100) < 50) m_mentat->loadScene("lose01");
-            else m_mentat->loadScene("lose02");
+            if (house == ATREIDES) 
+                m_mentat = new AtreidesMentat(m_ctx, true);
+            else if (house == HARKONNEN)
+                m_mentat = new HarkonnenMentat(m_ctx, true);
+            else if (house == ORDOS)
+                m_mentat = new OrdosMentat(m_ctx, true);
+            else 
+                m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
+            
+            if (RNG::rnd(100) < 50)
+                m_mentat->loadScene("lose01");
+            else
+                m_mentat->loadScene("lose02");
+            
             cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
             break;
     }
