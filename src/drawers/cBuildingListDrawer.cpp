@@ -12,8 +12,8 @@
 #include <format>
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
-    m_gameTextDrawer(ctx->getTextContext()->gameTextDrawer.get()),
-    m_smallTextDrawer(ctx->getTextContext()->smallTextDrawer.get()),
+    m_gameTextDrawer(ctx->getTextContext()->getGameTextDrawer()),
+    m_smallTextDrawer(ctx->getTextContext()->getSmallTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_player(player),
     m_renderListIds(false)

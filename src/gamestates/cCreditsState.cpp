@@ -14,7 +14,7 @@
 cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
     m_moveSpeed(0.15f),
-    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get())
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
 {
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);

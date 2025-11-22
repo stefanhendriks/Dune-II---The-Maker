@@ -834,7 +834,7 @@ bool cGame::setupGame()
     ctx->setTextContext(context->createTextContext());
     global_map.setGameContext(ctx.get());
 
-    m_textDrawer = ctx->getTextContext()->gameTextDrawer.get();
+    m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
     //m_textDrawer->setApplyShadow(false);
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));

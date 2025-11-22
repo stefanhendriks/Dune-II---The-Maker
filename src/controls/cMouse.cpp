@@ -15,7 +15,7 @@
 
 cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
-    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     coords(cPoint(0,0))
 {
     leftButtonPressed=false;
