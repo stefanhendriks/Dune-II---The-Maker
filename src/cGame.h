@@ -122,7 +122,7 @@ public:
     void thinkFast_state();
 
     void think_audio();
-    void think_mentat();
+    // void think_mentat();
     void think_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
@@ -349,7 +349,7 @@ private:
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
 
-    void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
+    // void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
 
