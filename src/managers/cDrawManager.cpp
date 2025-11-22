@@ -27,14 +27,14 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_structureDrawer(ctx),
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
-    m_textDrawer(ctx->getTextContext()->gameTextDrawer.get()),
+    m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
     assert(thePlayer);
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
-    m_mouseDrawer = new cMouseDrawer(thePlayer, ctx->getTextContext()->smallTextDrawer.get() );
+    m_mouseDrawer = new cMouseDrawer(thePlayer, ctx->getTextContext()->getSmallTextDrawer());
 }
 
 cDrawManager::~cDrawManager()

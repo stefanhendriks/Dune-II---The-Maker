@@ -15,7 +15,7 @@
 
 cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
     backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_screenH - m_textDrawer->getFontHeight(), " BACK");

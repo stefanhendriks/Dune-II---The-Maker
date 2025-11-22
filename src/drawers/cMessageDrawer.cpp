@@ -18,7 +18,7 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx) :
     m_alpha(0),
     m_state(messages::eMessageDrawerState::COMBAT),
     m_fadeState(messages::eMessageDrawerFadingState::FADE_IN),
-    m_textDrawer(ctx->getTextContext()->gameTextDrawer.get()),
+    m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {

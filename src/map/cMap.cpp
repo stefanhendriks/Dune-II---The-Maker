@@ -64,7 +64,7 @@ MapGeometry &cMap::getGeometry() const
 void cMap::setGameContext(GameContext* ctx)
 {
     m_ctx = ctx;
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
+    m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
