@@ -323,7 +323,7 @@ private:
     int m_newMusicSample;
     int m_newMusicCountdown;
 
-    AbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
+    // AbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
 
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
