@@ -268,7 +268,7 @@ public:
     }
 
     void applySettings(GameSettings *gs);
-    void execute();
+    void changeStateFromMentat();
 
     Texture* getScreenTexture() const {
         return screenTexture;
