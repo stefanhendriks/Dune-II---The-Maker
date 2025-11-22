@@ -1253,6 +1253,7 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     players[HUMAN].setHouse(house);
+    m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
         m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
