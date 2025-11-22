@@ -2110,15 +2110,16 @@ void cGame::execute(AbstractMentat &mentat)
         // lost mission > 1, so we go back to region select
         if (m_dataCampaign->mission > 1)   {
             game.setNextStateToTransitionTo(GAME_REGION);
-
             m_dataCampaign->mission--; // we did not win
         }
         else {
-            // mission 1 failed, really?..., back to mentat with briefing
-            game.setNextStateToTransitionTo(GAME_BRIEFING);
-            game.prepareMentatForPlayer();
-            game.playMusicByType(MUSIC_BRIEFING);
-            mentat.resetSpeak();
+            game.setNextStateToTransitionTo(GAME_REGION);
+            m_dataCampaign->mission = 1; // we did not win
+
+            // game.setNextStateToTransitionTo(GAME_BRIEFING);
+            // game.prepareMentatForPlayer();
+            // game.playMusicByType(MUSIC_BRIEFING);
+            // mentat.resetSpeak();
         }
 
         game.initiateFadingOut();
