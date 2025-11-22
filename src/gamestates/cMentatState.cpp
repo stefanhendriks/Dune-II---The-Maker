@@ -57,11 +57,11 @@ void cMentatState::prepareMentat(int house)
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
-                m_mentat = new AtreidesMentat(m_ctx, true);
+                m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = new HarkonnenMentat(m_ctx, true);
+                m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
             else if (house == ORDOS) 
-                m_mentat = new OrdosMentat(m_ctx, true);
+                m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
             else 
                 m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
             
@@ -73,11 +73,11 @@ void cMentatState::prepareMentat(int house)
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
-                m_mentat = new AtreidesMentat(m_ctx, true);
+                m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = new HarkonnenMentat(m_ctx, true);
+                m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = new OrdosMentat(m_ctx, true);
+                m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
             else 
                 m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
             
