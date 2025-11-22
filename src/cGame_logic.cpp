@@ -1261,7 +1261,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
-    pState->loadScenario(m_reinforcements.get(), m_dataCampaign.get());
+    pState->loadScenario(m_reinforcements.get());
 }
 
 void cGame::goingToWinLoseBrief(int value)
