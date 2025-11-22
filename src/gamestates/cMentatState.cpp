@@ -12,10 +12,10 @@
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 
-cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign, int house)
-    : cGameState(game, ctx), m_dataCampaign(dataCampaign), m_mode(mode), m_house(house)
+cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign)
+    : cGameState(game, ctx), m_dataCampaign(dataCampaign), m_mode(mode), m_house(dataCampaign->housePlayer)
 {
-    prepareMentat();
+    prepareMentat(m_house);
 }
 
 cMentatState::~cMentatState()
@@ -28,9 +28,9 @@ eGameStateType cMentatState::getType()
     return eGameStateType::GAMESTATE_MENTAT;
 }
 
-void cMentatState::prepareMentat()
+void cMentatState::prepareMentat(int house)
 {
-    int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
+    // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
     bool allowMissionSelect = !m_game.m_skirmish; 
     delete m_mentat;
     switch (m_mode) {

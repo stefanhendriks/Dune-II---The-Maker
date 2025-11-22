@@ -14,7 +14,7 @@ enum class MentatMode {
 
 class cMentatState : public cGameState {
 public:
-    cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign, int house = -1);
+    cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign);
     ~cMentatState() override;
 
     void thinkFast() override;
@@ -26,11 +26,10 @@ public:
     eGameStateType getType() override;
     void loadScenario(int iRegion, cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
     void loadBriefing(int iScenarioFind, int iSectionFind);
-
+    void prepareMentat(int house);
 private:
     AbstractMentat* m_mentat = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     MentatMode m_mode;
     int m_house;
-    void prepareMentat();
 };
