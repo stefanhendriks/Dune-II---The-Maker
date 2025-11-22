@@ -1272,7 +1272,7 @@ void cGame::goingToWinLoseBrief(int value)
 
 }
 
-void cGame::execute()
+void cGame::changeStateFromMentat()
 {
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
