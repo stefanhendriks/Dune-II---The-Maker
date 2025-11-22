@@ -116,9 +116,9 @@ void cMentatState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     if (m_mentat) m_mentat->onNotifyKeyboardEvent(event);
 }
 
-void cMentatState::loadScenario(int iRegion, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
+void cMentatState::loadScenario(cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
-    cIni::loadScenario(m_dataCampaign->housePlayer, iRegion, m_mentat, reinforcements, dataCampaign);
+    cIni::loadScenario(m_dataCampaign->housePlayer, dataCampaign->region, m_mentat, reinforcements, dataCampaign);
 }
 
 void cMentatState::loadBriefing(int iScenarioFind, int iSectionFind)
