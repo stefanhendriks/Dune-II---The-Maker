@@ -52,6 +52,7 @@ void BeneMentat::onNoButtonPressed()
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
     players[HUMAN].setHouse(GENERALHOUSE);
+    m_dataCampaign->housePlayer = GENERALHOUSE;
     game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
     game.initiateFadingOut();
 }
