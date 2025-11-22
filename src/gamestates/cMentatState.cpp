@@ -33,11 +33,13 @@ eGameStateType cMentatState::getType()
 void cMentatState::prepareMentat(int house)
 {
     // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
-    std::cout << "house I " << house << std::endl;
+    //std::cout << "house I " << house << std::endl;
     house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
-    std::cout << "house After " << house << std::endl;
+    //std::cout << "house After " << house << std::endl;
+    //std::cout << "skirmish ? " << m_game.m_skirmish<< std::endl;
     bool allowMissionSelect = !m_game.m_skirmish;
-    allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
+    // allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
+    //std::cout << "allowMissionSelect " << allowMissionSelect <<std::endl ;
     if (m_mentat)
         delete m_mentat;
     switch (m_mode) {
