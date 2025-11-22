@@ -30,6 +30,7 @@
 #include "gamestates/cSetupSkirmishState.h"
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cTellHouseState.h"
+#include "gamestates/cMentatState.h"
 #include "ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
@@ -598,12 +599,12 @@ void cGame::drawState()
     }
 
     switch (m_state) {
-        case GAME_BRIEFING:
-        case GAME_LOSEBRIEF:
-        //case GAME_TELLHOUSE: //here
-        case GAME_WINBRIEF:
-            drawStateMentat(m_mentat);
-            break;
+        // case GAME_BRIEFING:
+        // case GAME_LOSEBRIEF:
+        // //case GAME_TELLHOUSE: //here
+        // case GAME_WINBRIEF:
+        //     drawStateMentat(m_mentat);
+        //     break;
         case GAME_PLAYING:
             drawStateCombat();
             break;
@@ -1139,6 +1140,16 @@ void cGame::setState(int newState)
                 newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
+            else if (newState == GAME_BRIEFING) {
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            } else if (newState == GAME_WINBRIEF) {
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            } else if (newState == GAME_LOSEBRIEF) {
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            }
 
             m_states[newState] = newStatePtr;
             m_currentState = newStatePtr;
@@ -1199,52 +1210,66 @@ void cGame::drawStateMentat(AbstractMentat *mentat)
 
 void cGame::prepareMentatForPlayer()
 {
-    int house = players[HUMAN].getHouse();
+    // int house = players[HUMAN].getHouse();
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
-        cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
+        auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
+        pState->prepareMentat(m_dataCampaign->housePlayer);        
+        // pState->loadScenario(m_dataCampaign->region, m_reinforcements.get(), m_dataCampaign.get());
+        // cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+        // pState->loadBriefing(m_dataCampaign->region, INI_BRIEFING);
+        // cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
+        // initial code
+        // cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+        // cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
-        if (RNG::rnd(100) < 50) {
-            m_mentat->loadScene("win01");
-        }
-        else {
-            m_mentat->loadScene("win02");
-        }
-        cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
+        // if (RNG::rnd(100) < 50) {
+        //     m_mentat->loadScene("win01");
+        // }
+        // else {
+        //     m_mentat->loadScene("win02");
+        // }
+        auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_WINBRIEF]);
+        pState->prepareMentat(m_dataCampaign->housePlayer);
+        // already done pState->loadBriefing(m_dataCampaign->region, INI_WIN);
+        // initial cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
-        if (RNG::rnd(100) < 50) {
-            m_mentat->loadScene("lose01");
-        }
-        else {
-            m_mentat->loadScene("lose02");
-        }
-        cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
+        // if (RNG::rnd(100) < 50) {
+        //     m_mentat->loadScene("lose01");
+        // }
+        // else {
+        //     m_mentat->loadScene("lose02");
+        // }
+        auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_LOSEBRIEF]);
+        pState->prepareMentat(m_dataCampaign->housePlayer);
+        //already pState->loadBriefing(m_dataCampaign->region, INI_LOSE);
+        //initial cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
+
     }
 }
 
 void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 {
-    delete m_mentat;
-    int houseIndex = players[HUMAN].getHouse();
-    if (houseIndex == ATREIDES) {
-        m_mentat = new AtreidesMentat(ctx.get(), allowMissionSelect);
-    }
-    else if (houseIndex == HARKONNEN) {
-        m_mentat = new HarkonnenMentat(ctx.get(), allowMissionSelect);
-    }
-    else if (houseIndex == ORDOS) {
-        m_mentat = new OrdosMentat(ctx.get(), allowMissionSelect);
-    }
-    else {
-        // fallback
-        m_mentat = new BeneMentat(ctx.get(), m_dataCampaign.get());
-    }
+    // delete m_mentat;
+    // int houseIndex = players[HUMAN].getHouse();
+    // if (houseIndex == ATREIDES) {
+    //     m_mentat = new AtreidesMentat(ctx.get(), allowMissionSelect);
+    // }
+    // else if (houseIndex == HARKONNEN) {
+    //     m_mentat = new HarkonnenMentat(ctx.get(), allowMissionSelect);
+    // }
+    // else if (houseIndex == ORDOS) {
+    //     m_mentat = new OrdosMentat(ctx.get(), allowMissionSelect);
+    // }
+    // else {
+    //     // fallback
+    //     m_mentat = new BeneMentat(ctx.get(), m_dataCampaign.get());
+    // }
     prepareMentatForPlayer();
-    m_mentat->speak();
+    // m_mentat->speak();
 }
 
 void cGame::prepareMentatToTellAboutHouse(int house)
@@ -1258,14 +1283,17 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 
 void cGame::loadScenario()
 {
-    int iHouse = players[HUMAN].getHouse();
-    cIni::loadScenario(iHouse, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+    // int iHouse = players[HUMAN].getHouse();
+    // cIni::loadScenario(iHouse, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
+    auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
+    pState->loadScenario(m_dataCampaign->region, m_reinforcements.get(), m_dataCampaign.get());
 }
 
 void cGame::goingToWinLoseBrief(int value)
 {
     setState(value);
     createAndPrepareMentatForHumanPlayer(!m_skirmish);
+
 }
 
 void cGame::execute(AbstractMentat &mentat)
