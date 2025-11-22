@@ -12,6 +12,8 @@
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 
+#include <iostream>
+
 cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign)
     : cGameState(game, ctx), m_dataCampaign(dataCampaign), m_mode(mode), m_house(dataCampaign->housePlayer)
 {
@@ -31,8 +33,13 @@ eGameStateType cMentatState::getType()
 void cMentatState::prepareMentat(int house)
 {
     // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
-    bool allowMissionSelect = !m_game.m_skirmish; 
-    delete m_mentat;
+    std::cout << "house I " << house << std::endl;
+    house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
+    std::cout << "house After " << house << std::endl;
+    bool allowMissionSelect = !m_game.m_skirmish;
+    allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
+    if (m_mentat)
+        delete m_mentat;
     switch (m_mode) {
         case MentatMode::Briefing:
             if (house == ATREIDES)
