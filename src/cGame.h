@@ -93,9 +93,6 @@ public:
     bool m_skirmish;                // playing a skirmish game or not
     int m_screenshot;				// screenshot taking number
 
-    // int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
-    // int m_mission;		            // what mission are we playing? (= techlevel)
-
     int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
@@ -122,7 +119,6 @@ public:
     void thinkFast_state();
 
     void think_audio();
-    // void think_mentat();
     void think_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
@@ -268,7 +264,7 @@ public:
     }
 
     void applySettings(GameSettings *gs);
-    void execute(/*AbstractMentat &mentat*/);
+    void execute();
 
     Texture* getScreenTexture() const {
         return screenTexture;
@@ -323,8 +319,6 @@ private:
     int m_newMusicSample;
     int m_newMusicCountdown;
 
-    // AbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
-
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
 
@@ -349,8 +343,6 @@ private:
     void updateGamePlaying();
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
-
-    // void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
 

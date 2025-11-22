@@ -100,7 +100,6 @@ cGame::cGame()
     m_playMusic = true;
     context = nullptr;
     ctx = nullptr;
-    // m_mentat = nullptr;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -170,16 +169,10 @@ void cGame::init()
 
     setState(GAME_INITIALIZE);
 
-    // mentat
-    // delete m_mentat;
-    // m_mentat = nullptr;
-
     m_fadeSelect = 1.0f;
 
     m_fadeSelectDir = true;    // fade select direction
 
-    // m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
-    // m_mission = 0;         // calculated by mission loading (region -> mission calculation)
     m_dataCampaign->housePlayer = -1;
     m_dataCampaign->mission = 0;
     m_dataCampaign->region = 1;
@@ -484,13 +477,6 @@ bool cGame::hasGameOverConditionAIHasNoBuildings() const
     return (m_winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
 }
 
-// void cGame::think_mentat()
-// {
-    // if (m_mentat) {
-    //     m_mentat->think();
-    // }
-// }
-
 // think function belongs to combat state (tbd)
 void cGame::think_audio()
 {
@@ -641,12 +627,6 @@ void cGame::drawState()
     }
 
     switch (m_state) {
-        // case GAME_BRIEFING:
-        // case GAME_LOSEBRIEF:
-        // //case GAME_TELLHOUSE: //here
-        // case GAME_WINBRIEF:
-        //     drawStateMentat(m_mentat);
-        //     break;
         case GAME_PLAYING:
             drawStateCombat();
             break;
@@ -750,7 +730,6 @@ void cGame::shutdown()
         m_PreviewMaps->destroy();
     }
 
-    // delete m_mentat;
     delete m_mapViewport;
 
     delete drawManager;
@@ -1248,76 +1227,27 @@ cGame::~cGame()
 {
 }
 
-// // drawStateMentat logic + drawing mouth/eyes
-// void cGame::drawStateMentat(AbstractMentat *mentat)
-// {
-//     m_mouse->setTile(MOUSE_NORMAL);
-//     mentat->draw();
-//     m_mouse->draw();
-// }
-
 void cGame::prepareMentatForPlayer()
 {
-    // int house = players[HUMAN].getHouse();
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
         auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
         pState->prepareMentat(m_dataCampaign->housePlayer);        
-        // pState->loadScenario(m_dataCampaign->region, m_reinforcements.get(), m_dataCampaign.get());
-        // cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
-        // pState->loadBriefing(m_dataCampaign->region, INI_BRIEFING);
-        // cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
-        // initial code
-        // cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
-        // cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
     }
     else if (m_state == GAME_WINBRIEF) {
-        // if (RNG::rnd(100) < 50) {
-        //     m_mentat->loadScene("win01");
-        // }
-        // else {
-        //     m_mentat->loadScene("win02");
-        // }
         auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_WINBRIEF]);
         pState->prepareMentat(m_dataCampaign->housePlayer);
-        // already done pState->loadBriefing(m_dataCampaign->region, INI_WIN);
-        // initial cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
     }
     else if (m_state == GAME_LOSEBRIEF) {
-        // if (RNG::rnd(100) < 50) {
-        //     m_mentat->loadScene("lose01");
-        // }
-        // else {
-        //     m_mentat->loadScene("lose02");
-        // }
         auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_LOSEBRIEF]);
         pState->prepareMentat(m_dataCampaign->housePlayer);
-        //already pState->loadBriefing(m_dataCampaign->region, INI_LOSE);
-        //initial cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
-
     }
 }
 
 void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 {
-    // delete m_mentat;
-    // int houseIndex = players[HUMAN].getHouse();
-    // if (houseIndex == ATREIDES) {
-    //     m_mentat = new AtreidesMentat(ctx.get(), allowMissionSelect);
-    // }
-    // else if (houseIndex == HARKONNEN) {
-    //     m_mentat = new HarkonnenMentat(ctx.get(), allowMissionSelect);
-    // }
-    // else if (houseIndex == ORDOS) {
-    //     m_mentat = new OrdosMentat(ctx.get(), allowMissionSelect);
-    // }
-    // else {
-    //     // fallback
-    //     m_mentat = new BeneMentat(ctx.get(), m_dataCampaign.get());
-    // }
     prepareMentatForPlayer();
-    // m_mentat->speak();
 }
 
 void cGame::prepareMentatToTellAboutHouse(int house)
@@ -1331,8 +1261,6 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 
 void cGame::loadScenario()
 {
-    // int iHouse = players[HUMAN].getHouse();
-    // cIni::loadScenario(iHouse, m_dataCampaign->region, m_mentat, m_reinforcements.get(), m_dataCampaign.get());
     auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
     pState->loadScenario(m_dataCampaign->region, m_reinforcements.get(), m_dataCampaign.get());
 }
@@ -1344,7 +1272,7 @@ void cGame::goingToWinLoseBrief(int value)
 
 }
 
-void cGame::execute(/*AbstractMentat &mentat*/)
+void cGame::execute()
 {
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
@@ -1397,7 +1325,6 @@ void cGame::execute(/*AbstractMentat &mentat*/)
             game.setNextStateToTransitionTo(GAME_BRIEFING);
             game.prepareMentatForPlayer();
             game.playMusicByType(MUSIC_BRIEFING);
-            // mentat.resetSpeak();
         }
 
         game.initiateFadingOut();
@@ -1408,8 +1335,6 @@ void cGame::execute(/*AbstractMentat &mentat*/)
 void cGame::thinkFast_state()
 {
     think_audio();
-    // think_mentat();
-
     if (m_currentState) {
         m_currentState->thinkFast();
     }
@@ -1637,9 +1562,6 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
     }
-    // if (m_mentat) {
-    //     m_mentat->onNotifyMouseEvent(event);
-    // }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
