@@ -26,7 +26,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::execute()");
-                game.execute(*this);})
+                game.execute(/**this*/);})
             .build();
 }
 
