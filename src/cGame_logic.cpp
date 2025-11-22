@@ -482,12 +482,12 @@ bool cGame::hasGameOverConditionAIHasNoBuildings() const
     return (m_winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
 }
 
-void cGame::think_mentat()
-{
+// void cGame::think_mentat()
+// {
     // if (m_mentat) {
     //     m_mentat->think();
     // }
-}
+// }
 
 // think function belongs to combat state (tbd)
 void cGame::think_audio()
@@ -1246,13 +1246,13 @@ cGame::~cGame()
 {
 }
 
-// drawStateMentat logic + drawing mouth/eyes
-void cGame::drawStateMentat(AbstractMentat *mentat)
-{
-    m_mouse->setTile(MOUSE_NORMAL);
-    mentat->draw();
-    m_mouse->draw();
-}
+// // drawStateMentat logic + drawing mouth/eyes
+// void cGame::drawStateMentat(AbstractMentat *mentat)
+// {
+//     m_mouse->setTile(MOUSE_NORMAL);
+//     mentat->draw();
+//     m_mouse->draw();
+// }
 
 void cGame::prepareMentatForPlayer()
 {
@@ -1406,7 +1406,7 @@ void cGame::execute(AbstractMentat &mentat)
 void cGame::thinkFast_state()
 {
     think_audio();
-    think_mentat();
+    // think_mentat();
 
     if (m_currentState) {
         m_currentState->thinkFast();
