@@ -30,7 +30,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::execute()");
-                game.execute(*this);})
+                game.execute(/**this*/);})
             .build();
 }
 

@@ -1,4 +1,5 @@
 #include "utils/cIniGameRessouces.h"
+#include "utils/Graphics.hpp"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "data/gfxaudio.h"

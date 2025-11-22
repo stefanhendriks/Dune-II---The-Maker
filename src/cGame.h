@@ -14,7 +14,7 @@
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "mentat/AbstractMentat.h"
+// #include "mentat/AbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 #include "utils/cTimeManager.h"
@@ -268,7 +268,7 @@ public:
     }
 
     void applySettings(GameSettings *gs);
-    void execute(AbstractMentat &mentat);
+    void execute(/*AbstractMentat &mentat*/);
 
     Texture* getScreenTexture() const {
         return screenTexture;
@@ -349,7 +349,7 @@ private:
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
 
-    void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
+    // void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
 

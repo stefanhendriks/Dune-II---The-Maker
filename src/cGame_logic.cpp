@@ -553,12 +553,12 @@ void cGame::drawStateCombat()
 }
 
 // drawStateMentat logic + drawing mouth/eyes
-void cGame::drawStateMentat(AbstractMentat *mentat)
-{
-    m_mouse->setTile(MOUSE_NORMAL);
-    mentat->draw();
-    m_mouse->draw();
-}
+// void cGame::drawStateMentat(AbstractMentat *mentat)
+// {
+//     m_mouse->setTile(MOUSE_NORMAL);
+//     mentat->draw();
+//     m_mouse->draw();
+// }
 
 void cGame::initSkirmish() const
 {
@@ -2065,7 +2065,7 @@ void cGame::setMousePosition(int w, int h)
     m_mouse->setCursorPosition(window, w,h);
 }
 
-void cGame::execute(AbstractMentat &mentat)
+void cGame::execute(/*AbstractMentat &mentat*/)
 {
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)

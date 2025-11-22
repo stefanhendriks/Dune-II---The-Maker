@@ -26,7 +26,7 @@ HarkonnenMentat::HarkonnenMentat(GameContext* ctx, bool allowMissionSelect) : Ab
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::execute()");
-                game.execute(*this);})
+                game.execute(/**this*/);})
             .build();
 }
 
