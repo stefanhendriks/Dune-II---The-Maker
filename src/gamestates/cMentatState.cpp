@@ -54,7 +54,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = new BeneMentat(m_ctx, m_dataCampaign);
             m_game.missionInit();
             m_game.setupPlayers();
-            cIni::loadScenario(house, m_dataCampaign->region, m_mentat, m_game.getReinforcements(),m_dataCampaign);
+            cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat, m_game.getReinforcements(),m_dataCampaign);
             cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
             break;
         case MentatMode::WinBrief:
@@ -116,9 +116,9 @@ void cMentatState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     if (m_mentat) m_mentat->onNotifyKeyboardEvent(event);
 }
 
-void cMentatState::loadScenario(cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
+void cMentatState::loadScenario(cReinforcements *reinforcements)
 {
-    cIni::loadScenario(m_dataCampaign->housePlayer, dataCampaign->region, m_mentat, reinforcements, dataCampaign);
+    cIni::loadScenario(/*m_dataCampaign->housePlayer, m_dataCampaign->region,*/ m_mentat, reinforcements, m_dataCampaign);
 }
 
 void cMentatState::loadBriefing(int iScenarioFind, int iSectionFind)
