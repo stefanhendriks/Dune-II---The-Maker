@@ -4,6 +4,7 @@
 #include "mentat/AbstractMentat.h"
 
 struct s_DataCampaign;
+class cReinforcements;
 
 enum class MentatMode {
     Briefing,
@@ -23,6 +24,8 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     eGameStateType getType() override;
+    void loadScenario(int iRegion, cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
+    void loadBriefing(int iScenarioFind, int iSectionFind);
 
 private:
     AbstractMentat* m_mentat = nullptr;
