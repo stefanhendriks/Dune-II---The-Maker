@@ -24,7 +24,7 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     eGameStateType getType() override;
-    void loadScenario(cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
+    void loadScenario(cReinforcements *reinforcements);
     void loadBriefing(int iScenarioFind, int iSectionFind);
     void prepareMentat(int house);
 private:
