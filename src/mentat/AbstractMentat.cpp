@@ -26,7 +26,7 @@
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
+    m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
     iMentatSentence = -1;
 
     TIMER_Speaking = -1;

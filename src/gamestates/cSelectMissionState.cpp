@@ -9,7 +9,7 @@
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState) :
     cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get())
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
 {
     int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
