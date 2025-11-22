@@ -100,7 +100,7 @@ cGame::cGame()
     m_playMusic = true;
     context = nullptr;
     ctx = nullptr;
-    m_mentat = nullptr;
+    // m_mentat = nullptr;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -171,8 +171,8 @@ void cGame::init()
     setState(GAME_INITIALIZE);
 
     // mentat
-    delete m_mentat;
-    m_mentat = nullptr;
+    // delete m_mentat;
+    // m_mentat = nullptr;
 
     m_fadeSelect = 1.0f;
 
@@ -484,9 +484,9 @@ bool cGame::hasGameOverConditionAIHasNoBuildings() const
 
 void cGame::think_mentat()
 {
-    if (m_mentat) {
-        m_mentat->think();
-    }
+    // if (m_mentat) {
+    //     m_mentat->think();
+    // }
 }
 
 // think function belongs to combat state (tbd)
@@ -748,7 +748,7 @@ void cGame::shutdown()
         m_PreviewMaps->destroy();
     }
 
-    delete m_mentat;
+    // delete m_mentat;
     delete m_mapViewport;
 
     delete drawManager;
@@ -1392,7 +1392,7 @@ void cGame::execute(AbstractMentat &mentat)
             game.setNextStateToTransitionTo(GAME_BRIEFING);
             game.prepareMentatForPlayer();
             game.playMusicByType(MUSIC_BRIEFING);
-            mentat.resetSpeak();
+            // mentat.resetSpeak();
         }
 
         game.initiateFadingOut();
@@ -1676,9 +1676,9 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
     }
-    if (m_mentat) {
-        m_mentat->onNotifyMouseEvent(event);
-    }
+    // if (m_mentat) {
+    //     m_mentat->onNotifyMouseEvent(event);
+    // }
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
