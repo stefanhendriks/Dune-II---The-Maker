@@ -15,11 +15,10 @@
 
 cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
     : cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
-    m_textDrawer = ctx->getTextContext()->beneTextDrawer.get();
     refresh();
     m_backgroundTexture = m_game.getScreenTexture();
 }

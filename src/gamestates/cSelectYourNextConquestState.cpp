@@ -42,7 +42,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameContext*ctx) :
     cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->beneTextDrawer.get()),
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxworld(ctx->getGraphicsContext()->gfxworld.get()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {

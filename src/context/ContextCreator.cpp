@@ -88,11 +88,10 @@ std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
     return gtx;
 }
 
-std::unique_ptr<TextContext> ContextCreator::createTextContext()
-{
-    auto ttx = std::make_unique<TextContext>();
-    ttx->smallTextDrawer = std::make_unique<cTextDrawer>(small_font);
-    ttx->beneTextDrawer = std::make_unique<cTextDrawer>(bene_font);
-    ttx->gameTextDrawer = std::make_unique<cTextDrawer>(game_font);
-    return ttx;
+std::unique_ptr<TextContext> ContextCreator::createTextContext() {
+    return std::make_unique<TextContext>(
+        std::make_unique<cTextDrawer>(small_font),
+        std::make_unique<cTextDrawer>(bene_font),
+        std::make_unique<cTextDrawer>(game_font)
+    );
 }
