@@ -472,10 +472,12 @@ int getTechLevelByRegion(int iRegion)
 }
 
 
-void cIni::loadScenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
+void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
     game.m_skirmish = false;
     game.missionInit();
+    int iHouse = dataCampaign->housePlayer;
+    int iRegion = dataCampaign->region;
 
     std::string filename = cIniUtils::getScenarioFileName(iHouse, iRegion);
 
