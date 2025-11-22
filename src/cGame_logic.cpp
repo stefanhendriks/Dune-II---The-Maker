@@ -1184,12 +1184,15 @@ void cGame::setState(int newState)
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
+                // std::cout << "create cMentatState Briefing" << std::endl;
                 newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
+                // std::cout << "create cMentatState WinBrief" << std::endl;
                 newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
+                // std::cout << "create cMentatState LoseBrief" << std::endl;
                 newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
