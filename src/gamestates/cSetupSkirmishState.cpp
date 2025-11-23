@@ -1215,7 +1215,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
         renderDrawer->renderStrechFullSprite(tex, dest);
         iDrawX += mapItemButtonWidth + 15;
 
-        if (iDrawX > selectArea.getEndX()) {
+        if ((iDrawX + mapItemButtonWidth) > selectArea.getEndX()) {
             iDrawX = mapRect.getX() + margin;
             iDrawY += mapItemButtonHeight + 15;
         }
