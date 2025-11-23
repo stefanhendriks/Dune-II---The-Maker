@@ -173,8 +173,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
 
     // rectangle for map list
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
-    cRectangle previousMaps(mapListFrameX, mapListFrameY, 60, mapListFrameHeight);
-    cRectangle nextMaps(mapListFrameX + playerTitleBarWidth - 50, mapListFrameY, 50, mapListFrameHeight);
+    cRectangle previousMaps(mapListFrameX + 4, mapListFrameY, 60, mapListFrameHeight);
+    cRectangle nextMaps(mapListFrameX + playerTitleBarWidth - 48, mapListFrameY, 50, mapListFrameHeight);
 
     nextMapButton = GuiButtonBuilder()
             .withRect(nextMaps)
