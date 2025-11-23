@@ -67,7 +67,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         // index 0 == human player, but to keep our lives sane we don't change the index.
 
         // player 0 (HUMAN) is always playing,
-        sSkirmishPlayer.bHuman = i == 0;
+        sSkirmishPlayer.bHuman = i == HUMAN;
 
         // and 1 additional AI is minimally required to play
         sSkirmishPlayer.bPlaying = (i <= 1);
