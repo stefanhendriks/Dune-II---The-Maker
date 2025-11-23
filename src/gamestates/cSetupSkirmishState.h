@@ -48,8 +48,6 @@ private:
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
-    std::vector<int> mapsToRender;
-
     std::function<void()> nextFunction;
     std::function<void()> previousFunction;
 
