@@ -348,11 +348,11 @@ enum class SmudgeType : char {
     S_ROCK = 0,
     S_SAND = 1,
     S_WALL = 2,
-    MAX
+    COUNT
 };
 
 enum class GameState : char {
-    INITIALIZE,            // initialize game
+    INITIALIZE = 0,        // initialize game
     OVER,                  // game over
     MENU,                  // in a menu
     PLAYING,               // playing the actual game
@@ -371,5 +371,5 @@ enum class GameState : char {
     SETUPSKIRMISH,         // set up a skirmish game
     CREDITS,               // credits
     MISSIONSELECT,         // mission select
-    MAX            
+    COUNT            
 };

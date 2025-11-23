@@ -12,7 +12,7 @@
 template <typename T, typename EnumType>
 class EnumArray {
     // Calculate the size by converting the MAX value
-    static constexpr std::size_t SIZE = static_cast<std::size_t>(EnumType::MAX);
+    static constexpr std::size_t SIZE = static_cast<std::size_t>(EnumType::COUNT);
     std::array<T, SIZE> data_;
 
 public:
