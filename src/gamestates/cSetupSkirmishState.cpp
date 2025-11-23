@@ -1141,6 +1141,17 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
 void cSetupSkirmishState::generateRandomMap()
 {
     auto &randomMap = m_previewMaps->getMap(0);
+
+    // int randomMapWidth = RNG::rnd(100) < 50 ? 64 : 128;
+    // int randomMapHeight = RNG::rnd(100) < 50 ? 64 : 128;
+    // ^^^^^^
+    // Stefan: It would be nice if we could randomize the size of a map, but this seems to not work as expected
+    // - the map randomizer does not always generate enough room for all players
+    // - starting positions are not always defined, ie get out of map boundaries
+    // - starting a skirmish map sometimes does not respect the map boundaries set by these values, so
+    //   something else goes wrong.
+    // In short: need to investigate!
+
     int randomMapWidth = 128;
     int randomMapHeight = 128;
     int maxCells = randomMapWidth * randomMapHeight;
