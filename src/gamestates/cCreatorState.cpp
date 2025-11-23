@@ -3,6 +3,7 @@
 #include "gamestates/cGameState.h"
 
 #include "gamestates/cMainMenuState.h"
+#include "gamestates/cCreditsState.h"
 
 #include "cGame.h"
 #include "context/GameContext.hpp"
@@ -49,7 +50,11 @@ void CreatorState::createStateFromScratch(GameState gameState)
     case GameState::MENU:
         m_states[GameState::MENU] = std::make_unique<cMainMenuState>(m_game, m_ctx);
         break;
-    
+
+    case GameState::CREDITS:
+        m_states[GameState::CREDITS] = std::make_unique<cCreditsState>(m_game, m_ctx);
+        break;
+
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
     default:
         cLogger::getInstance()->log(LOG_ERROR, COMP_SETUP, "CreatorState",
