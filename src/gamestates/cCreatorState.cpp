@@ -50,6 +50,7 @@ void CreatorState::createStateFromScratch(GameState gameState)
         m_states[GameState::MENU] = std::make_unique<cMainMenuState>(m_game, m_ctx);
         break;
     
+    // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
     default:
         cLogger::getInstance()->log(LOG_ERROR, COMP_SETUP, "CreatorState",
                                      std::format("Forget gameState {}",gameStateToString(gameState)));
