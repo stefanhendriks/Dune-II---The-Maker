@@ -2,6 +2,7 @@
 #include "utils/cLog.h"
 #include "gamestates/cGameState.h"
 
+#include "gamestates/cMainMenuState.h"
 
 #include "cGame.h"
 #include "context/GameContext.hpp"
@@ -45,6 +46,9 @@ void CreatorState::createStateFromScratch(GameState gameState)
 {
     switch (gameState)
     {
+    case GameState::MENU:
+        m_states[GameState::MENU] = std::make_unique<cMainMenuState>(m_game, m_ctx);
+        break;
     
     default:
         cLogger::getInstance()->log(LOG_ERROR, COMP_SETUP, "CreatorState",
