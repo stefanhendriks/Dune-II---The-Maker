@@ -81,22 +81,22 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
-    int qMaps = m_previewMaps->getMapCount()/(maxMapsInSelectArea*2);
-    int rMaps = m_previewMaps->getMapCount()%(maxMapsInSelectArea*2);
+    int qMaps = m_previewMaps->getMapCount()/(maxMapsInSelectArea);
+    int rMaps = m_previewMaps->getMapCount()%(maxMapsInSelectArea);
     if (rMaps > 0) {
         qMaps++;
     }
 
     nextFunction = [this, qMaps]() {
         // Go to the next map
-        if (mapIndexToDisplay <= qMaps*maxMapsInSelectArea*2) {
-            mapIndexToDisplay += maxMapsInSelectArea*2;
+        if (mapIndexToDisplay <= qMaps*maxMapsInSelectArea) {
+            mapIndexToDisplay += maxMapsInSelectArea;
         }
     };
     previousFunction = [this]() {
         // Go back to the previous map
-        if (mapIndexToDisplay >= maxMapsInSelectArea*2) {
-            mapIndexToDisplay -= maxMapsInSelectArea*2;
+        if (mapIndexToDisplay >= maxMapsInSelectArea) {
+            mapIndexToDisplay -= maxMapsInSelectArea;
         }
     };
     iStartingPoints = 2;
@@ -200,8 +200,15 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
+    int margin = 5;
+
+    maxMapsInSelectAreaHorizontally = selectArea.getWidth() / (mapItemButtonWidth+margin);
+    maxMapsInSelectAreaVertically = selectArea.getHeight() / (mapItemButtonHeight+margin);
     // std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
-    maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+15);
+    // maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * maxMapsInSelectAreaVertically;
+    maxMapsInSelectArea = maxMapsInSelectAreaHorizontally;
+    //maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * 2;
+    // maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+margin);
     // std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
     int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = topBarHeight + 6;
@@ -1145,17 +1152,21 @@ void cSetupSkirmishState::generateRandomMap()
 void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
 {
     int const margin = 5;
-    int const mapItemButtonHeight = 175;
-    int const mapItemButtonWidth = 145;
     int iDrawX = mapRect.getX() + margin;
-    int i = 0;
+    int i = 0; // <-- this is the map index to render, not the row coordinate!
+
     // for every map that we read , draw here
     for (int j = 0; j < maxMapsInSelectArea; j++) {
+        int mapIndexToRender = mapIndexToDisplay + i;
+
+        // First row
+        /////////////
 
         // first element on top
-        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToDisplay+i);
+        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToRender);
         if (previewMap.name.empty()) continue;
-        int iDrawY = mapRect.getY() + 5;
+
+        int iDrawY = mapRect.getY() + margin;
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         Color textColor = bHover ? Color::red() : Color::white();
         if (!previewMap.validMap) {
@@ -1164,29 +1175,38 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
         if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
+
         // selected map, always render as pressed
-        if (mapIndexToDisplay+i == iSkirmishMap) {
+        if (mapIndexToRender == iSkirmishMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             if (!previewMap.validMap) {
                 textColor = colorDisabled;
             }
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
+
         m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap.name.c_str());
-        Texture *tex = previewMap.previewTex;
-        if (mapIndexToDisplay+i==0) {
+        Texture *tex = nullptr;
+        if (mapIndexToRender == 0) {
             // random map, render the 'random map' texture
             tex = m_gfxinter->getTexture(BMP_UNKNOWNMAP);
         } else {
             tex = previewMap.previewTex;
         }
+
         cRectangle dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
         renderDrawer->renderStrechFullSprite(tex, dest);
-        i+=1;
+
+        // Second row
+        /////////////
+        i+=1; // <-- this is the map index to render, not the row coordinate!
+        mapIndexToRender = mapIndexToDisplay + i;
 
         // second element on top
-        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToDisplay+i);
+        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToRender);
         if (previewMap2.name.empty()) continue;
+
+        // HERE WE RENDER THE SECOND 'ROW' of an icon, by adding `mapItemButtonHeight`!!
         iDrawY = mapRect.getY() + mapItemButtonHeight + 15;
 
         bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
@@ -1198,7 +1218,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
         // selected map, always render as pressed
-        if (mapIndexToDisplay+i == iSkirmishMap) {
+        if (mapIndexToRender == iSkirmishMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             if (!previewMap2.validMap) {
                 textColor = colorDisabled;
@@ -1208,7 +1228,9 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
         m_textDrawer->drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
         dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
         renderDrawer->renderStrechFullSprite(previewMap2.previewTex, dest);
+
         i+=1;
+
         // next drawX position
         iDrawX += mapItemButtonWidth+15;
     }
