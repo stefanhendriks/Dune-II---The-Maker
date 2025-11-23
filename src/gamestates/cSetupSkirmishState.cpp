@@ -523,7 +523,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
-    m_game.m_mission = techlevel; // high tech level (TODO: make this customizable)
+    m_game.m_mission = techlevel;
 
     m_game.setupPlayers();
 
@@ -1214,7 +1214,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
 void cSetupSkirmishState::onMouseRightButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
-        if (startPointsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+        if (startPointsRect.isPointWithin(mouse->getMouseCoords())) {
             iStartingPoints--;
 
             if (iStartingPoints < 2) { // < 2 startpoints is not allowed
@@ -1228,7 +1228,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtStartPoints()
 
 void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 {
-    if (wormsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+    if (wormsRect.isPointWithin(mouse->getMouseCoords())) {
         spawnWorms -= 1;
         if (spawnWorms < 0) {
             spawnWorms = 4;
@@ -1239,7 +1239,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 
 void cSetupSkirmishState::onMouseRightButtonClickedAtTechLevel()
 {
-    if (techLevelRect.isPointWithin(mouse->getX(), mouse->getY())) {
+    if (techLevelRect.isPointWithin(mouse->getMouseCoords())) {
         techlevel--;
 
         if (techlevel < 2) { // < 2 techlevel is not allowed
