@@ -127,10 +127,12 @@ public:
         btn->setTheme(params.theme);
         btn->setTextAlignHorizontal(params.align);
         btn->setTexture(params.tex);
-        if (params.onLeftClick)
+        if (params.onLeftClick) {
             btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
-        if (params.onRightClick)
+        }
+        if (params.onRightClick) {
             btn->setOnRightMouseButtonClickedAction(params.onRightClick);
+        }
         
         return btn;
     }
