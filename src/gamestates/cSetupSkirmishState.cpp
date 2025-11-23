@@ -172,7 +172,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
-    int margin = 15;
+    int margin = 10;
 
     maxMapsInSelectAreaHorizontally = selectArea.getWidth() / (mapItemButtonWidth+margin);
     maxMapsInSelectAreaVertically = selectArea.getHeight() / (mapItemButtonHeight+5);
