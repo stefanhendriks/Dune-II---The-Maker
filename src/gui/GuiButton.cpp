@@ -158,11 +158,16 @@ void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
     if (game.isDebugMode()) {
-        // LOST in SDL2 port: no keyboard acces i this area of code @Mira
-        // if (key[SDL_SCANCODE_LSHIFT]) { // TODO: replace with code in onNotifyKeyboardEvent
+
+        // TODO: replace with code in onNotifyKeyboardEvent
+        // DEBUG: Shift through render kinds
+
+        // if (key[SDL_SCANCODE_LSHIFT]) {
         //     if (m_focus) toggleTextAlignHorizontal();
         // } else {
-        if (m_focus) nextRenderKind();
+        if (m_focus) {
+            nextRenderKind();
+        }
         // }
     }
     if (m_focus) {
@@ -186,11 +191,12 @@ void GuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
     }
 }
 
-void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &)
-{
+void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &) {
     if (m_focus) {
         if (m_enabled && m_onLeftMouseButtonClickedAction) {
             m_onLeftMouseButtonClickedAction();
+            // un-press the button
+            m_pressed = false;
         }
     }
 }
