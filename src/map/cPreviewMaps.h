@@ -20,7 +20,7 @@ struct s_PreviewMap {
     std::string name;               // name of map
     std::string author;             // author of map
     std::string description;        // description of map
-    Texture *previewTex = nullptr; // texture for the map preview
+    Texture *previewTex = nullptr;  // texture for the map preview
 };
 
 class cPreviewMaps {
