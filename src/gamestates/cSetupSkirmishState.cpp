@@ -124,6 +124,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     widthOfRightColumn = 300;
     mapItemButtonHeight = 175;
     mapItemButtonWidth = 145;
+
     // Screen
     screen_x = m_game.m_screenW;
     screen_y = m_game.m_screenH;
@@ -162,10 +163,12 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     int mapListFrameX = 0;
     int mapListFrameY = playerListBarY + playerListBarHeight;
     int mapListFrameHeight = topBarHeight;
+
     // rectangle for map list
     mapListTitle = cRectangle(mapListFrameX, mapListFrameY, playerTitleBarWidth, mapListFrameHeight);
     cRectangle previousMaps(mapListFrameX, mapListFrameY, 60, mapListFrameHeight);
     cRectangle nextMaps(mapListFrameX + playerTitleBarWidth - 50, mapListFrameY, 50, mapListFrameHeight);
+
     nextMapButton = GuiButtonBuilder()
             .withRect(nextMaps)
             .withLabel("Next")
@@ -174,6 +177,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick(nextFunction)
             .build();
+
     previousMapButton = GuiButtonBuilder()
             .withRect(previousMaps)
             .withLabel("Previous")
@@ -208,18 +212,25 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     //maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * 2;
     // maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+margin);
     // std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
+
+
+    // Top right skirmish game properties:
+
+    // Starting positions
     int startPointsX = screen_x - widthOfRightColumn;
     int startPointsY = topBarHeight + 6;
     int startPointHitBoxWidth = 130;
     int startPointHitBoxHeight = 16;
     startPointsRect = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
 
+    // Worms
     int wormsX = screen_x - widthOfRightColumn;
     int wormsY = startPointsY + 32;
     int wormsHitBoxWidth = 130;
     int wormsHitBoxHeight = 16;
     wormsRect = cRectangle(wormsX, wormsY, wormsHitBoxWidth, wormsHitBoxHeight);
 
+    // Spice Blooms
     int bloomsX = screen_x - widthOfRightColumn;
     int bloomsY = wormsY + 32;
     int bloomsHitBoxWidth = 130;
@@ -232,12 +243,14 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     int detonateHitBoxHeight = 16;
     detonateBloomsRect = cRectangle(detonateX, detonateY, detonateHitBoxWidth, detonateHitBoxHeight);
 
+    // Techlevel
     int techLevelX = screen_x - widthOfRightColumn;
     int techLevelY = detonateY + 32;
     int techLevelHitBoxWidth = 130;
     int techLevelHitBoxHeight = 16;
     techLevelRect = cRectangle(techLevelX, techLevelY, techLevelHitBoxWidth, techLevelHitBoxHeight);
 
+    // Back button (bottom left)
     int backButtonWidth = m_textDrawer->getTextLength(" BACK");
     int backButtonHeight = topBarHeight;
     int backButtonY = screen_y - topBarHeight;
@@ -255,6 +268,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             })
             .build();
 
+    // Start skirmish mission (bottom right)
     int startButtonWidth = m_textDrawer->getTextLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
@@ -1223,7 +1237,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
             }
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
-        m_textDrawer->drawText(iDrawX+ 4, iDrawY + 4, textColor, previewMap2.name.c_str());
+        m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap2.name.c_str());
         dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
         renderDrawer->renderStrechFullSprite(previewMap2.previewTex, dest);
 
