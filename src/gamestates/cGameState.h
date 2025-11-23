@@ -57,3 +57,4 @@ private:
 
 };
 
+std::string gameStateToString(GameState state);
