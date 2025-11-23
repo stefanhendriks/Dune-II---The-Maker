@@ -79,15 +79,22 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
-    int qMaps = m_previewMaps->getMapCount()/(maxMapsInSelectArea);
-    int rMaps = m_previewMaps->getMapCount()%(maxMapsInSelectArea);
-    if (rMaps > 0) {
-        qMaps++;
-    }
+    // Stefan: Pages are computed here
+    // int qMaps = m_previewMaps->getMapCount() / maxMapsInSelectArea;
+    // int rMaps = m_previewMaps->getMapCount() % maxMapsInSelectArea;
+    // std::cout << "qMaps " << qMaps << std::endl;
+    // std::cout << "rMaps " << rMaps << std::endl;
+    // std::cout << "maxMapsInSelectArea " << maxMapsInSelectArea << std::endl;
+    // if (rMaps > 0) {
+    //     qMaps++;
+    // }
+
+    int qMaps = 0;
 
     nextFunction = [this, qMaps]() {
         // Go to the next map
-        if (mapIndexToDisplay <= qMaps*maxMapsInSelectArea) {
+        std::cout << "qMaps 2 -> " << qMaps << std::endl;
+        if (mapIndexToDisplay <= qMaps * maxMapsInSelectArea) {
             mapIndexToDisplay += maxMapsInSelectArea;
         }
     };
@@ -211,7 +218,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     maxMapsInSelectArea = maxMapsInSelectAreaHorizontally;
     //maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * 2;
     // maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+margin);
-    // std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
+    std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
 
 
     // Top right skirmish game properties:
