@@ -1,6 +1,12 @@
 #include "gamestates/cCreatorState.h"
+#include "utils/cLog.h"
+#include "gamestates/cGameState.h"
 
-CreatorState::CreatorState()
+
+#include "cGame.h"
+#include "context/GameContext.hpp"
+
+CreatorState::CreatorState(cGame* game, Context* ctx): m_game(game), m_ctx(ctx)
 {
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
@@ -37,5 +43,12 @@ cGameState* CreatorState::getState(GameState gameState)
 
 void CreatorState::createStateFromScratch(GameState gameState)
 {
-    // no implemented yet
+    switch (gameState)
+    {
+    
+    default:
+        cLogger::getInstance()->log(LOG_ERROR, COMP_SETUP, "CreatorState",
+                                     std::format("Forget gameState {}",gameStateToString(gameState)));
+        break;
+    }
 }
