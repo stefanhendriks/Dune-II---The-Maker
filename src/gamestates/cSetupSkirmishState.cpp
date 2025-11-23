@@ -216,9 +216,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     maxMapsInSelectAreaHorizontally = selectArea.getWidth() / (mapItemButtonWidth+margin);
     maxMapsInSelectAreaVertically = selectArea.getHeight() / (mapItemButtonHeight+margin);
     // std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
-    // maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * maxMapsInSelectAreaVertically;
-    maxMapsInSelectArea = maxMapsInSelectAreaHorizontally;
-    //maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * 2;
+    maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * maxMapsInSelectAreaVertically;
     // maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+margin);
     std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
 
@@ -1174,20 +1172,18 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
 {
     int const margin = 5;
     int iDrawX = mapRect.getX() + margin;
+    int iDrawY = mapRect.getY() + margin;
     int i = 0; // <-- this is the map index to render, not the row coordinate!
 
+    int startIndex = 0;
+    int endIndex = maxMapsInSelectArea;
+
     // for every map that we read , draw here
-    for (int j = 0; j < maxMapsInSelectArea; j++) {
-        int mapIndexToRender = mapIndexToDisplay + i;
-
-        // First row
-        /////////////
-
-        // first element on top
+    for (int j = startIndex; j < endIndex; j++) {
+        int mapIndexToRender = j;
         s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToRender);
         if (previewMap.name.empty()) continue;
 
-        int iDrawY = mapRect.getY() + margin;
         bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         Color textColor = bHover ? Color::red() : Color::white();
         if (!previewMap.validMap) {
@@ -1217,43 +1213,12 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
 
         cRectangle dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
         renderDrawer->renderStrechFullSprite(tex, dest);
+        iDrawX += mapItemButtonWidth + 15;
 
-        // Second row
-        /////////////
-        i+=1; // <-- this is the map index to render, not the row coordinate!
-        mapIndexToRender = mapIndexToDisplay + i;
-
-        // second element on top
-        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapIndexToRender);
-        if (previewMap2.name.empty()) continue;
-
-        // HERE WE RENDER THE SECOND 'ROW' of an icon, by adding `mapItemButtonHeight`!!
-        iDrawY = mapRect.getY() + mapItemButtonHeight + 15;
-
-        bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-        textColor = bHover ? Color::red() : Color::white();
-        if (!previewMap2.validMap) {
-            textColor = colorDisabled;
+        if (iDrawX > selectArea.getEndX()) {
+            iDrawX = mapRect.getX() + margin;
+            iDrawY += mapItemButtonHeight + 15;
         }
-        if (bHover && previewMap2.validMap && mouse->isLeftButtonClicked()) {
-            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-        }
-        // selected map, always render as pressed
-        if (mapIndexToRender == iSkirmishMap) {
-            textColor = bHover ? colorDarkerYellow : Color::yellow();
-            if (!previewMap2.validMap) {
-                textColor = colorDisabled;
-            }
-            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-        }
-        m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap2.name.c_str());
-        dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
-        renderDrawer->renderStrechFullSprite(previewMap2.previewTex, dest);
-
-        i+=1;
-
-        // next drawX position
-        iDrawX += mapItemButtonWidth+15;
     }
 }
 
