@@ -35,12 +35,14 @@ static bool gui_draw_frame(int x, int y, int width, int height)
 {
     cRectangle rect = cRectangle(x, y, width, height);
     renderDrawer->gui_DrawRect(rect);
-    auto m_mouse = game.getMouse();
-    if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
-            && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
-        return true;
-    }
-    return false; // not hovering on it
+    // auto m_mouse = game.getMouse();
+    return mouse_within_rect(x, y, width, height);
+    // return rect.isPointWithin(m_mouse->getMouseCoords());
+    // if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
+    //         && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
+    //     return true;
+    // }
+    // return false; // not hovering on it
 }
 
 static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
@@ -1181,38 +1183,46 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
     // for every map that we read , draw here
     for (int j = startIndex; j < endIndex; j++) {
         int mapIndexToRender = j;
-        s_PreviewMap &previewMap = m_previewMaps->getMap(mapIndexToRender);
-        if (previewMap.name.empty()) continue;
 
-        bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        bool isRenderingSelectedMap = mapIndexToRender == iSkirmishMap;
+
+        auto &mapToRender = m_previewMaps->getMap(mapIndexToRender);
+        if (mapToRender.name.empty()) continue;
+
+        const bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+
         Color textColor = bHover ? Color::red() : Color::white();
-        if (!previewMap.validMap) {
-            textColor = colorDisabled;
-        }
-        if (bHover && previewMap.validMap && mouse->isLeftButtonClicked()) {
+
+        if (bHover && mapToRender.validMap && mouse->isLeftButtonClicked()) {
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         // selected map, always render as pressed
-        if (mapIndexToRender == iSkirmishMap) {
+        if (isRenderingSelectedMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
-            if (!previewMap.validMap) {
-                textColor = colorDisabled;
-            }
             gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
-        m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, previewMap.name.c_str());
+        // In case invalid map, render as not-selectable
+        if (!mapToRender.validMap) {
+            textColor = colorDisabled;
+        }
+
+        m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, mapToRender.name.c_str());
+
         Texture *tex = nullptr;
         if (mapIndexToRender == 0) {
             // random map, render the 'random map' texture
             tex = m_gfxinter->getTexture(BMP_UNKNOWNMAP);
         } else {
-            tex = previewMap.previewTex;
+            tex = mapToRender.previewTex;
         }
 
+        // Render preview map on tile
         cRectangle dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
         renderDrawer->renderStrechFullSprite(tex, dest);
+
+        // Determine next tile coordinates, and if needed wrap to next row
         iDrawX += mapItemButtonWidth + 15;
 
         if ((iDrawX + mapItemButtonWidth) > selectArea.getEndX()) {
