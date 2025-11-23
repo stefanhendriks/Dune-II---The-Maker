@@ -152,7 +152,7 @@ private:
     void onMouseLeftButtonClickedAtWorms();
     void onMouseRightButtonClickedAtWorms();
 
-    void onMouseLeftButtonClickedAtMapList();
+    void onMouseLeftButtonClickedAtMapList(const cRectangle &selectMapRect);
     void onMouseLeftButtonClickedAtSpawnBlooms();
     void onMouseLeftButtonClickedAtDetonateBlooms();
 

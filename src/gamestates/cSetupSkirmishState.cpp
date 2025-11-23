@@ -944,7 +944,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
 
 void cSetupSkirmishState::onMouseLeftButtonClicked(const s_MouseEvent &)
 {
-    onMouseLeftButtonClickedAtMapList();
+    onMouseLeftButtonClickedAtMapList(selectArea);
     onMouseLeftButtonClickedAtStartPoints();
     onMouseLeftButtonClickedAtWorms();
     onMouseLeftButtonClickedAtSpawnBlooms();
@@ -1083,31 +1083,39 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtStartPoints()
     }
 }
 
-void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
+void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &selectMapRect)
 {
     int const margin = 5;
-    int iDrawX = selectArea.getX() + margin;
-    int i = 0;
-    // for every map that we read , draw here  <--- same copy/paste as in drawMapList !!!!!! ^_^
-    for (int j = 0; j < maxMapsInSelectArea; j++) {
-        // first element on top
-        s_PreviewMap &previewMap = m_previewMaps->getMap(mapStartingIndexToDisplay+i);
-        if (previewMap.name.empty()) continue;
+    int iDrawX = selectMapRect.getX() + margin;
+    int iDrawY = selectMapRect.getY() + margin;
 
-        int iDrawY = selectArea.getY() + 5;
+    int endIndex = mapStartingIndexToDisplay + maxMapsInSelectArea;
 
-        bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+    // for every map that we read , draw here
+    for (int j = mapStartingIndexToDisplay; j < endIndex; j++) {
+        int mapIndexToRender = j;
 
-        if (bHover && previewMap.validMap) {
-            iSkirmishMap = mapStartingIndexToDisplay+i;
-            if (mapStartingIndexToDisplay+i == 0) {
+        if (m_previewMaps->getMapCount() < mapIndexToRender) {
+            continue;
+        }
+
+        // no title, safety measure
+        auto &mapToRender = m_previewMaps->getMap(mapIndexToRender);
+        if (mapToRender.name.empty()) continue;
+
+        // RENDERS ! & also get true/false if mouse hovers
+        const bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+
+        if (bHover && mapToRender.validMap) {
+            iSkirmishMap = mapIndexToRender;
+            if (mapIndexToRender == 0) {
                 generateRandomMap();
             }
             else {
-                if (previewMap.name[0] != '\0') {
+                if (mapToRender.name[0] != '\0') {
                     startingPoints = 0;
                     // count starting points
-                    for (int s: previewMap.iStartCell) {
+                    for (int s: mapToRender.iStartCell) {
                         if (s > -1) {
                             startingPoints++;
                         }
@@ -1115,34 +1123,14 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
                 }
             }
         }
-        i+=1;
 
-        // second element on top 
-        s_PreviewMap &previewMap2 = m_previewMaps->getMap(mapStartingIndexToDisplay+i);
-        if (previewMap2.name.empty()) continue;
+        // Determine next tile coordinates, and if needed wrap to next row
+        iDrawX += mapItemButtonWidth + 15;
 
-        iDrawY = selectArea.getY() + mapItemButtonHeight + 15;
-
-        bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-        if (bHover && previewMap2.validMap) {
-            iSkirmishMap = mapStartingIndexToDisplay+i;
-            if (mapStartingIndexToDisplay+i == 0) {
-                generateRandomMap();
-            }
-            else {
-                if (previewMap.name[0] != '\0') {
-                    startingPoints = 0;
-                    // count starting points
-                    for (int s: previewMap2.iStartCell) {
-                        if (s > -1) {
-                            startingPoints++;
-                        }
-                    }
-                }
-            }
+        if ((iDrawX + mapItemButtonWidth) > selectArea.getEndX()) {
+            iDrawX = selectMapRect.getX() + margin;
+            iDrawY += mapItemButtonHeight + 15;
         }
-        i+=1;
-        iDrawX += mapItemButtonWidth+15;
     }
 }
 
@@ -1170,11 +1158,11 @@ void cSetupSkirmishState::generateRandomMap()
         randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
 }
 
-void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
+void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 {
     int const margin = 5;
-    int iDrawX = mapRect.getX() + margin;
-    int iDrawY = mapRect.getY() + margin;
+    int iDrawX = selectMapArea.getX() + margin;
+    int iDrawY = selectMapArea.getY() + margin;
 
     int endIndex = mapStartingIndexToDisplay + maxMapsInSelectArea;
 
@@ -1233,7 +1221,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &mapRect) const
         iDrawX += mapItemButtonWidth + 15;
 
         if ((iDrawX + mapItemButtonWidth) > selectArea.getEndX()) {
-            iDrawX = mapRect.getX() + margin;
+            iDrawX = selectMapArea.getX() + margin;
             iDrawY += mapItemButtonHeight + 15;
         }
     }
