@@ -384,7 +384,7 @@ int cMouse::getMouseDragDeltaY()
 }
 
 cPoint cMouse::getMouseCoords() {
-    return cPoint(mouse_co_x1, mouse_co_y1);
+    return cPoint(getX(), getY());
 }
 
 cPoint cMouse::getDragLineStartPoint()
