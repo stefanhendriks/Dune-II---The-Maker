@@ -22,6 +22,8 @@
 #include <algorithm>
 #include <utility>
 
+#include "config.h"
+
 static bool mouse_within_rect(int x, int y, int width, int height)
 {
     auto m_mouse = game.getMouse();
@@ -1091,32 +1093,34 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
 
     // for every map that we read , draw here
     for (int j = mapStartingIndexToDisplay; j < endIndex; j++) {
-        int mapIndexToRender = j;
+        int mapIndexToConsiderClickedAt = j;
 
-        if (m_previewMaps->getMapCount() < mapIndexToRender) {
+        if (m_previewMaps->getMapCount() < mapIndexToConsiderClickedAt) {
             continue;
         }
 
         // no title, safety measure
-        auto &mapToRender = m_previewMaps->getMap(mapIndexToRender);
-        if (mapToRender.name.empty()) continue;
+        auto &mapToConsiderClickedAt = m_previewMaps->getMap(mapIndexToConsiderClickedAt);
+        if (mapToConsiderClickedAt.name.empty()) {
+            continue;
+        }
 
-        // RENDERS ! & also get true/false if mouse hovers
-        const bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        cRectangle rect = cRectangle(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        const bool mouseHoversOverMapTile = rect.isPointWithin(m_game.getMouse()->getMouseCoords());
 
-        if (bHover && mapToRender.validMap) {
-            iSkirmishMap = mapIndexToRender;
-            if (mapIndexToRender == 0) {
+        if (mapToConsiderClickedAt.validMap && mouseHoversOverMapTile) {
+            // Mark map as selected
+            iSkirmishMap = mapIndexToConsiderClickedAt;
+
+            // If Random map pressed, generate it
+            if (mapIndexToConsiderClickedAt == 0) {
                 generateRandomMap();
-            }
-            else {
-                if (mapToRender.name[0] != '\0') {
-                    startingPoints = 0;
-                    // count starting points
-                    for (int s: mapToRender.iStartCell) {
-                        if (s > -1) {
-                            startingPoints++;
-                        }
+            } else {
+                // Else, count the starting points from selected map, and set it
+                startingPoints = 0;
+                for (int s : mapToConsiderClickedAt.iStartCell) {
+                    if (s > -1) {
+                        startingPoints++;
                     }
                 }
             }
@@ -1139,21 +1143,28 @@ void cSetupSkirmishState::generateRandomMap()
     int randomMapHeight = 128;
     int maxCells = randomMapWidth * randomMapHeight;
     randomMap.terrainType = std::vector<int>(maxCells, -1);
-    if (randomMap.terrain == nullptr)
-        randomMap.terrain = SDL_CreateRGBSurface(0,randomMapWidth, randomMapHeight,32,0,0,0,255);
-    if (randomMap.previewTex != nullptr) {
-        delete randomMap.previewTex;
+
+    if (randomMap.terrain == nullptr) {
+        randomMap.terrain = SDL_CreateRGBSurface(0, randomMapWidth, randomMapHeight,32,0,0,0,255);
     }
-    randomMapGenerator->generateRandomMap(randomMapWidth,randomMapHeight, startingPoints, randomMap);
+
+    // delete any preview texture if it exists
+    delete randomMap.previewTex;
+
+    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, startingPoints, randomMap);
+
     // @mira do better than (global_map.getWidth() * global_map.getHeight() > 64 * 64)
-    spawnWorms = (global_map.getWidth() * global_map.getHeight() > 64 * 64) ? 4 : 2;
+    spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
+
     randomMap.validMap = true;
+    randomMap.author = "D2TM";
+
     SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
-        if (out == nullptr) {
-            logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
-            return;
-        }
-        randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
+    if (out == nullptr) {
+        logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
+        return;
+    }
+    randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
 }
 
 void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
