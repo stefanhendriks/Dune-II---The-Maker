@@ -383,6 +383,10 @@ int cMouse::getMouseDragDeltaY()
     return mouse_mv_y2 - mouse_mv_y1;
 }
 
+cPoint cMouse::getMouseCoords() {
+    return cPoint(mouse_co_x1, mouse_co_y1);
+}
+
 cPoint cMouse::getDragLineStartPoint()
 {
     return cPoint(mouse_mv_x1, mouse_mv_y1);
