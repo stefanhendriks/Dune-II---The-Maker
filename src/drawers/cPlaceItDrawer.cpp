@@ -175,6 +175,10 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     else {
         bmp = player->getStructureBitmap(structureId);
     }
+    // We need to take a source rectangle, as the structure BMP contains multiple frames of the structure
+    // therefore we cannot use renderStrechFullSprite (as that assumes the source texture can be used as a whole
+    // which cannot be used in this case)
+    cRectangle src = { 0, 0, width, height}; // takes first frame
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechFullSprite(bmp, dest,96);
+    renderDrawer->renderStrechSprite(bmp, src, dest,96);
 }
