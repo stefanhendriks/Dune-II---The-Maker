@@ -174,17 +174,11 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
 
     maxMapsInSelectAreaHorizontally = selectArea.getWidth() / (mapItemButtonWidth+margin);
     maxMapsInSelectAreaVertically = selectArea.getHeight() / (mapItemButtonHeight+5);
-    // std::cout << "selectArea rectangle: " << selectArea.getX() << "," << selectArea.getY() << "," << selectArea.getWidth() << "," << selectArea.getHeight() << std::endl;
     maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * maxMapsInSelectAreaVertically;
-    // maxMapsInSelectArea = selectArea.getWidth() / (mapItemButtonWidth+margin);
-    std::cout << "maxMapsInSelectArea: " << maxMapsInSelectArea << std::endl;
-
 
     // Stefan: Pages are computed here
     int qMaps = m_previewMaps->getMapCount() / maxMapsInSelectArea;
     int rMaps = m_previewMaps->getMapCount() % maxMapsInSelectArea;
-    std::cout << "total maps " << m_previewMaps->getMapCount() << std::endl;
-    std::cout << "maxMapsInSelectArea " << maxMapsInSelectArea << std::endl;
     if (rMaps > 0) {
         qMaps++;
     }
@@ -195,14 +189,12 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         if (intendedNextStartIndex <= m_previewMaps->getMapCount()) {
             mapStartingIndexToDisplay = intendedNextStartIndex;
         }
-        std::cout << "Showing map " << mapStartingIndexToDisplay << " till " << mapStartingIndexToDisplay + maxMapsInSelectArea << std::endl;
     };
     previousFunction = [this]() {
         // Go back to the previous map
         if (mapStartingIndexToDisplay > 0) {
             mapStartingIndexToDisplay -= maxMapsInSelectArea;
         }
-        std::cout << "Showing map " << mapStartingIndexToDisplay << " till " << mapStartingIndexToDisplay + maxMapsInSelectArea << std::endl;
     };
 
     nextMapButton = GuiButtonBuilder()
