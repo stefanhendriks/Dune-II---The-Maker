@@ -46,7 +46,7 @@ public:
 
 private:
     cTextDrawer* m_textDrawer = nullptr;
-    s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
+    s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS] = {};
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
