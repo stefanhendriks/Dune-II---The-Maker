@@ -67,9 +67,9 @@ public:
         this->height = newHeight;
     }
 
-    SDL_Rect toSDL() const {
+    [[nodiscard]] SDL_Rect toSDL() const {
         return SDL_Rect{topLeft.x, topLeft.y, width, height};
-}
+    }
 private:
     cPoint topLeft;
     int width;
