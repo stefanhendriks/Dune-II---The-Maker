@@ -87,6 +87,8 @@ public:
 
     int getMouseDragDeltaY();
 
+    cPoint getMouseCoords();
+
     cPoint getDragLineStartPoint();
 
     cPoint getDragLineEndPoint();
