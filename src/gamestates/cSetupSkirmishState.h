@@ -48,21 +48,24 @@ private:
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
+    std::vector<int> mapsToRender;
+
     std::function<void()> nextFunction;
     std::function<void()> previousFunction;
 
     cMouse *mouse;
-    int mapIndexToDisplay;      // index of which maps are currently being displayed in the map list
-    int maxMapsInSelectArea = 0;    // maximum number of maps that can be displayed in the select area
+    int mapIndexToDisplay;                  // index of which maps are currently being displayed in the map list
+    int maxMapsInSelectArea = 0;            // maximum number of maps that can be displayed in the select area
     int maxMapsInSelectAreaHorizontally;    // maximum number of maps that can be displayed in the select area, horizontally
-    int maxMapsInSelectAreaVertically;    // maximum number of maps that can be displayed in the select area, vertically
+    int maxMapsInSelectAreaVertically;      // maximum number of maps that can be displayed in the select area, vertically
 
-    int iSkirmishMap;			// what map is selected
+    int iSkirmishMap;			            // what map is selected
+
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
-    int iStartingPoints;
-    int techlevel;
+    int startingPoints;
+    int techLevel;
 
     // Colors
     Color colorDarkishBackground;

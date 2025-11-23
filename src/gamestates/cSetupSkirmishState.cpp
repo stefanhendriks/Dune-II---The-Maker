@@ -104,7 +104,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             mapIndexToDisplay -= maxMapsInSelectArea;
         }
     };
-    iStartingPoints = 2;
+    startingPoints = 2;
     iSkirmishMap = -1;
     mapIndexToDisplay = 0;
 
@@ -114,7 +114,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     mouse = m_game.getMouse();
 
     spawnWorms = 2;
-    techlevel = 9;
+    techLevel = 9;
     spawnBlooms = true;
     detonateBlooms = true;
 
@@ -332,7 +332,7 @@ void cSetupSkirmishState::draw() const
     // randomly generated or not.
     drawPreviewMapAndMore(previewMapRect);
 
-    drawStartPoints(iStartingPoints, startPointsRect);
+    drawStartPoints(startingPoints, startPointsRect);
 
     drawWorms(wormsRect);
     drawBlooms(bloomsRect);
@@ -351,7 +351,7 @@ void cSetupSkirmishState::draw() const
 
         const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
 
-        if (p < iStartingPoints) {
+        if (p < startingPoints) {
             // player playing or not
             cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
             drawPlayerBrain(sSkirmishPlayer, brainRect);
@@ -542,7 +542,7 @@ void cSetupSkirmishState::drawTechLevel(const cRectangle &techLevelRect) const
 {
     Color textColor = techLevelRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
     m_textDrawer->drawText(techLevelRect.getX(), techLevelRect.getY(), textColor,
-                        std::format("TechLevel : {}", techlevel));
+                        std::format("TechLevel : {}", techLevel));
 }
 
 void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
@@ -550,7 +550,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
-    m_game.m_mission = techlevel;
+    m_game.m_mission = techLevel;
 
     m_game.setupPlayers();
 
@@ -875,7 +875,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
     for (int p = 0; p < (AI_WORM - 1); p++) {
         const int iDrawY = playerList.getY() + 4 + (p * 22);
 
-        if (p < iStartingPoints) {
+        if (p < startingPoints) {
             s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
             if (!sSkirmishPlayer.bPlaying) continue;
 
@@ -931,7 +931,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             if (teamsRect.isPointWithin(mouse->getX(), mouse->getY())) {
                 sSkirmishPlayer.team--;
                 if (sSkirmishPlayer.team < 1) {
-                    sSkirmishPlayer.team = iStartingPoints;
+                    sSkirmishPlayer.team = startingPoints;
                 }
             }
         }
@@ -955,7 +955,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
         int iDrawY = playerList.getY() + 4 + (p * 22);
         int iDrawX = 4;
 
-        if (p < iStartingPoints) {
+        if (p < startingPoints) {
             s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
             // player playing or not
 
@@ -1030,7 +1030,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             //  on click:
             if (teamsRect.isPointWithin(mouse->getX(), mouse->getY())) {
                 sSkirmishPlayer.team++;
-                if (sSkirmishPlayer.team > iStartingPoints) {
+                if (sSkirmishPlayer.team > startingPoints) {
                     sSkirmishPlayer.team = 1;
                 }
             }
@@ -1068,10 +1068,10 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse->getX(), mouse->getY())) {
-            iStartingPoints++;
+            startingPoints++;
 
-            if (iStartingPoints > 4) {
-                iStartingPoints = 2;
+            if (startingPoints > 4) {
+                startingPoints = 2;
             }
 
             generateRandomMap();
@@ -1101,11 +1101,11 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
             }
             else {
                 if (previewMap.name[0] != '\0') {
-                    iStartingPoints = 0;
+                    startingPoints = 0;
                     // count starting points
                     for (int s: previewMap.iStartCell) {
                         if (s > -1) {
-                            iStartingPoints++;
+                            startingPoints++;
                         }
                     }
                 }
@@ -1127,11 +1127,11 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList()
             }
             else {
                 if (previewMap.name[0] != '\0') {
-                    iStartingPoints = 0;
+                    startingPoints = 0;
                     // count starting points
                     for (int s: previewMap2.iStartCell) {
                         if (s > -1) {
-                            iStartingPoints++;
+                            startingPoints++;
                         }
                     }
                 }
@@ -1154,7 +1154,7 @@ void cSetupSkirmishState::generateRandomMap()
     if (randomMap.previewTex != nullptr) {
         delete randomMap.previewTex;
     }
-    randomMapGenerator->generateRandomMap(randomMapWidth,randomMapHeight, iStartingPoints, randomMap);
+    randomMapGenerator->generateRandomMap(randomMapWidth,randomMapHeight, startingPoints, randomMap);
     // @mira do better than (global_map.getWidth() * global_map.getHeight() > 64 * 64)
     spawnWorms = (global_map.getWidth() * global_map.getHeight() > 64 * 64) ? 4 : 2;
     randomMap.validMap = true;
@@ -1224,10 +1224,10 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse->getMouseCoords())) {
-            iStartingPoints--;
+            startingPoints--;
 
-            if (iStartingPoints < 2) { // < 2 startpoints is not allowed
-                iStartingPoints = 4; // wrap around to max
+            if (startingPoints < 2) { // < 2 startpoints is not allowed
+                startingPoints = 4; // wrap around to max
             }
 
             generateRandomMap();
@@ -1249,10 +1249,10 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 void cSetupSkirmishState::onMouseRightButtonClickedAtTechLevel()
 {
     if (techLevelRect.isPointWithin(mouse->getMouseCoords())) {
-        techlevel--;
+        techLevel--;
 
-        if (techlevel < 2) { // < 2 techlevel is not allowed
-            techlevel = 9; // wrap around to max
+        if (techLevel < 2) { // < 2 techlevel is not allowed
+            techLevel = 9; // wrap around to max
         }
     }
 }
@@ -1260,9 +1260,9 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtTechLevel()
 void cSetupSkirmishState::onMouseLeftButtonClickedAtTechLevel()
 {
     if (techLevelRect.isPointWithin(mouse->getX(), mouse->getY())) {
-        techlevel++;
-        if (techlevel >9) {
-            techlevel = 2;
+        techLevel++;
+        if (techLevel > 9) {
+            techLevel = 2;
         }
     }
 }
