@@ -38,6 +38,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
                 break;
             case Options::NOSOUND:
                 settings->playSound = false;
+                settings->playMusic = false;
                 break;
             case Options::DEBUG:
                 settings->debugMode = true;
