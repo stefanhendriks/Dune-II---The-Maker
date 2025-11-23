@@ -56,7 +56,7 @@ private:
     std::function<void()> previousFunction;
 
     cMouse *mouse;
-    int mapIndexToDisplay;                  // index of which maps are currently being displayed in the map list
+    int mapStartingIndexToDisplay;                  // index of which maps are currently being displayed in the map list
     int maxMapsInSelectArea = 0;            // maximum number of maps that can be displayed in the select area
     int maxMapsInSelectAreaHorizontally;    // maximum number of maps that can be displayed in the select area, horizontally
     int maxMapsInSelectAreaVertically;      // maximum number of maps that can be displayed in the select area, vertically
