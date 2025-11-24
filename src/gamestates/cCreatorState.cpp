@@ -4,6 +4,7 @@
 
 #include "gamestates/cMainMenuState.h"
 #include "gamestates/cCreditsState.h"
+#include "gamestates/cWinLoseState.h"
 
 #include "cGame.h"
 #include "context/GameContext.hpp"
@@ -18,6 +19,8 @@ CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(c
     needToRecreateState[GameState::CREDITS] = false;
     needToRecreateState[GameState::MISSIONSELECT] = false;
     needToRecreateState[GameState::MENU] = false;
+    needToRecreateState[GameState::WINNING] = false;
+    needToRecreateState[GameState::LOSING] = false;
 }
 
 CreatorState::~CreatorState()
@@ -53,6 +56,14 @@ void CreatorState::createStateFromScratch(GameState gameState)
 
     case GameState::CREDITS:
         m_states[GameState::CREDITS] = std::make_unique<cCreditsState>(*m_game, m_ctx);
+        break;
+
+    case GameState::WINNING:
+        m_states[GameState::WINNING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
+        break;
+
+    case GameState::LOSING:
+        m_states[GameState::LOSING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
