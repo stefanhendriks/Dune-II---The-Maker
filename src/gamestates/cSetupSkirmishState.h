@@ -160,7 +160,4 @@ private:
     void onMouseLeftButtonClickedAtTechLevel();
     void onMouseRightButtonClickedAtTechLevel();
     s_DataCampaign* m_dataCampaign;
-
-    void onMouseLeftButtonClickedAtTechLevel();
-    void onMouseRightButtonClickedAtTechLevel();
 };
