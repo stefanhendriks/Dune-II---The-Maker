@@ -50,18 +50,6 @@ std::string cTimeManager::getCurrentTimer() const
                        seconds.count());
 }
 
-std::string cTimeManager::getCurrentTimer() const
-{
-    auto duration = std::chrono::seconds(durationPartyTimer);
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
-    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration - hours);
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration - hours - minutes);
-    return std::format("{:02}:{:02}:{:02}",
-                       hours.count(),
-                       minutes.count(),
-                       seconds.count());
-}
-
 /**
 	In case the system locks up, or the computer is on heavy duty. The capping
 	makes sure the computer will not cause a chainreaction (getting extremely high timers
