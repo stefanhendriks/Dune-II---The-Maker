@@ -64,7 +64,7 @@ private:
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
-    int startingPoints;
+    int iStartingPoints;
     int techLevel;
 
     // Colors
@@ -156,8 +156,8 @@ private:
 
     void onMouseLeftButtonClickedAtPlayerList();
     void onMouseRightButtonClickedAtPlayerList();
-    s_DataCampaign* m_dataCampaign;
 
     void onMouseLeftButtonClickedAtTechLevel();
     void onMouseRightButtonClickedAtTechLevel();
+    s_DataCampaign* m_dataCampaign;
 };
