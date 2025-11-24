@@ -8,11 +8,11 @@
 #include <optional>
 
 class cGame;
-class Context;
+class GameContext;
 
 class CreatorState {
 public:
-    explicit CreatorState(cGame* game, Context* ctx);
+    explicit CreatorState(cGame* game, GameContext* ctx);
     ~CreatorState();
 
     cGameState *getState(GameState gameState);
@@ -22,5 +22,5 @@ private:
     EnumArray<bool, GameState> needToRecreateState;
     void createStateFromScratch(GameState gameState);
     cGame* m_game;
-    Context* m_ctx;
+    GameContext* m_ctx;
 };

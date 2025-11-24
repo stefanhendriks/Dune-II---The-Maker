@@ -8,7 +8,7 @@
 #include "cGame.h"
 #include "context/GameContext.hpp"
 
-CreatorState::CreatorState(cGame* game, Context* ctx): m_game(game), m_ctx(ctx)
+CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(ctx)
 {
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
@@ -48,11 +48,11 @@ void CreatorState::createStateFromScratch(GameState gameState)
     switch (gameState)
     {
     case GameState::MENU:
-        m_states[GameState::MENU] = std::make_unique<cMainMenuState>(m_game, m_ctx);
+        m_states[GameState::MENU] = std::make_unique<cMainMenuState>(*m_game, m_ctx);
         break;
 
     case GameState::CREDITS:
-        m_states[GameState::CREDITS] = std::make_unique<cCreditsState>(m_game, m_ctx);
+        m_states[GameState::CREDITS] = std::make_unique<cCreditsState>(*m_game, m_ctx);
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
