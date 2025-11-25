@@ -357,7 +357,7 @@ void cMap::thinkAboutRespawningWorms()
         // spawn one worm, set timer again
         int failures = 0;
         while (failures < 10) {
-            int cell = getRandomCell();
+            int cell = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
             if (!isCellPassableForWorm(cell)) {
                 failures++;
                 continue;
@@ -1015,6 +1015,9 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
 
 int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) //rip
 {
+    // distance = 2
+    // width = 64
+    // => 2 + (64 - 4) => 2 + (...60) = min 2, max 62
     return mapGeometry->getCellWithMapBorders(
                distance + RNG::rnd(width - (distance * 2)),
                distance + RNG::rnd(height - (distance * 2))
