@@ -32,6 +32,6 @@ public:
             m_y = p.y;
         }
 
-        int &m_x, m_y;
+        int &m_x, &m_y;
     };
 };
