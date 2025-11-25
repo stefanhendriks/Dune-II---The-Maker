@@ -1453,6 +1453,7 @@ int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minR
 
 bool cMap::isCellPassableForWorm(int cell)
 {
+    if (cell < 0) return false;
     int cellType = getCellType(cell);
     return cellType == TERRAIN_SAND ||
            cellType == TERRAIN_HILL ||
