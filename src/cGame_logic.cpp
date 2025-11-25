@@ -1407,7 +1407,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event)
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = global_map.fixCoordinatesToBeWithinMap(posX, posY);
+            cPoint::split(posX, posY) = global_map.fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
