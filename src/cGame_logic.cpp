@@ -1378,6 +1378,9 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
             onEventSpecialLaunch(event);
             break;
+        case eGameEventType::GAME_EVENT_DESTROYED:
+            onEventEntityDestroyed(event);
+            break;
         default:
             break;
     }
@@ -1388,8 +1391,49 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     }
 }
 
-void cGame::onEventSpecialLaunch(const s_GameEvent &event)
-{
+void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
+    if (event.entityType != eBuildType::STRUCTURE) {
+        return;
+    }
+    // TODO(https://github.com/stefanhendriks/Dune-II---The-Maker/issues/755) - Make this configurable via game.ini
+
+    int minAmountOfSoldiersToSpawnPotentially = 1;
+    int maxAmountOfSoldiersToSpawnPotentially = 3;
+
+    // bigger structures, can spawn a bigger range of
+    if (event.entitySpecificType == PALACE || event.entitySpecificType == STARPORT) {
+        maxAmountOfSoldiersToSpawnPotentially = 5;
+    }
+
+    if (event.entitySpecificType == TURRET || event.entitySpecificType == RTURRET || event.entitySpecificType == WALL) {
+        minAmountOfSoldiersToSpawnPotentially = 0;
+        maxAmountOfSoldiersToSpawnPotentially = 0;
+    }
+
+    int amountOfSoldiersToSpawn = RNG::genInt(minAmountOfSoldiersToSpawnPotentially, maxAmountOfSoldiersToSpawnPotentially);
+
+
+    int widthInCells = sStructureInfo[event.entitySpecificType].bmp_width / 32;
+    int heightInCells = sStructureInfo[event.entitySpecificType].bmp_height / 32;
+
+    int cellX = global_map.getGeometry().getCellX(event.atCell);
+    int cellY = global_map.getGeometry().getCellY(event.atCell);
+
+    for (int i = 0; i < amountOfSoldiersToSpawn; i++) {
+        int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
+        int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
+        UNIT_CREATE(
+            global_map.getGeometry().makeCell(randomX, randomY),
+            SOLDIER,
+            event.player->getId(),
+            false,
+            false,
+            RNG::genDouble(0.3, 0.8)
+        );
+    }
+}
+
+void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
     cBuildingListItem *itemToDeploy = event.buildingListItem;
     int iMouseCell = event.atCell;
     cPlayer *player = event.player;

@@ -334,7 +334,6 @@ public:
     void takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDealsDamage);
 
     void setHp(int hp) {
-        // debug purposes only
         iHitPoints = hp;
     }
 
@@ -580,6 +579,8 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
  * @return
  */
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
+
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage);
 
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
 

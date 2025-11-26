@@ -3891,11 +3891,11 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart)
  * @param unitType
  * @param iPlayer
  * @param bOnStart
+ * @param hpPercentage multiplies with hp of unit type for starting hp. 1.0 means 100% health
  * @param isReinforement flag to set on event
  * @return
  */
-int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
-{
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
     if (!global_map.isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
@@ -3951,7 +3951,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     newUnit.iHeadShouldFace = newUnit.iHeadFacing;
 
     newUnit.iType = unitType;
-    newUnit.setMaxHitPoints();
+    newUnit.setHp(sUnitType.hp * hpPercentage);
     newUnit.iGoalCell = iCll;
 
     newUnit.bSelected = false;
@@ -4001,6 +4001,22 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     game.onNotifyGameEvent(event);
 
     return iNewId;
+}
+
+/**
+ * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ *
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @param isReinforement flag to set on event
+ * @return
+ */
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
+{
+    return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
 }
 
 /*

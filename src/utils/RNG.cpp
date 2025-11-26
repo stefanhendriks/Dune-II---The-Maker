@@ -13,12 +13,18 @@ int RNG::genInt(int min, int max)
     return dist(getGenerator());
 }
 
+int RNG::genIntMaxExcl(int min, int maxExcl)
+{
+    std::uniform_int_distribution<int> dist(min, maxExcl-1);
+    return dist(getGenerator());
+}
+
 int RNG::rnd(int max)
 {
-    if (max<1)
+    if (max < 1) {
         return 0;
-    std::uniform_int_distribution<int> dist(0, max-1);
-        return dist(getGenerator());
+    }
+    return genIntMaxExcl(0, max);
 }
 
 double RNG::genDouble(double min, double max)
