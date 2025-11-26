@@ -136,6 +136,9 @@ struct s_StructureInfo {
 
     bool configured;     // is this structure configured? (poor man solution)
 
+    // Slab related
+    bool hasConcrete;   // if true, then structure gets pavement (for AI) or needs pavement (impacts health), and can decay
+
     // Turret specific:
     bool canAttackAirUnits;
     bool canAttackGroundUnits;

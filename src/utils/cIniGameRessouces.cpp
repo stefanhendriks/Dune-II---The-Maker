@@ -1225,6 +1225,7 @@ void IniGameRessources::install_structures()
         structureInfo.buildTime = 0;
         structureInfo.list = -1; // no list attached
         structureInfo.queuable = false;
+        structureInfo.hasConcrete = true;
         structureInfo.configured = false;
         structureInfo.canAttackAirUnits = false;
         structureInfo.canAttackGroundUnits = false;
@@ -1458,6 +1459,7 @@ void IniGameRessources::install_structures()
     sStructureInfo[CONSTYARD].sight = 4;
     sStructureInfo[CONSTYARD].bmp = gfxdata->getSurface(BUILD_CONSTYARD);
     sStructureInfo[CONSTYARD].shadow = gfxdata->getTexture(BUILD_CONSTYARD_SHADOW);
+    sStructureInfo[CONSTYARD].hasConcrete = false;
     sStructureInfo[CONSTYARD].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 14,
