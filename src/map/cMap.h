@@ -49,7 +49,7 @@ public:
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
 
-    int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance);
+    int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance) const;
 
     /**
     Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
@@ -513,6 +513,7 @@ public:
 
     int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
+    int findRandomCellToMoveToForSandworm() const;
     bool isCellPassableForWorm(int cell);
 
     bool isValidTerrainForConcreteAtCell(int cell);

@@ -1013,7 +1013,7 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     return isVisible(iCell, playerId);
 }
 
-int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) //rip
+int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) const //rip
 {
     // distance = 2
     // width = 64
@@ -1452,6 +1452,16 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
 int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType)
 {
     return findNearByValidDropLocation(cell, minRange, maxRange, unitType);
+}
+
+int cMap::findRandomCellToMoveToForSandworm() const {
+    for (int iTries = 0; iTries < 5; iTries++) {
+        int iMoveTo = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+        if (global_map.isCellPassableForWorm(iMoveTo)) {
+            return iMoveTo;
+        }
+    }
+    return -1;
 }
 
 bool cMap::isCellPassableForWorm(int cell)

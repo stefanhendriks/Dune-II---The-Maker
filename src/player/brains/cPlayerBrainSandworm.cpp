@@ -38,15 +38,7 @@ void cPlayerBrainSandworm::think()
 
 void cPlayerBrainSandworm::findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const
 {
-    int placeToMoveTo = -1;
-    for (int iTries = 0; iTries < 5; iTries++) {
-        int iMoveTo = global_map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
-
-        if (global_map.isCellPassableForWorm(iMoveTo)) {
-            placeToMoveTo = iMoveTo;
-            break;
-        }
-    }
+    int placeToMoveTo = global_map.findRandomCellToMoveToForSandworm();
 
     if (placeToMoveTo > -1) {
         pSandWorm.move_to(placeToMoveTo);
