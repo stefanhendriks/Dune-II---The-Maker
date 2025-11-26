@@ -201,6 +201,7 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
         if (cIniUtils::caseInsCompare(word, "FixPoints"))         return WORD_FIXHP;
         if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return WORD_POWERDRAIN;
+        if (cIniUtils::caseInsCompare(word, "HasConcrete"))       return WORD_HAS_CONCRETE;
         if (cIniUtils::caseInsCompare(word, "PowerGive"))         return WORD_POWERGIVE;
         if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
         if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
@@ -1510,6 +1511,7 @@ void cIni::installGame(std::string filename)
                 }
                 if (wordtype == WORD_FIXHP) sStructureInfo[id].fixhp = ToInt(word_right);
                 if (wordtype == WORD_POWERDRAIN) sStructureInfo[id].power_drain = ToInt(word_right);
+                if (wordtype == WORD_HAS_CONCRETE) sStructureInfo[id].hasConcrete = ToBool(word_right);
                 if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = ToInt(word_right);
                 if (wordtype == WORD_COST) sStructureInfo[id].cost = ToInt(word_right);
                 if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = ToInt(word_right);
