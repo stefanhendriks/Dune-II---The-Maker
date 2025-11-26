@@ -5,6 +5,7 @@
 #include "gamestates/cMainMenuState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cWinLoseState.h"
+#include "gamestates/cMentatState.h"
 
 #include "cGame.h"
 #include "context/GameContext.hpp"
@@ -64,6 +65,18 @@ void CreatorState::createStateFromScratch(GameState gameState)
 
     case GameState::LOSING:
         m_states[GameState::LOSING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
+        break;
+
+    case GameState::BRIEFING:
+        m_states[GameState::BRIEFING] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::Briefing, m_game->getDataCampaign());
+        break;
+
+    case GameState::WINBRIEF:
+        m_states[GameState::WINBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::WinBrief, m_game->getDataCampaign());
+        break;
+
+    case GameState::LOSEBRIEF:
+        m_states[GameState::LOSEBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::LoseBrief, m_game->getDataCampaign());
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
