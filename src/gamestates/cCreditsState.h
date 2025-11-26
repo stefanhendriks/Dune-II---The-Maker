@@ -3,6 +3,7 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
+#include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cPoint.h"
 
@@ -47,6 +48,7 @@ private:
     cPoint m_duneCoordinates;
     Texture *m_duneBmp;
     Texture *m_titleBmp;
+    GuiButton *backButton;
 
     void resetCrawler();
     void prepareCrawlerLines();
