@@ -281,13 +281,13 @@ enum eMouseEventType {
 
 enum eGameEventType {
     GAME_EVENT_NONE,
-    // an entity was created
+    // an entity was destroyed
     GAME_EVENT_DESTROYED,
     // an entity was deviated (switched player ownership)
     GAME_EVENT_DEVIATED,
     // an entity was discovered
     GAME_EVENT_DISCOVERED,
-    // an entity was destroyed
+    // an entity was created
     GAME_EVENT_CREATED,
     // damaged by projectile
     GAME_EVENT_DAMAGED,
