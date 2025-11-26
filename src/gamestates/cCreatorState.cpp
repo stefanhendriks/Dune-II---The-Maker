@@ -29,7 +29,7 @@ CreatorState::~CreatorState()
 }
 
 
-cGameState* CreatorState::getState(GameState gameState)
+cGameState* CreatorState::getState(GameState gameState, bool forceRecreate)
 {
     // no existing state ...
     if (!m_states[gameState].has_value()) {
@@ -38,7 +38,7 @@ cGameState* CreatorState::getState(GameState gameState)
     }
 
     // state already exist
-    if (needToRecreateState[gameState]) {
+    if (needToRecreateState[gameState] || forceRecreate) {
         createStateFromScratch(gameState);
         return m_states[gameState].value().get();
     } else {

@@ -15,7 +15,7 @@ public:
     explicit CreatorState(cGame* game, GameContext* ctx);
     ~CreatorState();
 
-    cGameState *getState(GameState gameState);
+    cGameState *getState(GameState gameState, bool forceRecreate = false);
 private:
     //cGameState *m_states[GameState::MAX];
     EnumArray<std::optional<std::unique_ptr<cGameState>>,GameState> m_states;
