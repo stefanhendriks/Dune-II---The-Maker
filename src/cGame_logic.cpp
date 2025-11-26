@@ -1158,8 +1158,8 @@ void cGame::setState(int newState)
                 newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
             }
             else if (newState == GAME_TELLHOUSE) {
-                int house = players[HUMAN].getHouse();
-                newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
+                m_dataCampaign->housePlayer = players[HUMAN].getHouse();
+                newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
@@ -1253,7 +1253,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
     players[HUMAN].setHouse(house);
     m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
-        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get(), house);
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
 }

@@ -12,10 +12,10 @@
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
 
-cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* dataCampaign, int house)
-    : cGameState(game, ctx), m_house(house), m_dataCampaign(dataCampaign)
+cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* dataCampaign)
+    : cGameState(game, ctx), m_house(dataCampaign->housePlayer), m_dataCampaign(dataCampaign)
 {
-    prepareMentat(house);
+    prepareMentat(m_house);
 }
 
 cTellHouseState::~cTellHouseState()
