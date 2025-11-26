@@ -1458,9 +1458,13 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
     if (!canPlace) {
         return nullptr;
     }
+
     if (m_autoSlabStructures) {
-        pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
+        if (iStructureTypeId != CONSTYARD) {
+            pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
+        }
     }
+
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
 }
 
