@@ -7,6 +7,7 @@
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cMentatState.h"
 #include "gamestates/cTellHouseState.h"
+#include "gamestates/cChooseHouseState.h"
 
 #include "cGame.h"
 #include "context/GameContext.hpp"
@@ -82,6 +83,10 @@ void CreatorState::createStateFromScratch(GameState gameState)
 
     case GameState::TELLHOUSE:
         m_states[GameState::TELLHOUSE] = std::make_unique<cTellHouseState>(*m_game, m_ctx, m_game->getDataCampaign());
+        break;
+
+    case GameState::SELECT_HOUSE:
+        m_states[GameState::SELECT_HOUSE] = std::make_unique<cChooseHouseState>(*m_game, m_ctx);
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
