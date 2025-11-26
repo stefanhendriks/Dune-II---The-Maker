@@ -137,6 +137,7 @@
 #define WORD_FIXHP			67	// fix hp
 #define WORD_POWERDRAIN			68	// power
 #define WORD_POWERGIVE			69	// power
+#define WORD_HAS_CONCRETE			89	// has concrete
 
 
 
