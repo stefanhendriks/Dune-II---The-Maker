@@ -6,6 +6,7 @@
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cMentatState.h"
+#include "gamestates/cTellHouseState.h"
 
 #include "cGame.h"
 #include "context/GameContext.hpp"
@@ -77,6 +78,10 @@ void CreatorState::createStateFromScratch(GameState gameState)
 
     case GameState::LOSEBRIEF:
         m_states[GameState::LOSEBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::LoseBrief, m_game->getDataCampaign());
+        break;
+
+    case GameState::TELLHOUSE:
+        m_states[GameState::TELLHOUSE] = std::make_unique<cTellHouseState>(*m_game, m_ctx, m_game->getDataCampaign());
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
