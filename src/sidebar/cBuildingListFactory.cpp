@@ -31,14 +31,6 @@ int cBuildingListFactory::getButtonDrawXStart()
 }
 
 
-/**
- * Initialize list according to techlevel. This will also remove all previously set icons.
- *
- * @param list
- * @param listType
- * @param techlevel
- * @param house
- */
 void cBuildingListFactory::initializeList(cBuildingList *list, eListType listType)
 {
     assert(list != NULL);

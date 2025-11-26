@@ -296,7 +296,9 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
             listConstYard->addStructureToList(RADAR, 0);
         }
 
-        listConstYard->addStructureToList(SILO, 0);
+        if (techLevel >= 2) {
+            listConstYard->addStructureToList(SILO, 0);
+        }
     }
 
 
