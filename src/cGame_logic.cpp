@@ -291,7 +291,7 @@ void cGame::thinkSlow_stateCombat_evaluatePlayerStatus()
     else {
         // TODO: Better way is with events (ie created/destroyed). However, there is no such
         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
-        for (int i = 1; i < MAX_PLAYERS; i++) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
             cPlayer &player = players[i];
             bool isAlive = player.isAlive();
             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
@@ -367,8 +367,7 @@ bool cGame::isMissionFailed() const
 
     if (hasGameOverConditionPlayerHasNoBuildings()) {
         cPlayer &humanPlayer = players[HUMAN];
-        bool hasNothing = humanPlayer.getAllMyStructuresAsId().empty() && humanPlayer.getAllMyUnits().empty();
-        if (hasNothing) {
+        if (!humanPlayer.isAlive()) {
             /**
              * If any of the bits in “LoseFlags” is set and the corresponding condition holds true
              * the player has won (and the computer has lost)
@@ -401,8 +400,7 @@ bool cGame::isMissionWon() const
 
     if (hasGameOverConditionPlayerHasNoBuildings()) {
         if (hasWinConditionHumanMustLoseAllBuildings()) {
-            bool hasNothing = humanPlayer.getAllMyStructuresAsId().empty() && humanPlayer.getAllMyUnits().empty();
-            if (hasNothing) {
+            if (!humanPlayer.isAlive()) {
                 return true;
             }
         }
