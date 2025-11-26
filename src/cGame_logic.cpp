@@ -2220,3 +2220,8 @@ cReinforcements* cGame::getReinforcements() const
 {
     return m_reinforcements.get();
 }
+
+s_DataCampaign* cGame::getDataCampaign() const
+{
+    return m_dataCampaign.get();
+}

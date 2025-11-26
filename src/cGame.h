@@ -280,6 +280,8 @@ public:
     void goingToWinLoseBrief(int value);
 
     cReinforcements* getReinforcements() const;
+
+    s_DataCampaign* getDataCampaign() const;
 private:
     /**
      * Variables start here
