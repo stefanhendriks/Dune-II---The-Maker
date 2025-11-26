@@ -28,15 +28,14 @@ public:
      */
     static int genIntMaxExcl(int min, int maxExcl);
 
-    //
     /**
      * Returns an integer between 0 (included) and max(excluded).
      * Effectively calling getIntMaxExcl(0, max)
-     * @param min (including)
-     * @param max (including)
+     * @param max (excluding)
      * @return
      */
     static int rnd(int max);
+
     // Returns a decimal number between min (included) and max (included)
     static double genDouble(double min, double max);
 private:
