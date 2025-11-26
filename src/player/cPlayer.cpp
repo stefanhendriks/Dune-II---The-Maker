@@ -1459,10 +1459,8 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
         return nullptr;
     }
 
-    if (m_autoSlabStructures) {
-        if (iStructureTypeId != CONSTYARD) {
-            pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
-        }
+    if (m_autoSlabStructures && sStructureInfo[iStructureTypeId].hasConcrete) {
+        pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
     }
 
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
@@ -1488,12 +1486,15 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
         pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
     }
 
-    int slabbed = pStructureFactory->getSlabStatus(destinationCell, iStructureTypeId);
-    int height = sStructureInfo[iStructureTypeId].bmp_height / TILESIZE_HEIGHT_PIXELS;
-    int width = sStructureInfo[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
-    int surface = width * height;
+    int healthPercentage = 100;
 
-    int healthPercentage = 50 + healthBar(50, slabbed, surface); // the minimum is 50% (with no slabs)
+    if (sStructureInfo[iStructureTypeId].hasConcrete) {
+        int slabbed = pStructureFactory->getSlabStatus(destinationCell, iStructureTypeId);
+        int height = sStructureInfo[iStructureTypeId].bmp_height / TILESIZE_HEIGHT_PIXELS;
+        int width = sStructureInfo[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
+        int surface = width * height;
+        healthPercentage = 50 + healthBar(50, slabbed, surface); // the minimum is 50% (with no slabs)
+    }
 
     cAbstractStructure *pStructure = pStructureFactory->createStructure(destinationCell,
                                      iStructureTypeId,
