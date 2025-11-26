@@ -31,6 +31,23 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     m_titleX = centerOfScreen - (titleWidth / 2);
     resetCrawler();
 
+    int backButtonWidth = m_textDrawer->getTextLength(" BACK");
+    int backButtonHeight = 21;
+    int backButtonY = m_game.m_screenH - 21;
+    int backButtonX = 0;
+    cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
+    backButton = GuiButtonBuilder()
+            .withRect(backButtonRect)
+            .withLabel("BACK")
+            .withTextDrawer(m_textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();
+            })
+            .build();
+
     m_lines = std::vector<s_CreditLine>();
     prepareCrawlerLines();
 }
@@ -382,12 +399,16 @@ void cCreditsState::draw() const
         textCrawlY += line.height;
     }
 
+    backButton->draw();
+
     // MOUSE
     m_game.getMouse()->draw();
 }
 
 void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    backButton->onNotifyMouseEvent(event);
+
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED) {
         m_moveSpeed = 1.0f; // speed up
     }
