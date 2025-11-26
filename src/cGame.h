@@ -174,12 +174,14 @@ public:
     void setPlayerToInteractFor(cPlayer *pPlayer);
     void setMousePosition(int w, int h);
 
+
     // Event handling
     void onNotifyGameEvent(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    void onEventSpecialLaunch(const s_GameEvent &event);
+    void onEventSpecialLaunch(const s_GameEvent &event) const;
+    void onEventEntityDestroyed(const s_GameEvent & event);
 
     static const char *stateString(const int &state) {
         switch (state) {
