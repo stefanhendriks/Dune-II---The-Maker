@@ -202,7 +202,7 @@ void cAbstractStructure::die()
     // create destroy particles
     for (int w = 0; w < iWidth; w++) {
         for (int h = 0; h < iHeight; h++) {
-            iCll= global_map.getGeometry().makeCell(iCX + w, iCY + h);
+            iCll = global_map.getGeometry().makeCell(iCX + w, iCY + h);
 
             global_map.cellChangeType(iCll, TERRAIN_ROCK);
             cMapEditor(global_map).smoothAroundCell(iCll);
