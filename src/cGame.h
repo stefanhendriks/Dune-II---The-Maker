@@ -282,6 +282,8 @@ public:
     cReinforcements* getReinforcements() const;
 
     s_DataCampaign* getDataCampaign() const;
+
+    int getCurrentState() const;
 private:
     /**
      * Variables start here
