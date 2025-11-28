@@ -8,13 +8,15 @@
 #include <format>
 #include "utils/RNG.hpp"
 #include <algorithm>
+#include "include/sDataCampaign.h"
 
 namespace brains {
 
-cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) :
+cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* dataCampaign) :
     cPlayerBrain(player),
     m_state(ePlayerBrainState::PLAYERBRAIN_PEACEFUL),
-    m_thinkState(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST)
+    m_thinkState(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST),
+    m_dataCampaign(dataCampaign)
 {
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
@@ -367,42 +369,42 @@ void cPlayerBrainCampaign::produceMissions()
         }
     }
 
-    if (game.m_mission == 2) {
+    if (m_dataCampaign->mission == 2) {
         produceLevel2Missions(soldierKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 3) {
+    if (m_dataCampaign->mission == 3) {
         produceLevel3Missions(trikeKind, soldierKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 4) {
+    if (m_dataCampaign->mission == 4) {
         produceLevel4Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 5) {
+    if (m_dataCampaign->mission == 5) {
         produceLevel5Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 6) {
+    if (m_dataCampaign->mission == 6) {
         produceLevel6Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 7) {
+    if (m_dataCampaign->mission == 7) {
         produceLevel7Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 8) {
+    if (m_dataCampaign->mission == 8) {
         produceLevel8Missions(trikeKind, infantryKind);
         return;
     }
 
-    if (game.m_mission == 9) {
+    if (m_dataCampaign->mission == 9) {
         produceLevel9Missions(trikeKind, infantryKind);
         return;
     }

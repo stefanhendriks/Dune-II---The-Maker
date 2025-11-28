@@ -4,7 +4,7 @@
 #include "data/gfxaudio.h"
 #include "d2tmc.h"
 #include "sidebar/cSideBar.h"
-
+#include "utils/Graphics.hpp"
 #include "utils/common.h"
 
 
