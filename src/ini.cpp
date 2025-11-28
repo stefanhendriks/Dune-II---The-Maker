@@ -17,6 +17,7 @@
 #include "d2tmc.h"
 #include "data/gfxdata.h"
 #include "definitions.h"
+#include "include/sDataCampaign.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
 #include "map/cMapCamera.h"
@@ -472,16 +473,18 @@ int getTechLevelByRegion(int iRegion)
 }
 
 
-void cIni::loadScenario(int iHouse, int iRegion, AbstractMentat *pMentat, cReinforcements *reinforcements)
+void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
     game.m_skirmish = false;
     game.missionInit();
+    int iHouse = dataCampaign->housePlayer;
+    int iRegion = dataCampaign->region;
 
     std::string filename = cIniUtils::getScenarioFileName(iHouse, iRegion);
 
-    game.m_mission = getTechLevelByRegion(iRegion);
+    dataCampaign->mission = getTechLevelByRegion(iRegion);
 
-    logbook(std::format("[SCENARIO] '{}' (Mission {})", filename, game.m_mission));
+    logbook(std::format("[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission));
     logbook("[SCENARIO] Opening file");
 
     // declare some temp fields while reading the scenario file.
