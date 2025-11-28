@@ -272,7 +272,8 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 
     if (structureType == REFINERY) {
         if (techLevel >= 2) {
-            listConstYard->addStructureToList(LIGHTFACTORY, 0);
+            listConstYard->addStructureToList(SILO, 0);
+            listConstYard->addStructureToList(RADAR, 0);
 
             if (house == ATREIDES ||
                     house == ORDOS ||
@@ -293,11 +294,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         }
 
         if (techLevel >= 3) {
-            listConstYard->addStructureToList(RADAR, 0);
-        }
-
-        if (techLevel >= 2) {
-            listConstYard->addStructureToList(SILO, 0);
+            listConstYard->addStructureToList(LIGHTFACTORY, 0);
         }
     }
 
