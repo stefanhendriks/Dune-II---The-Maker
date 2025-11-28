@@ -2189,3 +2189,8 @@ s_DataCampaign* cGame::getDataCampaign() const
 {
     return m_dataCampaign.get();
 }
+
+int cGame::getCurrentState() const
+{
+    return m_state;
+}
