@@ -118,8 +118,8 @@ public:
     void thinkFast_combat();
     void thinkFast_state();
 
-    void think_audio();
-    void think_fading();
+    void thinkFast_audio();
+    void thinkFast_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
@@ -242,10 +242,10 @@ public:
 
     void drawCombatMouse();
 
-    void think_state();
+    void thinkNormal_state();
 
     void thinkSlow();
-    void think_minute();
+    void thinkCache();
 
     bool isTurretsDownOnLowPower() {
         return m_turretsDownOnLowPower;

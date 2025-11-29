@@ -83,26 +83,26 @@ void cTimeManager::capTimers()
     }
 }
 
-void cTimeManager::handleTimerGameTime()
+void cTimeManager::handleTimerFast()
 {
     // keep up with time cycles
     while (m_timerGlobal > 0) {
-        m_game->think_fading();
+        m_game->thinkFast_fading();
         m_game->thinkFast_state();
 
         m_timerGlobal--;
     }
 }
 
-void cTimeManager::handleTimerUnits()
+void cTimeManager::handleTimerNormal()
 {
     while (m_timerUnits > 0) {
-        m_game->think_state();
+        m_game->thinkNormal_state();
         m_timerUnits--;
     }
 }
 
-void cTimeManager::handleTimerSecond()
+void cTimeManager::handleTimerSlow()
 {
     while (m_timerSecond > 0) {
         m_gameTime++;
@@ -114,10 +114,10 @@ void cTimeManager::handleTimerSecond()
     }
 }
 
-void cTimeManager::handleTimerMinute()
+void cTimeManager::handleTimerCache()
 {
-    if (m_timerMinute > 60) {
-        m_game->think_minute();
+    if (m_timerMinute > 30) {
+        m_game->thinkCache();
         m_timerMinute = 0;
     }
 }
@@ -159,10 +159,10 @@ void cTimeManager::processTime()
     }
 
     capTimers();
-    handleTimerSecond();
-    handleTimerUnits();
-    handleTimerGameTime();
-    handleTimerMinute();
+    handleTimerSlow();
+    handleTimerNormal();
+    handleTimerFast();
+    handleTimerCache();
 }
 
 int cTimeManager::getFps() const

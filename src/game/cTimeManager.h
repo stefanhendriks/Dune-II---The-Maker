@@ -56,15 +56,15 @@ public:
 
 private:
     // gametime timer is called every 5 ms, try to keep up with that.
-    void handleTimerGameTime();
+    void handleTimerFast();
     // gametime timer is called every 100 ms, try to keep up with that.
-    void handleTimerUnits();
+    void handleTimerNormal();
     // gametime timer is called every 1000 ms, try to keep up with that.
-    void handleTimerSecond();
+    void handleTimerSlow();
     // system capping to avoid extremely high timers
     void capTimers();
-    // start every 60000 ms
-    void handleTimerMinute();
+    // called every X s
+    void handleTimerCache();
 
     cGame *m_game;
     int m_timerUnits;		/** !!Specificly!! used for units **/
