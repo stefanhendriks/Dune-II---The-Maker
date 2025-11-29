@@ -161,7 +161,7 @@ void cTimeManager::handleTimerNormal()
     }
 }
 
-void cTimeManager::handleTimerMinute()
+void cTimeManager::handleTimerCache()
 {
     while (m_timerMinute.count > 0) {
         m_game->thinkCache();
@@ -210,7 +210,7 @@ void cTimeManager::processTime()
     handleTimerFast();
     handleTimerNormal();
     handleTimerSlow();
-    handleTimerMinute();
+    handleTimerCache();
 }
 
 int cTimeManager::getFps() const
