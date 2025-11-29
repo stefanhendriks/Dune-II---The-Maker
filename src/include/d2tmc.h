@@ -17,7 +17,7 @@
 **/
 #pragma once
 
-#include "cGame.h"
+#include "game/cGame.h"
 #include "definitions.h"
 #include "map/cMap.h"
 #include "structs.h"
