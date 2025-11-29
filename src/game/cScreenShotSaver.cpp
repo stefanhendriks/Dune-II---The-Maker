@@ -5,13 +5,17 @@
 #include <iostream>
 #include <format>
 #include <chrono>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 unsigned int cScreenShotSaver::screenCount = 0;
 
 bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
     screenCount++;
-    std::string filename = std::format("screen_{}_{}x{}_{:0>4}.png", getBaseFileName() , width, height,screenCount);
+    std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName() , width, height,screenCount);
+    std::cout << filename << std::endl;
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
         std::cerr << "Erreur création surface: " << SDL_GetError() << std::endl;
@@ -30,7 +34,25 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 std::string cScreenShotSaver::getBaseFileName()
 {
     auto now = std::chrono::year_month_day{
-        std::chrono::time_point_cast<std::chrono::days>(std::chrono::system_clock::now())
+        std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now())
     };
-    return std::format("{:%F}", now);
+    std::string baseName = std::format("{:%F}", now);
+    std::string folderName = std::format("screen_{:%Y-%m}", now);
+
+    fs::path folder = folderName;
+    if (!fs::exists(folder)) {
+        try {
+            fs::create_directory(folder);
+        }
+        catch (const fs::filesystem_error& e) {
+            std::cerr << "error creating folder : " << e.what() << '\n';
+            return baseName;
+        }
+    }
+    else if (!fs::is_directory(folder)) {
+        std::cerr << folder << " exist but it's not a folder !\n";
+        return baseName;
+    }
+    std::cout << folderName << "/" << baseName << std::endl;
+    return folderName+"/"+baseName;
 }
