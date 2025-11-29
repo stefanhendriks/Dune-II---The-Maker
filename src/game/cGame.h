@@ -242,7 +242,7 @@ public:
 
     void drawCombatMouse();
 
-    void thinkNormal_state();
+    void thinkNormal();
 
     void thinkSlow();
     void thinkCache();

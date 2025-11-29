@@ -16,6 +16,7 @@ public:
     ~cGamePlaying() override;
 
     void thinkFast() override;
+    void thinkSlow() override;
     void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -23,5 +24,5 @@ public:
 
     eGameStateType getType() override;
 private:
-
+    void thinkSlow_stateCombat_evaluatePlayerStatus();
 };

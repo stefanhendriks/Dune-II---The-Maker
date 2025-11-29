@@ -36,3 +36,9 @@ std::string gameStateToString(GameState state)
     // Handling unrecognized values ​​(if the enum is cast from an arbitrary character)
     throw std::out_of_range("Unknown GameState value");
 }
+
+void cGameState::thinkNormal()
+{}
+
+void cGameState::thinkSlow()
+{}

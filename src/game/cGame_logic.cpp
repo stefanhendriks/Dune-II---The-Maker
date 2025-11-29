@@ -1997,7 +1997,7 @@ int cGame::getMaxVolume()
 /**
  * Called every 100ms
  */
-void cGame::thinkNormal_state()
+void cGame::thinkNormal()
 {
     if (game.isState(GAME_PLAYING)) {
         // units think
@@ -2056,9 +2056,7 @@ void cGame::thinkSlow_state()
             cPlayer &player = players[i];
             player.thinkSlow();
         }
-
     } // game specific stuff
-
 }
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
