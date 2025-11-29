@@ -158,11 +158,6 @@ void cTimeManager::processTime()
         m_lastSecondsTick += durationTime.secondTickDuration;
     }
 
-    // 60000 ms pour allegro_timerseconds
-    // while (now - m_lastMinuteTick >= durationTime.minTickDuration) {
-    //     m_timerMinute++;
-    //     m_lastMinuteTick += durationTime.minTickDuration;
-    // }
     capTimers();
     handleTimerSecond();
     handleTimerUnits();
