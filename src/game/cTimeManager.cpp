@@ -14,10 +14,10 @@ constexpr int IDEAL_FPS = 60; // ideal frames per second
 
 cTimeManager::cTimeManager(cGame *game)
     : m_game(game)
-    , m_timerUnits(0)
-    , m_timerSecond(0)
-    , m_timerMinute(0)
-    , m_timerGlobal(0)
+    , m_timerFast(0)
+    , m_timerNormal(0)
+    , m_timerSlow(0)
+    , m_timerCache(0)
     , m_gameTime(0)
 {
     // we fix time to 5 100 1000
@@ -60,25 +60,25 @@ void cTimeManager::capTimers()
 {
     auto logger = cLogger::getInstance();
 
-    if (m_timerUnits > 10) {
+    if (m_timerNormal > 10) {
         if (m_game->isDebugMode()) {
-            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits));
-            m_timerUnits = 10;
+            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerNormal));
+            m_timerNormal = 10;
         }
     }
 
-    if (m_timerGlobal > 40) {
+    if (m_timerFast > 40) {
         if (m_game->isDebugMode()) {
-            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGlobal));
-            m_timerGlobal = 40;
+            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerFast));
+            m_timerFast = 40;
         }
     }
 
     /* Taking 10 seconds to render a frame? i hope not **/
-    if (m_timerSecond > 10) {
+    if (m_timerSlow > 10) {
         if (m_game->isDebugMode()) {
-            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond));
-            m_timerSecond = 10;
+            logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSlow));
+            m_timerSlow = 10;
         }
     }
 }
@@ -86,39 +86,39 @@ void cTimeManager::capTimers()
 void cTimeManager::handleTimerFast()
 {
     // keep up with time cycles
-    while (m_timerGlobal > 0) {
+    while (m_timerFast > 0) {
         m_game->thinkFast_fading();
         m_game->thinkFast_state();
 
-        m_timerGlobal--;
+        m_timerFast--;
     }
 }
 
 void cTimeManager::handleTimerNormal()
 {
-    while (m_timerUnits > 0) {
+    while (m_timerNormal > 0) {
         m_game->thinkNormal_state();
-        m_timerUnits--;
+        m_timerNormal--;
     }
 }
 
 void cTimeManager::handleTimerSlow()
 {
-    while (m_timerSecond > 0) {
+    while (m_timerSlow > 0) {
         m_gameTime++;
         m_game->thinkSlow();
-        m_timerSecond--; // done!
+        m_timerSlow--; // done!
         // more practice than ask every tick or frame
-        m_timerMinute++;
-        m_timeCounter->addTime(durationTime.secondTickDuration/1000);
+        m_timerCache++;
+        m_timeCounter->addTime(durationTime.slowTickDuration/1000);
     }
 }
 
 void cTimeManager::handleTimerCache()
 {
-    if (m_timerMinute > 30) {
+    if (m_timerCache > 30) {
         m_game->thinkCache();
-        m_timerMinute = 0;
+        m_timerCache = 0;
     }
 }
 
@@ -137,25 +137,25 @@ void cTimeManager::handleTimerCache()
 */
 void cTimeManager::processTime()
 {
-//    syncFromAllegroTimers();
+    // syncFromAllegroTimers();
     uint64_t now = SDL_GetTicks64();
 
-    // 100 ms pour allegro_timerunits
-    while (now - m_lastUnitsTick >= durationTime.unitTickDuration) {
-        m_timerUnits++;
-        m_lastUnitsTick += durationTime.unitTickDuration;
+    // 5 ms pour allegro_timergametime
+    while (now - m_lastFastTick >= durationTime.fastTickDuration) {
+        m_timerFast++;
+        m_lastFastTick += durationTime.fastTickDuration;
     }
 
-    // 5 ms pour allegro_timergametime
-    while (now - m_lastGameTimeTick >= durationTime.gameTickDuration) {
-        m_timerGlobal++;
-        m_lastGameTimeTick += durationTime.gameTickDuration;
+    // 100 ms pour allegro_timerunits
+    while (now - m_lastNormalTick >= durationTime.normalTickDuration) {
+        m_timerNormal++;
+        m_lastNormalTick += durationTime.normalTickDuration;
     }
 
     // 1000 ms pour allegro_timerseconds
-    while (now - m_lastSecondsTick >= durationTime.secondTickDuration) {
-        m_timerSecond++;
-        m_lastSecondsTick += durationTime.secondTickDuration;
+    while (now - m_lastSlowTick >= durationTime.slowTickDuration) {
+        m_timerSlow++;
+        m_lastSlowTick += durationTime.slowTickDuration;
     }
 
     capTimers();
@@ -218,7 +218,7 @@ void cTimeManager::restartTimer()
 }
 void cTimeManager::setGlobalSpeedVariation(int variation)
 {
-    int speed = durationTime.gameTickDuration;
+    int speed = durationTime.fastTickDuration;
     if (variation > 0)
         speed += 1;
     if (variation < 0)
