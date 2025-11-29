@@ -1,4 +1,4 @@
-#include "utils/cScreenShake.h"
+#include "game/cScreenShake.h"
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
