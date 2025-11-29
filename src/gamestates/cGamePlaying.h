@@ -7,6 +7,7 @@
 
 class Texture;
 class cGame;
+class cReinforcements;
 
 
 
@@ -24,6 +25,21 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     eGameStateType getType() override;
+
+    void missionInit();
 private:
     void thinkSlow_stateCombat_evaluatePlayerStatus();
+    void drawCombatMouse();
+
+    int m_pathsCreated;
+    int m_TIMER_evaluatePlayerStatus;
+    cReinforcements* m_reinforcements;
+
+    // win/lose flags
+    int8_t m_winFlags, m_loseFlags;
+
+    void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
+    void onKeyDownGamePlaying(const cKeyboardEvent &event);
+    void onKeyPressedGamePlaying(const cKeyboardEvent &event);
+    void onKeyDownDebugMode(const cKeyboardEvent &event);
 };
