@@ -114,7 +114,7 @@ public:
 
     void run();			            // run the game (MAIN LOOP)
 
-    void thinkSlow_stateCombat_evaluatePlayerStatus();
+    [[deprecated]] void thinkSlow_stateCombat_evaluatePlayerStatus();
 
     void thinkFast_combat();
     void thinkFast_state();
@@ -378,7 +378,7 @@ private:
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 
-    void thinkSlow_state();
+    [[deprecated]] void thinkSlow_state();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 
