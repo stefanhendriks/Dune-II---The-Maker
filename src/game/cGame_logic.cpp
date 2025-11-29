@@ -31,7 +31,7 @@
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cMentatState.h"
-#include "ini.h"
+#include "utils/ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"

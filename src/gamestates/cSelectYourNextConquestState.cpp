@@ -6,7 +6,7 @@
 #include "data/gfxworld.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
-#include "ini.h"
+#include "utils/ini.h"
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"

@@ -4,7 +4,7 @@
 #include "mentat/HarkonnenMentat.h"
 #include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
-#include "ini.h"
+#include "utils/ini.h"
 #include "include/d2tmc.h"
 #include "include/iniDefine.h"
 #include "include/sDataCampaign.h"
