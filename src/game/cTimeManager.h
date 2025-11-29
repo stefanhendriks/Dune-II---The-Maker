@@ -69,7 +69,7 @@ private:
     // system capping to avoid extremely high timers
     void capTimers();
     // start every 60000 ms
-    void handleTimerMinute();
+    void handleTimerCache();
     // reset or set the tick duration based on the global speed
     void initTimers(int baseSpeed);
 
