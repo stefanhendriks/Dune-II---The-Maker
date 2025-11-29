@@ -13,6 +13,8 @@ class Texture;
 class Graphics;
 class GameContext;
 
+struct s_DataCampaign;
+
 
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
@@ -46,7 +48,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(cGame &theGame, GameContext *ctx);
+    explicit cSelectYourNextConquestState(cGame &theGame, GameContext *ctx, s_DataCampaign* dataCompaign);
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;
@@ -134,4 +136,5 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     Graphics* m_gfxworld;
     Graphics* m_gfxinter;
+    s_DataCampaign* m_dataCompaign;
 };
