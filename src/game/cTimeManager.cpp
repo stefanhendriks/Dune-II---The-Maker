@@ -161,9 +161,6 @@ void cTimeManager::handleTimerNormal()
     }
 }
 
-/**
- * units timer is called every 100 ms, try to keep up with that.
- */
 void cTimeManager::handleTimerMinute()
 {
     while (m_timerMinute.count > 0) {
