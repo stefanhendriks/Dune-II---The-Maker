@@ -11,7 +11,7 @@
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cOptionsState.h"
 
-#include "cGame.h"
+#include "game/cGame.h"
 #include "context/GameContext.hpp"
 
 CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(ctx)

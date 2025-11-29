@@ -1,5 +1,5 @@
 #include "gamestates/cMentatState.h"
-#include "cGame.h"
+#include "game/cGame.h"
 #include "mentat/AtreidesMentat.h"
 #include "mentat/HarkonnenMentat.h"
 #include "mentat/OrdosMentat.h"

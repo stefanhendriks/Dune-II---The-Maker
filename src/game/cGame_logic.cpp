@@ -9,7 +9,7 @@
   2001 - 2022 (c) code by Stefan Hendriks
 
 */
-#include "cGame.h"
+#include "game/cGame.h"
 #include "include/Texture.hpp"
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"

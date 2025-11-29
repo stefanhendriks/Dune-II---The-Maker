@@ -1,6 +1,6 @@
 #include "cTimeManager.h"
 
-#include "cGame.h"
+#include "game/cGame.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
 #include "utils/cTimeCounter.h"
