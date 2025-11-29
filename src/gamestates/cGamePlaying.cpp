@@ -1,6 +1,6 @@
 #include "gamestates/cGamePlaying.h"
-
-#include "d2tmc.h"
+#include "include/d2tmc.h"
+#include "include/definitions.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "data/gfxdata.h"
@@ -24,7 +24,7 @@ void cGamePlaying::thinkFast()
 {
 }
 
-void thinkNormal()
+void cGamePlaying::thinkNormal()
 {
 }
 
