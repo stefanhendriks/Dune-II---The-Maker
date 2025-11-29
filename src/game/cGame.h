@@ -93,7 +93,6 @@ public:
 
     bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
-    int m_screenshot;				// screenshot taking number
 
     int m_pathsCreated;
 
