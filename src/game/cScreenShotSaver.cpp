@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
-#include <iostream>
+//#include <iostream>
 #include <format>
 #include <chrono>
 #include <filesystem>
@@ -17,19 +16,19 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
     screenCount++;
     std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName() , width, height,screenCount);
-    std::cout << filename << std::endl;
+    //std::cout << filename << std::endl;
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
-        std::cerr << "Error creating surface: " << SDL_GetError() << std::endl;
+        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error creating surface: {}",SDL_GetError()), OUTC_FAILED);
         return false;
     }
     if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
-        std::cerr << "Error reading pixels: " << SDL_GetError() << std::endl;
+        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error reading pixels: {}",SDL_GetError()), OUTC_FAILED);
         SDL_FreeSurface(surface);
         return false;
     }
     if (IMG_SavePNG(surface, filename.c_str()) != 0) {
-        std::cerr << "IMG_SavePNG error " << SDL_GetError() << std::endl;
+        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("IMG_SavePNG error: {}",SDL_GetError()), OUTC_FAILED);
     }        
     SDL_FreeSurface(surface);
     return true;
@@ -49,14 +48,14 @@ std::string cScreenShotSaver::getBaseFileName()
             fs::create_directory(folder);
         }
         catch (const fs::filesystem_error& e) {
-            std::cerr << " error creating folder : " << e.what() << '\n';
+            cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "cScreenShotSaver", std::format("error creating folder: {}",e.what()), OUTC_FAILED);
             return baseName;
         }
     }
     else if (!fs::is_directory(folder)) {
-        std::cerr << folder << " exist but it's not a folder !\n";
+        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "cScreenShotSaver", std::format("{} exist but it's not a folder !", folderName), OUTC_FAILED);
         return baseName;
     }
-    std::cout << folderName << "/" << baseName << std::endl;
+    //std::cout << folderName << "/" << baseName << std::endl;
     return folderName+"/"+baseName;
 }
