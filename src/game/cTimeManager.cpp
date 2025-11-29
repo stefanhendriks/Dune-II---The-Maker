@@ -1,9 +1,8 @@
-#include "cTimeManager.h"
-
-#include "cGame.h"
+#include "game/cGame.h"
+#include "game/cTimeManager.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
-#include "utils/cTimeCounter.h"
+#include "game/cTimeCounter.h"
 
 #include <format>
 #include <chrono>
