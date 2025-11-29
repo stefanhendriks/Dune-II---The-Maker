@@ -26,7 +26,9 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
         SDL_FreeSurface(surface);
         return false;
     }
-    IMG_SavePNG(surface, filename.c_str());
+    if (IMG_SavePNG(surface, filename.c_str()) != 0) {
+        std::cerr << "IMG_SavePNG error" << SDL_GetError() << std::endl;
+    }        
     SDL_FreeSurface(surface);
     return true;
 }
