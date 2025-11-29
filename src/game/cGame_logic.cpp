@@ -1999,6 +1999,9 @@ int cGame::getMaxVolume()
  */
 void cGame::thinkNormal()
 {
+    //@mira if (m_currentState) {
+    //@mira     m_currentState->thinkNormal();
+    //@mira }
     if (game.isState(GAME_PLAYING)) {
         // units think
         for (int i = 0; i < MAX_UNITS; i++) {
@@ -2013,7 +2016,6 @@ void cGame::thinkNormal()
         for (int i = 0; i < MAX_PLAYERS; i++) {
             players[i].think();
         }
-
     }
 }
 
@@ -2022,8 +2024,11 @@ void cGame::thinkNormal()
  */
 void cGame::thinkSlow()
 {
+    //@mira if (m_currentState) {
+    //@mira     m_currentState->thinkSlow();
+    //@mira }
     thinkSlow_state();
-
+    // a garder
     m_timeManager->capFps();
     m_timeManager->adaptWaitingTime();
 }
