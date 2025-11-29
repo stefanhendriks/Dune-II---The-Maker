@@ -41,6 +41,7 @@ class ContextCreator;
 class GameContext;
 class cScreenShake;
 class cFocusManager;
+class cGameConditionChecker;
 
 struct s_TerrainInfo;
 struct s_DataCampaign;
@@ -335,8 +336,6 @@ private:
 
     [[deprecated]] int m_TIMER_evaluatePlayerStatus;
 
-    // win/lose flags
-    int8_t m_winFlags, m_loseFlags;
 
     int m_state;
     int m_nextState;
@@ -355,22 +354,6 @@ private:
 
     void initPlayers(bool rememberHouse) const;
 
-    [[nodiscard]] bool isMissionWon() const;
-
-    [[nodiscard]] bool isMissionFailed() const;
-
-    [[nodiscard]] bool hasGameOverConditionHarvestForSpiceQuota() const;
-
-    [[nodiscard]] bool hasGameOverConditionPlayerHasNoBuildings() const;
-
-    [[nodiscard]] bool hasWinConditionHumanMustLoseAllBuildings() const;
-
-    [[nodiscard]] bool hasWinConditionAIShouldLoseEverything() const;
-
-    [[nodiscard]] bool allEnemyAIPlayersAreDestroyed() const;
-
-    [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
-
     void saveBmpScreenToDisk();
 
     // Combat state specific event handling for now
@@ -387,4 +370,5 @@ private:
     std::unique_ptr<GameContext> ctx;
     std::unique_ptr<ContextCreator> context;
     std::unique_ptr<s_DataCampaign> m_dataCampaign;
+    std::unique_ptr<cGameConditionChecker> m_gameConditionChecker;
 };
