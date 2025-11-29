@@ -16,6 +16,7 @@ public:
     ~cGamePlaying() override;
 
     void thinkFast() override;
+    void thinkNormal() override;
     void thinkSlow() override;
     void draw() const override;
 

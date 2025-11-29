@@ -93,7 +93,7 @@ public:
     bool m_skirmish;                // playing a skirmish game or not
     int m_screenshot;				// screenshot taking number
 
-    int m_pathsCreated;
+    [[deprecated]] int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
     int m_musicType;
@@ -240,7 +240,7 @@ public:
 
     void prepareMentatToTellAboutHouse(int house);
 
-    void drawCombatMouse();
+    [[deprecated]] void drawCombatMouse();
 
     void thinkNormal();
 
@@ -331,7 +331,7 @@ private:
 
     std::unique_ptr<cScreenShake> m_screenShake;
 
-    int m_TIMER_evaluatePlayerStatus;
+    [[deprecated]] int m_TIMER_evaluatePlayerStatus;
 
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
@@ -372,9 +372,9 @@ private:
     void saveBmpScreenToDisk();
 
     // Combat state specific event handling for now
-    void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
-    void onKeyDownGamePlaying(const cKeyboardEvent &event);
-    void onKeyPressedGamePlaying(const cKeyboardEvent &event);
+    [[deprecated]] void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
+    [[deprecated]] void onKeyDownGamePlaying(const cKeyboardEvent &event);
+    [[deprecated]] void onKeyPressedGamePlaying(const cKeyboardEvent &event);
 
     [[deprecated]] void thinkSlow_state();
 
