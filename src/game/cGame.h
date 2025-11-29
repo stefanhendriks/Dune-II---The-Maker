@@ -322,8 +322,6 @@ private:
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
-    int m_state;
-
     int m_newMusicSample;
     int m_newMusicCountdown;
 
@@ -340,12 +338,13 @@ private:
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
 
+    int m_state;
     int m_nextState;
-
     // the current game state we are running
     cGameState *m_currentState;
-
     cGameState *m_states[GAME_MAX_STATES];
+    void transitionStateIfRequired();
+    void setState(int newState);
 
     void updateMouseAndKeyboardState();
     void updateGamePlaying();
@@ -371,10 +370,6 @@ private:
     [[nodiscard]] bool allEnemyAIPlayersAreDestroyed() const;
 
     [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
-
-    void transitionStateIfRequired();
-
-    void setState(int newState);
 
     void saveBmpScreenToDisk();
 
