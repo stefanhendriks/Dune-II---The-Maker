@@ -24,6 +24,15 @@ void cGamePlaying::thinkFast()
 {
 }
 
+void thinkNormal()
+{
+}
+
+void cGamePlaying::thinkSlow()
+{
+}
+
+
 void cGamePlaying::draw() const
 {
 }
