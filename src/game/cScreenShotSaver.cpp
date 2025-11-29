@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-//#include <iostream>
+
 #include <format>
 #include <chrono>
 #include <filesystem>
@@ -16,7 +16,6 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
     screenCount++;
     std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName() , width, height,screenCount);
-    //std::cout << filename << std::endl;
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error creating surface: {}",SDL_GetError()), OUTC_FAILED);
@@ -56,6 +55,5 @@ std::string cScreenShotSaver::getBaseFileName()
         cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "cScreenShotSaver", std::format("{} exist but it's not a folder !", folderName), OUTC_FAILED);
         return baseName;
     }
-    //std::cout << folderName << "/" << baseName << std::endl;
     return folderName+"/"+baseName;
 }
