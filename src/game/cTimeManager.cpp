@@ -108,15 +108,17 @@ void cTimeManager::handleTimerSecond()
         m_gameTime++;
         m_game->thinkSlow();
         m_timerSecond--; // done!
+        // more practice than ask every tick or frame
+        m_timerMinute++;
         m_timeCounter->addTime(durationTime.secondTickDuration/1000);
     }
 }
 
 void cTimeManager::handleTimerMinute()
 {
-    if (m_timerMinute > 0) {
+    if (m_timerMinute > 60) {
         m_game->think_minute();
-        m_timerMinute--;
+        m_timerMinute = 0;
     }
 }
 
@@ -157,10 +159,10 @@ void cTimeManager::processTime()
     }
 
     // 60000 ms pour allegro_timerseconds
-    while (now - m_lastMinuteTick >= durationTime.minTickDuration) {
-        m_timerMinute++;
-        m_lastMinuteTick += durationTime.minTickDuration;
-    }
+    // while (now - m_lastMinuteTick >= durationTime.minTickDuration) {
+    //     m_timerMinute++;
+    //     m_lastMinuteTick += durationTime.minTickDuration;
+    // }
     capTimers();
     handleTimerSecond();
     handleTimerUnits();
