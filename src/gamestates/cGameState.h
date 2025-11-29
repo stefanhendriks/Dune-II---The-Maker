@@ -15,6 +15,7 @@ enum eGameStateType {
                                             // #define GAME_LOSEBRIEF   13      // briefing when losing
                                             // #define GAME_BRIEFING     3      // doing some briefing
     GAMESTATE_OPTIONS,                      // #define GAME_OPTIONS	      5     // options menu
+    GAMESTATE_PLAYING,                      // #define GAME_PLAYING      2      // playing the actual game
     GAMESTATE_SELECT_MISSION,               // #define GAME_MISSIONSELECT 18    // mission select
     GAMESTATE_SELECT_YOUR_NEXT_CONQUEST,    // #define GAME_REGION		  6	    // select a region / select your next conquest
     GAMESTATE_SETUP_SKIRMISH,               // #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
@@ -25,7 +26,7 @@ enum eGameStateType {
 
 // #define GAME_INITIALIZE  -1      // initialize game
 // #define GAME_OVER         0      // game over
-// #define GAME_PLAYING      2      // playing the actual game
+
 
 // #define GAME_EDITING      4      // running the editor
 // #define GAME_INTRO	     9
