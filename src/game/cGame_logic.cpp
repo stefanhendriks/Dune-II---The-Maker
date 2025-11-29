@@ -9,7 +9,7 @@
   2001 - 2022 (c) code by Stefan Hendriks
 
 */
-#include "cGame.h"
+#include "game/cGame.h"
 #include "include/Texture.hpp"
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
@@ -28,8 +28,12 @@
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishState.h"
-#include "ini.h"
+#include "gamestates/cWinLoseState.h"
+#include "gamestates/cTellHouseState.h"
+#include "gamestates/cMentatState.h"
+#include "utils/ini.h"
 #include "iniDefine.h"
+#include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
 #include "mentat/AtreidesMentat.h"
@@ -45,9 +49,9 @@
 #include "sidebar/cSideBarFactory.h"
 #include "utils/RNG.hpp"
 #include "utils/cLog.h"
-#include "utils/cPlatformLayerInit.h"
+#include "game/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
-#include "utils/cScreenInit.h"
+#include "game/cScreenInit.h"
 #include "utils/d2tm_math.h"
 #include "map/cPreviewMaps.h"
 #include "map/MapGeometry.hpp"
@@ -63,8 +67,8 @@
 #include "context/ContextCreator.hpp"
 #include "utils/cIniGameRessouces.h"
 
-#include "utils/cScreenShake.h"
-#include "utils/cTimeCounter.h"
+#include "game/cScreenShake.h"
+#include "game/cTimeCounter.h"
 
 #include <algorithm>
 #include <random>
@@ -96,7 +100,6 @@ cGame::cGame()
     m_playMusic = true;
     context = nullptr;
     ctx = nullptr;
-    m_mentat = nullptr;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -110,6 +113,8 @@ cGame::cGame()
     m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 
     m_screenShake = std::make_unique<cScreenShake>();
+
+    m_dataCampaign = std::make_unique<s_DataCampaign>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -164,16 +169,13 @@ void cGame::init()
 
     setState(GAME_INITIALIZE);
 
-    // mentat
-    delete m_mentat;
-    m_mentat = nullptr;
-
     m_fadeSelect = 1.0f;
 
     m_fadeSelectDir = true;    // fade select direction
 
-    m_region = 1;          // what region ? (calumative, from player perspective, NOT the actual region number)
-    m_mission = 0;         // calculated by mission loading (region -> mission calculation)
+    m_dataCampaign->housePlayer = -1;
+    m_dataCampaign->mission = 0;
+    m_dataCampaign->region = 1;
 
     m_screenShake->reset();
 
@@ -252,7 +254,7 @@ void cGame::initPlayers(bool rememberHouse) const
                         brain = new brains::cPlayerBrainSkirmish(&pPlayer);
                     }
                     else {
-                        brain = new brains::cPlayerBrainCampaign(&pPlayer);
+                        brain = new brains::cPlayerBrainCampaign(&pPlayer, m_dataCampaign.get());
                         autoSlabStructures = true;  // campaign based AI's autoslab structures...
                     }
                 }
@@ -473,13 +475,6 @@ bool cGame::hasGameOverConditionAIHasNoBuildings() const
     return (m_winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
 }
 
-void cGame::think_mentat()
-{
-    if (m_mentat) {
-        m_mentat->think();
-    }
-}
-
 // think function belongs to combat state (tbd)
 void cGame::think_audio()
 {
@@ -549,20 +544,6 @@ void cGame::drawStateCombat()
     drawManager->drawCombatMouse();
 }
 
-// drawStateMentat logic + drawing mouth/eyes
-void cGame::drawStateMentat(AbstractMentat *mentat)
-{
-    m_mouse->setTile(MOUSE_NORMAL);
-    mentat->draw();
-    m_mouse->draw();
-}
-
-// draw menu
-// void cGame::drawStateMenu()
-// {
-//     m_currentState->draw();
-// }
-
 void cGame::initSkirmish() const
 {
     game.missionInit();
@@ -572,6 +553,40 @@ void cGame::loadSkirmishMaps() const
 {
     m_PreviewMaps->loadSkirmishMaps();
 }
+
+// void cGame::shakeScreenAndBlitBuffer()
+// {
+//     if (m_TIMER_shake == 0) {
+//         m_TIMER_shake = -1;
+//     }
+
+//     // only in playing state we shake screen
+//     if (m_state == GAME_PLAYING) {
+//         // TODO: move the shaking part of the rendering in the playing state object at some time
+//         // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
+//         // always at some point in the main loop, and does not need to know about the shaking logic.
+
+//         // blitSprite on screen
+//         if (m_TIMER_shake > 0) {
+//             // the more we get to the 'end' the less we 'throttle'.
+//             // Structure explosions are 6 time units per cell.
+//             // Max is 9 cells (9*6=54)
+//             // the max border is then 9. So, we do time / 6
+//             int shakiness = std::min(m_TIMER_shake, 69);
+//             float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
+
+//             m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
+//             m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
+
+//             // @Mira recreate shake screen
+            
+//         }
+//         else {
+//             fadeOutOrBlitScreenBuffer();
+//         }
+//     }
+//     fadeOutOrBlitScreenBuffer();
+// }
 
 void cGame::shakeScreenAndBlitBuffer()
 {
@@ -610,26 +625,10 @@ void cGame::drawState()
     }
 
     switch (m_state) {
-        case GAME_BRIEFING:
-        case GAME_LOSEBRIEF:
-        case GAME_TELLHOUSE:
-        case GAME_WINBRIEF:
-            drawStateMentat(m_mentat);
-            break;
         case GAME_PLAYING:
             drawStateCombat();
             break;
-        // case GAME_MENU:
-        //     drawStateMenu();
-        //     break;
-        case GAME_WINNING:
-            drawStateWinning();
-            break;
-        case GAME_LOSING:
-            drawStateLosing();
-            break;
         default:
-            // std::cout << "m_state registered in drawState() " << m_state << std::endl;
             m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
     }
@@ -729,7 +728,6 @@ void cGame::shutdown()
         m_PreviewMaps->destroy();
     }
 
-    delete m_mentat;
     delete m_mapViewport;
 
     delete drawManager;
@@ -749,9 +747,6 @@ void cGame::shutdown()
     delete m_keyboard;
 
     logbook("Allegro FONT library shut down.");
-
-    // Release the game dev framework, so that it can do cleanup
-    //m_PLInit.reset();
 }
 
 
@@ -833,7 +828,6 @@ bool cGame::setupGame()
     global_map.setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
-    //m_textDrawer->setApplyShadow(false);
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
     m_soundPlayer = soundPlayer.get();
@@ -960,7 +954,7 @@ void cGame::setupPlayers()
         thePlayer->setGameControlsContext(gameControlsContext);
 
         // set tech level
-        thePlayer->setTechLevel(game.m_mission);
+        thePlayer->setTechLevel(m_dataCampaign->mission);
     }
     setPlayerToInteractFor(&players[0]);
 }
@@ -978,7 +972,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get());
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get(), m_dataCampaign.get());
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
@@ -986,7 +980,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
 
     cPlayer &humanPlayer = players[HUMAN];
     int missionZeroBased = missionNr - 1;
-    m_mission = missionZeroBased;
+    m_dataCampaign->mission = missionZeroBased;
 
     // a 'missionX.ini' file is from 1 til (including) 8
     // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
@@ -1044,13 +1038,13 @@ void cGame::setState(int newState)
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
                     auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
-                    if (game.m_mission > 1) {
+                    if (m_dataCampaign->mission > 1) {
                         pState->conquerRegions();
                     }
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->regionSetupNextMission(game.m_mission, humanPlayer.getHouse());
+                        pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer.getHouse());
                     }
                     else {
                         // OR: did not win
@@ -1079,16 +1073,16 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get());
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get(), m_dataCampaign.get());
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
                 pState->installWorld();
-                if (game.m_mission > 1) {
+                if (m_dataCampaign->mission > 1) {
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->regionSetupNextMission(game.m_mission, humanPlayer.getHouse());
+                pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer.getHouse());
 
                 playMusicByTypeForStateTransition(MUSIC_CONQUEST);
 
@@ -1096,7 +1090,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
-                newStatePtr = new cSetupSkirmishState(*this, ctx.get(), m_PreviewMaps);
+                newStatePtr = new cSetupSkirmishState(*this, ctx.get(), m_PreviewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_CREDITS) {
@@ -1156,6 +1150,30 @@ void cGame::setState(int newState)
                     game.onNotifyGameEvent(event);
                     m_timeManager->startTimer();
                 }
+            } 
+            else if (newState == GAME_LOSING) {
+                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
+            }
+            else if (newState == GAME_WINNING) {
+                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
+            }
+            else if (newState == GAME_TELLHOUSE) {
+                m_dataCampaign->housePlayer = players[HUMAN].getHouse();
+                newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            }
+            else if (newState == GAME_BRIEFING) {
+                // std::cout << "create cMentatState Briefing" << std::endl;
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            } else if (newState == GAME_WINBRIEF) {
+                // std::cout << "create cMentatState WinBrief" << std::endl;
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+            } else if (newState == GAME_LOSEBRIEF) {
+                // std::cout << "create cMentatState LoseBrief" << std::endl;
+                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
 
             m_states[newState] = newStatePtr;
@@ -1209,90 +1227,113 @@ cGame::~cGame()
 
 void cGame::prepareMentatForPlayer()
 {
-    int house = players[HUMAN].getHouse();
     if (m_state == GAME_BRIEFING) {
         game.missionInit();
         game.setupPlayers();
-        cIni::loadScenario(house, m_region, m_mentat, m_reinforcements.get());
-        cIni::loadBriefing(house, m_region, INI_BRIEFING, m_mentat);
+        auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
+        pState->prepareMentat(m_dataCampaign->housePlayer);        
     }
     else if (m_state == GAME_WINBRIEF) {
-        if (RNG::rnd(100) < 50) {
-            m_mentat->loadScene("win01");
-        }
-        else {
-            m_mentat->loadScene("win02");
-        }
-        cIni::loadBriefing(house, m_region, INI_WIN, m_mentat);
+        auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_WINBRIEF]);
+        pState->prepareMentat(m_dataCampaign->housePlayer);
     }
     else if (m_state == GAME_LOSEBRIEF) {
-        if (RNG::rnd(100) < 50) {
-            m_mentat->loadScene("lose01");
-        }
-        else {
-            m_mentat->loadScene("lose02");
-        }
-        cIni::loadBriefing(house, m_region, INI_LOSE, m_mentat);
+        auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_LOSEBRIEF]);
+        pState->prepareMentat(m_dataCampaign->housePlayer);
     }
 }
 
 void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 {
-    delete m_mentat;
-    int houseIndex = players[HUMAN].getHouse();
-    if (houseIndex == ATREIDES) {
-        m_mentat = new AtreidesMentat(ctx.get(), allowMissionSelect);
-    }
-    else if (houseIndex == HARKONNEN) {
-        m_mentat = new HarkonnenMentat(ctx.get(), allowMissionSelect);
-    }
-    else if (houseIndex == ORDOS) {
-        m_mentat = new OrdosMentat(ctx.get(), allowMissionSelect);
-    }
-    else {
-        // fallback
-        m_mentat = new BeneMentat(ctx.get());
-    }
     prepareMentatForPlayer();
-    m_mentat->speak();
 }
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    delete m_mentat;
-    m_mentat = new BeneMentat(ctx.get());
-    m_mentat->setHouse(house);
-    // create new drawStateMentat
-    if (house == ATREIDES) {
-        cIni::loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("platr"); // load planet of atreides
+    players[HUMAN].setHouse(house);
+    m_dataCampaign->housePlayer = house;
+    if (!m_states[GAME_TELLHOUSE]) {
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
+        playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
-    else if (house == HARKONNEN) {
-        cIni::loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("plhar"); // load planet of harkonnen
-    }
-    else if (house == ORDOS) {
-        cIni::loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("plord"); // load planet of ordos
-    }
-    else {
-        m_mentat->setSentence(0, "Looks like you choose an unknown house");
-    }
-    // todo: Sardaukar, etc? (Super Dune 2 features)
-    m_mentat->speak();
 }
 
 void cGame::loadScenario()
 {
-    int iHouse = players[HUMAN].getHouse();
-    cIni::loadScenario(iHouse, game.m_region, m_mentat, m_reinforcements.get());
+    auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
+    pState->loadScenario(m_reinforcements.get());
+}
+
+void cGame::goingToWinLoseBrief(int value)
+{
+    setState(value);
+    createAndPrepareMentatForHumanPlayer(!m_skirmish);
+
+}
+
+void cGame::changeStateFromMentat()
+{
+    if (game.isState(GAME_BRIEFING)) {
+        // proceed, play mission (it is already loaded before we got here)
+        game.setNextStateToTransitionTo(GAME_PLAYING);
+        drawManager->missionInit();
+
+        // CENTER MOUSE
+        game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
+
+        game.initiateFadingOut();
+
+        game.playMusicByType(MUSIC_PEACE);
+        return;
+    }
+
+    if (game.m_skirmish) {
+        if (game.isState(GAME_WINBRIEF) || game.isState(GAME_LOSEBRIEF)) {
+            // regardless of drawStateWinning or drawStateLosing, always go back to main menu
+            game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
+            game.initSkirmish();
+            game.initiateFadingOut();
+        }
+        else {
+            logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
+        }
+        return;
+    }
+
+    // NOT a skirmish game
+
+    // won mission, transition to region selection (Select your next Conquest)
+    if (game.isState(GAME_WINBRIEF)) {
+        game.setNextStateToTransitionTo(GAME_REGION);
+
+        game.initiateFadingOut();
+        return;
+    }
+
+    // lost mission
+    if (game.isState(GAME_LOSEBRIEF)) {
+        game.missionInit();
+        // lost mission > 1, so we go back to region select
+        if (m_dataCampaign->mission > 1)   {
+            game.setNextStateToTransitionTo(GAME_REGION);
+
+            m_dataCampaign->mission--; // we did not win
+        }
+        else {
+            // mission 1 failed, really?..., back to mentat with briefing
+            game.setNextStateToTransitionTo(GAME_BRIEFING);
+            game.prepareMentatForPlayer();
+            game.playMusicByType(MUSIC_BRIEFING);
+        }
+
+        game.initiateFadingOut();
+        return;
+    }
 }
 
 void cGame::thinkFast_state()
 {
     think_audio();
-    think_mentat();
-
     if (m_currentState) {
         m_currentState->thinkFast();
     }
@@ -1518,10 +1559,6 @@ void cGame::reduceShaking() const {
     m_screenShake->reduce();
 }
 
-// void cGame::install_bitmaps()
-// {
-//     //Mira rip this function
-// }
 
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
@@ -1567,9 +1604,6 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
     // pass through any classes that are interested
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
-    }
-    if (m_mentat) {
-        m_mentat->onNotifyMouseEvent(event);
     }
 }
 
@@ -2122,68 +2156,6 @@ void cGame::setMousePosition(int w, int h)
     m_mouse->setCursorPosition(window, w,h);
 }
 
-void cGame::execute(AbstractMentat &mentat)
-{
-    if (game.isState(GAME_BRIEFING)) {
-        // proceed, play mission (it is already loaded before we got here)
-        game.setNextStateToTransitionTo(GAME_PLAYING);
-        drawManager->missionInit();
-
-        // CENTER MOUSE
-        game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
-
-        game.initiateFadingOut();
-
-        game.playMusicByType(MUSIC_PEACE);
-        return;
-    }
-
-    if (game.m_skirmish) {
-        if (game.isState(GAME_WINBRIEF) || game.isState(GAME_LOSEBRIEF)) {
-            // regardless of drawStateWinning or drawStateLosing, always go back to main menu
-            game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-            game.initSkirmish();
-            game.initiateFadingOut();
-        }
-        else {
-            logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
-        }
-        return;
-    }
-
-    // NOT a skirmish game
-
-    // won mission, transition to region selection (Select your next Conquest)
-    if (game.isState(GAME_WINBRIEF)) {
-        game.setNextStateToTransitionTo(GAME_REGION);
-
-        game.initiateFadingOut();
-        return;
-    }
-
-    // lost mission
-    if (game.isState(GAME_LOSEBRIEF)) {
-        game.missionInit();
-        // lost mission > 1, so we go back to region select
-        if (game.m_mission > 1)   {
-            game.setNextStateToTransitionTo(GAME_REGION);
-
-            game.m_mission--; // we did not win
-        }
-        else {
-            // mission 1 failed, really?..., back to mentat with briefing
-            game.setNextStateToTransitionTo(GAME_BRIEFING);
-            game.prepareMentatForPlayer();
-            game.playMusicByType(MUSIC_BRIEFING);
-            mentat.resetSpeak();
-        }
-
-        game.initiateFadingOut();
-        return;
-    }
-}
-
-
 // Fading between menu items
 void cGame::initiateFadingOut()
 {
@@ -2196,51 +2168,6 @@ void cGame::initiateFadingOut()
     renderDrawer->endDrawingToTexture();
 }
 
-// this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateLosing()
-{
-    if (screenTexture)
-        renderDrawer->renderSprite(screenTexture,0,0);
-
-    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
-    int posW = (m_screenW-tex->w)/2;
-    int posH = (m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
-    renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
-
-    if (m_mouse->isLeftButtonClicked()) {
-        m_state = GAME_LOSEBRIEF;
-
-        createAndPrepareMentatForHumanPlayer(!m_skirmish);
-
-        // FADE OUT
-        initiateFadingOut();
-    }
-}
-
-// this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateWinning()
-{
-    if (screenTexture)
-        renderDrawer->renderSprite(screenTexture,0,0);
-        
-    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
-    int posW = (m_screenW-tex->w)/2;
-    int posH = (m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
-    renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
-
-    if (m_mouse->isLeftButtonClicked()) {
-        // Mentat will be happy, after that enter "Select your next Conquest"
-        m_state = GAME_WINBRIEF;
-
-        createAndPrepareMentatForHumanPlayer(!m_skirmish);
-
-        // FADE OUT
-        initiateFadingOut();
-    }
-}
-
 void cGame::takeBackGroundScreen()
 {
     renderDrawer->beginDrawingToTexture(screenTexture);
@@ -2251,4 +2178,19 @@ void cGame::takeBackGroundScreen()
 std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
 {
     return m_TerrainInfo;
+}
+
+cReinforcements* cGame::getReinforcements() const
+{
+    return m_reinforcements.get();
+}
+
+s_DataCampaign* cGame::getDataCampaign() const
+{
+    return m_dataCampaign.get();
+}
+
+int cGame::getCurrentState() const
+{
+    return m_state;
 }

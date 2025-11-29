@@ -17,13 +17,15 @@ class cReinforcements;
 class AbstractMentat;
 class cSelectYourNextConquestState;
 
+struct s_DataCampaign;
+
 // public stuff
 class cIni {
 public:
     // Read game.ini file
     static void installGame(std::string filename);
     // Load original scenario ini file
-    static void loadScenario(int iHouse, int iRegion, AbstractMentat *pMentat,cReinforcements *reinforcements);
+    static void loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat,cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
     // Load briefing for original scenario
     static void loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
     // Load regionfile for original scenario
