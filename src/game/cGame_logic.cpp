@@ -152,7 +152,6 @@ void cGame::init()
     m_nextState = -1;
     m_missionWasWon = false;
     m_currentState = nullptr;
-    m_screenshot = 0;
     m_playing = true;
 
     m_TIMER_evaluatePlayerStatus = 5;
@@ -874,7 +873,6 @@ bool cGame::setupGame()
     srand(t);
 
     game.m_playing = true;
-    game.m_screenshot = 0;
     game.m_state = GAME_INITIALIZE;
 
     logbook("Setup:  HOUSES");
