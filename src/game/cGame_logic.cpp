@@ -481,7 +481,7 @@ bool cGame::hasGameOverConditionAIHasNoBuildings() const
 }
 
 // think function belongs to combat state (tbd)
-void cGame::think_audio()
+void cGame::thinkFast_audio()
 {
     if (!game.m_playMusic) // no music enabled, so no need to think
         return;
@@ -1199,7 +1199,7 @@ void cGame::setState(int newState)
     m_state = newState;
 }
 
-void cGame::think_fading()
+void cGame::thinkFast_fading()
 {
     // Fading of the entire screen
     if (m_fadeAction == eFadeAction::FADE_OUT) {
@@ -1349,7 +1349,7 @@ void cGame::changeStateFromMentat()
 
 void cGame::thinkFast_state()
 {
-    think_audio();
+    thinkFast_audio();
     if (m_currentState) {
         m_currentState->thinkFast();
     }
@@ -1994,7 +1994,7 @@ int cGame::getMaxVolume()
 /**
  * Called every 100ms
  */
-void cGame::think_state()
+void cGame::thinkNormal_state()
 {
     if (game.isState(GAME_PLAYING)) {
         // units think
@@ -2025,7 +2025,7 @@ void cGame::thinkSlow()
     m_timeManager->adaptWaitingTime();
 }
 
-void cGame::think_minute()
+void cGame::thinkCache()
 {
     ctx->resetCache();
 }

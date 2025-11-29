@@ -125,7 +125,10 @@ void cTimeManager::capTimers()
     }
 }
 
-void cTimeManager::handleTimerSecond()
+/**
+ * timerseconds timer is called every 1000 ms, try to keep up with that.
+ */
+void cTimeManager::handleTimerSlow()
 {
     while (m_timerSecond.count > 0) {
         m_gameTime++;
@@ -135,27 +138,36 @@ void cTimeManager::handleTimerSecond()
     }
 }
 
-void cTimeManager::handleTimerGameTime()
+/**
+ * gametime timer is called every 5 ms, try to keep up with that.
+ */
+void cTimeManager::handleTimerFast()
 {
     while (m_timerGameTime.count > 0) {
-        m_game->think_fading();
+        m_game->thinkFast_fading();
         m_game->thinkFast_state();
         m_timerGameTime.count--;
     }
 }
 
-void cTimeManager::handleTimerUnits()
+/**
+ * units timer is called every 100 ms, try to keep up with that.
+ */
+void cTimeManager::handleTimerNormal()
 {
     while (m_timerUnits.count > 0) {
-        m_game->think_state();
+        m_game->thinkNormal_state();
         m_timerUnits.count--;
     }
 }
 
+/**
+ * units timer is called every 100 ms, try to keep up with that.
+ */
 void cTimeManager::handleTimerMinute()
 {
     while (m_timerMinute.count > 0) {
-        m_game->think_minute();
+        m_game->thinkCache();
         m_timerMinute.count--;
     }
 }
@@ -198,9 +210,9 @@ void cTimeManager::processTime()
     }
 
     capTimers();
-    handleTimerSecond();
-    handleTimerUnits();
-    handleTimerGameTime();
+    handleTimerFast();
+    handleTimerNormal();
+    handleTimerSlow();
     handleTimerMinute();
 }
 
