@@ -125,9 +125,6 @@ void cTimeManager::capTimers()
     }
 }
 
-/**
- * timerseconds timer is called every 1000 ms, try to keep up with that.
- */
 void cTimeManager::handleTimerSecond()
 {
     while (m_timerSecond.count > 0) {
@@ -138,9 +135,6 @@ void cTimeManager::handleTimerSecond()
     }
 }
 
-/**
- * gametime timer is called every 5 ms, try to keep up with that.
- */
 void cTimeManager::handleTimerGameTime()
 {
     while (m_timerGameTime.count > 0) {
@@ -150,9 +144,6 @@ void cTimeManager::handleTimerGameTime()
     }
 }
 
-/**
- * units timer is called every 100 ms, try to keep up with that.
- */
 void cTimeManager::handleTimerUnits()
 {
     while (m_timerUnits.count > 0) {
@@ -161,9 +152,6 @@ void cTimeManager::handleTimerUnits()
     }
 }
 
-/**
- * units timer is called every 100 ms, try to keep up with that.
- */
 void cTimeManager::handleTimerMinute()
 {
     while (m_timerMinute.count > 0) {
