@@ -1,4 +1,3 @@
-#include "game/cScreenShotSaver.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -6,6 +5,9 @@
 #include <format>
 #include <chrono>
 #include <filesystem>
+
+#include "game/cScreenShotSaver.h"
+#include "utils/cLog.h"
 
 namespace fs = std::filesystem;
 
@@ -18,16 +20,16 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
     std::cout << filename << std::endl;
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
-        std::cerr << "Erreur création surface: " << SDL_GetError() << std::endl;
+        std::cerr << "Error creating surface: " << SDL_GetError() << std::endl;
         return false;
     }
     if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
-        std::cerr << "Erreur lecture pixels: " << SDL_GetError() << std::endl;
+        std::cerr << "Error reading pixels: " << SDL_GetError() << std::endl;
         SDL_FreeSurface(surface);
         return false;
     }
     if (IMG_SavePNG(surface, filename.c_str()) != 0) {
-        std::cerr << "IMG_SavePNG error" << SDL_GetError() << std::endl;
+        std::cerr << "IMG_SavePNG error " << SDL_GetError() << std::endl;
     }        
     SDL_FreeSurface(surface);
     return true;
@@ -47,7 +49,7 @@ std::string cScreenShotSaver::getBaseFileName()
             fs::create_directory(folder);
         }
         catch (const fs::filesystem_error& e) {
-            std::cerr << "error creating folder : " << e.what() << '\n';
+            std::cerr << " error creating folder : " << e.what() << '\n';
             return baseName;
         }
     }
