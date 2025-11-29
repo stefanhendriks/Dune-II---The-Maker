@@ -1616,7 +1616,7 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 
     // take screenshot
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F11)) {
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F12)) {
         saveBmpScreenToDisk();
     }
 
