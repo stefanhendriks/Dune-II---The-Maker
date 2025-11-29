@@ -2,6 +2,7 @@
 
 #include "data/gfxmentat.h"
 #include "d2tmc.h"
+#include "include/sDataCampaign.h"
 #include "player/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -11,7 +12,7 @@
 #include "context/GameContext.hpp"
 #include <iostream>
 
-BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
+BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, false), m_dataCampaign(dataCampaign)
 {
     iBackgroundFrame = MENTATM;
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
@@ -22,13 +23,7 @@ BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
             .withLabel("No")
             .withTexture(gfxmentat->getTexture(BTN_NO))
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([]() {
-                logbook("cNoButtonCommand::execute()");
-                // head back to choose house
-                players[HUMAN].setHouse(GENERALHOUSE);
-                game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
-                game.initiateFadingOut();
-            })
+            .onClick([this]() { this->onNoButtonPressed(); })
             .build();
 
     rightGuiButton = GuiButtonBuilder()
@@ -36,15 +31,30 @@ BeneMentat::BeneMentat(GameContext* ctx) : AbstractMentat(ctx, false)
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([this]() {
-                logbook("cYesButtonCommand::execute()");
-                game.setNextStateToTransitionTo(GAME_BRIEFING);
-                game.m_mission = 1; // first mission
-                game.m_region  = 1; // and the first "region" so to speak
-                game.missionInit();
-                players[HUMAN].setHouse(this->getHouse());
-               game.initiateFadingOut();})
+            .onClick([this]() { this->onYesButtonPressed(); })
             .build();
+}
+
+void BeneMentat::onYesButtonPressed()
+{
+    logbook("cYesButtonCommand::execute()");
+    game.setNextStateToTransitionTo(GAME_BRIEFING);
+    m_dataCampaign->mission = 1; // first mission
+    m_dataCampaign->region  = 1; // and the first "region" so to speak
+    game.missionInit();
+    players[HUMAN].setHouse(this->getHouse());
+    m_dataCampaign->housePlayer = this->getHouse();
+    game.initiateFadingOut();
+}
+
+void BeneMentat::onNoButtonPressed()
+{
+    logbook("cNoButtonCommand::execute()");
+    // head back to choose house
+    players[HUMAN].setHouse(GENERALHOUSE);
+    m_dataCampaign->housePlayer = GENERALHOUSE;
+    game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
+    game.initiateFadingOut();
 }
 
 void BeneMentat::think()
@@ -78,4 +88,15 @@ void BeneMentat::draw_eyes()
 void BeneMentat::draw_mouth()
 {
     renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
+}
+
+void BeneMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+{
+    if (event.hasKey(SDL_SCANCODE_RETURN)) {
+        this->onYesButtonPressed();
+    }
+    else
+    if (event.hasKey(SDL_SCANCODE_BACKSPACE)) {
+        this->onNoButtonPressed();
+    }
 }

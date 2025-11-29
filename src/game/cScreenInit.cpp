@@ -1,6 +1,6 @@
-#include "cScreenInit.h"
+#include "game/cScreenInit.h"
 
-#include "cLog.h"
+#include "utils/cLog.h"
 
 #include <SDL2/SDL.h>
 #include <format>
