@@ -178,7 +178,7 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void onEventSpecialLaunch(const s_GameEvent &event) const;
-    void onEventEntityDestroyed(const s_GameEvent & event);
+    void onEventEntityDestroyedSpawned(const s_GameEvent & event);
 
     static const char *stateString(const int &state) {
         switch (state) {

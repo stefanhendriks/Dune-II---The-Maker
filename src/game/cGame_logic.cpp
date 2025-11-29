@@ -1418,7 +1418,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
             onEventSpecialLaunch(event);
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
-            onEventEntityDestroyed(event);
+            onEventEntityDestroyedSpawned(event);
             break;
         default:
             break;
@@ -1430,7 +1430,8 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     }
 }
 
-void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
+void cGame::onEventEntityDestroyedSpawned(const s_GameEvent &event)
+{
     if (event.entityType != eBuildType::STRUCTURE) {
         return;
     }
