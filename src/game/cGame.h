@@ -17,7 +17,7 @@
 // #include "mentat/AbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-#include "utils/cTimeManager.h"
+#include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
 
 #include <memory>
