@@ -360,8 +360,18 @@ void cUnit::createExplosionParticle()
                         unit[id].iHitPoints -= 150;
 
                         // NO HP LEFT, DIE
-                        if (unit[id].iHitPoints <= 1)
+                        if (unit[id].iHitPoints <= 1) {
                             unit[id].die(true, false);
+                            s_GameEvent event{
+                                .eventType = eGameEventType::GAME_EVENT_DESTROYED,
+                                .entityType = eBuildType::UNIT,
+                                .entityID = id,
+                                .player = getPlayer(),
+                                .entitySpecificType = unit[id].getType(),
+                                .atCell = unit[id].iCell
+                            };
+                            game.onNotifyGameEvent(event);
+                        }
                     } // only die when the unit is going to die
                 }
 
@@ -2957,6 +2967,15 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
                 // die
                 potentialDeadUnit.die(false, true);
+                s_GameEvent event{
+                    .eventType = eGameEventType::GAME_EVENT_DESTROYED,
+                    .entityType = eBuildType::UNIT,
+                    .entityID = potentialDeadUnit.iID,
+                    .player = getPlayer(),
+                    .entitySpecificType = potentialDeadUnit.getType(),
+                    .atCell = potentialDeadUnit.iCell
+                };
+                game.onNotifyGameEvent(event);
             }
         }
 
