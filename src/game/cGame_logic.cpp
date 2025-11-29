@@ -1419,6 +1419,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
             onEventEntityDestroyedSpawned(event);
+            onEventEntityDestroyedStatistics(event);
             break;
         default:
             break;
@@ -1427,6 +1428,19 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     // players handle events
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].onNotifyGameEvent(event);
+    }
+}
+
+void cGame::onEventEntityDestroyedStatistics(const s_GameEvent &event)
+{
+    if ((event.entityType != eBuildType::STRUCTURE) & (event.entityType != eBuildType::UNIT)) {
+        return;
+    }
+    if (event.entityType == eBuildType::STRUCTURE) {
+        std::cout << "structure destroyed " << std::endl;
+    }
+    if (event.entityType == eBuildType::UNIT) {
+        std::cout << "unit destroyed " << std::endl;
     }
 }
 

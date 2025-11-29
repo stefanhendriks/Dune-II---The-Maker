@@ -179,6 +179,7 @@ public:
 
     void onEventSpecialLaunch(const s_GameEvent &event) const;
     void onEventEntityDestroyedSpawned(const s_GameEvent & event);
+    void onEventEntityDestroyedStatistics(const s_GameEvent & event);
 
     static const char *stateString(const int &state) {
         switch (state) {
