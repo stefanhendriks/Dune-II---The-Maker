@@ -4,13 +4,17 @@
 #include <string>
 #include <iostream>
 #include <format>
+#include <chrono>
 
 unsigned int cScreenShotSaver::screenCount = 0;
 
 bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
     screenCount++;
-    std::string filename = std::format("screen_{}x{}_{:0>4}.png", width, height,screenCount);
+    auto now = std::chrono::year_month_day{
+        std::chrono::floor<std::chrono::days>(std::chrono::system_clock::now())
+    };
+    std::string filename = std::format("screen_{}_{}x{}_{:0>4}.png", std::format("{:%F}", now), width, height,screenCount);
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
         std::cerr << "Erreur création surface: " << SDL_GetError() << std::endl;
