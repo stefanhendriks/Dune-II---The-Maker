@@ -453,7 +453,7 @@ void cGame::drawState()
     }
 
     // this makes fade-in happen after fade-out automatically
-    if (m_cScreenFader->getAlpha()  == 0) {
+    if (m_cScreenFader->getAction()  == eFadeAction::None) {
         m_cScreenFader->startFadeIn();
     }
 
@@ -1034,6 +1034,43 @@ void cGame::setState(int newState)
 void cGame::thinkFast_fading()
 {
     m_cScreenFader->update();
+    //@mira_fader
+    
+    /*
+    // Fading of the entire screen
+    if (m_fadeAction == eFadeAction::FADE_OUT) {
+        m_fadeAlpha -= 2;
+        if (m_fadeAlpha < kMinAlpha) {
+            m_fadeAlpha = kMinAlpha;
+            m_fadeAction = eFadeAction::FADE_NONE;
+        }
+    }
+    else if (m_fadeAction == eFadeAction::FADE_IN) {
+        m_fadeAlpha += 2;
+        if (m_fadeAlpha > kMaxAlpha) {
+            m_fadeAlpha = kMaxAlpha;
+            m_fadeAction = eFadeAction::FADE_NONE;
+        }
+    }
+
+    // Fading / pulsating of selected stuff
+    static constexpr float fadeSelectIncrement = 1 / 256.0f;
+    if (m_fadeSelectDir) {
+        m_fadeSelect += fadeSelectIncrement;
+        // when 255, then fade back
+        if (m_fadeSelect > 0.99) {
+            m_fadeSelect = 1.0f;
+            m_fadeSelectDir = false;
+        }
+
+        return;
+    }
+
+    m_fadeSelect -= fadeSelectIncrement;
+    // not too dark, 0.03125
+    if (m_fadeSelect < 0.3125f) {
+        m_fadeSelectDir = true;
+    }*/
 }
 
 cGame::~cGame()
