@@ -70,6 +70,7 @@
 #include "game/cScreenShake.h"
 #include "game/cTimeCounter.h"
 #include "game/cGameConditionChecker.h"
+#include "game/cScreenFader.h"
 
 #include <algorithm>
 #include <random>
@@ -78,12 +79,12 @@
 
 #include "data/gfxaudio.h"
 
-namespace {
+// namespace {
 
-constexpr auto kMinAlpha = 0;
-constexpr auto kMaxAlpha = 255;
+// constexpr auto kMinAlpha = 0;
+// constexpr auto kMaxAlpha = 255;
 
-}
+// }
 
 cGame::cGame()
 {
@@ -118,6 +119,8 @@ cGame::cGame()
     m_dataCampaign = std::make_unique<s_DataCampaign>();
 
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
+
+    m_cScreenFader = std::make_unique<cScreenFader>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -162,9 +165,9 @@ void cGame::init()
     m_skirmish = false;
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_debugMode);
 
-    // Alpha (for fading in/out)
-    m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
-    m_fadeAction = eFadeAction::FADE_IN; // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    // // Alpha (for fading in/out)
+    // m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
+    // m_fadeAction = eFadeAction::FADE_IN; // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     m_musicVolume = 96; // volume is 0...
 
@@ -172,9 +175,7 @@ void cGame::init()
 
     setState(GAME_INITIALIZE);
 
-    m_fadeSelect = 1.0f;
-
-    m_fadeSelectDir = true;    // fade select direction
+    m_cScreenFader->inititialize();
 
     m_dataCampaign->housePlayer = -1;
     m_dataCampaign->mission = 0;
@@ -220,9 +221,7 @@ void cGame::missionInit()
 
     m_pathsCreated = 0;
 
-    m_fadeSelect = 1.0f;
-
-    m_fadeSelectDir = true;    // fade select direction
+    m_cScreenFader->inititialize();
 
     m_screenShake->reset();
 
@@ -479,32 +478,27 @@ void cGame::shakeScreenAndBlitBuffer()
 
 void cGame::fadeOutOrBlitScreenBuffer() const
 {
-    if (m_fadeAction == FADE_NONE) {
+    if (m_cScreenFader->getAction() == eFadeAction::None) {
         return;
     }
-
-    // Fading
-    assert(m_fadeAlpha >= kMinAlpha);
-    assert(m_fadeAlpha <= kMaxAlpha);
 }
 
 void cGame::drawState()
 {
-    if (m_fadeAction == eFadeAction::FADE_OUT) {
+    if (m_cScreenFader->getAction() == eFadeAction::FadeOut) {
         if (screenTexture) {
-            renderDrawer->renderSprite(screenTexture,0,0,(Uint8)m_fadeAlpha);
+            renderDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
         }
         return;
     }
 
     // this makes fade-in happen after fade-out automatically
-    if (m_fadeAlpha == kMinAlpha) {
-        m_fadeAction = eFadeAction::FADE_IN;
+    if (m_cScreenFader->getAction()  == eFadeAction::None) {
+        m_cScreenFader->startFadeIn();
     }
 
-    if (m_fadeAction == eFadeAction::FADE_IN && m_fadeAlpha>250) {
-        m_fadeAlpha = kMaxAlpha;
-        m_fadeAction = eFadeAction::FADE_NONE;
+    if (m_cScreenFader->getAction()  == eFadeAction::FadeIn && m_cScreenFader->getAlpha()>Uint8(250)) {
+       m_cScreenFader->startFadeNone();
     }
 
     switch (m_state) {
@@ -1068,6 +1062,10 @@ void cGame::setState(int newState)
 
 void cGame::thinkFast_fading()
 {
+    m_cScreenFader->update();
+    //@mira_fader
+    
+    /*
     // Fading of the entire screen
     if (m_fadeAction == eFadeAction::FADE_OUT) {
         m_fadeAlpha -= 2;
@@ -1101,7 +1099,7 @@ void cGame::thinkFast_fading()
     // not too dark, 0.03125
     if (m_fadeSelect < 0.3125f) {
         m_fadeSelectDir = true;
-    }
+    }*/
 }
 
 cGame::~cGame()
@@ -1445,10 +1443,7 @@ void cGame::reduceShaking() const {
 
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
-    unsigned char desiredRed = rFlag ? r * m_fadeSelect : r;
-    unsigned char desiredGreen = gFlag ? g * m_fadeSelect : g;
-    unsigned char desiredBlue = bFlag ? b * m_fadeSelect : b;
-    return Color{desiredRed, desiredGreen, desiredBlue,255};
+    return m_cScreenFader->getColorFadeSelected(r,g,b,rFlag,gFlag,bFlag);
 }
 
 Color cGame::getColorPlaceNeutral()
@@ -2040,8 +2035,9 @@ void cGame::setMousePosition(int w, int h)
 void cGame::initiateFadingOut()
 {
     // set state to fade out
-    m_fadeAction = eFadeAction::FADE_OUT; // fade out
-    m_fadeAlpha = 250;
+    // m_fadeAction = eFadeAction::FADE_OUT; // fade out
+    // m_fadeAlpha = 250;
+    m_cScreenFader->startFadeOut();
 
     renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
