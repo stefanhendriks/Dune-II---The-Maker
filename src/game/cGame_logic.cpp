@@ -493,7 +493,7 @@ void cGame::drawState()
     }
 
     // this makes fade-in happen after fade-out automatically
-    if (m_cScreenFader->getAction()  == eFadeAction::None) {
+    if (m_cScreenFader->getAlpha()  == 0) {
         m_cScreenFader->startFadeIn();
     }
 
