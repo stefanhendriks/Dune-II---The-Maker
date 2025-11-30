@@ -1,6 +1,6 @@
 #include "game/cScreenFader.h"
 #include "utils/Color.hpp"
-#include <algorithm>
+// #include <algorithm>
 
 cScreenFader::cScreenFader() : m_action(eFadeAction::None), m_alpha(0)
 {}
@@ -34,19 +34,23 @@ void cScreenFader::inititialize()
 void cScreenFader::update()
 {
     if (m_action == eFadeAction::FadeIn) {
-        if (m_alpha < 255) 
+        if (m_alpha < 253) 
             m_alpha += 2;
-        else
+        else {
+            m_alpha = 255;
             m_action = eFadeAction::None;
+        }
     } 
     else if (m_action == eFadeAction::FadeOut) {
-        if (m_alpha > 0)
+        if (m_alpha > 2)
             m_alpha -= 2;
-        else 
+        else {
+            m_alpha = 0;
             m_action = eFadeAction::None;
+        }
     }
 
-    std::clamp(m_alpha,Uint8(0),Uint8(255));
+    //std::clamp(m_alpha,Uint8(0),Uint8(255));
     // Fading
     // assert(m_fadeAlpha >= kMinAlpha);
     // assert(m_fadeAlpha <= kMaxAlpha);
