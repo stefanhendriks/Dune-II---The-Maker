@@ -91,8 +91,8 @@ eFadeAction cScreenFader::getAction() const
 
 Color cScreenFader::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
-    unsigned char desiredRed = rFlag ? r * m_alpha : r;
-    unsigned char desiredGreen = gFlag ? g * m_alpha : g;
-    unsigned char desiredBlue = bFlag ? b * m_alpha : b;
+    unsigned char desiredRed = rFlag ? r * m_fadeSelect : r;
+    unsigned char desiredGreen = gFlag ? g * m_fadeSelect : g;
+    unsigned char desiredBlue = bFlag ? b * m_fadeSelect : b;
     return Color{desiredRed, desiredGreen, desiredBlue,255};
 }
