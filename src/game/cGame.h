@@ -70,10 +70,6 @@ public:
     bool m_windowed;			    // windowed
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
-    // Alpha (for fading in/out)
-    // int m_fadeAlpha;                // 255 = opaque , anything else
-    // eFadeAction m_fadeAction;       // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
-
     // resolution of the game
     int m_screenW;
     int m_screenH;
@@ -146,23 +142,6 @@ public:
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 
     int getMaxVolume();
-
-    // Color getColorFadeSelected(int r, int g, int b) {
-    //     // Fade with all rgb
-    //     return getColorFadeSelected(r, g, b, true, true, true);
-    // }
-
-    // Color getColorFadeSelectedRed(int r, int g, int b) {
-    //     return getColorFadeSelected(r, g, b, true, false, false);
-    // }
-
-    // Color getColorFadeSelectedGreen(int r, int g, int b) {
-    //     return getColorFadeSelected(r, g, b, false, true, false);
-    // }
-
-    // Color getColorFadeSelectedBlue(int r, int g, int b) {
-    //     return getColorFadeSelected(r, g, b, false, false, true);
-    // }
 
     Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 
@@ -324,9 +303,6 @@ private:
 
     int m_newMusicSample;
     int m_newMusicCountdown;
-
-    // float m_fadeSelect;                 // fade color when selected
-    // bool m_fadeSelectDir;               // fade select direction
 
     bool m_drawFps;
     bool m_drawTime;

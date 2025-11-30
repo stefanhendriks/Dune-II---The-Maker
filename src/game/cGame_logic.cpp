@@ -79,13 +79,6 @@
 
 #include "data/gfxaudio.h"
 
-// namespace {
-
-// constexpr auto kMinAlpha = 0;
-// constexpr auto kMaxAlpha = 255;
-
-// }
-
 cGame::cGame()
 {
     memset(m_states, 0, sizeof(cGameState *));
@@ -164,10 +157,6 @@ void cGame::init()
 
     m_skirmish = false;
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_debugMode);
-
-    // // Alpha (for fading in/out)
-    // m_fadeAlpha = kMinAlpha;             // 255 = opaque , anything else
-    // m_fadeAction = eFadeAction::FADE_IN; // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     m_musicVolume = 96; // volume is 0...
 
@@ -435,40 +424,6 @@ void cGame::loadSkirmishMaps() const
 {
     m_PreviewMaps->loadSkirmishMaps();
 }
-
-// void cGame::shakeScreenAndBlitBuffer()
-// {
-//     if (m_TIMER_shake == 0) {
-//         m_TIMER_shake = -1;
-//     }
-
-//     // only in playing state we shake screen
-//     if (m_state == GAME_PLAYING) {
-//         // TODO: move the shaking part of the rendering in the playing state object at some time
-//         // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
-//         // always at some point in the main loop, and does not need to know about the shaking logic.
-
-//         // blitSprite on screen
-//         if (m_TIMER_shake > 0) {
-//             // the more we get to the 'end' the less we 'throttle'.
-//             // Structure explosions are 6 time units per cell.
-//             // Max is 9 cells (9*6=54)
-//             // the max border is then 9. So, we do time / 6
-//             int shakiness = std::min(m_TIMER_shake, 69);
-//             float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
-
-//             m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
-//             m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
-
-//             // @Mira recreate shake screen
-            
-//         }
-//         else {
-//             fadeOutOrBlitScreenBuffer();
-//         }
-//     }
-//     fadeOutOrBlitScreenBuffer();
-// }
 
 void cGame::shakeScreenAndBlitBuffer()
 {
@@ -1063,43 +1018,6 @@ void cGame::setState(int newState)
 void cGame::thinkFast_fading()
 {
     m_cScreenFader->update();
-    //@mira_fader
-    
-    /*
-    // Fading of the entire screen
-    if (m_fadeAction == eFadeAction::FADE_OUT) {
-        m_fadeAlpha -= 2;
-        if (m_fadeAlpha < kMinAlpha) {
-            m_fadeAlpha = kMinAlpha;
-            m_fadeAction = eFadeAction::FADE_NONE;
-        }
-    }
-    else if (m_fadeAction == eFadeAction::FADE_IN) {
-        m_fadeAlpha += 2;
-        if (m_fadeAlpha > kMaxAlpha) {
-            m_fadeAlpha = kMaxAlpha;
-            m_fadeAction = eFadeAction::FADE_NONE;
-        }
-    }
-
-    // Fading / pulsating of selected stuff
-    static constexpr float fadeSelectIncrement = 1 / 256.0f;
-    if (m_fadeSelectDir) {
-        m_fadeSelect += fadeSelectIncrement;
-        // when 255, then fade back
-        if (m_fadeSelect > 0.99) {
-            m_fadeSelect = 1.0f;
-            m_fadeSelectDir = false;
-        }
-
-        return;
-    }
-
-    m_fadeSelect -= fadeSelectIncrement;
-    // not too dark, 0.03125
-    if (m_fadeSelect < 0.3125f) {
-        m_fadeSelectDir = true;
-    }*/
 }
 
 cGame::~cGame()
@@ -2034,9 +1952,6 @@ void cGame::setMousePosition(int w, int h)
 // Fading between menu items
 void cGame::initiateFadingOut()
 {
-    // set state to fade out
-    // m_fadeAction = eFadeAction::FADE_OUT; // fade out
-    // m_fadeAlpha = 250;
     m_cScreenFader->startFadeOut();
 
     renderDrawer->beginDrawingToTexture(screenTexture);
