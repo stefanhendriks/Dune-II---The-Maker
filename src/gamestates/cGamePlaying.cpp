@@ -273,41 +273,9 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    /*@mira
-    if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
-        game.m_playMusic = !game.m_playMusic;
-        if (!game.m_playMusic) {
-            m_soundPlayer->stopMusic();
-            humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
-        }
-        else {
-            m_soundPlayer->playMusic(m_newMusicSample);
-            humanPlayer.addNotification("Music enabled", eNotificationType::NEUTRAL);
-        }
-    }
-
-    if (event.hasKey(SDL_SCANCODE_O) || event.hasKey(SDL_SCANCODE_VOLUMEDOWN)) {
-        m_soundPlayer->changeMusicVolume(-10);
-    }
-
-    if (event.hasKey(SDL_SCANCODE_P) || event.hasKey(SDL_SCANCODE_VOLUMEUP) ) {
-        m_soundPlayer->changeMusicVolume(10);
-    }
-    */
     if (event.hasKey(SDL_SCANCODE_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
-
-    /* @mira
-    if (event.hasKey(SDL_SCANCODE_KP_PLUS)) {
-        auto timerManager = ctx->getTimeManager();
-        timerManager->setGlobalSpeedVariation(-1);
-    }
-    if (event.hasKey(SDL_SCANCODE_KP_MINUS)) {
-        auto timerManager = ctx->getTimeManager();
-        timerManager->setGlobalSpeedVariation(1);
-    }
-    */
 
     // Center on the selected structure
     if (event.hasKey(SDL_SCANCODE_C)) {
@@ -316,18 +284,6 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
             mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
-
-     /* @mira
-    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_RETURN)) {
-        if (m_windowed) {
-            m_Screen->setFullScreenMode();
-            m_windowed = false;
-        } else {
-            m_Screen->setWindowMode();
-            m_windowed = true;
-        }
-    }
-    */
 
     cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
     if (selectedStructure) {
