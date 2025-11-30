@@ -1404,6 +1404,17 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         m_currentState->onNotifyKeyboardEvent(event);
     }
 
+    switch (event.eventType) {
+        case eKeyEventType::HOLD:
+            onKeyDownGame(event);
+            break;
+        case eKeyEventType::PRESSED:
+            onKeyPressedGame(event);
+            break;
+        default:
+            break;
+    }
+
     // take screenshot
     if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F11)) {
         saveBmpScreenToDisk();
@@ -1492,6 +1503,16 @@ void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
             break;
     }
 }
+
+void cGame::onKeyDownGame(const cKeyboardEvent &event)
+{
+}
+
+void cGame::onKeyPressedGame(const cKeyboardEvent &event)
+{
+
+}
+
 
 void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {

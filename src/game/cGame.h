@@ -334,7 +334,9 @@ private:
     // Combat state specific event handling for now
     [[deprecated]] void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
     [[deprecated]] void onKeyDownGamePlaying(const cKeyboardEvent &event);
+    void onKeyDownGame(const cKeyboardEvent &event);
     [[deprecated]] void onKeyPressedGamePlaying(const cKeyboardEvent &event);
+    void onKeyPressedGame(const cKeyboardEvent &event);
 
     [[deprecated]] void thinkSlow_state();
 
