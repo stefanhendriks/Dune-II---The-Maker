@@ -1463,11 +1463,6 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             break;
     }
 
-    // take screenshot
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F12)) {
-        saveBmpScreenToDisk();
-    }
-
     // TODO: this has to be its own state class. Then this if is no longer needed.
     if (m_state == GAME_PLAYING) {
         onNotifyKeyboardEventGamePlaying(event);
