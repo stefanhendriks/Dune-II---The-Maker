@@ -303,12 +303,12 @@ enum eGameEventType {
     GAME_EVENT_DEPLOY_UNIT,
 };
 
-// Fading action for transitioning between states
-enum eFadeAction {
-    FADE_NONE,  // no fading
-    FADE_IN,    // fade in
-    FADE_OUT    // fade out
-};
+// // Fading action for transitioning between states
+// enum eFadeAction {
+//     FADE_NONE,  // no fading
+//     FADE_IN,    // fade in
+//     FADE_OUT    // fade out
+// };
 
 // Particle drawing layers (z-index like) to draw particle
 enum class RenderLayerParticle : char {
