@@ -1415,11 +1415,6 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             break;
     }
 
-    // take screenshot
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F11)) {
-        saveBmpScreenToDisk();
-    }
-
     // TODO: this has to be its own state class. Then this if is no longer needed.
     if (m_state == GAME_PLAYING) {
         onNotifyKeyboardEventGamePlaying(event);
@@ -1506,11 +1501,55 @@ void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
 
 void cGame::onKeyDownGame(const cKeyboardEvent &event)
 {
+    
 }
 
 void cGame::onKeyPressedGame(const cKeyboardEvent &event)
 {
+    // take screenshot
+    if (event.hasKey(SDL_SCANCODE_F11)) {
+        saveBmpScreenToDisk();
+    }
 
+    if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
+        game.m_playMusic = !game.m_playMusic;
+        if (!game.m_playMusic) {
+            m_soundPlayer->stopMusic();
+            //@mira regression humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
+        }
+        else {
+            m_soundPlayer->playMusic(m_newMusicSample);
+            //@mira regression humanPlayer.addNotification("Music enabled", eNotificationType::NEUTRAL);
+        }
+    }
+
+    if (event.hasKey(SDL_SCANCODE_O) || event.hasKey(SDL_SCANCODE_VOLUMEDOWN)) {
+        m_soundPlayer->changeMusicVolume(-10);
+    }
+
+    if (event.hasKey(SDL_SCANCODE_P) || event.hasKey(SDL_SCANCODE_VOLUMEUP) ) {
+        m_soundPlayer->changeMusicVolume(10);
+    }
+
+    if (event.hasKey(SDL_SCANCODE_KP_PLUS)) {
+        auto timerManager = ctx->getTimeManager();
+        timerManager->setGlobalSpeedVariation(-1);
+    }
+
+    if (event.hasKey(SDL_SCANCODE_KP_MINUS)) {
+        auto timerManager = ctx->getTimeManager();
+        timerManager->setGlobalSpeedVariation(1);
+    }
+
+    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_RETURN)) {
+        if (m_windowed) {
+            m_Screen->setFullScreenMode();
+            m_windowed = false;
+        } else {
+            m_Screen->setWindowMode();
+            m_windowed = true;
+        }
+    }
 }
 
 
@@ -1592,37 +1631,8 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
-        game.m_playMusic = !game.m_playMusic;
-        if (!game.m_playMusic) {
-            m_soundPlayer->stopMusic();
-            humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
-        }
-        else {
-            m_soundPlayer->playMusic(m_newMusicSample);
-            humanPlayer.addNotification("Music enabled", eNotificationType::NEUTRAL);
-        }
-    }
-
-    if (event.hasKey(SDL_SCANCODE_O) || event.hasKey(SDL_SCANCODE_VOLUMEDOWN)) {
-        m_soundPlayer->changeMusicVolume(-10);
-    }
-
-    if (event.hasKey(SDL_SCANCODE_P) || event.hasKey(SDL_SCANCODE_VOLUMEUP) ) {
-        m_soundPlayer->changeMusicVolume(10);
-    }
-
     if (event.hasKey(SDL_SCANCODE_H)) {
         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
-    }
-
-    if (event.hasKey(SDL_SCANCODE_KP_PLUS)) {
-        auto timerManager = ctx->getTimeManager();
-        timerManager->setGlobalSpeedVariation(-1);
-    }
-    if (event.hasKey(SDL_SCANCODE_KP_MINUS)) {
-        auto timerManager = ctx->getTimeManager();
-        timerManager->setGlobalSpeedVariation(1);
     }
 
     // Center on the selected structure
@@ -1630,16 +1640,6 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
             mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
-        }
-    }
-
-    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_RETURN)) {
-        if (m_windowed) {
-            m_Screen->setFullScreenMode();
-            m_windowed = false;
-        } else {
-            m_Screen->setWindowMode();
-            m_windowed = true;
         }
     }
 
