@@ -270,7 +270,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
             item->resetProgress();
 
             // notify game that the item just has been cancelled, just before the actual removal
-            s_GameEvent newEvent {
+            s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED,
                 .entityType = item->getBuildType(),
                 .entityID = -1,
@@ -281,7 +281,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
                 .buildingListItem = item
             };
 
-            game.onNotifyGameEvent(newEvent);
+            game.onNotifyGameEvent(event);
             // else, only the number is decreased (used for queueing)
 
             cItemBuilder *itemBuilder = player->getItemBuilder();
