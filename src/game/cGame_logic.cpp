@@ -1310,7 +1310,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
-                    s_GameEvent newEvent{
+                    s_GameEvent event{
                         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
                         .entityType = itemToDeploy->getBuildType(),
                         .entityID = -1,
@@ -1321,7 +1321,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
                         .buildingListItem = itemToDeploy
                     };
 
-                    game.onNotifyGameEvent(newEvent);
+                    game.onNotifyGameEvent(event);
                 }
             }
         }
@@ -1340,7 +1340,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
     }
 
     // notify game that the item just has been finished!
-    s_GameEvent newEvent{
+    s_GameEvent eventT{
         .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
         .entityType = itemToDeploy->getBuildType(),
         .entityID = -1,
@@ -1351,7 +1351,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
         .buildingListItem = nullptr
     };
 
-    game.onNotifyGameEvent(newEvent);
+    game.onNotifyGameEvent(eventT);
 }
 
 void cGame::reduceShaking() const {
@@ -1650,13 +1650,13 @@ void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         // and then perform?
         if (event.hasKey(SDL_SCANCODE_D)) {
             if (selectedStructure->getType() == REPAIR) { // this should be done differently?
-                s_GameEvent e{
+                s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
                     .entityType = eBuildType::UNKNOWN,
                     .entityID = -1,
                     .player = &humanPlayer
                 };
-                selectedStructure->onNotifyGameEvent(e);
+                selectedStructure->onNotifyGameEvent(event);
             }
         }
         // other keys for other structures?

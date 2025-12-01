@@ -292,13 +292,13 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         // and then perform?
         if (event.hasKey(SDL_SCANCODE_D)) {
             if (selectedStructure->getType() == REPAIR) { // this should be done differently?
-                s_GameEvent e{
+                s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
                     .entityType = eBuildType::UNKNOWN,
                     .entityID = -1,
                     .player = &humanPlayer
                 };
-                selectedStructure->onNotifyGameEvent(e);
+                selectedStructure->onNotifyGameEvent(event);
             }
         }
         // other keys for other structures?
