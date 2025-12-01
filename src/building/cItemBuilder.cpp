@@ -252,7 +252,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             }
 
             // notify game that the item just has been finished
-            s_GameEvent newEvent {
+            s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
                 .entityType = eBuildType,
                 .entityID = -1,
@@ -263,7 +263,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 .buildingListItem = nullptr
             };
 
-            game.onNotifyGameEvent(newEvent);
+            game.onNotifyGameEvent(event);
         }
         else if (eBuildType == SPECIAL) {
             m_buildingListUpdater->onBuildItemCompleted(item);
@@ -325,7 +325,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 }
 
                 // notify game that the item just has been finished
-                s_GameEvent newEvent {
+                s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
                     .entityType = eBuildType,
                     .entityID = -1,
@@ -336,7 +336,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .buildingListItem = nullptr
                 };
 
-                game.onNotifyGameEvent(newEvent);
+                game.onNotifyGameEvent(event);
             }
             else if (special.providesType == BULLET) {
                 // Case: Deathhand, it is finished, and the player should select a target first.
@@ -369,7 +369,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
         }
         else if (eBuildType == UPGRADE) {
             // notify game that the item just has been finished
-            s_GameEvent newEvent {
+            s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
                 .entityType = eBuildType,
                 .entityID = -1,
@@ -380,7 +380,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 .buildingListItem = item
             };
 
-            game.onNotifyGameEvent(newEvent);
+            game.onNotifyGameEvent(event);
 
             // these destroy the data..
             m_buildingListUpdater->onUpgradeCompleted(item);
