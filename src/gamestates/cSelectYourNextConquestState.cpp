@@ -396,7 +396,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     m_dataCompaign->mission++;                        // FINALLY ADD MISSION NUMBER...
 
     // set up drawStateMentat
-    m_game.createAndPrepareMentatForHumanPlayer();
+    m_game.prepareMentatForPlayer();
 
     // load map
     m_game.loadScenario();

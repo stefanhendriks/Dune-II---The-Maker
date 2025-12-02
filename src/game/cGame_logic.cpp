@@ -1042,10 +1042,10 @@ void cGame::prepareMentatForPlayer()
     }
 }
 
-void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
-{
-    prepareMentatForPlayer();
-}
+// void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
+// {
+//     prepareMentatForPlayer();
+// }
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
@@ -1066,7 +1066,7 @@ void cGame::loadScenario()
 void cGame::goingToWinLoseBrief(int value)
 {
     setState(value);
-    createAndPrepareMentatForHumanPlayer(!m_skirmish);
+    prepareMentatForPlayer();
 
 }
 
@@ -1428,7 +1428,7 @@ void cGame::transitionStateIfRequired()
 
         if (m_nextState == GAME_BRIEFING) {
             playMusicByType(MUSIC_BRIEFING);
-            game.createAndPrepareMentatForHumanPlayer();
+            game.prepareMentatForPlayer();
         }
 
         m_nextState = -1;

@@ -105,7 +105,7 @@ public:
     bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
-    void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
+    //void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
     void loadSkirmishMaps() const;
     void loadScenario();
 
