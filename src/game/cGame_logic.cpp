@@ -1042,11 +1042,6 @@ void cGame::prepareMentatForPlayer()
     }
 }
 
-// void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
-// {
-//     prepareMentatForPlayer();
-// }
-
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
     players[HUMAN].setHouse(house);
