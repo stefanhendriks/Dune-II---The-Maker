@@ -1,4 +1,4 @@
-#include "utils/cTimeCounter.h"
+#include "game/cTimeCounter.h"
 
 cTimeCounter::cTimeCounter()
         : durationTimer(0), isPartyTimer(false)
