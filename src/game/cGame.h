@@ -164,6 +164,8 @@ public:
         switch (state) {
             case GAME_INITIALIZE:
                 return "GAME_INITIALIZE";
+            case GAME_INTRO:
+                return "GAME_INTRO";
             case GAME_OVER:
                 return "GAME_OVER";
             case GAME_MENU:

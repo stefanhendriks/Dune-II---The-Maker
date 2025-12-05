@@ -10,6 +10,7 @@ class GameContext;
 enum eGameStateType {
     GAMESTATE_CHOOSE_HOUSE,                 // #define GAME_SELECT_HOUSE  8		// pick a house
     GAMESTATE_CREDITS,                      // #define GAME_CREDITS       17    // credits
+    GAMESTATE_INTRO,                        // #define GAME_INTRO	     9
     GAMESTATE_MAIN_MENU,                    // #define GAME_MENU          1     // in a menu    
     GAMESTATE_MENTAT,                       // #define GAME_WINNING     11      // when winning, do some cool animation
                                             // #define GAME_LOSEBRIEF   13      // briefing when losing
@@ -29,7 +30,6 @@ enum eGameStateType {
 
 
 // #define GAME_EDITING      4      // running the editor
-// #define GAME_INTRO	     9
 
 // #define GAME_SKIRMISH    15      // playing a skirmish mission!
 
