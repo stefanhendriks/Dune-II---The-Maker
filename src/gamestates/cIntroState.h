@@ -12,6 +12,7 @@ public:
     ~cIntroState() override;
 
     void thinkFast() override;
+    void thinkNormal() override;
     void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;

@@ -1809,9 +1809,9 @@ int cGame::getMaxVolume()
  */
 void cGame::thinkNormal()
 {
-    //@mira if (m_currentState) {
-    //@mira     m_currentState->thinkNormal();
-    //@mira }
+    if (m_currentState) {
+        m_currentState->thinkNormal();
+    }
     if (game.isState(GAME_PLAYING)) {
         // units think
         for (int i = 0; i < MAX_UNITS; i++) {

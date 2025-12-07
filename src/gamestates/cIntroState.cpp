@@ -36,16 +36,14 @@ eGameStateType cIntroState::getType()
 
 void cIntroState::thinkFast()
 {
+}
+
+void cIntroState::thinkNormal()
+{
     if (gfxmovie != nullptr) {
-        TIMER_movie++;
-
-        if (TIMER_movie > 20) {
-            iMovieFrame++;
-
-            if (iMovieFrame == gfxmovie->getNumberOfFiles()) {
-                iMovieFrame = 0;
-            }
-            TIMER_movie = 0;
+        iMovieFrame++;
+        if (iMovieFrame == gfxmovie->getNumberOfFiles()) {
+            iMovieFrame = 0;
         }
     }
 }
