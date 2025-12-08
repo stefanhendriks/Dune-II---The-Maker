@@ -7,7 +7,7 @@ cGameState::cGameState(cGame &theGame, GameContext* _ctx) :
 }
 
 
-std::string gameStateToString(GameState state)
+const char *gameStateToString(GameState state)
 {
     switch (state) {
         case GameState::INITIALIZE: return "INITIALIZE";
