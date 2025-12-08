@@ -60,4 +60,4 @@ private:
 
 };
 
-std::string gameStateToString(GameState state);
+const char *gameStateToString(GameState state);
