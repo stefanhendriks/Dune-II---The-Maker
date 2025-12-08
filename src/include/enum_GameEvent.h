@@ -29,4 +29,5 @@ enum eGameEventType {
     GAME_EVENT_SPICE_BLOOM_BLEW,        // spice bloom has been blown up
     GAME_EVENT_PLAYER_DEFEATED,         // a player got defeated
     GAME_EVENT_DEPLOY_UNIT,             // Notify a unit should be deployed
+    GAME_EVENT_GAMESTATE
 };
