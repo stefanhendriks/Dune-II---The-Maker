@@ -45,4 +45,4 @@ enum class GameState : char {
 #define GAME_MISSIONSELECT  18    // mission select
 #define GAME_MAX_STATES 19
 
-const char *stateString(const int &state);
+const char *stateToString(const int &state);
