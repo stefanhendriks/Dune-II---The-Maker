@@ -13,6 +13,7 @@
 #include "include/Texture.hpp"
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
+#include "enums GameState.h"
 #include "config.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
