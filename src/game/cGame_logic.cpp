@@ -2002,3 +2002,16 @@ int cGame::getCurrentState() const
 {
     return m_state;
 }
+
+void cGame::drawTextFps() const
+{
+    m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
+}
+
+void cGame::drawTextTime() const
+{
+    auto time = m_timeManager->getCurrentTime();
+    m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
+    time = m_timeManager->getCurrentTimer();
+    m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
+}

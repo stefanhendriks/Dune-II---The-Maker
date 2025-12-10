@@ -74,10 +74,9 @@ void cGamePlaying::thinkSlow()
 
 void cGamePlaying::draw() const
 {
-    /* @mira
     drawManager->drawCombatState();
     if (m_game.m_drawFps) {
-        m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
+        game.drawTextFps();
     }
 
     // for now, call this on game class.
@@ -85,10 +84,10 @@ void cGamePlaying::draw() const
     drawCombatMouse();
 
     if (m_game.m_drawTime) {
+        game.drawTextTime();
     }
     // MOUSE
     drawManager->drawCombatMouse();
-    */
 }
 
 void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent &event)
