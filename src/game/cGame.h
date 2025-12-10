@@ -99,6 +99,10 @@ public:
 
     cRectangle *m_mapViewport;
 
+    bool m_drawFps;
+    bool m_drawTime;
+
+
     // Initialization functions
     void init();		            // initialize all game variables
     void missionInit();             // initialize variables for mission loading only
@@ -260,9 +264,6 @@ private:
 
     int m_newMusicSample;
     int m_newMusicCountdown;
-
-    bool m_drawFps;
-    bool m_drawTime;
 
     std::unique_ptr<cScreenShake> m_screenShake;
 

@@ -76,7 +76,7 @@ void cGamePlaying::draw() const
 {
     /* @mira
     drawManager->drawCombatState();
-    if (m_drawFps) {
+    if (m_game.m_drawFps) {
         m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
     }
 
@@ -84,11 +84,7 @@ void cGamePlaying::draw() const
     // TODO: move this "combat" state into own game state class
     drawCombatMouse();
 
-    if (m_drawTime) {
-        auto time = m_timeManager->getCurrentTime();
-        m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
-        time = m_timeManager->getCurrentTimer();
-        m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
+    if (m_game.m_drawTime) {
     }
     // MOUSE
     drawManager->drawCombatMouse();
@@ -205,7 +201,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     /*@mira
-    if (isDebugMode()) { // debug mode has additional keys
+    if (game.isDebugMode()) { // debug mode has additional keys
         if (event.hasKey(SDL_SCANCODE_TAB)) {
             onKeyDownDebugMode(event);
         }
