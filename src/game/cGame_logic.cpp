@@ -2068,3 +2068,16 @@ void cGame::drawTextTime() const
     time = m_timeManager->getCurrentTimer();
     m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
 }
+
+void cGame::checkMissionWinOrFail()
+{
+    if (m_gameConditionChecker->isMissionFailed()) {
+        setMissionLost();
+        return;
+    }
+
+    if (m_gameConditionChecker->isMissionWon()) {
+        setMissionWon();
+        return;
+    }
+}
