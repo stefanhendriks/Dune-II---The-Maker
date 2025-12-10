@@ -3,6 +3,7 @@
 #include "controls/cKeyboardEvent.h"
 #include "observers/cInputObserver.h"
 #include "sMouseEvent.h"
+#include "enums GameState.h"
 
 class cGame;
 class GameContext;
