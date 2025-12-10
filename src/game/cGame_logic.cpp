@@ -829,7 +829,7 @@ void cGame::setState(int newState)
         return;
     }
 
-    logbook(std::format("Setting state from {}(={}) to {}(={})", m_state, stateString(m_state), newState, stateString(newState)));
+    logbook(std::format("Setting state from {}(={}) to {}(={})", m_state, stateToString(m_state), newState, stateToString(newState)));
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&

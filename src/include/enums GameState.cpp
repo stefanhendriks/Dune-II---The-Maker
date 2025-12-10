@@ -2,7 +2,7 @@
 #include "include/enums GameState.h"
 
 
-const char *stateString(const int &state)
+const char *stateToString(const int &state)
 {
     switch (state) {
         case GAME_INITIALIZE:
