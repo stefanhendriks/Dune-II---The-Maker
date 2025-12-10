@@ -241,15 +241,13 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
     cPlayer &humanPlayer = players[HUMAN];
 
-    /*@mira
     if (event.hasKey(SDL_SCANCODE_F)) {
-        m_drawFps = false;
+        m_game.m_drawFps = false;
     }
 
     if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
-        m_drawTime = ! m_drawTime;
+        m_game.m_drawTime = ! m_game.m_drawTime;
     }
-    */
 
     if (event.hasKey(SDL_SCANCODE_D)) {
         for (int i = 0; i < MAX_UNITS; i++) {
