@@ -199,7 +199,6 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    /*@mira
     if (game.isDebugMode()) { // debug mode has additional keys
         if (event.hasKey(SDL_SCANCODE_TAB)) {
             onKeyDownDebugMode(event);
@@ -212,7 +211,6 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
             }
         }
     }
-    */
 
     if (event.hasKey(SDL_SCANCODE_Z)) {
         mapCamera->resetZoom();
