@@ -232,10 +232,9 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         game.setNextStateToTransitionTo(GAME_OPTIONS);
     }
 
-    /*@mira
     if (event.hasKey(SDL_SCANCODE_F)) {
-        m_drawFps = true;
-    }*/
+        game.m_drawFps = true;
+    }
 }
 
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
