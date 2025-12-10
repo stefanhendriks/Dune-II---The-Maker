@@ -1,6 +1,7 @@
 #pragma once
 
 #include "include/enums.h"
+#include "enums GameState.h"
 #include "gamestates/cGameState.h"
 #include "utils/cEnumArray.h"
 
