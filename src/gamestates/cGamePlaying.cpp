@@ -134,6 +134,7 @@ void cGamePlaying::thinkSlow_stateCombat_evaluatePlayerStatus()
         m_TIMER_evaluatePlayerStatus = 2;
     }
 
+    game.checkMissionWinOrFail();
     /* @mira
     if (isMissionFailed()) {
         setMissionLost();

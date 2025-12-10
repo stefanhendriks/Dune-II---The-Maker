@@ -227,6 +227,7 @@ public:
 
     void drawTextFps() const;
     void drawTextTime() const;
+    void checkMissionWinOrFail();
 private:
     /**
      * Variables start here
