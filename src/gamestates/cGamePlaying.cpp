@@ -148,7 +148,7 @@ void cGamePlaying::thinkSlow_stateCombat_evaluatePlayerStatus()
     */
 }
 
-void cGamePlaying::drawCombatMouse()
+void cGamePlaying::drawCombatMouse() const
 {
     auto m_mouse = game.getMouse();
     if (m_mouse->isBoxSelecting()) {
