@@ -101,7 +101,20 @@ eGameStateType cGamePlaying::getType()
 
 void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    logbook(event.toString());
 
+    drawManager->onNotifyKeyboardEvent(event);
+
+    switch (event.eventType) {
+        case eKeyEventType::HOLD:
+            onKeyDownGamePlaying(event);
+            break;
+        case eKeyEventType::PRESSED:
+            onKeyPressedGamePlaying(event);
+            break;
+        default:
+            break;
+    }
 }
 
 
@@ -169,23 +182,23 @@ void cGamePlaying::missionInit()
 }
 
 
-void cGamePlaying::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
-{
-    logbook(event.toString());
+// void cGamePlaying::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
+// {
+//     logbook(event.toString());
 
-    drawManager->onNotifyKeyboardEvent(event);
+//     drawManager->onNotifyKeyboardEvent(event);
 
-    switch (event.eventType) {
-        case eKeyEventType::HOLD:
-            onKeyDownGamePlaying(event);
-            break;
-        case eKeyEventType::PRESSED:
-            onKeyPressedGamePlaying(event);
-            break;
-        default:
-            break;
-    }
-}
+//     switch (event.eventType) {
+//         case eKeyEventType::HOLD:
+//             onKeyDownGamePlaying(event);
+//             break;
+//         case eKeyEventType::PRESSED:
+//             onKeyPressedGamePlaying(event);
+//             break;
+//         default:
+//             break;
+//     }
+// }
 
 void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
