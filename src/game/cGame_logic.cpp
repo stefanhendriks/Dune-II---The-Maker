@@ -1415,10 +1415,10 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             break;
     }
 
-    // TODO: this has to be its own state class. Then this if is no longer needed.
-    if (m_state == GAME_PLAYING) {
-        onNotifyKeyboardEventGamePlaying(event);
-    }
+    // // TODO: this has to be its own state class. Then this if is no longer needed.
+    // if (m_state == GAME_PLAYING) {
+    //     onNotifyKeyboardEventGamePlaying(event);
+    // }
 }
 
 void cGame::transitionStateIfRequired()
@@ -1481,23 +1481,23 @@ void cGame::saveBmpScreenToDisk()
     m_screenshot++;
 }
 
-void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
-{
-    logbook(event.toString());
+// void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
+// {
+//     logbook(event.toString());
 
-    drawManager->onNotifyKeyboardEvent(event);
+//     drawManager->onNotifyKeyboardEvent(event);
 
-    switch (event.eventType) {
-        case eKeyEventType::HOLD:
-            onKeyDownGamePlaying(event);
-            break;
-        case eKeyEventType::PRESSED:
-            onKeyPressedGamePlaying(event);
-            break;
-        default:
-            break;
-    }
-}
+//     switch (event.eventType) {
+//         case eKeyEventType::HOLD:
+//             onKeyDownGamePlaying(event);
+//             break;
+//         case eKeyEventType::PRESSED:
+//             onKeyPressedGamePlaying(event);
+//             break;
+//         default:
+//             break;
+//     }
+// }
 
 void cGame::onKeyDownGame(const cKeyboardEvent &event)
 {
@@ -1553,116 +1553,116 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
 }
 
 
-void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event)
-{
-    const cPlayer &humanPlayer = players[HUMAN];
+// void cGame::onKeyDownGamePlaying(const cKeyboardEvent &event)
+// {
+//     const cPlayer &humanPlayer = players[HUMAN];
 
-    bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
-    if (createGroup) {
-        int iGroup = event.getGroupNumber();
+//     bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
+//     if (createGroup) {
+//         int iGroup = event.getGroupNumber();
 
-        if (iGroup > 0) {
-            humanPlayer.markUnitsForGroup(iGroup);
-        }
-    }
+//         if (iGroup > 0) {
+//             humanPlayer.markUnitsForGroup(iGroup);
+//         }
+//     }
 
-    if (isDebugMode()) { // debug mode has additional keys
-        if (event.hasKey(SDL_SCANCODE_TAB)) {
-            onKeyDownDebugMode(event);
-        }
+//     if (isDebugMode()) { // debug mode has additional keys
+//         if (event.hasKey(SDL_SCANCODE_TAB)) {
+//             onKeyDownDebugMode(event);
+//         }
 
-        if (event.hasKey(SDL_SCANCODE_F4)) {
-            int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
-            if (mouseCell > -1) {
-                global_map.clearShroud(mouseCell, 6, HUMAN);
-            }
-        }
+//         if (event.hasKey(SDL_SCANCODE_F4)) {
+//             int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
+//             if (mouseCell > -1) {
+//                 global_map.clearShroud(mouseCell, 6, HUMAN);
+//             }
+//         }
 
-    }
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_Z)) {
-        mapCamera->resetZoom();
-    }
+//     if (event.hasKey(SDL_SCANCODE_Z)) {
+//         mapCamera->resetZoom();
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_H)) {
-        mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
-    }
+//     if (event.hasKey(SDL_SCANCODE_H)) {
+//         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+//     }
 
-    // Center on the selected structure
-    if (event.hasKey(SDL_SCANCODE_C)) {
-        cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
-        if (selectedStructure) {
-            mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
-        }
-    }
+//     // Center on the selected structure
+//     if (event.hasKey(SDL_SCANCODE_C)) {
+//         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+//         if (selectedStructure) {
+//             mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+//         }
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
-        game.setNextStateToTransitionTo(GAME_OPTIONS);
-    }
+//     if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+//         game.setNextStateToTransitionTo(GAME_OPTIONS);
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_F)) {
-        m_drawFps = true;
-    }
-}
+//     if (event.hasKey(SDL_SCANCODE_F)) {
+//         m_drawFps = true;
+//     }
+// }
 
-void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
-{
-    cPlayer &humanPlayer = players[HUMAN];
+// void cGame::onKeyPressedGamePlaying(const cKeyboardEvent &event)
+// {
+//     cPlayer &humanPlayer = players[HUMAN];
 
-    if (event.hasKey(SDL_SCANCODE_F)) {
-        m_drawFps = false;
-    }
+//     if (event.hasKey(SDL_SCANCODE_F)) {
+//         m_drawFps = false;
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
-        m_drawTime = ! m_drawTime;
-    }
+//     if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
+//         m_drawTime = ! m_drawTime;
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_D)) {
-        for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &u = unit[i];
-            if (u.bSelected && u.iType == MCV && u.getPlayer()->isHuman()) {
-                bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
-                if (canPlace) {
-                    int iLocation = u.getCell();
-                    u.die(false, false);
-                    humanPlayer.placeStructure(iLocation, CONSTYARD, 100);
-                }
-            }
-        }
-    }
+//     if (event.hasKey(SDL_SCANCODE_D)) {
+//         for (int i = 0; i < MAX_UNITS; i++) {
+//             cUnit &u = unit[i];
+//             if (u.bSelected && u.iType == MCV && u.getPlayer()->isHuman()) {
+//                 bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
+//                 if (canPlace) {
+//                     int iLocation = u.getCell();
+//                     u.die(false, false);
+//                     humanPlayer.placeStructure(iLocation, CONSTYARD, 100);
+//                 }
+//             }
+//         }
+//     }
 
-    if (event.hasKey(SDL_SCANCODE_H)) {
-        mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
-    }
+//     if (event.hasKey(SDL_SCANCODE_H)) {
+//         mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+//     }
 
-    // Center on the selected structure
-    if (event.hasKey(SDL_SCANCODE_C)) {
-        cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
-        if (selectedStructure) {
-            mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
-        }
-    }
+//     // Center on the selected structure
+//     if (event.hasKey(SDL_SCANCODE_C)) {
+//         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+//         if (selectedStructure) {
+//             mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+//         }
+//     }
 
-    cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
-    if (selectedStructure) {
-        // depending on type of structure, a key could mean a different thing?
-        // so, kind of like event.hasKey(selectedStructure->KeyForDeploying()) ?
-        // and then perform?
-        if (event.hasKey(SDL_SCANCODE_D)) {
-            if (selectedStructure->getType() == REPAIR) { // this should be done differently?
-                s_GameEvent event {
-                    .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
-                    .entityType = eBuildType::UNKNOWN,
-                    .entityID = -1,
-                    .player = &humanPlayer
-                };
-                selectedStructure->onNotifyGameEvent(event);
-            }
-        }
-        // other keys for other structures?
-        // like: repair/stop repairing?
-    }
-}
+//     cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+//     if (selectedStructure) {
+//         // depending on type of structure, a key could mean a different thing?
+//         // so, kind of like event.hasKey(selectedStructure->KeyForDeploying()) ?
+//         // and then perform?
+//         if (event.hasKey(SDL_SCANCODE_D)) {
+//             if (selectedStructure->getType() == REPAIR) { // this should be done differently?
+//                 s_GameEvent event {
+//                     .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+//                     .entityType = eBuildType::UNKNOWN,
+//                     .entityID = -1,
+//                     .player = &humanPlayer
+//                 };
+//                 selectedStructure->onNotifyGameEvent(event);
+//             }
+//         }
+//         // other keys for other structures?
+//         // like: repair/stop repairing?
+//     }
+// }
 
 void cGame::playSound(int sampleId)
 {
