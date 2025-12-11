@@ -32,6 +32,7 @@
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cMentatState.h"
+#include "gamestates/cGamePlaying.h"
 #include "utils/ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
@@ -983,7 +984,10 @@ void cGame::setState(int newState)
                     game.onNotifyGameEvent(event);
                     m_timeManager->startTimer();
                 }
-            } 
+            }
+            else if (newState == GAME_PLAYING) {
+                newStatePtr = new cGamePlaying(*this, ctx.get());
+            }
             else if (newState == GAME_LOSING) {
                 newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
             }
