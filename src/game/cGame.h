@@ -300,7 +300,7 @@ private:
     // [[deprecated]] void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGame(const cKeyboardEvent &event);
 
-    [[deprecated]] void thinkSlow_state();
+    // [[deprecated]] void thinkSlow_state();
 
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 

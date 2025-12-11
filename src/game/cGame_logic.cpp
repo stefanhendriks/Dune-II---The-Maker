@@ -1810,24 +1810,24 @@ int cGame::getMaxVolume()
  */
 void cGame::thinkNormal()
 {
-    //@mira if (m_currentState) {
-    //@mira     m_currentState->thinkNormal();
-    //@mira }
-    if (game.isState(GAME_PLAYING)) {
-        // units think
-        for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &cUnit = unit[i];
-            if (cUnit.isValid()) {
-                cUnit.think();
-            }
-        }
-
-        drawManager->think();
-
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            players[i].think();
-        }
+    if (m_currentState) {
+        m_currentState->thinkNormal();
     }
+    // if (game.isState(GAME_PLAYING)) {
+    //     // units think
+    //     for (int i = 0; i < MAX_UNITS; i++) {
+    //         cUnit &cUnit = unit[i];
+    //         if (cUnit.isValid()) {
+    //             cUnit.think();
+    //         }
+    //     }
+
+    //     drawManager->think();
+
+    //     for (int i = 0; i < MAX_PLAYERS; i++) {
+    //         players[i].think();
+    //     }
+    // }
 }
 
 /**
@@ -1835,10 +1835,10 @@ void cGame::thinkNormal()
  */
 void cGame::thinkSlow()
 {
-    //@mira if (m_currentState) {
-    //@mira     m_currentState->thinkSlow();
-    //@mira }
-    thinkSlow_state();
+    if (m_currentState) {
+        m_currentState->thinkSlow();
+    }
+    // thinkSlow_state();
     // a garder
     m_timeManager->capFps();
     m_timeManager->adaptWaitingTime();
@@ -1849,31 +1849,31 @@ void cGame::thinkCache()
     ctx->resetCache();
 }
 
-void cGame::thinkSlow_state()
-{
-    if (isState(GAME_PLAYING)) {
-        thinkSlow_stateCombat_evaluatePlayerStatus(); // so we can call non-const from a const :S
+// void cGame::thinkSlow_state()
+// {
+//     if (isState(GAME_PLAYING)) {
+//         thinkSlow_stateCombat_evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-        m_pathsCreated = 0;
+//         m_pathsCreated = 0;
 
-        if (!m_disableReinforcements) {
-            m_reinforcements->thinkSlow();
-        }
+//         if (!m_disableReinforcements) {
+//             m_reinforcements->thinkSlow();
+//         }
 
-        // starports think per second for deployment (if any)
-        for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *pStructure = structure[i];
-            if (pStructure && pStructure->isValid()) {
-                pStructure->thinkSlow();
-            }
-        }
+//         // starports think per second for deployment (if any)
+//         for (int i = 0; i < MAX_STRUCTURES; i++) {
+//             cAbstractStructure *pStructure = structure[i];
+//             if (pStructure && pStructure->isValid()) {
+//                 pStructure->thinkSlow();
+//             }
+//         }
 
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            cPlayer &player = players[i];
-            player.thinkSlow();
-        }
-    } // game specific stuff
-}
+//         for (int i = 0; i < MAX_PLAYERS; i++) {
+//             cPlayer &player = players[i];
+//             player.thinkSlow();
+//         }
+//     } // game specific stuff
+// }
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
