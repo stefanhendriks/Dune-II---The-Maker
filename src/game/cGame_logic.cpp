@@ -963,6 +963,7 @@ void cGame::setState(int newState)
                     humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
                 }
                 else {
+                    newStatePtr = new cGamePlaying(*this, ctx.get());
                     // re-create drawManager
                     delete drawManager;
                     drawManager = new cDrawManager(ctx.get(), &humanPlayer);
