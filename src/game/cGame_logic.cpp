@@ -396,26 +396,26 @@ void cGame::updateGamePlaying()
     }
 }
 
-void cGame::drawStateCombat()
-{
-    drawManager->drawCombatState();
-    if (m_drawFps) {
-        m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
-    }
+// void cGame::drawStateCombat()
+// {
+//     drawManager->drawCombatState();
+//     if (m_drawFps) {
+//         m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
+//     }
 
-    // for now, call this on game class.
-    // TODO: move this "combat" state into own game state class
-    drawCombatMouse();
+//     // for now, call this on game class.
+//     // TODO: move this "combat" state into own game state class
+//     drawCombatMouse();
 
-    if (m_drawTime) {
-        auto time = m_timeManager->getCurrentTime();
-        m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
-        time = m_timeManager->getCurrentTimer();
-        m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
-    }
-    // MOUSE
-    drawManager->drawCombatMouse();
-}
+//     if (m_drawTime) {
+//         auto time = m_timeManager->getCurrentTime();
+//         m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
+//         time = m_timeManager->getCurrentTimer();
+//         m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
+//     }
+//     // MOUSE
+//     drawManager->drawCombatMouse();
+// }
 
 void cGame::initSkirmish() const
 {
@@ -458,14 +458,14 @@ void cGame::drawState()
        m_cScreenFader->startFadeNone();
     }
 
-    switch (m_state) {
-        case GAME_PLAYING:
-            drawStateCombat();
-            break;
-        default:
+    // switch (m_state) {
+    //     case GAME_PLAYING:
+    //         drawStateCombat();
+    //         break;
+    //     default:
             m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
-    }
+    // }
 }
 
 /**
@@ -1440,20 +1440,20 @@ void cGame::setNextStateToTransitionTo(int newState)
     m_nextState = newState;
 }
 
-void cGame::drawCombatMouse()
-{
-    if (m_mouse->isBoxSelecting()) {
-        renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
-    }
+// void cGame::drawCombatMouse()
+// {
+//     if (m_mouse->isBoxSelecting()) {
+//         renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
+//     }
 
-    if (m_mouse->isMapScrolling()) {
-        cPoint startPoint = m_mouse->getDragLineStartPoint();
-        cPoint endPoint = m_mouse->getDragLineEndPoint();
-        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
-    }
+//     if (m_mouse->isMapScrolling()) {
+//         cPoint startPoint = m_mouse->getDragLineStartPoint();
+//         cPoint endPoint = m_mouse->getDragLineEndPoint();
+//         renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
+//     }
 
-    m_mouse->draw();
-}
+//     m_mouse->draw();
+// }
 
 void cGame::saveBmpScreenToDisk()
 {

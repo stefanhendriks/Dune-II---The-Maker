@@ -182,7 +182,7 @@ public:
 
     void prepareMentatToTellAboutHouse(int house);
 
-    [[deprecated]] void drawCombatMouse();
+    // [[deprecated]] void drawCombatMouse();
 
     void thinkNormal();
 
@@ -285,7 +285,7 @@ private:
     void updateMouseAndKeyboardState();
     void updateGamePlaying();
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
-    void drawStateCombat();		// the combat part (main) of the game
+    // void drawStateCombat();		// the combat part (main) of the game
 
     void shakeScreenAndBlitBuffer();
 
