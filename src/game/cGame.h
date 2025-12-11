@@ -92,7 +92,7 @@ public:
     bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
 
-    [[deprecated]] int m_pathsCreated;
+    int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
     int m_musicType;
