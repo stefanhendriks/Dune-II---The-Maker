@@ -155,14 +155,14 @@ void cGame::init()
     m_screenshot = 0;
     m_playing = true;
 
-    m_TIMER_evaluatePlayerStatus = 5;
+    // m_TIMER_evaluatePlayerStatus = 5;
 
     m_skirmish = false;
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_debugMode);
 
     m_musicVolume = 96; // volume is 0...
 
-    m_pathsCreated = 0;
+    // m_pathsCreated = 0;
 
     setState(GAME_INITIALIZE);
 
@@ -204,13 +204,13 @@ void cGame::missionInit()
     mapCamera->resetZoom();
 
     // first 15 seconds, do not evaluate player alive status
-    m_TIMER_evaluatePlayerStatus = 5;
+    // m_TIMER_evaluatePlayerStatus = 5;
 
     m_gameConditionChecker->missionInit();
 
     m_musicVolume = 96; // volume is 0...
 
-    m_pathsCreated = 0;
+    // m_pathsCreated = 0;
 
     m_cScreenFader->inititialize();
 
@@ -277,45 +277,45 @@ void cGame::initPlayers(bool rememberHouse) const
 /**
  * Thinking every second while in combat
  */
-void cGame::thinkSlow_stateCombat_evaluatePlayerStatus()
-{
-    if (m_TIMER_evaluatePlayerStatus > 0) {
-        m_TIMER_evaluatePlayerStatus--;
-    }
-    else {
-        // TODO: Better way is with events (ie created/destroyed). However, there is no such
-        // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            cPlayer &player = players[i];
-            bool isAlive = player.isAlive();
-            // evaluate all players regardless if they are alive or not (who knows, they became alive?)
-            player.evaluateStillAlive();
+// void cGame::thinkSlow_stateCombat_evaluatePlayerStatus()
+// {
+//     if (m_TIMER_evaluatePlayerStatus > 0) {
+//         m_TIMER_evaluatePlayerStatus--;
+//     }
+//     else {
+//         // TODO: Better way is with events (ie created/destroyed). However, there is no such
+//         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
+//         for (int i = 0; i < MAX_PLAYERS; i++) {
+//             cPlayer &player = players[i];
+//             bool isAlive = player.isAlive();
+//             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
+//             player.evaluateStillAlive();
 
-            if (isAlive && !player.isAlive()) {
-                s_GameEvent event{
-                    .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
-                    .entityType = eBuildType::SPECIAL,
-                    .entityID = -1,
-                    .player = &player
-                };
+//             if (isAlive && !player.isAlive()) {
+//                 s_GameEvent event{
+//                     .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
+//                     .entityType = eBuildType::SPECIAL,
+//                     .entityID = -1,
+//                     .player = &player
+//                 };
 
-                game.onNotifyGameEvent(event);
-            }
-            // TODO: event : Player joined/became alive, etc?
-        }
-        m_TIMER_evaluatePlayerStatus = 2;
-    }
+//                 game.onNotifyGameEvent(event);
+//             }
+//             // TODO: event : Player joined/became alive, etc?
+//         }
+//         m_TIMER_evaluatePlayerStatus = 2;
+//     }
 
-    if (m_gameConditionChecker->isMissionFailed()) {
-        setMissionLost();
-        return;
-    }
+//     if (m_gameConditionChecker->isMissionFailed()) {
+//         setMissionLost();
+//         return;
+//     }
 
-    if (m_gameConditionChecker->isMissionWon()) {
-        setMissionWon();
-        return;
-    }
-}
+//     if (m_gameConditionChecker->isMissionWon()) {
+//         setMissionWon();
+//         return;
+//     }
+// }
 
 void cGame::setMissionWon()
 {

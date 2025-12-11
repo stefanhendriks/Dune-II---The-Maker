@@ -31,7 +31,6 @@ private:
     void thinkSlow_stateCombat_evaluatePlayerStatus();
     void drawCombatMouse() const;
 
-    int m_pathsCreated;
     int m_TIMER_evaluatePlayerStatus;
     cReinforcements* m_reinforcements;
 
