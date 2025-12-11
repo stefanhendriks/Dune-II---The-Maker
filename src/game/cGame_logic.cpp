@@ -160,7 +160,7 @@ void cGame::init()
 
     m_musicVolume = 96; // volume is 0...
 
-    m_pathsCreated = 0;
+    // m_pathsCreated = 0;
 
     setState(GAME_INITIALIZE);
 
@@ -205,7 +205,7 @@ void cGame::missionInit()
 
     m_musicVolume = 96; // volume is 0...
 
-    m_pathsCreated = 0;
+    // m_pathsCreated = 0;
 
     m_cScreenFader->inititialize();
 
