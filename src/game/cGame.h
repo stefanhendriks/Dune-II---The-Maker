@@ -93,7 +93,7 @@ public:
     bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
 
-    [[deprecated]] int m_pathsCreated;
+    int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
     int m_musicType;
@@ -116,7 +116,7 @@ public:
 
     void run();			            // run the game (MAIN LOOP)
 
-    [[deprecated]] void thinkSlow_stateCombat_evaluatePlayerStatus();
+    // [[deprecated]] void thinkSlow_stateCombat_evaluatePlayerStatus();
 
     void thinkFast_combat();
     void thinkFast_state();
@@ -273,7 +273,7 @@ private:
 
     std::unique_ptr<cScreenShake> m_screenShake;
 
-    [[deprecated]] int m_TIMER_evaluatePlayerStatus;
+    // [[deprecated]] int m_TIMER_evaluatePlayerStatus;
 
 
     int m_state;
