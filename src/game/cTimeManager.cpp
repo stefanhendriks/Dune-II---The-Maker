@@ -87,9 +87,7 @@ void cTimeManager::handleTimerFast()
 {
     // keep up with time cycles
     while (m_timerFast > 0) {
-        //m_game->thinkFast_fading();
         m_game->thinkFast();
-
         m_timerFast--;
     }
 }
@@ -137,7 +135,6 @@ void cTimeManager::handleTimerCache()
 */
 void cTimeManager::processTime()
 {
-    // syncFromAllegroTimers();
     uint64_t now = SDL_GetTicks64();
 
     // 5 ms pour allegro_timergametime

@@ -37,7 +37,6 @@ private:
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
 
-    // void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);
