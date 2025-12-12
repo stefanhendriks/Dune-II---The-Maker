@@ -176,9 +176,6 @@ public:
     void setMissionWon();
 
     void prepareMentatToTellAboutHouse(int house);
-
-    // [[deprecated]] void drawCombatMouse();
-
     void thinkNormal();
 
     void thinkSlow();
@@ -231,7 +228,6 @@ private:
 
     // if true, then turrets won't do anything on low power (both gun and rocket turrets)
     bool m_turretsDownOnLowPower;
-
     // if true, rocket turrets will not fire rockets when low power
     bool m_rocketTurretsDownOnLowPower;
 
@@ -267,7 +263,6 @@ private:
 
     std::unique_ptr<cScreenShake> m_screenShake;
 
-    // [[deprecated]] int m_TIMER_evaluatePlayerStatus;
     void thinkFast_audio();
     void thinkFast_fading();
 
@@ -283,7 +278,6 @@ private:
     void updateMouseAndKeyboardState();
     void updateGamePlaying();
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
-    // void drawStateCombat();		// the combat part (main) of the game
 
     void shakeScreenAndBlitBuffer();
 
@@ -291,15 +285,8 @@ private:
 
     void saveBmpScreenToDisk();
 
-    // Combat state specific event handling for now
-    // [[deprecated]] void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
-    // [[deprecated]] void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyDownGame(const cKeyboardEvent &event);
-    // [[deprecated]] void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGame(const cKeyboardEvent &event);
-
-    // [[deprecated]] void thinkSlow_state();
-
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 
     void fadeOutOrBlitScreenBuffer() const;

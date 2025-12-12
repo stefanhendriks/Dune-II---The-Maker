@@ -144,7 +144,6 @@ void cTimeManager::handleTimerSlow()
 void cTimeManager::handleTimerFast()
 {
     while (m_timerGameTime.count > 0) {
-        m_game->thinkFast_fading();
         m_game->thinkFast();
         m_timerGameTime.count--;
     }
