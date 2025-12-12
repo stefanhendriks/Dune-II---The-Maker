@@ -115,13 +115,7 @@ public:
 
     void run();			            // run the game (MAIN LOOP)
 
-    // [[deprecated]] void thinkSlow_stateCombat_evaluatePlayerStatus();
-
-    // void thinkFast_combat();
     void thinkFast();
-
-    void thinkFast_audio();
-    void thinkFast_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
@@ -272,6 +266,8 @@ private:
     std::unique_ptr<cScreenShake> m_screenShake;
 
     // [[deprecated]] int m_TIMER_evaluatePlayerStatus;
+    void thinkFast_audio();
+    void thinkFast_fading();
 
 
     int m_state;
