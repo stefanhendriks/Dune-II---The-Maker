@@ -1138,11 +1138,11 @@ void cGame::thinkFast_state()
         m_currentState->thinkFast();
     }
 
-    // THINKING ONLY WHEN PLAYING / COMBAT (no state object yet)
-    if (isState(GAME_PLAYING)) {
-        drawManager->thinkFast_statePlaying();
+    // // THINKING ONLY WHEN PLAYING / COMBAT (no state object yet)
+    // if (isState(GAME_PLAYING)) {
+    //     drawManager->thinkFast_statePlaying();
     //     thinkFast_combat();
-    }
+    // }
 
     if (drawManager) {
         drawManager->thinkFast();

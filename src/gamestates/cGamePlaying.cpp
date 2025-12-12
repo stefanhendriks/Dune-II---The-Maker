@@ -33,6 +33,8 @@ cGamePlaying::~cGamePlaying()
 
 void cGamePlaying::thinkFast()
 {
+    drawManager->thinkFast_statePlaying();
+
     mapCamera->thinkFast();
 
     for (cPlayer &pPlayer : players) {
