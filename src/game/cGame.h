@@ -115,8 +115,6 @@ public:
 
     void run();			            // run the game (MAIN LOOP)
 
-    void thinkFast();
-
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
 
@@ -175,8 +173,9 @@ public:
     void setMissionWon();
 
     void prepareMentatToTellAboutHouse(int house);
-    void thinkNormal();
 
+    void thinkFast();
+    void thinkNormal();
     void thinkSlow();
     void thinkCache();
 
@@ -275,7 +274,7 @@ private:
 
     void updateMouseAndKeyboardState();
     void updateGamePlaying();
-    void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
+    void drawState();
 
     void shakeScreenAndBlitBuffer();
 
