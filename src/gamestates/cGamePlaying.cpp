@@ -135,8 +135,6 @@ void cGamePlaying::draw() const
         game.drawTextFps();
     }
 
-    // for now, call this on game class.
-    // TODO: move this "combat" state into own game state class
     drawCombatMouse();
 
     if (m_game.m_drawTime) {
