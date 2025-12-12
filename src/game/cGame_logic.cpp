@@ -1133,6 +1133,7 @@ void cGame::changeStateFromMentat()
 
 void cGame::thinkFast_state()
 {
+    thinkFast_fading();
     thinkFast_audio();
     if (m_currentState) {
         m_currentState->thinkFast();

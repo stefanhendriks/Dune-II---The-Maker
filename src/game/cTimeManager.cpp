@@ -87,7 +87,7 @@ void cTimeManager::handleTimerFast()
 {
     // keep up with time cycles
     while (m_timerFast > 0) {
-        m_game->thinkFast_fading();
+        //m_game->thinkFast_fading();
         m_game->thinkFast_state();
 
         m_timerFast--;
