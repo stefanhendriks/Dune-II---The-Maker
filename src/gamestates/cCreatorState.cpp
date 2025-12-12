@@ -8,6 +8,7 @@
 #include "gamestates/cMentatState.h"
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cChooseHouseState.h"
+#include "gamestates/cGamePlaying.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cOptionsState.h"
 
@@ -20,6 +21,7 @@ CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(c
     needToRecreateState.fill(true);
     // this States should not be recreated when we need to use
     needToRecreateState[GameState::OPTIONS] = false;
+    needToRecreateState[GameState::PLAYING] = false;
     needToRecreateState[GameState::SETUPSKIRMISH] = false;
     needToRecreateState[GameState::CREDITS] = false;
     needToRecreateState[GameState::MISSIONSELECT] = false;
@@ -93,6 +95,10 @@ void CreatorState::createStateFromScratch(GameState gameState)
 
     case GameState::REGION:
         m_states[GameState::REGION] = std::make_unique<cSelectYourNextConquestState>(*m_game, m_ctx, m_game->getDataCampaign());
+        break;
+
+    case GameState::PLAYING:
+        m_states[GameState::PLAYING] = std::make_unique<cGamePlaying>(*m_game, m_ctx);
         break;
 
     case GameState::OPTIONS:
