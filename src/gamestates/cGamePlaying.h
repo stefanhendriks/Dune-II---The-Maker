@@ -28,7 +28,7 @@ public:
 
     void missionInit();
 private:
-    void thinkSlow_stateCombat_evaluatePlayerStatus();
+    void evaluatePlayerStatus();
     void drawCombatMouse() const;
 
     int m_TIMER_evaluatePlayerStatus;

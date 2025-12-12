@@ -104,7 +104,7 @@ void cGamePlaying::thinkNormal()
 
 void cGamePlaying::thinkSlow()
 {
-    thinkSlow_stateCombat_evaluatePlayerStatus(); // so we can call non-const from a const :S
+    evaluatePlayerStatus(); // so we can call non-const from a const :S
 
     game.m_pathsCreated = 0;
 
@@ -172,7 +172,7 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 }
 
 
-void cGamePlaying::thinkSlow_stateCombat_evaluatePlayerStatus()
+void cGamePlaying::evaluatePlayerStatus()
 {
     if (m_TIMER_evaluatePlayerStatus > 0) {
         m_TIMER_evaluatePlayerStatus--;
