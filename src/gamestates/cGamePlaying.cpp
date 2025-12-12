@@ -1,6 +1,10 @@
 #include "gamestates/cGamePlaying.h"
 #include "include/d2tmc.h"
 #include "include/definitions.h"
+#include "building/cItemBuilder.h"
+#include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/projectiles/bullet.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "data/gfxdata.h"
@@ -29,6 +33,54 @@ cGamePlaying::~cGamePlaying()
 
 void cGamePlaying::thinkFast()
 {
+    mapCamera->thinkFast();
+
+    for (cPlayer &pPlayer : players) {
+        pPlayer.thinkFast();
+    }
+
+    // structures think
+    for (cAbstractStructure *pStructure : structure) {
+        if (pStructure == nullptr) continue;
+        if (pStructure->isValid()) {
+            pStructure->thinkFast();       // think about actions going on
+            pStructure->think_animation(); // think about animating
+            pStructure->think_guard();     // think about 'guarding' the area (turrets only)
+        }
+
+        if (pStructure->isDead()) {
+            cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
+        }
+    }
+
+    for (cPlayer &pPlayer : players) {
+        cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
+        if (itemBuilder) {
+            itemBuilder->thinkFast();
+        }
+    }
+
+    global_map.thinkFast();
+
+    game.reduceShaking();
+
+    // units think (move only)
+    for (cUnit &cUnit : unit) {
+        if (!cUnit.isValid()) continue;
+        cUnit.thinkFast();
+    }
+
+    for (cParticle &pParticle : particle) {
+        if (!pParticle.isValid()) continue;
+        pParticle.thinkFast();
+    }
+
+    // when not drawing the options, the game does all it needs to do
+    // bullets think
+    for (cBullet &cBullet : bullet) {
+        if (!cBullet.bAlive) continue;
+        cBullet.thinkFast();
+    }
 }
 
 void cGamePlaying::thinkNormal()
