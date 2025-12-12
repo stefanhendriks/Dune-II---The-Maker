@@ -1149,57 +1149,57 @@ void cGame::thinkFast_state()
     }
 }
 
-void cGame::thinkFast_combat()
-{
-    mapCamera->thinkFast();
+// void cGame::thinkFast_combat()
+// {
+//     mapCamera->thinkFast();
 
-    for (cPlayer &pPlayer : players) {
-        pPlayer.thinkFast();
-    }
+//     for (cPlayer &pPlayer : players) {
+//         pPlayer.thinkFast();
+//     }
 
-    // structures think
-    for (cAbstractStructure *pStructure : structure) {
-        if (pStructure == nullptr) continue;
-        if (pStructure->isValid()) {
-            pStructure->thinkFast();       // think about actions going on
-            pStructure->think_animation(); // think about animating
-            pStructure->think_guard();     // think about 'guarding' the area (turrets only)
-        }
+//     // structures think
+//     for (cAbstractStructure *pStructure : structure) {
+//         if (pStructure == nullptr) continue;
+//         if (pStructure->isValid()) {
+//             pStructure->thinkFast();       // think about actions going on
+//             pStructure->think_animation(); // think about animating
+//             pStructure->think_guard();     // think about 'guarding' the area (turrets only)
+//         }
 
-        if (pStructure->isDead()) {
-            cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
-        }
-    }
+//         if (pStructure->isDead()) {
+//             cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
+//         }
+//     }
 
-    for (cPlayer &pPlayer : players) {
-        cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
-        if (itemBuilder) {
-            itemBuilder->thinkFast();
-        }
-    }
+//     for (cPlayer &pPlayer : players) {
+//         cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
+//         if (itemBuilder) {
+//             itemBuilder->thinkFast();
+//         }
+//     }
 
-    global_map.thinkFast();
+//     global_map.thinkFast();
 
-    game.reduceShaking();
+//     game.reduceShaking();
 
-    // units think (move only)
-    for (cUnit &cUnit : unit) {
-        if (!cUnit.isValid()) continue;
-        cUnit.thinkFast();
-    }
+//     // units think (move only)
+//     for (cUnit &cUnit : unit) {
+//         if (!cUnit.isValid()) continue;
+//         cUnit.thinkFast();
+//     }
 
-    for (cParticle &pParticle : particle) {
-        if (!pParticle.isValid()) continue;
-        pParticle.thinkFast();
-    }
+//     for (cParticle &pParticle : particle) {
+//         if (!pParticle.isValid()) continue;
+//         pParticle.thinkFast();
+//     }
 
-    // when not drawing the options, the game does all it needs to do
-    // bullets think
-    for (cBullet &cBullet : bullet) {
-        if (!cBullet.bAlive) continue;
-        cBullet.thinkFast();
-    }
-}
+//     // when not drawing the options, the game does all it needs to do
+//     // bullets think
+//     for (cBullet &cBullet : bullet) {
+//         if (!cBullet.bAlive) continue;
+//         cBullet.thinkFast();
+//     }
+// }
 
 void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 {

@@ -117,7 +117,7 @@ public:
 
     // [[deprecated]] void thinkSlow_stateCombat_evaluatePlayerStatus();
 
-    void thinkFast_combat();
+    // void thinkFast_combat();
     void thinkFast_state();
 
     void thinkFast_audio();
