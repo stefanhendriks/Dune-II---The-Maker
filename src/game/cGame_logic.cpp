@@ -1360,7 +1360,7 @@ void cGame::saveBmpScreenToDisk()
     }
 }
 
-void cGame::onKeyDownGame(const cKeyboardEvent &event)
+void cGame::onKeyDownGame(const cKeyboardEvent &)
 {
     
 }
