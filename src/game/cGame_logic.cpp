@@ -1326,7 +1326,7 @@ void cGame::saveBmpScreenToDisk()
     m_screenshot++;
 }
 
-void cGame::onKeyDownGame(const cKeyboardEvent &event)
+void cGame::onKeyDownGame(const cKeyboardEvent &)
 {
     
 }

@@ -62,12 +62,12 @@ eGameStateType cWinLoseState::getType()
     return GAMESTATE_WINLOSE;
 }
 
-void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
 
 }
 
-void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &event) const
+void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
 {
     if (m_statement == Outcome::Lose) {
         game.goingToWinLoseBrief(GAME_LOSEBRIEF);

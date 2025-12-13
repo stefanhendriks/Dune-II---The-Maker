@@ -144,7 +144,7 @@ void cGamePlaying::draw() const
     drawManager->drawCombatMouse();
 }
 
-void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent &event)
+void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent& )
 {
 }
 
