@@ -45,3 +45,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         m_game.initiateFadingOut();
     }
 }
+
+void cEditorState::loadMap(int map)
+{
+}
