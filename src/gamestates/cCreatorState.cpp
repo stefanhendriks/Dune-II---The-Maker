@@ -3,6 +3,7 @@
 #include "gamestates/cGameState.h"
 
 #include "gamestates/cMainMenuState.h"
+#include "gamestates/cEditorState.h"
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cMentatState.h"
@@ -26,6 +27,7 @@ CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(c
     needToRecreateState[GameState::CREDITS] = false;
     needToRecreateState[GameState::MISSIONSELECT] = false;
     needToRecreateState[GameState::MENU] = false;
+    needToRecreateState[GameState::EDITOR] = false;
     needToRecreateState[GameState::WINNING] = false;
     needToRecreateState[GameState::LOSING] = false;
 }
@@ -63,6 +65,10 @@ void CreatorState::createStateFromScratch(GameState gameState)
 
     case GameState::CREDITS:
         m_states[GameState::CREDITS] = std::make_unique<cCreditsState>(*m_game, m_ctx);
+        break;
+
+    case GameState::EDITOR:
+        m_states[GameState::EDITOR] = std::make_unique<cEditorState>(*m_game, m_ctx);
         break;
 
     case GameState::WINNING:
