@@ -27,7 +27,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     logoY = (logoHeight/10);
 
     mainMenuWidth = 130;
-    mainMenuHeight = 143;
+    mainMenuHeight = 183;
 
     sdl2power = cRectangle{centerOfScreen+logoWidth/4, logoY+logoHeight+75,0,0};
 
@@ -65,7 +65,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
-
+    // height
+    const int heightBetweenButton = 22;
     // PLAY
     int playY = 323;
 
@@ -88,7 +89,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .build();
     gui_window->addGuiObject(gui_btn_SelectHouse);
 
-    int skirmishY = 344;
+    int skirmishY = playY + heightBetweenButton+1;
     const cRectangle &skirmish = cRectangle(buttonsX, skirmishY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Skirmish = GuiButtonBuilder()
             .withRect(skirmish)        
@@ -104,7 +105,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .build();
     gui_window->addGuiObject(gui_btn_Skirmish);
 
-    int multiplayerY = 364;
+    int multiplayerY = skirmishY+heightBetweenButton;
     const cRectangle &multiplayer = cRectangle(buttonsX, multiplayerY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Multiplayer = GuiButtonBuilder()
             .withRect(multiplayer)        
@@ -117,7 +118,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     gui_window->addGuiObject(gui_btn_Multiplayer);
 
     // LOAD
-    int loadY = 384;
+    int loadY = multiplayerY+heightBetweenButton;
     const cRectangle &load = cRectangle(buttonsX, loadY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Load = GuiButtonBuilder()
             .withRect(load)        
@@ -130,7 +131,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     gui_window->addGuiObject(gui_btn_Load);
 
     // OPTIONS
-    int optionsY = 404;
+    int optionsY = loadY+heightBetweenButton;
     const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Options = GuiButtonBuilder()
             .withRect(options)        
@@ -143,7 +144,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     gui_window->addGuiObject(gui_btn_Options);
 
     // HALL OF FAME
-    int hofY = 424;
+    int hofY = optionsY+heightBetweenButton;
     const cRectangle &hof = cRectangle(buttonsX, hofY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Hof = GuiButtonBuilder()
             .withRect(hof)        
@@ -156,7 +157,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     gui_window->addGuiObject(gui_btn_Hof);
 
     // EXIT
-    int exitY = 444;
+    int exitY = hofY+heightBetweenButton;
     const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Exit = GuiButtonBuilder()
             .withRect(exit)        
