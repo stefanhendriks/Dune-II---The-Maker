@@ -50,6 +50,5 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cEditorState::loadMap(s_PreviewMap* map)
 {
-    std::cout << "open "<< map->name << std::endl;
-    m_map = map;
+    std::cout << "open |"<< map->name << "|" << std::endl;
 }
