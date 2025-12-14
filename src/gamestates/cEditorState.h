@@ -5,8 +5,11 @@
 #include "drawers/cTextDrawer.h"
 #include "sMouseEvent.h"
 
+#include <memory>
+
 class Texture;
 class cGame;
+class s_PreviewMap;
 
 class cEditorState : public cGameState {
 public:
@@ -15,11 +18,12 @@ public:
 
     void thinkFast() override;
     void draw() const override;
-    void loadMap(int map);
+    void loadMap(s_PreviewMap* map);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     eGameStateType getType() override;
 private:
+    s_PreviewMap* m_map=nullptr;
 };
