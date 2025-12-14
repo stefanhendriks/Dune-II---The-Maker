@@ -15,7 +15,7 @@ const char *gameStateToString(GameState state)
         case GameState::MENU: return "MENU";
         case GameState::PLAYING: return "PLAYING";
         case GameState::BRIEFING: return "BRIEFING";
-        case GameState::EDITING: return "EDITING";
+        case GameState::EDITOR: return "EDITOR";
         case GameState::OPTIONS: return "OPTIONS";
         case GameState::REGION: return "REGION";
         case GameState::SELECT_HOUSE: return "SELECT_HOUSE";
