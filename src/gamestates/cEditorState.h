@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cGameState.h"
+#include "utils/cMatrix.h"
 #include "controls/cKeyboardEvent.h"
 #include "drawers/cTextDrawer.h"
 #include "sMouseEvent.h"
@@ -29,4 +30,5 @@ private:
     //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_modifBar;
+    std::unique_ptr<Matrix<int>> m_mapData;
 };
