@@ -25,5 +25,5 @@ public:
 
     eGameStateType getType() override;
 private:
-    s_PreviewMap* m_map=nullptr;
+    //s_PreviewMap* m_map=nullptr;
 };
