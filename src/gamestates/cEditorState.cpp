@@ -1,5 +1,5 @@
 #include "gamestates/cEditorState.h"
-
+#include "gui/GuiBar.h"
 #include "d2tmc.h"
 #include "config.h"
 #include "data/gfxinter.h"
@@ -13,9 +13,16 @@
 #include <format>
 #include <iostream>
 
+const int heightSize = 32;
+
 cEditorState::cEditorState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
 {
-
+    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightSize);
+    const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightSize, heightSize, heightSize, m_game.m_screenH-heightSize);
+    m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
+    m_modifBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
+    m_selectBar->setTheme(GuiTheme::Light());
+    m_modifBar->setTheme(GuiTheme::Light());
 }
 
 cEditorState::~cEditorState()
@@ -29,10 +36,15 @@ void cEditorState::thinkFast()
 
 void cEditorState::draw() const
 {
+    m_selectBar->draw();
+    m_modifBar->draw();
+    m_game.getMouse()->draw();
 }
 
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    m_selectBar->onNotifyMouseEvent(event);
+    m_modifBar->onNotifyMouseEvent(event);
 }
 
 eGameStateType cEditorState::getType()

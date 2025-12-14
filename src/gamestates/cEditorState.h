@@ -10,6 +10,7 @@
 class Texture;
 class cGame;
 class s_PreviewMap;
+class GuiBar;
 
 class cEditorState : public cGameState {
 public:
@@ -26,4 +27,6 @@ public:
     eGameStateType getType() override;
 private:
     //s_PreviewMap* m_map=nullptr;
+    std::unique_ptr<GuiBar> m_selectBar;
+    std::unique_ptr<GuiBar> m_modifBar;
 };
