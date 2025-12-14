@@ -1,6 +1,6 @@
 #include "context/GameContext.hpp"
-#include "utils/cTimeManager.h"
-#include "utils/cTimeCounter.h"
+#include "game/cTimeManager.h"
+#include "game/cTimeCounter.h"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
 

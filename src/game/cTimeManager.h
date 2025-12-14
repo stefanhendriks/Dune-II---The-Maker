@@ -41,7 +41,7 @@ public:
     void setGlobalSpeed(int speed);
     void setGlobalSpeedVariation(int variation);
     // get global speed
-    uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
+    uint16_t getGlobalSpeed() const { return durationTime.fastTickDuration; }
     // get current local Time
     std::string getCurrentTime() const;
     // returns the stored timer value on time format
@@ -55,43 +55,40 @@ public:
     void restartTimer();
 
 private:
-    // gametime timer is called every 100 ms, try to keep up with that.
-    void handleTimerUnits();
-    // gametime timer is called every 1000 ms, try to keep up with that.
-    void handleTimerSecond();
     // gametime timer is called every 5 ms, try to keep up with that.
-    void handleTimerGameTime();
+    void handleTimerFast();
+    // gametime timer is called every 100 ms, try to keep up with that.
+    void handleTimerNormal();
+    // gametime timer is called every 1000 ms, try to keep up with that.
+    void handleTimerSlow();
     // system capping to avoid extremely high timers
     void capTimers();
-    // start every 60000 ms
-    void handleTimerMinute();
+    // called every X s
+    void handleTimerCache();
 
     cGame *m_game;
-    int m_timerUnits;		/** !!Specificly!! used for units **/
-    int m_timerSecond;
-    int m_timerMinute;
-    int m_timerGlobal;
+    int m_timerFast;
+    int m_timerNormal;
+    int m_timerSlow;
+    int m_timerCache;
     int m_gameTime;		/** Definition of game time (= in seconds) **/
 
     int m_fps = 0;			/** Frames per second **/
     int frameCount = 0;		/** Frame count for FPS calculation **/
     int waitingTime = 10;	/** Waiting time in ms, used to adapt FPS **/
-    uint64_t m_lastUnitsTick = 0;
-    uint64_t m_lastGameTimeTick = 0;
-    uint64_t m_lastSecondsTick = 0;
-    uint64_t m_lastMinuteTick = 0;
+    uint64_t m_lastNormalTick = 0;
+    uint64_t m_lastFastTick = 0;
+    uint64_t m_lastSlowTick = 0;
 
     struct DurationTime {
-        uint64_t gameTickDuration;  // 5
-        uint64_t unitTickDuration;  // 100
-        uint64_t secondTickDuration; // 1000
-        uint64_t minTickDuration; // 60000
+        uint64_t fastTickDuration;  // 5
+        uint64_t normalTickDuration;  // 100
+        uint64_t slowTickDuration; // 1000
 
         void init(int value) {
-            gameTickDuration = value;
-            unitTickDuration = value * 20;
-            secondTickDuration = value * 200;
-            minTickDuration = 60000;
+            fastTickDuration = value;
+            normalTickDuration = value * 20;
+            slowTickDuration = value * 200;
         }
     };
 

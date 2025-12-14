@@ -14,10 +14,10 @@
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "mentat/AbstractMentat.h"
+#include "include/enums GameState.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-#include "utils/cTimeManager.h"
+#include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
 
 #include <memory>
@@ -40,8 +40,11 @@ struct GameSettings;
 class ContextCreator;
 class GameContext;
 class cScreenShake;
+class cGameConditionChecker;
+class cScreenFader;
 
 struct s_TerrainInfo;
+struct s_DataCampaign;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -67,10 +70,6 @@ public:
     bool m_windowed;			    // windowed
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
-    // Alpha (for fading in/out)
-    int m_fadeAlpha;                // 255 = opaque , anything else
-    eFadeAction m_fadeAction;       // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
-
     // resolution of the game
     int m_screenW;
     int m_screenH;
@@ -92,15 +91,16 @@ public:
     bool m_skirmish;                // playing a skirmish game or not
     int m_screenshot;				// screenshot taking number
 
-    int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
-    int m_mission;		            // what mission are we playing? (= techlevel)
-
     int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
     int m_musicType;
 
     cRectangle *m_mapViewport;
+
+    bool m_drawFps;
+    bool m_drawTime;
+
 
     // Initialization functions
     void init();		            // initialize all game variables
@@ -109,20 +109,10 @@ public:
     bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
     void shutdown();
     void initSkirmish() const;      // initialize combat state to start a skirmish game
-    void createAndPrepareMentatForHumanPlayer(bool allowMissionSelect = true);
     void loadSkirmishMaps() const;
     void loadScenario();
 
     void run();			            // run the game (MAIN LOOP)
-
-    void thinkSlow_stateCombat_evaluatePlayerStatus();
-
-    void thinkFast_combat();
-    void thinkFast_state();
-
-    void think_audio();
-    void think_mentat();
-    void think_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
@@ -148,24 +138,7 @@ public:
 
     int getMaxVolume();
 
-    Color getColorFadeSelected(int r, int g, int b) {
-        // Fade with all rgb
-        return getColorFadeSelected(r, g, b, true, true, true);
-    }
-
-    // Color getColorFadeSelectedRed(int r, int g, int b) {
-    //     return getColorFadeSelected(r, g, b, true, false, false);
-    // }
-
-    // Color getColorFadeSelectedGreen(int r, int g, int b) {
-    //     return getColorFadeSelected(r, g, b, false, true, false);
-    // }
-
-    // Color getColorFadeSelectedBlue(int r, int g, int b) {
-    //     return getColorFadeSelected(r, g, b, false, false, true);
-    // }
-
-    Color getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag);
+    Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 
     cMouse *getMouse() {
         return m_mouse; // NOOOO
@@ -182,49 +155,6 @@ public:
 
     void onEventSpecialLaunch(const s_GameEvent &event) const;
     void onEventEntityDestroyed(const s_GameEvent & event);
-
-    static const char *stateString(const int &state) {
-        switch (state) {
-            case GAME_INITIALIZE:
-                return "GAME_INITIALIZE";
-            case GAME_OVER:
-                return "GAME_OVER";
-            case GAME_MENU:
-                return "GAME_MENU";
-            case GAME_PLAYING:
-                return "GAME_PLAYING";
-            case GAME_BRIEFING:
-                return "GAME_BRIEFING";
-            case GAME_EDITING:
-                return "GAME_EDITING";
-            case GAME_OPTIONS:
-                return "GAME_OPTIONS";
-            case GAME_REGION:
-                return "GAME_REGION";
-            case GAME_SELECT_HOUSE:
-                return "GAME_SELECT_HOUSE";
-            case GAME_TELLHOUSE:
-                return "GAME_TELLHOUSE";
-            case GAME_WINNING:
-                return "GAME_WINNING";
-            case GAME_WINBRIEF:
-                return "GAME_WINBRIEF";
-            case GAME_LOSEBRIEF:
-                return "GAME_LOSEBRIEF";
-            case GAME_LOSING:
-                return "GAME_LOSING";
-            case GAME_SETUPSKIRMISH:
-                return "GAME_SETUPSKIRMISH";
-            case GAME_CREDITS:
-                return "GAME_CREDITS";
-            case GAME_MISSIONSELECT:
-                return "GAME_MISSIONSELECT";
-            default:
-                assert(false);
-                break;
-        }
-        return "";
-    }
 
     void shakeScreen(int duration);
     void reduceShaking() const;
@@ -243,12 +173,10 @@ public:
 
     void prepareMentatToTellAboutHouse(int house);
 
-    void drawCombatMouse();
-
-    void think_state();
-
+    void thinkFast();
+    void thinkNormal();
     void thinkSlow();
-    void think_minute();
+    void thinkCache();
 
     bool isTurretsDownOnLowPower() {
         return m_turretsDownOnLowPower;
@@ -269,7 +197,7 @@ public:
     }
 
     void applySettings(GameSettings *gs);
-    void execute(AbstractMentat &mentat);
+    void changeStateFromMentat();
 
     Texture* getScreenTexture() const {
         return screenTexture;
@@ -277,6 +205,18 @@ public:
     void takeBackGroundScreen();
 
     std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
+
+    void goingToWinLoseBrief(int value);
+
+    cReinforcements* getReinforcements() const;
+
+    s_DataCampaign* getDataCampaign() const;
+
+    int getCurrentState() const;
+
+    void drawTextFps() const;
+    void drawTextTime() const;
+    void checkMissionWinOrFail();
 private:
     /**
      * Variables start here
@@ -285,7 +225,6 @@ private:
 
     // if true, then turrets won't do anything on low power (both gun and rocket turrets)
     bool m_turretsDownOnLowPower;
-
     // if true, rocket turrets will not fire rockets when low power
     bool m_rocketTurretsDownOnLowPower;
 
@@ -315,86 +254,42 @@ private:
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
-    int m_state;
-
     int m_newMusicSample;
     int m_newMusicCountdown;
 
-    AbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
-
-    float m_fadeSelect;                 // fade color when selected
-    bool m_fadeSelectDir;               // fade select direction
-
-    bool m_drawFps;
-    bool m_drawTime;
-
     std::unique_ptr<cScreenShake> m_screenShake;
 
-    int m_TIMER_evaluatePlayerStatus;
+    void thinkFast_audio();
+    void thinkFast_fading();
 
-    // win/lose flags
-    int8_t m_winFlags, m_loseFlags;
 
+    int m_state;
     int m_nextState;
-
     // the current game state we are running
     cGameState *m_currentState;
-
     cGameState *m_states[GAME_MAX_STATES];
+    void transitionStateIfRequired();
+    void setState(int newState);
 
     void updateMouseAndKeyboardState();
     void updateGamePlaying();
-    void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
-    void drawStateCombat();		// the combat part (main) of the game
-    // void drawStateMenu();		// main menu
-    void drawStateWinning();    // drawStateWinning (during combat you get the window "you have been successful"),
-    // after clicking you get to debrief
-
-    void drawStateLosing();     // drawStateLosing (during combat you get the window "you have lost"),
-    // after clicking you get to debrief
-
-
-    void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
+    void drawState();
 
     void shakeScreenAndBlitBuffer();
 
     void initPlayers(bool rememberHouse) const;
 
-    // void install_bitmaps();
-
-    [[nodiscard]] bool isMissionWon() const;
-
-    [[nodiscard]] bool isMissionFailed() const;
-
-    [[nodiscard]] bool hasGameOverConditionHarvestForSpiceQuota() const;
-
-    [[nodiscard]] bool hasGameOverConditionPlayerHasNoBuildings() const;
-
-    [[nodiscard]] bool hasWinConditionHumanMustLoseAllBuildings() const;
-
-    [[nodiscard]] bool hasWinConditionAIShouldLoseEverything() const;
-
-    [[nodiscard]] bool allEnemyAIPlayersAreDestroyed() const;
-
-    [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
-
-    void transitionStateIfRequired();
-
-    void setState(int newState);
-
     void saveBmpScreenToDisk();
 
-    // Combat state specific event handling for now
-    void onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event);
-    void onKeyDownGamePlaying(const cKeyboardEvent &event);
-    void onKeyPressedGamePlaying(const cKeyboardEvent &event);
-
-    void thinkSlow_state();
-
+    void onKeyDownGame(const cKeyboardEvent &event);
+    void onKeyPressedGame(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 
     void fadeOutOrBlitScreenBuffer() const;
 
     std::unique_ptr<GameContext> ctx;
     std::unique_ptr<ContextCreator> context;
+    std::unique_ptr<s_DataCampaign> m_dataCampaign;
+    std::unique_ptr<cGameConditionChecker> m_gameConditionChecker;
+    std::unique_ptr<cScreenFader> m_cScreenFader;
 };
