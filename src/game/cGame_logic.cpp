@@ -1704,3 +1704,9 @@ void cGame::checkMissionWinOrFail()
         return;
     }
 }
+
+void cGame::loadMapFromEditor(int map)
+{
+    auto *pState = dynamic_cast<cEditorState *>(m_states[GAME_EDITOR]);
+    pState->loadMap(map);
+}

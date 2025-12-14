@@ -15,6 +15,7 @@ public:
 
     void thinkFast() override;
     void draw() const override;
+    void loadMap(int map);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;

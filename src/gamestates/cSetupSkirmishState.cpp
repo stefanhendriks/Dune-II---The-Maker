@@ -302,7 +302,9 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
-                    //game.prepareGameEditor(iSkirmishMap);
+                    m_game.loadMapFromEditor(iSkirmishMap);
+                    m_game.initiateFadingOut();
+                    m_game.setNextStateToTransitionTo(GAME_EDITOR); // this deletes the current state object
                 }
             })
             .build();
