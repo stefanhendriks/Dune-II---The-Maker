@@ -40,5 +40,8 @@ eGameStateType cEditorState::getType()
 
 void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        m_game.setNextStateToTransitionTo(GAME_MENU);
+        m_game.initiateFadingOut();
+    }
 }
