@@ -63,4 +63,5 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cEditorState::loadMap(s_PreviewMap* map)
 {
     std::cout << "open |"<< map->name << "|" << std::endl;
+    m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
 }
