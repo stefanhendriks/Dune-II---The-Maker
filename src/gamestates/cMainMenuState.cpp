@@ -130,8 +130,21 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .build();
     gui_window->addGuiObject(gui_btn_Load);
 
+    // Editor
+    int editorY = loadY+heightBetweenButton;
+    const cRectangle &editors = cRectangle(buttonsX, editorY, buttonWidth, buttonHeight);
+    GuiButton *gui_btn_Editor = GuiButtonBuilder()
+            .withRect(editors)        
+            .withLabel("Map Editor")
+            .withTextDrawer(m_textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this](){m_game.setNextStateToTransitionTo(GAME_EDITOR);})
+            .build();
+    gui_window->addGuiObject(gui_btn_Editor);
+
     // OPTIONS
-    int optionsY = loadY+heightBetweenButton;
+    int optionsY = editorY+heightBetweenButton;
     const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Options = GuiButtonBuilder()
             .withRect(options)        
