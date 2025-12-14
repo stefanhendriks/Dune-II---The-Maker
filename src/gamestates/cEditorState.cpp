@@ -8,8 +8,10 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "map/cPreviewMaps.h"
 #include <SDL2/SDL.h>
 #include <format>
+#include <iostream>
 
 cEditorState::cEditorState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
 {
@@ -46,6 +48,8 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 }
 
-void cEditorState::loadMap(int map)
+void cEditorState::loadMap(s_PreviewMap* map)
 {
+    std::cout << "open "<< map->name << std::endl;
+    m_map = map;
 }
