@@ -6,7 +6,7 @@ enum class GameState : char {
     MENU,                  // in a menu
     PLAYING,               // playing the actual game
     BRIEFING,              // doing some briefing
-    EDITING,               // running the editor
+    EDITOR,                // running the editor
     OPTIONS,               // options menu
     REGION,                // select a region / select your next conquest
     SELECT_HOUSE,          // pick a house
@@ -29,7 +29,7 @@ enum class GameState : char {
 #define GAME_MENU         1      // in a menu
 #define GAME_PLAYING      2      // playing the actual game
 #define GAME_BRIEFING     3      // doing some briefing
-#define GAME_EDITING      4      // running the editor
+#define GAME_EDITOR      4      // running the editor
 #define GAME_OPTIONS	  5		 // options menu
 #define GAME_REGION		  6		 // select a region / select your next conquest
 #define GAME_SELECT_HOUSE 8		 // pick a house
