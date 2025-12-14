@@ -33,6 +33,7 @@
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cMentatState.h"
 #include "gamestates/cGamePlaying.h"
+#include "gamestates/cEditorState.h"
 #include "utils/ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
@@ -847,6 +848,9 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this, ctx.get());
+            }
+            else if (newState == GAME_EDITOR) {
+                newStatePtr = new cEditorState(*this, ctx.get());
             }
             else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuState(*this, ctx.get());
