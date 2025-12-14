@@ -28,6 +28,10 @@ public:
     void setTheme(const GuiTheme& _theme) {
         GuiObject::setTheme(_theme);
     }
+
+    void beginPlacement(int value) {
+        placementPosition = value;
+    }
 private:
     std::vector<GuiObject *> gui_objects;
     GuiBarPlacement m_placement;
