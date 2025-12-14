@@ -1760,7 +1760,8 @@ void cGame::checkMissionWinOrFail()
 
 void cGame::loadMapFromEditor(int map)
 {
-    auto *pState = dynamic_cast<cEditorState *>(m_states[GAME_EDITOR]);
+    setState(GAME_EDITOR);
+    auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
     s_PreviewMap *selectedMap = &m_PreviewMaps->getMap(map);
     pState->loadMap(selectedMap);
 }

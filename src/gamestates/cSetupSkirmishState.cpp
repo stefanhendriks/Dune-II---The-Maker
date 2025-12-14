@@ -304,7 +304,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
                 if (iSkirmishMap > -1) {
                     m_game.loadMapFromEditor(iSkirmishMap);
                     m_game.initiateFadingOut();
-                    m_game.setNextStateToTransitionTo(GAME_EDITOR); // this deletes the current state object
+                    // m_game.setNextStateToTransitionTo(GAME_EDITOR); // this deletes the current state object
                 }
             })
             .build();
