@@ -24,6 +24,7 @@ public:
      */
     void createCell(int cell, int terrainType, int tile);
 
+private:
     bool isSpecificTerrainType(int cell, int terrainType);
 
     bool isBelowSpecificTerrainType(int sourceCell, int terrainType);
@@ -41,6 +42,5 @@ public:
     int smoothSandHillCell(int cell);
     int smoothWallCell(int cell);
 
-private:
     cMap &m_map;
 };
