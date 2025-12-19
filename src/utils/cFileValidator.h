@@ -13,7 +13,8 @@ enum class eGameDirFileName {
     GFXINTER,
     GFXWORLD,
     GFXMENTAT,
-    GFXAUDIO
+    GFXAUDIO,
+    GFXEDITOR
 };
 
 inline constexpr std::string eGameDirFileNameString(const eGameDirFileName &value)
@@ -35,6 +36,8 @@ inline constexpr std::string eGameDirFileNameString(const eGameDirFileName &valu
             return "GFXMENTAT";
         case eGameDirFileName::GFXAUDIO:
             return "GFXAUDIO";
+        case eGameDirFileName::GFXEDITOR:
+            return "GFXEDITOR";
         default:
             assert(false);
             break;
