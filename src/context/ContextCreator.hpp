@@ -24,6 +24,7 @@ private:
     std::shared_ptr<Graphics> gfxworld;
     std::shared_ptr<Graphics> gfxinter;
     std::shared_ptr<Graphics> gfxdata;
+    std::shared_ptr<Graphics> gfxeditor;
 
     TTF_Font *game_font = nullptr; 	// arrakeen.fon
     TTF_Font *bene_font = nullptr;	// benegesserit font.
