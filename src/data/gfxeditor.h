@@ -1,0 +1,13 @@
+#define BLOOM           0
+#define BUILDINGS       1
+#define FLIPHORZ        2
+#define FLIPVERT        3
+#define GRID            4
+#define LAYERS          5
+#define MAIN            6
+#define MOUNTAINS       7   
+#define SANDLAYER       8  
+#define SELECT          9
+#define SPICELAYER      10   
+#define STONELAYER      11 
+#define UNITS           12
