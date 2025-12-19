@@ -9,13 +9,20 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "map/cPreviewMaps.h"
+#include "utils/Graphics.hpp"
+#include "data/gfxeditor.h"
+#include "data/gfxinter.h"
+
 #include <SDL2/SDL.h>
 #include <format>
 #include <iostream>
 
-const int heightSize = 32;
+const int heightSize = 34;
 
-cEditorState::cEditorState(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
+cEditorState::cEditorState(cGame &theGame, GameContext* ctx) 
+    : cGameState(theGame, ctx),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
 {
     const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightSize);
     const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightSize, heightSize, heightSize, m_game.m_screenH-heightSize);

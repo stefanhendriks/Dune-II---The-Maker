@@ -9,6 +9,7 @@
 #include <memory>
 
 class Texture;
+class Graphics;
 class cGame;
 class s_PreviewMap;
 class GuiBar;
@@ -31,4 +32,5 @@ private:
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_modifBar;
     std::unique_ptr<Matrix<int>> m_mapData;
+    Graphics *m_gfxinter, *m_gfxeditor;
 };
