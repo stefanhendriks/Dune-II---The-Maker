@@ -543,6 +543,7 @@ bool cGame::setupGame()
         m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
         m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
         m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
+        m_transfertMap[eGameDirFileName::GFXEDITOR] = settings->getStringValue("DATAFILE", "GFXEDITOR");
         settingsValidator->addResources(std::move(m_transfertMap));
     }
 
