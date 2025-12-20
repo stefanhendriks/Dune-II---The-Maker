@@ -1,5 +1,6 @@
 #include "gamestates/cEditorState.h"
 #include "gui/GuiBar.h"
+#include "gui/GuiStateButton.h"
 #include "d2tmc.h"
 #include "config.h"
 #include "data/gfxinter.h"
@@ -24,18 +25,30 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
 {
-    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightSize);
-    const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightSize, heightSize, heightSize, m_game.m_screenH-heightSize);
+    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightSize+1);
+    const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightSize-1, heightSize-1, heightSize, m_game.m_screenH-heightSize);
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
     m_modifBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_selectBar->setTheme(GuiTheme::Light());
     m_modifBar->setTheme(GuiTheme::Light());
+
+    populateSelectBar();
+    populateModifBar();
 }
 
 cEditorState::~cEditorState()
 {
 
 }
+
+void cEditorState::populateSelectBar()
+{
+}
+
+void cEditorState::populateModifBar()
+{
+}
+
 
 void cEditorState::thinkFast()
 {
