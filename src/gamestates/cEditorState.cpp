@@ -17,7 +17,7 @@
 #include <format>
 #include <iostream>
 
-const int heightSize = 34;
+const int heightSize = 48;
 
 cEditorState::cEditorState(cGame &theGame, GameContext* ctx) 
     : cGameState(theGame, ctx),
