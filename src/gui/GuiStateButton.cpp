@@ -5,10 +5,10 @@ GuiStateButton::GuiStateButton(const cRectangle &rect)
     : GuiObject(rect)
 {
     m_state = GuiState::UNCLICKED;
-    rectState[GuiState::UNCLICKED] = std::make_unique<cRectangle>(0,0,rect.getWidth()/3, rect.getHeight());
-    rectState[GuiState::DISABLED] = std::make_unique<cRectangle>(rect.getWidth()/3,0,rect.getWidth()/3, rect.getHeight());
-    rectState[GuiState::CLICKED] = std::make_unique<cRectangle>(2*rect.getWidth()/3,0,rect.getWidth()/3, rect.getHeight());
-    m_currentRectState = rectState[GuiState::DISABLED].get();
+    rectState[GuiState::UNCLICKED] = std::make_unique<cRectangle>(0,0,32, 32);
+    rectState[GuiState::DISABLED] = std::make_unique<cRectangle>(32,0,32, 32);
+    rectState[GuiState::CLICKED] = std::make_unique<cRectangle>(64,0,32, 32);
+    m_currentRectState = rectState[GuiState::UNCLICKED].get();
 }
 
 GuiStateButton::~GuiStateButton()
