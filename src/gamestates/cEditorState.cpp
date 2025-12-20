@@ -90,6 +90,46 @@ void cEditorState::populateSelectBar()
 
 void cEditorState::populateModifBar()
 {
+    auto rectGui = cRectangle(m_game.m_screenW-heightSize-1,96,heightSize,heightSize);
+    auto guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
+            .onClick([this]() {
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_modifBar->addGuiObject(guiButton);
+    
+    rectGui = cRectangle(m_game.m_screenW-heightSize-1, 96+heightSize+5,heightSize,heightSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
+            .onClick([this]() {
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_modifBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightSize-1,96+2*(heightSize+5),heightSize,heightSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
+            .onClick([this]() {
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_modifBar->addGuiObject(guiButton);
+    
+    rectGui = cRectangle(m_game.m_screenW-heightSize-1, 96+3*(heightSize+5),heightSize,heightSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
+            .onClick([this]() {
+                m_game.initiateFadingOut();
+            })
+            .build();
+
+    m_modifBar->addGuiObject(guiButton);
 }
 
 
