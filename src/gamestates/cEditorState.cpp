@@ -43,6 +43,49 @@ cEditorState::~cEditorState()
 
 void cEditorState::populateSelectBar()
 {
+    auto rectGui = cRectangle(96,1,heightSize,heightSize);
+    auto guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STONELAYER))
+            .onClick([this]() {
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_selectBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(96+1*(heightSize+5),1,heightSize,heightSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(SPICELAYER))
+            .onClick([this]() {
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_selectBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(96+2*(heightSize+5),1,heightSize,heightSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(BUILDING))
+            .onClick([this]() {
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_selectBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(96+3*(heightSize+5),1,heightSize,heightSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(UNITS))
+            .onClick([this]() {
+                m_game.setNextStateToTransitionTo(GAME_MENU);
+                m_game.initiateFadingOut();
+            })
+            .build();
+    m_selectBar->addGuiObject(guiButton);
 }
 
 void cEditorState::populateModifBar()
