@@ -47,6 +47,12 @@ void GuiStateButton::draw() const
 
 void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (!event.coords.isWithinRectangle(&m_rect))
+        return;
+    if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
+        changeState(GuiState::CLICKED);
+        m_onLeftMouseButtonClickedAction();
+    }
 }
 
 void GuiStateButton::onNotifyKeyboardEvent(const cKeyboardEvent &event)
