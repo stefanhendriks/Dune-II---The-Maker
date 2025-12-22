@@ -378,14 +378,16 @@ void AbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
         }
     }
 
-    if (m_guiBtnToMissionSelect) {
-        m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
-    }
-    if (leftGuiButton) {
-        leftGuiButton->onNotifyMouseEvent(event);
-    }
-    if (rightGuiButton) {
-        rightGuiButton->onNotifyMouseEvent(event);
+    if (state == AWAITING_RESPONSE) {
+        if (m_guiBtnToMissionSelect) {
+            m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
+        }
+        if (leftGuiButton) {
+            leftGuiButton->onNotifyMouseEvent(event);
+        }
+        if (rightGuiButton) {
+            rightGuiButton->onNotifyMouseEvent(event);
+        }
     }
 }
 
