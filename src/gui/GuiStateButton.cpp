@@ -19,8 +19,13 @@ void GuiStateButton::setTexture(Texture *tex)
     m_tex = tex;
 }
 
-void GuiStateButton::changeState()
+void GuiStateButton::changeState(GuiState newState)
 {
+    if (m_state == newState) {
+        return;
+    }
+
+    m_state = newState;
     switch (m_state)
     {
     case GuiState::CLICKED:
