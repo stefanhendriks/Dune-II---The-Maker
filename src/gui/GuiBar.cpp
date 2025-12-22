@@ -36,6 +36,8 @@ void GuiBar::addGuiObject(GuiObject *guiObject)
 
 void GuiBar::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (!event.coords.isWithinRectangle(&m_rect))
+        return;
     for (auto &guiObject : gui_objects) {
         guiObject->onNotifyMouseEvent(event);
     }
