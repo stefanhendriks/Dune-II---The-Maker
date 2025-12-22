@@ -13,7 +13,7 @@
 
 #include <algorithm>
 
-cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_mouseToolTip(thePlayer), player(thePlayer)
+cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : player(thePlayer)
 {
     assert(thePlayer);
     mouseX = mouseY = 0;
