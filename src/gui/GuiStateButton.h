@@ -25,11 +25,11 @@ public:
     void setTexture(Texture* tex);
     void setRenderKind(GuiRenderKind value);
     void draw() const override;
-    void changeState();
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
     void setOnRightMouseButtonClickedAction(std::function<void()> action);
 private:
     enum class GuiState : char {DISABLED =0, CLICKED, UNCLICKED, COUNT};
+    void changeState(GuiState newState);
     Texture* m_tex =nullptr;
     EnumArray<std::unique_ptr<cRectangle>,GuiState> rectState;
     GuiRenderKind m_renderKind;
