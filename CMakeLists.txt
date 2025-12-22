@@ -37,7 +37,11 @@ if(APPLE)
     pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
     pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
 
-    set(HOMEBREW_PREFIX "/opt/homebrew")
+    if(EXISTS "/opt/homebrew/bin/brew")
+        set(HOMEBREW_PREFIX "/opt/homebrew")
+    else()
+        set(HOMEBREW_PREFIX "/usr/local")
+    endif()
 
     set(CMAKE_PREFIX_PATH
             "${HOMEBREW_PREFIX}"
@@ -48,14 +52,23 @@ if(APPLE)
             "${HOMEBREW_PREFIX}/opt/gcc/lib/gcc/15"
     )
 
-    set(CMAKE_C_COMPILER "${HOMEBREW_PREFIX}/bin/gcc-15")
-    set(CMAKE_CXX_COMPILER "${HOMEBREW_PREFIX}/bin/g++-15")
+    if(APPLE)
+        if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
+            message(STATUS "Apple Silicon (arm64)")
+        elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+            message(STATUS "Apple Intel X64")
+            set(CMAKE_C_COMPILER "clang")
+            set(CMAKE_CXX_COMPILER "clang++")
+        endif()
+    endif()
 
     message(STATUS "Mac GCC C compiler: ${CMAKE_C_COMPILER}")
     message(STATUS "Mac GCC C++ compiler: ${CMAKE_CXX_COMPILER}")
 
-    add_compile_options(-stdlib=libstdc++)
-    add_link_options(-stdlib=libstdc++)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        add_compile_options(-stdlib=libstdc++)
+        add_link_options(-stdlib=libstdc++)
+    endif()
 
     include_directories(
       ${SDL2_INCLUDE_DIRS}
@@ -90,6 +103,8 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE
     	${CMAKE_CURRENT_SOURCE_DIR}/src
     	${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        /usr/local/include/SDL2
+        /usr/local/include
 )
 
 if (APPLE)
@@ -159,9 +174,6 @@ endif()
 #     INTERPROCEDURAL_OPTIMIZATION TRUE
 #   )
 # endif()
-
-SET(CMAKE_CXX_FLAGS "-g")
-
-
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

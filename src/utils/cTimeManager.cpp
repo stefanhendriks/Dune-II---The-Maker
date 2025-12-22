@@ -28,26 +28,31 @@ cTimeManager::cTimeManager(cGame *game)
 
 std::string cTimeManager::getCurrentTime() const
 {
-    auto now_utc = std::chrono::system_clock::now();
-    auto now_local = std::chrono::zoned_time(std::chrono::current_zone(), now_utc);
-    auto local_time_seconds = std::chrono::time_point_cast<std::chrono::seconds>(now_local.get_local_time());
-    auto time_of_day = std::chrono::hh_mm_ss{local_time_seconds.time_since_epoch()};
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_tt = std::chrono::system_clock::to_time_t(now);
+
+    std::tm local_tm;
+#ifdef _WIN32
+    localtime_s(&local_tm, &now_tt);
+#else
+    localtime_r(&now_tt, &local_tm);
+#endif
+
     return std::format("{:02}:{:02}:{:02}",
-                       time_of_day.hours().count()%24,
-                       time_of_day.minutes().count(),
-                       time_of_day.seconds().count());
+                       local_tm.tm_hour,
+                       local_tm.tm_min,
+                       local_tm.tm_sec);
 }
 
 std::string cTimeManager::getCurrentTimer() const
 {
-    auto duration = std::chrono::seconds(m_timeCounter->getTime());
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
-    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration - hours);
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration - hours - minutes);
-    return std::format("{:02}:{:02}:{:02}",
-                       hours.count(),
-                       minutes.count(),
-                       seconds.count());
+    auto total_seconds = m_timeCounter->getTime();
+
+    int hours = static_cast<int>(total_seconds / 3600);
+    int minutes = static_cast<int>((total_seconds % 3600) / 60);
+    int seconds = static_cast<int>(total_seconds % 60);
+
+    return std::format("{:02}:{:02}:{:02}", hours, minutes, seconds);
 }
 
 /**
