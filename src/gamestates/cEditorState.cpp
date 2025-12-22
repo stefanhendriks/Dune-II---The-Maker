@@ -48,8 +48,7 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();
+                std::cout << "STONELAYER" << std::endl;
             })
             .build();
     m_selectBar->addGuiObject(guiButton);
@@ -59,8 +58,7 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(SPICELAYER))
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();
+                std::cout << "SPICELAYER" << std::endl;
             })
             .build();
     m_selectBar->addGuiObject(guiButton);
@@ -70,8 +68,7 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(BUILDING))
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();
+                std::cout << "BUILDING" << std::endl;
             })
             .build();
     m_selectBar->addGuiObject(guiButton);
@@ -81,8 +78,7 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(UNITS))
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();
+                std::cout << "UNITS" << std::endl;
             })
             .build();
     m_selectBar->addGuiObject(guiButton);
@@ -95,7 +91,7 @@ void cEditorState::populateModifBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
             .onClick([this]() {
-                m_game.initiateFadingOut();
+                std::cout << "TERRAN_HILL" << std::endl;
             })
             .build();
     m_modifBar->addGuiObject(guiButton);
@@ -105,7 +101,7 @@ void cEditorState::populateModifBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
             .onClick([this]() {
-                m_game.initiateFadingOut();
+                std::cout << "TERRAN_MOUNTAIN" << std::endl;
             })
             .build();
     m_modifBar->addGuiObject(guiButton);
@@ -115,7 +111,7 @@ void cEditorState::populateModifBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
             .onClick([this]() {
-                m_game.initiateFadingOut();
+                std::cout << "TERRAN_ROCK" << std::endl;
             })
             .build();
     m_modifBar->addGuiObject(guiButton);
@@ -125,7 +121,7 @@ void cEditorState::populateModifBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
             .onClick([this]() {
-                m_game.initiateFadingOut();
+                std::cout << "TERRAN_SAND" << std::endl;
             })
             .build();
 
