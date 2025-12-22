@@ -44,27 +44,46 @@ class cReinforcements;
 
 static int ToInt(const std::string& str)
 {
-    int value = 0;
-    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
-    if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
-        return value;
-    } else {
+    try {
+        size_t idx = 0;
+        int value = std::stoi(str, &idx);
+
+        if (idx == str.size()) {
+            return value;
+        } else {
+            logbook(std::format("ToInt: Extra characters in '{}', 0 returned.", str));
+            return 0;
+        }
+    } catch (const std::invalid_argument&) {
         logbook(std::format("ToInt: Failed to convert '{}' to int, 0 returned.", str));
-        return 0; 
+        return 0;
+    } catch (const std::out_of_range&) {
+        logbook(std::format("ToInt: Value out of range in '{}', 0 returned.", str));
+        return 0;
     }
 }
 
 static float ToFloat(const std::string& str)
 {
-    float value = 0.0f;
-    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
-    if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
-        return value;
-    } else {
+    try {
+        size_t idx = 0;
+        float value = std::stof(str, &idx);
+
+        if (idx == str.size()) {
+            return value;
+        } else {
+            logbook(std::format("ToFloat: Extra characters in '{}', 0.0f returned.", str));
+            return 0.0f;
+        }
+    } catch (const std::invalid_argument&) {
         logbook(std::format("ToFloat: Failed to convert '{}' to float, 0.0f returned.", str));
-        return 0.0f; 
+        return 0.0f;
+    } catch (const std::out_of_range&) {
+        logbook(std::format("ToFloat: Value out of range in '{}', 0.0f returned.", str));
+        return 0.0f;
     }
 }
+
 
 static bool ToBool(const std::string& str)
 {
