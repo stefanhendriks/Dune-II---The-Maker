@@ -1,4 +1,5 @@
 #include "gui/GuiStateButton.h"
+#include "gui/GuiButtonGroup.h"
 #include "d2tmc.h"
 
 GuiStateButton::GuiStateButton(const cRectangle &rect)
@@ -9,10 +10,17 @@ GuiStateButton::GuiStateButton(const cRectangle &rect)
     rectState[GuiState::DISABLED] = std::make_unique<cRectangle>(32,0,32, 32);
     rectState[GuiState::CLICKED] = std::make_unique<cRectangle>(64,0,32, 32);
     m_currentRectState = rectState[GuiState::UNCLICKED].get();
+    m_group = std::nullopt;
 }
 
 GuiStateButton::~GuiStateButton()
 {}
+
+void GuiStateButton::setGroup(GuiButtonGroup* g)
+{
+    m_group = g;
+    m_group.value()->add(this);
+}
 
 void GuiStateButton::setTexture(Texture *tex)
 {
@@ -50,12 +58,26 @@ void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
     if (!event.coords.isWithinRectangle(&m_rect))
         return;
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
-        changeState(GuiState::CLICKED);
-        m_onLeftMouseButtonClickedAction();
+        if (m_group.has_value()) {
+            m_group.value()->updateStates(this);
+        } else {
+            setPressed(true);
+            //m_onLeftMouseButtonClickedAction();
+        }
     }
 }
 
-void GuiStateButton::onNotifyKeyboardEvent(const cKeyboardEvent &event)
+void GuiStateButton::setPressed(bool value)
+{
+    if (value) {
+        changeState(GuiState::CLICKED);
+        m_onLeftMouseButtonClickedAction();
+    } else {
+        changeState(GuiState::UNCLICKED);
+    }
+}
+
+void GuiStateButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
 }
 

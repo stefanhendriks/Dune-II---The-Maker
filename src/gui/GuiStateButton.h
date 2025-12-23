@@ -3,8 +3,10 @@
 
 #include <memory>
 #include <functional>
+#include <optional>
 
 class Texture;
+class GuiButtonGroup;
 
 struct GuiStateButtonParams {
     cRectangle rect;
@@ -13,6 +15,7 @@ struct GuiStateButtonParams {
     std::function<void()> onLeftClick = nullptr;
     std::function<void()> onRightClick = nullptr;
     Texture *tex = nullptr;
+    GuiButtonGroup* group=nullptr;
 };
 
 class GuiStateButton : public GuiObject {
@@ -24,6 +27,8 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
     void setTexture(Texture* tex);
     void setRenderKind(GuiRenderKind value);
+    void setPressed(bool value);
+    void setGroup(GuiButtonGroup* group);
     void draw() const override;
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
     void setOnRightMouseButtonClickedAction(std::function<void()> action);
@@ -37,6 +42,7 @@ private:
     cRectangle* m_currentRectState;
     std::function<void()> m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onRightMouseButtonClickedAction;
+    std::optional<GuiButtonGroup*> m_group;
 };
 
 
@@ -68,11 +74,19 @@ public:
         return *this;
     }
 
+    GuiStateButtonBuilder& withGroup(GuiButtonGroup* group) {
+        params.group = group;
+        return *this;
+    }
+
     GuiStateButton* build() const {
         GuiStateButton* btn = new GuiStateButton(params.rect);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         btn->setTexture(params.tex);
+        if (params.group) {
+            btn->setGroup(params.group);
+        }
         if (params.onLeftClick) {
             btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
         }
