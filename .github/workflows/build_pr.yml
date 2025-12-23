@@ -67,8 +67,29 @@ jobs:
           cd "${{ github.workspace }}/build"
           make -j4
   MACOSX:
-    name: Mac OS X
+    name: Mac OS X (ARM)
     runs-on: [ macos-15 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          ./install_dependencies_macosx.sh
+      - name: Configure
+        run: |
+          cd "${{ github.workspace }}"
+          mkdir build
+          cd build
+          cmake ..
+      - name: Build
+        run: |
+          cd "${{ github.workspace }}/build"
+          make -j4
+  MACOSX_INTEL:
+    name: Mac OS X (Intel)
+    runs-on: [ macos-15-intel ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
