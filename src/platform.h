@@ -11,8 +11,7 @@
   */
 #pragma once
 
-#if defined(__clang__) && defined(__APPLE__)
-    #define D2TM_CLANG 1
-#else
-    #define D2TM_CLANG 0
+// D2TM_CLANG is set by the compiler if detected (see CMakeList.txt)
+#ifndef D2TM_CLANG
+#define D2TM_CLANG 0
 #endif

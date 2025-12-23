@@ -39,11 +39,13 @@ namespace fs=std::filesystem;
 #include <utility>
 #include <unordered_map>
 #include <charconv>
+#include <platform.h>
 
 class cReinforcements;
 
 static int ToInt(const std::string& str)
 {
+#if D2TM_CLANG
     try {
         size_t idx = 0;
         int value = std::stoi(str, &idx);
@@ -61,10 +63,21 @@ static int ToInt(const std::string& str)
         logbook(std::format("ToInt: Value out of range in '{}', 0 returned.", str));
         return 0;
     }
+#else
+    int value = 0;
+    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
+    if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
+        return value;
+    } else {
+        logbook(std::format("ToInt: Failed to convert '{}' to int, 0 returned.", str));
+        return 0;
+    }
+#endif
 }
 
 static float ToFloat(const std::string& str)
 {
+#if D2TM_CLANG
     try {
         size_t idx = 0;
         float value = std::stof(str, &idx);
@@ -82,6 +95,16 @@ static float ToFloat(const std::string& str)
         logbook(std::format("ToFloat: Value out of range in '{}', 0.0f returned.", str));
         return 0.0f;
     }
+#else
+    float value = 0.0f;
+    auto result = std::from_chars(str.data(), str.data() + str.size(), value);
+    if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
+        return value;
+    } else {
+        logbook(std::format("ToFloat: Failed to convert '{}' to float, 0.0f returned.", str));
+        return 0.0f;
+    }
+#endif
 }
 
 

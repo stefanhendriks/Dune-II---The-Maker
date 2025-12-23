@@ -26,7 +26,6 @@ CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.h"
 )
 
-
 if(APPLE)
     message(STATUS "Using pkg-config to locate SDL2 libraries on macOS")
 
@@ -52,14 +51,12 @@ if(APPLE)
             "${HOMEBREW_PREFIX}/opt/gcc/lib/gcc/15"
     )
 
-    if(APPLE)
-        if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
-            message(STATUS "Apple Silicon (arm64)")
-        elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-            message(STATUS "Apple Intel X64")
-            set(CMAKE_C_COMPILER "clang")
-            set(CMAKE_CXX_COMPILER "clang++")
-        endif()
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
+        message(STATUS "Apple Silicon (arm64)")
+    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        message(STATUS "Apple Intel X64")
+        set(CMAKE_C_COMPILER "clang")
+        set(CMAKE_CXX_COMPILER "clang++")
     endif()
 
     message(STATUS "Mac GCC C compiler: ${CMAKE_C_COMPILER}")
@@ -108,6 +105,11 @@ target_include_directories(${PROJECT_NAME}
 )
 
 if (APPLE)
+
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
+    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE D2TM_CLANG=1)
+    endif()
 
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
