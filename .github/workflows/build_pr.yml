@@ -67,7 +67,7 @@ jobs:
           cd "${{ github.workspace }}/build"
           make -j4
   MACOSX:
-    name: Mac OS X (ARM)
+    name: Mac OS X (Arm64)
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
