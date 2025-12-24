@@ -145,6 +145,7 @@ void cEditorState::thinkFast()
 
 void cEditorState::draw() const
 {
+    drawMap();
     m_selectBar->draw();
     m_modifBar->draw();
     m_game.getMouse()->draw();
@@ -173,4 +174,11 @@ void cEditorState::loadMap(s_PreviewMap* map)
 {
     std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
+}
+
+void cEditorState::drawMap() const
+{
+    if (m_mapData == nullptr) {
+        return;
+    }
 }
