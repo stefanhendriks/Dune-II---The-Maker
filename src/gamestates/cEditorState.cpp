@@ -28,6 +28,7 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
 {
     const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightBarSize+1);
     const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize-1, heightBarSize-1, heightBarSize, m_game.m_screenH-heightBarSize);
+    mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize-1,m_game.m_screenH-heightBarSize-1);
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
     m_modifBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_selectBar->setTheme(GuiTheme::Light());
@@ -153,8 +154,12 @@ void cEditorState::draw() const
 
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
-    m_selectBar->onNotifyMouseEvent(event);
-    m_modifBar->onNotifyMouseEvent(event);
+    if (event.coords.isWithinRectangle(&mapSizeArea)) {
+        return;
+    } else {
+        m_selectBar->onNotifyMouseEvent(event);
+        m_modifBar->onNotifyMouseEvent(event);
+    }
 }
 
 eGameStateType cEditorState::getType()
