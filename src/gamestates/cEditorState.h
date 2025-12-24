@@ -40,4 +40,6 @@ private:
     Graphics *m_gfxdata, *m_gfxeditor;
     std::unique_ptr<GuiButtonGroup> m_selectGroup;
     std::unique_ptr<GuiButtonGroup> m_topologyGroup;
+
+    cRectangle mapSizeArea;
 };
