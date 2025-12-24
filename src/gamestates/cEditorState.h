@@ -42,4 +42,5 @@ private:
     std::unique_ptr<GuiButtonGroup> m_topologyGroup;
 
     cRectangle mapSizeArea;
+    int tileLenSize = 16;
 };
