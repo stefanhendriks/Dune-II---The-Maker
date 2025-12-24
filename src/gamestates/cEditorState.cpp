@@ -36,6 +36,7 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
 
     populateSelectBar();
     populateModifBar();
+    std::cout << "Entered Editor State" << std::endl;
 }
 
 cEditorState::~cEditorState()

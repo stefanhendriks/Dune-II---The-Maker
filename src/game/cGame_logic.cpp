@@ -755,6 +755,7 @@ void cGame::setState(int newState)
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
                                newState != GAME_PLAYING &&
+                               newState != GAME_EDITOR &&
                                newState != GAME_OPTIONS); // don't delete these m_states, but re-use!
 
         if (newState == GAME_PLAYING) {
