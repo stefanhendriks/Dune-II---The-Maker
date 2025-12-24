@@ -13,6 +13,7 @@ class Graphics;
 class cGame;
 class s_PreviewMap;
 class GuiBar;
+class GuiButtonGroup;
 
 class cEditorState : public cGameState {
 public:
@@ -36,4 +37,6 @@ private:
     std::unique_ptr<GuiBar> m_modifBar;
     std::unique_ptr<Matrix<int>> m_mapData;
     Graphics *m_gfxinter, *m_gfxeditor;
+    std::unique_ptr<GuiButtonGroup> m_selectGroup;
+    std::unique_ptr<GuiButtonGroup> m_topologyGroup;
 };
