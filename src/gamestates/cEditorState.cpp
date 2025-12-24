@@ -23,7 +23,7 @@ const int heightSize = 48;
 
 cEditorState::cEditorState(cGame &theGame, GameContext* ctx) 
     : cGameState(theGame, ctx),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
 {
     const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightSize+1);
