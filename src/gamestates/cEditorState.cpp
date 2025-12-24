@@ -156,10 +156,10 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
         if (event.eventType== MOUSE_SCROLLED_DOWN) {
-            tileLenSize /=2;
+            tileLenSize -=4;
             tileLenSize = std::max(tileLenSize, 4);
         } else if (event.eventType== MOUSE_SCROLLED_UP) {
-            tileLenSize *=2;
+            tileLenSize +=4;
             tileLenSize = std::min(tileLenSize, 64);
         }
         return;
