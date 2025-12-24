@@ -43,4 +43,8 @@ private:
 
     cRectangle mapSizeArea;
     int tileLenSize = 16;
+
+    // Coordinates of the top left corner of the screen on the map (in pixels)
+    int cameraX = 0;
+    int cameraY = 0;
 };

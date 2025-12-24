@@ -181,6 +181,41 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         m_game.setNextStateToTransitionTo(GAME_MENU);
         m_game.initiateFadingOut();
     }
+    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
+        cameraX -=tileLenSize;
+        if (cameraX <0) {
+            cameraX =0;
+        }
+    }
+    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
+        cameraX +=tileLenSize;
+        // std::cout << "CameraX: " << cameraX << std::endl;
+        // std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
+        // std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
+
+        if (cameraX > (m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth())) {
+            cameraX = m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth();
+            // std::cout << "CameraX CORRECT: " << cameraX << std::endl;
+        }
+        if (m_mapData->getRows()*tileLenSize< mapSizeArea.getWidth()) {
+            cameraX =0;
+        }
+    }
+    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
+        cameraY -=tileLenSize;
+        if (cameraY <0) {
+            cameraY =0;
+        }
+    }
+    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
+        cameraY +=tileLenSize;
+        if (cameraY > (m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight())) {
+            cameraY = m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight();
+        }
+        if (m_mapData->getCols()*tileLenSize< mapSizeArea.getHeight()) {
+            cameraY =0;
+        }
+    }
 }
 
 void cEditorState::loadMap(s_PreviewMap* map)
@@ -194,12 +229,47 @@ void cEditorState::drawMap() const
     if (m_mapData == nullptr) {
         return;
     }
+    // 1. Convertir la position de la caméra (en pixels) en coordonnées de tuiles
+    size_t startX = cameraX / tileLenSize;
+    size_t startY = cameraY / tileLenSize;
+
+    // 2. Calcul due nombre de tuiles qui tiennent sur l'écran (+1 pour être sûr de couvrir)
+    size_t tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
+    size_t tilesDown = (mapSizeArea.getHeight() / tileLenSize) + 1;
+    // std::cout << "Tiles across: " << tilesAcross << " Tiles down: " << tilesDown << " tileLenSize: " << tileLenSize << std::endl;
+
+    // 3. Détermine la tuile de fin
+    size_t endX = startX + tilesAcross;
+    size_t endY = startY + tilesDown;
+    // std::cout << "Bx: "<< startX << " tileX: " << tilesAcross << " Ex: "<< endX << " Mx: " << m_mapData->getRows()<<std::endl;
+    // std::cout << "By: "<< startY << " tileY: " << tilesDown << " Et: "<< endY << " My: " << m_mapData->getCols()<<std::endl;
+    // 4. Clamper pour ne pas sortir des limites de la carte totale
+    if (endX > m_mapData->getRows()) {
+        endX = m_mapData->getRows();
+    }
+    if (endY > m_mapData->getCols()) {
+        endY = m_mapData->getCols();
+    }
+    
     int tileID;
+    int tile_world_x, tile_world_y;
+    int tile_screen_x, tile_screen_y;
+
     cRectangle destRect;
     cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
-    for (size_t j = 1; j < m_mapData->getRows()-1; ++j) { // Lignes
-        for (size_t i = 1; i < m_mapData->getCols()-1; ++i) { // Colonnes
-            destRect= cRectangle((i-1)*tileLenSize,heightBarSize+(j-1)*tileLenSize,tileLenSize,tileLenSize);
+    for (size_t i = startX; i < endX; ++i) { // Lignes
+        for (size_t j = startY; j < endY; ++j) { // Colonnes
+            
+            // 1. Position idéale en pixels si la carte démarrait à (0,0)
+            tile_world_x = i * tileLenSize;
+            tile_world_y = j * tileLenSize;
+
+            // 2. Position de rendu sur l'écran (avec le décalage de la caméra)
+            tile_screen_x = tile_world_x - cameraX;
+            tile_screen_y = tile_world_y - cameraY;
+            
+            destRect= cRectangle(tile_screen_x, 48+tile_screen_y,tileLenSize,tileLenSize);
+           
             tileID = (*m_mapData)[i][j];
             switch (tileID)
             {
