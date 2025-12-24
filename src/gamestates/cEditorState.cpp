@@ -193,4 +193,36 @@ void cEditorState::drawMap() const
     if (m_mapData == nullptr) {
         return;
     }
+    int tileID;
+    cRectangle destRect;
+    cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
+    for (size_t j = 1; j < m_mapData->getRows()-1; ++j) { // Lignes
+        for (size_t i = 1; i < m_mapData->getCols()-1; ++i) { // Colonnes
+            destRect= cRectangle((i-1)*tileLenSize,heightBarSize+(j-1)*tileLenSize,tileLenSize,tileLenSize);
+            tileID = (*m_mapData)[i][j];
+            switch (tileID)
+            {
+            case TERRAIN_SPICE:
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICE), srcRect, destRect);
+                break;
+            case TERRAIN_SAND:
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SAND), srcRect, destRect);
+                break;
+            case TERRAIN_MOUNTAIN:
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_MOUNTAIN), srcRect, destRect);
+                break;
+            case TERRAIN_ROCK:
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_ROCK), srcRect, destRect);
+                break;
+            case TERRAIN_SPICEHILL:
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICEHILL), srcRect, destRect);
+                break;  
+            case TERRAIN_HILL:
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_HILL), srcRect, destRect);
+                break;            
+            default:
+                break;
+            }
+        }
+    }
 }
