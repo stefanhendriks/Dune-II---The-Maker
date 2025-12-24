@@ -53,6 +53,8 @@ if(APPLE)
 
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
         message(STATUS "Apple Silicon (arm64)")
+        set(CMAKE_C_COMPILER "${HOMEBREW_PREFIX}/bin/gcc-15")
+        set(CMAKE_CXX_COMPILER "${HOMEBREW_PREFIX}/bin/g++-15")
     elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         message(STATUS "Apple Intel X64")
         set(CMAKE_C_COMPILER "clang")
