@@ -29,12 +29,17 @@ public:
 
     eGameStateType getType() override;
 private:
+    enum class ZoomDirection : char {
+        zoomIn,
+        zoomOut
+    };
     void populateModifBar();
     void populateSelectBar();
     void drawMap() const;
     // void clampCameraToMapBounds();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
+    void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
 
     //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
