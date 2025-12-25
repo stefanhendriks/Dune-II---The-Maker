@@ -20,6 +20,12 @@
 #include <iostream>
 
 const int heightBarSize = 48;
+const int minTileSize = 4;
+const int maxTileSize = 64;
+const int deltaTileSize = 4;
+
+const int sBS = 96; // startBarSize
+const int sBB = 5; // sizeBetweenButtons
 
 cEditorState::cEditorState(cGame &theGame, GameContext* ctx) 
     : cGameState(theGame, ctx),
@@ -58,7 +64,7 @@ void cEditorState::populateSelectBar()
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
 
-    rectGui = cRectangle(96+1*(heightBarSize+5),1,heightBarSize,heightBarSize);
+    rectGui = cRectangle(sBS+1*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(SPICELAYER))
@@ -69,7 +75,7 @@ void cEditorState::populateSelectBar()
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
 
-    rectGui = cRectangle(96+2*(heightBarSize+5),1,heightBarSize,heightBarSize);
+    rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(BUILDING))
@@ -80,7 +86,7 @@ void cEditorState::populateSelectBar()
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
 
-    rectGui = cRectangle(96+3*(heightBarSize+5),1,heightBarSize,heightBarSize);
+    rectGui = cRectangle(sBS+3*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(UNITS))
@@ -95,7 +101,7 @@ void cEditorState::populateSelectBar()
 void cEditorState::populateModifBar()
 {
     m_topologyGroup = std::make_unique<GuiButtonGroup>();
-    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,96,heightBarSize,heightBarSize);
+    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS,heightBarSize,heightBarSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
@@ -106,7 +112,7 @@ void cEditorState::populateModifBar()
     guiButton->setGroup(m_topologyGroup.get());
     m_modifBar->addGuiObject(guiButton);
     
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1, 96+heightBarSize+5,heightBarSize,heightBarSize);
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1, sBS+heightBarSize+sBB,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
@@ -117,7 +123,7 @@ void cEditorState::populateModifBar()
     guiButton->setGroup(m_topologyGroup.get());
     m_modifBar->addGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,96+2*(heightBarSize+5),heightBarSize,heightBarSize);
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+2*(heightBarSize+sBB),heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
@@ -128,7 +134,7 @@ void cEditorState::populateModifBar()
     guiButton->setGroup(m_topologyGroup.get());
     m_modifBar->addGuiObject(guiButton);
     
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1, 96+3*(heightBarSize+5),heightBarSize,heightBarSize);
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1, sBS+3*(heightBarSize+sBB),heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
@@ -161,11 +167,11 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
         int prevTileLenSize = tileLenSize;
         if (event.eventType == MOUSE_SCROLLED_DOWN) {
-            tileLenSize -= 4;
-            tileLenSize = std::max(tileLenSize, 4);
+            tileLenSize -= deltaTileSize;
+            tileLenSize = std::max(tileLenSize, minTileSize);
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
-            tileLenSize += 4;
-            tileLenSize = std::min(tileLenSize, 64);
+            tileLenSize += deltaTileSize;
+            tileLenSize = std::min(tileLenSize, maxTileSize);
         } else {
             return;
         }
@@ -299,7 +305,7 @@ void cEditorState::drawMap() const
             tile_screen_x = tile_world_x - cameraX;
             tile_screen_y = tile_world_y - cameraY;
             
-            destRect= cRectangle(tile_screen_x, 48+tile_screen_y,tileLenSize,tileLenSize);
+            destRect= cRectangle(tile_screen_x, heightBarSize+tile_screen_y,tileLenSize,tileLenSize);
            
             tileID = (*m_mapData)[i][j];
             switch (tileID)
