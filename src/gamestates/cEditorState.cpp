@@ -177,7 +177,7 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
             // Adjust the camera to keep the same tile under the cursor
             cameraX = worldTileX * tileLenSize - mouseX;
             cameraY = worldTileY * tileLenSize - mouseY;
-            // Clamp caméra pour ne pas sortir de la carte
+            // Clamp camera to map bounds
             clampCameraXToMapBounds();
             clampCameraYToMapBounds();
             // int maxCameraX = m_mapData ? (m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth()) : 0;
@@ -306,21 +306,21 @@ void cEditorState::drawMap() const
     if (m_mapData == nullptr) {
         return;
     }
-    // 1. Convertir la position de la caméra (en pixels) en coordonnées de tuiles
+    // Convert the camera position (in pixels) to tile coordinates
     int startX = cameraX / tileLenSize;
     int startY = cameraY / tileLenSize;
 
-    // 2. Calcul due nombre de tuiles qui tiennent sur l'écran (+1 pour être sûr de couvrir)
+    // Calculating the number of tiles that fit on the screen (+1 to be sure of coverage)
     size_t tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
     size_t tilesDown = (mapSizeArea.getHeight() / tileLenSize) + 1;
     // std::cout << "Tiles across: " << tilesAcross << " Tiles down: " << tilesDown << " tileLenSize: " << tileLenSize << std::endl;
 
-    // 3. Détermine la tuile de fin
+    // Determine the end tile
     size_t endX = startX + tilesAcross;
     size_t endY = startY + tilesDown;
     // std::cout << "Bx: "<< startX << " tileX: " << tilesAcross << " Ex: "<< endX << " Mx: " << m_mapData->getRows()<<std::endl;
     // std::cout << "By: "<< startY << " tileY: " << tilesDown << " Et: "<< endY << " My: " << m_mapData->getCols()<<std::endl;
-    // 4. Clamper pour ne pas sortir des limites de la carte totale
+    // Clamp to avoid wrong map m_mapData access
     if (endX > m_mapData->getRows()) {
         endX = m_mapData->getRows();
         startX = endX - tilesAcross;
@@ -342,14 +342,13 @@ void cEditorState::drawMap() const
 
     cRectangle destRect;
     cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
-    for (size_t i = startX; i < endX; ++i) { // Lignes
-        for (size_t j = startY; j < endY; ++j) { // Colonnes
+    for (size_t i = startX; i < endX; ++i) {
+        for (size_t j = startY; j < endY; ++j) {
             
-            // 1. Position idéale en pixels si la carte démarrait à (0,0)
+            // Ideal position in pixels if the map started at (0,0)
             tile_world_x = i * tileLenSize;
             tile_world_y = j * tileLenSize;
-
-            // 2. Position de rendu sur l'écran (avec le décalage de la caméra)
+            // Rendering position on the screen (including camera offset)
             tile_screen_x = tile_world_x - cameraX;
             tile_screen_y = tile_world_y - cameraY;
             
