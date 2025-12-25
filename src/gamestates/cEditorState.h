@@ -36,6 +36,7 @@ private:
     void populateModifBar();
     void populateSelectBar();
     void drawMap() const;
+    void modifyTile(int posX, int posY, int tileID);
     // void clampCameraToMapBounds();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();

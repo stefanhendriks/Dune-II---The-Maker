@@ -204,12 +204,7 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED) {
-            // Modification de la map à l'endroit du clic
-            int tileX = (cameraX + mouseX) / tileLenSize;
-            int tileY = (cameraY + mouseY) / tileLenSize;
-            if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols() && idTerrainToMapModif != -1) {
-                (*m_mapData)[tileX][tileY] = idTerrainToMapModif;
-            }
+            modifyTile(mouseX, mouseY, idTerrainToMapModif);
         } else {
             return;
         }
@@ -387,5 +382,17 @@ void cEditorState::updateVisibleTiles()
         if (startY < 0) {
             startY = 0; 
         }
+    }
+}
+
+void cEditorState::modifyTile(int posX, int posY, int tileID)
+{
+    int tileX = (cameraX + posX) / tileLenSize;
+    int tileY = (cameraY + posY) / tileLenSize;
+    if (tileID == -1) {
+        return;
+    }
+    if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols()) {
+        (*m_mapData)[tileX][tileY] = tileID;
     }
 }
