@@ -178,16 +178,17 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
             cameraX = worldTileX * tileLenSize - mouseX;
             cameraY = worldTileY * tileLenSize - mouseY;
             // Clamp caméra pour ne pas sortir de la carte
-            int maxCameraX = m_mapData ? (m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth()) : 0;
-            int maxCameraY = m_mapData ? (m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight()) : 0;
-            if (cameraX < 0) cameraX = 0;
-            if (cameraY < 0) cameraY = 0;
-            if (m_mapData) {
-                if (maxCameraX < 0) maxCameraX = 0;
-                if (maxCameraY < 0) maxCameraY = 0;
-                if (cameraX > maxCameraX) cameraX = maxCameraX;
-                if (cameraY > maxCameraY) cameraY = maxCameraY;
-            }
+            clampCameraToMapBounds();
+            // int maxCameraX = m_mapData ? (m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth()) : 0;
+            // int maxCameraY = m_mapData ? (m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight()) : 0;
+            // if (cameraX < 0) cameraX = 0;
+            // if (cameraY < 0) cameraY = 0;
+            // if (m_mapData) {
+            //     if (maxCameraX < 0) maxCameraX = 0;
+            //     if (maxCameraY < 0) maxCameraY = 0;
+            //     if (cameraX > maxCameraX) cameraX = maxCameraX;
+            //     if (cameraY > maxCameraY) cameraY = maxCameraY;
+            // }
         }
         return;
     } else {
@@ -224,13 +225,14 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
         std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
 
-        if (cameraX > (m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth())) {
-            cameraX = m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth();
-            std::cout << "CameraX CORRECT: " << cameraX << std::endl;
-        }
-        if (m_mapData->getRows()*tileLenSize< mapSizeArea.getWidth()) {
-            cameraX =0;
-        }
+        clampCameraToMapBounds();
+        // if (cameraX > (m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth())) {
+        //     cameraX = m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth();
+        //     std::cout << "CameraX CORRECT: " << cameraX << std::endl;
+        // }
+        // if (m_mapData->getRows()*tileLenSize< mapSizeArea.getWidth()) {
+        //     cameraX =0;
+        // }
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
         cameraY -=tileLenSize;
@@ -240,12 +242,13 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
         cameraY +=tileLenSize;
-        if (cameraY > (m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight())) {
-            cameraY = m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight();
-        }
-        if (m_mapData->getCols()*tileLenSize< mapSizeArea.getHeight()) {
-            cameraY =0;
-        }
+        clampCameraToMapBounds();
+        // if (cameraY > (m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight())) {
+        //     cameraY = m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight();
+        // }
+        // if (m_mapData->getCols()*tileLenSize< mapSizeArea.getHeight()) {
+        //     cameraY =0;
+        // }
     }
 }
 
