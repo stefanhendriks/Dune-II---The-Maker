@@ -156,12 +156,38 @@ void cEditorState::draw() const
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
-        if (event.eventType== MOUSE_SCROLLED_DOWN) {
-            tileLenSize -=4;
+        // Zoom centré sur le curseur
+        int mouseX = event.coords.x;
+        int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
+        int prevTileLenSize = tileLenSize;
+        if (event.eventType == MOUSE_SCROLLED_DOWN) {
+            tileLenSize -= 4;
             tileLenSize = std::max(tileLenSize, 4);
-        } else if (event.eventType== MOUSE_SCROLLED_UP) {
-            tileLenSize +=4;
+        } else if (event.eventType == MOUSE_SCROLLED_UP) {
+            tileLenSize += 4;
             tileLenSize = std::min(tileLenSize, 64);
+        } else {
+            return;
+        }
+        // Changement de zoom
+        if (tileLenSize != prevTileLenSize) {
+            // Calculer la tuile sous le curseur avant zoom
+            float worldTileX = (cameraX + mouseX) / (float)prevTileLenSize;
+            float worldTileY = (cameraY + mouseY) / (float)prevTileLenSize;
+            // Ajuster la caméra pour garder la même tuile sous le curseur
+            cameraX = (int)(worldTileX * tileLenSize - mouseX);
+            cameraY = (int)(worldTileY * tileLenSize - mouseY);
+            // Clamp caméra pour ne pas sortir de la carte
+            int maxCameraX = m_mapData ? (m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth()) : 0;
+            int maxCameraY = m_mapData ? (m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight()) : 0;
+            if (cameraX < 0) cameraX = 0;
+            if (cameraY < 0) cameraY = 0;
+            if (m_mapData) {
+                if (maxCameraX < 0) maxCameraX = 0;
+                if (maxCameraY < 0) maxCameraY = 0;
+                if (cameraX > maxCameraX) cameraX = maxCameraX;
+                if (cameraY > maxCameraY) cameraY = maxCameraY;
+            }
         }
         return;
     } else {
@@ -183,19 +209,24 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
         cameraX -=tileLenSize;
+        std::cout << "CameraX: " << cameraX << std::endl;
+        std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
+        std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
+
         if (cameraX <0) {
             cameraX =0;
+            std::cout << "CameraX CORRECT: " << cameraX << std::endl;
         }
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
         cameraX +=tileLenSize;
-        // std::cout << "CameraX: " << cameraX << std::endl;
-        // std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
-        // std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
+        std::cout << "CameraX: " << cameraX << std::endl;
+        std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
+        std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
 
         if (cameraX > (m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth())) {
             cameraX = m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth();
-            // std::cout << "CameraX CORRECT: " << cameraX << std::endl;
+            std::cout << "CameraX CORRECT: " << cameraX << std::endl;
         }
         if (m_mapData->getRows()*tileLenSize< mapSizeArea.getWidth()) {
             cameraX =0;
@@ -230,8 +261,8 @@ void cEditorState::drawMap() const
         return;
     }
     // 1. Convertir la position de la caméra (en pixels) en coordonnées de tuiles
-    size_t startX = cameraX / tileLenSize;
-    size_t startY = cameraY / tileLenSize;
+    int startX = cameraX / tileLenSize;
+    int startY = cameraY / tileLenSize;
 
     // 2. Calcul due nombre de tuiles qui tiennent sur l'écran (+1 pour être sûr de couvrir)
     size_t tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
@@ -246,9 +277,17 @@ void cEditorState::drawMap() const
     // 4. Clamper pour ne pas sortir des limites de la carte totale
     if (endX > m_mapData->getRows()) {
         endX = m_mapData->getRows();
+        startX = endX - tilesAcross;
+        if (startX < 0) {
+            startX = 0; 
+        }
     }
     if (endY > m_mapData->getCols()) {
         endY = m_mapData->getCols();
+        startY = endY - tilesDown;
+        if (startY < 0) {
+            startY = 0; 
+        }
     }
     
     int tileID;
