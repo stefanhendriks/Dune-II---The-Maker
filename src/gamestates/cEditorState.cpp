@@ -109,6 +109,7 @@ void cEditorState::populateModifBar()
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
             .onClick([this]() {
                 std::cout << "TERRAN_HILL" << std::endl;
+                idTerrainToMapModif = TERRAIN_HILL;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
@@ -120,6 +121,7 @@ void cEditorState::populateModifBar()
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
             .onClick([this]() {
                 std::cout << "TERRAN_MOUNTAIN" << std::endl;
+                idTerrainToMapModif = TERRAIN_MOUNTAIN;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
@@ -131,6 +133,7 @@ void cEditorState::populateModifBar()
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
             .onClick([this]() {
                 std::cout << "TERRAN_ROCK" << std::endl;
+                idTerrainToMapModif = TERRAIN_ROCK;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
@@ -142,6 +145,7 @@ void cEditorState::populateModifBar()
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
             .onClick([this]() {
                 std::cout << "TERRAN_SAND" << std::endl;
+                idTerrainToMapModif = TERRAIN_SAND;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
@@ -199,6 +203,13 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomOut);
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
+        } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED) {
+            // Modification de la map à l'endroit du clic
+            int tileX = (cameraX + mouseX) / tileLenSize;
+            int tileY = (cameraY + mouseY) / tileLenSize;
+            if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols() && idTerrainToMapModif != -1) {
+                (*m_mapData)[tileX][tileY] = idTerrainToMapModif;
+            }
         } else {
             return;
         }
