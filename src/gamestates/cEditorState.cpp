@@ -172,11 +172,11 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         // Zoom change
         if (tileLenSize != prevTileLenSize) {
             // Calculate the tile under the cursor before zooming
-            float worldTileX = (cameraX + mouseX) / (float)prevTileLenSize;
-            float worldTileY = (cameraY + mouseY) / (float)prevTileLenSize;
+            int worldTileX = (cameraX + mouseX) / prevTileLenSize;
+            int worldTileY = (cameraY + mouseY) / prevTileLenSize;
             // Adjust the camera to keep the same tile under the cursor
-            cameraX = (int)(worldTileX * tileLenSize - mouseX);
-            cameraY = (int)(worldTileY * tileLenSize - mouseY);
+            cameraX = worldTileX * tileLenSize - mouseX;
+            cameraY = worldTileY * tileLenSize - mouseY;
             // Clamp caméra pour ne pas sortir de la carte
             int maxCameraX = m_mapData ? (m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth()) : 0;
             int maxCameraY = m_mapData ? (m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight()) : 0;
