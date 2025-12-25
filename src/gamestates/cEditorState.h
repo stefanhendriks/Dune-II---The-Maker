@@ -32,7 +32,7 @@ private:
     void populateModifBar();
     void populateSelectBar();
     void drawMap() const;
-    void clampCameraToMapBounds();
+    // void clampCameraToMapBounds();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
 
