@@ -180,16 +180,6 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
             // Clamp camera to map bounds
             clampCameraXToMapBounds();
             clampCameraYToMapBounds();
-            // int maxCameraX = m_mapData ? (m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth()) : 0;
-            // int maxCameraY = m_mapData ? (m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight()) : 0;
-            // if (cameraX < 0) cameraX = 0;
-            // if (cameraY < 0) cameraY = 0;
-            // if (m_mapData) {
-            //     if (maxCameraX < 0) maxCameraX = 0;
-            //     if (maxCameraY < 0) maxCameraY = 0;
-            //     if (cameraX > maxCameraX) cameraX = maxCameraX;
-            //     if (cameraY > maxCameraY) cameraY = maxCameraY;
-            // }
         }
         return;
     } else {
@@ -211,29 +201,13 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
         cameraX -=tileLenSize;
-        std::cout << "CameraX: " << cameraX << std::endl;
-        std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
-        std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
-
         if (cameraX <0) {
             cameraX =0;
-            std::cout << "CameraX CORRECT: " << cameraX << std::endl;
         }
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
         cameraX +=tileLenSize;
-        std::cout << "CameraX: " << cameraX << std::endl;
-        std::cout << "MapSizeX: " << mapSizeArea.getWidth() << std::endl;
-        std::cout << "MaxSizeX: " << m_mapData->getRows()*tileLenSize << std::endl;
-
         clampCameraXToMapBounds();
-        // if (cameraX > (m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth())) {
-        //     cameraX = m_mapData->getRows()*tileLenSize - mapSizeArea.getWidth();
-        //     std::cout << "CameraX CORRECT: " << cameraX << std::endl;
-        // }
-        // if (m_mapData->getRows()*tileLenSize< mapSizeArea.getWidth()) {
-        //     cameraX =0;
-        // }
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
         cameraY -=tileLenSize;
@@ -244,12 +218,6 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
         cameraY +=tileLenSize;
         clampCameraYToMapBounds();
-        // if (cameraY > (m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight())) {
-        //     cameraY = m_mapData->getCols()*tileLenSize - mapSizeArea.getHeight();
-        // }
-        // if (m_mapData->getCols()*tileLenSize< mapSizeArea.getHeight()) {
-        //     cameraY =0;
-        // }
     }
 }
 
@@ -258,24 +226,6 @@ void cEditorState::loadMap(s_PreviewMap* map)
     std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
 }
-
-// void cEditorState::clampCameraToMapBounds()
-// {
-//     if (m_mapData == nullptr) {
-//         cameraX = 0;
-//         cameraY = 0;
-//         return;
-//     }
-//     int maxCameraX = m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth();
-//     int maxCameraY = m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight();
-
-//     if (cameraX < 0) cameraX = 0;
-//     if (cameraY < 0) cameraY = 0;
-//     if (maxCameraX < 0) maxCameraX = 0;
-//     if (maxCameraY < 0) maxCameraY = 0;
-//     if (cameraX > maxCameraX) cameraX = maxCameraX;
-//     if (cameraY > maxCameraY) cameraY = maxCameraY;
-// }
 
 void cEditorState::clampCameraYToMapBounds()
 {
@@ -313,13 +263,10 @@ void cEditorState::drawMap() const
     // Calculating the number of tiles that fit on the screen (+1 to be sure of coverage)
     size_t tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
     size_t tilesDown = (mapSizeArea.getHeight() / tileLenSize) + 1;
-    // std::cout << "Tiles across: " << tilesAcross << " Tiles down: " << tilesDown << " tileLenSize: " << tileLenSize << std::endl;
 
     // Determine the end tile
     size_t endX = startX + tilesAcross;
     size_t endY = startY + tilesDown;
-    // std::cout << "Bx: "<< startX << " tileX: " << tilesAcross << " Ex: "<< endX << " Mx: " << m_mapData->getRows()<<std::endl;
-    // std::cout << "By: "<< startY << " tileY: " << tilesDown << " Et: "<< endY << " My: " << m_mapData->getCols()<<std::endl;
     // Clamp to avoid wrong map m_mapData access
     if (endX > m_mapData->getRows()) {
         endX = m_mapData->getRows();
