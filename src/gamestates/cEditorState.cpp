@@ -207,9 +207,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
         cameraX -=tileLenSize;
-        if (cameraX <0) {
-            cameraX =0;
-        }
+        clampCameraXToMapBounds();
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
         cameraX +=tileLenSize;
@@ -217,9 +215,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
         cameraY -=tileLenSize;
-        if (cameraY <0) {
-            cameraY =0;
-        }
+        clampCameraYToMapBounds();
     }
     if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
         cameraY +=tileLenSize;
