@@ -40,6 +40,7 @@ private:
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
     void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
+    void updateVisibleTiles();
 
     //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
@@ -55,4 +56,8 @@ private:
     // Coordinates of the top left corner of the screen on the map (in pixels)
     int cameraX = 0;
     int cameraY = 0;
+    // Visible tile range, here to avoid creating them each frame
+    int startX = 0, startY = 0;
+    size_t endX = 0, endY = 0;
+    size_t tilesAcross = 0, tilesDown = 0;
 };
