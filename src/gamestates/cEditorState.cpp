@@ -267,8 +267,11 @@ void cEditorState::clampCameraYToMapBounds()
         cameraY = 0;
         return;
     }
+    if (cameraY < 0) {
+        cameraY = 0;
+        return;
+    }
     int maxCameraY = m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight();
-    if (cameraY < 0) cameraY = 0;
     if (maxCameraY < 0) maxCameraY = 0;
     if (cameraY > maxCameraY) cameraY = maxCameraY;
 }
@@ -279,8 +282,11 @@ void cEditorState::clampCameraXToMapBounds()
         cameraX = 0;
         return;
     }
+    if (cameraX < 0) {
+        cameraX = 0;
+        return;
+    }
     int maxCameraX = m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth();
-    if (cameraX < 0) cameraX = 0;
     if (maxCameraX < 0) maxCameraX = 0;
     if (cameraX > maxCameraX) cameraX = maxCameraX;
 }
