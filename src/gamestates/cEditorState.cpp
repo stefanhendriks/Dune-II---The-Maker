@@ -185,6 +185,9 @@ void cEditorState::zoomAtMapPosition(int screenX, int screenY, ZoomDirection dir
 
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (m_mapData == nullptr) {
+        return;
+    }
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
         // Zoom centered on the cursor
         int mouseX = event.coords.x;
@@ -196,6 +199,7 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         } else {
             return;
         }
+        updateVisibleTiles();
     } else {
         m_selectBar->onNotifyMouseEvent(event);
         m_modifBar->onNotifyMouseEvent(event);
@@ -209,6 +213,9 @@ eGameStateType cEditorState::getType()
 
 void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    if (m_mapData == nullptr) {
+        return;
+    }
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
             m_game.setNextStateToTransitionTo(GAME_MENU);
@@ -220,6 +227,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
         }
+        updateVisibleTiles();
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
@@ -244,7 +252,8 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
-        }    
+        }
+        updateVisibleTiles(); 
     }
 }
 
@@ -252,6 +261,7 @@ void cEditorState::loadMap(s_PreviewMap* map)
 {
     std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
+    updateVisibleTiles();
 }
 
 void cEditorState::clampCameraYToMapBounds()
@@ -288,32 +298,6 @@ void cEditorState::drawMap() const
 {
     if (m_mapData == nullptr) {
         return;
-    }
-    // Convert the camera position (in pixels) to tile coordinates
-    int startX = cameraX / tileLenSize;
-    int startY = cameraY / tileLenSize;
-
-    // Calculating the number of tiles that fit on the screen (+1 to be sure of coverage)
-    size_t tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
-    size_t tilesDown = (mapSizeArea.getHeight() / tileLenSize) + 1;
-
-    // Determine the end tile
-    size_t endX = startX + tilesAcross;
-    size_t endY = startY + tilesDown;
-    // Clamp to avoid wrong map m_mapData access
-    if (endX > m_mapData->getRows()) {
-        endX = m_mapData->getRows();
-        startX = endX - tilesAcross;
-        if (startX < 0) {
-            startX = 0; 
-        }
-    }
-    if (endY > m_mapData->getCols()) {
-        endY = m_mapData->getCols();
-        startY = endY - tilesDown;
-        if (startY < 0) {
-            startY = 0; 
-        }
     }
     
     int tileID;
