@@ -255,6 +255,24 @@ void cEditorState::loadMap(s_PreviewMap* map)
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
 }
 
+void cEditorState::clampCameraToMapBounds()
+{
+    if (m_mapData == nullptr) {
+        cameraX = 0;
+        cameraY = 0;
+        return;
+    }
+    int maxCameraX = m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth();
+    int maxCameraY = m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight();
+
+    if (cameraX < 0) cameraX = 0;
+    if (cameraY < 0) cameraY = 0;
+    if (maxCameraX < 0) maxCameraX = 0;
+    if (maxCameraY < 0) maxCameraY = 0;
+    if (cameraX > maxCameraX) cameraX = maxCameraX;
+    if (cameraY > maxCameraY) cameraY = maxCameraY;
+}
+
 void cEditorState::drawMap() const
 {
     if (m_mapData == nullptr) {

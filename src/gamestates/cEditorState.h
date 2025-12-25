@@ -32,6 +32,7 @@ private:
     void populateModifBar();
     void populateSelectBar();
     void drawMap() const;
+    void clampCameraToMapBounds();
 
     //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
