@@ -189,29 +189,13 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         // Zoom centered on the cursor
         int mouseX = event.coords.x;
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
-        int prevTileLenSize = tileLenSize;
         if (event.eventType == MOUSE_SCROLLED_DOWN) {
-            tileLenSize -= deltaTileSize;
-            tileLenSize = std::max(tileLenSize, minTileSize);
+            zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomOut);
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
-            tileLenSize += deltaTileSize;
-            tileLenSize = std::min(tileLenSize, maxTileSize);
+            zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
         } else {
             return;
         }
-        // Zoom change
-        if (tileLenSize != prevTileLenSize) {
-            // Calculate the tile under the cursor before zooming
-            int worldTileX = (cameraX + mouseX) / prevTileLenSize;
-            int worldTileY = (cameraY + mouseY) / prevTileLenSize;
-            // Adjust the camera to keep the same tile under the cursor
-            cameraX = worldTileX * tileLenSize - mouseX;
-            cameraY = worldTileY * tileLenSize - mouseY;
-            // Clamp camera to map bounds
-            clampCameraXToMapBounds();
-            clampCameraYToMapBounds();
-        }
-        return;
     } else {
         m_selectBar->onNotifyMouseEvent(event);
         m_modifBar->onNotifyMouseEvent(event);
@@ -245,37 +229,17 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         cameraY +=tileLenSize;
         clampCameraYToMapBounds();
     }
-    if ((event.isType(eKeyEventType::HOLD) && (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP))
-            || (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)))) {
-        int prevTileLenSize = tileLenSize;
-        tileLenSize += deltaTileSize;
-        tileLenSize = std::min(tileLenSize, maxTileSize);
-        // std::cout << "Zoom in, tile size from " << prevTileLenSize << " to " << tileLenSize << std::endl;
-        int centerScreenX = mapSizeArea.getWidth() / 2;
-        int centerScreenY = mapSizeArea.getWidth() / 2;
-        int worldTileX = (cameraX + centerScreenX) / prevTileLenSize;
-        int worldTileY = (cameraY + centerScreenY) / prevTileLenSize;
-        // Adjust the camera to keep the same tile under the cursor
-        cameraX = worldTileX * tileLenSize - centerScreenX;
-        cameraY = worldTileY * tileLenSize - centerScreenY;
-        clampCameraXToMapBounds();
-        clampCameraYToMapBounds();
+    if (event.isType(eKeyEventType::HOLD) && event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
+        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
     }
-    if ((event.isType(eKeyEventType::HOLD) && event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN))
-            || ((event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)))) {
-        int prevTileLenSize = tileLenSize;
-        tileLenSize -= deltaTileSize;
-        tileLenSize = std::max(tileLenSize, minTileSize);
-        // std::cout << "Zoom out, tile size from " << prevTileLenSize << " to " << tileLenSize << std::endl;
-        int centerScreenX = mapSizeArea.getWidth() / 2;
-        int centerScreenY = mapSizeArea.getWidth() / 2;
-        int worldTileX = (cameraX + centerScreenX) / prevTileLenSize;
-        int worldTileY = (cameraY + centerScreenY) / prevTileLenSize;
-        // Adjust the camera to keep the same tile under the cursor
-        cameraX = worldTileX * tileLenSize - centerScreenX;
-        cameraY = worldTileY * tileLenSize - centerScreenY;
-        clampCameraXToMapBounds();
-        clampCameraYToMapBounds();
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
+        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+    }
+    if (event.isType(eKeyEventType::HOLD) && event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
+        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+    }    
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
+        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
     }
 }
 
