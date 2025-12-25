@@ -60,4 +60,7 @@ private:
     int startX = 0, startY = 0;
     size_t endX = 0, endY = 0;
     size_t tilesAcross = 0, tilesDown = 0;
+
+    // map modification 
+    int idTerrainToMapModif = -1;
 };
