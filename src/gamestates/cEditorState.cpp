@@ -156,7 +156,7 @@ void cEditorState::draw() const
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
-        // Zoom centré sur le curseur
+        // Zoom centered on the cursor
         int mouseX = event.coords.x;
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
         int prevTileLenSize = tileLenSize;
@@ -169,12 +169,12 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         } else {
             return;
         }
-        // Changement de zoom
+        // Zoom change
         if (tileLenSize != prevTileLenSize) {
-            // Calculer la tuile sous le curseur avant zoom
+            // Calculate the tile under the cursor before zooming
             float worldTileX = (cameraX + mouseX) / (float)prevTileLenSize;
             float worldTileY = (cameraY + mouseY) / (float)prevTileLenSize;
-            // Ajuster la caméra pour garder la même tuile sous le curseur
+            // Adjust the camera to keep the same tile under the cursor
             cameraX = (int)(worldTileX * tileLenSize - mouseX);
             cameraY = (int)(worldTileY * tileLenSize - mouseY);
             // Clamp caméra pour ne pas sortir de la carte
