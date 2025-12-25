@@ -62,6 +62,7 @@ void cEditorState::populateSelectBar()
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
+    auto firstToActive = guiButton;
     m_selectBar->addGuiObject(guiButton);
 
     rectGui = cRectangle(sBS+1*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
@@ -96,6 +97,7 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
+    firstToActive->setPressed(true);
 }
 
 void cEditorState::populateModifBar()
@@ -144,6 +146,7 @@ void cEditorState::populateModifBar()
             .build();
     guiButton->setGroup(m_topologyGroup.get());
     m_modifBar->addGuiObject(guiButton);
+    guiButton->setPressed(true);
 }
 
 
