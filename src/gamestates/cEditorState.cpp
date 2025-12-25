@@ -209,37 +209,42 @@ eGameStateType cEditorState::getType()
 
 void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_ESCAPE)) {
-        m_game.setNextStateToTransitionTo(GAME_MENU);
-        m_game.initiateFadingOut();
+    if (event.isType(eKeyEventType::PRESSED)) {
+        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+            m_game.setNextStateToTransitionTo(GAME_MENU);
+            m_game.initiateFadingOut();
+        }
+        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
+            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+        }
+        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
+            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+        }
     }
-    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
-        cameraX -=tileLenSize;
-        clampCameraXToMapBounds();
-    }
-    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
-        cameraX +=tileLenSize;
-        clampCameraXToMapBounds();
-    }
-    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
-        cameraY -=tileLenSize;
-        clampCameraYToMapBounds();
-    }
-    if (event.isType(eKeyEventType::HOLD) && event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
-        cameraY +=tileLenSize;
-        clampCameraYToMapBounds();
-    }
-    if (event.isType(eKeyEventType::HOLD) && event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
-        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
-    }
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
-        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
-    }
-    if (event.isType(eKeyEventType::HOLD) && event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
-        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
-    }    
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
-        zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+
+    if (event.isType(eKeyEventType::HOLD)) {
+        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
+            cameraX -=tileLenSize;
+            clampCameraXToMapBounds();
+        }
+        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
+            cameraX +=tileLenSize;
+            clampCameraXToMapBounds();
+        }
+        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
+            cameraY -=tileLenSize;
+            clampCameraYToMapBounds();
+        }
+        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
+            cameraY +=tileLenSize;
+            clampCameraYToMapBounds();
+        }
+        if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
+            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+        }
+        if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
+            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+        }    
     }
 }
 
