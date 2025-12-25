@@ -361,3 +361,33 @@ void cEditorState::drawMap() const
         }
     }
 }
+
+void cEditorState::updateVisibleTiles()
+{
+    // Convert the camera position (in pixels) to tile coordinates
+    startX = cameraX / tileLenSize;
+    startY = cameraY / tileLenSize;
+
+    // Calculating the number of tiles that fit on the screen (+1 to be sure of coverage)
+    tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
+    tilesDown = (mapSizeArea.getHeight() / tileLenSize) + 1;
+
+    // Determine the end tile
+    endX = startX + tilesAcross;
+    endY = startY + tilesDown;
+    // Clamp to avoid wrong map m_mapData access
+    if (endX > m_mapData->getRows()) {
+        endX = m_mapData->getRows();
+        startX = endX - tilesAcross;
+        if (startX < 0) {
+            startX = 0; 
+        }
+    }
+    if (endY > m_mapData->getCols()) {
+        endY = m_mapData->getCols();
+        startY = endY - tilesDown;
+        if (startY < 0) {
+            startY = 0; 
+        }
+    }
+}
