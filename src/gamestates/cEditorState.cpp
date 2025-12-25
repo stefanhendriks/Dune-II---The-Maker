@@ -159,6 +159,30 @@ void cEditorState::draw() const
     m_game.getMouse()->draw();
 }
 
+void cEditorState::zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction)
+{
+    int prevTileLenSize = tileLenSize;
+    if (direction == ZoomDirection::zoomOut) {
+        tileLenSize -= deltaTileSize;
+        tileLenSize = std::max(tileLenSize, minTileSize);
+    } else if (direction == ZoomDirection::zoomIn) {
+        tileLenSize += deltaTileSize;
+        tileLenSize = std::min(tileLenSize, maxTileSize);
+    }
+    // Zoom change
+    if (tileLenSize != prevTileLenSize) {
+        // Calculate the tile under the cursor before zooming
+        int worldTileX = (cameraX + screenX) / prevTileLenSize;
+        int worldTileY = (cameraY + screenY) / prevTileLenSize;
+        // Adjust the camera to keep the same tile under the cursor
+        cameraX = worldTileX * tileLenSize - screenX;
+        cameraY = worldTileY * tileLenSize - screenY;
+        // Clamp camera to map bounds
+        clampCameraXToMapBounds();
+        clampCameraYToMapBounds();
+    }
+}
+
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
