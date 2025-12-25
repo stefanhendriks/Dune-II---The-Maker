@@ -225,6 +225,38 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         cameraY +=tileLenSize;
         clampCameraYToMapBounds();
     }
+    if ((event.isType(eKeyEventType::HOLD) && (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP))
+            || (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)))) {
+        int prevTileLenSize = tileLenSize;
+        tileLenSize += deltaTileSize;
+        tileLenSize = std::min(tileLenSize, maxTileSize);
+        // std::cout << "Zoom in, tile size from " << prevTileLenSize << " to " << tileLenSize << std::endl;
+        int centerScreenX = mapSizeArea.getWidth() / 2;
+        int centerScreenY = mapSizeArea.getWidth() / 2;
+        int worldTileX = (cameraX + centerScreenX) / prevTileLenSize;
+        int worldTileY = (cameraY + centerScreenY) / prevTileLenSize;
+        // Adjust the camera to keep the same tile under the cursor
+        cameraX = worldTileX * tileLenSize - centerScreenX;
+        cameraY = worldTileY * tileLenSize - centerScreenY;
+        clampCameraXToMapBounds();
+        clampCameraYToMapBounds();
+    }
+    if ((event.isType(eKeyEventType::HOLD) && event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN))
+            || ((event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)))) {
+        int prevTileLenSize = tileLenSize;
+        tileLenSize -= deltaTileSize;
+        tileLenSize = std::max(tileLenSize, minTileSize);
+        // std::cout << "Zoom out, tile size from " << prevTileLenSize << " to " << tileLenSize << std::endl;
+        int centerScreenX = mapSizeArea.getWidth() / 2;
+        int centerScreenY = mapSizeArea.getWidth() / 2;
+        int worldTileX = (cameraX + centerScreenX) / prevTileLenSize;
+        int worldTileY = (cameraY + centerScreenY) / prevTileLenSize;
+        // Adjust the camera to keep the same tile under the cursor
+        cameraX = worldTileX * tileLenSize - centerScreenX;
+        cameraY = worldTileY * tileLenSize - centerScreenY;
+        clampCameraXToMapBounds();
+        clampCameraYToMapBounds();
+    }
 }
 
 void cEditorState::loadMap(s_PreviewMap* map)
