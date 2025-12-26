@@ -36,12 +36,12 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize-1, heightBarSize-1, heightBarSize, m_game.m_screenH-heightBarSize);
     mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize-1,m_game.m_screenH-heightBarSize-1);
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
-    m_modifBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
+    m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_selectBar->setTheme(GuiTheme::Light());
-    m_modifBar->setTheme(GuiTheme::Light());
+    m_topologyBar->setTheme(GuiTheme::Light());
 
     populateSelectBar();
-    populateModifBar();
+    populateTopologyBar();
     std::cout << "Entered Editor State" << std::endl;
 }
 
@@ -100,7 +100,7 @@ void cEditorState::populateSelectBar()
     firstToActive->setPressed(true);
 }
 
-void cEditorState::populateModifBar()
+void cEditorState::populateTopologyBar()
 {
     m_topologyGroup = std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS,heightBarSize,heightBarSize);
@@ -113,7 +113,7 @@ void cEditorState::populateModifBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_modifBar->addGuiObject(guiButton);
+    m_topologyBar->addGuiObject(guiButton);
     
     rectGui = cRectangle(m_game.m_screenW-heightBarSize-1, sBS+heightBarSize+sBB,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
@@ -125,7 +125,7 @@ void cEditorState::populateModifBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_modifBar->addGuiObject(guiButton);
+    m_topologyBar->addGuiObject(guiButton);
 
     rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+2*(heightBarSize+sBB),heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
@@ -137,7 +137,7 @@ void cEditorState::populateModifBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_modifBar->addGuiObject(guiButton);
+    m_topologyBar->addGuiObject(guiButton);
     
     rectGui = cRectangle(m_game.m_screenW-heightBarSize-1, sBS+3*(heightBarSize+sBB),heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
@@ -149,7 +149,7 @@ void cEditorState::populateModifBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_modifBar->addGuiObject(guiButton);
+    m_topologyBar->addGuiObject(guiButton);
     guiButton->setPressed(true);
 }
 
@@ -162,7 +162,7 @@ void cEditorState::draw() const
 {
     drawMap();
     m_selectBar->draw();
-    m_modifBar->draw();
+    m_topologyBar->draw();
     m_game.getMouse()->draw();
 }
 
@@ -211,7 +211,7 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         updateVisibleTiles();
     } else {
         m_selectBar->onNotifyMouseEvent(event);
-        m_modifBar->onNotifyMouseEvent(event);
+        m_topologyBar->onNotifyMouseEvent(event);
     }
 }
 
