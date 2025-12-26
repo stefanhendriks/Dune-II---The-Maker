@@ -59,6 +59,7 @@ void cEditorState::populateSelectBar()
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
             .onClick([this]() {
                 std::cout << "STONELAYER" << std::endl;
+                m_currentBar = m_topologyBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
@@ -162,7 +163,7 @@ void cEditorState::draw() const
 {
     drawMap();
     m_selectBar->draw();
-    m_topologyBar->draw();
+    m_currentBar->draw();
     m_game.getMouse()->draw();
 }
 
