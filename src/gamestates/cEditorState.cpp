@@ -18,6 +18,7 @@
 #include <SDL2/SDL.h>
 #include <format>
 #include <iostream>
+#include <fstream>
 
 const int heightBarSize = 48;
 const int minTileSize = 4;
@@ -339,6 +340,10 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();
         }
+        if (event.hasKey(SDL_SCANCODE_S)) {
+            std::cout << "Save" << std::endl;
+            saveMap();
+        }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
         }
@@ -542,4 +547,60 @@ void cEditorState::drawStartCells() const
             }
         }
     }
+}
+
+void cEditorState::saveMap() const
+{
+    // creating file
+    std::ofstream saveFile("custom_map.ini");
+    // file verification
+    if (!saveFile.is_open()){
+        std::cerr << "unable to open modified map for saving" << std::endl;
+        return;
+    }
+    // map card
+    saveFile << "[SKIRMISH]\nTitle='Custom map'\n";
+    saveFile << "Author = -\n,Description = -\n";
+    saveFile << "Width = " << m_mapData->getCols()-2 << "\nHeight = "<< m_mapData->getRows()-2 << "\n";
+    saveFile << "StartCell=";
+    for(size_t i=0; i<startCells.size(); i++) {
+        if (startCells[i].x != -1 && startCells[i].y != -1) {
+            if (i !=0) {
+                saveFile << ",";
+            }
+            saveFile << startCells[i].x * m_mapData->getCols() + startCells[i].y ;
+        }
+    }
+    saveFile << "\n\n\n[MAP]\n";
+    // map data
+    for(size_t i=1; i<m_mapData->getCols()-1; i++) {
+        for(size_t j=1; j<m_mapData->getRows()-1; j++) {
+            switch ((*m_mapData)[i][j]) {
+                case TERRAIN_SAND:
+                    saveFile << ')';
+                    break;
+                case TERRAIN_ROCK:
+                    saveFile << '%';
+                    break;
+                case TERRAIN_MOUNTAIN:
+                    saveFile << 'R';
+                    break;
+                case TERRAIN_SPICEHILL:
+                    saveFile << '+';
+                    break;
+                case TERRAIN_SPICE:
+                    saveFile << '-';
+                    break;
+                case TERRAIN_HILL:
+                    saveFile << 'H';
+                    break;
+                default:
+                    std::cout << "Unknown value " << ((*m_mapData)[i][j]) << std::endl;
+                    break;
+            }
+        }
+        saveFile << "\n";
+    }
+
+    saveFile.close();
 }
