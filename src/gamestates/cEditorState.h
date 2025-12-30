@@ -39,6 +39,7 @@ private:
     void populateSelectBar();
 
     void drawMap() const;
+    void drawStartCells() const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     // void clampCameraToMapBounds();
