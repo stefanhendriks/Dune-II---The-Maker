@@ -495,11 +495,11 @@ void cEditorState::updateVisibleTiles()
 
 void cEditorState::modifyTile(int posX, int posY, int tileID)
 {
-    int tileX = (cameraX + posX) / tileLenSize;
-    int tileY = (cameraY + posY) / tileLenSize;
     if (tileID == -1) {
         return;
     }
+    int tileX = (cameraX + posX) / tileLenSize;
+    int tileY = (cameraY + posY) / tileLenSize;
     if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols()) {
         (*m_mapData)[tileX][tileY] = tileID;
     }
