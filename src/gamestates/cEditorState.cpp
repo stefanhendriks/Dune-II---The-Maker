@@ -268,6 +268,7 @@ void cEditorState::draw() const
     drawMap();
     m_selectBar->draw();
     m_currentBar->draw();
+    drawStartCells();
     m_game.getMouse()->draw();
 }
 
@@ -514,5 +515,23 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     int tileY = (cameraY + posY) / tileLenSize;
     if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getRows()-1 && tileY < (int)m_mapData->getCols()-1) {
         startCells[startCellID]={tileX, tileY};
+    }
+}
+
+void cEditorState::drawStartCells() const
+{
+    cRectangle destRect;
+    cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
+    int x,y;
+    for(size_t i=0; i<startCells.size(); i++) {
+        if (startCells[i].x != -1 && startCells[i].y != -1) {
+            x = startCells[i].x * tileLenSize - cameraX;
+            y = heightBarSize + startCells[i].y * tileLenSize - cameraY;
+            // Display if onscreen
+            if (x + tileLenSize > 0 && x < m_game.m_screenW &&y + tileLenSize > heightBarSize && y < m_game.m_screenH) {
+                destRect = cRectangle(x, y, tileLenSize, tileLenSize);
+                renderDrawer->renderStrechSprite(m_gfxeditor->getTexture(STARTPOSITION1+i), srcRect, destRect);
+            }
+        }
     }
 }
