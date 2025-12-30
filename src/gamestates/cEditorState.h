@@ -7,6 +7,7 @@
 #include "sMouseEvent.h"
 
 #include <memory>
+#include <array>
 
 class Texture;
 class Graphics;
@@ -39,6 +40,7 @@ private:
 
     void drawMap() const;
     void modifyTile(int posX, int posY, int tileID);
+    void modifyStartCell(int posX, int posY, int startCellID);
     // void clampCameraToMapBounds();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
@@ -69,4 +71,8 @@ private:
 
     // map modification 
     int idTerrainToMapModif = -1;
+    int idStartCellPlayer = -1;
+
+    // startCell positions 
+    std::array<cPoint,5> startCells;
 };
