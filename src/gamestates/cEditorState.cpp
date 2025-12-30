@@ -379,6 +379,14 @@ void cEditorState::loadMap(s_PreviewMap* map)
 {
     std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
+    for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
+        if (map->iStartCell[i] !=-1) {
+            std::cout << "startCell " << map->iStartCell[i] << std::endl;
+            int w = map->iStartCell[i] / map->width;
+            int h = map->iStartCell[i] % map->width;
+            startCells[i] = cPoint(w,h);
+        }
+    }
     updateVisibleTiles();
 }
 
