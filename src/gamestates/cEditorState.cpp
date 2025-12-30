@@ -195,6 +195,67 @@ void cEditorState::populateTopologyBar()
 
 void cEditorState::populateStartCellBar()
 {
+    m_startCellGroup = std::make_unique<GuiButtonGroup>();
+    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS,heightBarSize,heightBarSize);
+    auto guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STARTPOSITION1))
+            .onClick([this]() {
+                std::cout << "STARTPOSITION1" << std::endl;
+                idStartCellPlayer = 0;
+            })
+            .build();
+    guiButton->setGroup(m_startCellGroup.get());
+    guiButton->setPressed(true);
+    m_startCellBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+1*(heightBarSize+sBB),heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STARTPOSITION2))
+            .onClick([this]() {
+                std::cout << "STARTPOSITION2" << std::endl;
+                idStartCellPlayer = 1;
+            })
+            .build();
+    guiButton->setGroup(m_startCellGroup.get());
+    m_startCellBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+2*(heightBarSize+sBB),heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STARTPOSITION3))
+            .onClick([this]() {
+                std::cout << "STARTPOSITION3" << std::endl;
+                idStartCellPlayer = 2;
+            })
+            .build();
+    guiButton->setGroup(m_startCellGroup.get());
+    m_startCellBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+3*(heightBarSize+sBB),heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STARTPOSITION4))
+            .onClick([this]() {
+                std::cout << "STARTPOSITION4" << std::endl;
+                idStartCellPlayer = 3;
+            })
+            .build();
+    guiButton->setGroup(m_startCellGroup.get());
+    m_startCellBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+4*(heightBarSize+sBB),heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STARTPOSITION5))
+            .onClick([this]() {
+                std::cout << "STARTPOSITION5" << std::endl;
+                idStartCellPlayer = 4;
+            })
+            .build();
+    guiButton->setGroup(m_startCellGroup.get());
+    m_startCellBar->addGuiObject(guiButton);
 }
 
 void cEditorState::thinkFast()
