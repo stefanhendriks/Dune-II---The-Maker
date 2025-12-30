@@ -267,9 +267,10 @@ void cEditorState::thinkFast()
 void cEditorState::draw() const
 {
     drawMap();
+    if (m_currentBar == m_startCellBar.get())
+        drawStartCells();
     m_selectBar->draw();
     m_currentBar->draw();
-    drawStartCells();
     m_game.getMouse()->draw();
 }
 
