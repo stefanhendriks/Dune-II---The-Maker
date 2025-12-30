@@ -507,4 +507,12 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
 
 void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
 {
+    if (startCellID == -1) {
+        return;
+    }
+    int tileX = (cameraX + posX) / tileLenSize;
+    int tileY = (cameraY + posY) / tileLenSize;
+    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getRows()-1 && tileY < (int)m_mapData->getCols()-1) {
+        startCells[startCellID]={tileX, tileY};
+    }
 }
