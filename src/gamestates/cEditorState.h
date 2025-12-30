@@ -34,7 +34,9 @@ private:
         zoomOut
     };
     void populateTopologyBar();
+    void populateStartCellBar();
     void populateSelectBar();
+
     void drawMap() const;
     void modifyTile(int posX, int posY, int tileID);
     // void clampCameraToMapBounds();
@@ -46,11 +48,13 @@ private:
     //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_topologyBar;
+    std::unique_ptr<GuiBar> m_startCellBar;
     GuiBar* m_currentBar = nullptr;
     std::unique_ptr<Matrix<int>> m_mapData;
     Graphics *m_gfxdata, *m_gfxeditor;
     std::unique_ptr<GuiButtonGroup> m_selectGroup;
     std::unique_ptr<GuiButtonGroup> m_topologyGroup;
+    std::unique_ptr<GuiButtonGroup> m_startCellGroup;
 
     cRectangle mapSizeArea;
     int tileLenSize = 16;
