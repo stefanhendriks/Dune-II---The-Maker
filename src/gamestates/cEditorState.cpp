@@ -308,15 +308,18 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomOut);
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
-        } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED) {
+        } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
             modifyTile(mouseX, mouseY, idTerrainToMapModif);
-        } else {
+        }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
+            modifyStartCell(mouseX, mouseY, idStartCellPlayer);
+        }        
+        else {
             return;
         }
         updateVisibleTiles();
     } else {
         m_selectBar->onNotifyMouseEvent(event);
-        m_topologyBar->onNotifyMouseEvent(event);
+        m_currentBar->onNotifyMouseEvent(event);
     }
 }
 
