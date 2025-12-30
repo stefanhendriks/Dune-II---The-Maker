@@ -48,6 +48,7 @@ private:
     void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
     void updateVisibleTiles();
 
+    void saveMap() const;
     //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_topologyBar;
