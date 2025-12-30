@@ -45,6 +45,7 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     populateSelectBar();
     populateTopologyBar();
     populateStartCellBar();
+    startCells.fill({-1, -1});
     std::cout << "Entered Editor State" << std::endl;
 }
 
@@ -499,4 +500,8 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols()) {
         (*m_mapData)[tileX][tileY] = tileID;
     }
+}
+
+void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
+{
 }
