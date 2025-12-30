@@ -69,9 +69,9 @@ void cEditorState::populateSelectBar()
     rectGui = cRectangle(sBS+1*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(SPICELAYER))
+            .withTexture(m_gfxeditor->getTexture(SOLDIERS))
             .onClick([this]() {
-                std::cout << "SPICELAYER" << std::endl;
+                std::cout << "SOLDIERS" << std::endl;
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
@@ -152,6 +152,31 @@ void cEditorState::populateTopologyBar()
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addGuiObject(guiButton);
     guiButton->setPressed(true);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+4*(heightBarSize+sBB),heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(TERRAN_SPICE))
+            .onClick([this]() {
+                std::cout << "TERRAN_SPICE" << std::endl;
+                idTerrainToMapModif = TERRAIN_SPICE;
+            })
+            .build();
+    guiButton->setGroup(m_topologyGroup.get());
+    m_topologyBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize-1,sBS+5*(heightBarSize+sBB),heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(TERRAN_SPICEHILL))
+            .onClick([this]() {
+                std::cout << "TERRAN_SPICEHILL" << std::endl;
+                idTerrainToMapModif = TERRAIN_SPICEHILL;
+            })
+            .build();
+    guiButton->setGroup(m_topologyGroup.get());
+    m_topologyBar->addGuiObject(guiButton);
+
 }
 
 
