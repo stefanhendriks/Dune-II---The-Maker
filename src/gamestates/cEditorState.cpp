@@ -37,11 +37,14 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize-1,m_game.m_screenH-heightBarSize-1);
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
     m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
+    m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_selectBar->setTheme(GuiTheme::Light());
     m_topologyBar->setTheme(GuiTheme::Light());
+    m_startCellBar->setTheme(GuiTheme::Light());
 
     populateSelectBar();
     populateTopologyBar();
+    populateStartCellBar();
     std::cout << "Entered Editor State" << std::endl;
 }
 
@@ -69,6 +72,18 @@ void cEditorState::populateSelectBar()
     rectGui = cRectangle(sBS+1*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
+            .onClick([this]() {
+                std::cout << "STARTPOSITION" << std::endl;
+                m_currentBar = m_startCellBar.get();
+            })
+            .build();
+    guiButton->setGroup(m_selectGroup.get());
+    m_selectBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(SOLDIERS))
             .onClick([this]() {
                 std::cout << "SOLDIERS" << std::endl;
@@ -77,7 +92,7 @@ void cEditorState::populateSelectBar()
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
 
-    rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
+    rectGui = cRectangle(sBS+3*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(BUILDING))
@@ -88,7 +103,7 @@ void cEditorState::populateSelectBar()
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
 
-    rectGui = cRectangle(sBS+3*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
+    rectGui = cRectangle(sBS+4*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(UNITS))
@@ -176,9 +191,11 @@ void cEditorState::populateTopologyBar()
             .build();
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addGuiObject(guiButton);
-
 }
 
+void cEditorState::populateStartCellBar()
+{
+}
 
 void cEditorState::thinkFast()
 {
