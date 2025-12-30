@@ -10,7 +10,10 @@
 #define SPICELAYER      9   
 #define STONELAYER      10 
 #define UNITS           11
-#define TERRAN_HILL     12
-#define TERRAN_MOUNTAIN 13
-#define TERRAN_ROCK     14
-#define TERRAN_SAND     15
+#define SOLDIERS        12
+#define TERRAN_HILL     13
+#define TERRAN_MOUNTAIN 14
+#define TERRAN_ROCK     15
+#define TERRAN_SAND     16
+#define TERRAN_SPICE    17
+#define TERRAN_SPICEHILL 18
