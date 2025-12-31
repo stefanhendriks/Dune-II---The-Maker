@@ -384,12 +384,19 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cEditorState::loadMap(s_PreviewMap* map)
 {
     std::cout << "open |"<< map->name << "|" << std::endl;
-    m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->width, map->height);
+    std::vector<int> v_rec(map->width * map->height,-1);
+    // translate y,x to x,y
+    for (int j = 0; j < map->height; ++j) {
+        for (int i = 0; i < map->width; ++i) {
+            v_rec[i * map->height + j] = map->terrainType[j * map->width + i];
+        }
+    }
+    m_mapData = std::make_unique<Matrix<int>>(v_rec, map->width, map->height);
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
             std::cout << "startCell " << map->iStartCell[i] << std::endl;
-            int w = map->iStartCell[i] / map->width;
-            int h = map->iStartCell[i] % map->width;
+            int w = map->iStartCell[i] % map->width;
+            int h = map->iStartCell[i] / map->width;
             startCells[i] = cPoint(w,h);
         }
     }
@@ -561,22 +568,23 @@ void cEditorState::saveMap() const
     }
     // map card
     saveFile << "[SKIRMISH]\nTitle='Custom map'\n";
-    saveFile << "Author = -\n,Description = -\n";
-    saveFile << "Width = " << m_mapData->getCols()-2 << "\nHeight = "<< m_mapData->getRows()-2 << "\n";
+    saveFile << "Author = -\nDescription = -\n";
+    saveFile << "Width = " << m_mapData->getRows()-2 << "\nHeight = "<< m_mapData->getCols()-2 << "\n";
     saveFile << "StartCell=";
     for(size_t i=0; i<startCells.size(); i++) {
         if (startCells[i].x != -1 && startCells[i].y != -1) {
             if (i !=0) {
                 saveFile << ",";
             }
-            saveFile << startCells[i].x * m_mapData->getCols() + startCells[i].y ;
+            // translate (x,y) to (y,x)
+            saveFile << startCells[i].y * m_mapData->getRows() + startCells[i].x ;
         }
     }
     saveFile << "\n\n\n[MAP]\n";
     // map data
     for(size_t i=1; i<m_mapData->getCols()-1; i++) {
         for(size_t j=1; j<m_mapData->getRows()-1; j++) {
-            switch ((*m_mapData)[i][j]) {
+            switch ((*m_mapData)[j][i]) {  //translation (j,i)
                 case TERRAIN_SAND:
                     saveFile << ')';
                     break;
@@ -596,7 +604,7 @@ void cEditorState::saveMap() const
                     saveFile << 'H';
                     break;
                 default:
-                    std::cout << "Unknown value " << ((*m_mapData)[i][j]) << std::endl;
+                    std::cout << "Unknown value " << ((*m_mapData)[j][i]) << std::endl; //translation (j,i)
                     break;
             }
         }
