@@ -33,9 +33,9 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
 {
-    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightBarSize+1);
-    const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize-1, heightBarSize-1, heightBarSize, m_game.m_screenH-heightBarSize);
-    mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize-1,m_game.m_screenH-heightBarSize-1);
+    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightBarSize);
+    const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize, heightBarSize, heightBarSize, m_game.m_screenH-heightBarSize);
+    mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize,m_game.m_screenH-heightBarSize);
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
     m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
