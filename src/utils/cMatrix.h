@@ -6,7 +6,7 @@
 template <typename T>
 class Matrix {
 public:
-    // Contructor
+    // Constructor : first Height (rows) after Width (cols)
     Matrix(const std::vector<T>& data, size_t rows, size_t cols)
         : m_data(data), m_rows(rows), m_cols(cols)
     {
@@ -19,7 +19,6 @@ public:
     size_t getRows() const { return m_rows; }
     size_t getCols() const { return m_cols; }
 
-    // Setters : we need convention [x][y]
     class RowProxy {
     public:
         RowProxy(Matrix<T>& matrix, size_t row_index)
