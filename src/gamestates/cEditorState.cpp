@@ -589,7 +589,7 @@ void cEditorState::saveMap() const
                     saveFile << ')';
                     break;
                 case TERRAIN_ROCK:
-                    saveFile << '%';
+                    saveFile << '^';
                     break;
                 case TERRAIN_MOUNTAIN:
                     saveFile << 'R';
@@ -601,7 +601,7 @@ void cEditorState::saveMap() const
                     saveFile << '-';
                     break;
                 case TERRAIN_HILL:
-                    saveFile << 'H';
+                    saveFile << 'h';
                     break;
                 default:
                     std::cout << "Unknown value " << ((*m_mapData)[j][i]) << std::endl; //translation (j,i)
