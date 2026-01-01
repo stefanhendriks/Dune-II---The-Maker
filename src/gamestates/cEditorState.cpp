@@ -384,14 +384,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cEditorState::loadMap(s_PreviewMap* map)
 {
     std::cout << "open |"<< map->name << "|" << std::endl;
-    std::vector<int> v_rec(map->width * map->height,-1);
-    // translate y,x to x,y
-    for (int j = 0; j < map->height; ++j) {
-        for (int i = 0; i < map->width; ++i) {
-            v_rec[i * map->height + j] = map->terrainType[j * map->width + i];
-        }
-    }
-    m_mapData = std::make_unique<Matrix<int>>(v_rec, map->width, map->height);
+    m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->height, map->width);
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
             std::cout << "startCell " << map->iStartCell[i] << std::endl;
@@ -445,9 +438,8 @@ void cEditorState::drawMap() const
 
     cRectangle destRect;
     cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
-    for (size_t i = startX; i < endX; ++i) {
-        for (size_t j = startY; j < endY; ++j) {
-            
+    for (size_t j = startY; j < endY; j++) {
+        for (size_t i = startX; i < endX; i++) {
             // Ideal position in pixels if the map started at (0,0)
             tile_world_x = i * tileLenSize;
             tile_world_y = j * tileLenSize;
@@ -457,7 +449,7 @@ void cEditorState::drawMap() const
             
             destRect= cRectangle(tile_screen_x, heightBarSize+tile_screen_y,tileLenSize,tileLenSize);
            
-            tileID = (*m_mapData)[i][j];
+            tileID = (*m_mapData)[j][i];
             switch (tileID)
             {
             case TERRAIN_SPICE:
@@ -499,15 +491,15 @@ void cEditorState::updateVisibleTiles()
     endX = startX + tilesAcross;
     endY = startY + tilesDown;
     // Clamp to avoid wrong map m_mapData access
-    if (endX > m_mapData->getRows()) {
-        endX = m_mapData->getRows();
+    if (endX > m_mapData->getCols()) {
+        endX = m_mapData->getCols();
         startX = endX - tilesAcross;
         if (startX < 0) {
             startX = 0; 
         }
     }
-    if (endY > m_mapData->getCols()) {
-        endY = m_mapData->getCols();
+    if (endY > m_mapData->getRows()) {
+        endY = m_mapData->getRows();
         startY = endY - tilesDown;
         if (startY < 0) {
             startY = 0; 
@@ -523,7 +515,7 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
     if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols()) {
-        (*m_mapData)[tileX][tileY] = tileID;
+        (*m_mapData)[tileY][tileX] = tileID;
     }
 }
 
@@ -569,22 +561,21 @@ void cEditorState::saveMap() const
     // map card
     saveFile << "[SKIRMISH]\nTitle='Custom map'\n";
     saveFile << "Author = -\nDescription = -\n";
-    saveFile << "Width = " << m_mapData->getRows()-2 << "\nHeight = "<< m_mapData->getCols()-2 << "\n";
+    saveFile << "Width = " << m_mapData->getCols()-2 << "\nHeight = "<< m_mapData->getRows()-2 << "\n";
     saveFile << "StartCell=";
     for(size_t i=0; i<startCells.size(); i++) {
         if (startCells[i].x != -1 && startCells[i].y != -1) {
             if (i !=0) {
                 saveFile << ",";
             }
-            // translate (x,y) to (y,x)
-            saveFile << startCells[i].y * m_mapData->getRows() + startCells[i].x ;
+            saveFile << startCells[i].y * m_mapData->getCols() + startCells[i].x ;
         }
     }
     saveFile << "\n\n\n[MAP]\n";
     // map data
-    for(size_t i=1; i<m_mapData->getCols()-1; i++) {
-        for(size_t j=1; j<m_mapData->getRows()-1; j++) {
-            switch ((*m_mapData)[j][i]) {  //translation (j,i)
+    for(size_t j=1; j<m_mapData->getRows()-1; j++) {
+        for(size_t i=1; i<m_mapData->getCols()-1; i++) {
+            switch ((*m_mapData)[j][i]) {
                 case TERRAIN_SAND:
                     saveFile << ')';
                     break;
@@ -604,7 +595,7 @@ void cEditorState::saveMap() const
                     saveFile << 'h';
                     break;
                 default:
-                    std::cout << "Unknown value " << ((*m_mapData)[j][i]) << std::endl; //translation (j,i)
+                    std::cout << "Unknown value " << ((*m_mapData)[j][i]) << std::endl;
                     break;
             }
         }
