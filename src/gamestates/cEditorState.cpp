@@ -47,7 +47,7 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     populateTopologyBar();
     populateStartCellBar();
     startCells.fill({-1, -1});
-    std::cout << "Entered Editor State" << std::endl;
+    //std::cout << "Entered Editor State" << std::endl;
 }
 
 cEditorState::~cEditorState()
@@ -63,12 +63,12 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
             .onClick([this]() {
-                std::cout << "STONELAYER" << std::endl;
+                // std::cout << "STONELAYER" << std::endl;
                 m_currentBar = m_topologyBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
-    auto firstToActive = guiButton;
+    guiButton->setPressed(true);
     m_selectBar->addGuiObject(guiButton);
 
     rectGui = cRectangle(sBS+1*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
@@ -76,13 +76,14 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
             .onClick([this]() {
-                std::cout << "STARTPOSITION" << std::endl;
+                // std::cout << "STARTPOSITION" << std::endl;
                 m_currentBar = m_startCellBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
 
+/*
     rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -115,7 +116,7 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
-    firstToActive->setPressed(true);
+*/
 }
 
 void cEditorState::populateTopologyBar()
@@ -126,7 +127,7 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
             .onClick([this]() {
-                std::cout << "TERRAN_HILL" << std::endl;
+                // std::cout << "TERRAN_HILL" << std::endl;
                 idTerrainToMapModif = TERRAIN_HILL;
             })
             .build();
@@ -138,7 +139,7 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
             .onClick([this]() {
-                std::cout << "TERRAN_MOUNTAIN" << std::endl;
+                // std::cout << "TERRAN_MOUNTAIN" << std::endl;
                 idTerrainToMapModif = TERRAIN_MOUNTAIN;
             })
             .build();
@@ -150,7 +151,7 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
             .onClick([this]() {
-                std::cout << "TERRAN_ROCK" << std::endl;
+                // std::cout << "TERRAN_ROCK" << std::endl;
                 idTerrainToMapModif = TERRAIN_ROCK;
             })
             .build();
@@ -162,7 +163,7 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
             .onClick([this]() {
-                std::cout << "TERRAN_SAND" << std::endl;
+                // std::cout << "TERRAN_SAND" << std::endl;
                 idTerrainToMapModif = TERRAIN_SAND;
             })
             .build();
@@ -175,7 +176,7 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICE))
             .onClick([this]() {
-                std::cout << "TERRAN_SPICE" << std::endl;
+                // std::cout << "TERRAN_SPICE" << std::endl;
                 idTerrainToMapModif = TERRAIN_SPICE;
             })
             .build();
@@ -187,7 +188,7 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICEHILL))
             .onClick([this]() {
-                std::cout << "TERRAN_SPICEHILL" << std::endl;
+                // std::cout << "TERRAN_SPICEHILL" << std::endl;
                 idTerrainToMapModif = TERRAIN_SPICEHILL;
             })
             .build();
@@ -203,7 +204,7 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION1))
             .onClick([this]() {
-                std::cout << "STARTPOSITION1" << std::endl;
+                // std::cout << "STARTPOSITION1" << std::endl;
                 idStartCellPlayer = 0;
             })
             .build();
@@ -216,7 +217,7 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION2))
             .onClick([this]() {
-                std::cout << "STARTPOSITION2" << std::endl;
+                // std::cout << "STARTPOSITION2" << std::endl;
                 idStartCellPlayer = 1;
             })
             .build();
@@ -228,7 +229,7 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION3))
             .onClick([this]() {
-                std::cout << "STARTPOSITION3" << std::endl;
+                // std::cout << "STARTPOSITION3" << std::endl;
                 idStartCellPlayer = 2;
             })
             .build();
@@ -240,7 +241,7 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION4))
             .onClick([this]() {
-                std::cout << "STARTPOSITION4" << std::endl;
+                // std::cout << "STARTPOSITION4" << std::endl;
                 idStartCellPlayer = 3;
             })
             .build();
@@ -252,7 +253,7 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION5))
             .onClick([this]() {
-                std::cout << "STARTPOSITION5" << std::endl;
+                // std::cout << "STARTPOSITION5" << std::endl;
                 idStartCellPlayer = 4;
             })
             .build();
@@ -342,7 +343,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_game.initiateFadingOut();
         }
         if (event.hasKey(SDL_SCANCODE_S)) {
-            std::cout << "Save" << std::endl;
+            //std::cout << "Save" << std::endl;
             saveMap();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
@@ -383,11 +384,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cEditorState::loadMap(s_PreviewMap* map)
 {
-    std::cout << "open |"<< map->name << "|" << std::endl;
+    //std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->height, map->width);
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
-            std::cout << "startCell " << map->iStartCell[i] << std::endl;
+            //std::cout << "startCell " << map->iStartCell[i] << std::endl;
             int w = map->iStartCell[i] % map->width;
             int h = map->iStartCell[i] / map->width;
             startCells[i] = cPoint(w,h);
