@@ -9,4 +9,5 @@ public:
     std::shared_ptr<Graphics> gfxworld;
     std::shared_ptr<Graphics> gfxinter;
     std::shared_ptr<Graphics> gfxdata;
+    std::shared_ptr<Graphics> gfxeditor;
 };

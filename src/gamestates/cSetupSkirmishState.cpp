@@ -287,6 +287,27 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
                 }
             })
             .build();
+
+    // Modifiymap mission (bottom right)
+    int modifyButtonWidth = m_textDrawer->getTextLength("Modify");
+    int modifyButtonHeight = topBarHeight;
+    int modifyButtonY = screen_y - topBarHeight;
+    int modifyButtonX = screen_x - startButtonWidth-modifyButtonWidth - 15;
+    cRectangle modifyButtonRect = cRectangle(modifyButtonX, modifyButtonY, modifyButtonWidth, modifyButtonHeight);
+    modifyButton = GuiButtonBuilder()
+            .withRect(modifyButtonRect)        
+            .withLabel("Modify")
+            .withTextDrawer(m_textDrawer)
+            .withTheme(GuiTheme::Light())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                if (iSkirmishMap > -1) {
+                    m_game.loadMapFromEditor(iSkirmishMap);
+                    m_game.initiateFadingOut();
+                    // m_game.setNextStateToTransitionTo(GAME_EDITOR); // this deletes the current state object
+                }
+            })
+            .build();
 }
 
 cSetupSkirmishState::~cSetupSkirmishState()
@@ -295,6 +316,7 @@ cSetupSkirmishState::~cSetupSkirmishState()
     delete startButton;
     delete nextMapButton;
     delete previousMapButton;
+    delete modifyButton;
 }
 
 void cSetupSkirmishState::thinkFast()
@@ -385,9 +407,11 @@ void cSetupSkirmishState::draw() const
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);
+    modifyButton->setEnabled(iSkirmishMap > -1);
 
     backButton->draw();
     startButton->draw();
+    modifyButton->draw();
     nextMapButton->draw();
     previousMapButton->draw();
 
@@ -854,6 +878,7 @@ void cSetupSkirmishState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     backButton->onNotifyMouseEvent(event);
     startButton->onNotifyMouseEvent(event);
+    modifyButton->onNotifyMouseEvent(event);
     nextMapButton->onNotifyMouseEvent(event);
     previousMapButton->onNotifyMouseEvent(event);
 }

@@ -43,6 +43,14 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
         cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
 
+    gfxeditor = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXEDITOR));
+    if (gfxeditor == nullptr) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXEDITOR), OUTC_FAILED);
+    }
+    else {
+        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXEDITOR), OUTC_SUCCESS);
+    }
+
     //
     // loading all fonts
     //
@@ -85,6 +93,7 @@ std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
     gtx->gfxworld = gfxworld;
     gtx->gfxinter = gfxinter;
     gtx->gfxdata = gfxdata;
+    gtx->gfxeditor = gfxeditor;
     return gtx;
 }
 

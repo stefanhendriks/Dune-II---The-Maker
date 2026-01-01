@@ -33,6 +33,7 @@
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cMentatState.h"
 #include "gamestates/cGamePlaying.h"
+#include "gamestates/cEditorState.h"
 #include "utils/ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
@@ -542,6 +543,7 @@ bool cGame::setupGame()
         m_transfertMap[eGameDirFileName::GFXWORLD] = settings->getStringValue("DATAFILE", "GFXWORLD");
         m_transfertMap[eGameDirFileName::GFXMENTAT] = settings->getStringValue("DATAFILE", "GFXMENTAT");
         m_transfertMap[eGameDirFileName::GFXAUDIO] = settings->getStringValue("DATAFILE", "GFXAUDIO");
+        m_transfertMap[eGameDirFileName::GFXEDITOR] = settings->getStringValue("DATAFILE", "GFXEDITOR");
         settingsValidator->addResources(std::move(m_transfertMap));
     }
 
@@ -753,6 +755,7 @@ void cGame::setState(int newState)
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
                                newState != GAME_PLAYING &&
+                               newState != GAME_EDITOR &&
                                newState != GAME_OPTIONS); // don't delete these m_states, but re-use!
 
         if (newState == GAME_PLAYING) {
@@ -847,6 +850,9 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_CREDITS) {
                 newStatePtr = new cCreditsState(*this, ctx.get());
+            }
+            else if (newState == GAME_EDITOR) {
+                newStatePtr = new cEditorState(*this, ctx.get());
             }
             else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuState(*this, ctx.get());
@@ -1699,4 +1705,12 @@ void cGame::checkMissionWinOrFail()
         setMissionWon();
         return;
     }
+}
+
+void cGame::loadMapFromEditor(int map)
+{
+    setState(GAME_EDITOR);
+    auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
+    s_PreviewMap *selectedMap = &m_PreviewMaps->getMap(map);
+    pState->loadMap(selectedMap);
 }

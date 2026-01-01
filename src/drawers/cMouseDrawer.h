@@ -2,7 +2,6 @@
 
 #include "sMouseEvent.h"
 #include "gameobjects/structures/cAbstractStructure.h"
-#include "gui/MouseToolTip.h"
 #include "gui/cTextWriter.h"
 
 class cPlayer;
@@ -33,7 +32,6 @@ protected:
 private:
     void onMouseAt(const s_MouseEvent &event);
 
-    cMouseToolTip m_mouseToolTip;
     cPlayer *player;
     int mouseX, mouseY;
     cTextWriter* textWriter = nullptr;
