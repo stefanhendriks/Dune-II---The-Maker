@@ -886,7 +886,7 @@ void cAbstractStructure::drawFlags()
     for (auto flag : flags) {
         flag->draw();
     }
-    if (lowPower) {
+    if (lowPower && !players[this->getOwner()].bEnoughPower()) {
         //std::cout << "lowPower" << std::endl;
         lowPower->draw();
     }
