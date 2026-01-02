@@ -48,6 +48,9 @@ cRectangle GuiBar::getRelativeRect(int x, int y, int width, int height)
     return cRectangle(x + m_rect.getX(), y + m_rect.getY(), width, height);
 }
 
-void GuiBar::onNotifyKeyboardEvent(const cKeyboardEvent &)
+void GuiBar::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    for (auto &guiObject : gui_objects) {
+        guiObject->onNotifyKeyboardEvent(event);
+    }
 }
