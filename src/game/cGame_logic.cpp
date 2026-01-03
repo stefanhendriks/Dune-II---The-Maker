@@ -1771,3 +1771,10 @@ void cGame::loadMapFromEditor(int map)
     s_PreviewMap *selectedMap = &m_PreviewMaps->getMap(map);
     pState->loadMap(selectedMap);
 }
+
+void cGame::loadMapFromEditor(s_PreviewMap *map)
+{
+    setState(GAME_EDITOR);
+    auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
+    pState->loadMap(map);
+}
