@@ -17,6 +17,8 @@ const char *stateToString(const int &state)
             return "GAME_BRIEFING";
         case GAME_EDITOR:
             return "GAME_EDITOR";
+        case GAME_NEW_MAP_EDITOR:
+            return "GAME_NEW_MAP_EDITOR";
         case GAME_OPTIONS:
             return "GAME_OPTIONS";
         case GAME_REGION:
