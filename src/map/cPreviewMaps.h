@@ -44,6 +44,9 @@ public:
         return numberOfMaps+1;
     }
 
+    static s_PreviewMap createEmptyMap(const std::string &name, const std::string &author, 
+            const std::string &desciption, int width, int height);
+
 private:
     void loadSkirmish(const std::string &filename);
     void initRandomMap();
