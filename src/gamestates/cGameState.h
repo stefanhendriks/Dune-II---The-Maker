@@ -12,6 +12,7 @@ enum eGameStateType {
     GAMESTATE_CHOOSE_HOUSE,                 // #define GAME_SELECT_HOUSE  8		// pick a house
     GAMESTATE_CREDITS,                      // #define GAME_CREDITS       17    // credits
     GAMESTATE_EDITOR,                       // #define GAME_EDITOR      4      // running the editor
+    GAMESTATE_NEW_MAP_EDITOR,               // #define GAME_NEW_MAP_EDITOR 19    // new map editor
     GAMESTATE_MAIN_MENU,                    // #define GAME_MENU          1     // in a menu    
     GAMESTATE_MENTAT,                       // #define GAME_WINNING     11      // when winning, do some cool animation
                                             // #define GAME_LOSEBRIEF   13      // briefing when losing

@@ -7,6 +7,7 @@ enum class GameState : char {
     PLAYING,               // playing the actual game
     BRIEFING,              // doing some briefing
     EDITOR,                // running the editor
+    NEW_MAP_EDITOR,        // prepare new map editor parameters
     OPTIONS,               // options menu
     REGION,                // select a region / select your next conquest
     SELECT_HOUSE,          // pick a house
@@ -43,6 +44,7 @@ enum class GameState : char {
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
 #define GAME_CREDITS     17    // credits
 #define GAME_MISSIONSELECT  18    // mission select
-#define GAME_MAX_STATES 19
+#define GAME_NEW_MAP_EDITOR 19    // new map editor
+#define GAME_MAX_STATES 20
 
 const char *stateToString(const int &state);
