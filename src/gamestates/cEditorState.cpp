@@ -415,7 +415,7 @@ void cEditorState::clampCameraYToMapBounds()
         cameraY = 0;
         return;
     }
-    int maxCameraY = m_mapData->getCols() * tileLenSize - mapSizeArea.getHeight();
+    int maxCameraY = m_mapData->getRows() * tileLenSize - mapSizeArea.getHeight();
     if (maxCameraY < 0) maxCameraY = 0;
     if (cameraY > maxCameraY) cameraY = maxCameraY;
 }
@@ -430,7 +430,7 @@ void cEditorState::clampCameraXToMapBounds()
         cameraX = 0;
         return;
     }
-    int maxCameraX = m_mapData->getRows() * tileLenSize - mapSizeArea.getWidth();
+    int maxCameraX = m_mapData->getCols() * tileLenSize - mapSizeArea.getWidth();
     if (maxCameraX < 0) maxCameraX = 0;
     if (cameraX > maxCameraX) cameraX = maxCameraX;
 }
@@ -523,7 +523,7 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     }
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
-    if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getRows() && tileY < (int)m_mapData->getCols()) {
+    if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getCols() && tileY < (int)m_mapData->getRows()) {
         (*m_mapData)[tileY][tileX] = tileID;
     }
 }
@@ -535,7 +535,7 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     }
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
-    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getRows()-1 && tileY < (int)m_mapData->getCols()-1) {
+    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
         startCells[startCellID]={tileX, tileY};
     }
 }
