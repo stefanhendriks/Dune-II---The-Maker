@@ -49,6 +49,11 @@ cRectangle GuiWindow::getRelativeRect(int x, int y, int width, int height)
     return cRectangle(x + m_rect.getX(), y + m_rect.getY(), width, height);
 }
 
-void GuiWindow::onNotifyKeyboardEvent(const cKeyboardEvent &)
+void GuiWindow::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    if (event.isType(eKeyEventType::PRESSED)) {
+        for (auto &guiObject : gui_objects) {
+            guiObject->onNotifyKeyboardEvent(event);
+        }
+    }
 }
