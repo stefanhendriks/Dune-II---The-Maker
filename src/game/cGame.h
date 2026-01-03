@@ -19,6 +19,7 @@
 #include "utils/cRectangle.h"
 #include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
+#include "map/cPreviewMaps.h"
 
 #include <memory>
 #include <string>
@@ -199,6 +200,7 @@ public:
     void applySettings(GameSettings *gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
+    void loadMapFromEditor(s_PreviewMap *map);
 
     Texture* getScreenTexture() const {
         return screenTexture;

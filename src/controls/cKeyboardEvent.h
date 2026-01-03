@@ -66,6 +66,12 @@ public:
         return eventType == type;
     }
 
+    bool isPrintable() const;
+    bool isBackspace() const;
+    bool isEnter() const;
+    bool isShiftPressed() const;
+    char getChar() const;
+
     /**
      * If a numerical key is pressed, return that value.
      * @return

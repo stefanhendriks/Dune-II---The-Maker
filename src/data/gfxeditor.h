@@ -23,3 +23,7 @@
 #define STARTPOSITION3   22
 #define STARTPOSITION4   23
 #define STARTPOSITION5   24
+#define FLIPHORZLR      25
+#define FLIPHORZRL      26
+#define FLIPVERTBT      27
+#define FLIPVERTTB      28
