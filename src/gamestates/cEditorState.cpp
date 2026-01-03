@@ -359,6 +359,8 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
         }
         updateVisibleTiles();
+        m_selectBar->onNotifyKeyboardEvent(event);
+        m_currentBar->onNotifyKeyboardEvent(event);
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
