@@ -16,9 +16,9 @@ void GuiTextInput::draw() const
 
 void GuiTextInput::onNotifyKeyboardEvent(const cKeyboardEvent& event)
 {
-    std::cout << "GuiTextInput received keyboard event: " << event.toString() << std::endl;
+    //std::cout << "GuiTextInput received keyboard event: " << event.toString() << std::endl;
     if (!m_focused) return;
-    std::cout << "GuiTextInput focused received keyboard event: " << event.toString() << std::endl;
+    //std::cout << "GuiTextInput focused received keyboard event: " << event.toString() << std::endl;
     if (event.isPrintable()) {
         m_text += event.getChar();
     } else if (event.isBackspace()) {
