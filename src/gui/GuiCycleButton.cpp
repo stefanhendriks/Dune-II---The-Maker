@@ -30,7 +30,7 @@ void GuiCycleButton::draw() const
     if (m_textDrawer && !m_values.empty()) {
         std::string label = std::to_string(m_values[m_currentIndex]);
         // Utilise tes fonctions de dessin habituelles
-        m_textDrawer->drawText(m_rect.getX()+5, m_rect.getY()+5, m_theme.textColor, label);
+        m_textDrawer->drawText(m_rect.getX()+5, m_rect.getY()+3, m_theme.textColor, label);
     }
 }
 
