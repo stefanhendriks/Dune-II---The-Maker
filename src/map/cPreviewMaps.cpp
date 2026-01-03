@@ -270,3 +270,17 @@ std::string cPreviewMaps::getMapSize(int i) const {
     }
     return "HUGE";
 }
+
+s_PreviewMap cPreviewMaps::createEmptyMap(const std::string &name, const std::string &author, 
+            const std::string &desciption, int width, int height)
+{
+    s_PreviewMap emptyMap;
+    emptyMap.name = name;
+    emptyMap.author = author;
+    emptyMap.description = desciption;
+    emptyMap.width = width;
+    emptyMap.height = height;
+    emptyMap.validMap = true;
+    emptyMap.terrainType = std::vector<int>(width * height, TERRAIN_SAND);
+    return emptyMap;
+}
