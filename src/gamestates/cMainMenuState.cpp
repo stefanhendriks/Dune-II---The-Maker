@@ -135,11 +135,11 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     const cRectangle &editors = cRectangle(buttonsX, editorY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_Editor = GuiButtonBuilder()
             .withRect(editors)        
-            .withLabel("Map Editor")
+            .withLabel("New Map Editor")
             .withTextDrawer(m_textDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_game.setNextStateToTransitionTo(GAME_EDITOR);})
+            .onClick([this](){m_game.setNextStateToTransitionTo(GAME_NEW_MAP_EDITOR);})
             .build();
     gui_window->addGuiObject(gui_btn_Editor);
 
