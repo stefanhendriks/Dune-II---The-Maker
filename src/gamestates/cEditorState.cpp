@@ -609,6 +609,7 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
 
 void cEditorState::modifySymmetricArea(Direction dir)
 {
+    // std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
     switch (dir) {
         case Direction::bottom:
             for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
