@@ -653,7 +653,6 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
     }
-    normalizeModifications();
 }
 
 void cEditorState::drawStartCells() const
