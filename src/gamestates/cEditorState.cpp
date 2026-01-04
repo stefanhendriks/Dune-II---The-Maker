@@ -41,13 +41,16 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
     m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
+    m_symmetricBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_selectBar->setTheme(GuiTheme::Light());
     m_topologyBar->setTheme(GuiTheme::Light());
     m_startCellBar->setTheme(GuiTheme::Light());
+    m_symmetricBar->setTheme(GuiTheme::Light());
 
     populateSelectBar();
     populateTopologyBar();
     populateStartCellBar();
+    populateSymmetricBar();
     startCells.fill({-1, -1});
     //std::cout << "Entered Editor State" << std::endl;
 }
@@ -80,6 +83,18 @@ void cEditorState::populateSelectBar()
             .onClick([this]() {
                 // std::cout << "STARTPOSITION" << std::endl;
                 m_currentBar = m_startCellBar.get();
+            })
+            .build();
+    guiButton->setGroup(m_selectGroup.get());
+    m_selectBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPHORZ))
+            .onClick([this]() {
+                // std::cout << "FLIPHORZ" << std::endl;
+                m_currentBar = m_symmetricBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
@@ -261,6 +276,10 @@ void cEditorState::populateStartCellBar()
             .build();
     guiButton->setGroup(m_startCellGroup.get());
     m_startCellBar->addGuiObject(guiButton);
+}
+
+void cEditorState::populateSymmetricBar()
+{
 }
 
 void cEditorState::thinkFast()
