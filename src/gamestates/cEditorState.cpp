@@ -280,6 +280,55 @@ void cEditorState::populateStartCellBar()
 
 void cEditorState::populateSymmetricBar()
 {
+    m_symmetricGroup = std::make_unique<GuiButtonGroup>();
+    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
+    auto guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPHORZLR))
+            .onClick([this]() {
+                // std::cout << "FLIPHORZLR" << std::endl;
+                modifySymmetricArea(Direction::right);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    guiButton->setPressed(true);
+    m_symmetricBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+1*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPHORZRL))
+            .onClick([this]() {
+                // std::cout << "FLIPHORZRL" << std::endl;
+                modifySymmetricArea(Direction::left);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPVERTBT))
+            .onClick([this]() {
+                // std::cout << "FLIPVERTBT" << std::endl;
+                modifySymmetricArea(Direction::top);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPVERTTB))
+            .onClick([this]() {
+                // std::cout << "FLIPVERTTB" << std::endl;
+                modifySymmetricArea(Direction::bottom);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
 }
 
 void cEditorState::thinkFast()
