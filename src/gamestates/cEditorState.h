@@ -34,10 +34,17 @@ private:
         zoomIn,
         zoomOut
     };
+    enum class Direction : char {
+        top,
+        bottom,
+        left,
+        right
+    };
     void populateTopologyBar();
     void populateStartCellBar();
     void populateSelectBar();
     void populateSymmetricBar();
+    void modifySymmetricArea(Direction dir);
 
     void drawMap() const;
     void drawStartCells() const;
