@@ -379,8 +379,10 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
         if (event.eventType == MOUSE_SCROLLED_DOWN) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomOut);
+            updateVisibleTiles();
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
+            updateVisibleTiles();
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
             modifyTile(mouseX, mouseY, idTerrainToMapModif);
         }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
@@ -389,7 +391,6 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         else {
             return;
         }
-        updateVisibleTiles();
     } else {
         m_selectBar->onNotifyMouseEvent(event);
         m_currentBar->onNotifyMouseEvent(event);
@@ -421,11 +422,13 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+            updateVisibleTiles();
         }
-        updateVisibleTiles();
+
         m_selectBar->onNotifyKeyboardEvent(event);
         m_currentBar->onNotifyKeyboardEvent(event);
     }
@@ -434,26 +437,31 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
             cameraX -=tileLenSize;
             clampCameraXToMapBounds();
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
             cameraX +=tileLenSize;
             clampCameraXToMapBounds();
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
             cameraY -=tileLenSize;
             clampCameraYToMapBounds();
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
             cameraY +=tileLenSize;
             clampCameraYToMapBounds();
+            updateVisibleTiles(); 
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+            updateVisibleTiles(); 
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+            updateVisibleTiles(); 
         }
-        updateVisibleTiles(); 
     }
 }
 
