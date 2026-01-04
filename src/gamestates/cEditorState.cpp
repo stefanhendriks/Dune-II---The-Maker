@@ -291,7 +291,6 @@ void cEditorState::populateSymmetricBar()
             })
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
-    guiButton->setPressed(true);
     m_symmetricBar->addGuiObject(guiButton);
 
     rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+1*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
