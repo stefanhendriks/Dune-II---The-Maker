@@ -603,7 +603,7 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     }
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
-    if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getCols() && tileY < (int)m_mapData->getRows()) {
+    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
         (*m_mapData)[tileY][tileX] = tileID;
     }
 }
