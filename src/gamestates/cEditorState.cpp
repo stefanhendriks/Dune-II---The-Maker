@@ -609,21 +609,22 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
 
 void cEditorState::modifySymmetricArea(Direction dir)
 {
+    std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
     for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
         for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
             // Modify the tile at (i, j) based on the direction
             switch (dir) {
-                case Direction::top:
-                    
-                    break;
                 case Direction::bottom:
-                    
+                    (*m_mapData)[(m_mapData->getRows()-1)-j][i] = (*m_mapData)[j][i];
                     break;
-                case Direction::left:
-                    
+                case Direction::top:
+                    (*m_mapData)[j][i] = (*m_mapData)[(m_mapData->getRows()-1)-j][i];
                     break;
                 case Direction::right:
-                    
+                    (*m_mapData)[j][(m_mapData->getCols()-1)-i] = (*m_mapData)[j][i];
+                    break;
+                case Direction::left:
+                    (*m_mapData)[j][i] = (*m_mapData)[j][(m_mapData->getCols()-1)-i];
                     break;
             }
         }
