@@ -470,6 +470,19 @@ void cEditorState::loadMap(s_PreviewMap* map)
         }
     }
     updateVisibleTiles();
+    normalizeModifications();
+}
+
+void cEditorState::normalizeModifications()
+{
+    for (size_t j = 0; j < m_mapData->getRows(); j++) {
+        (*m_mapData)[j][0] = -1;
+        (*m_mapData)[j][m_mapData->getCols()-1] = -1;
+    }
+    for (size_t i = 0; i < m_mapData->getCols(); i++) {
+        (*m_mapData)[0][i] = -1;
+        (*m_mapData)[m_mapData->getRows()-1][i] = -1;
+    }
 }
 
 void cEditorState::clampCameraYToMapBounds()
@@ -640,6 +653,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
     }
+    normalizeModifications();
 }
 
 void cEditorState::drawStartCells() const
