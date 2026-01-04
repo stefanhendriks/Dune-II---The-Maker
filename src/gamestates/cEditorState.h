@@ -50,6 +50,7 @@ private:
     void drawStartCells() const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
+    void normalizeModifications();
     // void clampCameraToMapBounds();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
