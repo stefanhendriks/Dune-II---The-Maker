@@ -559,6 +559,29 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     }
 }
 
+void cEditorState::modifySymmetricArea(Direction dir)
+{
+    for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
+        for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
+            // Modify the tile at (i, j) based on the direction
+            switch (dir) {
+                case Direction::top:
+                    
+                    break;
+                case Direction::bottom:
+                    
+                    break;
+                case Direction::left:
+                    
+                    break;
+                case Direction::right:
+                    
+                    break;
+            }
+        }
+    }
+}
+
 void cEditorState::drawStartCells() const
 {
     cRectangle destRect;
