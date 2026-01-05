@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
+#include "gui/GuiButtonGroup.h"
 
 
 GuiBar::GuiBar(const cRectangle &rect, GuiBarPlacement placement) :
@@ -53,4 +54,9 @@ void GuiBar::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     for (auto &guiObject : gui_objects) {
         guiObject->onNotifyKeyboardEvent(event);
     }
+}
+
+void GuiBar::addGuiGroup(std::unique_ptr<GuiButtonGroup> buttonGroup)
+{
+    gui_button_groups.push_back(std::move(buttonGroup));
 }

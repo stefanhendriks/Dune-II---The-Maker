@@ -41,13 +41,16 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
     m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
+    m_symmetricBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
     m_selectBar->setTheme(GuiTheme::Light());
     m_topologyBar->setTheme(GuiTheme::Light());
     m_startCellBar->setTheme(GuiTheme::Light());
+    m_symmetricBar->setTheme(GuiTheme::Light());
 
     populateSelectBar();
     populateTopologyBar();
     populateStartCellBar();
+    populateSymmetricBar();
     startCells.fill({-1, -1});
     //std::cout << "Entered Editor State" << std::endl;
 }
@@ -59,7 +62,7 @@ cEditorState::~cEditorState()
 
 void cEditorState::populateSelectBar()
 {
-    m_selectGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_selectGroup= std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(96,halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -84,6 +87,19 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPHORZ))
+            .onClick([this]() {
+                // std::cout << "FLIPHORZ" << std::endl;
+                m_currentBar = m_symmetricBar.get();
+            })
+            .build();
+    guiButton->setGroup(m_selectGroup.get());
+    m_selectBar->addGuiObject(guiButton);
+    m_selectBar->addGuiGroup(std::move(m_selectGroup));
 
 /*
     rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
@@ -123,7 +139,7 @@ void cEditorState::populateSelectBar()
 
 void cEditorState::populateTopologyBar()
 {
-    m_topologyGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_topologyGroup = std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -196,11 +212,12 @@ void cEditorState::populateTopologyBar()
             .build();
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addGuiGroup(std::move(m_topologyGroup));
 }
 
 void cEditorState::populateStartCellBar()
 {
-    m_startCellGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_startCellGroup = std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -261,6 +278,60 @@ void cEditorState::populateStartCellBar()
             .build();
     guiButton->setGroup(m_startCellGroup.get());
     m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addGuiGroup(std::move(m_startCellGroup));
+}
+
+void cEditorState::populateSymmetricBar()
+{
+    std::unique_ptr<GuiButtonGroup> m_symmetricGroup = std::make_unique<GuiButtonGroup>();
+    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
+    auto guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPHORZLR))
+            .onClick([this]() {
+                // std::cout << "FLIPHORZLR" << std::endl;
+                modifySymmetricArea(Direction::right);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+1*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPHORZRL))
+            .onClick([this]() {
+                // std::cout << "FLIPHORZRL" << std::endl;
+                modifySymmetricArea(Direction::left);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPVERTBT))
+            .onClick([this]() {
+                // std::cout << "FLIPVERTBT" << std::endl;
+                modifySymmetricArea(Direction::top);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
+
+    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPVERTTB))
+            .onClick([this]() {
+                // std::cout << "FLIPVERTTB" << std::endl;
+                modifySymmetricArea(Direction::bottom);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addGuiObject(guiButton);
+    m_symmetricBar->addGuiGroup(std::move(m_symmetricGroup));
 }
 
 void cEditorState::thinkFast()
@@ -312,8 +383,10 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
         if (event.eventType == MOUSE_SCROLLED_DOWN) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomOut);
+            updateVisibleTiles();
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
             zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
+            updateVisibleTiles();
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
             modifyTile(mouseX, mouseY, idTerrainToMapModif);
         }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
@@ -322,7 +395,6 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         else {
             return;
         }
-        updateVisibleTiles();
     } else {
         m_selectBar->onNotifyMouseEvent(event);
         m_currentBar->onNotifyMouseEvent(event);
@@ -354,11 +426,13 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+            updateVisibleTiles();
         }
-        updateVisibleTiles();
+
         m_selectBar->onNotifyKeyboardEvent(event);
         m_currentBar->onNotifyKeyboardEvent(event);
     }
@@ -367,26 +441,31 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
             cameraX -=tileLenSize;
             clampCameraXToMapBounds();
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
             cameraX +=tileLenSize;
             clampCameraXToMapBounds();
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
             cameraY -=tileLenSize;
             clampCameraYToMapBounds();
+            updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
             cameraY +=tileLenSize;
             clampCameraYToMapBounds();
+            updateVisibleTiles(); 
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+            updateVisibleTiles(); 
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
             zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+            updateVisibleTiles(); 
         }
-        updateVisibleTiles(); 
     }
 }
 
@@ -403,6 +482,19 @@ void cEditorState::loadMap(s_PreviewMap* map)
         }
     }
     updateVisibleTiles();
+    normalizeModifications();
+}
+
+void cEditorState::normalizeModifications()
+{
+    for (size_t j = 0; j < m_mapData->getRows(); j++) {
+        (*m_mapData)[j][0] = -1;
+        (*m_mapData)[j][m_mapData->getCols()-1] = -1;
+    }
+    for (size_t i = 0; i < m_mapData->getCols(); i++) {
+        (*m_mapData)[0][i] = -1;
+        (*m_mapData)[m_mapData->getRows()-1][i] = -1;
+    }
 }
 
 void cEditorState::clampCameraYToMapBounds()
@@ -523,7 +615,7 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     }
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
-    if (m_mapData && tileX >= 0 && tileY >= 0 && tileX < (int)m_mapData->getCols() && tileY < (int)m_mapData->getRows()) {
+    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
         (*m_mapData)[tileY][tileX] = tileID;
     }
 }
@@ -537,6 +629,41 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     int tileY = (cameraY + posY) / tileLenSize;
     if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
         startCells[startCellID]={tileX, tileY};
+    }
+}
+
+void cEditorState::modifySymmetricArea(Direction dir)
+{
+    // std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
+    switch (dir) {
+        case Direction::bottom:
+            for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
+                for (size_t i = 1; i < m_mapData->getCols(); i++) {
+                    (*m_mapData)[(m_mapData->getRows()-1)-j][i] = (*m_mapData)[j][i];
+                }
+            }
+            break;
+        case Direction::top:
+            for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
+                for (size_t i = 1; i < m_mapData->getCols(); i++) {
+                    (*m_mapData)[j][i] = (*m_mapData)[(m_mapData->getRows()-1)-j][i];
+                }
+            }
+            break;
+        case Direction::right:
+            for (size_t j = 1; j < m_mapData->getRows(); j++) {
+                for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
+                    (*m_mapData)[j][(m_mapData->getCols()-1)-i] = (*m_mapData)[j][i];
+                }
+            }
+            break;
+        case Direction::left:
+            for (size_t j = 1; j < m_mapData->getRows(); j++) {
+                for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
+                    (*m_mapData)[j][i] = (*m_mapData)[j][(m_mapData->getCols()-1)-i];
+                }
+            }
+            break;
     }
 }
 
