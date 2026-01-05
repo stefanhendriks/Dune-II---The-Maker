@@ -51,14 +51,12 @@ private:
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();
-    // void clampCameraToMapBounds();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
     void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
     void updateVisibleTiles();
 
     void saveMap() const;
-    //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_topologyBar;
     std::unique_ptr<GuiBar> m_startCellBar;
@@ -66,10 +64,6 @@ private:
     GuiBar* m_currentBar = nullptr;
     std::unique_ptr<Matrix<int>> m_mapData;
     Graphics *m_gfxdata, *m_gfxeditor;
-    // std::unique_ptr<GuiButtonGroup> m_selectGroup;
-    // std::unique_ptr<GuiButtonGroup> m_topologyGroup;
-    // std::unique_ptr<GuiButtonGroup> m_startCellGroup;
-    // std::unique_ptr<GuiButtonGroup> m_symmetricGroup;
 
     cRectangle mapSizeArea;
     int tileLenSize = 16;
