@@ -62,7 +62,7 @@ cEditorState::~cEditorState()
 
 void cEditorState::populateSelectBar()
 {
-    m_selectGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_selectGroup= std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(96,halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -99,6 +99,7 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addGuiObject(guiButton);
+    m_selectBar->addGuiGroup(std::move(m_selectGroup));
 
 /*
     rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
@@ -138,7 +139,7 @@ void cEditorState::populateSelectBar()
 
 void cEditorState::populateTopologyBar()
 {
-    m_topologyGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_topologyGroup = std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -211,11 +212,12 @@ void cEditorState::populateTopologyBar()
             .build();
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addGuiGroup(std::move(m_topologyGroup));
 }
 
 void cEditorState::populateStartCellBar()
 {
-    m_startCellGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_startCellGroup = std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -276,11 +278,12 @@ void cEditorState::populateStartCellBar()
             .build();
     guiButton->setGroup(m_startCellGroup.get());
     m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addGuiGroup(std::move(m_startCellGroup));
 }
 
 void cEditorState::populateSymmetricBar()
 {
-    m_symmetricGroup = std::make_unique<GuiButtonGroup>();
+    std::unique_ptr<GuiButtonGroup> m_symmetricGroup = std::make_unique<GuiButtonGroup>();
     auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -328,6 +331,7 @@ void cEditorState::populateSymmetricBar()
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
     m_symmetricBar->addGuiObject(guiButton);
+    m_symmetricBar->addGuiGroup(std::move(m_symmetricGroup));
 }
 
 void cEditorState::thinkFast()
