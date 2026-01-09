@@ -2083,6 +2083,11 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
             if (idOfUnitAtCell > -1) {
                 unit[idOfUnitAtCell].die(false, false);
             }
+
+            idOfUnitAtCell = global_map.getCellIdAirUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(false, false);
+            }
         }
     }
 
