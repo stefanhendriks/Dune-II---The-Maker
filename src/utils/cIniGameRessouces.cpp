@@ -793,6 +793,7 @@ void IniGameRessources::install_bullets()
 
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
         sBulletInfo[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
+        sBulletInfo[i].moveSpeed = 2;
         sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
         sBulletInfo[i].damage_vehicles = 0;      // damage to vehicles
         sBulletInfo[i].damage_infantry = 0;  // damage to infantry
@@ -827,8 +828,8 @@ void IniGameRessources::install_bullets()
     sBulletInfo[ROCKET_SMALL_ORNI].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
     sBulletInfo[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_ORNI].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL_ORNI].damage_vehicles = 12; // they can do pretty damage
-    sBulletInfo[ROCKET_SMALL_ORNI].damage_infantry = 9;
+    sBulletInfo[ROCKET_SMALL_ORNI].damage_vehicles = 48; // they can do pretty damage
+    sBulletInfo[ROCKET_SMALL_ORNI].damage_infantry = 24;
     sBulletInfo[ROCKET_SMALL_ORNI].max_frames = 1;
     sBulletInfo[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
@@ -844,6 +845,7 @@ void IniGameRessources::install_bullets()
     sBulletInfo[ROCKET_SMALL].damage_vehicles = 10; // was 8
     sBulletInfo[ROCKET_SMALL].damage_infantry = 8; // was 4
     sBulletInfo[ROCKET_SMALL].max_frames = 1;
+    sBulletInfo[ROCKET_SMALL].moveSpeed = 3;
     sBulletInfo[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL].canDamageAirUnits = true;
     sBulletInfo[ROCKET_SMALL].max_deadframes = 1;
@@ -858,6 +860,7 @@ void IniGameRessources::install_bullets()
     sBulletInfo[ROCKET_SMALL_FREMEN].damage_vehicles = 22;
     sBulletInfo[ROCKET_SMALL_FREMEN].damage_infantry = 20;
     sBulletInfo[ROCKET_SMALL_FREMEN].max_frames = 1;
+    sBulletInfo[ROCKET_SMALL_FREMEN].moveSpeed = 4;
     sBulletInfo[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_FREMEN].max_deadframes = 1;
     sBulletInfo[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
@@ -873,6 +876,7 @@ void IniGameRessources::install_bullets()
     sBulletInfo[ROCKET_NORMAL].damage_infantry = 36;  // less damage on infantry
     sBulletInfo[ROCKET_NORMAL].max_frames = 1;
     sBulletInfo[ROCKET_NORMAL].sound = SOUND_ROCKET;
+    sBulletInfo[ROCKET_NORMAL].moveSpeed = 3;
     sBulletInfo[ROCKET_NORMAL].max_deadframes = 4;
     sBulletInfo[ROCKET_NORMAL].canDamageAirUnits = true;
     sBulletInfo[ROCKET_NORMAL].canDamageGround = true;
@@ -886,6 +890,7 @@ void IniGameRessources::install_bullets()
     sBulletInfo[BULLET_SMALL].damage_vehicles = 4; // vehicles are no match
     sBulletInfo[BULLET_SMALL].damage_infantry = 10; // infantry vs infantry means big time damage
     sBulletInfo[BULLET_SMALL].max_frames = 0;
+    sBulletInfo[BULLET_SMALL].moveSpeed = 4;
     sBulletInfo[BULLET_SMALL].sound = SOUND_GUN;
     sBulletInfo[BULLET_SMALL].max_deadframes = 0;
     sBulletInfo[BULLET_SMALL].groundBullet = true;
@@ -897,6 +902,7 @@ void IniGameRessources::install_bullets()
     sBulletInfo[BULLET_TRIKE].bmp_width = 6;
     sBulletInfo[BULLET_TRIKE].damage_vehicles = 3; // trikes do not do much damage to vehicles
     sBulletInfo[BULLET_TRIKE].damage_infantry = 6; // but more to infantry
+    sBulletInfo[BULLET_TRIKE].moveSpeed = 4;
     sBulletInfo[BULLET_TRIKE].max_frames = 0;
     sBulletInfo[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
     sBulletInfo[BULLET_TRIKE].max_deadframes = 0;

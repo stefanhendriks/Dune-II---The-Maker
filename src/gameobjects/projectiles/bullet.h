@@ -90,7 +90,7 @@ private:
 
     bool canDamageAirUnits() const;
 
-    bool damageAirUnit(int cell, double factor) const;
+    bool damageAirUnit(int cell) const;
 
     void damageTerrain(int cell, double factor) const;
 
