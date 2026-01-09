@@ -2065,6 +2065,18 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         }
     }
 
+    // SPAWN ENEMY AIR UNIT
+    if (event.hasKey(SDL_SCANCODE_F8)) {
+        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
+        UNIT_CREATE(
+            mc,
+            ORNITHOPTER,
+            1,
+            false,
+            false
+        );
+    }
+
     //DESTROY UNIT OR BUILDING
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
