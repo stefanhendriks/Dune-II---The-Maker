@@ -2103,7 +2103,9 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     else {
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
-            global_map.clear_all(HUMAN);
+            for (int i = 0; i < AI_WORM; i++) {
+                global_map.clear_all(i);
+            }
         }
     }
 
