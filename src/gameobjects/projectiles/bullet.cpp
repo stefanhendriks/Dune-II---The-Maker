@@ -309,7 +309,7 @@ void cBullet::arrivedAtDestinationLogic()
                         iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor));
 
             // when air layer is hit, it won't damage ground things
-            if (!damageAirUnit(cellToDamage, factor)) {                // inflict damage on air unit (if rocket)
+            if (!damageAirUnit(cellToDamage)) {                // inflict damage on air unit (if rocket)
                 damageStructure(cellToDamage, factor);                 // damage structure at cell if applicable
                 damageWall(cellToDamage, factor);                      // damage wall if applicable
 
@@ -398,17 +398,15 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
     if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
 
     cUnit &airUnit = unit[unitIdOnAirLayer];
-    if (iOwnerUnit <= 0) {
-        return false; // no air unit to damage
-    }
+    if (iOwnerUnit > 0) {
+        cUnit &ownerUnit = unit[iOwnerUnit];
+        if (!ownerUnit.isValid()) {
+            return false; // unit is not 'valid'
+        }
 
-    cUnit &ownerUnit = unit[iOwnerUnit];
-    if (!ownerUnit.isValid()) {
-        return false; // unit is not 'valid'
-    }
-
-    if (ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
-        return false; // Do not damage same team
+        if (ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
+            return false; // Do not damage same team
+        }
     }
 
     // yes, an air unit is present, is not of my team and can should be damaged.
@@ -419,13 +417,13 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
  * Handle damaging at cell, returns true if an (non-owner) unit is damaged.
  * Returns false when cell is invalid, bullet cannot damage air units, or if unit at cell is same as owner of this bullet.
  */
-bool cBullet::damageAirUnit(int cell, double factor) const
+bool cBullet::damageAirUnit(int cell) const
 {
     if (!global_map.isValidCell(cell)) return false;
     if (!canDamageAirUnits()) return false;
     int unitIdOnAirLayer = global_map.getCellIdAirUnitLayer(cell);
 
-    float iDamage = getDamageToInflictToNonInfantry() * factor;
+    float iDamage = getDamageToInflictToNonInfantry();
 
     if (doesAirUnitTakeDamage(unitIdOnAirLayer)) {
         cUnit &airUnit = unit[unitIdOnAirLayer];
@@ -553,9 +551,9 @@ void cBullet::damageSandworm(int cell, double factor) const
 
 bool cBullet::isAtDestination() const
 {
-    int distanceX = abs(targetX - posX);
-    int distanceY = abs(targetY - posY);
-    return distanceX < 2 && distanceY < 2;
+    int posCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
+    int targetCell = mapCamera->getCellFromAbsolutePosition(targetX, targetY);
+    return posCell == targetCell;
 }
 
 /**
@@ -590,7 +588,8 @@ void cBullet::moveBulletTowardsGoal()
 
     // now do some thing to make
     // 1/8 of a cell (2 pixels) per movement
-    int movespeed = 2; // this is fixed! (TODO: move this to bullet type data)
+    const s_BulletInfo &sBullet = gets_Bullet();
+    int movespeed = sBullet.moveSpeed; // this is fixed! (TODO: move this to bullet type data)
     posX += cos(angle) * movespeed;
     posY += sin(angle) * movespeed;
 }
