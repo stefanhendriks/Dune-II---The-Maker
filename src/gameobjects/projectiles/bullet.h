@@ -88,6 +88,8 @@ private:
 
     float getDamageToInflictToUnit(cUnit &unitTakingDamage) const;
 
+    int getMoveSpeed() const;
+
     bool canDamageAirUnits() const;
 
     bool damageAirUnit(int cell) const;

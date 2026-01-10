@@ -557,13 +557,11 @@ void cBullet::damageSandworm(int cell, double factor) const
 
 bool cBullet::isAtDestination() const
 {
-    const s_BulletInfo &sBullet = gets_Bullet();
-    int movespeed = sBullet.moveSpeed;
     int distanceX = abs(targetX - posX);
     int distanceY = abs(targetY - posY);
 
     // use 'movespeed' as 'closest' distance, so that we prevent overshoots
-    return distanceX < movespeed && distanceY < movespeed;
+    return distanceX < getMoveSpeed() && distanceY < getMoveSpeed();
 }
 
 /**
@@ -594,10 +592,8 @@ void cBullet::damageWall(int cell, double factor) const
 void cBullet::moveBulletTowardsGoal()
 {
     float angle = fRadians(posX, posY, targetX, targetY);
-    const s_BulletInfo &sBullet = gets_Bullet();
-    int movespeed = sBullet.moveSpeed;
-    posX += cos(angle) * movespeed;
-    posY += sin(angle) * movespeed;
+    posX += cos(angle) * (float)getMoveSpeed();
+    posY += sin(angle) * (float)getMoveSpeed();
 }
 
 bool cBullet::isGroundBullet() const
@@ -608,6 +604,11 @@ bool cBullet::isGroundBullet() const
 bool cBullet::canDamageAirUnits() const
 {
     return gets_Bullet().canDamageAirUnits;
+}
+
+int cBullet::getMoveSpeed() const
+{
+    return gets_Bullet().moveSpeed;
 }
 
 float cBullet::getDamageToInflictToNonInfantry() const
