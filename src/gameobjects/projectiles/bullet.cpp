@@ -557,9 +557,13 @@ void cBullet::damageSandworm(int cell, double factor) const
 
 bool cBullet::isAtDestination() const
 {
-    int posCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
-    int targetCell = mapCamera->getCellFromAbsolutePosition(targetX, targetY);
-    return posCell == targetCell;
+    const s_BulletInfo &sBullet = gets_Bullet();
+    int movespeed = sBullet.moveSpeed;
+    int distanceX = abs(targetX - posX);
+    int distanceY = abs(targetY - posY);
+
+    // use 'movespeed' as 'closest' distance, so that we prevent overshoots
+    return distanceX < movespeed && distanceY < movespeed;
 }
 
 /**
@@ -589,13 +593,9 @@ void cBullet::damageWall(int cell, double factor) const
 
 void cBullet::moveBulletTowardsGoal()
 {
-    // step 1 : look to the correct direction
     float angle = fRadians(posX, posY, targetX, targetY);
-
-    // now do some thing to make
-    // 1/8 of a cell (2 pixels) per movement
     const s_BulletInfo &sBullet = gets_Bullet();
-    int movespeed = sBullet.moveSpeed; // this is fixed! (TODO: move this to bullet type data)
+    int movespeed = sBullet.moveSpeed;
     posX += cos(angle) * movespeed;
     posY += sin(angle) * movespeed;
 }
