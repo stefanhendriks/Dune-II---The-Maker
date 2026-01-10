@@ -398,18 +398,24 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
     if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
 
     cUnit &airUnit = unit[unitIdOnAirLayer];
-    if (iOwnerUnit > 0) {
-        cUnit &ownerUnit = unit[iOwnerUnit];
-        if (!ownerUnit.isValid()) {
-            return false; // unit is not 'valid'
-        }
-
-        if (ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
-            return false; // Do not damage same team
-        }
+    if (!airUnit.isValid()) {
+        return false;
     }
 
-    // yes, an air unit is present, is not of my team and can should be damaged.
+    if (iOwnerUnit < 0) {
+        // yes, an air unit is present, is not of my team and can should be damaged.
+        return true;
+    }
+
+    cUnit &ownerUnit = unit[iOwnerUnit];
+    if (!ownerUnit.isValid()) {
+        return true;
+    }
+
+    if (ownerUnit.getPlayer()->isSameTeamAs(airUnit.getPlayer())) {
+        return false;
+    }
+
     return true;
 }
 
