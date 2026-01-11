@@ -4,9 +4,10 @@
 #include "drawers/SDLDrawer.hpp"
 
 
-GuiBar::GuiBar(const cRectangle &rect, GuiBarPlacement placement) :
-    GuiObject(rect), gui_objects(std::vector<GuiObject *>(0)), m_placement(placement), placementPosition(0)
+GuiBar::GuiBar(const cRectangle &rect, GuiBarPlacement placement, int heightBarSize) :
+    GuiObject(rect), gui_objects(std::vector<GuiObject *>(0)), m_placement(placement), placementPosition(0), heightBarSize(heightBarSize)
 {
+   halfMarginBetweenButtons = (rect.getHeight()-heightBarSize)/2; 
 }
 
 GuiBar::~GuiBar() noexcept

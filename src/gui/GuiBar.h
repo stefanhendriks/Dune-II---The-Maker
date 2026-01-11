@@ -13,7 +13,7 @@ enum class GuiBarPlacement :char {
 
 class GuiBar : protected GuiObject {
 public:
-    explicit GuiBar(const cRectangle &rect, GuiBarPlacement placement);
+    explicit GuiBar(const cRectangle &rect, GuiBarPlacement placement, int iconSize = 40);
     ~GuiBar() noexcept override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -36,5 +36,7 @@ private:
     std::vector<GuiObject *> gui_objects;
     GuiBarPlacement m_placement;
     int placementPosition;
+    int heightBarSize;
+    int halfMarginBetweenButtons;
 };
 

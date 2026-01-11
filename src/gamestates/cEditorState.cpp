@@ -38,9 +38,9 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightBarSize);
     const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize, heightBarSize, heightBarSize, m_game.m_screenH-heightBarSize);
     mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize,m_game.m_screenH-heightBarSize);
-    m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL);
-    m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
-    m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL);
+    m_selectBar = std::make_unique<GuiBar>(selectRect,GuiBarPlacement::HORIZONTAL,heightButtonSize);
+    m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
+    m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_selectBar->setTheme(GuiTheme::Light());
     m_topologyBar->setTheme(GuiTheme::Light());
     m_startCellBar->setTheme(GuiTheme::Light());
