@@ -42,8 +42,11 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_topologyBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_startCellBar = std::make_unique<GuiBar>(modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_selectBar->setTheme(GuiTheme::Light());
+    m_selectBar->beginPlacement(heightBarSize);
     m_topologyBar->setTheme(GuiTheme::Light());
+    m_topologyBar->beginPlacement(heightBarSize);
     m_startCellBar->setTheme(GuiTheme::Light());
+    m_startCellBar->beginPlacement(heightBarSize);
 
     populateSelectBar();
     populateTopologyBar();
@@ -60,7 +63,8 @@ cEditorState::~cEditorState()
 void cEditorState::populateSelectBar()
 {
     m_selectGroup = std::make_unique<GuiButtonGroup>();
-    auto rectGui = cRectangle(96,halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
+    //auto rectGui = cRectangle(96,halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
+    auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
@@ -71,9 +75,10 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     guiButton->setPressed(true);
-    m_selectBar->addGuiObject(guiButton);
+    // m_selectBar->addGuiObject(guiButton);
+    m_selectBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(sBS+1*(heightBarSize+sBB),halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
+    //rectGui = cRectangle(sBS+1*(heightBarSize+sBB),halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
@@ -83,7 +88,8 @@ void cEditorState::populateSelectBar()
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
-    m_selectBar->addGuiObject(guiButton);
+    // m_selectBar->addGuiObject(guiButton);
+    m_selectBar->addAutoGuiObject(guiButton);
 
 /*
     rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
@@ -124,7 +130,8 @@ void cEditorState::populateSelectBar()
 void cEditorState::populateTopologyBar()
 {
     m_topologyGroup = std::make_unique<GuiButtonGroup>();
-    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
+    // auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
+    auto rectGui = cRectangle(0,0,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
@@ -134,9 +141,10 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addGuiObject(guiButton);
+    // m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons, sBS+heightBarSize+sBB,heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons, sBS+heightBarSize+sBB,heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
@@ -146,9 +154,10 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addGuiObject(guiButton);
+    // m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
@@ -158,9 +167,10 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addGuiObject(guiButton);
+    // m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons, sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons, sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
@@ -170,10 +180,11 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addGuiObject(guiButton);
+    // m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(guiButton);
     guiButton->setPressed(true);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+4*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+4*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICE))
@@ -183,9 +194,10 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addGuiObject(guiButton);
+    // m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+5*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+5*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICEHILL))
@@ -195,13 +207,15 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addGuiObject(guiButton);
+    // m_topologyBar->addGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(guiButton);
 }
 
 void cEditorState::populateStartCellBar()
 {
     m_startCellGroup = std::make_unique<GuiButtonGroup>();
-    auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
+    // auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
+    auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION1))
@@ -212,9 +226,10 @@ void cEditorState::populateStartCellBar()
             .build();
     guiButton->setGroup(m_startCellGroup.get());
     guiButton->setPressed(true);
-    m_startCellBar->addGuiObject(guiButton);
+    // m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+1*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+1*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION2))
@@ -224,9 +239,10 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addGuiObject(guiButton);
+    // m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION3))
@@ -236,9 +252,10 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addGuiObject(guiButton);
+    // m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION4))
@@ -248,9 +265,10 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addGuiObject(guiButton);
+    // m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(guiButton);
 
-    rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+4*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
+    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+4*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION5))
@@ -260,7 +278,8 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addGuiObject(guiButton);
+    // m_startCellBar->addGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(guiButton);
 }
 
 void cEditorState::thinkFast()
