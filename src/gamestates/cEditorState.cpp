@@ -54,7 +54,6 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     populateStartCellBar();
     populateSymmetricBar();
     startCells.fill({-1, -1});
-    //std::cout << "Entered Editor State" << std::endl;
 }
 
 cEditorState::~cEditorState()
@@ -70,7 +69,6 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
             .onClick([this]() {
-                // std::cout << "STONELAYER" << std::endl;
                 m_currentBar = m_topologyBar.get();
             })
             .build();
@@ -82,7 +80,6 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION" << std::endl;
                 m_currentBar = m_startCellBar.get();
             })
             .build();
@@ -93,46 +90,11 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(FLIPHORZ))
             .onClick([this]() {
-                // std::cout << "FLIPHORZ" << std::endl;
                 m_currentBar = m_symmetricBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addAutoGuiObject(guiButton);
-/*
-    rectGui = cRectangle(sBS+2*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
-    guiButton = GuiStateButtonBuilder()
-            .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(SOLDIERS))
-            .onClick([this]() {
-                std::cout << "SOLDIERS" << std::endl;
-            })
-            .build();
-    guiButton->setGroup(m_selectGroup.get());
-    m_selectBar->addGuiObject(guiButton);
-
-    rectGui = cRectangle(sBS+3*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
-    guiButton = GuiStateButtonBuilder()
-            .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(BUILDING))
-            .onClick([this]() {
-                std::cout << "BUILDING" << std::endl;
-            })
-            .build();
-    guiButton->setGroup(m_selectGroup.get());
-    m_selectBar->addGuiObject(guiButton);
-
-    rectGui = cRectangle(sBS+4*(heightBarSize+sBB),1,heightBarSize,heightBarSize);
-    guiButton = GuiStateButtonBuilder()
-            .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(UNITS))
-            .onClick([this]() {
-                std::cout << "UNITS" << std::endl;
-            })
-            .build();
-    guiButton->setGroup(m_selectGroup.get());
-    m_selectBar->addGuiObject(guiButton);
-*/
 }
 
 void cEditorState::populateTopologyBar()
@@ -143,7 +105,6 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
             .onClick([this]() {
-                // std::cout << "TERRAN_HILL" << std::endl;
                 idTerrainToMapModif = TERRAIN_HILL;
             })
             .build();
@@ -154,7 +115,6 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
             .onClick([this]() {
-                // std::cout << "TERRAN_MOUNTAIN" << std::endl;
                 idTerrainToMapModif = TERRAIN_MOUNTAIN;
             })
             .build();
@@ -165,7 +125,6 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
             .onClick([this]() {
-                // std::cout << "TERRAN_ROCK" << std::endl;
                 idTerrainToMapModif = TERRAIN_ROCK;
             })
             .build();
@@ -176,7 +135,6 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
             .onClick([this]() {
-                // std::cout << "TERRAN_SAND" << std::endl;
                 idTerrainToMapModif = TERRAIN_SAND;
             })
             .build();
@@ -188,7 +146,6 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICE))
             .onClick([this]() {
-                // std::cout << "TERRAN_SPICE" << std::endl;
                 idTerrainToMapModif = TERRAIN_SPICE;
             })
             .build();
@@ -199,7 +156,6 @@ void cEditorState::populateTopologyBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICEHILL))
             .onClick([this]() {
-                // std::cout << "TERRAN_SPICEHILL" << std::endl;
                 idTerrainToMapModif = TERRAIN_SPICEHILL;
             })
             .build();
@@ -215,7 +171,6 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION1))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION1" << std::endl;
                 idStartCellPlayer = 0;
             })
             .build();
@@ -227,7 +182,6 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION2))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION2" << std::endl;
                 idStartCellPlayer = 1;
             })
             .build();
@@ -238,7 +192,6 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION3))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION3" << std::endl;
                 idStartCellPlayer = 2;
             })
             .build();
@@ -249,7 +202,6 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION4))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION4" << std::endl;
                 idStartCellPlayer = 3;
             })
             .build();
@@ -260,7 +212,6 @@ void cEditorState::populateStartCellBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION5))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION5" << std::endl;
                 idStartCellPlayer = 4;
             })
             .build();
