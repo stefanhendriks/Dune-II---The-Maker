@@ -52,7 +52,6 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     populateTopologyBar();
     populateStartCellBar();
     startCells.fill({-1, -1});
-    //std::cout << "Entered Editor State" << std::endl;
 }
 
 cEditorState::~cEditorState()
@@ -63,32 +62,26 @@ cEditorState::~cEditorState()
 void cEditorState::populateSelectBar()
 {
     m_selectGroup = std::make_unique<GuiButtonGroup>();
-    //auto rectGui = cRectangle(96,halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
     auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
             .onClick([this]() {
-                // std::cout << "STONELAYER" << std::endl;
                 m_currentBar = m_topologyBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
     guiButton->setPressed(true);
-    // m_selectBar->addGuiObject(guiButton);
     m_selectBar->addAutoGuiObject(guiButton);
 
-    //rectGui = cRectangle(sBS+1*(heightBarSize+sBB),halfMarginBetweenButtons,heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION" << std::endl;
                 m_currentBar = m_startCellBar.get();
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
-    // m_selectBar->addGuiObject(guiButton);
     m_selectBar->addAutoGuiObject(guiButton);
 
 /*
@@ -130,155 +123,122 @@ void cEditorState::populateSelectBar()
 void cEditorState::populateTopologyBar()
 {
     m_topologyGroup = std::make_unique<GuiButtonGroup>();
-    // auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto rectGui = cRectangle(0,0,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
             .onClick([this]() {
-                // std::cout << "TERRAN_HILL" << std::endl;
                 idTerrainToMapModif = TERRAIN_HILL;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    // m_topologyBar->addGuiObject(guiButton);
     m_topologyBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons, sBS+heightBarSize+sBB,heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
             .onClick([this]() {
-                // std::cout << "TERRAN_MOUNTAIN" << std::endl;
                 idTerrainToMapModif = TERRAIN_MOUNTAIN;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    // m_topologyBar->addGuiObject(guiButton);
     m_topologyBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
             .onClick([this]() {
-                // std::cout << "TERRAN_ROCK" << std::endl;
                 idTerrainToMapModif = TERRAIN_ROCK;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    // m_topologyBar->addGuiObject(guiButton);
     m_topologyBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons, sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
             .onClick([this]() {
-                // std::cout << "TERRAN_SAND" << std::endl;
                 idTerrainToMapModif = TERRAIN_SAND;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    // m_topologyBar->addGuiObject(guiButton);
     m_topologyBar->addAutoGuiObject(guiButton);
     guiButton->setPressed(true);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+4*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICE))
             .onClick([this]() {
-                // std::cout << "TERRAN_SPICE" << std::endl;
                 idTerrainToMapModif = TERRAIN_SPICE;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    // m_topologyBar->addGuiObject(guiButton);
     m_topologyBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+5*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(TERRAN_SPICEHILL))
             .onClick([this]() {
-                // std::cout << "TERRAN_SPICEHILL" << std::endl;
                 idTerrainToMapModif = TERRAIN_SPICEHILL;
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    // m_topologyBar->addGuiObject(guiButton);
     m_topologyBar->addAutoGuiObject(guiButton);
 }
 
 void cEditorState::populateStartCellBar()
 {
     m_startCellGroup = std::make_unique<GuiButtonGroup>();
-    // auto rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS,heightButtonSize,heightButtonSize);
     auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION1))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION1" << std::endl;
                 idStartCellPlayer = 0;
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
     guiButton->setPressed(true);
-    // m_startCellBar->addGuiObject(guiButton);
     m_startCellBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+1*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION2))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION2" << std::endl;
                 idStartCellPlayer = 1;
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    // m_startCellBar->addGuiObject(guiButton);
     m_startCellBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+2*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION3))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION3" << std::endl;
                 idStartCellPlayer = 2;
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    // m_startCellBar->addGuiObject(guiButton);
     m_startCellBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+3*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION4))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION4" << std::endl;
                 idStartCellPlayer = 3;
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    // m_startCellBar->addGuiObject(guiButton);
     m_startCellBar->addAutoGuiObject(guiButton);
 
-    // rectGui = cRectangle(m_game.m_screenW-heightBarSize+halfMarginBetweenButtons,sBS+4*(heightBarSize+sBB),heightButtonSize,heightButtonSize);
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION5))
             .onClick([this]() {
-                // std::cout << "STARTPOSITION5" << std::endl;
                 idStartCellPlayer = 4;
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    // m_startCellBar->addGuiObject(guiButton);
     m_startCellBar->addAutoGuiObject(guiButton);
 }
 
