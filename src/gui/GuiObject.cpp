@@ -8,6 +8,15 @@ void GuiObject::setTheme(const GuiTheme& theme)
     m_theme = theme;
 }
 
+void GuiObject::setPosition(int x, int y)
+{
+    m_rect.move(x, y);
+}
+void GuiObject::setSize(int width, int height)
+{
+    m_rect.resize(width, height);
+}
+
 void GuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
 {
     int x1= m_rect.getX();

@@ -23,6 +23,8 @@ public:
     virtual void draw() const = 0;
 
     void setTheme(const GuiTheme& theme);
+    void setPosition(int x, int y);
+    void setSize(int width, int height);
 protected:
     explicit GuiObject(const cRectangle &rect) : m_rect(rect) {}
     // any gui object has a position and size. Hence its always a 'rect'.
