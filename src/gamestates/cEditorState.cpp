@@ -22,13 +22,10 @@
 
 const int heightBarSize = 48;
 const int heightButtonSize = 40;
-const int halfMarginBetweenButtons = (heightBarSize-heightButtonSize)/2;
 const int minTileSize = 4;
 const int maxTileSize = 64;
 const int deltaTileSize = 4;
 
-const int sBS = 96; // startBarSize
-const int sBB = 5; // sizeBetweenButtons
 
 cEditorState::cEditorState(cGame &theGame, GameContext* ctx) 
     : cGameState(theGame, ctx),
