@@ -22,6 +22,7 @@ public:
     void draw() const override;
 
     void addGuiObject(GuiObject *guiObject);
+    void addAutoGuiObject(GuiObject *guiObject);
 
     cRectangle getRelativeRect(int x, int y, int width, int height);
 

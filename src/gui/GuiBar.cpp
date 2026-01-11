@@ -34,6 +34,9 @@ void GuiBar::addGuiObject(GuiObject *guiObject)
     gui_objects.push_back(guiObject);
 }
 
+void GuiBar::addAutoGuiObject(GuiObject *guiObject)
+{
+}
 
 void GuiBar::onNotifyMouseEvent(const s_MouseEvent &event)
 {
