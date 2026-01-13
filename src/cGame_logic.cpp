@@ -28,6 +28,8 @@
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cSetupSkirmishState.h"
+#include "gamestates/cWinLoseState.h"
+#include "gamestates/cTellHouseState.h"
 #include "ini.h"
 #include "iniDefine.h"
 #include "managers/cDrawManager.h"
@@ -557,12 +559,6 @@ void cGame::drawStateMentat(AbstractMentat *mentat)
     m_mouse->draw();
 }
 
-// draw menu
-// void cGame::drawStateMenu()
-// {
-//     m_currentState->draw();
-// }
-
 void cGame::initSkirmish() const
 {
     game.missionInit();
@@ -572,6 +568,40 @@ void cGame::loadSkirmishMaps() const
 {
     m_PreviewMaps->loadSkirmishMaps();
 }
+
+// void cGame::shakeScreenAndBlitBuffer()
+// {
+//     if (m_TIMER_shake == 0) {
+//         m_TIMER_shake = -1;
+//     }
+
+//     // only in playing state we shake screen
+//     if (m_state == GAME_PLAYING) {
+//         // TODO: move the shaking part of the rendering in the playing state object at some time
+//         // and shake it within the 'bmp_screen', so that the actual double buffering (bmp_screen -> screen) happens
+//         // always at some point in the main loop, and does not need to know about the shaking logic.
+
+//         // blitSprite on screen
+//         if (m_TIMER_shake > 0) {
+//             // the more we get to the 'end' the less we 'throttle'.
+//             // Structure explosions are 6 time units per cell.
+//             // Max is 9 cells (9*6=54)
+//             // the max border is then 9. So, we do time / 6
+//             int shakiness = std::min(m_TIMER_shake, 69);
+//             float offset = mapCamera->factorZoomLevel(std::min(shakiness / 5, 9));
+
+//             m_shakeX = -abs(offset / 2) + RNG::rnd(offset);
+//             m_shakeY = -abs(offset / 2) + RNG::rnd(offset);
+
+//             // @Mira recreate shake screen
+            
+//         }
+//         else {
+//             fadeOutOrBlitScreenBuffer();
+//         }
+//     }
+//     fadeOutOrBlitScreenBuffer();
+// }
 
 void cGame::shakeScreenAndBlitBuffer()
 {
@@ -612,24 +642,14 @@ void cGame::drawState()
     switch (m_state) {
         case GAME_BRIEFING:
         case GAME_LOSEBRIEF:
-        case GAME_TELLHOUSE:
+        //case GAME_TELLHOUSE: //here
         case GAME_WINBRIEF:
             drawStateMentat(m_mentat);
             break;
         case GAME_PLAYING:
             drawStateCombat();
             break;
-        // case GAME_MENU:
-        //     drawStateMenu();
-        //     break;
-        case GAME_WINNING:
-            drawStateWinning();
-            break;
-        case GAME_LOSING:
-            drawStateLosing();
-            break;
         default:
-            // std::cout << "m_state registered in drawState() " << m_state << std::endl;
             m_currentState->draw();
             // TODO: GAME_STATISTICS, ETC
     }
@@ -749,9 +769,6 @@ void cGame::shutdown()
     delete m_keyboard;
 
     logbook("Allegro FONT library shut down.");
-
-    // Release the game dev framework, so that it can do cleanup
-    //m_PLInit.reset();
 }
 
 
@@ -833,7 +850,6 @@ bool cGame::setupGame()
     global_map.setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
-    //m_textDrawer->setApplyShadow(false);
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
     m_soundPlayer = soundPlayer.get();
@@ -1156,6 +1172,17 @@ void cGame::setState(int newState)
                     game.onNotifyGameEvent(event);
                     m_timeManager->startTimer();
                 }
+            } 
+            else if (newState == GAME_LOSING) {
+                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
+            }
+            else if (newState == GAME_WINNING) {
+                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
+            }
+            else if (newState == GAME_TELLHOUSE) {
+                int house = players[HUMAN].getHouse();
+                newStatePtr = new cTellHouseState(*this, ctx.get(), house);
+                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
 
             m_states[newState] = newStatePtr;
@@ -1259,27 +1286,11 @@ void cGame::createAndPrepareMentatForHumanPlayer(bool allowMissionSelect)
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    delete m_mentat;
-    m_mentat = new BeneMentat(ctx.get());
-    m_mentat->setHouse(house);
-    // create new drawStateMentat
-    if (house == ATREIDES) {
-        cIni::loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("platr"); // load planet of atreides
+    players[HUMAN].setHouse(house);
+    if (!m_states[GAME_TELLHOUSE]) {
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), house);
+        playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
-    else if (house == HARKONNEN) {
-        cIni::loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("plhar"); // load planet of harkonnen
-    }
-    else if (house == ORDOS) {
-        cIni::loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat);
-        m_mentat->loadScene("plord"); // load planet of ordos
-    }
-    else {
-        m_mentat->setSentence(0, "Looks like you choose an unknown house");
-    }
-    // todo: Sardaukar, etc? (Super Dune 2 features)
-    m_mentat->speak();
 }
 
 void cGame::loadScenario()
@@ -1518,10 +1529,6 @@ void cGame::reduceShaking() const {
     m_screenShake->reduce();
 }
 
-// void cGame::install_bitmaps()
-// {
-//     //Mira rip this function
-// }
 
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
@@ -2215,51 +2222,6 @@ void cGame::initiateFadingOut()
     renderDrawer->endDrawingToTexture();
 }
 
-// this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateLosing()
-{
-    if (screenTexture)
-        renderDrawer->renderSprite(screenTexture,0,0);
-
-    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
-    int posW = (m_screenW-tex->w)/2;
-    int posH = (m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
-    renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
-
-    if (m_mouse->isLeftButtonClicked()) {
-        m_state = GAME_LOSEBRIEF;
-
-        createAndPrepareMentatForHumanPlayer(!m_skirmish);
-
-        // FADE OUT
-        initiateFadingOut();
-    }
-}
-
-// this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
-void cGame::drawStateWinning()
-{
-    if (screenTexture)
-        renderDrawer->renderSprite(screenTexture,0,0);
-        
-    auto tex = ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
-    int posW = (m_screenW-tex->w)/2;
-    int posH = (m_screenH-tex->h)/2;
-    renderDrawer->renderSprite(tex,posW, posH);
-    renderDrawer->renderSprite(gfxdata->getTexture(MOUSE_NORMAL), m_mouse->getX(), m_mouse->getY());
-
-    if (m_mouse->isLeftButtonClicked()) {
-        // Mentat will be happy, after that enter "Select your next Conquest"
-        m_state = GAME_WINBRIEF;
-
-        createAndPrepareMentatForHumanPlayer(!m_skirmish);
-
-        // FADE OUT
-        initiateFadingOut();
-    }
-}
-
 void cGame::takeBackGroundScreen()
 {
     renderDrawer->beginDrawingToTexture(screenTexture);
@@ -2270,4 +2232,10 @@ void cGame::takeBackGroundScreen()
 std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
 {
     return m_TerrainInfo;
+}
+
+void cGame::goingToWinLoseBrief(int value)
+{
+    setState(value);
+    createAndPrepareMentatForHumanPlayer(!m_skirmish);
 }
