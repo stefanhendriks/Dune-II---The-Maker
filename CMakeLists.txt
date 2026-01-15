@@ -4,6 +4,11 @@ set(CMAKE_CXX_STANDARD 20)
 
 project(d2tm)
 
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "No build type selected, defaulting to Debug")
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 if(DEFINED ENV{ENV_D2TM_VERSION})
@@ -169,15 +174,5 @@ else()
     -mwindows
   )
 endif()
-
-# if(CMAKE_BUILD_TYPE MATCHES Debug)
-#   set(D2TM_OPTMIZATION "-O0")
-# else()
-#   set(D2TM_OPTMIZATION "-O3")
-#   set_target_properties(${PROJECT_NAME} PROPERTIES
-#     INTERPROCEDURAL_OPTIMIZATION TRUE
-#   )
-# endif()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
