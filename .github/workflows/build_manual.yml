@@ -43,7 +43,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+          cmake .. -DENV_D2TM_VERSION=${{inputs.tag}} -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
       - name: Build
         run: |
           cd "${{ github.workspace }}\build"
@@ -60,7 +60,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').windows.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').windows.${{ inputs.tag }}.zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Upload ZIP as artifact
@@ -103,7 +103,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{inputs.tag}} -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -120,7 +120,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').linux.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').linux.${{ inputs.tag }}.zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Upload ZIP as artifact
@@ -155,7 +155,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{inputs.tag}} -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -172,7 +172,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}"
           mkdir -p out/nightly
-          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').macosx.$(git rev-parse --short HEAD).zip
+          FILE_NAME=D2TM-$(date -u +'%Y-%m-%dT%H-%M').macosx.${{ inputs.tag }}.zip
           cp bin/d2tm.zip "out/nightly/$FILE_NAME"
           echo "RELEASE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Upload ZIP as artifact
