@@ -525,7 +525,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+8,
                             Color::white(), std::format("Author: {}", selectedMap.author));
         m_textDrawer->drawText(previewMapRect.getEndX() -50, previewMapRect.getY() + previewMapRect.getHeight() + 16,
-                            Color{225, 177, 21,255}, std::format("{}", m_previewMaps->getMapSize(iSkirmishMap)));
+                            colorDarkerYellow, std::format("{}", m_previewMaps->getMapSize(iSkirmishMap)));
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+30,
                             Color::white(), std::format("{}", selectedMap.description));
         
