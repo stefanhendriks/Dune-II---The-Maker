@@ -53,6 +53,7 @@ public:
     // Do note: not every game state is a scenario observer!
 
     virtual eGameStateType getType() = 0;
+    virtual void update();
 
 protected:
     // the state of the game itself
