@@ -43,3 +43,7 @@ void cGameState::thinkNormal()
 
 void cGameState::thinkSlow()
 {}
+
+void cGameState::update()
+{}
+

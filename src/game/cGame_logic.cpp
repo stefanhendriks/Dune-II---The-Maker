@@ -436,7 +436,7 @@ void cGame::run()
         }
 
         updateMouseAndKeyboardState();
-        updateGamePlaying();
+        m_currentState->update();
 
         renderDrawer->beginDrawingToTexture(actualRenderer);
         renderDrawer->renderClearToColor();
