@@ -37,7 +37,7 @@ public:
     // }
     void renderClearToColor(Color color = Color{0,0,0,255});
 
-    void gui_DrawRect(const cRectangle &rectangle);
+    // void gui_DrawRect(const cRectangle &rectangle);
     void gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark);
     void gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark);
 
@@ -63,9 +63,9 @@ private:
     // Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 
     Color colorBlack;
-    Color gui_colorWindow;
-    Color gui_colorBorderLight;
-    Color gui_colorBorderDark;
+    // Color gui_colorWindow;
+    // Color gui_colorBorderLight;
+    // Color gui_colorBorderDark;
 
     SDL_Renderer *renderer=nullptr;
     Uint32 transparentColorKey;
