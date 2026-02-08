@@ -97,6 +97,7 @@ cGame::cGame()
     context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
+    hasFocus = true;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -644,13 +645,38 @@ void cGame::run()
     screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
-        m_timeManager->processTime();
+        if (hasFocus) {
+            m_timeManager->processTime();
+        }
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
                     m_playing = false;
                     break;
-
+                case SDL_WINDOWEVENT:
+                    switch (event.window.event) {
+                        case SDL_WINDOWEVENT_FOCUS_LOST:
+                            hasFocus = false;
+                            m_timeManager->focusLost();
+                            // std::cout << "Window focus lost" << std::endl;
+                            break;
+                        case SDL_WINDOWEVENT_FOCUS_GAINED:
+                            hasFocus = true;
+                            m_timeManager->focusGained();
+                            // std::cout << "Window focus gained" << std::endl;
+                            break;
+                        case SDL_WINDOWEVENT_MINIMIZED:
+                            hasFocus = false;
+                            m_timeManager->focusLost();
+                            // std::cout << "Window minimized" << std::endl;
+                            break;
+                        case SDL_WINDOWEVENT_RESTORED:
+                            hasFocus = true;
+                            m_timeManager->focusGained();
+                            // std::cout << "Window restored" << std::endl;
+                            break;
+                    }
+                    break;
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
                     m_keyboard->handleEvent(event);
@@ -665,6 +691,12 @@ void cGame::run()
                     break;
             }
         }
+
+        if (!hasFocus) {
+            m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
+            continue; // skip the rest of the loop when we don't have focus
+        }
+
         updateMouseAndKeyboardState();
         updateGamePlaying();
 
