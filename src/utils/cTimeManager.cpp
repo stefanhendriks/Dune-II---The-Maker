@@ -70,6 +70,28 @@ std::string cTimeManager::getCurrentTimer() const
 #endif
 }
 
+void cTimeManager::focusLost()
+{
+    m_focusLostTime = SDL_GetTicks();
+}
+
+void cTimeManager::focusGained()
+{
+    if (m_focusLostTime > 0) {
+        int lostTime = SDL_GetTicks() - m_focusLostTime;
+        // std::cout << "Focus regained, lost time: " << lostTime << " ms" << std::endl;
+        m_focusLostTime = 0;
+
+        // std::cout << "Before : " << m_timerGameTime.lastTick << std::endl;
+        m_timerGameTime.lastTick += lostTime;
+        m_timerUnits.lastTick += lostTime;
+        m_timerSecond.lastTick += lostTime;
+        m_timerMinute.lastTick += lostTime;
+        // std::cout << "After : " << m_timerGameTime.lastTick << std::endl;
+        // std::cout << "yet : " << SDL_GetTicks() << std::endl;
+    }
+}
+
 /**
 	In case the system locks up, or the computer is on heavy duty. The capping
 	makes sure the computer will not cause a chainreaction (getting extremely high timers
