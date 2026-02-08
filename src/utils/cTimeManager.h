@@ -54,6 +54,11 @@ public:
     // restart Timer
     void restartTimer();
 
+    // freeze time when focus is lost, and catch up when focus is regained
+    void focusLost();
+    // catch up time when focus is regained
+    void focusGained();
+
 private:
     // gametime timer is called every 100 ms, try to keep up with that.
     void handleTimerUnits();
@@ -85,6 +90,7 @@ private:
     int m_fps = 0;			/** Frames per second **/
     int frameCount = 0;		/** Frame count for FPS calculation **/
     int waitingTime = 10;	/** Waiting time in ms, used to adapt FPS **/
+    int m_focusLostTime = 0; // Time when focus was lost, used to calculate time to catch up when focus is regained
 
     std::unique_ptr<cTimeCounter> m_timeCounter;
 };
