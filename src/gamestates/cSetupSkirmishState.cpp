@@ -292,14 +292,14 @@ cSetupSkirmishState::~cSetupSkirmishState()
     delete modifyButton;
 }
 
-bool cSetupSkirmishState::gui_draw_frame(int x, int y, int width, int height) const
+bool cSetupSkirmishState::guiDrawFrame(int x, int y, int width, int height) const
 {
     cRectangle rect = cRectangle(x, y, width, height);
     renderDrawer->gui_DrawRect(rect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
     return mouse_within_rect(x, y, width, height);
 }
 
-bool cSetupSkirmishState::gui_draw_frame_pressed(int x1, int y1, int width, int height) const
+bool cSetupSkirmishState::guiDrawFramePressed(int x1, int y1, int width, int height) const
 {
     renderDrawer->renderRectFillColor(x1, y1, width, height, colorLightBackground);
     renderDrawer->renderRectColor(x1, y1, width, height, colorOtherBorder);
@@ -1198,20 +1198,20 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
         bool isRenderingSelectedMap = mapIndexToRender == iSkirmishMap;
 
         // RENDERS ! & also get true/false if mouse hovers
-        const bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        const bool bHover = guiDrawFrame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         Color textColor = bHover ? Color::red() : Color::white();
 
         if (bHover && mapToRender.validMap && mouse->isLeftButtonClicked()) {
             // RENDERS (AGAIN)!
-            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         // selected map, always render as pressed
         if (isRenderingSelectedMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             // RENDERS (AGAIN)!
-            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         // In case invalid map, render as not-selectable
