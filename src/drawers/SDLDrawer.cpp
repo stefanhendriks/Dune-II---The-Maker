@@ -296,47 +296,47 @@ void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color
     }
 }
 
-// Fonction utilitaire pour obtenir la couleur d'un pixel sur une SDL_Surface.
-// Retourne la valeur du pixel (Uint32) ou 0 si hors limites/erreur.
-// Assurez-vous que la surface est verrouillée AVANT d'appeler cette fonction si nécessaire !
-Uint32 SDLDrawer::get_pixel(SDL_Surface *surface, int x, int y)
-{
-    // Vérifier les limites de la surface
-    if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
-        // Pixel hors des limites, retourner 0 ou une valeur d'erreur définie
-        // Dans un vrai programme, vous pourriez logger une erreur.
-        return 0;
-    }
+// // Fonction utilitaire pour obtenir la couleur d'un pixel sur une SDL_Surface.
+// // Retourne la valeur du pixel (Uint32) ou 0 si hors limites/erreur.
+// // Assurez-vous que la surface est verrouillée AVANT d'appeler cette fonction si nécessaire !
+// Uint32 SDLDrawer::get_pixel(SDL_Surface *surface, int x, int y)
+// {
+//     // Vérifier les limites de la surface
+//     if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
+//         // Pixel hors des limites, retourner 0 ou une valeur d'erreur définie
+//         // Dans un vrai programme, vous pourriez logger une erreur.
+//         return 0;
+//     }
 
-    int bpp = surface->format->BytesPerPixel; // Bytes Per Pixel
+//     int bpp = surface->format->BytesPerPixel; // Bytes Per Pixel
 
-    // Calculer l'adresse du pixel
-    // p pointe vers le début de la ligne 'y'
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch;
-    // Déplacer p à la position 'x' du pixel en tenant compte du BPP
-    p += x * bpp;
+//     // Calculer l'adresse du pixel
+//     // p pointe vers le début de la ligne 'y'
+//     Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch;
+//     // Déplacer p à la position 'x' du pixel en tenant compte du BPP
+//     p += x * bpp;
 
-    // Lire la valeur du pixel en fonction du nombre d'octets par pixel
-    switch (bpp) {
-        case 1: // 8 bits par pixel
-            return *p;
-        case 2: // 16 bits par pixel
-            return *(Uint16 *)p;
-        case 3: // 24 bits par pixel (spécial car non aligné sur 4 octets)
-            // L'ordre des octets dépend de l'endianness du système
-            if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-                return (p[0] << 16) | (p[1] << 8) | p[2];
-            }
-            else {
-                return p[0] | (p[1] << 8) | (p[2] << 16);
-            }
-        case 4: // 32 bits par pixel
-            return *(Uint32 *)p;
-        default:
-            fprintf(stderr, "Format de pixel non supporté pour get_pixel: %d BPP\n", bpp);
-            return 0; // Ou une valeur d'erreur
-    }
-}
+//     // Lire la valeur du pixel en fonction du nombre d'octets par pixel
+//     switch (bpp) {
+//         case 1: // 8 bits par pixel
+//             return *p;
+//         case 2: // 16 bits par pixel
+//             return *(Uint16 *)p;
+//         case 3: // 24 bits par pixel (spécial car non aligné sur 4 octets)
+//             // L'ordre des octets dépend de l'endianness du système
+//             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+//                 return (p[0] << 16) | (p[1] << 8) | p[2];
+//             }
+//             else {
+//                 return p[0] | (p[1] << 8) | (p[2] << 16);
+//             }
+//         case 4: // 32 bits par pixel
+//             return *(Uint32 *)p;
+//         default:
+//             fprintf(stderr, "Format de pixel non supporté pour get_pixel: %d BPP\n", bpp);
+//             return 0; // Ou une valeur d'erreur
+//     }
+// }
 
 
 void SDLDrawer::FillWithColor(SDL_Surface *src, Color color)
@@ -368,22 +368,22 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
 }
 
 
-Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
-{
-    if (SDL_LockSurface(surface) < 0) {
-        fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
-        return Color{0,0,0,255};
-    }
-    auto tmpColor = get_pixel(surface,x,y);
-    SDL_UnlockSurface(surface);
-    Color extractedColor;
-    SDL_GetRGBA(tmpColor, surface->format,
-                &extractedColor.r,
-                &extractedColor.g,
-                &extractedColor.b,
-                &extractedColor.a);
-    return extractedColor;
-}
+// Color SDLDrawer::getPixel(SDL_Surface *surface, int x, int y)
+// {
+//     if (SDL_LockSurface(surface) < 0) {
+//         fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
+//         return Color{0,0,0,255};
+//     }
+//     auto tmpColor = get_pixel(surface,x,y);
+//     SDL_UnlockSurface(surface);
+//     Color extractedColor;
+//     SDL_GetRGBA(tmpColor, surface->format,
+//                 &extractedColor.r,
+//                 &extractedColor.g,
+//                 &extractedColor.b,
+//                 &extractedColor.a);
+//     return extractedColor;
+// }
 
 void SDLDrawer::renderChangeColor(Color color)
 {
