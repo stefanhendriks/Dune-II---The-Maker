@@ -339,19 +339,6 @@ void cGame::updateMouseAndKeyboardState()
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
 }
 
-// void cGame::updateGamePlaying()
-// {
-//     if (m_state != GAME_PLAYING) {
-//         return;
-//     }
-//     // Mission playing state logic
-//     // TODO: Move this to combat state object
-//     for (auto &pPlayer : players) {
-//         pPlayer.update();
-//     }
-// }
-
-
 void cGame::initSkirmish() const
 {
     game.missionInit();
@@ -436,7 +423,6 @@ void cGame::run()
         }
 
         updateMouseAndKeyboardState();
-        // updateGamePlaying();
         m_currentState->update();
 
         renderDrawer->beginDrawingToTexture(actualRenderer);
