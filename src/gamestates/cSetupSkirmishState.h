@@ -50,6 +50,9 @@ private:
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
+    bool gui_draw_frame(int x, int y, int width, int height) const ;
+    bool gui_draw_frame_pressed(int x1, int y1, int width, int height) const;
+
     std::function<void()> nextFunction;
     std::function<void()> previousFunction;
 
