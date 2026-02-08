@@ -20,6 +20,7 @@ public:
     void thinkNormal() override;
     void thinkSlow() override;
     void draw() const override;
+    void update() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
