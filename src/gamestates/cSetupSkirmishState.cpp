@@ -278,7 +278,6 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
                 if (iSkirmishMap > -1) {
                     m_game.loadMapFromEditor(iSkirmishMap);
                     m_game.initiateFadingOut();
-                    // m_game.setNextStateToTransitionTo(GAME_EDITOR); // this deletes the current state object
                 }
             })
             .build();
@@ -297,14 +296,7 @@ bool cSetupSkirmishState::gui_draw_frame(int x, int y, int width, int height) co
 {
     cRectangle rect = cRectangle(x, y, width, height);
     renderDrawer->gui_DrawRect(rect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
-    // auto m_mouse = game.getMouse();
     return mouse_within_rect(x, y, width, height);
-    // return rect.isPointWithin(m_mouse->getMouseCoords());
-    // if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
-    //         && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
-    //     return true;
-    // }
-    // return false; // not hovering on it
 }
 
 bool cSetupSkirmishState::gui_draw_frame_pressed(int x1, int y1, int width, int height) const
@@ -316,7 +308,6 @@ bool cSetupSkirmishState::gui_draw_frame_pressed(int x1, int y1, int width, int 
     renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, colorDarkishBorder);
     renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, colorDarkishBorder);
 
-    // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
     return mouse_within_rect(x1, y1, width, height);
 }
 
@@ -982,8 +973,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
 
             cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
             // on click:
-            // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
-            // playing CPU)
+            // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one playing CPU)
             if (brainRect.isPointWithin(mouse->getX(),mouse->getY())) {
                 if (p > 1) {
                     if (sSkirmishPlayer.bPlaying) {
@@ -1156,17 +1146,6 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
 void cSetupSkirmishState::generateRandomMap()
 {
     auto &randomMap = m_previewMaps->getMap(0);
-
-    // int randomMapWidth = RNG::rnd(100) < 50 ? 64 : 128;
-    // int randomMapHeight = RNG::rnd(100) < 50 ? 64 : 128;
-    // ^^^^^^
-    // Stefan: It would be nice if we could randomize the size of a map, but this seems to not work as expected
-    // - the map randomizer does not always generate enough room for all players
-    // - starting positions are not always defined, ie get out of map boundaries
-    // - starting a skirmish map sometimes does not respect the map boundaries set by these values, so
-    //   something else goes wrong.
-    // In short: need to investigate!
-
     int randomMapWidth = 128;
     int randomMapHeight = 128;
     int maxCells = randomMapWidth * randomMapHeight;
