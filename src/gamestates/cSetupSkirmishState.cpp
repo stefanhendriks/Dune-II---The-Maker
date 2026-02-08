@@ -36,7 +36,7 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 static bool gui_draw_frame(int x, int y, int width, int height)
 {
     cRectangle rect = cRectangle(x, y, width, height);
-    renderDrawer->gui_DrawRect(rect);
+    renderDrawer->gui_DrawRect(rect, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
     // auto m_mouse = game.getMouse();
     return mouse_within_rect(x, y, width, height);
     // return rect.isPointWithin(m_mouse->getMouseCoords());
@@ -327,12 +327,12 @@ void cSetupSkirmishState::thinkFast()
 void cSetupSkirmishState::draw() const
 {
     // @Mira rewrite it on Texture
-    renderDrawer->gui_DrawRect(topBar);
+    renderDrawer->gui_DrawRect(topBar, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
 
     m_textDrawer->drawTextCentered("Skirmish", 1);
 
     renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::white(), Color::white());
-    renderDrawer->gui_DrawRect(topRightBox);
+    renderDrawer->gui_DrawRect(topRightBox, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
     renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
@@ -403,7 +403,7 @@ void cSetupSkirmishState::draw() const
     }
 
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    renderDrawer->gui_DrawRect(bottomBarRect);
+    renderDrawer->gui_DrawRect(bottomBarRect, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);
