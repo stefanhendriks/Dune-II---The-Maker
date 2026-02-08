@@ -76,6 +76,7 @@ private:
     Color colorDarkishBorder;
     Color colorDarkerYellow;
     Color colorDisabled;
+    Color colorOtherBorder;
 
     // Some basic layout coordinates
     int topBarHeight;
