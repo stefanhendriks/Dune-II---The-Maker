@@ -10,9 +10,9 @@
 SDLDrawer::SDLDrawer(SDL_Renderer *_renderer)
 {
     colorBlack= Color{0,0,0,255};
-    gui_colorWindow = Color{176,176,196,255};
-    gui_colorBorderDark = Color{84,84,120,255};
-    gui_colorBorderLight = Color{252,252,252,255};
+    // gui_colorWindow = Color{176,176,196,255};
+    // gui_colorBorderDark = Color{84,84,120,255};
+    // gui_colorBorderLight = Color{252,252,252,255};
     renderer = _renderer;
 }
 
@@ -132,13 +132,14 @@ void SDLDrawer::setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int
 {
     auto tmp = SDL_Rect{topLeftX,topLeftY, bottomRightX-topLeftX, bottomRightY - topLeftY};
     SDL_RenderSetClipRect(renderer, &tmp);
-
 }
 
-void SDLDrawer::gui_DrawRect(const cRectangle &rectangle)
-{
-    gui_DrawRect(rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
-}
+// void SDLDrawer::gui_DrawRect(const cRectangle &rectangle)
+// {
+//     //gui_DrawRect(rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
+//     gui_DrawRect(rectangle, Color{176,176,196,255},Color{252,252,252,255},  Color{84,84,120,255});
+//         // Color{96,0,0,255}, Color{196,0,0,255}, Color{0,0,196,255});
+// }
 
 void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark)
 {
