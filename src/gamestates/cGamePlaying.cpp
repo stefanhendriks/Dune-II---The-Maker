@@ -425,3 +425,10 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         }
     }
 }
+
+void cGamePlaying::update()
+{
+    for (auto &pPlayer : players) {
+        pPlayer.update();
+    }
+}
