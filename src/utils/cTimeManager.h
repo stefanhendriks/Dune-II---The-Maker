@@ -41,7 +41,7 @@ public:
     void setGlobalSpeed(int speed);
     void setGlobalSpeedVariation(int variation);
     // get global speed
-    uint16_t getGlobalSpeed() const { return durationTime.gameTickDuration; }
+    uint16_t getGlobalSpeed() const { return m_timerGameTime.tickDuration; }
     // get current local Time
     std::string getCurrentTime() const;
     // returns the stored timer value on time format
@@ -65,36 +65,26 @@ private:
     void capTimers();
     // start every 60000 ms
     void handleTimerMinute();
+    // reset or set the tick duration based on the global speed
+    void initTimers(int baseSpeed);
 
     cGame *m_game;
-    int m_timerUnits;		/** !!Specificly!! used for units **/
-    int m_timerSecond;
-    int m_timerMinute;
-    int m_timerGlobal;
-    int m_gameTime;		/** Definition of game time (= in seconds) **/
 
+    struct Timer {
+        int count = 0;           // nombre de cycles à traiter
+        uint64_t lastTick = 0;   // dernier tick traité
+        uint64_t tickDuration = 0; // durée d'un tick (en ms)
+    };
+
+    Timer m_timerUnits;
+    Timer m_timerGameTime;
+    Timer m_timerSecond;
+    Timer m_timerMinute;
+
+    int m_gameTime = 0; // Definition of game time (= in seconds)
     int m_fps = 0;			/** Frames per second **/
     int frameCount = 0;		/** Frame count for FPS calculation **/
     int waitingTime = 10;	/** Waiting time in ms, used to adapt FPS **/
-    uint64_t m_lastUnitsTick = 0;
-    uint64_t m_lastGameTimeTick = 0;
-    uint64_t m_lastSecondsTick = 0;
-    uint64_t m_lastMinuteTick = 0;
-
-    struct DurationTime {
-        uint64_t gameTickDuration;  // 5
-        uint64_t unitTickDuration;  // 100
-        uint64_t secondTickDuration; // 1000
-        uint64_t minTickDuration; // 60000
-
-        void init(int value) {
-            gameTickDuration = value;
-            unitTickDuration = value * 20;
-            secondTickDuration = value * 200;
-            minTickDuration = 60000;
-        }
-    };
 
     std::unique_ptr<cTimeCounter> m_timeCounter;
-    DurationTime durationTime;
 };
