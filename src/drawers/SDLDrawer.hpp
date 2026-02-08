@@ -48,7 +48,7 @@ public:
     bool isSurface8BitPaletted(SDL_Surface *bmp);
 
     void FillWithColor(SDL_Surface *src, Color color);
-    Color getPixel(SDL_Surface *surface, int x, int y);
+    // Color getPixel(SDL_Surface *surface, int x, int y);
 
     SDL_Renderer *getRenderer() {
         return renderer;
@@ -60,7 +60,7 @@ public:
 private:
     void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
 
-    Uint32 get_pixel(SDL_Surface *surface, int x, int y);
+    // Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 
     Color colorBlack;
     Color gui_colorWindow;
