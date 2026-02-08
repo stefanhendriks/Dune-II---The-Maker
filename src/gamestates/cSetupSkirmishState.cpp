@@ -33,34 +33,6 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 }
 
 
-static bool gui_draw_frame(int x, int y, int width, int height)
-{
-    cRectangle rect = cRectangle(x, y, width, height);
-    renderDrawer->gui_DrawRect(rect, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
-    // auto m_mouse = game.getMouse();
-    return mouse_within_rect(x, y, width, height);
-    // return rect.isPointWithin(m_mouse->getMouseCoords());
-    // if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
-    //         && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
-    //     return true;
-    // }
-    // return false; // not hovering on it
-}
-
-static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
-{
-    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
-    renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
-
-    // lines to darken the right sides
-    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
-    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
-
-    // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
-    return mouse_within_rect(x1, y1, width, height);
-}
-
-
 cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
     cGameState(game, ctx),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
@@ -319,9 +291,35 @@ cSetupSkirmishState::~cSetupSkirmishState()
     delete modifyButton;
 }
 
+bool cSetupSkirmishState::gui_draw_frame(int x, int y, int width, int height) const
+{
+    cRectangle rect = cRectangle(x, y, width, height);
+    renderDrawer->gui_DrawRect(rect, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
+    // auto m_mouse = game.getMouse();
+    return mouse_within_rect(x, y, width, height);
+    // return rect.isPointWithin(m_mouse->getMouseCoords());
+    // if ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
+    //         && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height))) {
+    //     return true;
+    // }
+    // return false; // not hovering on it
+}
+
+bool cSetupSkirmishState::gui_draw_frame_pressed(int x1, int y1, int width, int height) const
+{
+    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
+    renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
+
+    // lines to darken the right sides
+    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
+    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
+
+    // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
+    return mouse_within_rect(x1, y1, width, height);
+}
+
 void cSetupSkirmishState::thinkFast()
 {
-
 }
 
 void cSetupSkirmishState::draw() const
