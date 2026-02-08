@@ -275,7 +275,6 @@ private:
     void setState(int newState);
 
     void updateMouseAndKeyboardState();
-    // void updateGamePlaying();
     void drawState();
 
     void shakeScreenAndBlitBuffer();
