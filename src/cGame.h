@@ -290,6 +290,7 @@ private:
     bool m_rocketTurretsDownOnLowPower;
 
     std::string m_gameFilename;
+    bool hasFocus;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
