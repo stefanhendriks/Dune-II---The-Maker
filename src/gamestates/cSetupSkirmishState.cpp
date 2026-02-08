@@ -73,7 +73,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
 
     // Colors
     colorDarkishBackground = Color{32, 32, 32,255};
-    colorDarkishBorder = Color{227, 229, 211,255};
+    colorDarkishBorder = Color{252,252,252,255};
     colorDarkerYellow = Color{225, 177, 21,255}; // a bit darker Color::yellow() to give some visual clue (hover color)
     colorDisabled = Color{128, 128, 128,255};
 
