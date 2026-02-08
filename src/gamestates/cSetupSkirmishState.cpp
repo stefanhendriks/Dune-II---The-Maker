@@ -77,6 +77,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     colorDarkerYellow = Color{225, 177, 21,255}; // a bit darker Color::yellow() to give some visual clue (hover color)
     colorDisabled = Color{128, 128, 128,255};
 
+    colorLightBackground = Color{176,176,196,255};
+
     // Basic coordinates
     topBarHeight = 21;
     previewMapHeight = 129;
@@ -294,7 +296,7 @@ cSetupSkirmishState::~cSetupSkirmishState()
 bool cSetupSkirmishState::gui_draw_frame(int x, int y, int width, int height) const
 {
     cRectangle rect = cRectangle(x, y, width, height);
-    renderDrawer->gui_DrawRect(rect, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
+    renderDrawer->gui_DrawRect(rect, colorLightBackground, colorDarkishBorder, Color{84,84,120,255});
     // auto m_mouse = game.getMouse();
     return mouse_within_rect(x, y, width, height);
     // return rect.isPointWithin(m_mouse->getMouseCoords());
@@ -307,12 +309,12 @@ bool cSetupSkirmishState::gui_draw_frame(int x, int y, int width, int height) co
 
 bool cSetupSkirmishState::gui_draw_frame_pressed(int x1, int y1, int width, int height) const
 {
-    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
+    renderDrawer->renderRectFillColor(x1, y1, width, height, colorLightBackground);
     renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
 
     // lines to darken the right sides
-    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
-    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
+    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, colorDarkishBorder);
+    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, colorDarkishBorder);
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
     return mouse_within_rect(x1, y1, width, height);
@@ -325,12 +327,12 @@ void cSetupSkirmishState::thinkFast()
 void cSetupSkirmishState::draw() const
 {
     // @Mira rewrite it on Texture
-    renderDrawer->gui_DrawRect(topBar, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
+    renderDrawer->gui_DrawRect(topBar, colorLightBackground, colorDarkishBorder, Color{84,84,120,255});
 
     m_textDrawer->drawTextCentered("Skirmish", 1);
 
     renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::white(), Color::white());
-    renderDrawer->gui_DrawRect(topRightBox, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
+    renderDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, Color{84,84,120,255});
     renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
     renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
@@ -401,7 +403,7 @@ void cSetupSkirmishState::draw() const
     }
 
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    renderDrawer->gui_DrawRect(bottomBarRect, Color{176,176,196,255}, Color{252,252,252,255}, Color{84,84,120,255});
+    renderDrawer->gui_DrawRect(bottomBarRect, colorLightBackground, colorDarkishBorder, Color{84,84,120,255});
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);

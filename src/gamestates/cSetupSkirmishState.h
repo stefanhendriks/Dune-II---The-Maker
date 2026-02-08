@@ -72,6 +72,7 @@ private:
 
     // Colors
     Color colorDarkishBackground;
+    Color colorLightBackground;
     Color colorDarkishBorder;
     Color colorDarkerYellow;
     Color colorDisabled;
