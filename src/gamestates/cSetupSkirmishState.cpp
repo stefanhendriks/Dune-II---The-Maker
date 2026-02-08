@@ -72,13 +72,12 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     detonateBlooms = true;
 
     // Colors
-    colorDarkishBackground = Color{32, 32, 32,255};
-    colorDarkishBorder = Color{252,252,252,255};
-    colorDarkerYellow = Color{225, 177, 21,255}; // a bit darker Color::yellow() to give some visual clue (hover color)
-    colorDisabled = Color{128, 128, 128,255};
-
-    colorLightBackground = Color{176,176,196,255};
-    colorOtherBorder = Color{84,84,120,255};
+    colorDarkishBackground = GuiTheme::Light().background;
+    colorDarkishBorder = GuiTheme::Light().borderLight;
+    colorDarkerYellow = GuiTheme::Light().textDarkColor;
+    colorDisabled = GuiTheme::Light().disabled;
+    colorLightBackground = GuiTheme::Light().fillColor;
+    colorOtherBorder = GuiTheme::Light().borderDark;
 
     // Basic coordinates
     topBarHeight = 21;
