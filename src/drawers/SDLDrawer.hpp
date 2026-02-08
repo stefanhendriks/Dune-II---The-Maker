@@ -32,23 +32,17 @@ public:
     void setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
 
     void setPixel(SDL_Surface *bmp, int x, int y, Color color);
-    // Color getColor_BLACK() {
-    //     return Color::black();
-    // }
     void renderClearToColor(Color color = Color{0,0,0,255});
 
-    // void gui_DrawRect(const cRectangle &rectangle);
     void gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark);
     void gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark);
 
     void renderLine(int x1, int y1, int x2, int y2, Color color);
     void renderDot(int x, int y, Color color, int size);
 
-    // void shimmer(SDL_Surface *src, int r, int x, int y, float cameraZoom);
     bool isSurface8BitPaletted(SDL_Surface *bmp);
 
     void FillWithColor(SDL_Surface *src, Color color);
-    // Color getPixel(SDL_Surface *surface, int x, int y);
 
     SDL_Renderer *getRenderer() {
         return renderer;
@@ -59,13 +53,6 @@ public:
     void endDrawingToTexture();
 private:
     void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
-
-    // Uint32 get_pixel(SDL_Surface *surface, int x, int y);
-
-    // Color colorBlack;
-    // Color gui_colorWindow;
-    // Color gui_colorBorderLight;
-    // Color gui_colorBorderDark;
 
     SDL_Renderer *renderer=nullptr;
     Uint32 transparentColorKey;
