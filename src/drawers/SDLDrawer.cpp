@@ -9,7 +9,7 @@
 
 SDLDrawer::SDLDrawer(SDL_Renderer *_renderer)
 {
-    colorBlack= Color{0,0,0,255};
+    // colorBlack= Color{0,0,0,255};
     // gui_colorWindow = Color{176,176,196,255};
     // gui_colorBorderDark = Color{84,84,120,255};
     // gui_colorBorderLight = Color{252,252,252,255};

@@ -62,7 +62,7 @@ private:
 
     // Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 
-    Color colorBlack;
+    // Color colorBlack;
     // Color gui_colorWindow;
     // Color gui_colorBorderLight;
     // Color gui_colorBorderDark;
