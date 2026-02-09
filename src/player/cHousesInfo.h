@@ -27,7 +27,7 @@ public:
         return m_houseInfo[house].minimap_color;
     }
 
-    void INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg);
+    void installHouses(std::shared_ptr<cIniFile> gameCfg);
 
 private:
     s_HouseInfo m_houseInfo[MAX_HOUSES];

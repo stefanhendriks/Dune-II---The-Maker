@@ -620,7 +620,7 @@ bool cGame::setupGame()
 
     logbook("Setup:  HOUSES");
     m_Houses = std::make_shared<cHousesInfo>();
-    m_Houses->INSTALL_HOUSES(gamesCfg);
+    m_Houses->installHouses(gamesCfg);
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
     for (int i = 0; i < MAX_PLAYERS; i++) {
