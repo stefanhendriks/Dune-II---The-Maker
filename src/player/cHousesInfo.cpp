@@ -1,7 +1,7 @@
 #include "cHousesInfo.h"
 #include "include/definitions.h"
 
-void cHousesInfo::INSTALL_HOUSES(std::shared_ptr<cIniFile> gameCfg)
+void cHousesInfo::installHouses(std::shared_ptr<cIniFile> gameCfg)
 {
     const cSection &section = gameCfg->getSection(SECTION_HOUSES);
 
