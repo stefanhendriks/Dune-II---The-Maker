@@ -318,3 +318,83 @@ void SDLDrawer::endDrawingToTexture()
         throw std::runtime_error("Error restoring default render target: " + std::string(SDL_GetError()));
     }
 }
+
+Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, int paletteSwapStart)
+{
+    assert(referenceSurface && "referenceSurface must be given");
+
+    // Step 1: Create a copy of the surface (same INDEX8 format)
+    SDL_Surface *modifiableSurface = SDL_CreateRGBSurfaceWithFormat(0, referenceSurface->w, referenceSurface->h, 8, SDL_PIXELFORMAT_INDEX8);
+    if (!modifiableSurface) {
+        SDL_Log("Error copying surface : %s", SDL_GetError());
+        return nullptr;
+    }
+
+    // Copy pixels
+    SDL_LockSurface(referenceSurface);
+    SDL_LockSurface(modifiableSurface);
+    memcpy(modifiableSurface->pixels, referenceSurface->pixels, referenceSurface->h * referenceSurface->pitch);
+    SDL_UnlockSurface(referenceSurface);
+    SDL_UnlockSurface(modifiableSurface);
+
+    // copy palette
+    if (referenceSurface->format->palette &&
+        referenceSurface->format->palette->ncolors > 0) {
+        SDL_SetPaletteColors(modifiableSurface->format->palette,
+                             referenceSurface->format->palette->colors,
+                             0,
+                             referenceSurface->format->palette->ncolors);
+    }
+    else {
+        SDL_Log("No palette in the original image!");
+        SDL_FreeSurface(modifiableSurface);
+        return nullptr;
+    }
+
+    // Apply optional palette swap if requested (caller decides swap start)
+    if (paletteSwapStart > -1) {
+        int start = paletteSwapStart;
+        int s = 144; // original position (harkonnen)
+        SDL_Palette *palette = modifiableSurface->format->palette;
+        for (int j = start; j < (start + 7) && s < palette->ncolors; j++) {
+            palette->colors[s].r = palette->colors[j].r;
+            palette->colors[s].g = palette->colors[j].g;
+            palette->colors[s].b = palette->colors[j].b;
+            palette->colors[s].a = palette->colors[j].a;
+            s++;
+        }
+        const SDL_Color *colors = palette->colors;
+        if (SDL_SetPaletteColors(modifiableSurface->format->palette, colors, 0, palette->ncolors) != 0) {
+            SDL_Log("Error setting palette colors : %s", SDL_GetError());
+            SDL_FreeSurface(modifiableSurface);
+            return nullptr;
+        }
+    }
+
+    // Step 3: Set the transparency index
+    if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, paletteIndexForTransparency) != 0) {
+        SDL_Log("SDL_SetColorKey error : %s", SDL_GetError());
+        SDL_FreeSurface(modifiableSurface);
+        return nullptr;
+    }
+
+    // Step 4: Convert to RGBA8888 to create the texture with alpha
+    SDL_Surface *rgbaSurface = SDL_ConvertSurfaceFormat(modifiableSurface, SDL_PIXELFORMAT_RGBA8888, 0);
+    SDL_FreeSurface(modifiableSurface);
+    if (!rgbaSurface) {
+        SDL_Log("SDL_ConvertSurfaceFormat error : %s", SDL_GetError());
+        return nullptr;
+    }
+
+    // Step 5: Create the final texture
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, rgbaSurface);
+    if (!texture) {
+        SDL_Log("SDL_CreateTextureFromSurface error : %s", SDL_GetError());
+        SDL_FreeSurface(rgbaSurface);
+        return nullptr;
+    }
+
+    auto *newTexture = new Texture(texture, rgbaSurface->w, rgbaSurface->h);
+    SDL_FreeSurface(rgbaSurface);
+    return newTexture;
+}
