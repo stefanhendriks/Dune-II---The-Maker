@@ -362,7 +362,38 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
             palette->colors[s].b = palette->colors[j].b;
             palette->colors[s].a = palette->colors[j].a;
             s++;
-        }
+        }/*
+        palette->colors[s].r = 67;
+        palette->colors[s].g = 185;
+        palette->colors[s].b = 211;
+        palette->colors[s].a = 255;
+
+        palette->colors[s+1].r = 43;
+        palette->colors[s+1].g = 148;
+        palette->colors[s+1].b = 169;
+        palette->colors[s+1].a = 255;
+
+        palette->colors[s+2].r = 22;
+        palette->colors[s+2].g = 118;
+        palette->colors[s+2].b = 135;
+        palette->colors[s+2].a = 255;
+
+        palette->colors[s+3].r = 4;
+        palette->colors[s+3].g = 69;
+        palette->colors[s+3].b = 80;
+        palette->colors[s+3].a = 255;
+
+        palette->colors[s+4].r = 1;
+        palette->colors[s+4].g = 46;
+        palette->colors[s+4].b = 54;
+        palette->colors[s+4].a = 255;
+
+        palette->colors[s+5].r = 0;
+        palette->colors[s+5].g = 24;
+        palette->colors[s+5].b = 28;
+        palette->colors[s+5].a = 255;
+        */
+
         const SDL_Color *colors = palette->colors;
         if (SDL_SetPaletteColors(modifiableSurface->format->palette, colors, 0, palette->ncolors) != 0) {
             SDL_Log("Error setting palette colors : %s", SDL_GetError());
