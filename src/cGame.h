@@ -14,7 +14,7 @@
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "mentat/AbstractMentat.h"
+// #include "mentat/AbstractMentat.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 #include "utils/cTimeManager.h"
@@ -42,6 +42,7 @@ class GameContext;
 class cScreenShake;
 
 struct s_TerrainInfo;
+struct s_DataCampaign;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -92,9 +93,6 @@ public:
     bool m_skirmish;                // playing a skirmish game or not
     int m_screenshot;				// screenshot taking number
 
-    int m_region;                   // what region is selected? (changed by cSelectYourNextConquestState class)
-    int m_mission;		            // what mission are we playing? (= techlevel)
-
     int m_pathsCreated;
 
     int m_musicVolume;              // volume of the music
@@ -121,7 +119,6 @@ public:
     void thinkFast_state();
 
     void think_audio();
-    void think_mentat();
     void think_fading();
 
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
@@ -269,7 +266,7 @@ public:
     }
 
     void applySettings(GameSettings *gs);
-    void execute(AbstractMentat &mentat);
+    void changeStateFromMentat();
 
     Texture* getScreenTexture() const {
         return screenTexture;
@@ -277,6 +274,14 @@ public:
     void takeBackGroundScreen();
 
     std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
+
+    void goingToWinLoseBrief(int value);
+
+    cReinforcements* getReinforcements() const;
+
+    s_DataCampaign* getDataCampaign() const;
+
+    int getCurrentState() const;
 private:
     /**
      * Variables start here
@@ -320,8 +325,6 @@ private:
     int m_newMusicSample;
     int m_newMusicCountdown;
 
-    AbstractMentat *m_mentat;          // TODO: Move this into a m_currentState class (as field)?
-
     float m_fadeSelect;                 // fade color when selected
     bool m_fadeSelectDir;               // fade select direction
 
@@ -346,21 +349,10 @@ private:
     void updateGamePlaying();
     void drawState();           // draws currentState, or calls any of the other functions which don't have state obj yet
     void drawStateCombat();		// the combat part (main) of the game
-    // void drawStateMenu();		// main menu
-    void drawStateWinning();    // drawStateWinning (during combat you get the window "you have been successful"),
-    // after clicking you get to debrief
-
-    void drawStateLosing();     // drawStateLosing (during combat you get the window "you have lost"),
-    // after clicking you get to debrief
-
-
-    void drawStateMentat(AbstractMentat *mentat);  // state mentat talking and interaction
 
     void shakeScreenAndBlitBuffer();
 
     void initPlayers(bool rememberHouse) const;
-
-    // void install_bitmaps();
 
     [[nodiscard]] bool isMissionWon() const;
 
@@ -397,4 +389,5 @@ private:
 
     std::unique_ptr<GameContext> ctx;
     std::unique_ptr<ContextCreator> context;
+    std::unique_ptr<s_DataCampaign> m_dataCampaign;
 };

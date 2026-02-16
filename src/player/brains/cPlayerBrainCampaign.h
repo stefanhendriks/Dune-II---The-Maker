@@ -6,6 +6,7 @@
 #include "player/brains/missions/cPlayerBrainMission.h"
 
 #include <set>
+struct s_DataCampaign;
 
 namespace brains {
 
@@ -20,7 +21,7 @@ class cPlayerBrainCampaign : public cPlayerBrain {
     const int SPECIAL_MISSION3 = 52;
 
 public:
-    explicit cPlayerBrainCampaign(cPlayer *player);
+    explicit cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* dataCampaign);
 
     ~cPlayerBrainCampaign();
 
@@ -138,6 +139,8 @@ private:
     void produceLevel9Missions(int trikeKind, int infantryKind);
 
     void respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder);
+
+    s_DataCampaign* m_dataCampaign;
 };
 
 }

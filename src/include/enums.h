@@ -262,71 +262,43 @@ enum eBuildingListItemState {
 };
 
 enum eMouseEventType {
-    MOUSE_NONE,
-    // Mouse moved to a position on screen
-    MOUSE_MOVED_TO,
-    // When mouse button has been pressed down, and released; it becomes a "click"
-    MOUSE_RIGHT_BUTTON_CLICKED,
-    // When mouse button has been pressed down, and released; it becomes a "click"
-    MOUSE_LEFT_BUTTON_CLICKED,
-    // If a mouse button has been pressed (held down)
-    MOUSE_RIGHT_BUTTON_PRESSED,
-    // If a mouse button has been pressed (held down)
-    MOUSE_LEFT_BUTTON_PRESSED,
-    // Mouse scroll wheel moved up
-    MOUSE_SCROLLED_UP,
-    // Mouse scroll wheel moved down
-    MOUSE_SCROLLED_DOWN
+    MOUSE_NONE,                 
+    MOUSE_MOVED_TO,             // Mouse moved to a position on screen
+    MOUSE_RIGHT_BUTTON_CLICKED, // When mouse button has been pressed down, and released; it becomes a "click"
+    MOUSE_LEFT_BUTTON_CLICKED,  // When mouse button has been pressed down, and released; it becomes a "click"
+    MOUSE_RIGHT_BUTTON_PRESSED, // If a mouse button has been pressed (held down)
+    MOUSE_LEFT_BUTTON_PRESSED,  // If a mouse button has been pressed (held down)
+    MOUSE_SCROLLED_UP,          // Mouse scroll wheel moved up
+    MOUSE_SCROLLED_DOWN         // Mouse scroll wheel moved down
 };
 
 enum eGameEventType {
-    GAME_EVENT_NONE,
-    // an entity was destroyed
-    GAME_EVENT_DESTROYED,
-    // an entity was deviated (switched player ownership)
-    GAME_EVENT_DEVIATED,
-    // an entity was discovered
-    GAME_EVENT_DISCOVERED,
-    // an entity was created
-    GAME_EVENT_CREATED,
-    // damaged by projectile
-    GAME_EVENT_DAMAGED,
-    // damaged by decay
-    GAME_EVENT_DECAY,
-    // special weapon READY (ie deathhand can be launched)
-    GAME_EVENT_SPECIAL_SELECT_TARGET,
-    // list item is ready for placement (structure)
-    GAME_EVENT_LIST_ITEM_PLACE_IT,
-    // LAUNCHes special weapon (ie deathhand)
-    GAME_EVENT_SPECIAL_LAUNCH,
-    // special weapon has been launched! (warning)
-    GAME_EVENT_SPECIAL_LAUNCHED,
-    // cannot build requested thing
-    GAME_EVENT_CANNOT_BUILD,
-    // cannot create a path to destination, help!
-    GAME_EVENT_CANNOT_CREATE_PATH,
-    // list became available
-    GAME_EVENT_LIST_BECAME_AVAILABLE,
-    // list became unavailable
-    GAME_EVENT_LIST_BECAME_UNAVAILABLE,
-    // list item has been added (not necessarily available)
-    GAME_EVENT_LIST_ITEM_ADDED,
+    GAME_EVENT_NONE,            
+    GAME_EVENT_DESTROYED,       // an entity was destroyed
+    GAME_EVENT_DEVIATED,        // an entity was deviated (switched player ownership)
+    GAME_EVENT_DISCOVERED,      // an entity was discovered
+    GAME_EVENT_CREATED,         // an entity was created
+    GAME_EVENT_DAMAGED,         // damaged by projectile
+    GAME_EVENT_DECAY,           // damaged by decay
+    GAME_EVENT_SPECIAL_SELECT_TARGET,   // special weapon READY (ie deathhand can be launched)
+    GAME_EVENT_LIST_ITEM_PLACE_IT,      // list item is ready for placement (structure)
+    GAME_EVENT_SPECIAL_LAUNCH,          // LAUNCHes special weapon (ie deathhand)
+    GAME_EVENT_SPECIAL_LAUNCHED,        // special weapon has been launched! (warning)
+    GAME_EVENT_CANNOT_BUILD,            // cannot build requested thing
+    GAME_EVENT_CANNOT_CREATE_PATH,      // cannot create a path to destination, help!
+    GAME_EVENT_LIST_BECAME_AVAILABLE,   // list became available
+    GAME_EVENT_LIST_BECAME_UNAVAILABLE, // list became unavailable
+    GAME_EVENT_LIST_ITEM_ADDED,         // list item has been added (not necessarily available)
     /**
      * list item has been constructed & deployed, and became available again for construction.
      * Also fired when item is an upgrade and it is finished.
      */
-    GAME_EVENT_LIST_ITEM_FINISHED,
-    // list item has been cancelled
-    GAME_EVENT_LIST_ITEM_CANCELLED,
-    // we're about to play the mission! (kind of init state)
-    GAME_EVENT_ABOUT_TO_BEGIN,
-    // spice bloom has been spawned on the map
-    GAME_EVENT_SPICE_BLOOM_SPAWNED,
-    // spice bloom has been blown up
-    GAME_EVENT_SPICE_BLOOM_BLEW,
-    // a player got defeated
-    GAME_EVENT_PLAYER_DEFEATED,
-
+    GAME_EVENT_LIST_ITEM_FINISHED,      
+    GAME_EVENT_LIST_ITEM_CANCELLED,     // list item has been cancelled
+    GAME_EVENT_ABOUT_TO_BEGIN,          // we're about to play the mission! (kind of init state)
+    GAME_EVENT_SPICE_BLOOM_SPAWNED,     // spice bloom has been spawned on the map
+    GAME_EVENT_SPICE_BLOOM_BLEW,        // spice bloom has been blown up
+    GAME_EVENT_PLAYER_DEFEATED,         // a player got defeated
     // Notify a unit should be deployed
     GAME_EVENT_DEPLOY_UNIT,
 };
@@ -348,5 +320,28 @@ enum class SmudgeType : char {
     S_ROCK = 0,
     S_SAND = 1,
     S_WALL = 2,
-    MAX
+    COUNT
+};
+
+enum class GameState : char {
+    INITIALIZE = 0,        // initialize game
+    OVER,                  // game over
+    MENU,                  // in a menu
+    PLAYING,               // playing the actual game
+    BRIEFING,              // doing some briefing
+    EDITING,               // running the editor
+    OPTIONS,               // options menu
+    REGION,                // select a region / select your next conquest
+    SELECT_HOUSE,          // pick a house
+    INTRO,               
+    TELLHOUSE,             // tell about the house
+    WINNING,               // when winning, do some cool animation
+    WINBRIEF,              // mentat chatter when won the mission
+    LOSEBRIEF,             // briefing when losing
+    LOSING,                // when losing, do something cool
+    SKIRMISH,              // playing a skirmish mission!
+    SETUPSKIRMISH,         // set up a skirmish game
+    CREDITS,               // credits
+    MISSIONSELECT,         // mission select
+    COUNT            
 };
