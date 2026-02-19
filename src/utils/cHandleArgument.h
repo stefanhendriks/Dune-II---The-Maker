@@ -25,6 +25,7 @@ private:
         NOREINFORCEMENTS,
         NOAIREST,
         USAGES,
+        USEFOCUS,
         SCREENX,
         SCREENY,
         HELP
@@ -45,6 +46,7 @@ private:
         {"-screenWidth",      Options::SCREENX},
         {"-screenHeight",     Options::SCREENY},
         {"-usages",           Options::USAGES},
+        {"-useFocus",         Options::USEFOCUS},
         {"--help",            Options::HELP}
     };
 

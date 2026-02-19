@@ -85,6 +85,7 @@ public:
     bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
     bool m_noAiRest;                // Campaign AI does not have long initial REST time
     bool m_playMusic;               // play any music?
+    bool m_useFocus;            // whether to use focus management (pausing the game when losing focus)
     float m_cameraDragMoveSpeed;          // speed of camera when dragging mouse (default = 0.5f)
     float m_cameraBorderOrKeyMoveSpeed;   // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
     bool m_cameraEdgeMove;              // should move map camera when hitting edges of screen
