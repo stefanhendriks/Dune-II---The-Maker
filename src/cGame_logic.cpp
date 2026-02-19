@@ -98,6 +98,7 @@ cGame::cGame()
     context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
+    m_useFocus = false;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -109,7 +110,6 @@ cGame::cGame()
     ctx->setTimeManager(std::move(timeManager));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
-    m_focusManager->setActivateFocus(true);
     // initialisation terrainInfo
     m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 
@@ -131,6 +131,7 @@ void cGame::applySettings(GameSettings *gs)
     m_playSound = gs->playSound;
     m_debugMode = gs->debugMode;
     m_drawUnitDebug = gs->drawUnitDebug;
+    m_useFocus = gs->useFocus;
     m_disableAI = gs->disableAI;
     m_oneAi = gs->oneAi;
     m_disableWormAi = gs->disableWormAi;
@@ -924,6 +925,8 @@ bool cGame::setupGame()
     cIni::installGame(m_gameFilename);
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
+
+    m_focusManager->setActivateFocus(m_useFocus);
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
