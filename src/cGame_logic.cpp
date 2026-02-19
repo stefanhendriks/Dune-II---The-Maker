@@ -65,6 +65,7 @@
 
 #include "utils/cScreenShake.h"
 #include "utils/cTimeCounter.h"
+#include "utils/cFocusManager.h"
 
 #include <algorithm>
 #include <random>
@@ -97,7 +98,6 @@ cGame::cGame()
     context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
-    hasFocus = true;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -107,6 +107,9 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
+    // focus manager
+    m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
+    m_focusManager->setActivateFocus(true);
     // initialisation terrainInfo
     m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 
@@ -645,7 +648,7 @@ void cGame::run()
     screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
-        if (hasFocus) {
+        if (m_focusManager->getFocus()) {
             m_timeManager->processTime();
         }
         while (SDL_PollEvent(&event)) {
@@ -654,28 +657,7 @@ void cGame::run()
                     m_playing = false;
                     break;
                 case SDL_WINDOWEVENT:
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_FOCUS_LOST:
-                            hasFocus = false;
-                            m_timeManager->focusLost();
-                            // std::cout << "Window focus lost" << std::endl;
-                            break;
-                        case SDL_WINDOWEVENT_FOCUS_GAINED:
-                            hasFocus = true;
-                            m_timeManager->focusGained();
-                            // std::cout << "Window focus gained" << std::endl;
-                            break;
-                        case SDL_WINDOWEVENT_MINIMIZED:
-                            hasFocus = false;
-                            m_timeManager->focusLost();
-                            // std::cout << "Window minimized" << std::endl;
-                            break;
-                        case SDL_WINDOWEVENT_RESTORED:
-                            hasFocus = true;
-                            m_timeManager->focusGained();
-                            // std::cout << "Window restored" << std::endl;
-                            break;
-                    }
+                    m_focusManager->onWindowsFocus(event.window);
                     break;
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
@@ -692,7 +674,7 @@ void cGame::run()
             }
         }
 
-        if (!hasFocus) {
+        if (!m_focusManager->getFocus()) {
             m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
             continue; // skip the rest of the loop when we don't have focus
         }

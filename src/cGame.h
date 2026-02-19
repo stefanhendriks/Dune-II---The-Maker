@@ -40,6 +40,7 @@ struct GameSettings;
 class ContextCreator;
 class GameContext;
 class cScreenShake;
+class cFocusManager;
 
 struct s_TerrainInfo;
 // Naming thoughts:
@@ -290,11 +291,11 @@ private:
     bool m_rocketTurretsDownOnLowPower;
 
     std::string m_gameFilename;
-    bool hasFocus;
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
     std::unique_ptr<cInteractionManager> m_interactionManager;
+    std::unique_ptr<cFocusManager> m_focusManager;
 
     cSoundPlayer* m_soundPlayer;
 
