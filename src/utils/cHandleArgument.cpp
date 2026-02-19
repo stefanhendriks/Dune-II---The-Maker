@@ -80,6 +80,9 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
             case Options::USAGES:
                 settings->drawUsages = true;
                 break;
+            case Options::USEFOCUS:
+                settings->useFocus = true;
+                break;
         }
     }
     return 0;
@@ -114,6 +117,7 @@ void cHandleArgument::printInstructions() const
     std::cout << "-noreinforcements      - Disable reinforcements (Campaign mode)\n";
     std::cout << "-noairest              - Disable initial delay of player AI before becoming active\n";
     std::cout << "-usages                - Draw used units, structures, particles, etc.\n";
+    std::cout << "-useFocus              - Use focus management (pauses game when losing focus)\n";
     std::cout << "\n\n";
     std::cout << "Examples (Windows)\n";
     std::cout << "------------------\n\n";
