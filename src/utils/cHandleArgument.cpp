@@ -4,6 +4,25 @@
 #include <string>
 #include <format>
 
+const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStrings{
+    {"-game",             Options::GAME},
+    {"-windowed",         Options::WINDOWED},
+    {"-nomusic",          Options::NOMUSIC},
+    {"-nosound",          Options::NOSOUND},
+    {"-debug",            Options::DEBUG},
+    {"-debug-units",      Options::DEBUG_UNITS},
+    {"-noai",             Options::NOAI},
+    {"-oneai",            Options::ONEAI},
+    {"-nowormai",         Options::NOWORMAI},
+    {"-noreinforcements", Options::NOREINFORCEMENTS},
+    {"-noairest",         Options::NOAIREST},
+    {"-screenWidth",      Options::SCREENX},
+    {"-screenHeight",     Options::SCREENY},
+    {"-usages",           Options::USAGES},
+    {"-useFocus",         Options::USEFOCUS},
+    {"--help",            Options::HELP}
+};
+
 int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
 {
     if (argc < 2) {
