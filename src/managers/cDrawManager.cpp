@@ -35,7 +35,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(ctx, thePlayer);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
     m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
-    m_mapDrawer = std::make_unique<cMapDrawer>(&global_map, thePlayer, mapCamera);
+    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &global_map, thePlayer, mapCamera);
     miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &global_map, thePlayer, mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
