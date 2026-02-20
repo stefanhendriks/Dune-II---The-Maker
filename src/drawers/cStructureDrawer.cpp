@@ -17,7 +17,8 @@
 #include <SDL2/SDL.h>
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx) :
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
 }
 
@@ -73,7 +74,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechFullSprite(gfxdata->getTexture(iDrawPreBuild), dest);
+    renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -252,8 +253,8 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
 
 void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
 {
-    int iconWidth = (gfxdata->getSurface(MOUSE_REPAIR))->w;
-    int iconHeight = (gfxdata->getSurface(MOUSE_REPAIR))->h;
+    int iconWidth = (m_gfxdata->getSurface(MOUSE_REPAIR))->w;
+    int iconHeight = (m_gfxdata->getSurface(MOUSE_REPAIR))->h;
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -263,7 +264,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechFullSprite(gfxdata->getTexture(MOUSE_REPAIR), dest);
+    renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const

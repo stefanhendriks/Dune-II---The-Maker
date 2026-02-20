@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "game/cGame.h"
+#include "context/GameContext.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
@@ -12,8 +13,9 @@
 
 #include <cassert>
 
-cPlaceItDrawer::cPlaceItDrawer(cPlayer *thePlayer) : player(thePlayer)
+cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(thePlayer), m_ctx(ctx)
 {
+    m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
 }
 
 cPlaceItDrawer::~cPlaceItDrawer()
@@ -165,13 +167,13 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = gfxdata->getTexture(PLACE_SLAB1);
+        bmp = m_gfxdata->getTexture(PLACE_SLAB1);
     }
     else if (structureId == SLAB4) {
-        bmp = gfxdata->getTexture(PLACE_SLAB4);
+        bmp = m_gfxdata->getTexture(PLACE_SLAB4);
     }
     else if (structureId == WALL) {
-        bmp = gfxdata->getTexture(PLACE_WALL);
+        bmp = m_gfxdata->getTexture(PLACE_WALL);
     }
     else {
         bmp = player->getStructureBitmap(structureId);
