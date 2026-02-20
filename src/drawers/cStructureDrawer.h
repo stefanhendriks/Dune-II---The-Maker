@@ -29,6 +29,7 @@ protected:
 
 private:
     Graphics *m_gfxinter;
+    Graphics *m_gfxdata;
     cStructureUtils structureUtils;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
