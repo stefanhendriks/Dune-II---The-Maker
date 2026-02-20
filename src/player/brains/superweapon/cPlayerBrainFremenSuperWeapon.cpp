@@ -1,6 +1,7 @@
 #include "cPlayerBrainFremenSuperWeapon.h"
 
 #include "d2tmc.h"
+#include "map/cMap.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>

@@ -1,6 +1,7 @@
 #include "cPlayerBrainMissionKindAttack.h"
 
 #include "d2tmc.h"
+#include "map/cMap.h"
 #include "definitions.h"
 #include "utils/d2tm_math.h"
 #include "player/cPlayer.h"

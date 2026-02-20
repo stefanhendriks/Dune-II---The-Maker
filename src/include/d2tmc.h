@@ -19,7 +19,7 @@
 
 // #include "game/cGame.h"
 #include "definitions.h"
-#include "map/cMap.h"
+//#include "map/cMap.h"
 #include "structs.h"
 #include "utils/cStructureUtils.h"
 
@@ -49,6 +49,7 @@ class cPlayer;
 class cRegion;
 class Graphics;
 class cGame;
+class cMap;
 
 struct SDL_Surface;
 
