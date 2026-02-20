@@ -16,6 +16,8 @@
 #include "observers/cInputObserver.h"
 #include "sMouseEvent.h"
 
+#include <memory>
+
 class cPlayer;
 struct SDL_Surface;
 class Texture;
@@ -38,11 +40,11 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     cMiniMapDrawer *getMiniMapDrawer() {
-        return &miniMapDrawer;
+        return miniMapDrawer.get();
     }
 
     cOrderDrawer *getOrderDrawer() {
-        return &m_orderDrawer;
+        return m_orderDrawer.get();
     }
 
     cMouseDrawer *getMouseDrawer() {
@@ -50,11 +52,11 @@ public:
     }
 
     cPlaceItDrawer *getPlaceItDrawer() {
-        return &m_placeitDrawer;
+        return m_placeitDrawer.get();
     }
 
     cBuildingListDrawer *getBuildingListDrawer() {
-        return m_sidebarDrawer.getBuildingListDrawer();
+        return m_sidebarDrawer->getBuildingListDrawer();
     }
 
     void drawMouse();
@@ -104,15 +106,15 @@ private:
     void drawNotifications();
 
     // Properties:
-    cSideBarDrawer m_sidebarDrawer;
-    CreditsDrawer m_creditsDrawer;
-    cOrderDrawer m_orderDrawer;
-    cMapDrawer m_mapDrawer;
-    cMiniMapDrawer miniMapDrawer;
-    cParticleDrawer m_particleDrawer;
-    cMessageDrawer m_messageDrawer;
-    cPlaceItDrawer m_placeitDrawer;
-    cStructureDrawer m_structureDrawer;
+    std::unique_ptr<cSideBarDrawer> m_sidebarDrawer;
+    std::unique_ptr<CreditsDrawer> m_creditsDrawer;
+    std::unique_ptr<cOrderDrawer> m_orderDrawer;
+    std::unique_ptr<cMapDrawer> m_mapDrawer;
+    std::unique_ptr<cMiniMapDrawer> miniMapDrawer;
+    std::unique_ptr<cParticleDrawer> m_particleDrawer;
+    std::unique_ptr<cMessageDrawer> m_messageDrawer;
+    std::unique_ptr<cPlaceItDrawer> m_placeitDrawer;
+    std::unique_ptr<cStructureDrawer> m_structureDrawer;
     Color m_sidebarColor;
     Texture *btnOptions;
 
@@ -120,6 +122,7 @@ private:
     cPlayer *m_player;
     cTextDrawer *m_textDrawer = nullptr;
     Graphics* m_gfxinter;
+    Graphics* m_gfxdata;
     cMouseDrawer* m_mouseDrawer = nullptr;
 
     void onKeyDown(const cKeyboardEvent &event);
