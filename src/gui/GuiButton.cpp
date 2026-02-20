@@ -1,6 +1,7 @@
 #include "GuiButton.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 
 GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)

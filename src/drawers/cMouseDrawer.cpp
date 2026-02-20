@@ -2,6 +2,7 @@
 
 #include "controls/cGameControlsContext.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"

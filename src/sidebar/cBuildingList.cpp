@@ -2,6 +2,7 @@
 
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 
 #include <vector>
 

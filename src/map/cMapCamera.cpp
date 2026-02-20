@@ -2,6 +2,7 @@
 
 #include "data/gfxdata.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "sidebar/cSideBar.h"
 #include "map/MapGeometry.hpp"
 

@@ -11,6 +11,7 @@
   */
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gamestates/cSelectYourNextConquestState.h"

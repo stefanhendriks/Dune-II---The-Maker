@@ -10,6 +10,7 @@
 #include "player/cPlayer.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 
 #include "data/gfxdata.h"
 

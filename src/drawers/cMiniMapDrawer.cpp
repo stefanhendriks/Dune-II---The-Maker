@@ -2,6 +2,7 @@
 
 #include "drawers/SDLDrawer.hpp"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
