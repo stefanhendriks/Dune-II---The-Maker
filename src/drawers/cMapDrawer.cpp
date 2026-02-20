@@ -4,6 +4,7 @@
 #include "data/gfxdata.h"
 #include "d2tmc.h"
 #include "game/cGame.h"
+#include "context/GameContext.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
@@ -13,10 +14,12 @@
 
 #include <cmath>
 
-cMapDrawer::cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera) :
+cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera) :
     m_map(map),
     m_player(player),
     m_camera(camera),
+    m_ctx(ctx),
+    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
@@ -70,7 +73,7 @@ void cMapDrawer::drawShroud()
                     if (tile > -1) {
                         const cRectangle src_pos = {tile * 32, 0, 32, 32};
                         cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                        renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
+                        renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                     }
                 }
                 else {
@@ -79,7 +82,7 @@ void cMapDrawer::drawShroud()
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
                     const cRectangle src_pos = {0, 0, 32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    renderDrawer->renderStrechSprite(gfxdata->getTexture(SHROUD), src_pos, dest_pos);
+                    renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                 }
             }
         }
@@ -144,7 +147,7 @@ void cMapDrawer::drawTerrain()
                 // valid type
                 const cRectangle src_pos = {cell->tile * 32, 0,32, 32};
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                renderDrawer->renderStrechSprite(gfxdata->getTexture(cell->type), src_pos, dest_pos);
+                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(cell->type), src_pos, dest_pos);
             }
 
             // draw Smudge if necessary
@@ -152,7 +155,7 @@ void cMapDrawer::drawTerrain()
                 cell->smudgetype.transform([&](const auto &smudgeType) {
                     const cRectangle src_pos = {cell->smudgetile * 32, static_cast<int>(smudgeType) * 32,32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    renderDrawer->renderStrechSprite(gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
+                    renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
                     return std::monostate{}; // needed with GCC15, with GCC16 not needed to return anything.
                 });
             }
