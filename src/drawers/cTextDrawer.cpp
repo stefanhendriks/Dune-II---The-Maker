@@ -2,6 +2,7 @@
 #include "drawers/cTextTextureCache.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Color.hpp"
 #include <iostream>

@@ -5,6 +5,7 @@
 #include "cDrawManager.h"
 #include "controls/cGameControlsContext.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/cMiniMapDrawer.h"
 #include "player/cPlayer.h"
 

@@ -1,5 +1,6 @@
 #include "gamestates/cGamePlaying.h"
 #include "include/d2tmc.h"
+#include "game/cGame.h"
 #include "include/definitions.h"
 #include "building/cItemBuilder.h"
 #include "gameobjects/structures/cStructureFactory.h"

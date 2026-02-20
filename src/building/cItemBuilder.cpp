@@ -1,6 +1,7 @@
 #include "cItemBuilder.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cReinforcements.h"

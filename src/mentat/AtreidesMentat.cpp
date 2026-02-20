@@ -1,6 +1,7 @@
 #include "AtreidesMentat.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"

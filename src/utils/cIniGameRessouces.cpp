@@ -3,6 +3,7 @@
 #include "data/gfxinter.h"
 #include "data/gfxaudio.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
