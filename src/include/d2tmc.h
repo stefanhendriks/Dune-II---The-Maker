@@ -17,7 +17,7 @@
 **/
 #pragma once
 
-#include "game/cGame.h"
+// #include "game/cGame.h"
 #include "definitions.h"
 #include "map/cMap.h"
 #include "structs.h"
@@ -48,6 +48,7 @@ class cParticle;
 class cPlayer;
 class cRegion;
 class Graphics;
+class cGame;
 
 struct SDL_Surface;
 

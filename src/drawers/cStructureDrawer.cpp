@@ -4,6 +4,7 @@
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "gameobjects/structures/cGunTurret.h"
 #include "gameobjects/structures/cRepairFacility.h"
 #include "gameobjects/structures/cRocketTurret.h"

@@ -1,6 +1,7 @@
 #include "cRefinery.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "definitions.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/units/cUnit.h"

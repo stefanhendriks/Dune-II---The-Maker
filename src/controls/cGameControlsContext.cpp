@@ -2,6 +2,7 @@
 
 #include "data/gfxdata.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "managers/cDrawManager.h"
 
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :

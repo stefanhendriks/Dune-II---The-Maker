@@ -14,6 +14,7 @@
 
 #include "data/gfxdata.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"

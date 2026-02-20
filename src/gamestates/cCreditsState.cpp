@@ -1,6 +1,7 @@
 #include "cCreditsState.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"

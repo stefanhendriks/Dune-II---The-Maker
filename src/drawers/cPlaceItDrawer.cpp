@@ -1,6 +1,7 @@
 #include "cPlaceItDrawer.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"

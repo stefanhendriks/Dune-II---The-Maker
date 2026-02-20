@@ -19,6 +19,7 @@
 #include "cWindTrap.h"
 #include "cWor.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"
