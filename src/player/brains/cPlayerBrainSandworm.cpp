@@ -1,6 +1,7 @@
 #include "cPlayerBrainSandworm.h"
 
 #include "d2tmc.h"
+#include "map/cMap.h"
 #include "player/cPlayer.h"
 
 namespace brains {

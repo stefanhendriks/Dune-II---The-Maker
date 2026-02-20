@@ -1,6 +1,7 @@
 #include "cPlayerBrainMissionKindExplore.h"
 
 #include "d2tmc.h"
+#include "map/cMap.h"
 
 #include <format>
 

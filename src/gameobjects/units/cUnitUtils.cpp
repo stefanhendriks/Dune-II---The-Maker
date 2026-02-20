@@ -1,6 +1,7 @@
 #include "cUnitUtils.h"
 
 #include "d2tmc.h"
+#include "map/cMap.h"
 #include "definitions.h"
 
 cUnitUtils::cUnitUtils()
