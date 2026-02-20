@@ -39,7 +39,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &global_map, thePlayer, mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
-    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(thePlayer);
+    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
     m_structureDrawer = std::make_unique<cStructureDrawer>(ctx);
     assert(thePlayer);
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
