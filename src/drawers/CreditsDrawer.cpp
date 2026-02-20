@@ -17,7 +17,8 @@
 CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_player(player),
     m_ctx(ctx),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
     assert(player);
 
@@ -246,7 +247,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
@@ -280,7 +281,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
