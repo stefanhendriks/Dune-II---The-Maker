@@ -30,6 +30,7 @@ private:
     cPlayer *m_player;  //
     GameContext* m_ctx;
     Graphics* m_gfxinter;
+    Graphics* m_gfxdata;
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);
