@@ -3,6 +3,7 @@
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
 #include "game/cGame.h"
+#include "map/cMap.h"
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureFactory.h"
