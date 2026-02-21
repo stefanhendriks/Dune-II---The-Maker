@@ -25,6 +25,7 @@
 
 //#include "utils/cDataPack.hpp"
 #include <memory>
+#include <array>
 #include <SDL2/SDL_ttf.h>
 
 /**
@@ -66,7 +67,7 @@ extern cMapCamera	  *mapCamera;
 extern cPlayer        players[MAX_PLAYERS];
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
-extern cRegion        world[MAX_REGIONS];
+extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
 extern SDLDrawer      *renderDrawer;
