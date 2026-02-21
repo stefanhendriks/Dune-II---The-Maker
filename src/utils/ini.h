@@ -12,7 +12,9 @@
 #pragma once
 
 #include <string>
+#include <span>
 
+class cRegion;
 class cReinforcements;
 class AbstractMentat;
 class cSelectYourNextConquestState;
@@ -29,7 +31,7 @@ public:
     // Load briefing for original scenario
     static void loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
     // Load regionfile for original scenario
-    static void loadRegionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
+    static void loadRegionfile(std::span<cRegion> world,int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
 
 
 private:

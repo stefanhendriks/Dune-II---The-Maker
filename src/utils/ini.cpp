@@ -374,7 +374,7 @@ std::string INI_GetHouseDirectoryName(int iHouse)
     }
 }
 
-void cIni::loadRegionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
+void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
     auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
     cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
