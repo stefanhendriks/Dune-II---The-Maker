@@ -67,7 +67,7 @@ extern cMapCamera	  *mapCamera;
 extern cPlayer        players[MAX_PLAYERS];
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
-extern std::array<cRegion, MAX_REGIONS> world;
+// extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
 extern SDLDrawer      *renderDrawer;
