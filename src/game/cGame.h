@@ -44,6 +44,7 @@ class cScreenShake;
 class cFocusManager;
 class cGameConditionChecker;
 class cScreenFader;
+class SDLDrawer;
 
 struct s_TerrainInfo;
 struct s_DataCampaign;
@@ -253,6 +254,7 @@ private:
     Texture *actualRenderer= nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cTimeManager* m_timeManager;
+    SDLDrawer *m_renderDrawer = nullptr;
 
     std::shared_ptr<cHousesInfo> m_Houses;
     std::shared_ptr<s_TerrainInfo> m_TerrainInfo;

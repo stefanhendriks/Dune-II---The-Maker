@@ -3,6 +3,7 @@
 #include "game/cTimeCounter.h"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
 GameContext::~GameContext() {
 }
@@ -69,4 +70,18 @@ void GameContext::resetCache() const {
         return;
     }
     m_textContext->resetCache();
+}
+
+void GameContext::setSDLDrawer(std::unique_ptr<SDLDrawer> SDLDrawer) {
+    if (!SDLDrawer) {
+        throw std::runtime_error("SDLDrawer is not initialized!");
+    }
+    m_SDLDrawer = std::move(SDLDrawer);
+}
+
+SDLDrawer *GameContext::getSDLDrawer() const {
+    if (m_SDLDrawer) {
+        return m_SDLDrawer.get();
+    }
+    throw std::runtime_error("SDLDrawer not defined");
 }
