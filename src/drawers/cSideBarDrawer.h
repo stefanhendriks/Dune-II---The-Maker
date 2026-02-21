@@ -10,6 +10,7 @@ class Texture;
 class cPlayer;
 class GameContext;
 class Graphics;
+class SDLDrawer;
 
 class cSideBarDrawer : cInputObserver {
 public:
@@ -38,6 +39,7 @@ protected:
 private:
     cPlayer *m_player;
     Graphics *m_gfxinter;
+    SDLDrawer* m_renderDrawer;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;
     Color m_sidebarColor;
