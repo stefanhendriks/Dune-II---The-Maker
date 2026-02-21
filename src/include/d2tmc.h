@@ -70,7 +70,7 @@ extern cBullet        bullet[MAX_BULLETS];
 // extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
-extern SDLDrawer      *renderDrawer;
+extern SDLDrawer      *global_renderDrawer;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];

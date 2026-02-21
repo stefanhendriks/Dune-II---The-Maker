@@ -117,7 +117,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // end of map creation
     mapEditor.smoothMap();
 
-    renderDrawer->FillWithColor(randomMapEntry.terrain, Color::black());
+    global_renderDrawer->FillWithColor(randomMapEntry.terrain, Color::black());
 
     // now put in previewmap 0
     for (int x = 0; x < global_map.getWidth(); x++) {
@@ -148,7 +148,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
                 }
             }
 
-            renderDrawer->setPixel(randomMapEntry.terrain, x, y, iColor);
+            global_renderDrawer->setPixel(randomMapEntry.terrain, x, y, iColor);
         }
     }
 }

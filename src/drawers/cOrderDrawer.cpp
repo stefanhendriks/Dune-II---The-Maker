@@ -42,11 +42,11 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
 
     assert(orderProcesser);
     if (orderProcesser->isOrderPlaced()) { //grey
-        renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
-        renderDrawer->renderRectColor(m_buttonRect,0,0,0,128);
+        global_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
+        global_renderDrawer->renderRectColor(m_buttonRect,0,0,0,128);
     }
     else {
-        renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
+        global_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
     }
 
     if (m_isMouseOverOrderButton) {
@@ -61,8 +61,8 @@ void cOrderDrawer::drawRectangleOrderButton()
     int width = m_buttonRect.getWidth();
     int height = m_buttonRect.getHeight();
     Color color = m_player->getHouseFadingColor();
-    renderDrawer->renderRectColor(x, y, width, height, color);
-    renderDrawer->renderRectColor(x+1, y+1, width-2, height-2, color);
+    global_renderDrawer->renderRectColor(x, y, width, height, color);
+    global_renderDrawer->renderRectColor(x+1, y+1, width-2, height-2, color);
 }
 
 void cOrderDrawer::onMouseAt(const s_MouseEvent &event)

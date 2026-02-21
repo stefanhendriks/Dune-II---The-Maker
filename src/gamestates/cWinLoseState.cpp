@@ -36,12 +36,12 @@ void cWinLoseState::thinkFast()
 void cWinLoseState::draw() const
 {
     if (m_backgroundTexture)
-        renderDrawer->renderSprite(m_backgroundTexture,0,0);
+        global_renderDrawer->renderSprite(m_backgroundTexture,0,0);
 
     // auto tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
     int posW = (game.m_screenW-m_tex->w)/2;
     int posH = (game.m_screenH-m_tex->h)/2;
-    renderDrawer->renderSprite(m_tex,posW, posH);
+    global_renderDrawer->renderSprite(m_tex,posW, posH);
 
     // MOUSE
     m_game.getMouse()->draw();

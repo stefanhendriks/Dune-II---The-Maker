@@ -24,13 +24,13 @@ void GuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
     int width = m_rect.getWidth();
     int height = m_rect.getHeight();
     //std::cout <<":" << x1 << " " << y1 << " " << width << " " << height << std::endl;
-    renderDrawer->renderRectColor(m_rect,borderRect);
-    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height,borderBottomRight);
-    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, borderBottomRight);
+    global_renderDrawer->renderRectColor(m_rect,borderRect);
+    global_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height,borderBottomRight);
+    global_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, borderBottomRight);
 }
 
 void GuiObject::drawRectFillBorder(const GuiTheme& theme) const
 {
-    renderDrawer->renderRectFillColor(m_rect, theme.fillColor);
+    global_renderDrawer->renderRectFillColor(m_rect, theme.fillColor);
     drawRectBorder(theme.borderLight, theme.borderDark);
 }

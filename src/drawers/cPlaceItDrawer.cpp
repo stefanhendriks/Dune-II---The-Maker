@@ -144,7 +144,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
+                global_renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
             }
         }
     }
@@ -183,5 +183,5 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     // which cannot be used in this case)
     cRectangle src = { 0, 0, width, height}; // takes first frame
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(bmp, src, dest,96);
+    global_renderDrawer->renderStrechSprite(bmp, src, dest,96);
 }

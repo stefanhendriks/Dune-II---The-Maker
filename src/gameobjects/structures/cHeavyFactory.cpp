@@ -94,7 +94,7 @@ void cHeavyFactory::draw()
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest= { drawX, drawY, scaledWidth, scaledHeight};
-        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+        global_renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
 
 
     }

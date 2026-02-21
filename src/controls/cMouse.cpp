@@ -259,7 +259,7 @@ void cMouse::boxSelectLogic(int mouseCell)
 
             // and draw the selection box
             //_rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, game.getColorFadeSelected(255, 255, 255));
-            renderDrawer->renderRectColor(mouse_co_x1, mouse_co_y1, mouse_co_x2-mouse_co_x1, mouse_co_y2-mouse_co_y1, game.getColorFadeSelected(255, 255, 255));
+            global_renderDrawer->renderRectColor(mouse_co_x1, mouse_co_y1, mouse_co_x2-mouse_co_x1, mouse_co_y2-mouse_co_y1, game.getColorFadeSelected(255, 255, 255));
         }
 
         // Note that we have to fix up the coordinates when checking 'within border'
@@ -357,7 +357,7 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    renderDrawer->renderSprite(gfxdata->getTexture(mouse_tile),mouseDrawX, mouseDrawY);
+    global_renderDrawer->renderSprite(gfxdata->getTexture(mouse_tile),mouseDrawX, mouseDrawY);
 
     if (game.isDebugMode()) {
         int y = mouseDrawY;
