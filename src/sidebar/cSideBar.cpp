@@ -55,7 +55,7 @@ void cSideBar::think()
 
 void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const
 {
-    drawManager->setMessage(item->getInfo());
+    global_drawManager->setMessage(item->getInfo());
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
@@ -136,13 +136,13 @@ void cSideBar::thinkProgressAnimation()
 void cSideBar::onMouseAt(const s_MouseEvent &event)
 {
     isMouseOverSidebarValue = event.coords.x > (game.m_screenW - cSideBar::SidebarWidth);
-    drawManager->setKeepMessage(isMouseOverSidebarValue);
+    global_drawManager->setKeepMessage(isMouseOverSidebarValue);
 
     if (selectedListID < 0) return;
 
     // when mouse is selecting a list, and over an item, then draw message bar...!?
     cBuildingList *list = getList(selectedListID);
-    cBuildingListDrawer *buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = global_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -184,14 +184,14 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         return;
     }
 
-    cOrderDrawer *orderDrawer = drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = global_drawManager->getOrderDrawer();
 
     // allow clicking on the order button, send event through...
     if (list->getType() == eListType::LIST_STARPORT) {
         orderDrawer->onNotify(event);
     }
 
-    cBuildingListDrawer *buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = global_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -231,7 +231,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
     // when mouse pressed, build item if over item
     cBuildingList *list = getList(selectedListID);
 
-    cBuildingListDrawer *buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = global_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 

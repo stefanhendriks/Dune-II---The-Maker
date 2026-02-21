@@ -41,7 +41,7 @@ cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 // std::array<cRegion, MAX_REGIONS> world;
 
-cDrawManager   				*drawManager = nullptr;
+cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*mapCamera;
 

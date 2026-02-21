@@ -174,7 +174,7 @@ void cSideBarDrawer::drawBuildingLists()
         }
     }
 
-    cOrderDrawer *orderDrawer = drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = global_drawManager->getOrderDrawer();
 
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
