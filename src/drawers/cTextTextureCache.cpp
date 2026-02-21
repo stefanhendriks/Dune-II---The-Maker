@@ -23,11 +23,11 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
 {
     auto newCacheEntry = std::make_unique<textCacheEntry>();
     SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
-    newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+    newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     SDL_FreeSurface(textSurface);
 
     textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
-    newCacheEntry->texture = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), textSurface);
+    newCacheEntry->texture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     newCacheEntry->width = textSurface->w;
     newCacheEntry->height = textSurface->h;
     newCacheEntry->lifeCounter = 10;

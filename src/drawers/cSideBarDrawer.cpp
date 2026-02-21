@@ -29,10 +29,10 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     candyHorizonBar = m_player->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
-    candiBarRenderer = renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_screenH-40);
-    renderDrawer->beginDrawingToTexture(candiBarRenderer);
+    candiBarRenderer = global_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_screenH-40);
+    global_renderDrawer->beginDrawingToTexture(candiBarRenderer);
     createCandyBar();
-    renderDrawer->endDrawingToTexture();
+    global_renderDrawer->endDrawingToTexture();
 }
 
 cSideBarDrawer::~cSideBarDrawer()
@@ -62,7 +62,7 @@ void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cSideBarDrawer::draw()
 {
     // black out sidebar
-    renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, Color{0, 0, 0,255});
+    global_renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -105,7 +105,7 @@ void cSideBarDrawer::drawBuildingLists()
 
     for (; drawX < game.m_screenW; drawX += backgroundSprite->w) {
         for (int drawY=startY; drawY < game.m_screenH; drawY += backgroundSprite->h) {
-            renderDrawer->renderSprite(backgroundSprite, drawX, drawY);
+            global_renderDrawer->renderSprite(backgroundSprite, drawX, drawY);
         }
     }
 
@@ -116,8 +116,8 @@ void cSideBarDrawer::drawBuildingLists()
     int iDrawY = m_buildingListDrawer.getDrawY();
 
     Texture *horBar = m_gfxinter->getTexture(BMP_GERALD_SIDEBAR_PIECE);
-    renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-38); // above sublist buttons
-    renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-5); // above normal icons
+    global_renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-38); // above sublist buttons
+    global_renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-5); // above normal icons
 
     if (selectedListId > -1) {
         selectedList = m_sidebar->getList(selectedListId);
@@ -134,25 +134,25 @@ void cSideBarDrawer::drawBuildingLists()
         int barX = (iDrawX - 1) + (i * 66);
         Color darker = Color{89, 56, 0,255};
         Color veryDark = Color{48, 28, 0,255};
-        renderDrawer->renderLine( barX - 1, iDrawY, barX - 1, endY, darker);
-        renderDrawer->renderLine( barX, iDrawY, barX, endY, veryDark);
+        global_renderDrawer->renderLine( barX - 1, iDrawY, barX - 1, endY, darker);
+        global_renderDrawer->renderLine( barX, iDrawY, barX, endY, veryDark);
 
         // horizontal lines
         for (int j = 1; j < rows; j++) {
             int barY = iDrawY - 1 + (j * 50);
-            renderDrawer->renderLine( iDrawX, barY-1, game.m_screenW, barY - 1, darker);
-            renderDrawer->renderLine( iDrawX, barY, game.m_screenW, barY, veryDark);
+            global_renderDrawer->renderLine( iDrawX, barY-1, game.m_screenW, barY - 1, darker);
+            global_renderDrawer->renderLine( iDrawX, barY, game.m_screenW, barY, veryDark);
         }
     }
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
-        renderDrawer->renderRectFillColor(iDrawX, endY, game.m_screenW-iDrawX, game.m_screenH-endY, m_sidebarColor);
-        renderDrawer->renderSprite(horBar, iDrawX-1, endY); // just below the last icons
+        global_renderDrawer->renderRectFillColor(iDrawX, endY, game.m_screenW-iDrawX, game.m_screenH-endY, m_sidebarColor);
+        global_renderDrawer->renderSprite(horBar, iDrawX-1, endY); // just below the last icons
     }
 
     // vertical lines at the side
-    renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, Color{255, 211, 125,255}); // left
-    renderDrawer->renderLine( game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, Color{209, 150, 28,255}); // right
+    global_renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, Color{255, 211, 125,255}); // left
+    global_renderDrawer->renderLine( game.m_screenW - 1, iDrawY - 38, game.m_screenW - 1, endY, Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
 
@@ -190,7 +190,7 @@ void cSideBarDrawer::drawCapacities()
 
 void cSideBarDrawer::drawCandybar()
 {
-    renderDrawer->renderSprite(candiBarRenderer,game.m_screenW - cSideBar::SidebarWidth,40);
+    global_renderDrawer->renderSprite(candiBarRenderer,game.m_screenW - cSideBar::SidebarWidth,40);
 }
 
 void cSideBarDrawer::drawMinimap()
@@ -200,7 +200,7 @@ void cSideBarDrawer::drawMinimap()
     // 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
     int drawY = cSideBar::TopBarHeight + heightMinimap;
-    renderDrawer->renderSprite(sprite, drawX, drawY);
+    global_renderDrawer->renderSprite(sprite, drawX, drawY);
 
     // 11, 10
     // 78, 60
@@ -214,7 +214,7 @@ void cSideBarDrawer::drawMinimap()
     }
 
     // else, we render the house emblem
-    renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
+    global_renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_screenW-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
                                       m_player->getEmblemBackgroundColor());
 
     if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS)) {
@@ -245,7 +245,7 @@ void cSideBarDrawer::drawMinimap()
 
         cRectangle src = {srcX, srcY, emblemWidth,emblemHeight};
         cRectangle dest = {drawX, drawY, emblemDesiredWidth, emblemDesiredHeight};
-        renderDrawer->renderStrechSprite(m_gfxinter->getTexture(bitmapId), src, dest);
+        global_renderDrawer->renderStrechSprite(m_gfxinter->getTexture(bitmapId), src, dest);
     }
 }
 
@@ -253,34 +253,34 @@ void cSideBarDrawer::createCandyBar()
 {
     int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
     // ball first
-    renderDrawer->renderSprite(candyBarBall, 0,0); // height of ball = 25
-    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
+    global_renderDrawer->renderSprite(candyBarBall, 0,0); // height of ball = 25
+    global_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
     // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
     // auto tmp = cRectangle{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
     for (int y = startY; y < (heightMinimap); y += 24) {
-        renderDrawer->renderSprite(candyBarPiece, 0, y);
+        global_renderDrawer->renderSprite(candyBarPiece, 0, y);
     }
     // note: no need to take top bar into account because 'm_candybar' is a separate bitmap so coords start at 0,0
     // ball is 6 pixels higher than horizontal m_candybar
     int ballY = (heightMinimap) - 6;
 
     // draw bottom m_candybar
-    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
+    global_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
 
     // draw ball
-    renderDrawer->renderSprite(candyBarBall, 0, ballY); // height of ball = 25
+    global_renderDrawer->renderSprite(candyBarBall, 0, ballY); // height of ball = 25
 
     // draw top m_candybar again
-    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
+    global_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
 
     startY = ballY + 26 + 10;
     for (int y = startY; y < (heightInPixels + 23); y += 24) {
-        renderDrawer->renderSprite(candyBarPiece, 0, y);
+        global_renderDrawer->renderSprite(candyBarPiece, 0, y);
     }
     // draw bottom
-    renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
+    global_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
 }
 
 void cSideBarDrawer::drawPowerUsage() const
@@ -291,7 +291,7 @@ void cSideBarDrawer::drawPowerUsage() const
     int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     //cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::black()); //renderDrawer->getColor_BLACK());
+    global_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::black()); //renderDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
@@ -303,7 +303,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
+    global_renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * powerUse;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -317,25 +317,25 @@ void cSideBarDrawer::drawPowerUsage() const
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
+        global_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
     }
     else {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
+        global_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
+    global_renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
 
-    renderDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
+    global_renderDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     Color darker = Color{89, 56, 0,255};
-    renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
+    global_renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    global_renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
     if (m_player->bEnoughPower()) {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
+        global_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
     }
     else {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
+        global_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
     }
 }
 
@@ -346,7 +346,7 @@ void cSideBarDrawer::drawCreditsUsage()
     int barY = cSideBar::TopBarHeight + 48;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     // cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
+    global_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
 
     // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
     // and so forth.
@@ -362,7 +362,7 @@ void cSideBarDrawer::drawCreditsUsage()
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
+    global_renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * spiceStored;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -377,24 +377,24 @@ void cSideBarDrawer::drawCreditsUsage()
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
+        global_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
     }
     else {
-        renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
+        global_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
-    renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
+    global_renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
 
     // draw darker 'sides' at the left and top
     Color darker = Color{89, 56, 0,255};
-    renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
+    global_renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    global_renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
     if (spiceCapacityRatio>0.95) {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
+        global_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
     } else  if (spiceCapacityRatio<0.05) {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
+        global_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
     } else {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
+        global_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
     }
 }

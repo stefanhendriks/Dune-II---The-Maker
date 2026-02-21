@@ -161,11 +161,11 @@ void cMouseDrawer::drawToolTipBackground()
     color = Color{red, green, blue,128};
     auto black = Color::black();
     black.a = 128;
-    renderDrawer->renderRectFillColor(x, y, width, height, color);
+    global_renderDrawer->renderRectFillColor(x, y, width, height, color);
     int shadowX = x + width;
     int shadowY = y + height;
-    renderDrawer->renderRectFillColor(x + 4, shadowY, (width - 4), 4, black);
-    renderDrawer->renderRectFillColor(shadowX, y + 4, 4, height, black);
+    global_renderDrawer->renderRectFillColor(x + 4, shadowY, (width - 4), 4, black);
+    global_renderDrawer->renderRectFillColor(shadowX, y + 4, 4, height, black);
 }
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure)

@@ -37,7 +37,7 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 static bool gui_draw_frame(int x, int y, int width, int height)
 {
     cRectangle rect = cRectangle(x, y, width, height);
-    renderDrawer->gui_DrawRect(rect);
+    global_renderDrawer->gui_DrawRect(rect);
     // auto m_mouse = game.getMouse();
     return mouse_within_rect(x, y, width, height);
     // return rect.isPointWithin(m_mouse->getMouseCoords());
@@ -50,12 +50,12 @@ static bool gui_draw_frame(int x, int y, int width, int height)
 
 static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
 {
-    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
-    renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
+    global_renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
+    global_renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
 
     // lines to darken the right sides
-    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
-    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
+    global_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
+    global_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
     return mouse_within_rect(x1, y1, width, height);
@@ -328,20 +328,20 @@ void cSetupSkirmishState::thinkFast()
 void cSetupSkirmishState::draw() const
 {
     // @Mira rewrite it on Texture
-    renderDrawer->gui_DrawRect(topBar);
+    global_renderDrawer->gui_DrawRect(topBar);
 
     m_textDrawer->drawTextCentered("Skirmish", 1);
 
-    renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::white(), Color::white());
-    renderDrawer->gui_DrawRect(topRightBox);
-    renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
-    renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    global_renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::white(), Color::white());
+    global_renderDrawer->gui_DrawRect(topRightBox);
+    global_renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
+    global_renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
     m_textDrawer->drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
-    renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
+    global_renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     m_textDrawer->drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
-    renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-    renderDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    global_renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    global_renderDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
     /// DRAW PREVIEW MAP
     //////
@@ -404,7 +404,7 @@ void cSetupSkirmishState::draw() const
     }
 
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    renderDrawer->gui_DrawRect(bottomBarRect);
+    global_renderDrawer->gui_DrawRect(bottomBarRect);
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);
@@ -508,7 +508,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
                                          previewMapRect.getHeight() * selectedMap.previewTex->w / selectedMap.previewTex->h, previewMapRect.getHeight());
 
                     }
-                    renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
+                    global_renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
                 }
             }
         }
@@ -516,9 +516,9 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             // render the 'random generated skirmish map'
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
-                    renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
+                    global_renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
             } else {
-                renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
+                global_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
             }
         }
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
@@ -1188,7 +1188,7 @@ void cSetupSkirmishState::generateRandomMap()
     randomMap.validMap = true;
     randomMap.author = "D2TM";
 
-    SDL_Texture* out = SDL_CreateTextureFromSurface(renderDrawer->getRenderer(), randomMap.terrain);
+    SDL_Texture* out = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), randomMap.terrain);
     if (out == nullptr) {
         logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
         return;
@@ -1253,7 +1253,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 
         // Render preview map on tile
         cRectangle dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
-        renderDrawer->renderStrechFullSprite(tex, dest);
+        global_renderDrawer->renderStrechFullSprite(tex, dest);
 
         // Determine next tile coordinates, and if needed wrap to next row
         iDrawX += mapItemButtonWidth + 15;

@@ -24,14 +24,14 @@ void GuiCheckBox::draw() const
 {
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            global_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawBox();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawBox();
             break;
         case OPAQUE_WITH_BORDER:
-            renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            global_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawBox();
             break;
         case TRANSPARENT_WITH_BORDER:
@@ -45,14 +45,14 @@ void GuiCheckBox::draw() const
 }
 
 void GuiCheckBox::renderChecked() const {
-    renderDrawer->renderLine(
+    global_renderDrawer->renderLine(
         m_rect.getX() + 2,
         m_rect.getY() + 3,
         m_rect.getX() + (m_rect.getWidth() - 3),
         m_rect.getY() + (m_rect.getHeight()- 2),
         m_theme.textColorShadow
     );
-    renderDrawer->renderLine(
+    global_renderDrawer->renderLine(
         m_rect.getX() + 2,
         m_rect.getY() + (m_rect.getHeight()-2),
         m_rect.getX() + (m_rect.getWidth()-3),
@@ -60,14 +60,14 @@ void GuiCheckBox::renderChecked() const {
         m_theme.textColorShadow
     );
 
-    renderDrawer->renderLine(
+    global_renderDrawer->renderLine(
         m_rect.getX() + 2,
         m_rect.getY() + 2,
         m_rect.getX() + (m_rect.getWidth() - 3),
         m_rect.getY() + (m_rect.getHeight()- 3),
         m_theme.textColor
     );
-    renderDrawer->renderLine(
+    global_renderDrawer->renderLine(
         m_rect.getX() + 2,
         m_rect.getY() + (m_rect.getHeight()-3),
         m_rect.getX() + (m_rect.getWidth()-3),

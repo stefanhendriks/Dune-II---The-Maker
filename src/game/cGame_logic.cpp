@@ -361,7 +361,7 @@ void cGame::drawState()
 {
     if (m_cScreenFader->getAction() == eFadeAction::FadeOut) {
         if (screenTexture) {
-            renderDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
+            global_renderDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
         }
         return;
     }
@@ -382,8 +382,8 @@ void cGame::drawState()
 */
 void cGame::run()
 {
-    actualRenderer = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
-    screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
+    actualRenderer = global_renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
+    screenTexture = global_renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
         m_timeManager->processTime();
@@ -410,14 +410,14 @@ void cGame::run()
         updateMouseAndKeyboardState();
         m_currentState->update();
 
-        renderDrawer->beginDrawingToTexture(actualRenderer);
-        renderDrawer->renderClearToColor();
+        global_renderDrawer->beginDrawingToTexture(actualRenderer);
+        global_renderDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer();
 
-        renderDrawer->endDrawingToTexture();
-        renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
+        global_renderDrawer->endDrawingToTexture();
+        global_renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
@@ -485,7 +485,7 @@ void cGame::shutdown()
         players[i].destroyAllegroBitmaps();
     }
 
-    delete renderDrawer;
+    delete global_renderDrawer;
     delete m_mouse;
     delete m_keyboard;
 
@@ -607,7 +607,7 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
 
-    renderDrawer = new SDLDrawer(renderer);
+    global_renderDrawer = new SDLDrawer(renderer);
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
@@ -1640,16 +1640,16 @@ void cGame::initiateFadingOut()
 {
     m_cScreenFader->startFadeOut();
 
-    renderDrawer->beginDrawingToTexture(screenTexture);
+    global_renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    global_renderDrawer->endDrawingToTexture();
 }
 
 void cGame::takeBackGroundScreen()
 {
-    renderDrawer->beginDrawingToTexture(screenTexture);
+    global_renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    global_renderDrawer->endDrawingToTexture();
 }
 
 std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const

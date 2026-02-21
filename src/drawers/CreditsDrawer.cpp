@@ -182,11 +182,11 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
 void CreditsDrawer::draw()
 {
     auto *tex = m_gfxinter->getTexture(CREDITS_BAR);
-    renderDrawer->renderSprite(tex, drawX, drawY);
-    renderDrawer->setClippingFor(drawX+1, drawY+5, drawX+tex->w-1, drawY+tex->h-5);
+    global_renderDrawer->renderSprite(tex, drawX, drawY);
+    global_renderDrawer->setClippingFor(drawX+1, drawY+5, drawX+tex->w-1, drawY+tex->h-5);
     drawCurrentCredits(drawX, drawY);
     drawPreviousCredits(drawX, drawY);
-    renderDrawer->resetClippingFor();
+    global_renderDrawer->resetClippingFor();
 
 }
 
@@ -247,7 +247,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            global_renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
@@ -281,7 +281,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            global_renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }

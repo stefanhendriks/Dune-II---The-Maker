@@ -23,14 +23,14 @@ void GuiLabel::draw() const
         return;
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            global_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawText();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            global_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawRectBorder(m_theme.borderLight, m_theme.borderDark);
             drawText();
             break;
@@ -39,7 +39,7 @@ void GuiLabel::draw() const
             drawText();
             break;
         case WITH_TEXTURE:
-            renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
+            global_renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
             break;
     }
 }

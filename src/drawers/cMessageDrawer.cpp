@@ -37,11 +37,11 @@ cMessageDrawer::~cMessageDrawer()
 void cMessageDrawer::draw()
 {
     if (m_state == messages::eMessageDrawerState::COMBAT) {
-        renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y);
+        global_renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y);
     }
 
     if (m_alpha > -1) {
-        renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
+        global_renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
         // draw message
         m_textDrawer->drawText(m_position.x+13, m_position.y+6, Color{0, 0, 0,Uint8(m_alpha)}, m_message, false);
     }

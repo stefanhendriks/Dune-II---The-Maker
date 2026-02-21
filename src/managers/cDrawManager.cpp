@@ -58,7 +58,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenH);
+    global_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenH);
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
@@ -82,16 +82,16 @@ void cDrawManager::drawCombatState()
 
     drawRallyPoint();
 
-    renderDrawer->resetClippingFor();
+    global_renderDrawer->resetClippingFor();
 
     // GUI
     drawSidebar();
 
     drawOptionBar();
 
-    renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    global_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
-    renderDrawer->resetClippingFor();
+    global_renderDrawer->resetClippingFor();
 
     drawTopBarBackground();
     drawCredits();
@@ -101,7 +101,7 @@ void cDrawManager::drawCombatState()
 
     drawNotifications();
 
-    renderDrawer->resetClippingFor();
+    global_renderDrawer->resetClippingFor();
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
@@ -172,7 +172,7 @@ void cDrawManager::drawRallyPoint()
     int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
-    renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
+    global_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
 
     int startX = theStructure->iDrawX() + mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
@@ -184,15 +184,15 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    renderDrawer->renderLine( startX, startY, endX, endY, players[HUMAN].getMinimapColor());
+    global_renderDrawer->renderLine( startX, startY, endX, endY, players[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
 {
-    renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
+    global_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
     m_sidebarDrawer->draw();
     miniMapDrawer->draw();
-    renderDrawer->resetClippingFor();
+    global_renderDrawer->resetClippingFor();
 }
 
 /**
@@ -238,10 +238,10 @@ void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
     for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
-        renderDrawer->renderSprite(topbarPiece, x, 0);
+        global_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    renderDrawer->renderSprite(btnOptions, 1, 0);
+    global_renderDrawer->renderSprite(btnOptions, 1, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -263,11 +263,11 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
+    global_renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    global_renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
 
     for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+        global_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
 
