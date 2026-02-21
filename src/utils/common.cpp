@@ -158,8 +158,8 @@ int iFindCloseBorderCell(int iCll)
 int distanceBetweenCellAndCenterOfScreen(int iCell)
 {
     if (global_map.isValidCell(iCell)) {
-        int centerX = mapCamera->getViewportCenterX();
-        int centerY = mapCamera->getViewportCenterY();
+        int centerX = global_mapCamera->getViewportCenterX();
+        int centerY = global_mapCamera->getViewportCenterY();
 
         int cellX = global_map.getAbsoluteXPositionFromCell(iCell);
         int cellY = global_map.getAbsoluteYPositionFromCell(iCell);
