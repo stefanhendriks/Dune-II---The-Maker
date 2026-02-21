@@ -8,6 +8,7 @@
 
 class cTimeManager;
 class cSoundPlayer;
+class SDLDrawer;
 
 class GameContext {
 public:
@@ -26,10 +27,14 @@ public:
     void setTextContext(std::unique_ptr<TextContext> textContext);
     TextContext* getTextContext() const;
 
+    void setSDLDrawer(std::unique_ptr<SDLDrawer> SDLDrawer);
+    SDLDrawer* getSDLDrawer() const;
+
     void resetCache() const;
 private:
     std::unique_ptr<GraphicsContext> m_graphicsContext;
     std::unique_ptr<cTimeManager> m_timeManager;
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
     std::unique_ptr<TextContext> m_textContext;
+    std::unique_ptr<SDLDrawer> m_SDLDrawer;
 };
