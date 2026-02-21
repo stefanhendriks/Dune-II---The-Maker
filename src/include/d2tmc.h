@@ -69,7 +69,7 @@ extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
 // extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
-extern cDrawManager   *drawManager;
+extern cDrawManager   *global_drawManager;
 extern SDLDrawer      *global_renderDrawer;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)

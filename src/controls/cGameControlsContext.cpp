@@ -50,7 +50,7 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords)
         return;
     }
 
-    if (drawManager->getMiniMapDrawer()->isMouseOver()) {
+    if (global_drawManager->getMiniMapDrawer()->isMouseOver()) {
         m_mouseCell = MOUSECELL_MINIMAP; // on minimap
         m_mouseOnBattleField = false;
         return;

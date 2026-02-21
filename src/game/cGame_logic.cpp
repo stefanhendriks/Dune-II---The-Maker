@@ -212,7 +212,7 @@ void cGame::missionInit()
 
     initPlayers(true);
 
-    drawManager->missionInit();
+    global_drawManager->missionInit();
 }
 
 void cGame::initPlayers(bool rememberHouse) const
@@ -473,7 +473,7 @@ void cGame::shutdown()
 
     delete m_mapViewport;
 
-    delete drawManager;
+    delete global_drawManager;
 
     delete mapCamera;
 
@@ -652,8 +652,8 @@ bool cGame::setupGame()
     IniGameRessources::install_upgrades();
     cPlayer *humanPlayer = &players[HUMAN];
 
-    delete drawManager;
-    drawManager = new cDrawManager(ctx.get(), humanPlayer);
+    delete global_drawManager;
+    global_drawManager = new cDrawManager(ctx.get(), humanPlayer);
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
     m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
@@ -861,7 +861,7 @@ void cGame::setState(int newState)
                 m_mouse->setTile(MOUSE_NORMAL);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
-                    drawManager->drawCombatState();
+                    global_drawManager->drawCombatState();
                     m_timeManager->pauseTimer();
                 }
                 else {
@@ -880,8 +880,8 @@ void cGame::setState(int newState)
                 else {
                     newStatePtr = new cGamePlaying(*this, ctx.get());
                     // re-create drawManager
-                    delete drawManager;
-                    drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    delete global_drawManager;
+                    global_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -890,7 +890,7 @@ void cGame::setState(int newState)
                     }
                     cParticle::reset();
                     // in-between solution until we have a proper combat state object
-                    drawManager->init();
+                    global_drawManager->init();
 
                     // handle update
                     s_GameEvent event{
@@ -991,7 +991,7 @@ void cGame::changeStateFromMentat()
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
         game.setNextStateToTransitionTo(GAME_PLAYING);
-        drawManager->missionInit();
+        global_drawManager->missionInit();
 
         // CENTER MOUSE
         game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
@@ -1053,8 +1053,8 @@ void cGame::thinkFast()
     if (m_currentState) {
         m_currentState->thinkFast();
     }
-    if (drawManager) {
-        drawManager->thinkFast();
+    if (global_drawManager) {
+        global_drawManager->thinkFast();
     }
 }
 
@@ -1545,19 +1545,19 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer &humanPlayer = players[HUMAN];
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        drawManager->setPlayerToDraw(&players[0]);
+        global_drawManager->setPlayerToDraw(&players[0]);
         game.setPlayerToInteractFor(&players[0]);
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        drawManager->setPlayerToDraw(&players[1]);
+        global_drawManager->setPlayerToDraw(&players[1]);
         game.setPlayerToInteractFor(&players[1]);
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        drawManager->setPlayerToDraw(&players[2]);
+        global_drawManager->setPlayerToDraw(&players[2]);
         game.setPlayerToInteractFor(&players[2]);
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        drawManager->setPlayerToDraw(&players[3]);
+        global_drawManager->setPlayerToDraw(&players[3]);
         game.setPlayerToInteractFor(&players[3]);
     }
 
