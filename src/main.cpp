@@ -43,7 +43,7 @@ cBullet        				bullet[MAX_BULLETS];
 
 cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
-cMapCamera					*mapCamera;
+cMapCamera					*global_mapCamera;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];

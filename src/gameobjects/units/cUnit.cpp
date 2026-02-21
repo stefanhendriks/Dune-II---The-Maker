@@ -385,8 +385,8 @@ void cUnit::createExplosionParticle()
                         }
 
                         if (RNG::rnd(100) < iChance) {
-                            long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + RNG::rnd(16));
-                            long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + RNG::rnd(16));
+                            long x = pos_x() + (global_mapCamera->getViewportStartX()) + 16 + (-8 + RNG::rnd(16));
+                            long y = pos_y() + (global_mapCamera->getViewportStartY()) + 16 + (-8 + RNG::rnd(16));
                             cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
                         }
                     }
@@ -513,7 +513,7 @@ int cUnit::draw_x(int bmpWidth)
     // (32 - 48) = -16 / 2 = -8
     int bmpOffset = (TILESIZE_WIDTH_PIXELS - bmpWidth) / 2;
     // x is -8 pixels (ie, 8 pixels more to the left than top-left corner (pos_x) of a cell
-    return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
+    return global_mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cUnit::draw_y()
@@ -525,17 +525,17 @@ int cUnit::draw_y(int bmpHeight)
 {
     // same as draw_x
     int bmpOffset = (TILESIZE_HEIGHT_PIXELS - bmpHeight) / 2;
-    return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
+    return global_mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
 int cUnit::center_draw_x()
 {
-    return mapCamera->getWindowXPosition(pos_x_centered());
+    return global_mapCamera->getWindowXPosition(pos_x_centered());
 }
 
 int cUnit::center_draw_y()
 {
-    return mapCamera->getWindowYPosition(pos_y_centered());
+    return global_mapCamera->getWindowYPosition(pos_y_centered());
 }
 
 int cUnit::getBmpHeight() const
@@ -545,8 +545,8 @@ int cUnit::getBmpHeight() const
 
 void cUnit::draw_spice()
 {
-    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
-    int height_y = mapCamera->factorZoomLevel(4);
+    float width_x = global_mapCamera->factorZoomLevel(getBmpWidth());
+    int height_y = global_mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y() - ((height_y * 2) + 2);
 
@@ -587,8 +587,8 @@ void cUnit::draw_health()
     if (iHitPoints < 0) return;
 
     // draw units health
-    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
-    int height_y = mapCamera->factorZoomLevel(4);
+    float width_x = global_mapCamera->factorZoomLevel(getBmpWidth());
+    int height_y = global_mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y() - (height_y + 2);
 
@@ -614,7 +614,7 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
 {
     if (iHitPoints < 0) return;
 
-    int height_y = mapCamera->factorZoomLevel(4);
+    int height_y = global_mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y() - (height_y + 2);
     // draw group
@@ -690,13 +690,13 @@ void cUnit::draw_path() const
         return;
 
     int halfTile = 16;
-    int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iPath[0], halfTile);
-    int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iPath[0], halfTile);
+    int iPrevX = global_mapCamera->getWindowXPositionFromCellWithOffset(iPath[0], halfTile);
+    int iPrevY = global_mapCamera->getWindowYPositionFromCellWithOffset(iPath[0], halfTile);
 
     for (int i = 1; i < MAX_PATH_SIZE; i++) {
         if (iPath[i] < 0) break;
-        int iDx = mapCamera->getWindowXPositionFromCellWithOffset(iPath[i], halfTile);
-        int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
+        int iDx = global_mapCamera->getWindowXPositionFromCellWithOffset(iPath[i], halfTile);
+        int iDy = global_mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
             global_renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 255,255});
@@ -746,8 +746,8 @@ void cUnit::draw()
 
     cPlayer &cPlayer = players[this->iPlayer];
 
-    const float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
-    const float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
+    const float scaledWidth = global_mapCamera->factorZoomLevel(bmp_width);
+    const float scaledHeight = global_mapCamera->factorZoomLevel(bmp_height);
 
     Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
     int roundedScaledWidth = static_cast<int>(round(scaledWidth));
@@ -780,7 +780,7 @@ void cUnit::draw()
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
-        cRectangle dest = {ux, uy, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
+        cRectangle dest = {ux, uy, static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_height)))};
         global_renderDrawer->renderStrechSprite(top,src, dest);
     }
 
@@ -797,7 +797,7 @@ void cUnit::draw()
         int x = draw_x(bmp_width);
         int y = draw_y(bmp_height);
 
-        cRectangle dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(mapCamera->factorZoomLevel(bmp_height)))};
+        cRectangle dest = {x,y, static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_height)))};
         global_renderDrawer->renderStrechFullSprite(gfxdata->getTexture(FOCUS), dest);
     }
 
@@ -1767,7 +1767,7 @@ void cUnit::thinkFast_move_airUnit()
     setPosY(newPosY);
 
     // Cell of unit is determined by its center
-    iCell = mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
+    iCell = global_mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
 
     updateCellXAndY();
     global_map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
@@ -3045,9 +3045,9 @@ void cUnit::thinkFast_position()
 {
     // keep updating dimensions
     dimensions.move(draw_x(), draw_y());
-    if (mapCamera) {
-        dimensions.resize(mapCamera->factorZoomLevel(getBmpWidth()),
-                          mapCamera->factorZoomLevel(getBmpHeight()));
+    if (global_mapCamera) {
+        dimensions.resize(global_mapCamera->factorZoomLevel(getBmpWidth()),
+                          global_mapCamera->factorZoomLevel(getBmpHeight()));
     }
 }
 
@@ -4343,11 +4343,11 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
             temp_map[the_cll].cost = cost;
 
             int halfTile = 16;
-            int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
-            int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
+            int iPrevX = global_mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
+            int iPrevY = global_mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
 
-            int iDx = mapCamera->getWindowXPositionFromCellWithOffset(the_cll, halfTile);
-            int iDy = mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
+            int iDx = global_mapCamera->getWindowXPositionFromCellWithOffset(the_cll, halfTile);
+            int iDy = global_mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
             if (game.m_drawUnitDebug) {
                 global_renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, Color{0, 255, 0,255});

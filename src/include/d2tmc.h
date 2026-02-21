@@ -63,7 +63,7 @@ extern cMap       global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
-extern cMapCamera	  *mapCamera;
+extern cMapCamera	  *global_mapCamera;
 extern cPlayer        players[MAX_PLAYERS];
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];

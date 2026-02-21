@@ -70,13 +70,13 @@ int cBullet::pos_y() const
 int cBullet::draw_x()
 {
     int bmpOffset = (getBulletBmpWidth()/2) * -1;
-    return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
+    return global_mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cBullet::draw_y()
 {
     int bmpOffset = (getBulletBmpHeight()/2) * -1;
-    return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
+    return global_mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
 // draw the bullet
@@ -133,7 +133,7 @@ void cBullet::draw()
 
     if (sBulletInfo[iType].bmp != nullptr) {
         cRectangle src = {sx,sy, bmp_width, bmp_width};
-        cRectangle dest = {x,y, static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(mapCamera->factorZoomLevel(bmp_width)))};
+        cRectangle dest = {x,y, static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width)))};
         global_renderDrawer->renderStrechSprite(sBulletInfo[iType].bmp, src, dest);
     }
 }
@@ -193,7 +193,7 @@ void cBullet::thinkFast()
 
 void cBullet::think_move()
 {
-    iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
+    iCell = global_mapCamera->getCellFromAbsolutePosition(posX, posY);
 
     int iCellX = global_map.getCellX(iCell);
     int iCellY = global_map.getCellY(iCell);

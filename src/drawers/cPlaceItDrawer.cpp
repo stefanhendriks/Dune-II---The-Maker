@@ -139,8 +139,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 }
 
                 // Draw bad gfx on spot
-                float desiredWidth = mapCamera->getZoomedTileWidth();
-                float desiredHeight = mapCamera->getZoomedTileHeight();
+                float desiredWidth = global_mapCamera->getZoomedTileWidth();
+                float desiredHeight = global_mapCamera->getZoomedTileHeight();
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
@@ -162,8 +162,8 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
 
-    int scaledWidth = mapCamera->factorZoomLevel(width);
-    int scaledHeight = mapCamera->factorZoomLevel(height);
+    int scaledWidth = global_mapCamera->factorZoomLevel(width);
+    int scaledHeight = global_mapCamera->factorZoomLevel(height);
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
