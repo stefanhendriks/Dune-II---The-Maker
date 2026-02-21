@@ -112,13 +112,13 @@ int cAbstractStructure::pos_y()
 // X drawing position
 int cAbstractStructure::iDrawX()
 {
-    return mapCamera->getWindowXPosition(pos_x());
+    return global_mapCamera->getWindowXPosition(pos_x());
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY()
 {
-    return mapCamera->getWindowYPosition(pos_y());
+    return global_mapCamera->getWindowYPosition(pos_y());
 }
 
 Texture *cAbstractStructure::getBitmap()
@@ -900,8 +900,8 @@ void cAbstractStructure::drawWithShadow()
     int drawX = iDrawX();
     int drawY = iDrawY();
 
-    int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+    int scaledWidth = global_mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = global_mapCamera->factorZoomLevel(pixelHeight);
 
     Texture *bitmapToDraw = getBitmap();
 

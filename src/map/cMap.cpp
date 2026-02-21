@@ -481,7 +481,7 @@ void cMap::clearShroud(int c, int size, int playerId)
             y = (y + dr2);
 
             // convert back
-            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = global_mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
 
@@ -646,7 +646,7 @@ int cMap::mouse_draw_x()
     if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absX = getAbsoluteXPositionFromCell(mouseCell);
-        return mapCamera->getWindowXPosition(absX);
+        return global_mapCamera->getWindowXPosition(absX);
     }
     return -1;
 }
@@ -656,7 +656,7 @@ int cMap::mouse_draw_y()
     if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absY = getAbsoluteYPositionFromCell(mouseCell);
-        return mapCamera->getWindowYPosition(absY);
+        return global_mapCamera->getWindowYPosition(absY);
     }
     return -1;
 }
@@ -1237,7 +1237,7 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             y = (y + dr2);
 
             // convert back
-            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = global_mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
             if (!isWithinBoundaries(cl)) continue;
@@ -1272,7 +1272,7 @@ int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDr
             y = (y + dr2);
 
             // convert back
-            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = global_mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
 
