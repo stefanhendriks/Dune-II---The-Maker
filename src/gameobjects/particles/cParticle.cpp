@@ -124,14 +124,14 @@ void cParticle::draw()
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
-            renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
+            global_renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
         else {
-            renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
+            global_renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
     }
     else {
-        renderDrawer->renderStrechSprite(bmp, src, dest,255);
+        global_renderDrawer->renderStrechSprite(bmp, src, dest,255);
     }
 }
 
@@ -825,7 +825,7 @@ void cParticle::recolorForHouseIfGiven() {
     }
 
     int bmpIndex = sParticleInfo[iType].bmpIndex;
-    if (renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
+    if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }

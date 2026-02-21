@@ -63,7 +63,7 @@ void cMapDrawer::drawShroud()
                     // do nothing
                 }
                 else {
-                    renderDrawer->renderRectFillColor(fDrawX, fDrawY, tileWidth, tileHeight,0, 0, 0,128);
+                    global_renderDrawer->renderRectFillColor(fDrawX, fDrawY, tileWidth, tileHeight,0, 0, 0,128);
                 }
             }
             else {
@@ -73,7 +73,7 @@ void cMapDrawer::drawShroud()
                     if (tile > -1) {
                         const cRectangle src_pos = {tile * 32, 0, 32, 32};
                         cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                        renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
+                        global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                     }
                 }
                 else {
@@ -82,7 +82,7 @@ void cMapDrawer::drawShroud()
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
                     const cRectangle src_pos = {0, 0, 32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
+                    global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
                 }
             }
         }
@@ -141,13 +141,13 @@ void cMapDrawer::drawTerrain()
             // Draw terrain
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
-                renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
+                global_renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
             }
             else {
                 // valid type
                 const cRectangle src_pos = {cell->tile * 32, 0,32, 32};
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                renderDrawer->renderStrechSprite(m_gfxdata->getTexture(cell->type), src_pos, dest_pos);
+                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(cell->type), src_pos, dest_pos);
             }
 
             // draw Smudge if necessary
@@ -155,7 +155,7 @@ void cMapDrawer::drawTerrain()
                 cell->smudgetype.transform([&](const auto &smudgeType) {
                     const cRectangle src_pos = {cell->smudgetile * 32, static_cast<int>(smudgeType) * 32,32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
+                    global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
                     return std::monostate{}; // needed with GCC15, with GCC16 not needed to return anything.
                 });
             }
@@ -169,12 +169,12 @@ void cMapDrawer::drawTerrain()
                     int mcY = m_map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight,255, 255, 0,96);
+                        global_renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight,255, 255, 0,96);
                     }
                 }
 
                 if (m_drawGrid) {
-                    renderDrawer->renderRectColor(iDrawX, iDrawY, iTileWidth, iTileHeight, Color{128, 128, 128,255});
+                    global_renderDrawer->renderRectColor(iDrawX, iDrawY, iTileWidth, iTileHeight, Color{128, 128, 128,255});
                 }
             }
 
@@ -242,7 +242,7 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 
     if (bDraw) {
-        renderDrawer->renderRectColor(fDrawX, fDrawY, tileWidth, tileHeight, iClr);
+        global_renderDrawer->renderRectColor(fDrawX, fDrawY, tileWidth, tileHeight, iClr);
     }
 }
 

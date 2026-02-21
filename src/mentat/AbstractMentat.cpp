@@ -252,17 +252,17 @@ void AbstractMentat::thinkMouth()  // MOUTH
 
 void AbstractMentat::draw()
 {
-    renderDrawer->renderClearToColor(Color{7,7,15,255});
-    renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
-    renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
-    renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
+    global_renderDrawer->renderClearToColor(Color{7,7,15,255});
+    global_renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
+    global_renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
+    global_renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
 
     // movie
     draw_movie();
 
     Texture *tmp = getBackgroundBitmap();
     cRectangle dest = {offsetX, offsetY,640, 480};
-    renderDrawer->renderStrechFullSprite(tmp, dest);
+    global_renderDrawer->renderStrechFullSprite(tmp, dest);
 
     draw_eyes();
     draw_mouth();
@@ -307,7 +307,7 @@ void AbstractMentat::draw_movie()
     // drawing only, circulating is done in think function
     Texture *tmp = gfxmovie->getTexture(iMovieFrame);
     cRectangle dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
-    renderDrawer->renderStrechFullSprite(tmp, dest);
+    global_renderDrawer->renderStrechFullSprite(tmp, dest);
 }
 
 void AbstractMentat::initSentences()
@@ -328,7 +328,7 @@ void AbstractMentat::loadScene(const std::string &scene)
     char filename[255];
     snprintf(filename, sizeof(filename), "data/scenes/sdl_%s.dat", scene.c_str());
 
-    gfxmovie = std::make_shared<Graphics>(renderDrawer->getRenderer(),filename);
+    gfxmovie = std::make_shared<Graphics>(global_renderDrawer->getRenderer(),filename);
 
     TIMER_movie = 0;
     iMovieFrame=0;

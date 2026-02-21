@@ -229,7 +229,7 @@ void cOptionsState::thinkFast()
 void cOptionsState::draw() const
 {
     if (m_backgroundTexture) {
-        renderDrawer->renderSprite(m_backgroundTexture,0,0);
+        global_renderDrawer->renderSprite(m_backgroundTexture,0,0);
     }
     m_guiWindow->draw();
 

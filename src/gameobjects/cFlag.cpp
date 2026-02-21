@@ -42,7 +42,7 @@ void cFlag::draw()
         cRectangle src = {0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
 
-        renderDrawer->renderStrechSprite(flagBitmap, src, dest);
+        global_renderDrawer->renderStrechSprite(flagBitmap, src, dest);
     }
 }
 

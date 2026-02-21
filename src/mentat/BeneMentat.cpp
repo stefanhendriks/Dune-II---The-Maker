@@ -83,12 +83,12 @@ void BeneMentat::draw_other()
 
 void BeneMentat::draw_eyes()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
+    global_renderDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
 }
 
 void BeneMentat::draw_mouth()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
+    global_renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }
 
 void BeneMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)

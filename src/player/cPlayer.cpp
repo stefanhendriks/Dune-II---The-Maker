@@ -2311,8 +2311,7 @@ void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
 Texture *cPlayer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency)
 {
     assert(referenceSurface && "referenceSurface must be given");
-
     int swapStart = m_HousesInfo->getSwapColor(house);
     if (swapStart < 0) swapStart = -1;
-    return renderDrawer->createTextureFromIndexedSurfaceWithPalette(referenceSurface, paletteIndexForTransparency, swapStart);
+    return global_renderDrawer->createTextureFromIndexedSurfaceWithPalette(referenceSurface, paletteIndexForTransparency, swapStart);
 }

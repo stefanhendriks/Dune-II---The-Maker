@@ -42,7 +42,7 @@ cBullet        				bullet[MAX_BULLETS];
 // std::array<cRegion, MAX_REGIONS> world;
 
 cDrawManager   				*drawManager = nullptr;
-SDLDrawer                   *renderDrawer = nullptr;
+SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*mapCamera;
 
 // Structs of all kinds of objects (*info)
