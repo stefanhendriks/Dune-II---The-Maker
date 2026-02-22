@@ -7,6 +7,7 @@
 struct SDL_Surface;
 class GameContext;
 class Graphics;
+class SDLDrawer;
 
 namespace messages {
 enum eMessageDrawerState {
@@ -61,6 +62,7 @@ private:
     messages::eMessageDrawerState m_state;
     messages::eMessageDrawerFadingState m_fadeState;
     cTextDrawer* m_textDrawer=nullptr;
+    SDLDrawer* m_renderDrawer=nullptr;
     GameContext* m_ctx;
     Graphics* m_gfxinter;
 
