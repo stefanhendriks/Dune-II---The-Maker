@@ -13,7 +13,7 @@
 
 #include <cassert>
 
-cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(thePlayer), m_ctx(ctx)
+cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
 {
     m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
 }
@@ -144,7 +144,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                global_renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
+                m_renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
             }
         }
     }
@@ -183,5 +183,5 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     // which cannot be used in this case)
     cRectangle src = { 0, 0, width, height}; // takes first frame
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    global_renderDrawer->renderStrechSprite(bmp, src, dest,96);
+    m_renderDrawer->renderStrechSprite(bmp, src, dest,96);
 }
