@@ -7,6 +7,7 @@
 
 class cGame;
 class GameContext;
+class SDLDrawer;
 
 enum eGameStateType {
     GAMESTATE_CHOOSE_HOUSE,                 // #define GAME_SELECT_HOUSE  8		// pick a house
@@ -59,7 +60,7 @@ protected:
     // the state of the game itself
     cGame &m_game;
     GameContext* m_ctx=nullptr;
-
+    SDLDrawer* m_renderDrawer;
 private:
 
 };
