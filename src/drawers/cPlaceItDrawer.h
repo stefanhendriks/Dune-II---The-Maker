@@ -6,6 +6,7 @@
 class GameContext;
 class cPlayer;
 class Graphics;
+class SDLDrawer;
 
 class cPlaceItDrawer {
 public:
@@ -24,5 +25,6 @@ private:
     cStructureUtils structureUtils;
     cPlayer *player;
     GameContext *m_ctx;
+    SDLDrawer *m_renderDrawer;
     Graphics *m_gfxdata;
 };
