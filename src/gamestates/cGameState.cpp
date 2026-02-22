@@ -1,8 +1,11 @@
 #include "cGameState.h"
+#include "context/GameContext.hpp"
+#include "drawers/SDLDrawer.hpp"
 
 cGameState::cGameState(cGame &theGame, GameContext* _ctx) :
     m_game(theGame),
-    m_ctx(_ctx)
+    m_ctx(_ctx),
+    m_renderDrawer(m_ctx->getSDLDrawer())
 {
 }
 

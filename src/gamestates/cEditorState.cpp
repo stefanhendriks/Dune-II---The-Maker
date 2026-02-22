@@ -439,22 +439,22 @@ void cEditorState::drawMap() const
             switch (tileID)
             {
             case TERRAIN_SPICE:
-                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICE), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICE), srcRect, destRect);
                 break;
             case TERRAIN_SAND:
-                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SAND), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SAND), srcRect, destRect);
                 break;
             case TERRAIN_MOUNTAIN:
-                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_MOUNTAIN), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_MOUNTAIN), srcRect, destRect);
                 break;
             case TERRAIN_ROCK:
-                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_ROCK), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_ROCK), srcRect, destRect);
                 break;
             case TERRAIN_SPICEHILL:
-                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICEHILL), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICEHILL), srcRect, destRect);
                 break;  
             case TERRAIN_HILL:
-                global_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_HILL), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_HILL), srcRect, destRect);
                 break;            
             default:
                 break;
@@ -529,7 +529,7 @@ void cEditorState::drawStartCells() const
             // Display if onscreen
             if (x + tileLenSize > 0 && x < m_game.m_screenW &&y + tileLenSize > heightBarSize && y < m_game.m_screenH) {
                 destRect = cRectangle(x, y, tileLenSize, tileLenSize);
-                global_renderDrawer->renderStrechSprite(m_gfxeditor->getTexture(STARTPOSITION1+i), srcRect, destRect);
+                m_renderDrawer->renderStrechSprite(m_gfxeditor->getTexture(STARTPOSITION1+i), srcRect, destRect);
             }
         }
     }
