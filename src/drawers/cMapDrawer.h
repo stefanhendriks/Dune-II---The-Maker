@@ -7,6 +7,7 @@ struct SDL_Surface;
 class cPlayer;
 class GameContext;
 class Graphics;
+class SDLDrawer;
 
 class cMapDrawer {
 public:
@@ -33,6 +34,7 @@ private:
     cPlayer *m_player;
     cMapCamera *m_camera;
     GameContext *m_ctx;
+    SDLDrawer* m_renderDrawer;
     Graphics *m_gfxdata;
 
     bool m_drawWithoutShroudTiles;
