@@ -37,7 +37,6 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
     cGameState(game, ctx),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
-    m_renderDrawer(ctx->getSDLDrawer()),
     m_previewMaps(std::move(previewMaps)),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_dataCampaign(dataCompaign)

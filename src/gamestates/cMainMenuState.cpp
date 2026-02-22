@@ -187,14 +187,14 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
     // prepare to drawing in cache texture
     if (m_game.isDebugMode()) {
-        backGroundDebug = global_renderDrawer->createRenderTargetTexture(m_game.m_screenW, m_game.m_screenH);
-        global_renderDrawer->beginDrawingToTexture(backGroundDebug);
+        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_screenW, m_game.m_screenH);
+        m_renderDrawer->beginDrawingToTexture(backGroundDebug);
         for (int x = 0; x < m_game.m_screenW; x += 60) {
             for (int y = 0; y < m_game.m_screenH; y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
-        global_renderDrawer->endDrawingToTexture();
+        m_renderDrawer->endDrawingToTexture();
     }
 }
 
@@ -214,10 +214,10 @@ void cMainMenuState::thinkFast()
 void cMainMenuState::draw() const
 {
     if (m_game.isDebugMode()) {
-        global_renderDrawer->renderSprite(backGroundDebug,0,0);
+        m_renderDrawer->renderSprite(backGroundDebug,0,0);
     }
 
-    global_renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
+    m_renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
 
     gui_window->draw();
     gui_btn_credits->draw();
