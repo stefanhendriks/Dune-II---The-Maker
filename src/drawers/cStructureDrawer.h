@@ -2,6 +2,7 @@
 
 class GameContext;
 class Graphics;
+class SDLDrawer;
 
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
@@ -28,6 +29,7 @@ protected:
     int determinePreBuildAnimationIndex(cAbstractStructure *structure);
 
 private:
+    SDLDrawer* m_renderDrawer;
     Graphics *m_gfxinter;
     Graphics *m_gfxdata;
     cStructureUtils structureUtils;
