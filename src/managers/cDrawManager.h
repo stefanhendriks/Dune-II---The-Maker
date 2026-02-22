@@ -23,6 +23,7 @@ struct SDL_Surface;
 class Texture;
 class GameContext;
 class Graphics;
+class SDLDrawer;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
@@ -121,6 +122,7 @@ private:
     // TODO: bullet/projectile drawer
     cPlayer *m_player;
     cTextDrawer *m_textDrawer = nullptr;
+    SDLDrawer* m_renderDrawer;
     Graphics* m_gfxinter;
     Graphics* m_gfxdata;
     cMouseDrawer* m_mouseDrawer = nullptr;

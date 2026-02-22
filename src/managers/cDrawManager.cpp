@@ -29,6 +29,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
+    m_renderDrawer(ctx->getSDLDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
@@ -58,7 +59,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    global_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, global_mapCamera->getWindowWidth(), game.m_screenH);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, global_mapCamera->getWindowWidth(), game.m_screenH);
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
@@ -82,16 +83,16 @@ void cDrawManager::drawCombatState()
 
     drawRallyPoint();
 
-    global_renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 
     // GUI
     drawSidebar();
 
     drawOptionBar();
 
-    global_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, global_mapCamera->getWindowWidth(), global_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, global_mapCamera->getWindowWidth(), global_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
-    global_renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 
     drawTopBarBackground();
     drawCredits();
@@ -101,7 +102,7 @@ void cDrawManager::drawCombatState()
 
     drawNotifications();
 
-    global_renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
@@ -172,7 +173,7 @@ void cDrawManager::drawRallyPoint()
     int rallyPointWidthScaled = global_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = global_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
-    global_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
+    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
 
     int startX = theStructure->iDrawX() + global_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + global_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
@@ -184,15 +185,15 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    global_renderDrawer->renderLine( startX, startY, endX, endY, players[HUMAN].getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, players[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
 {
-    global_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
+    m_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
     m_sidebarDrawer->draw();
     miniMapDrawer->draw();
-    global_renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 }
 
 /**
@@ -238,10 +239,10 @@ void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
     for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
-        global_renderDrawer->renderSprite(topbarPiece, x, 0);
+        m_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    global_renderDrawer->renderSprite(btnOptions, 1, 0);
+    m_renderDrawer->renderSprite(btnOptions, 1, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -263,11 +264,11 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    global_renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    global_renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
+    m_renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
 
     for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-        global_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+        m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
 
