@@ -17,6 +17,7 @@
 #include <SDL2/SDL.h>
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx) :
+    m_renderDrawer(ctx->getSDLDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
@@ -55,7 +56,7 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int width_x = global_mapCamera->factorZoomLevel(width);
     int height_y = global_mapCamera->factorZoomLevel(height);
 
-    global_renderDrawer->renderRectColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, 96);
+    m_renderDrawer->renderRectColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, 96);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
@@ -74,7 +75,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-    global_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
+    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -158,7 +159,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
             int x2 = global_mapCamera->getWindowXPosition(structure->pos_x() + 16);
             int y2 = global_mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
-            global_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
+            m_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
             int mouseCellX = global_map.getCellX(pContext->getMouseCell());
             int mouseCellY = global_map.getCellY(pContext->getMouseCell());
@@ -264,7 +265,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = global_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = global_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    global_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
+    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
@@ -295,11 +296,11 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     if (r > 255) r = 255;
 
     // bar itself
-    global_renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
-    global_renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
+    m_renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    m_renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
 
     // bar around it
-    global_renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
+    m_renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -309,7 +310,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int scaledWidth = global_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = global_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    global_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
+    m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
@@ -336,7 +337,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         }
     }
 
-    global_renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0,
+    m_renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0,
                                       cSideBar::SidebarWidth, game.m_screenH, 0, 0, 0,255);
 }
 
@@ -368,9 +369,9 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     if (r > 255) r = 255;
 
     // bar itself
-    global_renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
-    global_renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
+    m_renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    m_renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
 
     // bar around it
-    global_renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
+    m_renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
 }
