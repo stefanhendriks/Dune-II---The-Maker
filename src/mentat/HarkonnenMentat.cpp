@@ -48,10 +48,10 @@ void HarkonnenMentat::draw_other()
 
 void HarkonnenMentat::draw_eyes()
 {
-    global_renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
 }
 
 void HarkonnenMentat::draw_mouth()
 {
-    global_renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
 }
