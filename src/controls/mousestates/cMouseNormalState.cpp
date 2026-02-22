@@ -10,6 +10,7 @@
 #include "player/cPlayer.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 
 #include "data/gfxdata.h"
 
@@ -69,11 +70,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
 
         if (!ids.empty()) {
             if (ids.size() > 1) {
-                drawManager->setMessage(std::format("{} units selected", ids.size()));
+                global_drawManager->setMessage(std::format("{} units selected", ids.size()));
             }
             else {
                 cUnit &pUnit = unit[ids[0]];
-                drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+                global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
             }
         }
     }
@@ -96,7 +97,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                     else {
                         unitSelected = true;
                     }
-                    drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+                    global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
                 }
             }
 
@@ -115,7 +116,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                 }
 
                 if (pStructure && pStructure->isValid()) {
-                    drawManager->setMessage(pStructure->getStatusForMessageBar());
+                    global_drawManager->setMessage(pStructure->getStatusForMessageBar());
                 }
             }
         }

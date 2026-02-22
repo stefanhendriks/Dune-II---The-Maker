@@ -1,6 +1,7 @@
 #include "gamestates/cChooseHouseState.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/cSoundPlayer.h"
@@ -69,14 +70,14 @@ void cChooseHouseState::draw() const
     cMouse *mouse = m_game.getMouse();
 
     // Render the planet Dune a bit downward
-    renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
+    m_renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
 
     // HOUSES
-    renderDrawer->renderSprite(bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
+    m_renderDrawer->renderSprite(bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
-    renderDrawer->renderSprite(bmp_HouseAtreides, houseAtreides.getX(), houseAtreides.getY());
-    renderDrawer->renderSprite(bmp_HouseOrdos, houseOrdos.getX(), houseOrdos.getY());
-    renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
+    m_renderDrawer->renderSprite(bmp_HouseAtreides, houseAtreides.getX(), houseAtreides.getY());
+    m_renderDrawer->renderSprite(bmp_HouseOrdos, houseOrdos.getX(), houseOrdos.getY());
+    m_renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
 
     // BACK (bottom right
     // TODO: Use actual cGuiButton

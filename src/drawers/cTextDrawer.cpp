@@ -2,6 +2,7 @@
 #include "drawers/cTextTextureCache.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Color.hpp"
 #include <iostream>
@@ -24,9 +25,9 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
     auto cacheEntry = m_textCache->findOrCreate(color, msg);
     cacheEntry->lifeCounter += 1;
     if (applyShadow) {
-        renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
+        global_renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
     }
-    renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
+    global_renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
 }
 
 void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow) const

@@ -1,6 +1,7 @@
 #include "cCreditsState.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
@@ -375,12 +376,12 @@ void cCreditsState::thinkFast()
 
 void cCreditsState::draw() const
 {
-    renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
+    m_renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
     int halfScreen = m_game.m_screenW / 2;
 
     // draw crawler
-    renderDrawer->renderSprite(m_titleBmp, m_titleX, m_crawlerY);
+    m_renderDrawer->renderSprite(m_titleBmp, m_titleX, m_crawlerY);
     int textCrawlY = m_crawlerY + m_titleHeight;
     for (auto &line : m_lines) {
         if (line.name.empty()) {

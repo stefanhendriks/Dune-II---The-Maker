@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "data/gfxdata.h"
+#include "map/cMap.h"
 #include "controls/cGameControlsContext.h"
 #include "player/cPlayer.h"
 

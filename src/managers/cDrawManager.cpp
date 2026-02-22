@@ -2,6 +2,7 @@
 
 #include "controls/cGameControlsContext.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
@@ -16,20 +17,31 @@
 #include <cassert>
 
 cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
-    m_sidebarDrawer(ctx, thePlayer),
-    m_creditsDrawer(ctx, thePlayer),
-    m_orderDrawer(ctx, thePlayer),
-    m_mapDrawer(&global_map, thePlayer, mapCamera),
-    miniMapDrawer(ctx, &global_map, thePlayer, mapCamera),
-    m_particleDrawer(),
-    m_messageDrawer(ctx),
-    m_placeitDrawer(thePlayer),
-    m_structureDrawer(ctx),
+    //m_sidebarDrawer(ctx, thePlayer),
+    // m_creditsDrawer(ctx, thePlayer),
+    // m_orderDrawer(ctx, thePlayer),
+    // m_mapDrawer(&global_map, thePlayer, mapCamera),
+    // miniMapDrawer(ctx, &global_map, thePlayer, mapCamera),
+    // m_particleDrawer(),
+    // m_messageDrawer(ctx),
+    // m_placeitDrawer(thePlayer),
+    // m_structureDrawer(ctx),
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+    m_renderDrawer(ctx->getSDLDrawer()),
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
+    m_sidebarDrawer = std::make_unique<cSideBarDrawer>(ctx, thePlayer);
+    m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
+    m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
+    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &global_map, thePlayer, global_mapCamera);
+    miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &global_map, thePlayer, global_mapCamera);
+    m_particleDrawer = std::make_unique<cParticleDrawer>();
+    m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
+    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
+    m_structureDrawer = std::make_unique<cStructureDrawer>(ctx);
     assert(thePlayer);
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
@@ -47,40 +59,40 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.m_screenH);
-    m_mapDrawer.drawTerrain();
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, global_mapCamera->getWindowWidth(), game.m_screenH);
+    m_mapDrawer->drawTerrain();
 
-    m_structureDrawer.drawStructuresFirstLayer();
+    m_structureDrawer->drawStructuresFirstLayer();
 
     // draw layer 1 (beneath units, on top of terrain)
-    m_particleDrawer.determineParticlesToDraw(*game.m_mapViewport);
-    m_particleDrawer.drawLowerLayer();
+    m_particleDrawer->determineParticlesToDraw(*game.m_mapViewport);
+    m_particleDrawer->drawLowerLayer();
 
     global_map.draw_units();
 
     global_map.draw_bullets();
 
-    m_structureDrawer.drawStructuresSecondLayer();
+    m_structureDrawer->drawStructuresSecondLayer();
 
     global_map.draw_units_2nd();
 
-    m_particleDrawer.drawTopLayer();
-    m_structureDrawer.drawStructuresHealthBars();
+    m_particleDrawer->drawTopLayer();
+    m_structureDrawer->drawStructuresHealthBars();
 
-    m_mapDrawer.drawShroud();
+    m_mapDrawer->drawShroud();
 
     drawRallyPoint();
 
-    renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 
     // GUI
     drawSidebar();
 
     drawOptionBar();
 
-    renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, global_mapCamera->getWindowWidth(), global_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
-    renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 
     drawTopBarBackground();
     drawCredits();
@@ -90,11 +102,11 @@ void cDrawManager::drawCombatState()
 
     drawNotifications();
 
-    renderDrawer->resetClippingFor();
+    m_renderDrawer->resetClippingFor();
 
     if (game.m_drawUsages) {
         drawDebugInfoUsages();
-        m_particleDrawer.drawDebugInfo(m_textDrawer);
+        m_particleDrawer->drawDebugInfo(m_textDrawer);
     }
 }
 
@@ -141,7 +153,7 @@ void cDrawManager::drawDebugInfoUsages() const
 
 void cDrawManager::drawCredits()
 {
-    m_creditsDrawer.draw();
+    m_creditsDrawer->draw();
 }
 
 void cDrawManager::drawRallyPoint()
@@ -153,35 +165,35 @@ void cDrawManager::drawRallyPoint()
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
 
-    int drawX = mapCamera->getWindowXPositionFromCell(rallyPointCell);
-    int drawY = mapCamera->getWindowYPositionFromCell(rallyPointCell);
+    int drawX = global_mapCamera->getWindowXPositionFromCell(rallyPointCell);
+    int drawY = global_mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
-    SDL_Surface *mouseMoveBitmap = gfxdata->getSurface(MOUSE_MOVE);
+    SDL_Surface *mouseMoveBitmap = m_gfxdata->getSurface(MOUSE_MOVE);
 
-    int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
-    int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
+    int rallyPointWidthScaled = global_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
+    int rallyPointHeightScaled = global_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
-    renderDrawer->renderStrechFullSprite(gfxdata->getTexture(MOUSE_MOVE), dest);
+    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
 
-    int startX = theStructure->iDrawX() + mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
-    int startY = theStructure->iDrawY() + mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
+    int startX = theStructure->iDrawX() + global_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
+    int startY = theStructure->iDrawY() + global_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
 
     int offset = (mouseMoveBitmap->w/2);
-    drawX = mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
-    drawY = mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
+    drawX = global_mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
+    drawY = global_mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
 
     int endX = drawX;
     int endY = drawY;
 
-    renderDrawer->renderLine( startX, startY, endX, endY, players[HUMAN].getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, players[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
 {
-    renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
-    m_sidebarDrawer.draw();
-    miniMapDrawer.draw();
-    renderDrawer->resetClippingFor();
+    m_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
+    m_sidebarDrawer->draw();
+    miniMapDrawer->draw();
+    m_renderDrawer->resetClippingFor();
 }
 
 /**
@@ -196,12 +208,12 @@ void cDrawManager::drawStructurePlacing()
     cBuildingListItem *itemToPlace = m_player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
 
-    m_placeitDrawer.draw(itemToPlace, m_player->getGameControlsContext()->getMouseCell());
+    m_placeitDrawer->draw(itemToPlace, m_player->getGameControlsContext()->getMouseCell());
 }
 
 void cDrawManager::drawMessage()
 {
-    m_messageDrawer.draw();
+    m_messageDrawer->draw();
 
     // TODO: replace messageDrawer with drawMessageBar?
     // messageBarDrawer->drawMessageBar();
@@ -227,10 +239,10 @@ void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
     for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
-        renderDrawer->renderSprite(topbarPiece, x, 0);
+        m_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    renderDrawer->renderSprite(btnOptions, 1, 0);
+    m_renderDrawer->renderSprite(btnOptions, 1, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -242,21 +254,21 @@ void cDrawManager::drawTopBarBackground()
 void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 {
     m_player = playerToDraw;
-    m_creditsDrawer.setPlayer(playerToDraw);
-    m_sidebarDrawer.setPlayer(playerToDraw);
-    m_orderDrawer.setPlayer(playerToDraw);
-    miniMapDrawer.setPlayer(playerToDraw);
-    m_mapDrawer.setPlayer(playerToDraw);
+    m_creditsDrawer->setPlayer(playerToDraw);
+    m_sidebarDrawer->setPlayer(playerToDraw);
+    m_orderDrawer->setPlayer(playerToDraw);
+    miniMapDrawer->setPlayer(playerToDraw);
+    m_mapDrawer->setPlayer(playerToDraw);
 }
 
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
+    m_renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
 
     for (int w = 0; w < (game.m_screenW + 800); w += 789) {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+        m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
 
@@ -273,22 +285,22 @@ void cDrawManager::drawNotifications()
 
 void cDrawManager::think()
 {
-    miniMapDrawer.think();
+    miniMapDrawer->think();
 }
 
 void cDrawManager::init()
 {
-    miniMapDrawer.init();
+    miniMapDrawer->init();
 }
 
 void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &event)
 {
-    m_sidebarDrawer.onNotifyMouseEvent(event);
+    m_sidebarDrawer->onNotifyMouseEvent(event);
 }
 
 void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    m_sidebarDrawer.onNotifyKeyboardEvent(event);
+    m_sidebarDrawer->onNotifyKeyboardEvent(event);
 
     switch (event.eventType) {
         case eKeyEventType::HOLD:
@@ -306,10 +318,10 @@ void cDrawManager::onKeyDown(const cKeyboardEvent &event)
 {
     if (game.isDebugMode()) {
         if (event.hasKeys(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
-            m_mapDrawer.setDrawWithoutShroudTiles(true);
+            m_mapDrawer->setDrawWithoutShroudTiles(true);
         }
         if (event.hasKey(SDL_SCANCODE_G)) {
-            m_mapDrawer.setDrawGrid(true);
+            m_mapDrawer->setDrawGrid(true);
         }
     }
 }
@@ -320,51 +332,51 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event)
         // one of these we're pressed, that's enough info to revert back as it breaks the
         // mandatory 'both keys must be pressed' state:
         if (event.hasEitherKey(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
-            m_mapDrawer.setDrawWithoutShroudTiles(false);
+            m_mapDrawer->setDrawWithoutShroudTiles(false);
         }
         if (event.hasKey(SDL_SCANCODE_G)) {
-            m_mapDrawer.setDrawGrid(false);
+            m_mapDrawer->setDrawGrid(false);
         }
     }
 }
 
 void cDrawManager::missionInit()
 {
-    m_creditsDrawer.setCredits();
-    m_messageDrawer.initCombatPosition();
+    m_creditsDrawer->setCredits();
+    m_messageDrawer->initCombatPosition();
 }
 
 void cDrawManager::thinkFast_statePlaying()
 {
-    m_creditsDrawer.thinkFast();
+    m_creditsDrawer->thinkFast();
 }
 
 void cDrawManager::thinkFast()
 {
-    m_messageDrawer.thinkFast();
+    m_messageDrawer->thinkFast();
 }
 
 void cDrawManager::drawMessageBar()
 {
-    m_messageDrawer.draw();
+    m_messageDrawer->draw();
 }
 
 void cDrawManager::setMessage(std::string msg, bool keepMessage)
 {
-    m_messageDrawer.setMessage(msg, keepMessage);
+    m_messageDrawer->setMessage(msg, keepMessage);
 }
 
 void cDrawManager::setKeepMessage(bool value)
 {
-    m_messageDrawer.setKeepMessage(value);
+    m_messageDrawer->setKeepMessage(value);
 }
 
 void cDrawManager::regionInit(int offsetX, int offsetY)
 {
-    m_messageDrawer.initRegionPosition(offsetX, offsetY);
+    m_messageDrawer->initRegionPosition(offsetX, offsetY);
 }
 
 bool cDrawManager::hasMessage()
 {
-    return m_messageDrawer.hasMessage();
+    return m_messageDrawer->hasMessage();
 }

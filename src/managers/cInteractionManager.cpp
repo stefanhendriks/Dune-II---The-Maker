@@ -5,6 +5,7 @@
 #include "cDrawManager.h"
 #include "controls/cGameControlsContext.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/cMiniMapDrawer.h"
 #include "player/cPlayer.h"
 
@@ -85,11 +86,11 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
         pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
         sidebar->onNotifyMouseEvent(mouseEvent);
-        mapCamera->onNotifyMouseEvent(mouseEvent);
+        global_mapCamera->onNotifyMouseEvent(mouseEvent);
 
         // do like this because drawManager gets deleted/recreated
-        drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
-        drawManager->getOrderDrawer()->onNotify(mouseEvent);
+        global_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
+        global_drawManager->getOrderDrawer()->onNotify(mouseEvent);
         cItemBuilder *pBuilder = player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyMouseEvent(mouseEvent);
@@ -97,7 +98,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
     }
 
     // do like this because drawManager gets deleted/recreated
-    drawManager->getMouseDrawer()->onNotify(mouseEvent);
+    global_drawManager->getMouseDrawer()->onNotify(mouseEvent);
 
     // LAST FOR NOW, as this can change states and thus break things. Hence, if you put this
     // somewhere above this function, the lines after this onNotifyGameEvent might end up pointing to invalid memory addresses
@@ -111,7 +112,7 @@ void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         cGameControlsContext *pContext = player->getGameControlsContext();
         pContext->onNotifyKeyboardEvent(event);
 
-        mapCamera->onNotifyKeyboardEvent(event);
+        global_mapCamera->onNotifyKeyboardEvent(event);
         cItemBuilder *pBuilder = player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyKeyboardEvent(event);

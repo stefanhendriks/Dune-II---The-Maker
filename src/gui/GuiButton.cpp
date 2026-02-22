@@ -1,6 +1,7 @@
 #include "GuiButton.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 
 GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
@@ -26,33 +27,33 @@ void GuiButton::draw() const
 {
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            global_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawText();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            global_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             if (m_pressed) {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+                global_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                global_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
             }
             drawText();
             break;
         case TRANSPARENT_WITH_BORDER:
             if (m_pressed) {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+                global_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                global_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
             }
             drawText();
             break;
         case WITH_TEXTURE:
-            renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
+            global_renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
             break;
     }
 }

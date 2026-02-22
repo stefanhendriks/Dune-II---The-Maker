@@ -15,6 +15,7 @@
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "map/cMapCamera.h"
 #include "sidebar/cSideBar.h"
@@ -155,8 +156,8 @@ int iFindCloseBorderCell(int iCll)
 int distanceBetweenCellAndCenterOfScreen(int iCell)
 {
     if (global_map.isValidCell(iCell)) {
-        int centerX = mapCamera->getViewportCenterX();
-        int centerY = mapCamera->getViewportCenterY();
+        int centerX = global_mapCamera->getViewportCenterX();
+        int centerY = global_mapCamera->getViewportCenterY();
 
         int cellX = global_map.getAbsoluteXPositionFromCell(iCell);
         int cellY = global_map.getAbsoluteYPositionFromCell(iCell);

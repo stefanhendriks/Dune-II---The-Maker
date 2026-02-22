@@ -77,11 +77,11 @@ bool cParticle::isValid() const {
 }
 
 int cParticle::draw_x() const {
-    return mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
+    return global_mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
 int cParticle::draw_y() const {
-    return mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
+    return global_mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
 }
 
 /**
@@ -99,9 +99,9 @@ void cParticle::think_position()
 
     // keep updating dimensions
     dimensions->move(draw_x(), draw_y());
-    if (mapCamera) {
-        dimensions->resize(mapCamera->factorZoomLevel(getFrameWidth()),
-                           mapCamera->factorZoomLevel(getFrameHeight()));
+    if (global_mapCamera) {
+        dimensions->resize(global_mapCamera->factorZoomLevel(getFrameWidth()),
+                           global_mapCamera->factorZoomLevel(getFrameHeight()));
     }
 }
 
@@ -113,8 +113,8 @@ void cParticle::draw()
     int frameHeight = getFrameHeight();
 
     // create proper sized bitmap
-    int bmp_width = mapCamera->factorZoomLevel(frameWidth);
-    int bmp_height = mapCamera->factorZoomLevel(frameHeight);
+    int bmp_width = global_mapCamera->factorZoomLevel(frameWidth);
+    int bmp_height = global_mapCamera->factorZoomLevel(frameHeight);
 
     int drawX = draw_x();
     int drawY = draw_y();
@@ -124,14 +124,14 @@ void cParticle::draw()
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
-            renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
+            global_renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
         else {
-            renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
+            global_renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
     }
     else {
-        renderDrawer->renderStrechSprite(bmp, src, dest,255);
+        global_renderDrawer->renderStrechSprite(bmp, src, dest,255);
     }
 }
 
@@ -825,7 +825,7 @@ void cParticle::recolorForHouseIfGiven() {
     }
 
     int bmpIndex = sParticleInfo[iType].bmpIndex;
-    if (renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
+    if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }

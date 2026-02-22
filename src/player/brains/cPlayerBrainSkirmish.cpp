@@ -3,6 +3,8 @@
 #include "actions/cRespondToThreatAction.h"
 #include "enums.h"
 #include "d2tmc.h"
+#include "map/cMap.h"
+#include "game/cGame.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>

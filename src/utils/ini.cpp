@@ -15,6 +15,7 @@
 #include "utils/cIniUtils.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "definitions.h"
 #include "include/sDataCampaign.h"
@@ -373,7 +374,7 @@ std::string INI_GetHouseDirectoryName(int iHouse)
     }
 }
 
-void cIni::loadRegionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
+void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
     auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
     cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
@@ -648,7 +649,7 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
     else if (wordtype == WORD_FOCUS) {
         int focusCell = ToInt(linefeed);
         players[0].setFocusCell(focusCell);
-        mapCamera->centerAndJumpViewPortToCell(focusCell);
+        global_mapCamera->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
         game.setWinFlags(ToInt(linefeed));
@@ -1176,8 +1177,8 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     fremenIsHumanAlly = true;
                 }
 
-                assert(drawManager);
-                drawManager->missionInit();
+                assert(global_drawManager);
+                global_drawManager->missionInit();
 
                 if (quota > 0) {
                     players[HUMAN].setQuota(quota);

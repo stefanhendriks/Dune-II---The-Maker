@@ -2,6 +2,7 @@
 
 #include "data/gfxdata.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "sidebar/cSideBar.h"
 #include "map/MapGeometry.hpp"
 
@@ -178,10 +179,10 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseMovedTo(event);
             break;
         case eMouseEventType::MOUSE_SCROLLED_DOWN:
-            mapCamera->zoomOut();
+            global_mapCamera->zoomOut();
             break;
         case eMouseEventType::MOUSE_SCROLLED_UP:
-            mapCamera->zoomIn();
+            global_mapCamera->zoomIn();
             break;
         case eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED:
             onMouseRightButtonPressed(event);

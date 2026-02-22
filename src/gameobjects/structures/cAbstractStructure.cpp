@@ -13,6 +13,7 @@
 #include "cAbstractStructure.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
@@ -111,13 +112,13 @@ int cAbstractStructure::pos_y()
 // X drawing position
 int cAbstractStructure::iDrawX()
 {
-    return mapCamera->getWindowXPosition(pos_x());
+    return global_mapCamera->getWindowXPosition(pos_x());
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY()
 {
-    return mapCamera->getWindowYPosition(pos_y());
+    return global_mapCamera->getWindowYPosition(pos_y());
 }
 
 Texture *cAbstractStructure::getBitmap()
@@ -899,8 +900,8 @@ void cAbstractStructure::drawWithShadow()
     int drawX = iDrawX();
     int drawY = iDrawY();
 
-    int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+    int scaledWidth = global_mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = global_mapCamera->factorZoomLevel(pixelHeight);
 
     Texture *bitmapToDraw = getBitmap();
 
@@ -908,9 +909,9 @@ void cAbstractStructure::drawWithShadow()
     cRectangle dest =  {drawX, drawY, scaledWidth, scaledHeight};
     Texture *shadow = getShadowBitmap();
     if (shadow) {
-        renderDrawer->renderStrechSprite(shadow, src, dest, ShadowTrans);
+        global_renderDrawer->renderStrechSprite(shadow, src, dest, ShadowTrans);
     }
-    renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+    global_renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
 }
 
 /**

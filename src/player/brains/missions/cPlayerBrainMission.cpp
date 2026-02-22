@@ -8,6 +8,7 @@
 #include "cPlayerBrainMissionKindFremen.h"
 
 #include "d2tmc.h"
+#include "map/cMap.h"
 
 #include <format>
 

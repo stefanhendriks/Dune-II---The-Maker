@@ -7,6 +7,7 @@
 #include "cOrderProcesser.h"
 #include "utils/RNG.hpp"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
@@ -114,10 +115,10 @@ void cOrderProcesser::think()
 
         if (secondsUntilArrival == 0) {
             sendFrigate();
-            drawManager->setMessage("Frigate is arriving...");
+            global_drawManager->setMessage("Frigate is arriving...");
         }
         else {
-            drawManager->setMessage(msg);
+            global_drawManager->setMessage(msg);
         }
     }
 

@@ -1,6 +1,8 @@
 #include "cPlaceItDrawer.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
+#include "context/GameContext.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
@@ -11,8 +13,9 @@
 
 #include <cassert>
 
-cPlaceItDrawer::cPlaceItDrawer(cPlayer *thePlayer) : player(thePlayer)
+cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
 {
+    m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
 }
 
 cPlaceItDrawer::~cPlaceItDrawer()
@@ -136,12 +139,12 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 }
 
                 // Draw bad gfx on spot
-                float desiredWidth = mapCamera->getZoomedTileWidth();
-                float desiredHeight = mapCamera->getZoomedTileHeight();
+                float desiredWidth = global_mapCamera->getZoomedTileWidth();
+                float desiredHeight = global_mapCamera->getZoomedTileHeight();
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
+                m_renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
             }
         }
     }
@@ -159,18 +162,18 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
 
-    int scaledWidth = mapCamera->factorZoomLevel(width);
-    int scaledHeight = mapCamera->factorZoomLevel(height);
+    int scaledWidth = global_mapCamera->factorZoomLevel(width);
+    int scaledHeight = global_mapCamera->factorZoomLevel(height);
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = gfxdata->getTexture(PLACE_SLAB1);
+        bmp = m_gfxdata->getTexture(PLACE_SLAB1);
     }
     else if (structureId == SLAB4) {
-        bmp = gfxdata->getTexture(PLACE_SLAB4);
+        bmp = m_gfxdata->getTexture(PLACE_SLAB4);
     }
     else if (structureId == WALL) {
-        bmp = gfxdata->getTexture(PLACE_WALL);
+        bmp = m_gfxdata->getTexture(PLACE_WALL);
     }
     else {
         bmp = player->getStructureBitmap(structureId);
@@ -180,5 +183,5 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     // which cannot be used in this case)
     cRectangle src = { 0, 0, width, height}; // takes first frame
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    renderDrawer->renderStrechSprite(bmp, src, dest,96);
+    m_renderDrawer->renderStrechSprite(bmp, src, dest,96);
 }

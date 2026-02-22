@@ -12,6 +12,7 @@ struct SDL_Surface;
 class Texture;
 class Graphics;
 class GameContext;
+class SDLDrawer;
 
 struct s_DataCampaign;
 
@@ -137,4 +138,5 @@ private:
     Graphics* m_gfxworld;
     Graphics* m_gfxinter;
     s_DataCampaign* m_dataCompaign;
+    mutable std::array<cRegion, MAX_REGIONS> world;
 };

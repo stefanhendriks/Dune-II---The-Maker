@@ -17,14 +17,15 @@
 **/
 #pragma once
 
-#include "game/cGame.h"
+// #include "game/cGame.h"
 #include "definitions.h"
-#include "map/cMap.h"
+//#include "map/cMap.h"
 #include "structs.h"
 #include "utils/cStructureUtils.h"
 
-#include "utils/cDataPack.hpp"
+//#include "utils/cDataPack.hpp"
 #include <memory>
+#include <array>
 #include <SDL2/SDL_ttf.h>
 
 /**
@@ -42,12 +43,14 @@ class SDLDrawer;
 class cBullet;
 class cDrawManager;
 class cMapCamera;
-class cRandomMapGenerator;
+// class cRandomMapGenerator;
 class cUnit;
 class cParticle;
 class cPlayer;
-class cRegion;
+// class cRegion;
 class Graphics;
+class cGame;
+class cMap;
 
 struct SDL_Surface;
 
@@ -60,14 +63,14 @@ extern cMap       global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
-extern cMapCamera	  *mapCamera;
+extern cMapCamera	  *global_mapCamera;
 extern cPlayer        players[MAX_PLAYERS];
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
-extern cRegion        world[MAX_REGIONS];
+// extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
-extern cDrawManager   *drawManager;
-extern SDLDrawer      *renderDrawer;
+extern cDrawManager   *global_drawManager;
+extern SDLDrawer      *global_renderDrawer;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];

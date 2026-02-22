@@ -2,6 +2,7 @@
 
 #include "d2tmc.h"
 #include "config.h"
+#include "game/cGame.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -186,14 +187,14 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
     // prepare to drawing in cache texture
     if (m_game.isDebugMode()) {
-        backGroundDebug = renderDrawer->createRenderTargetTexture(m_game.m_screenW, m_game.m_screenH);
-        renderDrawer->beginDrawingToTexture(backGroundDebug);
+        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_screenW, m_game.m_screenH);
+        m_renderDrawer->beginDrawingToTexture(backGroundDebug);
         for (int x = 0; x < m_game.m_screenW; x += 60) {
             for (int y = 0; y < m_game.m_screenH; y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
-        renderDrawer->endDrawingToTexture();
+        m_renderDrawer->endDrawingToTexture();
     }
 }
 
@@ -213,10 +214,10 @@ void cMainMenuState::thinkFast()
 void cMainMenuState::draw() const
 {
     if (m_game.isDebugMode()) {
-        renderDrawer->renderSprite(backGroundDebug,0,0);
+        m_renderDrawer->renderSprite(backGroundDebug,0,0);
     }
 
-    renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
+    m_renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
 
     gui_window->draw();
     gui_btn_credits->draw();

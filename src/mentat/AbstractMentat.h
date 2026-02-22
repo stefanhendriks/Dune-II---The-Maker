@@ -23,7 +23,6 @@
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
 #include "utils/Graphics.hpp"
-#include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include <string>
 #include <memory>
@@ -33,6 +32,7 @@ class GuiButton;
 struct SDL_Surface;
 class Texture;
 class GameContext;
+class SDLDrawer;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)
@@ -102,6 +102,7 @@ protected:
 
     eMentatState state;
     cTextDrawer* m_textDrawer = nullptr;
+    SDLDrawer* m_renderDrawer;
 
     cRectangle *leftButton;
     cRectangle *rightButton;

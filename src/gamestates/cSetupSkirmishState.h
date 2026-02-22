@@ -18,6 +18,7 @@ class cMouse;
 class cPreviewMaps;
 class cRandomMapGenerator;
 class Graphics;
+class SDLDrawer;
 
 struct s_DataCampaign;
 

@@ -2,6 +2,7 @@
 
 #include "drawers/SDLDrawer.hpp"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
@@ -15,6 +16,7 @@ cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player
     m_gameTextDrawer(ctx->getTextContext()->getGameTextDrawer()),
     m_smallTextDrawer(ctx->getTextContext()->getSmallTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_renderDrawer(ctx->getSDLDrawer()),
     m_player(player),
     m_renderListIds(false)
 {
@@ -53,8 +55,8 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
 
     Color color = m_player->getSelectFadingColor();
 
-    renderDrawer->renderRectColor(x, y, width, height, color);
-    renderDrawer->renderRectColor(x + 1, y + 1, width-2, height-2, color);
+    m_renderDrawer->renderRectColor(x, y, width, height, color);
+    m_renderDrawer->renderRectColor(x + 1, y + 1, width-2, height-2, color);
 }
 
 void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
@@ -80,13 +82,13 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
     int height = (m_gfxinter->getSurface(id))->h;
 
     // clear
-    renderDrawer->renderSprite(m_gfxinter->getTexture(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
+    m_renderDrawer->renderSprite(m_gfxinter->getTexture(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
-    renderDrawer->renderSprite(m_gfxinter->getTexture(id), x, y,128);
+    m_renderDrawer->renderSprite(m_gfxinter->getTexture(id), x, y,128);
 
     if (!list->isAvailable()) {
-        renderDrawer->renderRectFillColor(x, y, width, height, 0,0,0,96);
+        m_renderDrawer->renderRectFillColor(x, y, width, height, 0,0,0,96);
     }
 
     if (pressed) {
@@ -94,16 +96,16 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
         Color color = m_player->getHouseFadingColor();
 
-        renderDrawer->renderRectColor(x, y, width, height, color);
-        renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
+        m_renderDrawer->renderRectColor(x, y, width, height, color);
+        m_renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
     }
     else {
         if (list->isFlashing()) {
             Color color = list->getFlashingColor();
 
-            renderDrawer->renderRectColor(x, y, width, height, color);
-            renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
-            renderDrawer->renderRectColor(x + 2, y + 2, width - 3, height - 3, color);
+            m_renderDrawer->renderRectColor(x, y, width, height, color);
+            m_renderDrawer->renderRectColor(x + 1, y + 1, width - 2, height - 2, color);
+            m_renderDrawer->renderRectColor(x + 2, y + 2, width - 3, height - 3, color);
         }
     }
 }
@@ -159,7 +161,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         // icon id must be set , assert it.
         assert(item->getIconId() > -1);
 
-        renderDrawer->renderSprite(m_gfxinter->getTexture(item->getIconId()), iDrawX, iDrawY);
+        m_renderDrawer->renderSprite(m_gfxinter->getTexture(item->getIconId()), iDrawX, iDrawY);
 
         if (shouldDrawStructureSize) {
             drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
@@ -171,8 +173,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
-                renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
-                renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
+                m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
+                m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
             }
             else {
                 if (item->shouldPlaceIt()) {
@@ -181,7 +183,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
-                    renderDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
+                    m_renderDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
                 }
                 else if (item->shouldDeployIt()) {
                     // TODO: draw white/red (flicker)
@@ -190,7 +192,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
-                    renderDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
+                    m_renderDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
                 }
             }
         }
@@ -213,14 +215,14 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             }
 
             if (!item->isAvailable() || isBuildingSameSubListItem) {
-                renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
+                m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
 
                 // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                 if (item->isPendingUpgrading()) {
                     Color errorFadingColor = m_player->getErrorFadingColor();
-                    renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                    m_renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    m_renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     Color red = Color{255, 0, 0,255};
                     m_smallTextDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
@@ -229,9 +231,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // Pending building (ie: a build is progressing, blocking the upgrade)
                 if (item->isPendingBuilding()) {
                     Color errorFadingColor = m_player->getErrorFadingColor();
-                    renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                    m_renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    m_renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     Color red = Color{255, 0, 0, 255};
                     int height = heightOfIcon / 3;
@@ -245,18 +247,18 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
                 // payment/progress)
                 if (cannotPayIt) {
-                    renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
+                    m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
                     Color errorFadingColor = m_player->getErrorFadingColor();
-                    renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+                    m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                    m_renderDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    m_renderDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
                 }
             }
 
             // last built id
             if (list->getLastClickedId() == i) {
-                renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
-                renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
+                m_renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
+                m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
             }
         }
 
@@ -296,14 +298,14 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         // draw rectangle when mouse hovers over icon
         auto m_mouse = game.getMouse();
         if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
-            renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
-            renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
+            m_renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
+            m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
         }
         else {
             Color color = list->getFlashingColor();
             if (item->isFlashing()) {
-                renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), color);
-                renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, color);
+                m_renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), color);
+                m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, color);
             }
         }
 
@@ -347,9 +349,9 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
         iTile = GRID_3X3;
     }
 
-    renderDrawer->renderRectFillColor(x + 43, y + 20,19,19,0,0,0,192);
-    renderDrawer->renderSprite(m_gfxinter->getTexture(GRID_0X0), x + 43, y + 20);
-    renderDrawer->renderSprite(m_gfxinter->getTexture(iTile), x + 43, y + 20);
+    m_renderDrawer->renderRectFillColor(x + 43, y + 20,19,19,0,0,0,192);
+    m_renderDrawer->renderSprite(m_gfxinter->getTexture(GRID_0X0), x + 43, y + 20);
+    m_renderDrawer->renderSprite(m_gfxinter->getTexture(iTile), x + 43, y + 20);
 }
 
 bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY)

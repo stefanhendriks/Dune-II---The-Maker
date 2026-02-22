@@ -1,6 +1,7 @@
 #include "cMessageDrawer.h"
 #include "data/gfxinter.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
@@ -19,6 +20,7 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx) :
     m_state(messages::eMessageDrawerState::COMBAT),
     m_fadeState(messages::eMessageDrawerFadingState::FADE_IN),
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
+    m_renderDrawer(ctx->getSDLDrawer()),
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
@@ -36,11 +38,11 @@ cMessageDrawer::~cMessageDrawer()
 void cMessageDrawer::draw()
 {
     if (m_state == messages::eMessageDrawerState::COMBAT) {
-        renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y);
+        m_renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y);
     }
 
     if (m_alpha > -1) {
-        renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
+        m_renderDrawer->renderFromSurface(m_bmpBar, m_position.x, m_position.y, m_alpha);
         // draw message
         m_textDrawer->drawText(m_position.x+13, m_position.y+6, Color{0, 0, 0,Uint8(m_alpha)}, m_message, false);
     }

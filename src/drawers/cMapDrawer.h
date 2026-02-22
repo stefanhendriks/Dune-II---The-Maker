@@ -5,10 +5,13 @@
 
 struct SDL_Surface;
 class cPlayer;
+class GameContext;
+class Graphics;
+class SDLDrawer;
 
 class cMapDrawer {
 public:
-    cMapDrawer(cMap *map, cPlayer *player, cMapCamera *camera);
+    cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera);
     ~cMapDrawer();
 
     void setPlayer(cPlayer *thePlayer);
@@ -30,6 +33,9 @@ private:
     cMap *m_map;
     cPlayer *m_player;
     cMapCamera *m_camera;
+    GameContext *m_ctx;
+    SDLDrawer* m_renderDrawer;
+    Graphics *m_gfxdata;
 
     bool m_drawWithoutShroudTiles;
     bool m_drawGrid;

@@ -74,13 +74,13 @@ void cLightFactory::draw()
         int drawX = iDrawX();
         int drawY = iDrawY();
 
-        int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-        int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+        int scaledWidth = global_mapCamera->factorZoomLevel(pixelWidth);
+        int scaledHeight = global_mapCamera->factorZoomLevel(pixelHeight);
 
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-        renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+        global_renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
     }
 }
 

@@ -3,11 +3,14 @@
 #include "sidebar/cBuildingListItem.h"
 #include "utils/cStructureUtils.h"
 
+class GameContext;
 class cPlayer;
+class Graphics;
+class SDLDrawer;
 
 class cPlaceItDrawer {
 public:
-    explicit cPlaceItDrawer(cPlayer *thePlayer);
+    explicit cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer);
 
     ~cPlaceItDrawer();
 
@@ -20,6 +23,8 @@ protected:
 
 private:
     cStructureUtils structureUtils;
-
     cPlayer *player;
+    GameContext *m_ctx;
+    SDLDrawer *m_renderDrawer;
+    Graphics *m_gfxdata;
 };

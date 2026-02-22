@@ -1,6 +1,7 @@
 #include "cFlag.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
@@ -23,8 +24,8 @@ void cFlag::draw()
     Texture *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
-    int drawX = mapCamera->getWindowXPosition(absCoords.x);
-    int drawY = mapCamera->getWindowYPosition(absCoords.y);
+    int drawX = global_mapCamera->getWindowXPosition(absCoords.x);
+    int drawY = global_mapCamera->getWindowYPosition(absCoords.y);
 
     if ((drawX >= 0 && drawX < game.m_screenW) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
@@ -36,12 +37,12 @@ void cFlag::draw()
         // So multiply the height of the flag size times frame
         int iSourceY = pixelHeight * frame;
 
-        int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-        int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+        int scaledWidth = global_mapCamera->factorZoomLevel(pixelWidth);
+        int scaledHeight = global_mapCamera->factorZoomLevel(pixelHeight);
         cRectangle src = {0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
 
-        renderDrawer->renderStrechSprite(flagBitmap, src, dest);
+        global_renderDrawer->renderStrechSprite(flagBitmap, src, dest);
     }
 }
 

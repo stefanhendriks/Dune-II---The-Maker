@@ -196,7 +196,7 @@ void cGame::init()
 // initialize for missions
 void cGame::missionInit()
 {
-    mapCamera->resetZoom();
+    global_mapCamera->resetZoom();
 
     m_gameConditionChecker->missionInit();
 
@@ -212,7 +212,7 @@ void cGame::missionInit()
 
     initPlayers(true);
 
-    drawManager->missionInit();
+    global_drawManager->missionInit();
 }
 
 void cGame::initPlayers(bool rememberHouse) const
@@ -346,7 +346,7 @@ void cGame::loadSkirmishMaps() const
 
 void cGame::shakeScreenAndBlitBuffer()
 {
-    m_screenShake->update(m_state, GAME_PLAYING, mapCamera);
+    m_screenShake->update(m_state, GAME_PLAYING, global_mapCamera);
     fadeOutOrBlitScreenBuffer();
 }
 
@@ -361,7 +361,7 @@ void cGame::drawState()
 {
     if (m_cScreenFader->getAction() == eFadeAction::FadeOut) {
         if (screenTexture) {
-            renderDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
+            m_renderDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
         }
         return;
     }
@@ -382,8 +382,8 @@ void cGame::drawState()
 */
 void cGame::run()
 {
-    actualRenderer = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
-    screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
+    actualRenderer = m_renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
+    screenTexture = m_renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
         m_timeManager->processTime();
@@ -410,14 +410,14 @@ void cGame::run()
         updateMouseAndKeyboardState();
         m_currentState->update();
 
-        renderDrawer->beginDrawingToTexture(actualRenderer);
-        renderDrawer->renderClearToColor();
+        m_renderDrawer->beginDrawingToTexture(actualRenderer);
+        m_renderDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer();
 
-        renderDrawer->endDrawingToTexture();
-        renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
+        m_renderDrawer->endDrawingToTexture();
+        m_renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
@@ -473,9 +473,9 @@ void cGame::shutdown()
 
     delete m_mapViewport;
 
-    delete drawManager;
+    delete global_drawManager;
 
-    delete mapCamera;
+    delete global_mapCamera;
 
     cStructureFactory::destroy();
     cSideBarFactory::destroy();
@@ -484,8 +484,7 @@ void cGame::shutdown()
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].destroyAllegroBitmaps();
     }
-
-    delete renderDrawer;
+    //delete global#renderDrawer;
     delete m_mouse;
     delete m_keyboard;
 
@@ -607,7 +606,13 @@ bool cGame::setupGame()
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
 
-    renderDrawer = new SDLDrawer(renderer);
+    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
+    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
+    m_renderDrawer = renderDrawer.get();
+    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
+    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
+    // -----------------------------------
+    ctx->setSDLDrawer(std::move(renderDrawer));
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
@@ -640,8 +645,8 @@ bool cGame::setupGame()
     logbook("Setup:  TERRAINS");
     IniGameRessources::install_terrain(m_TerrainInfo);
 
-    delete mapCamera;
-    mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
+    delete global_mapCamera;
+    global_mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     cIni::installGame(m_gameFilename);
     // Now we are ready for the menu state
@@ -652,8 +657,8 @@ bool cGame::setupGame()
     IniGameRessources::install_upgrades();
     cPlayer *humanPlayer = &players[HUMAN];
 
-    delete drawManager;
-    drawManager = new cDrawManager(ctx.get(), humanPlayer);
+    delete global_drawManager;
+    global_drawManager = new cDrawManager(ctx.get(), humanPlayer);
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
     m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
@@ -861,7 +866,7 @@ void cGame::setState(int newState)
                 m_mouse->setTile(MOUSE_NORMAL);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
-                    drawManager->drawCombatState();
+                    global_drawManager->drawCombatState();
                     m_timeManager->pauseTimer();
                 }
                 else {
@@ -880,8 +885,8 @@ void cGame::setState(int newState)
                 else {
                     newStatePtr = new cGamePlaying(*this, ctx.get());
                     // re-create drawManager
-                    delete drawManager;
-                    drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    delete global_drawManager;
+                    global_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -890,7 +895,7 @@ void cGame::setState(int newState)
                     }
                     cParticle::reset();
                     // in-between solution until we have a proper combat state object
-                    drawManager->init();
+                    global_drawManager->init();
 
                     // handle update
                     s_GameEvent event{
@@ -991,7 +996,7 @@ void cGame::changeStateFromMentat()
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
         game.setNextStateToTransitionTo(GAME_PLAYING);
-        drawManager->missionInit();
+        global_drawManager->missionInit();
 
         // CENTER MOUSE
         game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
@@ -1053,8 +1058,8 @@ void cGame::thinkFast()
     if (m_currentState) {
         m_currentState->thinkFast();
     }
-    if (drawManager) {
-        drawManager->thinkFast();
+    if (global_drawManager) {
+        global_drawManager->thinkFast();
     }
 }
 
@@ -1391,18 +1396,18 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = mapCamera->divideByZoomLevel(global_map.getMaxDistanceInPixels() / 2);
+    float maxDistance = global_mapCamera->divideByZoomLevel(global_map.getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
 
     // zoom factor influences volume (more zoomed in means louder)
-    float volumeFactor = mapCamera->factorZoomLevel(0.7f);
+    float volumeFactor = global_mapCamera->factorZoomLevel(0.7f);
     int iVolFactored = volumeFactor * volume;
 
     if (game.isDebugMode()) {
         logbook(std::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
-                            iDistance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
+                            iDistance, distanceNormalized, maxDistance, global_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
     }
 
     playSound(sampleId, iVolFactored);
@@ -1545,19 +1550,19 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer &humanPlayer = players[HUMAN];
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        drawManager->setPlayerToDraw(&players[0]);
+        global_drawManager->setPlayerToDraw(&players[0]);
         game.setPlayerToInteractFor(&players[0]);
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        drawManager->setPlayerToDraw(&players[1]);
+        global_drawManager->setPlayerToDraw(&players[1]);
         game.setPlayerToInteractFor(&players[1]);
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        drawManager->setPlayerToDraw(&players[2]);
+        global_drawManager->setPlayerToDraw(&players[2]);
         game.setPlayerToInteractFor(&players[2]);
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        drawManager->setPlayerToDraw(&players[3]);
+        global_drawManager->setPlayerToDraw(&players[3]);
         game.setPlayerToInteractFor(&players[3]);
     }
 
@@ -1640,16 +1645,16 @@ void cGame::initiateFadingOut()
 {
     m_cScreenFader->startFadeOut();
 
-    renderDrawer->beginDrawingToTexture(screenTexture);
+    m_renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    m_renderDrawer->endDrawingToTexture();
 }
 
 void cGame::takeBackGroundScreen()
 {
-    renderDrawer->beginDrawingToTexture(screenTexture);
+    m_renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
-    renderDrawer->endDrawingToTexture();
+    m_renderDrawer->endDrawingToTexture();
 }
 
 std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const

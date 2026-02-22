@@ -2,6 +2,7 @@
 
 #include "player/cPlayer.h"
 #include "d2tmc.h"
+#include "map/cMap.h"
 
 #include <vector>
 

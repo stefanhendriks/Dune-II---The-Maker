@@ -1,6 +1,7 @@
 #include "cSelectYourNextConquestState.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "data/gfxworld.h"
@@ -116,22 +117,22 @@ void cSelectYourNextConquestState::thinkFast()
         int iHouse = players[0].getHouse();
         int iMission = m_dataCompaign->mission;
 
-        bool hasMessage = drawManager->hasMessage();
+        bool hasMessage = global_drawManager->hasMessage();
 
         if (regionSceneState == SCENE_INIT) {
             regionSetupNextMission(iMission, iHouse);
-            drawManager->setMessage("3 Houses have come to Dune.");
+            global_drawManager->setMessage("3 Houses have come to Dune.");
             transitionToNextRegionSceneState(SCENE_THREE_HOUSES_COME_FOR_DUNE);
         }
         else if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
             if (!hasMessage && iRegionSceneAlpha >= 255) {
-                drawManager->setMessage("To take control of the land.");
+                global_drawManager->setMessage("To take control of the land.");
                 transitionToNextRegionSceneState(SCENE_TO_TAKE_CONTROL_OF_THE_LAND);
             }
         }
         else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
             if (!hasMessage && iRegionSceneAlpha >= 255) {
-                drawManager->setMessage("That has become divided.");
+                global_drawManager->setMessage("That has become divided.");
                 transitionToNextRegionSceneState(SCENE_THAT_HAS_BECOME_DIVIDED);
             }
         }
@@ -176,13 +177,13 @@ void cSelectYourNextConquestState::thinkFast()
                 bool isRegionTextGiven = regionTextString[0] != '\0';
                 bool isRegionTextEmpty = regionTextString[0] == '\0';
 
-                if ((isRegionTextGiven && !drawManager->hasMessage()) || isRegionTextEmpty) {
+                if ((isRegionTextGiven && !global_drawManager->hasMessage()) || isRegionTextEmpty) {
                     // set this up
                     region.iHouse = houseThatConquersTheRegion;
                     region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
 
                     if (isRegionTextGiven) {
-                        drawManager->setMessage(regionTextString);
+                        global_drawManager->setMessage(regionTextString);
                     }
                     isFinishedConqueringRegions = false;
                     break;
@@ -260,13 +261,13 @@ void cSelectYourNextConquestState::draw() const
 
 
     // Draw this last
-    renderDrawer->renderSprite(m_gfxworld->getTexture(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
+    m_renderDrawer->renderSprite(m_gfxworld->getTexture(BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
-    drawManager->drawMessageBar();
+    global_drawManager->drawMessageBar();
 
     m_guiBtnToMissionSelect->draw();
 
-    drawManager->drawMouse();
+    global_drawManager->drawMouse();
 }
 
 void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
@@ -285,10 +286,10 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 
     // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
-        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY);
-        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);
-        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY + (480) - 64);
-        renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY + (480) - 64);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
     }
 }
 
@@ -296,26 +297,26 @@ void cSelectYourNextConquestState::drawStateIntroduction() const
 {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
         // draw dune planet (being faded in)
-        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
+        m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-        renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
-        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
+        m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
-        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
-        renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+        m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
     }
 }
 
 void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dune first
 {
-    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+    m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
@@ -323,15 +324,15 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dun
     }
 
     // Animate here (so add regions that are conquered)
-    if (isFinishedConqueringRegions && !drawManager->hasMessage()) {
-        drawManager->setMessage("Select your next region.", true);
+    if (isFinishedConqueringRegions && !global_drawManager->hasMessage()) {
+        global_drawManager->setMessage("Select your next region.", true);
     }
 }
 
 void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
 {
-    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
-    renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
+    m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE), offsetX + 16, offsetY + 73);
+    m_renderDrawer->renderSprite(m_gfxworld->getTexture(WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
@@ -345,8 +346,8 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
     }
 
     // Animate here (so add regions that are conquered)
-    if (isFinishedConqueringRegions && !drawManager->hasMessage()) {
-        drawManager->setMessage("Select your next region.", true);
+    if (isFinishedConqueringRegions && !global_drawManager->hasMessage()) {
+        global_drawManager->setMessage("Select your next region.", true);
     }
 }
 
@@ -417,7 +418,7 @@ cRegion *cSelectYourNextConquestState::getRegionMouseIsOver() const
 
 void cSelectYourNextConquestState::regionSetupLostMission()
 {
-    drawManager->regionInit(offsetX, offsetY);
+    global_drawManager->regionInit(offsetX, offsetY);
 
     selectNextConquestAlpha = 1;
 
@@ -435,7 +436,7 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. That's what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
-    drawManager->regionInit(offsetX, offsetY);
+    global_drawManager->regionInit(offsetX, offsetY);
 
     // make world pieces not selectable
     for (int i = 0; i < MAX_REGIONS; i++) {
@@ -449,7 +450,7 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
 
     // Per mission assign:
     // Every house has a different campaign, so...
-    cIni::loadRegionfile(iHouse, iMission, this);
+    cIni::loadRegionfile(world, iHouse, iMission, this);
 
     selectNextConquestAlpha = 1;
 
@@ -504,10 +505,10 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const
     int regionY = offsetY + regionPiece.y;
 
     if (regionPiece.iAlpha >= 255) {
-        renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY);
+        m_renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY);
     }
     else {
-        renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY,regionPiece.iAlpha);
+        m_renderDrawer->renderSprite(regionPiece.bmpColor, regionX, regionY,regionPiece.iAlpha);
     }
 }
 // End of function
@@ -523,7 +524,7 @@ int cSelectYourNextConquestState::regionOver(int mouseX, int mouseY)
     int hCalc = round((mouseY-offsetY-73)*240.0/regionClickMapBmp->h);
     int c = getPixelColorIndexFromSurface(regionClickMapBmp, wCalc, hCalc);
     //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
-    drawManager->setMessage(std::format("region {}",c-1));
+    global_drawManager->setMessage(std::format("region {}",c-1));
     return c - 1;
 }
 

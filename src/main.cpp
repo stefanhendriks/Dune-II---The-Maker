@@ -11,6 +11,7 @@
   */
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gamestates/cSelectYourNextConquestState.h"
@@ -38,11 +39,11 @@ cUnit          				unit[MAX_UNITS];                // units in the game (max MAX
 cPlayer        				players[MAX_PLAYERS];             // player is
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
-cRegion        				world[MAX_REGIONS];
+// std::array<cRegion, MAX_REGIONS> world;
 
-cDrawManager   				*drawManager = nullptr;
-SDLDrawer                   *renderDrawer = nullptr;
-cMapCamera					*mapCamera;
+cDrawManager   				*global_drawManager = nullptr;
+SDLDrawer                   *global_renderDrawer = nullptr;
+cMapCamera					*global_mapCamera;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];

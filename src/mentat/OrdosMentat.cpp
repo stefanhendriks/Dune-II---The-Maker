@@ -1,5 +1,6 @@
 #include "OrdosMentat.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -47,10 +48,10 @@ void OrdosMentat::draw_other()
 
 void OrdosMentat::draw_eyes()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
 }
 
 void OrdosMentat::draw_mouth()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }

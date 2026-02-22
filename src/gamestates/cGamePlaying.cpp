@@ -1,5 +1,6 @@
 #include "gamestates/cGamePlaying.h"
 #include "include/d2tmc.h"
+#include "game/cGame.h"
 #include "include/definitions.h"
 #include "building/cItemBuilder.h"
 #include "gameobjects/structures/cStructureFactory.h"
@@ -33,9 +34,9 @@ cGamePlaying::~cGamePlaying()
 
 void cGamePlaying::thinkFast()
 {
-    drawManager->thinkFast_statePlaying();
+    global_drawManager->thinkFast_statePlaying();
 
-    mapCamera->thinkFast();
+    global_mapCamera->thinkFast();
 
     for (cPlayer &pPlayer : players) {
         pPlayer.thinkFast();
@@ -95,7 +96,7 @@ void cGamePlaying::thinkNormal()
             }
         }
 
-        drawManager->think();
+        global_drawManager->think();
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
             players[i].think();
@@ -130,7 +131,7 @@ void cGamePlaying::thinkSlow()
 
 void cGamePlaying::draw() const
 {
-    drawManager->drawCombatState();
+    global_drawManager->drawCombatState();
     if (m_game.m_drawFps) {
         game.drawTextFps();
     }
@@ -141,7 +142,7 @@ void cGamePlaying::draw() const
         game.drawTextTime();
     }
     // MOUSE
-    drawManager->drawCombatMouse();
+    global_drawManager->drawCombatMouse();
 }
 
 void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent& )
@@ -157,7 +158,7 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     logbook(event.toString());
 
-    drawManager->onNotifyKeyboardEvent(event);
+    global_drawManager->onNotifyKeyboardEvent(event);
 
     switch (event.eventType) {
         case eKeyEventType::HOLD:
@@ -208,13 +209,13 @@ void cGamePlaying::drawCombatMouse() const
 {
     auto m_mouse = game.getMouse();
     if (m_mouse->isBoxSelecting()) {
-        renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
+        m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
+        m_renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
     }
     m_mouse->draw();
 }
@@ -253,18 +254,18 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_Z)) {
-        mapCamera->resetZoom();
+        global_mapCamera->resetZoom();
     }
 
     if (event.hasKey(SDL_SCANCODE_H)) {
-        mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        global_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     // Center on the selected structure
     if (event.hasKey(SDL_SCANCODE_C)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            global_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
@@ -304,14 +305,14 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_H)) {
-        mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        global_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     // Center on the selected structure
     if (event.hasKey(SDL_SCANCODE_C)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            global_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
@@ -341,19 +342,19 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer &humanPlayer = players[HUMAN];
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        drawManager->setPlayerToDraw(&players[0]);
+        global_drawManager->setPlayerToDraw(&players[0]);
         game.setPlayerToInteractFor(&players[0]);
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        drawManager->setPlayerToDraw(&players[1]);
+        global_drawManager->setPlayerToDraw(&players[1]);
         game.setPlayerToInteractFor(&players[1]);
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        drawManager->setPlayerToDraw(&players[2]);
+        global_drawManager->setPlayerToDraw(&players[2]);
         game.setPlayerToInteractFor(&players[2]);
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        drawManager->setPlayerToDraw(&players[3]);
+        global_drawManager->setPlayerToDraw(&players[3]);
         game.setPlayerToInteractFor(&players[3]);
     }
 

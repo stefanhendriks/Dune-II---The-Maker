@@ -1,6 +1,7 @@
 #include "AtreidesMentat.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -52,10 +53,10 @@ void AtreidesMentat::draw_other()
 
 void AtreidesMentat::draw_eyes()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(ATR_EYES01+ iMentatEyes),  offsetX + 80, offsetY + 241);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(ATR_EYES01+ iMentatEyes),  offsetX + 80, offsetY + 241);
 }
 
 void AtreidesMentat::draw_mouth()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
 }

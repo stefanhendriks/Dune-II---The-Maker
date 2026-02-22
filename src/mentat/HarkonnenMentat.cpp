@@ -1,5 +1,6 @@
 #include "HarkonnenMentat.h"
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -47,10 +48,10 @@ void HarkonnenMentat::draw_other()
 
 void HarkonnenMentat::draw_eyes()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
 }
 
 void HarkonnenMentat::draw_mouth()
 {
-    renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
+    m_renderDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
 }

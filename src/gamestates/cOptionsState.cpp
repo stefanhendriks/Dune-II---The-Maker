@@ -1,6 +1,7 @@
 #include "cOptionsState.h"
 
 #include "d2tmc.h"
+#include "game/cGame.h"
 #include "config.h"
 
 #include "gui/GuiButton.h"
@@ -228,7 +229,7 @@ void cOptionsState::thinkFast()
 void cOptionsState::draw() const
 {
     if (m_backgroundTexture) {
-        renderDrawer->renderSprite(m_backgroundTexture,0,0);
+        m_renderDrawer->renderSprite(m_backgroundTexture,0,0);
     }
     m_guiWindow->draw();
 
