@@ -98,7 +98,7 @@ cGame::cGame()
     context = nullptr;
     ctx = nullptr;
     m_mentat = nullptr;
-    m_useFocus = false;
+    m_pauseWhenLosingFocus = false;
 
     // create GameContext
     ctx = std::make_unique<GameContext>();
@@ -131,7 +131,7 @@ void cGame::applySettings(GameSettings *gs)
     m_playSound = gs->playSound;
     m_debugMode = gs->debugMode;
     m_drawUnitDebug = gs->drawUnitDebug;
-    m_useFocus = gs->useFocus;
+    m_pauseWhenLosingFocus = gs->pauseWhenLosingFocus;
     m_disableAI = gs->disableAI;
     m_oneAi = gs->oneAi;
     m_disableWormAi = gs->disableWormAi;
@@ -649,7 +649,7 @@ void cGame::run()
     screenTexture = renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
-        if (m_focusManager->getFocus()) {
+        if (m_focusManager->isGameWindowActive()) {
             m_timeManager->processTime();
         }
         while (SDL_PollEvent(&event)) {
@@ -675,7 +675,7 @@ void cGame::run()
             }
         }
 
-        if (!m_focusManager->getFocus()) {
+        if (!m_focusManager->isGameWindowActive()) {
             m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
             continue; // skip the rest of the loop when we don't have focus
         }
@@ -926,7 +926,7 @@ bool cGame::setupGame()
     // Now we are ready for the menu state
     game.setState(GAME_MENU);
 
-    m_focusManager->setActivateFocus(m_useFocus);
+    m_focusManager->setEnabled(m_pauseWhenLosingFocus);
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.

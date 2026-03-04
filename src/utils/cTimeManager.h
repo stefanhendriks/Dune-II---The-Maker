@@ -55,9 +55,9 @@ public:
     void restartTimer();
 
     // freeze time when focus is lost, and catch up when focus is regained
-    void focusLost();
+    void onWindowFocusLost();
     // catch up time when focus is regained
-    void focusGained();
+    void onWindowFocusGained();
 
 private:
     // gametime timer is called every 100 ms, try to keep up with that.
@@ -76,9 +76,9 @@ private:
     cGame *m_game;
 
     struct Timer {
-        int count = 0;           // nombre de cycles à traiter
-        uint64_t lastTick = 0;   // dernier tick traité
-        uint64_t tickDuration = 0; // durée d'un tick (en ms)
+        int count = 0;                  // number of cycles to process
+        uint64_t lastTick = 0;          // last tick processed
+        uint64_t tickDuration = 0;      // duration of a tick (in ms)
     };
 
     Timer m_timerUnits;
@@ -86,11 +86,11 @@ private:
     Timer m_timerSecond;
     Timer m_timerMinute;
 
-    int m_gameTime = 0; // Definition of game time (= in seconds)
-    int m_fps = 0;			/** Frames per second **/
-    int frameCount = 0;		/** Frame count for FPS calculation **/
-    int waitingTime = 10;	/** Waiting time in ms, used to adapt FPS **/
-    int m_focusLostTime = 0; // Time when focus was lost, used to calculate time to catch up when focus is regained
+    int m_gameTime = 0;         // Definition of game time (= in seconds)
+    int m_fps = 0;			    // Frames per second
+    int frameCount = 0;		    // Frame count for FPS calculation
+    int waitingTime = 10;	    // Waiting time in ms, used to adapt FPS
+    int m_focusLostTime = 0;    // Time when focus was lost, used to calculate time to catch up when focus is regained
 
     std::unique_ptr<cTimeCounter> m_timeCounter;
 };

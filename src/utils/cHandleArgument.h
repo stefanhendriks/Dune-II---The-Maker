@@ -25,7 +25,7 @@ private:
         NOREINFORCEMENTS,
         NOAIREST,
         USAGES,
-        USEFOCUS,
+        PAUSE_WHEN_LOSING_FOCUS,
         SCREENX,
         SCREENY,
         HELP

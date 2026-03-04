@@ -83,8 +83,8 @@ std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
         gameSettings->noAiRest = section.getBoolean("noAiRest");
     if (section.hasValue("drawUsages"))
         gameSettings->drawUsages = section.getBoolean("drawUsages");
-    if (section.hasValue("useFocus"))
-        gameSettings->useFocus = section.getBoolean("useFocus");
+    if (section.hasValue("pauseWhenLosingFocus"))
+        gameSettings->pauseWhenLosingFocus = section.getBoolean("pauseWhenLosingFocus");
 
     return gameSettings;
 }
