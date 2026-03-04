@@ -76,19 +76,19 @@ public:
     int m_screenW;
     int m_screenH;
 
-    bool m_playSound;               // play sound?
-    bool m_disableAI;               // disable AI thinking?
-    bool m_oneAi;                   // disable all but one AI brain? (default == false)
-    bool m_disableWormAi;                // disable worm AI brain? (default == false)
-    bool m_disableReinforcements;   // disable any reinforcements from scenario ini file?
-    bool m_drawUsages;              // draw the amount of structures/units/bullets used during combat
-    bool m_drawUnitDebug;           // draw the unit debug info (rects, paths, etc)
-    bool m_noAiRest;                // Campaign AI does not have long initial REST time
-    bool m_playMusic;               // play any music?
-    bool m_useFocus;            // whether to use focus management (pausing the game when losing focus)
-    float m_cameraDragMoveSpeed;          // speed of camera when dragging mouse (default = 0.5f)
-    float m_cameraBorderOrKeyMoveSpeed;   // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
-    bool m_cameraEdgeMove;              // should move map camera when hitting edges of screen
+    bool m_playSound;                       // play sound?
+    bool m_disableAI;                       // disable AI thinking?
+    bool m_oneAi;                           // disable all but one AI brain? (default == false)
+    bool m_disableWormAi;                   // disable worm AI brain? (default == false)
+    bool m_disableReinforcements;           // disable any reinforcements from scenario ini file?
+    bool m_drawUsages;                      // draw the amount of structures/units/bullets used during combat
+    bool m_drawUnitDebug;                   // draw the unit debug info (rects, paths, etc)
+    bool m_noAiRest;                        // Campaign AI does not have long initial REST time
+    bool m_playMusic;                       // play any music?
+    bool m_useFocus;                        // whether to use focus management (pausing the game when losing focus)
+    float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
+    float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
+    bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
 
     bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
