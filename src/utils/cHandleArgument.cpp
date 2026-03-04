@@ -5,22 +5,22 @@
 #include <format>
 
 const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStrings{
-    {"-game",             Options::GAME},
-    {"-windowed",         Options::WINDOWED},
-    {"-nomusic",          Options::NOMUSIC},
-    {"-nosound",          Options::NOSOUND},
-    {"-debug",            Options::DEBUG},
-    {"-debug-units",      Options::DEBUG_UNITS},
-    {"-noai",             Options::NOAI},
-    {"-oneai",            Options::ONEAI},
-    {"-nowormai",         Options::NOWORMAI},
-    {"-noreinforcements", Options::NOREINFORCEMENTS},
-    {"-noairest",         Options::NOAIREST},
-    {"-screenWidth",      Options::SCREENX},
-    {"-screenHeight",     Options::SCREENY},
-    {"-usages",           Options::USAGES},
-    {"-useFocus",         Options::USEFOCUS},
-    {"--help",            Options::HELP}
+    {"-game",                   Options::GAME},
+    {"-windowed",               Options::WINDOWED},
+    {"-nomusic",                Options::NOMUSIC},
+    {"-nosound",                Options::NOSOUND},
+    {"-debug",                  Options::DEBUG},
+    {"-debug-units",            Options::DEBUG_UNITS},
+    {"-noai",                   Options::NOAI},
+    {"-oneai",                  Options::ONEAI},
+    {"-nowormai",               Options::NOWORMAI},
+    {"-noreinforcements",       Options::NOREINFORCEMENTS},
+    {"-noairest",               Options::NOAIREST},
+    {"-screenWidth",            Options::SCREENX},
+    {"-screenHeight",           Options::SCREENY},
+    {"-usages",                 Options::USAGES},
+    {"-autopause",              Options::PAUSE_WHEN_LOSING_FOCUS},
+    {"--help",                  Options::HELP}
 };
 
 int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
@@ -99,8 +99,8 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
             case Options::USAGES:
                 settings->drawUsages = true;
                 break;
-            case Options::USEFOCUS:
-                settings->useFocus = true;
+            case Options::PAUSE_WHEN_LOSING_FOCUS:
+                settings->pauseWhenLosingFocus = true;
                 break;
         }
     }
@@ -126,6 +126,10 @@ void cHandleArgument::printInstructions() const
     std::cout << "------------\n\n";
     std::cout << "-game <filename>       - Specify which file to use instead of game.ini\n";
     std::cout << "\n\n";
+    std::cout << "Other\n";
+    std::cout << "---------\n\n";
+    std::cout << "-autopause             - Pauses game when losing focus\n";
+    std::cout << "\n\n";
     std::cout << "Debugging\n";
     std::cout << "---------\n\n";
     std::cout << "-debug                 - Run in debug mode\n";
@@ -136,7 +140,6 @@ void cHandleArgument::printInstructions() const
     std::cout << "-noreinforcements      - Disable reinforcements (Campaign mode)\n";
     std::cout << "-noairest              - Disable initial delay of player AI before becoming active\n";
     std::cout << "-usages                - Draw used units, structures, particles, etc.\n";
-    std::cout << "-useFocus              - Use focus management (pauses game when losing focus)\n";
     std::cout << "\n\n";
     std::cout << "Examples (Windows)\n";
     std::cout << "------------------\n\n";

@@ -70,12 +70,12 @@ std::string cTimeManager::getCurrentTimer() const
 #endif
 }
 
-void cTimeManager::focusLost()
+void cTimeManager::onWindowFocusLost()
 {
     m_focusLostTime = SDL_GetTicks();
 }
 
-void cTimeManager::focusGained()
+void cTimeManager::onWindowFocusGained()
 {
     if (m_focusLostTime > 0) {
         int lostTime = SDL_GetTicks() - m_focusLostTime;

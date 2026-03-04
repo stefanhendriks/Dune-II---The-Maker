@@ -8,51 +8,49 @@ cFocusManager::cFocusManager(cTimeManager* timeManager)
     m_timeManager = timeManager;
 }
 
-cFocusManager::~cFocusManager()
+void cFocusManager::setEnabled(bool value)
 {
-    // Clean up resources if needed
+    m_enabled = value;
 }
 
-void cFocusManager::setActivateFocus(bool value)
+bool cFocusManager::isEnabled() const
 {
-    actifFocus = value;
-}
-
-bool cFocusManager::getActivateFocus() const
-{
-    return actifFocus;
-}
-
-bool cFocusManager::getFocus() const
-{
-    return hasFocus;
+    return m_enabled;
 }
 
 void cFocusManager::onWindowsFocus(const SDL_WindowEvent &event)
 {
-    if (!actifFocus) {
+    if (!m_enabled) {
         return; // If focus management is not active, do nothing
     }
     switch (event.event) {
         case SDL_WINDOWEVENT_FOCUS_LOST:
-            hasFocus = false;
-            m_timeManager->focusLost();
-            std::cout << "Window focus lost" << std::endl;
-            break;
-        case SDL_WINDOWEVENT_FOCUS_GAINED:
-            hasFocus = true;
-            m_timeManager->focusGained();
-            std::cout << "Window focus gained" << std::endl;
+            gameWindowActive = false;
+            m_timeManager->onWindowFocusLost();
+            std::cout << "D2TM: Window focus lost" << std::endl;
             break;
         case SDL_WINDOWEVENT_MINIMIZED:
-            hasFocus = false;
-            m_timeManager->focusLost();
-            std::cout << "Window minimized" << std::endl;
+            gameWindowActive = false;
+            m_timeManager->onWindowFocusLost();
+            std::cout << "D2TM: Window minimized" << std::endl;
+            break;
+        case SDL_WINDOWEVENT_FOCUS_GAINED:
+            gameWindowActive = true;
+            m_timeManager->onWindowFocusGained();
+            std::cout << "D2TM: Window focus gained" << std::endl;
             break;
         case SDL_WINDOWEVENT_RESTORED:
-            hasFocus = true;
-            m_timeManager->focusGained();
-            std::cout << "Window restored" << std::endl;
+            gameWindowActive = true;
+            m_timeManager->onWindowFocusGained();
+            std::cout << "D2TM: Window restored" << std::endl;
+            break;
+        default:
+            // ignore other events
             break;
     }
+}
+
+bool cFocusManager::isGameWindowActive() const
+{
+    return gameWindowActive;
 }

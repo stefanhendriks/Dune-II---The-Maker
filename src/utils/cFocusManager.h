@@ -1,3 +1,4 @@
+#pragma once
 
 #include <SDL2/SDL.h>
 
@@ -6,14 +7,14 @@ class cTimeManager;
 class cFocusManager {
 public:
     cFocusManager(cTimeManager* timeManager);
-    ~cFocusManager();
+    ~cFocusManager() = default;
 
-    void setActivateFocus(bool value);
-    bool getActivateFocus() const;
+    void setEnabled(bool value);
+    [[nodiscard]] bool isEnabled() const;
     void onWindowsFocus(const SDL_WindowEvent& event);
-    bool getFocus() const;
+    [[nodiscard]] bool isGameWindowActive() const;
 private:
-    bool actifFocus = false;
-    bool hasFocus = true;
+    bool m_enabled = false;
+    bool gameWindowActive = true;
     cTimeManager* m_timeManager = nullptr;
 };
