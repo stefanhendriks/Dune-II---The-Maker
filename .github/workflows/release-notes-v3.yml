@@ -38,7 +38,7 @@ jobs:
       - name: Create temp dir
         run: |
           mkdir -p temp_release_notes
-          printf "%s" "${{ steps.notes.outputs.release_notes }}" >> temp_release_notes/${{ github.event.inputs.tag-name }}.md
+          printf "%s" "${{ steps.notes.outputs.release-notes }}" >> temp_release_notes/${{ github.event.inputs.tag-name }}.md
 
       - name: Upload Release Notes to Wiki
         uses: docker://decathlon/wiki-page-creator-action:2.0.2
