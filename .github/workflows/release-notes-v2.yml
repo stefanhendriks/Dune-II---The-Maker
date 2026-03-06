@@ -1,0 +1,24 @@
+# Trigger the workflow on milestone events
+on:
+  milestone:
+    types: [closed]
+name: Milestone Closure v2
+jobs:
+  create-release-notes-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build Changelog
+        id: github_release
+        uses: okcredit/changelog-creator-action@{latest-release}
+        with:
+          configuration: "configuration.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print change log
+        run: echo "Generated changelog - ${{ steps.github_release.outputs.changelog }}"

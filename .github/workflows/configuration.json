@@ -1,0 +1,35 @@
+{
+  "categories": [
+    {
+      "title": "## 🚀 Features",
+      "labels": ["feature", "improvement"]
+    },
+    {
+      "title": "## 🎲 Gameplay",
+      "labels": ["balancing"]
+    },
+    {
+      "title": "## 🧩️Dune 2 features",
+      "labels": ["missing-dune2-piece"]
+    },
+    {
+      "title": "## 🧪 Experimental",
+      "labels": ["experimental"]
+    },
+    {
+      "title": "## 🐛 Fixes",
+      "labels": ["bug"]
+    },
+    {
+      "title": "## ⚙️ Technical",
+      "labels": ["refactoring", "technical"]
+    }
+  ],
+  "ignore_labels": [
+    "ignore"
+  ],
+  "sort": "DESC",
+  "template": "${{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n${{UNCATEGORIZED}}\n</details>",
+  "pr_template": "- ${{TITLE}}\n   - PR: #${{NUMBER}}",
+  "empty_template": "- no changes"
+}
