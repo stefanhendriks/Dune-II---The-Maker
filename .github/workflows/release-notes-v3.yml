@@ -27,16 +27,20 @@ jobs:
         with:
           tag-name: ${{ github.event.inputs.tag-name }}
           from-tag-name: ${{ github.event.inputs.from-tag-name }}
+          verbose: true  # enable debug logging
           chapters: |
             - {"title": "🚀 Features", "labels": "feature, improvement"}
             - {"title": "🎲 Gameplay", "labels": "balancing"}
-            - {"title": "🧩️Dune 2 features", "label": "missing-dune2-piece"}
+            - {"title": "🧩️ Dune 2 features", "label": "missing-dune2-piece"}
             - {"title": "🧪 Experimental", "label": "experimental"}
             - {"title": "🐛 Fixes", "labels": "bug"}
             - {"title": "⚙️ Technical", "labels": "refactoring, technical"}
 
       - name: Create temp dir
         run: mkdir temp_release_notes
+
+      - name: Print change to console
+        run: echo "${{ steps.notes.outputs.release_notes }}"
 
       - name: Print change log
         run: echo "${{ steps.notes.outputs.release_notes }}" >> temp_release_notes/${{ github.event.inputs.tag-name }}.md
