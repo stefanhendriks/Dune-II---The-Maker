@@ -16,7 +16,7 @@ jobs:
         id: github_release
         uses: okcredit/changelog-creator-action@v1.0.0
         with:
-          configuration: "configuration.json"
+          configuration: ".github/workflows/configuration.json"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
