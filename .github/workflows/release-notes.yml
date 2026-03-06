@@ -11,7 +11,7 @@ jobs:
       - name: Create Release Notes
         uses: docker://decathlon/release-notes-generator-action:3.0.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_D2TM }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_FOLDER: temp_release_notes
           USE_MILESTONE_TITLE: "true"
       - name: Upload Release Notes to Wiki
