@@ -30,6 +30,6 @@
   ],
   "sort": "DESC",
   "template": "${{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n${{UNCATEGORIZED}}\n</details>",
-  "pr_template": "- ${{TITLE}} - <a href="${{URL}}">PR #${{NUMBER}}</a> by ${{AUTHOR}}",
+  "pr_template": "- ${{TITLE}} by ${{AUTHOR}}",
   "empty_template": "- no changes"
 }

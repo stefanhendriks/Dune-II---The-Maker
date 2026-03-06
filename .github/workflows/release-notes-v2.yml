@@ -24,7 +24,7 @@ jobs:
         run: mkdir temp_release_notes
 
       - name: Print change log
-        run: echo "${{ steps.github_release.outputs.changelog }}" >> temp_release_notes/release.md
+        run: echo "${{ steps.github_release.outputs.changelog }}" >> temp_release_notes/${{ steps.github_release.outputs.milestone }}.md
 
       - name: Upload Release Notes to Wiki
         uses: docker://decathlon/wiki-page-creator-action:2.0.2
