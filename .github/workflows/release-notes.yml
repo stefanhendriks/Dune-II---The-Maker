@@ -17,7 +17,7 @@ jobs:
       - name: Upload Release Notes to Wiki
         uses: docker://decathlon/wiki-page-creator-action:2.0.2
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT_D2TM }}
           ACTION_MAIL: stefan@fundynamic.com
           ACTION_NAME: stefanhendriks
           OWNER: stefanhendriks
