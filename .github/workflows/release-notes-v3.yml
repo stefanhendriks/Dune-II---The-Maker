@@ -1,0 +1,44 @@
+name: "Create Release & Notes"
+on:
+  workflow_dispatch:
+    inputs:
+      tag-name:
+        description: 'Existing git tag to use for this draft release. Syntax: "v[0-9]+.[0-9]+.[0-9]+". Ensure the tag is created and pushed before running.'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Release Notes
+        id: notes
+        uses: AbsaOSS/generate-release-notes@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag-name: ${{ github.event.inputs.tag-name }}
+          chapters: |
+            - {"title": "🚀 Features", "labels": "feature, improvement"}
+            - {"title": "🎲 Gameplay", "labels": "balancing"}
+            - {"title": "🧩️Dune 2 features", "label": "missing-dune2-piece"}
+            - {"title": "🧪 Experimental", "label": "experimental"}
+            - {"title": "🐛 Fixes", "labels": "bug"}
+            - {"title": "⚙️ Technical", "labels": "refactoring, technical"}
+
+      - name: Create temp dir
+        run: mkdir temp_release_notes
+
+      - name: Print change log
+        run: echo "${{ steps.notes.outputs.release_notes }}" >> temp_release_notes/${{ github.event.inputs.tag-name }}.md
+
+      - name: Upload Release Notes to Wiki
+        uses: docker://decathlon/wiki-page-creator-action:2.0.2
+        env:
+          GH_PAT: ${{ secrets.GH_PAT_D2TM }}
+          ACTION_MAIL: stefan@fundynamic.com
+          ACTION_NAME: stefanhendriks
+          OWNER: stefanhendriks
+          REPO_NAME: Dune-II---The-Maker
+          MD_FOLDER: temp_release_notes
