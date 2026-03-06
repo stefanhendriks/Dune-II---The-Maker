@@ -38,7 +38,14 @@ jobs:
       - name: Create temp dir
         run: |
           mkdir -p temp_release_notes
-          printf "%s" "${{ steps.notes.outputs.release-notes }}" >> temp_release_notes/${{ github.event.inputs.tag-name }}.md
+        
+          echo "${{ steps.notes.outputs.release-notes }}" \
+          | sed '/^## Closed Issues without Pull Request/,/^## /d' \
+          | sed '/^## Merged PRs without Issue and User Defined Labels/,/^## /d' \
+          | sed '/^## Closed PRs without Issue and User Defined Labels/,/^## /d' \
+          | sed '/^## Merged PRs Linked to .Not Closed. Issue/,/^## /d' \
+          | sed '/^## Direct Commits/,/^## /d' \
+          > temp_release_notes/${{ github.event.inputs.tag-name }}.md
 
       - name: Upload Release Notes to Wiki
         uses: docker://decathlon/wiki-page-creator-action:2.0.2
