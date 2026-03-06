@@ -2,8 +2,11 @@ name: "Create Release & Notes"
 on:
   workflow_dispatch:
     inputs:
+      from-tag-name:
+        description: 'Existing previous git tag to use. Ie the previous release.'
+        required: true
       tag-name:
-        description: 'Existing git tag to use for this draft release. Syntax: "v[0-9]+.[0-9]+.[0-9]+". Ensure the tag is created and pushed before running.'
+        description: 'Existing new tag to use for drafting release notes.'
         required: true
 
 jobs:
@@ -23,6 +26,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag-name: ${{ github.event.inputs.tag-name }}
+          from-tag-name: ${{ github.event.inputs.from-tag-name }}
           chapters: |
             - {"title": "🚀 Features", "labels": "feature, improvement"}
             - {"title": "🎲 Gameplay", "labels": "balancing"}
