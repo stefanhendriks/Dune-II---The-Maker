@@ -14,7 +14,7 @@ jobs:
 
       - name: Build Changelog
         id: github_release
-        uses: okcredit/changelog-creator-action@{latest-release}
+        uses: okcredit/changelog-creator-action@1.0.0
         with:
           configuration: "configuration.json"
         env:
