@@ -137,6 +137,7 @@ jobs:
           keep_files: true
   MACOSX_INTEL:
     name: Mac OS X (Intel)
+    needs: Ubuntu
     runs-on: [ macos-15-intel ]
     steps:
       - name: Checkout
@@ -186,7 +187,7 @@ jobs:
 
   MACOSX:
     name: Mac OS X
-    needs: Ubuntu
+    needs: MACOSX_INTEL
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
