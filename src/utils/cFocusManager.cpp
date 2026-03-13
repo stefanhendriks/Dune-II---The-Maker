@@ -1,5 +1,5 @@
 #include "utils/cFocusManager.h"
-#include "utils/cTimeManager.h"
+#include "game/cTimeManager.h"
 #include <iostream>
 
 cFocusManager::cFocusManager(cTimeManager* timeManager)
