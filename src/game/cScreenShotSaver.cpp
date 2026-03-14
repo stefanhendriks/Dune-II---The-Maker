@@ -16,7 +16,9 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
     screenCount++;
     std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName() , width, height,screenCount);
-    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
+    int rw, rh;
+    SDL_GetRendererOutputSize(renderer, &rw, &rh);
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, rw, rh, 32, SDL_PIXELFORMAT_RGBA32);
     if (!surface) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error creating surface: {}",SDL_GetError()), OUTC_FAILED);
         return false;
