@@ -34,6 +34,7 @@
 #include "gamestates/cMentatState.h"
 #include "gamestates/cGamePlaying.h"
 #include "gamestates/cEditorState.h"
+#include "gamestates/cNewMapEditorState.h"
 #include "utils/ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
@@ -873,6 +874,9 @@ void cGame::setState(int newState)
             else if (newState == GAME_MENU) {
                 newStatePtr = new cMainMenuState(*this, ctx.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
+            }
+            else if (newState == GAME_NEW_MAP_EDITOR) {
+                newStatePtr = new cNewMapEditorState(*this, ctx.get());
             }
             else if (newState == GAME_SELECT_HOUSE) {
                 newStatePtr = new cChooseHouseState(*this, ctx.get());
@@ -1766,4 +1770,11 @@ void cGame::loadMapFromEditor(int map)
     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
     s_PreviewMap *selectedMap = &m_PreviewMaps->getMap(map);
     pState->loadMap(selectedMap);
+}
+
+void cGame::loadMapFromEditor(s_PreviewMap *map)
+{
+    setState(GAME_EDITOR);
+    auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
+    pState->loadMap(map);
 }
