@@ -34,31 +34,36 @@ private:
         zoomIn,
         zoomOut
     };
+    enum class Direction : char {
+        top,
+        bottom,
+        left,
+        right
+    };
     void populateTopologyBar();
     void populateStartCellBar();
     void populateSelectBar();
+    void populateSymmetricBar();
+    void modifySymmetricArea(Direction dir);
 
     void drawMap() const;
     void drawStartCells() const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
-    // void clampCameraToMapBounds();
+    void normalizeModifications();
     void clampCameraXToMapBounds();
     void clampCameraYToMapBounds();
     void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
     void updateVisibleTiles();
 
     void saveMap() const;
-    //s_PreviewMap* m_map=nullptr;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_topologyBar;
     std::unique_ptr<GuiBar> m_startCellBar;
+    std::unique_ptr<GuiBar> m_symmetricBar;
     GuiBar* m_currentBar = nullptr;
     std::unique_ptr<Matrix<int>> m_mapData;
     Graphics *m_gfxdata, *m_gfxeditor;
-    std::unique_ptr<GuiButtonGroup> m_selectGroup;
-    std::unique_ptr<GuiButtonGroup> m_topologyGroup;
-    std::unique_ptr<GuiButtonGroup> m_startCellGroup;
 
     cRectangle mapSizeArea;
     int tileLenSize = 16;

@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+class GuiButtonGroup;
+
 enum class GuiBarPlacement :char {
     HORIZONTAL = 0,
     VERTICAL = 1
@@ -22,6 +24,8 @@ public:
     void draw() const override;
 
     void addGuiObject(GuiObject *guiObject);
+    //void addGuiObject(GuiObject *guiObject, int position);
+    void addGuiGroup(std::unique_ptr<GuiButtonGroup> buttonGroup);
 
     cRectangle getRelativeRect(int x, int y, int width, int height);
 
@@ -36,5 +40,6 @@ private:
     std::vector<GuiObject *> gui_objects;
     GuiBarPlacement m_placement;
     int placementPosition;
+    std::vector<std::unique_ptr<GuiButtonGroup>> gui_button_groups;
 };
 
