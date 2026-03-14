@@ -156,7 +156,7 @@ void cTimeManager::handleTimerFast()
 void cTimeManager::handleTimerNormal()
 {
     while (m_timerUnits.count > 0) {
-        m_game->thinkNormal_state();
+        m_game->thinkNormal();
         m_timerUnits.count--;
     }
 }
