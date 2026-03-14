@@ -9,7 +9,7 @@
   2001 - 2022 (c) code by Stefan Hendriks
 
 */
-#include "cGame.h"
+#include "game/cGame.h"
 #include "include/Texture.hpp"
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
@@ -31,7 +31,7 @@
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cMentatState.h"
-#include "ini.h"
+#include "utils/ini.h"
 #include "iniDefine.h"
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
@@ -49,9 +49,10 @@
 #include "sidebar/cSideBarFactory.h"
 #include "utils/RNG.hpp"
 #include "utils/cLog.h"
-#include "utils/cPlatformLayerInit.h"
+#include "game/cPlatformLayerInit.h"
 #include "utils/cSoundPlayer.h"
-#include "utils/cScreenInit.h"
+#include "game/cScreenInit.h"
+#include "game/cScreenShotSaver.h"
 #include "utils/d2tm_math.h"
 #include "map/cPreviewMaps.h"
 #include "map/MapGeometry.hpp"
@@ -67,9 +68,10 @@
 #include "context/ContextCreator.hpp"
 #include "utils/cIniGameRessouces.h"
 
-#include "utils/cScreenShake.h"
-#include "utils/cTimeCounter.h"
+#include "game/cScreenShake.h"
+#include "game/cTimeCounter.h"
 #include "utils/cFocusManager.h"
+#include "game/cGameConditionChecker.h"
 
 #include <algorithm>
 #include <random>
@@ -119,6 +121,8 @@ cGame::cGame()
     m_screenShake = std::make_unique<cScreenShake>();
 
     m_dataCampaign = std::make_unique<s_DataCampaign>();
+
+    m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -156,7 +160,6 @@ void cGame::init()
     m_nextState = -1;
     m_missionWasWon = false;
     m_currentState = nullptr;
-    m_screenshot = 0;
     m_playing = true;
 
     m_TIMER_evaluatePlayerStatus = 5;
@@ -216,8 +219,7 @@ void cGame::missionInit()
     // first 15 seconds, do not evaluate player alive status
     m_TIMER_evaluatePlayerStatus = 5;
 
-    m_winFlags = 0;
-    m_loseFlags = 0;
+    m_gameConditionChecker->missionInit();
 
     m_musicVolume = 96; // volume is 0...
 
@@ -319,12 +321,12 @@ void cGame::thinkSlow_stateCombat_evaluatePlayerStatus()
         m_TIMER_evaluatePlayerStatus = 2;
     }
 
-    if (isMissionFailed()) {
+    if (m_gameConditionChecker->isMissionFailed()) {
         setMissionLost();
         return;
     }
 
-    if (isMissionWon()) {
+    if (m_gameConditionChecker->isMissionWon()) {
         setMissionWon();
         return;
     }
@@ -360,128 +362,9 @@ void cGame::setMissionLost()
     takeBackGroundScreen();
 }
 
-bool cGame::isMissionFailed() const
-{
-    if (hasGameOverConditionHarvestForSpiceQuota()) {
-        // check for non-human players if they have met spice quota, if so, they win (and thus human player loses)
-        for (int i = 1; i < MAX_PLAYERS; i++) {
-            cPlayer &player = players[i];
-            if (player.isAlive() && player.hasMetQuota()) {
-                return true;
-            }
-        }
-    }
-
-    if (hasGameOverConditionPlayerHasNoBuildings()) {
-        cPlayer &humanPlayer = players[HUMAN];
-        if (!humanPlayer.isAlive()) {
-            /**
-             * If any of the bits in “LoseFlags” is set and the corresponding condition holds true
-             * the player has won (and the computer has lost)
-             */
-            if (hasWinConditionHumanMustLoseAllBuildings()) {
-                // this means, if any other player has lost all, that player wins, this is not (yet)
-                // supported. Mainly because we can't distinguish yet between 'active' and non-active players
-                // since we have a fixed list of players.
-
-                // so for now just do this:
-                return false; // it is meant to win the game by drawStateLosing all...
-            }
-            else {
-                return true; // nope, it should lose mission now
-            }
-        }
-    }
-
-    return false;
-}
-
-bool cGame::isMissionWon() const
-{
-    cPlayer &humanPlayer = players[HUMAN];
-    if (hasGameOverConditionHarvestForSpiceQuota()) {
-        if (humanPlayer.hasMetQuota()) {
-            return true;
-        }
-    }
-
-    if (hasGameOverConditionPlayerHasNoBuildings()) {
-        if (hasWinConditionHumanMustLoseAllBuildings()) {
-            if (!humanPlayer.isAlive()) {
-                return true;
-            }
-        }
-
-        if (hasWinConditionAIShouldLoseEverything()) {
-            if (allEnemyAIPlayersAreDestroyed()) {
-                return true;
-            }
-        }
-    }
-    else if (hasGameOverConditionAIHasNoBuildings()) {
-        if (hasWinConditionAIShouldLoseEverything()) {
-            if (allEnemyAIPlayersAreDestroyed()) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-bool cGame::allEnemyAIPlayersAreDestroyed() const
-{
-    cPlayer &humanPlayer = players[HUMAN];
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer *player = &players[i];
-        if (!player->isAlive()) continue;
-        if (humanPlayer.isSameTeamAs(player)) continue; // skip allied AI players
-        return false;
-    }
-    return true;
-}
-
-
-/**
- * Remember, the 'm_winFlags' are used to determine when the game is "over". Only then the lose flags are evaluated
- * and used to determine who has won. (According to the SCEN specification).
- * @return
- */
-bool cGame::hasWinConditionHumanMustLoseAllBuildings() const
-{
-    return (m_loseFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
-}
-
-bool cGame::hasWinConditionAIShouldLoseEverything() const
-{
-    return (m_loseFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
-}
-
-/**
- * Game over condition: player has no buildings (WinFlags)
- * @return
- */
-bool cGame::hasGameOverConditionPlayerHasNoBuildings() const
-{
-    return (m_winFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
-}
-
-/**
- * Game over condition: Spice quota reached by player
- * @return
- */
-bool cGame::hasGameOverConditionHarvestForSpiceQuota() const
-{
-    return (m_winFlags & WINLOSEFLAGS_QUOTA) != 0;
-}
-
-bool cGame::hasGameOverConditionAIHasNoBuildings() const
-{
-    return (m_winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
-}
 
 // think function belongs to combat state (tbd)
-void cGame::think_audio()
+void cGame::thinkFast_audio()
 {
     if (!game.m_playMusic) // no music enabled, so no need to think
         return;
@@ -888,7 +771,6 @@ bool cGame::setupGame()
     srand(t);
 
     game.m_playing = true;
-    game.m_screenshot = 0;
     game.m_state = GAME_INITIALIZE;
 
     logbook("Setup:  HOUSES");
@@ -1200,7 +1082,7 @@ void cGame::setState(int newState)
     m_state = newState;
 }
 
-void cGame::think_fading()
+void cGame::thinkFast_fading()
 {
     // Fading of the entire screen
     if (m_fadeAction == eFadeAction::FADE_OUT) {
@@ -1350,7 +1232,7 @@ void cGame::changeStateFromMentat()
 
 void cGame::thinkFast_state()
 {
-    think_audio();
+    thinkFast_audio();
     if (m_currentState) {
         m_currentState->thinkFast();
     }
@@ -1602,18 +1484,12 @@ Color cGame::getColorPlaceGood()
 
 void cGame::setWinFlags(int value)
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("Changing m_winFlags from {} to {}", m_winFlags, value));
-    }
-    m_winFlags = value;
+    m_gameConditionChecker->setWinFlags(value);
 }
 
 void cGame::setLoseFlags(int value)
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("Changing m_loseFlags from {} to {}", m_loseFlags, value));
-    }
-    m_loseFlags = value;
+    m_gameConditionChecker->setLoseFlags(value);
 }
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -1632,7 +1508,7 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 
     // take screenshot
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F11)) {
+    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_F12)) {
         saveBmpScreenToDisk();
     }
 
@@ -1678,28 +1554,9 @@ void cGame::drawCombatMouse()
 
 void cGame::saveBmpScreenToDisk()
 {
-    std::string filename = std::format("{}x{}_{:0>4}.bmp", m_screenW, m_screenH, m_screenshot);
-    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, m_screenW, m_screenH, 32, SDL_PIXELFORMAT_RGBA32);
-    if (!surface) {
-        std::cerr << "Erreur lors de la création de la surface: " << SDL_GetError() << std::endl;
-        return;
+    if (cScreenShotSaver::saveScreen(renderer, m_screenW, m_screenH)) {
+        players[HUMAN].addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
-    // Lire les pixels depuis le framebuffer
-    if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
-        std::cerr << "Erreur lors de la lecture des pixels: " << SDL_GetError() << std::endl;
-        SDL_FreeSurface(surface);
-        return;
-    }
-    std::string name = std::format("screenshot{}.bmp",m_screenshot);
-    SDL_SaveBMP(surface, filename.c_str());
-    SDL_FreeSurface(surface);
-
-    // shows a message in-game, would be even better to have this 'globally' (not depending on state), kind of like
-    // a Quake console perhaps?
-    cPlayer &humanPlayer = players[HUMAN];
-    humanPlayer.addNotification(std::format("Screenshot saved {}.", filename), eNotificationType::NEUTRAL);
-
-    m_screenshot++;
 }
 
 void cGame::onNotifyKeyboardEventGamePlaying(const cKeyboardEvent &event)
@@ -2014,8 +1871,11 @@ int cGame::getMaxVolume()
 /**
  * Called every 100ms
  */
-void cGame::think_state()
+void cGame::thinkNormal()
 {
+    //@mira if (m_currentState) {
+    //@mira     m_currentState->thinkNormal();
+    //@mira }
     if (game.isState(GAME_PLAYING)) {
         // units think
         for (int i = 0; i < MAX_UNITS; i++) {
@@ -2030,7 +1890,6 @@ void cGame::think_state()
         for (int i = 0; i < MAX_PLAYERS; i++) {
             players[i].think();
         }
-
     }
 }
 
@@ -2039,13 +1898,16 @@ void cGame::think_state()
  */
 void cGame::thinkSlow()
 {
+    //@mira if (m_currentState) {
+    //@mira     m_currentState->thinkSlow();
+    //@mira }
     thinkSlow_state();
-
+    // a garder
     m_timeManager->capFps();
     m_timeManager->adaptWaitingTime();
 }
 
-void cGame::think_minute()
+void cGame::thinkCache()
 {
     ctx->resetCache();
 }
@@ -2073,9 +1935,7 @@ void cGame::thinkSlow_state()
             cPlayer &player = players[i];
             player.thinkSlow();
         }
-
     } // game specific stuff
-
 }
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)

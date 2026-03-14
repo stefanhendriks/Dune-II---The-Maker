@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cPlatformLayerInit.h"
+#include "game/cPlatformLayerInit.h"
 
 #include <string>
 #include <SDL2/SDL.h>

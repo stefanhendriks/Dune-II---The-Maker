@@ -1,9 +1,8 @@
-#include "cTimeManager.h"
-
-#include "cGame.h"
+#include "game/cGame.h"
+#include "game/cTimeManager.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cLog.h"
-#include "utils/cTimeCounter.h"
+#include "game/cTimeCounter.h"
 
 #include <format>
 #include <chrono>
@@ -129,7 +128,7 @@ void cTimeManager::capTimers()
 /**
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerSecond()
+void cTimeManager::handleTimerSlow()
 {
     while (m_timerSecond.count > 0) {
         m_gameTime++;
@@ -142,10 +141,10 @@ void cTimeManager::handleTimerSecond()
 /**
  * gametime timer is called every 5 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerGameTime()
+void cTimeManager::handleTimerFast()
 {
     while (m_timerGameTime.count > 0) {
-        m_game->think_fading();
+        m_game->thinkFast_fading();
         m_game->thinkFast_state();
         m_timerGameTime.count--;
     }
@@ -154,10 +153,10 @@ void cTimeManager::handleTimerGameTime()
 /**
  * units timer is called every 100 ms, try to keep up with that.
  */
-void cTimeManager::handleTimerUnits()
+void cTimeManager::handleTimerNormal()
 {
     while (m_timerUnits.count > 0) {
-        m_game->think_state();
+        m_game->thinkNormal();
         m_timerUnits.count--;
     }
 }
@@ -168,7 +167,7 @@ void cTimeManager::handleTimerUnits()
 void cTimeManager::handleTimerMinute()
 {
     while (m_timerMinute.count > 0) {
-        m_game->think_minute();
+        m_game->thinkCache();
         m_timerMinute.count--;
     }
 }
@@ -211,9 +210,9 @@ void cTimeManager::processTime()
     }
 
     capTimers();
-    handleTimerSecond();
-    handleTimerUnits();
-    handleTimerGameTime();
+    handleTimerFast();
+    handleTimerNormal();
+    handleTimerSlow();
     handleTimerMinute();
 }
 
