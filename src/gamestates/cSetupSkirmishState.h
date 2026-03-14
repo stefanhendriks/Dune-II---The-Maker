@@ -103,6 +103,7 @@ private:
 
     GuiButton *backButton;
     GuiButton *startButton;
+    GuiButton *modifyButton;
     GuiButton *nextMapButton;
     GuiButton *previousMapButton;
     Graphics* m_gfxinter;

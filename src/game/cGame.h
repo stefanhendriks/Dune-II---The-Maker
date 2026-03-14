@@ -199,6 +199,7 @@ public:
 
     void applySettings(GameSettings *gs);
     void changeStateFromMentat();
+    void loadMapFromEditor(int map);
 
     Texture* getScreenTexture() const {
         return screenTexture;

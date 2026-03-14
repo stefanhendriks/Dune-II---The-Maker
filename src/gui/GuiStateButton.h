@@ -1,0 +1,101 @@
+#include "gui/GuiObject.h"
+#include "utils/cEnumArray.h"
+
+#include <memory>
+#include <functional>
+#include <optional>
+
+class Texture;
+class GuiButtonGroup;
+
+struct GuiStateButtonParams {
+    cRectangle rect;
+    GuiRenderKind kind = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    GuiTheme theme = GuiTheme::Light();
+    std::function<void()> onLeftClick = nullptr;
+    std::function<void()> onRightClick = nullptr;
+    Texture *tex = nullptr;
+    GuiButtonGroup* group=nullptr;
+};
+
+class GuiStateButton : public GuiObject {
+public:
+    explicit GuiStateButton(const cRectangle &rect);
+    ~GuiStateButton();
+
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+    void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    void setTexture(Texture* tex);
+    void setRenderKind(GuiRenderKind value);
+    void setPressed(bool value);
+    void setGroup(GuiButtonGroup* group);
+    void draw() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action);
+    void setOnRightMouseButtonClickedAction(std::function<void()> action);
+private:
+    enum class GuiState : char {DISABLED =0, CLICKED, UNCLICKED, COUNT};
+    void changeState(GuiState newState);
+    Texture* m_tex =nullptr;
+    EnumArray<std::unique_ptr<cRectangle>,GuiState> rectState;
+    GuiRenderKind m_renderKind;
+    GuiState m_state;
+    cRectangle* m_currentRectState;
+    std::function<void()> m_onLeftMouseButtonClickedAction;
+    std::function<void()> m_onRightMouseButtonClickedAction;
+    std::optional<GuiButtonGroup*> m_group;
+};
+
+
+
+class GuiStateButtonBuilder {
+public:
+    GuiStateButtonBuilder& withRect(const cRectangle& rect) {
+        params.rect = rect;
+        return *this;
+    }
+
+    GuiStateButtonBuilder& withKind(GuiRenderKind kind) {
+        params.kind = kind;
+        return *this;
+    }
+
+    GuiStateButtonBuilder& onClick(std::function<void()> callback) {
+        params.onLeftClick = std::move(callback);
+        return *this;
+    }
+
+    GuiStateButtonBuilder& onRightClick(std::function<void()> callback) {
+        params.onRightClick = std::move(callback);
+        return *this;
+    }
+
+    GuiStateButtonBuilder& withTexture(Texture* tex) {
+        params.tex = tex;
+        return *this;
+    }
+
+    GuiStateButtonBuilder& withGroup(GuiButtonGroup* group) {
+        params.group = group;
+        return *this;
+    }
+
+    GuiStateButton* build() const {
+        GuiStateButton* btn = new GuiStateButton(params.rect);
+        btn->setRenderKind(params.kind);
+        btn->setTheme(params.theme);
+        btn->setTexture(params.tex);
+        if (params.group) {
+            btn->setGroup(params.group);
+        }
+        if (params.onLeftClick) {
+            btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
+        }
+        if (params.onRightClick) {
+            btn->setOnRightMouseButtonClickedAction(params.onRightClick);
+        }        
+        return btn;
+    }
+
+private:
+    GuiStateButtonParams params;
+};
