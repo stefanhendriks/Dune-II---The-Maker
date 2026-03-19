@@ -107,7 +107,7 @@ void cMap::init(int width, int height)
     }
 
     for (int i = 0; i < MAX_PARTICLES; i++) {
-        particle[i].init();
+        g_Particle[i].init();
     }
 
     for (int i = 0; i < MAX_UNITS; i++) {
