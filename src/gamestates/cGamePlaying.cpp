@@ -80,7 +80,7 @@ void cGamePlaying::thinkFast()
 
     // when not drawing the options, the game does all it needs to do
     // bullets think
-    for (cBullet &cBullet : bullet) {
+    for (cBullet &cBullet : g_Bullet) {
         if (!cBullet.bAlive) continue;
         cBullet.thinkFast();
     }

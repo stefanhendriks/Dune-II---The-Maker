@@ -1921,8 +1921,8 @@ void cUnit::shoot(int iTargetCell)
         if (attackUnit && !attackUnit->isValid()) {
             // allowing homing bullets towards air units from the ground
             if (iBull > -1 && attackUnit->isAirbornUnit()) {
-                bullet[iBull].iHoming = iAttackUnit;
-                bullet[iBull].TIMER_homing = 200;
+                g_Bullet[iBull].iHoming = iAttackUnit;
+                g_Bullet[iBull].TIMER_homing = 200;
             }
         }
     }
