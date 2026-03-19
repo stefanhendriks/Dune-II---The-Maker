@@ -129,7 +129,7 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int bulletsUsed = 0;
     for (int i = 0; i < MAX_BULLETS; i++) {
-        cBullet &pBullet = bullet[i];
+        cBullet &pBullet = g_Bullet[i];
         if (pBullet.bAlive) {
             bulletsUsed++;
         }
