@@ -316,7 +316,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 void cStructureDrawer::drawStructuresForLayer(int layer)
 {
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = structure[i];
+        cAbstractStructure *theStructure = g_pStructure[i];
 
         if (!theStructure) continue;
 
@@ -345,7 +345,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
 {
     if (iStructure < 0 || iStructure >= MAX_STRUCTURES) return;
 
-    cAbstractStructure *theStructure = structure[iStructure];
+    cAbstractStructure *theStructure = g_pStructure[iStructure];
 
     if (!theStructure) {
         return;

@@ -61,7 +61,7 @@ extern cGame		  game;
 
 extern cMap       global_map;
 
-extern cAbstractStructure     *structure[MAX_STRUCTURES];
+extern cAbstractStructure     *g_pStructure[MAX_STRUCTURES];
 extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	  *global_mapCamera;
 extern cPlayer        g_Player[MAX_PLAYERS];
