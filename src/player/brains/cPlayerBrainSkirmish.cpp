@@ -185,7 +185,7 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event)
 {
     // a structure was created, update our baseplan
-    cAbstractStructure *pStructure = structure[event.entityID];
+    cAbstractStructure *pStructure = g_pStructure[event.entityID];
 
     if (event.entitySpecificType == PALACE) {
         // built a palace, create super weapon missions asap!
@@ -255,7 +255,7 @@ void cPlayerBrainSkirmish::onMyStructureDestroyed(const s_GameEvent &event)
 void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = structure[event.entityID];
+        cAbstractStructure *pStructure = g_pStructure[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = sStructureInfo[event.entitySpecificType];
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -291,7 +291,7 @@ void cPlayerBrainSkirmish::respondToThreat(cUnit *threat, cUnit *victim, int cel
 void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = structure[event.entityID];
+        cAbstractStructure *pStructure = g_pStructure[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = sStructureInfo[event.entitySpecificType];
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -982,7 +982,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
     }
     else {
         for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *theStructure = structure[i];
+            cAbstractStructure *theStructure = g_pStructure[i];
             if (!theStructure) continue;
             if (!theStructure->isValid()) continue;
             if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
@@ -1251,7 +1251,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                     }
                 }
                 else if (event.entityType == eBuildType::STRUCTURE) {
-                    cAbstractStructure *pStructure = structure[event.entityID];
+                    cAbstractStructure *pStructure = g_pStructure[event.entityID];
                     if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                         // found enemy structure
                         m_TIMER_produceMissionCooldown = 0;
@@ -1279,7 +1279,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                         }
                     }
                     else if (event.entityType == eBuildType::STRUCTURE) {
-                        cAbstractStructure *pStructure = structure[event.entityID];
+                        cAbstractStructure *pStructure = g_pStructure[event.entityID];
                         // the other player discovered a structure of mine
                         if (pStructure->getPlayer() == player) {
                             // found my structure

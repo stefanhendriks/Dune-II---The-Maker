@@ -238,7 +238,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 // airborn unit
                 int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(m_player);
                 if (structureToDeployUnit > -1) {
-                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+                    cAbstractStructure *pStructureToDeploy = g_pStructure[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
                     int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
                     if (unitId > -1) {
@@ -405,7 +405,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
     int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_player, structureTypeByItem);
     int buildIdToProduce = buildId;
     if (structureToDeployUnit > -1) {
-        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = g_pStructure[structureToDeployUnit];
         // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
         int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
         if (cell > -1) {
@@ -427,7 +427,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
         if (structureToDeployUnit < 0) {
             // find any structure of type (regardless if we can deploy or not)
             for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
-                cAbstractStructure *pStructure = structure[structureId];
+                cAbstractStructure *pStructure = g_pStructure[structureId];
                 if (pStructure &&
                         pStructure->isValid() &&
                         pStructure->belongsTo(m_player->getId()) &&
@@ -438,9 +438,9 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             }
         }
 
-        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = g_pStructure[structureToDeployUnit];
         if (pStructureToDeploy && pStructureToDeploy->isValid()) {
-            int cellToDeploy = structure[structureToDeployUnit]->getCell();
+            int cellToDeploy = g_pStructure[structureToDeployUnit]->getCell();
             if (pStructureToDeploy->getRallyPoint() > -1) {
                 cellToDeploy = pStructureToDeploy->getRallyPoint();
             }

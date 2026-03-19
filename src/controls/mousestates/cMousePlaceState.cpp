@@ -106,7 +106,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
-                    if (structure[iID]->getOwner() == HUMAN) {
+                    if (g_pStructure[iID]->getOwner() == HUMAN) {
                         bWithinBuildDistance = true; // connection!
                         break;
                     }
