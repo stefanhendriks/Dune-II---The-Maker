@@ -137,7 +137,7 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int particlesUsed = 0;
     for (int i = 0; i < MAX_PARTICLES; i++) {
-        cParticle &pParticle = particle[i];
+        cParticle &pParticle = g_Particle[i];
         if (pParticle.isValid()) {
             particlesUsed++;
         }
