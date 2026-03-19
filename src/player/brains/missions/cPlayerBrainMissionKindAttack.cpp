@@ -64,7 +64,7 @@ int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 {
     int target = -1;
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+        cUnit &pUnit = g_Unit[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.getPlayer() == player) continue; // skip self
         if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
@@ -96,7 +96,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
 
         const std::vector<int> &units = mission->getUnits();
         for (auto &myUnit : units) {
-            cUnit &aUnit = unit[myUnit];
+            cUnit &aUnit = g_Unit[myUnit];
             if (aUnit.isValid() && aUnit.isIdle()) {
                 log("cPlayerBrainMissionKindAttack::thinkState_Execute(): Ordering unit to attack!");
                 aUnit.attackStructure(targetStructureID);
@@ -106,7 +106,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
     else if (targetUnitID > -1) {
         const std::vector<int> &units = mission->getUnits();
         for (auto &myUnit : units) {
-            cUnit &aUnit = unit[myUnit];
+            cUnit &aUnit = g_Unit[myUnit];
             if (aUnit.isValid() && aUnit.isIdle()) {
                 log("cPlayerBrainMissionKindAttack::thinkState_Execute(): Ordering unit to attack!");
                 aUnit.attackUnit(targetUnitID);
@@ -136,7 +136,7 @@ void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainMissionKindAttack::onEventDeviated(const s_GameEvent &event)
 {
     if (event.entityType == UNIT) {
-        cUnit &entityUnit = unit[event.entityID];
+        cUnit &entityUnit = g_Unit[event.entityID];
         if (entityUnit.getPlayer() == player) {
             // the unit is ours, if it was a target, then we can forget it.
             if (targetUnitID == event.entityID) {

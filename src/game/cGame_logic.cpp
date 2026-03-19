@@ -184,7 +184,7 @@ void cGame::init()
     initPlayers(false);
 
     for (int i = 0; i < MAX_UNITS; i++) {
-        unit[i].init(i);
+        g_Unit[i].init(i);
     }
 
     for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -1637,7 +1637,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                unit[idOfUnitAtCell].die(true, false);
+                g_Unit[idOfUnitAtCell].die(true, false);
             }
 
             int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
@@ -1647,12 +1647,12 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                unit[idOfUnitAtCell].die(false, false);
+                g_Unit[idOfUnitAtCell].die(false, false);
             }
 
             idOfUnitAtCell = global_map.getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                unit[idOfUnitAtCell].die(false, false);
+                g_Unit[idOfUnitAtCell].die(false, false);
             }
         }
     }
@@ -1663,7 +1663,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = unit[idOfUnitAtCell];
+                cUnit &pUnit = g_Unit[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
                     pUnit.takeDamage(damageToTake, -1, -1);
@@ -1684,7 +1684,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         // kill all carry-all's
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = unit[unitId];
+            cUnit &pUnit = g_Unit[unitId];
             pUnit.die(true, false);
         }
     }
