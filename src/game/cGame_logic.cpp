@@ -158,7 +158,6 @@ void cGame::init()
     m_currentState = nullptr;
     m_playing = true;
     m_skirmish = false;
-    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_debugMode);
 
     m_musicVolume = 96; // volume is 0...
 
@@ -685,6 +684,9 @@ bool cGame::setupGame()
 
     m_mouse->setMouseObserver(m_interactionManager.get());
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
+
+    // I need m_renderDrawer to create cPreviewMaps
+    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_debugMode);
 
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);
