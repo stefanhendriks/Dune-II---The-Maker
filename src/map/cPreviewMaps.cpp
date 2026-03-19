@@ -11,9 +11,8 @@ namespace fs = std::filesystem;
 #include <algorithm>
 #include "utils/cIniFile.h"
 
-cPreviewMaps::cPreviewMaps(bool debugMode) : m_debugMode(debugMode)
+cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode) : m_renderDrawer(renderDrawer), m_debugMode(debugMode)
 {
-
 }
 
 void cPreviewMaps::destroy()
@@ -110,7 +109,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap.terrain == nullptr) {
         previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
     }
-    global_renderDrawer->FillWithColor(previewMap.terrain, Color::black());
+    m_renderDrawer->FillWithColor(previewMap.terrain, Color::black());
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -161,7 +160,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             previewMap.terrainType[iCll] = terrainType;
-            global_renderDrawer->setPixel(previewMap.terrain, 1 + iX, 1 + iY, iColor);
+            m_renderDrawer->setPixel(previewMap.terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
@@ -171,11 +170,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = mapGeom.getCellX(startCell);
             int y = mapGeom.getCellY(startCell);
-            global_renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
+            m_renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
         }
     }
     if (previewMap.terrain!= nullptr){
-        SDL_Texture* out = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), previewMap.terrain);
+        SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), previewMap.terrain);
         if (out == nullptr) {
             logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;

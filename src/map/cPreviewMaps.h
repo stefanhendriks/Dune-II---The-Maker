@@ -8,6 +8,7 @@
 #include <array>
 
 class Texture;
+class SDLDrawer;
 
 static constexpr int MAX_SKIRMISHMAP_PLAYERS = 5;
 
@@ -25,7 +26,7 @@ struct s_PreviewMap {
 
 class cPreviewMaps {
 public:
-    explicit cPreviewMaps(bool debugMode);
+    explicit cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode);
 
     ~cPreviewMaps() = default;
 
@@ -54,6 +55,6 @@ private:
     int numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array PreviewMap?
 
     std::array<s_PreviewMap, MAX_SKIRMISHMAPS> PreviewMap;
-
+    SDLDrawer * m_renderDrawer;
     bool m_debugMode;
 };
