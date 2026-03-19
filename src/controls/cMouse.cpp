@@ -351,7 +351,7 @@ void cMouse::draw()
 
         if (game.isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
-                int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
+                int mouseCell = g_Player[HUMAN].getGameControlsContext()->getMouseCell(); // Ugh :/
                 m_textDrawer->drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
             }
         }

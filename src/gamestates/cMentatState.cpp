@@ -34,7 +34,7 @@ void cMentatState::prepareMentat(int house)
 {
     // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
     //std::cout << "house I " << house << std::endl;
-    house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
+    house = (m_house != -1) ? m_house : g_Player[HUMAN].getHouse();
     //std::cout << "house After " << house << std::endl;
     //std::cout << "skirmish ? " << m_game.m_skirmish<< std::endl;
     bool allowMissionSelect = !m_game.m_skirmish;

@@ -353,7 +353,7 @@ void cMap::thinkAboutRespawningWorms()
     // timer hit exactly '1'
     m_iTIMER_respawnSandworms--;
 
-    int currentAmountOfWorms = players[AI_WORM].getAmountOfUnitsForType(SANDWORM);
+    int currentAmountOfWorms = g_Player[AI_WORM].getAmountOfUnitsForType(SANDWORM);
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
         // spawn one worm, set timer again
         int failures = 0;
@@ -495,7 +495,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                         .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                         .entityType = eBuildType::STRUCTURE,
                         .entityID = structureId,
-                        .player = &players[playerId],
+                        .player = &g_Player[playerId],
                         .entitySpecificType = pStructure->getType(),
                         .atCell = cl
                     };
@@ -511,7 +511,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                             .entityType = eBuildType::UNIT,
                             .entityID = unitId,
-                            .player = &players[playerId],
+                            .player = &g_Player[playerId],
                             .entitySpecificType = cUnit.getType(),
                             .atCell = cl
                         };
@@ -643,8 +643,8 @@ void cMap::draw_units_2nd()
 
 int cMap::mouse_draw_x()
 {
-    if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
+    if (g_Player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = g_Player[HUMAN].getGameControlsContext()->getMouseCell();
         int absX = getAbsoluteXPositionFromCell(mouseCell);
         return global_mapCamera->getWindowXPosition(absX);
     }
@@ -653,8 +653,8 @@ int cMap::mouse_draw_x()
 
 int cMap::mouse_draw_y()
 {
-    if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
+    if (g_Player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = g_Player[HUMAN].getGameControlsContext()->getMouseCell();
         int absY = getAbsoluteYPositionFromCell(mouseCell);
         return global_mapCamera->getWindowYPosition(absY);
     }
@@ -1554,7 +1554,7 @@ void cMap::onEntityCreated(const s_GameEvent &event)
 
 void cMap::evaluateIfWeShouldSetTimerToRespawnWorm()
 {
-    int currentAmountOfWorms = players[AI_WORM].getAmountOfUnitsForType(SANDWORM);
+    int currentAmountOfWorms = g_Player[AI_WORM].getAmountOfUnitsForType(SANDWORM);
 
     // as long as we don't have the desired amount, set respawn timer
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
