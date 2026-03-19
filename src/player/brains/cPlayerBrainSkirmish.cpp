@@ -1263,7 +1263,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
             }
             else {
                 // event.player == player who discovered something
-                if (event.player == &players[AI_WORM]) {
+                if (event.player == &g_Player[AI_WORM]) {
                     // ignore anything that the WORM AI player detected.
                 }
                 else if (!event.player->isSameTeamAs(player)) {

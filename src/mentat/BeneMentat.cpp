@@ -43,7 +43,7 @@ void BeneMentat::onYesButtonPressed()
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
     game.missionInit();
-    players[HUMAN].setHouse(this->getHouse());
+    g_Player[HUMAN].setHouse(this->getHouse());
     m_dataCampaign->housePlayer = this->getHouse();
     game.initiateFadingOut();
 }
@@ -52,7 +52,7 @@ void BeneMentat::onNoButtonPressed()
 {
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
-    players[HUMAN].setHouse(GENERALHOUSE);
+    g_Player[HUMAN].setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
     game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
     game.initiateFadingOut();

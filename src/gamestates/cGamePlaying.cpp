@@ -38,7 +38,7 @@ void cGamePlaying::thinkFast()
 
     global_mapCamera->thinkFast();
 
-    for (cPlayer &pPlayer : players) {
+    for (cPlayer &pPlayer : g_Player) {
         pPlayer.thinkFast();
     }
 
@@ -56,7 +56,7 @@ void cGamePlaying::thinkFast()
         }
     }
 
-    for (cPlayer &pPlayer : players) {
+    for (cPlayer &pPlayer : g_Player) {
         cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
         if (itemBuilder) {
             itemBuilder->thinkFast();
@@ -99,7 +99,7 @@ void cGamePlaying::thinkNormal()
         global_drawManager->think();
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            players[i].think();
+            g_Player[i].think();
         }
 }
 
@@ -123,7 +123,7 @@ void cGamePlaying::thinkSlow()
     }
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &player = players[i];
+        cPlayer &player = g_Player[i];
         player.thinkSlow();
     }
 }
@@ -182,7 +182,7 @@ void cGamePlaying::evaluatePlayerStatus()
         // TODO: Better way is with events (ie created/destroyed). However, there is no such
         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            cPlayer &player = players[i];
+            cPlayer &player = g_Player[i];
             bool isAlive = player.isAlive();
             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
             player.evaluateStillAlive();
@@ -229,7 +229,7 @@ void cGamePlaying::missionInit()
 
 void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = players[HUMAN];
+    const cPlayer &humanPlayer = g_Player[HUMAN];
 
     bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
     if (createGroup) {
@@ -280,7 +280,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
-    cPlayer &humanPlayer = players[HUMAN];
+    cPlayer &humanPlayer = g_Player[HUMAN];
 
     if (event.hasKey(SDL_SCANCODE_F)) {
         m_game.m_drawFps = false;
@@ -339,23 +339,23 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = players[HUMAN];
+    const cPlayer &humanPlayer = g_Player[HUMAN];
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        global_drawManager->setPlayerToDraw(&players[0]);
-        game.setPlayerToInteractFor(&players[0]);
+        global_drawManager->setPlayerToDraw(&g_Player[0]);
+        game.setPlayerToInteractFor(&g_Player[0]);
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        global_drawManager->setPlayerToDraw(&players[1]);
-        game.setPlayerToInteractFor(&players[1]);
+        global_drawManager->setPlayerToDraw(&g_Player[1]);
+        game.setPlayerToInteractFor(&g_Player[1]);
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        global_drawManager->setPlayerToDraw(&players[2]);
-        game.setPlayerToInteractFor(&players[2]);
+        global_drawManager->setPlayerToDraw(&g_Player[2]);
+        game.setPlayerToInteractFor(&g_Player[2]);
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        global_drawManager->setPlayerToDraw(&players[3]);
-        game.setPlayerToInteractFor(&players[3]);
+        global_drawManager->setPlayerToDraw(&g_Player[3]);
+        game.setPlayerToInteractFor(&g_Player[3]);
     }
 
     // WIN MISSION
@@ -371,7 +371,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     // GIVE CREDITS TO ALL PLAYERS
     if (event.hasKey(SDL_SCANCODE_F4)) {
         for (int i = 0; i < AI_WORM; i++) {
-            players[i].setCredits(5000);
+            g_Player[i].setCredits(5000);
         }
     }
 
@@ -429,7 +429,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
 void cGamePlaying::update()
 {
-    for (auto &pPlayer : players) {
+    for (auto &pPlayer : g_Player) {
         pPlayer.update();
     }
 }

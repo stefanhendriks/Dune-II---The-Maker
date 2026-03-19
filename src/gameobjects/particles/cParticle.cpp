@@ -838,7 +838,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
     
-    cPlayer &player = players[this->iHousePal];
+    cPlayer &player = g_Player[this->iHousePal];
     auto tex = gfxdata->getSurface(bmpIndex);
     auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {

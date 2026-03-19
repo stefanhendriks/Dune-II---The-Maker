@@ -42,7 +42,7 @@ void cPlayerBrainFremenSuperWeapon::think()
     std::mt19937 g(rd());
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer *pPlayer = &players[i];
+        cPlayer *pPlayer = &g_Player[i];
         if (pPlayer == nullptr) continue;
         if (pPlayer == player) continue; // skip self
         if (pPlayer->isSameTeamAs(player)) continue; // skip same team players
