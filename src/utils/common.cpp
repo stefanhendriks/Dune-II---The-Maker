@@ -213,7 +213,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 
     int structureIdAtTargetCell = global_map.getCellIdStructuresLayer(targetCell);
     if (structureIdAtTargetCell > -1) {
-        cAbstractStructure *pStructure = structure[structureIdAtTargetCell];
+        cAbstractStructure *pStructure = g_pStructure[structureIdAtTargetCell];
         if (pStructure && pStructure->isValid()) {
             newBullet.targetX = pStructure->getRandomPosX();
             newBullet.targetY = pStructure->getRandomPosY();
@@ -235,7 +235,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     }
 
     if (structureWhichShoots > -1) {
-        cAbstractStructure *pStructure = structure[structureWhichShoots];
+        cAbstractStructure *pStructure = g_pStructure[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
 
         int unitIdAtTargetCell = global_map.getCellIdUnitLayer(targetCell);
