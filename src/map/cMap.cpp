@@ -103,7 +103,7 @@ void cMap::init(int width, int height)
     cStructureFactory::getInstance()->deleteAllExistingStructures();
 
     for (int i = 0; i < MAX_BULLETS; i++) {
-        bullet[i].init();
+        g_Bullet[i].init();
     }
 
     for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -440,8 +440,8 @@ void cMap::draw_bullets()
 {
     // Loop through all units, check if they should be drawn, and if so, draw them
     for (int i = 0; i < MAX_BULLETS; i++) {
-        if (bullet[i].bAlive) {
-            bullet[i].draw();
+        if (g_Bullet[i].bAlive) {
+            g_Bullet[i].draw();
         }
     }
 }

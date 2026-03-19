@@ -38,7 +38,7 @@ cAbstractStructure     		*structure[MAX_STRUCTURES];
 cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cPlayer        				g_Player[MAX_PLAYERS];             // player is
 cParticle      				g_Particle[MAX_PARTICLES];
-cBullet        				bullet[MAX_BULLETS];
+cBullet        				g_Bullet[MAX_BULLETS];
 // std::array<cRegion, MAX_REGIONS> world;
 
 cDrawManager   				*global_drawManager = nullptr;
