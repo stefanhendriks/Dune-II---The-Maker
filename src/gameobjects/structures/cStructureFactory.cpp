@@ -128,7 +128,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     }
 
     cPoint absTopLeft = global_map.getAbsolutePositionFromCell(iCell);
-    cPlayer *player = &players[iPlayer];
+    cPlayer *player = &g_Player[iPlayer];
 
     for (auto flag : structureInfo.flags) {
         cPoint pos = cPoint(
@@ -201,7 +201,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer)
 {
     // add this structure to the array of the player (for some score management)
-    cPlayer &cPlayer = players[iPlayer];
+    cPlayer &cPlayer = g_Player[iPlayer];
     cPlayer.increaseStructureAmount(iStructureType);
 
     auto mapEditor = cMapEditor(global_map);

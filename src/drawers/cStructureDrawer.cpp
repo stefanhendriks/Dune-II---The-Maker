@@ -36,7 +36,7 @@ void cStructureDrawer::drawStructuresSecondLayer()
 
 void cStructureDrawer::drawStructuresHealthBars()
 {
-    cGameControlsContext *context = players[HUMAN].getGameControlsContext();
+    cGameControlsContext *context = g_Player[HUMAN].getGameControlsContext();
 
     // DRAW HEALTH
     if (context->isMouseOverStructure()) {
@@ -148,7 +148,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
     // :-/
     if (game.isDebugMode()) {
-        cPlayer &humanPlayer = players[HUMAN];
+        cPlayer &humanPlayer = g_Player[HUMAN];
         cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
         if (pStructure && pStructure == structure) {
             cMouse *pMouse = game.getMouse();
@@ -324,7 +324,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            cPlayer &player = players[HUMAN]; // TODO: Pass it as variable? (instead of getting it from here)
+            cPlayer &player = g_Player[HUMAN]; // TODO: Pass it as variable? (instead of getting it from here)
             // regardless if selected, render this so you know from which structure things will come?
             if (player.isPrimaryStructureForStructureType(theStructure->getType(), i)) {
                 drawRectangleOfStructure(theStructure, player.getPrimaryBuildingFadingColor());

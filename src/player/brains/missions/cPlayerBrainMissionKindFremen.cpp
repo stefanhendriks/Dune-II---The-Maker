@@ -11,7 +11,7 @@ cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cP
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
     specificBuildTypeToGoToSelectTargetState = sSpecialInfo[SPECIAL_FREMEN].providesType;
     specificBuildIdToGoToSelectTargetState = sSpecialInfo[SPECIAL_FREMEN].providesTypeId;
-    specificPlayerForEventToGoToSelectTargetState = &players[AI_CPU5];
+    specificPlayerForEventToGoToSelectTargetState = &g_Player[AI_CPU5];
 }
 
 cPlayerBrainMissionKindFremen::~cPlayerBrainMissionKindFremen()
