@@ -580,6 +580,14 @@ bool cGame::setupGame()
         m_soundPlayer->setMusicEnabled(false);
     }
 
+    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
+    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
+    m_renderDrawer = renderDrawer.get();
+    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
+    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
+    // -----------------------------------
+    ctx->setSDLDrawer(std::move(renderDrawer));
+
     // do it here, because it depends on fonts to be loaded
     m_mouse = new cMouse(ctx.get());
 
@@ -605,14 +613,6 @@ bool cGame::setupGame()
     else {
         logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
-
-    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
-    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
-    m_renderDrawer = renderDrawer.get();
-    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
-    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
-    // -----------------------------------
-    ctx->setSDLDrawer(std::move(renderDrawer));
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
