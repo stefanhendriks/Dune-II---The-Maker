@@ -34,10 +34,10 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 }
 
 
-static bool gui_draw_frame(int x, int y, int width, int height)
+static bool gui_draw_frame(SDLDrawer *renderDrawer, int x, int y, int width, int height)
 {
     cRectangle rect = cRectangle(x, y, width, height);
-    global_renderDrawer->gui_DrawRect(rect);
+    renderDrawer->gui_DrawRect(rect);
     // auto m_mouse = game.getMouse();
     return mouse_within_rect(x, y, width, height);
     // return rect.isPointWithin(m_mouse->getMouseCoords());
@@ -48,14 +48,14 @@ static bool gui_draw_frame(int x, int y, int width, int height)
     // return false; // not hovering on it
 }
 
-static bool gui_draw_frame_pressed(int x1, int y1, int width, int height)
+static bool gui_draw_frame_pressed(SDLDrawer *renderDrawer,int x1, int y1, int width, int height)
 {
-    global_renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
-    global_renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
+    renderDrawer->renderRectFillColor(x1, y1, width, height, 176,176,196,255);
+    renderDrawer->renderRectColor(x1, y1, width, height, 84,84,120,255);
 
     // lines to darken the right sides
-    global_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
-    global_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
+    renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, Color{252,252,252,255});
+    renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, Color{252,252,252,255});
 
     // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
     return mouse_within_rect(x1, y1, width, height);
@@ -1220,20 +1220,20 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
         bool isRenderingSelectedMap = mapIndexToRender == iSkirmishMap;
 
         // RENDERS ! & also get true/false if mouse hovers
-        const bool bHover = gui_draw_frame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+        const bool bHover = gui_draw_frame(m_renderDrawer, iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
         Color textColor = bHover ? Color::red() : Color::white();
 
         if (bHover && mapToRender.validMap && mouse->isLeftButtonClicked()) {
             // RENDERS (AGAIN)!
-            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            gui_draw_frame_pressed(m_renderDrawer, iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         // selected map, always render as pressed
         if (isRenderingSelectedMap) {
             textColor = bHover ? colorDarkerYellow : Color::yellow();
             // RENDERS (AGAIN)!
-            gui_draw_frame_pressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            gui_draw_frame_pressed(m_renderDrawer, iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
         // In case invalid map, render as not-selectable
