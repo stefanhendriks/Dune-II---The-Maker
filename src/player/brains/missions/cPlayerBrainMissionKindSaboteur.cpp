@@ -55,7 +55,7 @@ void cPlayerBrainMissionKindSaboteur::think_Execute()
         if (pStructure->isValid()) {
             const std::vector<int> &units = mission->getUnits();
             for (auto &myUnit: units) {
-                cUnit &aUnit = unit[myUnit];
+                cUnit &aUnit = g_Unit[myUnit];
                 if (aUnit.isValid() && aUnit.isIdle()) {
                     log("cPlayerBrainMissionKindSaboteur::thinkState_Execute(): Ordering unit to attack!");
                     aUnit.attackStructure(targetStructureID);

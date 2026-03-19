@@ -228,7 +228,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     newBullet.iPlayer = -1;
 
     if (unitWhichShoots > -1 ) {
-        cUnit &cUnit = unit[unitWhichShoots];
+        cUnit &cUnit = g_Unit[unitWhichShoots];
         newBullet.iPlayer = cUnit.iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {
@@ -242,14 +242,14 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 
         int unitIdAtTargetCell = global_map.getCellIdUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
-            cUnit &unitTarget = unit[unitIdAtTargetCell];
+            cUnit &unitTarget = g_Unit[unitIdAtTargetCell];
             // reveal for player which is being attacked
             global_map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
 
         unitIdAtTargetCell = global_map.getCellIdAirUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
-            cUnit &unitTarget = unit[unitIdAtTargetCell];
+            cUnit &unitTarget = g_Unit[unitIdAtTargetCell];
             // reveal for player which is being attacked
             global_map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }

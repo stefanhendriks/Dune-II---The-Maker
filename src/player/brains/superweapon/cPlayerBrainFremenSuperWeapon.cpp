@@ -22,7 +22,7 @@ void cPlayerBrainFremenSuperWeapon::think()
     bool foundIdleUnit = false;
     std::vector<int> ids = player->getAllMyUnits();
     for (auto &id : ids) {
-        cUnit &cUnit = unit[id];
+        cUnit &cUnit = g_Unit[id];
         if (cUnit.isIdle()) {
             foundIdleUnit = true;
             break;
@@ -56,7 +56,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         std::vector<int> unitIds = pPlayer->getAllMyUnits();
         if (!unitIds.empty()) {
             std::shuffle(unitIds.begin(), unitIds.end(), g);
-            cellToAttack = unit[unitIds.front()].getCell();
+            cellToAttack = g_Unit[unitIds.front()].getCell();
             if (RNG::rnd(100) > 30) break;
         }
 
@@ -74,7 +74,7 @@ void cPlayerBrainFremenSuperWeapon::think()
 
     // order units to attack!
     for (auto &id : ids) {
-        cUnit &pUnit = unit[id];
+        cUnit &pUnit = g_Unit[id];
         if (!pUnit.isIdle()) continue;
         pUnit.attackAt(cellToAttack);
     }

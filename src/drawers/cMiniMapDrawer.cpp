@@ -304,7 +304,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
-                int iPlr = unit[idOfUnitAtCell].iPlayer;
+                int iPlr = g_Unit[idOfUnitAtCell].iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
@@ -313,7 +313,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
-                int iPlr = unit[idOfAirUnitAtCell].iPlayer;
+                int iPlr = g_Unit[idOfAirUnitAtCell].iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
