@@ -10,6 +10,7 @@
 
 class cRectangle;
 class GameContext;
+class SDLDrawer;
 
 class cMouse {
 
@@ -99,7 +100,7 @@ private:
     cInputObserver *_mouseObserver;
     GameContext* m_ctx = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
-
+    SDLDrawer* m_renderDrawer = nullptr;
 
     bool leftButtonPressed;
     bool rightButtonPressed;
