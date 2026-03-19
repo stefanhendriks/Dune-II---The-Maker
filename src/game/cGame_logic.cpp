@@ -188,7 +188,7 @@ void cGame::init()
     }
 
     for (int i = 0; i < MAX_PARTICLES; i++) {
-        particle[i].init();
+        g_Particle[i].init();
     }
 
     // Units & Structures are already initialized in map.init()
