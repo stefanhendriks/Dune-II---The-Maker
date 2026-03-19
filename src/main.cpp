@@ -35,7 +35,7 @@ cStructureUtils 			structureUtils;
 cMap           				global_map;
 
 cAbstractStructure     		*structure[MAX_STRUCTURES];
-cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
+cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cPlayer        				g_Player[MAX_PLAYERS];             // player is
 cParticle      				g_Particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];

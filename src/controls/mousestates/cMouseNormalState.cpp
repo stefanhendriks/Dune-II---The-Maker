@@ -73,7 +73,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                 global_drawManager->setMessage(std::format("{} units selected", ids.size()));
             }
             else {
-                cUnit &pUnit = unit[ids[0]];
+                cUnit &pUnit = g_Unit[ids[0]];
                 global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
             }
         }
@@ -88,7 +88,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
             if (hoverUnitId > -1) {
                 m_player->deselectAllUnits();
 
-                cUnit &pUnit = unit[hoverUnitId];
+                cUnit &pUnit = g_Unit[hoverUnitId];
                 if (pUnit.isValid() && pUnit.belongsTo(m_player) && !pUnit.bSelected) {
                     pUnit.bSelected = true;
                     if (pUnit.isInfantryUnit()) {
@@ -170,7 +170,7 @@ int cMouseNormalState::getMouseTileForNormalState() const
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit &pUnit = unit[hoverUnitId];
+        cUnit &pUnit = g_Unit[hoverUnitId];
         if (pUnit.isValid() && pUnit.belongsTo(m_player)) {
             // only show this for units
             return MOUSE_PICK;

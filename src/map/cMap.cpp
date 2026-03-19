@@ -111,7 +111,7 @@ void cMap::init(int width, int height)
     }
 
     for (int i = 0; i < MAX_UNITS; i++) {
-        unit[i].init(i);
+        g_Unit[i].init(i);
     }
 
     TIMER_scroll = 0;
@@ -235,7 +235,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
     if (iCell < 0 || iUnitID < 0)
         return false;
 
-    cUnit &pUnit = unit[iUnitID];
+    cUnit &pUnit = g_Unit[iUnitID];
     if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
     if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
@@ -292,7 +292,7 @@ bool cMap::occupied(int iCll, int iUnitID)
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    cUnit &pUnit = unit[iUnitID];
+    cUnit &pUnit = g_Unit[iUnitID];
 
     int structureIdOnMap = getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {
@@ -505,7 +505,7 @@ void cMap::clearShroud(int c, int size, int playerId)
 
                 int unitId = getCellIdUnitLayer(cl);
                 if (unitId > -1) {
-                    cUnit &cUnit = unit[unitId];
+                    cUnit &cUnit = g_Unit[unitId];
                     if (cUnit.isValid()) {
                         s_GameEvent event{
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
@@ -544,7 +544,7 @@ void cMap::draw_units()
 
     // draw all worms first
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+        cUnit &pUnit = g_Unit[i];
         if (!pUnit.isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
@@ -564,7 +564,7 @@ void cMap::draw_units()
 
     // then: draw infantry units
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+        cUnit &pUnit = g_Unit[i];
         if (!pUnit.isValid()) continue;
 
         if (!pUnit.isInfantryUnit())
@@ -580,7 +580,7 @@ void cMap::draw_units()
 
     // then: draw ground units
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+        cUnit &pUnit = g_Unit[i];
         if (!pUnit.isValid()) continue;
 
         if (pUnit.isAirbornUnit() ||
@@ -609,7 +609,7 @@ void cMap::draw_units_2nd()
 {
     // draw health of units
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+        cUnit &pUnit = g_Unit[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.bHovered && !pUnit.bSelected) continue;
         if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
@@ -625,7 +625,7 @@ void cMap::draw_units_2nd()
 
     // draw airborn units
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
+        cUnit &pUnit = g_Unit[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.isAirbornUnit()) continue;
 

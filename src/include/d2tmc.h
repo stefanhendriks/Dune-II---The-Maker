@@ -62,7 +62,7 @@ extern cGame		  game;
 extern cMap       global_map;
 
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
-extern cUnit          unit[MAX_UNITS];
+extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	  *global_mapCamera;
 extern cPlayer        g_Player[MAX_PLAYERS];
 extern cParticle      g_Particle[MAX_PARTICLES];

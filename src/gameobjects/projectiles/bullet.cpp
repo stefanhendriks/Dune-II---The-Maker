@@ -179,8 +179,8 @@ void cBullet::thinkFast()
         TIMER_homing--;
 
         if (iHoming > -1) {
-            if (unit[iHoming].isValid()) {
-                int cll = unit[iHoming].getCell();
+            if (g_Unit[iHoming].isValid()) {
+                int cll = g_Unit[iHoming].getCell();
                 targetX = global_map.getAbsoluteXPositionFromCell(cll);
                 targetY = global_map.getAbsoluteYPositionFromCell(cll);
             }
@@ -398,12 +398,12 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
     if (unitIdOnAirLayer < 0) return false;
     if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
 
-    cUnit &airUnit = unit[unitIdOnAirLayer];
+    cUnit &airUnit = g_Unit[unitIdOnAirLayer];
     if (iOwnerUnit <= 0) {
         return false; // no air unit to damage
     }
 
-    cUnit &ownerUnit = unit[iOwnerUnit];
+    cUnit &ownerUnit = g_Unit[iOwnerUnit];
     if (!ownerUnit.isValid()) {
         return false; // unit is not 'valid'
     }
@@ -429,7 +429,7 @@ bool cBullet::damageAirUnit(int cell, double factor) const
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     if (doesAirUnitTakeDamage(unitIdOnAirLayer)) {
-        cUnit &airUnit = unit[unitIdOnAirLayer];
+        cUnit &airUnit = g_Unit[unitIdOnAirLayer];
         airUnit.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
         return true;
     }
@@ -449,7 +449,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (id < 0) return false;
     if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
 
-    cUnit &groundUnitTakingDamage = unit[id];
+    cUnit &groundUnitTakingDamage = g_Unit[id];
 
     float iDamage = getDamageToInflictToUnit(groundUnitTakingDamage) * factor;
     groundUnitTakingDamage.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
@@ -461,7 +461,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (groundUnitTakingDamage.isDead()) {
         // who is to blame for killing this unit?
         if (iOwnerUnit > -1) {
-            cUnit &ownerUnit = unit[iOwnerUnit];
+            cUnit &ownerUnit = g_Unit[iOwnerUnit];
             if (ownerUnit.isValid()) {
                 // TODO: update statistics
 
@@ -484,7 +484,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
 
         // take over unit
         if (RNG::rnd(100) < gets_Bullet().deviateProbability) {
-            cUnit &ownerUnit = unit[iOwnerUnit];
+            cUnit &ownerUnit = g_Unit[iOwnerUnit];
             if (ownerUnit.isValid()) {
                 groundUnitTakingDamage.iPlayer = ownerUnit.iPlayer;
                 groundUnitTakingDamage.iGroup = -1;
@@ -525,7 +525,7 @@ float cBullet::getDamageToInflictToInfantry() const
     float result = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_infantry);
 
     if (iOwnerUnit > -1) {
-        float fDam = unit[iOwnerUnit].fExpDamage() * result;
+        float fDam = g_Unit[iOwnerUnit].fExpDamage() * result;
         result += fDam;
     }
     return result;
@@ -547,7 +547,7 @@ void cBullet::damageSandworm(int cell, double factor) const
     int id = global_map.getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
-    cUnit &worm = unit[id];
+    cUnit &worm = g_Unit[id];
     float damage = getDamageToInflictToNonInfantry() * factor;
     worm.takeDamage(damage, iOwnerUnit, iOwnerStructure);
 }
@@ -615,7 +615,7 @@ float cBullet::getDamageToInflictToNonInfantry() const
     // increase damage by experience of unit
     if (iOwnerUnit > -1) {
         // extra damage by experience:
-        cUnit &cUnit = unit[iOwnerUnit];
+        cUnit &cUnit = g_Unit[iOwnerUnit];
         if (cUnit.isValid()) { // in case the unit died while firing
             float iDam = (cUnit.fExpDamage() * iDamage);
             iDamage = iDamage + iDam;
@@ -660,8 +660,8 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {
-        if (unit[iOwnerUnit].isValid()) {
-            pUnit = &unit[iOwnerUnit];
+        if (g_Unit[iOwnerUnit].isValid()) {
+            pUnit = &g_Unit[iOwnerUnit];
         }
     }
 

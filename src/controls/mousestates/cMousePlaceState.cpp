@@ -156,7 +156,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 int unitIdOnMap = global_map.getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
-                    if (!unit[unitIdOnMap].isDead()) {
+                    if (!g_Unit[unitIdOnMap].isDead()) {
                         return false;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?
