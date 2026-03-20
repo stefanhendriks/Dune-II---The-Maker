@@ -2,12 +2,16 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-#include "gui/GuiButtonGroup.h"
 
 
-GuiBar::GuiBar(const cRectangle &rect, GuiBarPlacement placement) :
-    GuiObject(rect), gui_objects(std::vector<GuiObject *>(0)), m_placement(placement), placementPosition(0)
+GuiBar::GuiBar(const cRectangle &rect, GuiBarPlacement placement, int heightBarSize) :
+    GuiObject(rect), gui_objects(std::vector<GuiObject *>(0)), m_placement(placement), placementPosition(0), heightBarSize(heightBarSize)
 {
+    if (m_placement == GuiBarPlacement::HORIZONTAL) {
+       halfMarginBetweenButtons = (rect.getHeight()-heightBarSize)/2;
+    } else {
+        halfMarginBetweenButtons = (rect.getWidth()-heightBarSize)/2;
+    }
 }
 
 GuiBar::~GuiBar() noexcept
@@ -34,6 +38,21 @@ void GuiBar::addGuiObject(GuiObject *guiObject)
     gui_objects.push_back(guiObject);
 }
 
+void GuiBar::addAutoGuiObject(GuiObject *guiObject)
+{
+    int x = 0, y = 0;
+    if (m_placement == GuiBarPlacement::HORIZONTAL) {
+        x = placementPosition;
+        y = halfMarginBetweenButtons;
+        placementPosition += heightBarSize + 2*halfMarginBetweenButtons;
+    } else {
+        x = m_rect.getX() + halfMarginBetweenButtons;
+        y = m_rect.getY() + placementPosition;
+        placementPosition += heightBarSize + 2*halfMarginBetweenButtons;
+    }
+    guiObject->setPosition(x,y);
+    gui_objects.push_back(guiObject);
+}
 
 void GuiBar::onNotifyMouseEvent(const s_MouseEvent &event)
 {
@@ -54,9 +73,4 @@ void GuiBar::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     for (auto &guiObject : gui_objects) {
         guiObject->onNotifyKeyboardEvent(event);
     }
-}
-
-void GuiBar::addGuiGroup(std::unique_ptr<GuiButtonGroup> buttonGroup)
-{
-    gui_button_groups.push_back(std::move(buttonGroup));
 }
