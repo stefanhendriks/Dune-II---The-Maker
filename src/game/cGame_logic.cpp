@@ -161,8 +161,6 @@ void cGame::init()
 
     m_musicVolume = 96; // volume is 0...
 
-    // m_pathsCreated = 0;
-
     setState(GAME_INITIALIZE);
 
     m_cScreenFader->inititialize();
@@ -205,8 +203,6 @@ void cGame::missionInit()
     m_gameConditionChecker->missionInit();
 
     m_musicVolume = 96; // volume is 0...
-
-    // m_pathsCreated = 0;
 
     m_cScreenFader->inititialize();
 
@@ -820,8 +816,7 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_OPTIONS) {
                 // This feels awkward. For now, I'll keep it (if it works), but this will change
-                // once we have a proper game playing state and we need to transition properly between
-                // states
+                // once we have a proper game playing state and we need to transition properly between states
                 takeBackGroundScreen();
                 auto *pState = dynamic_cast<cOptionsState *>(existingStatePtr);
                 // you cannot 'go back' to mission select
@@ -939,15 +934,12 @@ void cGame::setState(int newState)
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
-                // std::cout << "create cMentatState Briefing" << std::endl;
                 newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
-                // std::cout << "create cMentatState WinBrief" << std::endl;
                 newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
-                // std::cout << "create cMentatState LoseBrief" << std::endl;
                 newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
@@ -962,43 +954,6 @@ void cGame::setState(int newState)
 void cGame::thinkFast_fading()
 {
     m_cScreenFader->update();
-    //@mira_fader
-    
-    /*
-    // Fading of the entire screen
-    if (m_fadeAction == eFadeAction::FADE_OUT) {
-        m_fadeAlpha -= 2;
-        if (m_fadeAlpha < kMinAlpha) {
-            m_fadeAlpha = kMinAlpha;
-            m_fadeAction = eFadeAction::FADE_NONE;
-        }
-    }
-    else if (m_fadeAction == eFadeAction::FADE_IN) {
-        m_fadeAlpha += 2;
-        if (m_fadeAlpha > kMaxAlpha) {
-            m_fadeAlpha = kMaxAlpha;
-            m_fadeAction = eFadeAction::FADE_NONE;
-        }
-    }
-
-    // Fading / pulsating of selected stuff
-    static constexpr float fadeSelectIncrement = 1 / 256.0f;
-    if (m_fadeSelectDir) {
-        m_fadeSelect += fadeSelectIncrement;
-        // when 255, then fade back
-        if (m_fadeSelect > 0.99) {
-            m_fadeSelect = 1.0f;
-            m_fadeSelectDir = false;
-        }
-
-        return;
-    }
-
-    m_fadeSelect -= fadeSelectIncrement;
-    // not too dark, 0.03125
-    if (m_fadeSelect < 0.3125f) {
-        m_fadeSelectDir = true;
-    }*/
 }
 
 cGame::~cGame()
@@ -1076,7 +1031,6 @@ void cGame::changeStateFromMentat()
     }
 
     // NOT a skirmish game
-
     // won mission, transition to region selection (Select your next Conquest)
     if (game.isState(GAME_WINBRIEF)) {
         game.setNextStateToTransitionTo(GAME_REGION);
@@ -1554,9 +1508,6 @@ int cGame::getMaxVolume()
     return m_soundPlayer->getMaxVolume();
 }
 
-/**
- * Called every 100ms
- */
 void cGame::thinkNormal()
 {
     if (m_currentState) {
@@ -1564,9 +1515,6 @@ void cGame::thinkNormal()
     }
 }
 
-/**
- * Called every second
- */
 void cGame::thinkSlow()
 {
     if (m_currentState) {
