@@ -73,7 +73,7 @@ void cGamePlaying::thinkFast()
         cUnit.thinkFast();
     }
 
-    for (cParticle &pParticle : g_Particle) {
+    for (cParticle &pParticle : g_Particles) {
         if (!pParticle.isValid()) continue;
         pParticle.thinkFast();
     }

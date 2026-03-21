@@ -37,7 +37,8 @@ cMap           				global_map;
 cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
 cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cPlayer        				g_Player[MAX_PLAYERS];             // player is
-cParticle      				g_Particle[MAX_PARTICLES];
+// cParticle      				g_Particle[MAX_PARTICLES];
+cParticles      			g_Particles;
 cBullet        				g_Bullet[MAX_BULLETS];
 // std::array<cRegion, MAX_REGIONS> world;
 

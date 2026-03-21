@@ -582,7 +582,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         return -1;
     }
 
-    cParticle &pParticle = g_Particle[iNewId];
+    cParticle &pParticle = g_Particles[iNewId];
     if (iType > -1 && iType < particleInfos.size()) {
         s_ParticleInfo &sParticle = particleInfos[iType];
         pParticle.init(sParticle);
@@ -714,8 +714,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
 int cParticle::findNewSlot()
 {
-    for (int i = 0; i < MAX_PARTICLES; i++) {
-        if (!g_Particle[i].isValid())
+    for (int i = 0; i < g_Particles.size(); i++) {
+        if (!g_Particles[i].isValid())
             return i;
     }
 
@@ -782,7 +782,7 @@ void cParticle::addPosX(float d)
 {
     this->x += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = g_Particle[boundParticleID];
+        cParticle &otherParticle = g_Particles[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosX(d);
         }
@@ -796,7 +796,7 @@ void cParticle::addPosY(float d)
 {
     this->y += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = g_Particle[boundParticleID];
+        cParticle &otherParticle = g_Particles[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosY(d);
         }
@@ -811,7 +811,7 @@ void cParticle::die()
     bindToUnit(-1);
     bAlive = false;
     if (boundParticleID > -1) {
-        cParticle &pParticle = g_Particle[boundParticleID];
+        cParticle &pParticle = g_Particles[boundParticleID];
         if (pParticle.isValid()) {
             pParticle.die();
         }

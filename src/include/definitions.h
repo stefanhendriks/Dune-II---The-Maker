@@ -52,7 +52,7 @@
 #define MAX_UNITS        300     // max of units in the game
 #define MAX_STRUCTURES   200     // max of structures in the game
 #define MAX_BULLETS      300     // max of bullets in the game at once
-#define MAX_PARTICLES    600	 // max of particles in the game at once
+// #define MAX_PARTICLES    600	 // max of particles in the game at once
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 
 // FOR OPTIONS:

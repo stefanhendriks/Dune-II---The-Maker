@@ -510,7 +510,7 @@ void cAbstractStructure::damage(int hp, int originId)
             long y = getRandomPosY();
             int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
             if (particleIndex > -1) {
-                TIMER_reduceSmoke = g_Particle[particleIndex].getTimerDeadInTicks();
+                TIMER_reduceSmoke = g_Particles[particleIndex].getTimerDeadInTicks();
                 m_smokeParticlesCreated++;
             }
         }
