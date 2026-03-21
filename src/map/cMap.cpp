@@ -102,8 +102,8 @@ void cMap::init(int width, int height)
 
     cStructureFactory::getInstance()->deleteAllExistingStructures();
 
-    for (int i = 0; i < g_Bullet.size(); i++) {
-        g_Bullet[i].init();
+    for (int i = 0; i < g_Bullets.size(); i++) {
+        g_Bullets[i].init();
     }
 
     for (int i = 0; i < g_Particles.size(); i++) {
@@ -439,9 +439,9 @@ void cMap::thinkAutoDetonateSpiceBlooms()  // let spice bloom detonate after X a
 void cMap::draw_bullets()
 {
     // Loop through all units, check if they should be drawn, and if so, draw them
-    for (int i = 0; i < g_Bullet.size(); i++) {
-        if (g_Bullet[i].bAlive) {
-            g_Bullet[i].draw();
+    for (int i = 0; i < g_Bullets.size(); i++) {
+        if (g_Bullets[i].bAlive) {
+            g_Bullets[i].draw();
         }
     }
 }
