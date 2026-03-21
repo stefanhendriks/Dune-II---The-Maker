@@ -646,7 +646,7 @@ s_BulletInfo cBullet::gets_Bullet() const
 
 cPlayer *cBullet::getPlayer() const
 {
-    return &g_Player[iPlayer];
+    return &g_Players[iPlayer];
 }
 
 /**

@@ -300,7 +300,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = g_Player[iPlr].getMinimapColor();
+                iColor = g_Players[iPlr].getMinimapColor();
             }
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
@@ -309,7 +309,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = g_Player[iPlr].getMinimapColor();
+                iColor = g_Players[iPlr].getMinimapColor();
             }
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
@@ -318,7 +318,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = g_Player[iPlr].getMinimapColor();
+                iColor = g_Players[iPlr].getMinimapColor();
             }
 
             int idOfWormAtCell = m_map->getCellIdWormsLayer(iCll);

@@ -41,8 +41,8 @@ cMapCamera					*global_mapCamera;
 
 cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
 cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
-cPlayers       				g_Player;                          // player manager instance
 
+cPlayers       				g_Players;
 cParticles      			g_Particles;
 cBullets                    g_Bullets;
 
