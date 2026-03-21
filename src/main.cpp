@@ -40,7 +40,7 @@ cUnit          				g_Unit[MAX_UNITS];                // units in the game (max M
 cPlayer        				g_Player[MAX_PLAYERS];             // player is
 // cParticle      				g_Particle[MAX_PARTICLES];
 cParticles      			g_Particles;
-cBullet        				g_Bullet[MAX_BULLETS];
+cBullets                      g_Bullet;
 // std::array<cRegion, MAX_REGIONS> world;
 
 cDrawManager   				*global_drawManager = nullptr;

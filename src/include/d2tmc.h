@@ -24,6 +24,7 @@
 #include "utils/cStructureUtils.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/projectiles/cBulletInfos.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/bullet.h"
 
@@ -71,7 +72,8 @@ extern cMapCamera	  *global_mapCamera;
 extern cPlayer        g_Player[MAX_PLAYERS];
 //extern cParticle      g_Particle[MAX_PARTICLES];
 extern cParticles      g_Particles;
-extern cBullet        g_Bullet[MAX_BULLETS];
+//extern cBullet        g_Bullet[MAX_BULLETS];
+extern cBullets       g_Bullet;
 // extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *global_drawManager;
