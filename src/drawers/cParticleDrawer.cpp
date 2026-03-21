@@ -8,8 +8,8 @@ void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {
     particlesLowerLayer.clear();
     particlesTopLayer.clear();
-    for (int i=0; i < MAX_PARTICLES; i++) {
-        cParticle &pParticle = g_Particle[i];
+    for (int i=0; i < g_Particles.size(); i++) {
+        cParticle &pParticle = g_Particles[i];
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 
@@ -25,14 +25,14 @@ void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 void cParticleDrawer::drawLowerLayer()
 {
     for (auto &i : particlesLowerLayer) {
-        g_Particle[i].draw();
+        g_Particles[i].draw();
     }
 }
 
 void cParticleDrawer::drawTopLayer()
 {
     for (auto &i : particlesTopLayer) {
-        g_Particle[i].draw();
+        g_Particles[i].draw();
     }
 }
 

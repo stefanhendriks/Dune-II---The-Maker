@@ -23,6 +23,7 @@
 #include "structs.h"
 #include "utils/cStructureUtils.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/particles/cParticles.h"
 
 //#include "utils/cDataPack.hpp"
 #include <memory>
@@ -66,7 +67,8 @@ extern cAbstractStructure     *g_pStructure[MAX_STRUCTURES];
 extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	  *global_mapCamera;
 extern cPlayer        g_Player[MAX_PLAYERS];
-extern cParticle      g_Particle[MAX_PARTICLES];
+//extern cParticle      g_Particle[MAX_PARTICLES];
+extern cParticles      g_Particles;
 extern cBullet        g_Bullet[MAX_BULLETS];
 // extern std::array<cRegion, MAX_REGIONS> world;
 extern cStructureUtils structureUtils;
