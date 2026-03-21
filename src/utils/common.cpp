@@ -184,7 +184,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 {
     int new_id = -1;
 
-    for (int i = 0; i < MAX_BULLETS; i++)
+    for (int i = 0; i < g_Bullet.size(); i++)
         if (g_Bullet[i].bAlive == false) {
             new_id = i;
             break;

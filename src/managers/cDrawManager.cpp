@@ -128,7 +128,7 @@ void cDrawManager::drawDebugInfoUsages() const
     }
 
     int bulletsUsed = 0;
-    for (int i = 0; i < MAX_BULLETS; i++) {
+    for (int i = 0; i < g_Bullet.size(); i++) {
         cBullet &pBullet = g_Bullet[i];
         if (pBullet.bAlive) {
             bulletsUsed++;
@@ -147,7 +147,7 @@ void cDrawManager::drawDebugInfoUsages() const
     int height = 14;
     m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, MAX_UNITS));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, MAX_BULLETS));
+    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, g_Bullet.size()));
     m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, g_Particles.size()));
 }
 
