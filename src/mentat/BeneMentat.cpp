@@ -5,6 +5,7 @@
 #include "game/cGame.h"
 #include "include/sDataCampaign.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "drawers/cTextDrawer.h"

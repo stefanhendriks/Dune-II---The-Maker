@@ -9,6 +9,7 @@
 #include "include/iniDefine.h"
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 

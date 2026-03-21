@@ -21,6 +21,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"

@@ -70,6 +70,8 @@ std::string getLogComponentString(eLogComponent component)
             return "SOUND";
         case COMP_REGIONINI:
             return "REGIONINI";
+        case COMP_PLAYER:
+            return "PLAYER";
     }
     return "UNIDENTIFIED";
 }

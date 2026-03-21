@@ -18,6 +18,7 @@
 #include <format>
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 
 
 cGamePlaying::cGamePlaying(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)

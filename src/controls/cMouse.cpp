@@ -7,6 +7,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "sidebar/cSideBar.h"
 #include "utils/d2tm_math.h"
 #include "utils/Graphics.hpp"

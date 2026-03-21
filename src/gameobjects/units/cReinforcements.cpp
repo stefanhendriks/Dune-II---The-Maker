@@ -3,6 +3,7 @@
 #include "cReinforcements.h"
 #include "utils/common.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/RNG.hpp"
 #include <algorithm>
 #include <format>
