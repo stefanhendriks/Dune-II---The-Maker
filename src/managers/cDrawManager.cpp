@@ -159,7 +159,7 @@ void cDrawManager::drawCredits()
 
 void cDrawManager::drawRallyPoint()
 {
-    cPlayer &humanPlayer = g_Players[HUMAN];
+    cPlayer &humanPlayer = game.getPlayers()[HUMAN];
     if (humanPlayer.selected_structure < 0) return;
     cAbstractStructure *theStructure = g_pStructure[humanPlayer.selected_structure];
     if (!theStructure) return;
@@ -186,7 +186,7 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    m_renderDrawer->renderLine( startX, startY, endX, endY, g_Players[HUMAN].getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, game.getPlayers()[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()

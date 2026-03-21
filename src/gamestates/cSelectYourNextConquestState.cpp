@@ -115,7 +115,7 @@ void cSelectYourNextConquestState::thinkFast()
             iRegionSceneAlpha = 255;
         }
 
-        int iHouse = g_Players[0].getHouse();
+        int iHouse = game.getPlayers()[0].getHouse();
         int iMission = m_dataCompaign->mission;
 
         bool hasMessage = global_drawManager->hasMessage();
@@ -246,7 +246,7 @@ void cSelectYourNextConquestState::draw() const
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-    int iHouse = g_Players[0].getHouse();
+    int iHouse = game.getPlayers()[0].getHouse();
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
         drawStateIntroduction();
     }
@@ -425,8 +425,8 @@ void cSelectYourNextConquestState::regionSetupLostMission()
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        g_Players[i].init(i, nullptr);
-        g_Players[i].setHouse(i);
+        game.getPlayers()[i].init(i, nullptr);
+        game.getPlayers()[i].setHouse(i);
     }
 
     return;
@@ -457,8 +457,8 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        g_Players[i].init(i, nullptr);
-        g_Players[i].setHouse(i);
+        game.getPlayers()[i].init(i, nullptr);
+        game.getPlayers()[i].setHouse(i);
     }
 
     return;
@@ -476,7 +476,7 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
     if (regionPiece.iHouse > -1) {
         // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
         // is the player we want to get the correct house collor for this piece...
-        cPlayer &temp = g_Players[regionPiece.iHouse];
+        cPlayer &temp = game.getPlayers()[regionPiece.iHouse];
         // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
             regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp, TransparentColorIndex);
@@ -487,8 +487,8 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
 
     // select your next conquest... always draw them in the human playing house color
     if (regionPiece.bSelectable && state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
-        int iHouse = g_Players[HUMAN].getHouse();
-        cPlayer &temp = g_Players[iHouse];
+        int iHouse = game.getPlayers()[HUMAN].getHouse();
+        cPlayer &temp = game.getPlayers()[iHouse];
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
             regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp, TransparentColorIndex);
         }
