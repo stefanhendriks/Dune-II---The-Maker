@@ -23,7 +23,9 @@
 #include "structs.h"
 #include "utils/cStructureUtils.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/projectiles/bullet.h"
 
 //#include "utils/cDataPack.hpp"
 #include <memory>
@@ -82,6 +84,7 @@ extern s_UpgradeInfo                sUpgradeInfo[MAX_UPGRADETYPES];
 extern s_SpecialInfo                sSpecialInfo[MAX_SPECIALTYPES];
 extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 // extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
+//extern cBulletInfos             sBulletInfo;
 extern cParticleInfos					  particleInfos;
 
 // DATAFILES

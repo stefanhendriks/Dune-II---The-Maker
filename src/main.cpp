@@ -13,6 +13,7 @@
 #include "d2tmc.h"
 #include "game/cGame.h"
 #include "gameobjects/particles/cParticle.h"
+
 #include "gameobjects/projectiles/bullet.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
@@ -47,12 +48,14 @@ SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*global_mapCamera;
 
 // Structs of all kinds of objects (*info)
-s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
-s_UnitInfo         			    sUnitInfo[MAX_UNITTYPES];
-s_UpgradeInfo                   sUpgradeInfo[MAX_UPGRADETYPES];
+s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
+s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
+s_UpgradeInfo               sUpgradeInfo[MAX_UPGRADETYPES];
 s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
 s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 // s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
+
+//cBulletInfos       			    sBulletInfo;
 cParticleInfos					particleInfos;
 
 // datafile(s)
