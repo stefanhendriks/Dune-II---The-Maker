@@ -55,7 +55,7 @@ s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
 // s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 // s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 
-cBulletInfos       			    sBulletInfo;
+cBulletInfos       			    bulletInfos;
 cParticleInfos					particleInfos;
 
 // datafile(s)

@@ -84,7 +84,7 @@ extern s_UpgradeInfo                sUpgradeInfo[MAX_UPGRADETYPES];
 extern s_SpecialInfo                sSpecialInfo[MAX_SPECIALTYPES];
 // extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 // extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
-extern cBulletInfos             sBulletInfo;
+extern cBulletInfos             bulletInfos;
 extern cParticleInfos					  particleInfos;
 
 // DATAFILES

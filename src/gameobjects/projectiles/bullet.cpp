@@ -131,16 +131,16 @@ void cBullet::draw()
         return;
     }
 
-    if (sBulletInfo[iType].bmp != nullptr) {
+    if (bulletInfos[iType].bmp != nullptr) {
         cRectangle src = {sx,sy, bmp_width, bmp_width};
         cRectangle dest = {x,y, static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width)))};
-        global_renderDrawer->renderStrechSprite(sBulletInfo[iType].bmp, src, dest);
+        global_renderDrawer->renderStrechSprite(bulletInfos[iType].bmp, src, dest);
     }
 }
 
 int cBullet::getBulletBmpWidth() const
 {
-    return sBulletInfo[iType].bmp_width;
+    return bulletInfos[iType].bmp_width;
 }
 
 int cBullet::getBulletBmpHeight() const
@@ -526,7 +526,7 @@ float cBullet::getDamageToInflictToInfantry() const
 {
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float result = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_infantry);
+    float result = difficultySettings->getInflictDamage(bulletInfos[iType].damage_infantry);
 
     if (iOwnerUnit > -1) {
         float fDam = g_Unit[iOwnerUnit].fExpDamage() * result;
@@ -640,7 +640,7 @@ cPlayerDifficultySettings *cBullet::getDifficultySettings() const
 
 s_BulletInfo cBullet::gets_Bullet() const
 {
-    return sBulletInfo[iType];
+    return bulletInfos[iType];
 }
 
 cPlayer *cBullet::getPlayer() const
@@ -662,7 +662,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float iDamage = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_vehicles) * factor;
+    float iDamage = difficultySettings->getInflictDamage(bulletInfos[iType].damage_vehicles) * factor;
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {

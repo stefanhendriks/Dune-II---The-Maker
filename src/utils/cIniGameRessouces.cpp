@@ -793,224 +793,224 @@ void IniGameRessources::install_bullets()
     logbook("Installing:  BULLET TYPES");
 
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
-        sBulletInfo[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
-        sBulletInfo[i].moveSpeed = 2;
-        sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
-        sBulletInfo[i].damage_vehicles = 0;      // damage to vehicles
-        sBulletInfo[i].damage_infantry = 0;  // damage to infantry
-        sBulletInfo[i].max_frames = 1;  // 1 frame animation
-        sBulletInfo[i].max_deadframes = 4; // 4 frame animation
-        sBulletInfo[i].smokeParticle = -1; // by default no smoke particle is spawned
-        sBulletInfo[i].bmp_width = 8 * 2;
-        sBulletInfo[i].sound = -1;    // no sound
-        sBulletInfo[i].explosionSize = 1; // 1 tile sized explosion
-        sBulletInfo[i].deviateProbability = 0; // no probability of deviating a unit
-        sBulletInfo[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
-        sBulletInfo[i].canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
-        sBulletInfo[i].canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
-        strcpy(sBulletInfo[i].description, "Unknown");
+        bulletInfos[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
+        bulletInfos[i].moveSpeed = 2;
+        bulletInfos[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
+        bulletInfos[i].damage_vehicles = 0;      // damage to vehicles
+        bulletInfos[i].damage_infantry = 0;  // damage to infantry
+        bulletInfos[i].max_frames = 1;  // 1 frame animation
+        bulletInfos[i].max_deadframes = 4; // 4 frame animation
+        bulletInfos[i].smokeParticle = -1; // by default no smoke particle is spawned
+        bulletInfos[i].bmp_width = 8 * 2;
+        bulletInfos[i].sound = -1;    // no sound
+        bulletInfos[i].explosionSize = 1; // 1 tile sized explosion
+        bulletInfos[i].deviateProbability = 0; // no probability of deviating a unit
+        bulletInfos[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
+        bulletInfos[i].canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
+        bulletInfos[i].canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
+        strcpy(bulletInfos[i].description, "Unknown");
     }
 
     // huge rocket/missile
-    sBulletInfo[ROCKET_BIG].bmp = gfxdata->getTexture(BULLET_ROCKET_LARGE);
-    sBulletInfo[ROCKET_BIG].deathParticle = D2TM_PARTICLE_EXPLOSION_STRUCTURE01;
-    sBulletInfo[ROCKET_BIG].bmp_width = 48;
-    sBulletInfo[ROCKET_BIG].damage_vehicles = 999;
-    sBulletInfo[ROCKET_BIG].damage_infantry = 999;
-    sBulletInfo[ROCKET_BIG].max_frames = 1;
-    sBulletInfo[ROCKET_BIG].sound = SOUND_ROCKET;
-    sBulletInfo[ROCKET_BIG].explosionSize = 7;
-    sBulletInfo[ROCKET_BIG].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_BIG].canDamageGround = true;
-    sBulletInfo[ROCKET_BIG].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_BIG].description, "ROCKET_BIG");
+    bulletInfos[ROCKET_BIG].bmp = gfxdata->getTexture(BULLET_ROCKET_LARGE);
+    bulletInfos[ROCKET_BIG].deathParticle = D2TM_PARTICLE_EXPLOSION_STRUCTURE01;
+    bulletInfos[ROCKET_BIG].bmp_width = 48;
+    bulletInfos[ROCKET_BIG].damage_vehicles = 999;
+    bulletInfos[ROCKET_BIG].damage_infantry = 999;
+    bulletInfos[ROCKET_BIG].max_frames = 1;
+    bulletInfos[ROCKET_BIG].sound = SOUND_ROCKET;
+    bulletInfos[ROCKET_BIG].explosionSize = 7;
+    bulletInfos[ROCKET_BIG].canDamageAirUnits = true;
+    bulletInfos[ROCKET_BIG].canDamageGround = true;
+    bulletInfos[ROCKET_BIG].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
+    strcpy(bulletInfos[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
-    sBulletInfo[ROCKET_SMALL_ORNI].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
-    sBulletInfo[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_ORNI].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL_ORNI].damage_vehicles = 48; // they can do pretty damage
-    sBulletInfo[ROCKET_SMALL_ORNI].damage_infantry = 24;
-    sBulletInfo[ROCKET_SMALL_ORNI].max_frames = 1;
-    sBulletInfo[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_SMALL_ORNI].max_deadframes = 1;
-    sBulletInfo[ROCKET_SMALL_ORNI].canDamageGround = true;
-    sBulletInfo[ROCKET_SMALL_ORNI].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
+    bulletInfos[ROCKET_SMALL_ORNI].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
+    bulletInfos[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL_ORNI].bmp_width = 16;
+    bulletInfos[ROCKET_SMALL_ORNI].damage_vehicles = 48; // they can do pretty damage
+    bulletInfos[ROCKET_SMALL_ORNI].damage_infantry = 24;
+    bulletInfos[ROCKET_SMALL_ORNI].max_frames = 1;
+    bulletInfos[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
+    bulletInfos[ROCKET_SMALL_ORNI].max_deadframes = 1;
+    bulletInfos[ROCKET_SMALL_ORNI].canDamageGround = true;
+    bulletInfos[ROCKET_SMALL_ORNI].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
+    strcpy(bulletInfos[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
     // small rocket
-    sBulletInfo[ROCKET_SMALL].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
-    sBulletInfo[ROCKET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL].damage_vehicles = 10; // was 8
-    sBulletInfo[ROCKET_SMALL].damage_infantry = 8; // was 4
-    sBulletInfo[ROCKET_SMALL].max_frames = 1;
-    sBulletInfo[ROCKET_SMALL].moveSpeed = 3;
-    sBulletInfo[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_SMALL].max_deadframes = 1;
-    sBulletInfo[ROCKET_SMALL].canDamageGround = true;
+    bulletInfos[ROCKET_SMALL].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
+    bulletInfos[ROCKET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL].bmp_width = 16;
+    bulletInfos[ROCKET_SMALL].damage_vehicles = 10; // was 8
+    bulletInfos[ROCKET_SMALL].damage_infantry = 8; // was 4
+    bulletInfos[ROCKET_SMALL].max_frames = 1;
+    bulletInfos[ROCKET_SMALL].moveSpeed = 3;
+    bulletInfos[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL].canDamageAirUnits = true;
+    bulletInfos[ROCKET_SMALL].max_deadframes = 1;
+    bulletInfos[ROCKET_SMALL].canDamageGround = true;
 //    bullets[ROCKET_SMALL].smokeParticle = BULLET_PUF; // small rockets have no smoke trail yet
-    strcpy(sBulletInfo[ROCKET_SMALL].description, "ROCKET_SMALL");
+    strcpy(bulletInfos[ROCKET_SMALL].description, "ROCKET_SMALL");
 
     // small rocket - fremen rocket
-    sBulletInfo[ROCKET_SMALL_FREMEN].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
-    sBulletInfo[ROCKET_SMALL_FREMEN].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_FREMEN].bmp_width = 16;
-    sBulletInfo[ROCKET_SMALL_FREMEN].damage_vehicles = 22;
-    sBulletInfo[ROCKET_SMALL_FREMEN].damage_infantry = 20;
-    sBulletInfo[ROCKET_SMALL_FREMEN].max_frames = 1;
-    sBulletInfo[ROCKET_SMALL_FREMEN].moveSpeed = 4;
-    sBulletInfo[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
-    sBulletInfo[ROCKET_SMALL_FREMEN].max_deadframes = 1;
-    sBulletInfo[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_SMALL_FREMEN].canDamageGround = true;
+    bulletInfos[ROCKET_SMALL_FREMEN].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
+    bulletInfos[ROCKET_SMALL_FREMEN].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL_FREMEN].bmp_width = 16;
+    bulletInfos[ROCKET_SMALL_FREMEN].damage_vehicles = 22;
+    bulletInfos[ROCKET_SMALL_FREMEN].damage_infantry = 20;
+    bulletInfos[ROCKET_SMALL_FREMEN].max_frames = 1;
+    bulletInfos[ROCKET_SMALL_FREMEN].moveSpeed = 4;
+    bulletInfos[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL_FREMEN].max_deadframes = 1;
+    bulletInfos[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
+    bulletInfos[ROCKET_SMALL_FREMEN].canDamageGround = true;
 //    bullets[ROCKET_SMALL_FREMEN].smokeParticle = true; // not yet
-    strcpy(sBulletInfo[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
+    strcpy(bulletInfos[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
     // normal rocket
-    sBulletInfo[ROCKET_NORMAL].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
-    sBulletInfo[ROCKET_NORMAL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET;
-    sBulletInfo[ROCKET_NORMAL].bmp_width = 32;
-    sBulletInfo[ROCKET_NORMAL].damage_vehicles = 76;
-    sBulletInfo[ROCKET_NORMAL].damage_infantry = 36;  // less damage on infantry
-    sBulletInfo[ROCKET_NORMAL].max_frames = 1;
-    sBulletInfo[ROCKET_NORMAL].sound = SOUND_ROCKET;
-    sBulletInfo[ROCKET_NORMAL].moveSpeed = 3;
-    sBulletInfo[ROCKET_NORMAL].max_deadframes = 4;
-    sBulletInfo[ROCKET_NORMAL].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_NORMAL].canDamageGround = true;
-    sBulletInfo[ROCKET_NORMAL].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_NORMAL].description, "ROCKET_NORMAL");
+    bulletInfos[ROCKET_NORMAL].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
+    bulletInfos[ROCKET_NORMAL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET;
+    bulletInfos[ROCKET_NORMAL].bmp_width = 32;
+    bulletInfos[ROCKET_NORMAL].damage_vehicles = 76;
+    bulletInfos[ROCKET_NORMAL].damage_infantry = 36;  // less damage on infantry
+    bulletInfos[ROCKET_NORMAL].max_frames = 1;
+    bulletInfos[ROCKET_NORMAL].sound = SOUND_ROCKET;
+    bulletInfos[ROCKET_NORMAL].moveSpeed = 3;
+    bulletInfos[ROCKET_NORMAL].max_deadframes = 4;
+    bulletInfos[ROCKET_NORMAL].canDamageAirUnits = true;
+    bulletInfos[ROCKET_NORMAL].canDamageGround = true;
+    bulletInfos[ROCKET_NORMAL].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
+    strcpy(bulletInfos[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
     // soldier shot
-    sBulletInfo[BULLET_SMALL].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
-    sBulletInfo[BULLET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_SMALL].bmp_width = 6;
-    sBulletInfo[BULLET_SMALL].damage_vehicles = 4; // vehicles are no match
-    sBulletInfo[BULLET_SMALL].damage_infantry = 10; // infantry vs infantry means big time damage
-    sBulletInfo[BULLET_SMALL].max_frames = 0;
-    sBulletInfo[BULLET_SMALL].moveSpeed = 4;
-    sBulletInfo[BULLET_SMALL].sound = SOUND_GUN;
-    sBulletInfo[BULLET_SMALL].max_deadframes = 0;
-    sBulletInfo[BULLET_SMALL].groundBullet = true;
-    strcpy(sBulletInfo[BULLET_SMALL].description, "BULLET_SMALL");
+    bulletInfos[BULLET_SMALL].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
+    bulletInfos[BULLET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
+    bulletInfos[BULLET_SMALL].bmp_width = 6;
+    bulletInfos[BULLET_SMALL].damage_vehicles = 4; // vehicles are no match
+    bulletInfos[BULLET_SMALL].damage_infantry = 10; // infantry vs infantry means big time damage
+    bulletInfos[BULLET_SMALL].max_frames = 0;
+    bulletInfos[BULLET_SMALL].moveSpeed = 4;
+    bulletInfos[BULLET_SMALL].sound = SOUND_GUN;
+    bulletInfos[BULLET_SMALL].max_deadframes = 0;
+    bulletInfos[BULLET_SMALL].groundBullet = true;
+    strcpy(bulletInfos[BULLET_SMALL].description, "BULLET_SMALL");
 
     // trike shot
-    sBulletInfo[BULLET_TRIKE].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
-    sBulletInfo[BULLET_TRIKE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_TRIKE].bmp_width = 6;
-    sBulletInfo[BULLET_TRIKE].damage_vehicles = 3; // trikes do not do much damage to vehicles
-    sBulletInfo[BULLET_TRIKE].damage_infantry = 6; // but more to infantry
-    sBulletInfo[BULLET_TRIKE].moveSpeed = 4;
-    sBulletInfo[BULLET_TRIKE].max_frames = 0;
-    sBulletInfo[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
-    sBulletInfo[BULLET_TRIKE].max_deadframes = 0;
-    sBulletInfo[BULLET_TRIKE].groundBullet = true;
-    strcpy(sBulletInfo[BULLET_TRIKE].description, "BULLET_TRIKE");
+    bulletInfos[BULLET_TRIKE].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
+    bulletInfos[BULLET_TRIKE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
+    bulletInfos[BULLET_TRIKE].bmp_width = 6;
+    bulletInfos[BULLET_TRIKE].damage_vehicles = 3; // trikes do not do much damage to vehicles
+    bulletInfos[BULLET_TRIKE].damage_infantry = 6; // but more to infantry
+    bulletInfos[BULLET_TRIKE].moveSpeed = 4;
+    bulletInfos[BULLET_TRIKE].max_frames = 0;
+    bulletInfos[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
+    bulletInfos[BULLET_TRIKE].max_deadframes = 0;
+    bulletInfos[BULLET_TRIKE].groundBullet = true;
+    strcpy(bulletInfos[BULLET_TRIKE].description, "BULLET_TRIKE");
 
     // quad shot
-    sBulletInfo[BULLET_QUAD].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
-    sBulletInfo[BULLET_QUAD].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_QUAD].bmp_width = 6;
-    sBulletInfo[BULLET_QUAD].damage_vehicles = 6;
-    sBulletInfo[BULLET_QUAD].damage_infantry = 8; // bigger impact on infantry
-    sBulletInfo[BULLET_QUAD].max_frames = 0;
-    sBulletInfo[BULLET_QUAD].sound = SOUND_MACHINEGUN;
-    sBulletInfo[BULLET_QUAD].max_deadframes = 0;
-    sBulletInfo[BULLET_QUAD].groundBullet = true;
-    strcpy(sBulletInfo[BULLET_QUAD].description, "BULLET_QUAD");
+    bulletInfos[BULLET_QUAD].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
+    bulletInfos[BULLET_QUAD].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
+    bulletInfos[BULLET_QUAD].bmp_width = 6;
+    bulletInfos[BULLET_QUAD].damage_vehicles = 6;
+    bulletInfos[BULLET_QUAD].damage_infantry = 8; // bigger impact on infantry
+    bulletInfos[BULLET_QUAD].max_frames = 0;
+    bulletInfos[BULLET_QUAD].sound = SOUND_MACHINEGUN;
+    bulletInfos[BULLET_QUAD].max_deadframes = 0;
+    bulletInfos[BULLET_QUAD].groundBullet = true;
+    strcpy(bulletInfos[BULLET_QUAD].description, "BULLET_QUAD");
 
     // normal tank shot
-    sBulletInfo[BULLET_TANK].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
-    sBulletInfo[BULLET_TANK].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_TANK].bmp_width = 8;
-    sBulletInfo[BULLET_TANK].damage_vehicles = 12;
-    sBulletInfo[BULLET_TANK].damage_infantry = 4;  // infantry is not much damaged
-    sBulletInfo[BULLET_TANK].max_frames = 0;
-    sBulletInfo[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
-    sBulletInfo[BULLET_TANK].max_deadframes = 1;
-    sBulletInfo[BULLET_TANK].groundBullet = true;
-    sBulletInfo[BULLET_TANK].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_TANK].description, "BULLET_TANK");
+    bulletInfos[BULLET_TANK].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
+    bulletInfos[BULLET_TANK].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
+    bulletInfos[BULLET_TANK].bmp_width = 8;
+    bulletInfos[BULLET_TANK].damage_vehicles = 12;
+    bulletInfos[BULLET_TANK].damage_infantry = 4;  // infantry is not much damaged
+    bulletInfos[BULLET_TANK].max_frames = 0;
+    bulletInfos[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
+    bulletInfos[BULLET_TANK].max_deadframes = 1;
+    bulletInfos[BULLET_TANK].groundBullet = true;
+    bulletInfos[BULLET_TANK].canDamageGround = true;
+    strcpy(bulletInfos[BULLET_TANK].description, "BULLET_TANK");
 
     // siege tank shot
-    sBulletInfo[BULLET_SIEGE].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
-    sBulletInfo[BULLET_SIEGE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_SIEGE].bmp_width = 8;
-    sBulletInfo[BULLET_SIEGE].damage_vehicles = 24;
-    sBulletInfo[BULLET_SIEGE].damage_infantry = 6; // infantry is not as much damaged
-    sBulletInfo[BULLET_SIEGE].max_frames = 0;
-    sBulletInfo[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
-    sBulletInfo[BULLET_SIEGE].max_deadframes = 2;
-    sBulletInfo[BULLET_SIEGE].groundBullet = true;
-    sBulletInfo[BULLET_SIEGE].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_SIEGE].description, "BULLET_SIEGE");
+    bulletInfos[BULLET_SIEGE].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
+    bulletInfos[BULLET_SIEGE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
+    bulletInfos[BULLET_SIEGE].bmp_width = 8;
+    bulletInfos[BULLET_SIEGE].damage_vehicles = 24;
+    bulletInfos[BULLET_SIEGE].damage_infantry = 6; // infantry is not as much damaged
+    bulletInfos[BULLET_SIEGE].max_frames = 0;
+    bulletInfos[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
+    bulletInfos[BULLET_SIEGE].max_deadframes = 2;
+    bulletInfos[BULLET_SIEGE].groundBullet = true;
+    bulletInfos[BULLET_SIEGE].canDamageGround = true;
+    strcpy(bulletInfos[BULLET_SIEGE].description, "BULLET_SIEGE");
 
     // devastator shot
-    sBulletInfo[BULLET_DEVASTATOR].bmp = gfxdata->getTexture(BULLET_DOT_LARGE);
-    sBulletInfo[BULLET_DEVASTATOR].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL; // not used anyway
-    sBulletInfo[BULLET_DEVASTATOR].bmp_width = 8;
-    sBulletInfo[BULLET_DEVASTATOR].damage_vehicles = 30;
-    sBulletInfo[BULLET_DEVASTATOR].damage_infantry = 12; // infantry again not much damaged
-    sBulletInfo[BULLET_DEVASTATOR].max_frames = 0;
-    sBulletInfo[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
-    sBulletInfo[BULLET_DEVASTATOR].max_deadframes = 1;
-    sBulletInfo[BULLET_DEVASTATOR].groundBullet = true;
-    sBulletInfo[BULLET_DEVASTATOR].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
+    bulletInfos[BULLET_DEVASTATOR].bmp = gfxdata->getTexture(BULLET_DOT_LARGE);
+    bulletInfos[BULLET_DEVASTATOR].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL; // not used anyway
+    bulletInfos[BULLET_DEVASTATOR].bmp_width = 8;
+    bulletInfos[BULLET_DEVASTATOR].damage_vehicles = 30;
+    bulletInfos[BULLET_DEVASTATOR].damage_infantry = 12; // infantry again not much damaged
+    bulletInfos[BULLET_DEVASTATOR].max_frames = 0;
+    bulletInfos[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
+    bulletInfos[BULLET_DEVASTATOR].max_deadframes = 1;
+    bulletInfos[BULLET_DEVASTATOR].groundBullet = true;
+    bulletInfos[BULLET_DEVASTATOR].canDamageGround = true;
+    strcpy(bulletInfos[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
 
     // Gas rocket of a deviator
-    sBulletInfo[BULLET_GAS].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
-    sBulletInfo[BULLET_GAS].deathParticle = D2TM_PARTICLE_EXPLOSION_GAS;
-    sBulletInfo[BULLET_GAS].bmp_width = 32;
-    sBulletInfo[BULLET_GAS].damage_vehicles = 1;
-    sBulletInfo[BULLET_GAS].damage_infantry = 1;
-    sBulletInfo[BULLET_GAS].max_frames = 1;
-    sBulletInfo[BULLET_GAS].max_deadframes = 4;
-    sBulletInfo[BULLET_GAS].sound = SOUND_ROCKET;
-    sBulletInfo[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
-    sBulletInfo[BULLET_GAS].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[BULLET_GAS].description, "BULLET_GAS");
+    bulletInfos[BULLET_GAS].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
+    bulletInfos[BULLET_GAS].deathParticle = D2TM_PARTICLE_EXPLOSION_GAS;
+    bulletInfos[BULLET_GAS].bmp_width = 32;
+    bulletInfos[BULLET_GAS].damage_vehicles = 1;
+    bulletInfos[BULLET_GAS].damage_infantry = 1;
+    bulletInfos[BULLET_GAS].max_frames = 1;
+    bulletInfos[BULLET_GAS].max_deadframes = 4;
+    bulletInfos[BULLET_GAS].sound = SOUND_ROCKET;
+    bulletInfos[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
+    bulletInfos[BULLET_GAS].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
+    strcpy(bulletInfos[BULLET_GAS].description, "BULLET_GAS");
 
     // normal turret shot
-    sBulletInfo[BULLET_TURRET].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
-    sBulletInfo[BULLET_TURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
-    sBulletInfo[BULLET_TURRET].bmp_width = 8;
-    sBulletInfo[BULLET_TURRET].damage_vehicles = 12;
-    sBulletInfo[BULLET_TURRET].damage_infantry = 12; // infantry is a hard target
-    sBulletInfo[BULLET_TURRET].max_frames = 0;
-    sBulletInfo[BULLET_TURRET].max_deadframes = 1;
-    sBulletInfo[BULLET_TURRET].sound = SOUND_GUNTURRET;
-    sBulletInfo[BULLET_TURRET].groundBullet = false; // this can fly over structures, walls, mountains, yes!
-    sBulletInfo[BULLET_TURRET].canDamageGround = true;
-    strcpy(sBulletInfo[BULLET_TURRET].description, "BULLET_TURRET");
+    bulletInfos[BULLET_TURRET].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
+    bulletInfos[BULLET_TURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
+    bulletInfos[BULLET_TURRET].bmp_width = 8;
+    bulletInfos[BULLET_TURRET].damage_vehicles = 12;
+    bulletInfos[BULLET_TURRET].damage_infantry = 12; // infantry is a hard target
+    bulletInfos[BULLET_TURRET].max_frames = 0;
+    bulletInfos[BULLET_TURRET].max_deadframes = 1;
+    bulletInfos[BULLET_TURRET].sound = SOUND_GUNTURRET;
+    bulletInfos[BULLET_TURRET].groundBullet = false; // this can fly over structures, walls, mountains, yes!
+    bulletInfos[BULLET_TURRET].canDamageGround = true;
+    strcpy(bulletInfos[BULLET_TURRET].description, "BULLET_TURRET");
 
     // EXEPTION: Shimmer/ Sonic tank
-    sBulletInfo[BULLET_SHIMMER].bmp = nullptr;
-    sBulletInfo[BULLET_SHIMMER].deathParticle = -1;
-    sBulletInfo[BULLET_SHIMMER].bmp_width = 0;
-    sBulletInfo[BULLET_SHIMMER].damage_vehicles = 55;
-    sBulletInfo[BULLET_SHIMMER].damage_infantry = 70; // infantry cant stand the sound, die very fast
-    sBulletInfo[BULLET_SHIMMER].max_frames = 0;
-    sBulletInfo[BULLET_SHIMMER].max_deadframes = 0;
-    sBulletInfo[BULLET_SHIMMER].sound = SOUND_SHIMMER;
-    strcpy(sBulletInfo[BULLET_SHIMMER].description, "BULLET_SHIMMER");
+    bulletInfos[BULLET_SHIMMER].bmp = nullptr;
+    bulletInfos[BULLET_SHIMMER].deathParticle = -1;
+    bulletInfos[BULLET_SHIMMER].bmp_width = 0;
+    bulletInfos[BULLET_SHIMMER].damage_vehicles = 55;
+    bulletInfos[BULLET_SHIMMER].damage_infantry = 70; // infantry cant stand the sound, die very fast
+    bulletInfos[BULLET_SHIMMER].max_frames = 0;
+    bulletInfos[BULLET_SHIMMER].max_deadframes = 0;
+    bulletInfos[BULLET_SHIMMER].sound = SOUND_SHIMMER;
+    strcpy(bulletInfos[BULLET_SHIMMER].description, "BULLET_SHIMMER");
 
     // rocket of rocket turret
-    sBulletInfo[ROCKET_RTURRET].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
-    sBulletInfo[ROCKET_RTURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
-    sBulletInfo[ROCKET_RTURRET].bmp_width = 16 * 2;
-    sBulletInfo[ROCKET_RTURRET].damage_vehicles = 25;
-    sBulletInfo[ROCKET_RTURRET].damage_infantry = 10; // infantry is a bit tougher
-    sBulletInfo[ROCKET_RTURRET].max_frames = 1;
-    sBulletInfo[ROCKET_RTURRET].sound = SOUND_ROCKET;
-    sBulletInfo[ROCKET_RTURRET].max_deadframes = 4;
-    sBulletInfo[ROCKET_RTURRET].canDamageAirUnits = true;
-    sBulletInfo[ROCKET_RTURRET].canDamageGround = true;
-    sBulletInfo[ROCKET_RTURRET].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(sBulletInfo[ROCKET_RTURRET].description, "ROCKET_RTURRET");
+    bulletInfos[ROCKET_RTURRET].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
+    bulletInfos[ROCKET_RTURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
+    bulletInfos[ROCKET_RTURRET].bmp_width = 16 * 2;
+    bulletInfos[ROCKET_RTURRET].damage_vehicles = 25;
+    bulletInfos[ROCKET_RTURRET].damage_infantry = 10; // infantry is a bit tougher
+    bulletInfos[ROCKET_RTURRET].max_frames = 1;
+    bulletInfos[ROCKET_RTURRET].sound = SOUND_ROCKET;
+    bulletInfos[ROCKET_RTURRET].max_deadframes = 4;
+    bulletInfos[ROCKET_RTURRET].canDamageAirUnits = true;
+    bulletInfos[ROCKET_RTURRET].canDamageGround = true;
+    bulletInfos[ROCKET_RTURRET].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
+    strcpy(bulletInfos[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 }
 
 
