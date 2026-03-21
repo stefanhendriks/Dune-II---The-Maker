@@ -37,5 +37,6 @@ public:
     auto end() const noexcept { return m_values.end(); }
 
 private:
+    static constexpr std::size_t MAX_BULLETS = 300;     // max of bullets in the game at once
     std::array<value_type, MAX_BULLETS> m_values{};
 };

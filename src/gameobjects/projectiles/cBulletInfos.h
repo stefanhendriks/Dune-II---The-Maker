@@ -10,7 +10,6 @@
 
 class Texture;
 
-#define MAX_BULLETS      300     // max of bullets in the game at once
 
 struct s_BulletInfo {
     Texture *bmp;           // a reference to its bitmap. (16 bits here!)
