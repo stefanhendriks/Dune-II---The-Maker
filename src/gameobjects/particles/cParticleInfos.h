@@ -29,3 +29,47 @@ struct s_ParticleInfo {
     int frameHeight;        // height of frame
     bool oldParticle;       // if true, then keep old behavior for now (will be removed)
 };
+
+
+class cParticleInfos {
+public:
+    cParticleInfos()
+    {}
+
+    // accès
+    s_ParticleInfo &operator[](std::size_t i) {
+        if (i >= MAX_PARTICLE_TYPES) throw std::out_of_range("Particle index");
+        return m_data[i];
+    }
+
+    const s_ParticleInfo &operator[](std::size_t i) const {
+        if (i >= MAX_PARTICLE_TYPES) throw std::out_of_range("Particle index");
+        return m_data[i];
+    }
+
+    // getter explicite
+    s_ParticleInfo &get(std::size_t i) { return (*this)[i]; }
+    const s_ParticleInfo &get(std::size_t i) const { return (*this)[i]; }
+
+    // taille
+    static constexpr std::size_t size() noexcept { return MAX_PARTICLE_TYPES; }
+
+    // recherche/existence
+    bool valid(std::size_t i) const noexcept { return i < MAX_PARTICLE_TYPES; }
+
+    // initialisation
+    void reset() noexcept {
+        for (auto &p : m_data) {
+            p = s_ParticleInfo{}; // ou init spécifique
+        }
+    }
+
+    // itérateurs
+    auto begin() noexcept { return m_data.begin(); }
+    auto end() noexcept { return m_data.end(); }
+    auto begin() const noexcept { return m_data.begin(); }
+    auto end() const noexcept { return m_data.end(); }
+
+private:
+    std::array<s_ParticleInfo, MAX_PARTICLE_TYPES> m_data;
+};

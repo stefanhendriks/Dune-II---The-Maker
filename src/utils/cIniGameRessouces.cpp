@@ -7,6 +7,7 @@
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
+#include "gameobjects/particles/cParticleInfos.h"
 
 
 /********************************
@@ -541,7 +542,7 @@ void IniGameRessources::install_units()
 void IniGameRessources::install_particles()
 {
     for (int i = 0; i < MAX_PARTICLE_TYPES; i++) {
-        s_ParticleInfo &particleInfo = sParticleInfo[i];
+        s_ParticleInfo &particleInfo = particleInfos[i];
         particleInfo.bmpIndex = -1;
         particleInfo.startAlpha = -1;
         particleInfo.usesAdditiveBlending = false;
@@ -557,163 +558,162 @@ void IniGameRessources::install_particles()
     }
 
     // move
-    sParticleInfo[D2TM_PARTICLE_MOVE].bmpIndex = MOVE_INDICATOR;
-    sParticleInfo[D2TM_PARTICLE_MOVE].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_MOVE].bmpIndex = MOVE_INDICATOR;
+    particleInfos[D2TM_PARTICLE_MOVE].startAlpha = 128;
 
     // attack
-    sParticleInfo[D2TM_PARTICLE_ATTACK].bmpIndex = ATTACK_INDICATOR;
-    sParticleInfo[D2TM_PARTICLE_ATTACK].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_ATTACK].bmpIndex = ATTACK_INDICATOR;
+    particleInfos[D2TM_PARTICLE_ATTACK].startAlpha = 128;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].bmpIndex = EXPLOSION_TRIKE;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].bmpIndex = EXPLOSION_TRIKE;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_SMOKE].bmpIndex = OBJECT_SMOKE;
-    sParticleInfo[D2TM_PARTICLE_SMOKE].startAlpha = 0;
-    sParticleInfo[D2TM_PARTICLE_SMOKE].frameWidth = 32;
-    sParticleInfo[D2TM_PARTICLE_SMOKE].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_SMOKE].bmpIndex = OBJECT_SMOKE;
+    particleInfos[D2TM_PARTICLE_SMOKE].startAlpha = 0;
+    particleInfos[D2TM_PARTICLE_SMOKE].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_SMOKE].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].bmpIndex = OBJECT_SMOKE;
-    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].startAlpha = 0;
-    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameWidth = 32;
-    sParticleInfo[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].bmpIndex = OBJECT_SMOKE;
+    particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].startAlpha = 0;
+    particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = OBJECT_SMOKE_SHADOW;
-    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].startAlpha = 0;
-    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].frameWidth = 36;
-    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
+    particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = OBJECT_SMOKE_SHADOW;
+    particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].startAlpha = 0;
+    particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].frameWidth = 36;
+    particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
 
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].bmpIndex = TRACK_DIA;
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_TRACK_DIA].bmpIndex = TRACK_DIA;
+    particleInfos[D2TM_PARTICLE_TRACK_DIA].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
 
-    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].bmpIndex = TRACK_HOR;
-    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_TRACK_HOR].bmpIndex = TRACK_HOR;
+    particleInfos[D2TM_PARTICLE_TRACK_HOR].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
 
-    sParticleInfo[D2TM_PARTICLE_TRACK_VER].bmpIndex = TRACK_VER;
-    sParticleInfo[D2TM_PARTICLE_TRACK_VER].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_TRACK_VER].bmpIndex = TRACK_VER;
+    particleInfos[D2TM_PARTICLE_TRACK_VER].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
 
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = TRACK_DIA2;
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = TRACK_DIA2;
+    particleInfos[D2TM_PARTICLE_TRACK_DIA2].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
 
-    sParticleInfo[D2TM_PARTICLE_BULLET_PUF].bmpIndex = BULLET_PUF;
-    sParticleInfo[D2TM_PARTICLE_BULLET_PUF].frameWidth = 18;
-    sParticleInfo[D2TM_PARTICLE_BULLET_PUF].frameHeight = 18;
+    particleInfos[D2TM_PARTICLE_BULLET_PUF].bmpIndex = BULLET_PUF;
+    particleInfos[D2TM_PARTICLE_BULLET_PUF].frameWidth = 18;
+    particleInfos[D2TM_PARTICLE_BULLET_PUF].frameHeight = 18;
 
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_FIRE].bmpIndex = EXPLOSION_FIRE;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_FIRE].bmpIndex = EXPLOSION_FIRE;
 
-    sParticleInfo[D2TM_PARTICLE_WORMEAT].bmpIndex = OBJECT_WORMEAT;
-    sParticleInfo[D2TM_PARTICLE_WORMEAT].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_WORMEAT].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_WORMEAT].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_WORMEAT].bmpIndex = OBJECT_WORMEAT;
+    particleInfos[D2TM_PARTICLE_WORMEAT].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_WORMEAT].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_WORMEAT].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].bmpIndex = EXPLOSION_TANK_ONE;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].bmpIndex = EXPLOSION_TANK_ONE;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].bmpIndex = EXPLOSION_TANK_TWO;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].bmpIndex = EXPLOSION_TANK_TWO;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].bmpIndex = EXPLOSION_STRUCTURE01;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].bmpIndex = EXPLOSION_STRUCTURE01;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].bmpIndex = EXPLOSION_STRUCTURE02;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].bmpIndex = EXPLOSION_STRUCTURE02;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].bmpIndex = EXPLOSION_GAS;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].bmpIndex = EXPLOSION_GAS;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].bmpIndex = OBJECT_WORMTRAIL;
-    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
-    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
-    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
+    particleInfos[D2TM_PARTICLE_WORMTRAIL].bmpIndex = OBJECT_WORMTRAIL;
+    particleInfos[D2TM_PARTICLE_WORMTRAIL].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
+    particleInfos[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
+    particleInfos[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
 
-    sParticleInfo[D2TM_PARTICLE_DEADINF01].bmpIndex = OBJECT_DEADINF01;
-    sParticleInfo[D2TM_PARTICLE_DEADINF01].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_DEADINF01].bmpIndex = OBJECT_DEADINF01;
+    particleInfos[D2TM_PARTICLE_DEADINF01].layer = RenderLayerParticle::BOTTOM;
 
-    sParticleInfo[D2TM_PARTICLE_DEADINF02].bmpIndex = OBJECT_DEADINF02;
-    sParticleInfo[D2TM_PARTICLE_DEADINF02].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_DEADINF02].bmpIndex = OBJECT_DEADINF02;
+    particleInfos[D2TM_PARTICLE_DEADINF02].layer = RenderLayerParticle::BOTTOM;
 
-    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].bmpIndex = OBJECT_TANKSHOOT;
-    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
-    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].frameWidth = 64;
-    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].frameHeight = 64;
+    particleInfos[D2TM_PARTICLE_TANKSHOOT].bmpIndex = OBJECT_TANKSHOOT;
+    particleInfos[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_TANKSHOOT].frameWidth = 64;
+    particleInfos[D2TM_PARTICLE_TANKSHOOT].frameHeight = 64;
 
-    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].bmpIndex = OBJECT_SIEGESHOOT;
-    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].startAlpha = 128;
-    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].frameWidth = 64;
-    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
+    particleInfos[D2TM_PARTICLE_SIEGESHOOT].bmpIndex = OBJECT_SIEGESHOOT;
+    particleInfos[D2TM_PARTICLE_SIEGESHOOT].startAlpha = 128;
+    particleInfos[D2TM_PARTICLE_SIEGESHOOT].frameWidth = 64;
+    particleInfos[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
 
-    sParticleInfo[D2TM_PARTICLE_SQUISH01].bmpIndex = EXPLOSION_SQUISH01;
-    sParticleInfo[D2TM_PARTICLE_SQUISH01].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
-    sParticleInfo[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
+    particleInfos[D2TM_PARTICLE_SQUISH01].bmpIndex = EXPLOSION_SQUISH01;
+    particleInfos[D2TM_PARTICLE_SQUISH01].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
 
-    sParticleInfo[D2TM_PARTICLE_SQUISH02].bmpIndex = EXPLOSION_SQUISH02;
-    sParticleInfo[D2TM_PARTICLE_SQUISH02].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
-    sParticleInfo[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
+    particleInfos[D2TM_PARTICLE_SQUISH02].bmpIndex = EXPLOSION_SQUISH02;
+    particleInfos[D2TM_PARTICLE_SQUISH02].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
 
-    sParticleInfo[D2TM_PARTICLE_SQUISH03].bmpIndex = EXPLOSION_SQUISH03;
-    sParticleInfo[D2TM_PARTICLE_SQUISH03].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
-    sParticleInfo[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
+    particleInfos[D2TM_PARTICLE_SQUISH03].bmpIndex = EXPLOSION_SQUISH03;
+    particleInfos[D2TM_PARTICLE_SQUISH03].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = EXPLOSION_ORNI;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = EXPLOSION_ORNI;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
 
-    sParticleInfo[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
+    particleInfos[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
 
-    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
-    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].layer = RenderLayerParticle::BOTTOM;
-    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
-    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
+    particleInfos[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
+    particleInfos[D2TM_PARTICLE_CARRYPUFF].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
+    particleInfos[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ROCKET].bmpIndex = EXPLOSION_ROCKET;
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL].bmpIndex = EXPLOSION_ROCKET_SMALL;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ROCKET].bmpIndex = EXPLOSION_ROCKET;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL].bmpIndex = EXPLOSION_ROCKET_SMALL;
 
-    sParticleInfo[D2TM_PARTICLE_EXPLOSION_BULLET].bmpIndex = EXPLOSION_BULLET;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_BULLET].bmpIndex = EXPLOSION_BULLET;
 
     // the nice flare/light effects that come with explosions
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].bmpIndex = OBJECT_BOOM01;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].usesAdditiveBlending = true;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].startAlpha = 240;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].frameWidth = 512;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].frameHeight = 512;
-    ;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = OBJECT_BOOM02;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].usesAdditiveBlending = true;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].startAlpha = 230;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].frameWidth = 256;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].frameHeight = 256;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].bmpIndex = OBJECT_BOOM01;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].usesAdditiveBlending = true;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].startAlpha = 240;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].frameWidth = 512;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].frameHeight = 512;
 
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].bmpIndex = OBJECT_BOOM03;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].usesAdditiveBlending = true;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].startAlpha = 220;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].frameWidth = 128;
-    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].frameHeight = 128;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = OBJECT_BOOM02;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].usesAdditiveBlending = true;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].startAlpha = 230;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].frameWidth = 256;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].frameHeight = 256;
 
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].bmpIndex = OBJECT_BOOM03;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].usesAdditiveBlending = true;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].startAlpha = 220;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].frameWidth = 128;
+    particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].frameHeight = 128;
 }
 
 void IniGameRessources::install_specials()

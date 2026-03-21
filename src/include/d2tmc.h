@@ -79,7 +79,8 @@ extern s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 extern s_UpgradeInfo                sUpgradeInfo[MAX_UPGRADETYPES];
 extern s_SpecialInfo                sSpecialInfo[MAX_SPECIALTYPES];
 extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
-extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
+// extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
+extern cParticleInfos					  particleInfos;
 
 // DATAFILES
 extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)

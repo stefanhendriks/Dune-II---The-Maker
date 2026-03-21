@@ -137,7 +137,7 @@ void cParticle::draw()
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const {
-    s_ParticleInfo &particleInfo = sParticleInfo[iType];
+    s_ParticleInfo &particleInfo = particleInfos[iType];
     return particleInfo;
 }
 
@@ -584,7 +584,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     cParticle &pParticle = g_Particle[iNewId];
     if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
-        s_ParticleInfo &sParticle = sParticleInfo[iType];
+        s_ParticleInfo &sParticle = particleInfos[iType];
         pParticle.init(sParticle);
     }
     else {
@@ -825,7 +825,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
 
-    int bmpIndex = sParticleInfo[iType].bmpIndex;
+    int bmpIndex = particleInfos[iType].bmpIndex;
     if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
