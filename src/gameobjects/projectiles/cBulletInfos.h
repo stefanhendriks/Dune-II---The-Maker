@@ -11,7 +11,6 @@
 class Texture;
 
 #define MAX_BULLETS      300     // max of bullets in the game at once
-#define MAX_BULLET_TYPES      30
 
 struct s_BulletInfo {
     Texture *bmp;           // a reference to its bitmap. (16 bits here!)
@@ -64,5 +63,6 @@ public:
     auto end() const noexcept { return m_values.end(); }
 
 private:
+    static constexpr std::size_t MAX_BULLET_TYPES = 30;
     std::array<s_BulletInfo, MAX_BULLET_TYPES> m_values{};
 };
