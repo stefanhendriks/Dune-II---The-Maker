@@ -52,7 +52,6 @@ s_UpgradeInfo               sUpgradeInfo[MAX_UPGRADETYPES];
 s_SpecialInfo               sSpecialInfo[MAX_SPECIALTYPES];
 
 cBulletInfos   			    bulletInfos;
-cParticleInfos  			particleInfos;
 
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)

@@ -1706,6 +1706,16 @@ const cParticles& cGame::getParticles() const
     return m_particles;
 }
 
+cParticleInfos& cGame::getParticleInfos()
+{
+    return m_particleInfos;
+}
+
+const cParticleInfos& cGame::getParticleInfos() const
+{
+    return m_particleInfos;
+}
+
 int cGame::getCurrentState() const
 {
     return m_state;
