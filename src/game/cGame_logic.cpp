@@ -224,7 +224,7 @@ void cGame::initPlayers(bool rememberHouse) const
     }
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &pPlayer = g_Player[i];
+        cPlayer &pPlayer = g_Players[i];
 
         int h = pPlayer.getHouse();
 
@@ -276,7 +276,7 @@ void cGame::setMissionWon()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, g_Player[HUMAN].getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, g_Players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_WIN);
 
@@ -291,7 +291,7 @@ void cGame::setMissionLost()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, g_Player[HUMAN].getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, g_Players[HUMAN].getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
@@ -493,7 +493,7 @@ void cGame::shutdown()
     cBuildingListFactory::destroy();
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        g_Player[i].destroyAllegroBitmaps();
+        g_Players[i].destroyAllegroBitmaps();
     }
     //delete global#renderDrawer;
     delete m_mouse;
@@ -639,8 +639,8 @@ bool cGame::setupGame()
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        g_Player[i].init(i, nullptr);
-        g_Player[i].setHousesInfo(m_Houses);
+        g_Players[i].init(i, nullptr);
+        g_Players[i].setHousesInfo(m_Houses);
     }
     logbook("Setup:  STRUCTURES");
     IniGameRessources::install_structures();
@@ -667,7 +667,7 @@ bool cGame::setupGame()
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
     IniGameRessources::install_upgrades();
-    cPlayer *humanPlayer = &g_Player[HUMAN];
+    cPlayer *humanPlayer = &g_Players[HUMAN];
 
     delete global_drawManager;
     global_drawManager = new cDrawManager(ctx.get(), humanPlayer);
@@ -698,7 +698,7 @@ void cGame::setupPlayers()
 {
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-        cPlayer *thePlayer = &g_Player[i];
+        cPlayer *thePlayer = &g_Players[i];
 
         auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
         thePlayer->setBuildingListUpdater(buildingListUpdater);
@@ -718,7 +718,7 @@ void cGame::setupPlayers()
         // set tech level
         thePlayer->setTechLevel(m_dataCampaign->mission);
     }
-    setPlayerToInteractFor(&g_Player[0]);
+    setPlayerToInteractFor(&g_Players[0]);
 }
 
 bool cGame::isState(int thisState) const
@@ -740,7 +740,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
     pState->calculateOffset();
     pState->installWorld();
 
-    cPlayer &humanPlayer = g_Player[HUMAN];
+    cPlayer &humanPlayer = g_Players[HUMAN];
     int missionZeroBased = missionNr - 1;
     m_dataCampaign->mission = missionZeroBased;
 
@@ -787,7 +787,7 @@ void cGame::setState(int newState)
             m_states[newState] = nullptr;
         }
 
-        cPlayer &humanPlayer = g_Player[HUMAN];
+        cPlayer &humanPlayer = g_Players[HUMAN];
 
         cGameState *existingStatePtr = m_states[newState];
 
@@ -904,7 +904,7 @@ void cGame::setState(int newState)
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
-                        cPlayer &player = g_Player[i];
+                        cPlayer &player = g_Players[i];
                         player.evaluateStillAlive();
                     }
                     cParticle::reset();
@@ -930,7 +930,7 @@ void cGame::setState(int newState)
                 newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
             }
             else if (newState == GAME_TELLHOUSE) {
-                m_dataCampaign->housePlayer = g_Player[HUMAN].getHouse();
+                m_dataCampaign->housePlayer = g_Players[HUMAN].getHouse();
                 newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
@@ -981,7 +981,7 @@ void cGame::prepareMentatForPlayer()
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    g_Player[HUMAN].setHouse(house);
+    g_Players[HUMAN].setHouse(house);
     m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
         m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
@@ -1098,7 +1098,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 
     // players handle events
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        g_Player[i].onNotifyGameEvent(event);
+        g_Players[i].onNotifyGameEvent(event);
     }
 }
 
@@ -1311,7 +1311,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::saveBmpScreenToDisk()
 {
     if (cScreenShotSaver::saveScreen(renderer, m_screenW, m_screenH)) {
-        g_Player[HUMAN].addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
+        g_Players[HUMAN].addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }
 
@@ -1407,7 +1407,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
 void cGame::playVoice(int sampleId, int playerId)
 {
-    m_soundPlayer->playVoice(sampleId, g_Player[playerId].getHouse());
+    m_soundPlayer->playVoice(sampleId, g_Players[playerId].getHouse());
 }
 
 void cGame::playMusicByTypeForStateTransition(int iType)
@@ -1467,7 +1467,7 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         sampleId = MIDI_SCENARIO;
     }
     else if (iType == MUSIC_BRIEFING) {
-        int houseIndex = g_Player[HUMAN].getHouse();
+        int houseIndex = g_Players[HUMAN].getHouse();
         if (houseIndex == ATREIDES) {
             sampleId = MIDI_MENTAT_ATR;
         }
@@ -1532,23 +1532,23 @@ void cGame::thinkCache()
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = g_Player[HUMAN];
+    const cPlayer &humanPlayer = g_Players[HUMAN];
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        global_drawManager->setPlayerToDraw(&g_Player[0]);
-        game.setPlayerToInteractFor(&g_Player[0]);
+        global_drawManager->setPlayerToDraw(&g_Players[0]);
+        game.setPlayerToInteractFor(&g_Players[0]);
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        global_drawManager->setPlayerToDraw(&g_Player[1]);
-        game.setPlayerToInteractFor(&g_Player[1]);
+        global_drawManager->setPlayerToDraw(&g_Players[1]);
+        game.setPlayerToInteractFor(&g_Players[1]);
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        global_drawManager->setPlayerToDraw(&g_Player[2]);
-        game.setPlayerToInteractFor(&g_Player[2]);
+        global_drawManager->setPlayerToDraw(&g_Players[2]);
+        game.setPlayerToInteractFor(&g_Players[2]);
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        global_drawManager->setPlayerToDraw(&g_Player[3]);
-        game.setPlayerToInteractFor(&g_Player[3]);
+        global_drawManager->setPlayerToDraw(&g_Players[3]);
+        game.setPlayerToInteractFor(&g_Players[3]);
     }
 
     // WIN MISSION
@@ -1564,7 +1564,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     // GIVE CREDITS TO ALL PLAYERS
     if (event.hasKey(SDL_SCANCODE_F4)) {
         for (int i = 0; i < AI_WORM; i++) {
-            g_Player[i].setCredits(5000);
+            g_Players[i].setCredits(5000);
         }
     }
 

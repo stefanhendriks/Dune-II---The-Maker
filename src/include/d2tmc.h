@@ -67,7 +67,8 @@ extern SDLDrawer       *global_renderDrawer;
 
 extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	    *global_mapCamera;
-extern cPlayers g_Player;
+
+extern cPlayers       g_Players;
 extern cParticles     g_Particles;
 extern cBullets       g_Bullets;
 
