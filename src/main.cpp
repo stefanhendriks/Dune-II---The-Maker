@@ -52,10 +52,10 @@ s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 s_UpgradeInfo               sUpgradeInfo[MAX_UPGRADETYPES];
 s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
-s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
+// s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 // s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
 
-//cBulletInfos       			    sBulletInfo;
+cBulletInfos       			    sBulletInfo;
 cParticleInfos					particleInfos;
 
 // datafile(s)
