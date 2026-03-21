@@ -184,8 +184,8 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 {
     int new_id = -1;
 
-    for (int i = 0; i < g_Bullet.size(); i++)
-        if (g_Bullet[i].bAlive == false) {
+    for (int i = 0; i < g_Bullets.size(); i++)
+        if (g_Bullets[i].bAlive == false) {
             new_id = i;
             break;
         }
@@ -197,7 +197,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
         return -1; // failed
 
 
-    cBullet &newBullet = g_Bullet[new_id];
+    cBullet &newBullet = g_Bullets[new_id];
     newBullet.init();
 
     newBullet.iType = type;
