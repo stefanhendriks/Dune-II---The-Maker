@@ -34,30 +34,25 @@
 cGame          				game;
 cStructureUtils 			structureUtils;
 cMap           				global_map;
-
-cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
-cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
-cPlayer        				g_Player[MAX_PLAYERS];             // player is
-// cParticle      				g_Particle[MAX_PARTICLES];
-cParticles      			g_Particles;
-cBullets                      g_Bullet;
-// std::array<cRegion, MAX_REGIONS> world;
-
 cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*global_mapCamera;
+
+cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
+cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
+cPlayer        				g_Player[MAX_PLAYERS];            // player is
+
+cParticles      			g_Particles;
 cBullets                    g_Bullets;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 s_UpgradeInfo               sUpgradeInfo[MAX_UPGRADETYPES];
-s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
-// s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
-// s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
+s_SpecialInfo               sSpecialInfo[MAX_SPECIALTYPES];
 
-cBulletInfos       			    bulletInfos;
-cParticleInfos					particleInfos;
+cBulletInfos   			    bulletInfos;
+cParticleInfos  			particleInfos;
 
 // datafile(s)
 std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)

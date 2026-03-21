@@ -51,14 +51,7 @@
 // MEMORY USAGE: (units, structures, etc , more info below)
 #define MAX_UNITS        300     // max of units in the game
 #define MAX_STRUCTURES   200     // max of structures in the game
-// #define MAX_BULLETS      300     // max of bullets in the game at once
-// #define MAX_PARTICLES    600	 // max of particles in the game at once
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
-
-// FOR OPTIONS:
-
-// GAME (MENU) FLAGS: (used when GAME_MENU)
-// Game menu state machine
 
 #define HUMAN			0  // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
 #define AI_CPU1         1  // 1 = CPU (Atreides)
@@ -68,7 +61,7 @@
 #define AI_CPU5         5  // 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
 #define AI_CPU6         6  // 6 = WORM
 #define AI_WORM			AI_CPU6
-#define MAX_PLAYERS       7
+#define MAX_PLAYERS     7
 
 // UNITS stuff
 #define MAX_UNITTYPES       50    // maximum of unit types
@@ -82,19 +75,9 @@
 // STRUCTURES stuff
 #define MAX_STRUCTURETYPES  50    // max of building types
 
-// BULLETS stuff
-//#define MAX_BULLET_TYPES      30
-
-// PARTICLES
-//#define MAX_PARTICLE_TYPES    50
-
 // Lists stuff
 #define MAX_ICONS       30          // max of 30 icons per list
 #define MAX_ITEMS		MAX_ICONS   // because in theory the item builder should be able to build each icon simultaniously
-
-// #TIMERS
-// #define TIMER_GUARD         10
-// #define TIMER_UNIT_BULLET   5
 
 // FACING
 #define FACE_UP           0
