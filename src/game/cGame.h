@@ -22,6 +22,7 @@
 #include "map/cPreviewMaps.h"
 #include "player/cPlayers.h"
 #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/particles/cParticleInfos.h"
 
 #include <memory>
 #include <string>
@@ -233,6 +234,9 @@ public:
     cParticles& getParticles();
     const cParticles& getParticles() const;
 
+    cParticleInfos& getParticleInfos();
+    const cParticleInfos& getParticleInfos() const;
+
 private:
     /**
      * Variables start here
@@ -272,6 +276,7 @@ private:
 
     cPlayers m_Players;
     cParticles m_particles;
+    cParticleInfos m_particleInfos;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
