@@ -82,9 +82,9 @@ extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 extern s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 extern s_UpgradeInfo                sUpgradeInfo[MAX_UPGRADETYPES];
 extern s_SpecialInfo                sSpecialInfo[MAX_SPECIALTYPES];
-extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
+// extern s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
 // extern s_ParticleInfo        		sParticleInfo[MAX_PARTICLE_TYPES];
-//extern cBulletInfos             sBulletInfo;
+extern cBulletInfos             sBulletInfo;
 extern cParticleInfos					  particleInfos;
 
 // DATAFILES

@@ -38,3 +38,31 @@ struct s_BulletInfo {
     int moveSpeed;
 };
 
+
+class cBulletInfos {
+public:
+    cBulletInfos() = default;
+
+    s_BulletInfo &operator[](std::size_t index) {
+        assert(index < MAX_BULLET_TYPES && "Index out of bounds for sBulletInfo");
+        return m_values[index];
+    }
+
+    const s_BulletInfo &operator[](std::size_t index) const {
+        assert(index < MAX_BULLET_TYPES && "Index out of bounds for sBulletInfo");
+        return m_values[index];
+    }
+
+    s_BulletInfo *data() noexcept { return m_values.data(); }
+    const s_BulletInfo *data() const noexcept { return m_values.data(); }
+
+    std::size_t size() const noexcept { return m_values.size(); }
+
+    auto begin() noexcept { return m_values.begin(); }
+    auto end() noexcept { return m_values.end(); }
+    auto begin() const noexcept { return m_values.begin(); }
+    auto end() const noexcept { return m_values.end(); }
+
+private:
+    std::array<s_BulletInfo, MAX_BULLET_TYPES> m_values{};
+};
