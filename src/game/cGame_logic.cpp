@@ -224,7 +224,7 @@ void cGame::initPlayers(bool rememberHouse) const
     }
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &pPlayer = game.getPlayers()[i];
+        cPlayer &pPlayer = game.getPlayer(i);
 
         int h = pPlayer.getHouse();
 
@@ -276,7 +276,7 @@ void cGame::setMissionWon()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, game.getPlayers()[HUMAN].getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, game.getPlayer(HUMAN).getHouse());
 
     playMusicByType(MUSIC_WIN);
 
@@ -291,7 +291,7 @@ void cGame::setMissionLost()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, game.getPlayers()[HUMAN].getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, game.getPlayer(HUMAN).getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
@@ -493,7 +493,7 @@ void cGame::shutdown()
     cBuildingListFactory::destroy();
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        game.getPlayers()[i].destroyAllegroBitmaps();
+        game.getPlayer(i).destroyAllegroBitmaps();
     }
     //delete global#renderDrawer;
     delete m_mouse;
@@ -639,8 +639,8 @@ bool cGame::setupGame()
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        game.getPlayers()[i].init(i, nullptr);
-        game.getPlayers()[i].setHousesInfo(m_Houses);
+        game.getPlayer(i).init(i, nullptr);
+        game.getPlayer(i).setHousesInfo(m_Houses);
     }
     logbook("Setup:  STRUCTURES");
     IniGameRessources::install_structures();
@@ -667,7 +667,7 @@ bool cGame::setupGame()
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
     IniGameRessources::install_upgrades();
-    cPlayer *humanPlayer = &game.getPlayers()[HUMAN];
+    cPlayer *humanPlayer = &game.getPlayer(HUMAN);
 
     delete global_drawManager;
     global_drawManager = new cDrawManager(ctx.get(), humanPlayer);
@@ -698,7 +698,7 @@ void cGame::setupPlayers()
 {
     // make sure each player has an own item builder
     for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-        cPlayer *thePlayer = &game.getPlayers()[i];
+        cPlayer *thePlayer = &game.getPlayer(i);
 
         auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
         thePlayer->setBuildingListUpdater(buildingListUpdater);
@@ -718,7 +718,7 @@ void cGame::setupPlayers()
         // set tech level
         thePlayer->setTechLevel(m_dataCampaign->mission);
     }
-    setPlayerToInteractFor(&game.getPlayers()[0]);
+    setPlayerToInteractFor(&game.getPlayer(0));
 }
 
 bool cGame::isState(int thisState) const
@@ -740,7 +740,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
     pState->calculateOffset();
     pState->installWorld();
 
-    cPlayer &humanPlayer = game.getPlayers()[HUMAN];
+    cPlayer &humanPlayer = game.getPlayer(HUMAN);
     int missionZeroBased = missionNr - 1;
     m_dataCampaign->mission = missionZeroBased;
 
@@ -787,7 +787,7 @@ void cGame::setState(int newState)
             m_states[newState] = nullptr;
         }
 
-        cPlayer &humanPlayer = game.getPlayers()[HUMAN];
+        cPlayer &humanPlayer = game.getPlayer(HUMAN);
 
         cGameState *existingStatePtr = m_states[newState];
 
@@ -904,7 +904,7 @@ void cGame::setState(int newState)
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
-                        cPlayer &player = game.getPlayers()[i];
+                        cPlayer &player = game.getPlayer(i);
                         player.evaluateStillAlive();
                     }
                     cParticle::reset();
@@ -930,7 +930,7 @@ void cGame::setState(int newState)
                 newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
             }
             else if (newState == GAME_TELLHOUSE) {
-                m_dataCampaign->housePlayer = game.getPlayers()[HUMAN].getHouse();
+                m_dataCampaign->housePlayer = game.getPlayer(HUMAN).getHouse();
                 newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
@@ -981,7 +981,7 @@ void cGame::prepareMentatForPlayer()
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    game.getPlayers()[HUMAN].setHouse(house);
+    game.getPlayer(HUMAN).setHouse(house);
     m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
         m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
@@ -1098,7 +1098,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 
     // players handle events
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        game.getPlayers()[i].onNotifyGameEvent(event);
+        game.getPlayer(i).onNotifyGameEvent(event);
     }
 }
 
@@ -1311,7 +1311,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::saveBmpScreenToDisk()
 {
     if (cScreenShotSaver::saveScreen(renderer, m_screenW, m_screenH)) {
-        game.getPlayers()[HUMAN].addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
+        game.getPlayer(HUMAN).addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }
 
@@ -1407,7 +1407,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
 void cGame::playVoice(int sampleId, int playerId)
 {
-    m_soundPlayer->playVoice(sampleId, game.getPlayers()[playerId].getHouse());
+    m_soundPlayer->playVoice(sampleId, game.getPlayer(playerId).getHouse());
 }
 
 void cGame::playMusicByTypeForStateTransition(int iType)
@@ -1467,7 +1467,7 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         sampleId = MIDI_SCENARIO;
     }
     else if (iType == MUSIC_BRIEFING) {
-        int houseIndex = game.getPlayers()[HUMAN].getHouse();
+        int houseIndex = game.getPlayer(HUMAN).getHouse();
         if (houseIndex == ATREIDES) {
             sampleId = MIDI_MENTAT_ATR;
         }
@@ -1532,23 +1532,23 @@ void cGame::thinkCache()
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = game.getPlayers()[HUMAN];
+    const cPlayer &humanPlayer = game.getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        global_drawManager->setPlayerToDraw(&game.getPlayers()[0]);
-        game.setPlayerToInteractFor(&game.getPlayers()[0]);
+        global_drawManager->setPlayerToDraw(&game.getPlayer(0));
+        game.setPlayerToInteractFor(&game.getPlayer(0));
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        global_drawManager->setPlayerToDraw(&game.getPlayers()[1]);
-        game.setPlayerToInteractFor(&game.getPlayers()[1]);
+        global_drawManager->setPlayerToDraw(&game.getPlayer(1));
+        game.setPlayerToInteractFor(&game.getPlayer(1));
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        global_drawManager->setPlayerToDraw(&game.getPlayers()[2]);
-        game.setPlayerToInteractFor(&game.getPlayers()[2]);
+        global_drawManager->setPlayerToDraw(&game.getPlayer(2));
+        game.setPlayerToInteractFor(&game.getPlayer(2));
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        global_drawManager->setPlayerToDraw(&game.getPlayers()[3]);
-        game.setPlayerToInteractFor(&game.getPlayers()[3]);
+        global_drawManager->setPlayerToDraw(&game.getPlayer(3));
+        game.setPlayerToInteractFor(&game.getPlayer(3));
     }
 
     // WIN MISSION
@@ -1564,7 +1564,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     // GIVE CREDITS TO ALL PLAYERS
     if (event.hasKey(SDL_SCANCODE_F4)) {
         for (int i = 0; i < AI_WORM; i++) {
-            game.getPlayers()[i].setCredits(5000);
+            game.getPlayer(i).setCredits(5000);
         }
     }
 
@@ -1684,6 +1684,16 @@ cPlayers& cGame::getPlayers()
 const cPlayers& cGame::getPlayers() const
 {
     return m_Players;
+}
+
+cPlayer& cGame::getPlayer(int index)
+{
+    return m_Players[index];
+}
+
+const cPlayer& cGame::getPlayer(int index) const
+{
+    return m_Players[index];
 }
 
 int cGame::getCurrentState() const

@@ -226,6 +226,8 @@ public:
 
     cPlayers& getPlayers();
     const cPlayers& getPlayers() const;
+    cPlayer& getPlayer(int index);
+    const cPlayer& getPlayer(int index) const;
 
 private:
     /**
