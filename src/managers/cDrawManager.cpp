@@ -137,8 +137,8 @@ void cDrawManager::drawDebugInfoUsages() const
     }
 
     int particlesUsed = 0;
-    for (int i = 0; i < g_Particles.size(); i++) {
-        cParticle &pParticle = g_Particles[i];
+    for (int i = 0; i < game.getParticles().size(); i++) {
+        cParticle &pParticle = game.getParticles()[i];
         if (pParticle.isValid()) {
             particlesUsed++;
         }
@@ -149,7 +149,7 @@ void cDrawManager::drawDebugInfoUsages() const
     m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, MAX_UNITS));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
     m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, g_Bullets.size()));
-    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, g_Particles.size()));
+    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.getParticles().size()));
 }
 
 void cDrawManager::drawCredits()

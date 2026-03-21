@@ -43,7 +43,6 @@ cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
 cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 
 
-cParticles      			g_Particles;
 cBullets                    g_Bullets;
 
 // Structs of all kinds of objects (*info)

@@ -69,7 +69,6 @@ extern SDLDrawer       *global_renderDrawer;
 extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	    *global_mapCamera;
 
-extern cParticles     g_Particles;
 extern cBullets       g_Bullets;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)

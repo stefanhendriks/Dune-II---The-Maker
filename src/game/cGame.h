@@ -21,6 +21,7 @@
 #include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
 #include "player/cPlayers.h"
+#include "gameobjects/particles/cParticles.h"
 
 #include <memory>
 #include <string>
@@ -229,6 +230,9 @@ public:
     cPlayer& getPlayer(int index);
     const cPlayer& getPlayer(int index) const;
 
+    cParticles& getParticles();
+    const cParticles& getParticles() const;
+
 private:
     /**
      * Variables start here
@@ -267,6 +271,7 @@ private:
     std::shared_ptr<s_TerrainInfo> m_TerrainInfo;
 
     cPlayers m_Players;
+    cParticles m_particles;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
