@@ -107,8 +107,8 @@ void cMap::init(int width, int height)
         g_Bullets[i].init();
     }
 
-    for (int i = 0; i < g_Particles.size(); i++) {
-        g_Particles[i].init();
+    for (int i = 0; i < game.getParticles().size(); i++) {
+        game.getParticles()[i].init();
     }
 
     for (int i = 0; i < MAX_UNITS; i++) {

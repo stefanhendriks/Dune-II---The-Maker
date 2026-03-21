@@ -173,7 +173,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
 
     // any damage particle dies with the unit?
     if (boundParticleId > -1) {
-        cParticle &pParticle = g_Particles[boundParticleId];
+        cParticle &pParticle = game.getParticles()[boundParticleId];
         if (pParticle.isValid()) {
             pParticle.die();
         }
@@ -1779,7 +1779,7 @@ void cUnit::setPosX(float newVal)
     float diff = newVal - posX;
     posX = newVal;
     if (boundParticleId > -1) {
-        cParticle &pParticle = g_Particles[boundParticleId];
+        cParticle &pParticle = game.getParticles()[boundParticleId];
         pParticle.addPosX(diff);
     }
 }
@@ -1789,7 +1789,7 @@ void cUnit::setPosY(float newVal)
     float diff = newVal - posY;
     posY = newVal;
     if (boundParticleId > -1) {
-        cParticle &pParticle = g_Particles[boundParticleId];
+        cParticle &pParticle = game.getParticles()[boundParticleId];
         pParticle.addPosY(diff);
     }
 }

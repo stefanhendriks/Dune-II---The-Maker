@@ -186,8 +186,8 @@ void cGame::init()
         g_Unit[i].init(i);
     }
 
-    for (int i = 0; i < g_Particles.size(); i++) {
-        g_Particles[i].init();
+    for (int i = 0; i < getParticles().size(); i++) {
+        getParticles()[i].init();
     }
 
     // Units & Structures are already initialized in map.init()
@@ -1694,6 +1694,16 @@ cPlayer& cGame::getPlayer(int index)
 const cPlayer& cGame::getPlayer(int index) const
 {
     return m_Players[index];
+}
+
+cParticles& cGame::getParticles()
+{
+    return m_particles;
+}
+
+const cParticles& cGame::getParticles() const
+{
+    return m_particles;
 }
 
 int cGame::getCurrentState() const
