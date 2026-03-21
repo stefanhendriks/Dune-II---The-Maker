@@ -48,6 +48,7 @@ class cMapCamera;
 class cUnit;
 class cParticle;
 class cPlayer;
+class cPlayers;
 class Graphics;
 class cGame;
 class cMap;
@@ -66,7 +67,7 @@ extern SDLDrawer       *global_renderDrawer;
 
 extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	    *global_mapCamera;
-extern cPlayer        g_Player[MAX_PLAYERS];
+extern cPlayers g_Player;
 extern cParticles     g_Particles;
 extern cBullets       g_Bullets;
 

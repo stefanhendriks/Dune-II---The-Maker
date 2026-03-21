@@ -15,6 +15,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
 #include "gameobjects/particles/cParticleInfos.h"

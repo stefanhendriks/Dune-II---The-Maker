@@ -21,6 +21,7 @@
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"

@@ -24,6 +24,7 @@
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
 #include <format>

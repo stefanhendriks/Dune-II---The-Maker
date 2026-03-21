@@ -33,7 +33,8 @@ enum eLogComponent {
     COMP_SKIRMISHSETUP, /** When skirmish game is being set up **/
     COMP_ALFONT, 		/** ALFONT library specific **/
     COMP_SOUND, 		/** Sound related **/
-    COMP_REGIONINI		/** Used for regions **/
+    COMP_REGIONINI,		/** Used for regions **/
+    COMP_PLAYER			/** Player related **/
 };
 
 enum eLogOutcome {

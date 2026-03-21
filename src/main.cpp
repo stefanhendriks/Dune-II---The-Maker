@@ -18,6 +18,7 @@
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "map/cMapEditor.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/cLog.h"
 #include "drawers/SDLDrawer.hpp"
 
@@ -40,7 +41,7 @@ cMapCamera					*global_mapCamera;
 
 cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
 cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
-cPlayer        				g_Player[MAX_PLAYERS];            // player is
+cPlayers       				g_Player;                          // player manager instance
 
 cParticles      			g_Particles;
 cBullets                    g_Bullets;

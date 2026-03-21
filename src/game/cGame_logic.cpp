@@ -41,6 +41,7 @@
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "player/brains/cPlayerBrainCampaign.h"
 #include "player/brains/cPlayerBrainSandworm.h"
 #include "player/brains/cPlayerBrainSkirmish.h"

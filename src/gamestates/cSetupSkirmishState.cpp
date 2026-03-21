@@ -13,6 +13,7 @@
 #include "player/brains/cPlayerBrainSkirmish.h"
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/cLog.h"
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"

@@ -26,6 +26,7 @@
 #include "map/MapGeometry.hpp"
 #include "mentat/AbstractMentat.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"

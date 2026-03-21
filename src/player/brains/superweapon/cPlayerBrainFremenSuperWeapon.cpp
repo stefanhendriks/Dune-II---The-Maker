@@ -3,6 +3,7 @@
 #include "d2tmc.h"
 #include "map/cMap.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/RNG.hpp"
 #include <format>
 

@@ -2,6 +2,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 
 cGameConditionChecker::cGameConditionChecker(cGame* game) : m_game(game)
 {    

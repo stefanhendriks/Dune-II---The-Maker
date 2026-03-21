@@ -9,6 +9,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"

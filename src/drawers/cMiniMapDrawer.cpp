@@ -6,6 +6,7 @@
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
+#include "player/cPlayers.h"
 #include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"

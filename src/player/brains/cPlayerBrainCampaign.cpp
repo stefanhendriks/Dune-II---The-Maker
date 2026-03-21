@@ -6,7 +6,7 @@
 #include "game/cGame.h"
 #include "enums.h"
 #include "player/cPlayer.h"
-
+#include "player/cPlayers.h"
 #include <format>
 #include "utils/RNG.hpp"
 #include <algorithm>
