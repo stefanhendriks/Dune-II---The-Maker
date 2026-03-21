@@ -20,6 +20,7 @@
 #include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
+#include "player/cPlayers.h"
 
 #include <memory>
 #include <string>
@@ -222,6 +223,10 @@ public:
     void drawTextFps() const;
     void drawTextTime() const;
     void checkMissionWinOrFail();
+
+    cPlayers& getPlayers();
+    const cPlayers& getPlayers() const;
+
 private:
     /**
      * Variables start here
@@ -258,6 +263,8 @@ private:
 
     std::shared_ptr<cHousesInfo> m_Houses;
     std::shared_ptr<s_TerrainInfo> m_TerrainInfo;
+
+    cPlayers m_Players;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

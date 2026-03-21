@@ -137,7 +137,7 @@ cPlayer *cAbstractStructure::getPlayer()
 {
     assert(iPlayer >= HUMAN);
     assert(iPlayer < MAX_PLAYERS);
-    return &g_Players[iPlayer];
+    return &game.getPlayers()[iPlayer];
 }
 
 int cAbstractStructure::getMaxHP()
@@ -591,7 +591,7 @@ void cAbstractStructure::think_repair()
 {
     // REPAIRING (from think_fast, so called every 5 ms).
     if (bRepair) {
-        cPlayer &player = g_Players[iPlayer];
+        cPlayer &player = game.getPlayers()[iPlayer];
         float costToRepair = 1.0f;
         s_StructureInfo &structureInfo = sStructureInfo[getType()];
         if (player.hasEnoughCreditsFor(costToRepair)) {

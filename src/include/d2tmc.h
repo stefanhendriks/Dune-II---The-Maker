@@ -20,6 +20,7 @@
 #include "definitions.h"
 #include "structs.h"
 #include "utils/cStructureUtils.h"
+#include "game/cGame.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/projectiles/cBullets.h"
@@ -68,7 +69,6 @@ extern SDLDrawer       *global_renderDrawer;
 extern cUnit          g_Unit[MAX_UNITS];
 extern cMapCamera	    *global_mapCamera;
 
-extern cPlayers       g_Players;
 extern cParticles     g_Particles;
 extern cBullets       g_Bullets;
 

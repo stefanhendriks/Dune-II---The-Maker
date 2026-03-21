@@ -13,8 +13,7 @@
 #pragma once
 
 #include <array>
-
-class cPlayer;
+#include "cPlayer.h"
 
 /**
  * Manager class that encapsulates the global g_Player array

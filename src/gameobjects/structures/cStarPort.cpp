@@ -75,7 +75,7 @@ void cStarPort::think_deploy()
         if (TIMER_deploy < 0) {
             TIMER_deploy = 1;
             // deploy unit
-            cOrderProcesser *orderProcesser = g_Players[iPlayer].getOrderProcesser();
+            cOrderProcesser *orderProcesser = game.getPlayers()[iPlayer].getOrderProcesser();
             cBuildingListItem *item = orderProcesser->getItemToDeploy();
             if (item) {
                 int cellToDeployTo = getNonOccupiedCellAroundStructure();
