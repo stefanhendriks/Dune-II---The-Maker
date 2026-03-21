@@ -2,6 +2,7 @@
 
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayerDifficultySettings.h"
+#include "gameobjects/projectiles/cBulletInfos.h"
 #include "structs.h"
 
 class cPlayer;
