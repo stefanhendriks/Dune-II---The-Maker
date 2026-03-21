@@ -541,7 +541,7 @@ void IniGameRessources::install_units()
 
 void IniGameRessources::install_particles()
 {
-    for (int i = 0; i < MAX_PARTICLE_TYPES; i++) {
+    for (unsigned int i = 0; i < particleInfos.size(); i++) {
         s_ParticleInfo &particleInfo = particleInfos[i];
         particleInfo.bmpIndex = -1;
         particleInfo.startAlpha = -1;

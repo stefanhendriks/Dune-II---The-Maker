@@ -583,7 +583,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     cParticle &pParticle = g_Particle[iNewId];
-    if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
+    if (iType > -1 && iType < particleInfos.size()) {
         s_ParticleInfo &sParticle = particleInfos[iType];
         pParticle.init(sParticle);
     }
