@@ -4,8 +4,6 @@
 #include <cstddef>
 #include <stdexcept>
 
-constexpr std::size_t MAX_PARTICLE_TYPES = 50;
-
 // Particle drawing layers (z-index like) to draw particle
 enum class RenderLayerParticle : char {
     TOP =0,     // top (over unit)
@@ -71,5 +69,6 @@ public:
     auto end() const noexcept { return m_data.end(); }
 
 private:
+    static constexpr std::size_t MAX_PARTICLE_TYPES = 50;
     std::array<s_ParticleInfo, MAX_PARTICLE_TYPES> m_data;
 };
