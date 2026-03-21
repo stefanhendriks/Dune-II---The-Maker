@@ -1473,7 +1473,7 @@ void cIni::installGame(std::string filename)
                         }
 
                         id = cIniUtils::getBulletTypeFromString(name_bullet);
-                        if (id >= MAX_BULLET_TYPES) id--;
+                        if (id >= bulletInfos.size()) id--;
                     } // found a new bullet type
                 }
                 continue; // next line
