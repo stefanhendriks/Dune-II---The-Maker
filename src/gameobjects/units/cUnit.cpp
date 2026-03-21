@@ -745,7 +745,7 @@ void cUnit::draw()
     int start_x = bmp_body * bmp_width;
     int start_y = bmp_height * iFrame;
 
-    cPlayer &cPlayer = game.getPlayers()[this->iPlayer];
+    cPlayer &cPlayer = game.getPlayer(this->iPlayer);
 
     const float scaledWidth = global_mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = global_mapCamera->factorZoomLevel(bmp_height);
@@ -2103,7 +2103,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
-    game.getPlayers()[iPlayer].log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, iGoalCell = {}] '{}'",
+    game.getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, iGoalCell = {}] '{}'",
                                      iID, iType, sUnitInfo[iType].name, iCell, iGoalCell, txt));
 }
 
@@ -2822,7 +2822,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int cellType = global_map.getCellType(iCell);
     int iSlowDown = global_map.getCellSlowDown(iCell);
 
-    cPlayerDifficultySettings *difficultySettings = game.getPlayers()[iPlayer].getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
     if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
@@ -2962,7 +2962,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
             }
         }
 
-        if (iPlayer == AI_CPU5 && game.getPlayers()[HUMAN].isHouse(ATREIDES)) {
+        if (iPlayer == AI_CPU5 && game.getPlayer(HUMAN).isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
             global_map.clearShroud(iCell, sUnitInfo[iType].sight, HUMAN);
@@ -3090,7 +3090,7 @@ bool cUnit::canBeSquished()
 
 cPlayer *cUnit::getPlayer()
 {
-    return &game.getPlayers()[iPlayer];
+    return &game.getPlayer(iPlayer);
 }
 
 bool cUnit::isSaboteur()
@@ -3740,7 +3740,7 @@ void cUnit::think_harvester()
             bFindRefinery = true;
 
         // when we should harvest...
-        cPlayerDifficultySettings *difficultySettings = game.getPlayers()[iPlayer].getDifficultySettings();
+        cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
         if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
                 iCredits < getUnitInfo().credit_capacity) {
             TIMER_harvest = 1;
