@@ -22,6 +22,7 @@
 //#include "map/cMap.h"
 #include "structs.h"
 #include "utils/cStructureUtils.h"
+#include "gameobjects/particles/cParticleInfos.h"
 
 //#include "utils/cDataPack.hpp"
 #include <memory>

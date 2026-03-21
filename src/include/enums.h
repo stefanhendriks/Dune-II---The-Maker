@@ -280,11 +280,6 @@ enum eMouseEventType {
 //     FADE_OUT    // fade out
 // };
 
-// Particle drawing layers (z-index like) to draw particle
-enum class RenderLayerParticle : char {
-    TOP =0,     // top (over unit)
-    BOTTOM = 1  // bottom (beneath unit)
-};
 
 enum class SmudgeType : char {
     S_ROCK = 0,
