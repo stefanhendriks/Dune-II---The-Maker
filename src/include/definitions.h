@@ -86,7 +86,7 @@
 #define MAX_BULLET_TYPES      30
 
 // PARTICLES
-#define MAX_PARTICLE_TYPES    50
+//#define MAX_PARTICLE_TYPES    50
 
 // Lists stuff
 #define MAX_ICONS       30          // max of 30 icons per list

@@ -17,6 +17,7 @@
 #include "player/cPlayer.h"
 #include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
+#include "gameobjects/particles/cParticleInfos.h"
 
 #include <iostream>
 
