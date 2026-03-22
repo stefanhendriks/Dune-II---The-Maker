@@ -184,16 +184,16 @@ void cAbstractStructure::die()
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitIDWithinStructure > -1) {
-        g_Unit[iUnitIDWithinStructure].init(iUnitIDWithinStructure); // die here... softly
+        g_Units[iUnitIDWithinStructure].init(iUnitIDWithinStructure); // die here... softly
     }
 
     if (iUnitIDEnteringStructure > -1) {
-        g_Unit[iUnitIDEnteringStructure].die(true, false);
+        g_Units[iUnitIDEnteringStructure].die(true, false);
     }
 
     if (iUnitIDHeadingForStructure > -1) {
         // reset structure ID
-        g_Unit[iUnitIDHeadingForStructure].iStructureID = -1;
+        g_Units[iUnitIDHeadingForStructure].iStructureID = -1;
         iUnitIDHeadingForStructure = -1;
     }
 
@@ -768,7 +768,7 @@ void cAbstractStructure::enterStructure(int unitId)
     setAnimating(false);
     setFrame(0);
 
-    cUnit &pUnit = g_Unit[unitId];
+    cUnit &pUnit = g_Units[unitId];
 
     pUnit.hideUnit();
     pUnit.setCell(getCell());
@@ -779,7 +779,7 @@ void cAbstractStructure::enterStructure(int unitId)
 
 void cAbstractStructure::unitLeavesStructure()
 {
-    cUnit &unitToLeave = g_Unit[iUnitIDWithinStructure];
+    cUnit &unitToLeave = g_Units[iUnitIDWithinStructure];
     int iNewCell = getNonOccupiedCellAroundStructure();
 
     if (iNewCell > -1) {

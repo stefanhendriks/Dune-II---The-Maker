@@ -61,7 +61,7 @@ void cGunTurret::think_animation()
 
 void cGunTurret::think_attack()
 {
-    cUnit &unitTarget = g_Unit[iTargetID];
+    cUnit &unitTarget = g_Units[iTargetID];
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         int iCellX = global_map.getCellX(getCell());
         int iCellY = global_map.getCellY(getCell());
@@ -138,7 +138,7 @@ void cGunTurret::think_fire()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
 
-    cUnit &unitTarget = g_Unit[iTargetID];
+    cUnit &unitTarget = g_Units[iTargetID];
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         TIMER_fire++;
 
@@ -234,7 +234,7 @@ void cGunTurret::think_guard()
         // scan area for units
         for (int i = 0; i < MAX_UNITS; i++) {
             // is valid
-            cUnit &cUnit = g_Unit[i];
+            cUnit &cUnit = g_Units[i];
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
             if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
@@ -286,7 +286,7 @@ void cGunTurret::think_guard()
 
         // discovered a new target
         if (iTargetID > -1 && iTargetID != prevTarget) {
-            cUnit &unitToAttack = g_Unit[iTargetID];
+            cUnit &unitToAttack = g_Units[iTargetID];
             if (unitToAttack.isValid()) {
                 s_GameEvent event{
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,

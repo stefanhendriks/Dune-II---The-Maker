@@ -24,11 +24,11 @@ int cUnitUtils::findUnit(int type, int iPlayerId)
 int cUnitUtils::findUnit(int type, int iPlayerId, int iIgnoreUnitId)
 {
     for (int i=0; i < MAX_UNITS; i++) {
-        if (i == iIgnoreUnitId || !g_Unit[i].isValid()) {
+        if (i == iIgnoreUnitId || !g_Units[i].isValid()) {
             continue;
         }
 
-        if (g_Unit[i].iPlayer == iPlayerId && g_Unit[i].iType == type) {
+        if (g_Units[i].iPlayer == iPlayerId && g_Units[i].iType == type) {
             return i;
         }
     }

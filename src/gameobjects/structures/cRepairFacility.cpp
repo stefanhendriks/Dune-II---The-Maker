@@ -32,7 +32,7 @@ void cRepairFacility::thinkFast()
 void cRepairFacility::think_repairUnit()  // must repair...
 {
     int iUnitID = getUnitIdWithin();
-    cUnit &unitToRepair = g_Unit[iUnitID];
+    cUnit &unitToRepair = g_Units[iUnitID];
 //    int maxHpForUnitType = sUnitInfo[unitToRepair.iType].hp;
 
     if (unitToRepair.requiresRepairing()) {
