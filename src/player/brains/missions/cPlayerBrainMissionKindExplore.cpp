@@ -19,7 +19,7 @@ cPlayerBrainMissionKindExplore::~cPlayerBrainMissionKindExplore()
 
 bool cPlayerBrainMissionKindExplore::think_SelectTarget()
 {
-    targetCell = global_map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+    targetCell = game.getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(2);
     return true;
 }
 
@@ -30,7 +30,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
         cUnit &aUnit = game.getUnit(myUnit);
         if (aUnit.isValid()) {
             if (aUnit.isIdle()) {
-                if (global_map.distance(aUnit.getCell(), targetCell) < 4) {
+                if (game.getMap().distance(aUnit.getCell(), targetCell) < 4) {
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target
                 }
@@ -39,7 +39,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
                 }
             }
             else {
-                if (global_map.distance(aUnit.getCell(), targetCell) < 2) {
+                if (game.getMap().distance(aUnit.getCell(), targetCell) < 2) {
                     // almost there. Select new target.
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target

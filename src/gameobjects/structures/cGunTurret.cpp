@@ -63,13 +63,13 @@ void cGunTurret::think_attack()
 {
     cUnit &unitTarget = game.getUnit(iTargetID);
     if (unitTarget.isValid() && !unitTarget.isDead()) {
-        int iCellX = global_map.getCellX(getCell());
-        int iCellY = global_map.getCellY(getCell());
+        int iCellX = game.getMap().getCellX(getCell());
+        int iCellY = game.getMap().getCellY(getCell());
 
         int unitCell = unitTarget.getCell();
 
-        int iTargetX = global_map.getCellX(unitCell);
-        int iTargetY = global_map.getCellY(unitCell);
+        int iTargetX = game.getMap().getCellX(unitCell);
+        int iTargetY = game.getMap().getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int facingAngle = faceAngle(d, kTurretFacings); // get the angle
@@ -142,7 +142,7 @@ void cGunTurret::think_fire()
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         TIMER_fire++;
 
-        int iDistance = global_map.distance(getCell(), unitTarget.getCell());
+        int iDistance = game.getMap().distance(getCell(), unitTarget.getCell());
 
         if (iDistance > getSight()) {
             iTargetID = -1;
@@ -213,8 +213,8 @@ void cGunTurret::think_guard()
         TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
-        int iCellX = global_map.getCellX(c);
-        int iCellY = global_map.getCellY(c);
+        int iCellX = game.getMap().getCellX(c);
+        int iCellY = game.getMap().getCellY(c);
 
         int iDistance=9999; // closest distance
 
@@ -238,7 +238,7 @@ void cGunTurret::think_guard()
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
             if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
-            if (!global_map.isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
+            if (!game.getMap().isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
 
             if (!canAttackAirUnits()) {
                 if (cUnit.isAirbornUnit()) {
@@ -256,7 +256,7 @@ void cGunTurret::think_guard()
             }
 
             int c1 = cUnit.getCell();
-            int distance = ABS_length(iCellX, iCellY, global_map.getCellX(c1), global_map.getCellY(c1));
+            int distance = ABS_length(iCellX, iCellY, game.getMap().getCellX(c1), game.getMap().getCellY(c1));
 
             if (distance <= distanceForAttacking) {
                 if (cUnit.isAttackableAirUnit()) {

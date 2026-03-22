@@ -82,8 +82,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
 #define SCANWIDTH    1
 
-    int iCellX = global_map.getCellX(mouseCell);
-    int iCellY = global_map.getCellY(mouseCell);
+    int iCellX = game.getMap().getCellX(mouseCell);
+    int iCellY = game.getMap().getCellY(mouseCell);
 
     // check
     int iStartX = iCellX - SCANWIDTH;
@@ -93,16 +93,16 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    cPoint::split(iStartX, iStartY) = global_map.fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    cPoint::split(iEndX, iEndY) = global_map.fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = game.getMap().fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = game.getMap().fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX = iStartX; iX < iEndX; iX++) {
         for (int iY = iStartY; iY < iEndY; iY++) {
-            int iCll = global_map.getGeometry().getCellWithMapDimensions(iX, iY);
+            int iCll = game.getMap().getGeometry().getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
-                int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = game.getMap().getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
@@ -114,8 +114,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                     // TODO: Allow placement nearby allies?
                 }
 
-                if (global_map.getCellType(iCll) == TERRAIN_WALL ||
-                        global_map.getCellType(iCll) == TERRAIN_SLAB) {
+                if (game.getMap().getCellType(iCll) == TERRAIN_WALL ||
+                        game.getMap().getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance = true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
@@ -136,14 +136,14 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
             int cellX = iCellX + iX;
             int cellY = iCellY + iY;
 
-            if (!global_map.isWithinBoundaries(cellX, cellY)) {
+            if (!game.getMap().isWithinBoundaries(cellX, cellY)) {
                 return false;
             }
 
-            int iCll = global_map.getGeometry().makeCell(cellX, cellY);
+            int iCll = game.getMap().getGeometry().makeCell(cellX, cellY);
 
             // occupied by units or structures
-            int idOfStructureAtCell = global_map.getCellIdStructuresLayer(iCll);
+            int idOfStructureAtCell = game.getMap().getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
                 // may not place when we're not placing a slab.. hack hack
                 if (structureIdToPlace != SLAB4) {
@@ -153,7 +153,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
             // non slab 'structures' can be blocked by units
             if (structureIdToPlace != SLAB4 && structureIdToPlace != SLAB1) {
-                int unitIdOnMap = global_map.getCellIdUnitLayer(iCll);
+                int unitIdOnMap = game.getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!game.getUnit(unitIdOnMap).isDead()) {

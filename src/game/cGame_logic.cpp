@@ -149,7 +149,7 @@ void cGame::applySettings(GameSettings *gs)
 
 void cGame::init()
 {
-    global_map.setTerrainInfo(m_TerrainInfo);
+    game.getMap().setTerrainInfo(m_TerrainInfo);
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -178,7 +178,7 @@ void cGame::init()
     m_cameraBorderOrKeyMoveSpeed=0.5;
     m_cameraEdgeMove = true;
 
-    global_map.init(64, 64);
+    game.getMap().init(64, 64);
 
     initPlayers(false);
 
@@ -209,7 +209,7 @@ void cGame::missionInit()
 
     m_screenShake->reset();
 
-    global_map.init(64, 64);
+    game.getMap().init(64, 64);
 
     initPlayers(true);
 
@@ -524,7 +524,7 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
-    global_map.setReinforcements(m_reinforcements);
+    game.getMap().setReinforcements(m_reinforcements);
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
@@ -577,7 +577,7 @@ bool cGame::setupGame()
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext());
-    global_map.setGameContext(ctx.get());
+    game.getMap().setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
 
@@ -656,7 +656,7 @@ bool cGame::setupGame()
     IniGameRessources::install_terrain(m_TerrainInfo);
 
     delete global_mapCamera;
-    global_mapCamera = new cMapCamera(&global_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
+    global_mapCamera = new cMapCamera(&game.getMap(), game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     cIni::installGame(m_gameFilename);
     // Now we are ready for the menu state
@@ -1082,7 +1082,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 {
     logbook(s_GameEvent::toString(event));
 
-    global_map.onNotifyGameEvent(event);
+    game.getMap().onNotifyGameEvent(event);
 
     // game itself handles events
     switch (event.eventType) {
@@ -1127,14 +1127,14 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     int widthInCells = sStructureInfo[event.entitySpecificType].bmp_width / 32;
     int heightInCells = sStructureInfo[event.entitySpecificType].bmp_height / 32;
 
-    int cellX = global_map.getGeometry().getCellX(event.atCell);
-    int cellY = global_map.getGeometry().getCellY(event.atCell);
+    int cellX = game.getMap().getGeometry().getCellX(event.atCell);
+    int cellY = game.getMap().getGeometry().getCellY(event.atCell);
 
     for (int i = 0; i < amountOfSoldiersToSpawn; i++) {
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         UNIT_CREATE(
-            global_map.getGeometry().makeCell(randomX, randomY),
+            game.getMap().getGeometry().makeCell(randomX, randomY),
             SOLDIER,
             event.player->getId(),
             false,
@@ -1157,19 +1157,19 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
         }
         else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
             int precision = special.deployTargetPrecision;
-            int mouseCellX = global_map.getCellX(iMouseCell) - precision;
-            int mouseCellY = global_map.getCellY(iMouseCell) - precision;
+            int mouseCellX = game.getMap().getCellX(iMouseCell) - precision;
+            int mouseCellY = game.getMap().getCellY(iMouseCell) - precision;
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = global_map.fixCoordinatesToBeWithinPlayableMap(posX, posY);
+            cPoint::split(posX, posY) = game.getMap().fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = global_map.getGeometry().makeCell(posX, posY);
+            deployCell = game.getMap().getGeometry().makeCell(posX, posY);
         }
 
 
@@ -1387,7 +1387,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = global_mapCamera->divideByZoomLevel(global_map.getMaxDistanceInPixels() / 2);
+    float maxDistance = global_mapCamera->divideByZoomLevel(game.getMap().getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
@@ -1584,22 +1584,22 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = game.getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_Units[idOfUnitAtCell].die(true, false);
             }
 
-            int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = game.getMap().getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
                 g_pStructures[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
+            idOfUnitAtCell = game.getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_Units[idOfUnitAtCell].die(false, false);
             }
 
-            idOfUnitAtCell = global_map.getCellIdAirUnitLayer(mc);
+            idOfUnitAtCell = game.getMap().getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_Units[idOfUnitAtCell].die(false, false);
             }
@@ -1610,7 +1610,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = game.getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 cUnit &pUnit = m_Units[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
@@ -1624,7 +1624,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
             for (int i = 0; i < AI_WORM; i++) {
-                global_map.clear_all(i);
+                game.getMap().clear_all(i);
             }
         }
     }
@@ -1694,6 +1694,16 @@ cUnits& cGame::getUnits()
 const cUnits& cGame::getUnits() const
 {
     return m_Units;
+}
+
+cMap& cGame::getMap()
+{
+    return m_map;
+}
+
+const cMap& cGame::getMap() const
+{
+    return m_map;
 }
 
 cUnit& cGame::getUnit(int index)

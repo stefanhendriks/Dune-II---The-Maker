@@ -34,7 +34,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!global_map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!game.getMap().isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         target = theStructure->getCell();
@@ -50,7 +50,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
             if (!pUnit.isValid()) continue;
             if (pUnit.getPlayer() == player) continue; // skip self
             if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-            if (!global_map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+            if (!game.getMap().isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
             // enemy unit
             target = i;
             if (RNG::rnd(100) < 5) {

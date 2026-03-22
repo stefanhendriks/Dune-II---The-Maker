@@ -20,6 +20,7 @@
 #include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
+#include "map/cMap.h"
 #include "player/cPlayers.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/particles/cParticleInfos.h"
@@ -243,6 +244,9 @@ public:
     cParticleInfos& getParticleInfos();
     const cParticleInfos& getParticleInfos() const;
 
+    cMap& getMap();
+    const cMap& getMap() const;
+
 private:
     /**
      * Variables start here
@@ -284,6 +288,7 @@ private:
     cParticles m_particles;
     cParticleInfos m_particleInfos;
     cUnits m_Units;
+    cMap m_map;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
