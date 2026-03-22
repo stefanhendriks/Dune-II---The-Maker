@@ -4,11 +4,14 @@
 #include "map/cMap.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
+#include <cassert>
 
 namespace brains {
 
 cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
+    assert(player != nullptr);
+    assert(mission != nullptr);
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
     specificBuildTypeToGoToSelectTargetState = sSpecialInfo[SPECIAL_FREMEN].providesType;
     specificBuildIdToGoToSelectTargetState = sSpecialInfo[SPECIAL_FREMEN].providesTypeId;

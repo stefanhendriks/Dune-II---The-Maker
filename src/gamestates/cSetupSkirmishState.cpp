@@ -24,6 +24,7 @@
 #include <format>
 #include <algorithm>
 #include <utility>
+#include <cassert>
 
 #include "config.h"
 
@@ -42,6 +43,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_dataCampaign(dataCompaign)
 {
+    assert(ctx != nullptr);
+    assert(m_dataCampaign != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.

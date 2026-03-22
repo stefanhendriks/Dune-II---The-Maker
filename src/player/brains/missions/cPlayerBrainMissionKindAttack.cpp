@@ -7,11 +7,14 @@
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
+#include <cassert>
 
 namespace brains {
 
 cPlayerBrainMissionKindAttack::cPlayerBrainMissionKindAttack(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
+    assert(player != nullptr);
+    assert(mission != nullptr);
     targetStructureID = -1;
     targetUnitID = -1;
 }

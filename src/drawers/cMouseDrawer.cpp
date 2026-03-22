@@ -11,12 +11,13 @@
 #include "player/cPlayer.h"
 
 #include <SDL2/SDL.h>
-
 #include <algorithm>
+#include <cassert>
 
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : player(thePlayer)
 {
-    assert(thePlayer);
+    assert(thePlayer != nullptr);
+    assert(textDrawer != nullptr);
     mouseX = mouseY = 0;
     textWriter = new cTextWriter(textDrawer,12);
 }

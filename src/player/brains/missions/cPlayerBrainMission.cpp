@@ -11,7 +11,7 @@
 #include "map/cMap.h"
 
 #include <format>
-
+#include <cassert>
 #include <algorithm>
 
 namespace brains {
@@ -32,6 +32,8 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
     , units()
     , group(group)
 {
+    assert(player != nullptr);
+    assert(brain != nullptr);
     switch (kind) {
         case PLAYERBRAINMISSION_KIND_ATTACK:
             missionKind = new cPlayerBrainMissionKindAttack(player, this);

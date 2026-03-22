@@ -15,6 +15,8 @@
 
 cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
 {
+    assert(thePlayer != nullptr);
+    assert(ctx != nullptr);
     m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
 }
 

@@ -7,11 +7,14 @@
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
+#include <cassert>
 
 namespace brains {
 
 cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
+    assert(player != nullptr);
+    assert(mission != nullptr);
     target = -1;
     itemToLaunch = nullptr;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET; // ready for launch!

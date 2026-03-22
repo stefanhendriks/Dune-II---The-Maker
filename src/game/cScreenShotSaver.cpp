@@ -4,6 +4,7 @@
 #include <format>
 #include <chrono>
 #include <filesystem>
+#include <cassert>
 
 #include "game/cScreenShotSaver.h"
 #include "utils/cLog.h"
@@ -14,6 +15,7 @@ unsigned int cScreenShotSaver::screenCount = 0;
 
 bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
+    assert(renderer != nullptr);
     screenCount++;
     std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName() , width, height,screenCount);
     int rw, rh;

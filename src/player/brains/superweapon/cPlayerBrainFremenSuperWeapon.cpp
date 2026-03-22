@@ -9,12 +9,13 @@
 
 #include <algorithm>
 #include <random>
+#include <cassert>
 
 namespace brains {
 
 cPlayerBrainFremenSuperWeapon::cPlayerBrainFremenSuperWeapon(cPlayer *player) : cPlayerBrain(player)
 {
-
+    assert(player != nullptr);
 }
 
 void cPlayerBrainFremenSuperWeapon::think()

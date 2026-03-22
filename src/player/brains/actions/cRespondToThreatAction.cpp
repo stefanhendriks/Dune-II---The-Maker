@@ -5,6 +5,7 @@
 #include "map/cMap.h"
 
 #include <vector>
+#include <cassert>
 
 cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder)
     :
@@ -14,7 +15,7 @@ cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit *threat, c
     m_victim(victim),
     m_maxUnitsToOrder(maxUnitsToOrder)
 {
-
+    assert(player != nullptr);
 }
 
 void cRespondToThreatAction::execute()

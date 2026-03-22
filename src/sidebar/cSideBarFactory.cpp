@@ -26,7 +26,7 @@ cSideBarFactory *cSideBarFactory::getInstance()
 // construct a cSideBar
 cSideBar *cSideBarFactory::createSideBar(cPlayer *thePlayer)
 {
-    assert(thePlayer);
+    assert(thePlayer!=nullptr);
     cSideBar *sidebar = new cSideBar(thePlayer);
 
     for (const auto listType : AllListTypes) {

@@ -14,12 +14,14 @@
 
 #include <iostream>
 #include <memory>
+#include <cassert>
 
 cNewMapEditorState::cNewMapEditorState(cGame &theGame, GameContext *ctx)
     : cGameState(theGame, ctx),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_guiWindow(nullptr)
 {
+    assert(ctx != nullptr);
     constructWindow();
 }
 

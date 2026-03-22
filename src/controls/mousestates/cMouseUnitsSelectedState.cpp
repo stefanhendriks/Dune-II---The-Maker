@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <string>
+#include <cassert>
 
 #include "data/gfxaudio.h"
 
@@ -55,7 +56,9 @@ cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControl
     m_state(SELECTED_STATE_MOVE),
     m_prevState(SELECTED_STATE_MOVE)
 {
-
+    assert(player!=nullptr);
+    assert(context!=nullptr);
+    assert(mouse!=nullptr);
 }
 
 void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event)

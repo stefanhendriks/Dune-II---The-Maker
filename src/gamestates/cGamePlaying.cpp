@@ -20,9 +20,11 @@
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 
+#include <cassert>
 
 cGamePlaying::cGamePlaying(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
 {
+    assert(ctx != nullptr);
     m_reinforcements = game.getReinforcements();
     m_TIMER_evaluatePlayerStatus = 5;
     game.m_pathsCreated = 0;

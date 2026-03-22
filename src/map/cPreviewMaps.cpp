@@ -9,10 +9,12 @@
 namespace fs = std::filesystem;
 
 #include <algorithm>
+#include <cassert>
 #include "utils/cIniFile.h"
 
 cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode) : m_renderDrawer(renderDrawer), m_debugMode(debugMode)
 {
+    assert(renderDrawer != nullptr);
 }
 
 void cPreviewMaps::destroy()

@@ -12,7 +12,7 @@
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 
-
+#include <cassert>
 
 cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
     : cGameState(theGame, ctx),
@@ -20,6 +20,7 @@ cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
+    assert(ctx != nullptr);
     refresh();
     m_backgroundTexture = m_game.getScreenTexture();
 }

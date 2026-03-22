@@ -11,12 +11,15 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
+#include <cassert>
 
 cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     m_ctx(ctx),
     m_renderDrawer(ctx->getSDLDrawer()),
     m_player(player)
 {
+    assert(player != nullptr);
+    assert(ctx != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_buttonBitmap = player->createTextureFromIndexedSurfaceWithPalette(gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;

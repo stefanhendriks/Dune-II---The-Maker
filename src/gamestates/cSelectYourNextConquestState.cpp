@@ -19,6 +19,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <format>
+#include <cassert>
 
 // Return color index from pixel (x, y) in surface
 static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
@@ -50,6 +51,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_dataCompaign(dataCompaign)
 {
+    assert(ctx != nullptr);
+    assert(m_dataCompaign != nullptr);
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 

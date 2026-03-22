@@ -16,9 +16,12 @@
 
 #include "game/cGame.h"
 #include "context/GameContext.hpp"
+#include <cassert>
 
 CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(ctx)
 {
+    assert(game != nullptr);
+    assert(ctx != nullptr);
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
     // this States should not be recreated when we need to use

@@ -34,6 +34,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
+    assert(thePlayer!=nullptr);
+    assert(ctx != nullptr);
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(ctx, thePlayer);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
     m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
@@ -43,7 +45,6 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
     m_structureDrawer = std::make_unique<cStructureDrawer>(ctx);
-    assert(thePlayer);
     btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );

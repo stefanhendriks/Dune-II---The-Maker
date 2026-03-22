@@ -16,12 +16,14 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
+#include <cassert>
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx) :
     m_renderDrawer(ctx->getSDLDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
+    assert(ctx != nullptr);
 }
 
 

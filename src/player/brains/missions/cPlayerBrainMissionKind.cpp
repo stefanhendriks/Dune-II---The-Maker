@@ -5,6 +5,7 @@
 #include "player/cPlayer.h"
 
 #include <format>
+#include <cassert>
 
 namespace brains {
 
@@ -40,6 +41,8 @@ const char *ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind)
 
 cPlayerBrainMissionKind::cPlayerBrainMissionKind(cPlayer *player, cPlayerBrainMission *mission) : player(player), mission(mission)
 {
+    assert(player != nullptr);
+    assert(mission != nullptr);
     player->log("cPlayerBrainMissionKind() constructor");
     specificPlayerForEventToGoToSelectTargetState = player;
 

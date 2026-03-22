@@ -12,9 +12,12 @@
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
 
+#include <cassert>
+
 cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* dataCampaign)
     : cGameState(game, ctx), m_house(dataCampaign->housePlayer), m_dataCampaign(dataCampaign)
 {
+    assert(ctx != nullptr);
     prepareMentat(m_house);
 }
 

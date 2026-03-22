@@ -11,9 +11,11 @@
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
 #include <format>
+#include <cassert>
 
 cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value) : cGameState(theGame, ctx), m_statement(value)
 {
+    assert(ctx != nullptr);
     if (m_game.getScreenTexture() != nullptr)
         m_backgroundTexture = m_game.getScreenTexture();
     

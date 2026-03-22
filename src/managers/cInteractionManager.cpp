@@ -11,7 +11,7 @@
 
 cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()
 {
-    assert(thePlayer);
+    assert(thePlayer!=nullptr);
     // does not own these things!
     player = thePlayer;
     sidebar = thePlayer->getSideBar();

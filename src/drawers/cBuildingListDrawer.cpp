@@ -11,6 +11,7 @@
 
 #include <SDL2/SDL.h>
 #include <format>
+#include <cassert>
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
     m_gameTextDrawer(ctx->getTextContext()->getGameTextDrawer()),
@@ -20,6 +21,8 @@ cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player
     m_player(player),
     m_renderListIds(false)
 {
+    assert(player != nullptr);
+    assert(ctx != nullptr);
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
