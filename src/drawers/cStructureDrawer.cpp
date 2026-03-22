@@ -274,7 +274,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
     assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
-    cUnit &pUnit = game.getUnits()[unitId];
+    cUnit &pUnit = game.getUnit(unitId);
     int iconId = pUnit.getUnitInfo().icon;
 
     int iconWidth = (m_gfxinter->getSurface(iconId))->w;

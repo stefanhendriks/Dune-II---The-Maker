@@ -234,6 +234,8 @@ public:
 
     cUnits& getUnits();
     const cUnits& getUnits() const;
+    cUnit& getUnit(int index);
+    const cUnit& getUnit(int index) const;
 
     cParticles& getParticles();
     const cParticles& getParticles() const;
