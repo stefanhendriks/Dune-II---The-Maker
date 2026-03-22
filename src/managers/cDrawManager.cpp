@@ -115,7 +115,7 @@ void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
     for (int i = 0; i < MAX_UNITS; i++) {
-        if (game.getUnits()[i].isValid()) {
+        if (game.getUnit(i).isValid()) {
             unitsUsed++;
         }
     }

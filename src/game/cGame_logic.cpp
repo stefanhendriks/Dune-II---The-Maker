@@ -1696,6 +1696,16 @@ const cUnits& cGame::getUnits() const
     return m_Units;
 }
 
+cUnit& cGame::getUnit(int index)
+{
+    return m_Units[index];
+}
+
+const cUnit& cGame::getUnit(int index) const
+{
+    return m_Units[index];
+}
+
 cPlayer& cGame::getPlayer(int index)
 {
     return m_Players[index];

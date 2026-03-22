@@ -204,7 +204,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     int d = fDegrees(iCellX, iCellY, cx, cy);
     int f = faceAngle(d); // get the angle
 
-    cUnit &carryall = game.getUnits()[iUnit];
+    cUnit &carryall = game.getUnit(iUnit);
     carryall.iBodyShouldFace = f;
     carryall.iBodyFacing = f;
     carryall.iHeadShouldFace = f;

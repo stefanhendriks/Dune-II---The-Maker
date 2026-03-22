@@ -184,7 +184,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
 
     // Anyone who was attacking this unit is on actionGuard
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = game.getUnits()[i];
+        cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue; // skip invalid
         if (pUnit.iAttackUnit != iID) continue; // skip those who did not want to attack me
 
@@ -198,7 +198,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     if (isAirbornUnit()) {
         if (iUnitID > -1) {
             // we intended to pick up this unit
-            cUnit &pUnit = game.getUnits()[iUnitID];
+            cUnit &pUnit = game.getUnit(iUnitID);
             if (pUnit.isValid()) {
                 pUnit.willBePickedUpBy = -1; // no longer being picked up by this one
             }
@@ -358,12 +358,12 @@ void cUnit::createExplosionParticle()
                 if (idOfUnitAtCell > -1) {
                     int id = idOfUnitAtCell;
 
-                    if (game.getUnits()[id].iHitPoints > 0) {
-                        game.getUnits()[id].iHitPoints -= 150;
+                    if (game.getUnit(id).iHitPoints > 0) {
+                        game.getUnit(id).iHitPoints -= 150;
 
                         // NO HP LEFT, DIE
-                        if (game.getUnits()[id].iHitPoints <= 1)
-                            game.getUnits()[id].die(true, false);
+                        if (game.getUnit(id).iHitPoints <= 1)
+                            game.getUnit(id).die(true, false);
                     } // only die when the unit is going to die
                 }
 
@@ -830,7 +830,7 @@ void cUnit::attackUnit(int targetUnit)
 void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
 {
     log(std::format("attackUnit() : targetUnit is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
-    attack(game.getUnits()[targetUnit].iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
+    attack(game.getUnit(targetUnit).iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure)
@@ -963,7 +963,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
 void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const
 {
     if (willBePickedUpBy > -1) {
-        cUnit &pUnit = game.getUnits()[willBePickedUpBy];
+        cUnit &pUnit = game.getUnit(willBePickedUpBy);
         if (pUnit.isValid()) {
             pUnit.forgetAboutUnitToPickUp();
         }
@@ -1032,7 +1032,7 @@ void cUnit::thinkFast_guard()
     }
 
     if (unitIdToAttack > -1) {
-        cUnit &unitToAttack = game.getUnits()[unitIdToAttack];
+        cUnit &unitToAttack = game.getUnit(unitIdToAttack);
 
         if (unitToAttack.isValid()) {
 //            s_GameEvent event{
@@ -1246,7 +1246,7 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
     int iTarget = -1;
 
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &target = game.getUnits()[i];
+        cUnit &target = game.getUnit(i);
         if (target.isValid() && i != iID) {
             if (pPlayer->isSameTeamAs(target.getPlayer()))
                 continue;
@@ -1553,7 +1553,7 @@ void cUnit::thinkFast_move_airUnit()
                         else {
                             // find a new spot
                             updateCellXAndY();
-                            setGoalCell(findNewDropLocation(game.getUnits()[iUnitID].iType, iCell));
+                            setGoalCell(findNewDropLocation(game.getUnit(iUnitID).iType, iCell));
                             iBringTarget = iGoalCell;
                             return;
                         }
@@ -1804,7 +1804,7 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
 cUnit &cUnit::getUnitToPickupOrDrop() const
 {
     assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
-    return game.getUnits()[iUnitID];
+    return game.getUnit(iUnitID);
 }
 
 cAbstractStructure *cUnit::getStructureUnitWantsToEnter() const
@@ -1865,7 +1865,7 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
     }
     else if (transferType == eTransferType::PICKUP && iuID > -1) {
         // the carryall must pickup the unit, and then bring it to the iBring stuff
-        cUnit &pUnit = game.getUnits()[iuID];
+        cUnit &pUnit = game.getUnit(iuID);
         if (pUnit.isValid()) {
             m_transferType = transferType;
 
@@ -1918,7 +1918,7 @@ void cUnit::shoot(int iTargetCell)
 
     cUnit *attackUnit = nullptr;
     if (iAttackUnit > -1) {
-        attackUnit = &game.getUnits()[iAttackUnit];
+        attackUnit = &game.getUnit(iAttackUnit);
         if (attackUnit && !attackUnit->isValid()) {
             // allowing homing bullets towards air units from the ground
             if (iBull > -1 && attackUnit->isAirbornUnit()) {
@@ -1968,7 +1968,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     }
 
     if (iShotUnit > -1) {
-        cUnit &unitWhoShotMe = game.getUnits()[iShotUnit];
+        cUnit &unitWhoShotMe = game.getUnit(iShotUnit);
         if (unitWhoShotMe.getPlayer()->isSameTeamAs(getPlayer())) return; // ignore friendly fire
 
         bool unitWhoShotMeIsInfantry = unitWhoShotMe.isInfantryUnit();
@@ -1984,9 +1984,9 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
         }
 
         if (!getPlayer()->isHuman()) {
-            int unitCellWhichShotMe = game.getUnits()[iShotUnit].iCell;
+            int unitCellWhichShotMe = game.getUnit(iShotUnit).iCell;
             if (isHarvester()) {
-                if (game.getUnits()[iShotUnit].isInfantryUnit() && !isMovingBetweenCells()) {
+                if (game.getUnit(iShotUnit).isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
                     move_to(unitCellWhichShotMe);
                 }
@@ -2035,7 +2035,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                     if (iDestCell < 0) {
                         if (iAttackUnit > -1)
-                            iDestCell = game.getUnits()[iAttackUnit].iCell;
+                            iDestCell = game.getUnit(iAttackUnit).iCell;
 
                         if (iAttackStructure > -1) {
                             cAbstractStructure *pStructure = g_pStructure[iAttackStructure];
@@ -2121,7 +2121,7 @@ void cUnit::think_attack()
 
     cUnit *attackUnit = nullptr;
     if (iAttackUnit > -1) {
-        attackUnit = &game.getUnits()[iAttackUnit];
+        attackUnit = &game.getUnit(iAttackUnit);
 
         // should be impossible
         if (!attackUnit) {
@@ -2245,7 +2245,7 @@ void cUnit::think_attack_sandworm()
         return;
     }
 
-    cUnit *attackUnit = &game.getUnits()[iAttackUnit];
+    cUnit *attackUnit = &game.getUnit(iAttackUnit);
 
     // should be impossible
     if (!attackUnit) {
@@ -2320,7 +2320,7 @@ void cUnit::startChasingTarget()
 //        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     }
     else if (iAttackUnit > -1) {
-        cUnit *attackUnit = &game.getUnits()[iAttackUnit];
+        cUnit *attackUnit = &game.getUnit(iAttackUnit);
         // chase unit, but only when ground unit
         if (!attackUnit->isAirbornUnit()) {
             setAction(eActionType::CHASE);
@@ -2581,7 +2581,7 @@ void cUnit::thinkFast_move()
         bOccupied = true;
         // unless... it is an enemy infantry unit and I can squish stuff
         if (canSquishInfantry()) {
-            cUnit &unitAtCell = game.getUnits()[iUID];
+            cUnit &unitAtCell = game.getUnit(iUID);
             if (unitAtCell.isValid() &&
                     unitAtCell.iPlayer != iPlayer && // enemy player?
                     unitAtCell.isInfantryUnit() // squishable?
@@ -2709,7 +2709,7 @@ void cUnit::thinkFast_move()
             int uID = idOfUnitAtNextCell;
 
             // Wait when the obstacle is moving, perhaps it will clear our way
-            cUnit &unitOccupyingNextCell = game.getUnits()[uID];
+            cUnit &unitOccupyingNextCell = game.getUnit(uID);
             if (unitOccupyingNextCell.isValid() &&
                     unitOccupyingNextCell.TIMER_movewait <= 0 &&
                     unitOccupyingNextCell.iGoalCell != unitOccupyingNextCell.iCell) {
@@ -2917,7 +2917,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // when we are chasing, we now set on attack...
         if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            cUnit *attackUnit = &game.getUnits()[iAttackUnit];
+            cUnit *attackUnit = &game.getUnit(iAttackUnit);
             if (attackUnit && attackUnit->isValid()) {
                 setAction(eActionType::ATTACK_CHASE);
                 if (attackUnit->getCell() != iGoalCell) {
@@ -2946,7 +2946,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // iterate over all units)
         if (canSquishInfantry()) {
             for (int iq = 0; iq < MAX_UNITS; iq++) {
-                cUnit &potentialDeadUnit = game.getUnits()[iq];
+                cUnit &potentialDeadUnit = game.getUnit(iq);
                 if (iq == iID) continue; // skip self
                 if (!potentialDeadUnit.isValid()) continue;
                 if (potentialDeadUnit.iCell != iCell) continue; // not on my cell
@@ -3341,7 +3341,7 @@ bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *c
         return false;
     }
 
-    cUnit &carryAll = game.getUnits()[r];
+    cUnit &carryAll = game.getUnit(r);
     carryAll.carryAll_transferUnitTo(iID, destCell);
 
     // todo: "getCellWhereToBringUnit"? where to enter structure so to speak?
@@ -3440,7 +3440,7 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
             auto originId = -1;
             auto originCell = -1;
             if (unitWhoDealsDamage > -1) {
-                cUnit &pUnit = game.getUnits()[unitWhoDealsDamage];
+                cUnit &pUnit = game.getUnit(unitWhoDealsDamage);
                 if (pUnit.isValid()) {
                     originType = eBuildType::UNIT;
                     originId = unitWhoDealsDamage;
@@ -3510,7 +3510,7 @@ void cUnit::thinkFast_guard_sandworm()
     int unitIdToAttack = -1;
 
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &potentialDinner = game.getUnits()[i];
+        cUnit &potentialDinner = game.getUnit(i);
         if (i == iID) continue;
         if (!potentialDinner.isValid()) continue;
         if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
@@ -3526,7 +3526,7 @@ void cUnit::thinkFast_guard_sandworm()
     }
 
     if (unitIdToAttack > -1) {
-        cUnit &unitToAttack = game.getUnits()[unitIdToAttack];
+        cUnit &unitToAttack = game.getUnit(unitIdToAttack);
 
         if (unitToAttack.isValid()) {
 //            s_GameEvent event{
@@ -3562,7 +3562,7 @@ int cUnit::findNearbyGroundUnitToAttack(int range)
 
     for (int i = 0; i < MAX_UNITS; i++) {
         if (i == iID) continue; // skip self
-        cUnit &potentialThreat = game.getUnits()[i];
+        cUnit &potentialThreat = game.getUnit(i);
         if (!potentialThreat.isValid()) continue;
         if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
         if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
@@ -3587,7 +3587,7 @@ int cUnit::findNearbyAirUnitToAttack(int range)
 
     for (int i = 0; i < MAX_UNITS; i++) {
         if (i == iID) continue; // skip self
-        cUnit &potentialThreat = game.getUnits()[i];
+        cUnit &potentialThreat = game.getUnit(i);
         if (!potentialThreat.isValid()) continue;
         if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
         if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
@@ -3864,7 +3864,7 @@ bool cUnit::canUnload()
 int UNIT_NEW()
 {
     for (int i = 0; i < MAX_UNITS; i++)
-        if (!game.getUnits()[i].isValid())
+        if (!game.getUnit(i).isValid())
             return i;
 
     return -1; // NONE
@@ -3942,7 +3942,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
         return -1;
     }
 
-    cUnit &newUnit = game.getUnits()[iNewId];
+    cUnit &newUnit = game.getUnit(iNewId);
     newUnit.init(iNewId);
 
     newUnit.setCell(iCll);
@@ -3979,7 +3979,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
         if (iF > -1) {
             newUnit.log("Order move #2");
-            game.getUnits()[iNewId].move_to(iF);
+            game.getUnit(iNewId).move_to(iF);
         }
     }
 
@@ -4052,7 +4052,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
         return -99; // Wut!?
     }
 
-    cUnit &pUnit = game.getUnits()[iUnitId];
+    cUnit &pUnit = game.getUnit(iUnitId);
     if (!pUnit.isValid() || pUnit.isDead()) {
         return -99; // for now...
     }
@@ -4238,7 +4238,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits)
                                 }
                             }
 
-                            cUnit &unitAtCell = game.getUnits()[iUID];
+                            cUnit &unitAtCell = game.getUnit(iUID);
                             if (!unitAtCell.getPlayer()->isSameTeamAs(pUnit.getPlayer())) {
                                 // allow running over enemy infantry/squishable units
                                 if (unitAtCell.isInfantryUnit() &&
@@ -4557,7 +4557,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = global_map.getCellType(cll);
-                    if (sUnitInfo[game.getUnits()[iID].iType].infantry) {
+                    if (sUnitInfo[game.getUnit(iID).iType].infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }
@@ -4590,7 +4590,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
 int UNIT_find_harvest_spot(int id)
 {
     // finds the closest harvest spot
-    cUnit &cUnit = game.getUnits()[id];
+    cUnit &cUnit = game.getUnit(id);
     cUnit.updateCellXAndY();
     int cx = cUnit.getCellX();
     int cy = cUnit.getCellY();
@@ -4668,7 +4668,7 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
 {
     // find a free carry all
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = game.getUnits()[i];
+        cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != iPlayer) continue;
         if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
@@ -4688,9 +4688,9 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
  */
 int CARRYALL_TRANSFER(int iuID, int iGoal)
 {
-    int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(game.getUnits()[iuID].iPlayer);
+    int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(game.getUnit(iuID).iPlayer);
     if (carryAllUnitId > -1) {
-        cUnit &cUnit = game.getUnits()[carryAllUnitId];
+        cUnit &cUnit = game.getUnit(carryAllUnitId);
         cUnit.carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
     }
     return carryAllUnitId;
@@ -4703,7 +4703,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
         return -1;
     }
 
-    cUnit &cUnit = game.getUnits()[iUnit];
+    cUnit &cUnit = game.getUnit(iUnit);
 
     cUnit.updateCellXAndY();
     int iStartX = cUnit.getCellX();
