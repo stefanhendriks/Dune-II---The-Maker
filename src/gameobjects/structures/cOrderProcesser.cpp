@@ -253,13 +253,13 @@ void cOrderProcesser::sendFrigate()
             int d = fDegrees(iCellX, iCellY, cx, cy);
             int f = faceAngle(d); // get the angle
 
-            g_Units[unitId].iBodyShouldFace = f;
-            g_Units[unitId].iBodyFacing = f;
-            g_Units[unitId].iHeadShouldFace = f;
-            g_Units[unitId].iHeadFacing = f;
+            game.getUnits()[unitId].iBodyShouldFace = f;
+            game.getUnits()[unitId].iBodyFacing = f;
+            game.getUnits()[unitId].iHeadShouldFace = f;
+            game.getUnits()[unitId].iHeadFacing = f;
 
             // STEP 3: assign order to frigate (use carryall order function)
-            g_Units[unitId].carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
+            game.getUnits()[unitId].carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
             unitIdOfFrigateSent = unitId;
             frigateSent = true;
         }

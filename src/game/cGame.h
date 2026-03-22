@@ -23,6 +23,7 @@
 #include "player/cPlayers.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/units/cUnits.h"
 
 #include <memory>
 #include <string>
@@ -231,6 +232,9 @@ public:
     cPlayer& getPlayer(int index);
     const cPlayer& getPlayer(int index) const;
 
+    cUnits& getUnits();
+    const cUnits& getUnits() const;
+
     cParticles& getParticles();
     const cParticles& getParticles() const;
 
@@ -277,6 +281,7 @@ private:
     cPlayers m_Players;
     cParticles m_particles;
     cParticleInfos m_particleInfos;
+    cUnits m_Units;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 

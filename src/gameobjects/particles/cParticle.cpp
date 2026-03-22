@@ -93,7 +93,7 @@ int cParticle::draw_y() const {
 void cParticle::think_position()
 {
     if (boundUnitID > -1) {
-        cUnit &pUnit = g_Units[boundUnitID];
+        cUnit &pUnit = game.getUnits()[boundUnitID];
         if (!pUnit.isValid()) {
             bindToUnit(-1);
         }
@@ -771,7 +771,7 @@ void cParticle::think_new()
 void cParticle::bindToUnit(int unitID)
 {
     if (boundUnitID > -1) {
-        cUnit &pUnit = g_Units[boundUnitID];
+        cUnit &pUnit = game.getUnits()[boundUnitID];
         if (pUnit.isValid()) {
             pUnit.setBoundParticleId(-1);
         }

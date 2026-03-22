@@ -183,7 +183,7 @@ void cGame::init()
     initPlayers(false);
 
     for (int i = 0; i < MAX_UNITS; i++) {
-        g_Units[i].init(i);
+        m_Units[i].init(i);
     }
 
     for (int i = 0; i < getParticles().size(); i++) {
@@ -1586,7 +1586,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                g_Units[idOfUnitAtCell].die(true, false);
+                m_Units[idOfUnitAtCell].die(true, false);
             }
 
             int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
@@ -1596,12 +1596,12 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                g_Units[idOfUnitAtCell].die(false, false);
+                m_Units[idOfUnitAtCell].die(false, false);
             }
 
             idOfUnitAtCell = global_map.getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                g_Units[idOfUnitAtCell].die(false, false);
+                m_Units[idOfUnitAtCell].die(false, false);
             }
         }
     }
@@ -1612,7 +1612,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = g_Units[idOfUnitAtCell];
+                cUnit &pUnit = m_Units[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
                     pUnit.takeDamage(damageToTake, -1, -1);
@@ -1633,7 +1633,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         // kill all carry-all's
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = g_Units[unitId];
+            cUnit &pUnit = m_Units[unitId];
             pUnit.die(true, false);
         }
     }
@@ -1684,6 +1684,16 @@ cPlayers& cGame::getPlayers()
 const cPlayers& cGame::getPlayers() const
 {
     return m_Players;
+}
+
+cUnits& cGame::getUnits()
+{
+    return m_Units;
+}
+
+const cUnits& cGame::getUnits() const
+{
+    return m_Units;
 }
 
 cPlayer& cGame::getPlayer(int index)

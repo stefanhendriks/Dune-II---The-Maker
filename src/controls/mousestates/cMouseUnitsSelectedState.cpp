@@ -140,7 +140,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
                  m_state == SELECTED_STATE_MOVE) {
 
             for (auto id: m_selectedUnits) {
-                cUnit &pUnit = g_Units[id];
+                cUnit &pUnit = game.getUnits()[id];
                 if (m_state == SELECTED_STATE_REPAIR) {
                     // only send units that are eligible for repair to facility
                     if (pUnit.isEligibleForRepair()) {
@@ -167,7 +167,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         }
         else if (m_state == SELECTED_STATE_ATTACK || m_state == SELECTED_STATE_FORCE_ATTACK) {
             for (auto id: m_selectedUnits) {
-                cUnit &pUnit = g_Units[id];
+                cUnit &pUnit = game.getUnits()[id];
                 if (pUnit.isHarvester()) {
                     continue;
                 }
@@ -185,7 +185,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         else if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
             const int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
-                cUnit &pUnit = g_Units[hoverUnitId];
+                cUnit &pUnit = game.getUnits()[hoverUnitId];
                 if (pUnit.getPlayer() == m_player) {
                     auto ids = m_player->getSelectedUnits();
                     auto position = std::find(ids.begin(), ids.end(), hoverUnitId);
@@ -301,7 +301,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
     if (unitsWhichCanAttackSelected) {
         int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
         if (hoverUnitId > -1) {
-            cUnit &pUnit = g_Units[hoverUnitId];
+            cUnit &pUnit = game.getUnits()[hoverUnitId];
             if (pUnit.isValid()) {
                 if (!pUnit.getPlayer()->isSameTeamAs(m_player)) {
                     mouseTile = MOUSE_ATTACK;
@@ -334,7 +334,7 @@ void cMouseUnitsSelectedState::updateSelectedUnitsState()
     m_infantrySelected = false;
     m_repairableUnitsSelected = false;
     for (auto id: m_selectedUnits) {
-        cUnit &pUnit = g_Units[id];
+        cUnit &pUnit = game.getUnits()[id];
         if (pUnit.isHarvester()) {
             m_harvestersSelected = true;
             m_repairableUnitsSelected = true;
@@ -362,9 +362,9 @@ void cMouseUnitsSelectedState::evaluateSelectedUnits()
             m_selectedUnits.begin(),
             m_selectedUnits.end(),
     [this](int id) {
-        return !g_Units[id].isValid() || // no (longer) valid
-               !g_Units[id].belongsTo(m_player) || // no longer belongs to player
-               g_Units[id].isHidden(); // hidden (entered structure, etc). Forget it then.
+        return !game.getUnits()[id].isValid() || // no (longer) valid
+               !game.getUnits()[id].belongsTo(m_player) || // no longer belongs to player
+               game.getUnits()[id].isHidden(); // hidden (entered structure, etc). Forget it then.
     }),
     m_selectedUnits.end()
     );
@@ -418,7 +418,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         if (!m_mouse->isBoxSelecting()) {
             int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
-                cUnit &pUnit = g_Units[hoverUnitId];
+                cUnit &pUnit = game.getUnits()[hoverUnitId];
                 if (pUnit.getPlayer() == m_player) {
                     mouseTile = MOUSE_PICK;
                 }
@@ -480,7 +480,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
     if (event.hasKey(SDL_SCANCODE_D)) {
         const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
         for (auto &id : selectedUnits) {
-            cUnit &pUnit = g_Units[id];
+            cUnit &pUnit = game.getUnits()[id];
             if (pUnit.isHarvester() && pUnit.canUnload()) {
                 pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
             }

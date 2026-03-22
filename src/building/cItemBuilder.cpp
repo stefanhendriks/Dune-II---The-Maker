@@ -244,7 +244,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     if (unitId > -1) {
                         int rallyPoint = pStructureToDeploy->getRallyPoint();
                         if (rallyPoint > -1) {
-                            g_Units[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                            game.getUnits()[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
                         }
                     }
                 }
@@ -414,7 +414,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             if (unitId > -1) {
                 int rallyPoint = pStructureToDeploy->getRallyPoint();
                 if (rallyPoint > -1) {
-                    g_Units[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                    game.getUnits()[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
                 }
             }
         }
