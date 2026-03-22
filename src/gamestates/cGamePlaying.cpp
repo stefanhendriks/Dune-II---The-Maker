@@ -69,7 +69,7 @@ void cGamePlaying::thinkFast()
     game.reduceShaking();
 
     // units think (move only)
-    for (cUnit &cUnit : g_Unit) {
+    for (cUnit &cUnit : g_Units) {
         if (!cUnit.isValid()) continue;
         cUnit.thinkFast();
     }
@@ -91,7 +91,7 @@ void cGamePlaying::thinkNormal()
 {
         // units think
         for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &cUnit = g_Unit[i];
+            cUnit &cUnit = g_Units[i];
             if (cUnit.isValid()) {
                 cUnit.think();
             }
@@ -293,7 +293,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
     if (event.hasKey(SDL_SCANCODE_D)) {
         for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &u = g_Unit[i];
+            cUnit &u = g_Units[i];
             if (u.bSelected && u.iType == MCV && u.getPlayer()->isHuman()) {
                 bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
                 if (canPlace) {
@@ -382,7 +382,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                g_Unit[idOfUnitAtCell].die(true, false);
+                g_Units[idOfUnitAtCell].die(true, false);
             }
 
             int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
@@ -392,7 +392,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                g_Unit[idOfUnitAtCell].die(false, false);
+                g_Units[idOfUnitAtCell].die(false, false);
             }
         }
     }
@@ -403,7 +403,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = g_Unit[idOfUnitAtCell];
+                cUnit &pUnit = g_Units[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
                     pUnit.takeDamage(damageToTake, -1, -1);
@@ -422,7 +422,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         // kill all carry-all's
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = g_Unit[unitId];
+            cUnit &pUnit = g_Units[unitId];
             pUnit.die(true, false);
         }
     }

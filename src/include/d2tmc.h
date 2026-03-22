@@ -68,7 +68,7 @@ extern cStructureUtils structureUtils;
 extern cDrawManager    *global_drawManager;
 extern SDLDrawer       *global_renderDrawer;
 
-extern cUnits    g_Unit;
+extern cUnits    g_Units;
 extern cMapCamera	    *global_mapCamera;
 
 extern cBullets       g_Bullets;

@@ -389,7 +389,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 {
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
-    for (auto &pUnit : g_Unit) {
+    for (auto &pUnit : g_Units) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.bSelected) {
@@ -408,7 +408,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = g_Unit[i];
+        cUnit &pUnit = g_Units[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
@@ -425,7 +425,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = g_Unit[i];
+        cUnit &pUnit = g_Units[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
@@ -451,7 +451,7 @@ int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
 {
     int count = 0;
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = g_Unit[i];
+        cUnit &cUnit = g_Units[i];
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != this->getId()) continue;
         if (std::find(unitTypes.begin(), unitTypes.end(), cUnit.iType) != unitTypes.end()) {
@@ -1352,7 +1352,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
     int maxTargets = 0;
 
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = g_Unit[i];
+        cUnit &cUnit = g_Units[i];
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
@@ -1783,7 +1783,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 
             int idOfUnitAtCell = global_map.getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
-                if (g_Unit[idOfUnitAtCell].isValid() && g_Unit[idOfUnitAtCell].getPlayer() != this) {
+                if (g_Units[idOfUnitAtCell].isValid() && g_Units[idOfUnitAtCell].getPlayer() != this) {
                     foundUnitFromOtherPlayerThanMe = true;
                 }
                 if (iUnitIDToIgnore > -1) {
@@ -1849,7 +1849,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
     // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
     bool triggerMusic = false;
     if (event.entityType == eBuildType::UNIT) {
-        cUnit &pUnit = g_Unit[event.entityID];
+        cUnit &pUnit = g_Units[event.entityID];
         bool detectedEntityIsHuman = pUnit.getPlayer()->isHuman();
 
         // unit discovered is NOT the same team, so enemy detected / music trigger
@@ -1984,7 +1984,7 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
 
 void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
 {
-    cUnit &pUnit = g_Unit[event.entityID];
+    cUnit &pUnit = g_Units[event.entityID];
 
     // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
     // player
@@ -2054,7 +2054,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
     std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
     for (auto &unitId : ids) {
-        cUnit aUnit = g_Unit[unitId];
+        cUnit aUnit = g_Units[unitId];
         double dist = global_map.distance(aUnit.getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
@@ -2109,7 +2109,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = g_Unit[i];
+        cUnit &pUnit = g_Units[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead() && !pUnit.isHidden()) continue; // hidden units play "dead" :/
         if (!pUnit.belongsTo(this)) continue;
@@ -2146,7 +2146,7 @@ bool cPlayer::evaluateStillAlive()
     if (!alive) {
         // check units now
         for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &pUnit = g_Unit[i];
+            cUnit &pUnit = g_Units[i];
             if (!pUnit.isValid()) continue;
             if (pUnit.isAirbornUnit()) continue; // do not count airborn units
             if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
@@ -2190,7 +2190,7 @@ std::vector<int> cPlayer::getSelectedUnits() const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = g_Unit[i];
+        cUnit &cUnit = g_Units[i];
         if (!cUnit.isValid()) continue;
         if (!cUnit.belongsTo(this)) continue;
         if (cUnit.bSelected) {
@@ -2221,20 +2221,20 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
 
     // check if there is a harvester in this group
     auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) {
-        return g_Unit[id].isHarvester();
+        return g_Units[id].isHarvester();
     });
     bool hasHarvesterSelected = position != ids.end();
 
     position = std::find_if(ids.begin(), ids.end(),
     [&](const int &id) {
-        return !g_Unit[id].isHarvester() && !g_Unit[id].isAirbornUnit();
+        return !g_Units[id].isHarvester() && !g_Units[id].isAirbornUnit();
     });
     bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
 
     if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
         // select all the harvester units, skip airborn
         for (auto id: ids) {
-            cUnit &pUnit = g_Unit[id];
+            cUnit &pUnit = g_Units[id];
             if (pUnit.isAirbornUnit()) continue;
             if (!pUnit.isHarvester()) continue;
             // only check if it has not been selected, so we only play sound when we truly select a new unit.
@@ -2247,7 +2247,7 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     else {
         // select all the non-harvester, non-airborn units
         for (auto id: ids) {
-            cUnit &pUnit = g_Unit[id];
+            cUnit &pUnit = g_Units[id];
             if (pUnit.isAirbornUnit()) continue;
             if (pUnit.isHarvester()) continue;
             // only check if it has not been selected, so we only play sound when we truly select a new unit.
@@ -2294,7 +2294,7 @@ void cPlayer::thinkSlow()
 
 void cPlayer::deselectUnit(const int &unitId)
 {
-    g_Unit[unitId].bSelected = false;
+    g_Units[unitId].bSelected = false;
 }
 
 void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
