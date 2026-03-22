@@ -26,6 +26,7 @@
 #include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/units/cUnits.h"
 
 #include <memory>
 #include <array>
@@ -47,6 +48,7 @@ class cBullet;
 class cDrawManager;
 class cMapCamera;
 class cUnit;
+class cUnits;
 class cParticle;
 class cPlayer;
 class cPlayers;
@@ -66,7 +68,7 @@ extern cStructureUtils structureUtils;
 extern cDrawManager    *global_drawManager;
 extern SDLDrawer       *global_renderDrawer;
 
-extern cUnit          g_Unit[MAX_UNITS];
+extern cUnits    g_Unit;
 extern cMapCamera	    *global_mapCamera;
 
 extern cBullets       g_Bullets;
