@@ -40,7 +40,7 @@ cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*global_mapCamera;
 
-cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
+cStructures g_pStructure;
 
 
 cBullets                    g_Bullets;

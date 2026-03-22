@@ -26,7 +26,7 @@
 #include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/units/cUnits.h"
+#include "gameobjects/structures/cStructures.h"
 
 #include <memory>
 #include <array>
@@ -63,7 +63,7 @@ struct SDL_Surface;
 // game
 extern cGame		  game;
 extern cMap       global_map;
-extern cAbstractStructure     *g_pStructure[MAX_STRUCTURES];
+extern cStructures g_pStructure;
 extern cStructureUtils structureUtils;
 extern cDrawManager    *global_drawManager;
 extern SDLDrawer       *global_renderDrawer;
