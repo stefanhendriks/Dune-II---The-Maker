@@ -48,6 +48,8 @@ std::string getLogComponentString(eLogComponent component)
             return "BUILDING_LIST_UPDATER";
         case COMP_MAP:
             return "MAP";
+        case COMP_GAMEOBJECTS:
+            return "GAMEOBJECTS";
         case COMP_SIDEBAR:
             return "SIDEBAR";
         case COMP_NONE:

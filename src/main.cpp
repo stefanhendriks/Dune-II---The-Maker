@@ -26,6 +26,7 @@
 
 #include "utils/cHandleArgument.h"
 #include "utils/common.h"
+#include "gameobjects/units/cUnits.h"
 #include <string>
 
 #include <iostream>
@@ -40,7 +41,7 @@ SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*global_mapCamera;
 
 cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
-cUnit          				g_Unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
+cUnits                      g_Unit;                           // units in the game (max MAX_UNITS amount)
 
 
 cBullets                    g_Bullets;
