@@ -23,6 +23,7 @@
 #include "map/cMap.h"
 #include "player/cPlayers.h"
 #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/units/cUnits.h"
 
@@ -247,6 +248,9 @@ public:
     cMap& getMap();
     const cMap& getMap() const;
 
+    cStructures& getStructures();
+    const cStructures& getStructures() const;
+
 private:
     /**
      * Variables start here
@@ -287,6 +291,7 @@ private:
     cPlayers m_Players;
     cParticles m_particles;
     cParticleInfos m_particleInfos;
+    cStructures m_pStructures;
     cUnits m_Units;
     cMap m_map;
 

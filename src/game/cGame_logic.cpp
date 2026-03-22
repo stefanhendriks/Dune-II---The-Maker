@@ -1177,7 +1177,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
             // from where
             int structureId = structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
             if (structureId > -1) {
-                cAbstractStructure *pStructure = g_pStructures[structureId];
+                cAbstractStructure *pStructure = game.getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {
                     m_soundPlayer->playSound(SOUND_PLACE);
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
@@ -1591,7 +1591,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             int idOfStructureAtCell = game.getMap().getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
-                g_pStructures[idOfStructureAtCell]->die();
+                game.getStructures()[idOfStructureAtCell]->die();
             }
 
             idOfUnitAtCell = game.getMap().getCellIdWormsLayer(mc);
@@ -1749,6 +1749,16 @@ const cParticleInfos& cGame::getParticleInfos() const
 int cGame::getCurrentState() const
 {
     return m_state;
+}
+
+cStructures& cGame::getStructures()
+{
+    return m_pStructures;
+}
+
+const cStructures& cGame::getStructures() const
+{
+    return m_pStructures;
 }
 
 void cGame::drawTextFps() const
