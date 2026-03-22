@@ -26,7 +26,7 @@ bool cPlayerBrainMissionKindSaboteur::think_SelectTarget()
 
     // TODO: based on priority?
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = g_pStructure[i];
+        cAbstractStructure *theStructure = g_pStructures[i];
         if (!theStructure) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
@@ -50,7 +50,7 @@ void cPlayerBrainMissionKindSaboteur::think_Execute()
     }
 
     if (targetStructureID > -1) {
-        cAbstractStructure *pStructure = g_pStructure[targetStructureID];
+        cAbstractStructure *pStructure = g_pStructures[targetStructureID];
         assert(pStructure != nullptr);
         if (pStructure->isValid()) {
             const std::vector<int> &units = mission->getUnits();

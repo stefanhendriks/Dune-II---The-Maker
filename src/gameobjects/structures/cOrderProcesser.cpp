@@ -227,8 +227,8 @@ void cOrderProcesser::sendFrigate()
 
     if (structureId > -1) {
         // found structure
-        g_pStructure[structureId]->setAnimating(true);
-        int destinationCell = g_pStructure[structureId]->getCell();
+        g_pStructures[structureId]->setAnimating(true);
+        int destinationCell = g_pStructures[structureId]->getCell();
 
         int iStartCell = global_map.findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 

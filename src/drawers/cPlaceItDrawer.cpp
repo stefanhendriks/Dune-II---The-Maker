@@ -76,7 +76,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
-                    if (g_pStructure[iID]->getOwner() == HUMAN) {
+                    if (g_pStructures[iID]->getOwner() == HUMAN) {
                         bWithinBuildDistance = true; // connection!
                         break;
                     }

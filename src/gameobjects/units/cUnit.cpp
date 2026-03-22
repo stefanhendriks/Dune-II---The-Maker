@@ -217,7 +217,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     }
 
     if (iStructureID > -1) {
-        cAbstractStructure *pStructure = g_pStructure[iStructureID];
+        cAbstractStructure *pStructure = g_pStructures[iStructureID];
         if (pStructure && pStructure->isValid()) {
             // TODO: Use events, and let structure deal with this themselves!
         }
@@ -372,7 +372,7 @@ void cUnit::createExplosionParticle()
                     // structure hit!
                     int id = idOfStructureAtCell;
 
-                    cAbstractStructure *pStructure = g_pStructure[id];
+                    cAbstractStructure *pStructure = g_pStructures[id];
                     assert(pStructure);
                     if (pStructure->getHitPoints() > 0) {
 
@@ -836,7 +836,7 @@ void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
 void cUnit::attackStructure(int targetStructure)
 {
     log(std::format("attackStructure() : target is [{}]", targetStructure));
-    attack(g_pStructure[targetStructure]->getCell(), -1, targetStructure, -1, true);
+    attack(g_pStructures[targetStructure]->getCell(), -1, targetStructure, -1, true);
 }
 
 void cUnit::attackCell(int cell)
@@ -931,7 +931,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     iStructureID = iStructureIdToEnter;
 
     if (iStructureIdToEnter > -1) {
-        cAbstractStructure *pStructure = g_pStructure[iStructureIdToEnter];
+        cAbstractStructure *pStructure = g_pStructures[iStructureIdToEnter];
         if (!pStructure->hasUnitHeadingTowards() && !pStructure->hasUnitWithin()) {
             pStructure->unitHeadsTowardsStructure(iID);
         }
@@ -1279,7 +1279,7 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
         int iTarget = -1;
 
         for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *pStructure = g_pStructure[i];
+            cAbstractStructure *pStructure = g_pStructures[i];
             if (!pStructure) continue;
             if (!pStructure->isValid()) continue;
 
@@ -1578,9 +1578,9 @@ void cUnit::thinkFast_move_airUnit()
                     setGoalCell(iFindCloseBorderCell(iCell));
                     m_transferType = eTransferType::DIE;
 
-                    g_pStructure[iStrucId]->setFrame(4); // show package on this structure
-                    g_pStructure[iStrucId]->setAnimating(true); // keep animating
-                    dynamic_cast<cStarPort *>(g_pStructure[iStrucId])->setFrigateDroppedPackage(true);
+                    g_pStructures[iStrucId]->setFrame(4); // show package on this structure
+                    g_pStructures[iStrucId]->setAnimating(true); // keep animating
+                    dynamic_cast<cStarPort *>(g_pStructures[iStrucId])->setFrigateDroppedPackage(true);
                 }
                 else {
                     // we don't expect this to go wrong :/
@@ -1811,7 +1811,7 @@ cAbstractStructure *cUnit::getStructureUnitWantsToEnter() const
 {
     cAbstractStructure *structureUnitWantsToEnter = nullptr;
     if (iStructureID > -1) {
-        structureUnitWantsToEnter = g_pStructure[iStructureID];
+        structureUnitWantsToEnter = g_pStructures[iStructureID];
         if (structureUnitWantsToEnter && !structureUnitWantsToEnter->isValid()) {
             structureUnitWantsToEnter = nullptr;
         }
@@ -2038,7 +2038,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                             iDestCell = game.getUnit(iAttackUnit).iCell;
 
                         if (iAttackStructure > -1) {
-                            cAbstractStructure *pStructure = g_pStructure[iAttackStructure];
+                            cAbstractStructure *pStructure = g_pStructures[iAttackStructure];
                             // it can become null, so check!
                             if (pStructure && pStructure->isValid()) {
                                 iDestCell = pStructure->getCell();
@@ -2140,7 +2140,7 @@ void cUnit::think_attack()
 
     cAbstractStructure *pStructure = nullptr;
     if (iAttackStructure > -1) {
-        pStructure = g_pStructure[iAttackStructure];
+        pStructure = g_pStructures[iAttackStructure];
         if (pStructure && pStructure->isValid()) {
             setGoalCell(pStructure->getCell());
         }
@@ -2602,7 +2602,7 @@ void cUnit::thinkFast_move()
         else if (iStructureID > -1) {
             if (iStructureID == idOfStructureAtNextCell) {
                 // it is the structure this unit intents to go to...
-                cAbstractStructure *pStructure = g_pStructure[iStructureID];
+                cAbstractStructure *pStructure = g_pStructures[iStructureID];
                 // we may enter, only if its empty
                 if (pStructure && pStructure->isValid()) {
                     // repair/spice unloading structures can only 'contain' ONE unit. So if it is occupied, find another.
@@ -2742,7 +2742,7 @@ void cUnit::thinkFast_move()
             // we wanted to enter this structure
             if (iStructureID > -1 &&
                     idOfStructureAtCurrentCell > -1 && idOfStructureAtCurrentCell == iStructureID) {
-                cAbstractStructure *pStructure = g_pStructure[iStructureID];
+                cAbstractStructure *pStructure = g_pStructures[iStructureID];
                 if (pStructure && pStructure->isValid()) {
                     if (intent == eUnitActionIntent::INTENT_REPAIR ||
                             intent == eUnitActionIntent::INTENT_UNLOAD_SPICE) {
@@ -3110,7 +3110,7 @@ void cUnit::move_to(int iGoalCell)
     }
 
     if (structureID > -1) {
-        cAbstractStructure *pStructure = g_pStructure[structureID];
+        cAbstractStructure *pStructure = g_pStructures[structureID];
         if (pStructure && pStructure->isValid()) {
             bool friendlyStructure = getPlayer()->isSameTeamAs(pStructure->getPlayer());
             if (friendlyStructure) {
@@ -3448,7 +3448,7 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                 }
             }
             else if (structureWhoDealsDamage > -1) {
-                cAbstractStructure *pStructure = g_pStructure[structureWhoDealsDamage];
+                cAbstractStructure *pStructure = g_pStructures[structureWhoDealsDamage];
                 if (pStructure) { // can be NULL (destroyed after firing this bullet)
                     originId = structureWhoDealsDamage;
                     originType = eBuildType::STRUCTURE;
@@ -3617,7 +3617,7 @@ int cUnit::findNearbyStructureThatCanDamageUnitsToAttack(int range)
     int iDistance = 9999;
 
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = g_pStructure[i];
+        cAbstractStructure *pStructure = g_pStructures[i];
         if (!pStructure) continue;
         if (!pStructure->isValid()) continue;
         if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
@@ -3649,7 +3649,7 @@ int cUnit::findNearbyStructureToAttack(int range)
     int iDistance = 9999;
 
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = g_pStructure[i];
+        cAbstractStructure *pStructure = g_pStructures[i];
         if (!pStructure) continue;
         if (!pStructure->isValid()) continue;
         if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
@@ -3802,7 +3802,7 @@ void cUnit::retreatToNearbyBase()
         return;
     }
     const sEntityForDistance &closest = result[0];
-    cAbstractStructure *pStructure = g_pStructure[closest.entityId];
+    cAbstractStructure *pStructure = g_pStructures[closest.entityId];
     // use the 'drop location' function, as it will circle around a given cell until a valid cell is found
     int cellToRetreatTo = findNewDropLocation(iType, pStructure->getCell());
 
