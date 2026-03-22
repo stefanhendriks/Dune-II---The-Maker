@@ -288,7 +288,7 @@ void cGunTurret::think_guard()
         if (iTargetID > -1 && iTargetID != prevTarget) {
             cUnit &unitToAttack = game.getUnit(iTargetID);
             if (unitToAttack.isValid()) {
-                s_GameEvent event{
+                s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                     .entityType = eBuildType::UNIT,
                     .entityID = unitToAttack.iID,

@@ -492,7 +492,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                 int structureId = getCellIdStructuresLayer(cl);
                 if (structureId > -1) {
                     cAbstractStructure *pStructure = g_pStructure[structureId];
-                    s_GameEvent event{
+                    s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                         .entityType = eBuildType::STRUCTURE,
                         .entityID = structureId,
@@ -508,7 +508,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                 if (unitId > -1) {
                     cUnit &cUnit = game.getUnit(unitId);
                     if (cUnit.isValid()) {
-                        s_GameEvent event{
+                        s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                             .entityType = eBuildType::UNIT,
                             .entityID = unitId,
@@ -985,7 +985,7 @@ void cMap::createCell(int cell, int terrainType, int tile)
     else if (terrainType == TERRAIN_BLOOM) {
         cellChangeCredits(cell, -23);
 
-        s_GameEvent event{
+        s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED,
             .entityType = eBuildType::SPECIAL,
             .entityID = -1,
@@ -1502,7 +1502,7 @@ void cMap::detonateSpiceBloom(int cell)
     mapEditor.createRandomField(cell, TERRAIN_SPICE, size);
     game.shakeScreen(20);
 
-    s_GameEvent event{
+    s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
         .entityType = eBuildType::SPECIAL,
         .entityID = -1,
