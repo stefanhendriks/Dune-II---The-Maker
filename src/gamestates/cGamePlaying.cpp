@@ -189,7 +189,7 @@ void cGamePlaying::evaluatePlayerStatus()
             player.evaluateStillAlive();
 
             if (isAlive && !player.isAlive()) {
-                s_GameEvent event{
+                s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
                     .entityType = eBuildType::SPECIAL,
                     .entityID = -1,

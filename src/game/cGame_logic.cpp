@@ -912,7 +912,7 @@ void cGame::setState(int newState)
                     global_drawManager->init();
 
                     // handle update
-                    s_GameEvent event{
+                    s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
                     };
                     // the game is about to begin!
@@ -1183,7 +1183,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
-                    s_GameEvent event{
+                    s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
                         .entityType = itemToDeploy->getBuildType(),
                         .entityID = -1,
@@ -1213,7 +1213,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
     }
 
     // notify game that the item just has been finished!
-    s_GameEvent eventT{
+    s_GameEvent eventT {
         .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
         .entityType = itemToDeploy->getBuildType(),
         .entityID = -1,

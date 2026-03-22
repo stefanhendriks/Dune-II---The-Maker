@@ -1035,7 +1035,7 @@ void cUnit::thinkFast_guard()
         cUnit &unitToAttack = game.getUnit(unitIdToAttack);
 
         if (unitToAttack.isValid()) {
-//            s_GameEvent event{
+//            s_GameEvent event {
 //                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
 //                    .entityType = eBuildType::UNIT,
 //                    .entityID = unitToAttack.iID,
@@ -3529,7 +3529,7 @@ void cUnit::thinkFast_guard_sandworm()
         cUnit &unitToAttack = game.getUnit(unitIdToAttack);
 
         if (unitToAttack.isValid()) {
-//            s_GameEvent event{
+//            s_GameEvent event {
 //                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
 //                    .entityType = eBuildType::UNIT,
 //                    .entityID = unitToAttack.iID,
