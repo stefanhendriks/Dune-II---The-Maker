@@ -122,7 +122,7 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int structuresUsed = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = g_pStructure[i];
+        cAbstractStructure *pStructure = g_pStructures[i];
         if (pStructure) {
             structuresUsed++;
         }
@@ -161,7 +161,7 @@ void cDrawManager::drawRallyPoint()
 {
     cPlayer &humanPlayer = game.getPlayer(HUMAN);
     if (humanPlayer.selected_structure < 0) return;
-    cAbstractStructure *theStructure = g_pStructure[humanPlayer.selected_structure];
+    cAbstractStructure *theStructure = g_pStructures[humanPlayer.selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;

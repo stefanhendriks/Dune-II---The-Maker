@@ -1177,7 +1177,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
             // from where
             int structureId = structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
             if (structureId > -1) {
-                cAbstractStructure *pStructure = g_pStructure[structureId];
+                cAbstractStructure *pStructure = g_pStructures[structureId];
                 if (pStructure && pStructure->isValid()) {
                     m_soundPlayer->playSound(SOUND_PLACE);
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
@@ -1591,7 +1591,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
-                g_pStructure[idOfStructureAtCell]->die();
+                g_pStructures[idOfStructureAtCell]->die();
             }
 
             idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);

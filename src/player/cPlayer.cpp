@@ -745,7 +745,7 @@ std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType)
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *abstractStructure = g_pStructure[i];
+        cAbstractStructure *abstractStructure = g_pStructures[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
@@ -1135,7 +1135,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
     int iHeight = sStructureInfo[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     for (auto &id : allMyStructuresAsId) {
-        cAbstractStructure *aStructure = g_pStructure[id];
+        cAbstractStructure *aStructure = g_pStructures[id];
 
         // go around any structure, and try to find a cell where we can place a structure.
         int iStartX = global_map.getCellX(aStructure->getCell());
@@ -1389,9 +1389,9 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
     int iT = 0;
 
     for (int i = 0; i < MAX_STRUCTURES; i++)
-        if (g_pStructure[i])
-            if (g_pStructure[i]->getOwner() == iAttackPlayer)
-                if (global_map.isVisible(g_pStructure[i]->getCell(), this) ||
+        if (g_pStructures[i])
+            if (g_pStructures[i]->getOwner() == iAttackPlayer)
+                if (global_map.isVisible(g_pStructures[i]->getCell(), this) ||
                         game.m_skirmish) {
                     iTargets[iT] = i;
 
@@ -1871,7 +1871,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
         }
     }
     else if (event.entityType == eBuildType::STRUCTURE) {
-        cAbstractStructure *pStructure = g_pStructure[event.entityID];
+        cAbstractStructure *pStructure = g_pStructures[event.entityID];
         bool detectedEntityIsHuman = pStructure->getPlayer()->isHuman();
 
         // structure discovered is NOT the same team, so enemy detected / music trigger
@@ -2003,7 +2003,7 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
             reinforceHarvesterIfNeeded(pUnit.getCell());
 
             for (auto &structureId: refineries) {
-                cAbstractStructure *pStructure = g_pStructure[structureId];
+                cAbstractStructure *pStructure = g_pStructures[structureId];
                 pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
             }
         }
@@ -2073,7 +2073,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(in
     std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
     for (auto &structureId : ids) {
-        cAbstractStructure *pStructure = g_pStructure[structureId];
+        cAbstractStructure *pStructure = g_pStructures[structureId];
         double dist = global_map.distance(pStructure->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
@@ -2135,7 +2135,7 @@ bool cPlayer::evaluateStillAlive()
 {
     alive = false;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *abstractStructure = g_pStructure[i];
+        cAbstractStructure *abstractStructure = g_pStructures[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
@@ -2178,7 +2178,7 @@ void cPlayer::addNotification(const std::string &msg, eNotificationType type)
 cAbstractStructure *cPlayer::getSelectedStructure() const
 {
     if (selected_structure < 0) return nullptr;
-    return g_pStructure[selected_structure];
+    return g_pStructures[selected_structure];
 }
 
 void cPlayer::deselectStructure()

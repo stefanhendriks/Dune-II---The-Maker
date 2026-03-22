@@ -249,7 +249,7 @@ void cBullet::think_move()
             }
             else {
                 // do not hit own or allied structures
-                if (!g_pStructure[id]->getPlayer()->isSameTeamAs(getPlayer())) {
+                if (!g_pStructures[id]->getPlayer()->isSameTeamAs(getPlayer())) {
                     bHitsEnemyBuilding = true;
                 }
             }
@@ -677,7 +677,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
         iDamage += iDam;
     }
 
-    cAbstractStructure *pStructure = g_pStructure[id];
+    cAbstractStructure *pStructure = g_pStructures[id];
     if (pStructure == nullptr) {
         return; // invalid pointer!
     }
