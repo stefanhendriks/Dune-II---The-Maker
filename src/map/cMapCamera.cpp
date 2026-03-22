@@ -7,6 +7,7 @@
 #include "map/MapGeometry.hpp"
 
 #include <algorithm>
+#include <cassert>
 
 namespace {
 constexpr auto kMapBoundaryScrollSpeed = 5.0f;
@@ -18,6 +19,7 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_cameraEdgeMove(cameraEdgeMove),
     m_pMap(theMap)
 {
+    assert(theMap != nullptr);
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 

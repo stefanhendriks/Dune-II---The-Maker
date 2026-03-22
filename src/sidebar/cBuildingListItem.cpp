@@ -5,6 +5,7 @@
 #include "sidebar/cBuildingList.h"
 
 #include <format>
+#include <cassert>
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
 {

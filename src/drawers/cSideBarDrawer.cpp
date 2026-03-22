@@ -8,10 +8,12 @@
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
-#include <SDL2/SDL.h>
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+
+#include <SDL2/SDL.h>
 #include <algorithm>
+#include <cassert>
 
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
@@ -21,7 +23,8 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
 {
-    assert(player);
+    assert(player!= nullptr);
+    assert(ctx != nullptr);
 
     candyBarBall = m_player->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);

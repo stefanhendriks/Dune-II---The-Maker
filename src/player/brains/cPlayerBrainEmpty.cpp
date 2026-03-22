@@ -1,11 +1,11 @@
 #include "cPlayerBrainEmpty.h"
-
+#include <cassert>
 
 namespace brains {
 
 cPlayerBrainEmpty::cPlayerBrainEmpty(cPlayer *player) : cPlayerBrain(player)
 {
-
+    assert(player != nullptr);
 }
 
 void cPlayerBrainEmpty::think()

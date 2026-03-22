@@ -3,10 +3,12 @@
 #include "d2tmc.h"
 #include "map/cMap.h"
 #include "player/cPlayer.h"
+#include <cassert>
 
 namespace brains {
 cPlayerBrainSandworm::cPlayerBrainSandworm(cPlayer *player) : cPlayerBrain(player)
 {
+    assert(player != nullptr);
     TIMER_think = 0;
 }
 

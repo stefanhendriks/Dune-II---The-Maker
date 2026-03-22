@@ -17,6 +17,7 @@
 #include "data/gfxinter.h"
 
 #include <SDL2/SDL.h>
+#include <cassert>
 #include <format>
 #include <iostream>
 #include <fstream>
@@ -33,6 +34,7 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
 {
+    assert(ctx != nullptr);
     const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightBarSize);
     const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize, heightBarSize, heightBarSize, m_game.m_screenH-heightBarSize);
     mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize,m_game.m_screenH-heightBarSize);

@@ -2,9 +2,13 @@
 #include "drawers/SDLDrawer.hpp"
 #include "include/d2tmc.h"
 
+#include <cassert>
+
 cTextTextureCache::cTextTextureCache(TTF_Font *font)
     : m_font(font)
-{}
+{
+    assert(font != nullptr);
+}
 
 cTextTextureCache::~cTextTextureCache()
 {

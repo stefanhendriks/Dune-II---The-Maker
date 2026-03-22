@@ -11,6 +11,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include <algorithm>
+#include <cassert>
 
 #include "data/gfxaudio.h"
 
@@ -19,6 +20,7 @@ cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
+    assert(ctx != nullptr);
     backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_screenH - m_textDrawer->getFontHeight(), " BACK");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 

@@ -12,8 +12,10 @@
 #include "utils/d2tm_math.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <cassert>
 
 cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
@@ -21,6 +23,7 @@ cMouse::cMouse(GameContext *ctx) :
     m_renderDrawer(ctx->getSDLDrawer()),
     coords(cPoint(0,0))
 {
+    assert(m_ctx!=nullptr);
     leftButtonPressed=false;
     rightButtonPressed=false;
     leftButtonReleased=false;

@@ -27,6 +27,8 @@ cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingLis
     m_buildingListUpdater(buildingListUpdater),
     m_buildItemMultiplierEnabled(false)
 {
+    assert(thePlayer!=nullptr);
+    assert(buildingListUpdater!=nullptr);
     removeAllItems();
     memset(m_timers, 0, sizeof(m_timers));
 }

@@ -2,7 +2,7 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
-
+#include <cassert>
 
 GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer) :
     GuiObject(rect),
@@ -10,6 +10,7 @@ GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer) :
     title(""),
     m_textDrawer(_textDrawer)
 {
+    assert(_textDrawer != nullptr);
 }
 
 GuiWindow::~GuiWindow() noexcept

@@ -12,7 +12,7 @@
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer)
 {
-    assert(thePlayer);
+    assert(thePlayer!=nullptr);
     player = thePlayer;
 }
 

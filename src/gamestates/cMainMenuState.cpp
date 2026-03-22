@@ -9,13 +9,16 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "utils/cSoundPlayer.h"
+
 #include <SDL2/SDL.h>
 #include <format>
+#include <cassert>
 
 cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
 {
+    assert(ctx != nullptr);
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 

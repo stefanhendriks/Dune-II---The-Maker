@@ -4,8 +4,11 @@
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 
+#include <cassert>
+
 cGameConditionChecker::cGameConditionChecker(cGame* game) : m_game(game)
-{    
+{   
+    assert(game != nullptr); 
     m_winFlags = 0;
     m_loseFlags = 0;
 }

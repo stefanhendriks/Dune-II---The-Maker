@@ -5,10 +5,12 @@
 #include <iostream>
 #include <algorithm>
 #include <memory>
+#include <cassert>
 
 
 SDLDrawer::SDLDrawer(SDL_Renderer *_renderer)
 {
+    assert(_renderer != nullptr);
     renderer = _renderer;
 }
 

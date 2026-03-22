@@ -6,12 +6,13 @@
 #include "drawers/SDLDrawer.hpp"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
-
+#include <cassert>
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState) :
     cGameState(theGame, ctx),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
 {
+    assert(ctx != nullptr);
     int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;

@@ -9,6 +9,7 @@
 #include "player/cPlayers.h"
 #include "utils/RNG.hpp"
 #include <format>
+#include <cassert>
 
 #include <algorithm>
 
@@ -19,6 +20,7 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
     m_state(ePlayerBrainState::PLAYERBRAIN_PEACEFUL),
     m_thinkState(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST)
 {
+    assert(player != nullptr);
 //         timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        m_TIMER_rest = (10 * 60) * 4;

@@ -2,13 +2,15 @@
 
 #include "d2tmc.h"
 #include "map/cMap.h"
-
+#include <cassert>
 #include <format>
 
 namespace brains {
 
 cPlayerBrainMissionKindExplore::cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
+    assert(player != nullptr);
+    assert(mission != nullptr);
     targetCell = -1;
 }
 

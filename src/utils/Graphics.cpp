@@ -1,9 +1,11 @@
 #include "Graphics.hpp"
 #include "utils/cDataPack.hpp"
 #include <iostream>
+#include <cassert>
 
 Graphics::Graphics(SDL_Renderer *_renderer,const std::string &filePackName): renderer(_renderer)
 {
+    assert(_renderer != nullptr);
     dataPack = std::make_unique<DataPack>(filePackName);
 }
 

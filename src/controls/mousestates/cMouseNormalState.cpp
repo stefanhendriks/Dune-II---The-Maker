@@ -16,6 +16,7 @@
 
 #include <format>
 #include <algorithm>
+#include <cassert>
 
 #include "data/gfxaudio.h"
 
@@ -23,6 +24,9 @@ cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *cont
     cMouseState(player, context, mouse),
     m_state(SELECT_STATE_NORMAL)
 {
+    assert(player!=nullptr);
+    assert(context!=nullptr);
+    assert(mouse!=nullptr);
 }
 
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event)

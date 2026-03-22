@@ -7,10 +7,14 @@
 #include "player/cPlayer.h"
 
 #include <algorithm>
+#include <cassert>
 
 cMouseDeployState::cMouseDeployState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {
+    assert(player!=nullptr);
+    assert(context!=nullptr);
+    assert(mouse!=nullptr);
 }
 
 void cMouseDeployState::onNotifyMouseEvent(const s_MouseEvent &event)

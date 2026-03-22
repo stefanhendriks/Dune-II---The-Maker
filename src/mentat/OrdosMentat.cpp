@@ -6,9 +6,11 @@
 #include "utils/Graphics.hpp"
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
+#include <cassert>
 
 OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx, allowMissionSelect)
 {
+    assert(ctx != nullptr);
     iBackgroundFrame = MENTATO;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);

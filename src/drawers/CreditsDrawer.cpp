@@ -10,9 +10,10 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
-#include <SDL2/SDL.h>
-
 #include "data/gfxaudio.h"
+
+#include <SDL2/SDL.h>
+#include <cassert>
 
 CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_player(player),
@@ -21,7 +22,8 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_renderDrawer(ctx->getSDLDrawer())
 {
-    assert(player);
+    assert(player!= nullptr);
+    assert(ctx != nullptr);
 
     memset(offset_credit, 0, sizeof(offset_credit));
     memset(offset_direction, 0, sizeof(offset_direction));

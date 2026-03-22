@@ -10,6 +10,7 @@
 #include <format>
 #include "utils/RNG.hpp"
 #include <algorithm>
+#include <cassert>
 #include "include/sDataCampaign.h"
 
 namespace brains {
@@ -20,6 +21,8 @@ cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* data
     m_thinkState(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST),
     m_dataCampaign(dataCampaign)
 {
+    assert(player != nullptr);
+    assert(dataCampaign != nullptr);
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
     m_TIMER_rest = (10 * 60) * 4;

@@ -11,12 +11,14 @@
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <cassert>
 
 cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     cGameState(theGame, ctx),
     m_moveSpeed(0.15f),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
 {
+    assert(ctx != nullptr);
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);

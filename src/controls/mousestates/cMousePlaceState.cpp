@@ -9,13 +9,16 @@
 #include "utils/cSoundPlayer.h"
 #include "map/MapGeometry.hpp"
 #include <algorithm>
+#include <cassert>
 
 #include "data/gfxaudio.h"
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {
-
+    assert(player!=nullptr);
+    assert(context!=nullptr);
+    assert(mouse!=nullptr);
 }
 
 void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)

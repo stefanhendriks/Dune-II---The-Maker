@@ -4,11 +4,14 @@
 #include "map/cMap.h"
 #include "utils/RNG.hpp"
 #include <format>
+#include <cassert>
 
 namespace brains {
 
 cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
+    assert(player != nullptr);
+    assert(mission != nullptr);
     targetStructureID = -1;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
     specificBuildTypeToGoToSelectTargetState = sSpecialInfo[SPECIAL_SABOTEUR].providesType;

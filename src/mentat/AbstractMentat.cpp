@@ -23,9 +23,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <format>
+#include <cassert>
 
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
+    assert(ctx != nullptr);
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
     m_renderDrawer = ctx->getSDLDrawer();
