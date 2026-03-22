@@ -1138,8 +1138,8 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         cAbstractStructure *aStructure = g_pStructures[id];
 
         // go around any structure, and try to find a cell where we can place a structure.
-        int iStartX = global_map.getCellX(aStructure->getCell());
-        int iStartY = global_map.getCellY(aStructure->getCell());
+        int iStartX = game.getMap().getCellX(aStructure->getCell());
+        int iStartY = game.getMap().getCellY(aStructure->getCell());
 
         int iEndX = iStartX + aStructure->getWidth(); // not plus 1 because iStartX is 1st cell
         int iEndY = iStartY + aStructure->getHeight(); // not plus 1 because iStartY is 1st cell
@@ -1152,7 +1152,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
 
         // check: from top left to top right
         for (int sx = topLeftX; sx < iEndX; sx++) {
-            int cell = global_map.getGeometry().getCellWithMapBorders(sx, topLeftY);
+            int cell = game.getMap().getGeometry().getCellWithMapBorders(sx, topLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1166,7 +1166,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int bottomLeftY = iEndY;
         // check: from bottom left to bottom right
         for (int sx = bottomLeftX; sx < iEndX; sx++) {
-            int cell = global_map.getGeometry().getCellWithMapBorders(sx, bottomLeftY);
+            int cell = game.getMap().getGeometry().getCellWithMapBorders(sx, bottomLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1180,7 +1180,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justLeftX = topLeftX;
         int justLeftY = iStartY - (iHeight - 1);
         for (int sy = justLeftY; sy < iEndY; sy++) {
-            int cell = global_map.getGeometry().getCellWithMapBorders(justLeftX, sy);
+            int cell = game.getMap().getGeometry().getCellWithMapBorders(justLeftX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1194,7 +1194,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justRightX = iEndX;
         int justRightY = iStartY - (iHeight - 1);
         for (int sy = justRightY; sy < iEndY; sy++) {
-            int cell = global_map.getGeometry().getCellWithMapBorders(justRightX, sy);
+            int cell = game.getMap().getGeometry().getCellWithMapBorders(justRightX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1357,7 +1357,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = global_map.isVisible(cUnit.getCell(), this);
+        bool isVisibleForPlayer = game.getMap().isVisible(cUnit.getCell(), this);
 
         if (game.isDebugMode()) {
             log(std::format("Visible = {}", isVisibleForPlayer));
@@ -1391,7 +1391,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
     for (int i = 0; i < MAX_STRUCTURES; i++)
         if (g_pStructures[i])
             if (g_pStructures[i]->getOwner() == iAttackPlayer)
-                if (global_map.isVisible(g_pStructures[i]->getCell(), this) ||
+                if (game.getMap().isVisible(g_pStructures[i]->getCell(), this) ||
                         game.m_skirmish) {
                     iTargets[iT] = i;
 
@@ -1753,7 +1753,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 {
     s_PlaceResult result;
 
-    if (!global_map.isValidCell(iCell)) {
+    if (!game.getMap().isValidCell(iCell)) {
         result.outOfBounds = true;
         return result;
     }
@@ -1762,26 +1762,26 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     int w = sStructureInfo[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
     int h = sStructureInfo[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int x = global_map.getCellX(iCell);
-    int y = global_map.getCellY(iCell);
+    int x = game.getMap().getCellX(iCell);
+    int y = game.getMap().getCellY(iCell);
 
     bool foundUnitFromOtherPlayerThanMe = false;
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = global_map.getGeometry().getCellWithMapBorders(cx + x, cy + y);
+            int cll = game.getMap().getGeometry().getCellWithMapBorders(cx + x, cy + y);
 
-            if (!result.badTerrain && !global_map.isValidTerrainForStructureAtCell(cll)) {
+            if (!result.badTerrain && !game.getMap().isValidTerrainForStructureAtCell(cll)) {
                 result.badTerrain = true;
             }
 
             // another structure found on this location, "blocked"
-            int structureId = global_map.getCellIdStructuresLayer(cll);
+            int structureId = game.getMap().getCellIdStructuresLayer(cll);
             if (structureId > -1) {
                 result.structureIds.insert(structureId);
             }
 
-            int idOfUnitAtCell = global_map.getCellIdUnitLayer(cll);
+            int idOfUnitAtCell = game.getMap().getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
                 if (game.getUnit(idOfUnitAtCell).isValid() && game.getUnit(idOfUnitAtCell).getPlayer() != this) {
                     foundUnitFromOtherPlayerThanMe = true;
@@ -1971,7 +1971,7 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
 {
     s_PlaceResult result;
 
-    if (!global_map.isValidCell(iCell)) {
+    if (!game.getMap().isValidCell(iCell)) {
         result.outOfBounds = true;
         return result;
     }
@@ -2033,7 +2033,7 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
             addNotification("No more Harvester left, reinforcing...", BAD);
 
             // deliver
-            cAbstractStructure *refinery = global_map.findClosestStructureType(cell, REFINERY, this);
+            cAbstractStructure *refinery = game.getMap().findClosestStructureType(cell, REFINERY, this);
 
             // found a refinery, deliver harvester to that
             if (refinery) {
@@ -2055,7 +2055,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
 
     for (auto &unitId : ids) {
         cUnit aUnit = game.getUnit(unitId);
-        double dist = global_map.distance(aUnit.getCell(), cell);
+        double dist = game.getMap().distance(aUnit.getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = unitId
@@ -2074,7 +2074,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(in
 
     for (auto &structureId : ids) {
         cAbstractStructure *pStructure = g_pStructures[structureId];
-        double dist = global_map.distance(pStructure->getCell(), cell);
+        double dist = game.getMap().distance(pStructure->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = structureId

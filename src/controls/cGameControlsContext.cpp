@@ -86,11 +86,11 @@ void cGameControlsContext::determineHoveringOverStructureId()
 {
     m_mouseHoveringOverStructureId = -1;
 
-    if (!global_map.isVisible(m_mouseCell, this->m_player)) {
+    if (!game.getMap().isVisible(m_mouseCell, this->m_player)) {
         return; // cell not visible
     }
 
-    m_mouseHoveringOverStructureId = global_map.getCellIdStructuresLayer(m_mouseCell);
+    m_mouseHoveringOverStructureId = game.getMap().getCellIdStructuresLayer(m_mouseCell);
 }
 
 void cGameControlsContext::determineHoveringOverUnitId()
@@ -103,10 +103,10 @@ void cGameControlsContext::determineHoveringOverUnitId()
     }
     m_mouseHoveringOverUnitId = -1;
     int mc = getMouseCell();
-    tCell *cellOfMouse = global_map.getCell(mc);
+    tCell *cellOfMouse = game.getMap().getCell(mc);
     if (cellOfMouse == nullptr) return; // mouse is not on battlefield
 
-    if (!global_map.isVisible(mc, this->m_player)) {
+    if (!game.getMap().isVisible(mc, this->m_player)) {
         return; // cell not visible
     }
 

@@ -62,7 +62,6 @@ struct SDL_Surface;
 
 // game
 extern cGame		  game;
-extern cMap       global_map;
 extern cStructures g_pStructures;
 extern cStructureUtils structureUtils;
 extern cDrawManager    *global_drawManager;

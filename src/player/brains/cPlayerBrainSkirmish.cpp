@@ -1180,7 +1180,7 @@ void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_
                 }
                 // move it when idle, else don't do a thing
                 if (aUnit.isIdle()) {
-                    aUnit.move_to(global_map.getRandomCellFrom(aUnit.getCell(), 3));
+                    aUnit.move_to(game.getMap().getRandomCellFrom(aUnit.getCell(), 3));
                 }
             }
             else {
@@ -1246,7 +1246,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
-                        if (m_centerOfBaseCell > -1 && global_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
@@ -1308,7 +1308,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                 if (event.entityType == eBuildType::UNIT) {
                     cUnit &pUnit = game.getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
-                        if (m_centerOfBaseCell > -1 && global_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }

@@ -31,7 +31,7 @@ bool cPlayerBrainMissionKindSaboteur::think_SelectTarget()
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!global_map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!game.getMap().isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         targetStructureID = theStructure->getStructureId();

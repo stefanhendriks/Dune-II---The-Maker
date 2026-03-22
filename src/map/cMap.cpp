@@ -1459,7 +1459,7 @@ int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minR
 int cMap::findRandomCellToMoveToForSandworm() const {
     for (int iTries = 0; iTries < 5; iTries++) {
         int iMoveTo = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
-        if (global_map.isCellPassableForWorm(iMoveTo)) {
+        if (game.getMap().isCellPassableForWorm(iMoveTo)) {
             return iMoveTo;
         }
     }

@@ -104,12 +104,12 @@ void cMapCamera::keepViewportWithinReasonableBounds()
         m_viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (global_map.getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (game.getMap().getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         m_viewportStartX = maxWidth - m_viewportWidth;
     }
 
-    int maxHeight = (global_map.getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (game.getMap().getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         m_viewportStartY = maxHeight - m_viewportHeight;
     }
@@ -119,7 +119,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell)
 {
     // fix any boundaries
     if (cell < 0) cell = 0;
-    if (cell >= global_map.getMaxCells()) cell = (global_map.getMaxCells()-1);
+    if (cell >= game.getMap().getMaxCells()) cell = (game.getMap().getMaxCells()-1);
 
     int mapCellX = m_pMap->getAbsoluteXPositionFromCell(cell);
     int mapCellY = m_pMap->getAbsoluteYPositionFromCell(cell);
@@ -168,7 +168,7 @@ void cMapCamera::setViewportPosition(int x, int y)
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y)
 {
-    return global_map.getGeometry().getCellWithMapDimensions((x / 32), (y / 32));
+    return game.getMap().getGeometry().getCellWithMapDimensions((x / 32), (y / 32));
 }
 
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)

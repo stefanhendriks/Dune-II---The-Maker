@@ -64,7 +64,7 @@ void cGamePlaying::thinkFast()
         }
     }
 
-    global_map.thinkFast();
+    game.getMap().thinkFast();
 
     game.reduceShaking();
 
@@ -249,7 +249,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_F4)) {
             int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
-                global_map.clearShroud(mouseCell, 6, HUMAN);
+                game.getMap().clearShroud(mouseCell, 6, HUMAN);
             }
         }
     }
@@ -380,17 +380,17 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = game.getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 game.getUnit(idOfUnitAtCell).die(true, false);
             }
 
-            int idOfStructureAtCell = global_map.getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = game.getMap().getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
                 g_pStructures[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = global_map.getCellIdWormsLayer(mc);
+            idOfUnitAtCell = game.getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
                 game.getUnit(idOfUnitAtCell).die(false, false);
             }
@@ -401,7 +401,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = global_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = game.getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 cUnit &pUnit = game.getUnit(idOfUnitAtCell);
                 int damageToTake = pUnit.getHitPoints() - 25;
@@ -414,7 +414,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     else {
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
-            global_map.clear_all(HUMAN);
+            game.getMap().clear_all(HUMAN);
         }
     }
 
