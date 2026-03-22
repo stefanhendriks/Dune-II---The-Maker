@@ -66,7 +66,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         if (!structureIds.empty()) {
             // pick structure to attack
             std::shuffle(structureIds.begin(), structureIds.end(), g);
-            cellToAttack = g_pStructures[structureIds.front()]->getCell();
+            cellToAttack = game.getStructures()[structureIds.front()]->getCell();
             if (RNG::rnd(100) > 30) break;
         }
     }

@@ -296,7 +296,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfStructureAtCell = m_map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
-                int iPlr = g_pStructures[idOfStructureAtCell]->getOwner();
+                int iPlr = game.getStructures()[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }

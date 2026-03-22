@@ -227,8 +227,8 @@ void cOrderProcesser::sendFrigate()
 
     if (structureId > -1) {
         // found structure
-        g_pStructures[structureId]->setAnimating(true);
-        int destinationCell = g_pStructures[structureId]->getCell();
+        game.getStructures()[structureId]->setAnimating(true);
+        int destinationCell = game.getStructures()[structureId]->getCell();
 
         int iStartCell = game.getMap().findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 

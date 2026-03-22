@@ -44,7 +44,7 @@ void cGamePlaying::thinkFast()
     }
 
     // structures think
-    for (cAbstractStructure *pStructure : g_pStructures) {
+    for (cAbstractStructure *pStructure : game.getStructures()) {
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
             pStructure->thinkFast();       // think about actions going on
@@ -117,7 +117,7 @@ void cGamePlaying::thinkSlow()
 
     // starports think per second for deployment (if any)
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = g_pStructures[i];
+        cAbstractStructure *pStructure = game.getStructures()[i];
         if (pStructure && pStructure->isValid()) {
             pStructure->thinkSlow();
         }
@@ -387,7 +387,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             int idOfStructureAtCell = game.getMap().getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
-                g_pStructures[idOfStructureAtCell]->die();
+                game.getStructures()[idOfStructureAtCell]->die();
             }
 
             idOfUnitAtCell = game.getMap().getCellIdWormsLayer(mc);

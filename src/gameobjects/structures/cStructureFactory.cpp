@@ -70,7 +70,7 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type)
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure)
 {
     // delete memory acquired
-    g_pStructures[pStructure->getStructureId()] = nullptr;
+    game.getStructures()[pStructure->getStructureId()] = nullptr;
     delete pStructure;
 }
 
@@ -155,7 +155,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;
 
     // assign to array
-    g_pStructures[iNewId] = str;
+    game.getStructures()[iNewId] = str;
 
     // Now set it up for location & player
     str->setCell(iCell);
@@ -292,7 +292,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 int cStructureFactory::getFreeSlot()
 {
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        if (g_pStructures[i] == nullptr) {
+        if (game.getStructures()[i] == nullptr) {
             return i;
         }
     }
@@ -370,12 +370,12 @@ void cStructureFactory::deleteAllExistingStructures()
 {
     for (int i=0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
-        cAbstractStructure *pStructure = g_pStructures[i];
+        cAbstractStructure *pStructure = game.getStructures()[i];
         if (pStructure) {
             delete pStructure;
         }
         // clear pointer
-        g_pStructures[i] = nullptr;
+        game.getStructures()[i] = nullptr;
     }
 }
 
