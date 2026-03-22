@@ -180,8 +180,8 @@ void cBullet::thinkFast()
         TIMER_homing--;
 
         if (iHoming > -1) {
-            if (g_Units[iHoming].isValid()) {
-                int cll = g_Units[iHoming].getCell();
+            if (game.getUnits()[iHoming].isValid()) {
+                int cll = game.getUnits()[iHoming].getCell();
                 targetX = global_map.getAbsoluteXPositionFromCell(cll);
                 targetY = global_map.getAbsoluteYPositionFromCell(cll);
             }
@@ -399,7 +399,7 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
     if (unitIdOnAirLayer < 0) return false;
     if (iOwnerUnit > 0 && unitIdOnAirLayer == iOwnerUnit) return false; // do not damage self
 
-    cUnit &airUnit = g_Units[unitIdOnAirLayer];
+    cUnit &airUnit = game.getUnits()[unitIdOnAirLayer];
     if (!airUnit.isValid()) {
         return false;
     }
@@ -409,7 +409,7 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
         return true;
     }
 
-    cUnit &ownerUnit = g_Units[iOwnerUnit];
+    cUnit &ownerUnit = game.getUnits()[iOwnerUnit];
     if (!ownerUnit.isValid()) {
         return true;
     }
@@ -434,7 +434,7 @@ bool cBullet::damageAirUnit(int cell) const
     float iDamage = getDamageToInflictToNonInfantry();
 
     if (doesAirUnitTakeDamage(unitIdOnAirLayer)) {
-        cUnit &airUnit = g_Units[unitIdOnAirLayer];
+        cUnit &airUnit = game.getUnits()[unitIdOnAirLayer];
         airUnit.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
         return true;
     }
@@ -454,7 +454,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (id < 0) return false;
     if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
 
-    cUnit &groundUnitTakingDamage = g_Units[id];
+    cUnit &groundUnitTakingDamage = game.getUnits()[id];
 
     float iDamage = getDamageToInflictToUnit(groundUnitTakingDamage) * factor;
     groundUnitTakingDamage.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
@@ -466,7 +466,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (groundUnitTakingDamage.isDead()) {
         // who is to blame for killing this unit?
         if (iOwnerUnit > -1) {
-            cUnit &ownerUnit = g_Units[iOwnerUnit];
+            cUnit &ownerUnit = game.getUnits()[iOwnerUnit];
             if (ownerUnit.isValid()) {
                 // TODO: update statistics
 
@@ -489,7 +489,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
 
         // take over unit
         if (RNG::rnd(100) < gets_Bullet().deviateProbability) {
-            cUnit &ownerUnit = g_Units[iOwnerUnit];
+            cUnit &ownerUnit = game.getUnits()[iOwnerUnit];
             if (ownerUnit.isValid()) {
                 groundUnitTakingDamage.iPlayer = ownerUnit.iPlayer;
                 groundUnitTakingDamage.iGroup = -1;
@@ -530,7 +530,7 @@ float cBullet::getDamageToInflictToInfantry() const
     float result = difficultySettings->getInflictDamage(bulletInfos[iType].damage_infantry);
 
     if (iOwnerUnit > -1) {
-        float fDam = g_Units[iOwnerUnit].fExpDamage() * result;
+        float fDam = game.getUnits()[iOwnerUnit].fExpDamage() * result;
         result += fDam;
     }
     return result;
@@ -552,7 +552,7 @@ void cBullet::damageSandworm(int cell, double factor) const
     int id = global_map.getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
-    cUnit &worm = g_Units[id];
+    cUnit &worm = game.getUnits()[id];
     float damage = getDamageToInflictToNonInfantry() * factor;
     worm.takeDamage(damage, iOwnerUnit, iOwnerStructure);
 }
@@ -622,7 +622,7 @@ float cBullet::getDamageToInflictToNonInfantry() const
     // increase damage by experience of unit
     if (iOwnerUnit > -1) {
         // extra damage by experience:
-        cUnit &cUnit = g_Units[iOwnerUnit];
+        cUnit &cUnit = game.getUnits()[iOwnerUnit];
         if (cUnit.isValid()) { // in case the unit died while firing
             float iDam = (cUnit.fExpDamage() * iDamage);
             iDamage = iDamage + iDam;
@@ -667,8 +667,8 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {
-        if (g_Units[iOwnerUnit].isValid()) {
-            pUnit = &g_Units[iOwnerUnit];
+        if (game.getUnits()[iOwnerUnit].isValid()) {
+            pUnit = &game.getUnits()[iOwnerUnit];
         }
     }
 

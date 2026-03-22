@@ -41,7 +41,6 @@ SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*global_mapCamera;
 
 cAbstractStructure     		*g_pStructure[MAX_STRUCTURES];
-cUnits                      g_Units;                           // units in the game (max MAX_UNITS amount)
 
 
 cBullets                    g_Bullets;

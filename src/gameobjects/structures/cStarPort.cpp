@@ -86,7 +86,7 @@ void cStarPort::think_deploy()
                 if (cellToDeployTo >= 0) {
                     int id = UNIT_CREATE(cellToDeployTo, item->getBuildId(), iPlayer, true);
                     if (rallyPoint > -1) {
-                        g_Units[id].move_to(rallyPoint, -1, -1);
+                        game.getUnits()[id].move_to(rallyPoint, -1, -1);
                     }
                     game.playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
                 }
