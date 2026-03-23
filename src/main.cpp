@@ -37,7 +37,7 @@ cGame          				game;
 cStructureUtils 			structureUtils;
 cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
-cMapCamera					*global_mapCamera;
+
 
 // cBullets                    g_Bullets;
 

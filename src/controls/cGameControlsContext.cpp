@@ -69,9 +69,9 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords)
 
 int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
 {
-    int absMapX = global_mapCamera->getAbsMapMouseX(mouseX);
-    int absMapY = global_mapCamera->getAbsMapMouseY(mouseY);
-    return global_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
+    int absMapX = game.global_mapCamera->getAbsMapMouseX(mouseX);
+    int absMapY = game.global_mapCamera->getAbsMapMouseY(mouseY);
+    return game.global_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
 }
 
 void cGameControlsContext::determineToolTip()

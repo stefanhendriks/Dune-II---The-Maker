@@ -71,13 +71,13 @@ int cBullet::pos_y() const
 int cBullet::draw_x()
 {
     int bmpOffset = (getBulletBmpWidth()/2) * -1;
-    return global_mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
+    return game.global_mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cBullet::draw_y()
 {
     int bmpOffset = (getBulletBmpHeight()/2) * -1;
-    return global_mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
+    return game.global_mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
 // draw the bullet
@@ -134,7 +134,7 @@ void cBullet::draw()
 
     if (bulletInfos[iType].bmp != nullptr) {
         cRectangle src = {sx,sy, bmp_width, bmp_width};
-        cRectangle dest = {x,y, static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(global_mapCamera->factorZoomLevel(bmp_width)))};
+        cRectangle dest = {x,y, static_cast<int>(round(game.global_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(game.global_mapCamera->factorZoomLevel(bmp_width)))};
         global_renderDrawer->renderStrechSprite(bulletInfos[iType].bmp, src, dest);
     }
 }
@@ -194,7 +194,7 @@ void cBullet::thinkFast()
 
 void cBullet::think_move()
 {
-    iCell = global_mapCamera->getCellFromAbsolutePosition(posX, posY);
+    iCell = game.global_mapCamera->getCellFromAbsolutePosition(posX, posY);
 
     int iCellX = game.getMap().getCellX(iCell);
     int iCellY = game.getMap().getCellY(iCell);
