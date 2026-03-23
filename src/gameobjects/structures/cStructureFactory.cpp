@@ -178,7 +178,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
         REINFORCE(iPlayer, HARVESTER, iCell, -1);
     }
 
-    structureUtils.putStructureOnDimension(MAPID_STRUCTURES, str);
+    g_structureUtils.putStructureOnDimension(MAPID_STRUCTURES, str);
 
     // handle update
     s_GameEvent event {

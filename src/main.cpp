@@ -34,7 +34,7 @@
 
 // the ultimate game variable(s)
 cGame          				game;
-cStructureUtils 			structureUtils;
+cStructureUtils 			g_structureUtils;
 // cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
 

@@ -80,8 +80,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
     bool bWithinBuildDistance = false;
 
-    int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureIdToPlace);
-    int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureIdToPlace);
+    int cellWidth = g_structureUtils.getWidthOfStructureTypeInCells(structureIdToPlace);
+    int cellHeight = g_structureUtils.getHeightOfStructureTypeInCells(structureIdToPlace);
 
 #define SCANWIDTH    1
 
