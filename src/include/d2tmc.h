@@ -27,6 +27,7 @@
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/cSpecialInfos.h"
 
 #include <memory>
 #include <array>
