@@ -63,8 +63,8 @@
 #define AI_WORM			AI_CPU6
 #define MAX_PLAYERS     7
 
-// UNITS stuff
-#define MAX_UNITTYPES       50    // maximum of unit types
+// // UNITS stuff
+// #define MAX_UNITTYPES       50    // maximum of unit types
 
 // UPGRADES stuff
 //#define MAX_UPGRADETYPES       50    // maximum of upgrades
