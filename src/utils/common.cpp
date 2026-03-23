@@ -270,6 +270,9 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 
 const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId)
 {
+    if (specificTypeId < 0) {
+        return "Unknown";
+    }
     switch (buildType) {
         case eBuildType::SPECIAL:
             return specialInfos[specificTypeId].description;
