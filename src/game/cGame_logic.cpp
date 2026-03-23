@@ -213,7 +213,7 @@ void cGame::missionInit()
 
     initPlayers(true);
 
-    game.global_drawManager->missionInit();
+    game.m_drawManager->missionInit();
 }
 
 void cGame::initPlayers(bool rememberHouse) const
@@ -484,7 +484,7 @@ void cGame::shutdown()
 
     delete m_mapViewport;
 
-    delete game.global_drawManager;
+    delete game.m_drawManager;
 
     delete m_mapCamera;
 
@@ -669,8 +669,8 @@ bool cGame::setupGame()
     IniGameRessources::install_upgrades();
     cPlayer *humanPlayer = &game.getPlayer(HUMAN);
 
-    delete game.global_drawManager;
-    game.global_drawManager = new cDrawManager(ctx.get(), humanPlayer);
+    delete game.m_drawManager;
+    game.m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
     m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
@@ -880,7 +880,7 @@ void cGame::setState(int newState)
                 m_mouse->setTile(MOUSE_NORMAL);
                 if (m_state == GAME_PLAYING) {
                     // so we don't draw mouse cursor
-                    game.global_drawManager->drawCombatState();
+                    game.m_drawManager->drawCombatState();
                     m_timeManager->pauseTimer();
                 }
                 else {
@@ -899,8 +899,8 @@ void cGame::setState(int newState)
                 else {
                     newStatePtr = new cGamePlaying(*this, ctx.get());
                     // re-create drawManager
-                    delete game.global_drawManager;
-                    game.global_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    delete game.m_drawManager;
+                    game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -909,7 +909,7 @@ void cGame::setState(int newState)
                     }
                     m_particles.reset();
                     // in-between solution until we have a proper combat state object
-                    game.global_drawManager->init();
+                    game.m_drawManager->init();
 
                     // handle update
                     s_GameEvent event {
@@ -1007,7 +1007,7 @@ void cGame::changeStateFromMentat()
     if (game.isState(GAME_BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
         game.setNextStateToTransitionTo(GAME_PLAYING);
-        game.global_drawManager->missionInit();
+        game.m_drawManager->missionInit();
 
         // CENTER MOUSE
         game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
@@ -1068,8 +1068,8 @@ void cGame::thinkFast()
     if (m_currentState) {
         m_currentState->thinkFast();
     }
-    if (game.global_drawManager) {
-        game.global_drawManager->thinkFast();
+    if (game.m_drawManager) {
+        game.m_drawManager->thinkFast();
     }
 }
 
@@ -1535,19 +1535,19 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer &humanPlayer = game.getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(0));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(0));
         game.setPlayerToInteractFor(&game.getPlayer(0));
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(1));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(1));
         game.setPlayerToInteractFor(&game.getPlayer(1));
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(2));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(2));
         game.setPlayerToInteractFor(&game.getPlayer(2));
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(3));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(3));
         game.setPlayerToInteractFor(&game.getPlayer(3));
     }
 

@@ -37,7 +37,7 @@ cGamePlaying::~cGamePlaying()
 
 void cGamePlaying::thinkFast()
 {
-    game.global_drawManager->thinkFast_statePlaying();
+    game.m_drawManager->thinkFast_statePlaying();
 
     game.m_mapCamera->thinkFast();
 
@@ -99,7 +99,7 @@ void cGamePlaying::thinkNormal()
             }
         }
 
-        game.global_drawManager->think();
+        game.m_drawManager->think();
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
             game.getPlayer(i).think();
@@ -134,7 +134,7 @@ void cGamePlaying::thinkSlow()
 
 void cGamePlaying::draw() const
 {
-    game.global_drawManager->drawCombatState();
+    game.m_drawManager->drawCombatState();
     if (m_game.m_drawFps) {
         game.drawTextFps();
     }
@@ -145,7 +145,7 @@ void cGamePlaying::draw() const
         game.drawTextTime();
     }
     // MOUSE
-    game.global_drawManager->drawCombatMouse();
+    game.m_drawManager->drawCombatMouse();
 }
 
 void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent& )
@@ -161,7 +161,7 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     logbook(event.toString());
 
-    game.global_drawManager->onNotifyKeyboardEvent(event);
+    game.m_drawManager->onNotifyKeyboardEvent(event);
 
     switch (event.eventType) {
         case eKeyEventType::HOLD:
@@ -345,19 +345,19 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer &humanPlayer = game.getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(0));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(0));
         game.setPlayerToInteractFor(&game.getPlayer(0));
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(1));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(1));
         game.setPlayerToInteractFor(&game.getPlayer(1));
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(2));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(2));
         game.setPlayerToInteractFor(&game.getPlayer(2));
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        game.global_drawManager->setPlayerToDraw(&game.getPlayer(3));
+        game.m_drawManager->setPlayerToDraw(&game.getPlayer(3));
         game.setPlayerToInteractFor(&game.getPlayer(3));
     }
 

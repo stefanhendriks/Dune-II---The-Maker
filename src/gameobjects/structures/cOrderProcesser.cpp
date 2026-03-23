@@ -115,10 +115,10 @@ void cOrderProcesser::think()
 
         if (secondsUntilArrival == 0) {
             sendFrigate();
-            game.global_drawManager->setMessage("Frigate is arriving...");
+            game.m_drawManager->setMessage("Frigate is arriving...");
         }
         else {
-            game.global_drawManager->setMessage(msg);
+            game.m_drawManager->setMessage(msg);
         }
     }
 

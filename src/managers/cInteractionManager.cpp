@@ -89,8 +89,8 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
         game.m_mapCamera->onNotifyMouseEvent(mouseEvent);
 
         // do like this because drawManager gets deleted/recreated
-        game.global_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
-        game.global_drawManager->getOrderDrawer()->onNotify(mouseEvent);
+        game.m_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
+        game.m_drawManager->getOrderDrawer()->onNotify(mouseEvent);
         cItemBuilder *pBuilder = player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyMouseEvent(mouseEvent);
@@ -98,7 +98,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
     }
 
     // do like this because drawManager gets deleted/recreated
-    game.global_drawManager->getMouseDrawer()->onNotify(mouseEvent);
+    game.m_drawManager->getMouseDrawer()->onNotify(mouseEvent);
 
     // LAST FOR NOW, as this can change states and thus break things. Hence, if you put this
     // somewhere above this function, the lines after this onNotifyGameEvent might end up pointing to invalid memory addresses
