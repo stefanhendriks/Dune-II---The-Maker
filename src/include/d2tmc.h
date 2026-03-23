@@ -66,10 +66,8 @@ extern cStructureUtils structureUtils;
 extern cDrawManager    *global_drawManager;
 extern SDLDrawer       *global_renderDrawer;
 
-extern cUnits    g_Units;
-extern cMapCamera	    *global_mapCamera;
-
-// extern cBullets       g_Bullets;
+extern cUnits         g_Units;
+extern cBullets       g_Bullets;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];

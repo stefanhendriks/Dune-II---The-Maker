@@ -79,11 +79,11 @@ bool cParticle::isValid() const {
 }
 
 int cParticle::draw_x() const {
-    return global_mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
+    return game.global_mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
 int cParticle::draw_y() const {
-    return global_mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
+    return game.global_mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
 }
 
 /**
@@ -101,9 +101,9 @@ void cParticle::think_position()
 
     // keep updating dimensions
     dimensions->move(draw_x(), draw_y());
-    if (global_mapCamera) {
-        dimensions->resize(global_mapCamera->factorZoomLevel(getFrameWidth()),
-                           global_mapCamera->factorZoomLevel(getFrameHeight()));
+    if (game.global_mapCamera) {
+        dimensions->resize(game.global_mapCamera->factorZoomLevel(getFrameWidth()),
+                           game.global_mapCamera->factorZoomLevel(getFrameHeight()));
     }
 }
 
@@ -115,8 +115,8 @@ void cParticle::draw()
     int frameHeight = getFrameHeight();
 
     // create proper sized bitmap
-    int bmp_width = global_mapCamera->factorZoomLevel(frameWidth);
-    int bmp_height = global_mapCamera->factorZoomLevel(frameHeight);
+    int bmp_width = game.global_mapCamera->factorZoomLevel(frameWidth);
+    int bmp_height = game.global_mapCamera->factorZoomLevel(frameHeight);
 
     int drawX = draw_x();
     int drawY = draw_y();

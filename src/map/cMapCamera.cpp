@@ -181,10 +181,10 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseMovedTo(event);
             break;
         case eMouseEventType::MOUSE_SCROLLED_DOWN:
-            global_mapCamera->zoomOut();
+            game.global_mapCamera->zoomOut();
             break;
         case eMouseEventType::MOUSE_SCROLLED_UP:
-            global_mapCamera->zoomIn();
+            game.global_mapCamera->zoomIn();
             break;
         case eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED:
             onMouseRightButtonPressed(event);

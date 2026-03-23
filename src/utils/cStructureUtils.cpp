@@ -243,8 +243,8 @@ bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure)
 
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
-    int width = global_mapCamera->factorZoomLevel(structure->getWidthInPixels());
-    int height = global_mapCamera->factorZoomLevel(structure->getHeightInPixels());
+    int width = game.global_mapCamera->factorZoomLevel(structure->getWidthInPixels());
+    int height = game.global_mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
     return (drawX + width  >= 0 && drawX < game.m_screenW) &&
            (drawY + height >= 0 && drawY < game.m_screenH);
@@ -257,8 +257,8 @@ bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int sc
     // translate the structure coordinates to screen coordinates
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
-    int width = global_mapCamera->factorZoomLevel(structure->getWidthInPixels());
-    int height = global_mapCamera->factorZoomLevel(structure->getHeightInPixels());
+    int width = game.global_mapCamera->factorZoomLevel(structure->getWidthInPixels());
+    int height = game.global_mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
     return cRectangle::isWithin(screenX, screenY, drawX, drawY, width, height);
 }
