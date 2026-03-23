@@ -34,12 +34,8 @@
 
 // the ultimate game variable(s)
 cGame          				game;
-// cStructureUtils 			g_structureUtils;
-// cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
-
-
-// cBullets                    g_Bullets;
+std::shared_ptr<Graphics>   gfxdata;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
@@ -49,12 +45,7 @@ s_SpecialInfo               sSpecialInfo[MAX_SPECIALTYPES];
 
 cBulletInfos   			    bulletInfos;
 
-// datafile(s)
-std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
 
-/**
-	Entry point of the game
-*/
 int main(int argc, char **argv)
 {
     std::unique_ptr<GameSettings> settings = loadSettingsFromIni("settings.ini");
