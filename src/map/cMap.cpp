@@ -789,7 +789,7 @@ double cMap::distance(int x1, int y1, int x2, int y2)  //rip
     return sqrt((double) (A + B)); // get C from A and B
 }
 
-int cMap::getCellY(int c) //rip
+int cMap::getCellY(int c) const//rip
 {
     if (c < 0 || c >= maxCells) {
         return -1;
@@ -798,7 +798,7 @@ int cMap::getCellY(int c) //rip
     return (c / width);
 }
 
-int cMap::getCellX(int c) //rip
+int cMap::getCellX(int c) const//rip
 {
     if (c < 0 || c >= maxCells) {
         return -1;

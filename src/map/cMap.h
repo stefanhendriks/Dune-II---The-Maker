@@ -102,12 +102,12 @@ public:
         The X coordinate is found by finding out how many 'rows' (the Y) are there, then
         the remaining of that value is the X.
     **/
-    int getCellX(int c);
+    int getCellX(int c) const;
 
     /**
         The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
     **/
-    int getCellY(int c);
+    int getCellY(int c) const;
 
     bool isWithinBoundaries(int c);
 
