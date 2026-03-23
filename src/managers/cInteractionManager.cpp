@@ -86,7 +86,7 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
         pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
         sidebar->onNotifyMouseEvent(mouseEvent);
-        game.global_mapCamera->onNotifyMouseEvent(mouseEvent);
+        game.m_mapCamera->onNotifyMouseEvent(mouseEvent);
 
         // do like this because drawManager gets deleted/recreated
         global_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
@@ -112,7 +112,7 @@ void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         cGameControlsContext *pContext = player->getGameControlsContext();
         pContext->onNotifyKeyboardEvent(event);
 
-        game.global_mapCamera->onNotifyKeyboardEvent(event);
+        game.m_mapCamera->onNotifyKeyboardEvent(event);
         cItemBuilder *pBuilder = player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyKeyboardEvent(event);

@@ -74,8 +74,8 @@ void cLightFactory::draw()
         int drawX = iDrawX();
         int drawY = iDrawY();
 
-        int scaledWidth = game.global_mapCamera->factorZoomLevel(pixelWidth);
-        int scaledHeight = game.global_mapCamera->factorZoomLevel(pixelHeight);
+        int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
+        int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
 
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};

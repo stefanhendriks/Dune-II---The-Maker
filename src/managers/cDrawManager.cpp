@@ -39,8 +39,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(ctx, thePlayer);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
     m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
-    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.getMap(), thePlayer, game.global_mapCamera);
-    miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.getMap(), thePlayer, game.global_mapCamera);
+    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.getMap(), thePlayer, game.m_mapCamera);
+    miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.getMap(), thePlayer, game.m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
@@ -61,7 +61,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.global_mapCamera->getWindowWidth(), game.m_screenH);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_screenH);
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
@@ -92,7 +92,7 @@ void cDrawManager::drawCombatState()
 
     drawOptionBar();
 
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.global_mapCamera->getWindowWidth(), game.global_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
     m_renderDrawer->resetClippingFor();
 
@@ -167,22 +167,22 @@ void cDrawManager::drawRallyPoint()
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
 
-    int drawX = game.global_mapCamera->getWindowXPositionFromCell(rallyPointCell);
-    int drawY = game.global_mapCamera->getWindowYPositionFromCell(rallyPointCell);
+    int drawX = game.m_mapCamera->getWindowXPositionFromCell(rallyPointCell);
+    int drawY = game.m_mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
     SDL_Surface *mouseMoveBitmap = m_gfxdata->getSurface(MOUSE_MOVE);
 
-    int rallyPointWidthScaled = game.global_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
-    int rallyPointHeightScaled = game.global_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
+    int rallyPointWidthScaled = game.m_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
+    int rallyPointHeightScaled = game.m_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
     m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
 
-    int startX = theStructure->iDrawX() + game.global_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
-    int startY = theStructure->iDrawY() + game.global_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
+    int startX = theStructure->iDrawX() + game.m_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
+    int startY = theStructure->iDrawY() + game.m_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
 
     int offset = (mouseMoveBitmap->w/2);
-    drawX = game.global_mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
-    drawY = game.global_mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
+    drawX = game.m_mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
+    drawY = game.m_mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
 
     int endX = drawX;
     int endY = drawY;

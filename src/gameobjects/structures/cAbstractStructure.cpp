@@ -113,13 +113,13 @@ int cAbstractStructure::pos_y()
 // X drawing position
 int cAbstractStructure::iDrawX()
 {
-    return game.global_mapCamera->getWindowXPosition(pos_x());
+    return game.m_mapCamera->getWindowXPosition(pos_x());
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY()
 {
-    return game.global_mapCamera->getWindowYPosition(pos_y());
+    return game.m_mapCamera->getWindowYPosition(pos_y());
 }
 
 Texture *cAbstractStructure::getBitmap()
@@ -901,8 +901,8 @@ void cAbstractStructure::drawWithShadow()
     int drawX = iDrawX();
     int drawY = iDrawY();
 
-    int scaledWidth = game.global_mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = game.global_mapCamera->factorZoomLevel(pixelHeight);
+    int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
 
     Texture *bitmapToDraw = getBitmap();
 

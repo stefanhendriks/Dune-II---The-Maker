@@ -199,7 +199,7 @@ void cGame::init()
 // initialize for missions
 void cGame::missionInit()
 {
-    global_mapCamera->resetZoom();
+    m_mapCamera->resetZoom();
 
     m_gameConditionChecker->missionInit();
 
@@ -347,7 +347,7 @@ void cGame::loadSkirmishMaps() const
 
 void cGame::shakeScreenAndBlitBuffer()
 {
-    m_screenShake->update(m_state, GAME_PLAYING, global_mapCamera);
+    m_screenShake->update(m_state, GAME_PLAYING, m_mapCamera);
     fadeOutOrBlitScreenBuffer();
 }
 
@@ -486,7 +486,7 @@ void cGame::shutdown()
 
     delete global_drawManager;
 
-    delete global_mapCamera;
+    delete m_mapCamera;
 
     cStructureFactory::destroy();
     cSideBarFactory::destroy();
@@ -655,8 +655,8 @@ bool cGame::setupGame()
     logbook("Setup:  TERRAINS");
     IniGameRessources::install_terrain(m_TerrainInfo);
 
-    delete global_mapCamera;
-    global_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
+    delete m_mapCamera;
+    m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     cIni::installGame(m_gameFilename);
     // Now we are ready for the menu state
@@ -1387,18 +1387,18 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = global_mapCamera->divideByZoomLevel(m_map.getMaxDistanceInPixels() / 2);
+    float maxDistance = m_mapCamera->divideByZoomLevel(m_map.getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
 
     // zoom factor influences volume (more zoomed in means louder)
-    float volumeFactor = global_mapCamera->factorZoomLevel(0.7f);
+    float volumeFactor = m_mapCamera->factorZoomLevel(0.7f);
     int iVolFactored = volumeFactor * volume;
 
     if (game.isDebugMode()) {
         logbook(std::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
-                            iDistance, distanceNormalized, maxDistance, global_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
+                            iDistance, distanceNormalized, maxDistance, m_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
     }
 
     playSound(sampleId, iVolFactored);
