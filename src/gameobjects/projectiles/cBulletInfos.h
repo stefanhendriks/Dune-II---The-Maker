@@ -51,8 +51,8 @@ public:
         return m_values[index];
     }
 
-    s_BulletInfo *data() noexcept { return m_values.data(); }
-    const s_BulletInfo *data() const noexcept { return m_values.data(); }
+    // s_BulletInfo *data() noexcept { return m_values.data(); }
+    // const s_BulletInfo *data() const noexcept { return m_values.data(); }
 
     std::size_t size() const noexcept { return m_values.size(); }
 
