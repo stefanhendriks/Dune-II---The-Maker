@@ -110,7 +110,7 @@ void cPlayerBrainCampaign::addBuildOrder(S_buildOrder order)
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {
             msg = std::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              specialInfos[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::BULLET) {
             msg = std::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,

@@ -272,7 +272,7 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
 {
     switch (buildType) {
         case eBuildType::SPECIAL:
-            return sSpecialInfo[specificTypeId].description;
+            return specialInfos[specificTypeId].description;
         case eBuildType::UNIT:
             return sUnitInfo[specificTypeId].name;
         case eBuildType::STRUCTURE:

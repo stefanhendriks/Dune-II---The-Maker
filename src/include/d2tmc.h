@@ -62,6 +62,6 @@ extern std::shared_ptr<Graphics> gfxdata;
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 extern s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 extern s_UpgradeInfo            sUpgradeInfo[MAX_UPGRADETYPES];
-extern s_SpecialInfo            sSpecialInfo[MAX_SPECIALTYPES];
-
+//extern s_SpecialInfo            sSpecialInfo[MAX_SPECIALTYPES];
+extern cSpecialInfos            specialInfos;
 extern cBulletInfos             bulletInfos;
