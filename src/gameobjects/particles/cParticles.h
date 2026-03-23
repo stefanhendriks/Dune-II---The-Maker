@@ -33,9 +33,7 @@ public:
 
     // initialisation
     void reset() noexcept {
-        for (auto &p : m_particles) {
-            p.reset(); // ou init spécifique
-        }
+        cParticle::reset();
     }
 
     // itérateurs
