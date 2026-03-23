@@ -599,7 +599,7 @@ bool cPlayer::hasEnoughCreditsForStructure(int structureType)
 bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType)
 {
     if (upgradeType < 0 || upgradeType >= MAX_UPGRADETYPES) return false;
-    return this->credits >= sUpgradeInfo[upgradeType].cost;
+    return this->credits >= upgradeInfos[upgradeType].cost;
 }
 
 /**
@@ -1080,7 +1080,7 @@ bool cPlayer::startUpgrading(int iUpgradeType) const
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(std::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
-                        sUpgradeInfo[iUpgradeType].description, iUpgradeType, eListTypeAsInt(listType), result));
+                        upgradeInfos[iUpgradeType].description, iUpgradeType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }

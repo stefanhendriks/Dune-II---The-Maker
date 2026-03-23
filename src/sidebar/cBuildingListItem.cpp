@@ -153,7 +153,7 @@ int cBuildingListItem::getTotalBuildTime() const
         return sStructureInfo[buildId].buildTime;
     }
     if (type == UPGRADE) {
-        return sUpgradeInfo[buildId].buildTime;
+        return upgradeInfos[buildId].buildTime;
     }
     if (type == SPECIAL) {
         return specialInfos[buildId].buildTime;
@@ -199,7 +199,7 @@ s_UpgradeInfo &cBuildingListItem::getUpgradeInfo()
         logbook("ERROR!!! - calling getUpgradeInfo while type is not UPGRADE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return sUpgradeInfo[buildId];
+    return upgradeInfos[buildId];
 }
 
 s_SpecialInfo &cBuildingListItem::getSpecialInfo()
@@ -330,7 +330,7 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
             buildTime = specialInfos[buildId].buildTime;
             break;
         case UPGRADE:
-            buildTime = sUpgradeInfo[buildId].buildTime;
+            buildTime = upgradeInfos[buildId].buildTime;
             break;
         case BULLET:
         default:
@@ -351,7 +351,7 @@ int cBuildingListItem::getListId(eBuildType type, int buildId)
             return eListTypeAsInt(specialInfos[buildId].listType);
             break;
         case UPGRADE:
-//            return sUpgradeInfo[buildId].;
+//            return upgradeInfos[buildId].;
             return eListTypeAsInt(eListType::LIST_UPGRADES);
             break;
         default:
