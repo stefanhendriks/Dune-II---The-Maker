@@ -290,7 +290,7 @@ void cPlayer::setHouse(int iHouse)
 
         // same goes for units
         for (int i = 0; i < MAX_UNITTYPES; i++) {
-            s_UnitInfo &unitType = sUnitInfo[i];
+            s_UnitInfo &unitType = unitInfos[i];
 
             bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, TransparentColorIndex);
             if (!bmp_unit[i]) {
@@ -533,9 +533,9 @@ Texture *cPlayer::getUnitTopBitmap(int index)
  */
 // SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
 // {
-// if (sUnitInfo[index].shadow) {
-// int bmp_width = sUnitInfo[index].bmp_width;
-// int bmp_height = sUnitInfo[index].bmp_height;
+// if (unitInfos[index].shadow) {
+// int bmp_width = unitInfos[index].bmp_width;
+// int bmp_height = unitInfos[index].bmp_height;
 // int start_x = bodyFacing * bmp_width;
 // int start_y = bmp_height * animationFrame;
 //
@@ -547,15 +547,15 @@ Texture *cPlayer::getUnitTopBitmap(int index)
 //
 // SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
 // renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
-// renderDrawer->blit(sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+// renderDrawer->blit(unitInfos[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
 // return shadow;
 // }
 // return nullptr;
 // }
 Texture *cPlayer::getUnitShadowBitmap(int index)
 {
-    if (sUnitInfo[index].shadow) {
-        return sUnitInfo[index].shadow;
+    if (unitInfos[index].shadow) {
+        return unitInfos[index].shadow;
     } else
         return nullptr;
 }
@@ -587,7 +587,7 @@ bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const
 bool cPlayer::hasEnoughCreditsForUnit(int unitType)
 {
     if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
-    return this->credits >= sUnitInfo[unitType].cost;
+    return this->credits >= unitInfos[unitType].cost;
 }
 
 bool cPlayer::hasEnoughCreditsForStructure(int structureType)
@@ -878,7 +878,7 @@ bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const
 
 bool cPlayer::canBuildUnitType(int iUnitType) const
 {
-    eListType listType = sUnitInfo[iUnitType].listType;
+    eListType listType = unitInfos[iUnitType].listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iUnitType);
     bool result = pItem != nullptr;
     log(std::format("canBuildUnitType(unitType={}) -> {}", iUnitType, result ? "TRUE" : "FALSE"));
@@ -921,7 +921,7 @@ cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const
  */
 bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const
 {
-    s_UnitInfo &p = sUnitInfo[iUnitType];
+    s_UnitInfo &p = unitInfos[iUnitType];
     eListType listType = p.listType;
     int subListId = p.subListId;
 
@@ -1032,7 +1032,7 @@ cBuildingListItem *cPlayer::isBuildingStructure() const
 
 bool cPlayer::startBuildingUnit(int iUnitType) const
 {
-    s_UnitInfo &unitType = sUnitInfo[iUnitType];
+    s_UnitInfo &unitType = unitInfos[iUnitType];
     eListType listType = unitType.listType;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUnitType);
 
@@ -1253,12 +1253,12 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
 {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    log(std::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, sUnitInfo[iUnitType].name));
+    log(std::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, unitInfos[iUnitType].name));
 
     // CHECK 1: Do we have the money?
     if (checkIfAffordable) {
         if (!hasEnoughCreditsForUnit(iUnitType)) {
-            log(std::format("canBuildUnit: FALSE, because cost {} higher than credits {}", sUnitInfo[iUnitType].cost, getCredits()));
+            log(std::format("canBuildUnit: FALSE, because cost {} higher than credits {}", unitInfos[iUnitType].cost, getCredits()));
             return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
         }
     }
@@ -1274,14 +1274,14 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(iStrucType)) {
         log(std::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for this unit: [{}]",
-                        sStructureInfo[iStrucType].name, sUnitInfo[iUnitType].name));
+                        sStructureInfo[iStrucType].name, unitInfos[iUnitType].name));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
     if (iUnitType == DEVASTATOR || iUnitType == SONICTANK || iUnitType == DEVIATOR) {
         if (!hasAtleastOneStructure(IX)) {
             log(std::format("canBuildUnit: FALSE, because we do not own the required ADDITIONAL structure type [{}] for this unit: [{}]",
-                            sStructureInfo[IX].name, sUnitInfo[iUnitType].name));
+                            sStructureInfo[IX].name, unitInfos[iUnitType].name));
             return eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE;
         }
     }
@@ -1290,7 +1290,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         // not available to build (not in list)
         // assume it requires an upgrade?
         log(std::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this unit: [{}]",
-                        eListTypeAsInt(sUnitInfo[iUnitType].listType), sUnitInfo[iUnitType].name));
+                        eListTypeAsInt(unitInfos[iUnitType].listType), unitInfos[iUnitType].name));
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 

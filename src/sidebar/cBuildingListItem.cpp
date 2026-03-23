@@ -159,7 +159,7 @@ int cBuildingListItem::getTotalBuildTime() const
         return specialInfos[buildId].buildTime;
     }
     // assumes units by default
-    return sUnitInfo[buildId].buildTime;
+    return unitInfos[buildId].buildTime;
 }
 
 bool cBuildingListItem::isDoneBuilding()
@@ -219,7 +219,7 @@ s_UnitInfo &cBuildingListItem::getUnitInfo()
         logbook("ERROR!!! - calling getUnitInfo while type is not UNIT! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return sUnitInfo[buildId];
+    return unitInfos[buildId];
 }
 
 s_StructureInfo &cBuildingListItem::getStructureInfo()
@@ -321,7 +321,7 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
     int buildTime = 0;
     switch (type) {
         case UNIT:
-            buildTime = sUnitInfo[buildId].buildTime;
+            buildTime = unitInfos[buildId].buildTime;
             break;
         case STRUCTURE:
             buildTime = sStructureInfo[buildId].buildTime;
@@ -344,7 +344,7 @@ int cBuildingListItem::getListId(eBuildType type, int buildId)
 {
     switch (type) {
         case UNIT:
-            return eListTypeAsInt(sUnitInfo[buildId].listType);
+            return eListTypeAsInt(unitInfos[buildId].listType);
         case STRUCTURE:
             return sStructureInfo[buildId].list;
         case SPECIAL:
@@ -393,7 +393,7 @@ std::string cBuildingListItem::getInfo()
             msg = std::format("${} | {} | {} Secs", getBuildCost(), unitType.name, seconds);
         }
         else {
-            msg = std::format("{} | {} Secs", sUnitInfo[getBuildId()].name, seconds);
+            msg = std::format("{} | {} Secs", unitInfos[getBuildId()].name, seconds);
         }
     }
     else if (isTypeUpgrade()) {
