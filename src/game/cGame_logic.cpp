@@ -444,7 +444,7 @@ void cGame::shakeScreen(int duration)
 */
 void cGame::shutdown()
 {
-    cParticle::reset();
+    m_particles.reset();
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("SHUTDOWN");
 
@@ -907,7 +907,7 @@ void cGame::setState(int newState)
                         cPlayer &player = game.getPlayer(i);
                         player.evaluateStillAlive();
                     }
-                    cParticle::reset();
+                    m_particles.reset();
                     // in-between solution until we have a proper combat state object
                     global_drawManager->init();
 
