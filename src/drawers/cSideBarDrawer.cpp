@@ -178,7 +178,7 @@ void cSideBarDrawer::drawBuildingLists()
         }
     }
 
-    cOrderDrawer *orderDrawer = global_drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = game.global_drawManager->getOrderDrawer();
 
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {

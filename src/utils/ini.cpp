@@ -1220,8 +1220,8 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     fremenIsHumanAlly = true;
                 }
 
-                assert(global_drawManager);
-                global_drawManager->missionInit();
+                assert(game.global_drawManager);
+                game.global_drawManager->missionInit();
 
                 if (quota > 0) {
                     game.getPlayer(HUMAN).setQuota(quota);

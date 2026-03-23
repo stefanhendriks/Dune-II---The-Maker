@@ -53,6 +53,7 @@ class cGameConditionChecker;
 class cScreenFader;
 class SDLDrawer;
 class cMapCamera;
+class cDrawManager;
 
 struct s_TerrainInfo;
 struct s_DataCampaign;
@@ -115,6 +116,7 @@ public:
     cBullets                    g_Bullets;
     // TODO: move these to a 'game context' class that we can pass around, instead of having them as global variables.
     cMapCamera					*m_mapCamera;
+    cDrawManager                *global_drawManager;
 
     // Initialization functions
     void init();		            // initialize all game variables
