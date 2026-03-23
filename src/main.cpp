@@ -41,8 +41,9 @@ std::shared_ptr<Graphics>   gfxdata;
 s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
 s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 s_UpgradeInfo               sUpgradeInfo[MAX_UPGRADETYPES];
-s_SpecialInfo               sSpecialInfo[MAX_SPECIALTYPES];
+//s_SpecialInfo             sSpecialInfo[MAX_SPECIALTYPES];
 
+cSpecialInfos               specialInfos;
 cBulletInfos   			    bulletInfos;
 
 

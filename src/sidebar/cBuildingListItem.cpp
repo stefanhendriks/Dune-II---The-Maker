@@ -156,7 +156,7 @@ int cBuildingListItem::getTotalBuildTime() const
         return sUpgradeInfo[buildId].buildTime;
     }
     if (type == SPECIAL) {
-        return sSpecialInfo[buildId].buildTime;
+        return specialInfos[buildId].buildTime;
     }
     // assumes units by default
     return sUnitInfo[buildId].buildTime;
@@ -209,7 +209,7 @@ s_SpecialInfo &cBuildingListItem::getSpecialInfo()
         logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return sSpecialInfo[buildId];
+    return specialInfos[buildId];
 }
 
 s_UnitInfo &cBuildingListItem::getUnitInfo()
@@ -327,7 +327,7 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
             buildTime = sStructureInfo[buildId].buildTime;
             break;
         case SPECIAL:
-            buildTime = sSpecialInfo[buildId].buildTime;
+            buildTime = specialInfos[buildId].buildTime;
             break;
         case UPGRADE:
             buildTime = sUpgradeInfo[buildId].buildTime;
@@ -348,7 +348,7 @@ int cBuildingListItem::getListId(eBuildType type, int buildId)
         case STRUCTURE:
             return sStructureInfo[buildId].list;
         case SPECIAL:
-            return eListTypeAsInt(sSpecialInfo[buildId].listType);
+            return eListTypeAsInt(specialInfos[buildId].listType);
             break;
         case UPGRADE:
 //            return sUpgradeInfo[buildId].;
@@ -363,7 +363,7 @@ bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId)
 {
     switch (type) {
         case SPECIAL:
-            return sSpecialInfo[buildId].autoBuild;
+            return specialInfos[buildId].autoBuild;
         default:
             return false;
     }

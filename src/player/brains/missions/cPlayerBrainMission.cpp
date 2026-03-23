@@ -214,10 +214,10 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                         }
                         else if (thingIWant.buildType == eBuildType::SPECIAL) {
                             // or a special kind of thing I ordered should produce a unit
-                            if (sSpecialInfo[thingIWant.type].providesType == eBuildType::UNIT) {
+                            if (specialInfos[thingIWant.type].providesType == eBuildType::UNIT) {
                                 // it provides a unit AND the kind of unit it provides matches that what
                                 // has been created... then we *also* are interested.
-                                if (sSpecialInfo[thingIWant.type].providesTypeId == event.entitySpecificType) {
+                                if (specialInfos[thingIWant.type].providesTypeId == event.entitySpecificType) {
                                     // in case we have multiple entries with same type we check for produced vs required
 
                                     // do not look at produced property, because we should have only ONE SPECIAL KIND

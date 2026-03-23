@@ -720,67 +720,67 @@ void IniGameRessources::install_specials()
 {
 
     for (int i = 0; i < MAX_SPECIALTYPES; i++) {
-        sSpecialInfo[i].icon = -1;
-        sSpecialInfo[i].providesType = eBuildType::UNIT;
-        sSpecialInfo[i].buildTime = 0;
-        sSpecialInfo[i].deployFrom = eDeployFromType::AT_RANDOM_CELL;
-        sSpecialInfo[i].deployAtStructure = -1;
-        sSpecialInfo[i].units = 0;
-        sSpecialInfo[i].house = eHouseBitFlag::Unknown;
-        sSpecialInfo[i].autoBuild = false;
-        sSpecialInfo[i].deployTargetType = eDeployTargetType::TARGET_NONE;
-        sSpecialInfo[i].deployTargetPrecision = 0;
-        sSpecialInfo[i].listType = eListType::LIST_NONE;
-        sSpecialInfo[i].subListId = -1;
-        strcpy(sSpecialInfo[i].description, "\0");
+        specialInfos[i].icon = -1;
+        specialInfos[i].providesType = eBuildType::UNIT;
+        specialInfos[i].buildTime = 0;
+        specialInfos[i].deployFrom = eDeployFromType::AT_RANDOM_CELL;
+        specialInfos[i].deployAtStructure = -1;
+        specialInfos[i].units = 0;
+        specialInfos[i].house = eHouseBitFlag::Unknown;
+        specialInfos[i].autoBuild = false;
+        specialInfos[i].deployTargetType = eDeployTargetType::TARGET_NONE;
+        specialInfos[i].deployTargetPrecision = 0;
+        specialInfos[i].listType = eListType::LIST_NONE;
+        specialInfos[i].subListId = -1;
+        strcpy(specialInfos[i].description, "\0");
     }
 
     // Deploy Saboteur
-    sSpecialInfo[SPECIAL_SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
-    sSpecialInfo[SPECIAL_SABOTEUR].house=eHouseBitFlag::Ordos;
-    sSpecialInfo[SPECIAL_SABOTEUR].autoBuild=true;
-    sSpecialInfo[SPECIAL_SABOTEUR].providesType = eBuildType::UNIT;
-    sSpecialInfo[SPECIAL_SABOTEUR].providesTypeId = SABOTEUR;
-    sSpecialInfo[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
-    sSpecialInfo[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
-    sSpecialInfo[SPECIAL_SABOTEUR].units = 1;
-    sSpecialInfo[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
-    sSpecialInfo[SPECIAL_SABOTEUR].listType=eListType::LIST_PALACE;
-    sSpecialInfo[SPECIAL_SABOTEUR].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_SABOTEUR].description, "Saboteur");
+    specialInfos[SPECIAL_SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
+    specialInfos[SPECIAL_SABOTEUR].house=eHouseBitFlag::Ordos;
+    specialInfos[SPECIAL_SABOTEUR].autoBuild=true;
+    specialInfos[SPECIAL_SABOTEUR].providesType = eBuildType::UNIT;
+    specialInfos[SPECIAL_SABOTEUR].providesTypeId = SABOTEUR;
+    specialInfos[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
+    specialInfos[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
+    specialInfos[SPECIAL_SABOTEUR].units = 1;
+    specialInfos[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
+    specialInfos[SPECIAL_SABOTEUR].listType=eListType::LIST_PALACE;
+    specialInfos[SPECIAL_SABOTEUR].subListId=0;
+    strcpy(specialInfos[SPECIAL_SABOTEUR].description, "Saboteur");
 
     // Deploy Fremen
-    sSpecialInfo[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
-    sSpecialInfo[SPECIAL_FREMEN].house=eHouseBitFlag::Atreides;
-    sSpecialInfo[SPECIAL_FREMEN].autoBuild=true;
-    sSpecialInfo[SPECIAL_FREMEN].providesType = eBuildType::UNIT;
-    sSpecialInfo[SPECIAL_FREMEN].providesTypeId = UNIT_FREMEN_THREE;
-    sSpecialInfo[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
-    sSpecialInfo[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
-    sSpecialInfo[SPECIAL_FREMEN].units = 6; // ... but this is
-    sSpecialInfo[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
-    sSpecialInfo[SPECIAL_FREMEN].listType=eListType::LIST_PALACE;
-    sSpecialInfo[SPECIAL_FREMEN].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_FREMEN].description, "Fremen");
+    specialInfos[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
+    specialInfos[SPECIAL_FREMEN].house=eHouseBitFlag::Atreides;
+    specialInfos[SPECIAL_FREMEN].autoBuild=true;
+    specialInfos[SPECIAL_FREMEN].providesType = eBuildType::UNIT;
+    specialInfos[SPECIAL_FREMEN].providesTypeId = UNIT_FREMEN_THREE;
+    specialInfos[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
+    specialInfos[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
+    specialInfos[SPECIAL_FREMEN].units = 6; // ... but this is
+    specialInfos[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
+    specialInfos[SPECIAL_FREMEN].listType=eListType::LIST_PALACE;
+    specialInfos[SPECIAL_FREMEN].subListId=0;
+    strcpy(specialInfos[SPECIAL_FREMEN].description, "Fremen");
 
     // Launch Death Hand
-    sSpecialInfo[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
-    sSpecialInfo[SPECIAL_DEATHHAND].house = Harkonnen | Sardaukar;
-    sSpecialInfo[SPECIAL_DEATHHAND].autoBuild=true;
-    sSpecialInfo[SPECIAL_DEATHHAND].providesType = eBuildType::BULLET;
-    sSpecialInfo[SPECIAL_DEATHHAND].providesTypeId = ROCKET_BIG;
-    sSpecialInfo[SPECIAL_DEATHHAND].deployFrom = eDeployFromType::AT_STRUCTURE; // the rocket is fired FROM ...
-    sSpecialInfo[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
-    sSpecialInfo[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
-    sSpecialInfo[SPECIAL_DEATHHAND].units = 1;
-    sSpecialInfo[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
+    specialInfos[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
+    specialInfos[SPECIAL_DEATHHAND].house = Harkonnen | Sardaukar;
+    specialInfos[SPECIAL_DEATHHAND].autoBuild=true;
+    specialInfos[SPECIAL_DEATHHAND].providesType = eBuildType::BULLET;
+    specialInfos[SPECIAL_DEATHHAND].providesTypeId = ROCKET_BIG;
+    specialInfos[SPECIAL_DEATHHAND].deployFrom = eDeployFromType::AT_STRUCTURE; // the rocket is fired FROM ...
+    specialInfos[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
+    specialInfos[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
+    specialInfos[SPECIAL_DEATHHAND].units = 1;
+    specialInfos[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
     // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
     // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
 
-    sSpecialInfo[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
-    sSpecialInfo[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
-    sSpecialInfo[SPECIAL_DEATHHAND].subListId=0;
-    strcpy(sSpecialInfo[SPECIAL_DEATHHAND].description, "Death Hand");
+    specialInfos[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
+    specialInfos[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
+    specialInfos[SPECIAL_DEATHHAND].subListId=0;
+    strcpy(specialInfos[SPECIAL_DEATHHAND].description, "Death Hand");
 
 }
 

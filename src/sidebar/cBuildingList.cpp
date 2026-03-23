@@ -103,7 +103,7 @@ void cBuildingList::addUnitToList(int unitType, int subList)
 
 void cBuildingList::addSpecialToList(int specialType, int subList)
 {
-    s_SpecialInfo &special = sSpecialInfo[specialType];
+    s_SpecialInfo &special = specialInfos[specialType];
     cBuildingListItem *item = new cBuildingListItem(specialType, special, subList);
     if (!addItemToList(item)) {
         delete item;
