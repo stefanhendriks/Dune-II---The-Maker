@@ -29,6 +29,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/cSpecialInfos.h"
 #include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 
 #include <memory>
 #include <array>
@@ -61,7 +62,8 @@ extern std::shared_ptr<Graphics> gfxdata;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
-extern s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
+//extern s_UnitInfo         			unitInfos[MAX_UNITTYPES];
+extern cUnitInfos               unitInfos;
 // extern s_UpgradeInfo            sUpgradeInfo[MAX_UPGRADETYPES];
 extern cUpgradeInfos            upgradeInfos;
 // extern s_SpecialInfo            sSpecialInfo[MAX_SPECIALTYPES];

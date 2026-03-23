@@ -28,6 +28,7 @@
 #include "utils/common.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 #include <string>
 
 #include <iostream>
