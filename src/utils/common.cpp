@@ -158,8 +158,8 @@ int iFindCloseBorderCell(int iCll)
 int distanceBetweenCellAndCenterOfScreen(int iCell)
 {
     if (game.getMap().isValidCell(iCell)) {
-        int centerX = game.global_mapCamera->getViewportCenterX();
-        int centerY = game.global_mapCamera->getViewportCenterY();
+        int centerX = game.m_mapCamera->getViewportCenterX();
+        int centerY = game.m_mapCamera->getViewportCenterY();
 
         int cellX = game.getMap().getAbsoluteXPositionFromCell(iCell);
         int cellY = game.getMap().getAbsoluteYPositionFromCell(iCell);

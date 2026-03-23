@@ -114,7 +114,7 @@ public:
 
     cBullets                    g_Bullets;
     // TODO: move these to a 'game context' class that we can pass around, instead of having them as global variables.
-    cMapCamera					*global_mapCamera;
+    cMapCamera					*m_mapCamera;
 
     // Initialization functions
     void init();		            // initialize all game variables

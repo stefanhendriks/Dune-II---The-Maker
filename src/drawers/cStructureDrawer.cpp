@@ -56,8 +56,8 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int width = sStructureInfo[theStructure->getType()].bmp_width - 1;
     int height = sStructureInfo[theStructure->getType()].bmp_height - 1;
 
-    int width_x = game.global_mapCamera->factorZoomLevel(width);
-    int height_y = game.global_mapCamera->factorZoomLevel(height);
+    int width_x = game.m_mapCamera->factorZoomLevel(width);
+    int height_y = game.m_mapCamera->factorZoomLevel(height);
 
     m_renderDrawer->renderRectColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, 96);
 }
@@ -73,8 +73,8 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
 
-    int scaledWidth = game.global_mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = game.global_mapCamera->factorZoomLevel(pixelHeight);
+    int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
 
     // Draw prebuild
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
@@ -159,8 +159,8 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             int x1 = pMouse->getX();
             int y1 = pMouse->getY();
-            int x2 = game.global_mapCamera->getWindowXPosition(structure->pos_x() + 16);
-            int y2 = game.global_mapCamera->getWindowYPosition(structure->pos_y() + 16);
+            int x2 = game.m_mapCamera->getWindowXPosition(structure->pos_x() + 16);
+            int y2 = game.m_mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
             m_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
@@ -263,10 +263,10 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
     int offsetY = (structure->getHeightInPixels() - iconHeight) / 2;
-    int offsetXScaled = game.global_mapCamera->factorZoomLevel(offsetX);
-    int offsetYScaled = game.global_mapCamera->factorZoomLevel(offsetY);
-    int scaledWidth = game.global_mapCamera->factorZoomLevel(iconWidth);
-    int scaledHeight = game.global_mapCamera->factorZoomLevel(iconHeight);
+    int offsetXScaled = game.m_mapCamera->factorZoomLevel(offsetX);
+    int offsetYScaled = game.m_mapCamera->factorZoomLevel(offsetY);
+    int scaledWidth = game.m_mapCamera->factorZoomLevel(iconWidth);
+    int scaledHeight = game.m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
     m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
 }
@@ -308,10 +308,10 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
     int offsetY = (structure->getHeightInPixels() - iconHeight) / 2;
-    int offsetXScaled = game.global_mapCamera->factorZoomLevel(offsetX);
-    int offsetYScaled = game.global_mapCamera->factorZoomLevel(offsetY);
-    int scaledWidth = game.global_mapCamera->factorZoomLevel(iconWidth);
-    int scaledHeight = game.global_mapCamera->factorZoomLevel(iconHeight);
+    int offsetXScaled = game.m_mapCamera->factorZoomLevel(offsetX);
+    int offsetYScaled = game.m_mapCamera->factorZoomLevel(offsetY);
+    int scaledWidth = game.m_mapCamera->factorZoomLevel(iconWidth);
+    int scaledHeight = game.m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
     m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
 }
@@ -358,7 +358,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     int draw_x = theStructure->iDrawX() - 1;
     int draw_y = theStructure->iDrawY() - 5;
 
-    int widthBmp = game.global_mapCamera->factorZoomLevel(theStructure->getStructureInfo().bmp_width);
+    int widthBmp = game.m_mapCamera->factorZoomLevel(theStructure->getStructureInfo().bmp_width);
     int width_x = widthBmp - 1;
 
     int height_y = 4;

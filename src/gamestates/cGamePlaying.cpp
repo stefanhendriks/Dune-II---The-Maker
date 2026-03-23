@@ -39,7 +39,7 @@ void cGamePlaying::thinkFast()
 {
     global_drawManager->thinkFast_statePlaying();
 
-    game.global_mapCamera->thinkFast();
+    game.m_mapCamera->thinkFast();
 
     for (cPlayer &pPlayer : game.getPlayers()) {
         pPlayer.thinkFast();
@@ -257,18 +257,18 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_Z)) {
-        game.global_mapCamera->resetZoom();
+        game.m_mapCamera->resetZoom();
     }
 
     if (event.hasKey(SDL_SCANCODE_H)) {
-        game.global_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     // Center on the selected structure
     if (event.hasKey(SDL_SCANCODE_C)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            game.global_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
@@ -308,14 +308,14 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_H)) {
-        game.global_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     // Center on the selected structure
     if (event.hasKey(SDL_SCANCODE_C)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            game.global_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 

@@ -25,8 +25,8 @@ void cFlag::draw()
     Texture *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
-    int drawX = game.global_mapCamera->getWindowXPosition(absCoords.x);
-    int drawY = game.global_mapCamera->getWindowYPosition(absCoords.y);
+    int drawX = game.m_mapCamera->getWindowXPosition(absCoords.x);
+    int drawY = game.m_mapCamera->getWindowYPosition(absCoords.y);
 
     if ((drawX >= 0 && drawX < game.m_screenW) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
@@ -38,8 +38,8 @@ void cFlag::draw()
         // So multiply the height of the flag size times frame
         int iSourceY = pixelHeight * frame;
 
-        int scaledWidth = game.global_mapCamera->factorZoomLevel(pixelWidth);
-        int scaledHeight = game.global_mapCamera->factorZoomLevel(pixelHeight);
+        int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
+        int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
         cRectangle src = {0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest = {drawX, drawY, scaledWidth, scaledHeight};
 

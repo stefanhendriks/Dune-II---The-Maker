@@ -39,8 +39,8 @@ cMapDrawer::~cMapDrawer()
 
 void cMapDrawer::drawShroud()
 {
-    float tileWidth = game.global_mapCamera->getZoomedTileWidth();
-    float tileHeight = game.global_mapCamera->getZoomedTileHeight();
+    float tileWidth = game.m_mapCamera->getZoomedTileWidth();
+    float tileHeight = game.m_mapCamera->getZoomedTileHeight();
 
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
@@ -50,15 +50,15 @@ void cMapDrawer::drawShroud()
 
         // new row
         for (int viewportY = m_camera->getViewportStartY(); viewportY < m_camera->getViewportEndY() + 32; viewportY += 32) {
-            int iCell = game.global_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            int iCell = game.m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
 
             if (iCell < 0) continue;
 
             int absoluteXCoordinateOnMap = m_map->getAbsoluteXPositionFromCell(iCell);
-            float fDrawX = game.global_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
+            float fDrawX = game.m_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
             int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
-            float fDrawY = game.global_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
+            float fDrawY = game.m_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
             if (m_drawWithoutShroudTiles) {
@@ -94,8 +94,8 @@ void cMapDrawer::drawShroud()
 
 void cMapDrawer::drawTerrain()
 {
-    float tileWidth = game.global_mapCamera->getZoomedTileWidth();
-    float tileHeight = game.global_mapCamera->getZoomedTileHeight();
+    float tileWidth = game.m_mapCamera->getZoomedTileWidth();
+    float tileHeight = game.m_mapCamera->getZoomedTileHeight();
 
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
@@ -113,7 +113,7 @@ void cMapDrawer::drawTerrain()
 
         // new row
         for (int viewportY = m_camera->getViewportStartY(); viewportY < m_camera->getViewportEndY() + 32; viewportY += 32) {
-            int iCell = game.global_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            int iCell = game.m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
             if (iCell < 0) continue;
 
             // not visible for player, so do not draw
@@ -133,10 +133,10 @@ void cMapDrawer::drawTerrain()
             }
 
             int absoluteXCoordinateOnMap = m_map->getAbsoluteXPositionFromCell(iCell);
-            float fDrawX = game.global_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
+            float fDrawX = game.m_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
             int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
-            float fDrawY = game.global_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
+            float fDrawY = game.m_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);

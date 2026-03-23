@@ -716,7 +716,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
         // Set map position
         if (p == HUMAN) {
-            game.global_mapCamera->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
+            game.m_mapCamera->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
         }
 
         // create constyard
