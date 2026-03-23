@@ -1175,7 +1175,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
 
         if (special.providesType == eBuildType::BULLET) {
             // from where
-            int structureId = g_structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
+            int structureId = game.g_structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
             if (structureId > -1) {
                 cAbstractStructure *pStructure = game.getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {

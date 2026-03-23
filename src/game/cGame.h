@@ -27,6 +27,7 @@
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/projectiles/cBullets.h"
+#include "utils/cStructureUtils.h"
 
 #include <memory>
 #include <string>
@@ -117,6 +118,7 @@ public:
     // TODO: move these to a 'game context' class that we can pass around, instead of having them as global variables.
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
+    cStructureUtils             g_structureUtils;
 
     // Initialization functions
     void init();		            // initialize all game variables

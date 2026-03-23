@@ -772,10 +772,10 @@ bool cPlayer::isSameTeamAs(const cPlayer *pPlayer)
  */
 void cPlayer::update()
 {
-    powerUsage_ = g_structureUtils.getTotalPowerUsageForPlayer(this);
-    powerProduce_ = g_structureUtils.getTotalPowerOutForPlayer(this);
+    powerUsage_ = game.g_structureUtils.getTotalPowerUsageForPlayer(this);
+    powerProduce_ = game.g_structureUtils.getTotalPowerOutForPlayer(this);
     // update spice capacity
-    maxCredits_ = g_structureUtils.getTotalSpiceCapacityForPlayer(this);
+    maxCredits_ = game.g_structureUtils.getTotalSpiceCapacityForPlayer(this);
 }
 
 int cPlayer::getCredits()
@@ -1269,7 +1269,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         return eCantBuildReason::ALREADY_BUILDING;
     }
 
-    int iStrucType = g_structureUtils.getStructureTypeByUnitBuildId(iUnitType);
+    int iStrucType = game.g_structureUtils.getStructureTypeByUnitBuildId(iUnitType);
 
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(iStrucType)) {
