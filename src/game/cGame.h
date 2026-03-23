@@ -26,6 +26,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/units/cUnits.h"
+#include "gameobjects/projectiles/cBullets.h"
 
 #include <memory>
 #include <string>
@@ -110,6 +111,7 @@ public:
     bool m_drawFps;
     bool m_drawTime;
 
+    cBullets                    g_Bullets;
 
     // Initialization functions
     void init();		            // initialize all game variables

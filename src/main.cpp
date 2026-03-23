@@ -39,7 +39,7 @@ cDrawManager   				*global_drawManager = nullptr;
 SDLDrawer                   *global_renderDrawer = nullptr;
 cMapCamera					*global_mapCamera;
 
-cBullets                    g_Bullets;
+// cBullets                    g_Bullets;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
