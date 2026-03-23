@@ -111,7 +111,7 @@ void cMap::init(int width, int height)
         game.getParticles()[i].init();
     }
 
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         game.getUnit(i).init(i);
     }
 
@@ -544,7 +544,7 @@ void cMap::draw_units()
     //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
 
@@ -564,7 +564,7 @@ void cMap::draw_units()
     }
 
     // then: draw infantry units
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
 
@@ -580,7 +580,7 @@ void cMap::draw_units()
     }
 
     // then: draw ground units
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
 
@@ -609,7 +609,7 @@ void cMap::drawUnitDebug(cUnit &pUnit) const
 void cMap::draw_units_2nd()
 {
     // draw health of units
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (!pUnit.bHovered && !pUnit.bSelected) continue;
@@ -625,7 +625,7 @@ void cMap::draw_units_2nd()
     }
 
     // draw airborn units
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (!pUnit.isAirbornUnit()) continue;

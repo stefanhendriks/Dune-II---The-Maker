@@ -232,7 +232,7 @@ void cGunTurret::think_guard()
         }
 
         // scan area for units
-        for (int i = 0; i < MAX_UNITS; i++) {
+        for (int i = 0; i < game.getUnits().size(); i++) {
             // is valid
             cUnit &cUnit = game.getUnit(i);
             if (!cUnit.isValid()) continue;

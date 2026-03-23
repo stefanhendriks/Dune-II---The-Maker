@@ -48,7 +48,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
 
     if (target < 0) {
         // find any unit to attack instead
-        for (int i = 0; i < MAX_UNITS; i++) {
+        for (int i = 0; i < game.getUnits().size(); i++) {
             cUnit &pUnit = game.getUnit(i);
             if (!pUnit.isValid()) continue;
             if (pUnit.getPlayer() == player) continue; // skip self
