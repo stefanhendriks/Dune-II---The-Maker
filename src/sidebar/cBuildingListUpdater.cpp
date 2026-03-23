@@ -482,7 +482,7 @@ void cBuildingListUpdater::evaluateUpgrades()
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
-        s_UpgradeInfo &upgradeInfo = sUpgradeInfo[i];
+        s_UpgradeInfo &upgradeInfo = upgradeInfos[i];
         if (!upgradeInfo.enabled) continue;
         // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.

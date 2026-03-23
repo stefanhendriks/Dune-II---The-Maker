@@ -33,3 +33,43 @@ struct s_UpgradeInfo {
     eListType providesTypeList; // into which list will this type be made available?
     int providesTypeSubList; // and sublist
 };
+
+
+
+
+class cUpgradeInfos {
+public:
+    cUpgradeInfos()
+    {}
+
+    // accès
+    s_UpgradeInfo &operator[](std::size_t i) {
+        if (i >= MAX_UPGRADETYPES) throw std::out_of_range("UpgradeInfo index");
+        return m_data[i];
+    }
+
+    const s_UpgradeInfo &operator[](std::size_t i) const {
+        if (i >= MAX_UPGRADETYPES) throw std::out_of_range("UpgradeInfo index");
+        return m_data[i];
+    }
+
+    // getter explicite
+    s_UpgradeInfo &get(std::size_t i) { return (*this)[i]; }
+    const s_UpgradeInfo &get(std::size_t i) const { return (*this)[i]; }
+
+    // taille
+    static constexpr std::size_t size() noexcept { return MAX_UPGRADETYPES; }
+
+    // recherche/existence
+    bool valid(std::size_t i) const noexcept { return i < MAX_UPGRADETYPES; }
+
+
+    // itérateurs
+    auto begin() noexcept { return m_data.begin(); }
+    auto end() noexcept { return m_data.end(); }
+    auto begin() const noexcept { return m_data.begin(); }
+    auto end() const noexcept { return m_data.end(); }
+
+private:
+    std::array<s_UpgradeInfo, MAX_UPGRADETYPES> m_data;
+};

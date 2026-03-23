@@ -280,7 +280,7 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
         case eBuildType::BULLET:
             return bulletInfos[specificTypeId].description;
         case eBuildType::UPGRADE:
-            return sUpgradeInfo[specificTypeId].description;
+            return upgradeInfos[specificTypeId].description;
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:
