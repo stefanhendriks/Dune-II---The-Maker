@@ -118,7 +118,7 @@ public:
     // TODO: move these to a 'game context' class that we can pass around, instead of having them as global variables.
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
-    cStructureUtils             g_structureUtils;
+    cStructureUtils             m_structureUtils;
 
     // Initialization functions
     void init();		            // initialize all game variables
