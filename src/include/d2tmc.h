@@ -28,6 +28,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/cUpgradeInfo.h"
 
 #include <memory>
 #include <array>
