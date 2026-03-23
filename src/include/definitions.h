@@ -67,7 +67,7 @@
 #define MAX_UNITTYPES       50    // maximum of unit types
 
 // UPGRADES stuff
-#define MAX_UPGRADETYPES       50    // maximum of upgrades
+//#define MAX_UPGRADETYPES       50    // maximum of upgrades
 
 // SPECIALS (super weapons) stuff
 //#define MAX_SPECIALTYPES       10    // maximum of specialInfo

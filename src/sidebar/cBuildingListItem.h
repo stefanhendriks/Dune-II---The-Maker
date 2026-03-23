@@ -13,6 +13,7 @@
 
 class cBuildingList;
 struct s_SpecialInfo;
+struct s_UpgradeInfo;
 
 class cBuildingListItem {
 
