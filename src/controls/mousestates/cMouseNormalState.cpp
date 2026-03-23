@@ -74,11 +74,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
 
         if (!ids.empty()) {
             if (ids.size() > 1) {
-                global_drawManager->setMessage(std::format("{} units selected", ids.size()));
+                game.global_drawManager->setMessage(std::format("{} units selected", ids.size()));
             }
             else {
                 cUnit &pUnit = game.getUnit(ids[0]);
-                global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+                game.global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
             }
         }
     }
@@ -101,7 +101,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                     else {
                         unitSelected = true;
                     }
-                    global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+                    game.global_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
                 }
             }
 
@@ -120,7 +120,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                 }
 
                 if (pStructure && pStructure->isValid()) {
-                    global_drawManager->setMessage(pStructure->getStatusForMessageBar());
+                    game.global_drawManager->setMessage(pStructure->getStatusForMessageBar());
                 }
             }
         }
