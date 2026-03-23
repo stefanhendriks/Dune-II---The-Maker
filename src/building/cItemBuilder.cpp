@@ -238,7 +238,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             }
             else {
                 // airborn unit
-                int structureToDeployUnit = game.g_structureUtils.findHiTechToDeployAirUnit(m_player);
+                int structureToDeployUnit = game.m_structureUtils.findHiTechToDeployAirUnit(m_player);
                 if (structureToDeployUnit > -1) {
                     cAbstractStructure *pStructureToDeploy = game.getStructures()[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
@@ -402,9 +402,9 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
  */
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
 {
-    int structureTypeByItem = game.g_structureUtils.findStructureTypeByTypeOfList(item);
+    int structureTypeByItem = game.m_structureUtils.findStructureTypeByTypeOfList(item);
     assert(structureTypeByItem > -1);
-    int structureToDeployUnit = game.g_structureUtils.findStructureToDeployUnit(m_player, structureTypeByItem);
+    int structureToDeployUnit = game.m_structureUtils.findStructureToDeployUnit(m_player, structureTypeByItem);
     int buildIdToProduce = buildId;
     if (structureToDeployUnit > -1) {
         cAbstractStructure *pStructureToDeploy = game.getStructures()[structureToDeployUnit];

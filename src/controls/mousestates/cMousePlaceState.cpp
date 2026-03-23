@@ -80,8 +80,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
     bool bWithinBuildDistance = false;
 
-    int cellWidth = game.g_structureUtils.getWidthOfStructureTypeInCells(structureIdToPlace);
-    int cellHeight = game.g_structureUtils.getHeightOfStructureTypeInCells(structureIdToPlace);
+    int cellWidth = game.m_structureUtils.getWidthOfStructureTypeInCells(structureIdToPlace);
+    int cellHeight = game.m_structureUtils.getHeightOfStructureTypeInCells(structureIdToPlace);
 
 #define SCANWIDTH    1
 
