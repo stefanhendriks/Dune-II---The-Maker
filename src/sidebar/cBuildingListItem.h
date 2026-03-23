@@ -12,6 +12,7 @@
 #include <string>
 
 class cBuildingList;
+struct s_SpecialInfo;
 
 class cBuildingListItem {
 

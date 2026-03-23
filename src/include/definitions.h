@@ -70,7 +70,7 @@
 #define MAX_UPGRADETYPES       50    // maximum of upgrades
 
 // SPECIALS (super weapons) stuff
-#define MAX_SPECIALTYPES       10    // maximum of specialInfo
+//#define MAX_SPECIALTYPES       10    // maximum of specialInfo
 
 // STRUCTURES stuff
 #define MAX_STRUCTURETYPES  50    // max of building types
