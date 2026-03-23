@@ -28,7 +28,7 @@
 #include "player/brains/cPlayerBrain.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
-#include "gameobjects/units/cUnitInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 
 #include <set>
 #include <string>

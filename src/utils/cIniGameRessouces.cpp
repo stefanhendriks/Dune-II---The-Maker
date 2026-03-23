@@ -30,7 +30,7 @@ void IniGameRessources::install_units()
 
     // some things for ALL unit types; initialization
     for (int i = 0; i < MAX_UNITTYPES; i++) {
-        s_UnitInfo &unitInfo = sUnitInfo[i];
+        s_UnitInfo &unitInfo = unitInfos[i];
         unitInfo.bmp = gfxdata->getSurface(UNIT_QUAD); // default bitmap is a quad!
         unitInfo.top = nullptr;  // no top
         unitInfo.shadow = nullptr;  // no shadow (deliverd with picture itself)
@@ -88,243 +88,243 @@ void IniGameRessources::install_units()
 
     // Unit        : CarryAll
     // Description : CarryAll, the flying pickuptruck
-    sUnitInfo[CARRYALL].bmp = gfxdata->getSurface(UNIT_CARRYALL);      // pointer to the original 8bit bitmap
-    sUnitInfo[CARRYALL].shadow = gfxdata->getTexture(UNIT_CARRYALL_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[CARRYALL].bmp_width = 24 * 2;
-    sUnitInfo[CARRYALL].bmp_height = 24 * 2;
-    sUnitInfo[CARRYALL].bmp_startpixel = 0;
-    sUnitInfo[CARRYALL].bmp_frames = 2; // we have at max 1 extra frame
-    sUnitInfo[CARRYALL].icon = ICON_UNIT_CARRYALL;
-    sUnitInfo[CARRYALL].airborn = true;   // is airborn
-    sUnitInfo[CARRYALL].free_roam = true; // may freely roam the air
-    sUnitInfo[CARRYALL].listType = eListType::LIST_UNITS;
-    sUnitInfo[CARRYALL].subListId = SUBLIST_HIGHTECH;
-    strcpy(sUnitInfo[CARRYALL].name, "Carry-All");
+    unitInfos[CARRYALL].bmp = gfxdata->getSurface(UNIT_CARRYALL);      // pointer to the original 8bit bitmap
+    unitInfos[CARRYALL].shadow = gfxdata->getTexture(UNIT_CARRYALL_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[CARRYALL].bmp_width = 24 * 2;
+    unitInfos[CARRYALL].bmp_height = 24 * 2;
+    unitInfos[CARRYALL].bmp_startpixel = 0;
+    unitInfos[CARRYALL].bmp_frames = 2; // we have at max 1 extra frame
+    unitInfos[CARRYALL].icon = ICON_UNIT_CARRYALL;
+    unitInfos[CARRYALL].airborn = true;   // is airborn
+    unitInfos[CARRYALL].free_roam = true; // may freely roam the air
+    unitInfos[CARRYALL].listType = eListType::LIST_UNITS;
+    unitInfos[CARRYALL].subListId = SUBLIST_HIGHTECH;
+    strcpy(unitInfos[CARRYALL].name, "Carry-All");
 
     // Unit        : Ornithopter
     // Description : Pesty little aircraft shooting bastard
-    sUnitInfo[ORNITHOPTER].bmp = gfxdata->getSurface(UNIT_ORNITHOPTER);      // pointer to the original 8bit bitmap
-    sUnitInfo[ORNITHOPTER].shadow = gfxdata->getTexture(UNIT_ORNITHOPTER_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[ORNITHOPTER].bmp_width = 24 * 2;
-    sUnitInfo[ORNITHOPTER].bmp_height = 24 * 2;
-    sUnitInfo[ORNITHOPTER].bmp_startpixel = 0;
-    sUnitInfo[ORNITHOPTER].bmp_frames = 4; // we have at max 3 extra frames
-    sUnitInfo[ORNITHOPTER].icon = ICON_UNIT_ORNITHOPTER;
-    sUnitInfo[ORNITHOPTER].bulletType = ROCKET_SMALL_ORNI;
-    sUnitInfo[ORNITHOPTER].fireTwice = true;
-    sUnitInfo[ORNITHOPTER].airborn = true;   // is airborn
-    sUnitInfo[ORNITHOPTER].squish = false;   // can't squish infantry
-    sUnitInfo[ORNITHOPTER].free_roam = true; // may freely roam the air
-    sUnitInfo[ORNITHOPTER].listType = eListType::LIST_UNITS;
-    sUnitInfo[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
-//    sUnitInfo[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
-    strcpy(sUnitInfo[ORNITHOPTER].name, "Ornithopter");
+    unitInfos[ORNITHOPTER].bmp = gfxdata->getSurface(UNIT_ORNITHOPTER);      // pointer to the original 8bit bitmap
+    unitInfos[ORNITHOPTER].shadow = gfxdata->getTexture(UNIT_ORNITHOPTER_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[ORNITHOPTER].bmp_width = 24 * 2;
+    unitInfos[ORNITHOPTER].bmp_height = 24 * 2;
+    unitInfos[ORNITHOPTER].bmp_startpixel = 0;
+    unitInfos[ORNITHOPTER].bmp_frames = 4; // we have at max 3 extra frames
+    unitInfos[ORNITHOPTER].icon = ICON_UNIT_ORNITHOPTER;
+    unitInfos[ORNITHOPTER].bulletType = ROCKET_SMALL_ORNI;
+    unitInfos[ORNITHOPTER].fireTwice = true;
+    unitInfos[ORNITHOPTER].airborn = true;   // is airborn
+    unitInfos[ORNITHOPTER].squish = false;   // can't squish infantry
+    unitInfos[ORNITHOPTER].free_roam = true; // may freely roam the air
+    unitInfos[ORNITHOPTER].listType = eListType::LIST_UNITS;
+    unitInfos[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
+//    unitInfos[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
+    strcpy(unitInfos[ORNITHOPTER].name, "Ornithopter");
 
     // Unit        : Devastator
     // Description : Devastator
-    sUnitInfo[DEVASTATOR].bmp = gfxdata->getSurface(UNIT_DEVASTATOR);      // pointer to the original 8bit bitmap
-    sUnitInfo[DEVASTATOR].shadow = gfxdata->getTexture(UNIT_DEVASTATOR_SHADOW);      // pointer to the original bitmap shadow
-    sUnitInfo[DEVASTATOR].bmp_width = 19 * 2;
-    sUnitInfo[DEVASTATOR].bmp_startpixel = 0;
-    sUnitInfo[DEVASTATOR].bmp_height = 23 * 2;
-    sUnitInfo[DEVASTATOR].bmp_frames = 1;
-    sUnitInfo[DEVASTATOR].bulletType = BULLET_DEVASTATOR;
-    sUnitInfo[DEVASTATOR].fireTwice = true;
-    sUnitInfo[DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
-    sUnitInfo[DEVASTATOR].listType = eListType::LIST_UNITS;
-    sUnitInfo[DEVASTATOR].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[DEVASTATOR].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[DEVASTATOR].smokeHpFactor = 0.5f;
-    sUnitInfo[DEVASTATOR].canGuard = true;
-    sUnitInfo[DEVASTATOR].canAttackUnits = true;
-    strcpy(sUnitInfo[DEVASTATOR].name, "Devastator");
+    unitInfos[DEVASTATOR].bmp = gfxdata->getSurface(UNIT_DEVASTATOR);      // pointer to the original 8bit bitmap
+    unitInfos[DEVASTATOR].shadow = gfxdata->getTexture(UNIT_DEVASTATOR_SHADOW);      // pointer to the original bitmap shadow
+    unitInfos[DEVASTATOR].bmp_width = 19 * 2;
+    unitInfos[DEVASTATOR].bmp_startpixel = 0;
+    unitInfos[DEVASTATOR].bmp_height = 23 * 2;
+    unitInfos[DEVASTATOR].bmp_frames = 1;
+    unitInfos[DEVASTATOR].bulletType = BULLET_DEVASTATOR;
+    unitInfos[DEVASTATOR].fireTwice = true;
+    unitInfos[DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
+    unitInfos[DEVASTATOR].listType = eListType::LIST_UNITS;
+    unitInfos[DEVASTATOR].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[DEVASTATOR].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[DEVASTATOR].smokeHpFactor = 0.5f;
+    unitInfos[DEVASTATOR].canGuard = true;
+    unitInfos[DEVASTATOR].canAttackUnits = true;
+    strcpy(unitInfos[DEVASTATOR].name, "Devastator");
 
     // Unit        : Harvester
     // Description : Harvester
-    sUnitInfo[HARVESTER].bmp = gfxdata->getSurface(UNIT_HARVESTER);      // pointer to the original 8bit bitmap
-    sUnitInfo[HARVESTER].shadow = gfxdata->getTexture(UNIT_HARVESTER_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[HARVESTER].bmp_width = 40 * 2;
-    sUnitInfo[HARVESTER].bmp_startpixel = 24;
-    sUnitInfo[HARVESTER].bmp_height = 26 * 2;
-    sUnitInfo[HARVESTER].bmp_frames = 4;
-    sUnitInfo[HARVESTER].icon = ICON_UNIT_HARVESTER;
-    sUnitInfo[HARVESTER].credit_capacity = 700;
-    sUnitInfo[HARVESTER].harvesting_amount = 5;
-    sUnitInfo[HARVESTER].listType = eListType::LIST_UNITS;
-    sUnitInfo[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[HARVESTER].smokeHpFactor = 0.5f;
-    strcpy(sUnitInfo[HARVESTER].name, "Harvester");
+    unitInfos[HARVESTER].bmp = gfxdata->getSurface(UNIT_HARVESTER);      // pointer to the original 8bit bitmap
+    unitInfos[HARVESTER].shadow = gfxdata->getTexture(UNIT_HARVESTER_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[HARVESTER].bmp_width = 40 * 2;
+    unitInfos[HARVESTER].bmp_startpixel = 24;
+    unitInfos[HARVESTER].bmp_height = 26 * 2;
+    unitInfos[HARVESTER].bmp_frames = 4;
+    unitInfos[HARVESTER].icon = ICON_UNIT_HARVESTER;
+    unitInfos[HARVESTER].credit_capacity = 700;
+    unitInfos[HARVESTER].harvesting_amount = 5;
+    unitInfos[HARVESTER].listType = eListType::LIST_UNITS;
+    unitInfos[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[HARVESTER].smokeHpFactor = 0.5f;
+    strcpy(unitInfos[HARVESTER].name, "Harvester");
 
     // Unit        : Combattank
     // Description : Combattank
-    sUnitInfo[TANK].bmp = gfxdata->getSurface(UNIT_TANKBASE);      // pointer to the original 8bit bitmap
-    sUnitInfo[TANK].shadow = gfxdata->getTexture(UNIT_TANKBASE_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[TANK].top = gfxdata->getSurface(UNIT_TANKTOP);      // pointer to the original 8bit bitmap
-    sUnitInfo[TANK].bmp_width = 16 * 2;
-    sUnitInfo[TANK].bmp_startpixel = 0;
-    sUnitInfo[TANK].bmp_height = 16 * 2;
-    sUnitInfo[TANK].bmp_frames = 0;
-    sUnitInfo[TANK].bulletType = BULLET_TANK;
-    sUnitInfo[TANK].icon = ICON_UNIT_TANK;
-    sUnitInfo[TANK].listType = eListType::LIST_UNITS;
-    sUnitInfo[TANK].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[TANK].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[TANK].smokeHpFactor = 0.5f;
-    sUnitInfo[TANK].canGuard = true;
-    sUnitInfo[TANK].canAttackUnits = true;
-    strcpy(sUnitInfo[TANK].name, "Tank");
+    unitInfos[TANK].bmp = gfxdata->getSurface(UNIT_TANKBASE);      // pointer to the original 8bit bitmap
+    unitInfos[TANK].shadow = gfxdata->getTexture(UNIT_TANKBASE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[TANK].top = gfxdata->getSurface(UNIT_TANKTOP);      // pointer to the original 8bit bitmap
+    unitInfos[TANK].bmp_width = 16 * 2;
+    unitInfos[TANK].bmp_startpixel = 0;
+    unitInfos[TANK].bmp_height = 16 * 2;
+    unitInfos[TANK].bmp_frames = 0;
+    unitInfos[TANK].bulletType = BULLET_TANK;
+    unitInfos[TANK].icon = ICON_UNIT_TANK;
+    unitInfos[TANK].listType = eListType::LIST_UNITS;
+    unitInfos[TANK].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[TANK].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[TANK].smokeHpFactor = 0.5f;
+    unitInfos[TANK].canGuard = true;
+    unitInfos[TANK].canAttackUnits = true;
+    strcpy(unitInfos[TANK].name, "Tank");
 
 
     // Unit        : Siege Tank
     // Description : Siege tank
-    sUnitInfo[SIEGETANK].bmp = gfxdata->getSurface(UNIT_SIEGEBASE);      // pointer to the original 8bit bitmap
-    sUnitInfo[SIEGETANK].shadow = gfxdata->getTexture(UNIT_SIEGEBASE_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[SIEGETANK].top = gfxdata->getSurface(UNIT_SIEGETOP);      // pointer to the original 8bit bitmap
-    sUnitInfo[SIEGETANK].bmp_width = 18 * 2;
-    sUnitInfo[SIEGETANK].bmp_startpixel = 1;
-    sUnitInfo[SIEGETANK].bmp_height = 18 * 2;
-    sUnitInfo[SIEGETANK].bmp_frames = 0;
-    sUnitInfo[SIEGETANK].bulletType = BULLET_SIEGE;
-    sUnitInfo[SIEGETANK].fireTwice = true;
-    sUnitInfo[SIEGETANK].icon = ICON_UNIT_SIEGETANK;
-    sUnitInfo[SIEGETANK].listType = eListType::LIST_UNITS;
-    sUnitInfo[SIEGETANK].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[SIEGETANK].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[SIEGETANK].smokeHpFactor = 0.5f;
-    sUnitInfo[SIEGETANK].canGuard = true;
-    sUnitInfo[SIEGETANK].canAttackUnits = true;
-    strcpy(sUnitInfo[SIEGETANK].name, "Siege Tank");
+    unitInfos[SIEGETANK].bmp = gfxdata->getSurface(UNIT_SIEGEBASE);      // pointer to the original 8bit bitmap
+    unitInfos[SIEGETANK].shadow = gfxdata->getTexture(UNIT_SIEGEBASE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[SIEGETANK].top = gfxdata->getSurface(UNIT_SIEGETOP);      // pointer to the original 8bit bitmap
+    unitInfos[SIEGETANK].bmp_width = 18 * 2;
+    unitInfos[SIEGETANK].bmp_startpixel = 1;
+    unitInfos[SIEGETANK].bmp_height = 18 * 2;
+    unitInfos[SIEGETANK].bmp_frames = 0;
+    unitInfos[SIEGETANK].bulletType = BULLET_SIEGE;
+    unitInfos[SIEGETANK].fireTwice = true;
+    unitInfos[SIEGETANK].icon = ICON_UNIT_SIEGETANK;
+    unitInfos[SIEGETANK].listType = eListType::LIST_UNITS;
+    unitInfos[SIEGETANK].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[SIEGETANK].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[SIEGETANK].smokeHpFactor = 0.5f;
+    unitInfos[SIEGETANK].canGuard = true;
+    unitInfos[SIEGETANK].canAttackUnits = true;
+    strcpy(unitInfos[SIEGETANK].name, "Siege Tank");
 
     // Unit        : MCV
     // Description : Movable Construction Vehicle
-    sUnitInfo[MCV].bmp = gfxdata->getSurface(UNIT_MCV);      // pointer to the original 8bit bitmap
-    sUnitInfo[MCV].shadow = gfxdata->getTexture(UNIT_MCV_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[MCV].bmp_width = 24 * 2;
-    sUnitInfo[MCV].bmp_startpixel = 0;
-    sUnitInfo[MCV].bmp_height = 25 * 2;
-    sUnitInfo[MCV].bmp_frames = 1;
-    sUnitInfo[MCV].icon = ICON_UNIT_MCV;
-    sUnitInfo[MCV].listType = eListType::LIST_UNITS;
-    sUnitInfo[MCV].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[MCV].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[MCV].smokeHpFactor = 0.5f;
-    strcpy(sUnitInfo[MCV].name, "MCV");
+    unitInfos[MCV].bmp = gfxdata->getSurface(UNIT_MCV);      // pointer to the original 8bit bitmap
+    unitInfos[MCV].shadow = gfxdata->getTexture(UNIT_MCV_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[MCV].bmp_width = 24 * 2;
+    unitInfos[MCV].bmp_startpixel = 0;
+    unitInfos[MCV].bmp_height = 25 * 2;
+    unitInfos[MCV].bmp_frames = 1;
+    unitInfos[MCV].icon = ICON_UNIT_MCV;
+    unitInfos[MCV].listType = eListType::LIST_UNITS;
+    unitInfos[MCV].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[MCV].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[MCV].smokeHpFactor = 0.5f;
+    strcpy(unitInfos[MCV].name, "MCV");
 
 
     // Unit        : Deviator
     // Description : Deviator
-    sUnitInfo[DEVIATOR].bmp = gfxdata->getSurface(UNIT_DEVIATOR);      // pointer to the original 8bit bitmap
-    sUnitInfo[DEVIATOR].bmp_width = 16 * 2;
-    sUnitInfo[DEVIATOR].bmp_height = 16 * 2;
-    sUnitInfo[DEVIATOR].bmp_startpixel = 0;
-    sUnitInfo[DEVIATOR].bmp_frames = 1;
-    sUnitInfo[DEVIATOR].icon = ICON_UNIT_DEVIATOR;
-    sUnitInfo[DEVIATOR].bulletType = BULLET_GAS; // our gassy rocket
-    sUnitInfo[DEVIATOR].listType = eListType::LIST_UNITS;
-    sUnitInfo[DEVIATOR].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[DEVIATOR].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[DEVIATOR].smokeHpFactor = 0.5f;
-    sUnitInfo[DEVIATOR].canGuard = true;
-    sUnitInfo[DEVIATOR].canAttackUnits = true;
-    strcpy(sUnitInfo[DEVIATOR].name, "Deviator");
+    unitInfos[DEVIATOR].bmp = gfxdata->getSurface(UNIT_DEVIATOR);      // pointer to the original 8bit bitmap
+    unitInfos[DEVIATOR].bmp_width = 16 * 2;
+    unitInfos[DEVIATOR].bmp_height = 16 * 2;
+    unitInfos[DEVIATOR].bmp_startpixel = 0;
+    unitInfos[DEVIATOR].bmp_frames = 1;
+    unitInfos[DEVIATOR].icon = ICON_UNIT_DEVIATOR;
+    unitInfos[DEVIATOR].bulletType = BULLET_GAS; // our gassy rocket
+    unitInfos[DEVIATOR].listType = eListType::LIST_UNITS;
+    unitInfos[DEVIATOR].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[DEVIATOR].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[DEVIATOR].smokeHpFactor = 0.5f;
+    unitInfos[DEVIATOR].canGuard = true;
+    unitInfos[DEVIATOR].canAttackUnits = true;
+    strcpy(unitInfos[DEVIATOR].name, "Deviator");
 
     // Unit        : Launcher
     // Description : Rocket Launcher
-    sUnitInfo[LAUNCHER].bmp = gfxdata->getSurface(UNIT_LAUNCHER);      // pointer to the original 8bit bitmap
-    sUnitInfo[LAUNCHER].shadow = gfxdata->getTexture(UNIT_LAUNCHER_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[LAUNCHER].bmp_width = 16 * 2;
-    sUnitInfo[LAUNCHER].bmp_height = 16 * 2;
-    sUnitInfo[LAUNCHER].bmp_startpixel = 0;
-    sUnitInfo[LAUNCHER].bmp_frames = 1;
-    sUnitInfo[LAUNCHER].icon = ICON_UNIT_LAUNCHER;
-    sUnitInfo[LAUNCHER].fireTwice = true;
+    unitInfos[LAUNCHER].bmp = gfxdata->getSurface(UNIT_LAUNCHER);      // pointer to the original 8bit bitmap
+    unitInfos[LAUNCHER].shadow = gfxdata->getTexture(UNIT_LAUNCHER_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[LAUNCHER].bmp_width = 16 * 2;
+    unitInfos[LAUNCHER].bmp_height = 16 * 2;
+    unitInfos[LAUNCHER].bmp_startpixel = 0;
+    unitInfos[LAUNCHER].bmp_frames = 1;
+    unitInfos[LAUNCHER].icon = ICON_UNIT_LAUNCHER;
+    unitInfos[LAUNCHER].fireTwice = true;
     //units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
-    sUnitInfo[LAUNCHER].bulletType = ROCKET_NORMAL; // our gassy rocket
-    sUnitInfo[LAUNCHER].listType = eListType::LIST_UNITS;
-    sUnitInfo[LAUNCHER].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[LAUNCHER].canAttackAirUnits = true;
-    sUnitInfo[LAUNCHER].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[LAUNCHER].smokeHpFactor = 0.5f;
-    sUnitInfo[LAUNCHER].canGuard = true;
-    sUnitInfo[LAUNCHER].canAttackUnits = true;
-    strcpy(sUnitInfo[LAUNCHER].name, "Launcher");
+    unitInfos[LAUNCHER].bulletType = ROCKET_NORMAL; // our gassy rocket
+    unitInfos[LAUNCHER].listType = eListType::LIST_UNITS;
+    unitInfos[LAUNCHER].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[LAUNCHER].canAttackAirUnits = true;
+    unitInfos[LAUNCHER].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[LAUNCHER].smokeHpFactor = 0.5f;
+    unitInfos[LAUNCHER].canGuard = true;
+    unitInfos[LAUNCHER].canAttackUnits = true;
+    strcpy(unitInfos[LAUNCHER].name, "Launcher");
 
     // Unit        : Quad
     // Description : Quad, 4 wheeled (double gunned)
-    sUnitInfo[QUAD].bmp = gfxdata->getSurface(UNIT_QUAD);      // pointer to the original 8bit bitmap
-    sUnitInfo[QUAD].shadow = gfxdata->getTexture(UNIT_QUAD_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[QUAD].bmp_width = 16 * 2;
-    sUnitInfo[QUAD].bmp_height = 16 * 2;
-    sUnitInfo[QUAD].bmp_startpixel = 0;
-    sUnitInfo[QUAD].bmp_frames = 1;
-    sUnitInfo[QUAD].icon = ICON_UNIT_QUAD;
-    sUnitInfo[QUAD].fireTwice = true;
-    sUnitInfo[QUAD].bulletType = BULLET_QUAD;
-    sUnitInfo[QUAD].squish = false;
-    sUnitInfo[QUAD].listType = eListType::LIST_UNITS;
-    sUnitInfo[QUAD].subListId = SUBLIST_LIGHTFCTRY;
-    sUnitInfo[QUAD].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[QUAD].smokeHpFactor = 0.5f;
-    sUnitInfo[QUAD].canGuard = true;
-    sUnitInfo[QUAD].canAttackUnits = true;
-    strcpy(sUnitInfo[QUAD].name, "Quad");
+    unitInfos[QUAD].bmp = gfxdata->getSurface(UNIT_QUAD);      // pointer to the original 8bit bitmap
+    unitInfos[QUAD].shadow = gfxdata->getTexture(UNIT_QUAD_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[QUAD].bmp_width = 16 * 2;
+    unitInfos[QUAD].bmp_height = 16 * 2;
+    unitInfos[QUAD].bmp_startpixel = 0;
+    unitInfos[QUAD].bmp_frames = 1;
+    unitInfos[QUAD].icon = ICON_UNIT_QUAD;
+    unitInfos[QUAD].fireTwice = true;
+    unitInfos[QUAD].bulletType = BULLET_QUAD;
+    unitInfos[QUAD].squish = false;
+    unitInfos[QUAD].listType = eListType::LIST_UNITS;
+    unitInfos[QUAD].subListId = SUBLIST_LIGHTFCTRY;
+    unitInfos[QUAD].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[QUAD].smokeHpFactor = 0.5f;
+    unitInfos[QUAD].canGuard = true;
+    unitInfos[QUAD].canAttackUnits = true;
+    strcpy(unitInfos[QUAD].name, "Quad");
 
 
     // Unit        : Trike (normal trike)
     // Description : Trike, 3 wheeled (single gunned)
-    sUnitInfo[TRIKE].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
-    sUnitInfo[TRIKE].shadow = gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[TRIKE].bmp_width = 28;
-    sUnitInfo[TRIKE].bmp_height = 26;
-    sUnitInfo[TRIKE].bmp_startpixel = 0;
-    sUnitInfo[TRIKE].bmp_frames = 1;
-    sUnitInfo[TRIKE].icon = ICON_UNIT_TRIKE;
-    sUnitInfo[TRIKE].bulletType = BULLET_TRIKE;
-    sUnitInfo[TRIKE].squish = false;
-    sUnitInfo[TRIKE].listType = eListType::LIST_UNITS;
-    sUnitInfo[TRIKE].subListId = SUBLIST_LIGHTFCTRY;
-    sUnitInfo[TRIKE].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[TRIKE].smokeHpFactor = 0.5f;
-    sUnitInfo[TRIKE].canGuard = true;
-    sUnitInfo[TRIKE].canAttackUnits = true;
-    strcpy(sUnitInfo[TRIKE].name, "Trike");
+    unitInfos[TRIKE].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
+    unitInfos[TRIKE].shadow = gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[TRIKE].bmp_width = 28;
+    unitInfos[TRIKE].bmp_height = 26;
+    unitInfos[TRIKE].bmp_startpixel = 0;
+    unitInfos[TRIKE].bmp_frames = 1;
+    unitInfos[TRIKE].icon = ICON_UNIT_TRIKE;
+    unitInfos[TRIKE].bulletType = BULLET_TRIKE;
+    unitInfos[TRIKE].squish = false;
+    unitInfos[TRIKE].listType = eListType::LIST_UNITS;
+    unitInfos[TRIKE].subListId = SUBLIST_LIGHTFCTRY;
+    unitInfos[TRIKE].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[TRIKE].smokeHpFactor = 0.5f;
+    unitInfos[TRIKE].canGuard = true;
+    unitInfos[TRIKE].canAttackUnits = true;
+    strcpy(unitInfos[TRIKE].name, "Trike");
 
     // Unit        : Raider Trike (Ordos trike)
     // Description : Raider Trike, 3 wheeled (single gunned), weaker, but faster
-    sUnitInfo[RAIDER].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
-    sUnitInfo[RAIDER].shadow = gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[RAIDER].bmp_width = 14 * 2;
-    sUnitInfo[RAIDER].bmp_height = 14 * 2;
-    sUnitInfo[RAIDER].bmp_startpixel = 0;
-    sUnitInfo[RAIDER].bmp_frames = 1;
-    strcpy(sUnitInfo[RAIDER].name, "Raider Trike");
-    sUnitInfo[RAIDER].icon = ICON_UNIT_RAIDER;
-    sUnitInfo[RAIDER].bulletType = BULLET_TRIKE;
-    sUnitInfo[RAIDER].squish = false;
-    sUnitInfo[RAIDER].listType = eListType::LIST_UNITS;
-    sUnitInfo[RAIDER].subListId = SUBLIST_LIGHTFCTRY;
-    sUnitInfo[RAIDER].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[RAIDER].smokeHpFactor = 0.5f;
-    sUnitInfo[RAIDER].canGuard = true;
-    sUnitInfo[RAIDER].canAttackUnits = true;
+    unitInfos[RAIDER].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
+    unitInfos[RAIDER].shadow = gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[RAIDER].bmp_width = 14 * 2;
+    unitInfos[RAIDER].bmp_height = 14 * 2;
+    unitInfos[RAIDER].bmp_startpixel = 0;
+    unitInfos[RAIDER].bmp_frames = 1;
+    strcpy(unitInfos[RAIDER].name, "Raider Trike");
+    unitInfos[RAIDER].icon = ICON_UNIT_RAIDER;
+    unitInfos[RAIDER].bulletType = BULLET_TRIKE;
+    unitInfos[RAIDER].squish = false;
+    unitInfos[RAIDER].listType = eListType::LIST_UNITS;
+    unitInfos[RAIDER].subListId = SUBLIST_LIGHTFCTRY;
+    unitInfos[RAIDER].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[RAIDER].smokeHpFactor = 0.5f;
+    unitInfos[RAIDER].canGuard = true;
+    unitInfos[RAIDER].canAttackUnits = true;
 
     // Unit        : Frigate
     // Description : Frigate
-    sUnitInfo[FRIGATE].bmp = gfxdata->getSurface(UNIT_FRIGATE);      // pointer to the original 8bit bitmap
-    sUnitInfo[FRIGATE].shadow = gfxdata->getTexture(UNIT_FRIGATE_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[FRIGATE].bmp_width = 32 * 2;
-    sUnitInfo[FRIGATE].bmp_height = 32 * 2;
-    sUnitInfo[FRIGATE].bmp_startpixel = 0;
-    sUnitInfo[FRIGATE].bmp_frames = 2; // we have at max 1 extra frame
-    sUnitInfo[FRIGATE].speed = 2;
-    sUnitInfo[FRIGATE].turnspeed = 4;
-    sUnitInfo[FRIGATE].airborn = true;
-    sUnitInfo[FRIGATE].squish = false;
-    sUnitInfo[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
-    sUnitInfo[FRIGATE].hp = 9999;
+    unitInfos[FRIGATE].bmp = gfxdata->getSurface(UNIT_FRIGATE);      // pointer to the original 8bit bitmap
+    unitInfos[FRIGATE].shadow = gfxdata->getTexture(UNIT_FRIGATE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[FRIGATE].bmp_width = 32 * 2;
+    unitInfos[FRIGATE].bmp_height = 32 * 2;
+    unitInfos[FRIGATE].bmp_startpixel = 0;
+    unitInfos[FRIGATE].bmp_frames = 2; // we have at max 1 extra frame
+    unitInfos[FRIGATE].speed = 2;
+    unitInfos[FRIGATE].turnspeed = 4;
+    unitInfos[FRIGATE].airborn = true;
+    unitInfos[FRIGATE].squish = false;
+    unitInfos[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
+    unitInfos[FRIGATE].hp = 9999;
     // frigate has no list
-    strcpy(sUnitInfo[FRIGATE].name, "Frigate");
+    strcpy(unitInfos[FRIGATE].name, "Frigate");
 
     /*
     units[FRIGATE].speed     = 0;
@@ -338,200 +338,200 @@ void IniGameRessources::install_units()
 
     // Unit        : Sonic Tank
     // Description : Sonic tank (using sound waves to destroy)
-    sUnitInfo[SONICTANK].bmp = gfxdata->getSurface(UNIT_SONICTANK);      // pointer to the original 8bit bitmap
-    sUnitInfo[SONICTANK].shadow = gfxdata->getTexture(UNIT_SONICTANK_SHADOW);      // pointer to the original 8bit bitmap
-    sUnitInfo[SONICTANK].bmp_width = 16 * 2;
-    sUnitInfo[SONICTANK].bmp_height = 16 * 2;
-    sUnitInfo[SONICTANK].bmp_startpixel = 0;
-    sUnitInfo[SONICTANK].bmp_frames = 1; // no extra frames
-    sUnitInfo[SONICTANK].bulletType = BULLET_SHIMMER;
-    sUnitInfo[SONICTANK].icon = ICON_UNIT_SONICTANK;
-    sUnitInfo[SONICTANK].listType = eListType::LIST_UNITS;
-    sUnitInfo[SONICTANK].subListId = SUBLIST_HEAVYFCTRY;
-    sUnitInfo[SONICTANK].renderSmokeOnUnitWhenThresholdMet = true;
-    sUnitInfo[SONICTANK].smokeHpFactor = 0.5f;
-    sUnitInfo[SONICTANK].canGuard = true;
-    sUnitInfo[SONICTANK].canAttackUnits = true;
+    unitInfos[SONICTANK].bmp = gfxdata->getSurface(UNIT_SONICTANK);      // pointer to the original 8bit bitmap
+    unitInfos[SONICTANK].shadow = gfxdata->getTexture(UNIT_SONICTANK_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[SONICTANK].bmp_width = 16 * 2;
+    unitInfos[SONICTANK].bmp_height = 16 * 2;
+    unitInfos[SONICTANK].bmp_startpixel = 0;
+    unitInfos[SONICTANK].bmp_frames = 1; // no extra frames
+    unitInfos[SONICTANK].bulletType = BULLET_SHIMMER;
+    unitInfos[SONICTANK].icon = ICON_UNIT_SONICTANK;
+    unitInfos[SONICTANK].listType = eListType::LIST_UNITS;
+    unitInfos[SONICTANK].subListId = SUBLIST_HEAVYFCTRY;
+    unitInfos[SONICTANK].renderSmokeOnUnitWhenThresholdMet = true;
+    unitInfos[SONICTANK].smokeHpFactor = 0.5f;
+    unitInfos[SONICTANK].canGuard = true;
+    unitInfos[SONICTANK].canAttackUnits = true;
 
-    strcpy(sUnitInfo[SONICTANK].name, "Sonic Tank");
+    strcpy(unitInfos[SONICTANK].name, "Sonic Tank");
 
 
     // Unit        : Single Soldier
     // Description : 1 soldier
-    sUnitInfo[SOLDIER].bmp = gfxdata->getSurface(UNIT_SOLDIER);      // pointer to the original 8bit bitmap
-    sUnitInfo[SOLDIER].bmp_width = 16 * 2;
-    sUnitInfo[SOLDIER].bmp_height = 16 * 2;
-    sUnitInfo[SOLDIER].bmp_startpixel = 0;
-    sUnitInfo[SOLDIER].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[SOLDIER].infantry = true;
-    sUnitInfo[SOLDIER].bulletType = BULLET_SMALL;
-    sUnitInfo[SOLDIER].icon = ICON_UNIT_SOLDIER;
-    sUnitInfo[SOLDIER].squish = false;
-    sUnitInfo[SOLDIER].canBeSquished = true;
-    sUnitInfo[SOLDIER].listType = eListType::LIST_FOOT_UNITS;
-    sUnitInfo[SOLDIER].subListId = SUBLIST_INFANTRY;
-    sUnitInfo[SOLDIER].canEnterAndDamageStructure = true;
-    sUnitInfo[SOLDIER].attackIsEnterStructure = false;
-    sUnitInfo[SOLDIER].damageOnEnterStructure = 10.0f;
-    sUnitInfo[SOLDIER].canGuard = true;
-    sUnitInfo[SOLDIER].canAttackUnits = true;
-    strcpy(sUnitInfo[SOLDIER].name, "Soldier");
+    unitInfos[SOLDIER].bmp = gfxdata->getSurface(UNIT_SOLDIER);      // pointer to the original 8bit bitmap
+    unitInfos[SOLDIER].bmp_width = 16 * 2;
+    unitInfos[SOLDIER].bmp_height = 16 * 2;
+    unitInfos[SOLDIER].bmp_startpixel = 0;
+    unitInfos[SOLDIER].bmp_frames = 3; // 2 extra frames
+    unitInfos[SOLDIER].infantry = true;
+    unitInfos[SOLDIER].bulletType = BULLET_SMALL;
+    unitInfos[SOLDIER].icon = ICON_UNIT_SOLDIER;
+    unitInfos[SOLDIER].squish = false;
+    unitInfos[SOLDIER].canBeSquished = true;
+    unitInfos[SOLDIER].listType = eListType::LIST_FOOT_UNITS;
+    unitInfos[SOLDIER].subListId = SUBLIST_INFANTRY;
+    unitInfos[SOLDIER].canEnterAndDamageStructure = true;
+    unitInfos[SOLDIER].attackIsEnterStructure = false;
+    unitInfos[SOLDIER].damageOnEnterStructure = 10.0f;
+    unitInfos[SOLDIER].canGuard = true;
+    unitInfos[SOLDIER].canAttackUnits = true;
+    strcpy(unitInfos[SOLDIER].name, "Soldier");
 
 
     // Unit        : Infantry
     // Description : 3 soldiers
-    sUnitInfo[INFANTRY].bmp = gfxdata->getSurface(UNIT_SOLDIERS);      // pointer to the original 8bit bitmap
-    sUnitInfo[INFANTRY].bmp_width = 16 * 2;
-    sUnitInfo[INFANTRY].bmp_height = 16 * 2;
-    sUnitInfo[INFANTRY].bmp_startpixel = 0;
-    sUnitInfo[INFANTRY].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[INFANTRY].speed = 8;
-    sUnitInfo[INFANTRY].infantry = true;
-    sUnitInfo[INFANTRY].bulletType = BULLET_SMALL;
-    sUnitInfo[INFANTRY].fireTwice = true;
-    sUnitInfo[INFANTRY].icon = ICON_UNIT_INFANTRY;
-    sUnitInfo[INFANTRY].squish = false;
-    sUnitInfo[INFANTRY].canBeSquished = true;
-    sUnitInfo[INFANTRY].listType = eListType::LIST_FOOT_UNITS;
-    sUnitInfo[INFANTRY].subListId = SUBLIST_INFANTRY;
-    sUnitInfo[INFANTRY].canEnterAndDamageStructure = true;
-    sUnitInfo[INFANTRY].attackIsEnterStructure = false;
-    sUnitInfo[INFANTRY].damageOnEnterStructure = 25.0f;
-    sUnitInfo[INFANTRY].canGuard = true;
-    sUnitInfo[INFANTRY].canAttackUnits = true;
-    strcpy(sUnitInfo[INFANTRY].name, "Light Infantry");
+    unitInfos[INFANTRY].bmp = gfxdata->getSurface(UNIT_SOLDIERS);      // pointer to the original 8bit bitmap
+    unitInfos[INFANTRY].bmp_width = 16 * 2;
+    unitInfos[INFANTRY].bmp_height = 16 * 2;
+    unitInfos[INFANTRY].bmp_startpixel = 0;
+    unitInfos[INFANTRY].bmp_frames = 3; // 2 extra frames
+    unitInfos[INFANTRY].speed = 8;
+    unitInfos[INFANTRY].infantry = true;
+    unitInfos[INFANTRY].bulletType = BULLET_SMALL;
+    unitInfos[INFANTRY].fireTwice = true;
+    unitInfos[INFANTRY].icon = ICON_UNIT_INFANTRY;
+    unitInfos[INFANTRY].squish = false;
+    unitInfos[INFANTRY].canBeSquished = true;
+    unitInfos[INFANTRY].listType = eListType::LIST_FOOT_UNITS;
+    unitInfos[INFANTRY].subListId = SUBLIST_INFANTRY;
+    unitInfos[INFANTRY].canEnterAndDamageStructure = true;
+    unitInfos[INFANTRY].attackIsEnterStructure = false;
+    unitInfos[INFANTRY].damageOnEnterStructure = 25.0f;
+    unitInfos[INFANTRY].canGuard = true;
+    unitInfos[INFANTRY].canAttackUnits = true;
+    strcpy(unitInfos[INFANTRY].name, "Light Infantry");
 
     // Unit        : Single Trooper
     // Description : 1 trooper
-    sUnitInfo[TROOPER].bmp = gfxdata->getSurface(UNIT_TROOPER);      // pointer to the original 8bit bitmap
-    sUnitInfo[TROOPER].bmp_width = 16 * 2;
-    sUnitInfo[TROOPER].bmp_height = 16 * 2;
-    sUnitInfo[TROOPER].bmp_startpixel = 0;
-    sUnitInfo[TROOPER].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[TROOPER].name, "Trooper");
-    sUnitInfo[TROOPER].infantry = true;
-    sUnitInfo[TROOPER].bulletType = ROCKET_SMALL;
-    sUnitInfo[TROOPER].icon = ICON_UNIT_TROOPER;
-    sUnitInfo[TROOPER].listType = eListType::LIST_FOOT_UNITS;
-    sUnitInfo[TROOPER].subListId = SUBLIST_TROOPERS;
-    sUnitInfo[TROOPER].squish = false;
-    sUnitInfo[TROOPER].canBeSquished = true;
-    sUnitInfo[TROOPER].canAttackAirUnits = true;
-    sUnitInfo[TROOPER].canEnterAndDamageStructure = true;
-    sUnitInfo[TROOPER].attackIsEnterStructure = false;
-    sUnitInfo[TROOPER].damageOnEnterStructure = 12.0f;
-    sUnitInfo[TROOPER].bulletTypeSecondary = BULLET_SMALL;
-    sUnitInfo[TROOPER].fireSecondaryWithinRange = 2;
-    sUnitInfo[TROOPER].canGuard = true;
-    sUnitInfo[TROOPER].canAttackUnits = true;
+    unitInfos[TROOPER].bmp = gfxdata->getSurface(UNIT_TROOPER);      // pointer to the original 8bit bitmap
+    unitInfos[TROOPER].bmp_width = 16 * 2;
+    unitInfos[TROOPER].bmp_height = 16 * 2;
+    unitInfos[TROOPER].bmp_startpixel = 0;
+    unitInfos[TROOPER].bmp_frames = 3; // 2 extra frames
+    strcpy(unitInfos[TROOPER].name, "Trooper");
+    unitInfos[TROOPER].infantry = true;
+    unitInfos[TROOPER].bulletType = ROCKET_SMALL;
+    unitInfos[TROOPER].icon = ICON_UNIT_TROOPER;
+    unitInfos[TROOPER].listType = eListType::LIST_FOOT_UNITS;
+    unitInfos[TROOPER].subListId = SUBLIST_TROOPERS;
+    unitInfos[TROOPER].squish = false;
+    unitInfos[TROOPER].canBeSquished = true;
+    unitInfos[TROOPER].canAttackAirUnits = true;
+    unitInfos[TROOPER].canEnterAndDamageStructure = true;
+    unitInfos[TROOPER].attackIsEnterStructure = false;
+    unitInfos[TROOPER].damageOnEnterStructure = 12.0f;
+    unitInfos[TROOPER].bulletTypeSecondary = BULLET_SMALL;
+    unitInfos[TROOPER].fireSecondaryWithinRange = 2;
+    unitInfos[TROOPER].canGuard = true;
+    unitInfos[TROOPER].canAttackUnits = true;
 
     // Unit        : Group Trooper
     // Description : 3 troopers
-    sUnitInfo[TROOPERS].bmp = gfxdata->getSurface(UNIT_TROOPERS);      // pointer to the original 8bit bitmap
-    sUnitInfo[TROOPERS].bmp_width = 16 * 2;
-    sUnitInfo[TROOPERS].bmp_height = 16 * 2;
-    sUnitInfo[TROOPERS].bmp_startpixel = 0;
-    sUnitInfo[TROOPERS].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[TROOPERS].name, "Troopers");
-    sUnitInfo[TROOPERS].icon = ICON_UNIT_TROOPERS;
-    sUnitInfo[TROOPERS].bulletType = ROCKET_SMALL;
-    sUnitInfo[TROOPERS].fireTwice = true;
-    sUnitInfo[TROOPERS].infantry = true;
-    sUnitInfo[TROOPERS].listType = eListType::LIST_FOOT_UNITS;
-    sUnitInfo[TROOPERS].subListId = SUBLIST_TROOPERS;
-    sUnitInfo[TROOPERS].squish = false;
-    sUnitInfo[TROOPERS].canBeSquished = true;
-    sUnitInfo[TROOPERS].canAttackAirUnits = true;
-    sUnitInfo[TROOPERS].canEnterAndDamageStructure = true;
-    sUnitInfo[TROOPERS].attackIsEnterStructure = false;
-    sUnitInfo[TROOPERS].damageOnEnterStructure = 35.0f;
-    sUnitInfo[TROOPERS].bulletTypeSecondary = BULLET_SMALL;
-    sUnitInfo[TROOPERS].fireSecondaryWithinRange = 2;
-    sUnitInfo[TROOPERS].canGuard = true;
-    sUnitInfo[TROOPERS].canAttackUnits = true;
+    unitInfos[TROOPERS].bmp = gfxdata->getSurface(UNIT_TROOPERS);      // pointer to the original 8bit bitmap
+    unitInfos[TROOPERS].bmp_width = 16 * 2;
+    unitInfos[TROOPERS].bmp_height = 16 * 2;
+    unitInfos[TROOPERS].bmp_startpixel = 0;
+    unitInfos[TROOPERS].bmp_frames = 3; // 2 extra frames
+    strcpy(unitInfos[TROOPERS].name, "Troopers");
+    unitInfos[TROOPERS].icon = ICON_UNIT_TROOPERS;
+    unitInfos[TROOPERS].bulletType = ROCKET_SMALL;
+    unitInfos[TROOPERS].fireTwice = true;
+    unitInfos[TROOPERS].infantry = true;
+    unitInfos[TROOPERS].listType = eListType::LIST_FOOT_UNITS;
+    unitInfos[TROOPERS].subListId = SUBLIST_TROOPERS;
+    unitInfos[TROOPERS].squish = false;
+    unitInfos[TROOPERS].canBeSquished = true;
+    unitInfos[TROOPERS].canAttackAirUnits = true;
+    unitInfos[TROOPERS].canEnterAndDamageStructure = true;
+    unitInfos[TROOPERS].attackIsEnterStructure = false;
+    unitInfos[TROOPERS].damageOnEnterStructure = 35.0f;
+    unitInfos[TROOPERS].bulletTypeSecondary = BULLET_SMALL;
+    unitInfos[TROOPERS].fireSecondaryWithinRange = 2;
+    unitInfos[TROOPERS].canGuard = true;
+    unitInfos[TROOPERS].canAttackUnits = true;
 
     // Unit        : Fremen
     // Description : A single fremen
-    sUnitInfo[UNIT_FREMEN_ONE].bmp = gfxdata->getSurface(UNIT_SINGLEFREMEN);      // pointer to the original 8bit bitmap
-    sUnitInfo[UNIT_FREMEN_ONE].bmp_width = 16 * 2;
-    sUnitInfo[UNIT_FREMEN_ONE].bmp_height = 16 * 2;
-    sUnitInfo[UNIT_FREMEN_ONE].bmp_startpixel = 0;
-    sUnitInfo[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[UNIT_FREMEN_ONE].name, "Fremen (1)");
-    sUnitInfo[UNIT_FREMEN_ONE].icon = ICON_SPECIAL_FREMEN;
-    sUnitInfo[UNIT_FREMEN_ONE].bulletType = ROCKET_SMALL_FREMEN;
-    sUnitInfo[UNIT_FREMEN_ONE].fireTwice = false;
-    sUnitInfo[UNIT_FREMEN_ONE].infantry = true;
-    sUnitInfo[UNIT_FREMEN_ONE].squish = false;
-    sUnitInfo[UNIT_FREMEN_ONE].canBeSquished = true;
-    sUnitInfo[UNIT_FREMEN_ONE].canAttackAirUnits = true;
-    sUnitInfo[UNIT_FREMEN_ONE].canGuard = true;
-    sUnitInfo[UNIT_FREMEN_ONE].canAttackUnits = true;
+    unitInfos[UNIT_FREMEN_ONE].bmp = gfxdata->getSurface(UNIT_SINGLEFREMEN);      // pointer to the original 8bit bitmap
+    unitInfos[UNIT_FREMEN_ONE].bmp_width = 16 * 2;
+    unitInfos[UNIT_FREMEN_ONE].bmp_height = 16 * 2;
+    unitInfos[UNIT_FREMEN_ONE].bmp_startpixel = 0;
+    unitInfos[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
+    strcpy(unitInfos[UNIT_FREMEN_ONE].name, "Fremen (1)");
+    unitInfos[UNIT_FREMEN_ONE].icon = ICON_SPECIAL_FREMEN;
+    unitInfos[UNIT_FREMEN_ONE].bulletType = ROCKET_SMALL_FREMEN;
+    unitInfos[UNIT_FREMEN_ONE].fireTwice = false;
+    unitInfos[UNIT_FREMEN_ONE].infantry = true;
+    unitInfos[UNIT_FREMEN_ONE].squish = false;
+    unitInfos[UNIT_FREMEN_ONE].canBeSquished = true;
+    unitInfos[UNIT_FREMEN_ONE].canAttackAirUnits = true;
+    unitInfos[UNIT_FREMEN_ONE].canGuard = true;
+    unitInfos[UNIT_FREMEN_ONE].canAttackUnits = true;
 
 //  units[UNIT_FREMEN_ONE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_ONE].subListId=0;
 
     // Unit        : Fremen
     // Description : A group of Fremen
-    sUnitInfo[UNIT_FREMEN_THREE].bmp = gfxdata->getSurface(UNIT_TRIPLEFREMEN);      // pointer to the original 8bit bitmap
-    sUnitInfo[UNIT_FREMEN_THREE].bmp_width = 16 * 2;
-    sUnitInfo[UNIT_FREMEN_THREE].bmp_height = 16 * 2;
-    sUnitInfo[UNIT_FREMEN_THREE].bmp_startpixel = 0;
-    sUnitInfo[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
-    strcpy(sUnitInfo[UNIT_FREMEN_THREE].name, "Fremen (3)");
-    sUnitInfo[UNIT_FREMEN_THREE].icon = ICON_SPECIAL_FREMEN;
-    sUnitInfo[UNIT_FREMEN_THREE].bulletType = ROCKET_SMALL_FREMEN;
-    sUnitInfo[UNIT_FREMEN_THREE].fireTwice = true;
-    sUnitInfo[UNIT_FREMEN_THREE].infantry = true;
-    sUnitInfo[UNIT_FREMEN_THREE].squish = false;
-    sUnitInfo[UNIT_FREMEN_THREE].canBeSquished = true;
-    sUnitInfo[UNIT_FREMEN_THREE].canAttackAirUnits = true;
-    sUnitInfo[UNIT_FREMEN_THREE].canGuard = true;
-    sUnitInfo[UNIT_FREMEN_THREE].canAttackUnits = true;
+    unitInfos[UNIT_FREMEN_THREE].bmp = gfxdata->getSurface(UNIT_TRIPLEFREMEN);      // pointer to the original 8bit bitmap
+    unitInfos[UNIT_FREMEN_THREE].bmp_width = 16 * 2;
+    unitInfos[UNIT_FREMEN_THREE].bmp_height = 16 * 2;
+    unitInfos[UNIT_FREMEN_THREE].bmp_startpixel = 0;
+    unitInfos[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
+    strcpy(unitInfos[UNIT_FREMEN_THREE].name, "Fremen (3)");
+    unitInfos[UNIT_FREMEN_THREE].icon = ICON_SPECIAL_FREMEN;
+    unitInfos[UNIT_FREMEN_THREE].bulletType = ROCKET_SMALL_FREMEN;
+    unitInfos[UNIT_FREMEN_THREE].fireTwice = true;
+    unitInfos[UNIT_FREMEN_THREE].infantry = true;
+    unitInfos[UNIT_FREMEN_THREE].squish = false;
+    unitInfos[UNIT_FREMEN_THREE].canBeSquished = true;
+    unitInfos[UNIT_FREMEN_THREE].canAttackAirUnits = true;
+    unitInfos[UNIT_FREMEN_THREE].canGuard = true;
+    unitInfos[UNIT_FREMEN_THREE].canAttackUnits = true;
 //  units[UNIT_FREMEN_THREE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_THREE].subListId=0;
 
     // Unit        : Saboteur
     // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
-    sUnitInfo[SABOTEUR].bmp = gfxdata->getSurface(UNIT_SABOTEUR);
-    sUnitInfo[SABOTEUR].buildTime = 1000;
-    sUnitInfo[SABOTEUR].bmp_width = 16 * 2;
-    sUnitInfo[SABOTEUR].bmp_height = 16 * 2;
-    sUnitInfo[SABOTEUR].bmp_startpixel = 0;
-    sUnitInfo[SABOTEUR].bmp_frames = 3; // 2 extra frames
-    sUnitInfo[SABOTEUR].speed = 0; // very fast
-    sUnitInfo[SABOTEUR].hp = 60;   // quite some health
-    sUnitInfo[SABOTEUR].cost = 0;
-    sUnitInfo[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
-    sUnitInfo[SABOTEUR].range = 2;
-    sUnitInfo[SABOTEUR].attack_frequency = 0;
-    sUnitInfo[SABOTEUR].turnspeed = 0; // very fast
-    strcpy(sUnitInfo[SABOTEUR].name, "Saboteur");
-    sUnitInfo[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
-    sUnitInfo[SABOTEUR].squish = false;
-    sUnitInfo[SABOTEUR].canBeSquished = true;
-    sUnitInfo[SABOTEUR].infantry = true; // infantry unit, so it can be squished
-    sUnitInfo[SABOTEUR].listType = eListType::LIST_PALACE;
-    sUnitInfo[SABOTEUR].subListId = 0;
-    sUnitInfo[SABOTEUR].canEnterAndDamageStructure = true;
-    sUnitInfo[SABOTEUR].attackIsEnterStructure = true;
-    sUnitInfo[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
+    unitInfos[SABOTEUR].bmp = gfxdata->getSurface(UNIT_SABOTEUR);
+    unitInfos[SABOTEUR].buildTime = 1000;
+    unitInfos[SABOTEUR].bmp_width = 16 * 2;
+    unitInfos[SABOTEUR].bmp_height = 16 * 2;
+    unitInfos[SABOTEUR].bmp_startpixel = 0;
+    unitInfos[SABOTEUR].bmp_frames = 3; // 2 extra frames
+    unitInfos[SABOTEUR].speed = 0; // very fast
+    unitInfos[SABOTEUR].hp = 60;   // quite some health
+    unitInfos[SABOTEUR].cost = 0;
+    unitInfos[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
+    unitInfos[SABOTEUR].range = 2;
+    unitInfos[SABOTEUR].attack_frequency = 0;
+    unitInfos[SABOTEUR].turnspeed = 0; // very fast
+    strcpy(unitInfos[SABOTEUR].name, "Saboteur");
+    unitInfos[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
+    unitInfos[SABOTEUR].squish = false;
+    unitInfos[SABOTEUR].canBeSquished = true;
+    unitInfos[SABOTEUR].infantry = true; // infantry unit, so it can be squished
+    unitInfos[SABOTEUR].listType = eListType::LIST_PALACE;
+    unitInfos[SABOTEUR].subListId = 0;
+    unitInfos[SABOTEUR].canEnterAndDamageStructure = true;
+    unitInfos[SABOTEUR].attackIsEnterStructure = true;
+    unitInfos[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
 
     // Unit        : Sandworm
-    sUnitInfo[SANDWORM].speed = 3; // very fast
-    sUnitInfo[SANDWORM].bmp = gfxdata->getSurface(UNIT_SANDWORM);
-    sUnitInfo[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
-    sUnitInfo[SANDWORM].dieWhenLowerThanHP = 1000;
-    sUnitInfo[SANDWORM].appetite = 10;
-    sUnitInfo[SANDWORM].bmp_width = 48;
-    sUnitInfo[SANDWORM].bmp_height = 48;
-    sUnitInfo[SANDWORM].turnspeed = 0; // very fast
-    sUnitInfo[SANDWORM].sight = 16;
-    strcpy(sUnitInfo[SANDWORM].name, "Sandworm");
-    sUnitInfo[SANDWORM].icon = ICON_UNIT_SANDWORM;
-    sUnitInfo[SANDWORM].squish = false;
-    sUnitInfo[SANDWORM].canGuard = true;
-    sUnitInfo[SANDWORM].canAttackUnits = true;
+    unitInfos[SANDWORM].speed = 3; // very fast
+    unitInfos[SANDWORM].bmp = gfxdata->getSurface(UNIT_SANDWORM);
+    unitInfos[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
+    unitInfos[SANDWORM].dieWhenLowerThanHP = 1000;
+    unitInfos[SANDWORM].appetite = 10;
+    unitInfos[SANDWORM].bmp_width = 48;
+    unitInfos[SANDWORM].bmp_height = 48;
+    unitInfos[SANDWORM].turnspeed = 0; // very fast
+    unitInfos[SANDWORM].sight = 16;
+    strcpy(unitInfos[SANDWORM].name, "Sandworm");
+    unitInfos[SANDWORM].icon = ICON_UNIT_SANDWORM;
+    unitInfos[SANDWORM].squish = false;
+    unitInfos[SANDWORM].canGuard = true;
+    unitInfos[SANDWORM].canAttackUnits = true;
 
 
     // Unit        : <name>

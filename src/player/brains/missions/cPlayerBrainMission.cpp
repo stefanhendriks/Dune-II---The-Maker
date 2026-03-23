@@ -351,7 +351,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                     cSideBar *pSideBar = player->getSideBar();
                     int awaitingResourcesTimeToIncrease = 15;
                     if (thingIWant.buildType == UNIT) {
-                        cBuildingListItem *pItem = pSideBar->getBuildingListItem(sUnitInfo[thingIWant.type].listType,
+                        cBuildingListItem *pItem = pSideBar->getBuildingListItem(unitInfos[thingIWant.type].listType,
                                                    thingIWant.type);
 
                         if (pItem) {

@@ -119,7 +119,7 @@ void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order)
         std::string msg;
         if (buildOrder.buildType == eBuildType::UNIT) {
             msg = std::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              unitInfos[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
             msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,

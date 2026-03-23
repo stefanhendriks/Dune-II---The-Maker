@@ -1489,7 +1489,7 @@ void cIni::installGame(std::string filename)
                 // Valid ID
                 if (section == INI_UNITS && id > -1) {
                     // Unit properties
-                    s_UnitInfo &unitInfo = sUnitInfo[id];
+                    s_UnitInfo &unitInfo = unitInfos[id];
 
                     if (wordtype == WORD_HITPOINTS) unitInfo.hp = ToInt(word_right);
                     if (wordtype == WORD_APPETITE) unitInfo.appetite = ToInt(word_right);

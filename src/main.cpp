@@ -41,7 +41,9 @@ std::shared_ptr<Graphics>   gfxdata;
 
 // Structs of all kinds of objects (*info)
 s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
-s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
+//s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
+cUnitInfos                  unitInfos;
+
 // s_UpgradeInfo              sUpgradeInfo[MAX_UPGRADETYPES];
 cUpgradeInfos               upgradeInfos;
 //s_SpecialInfo             sSpecialInfo[MAX_SPECIALTYPES];

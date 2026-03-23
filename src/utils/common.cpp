@@ -277,7 +277,7 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
         case eBuildType::SPECIAL:
             return specialInfos[specificTypeId].description;
         case eBuildType::UNIT:
-            return sUnitInfo[specificTypeId].name;
+            return unitInfos[specificTypeId].name;
         case eBuildType::STRUCTURE:
             return sStructureInfo[specificTypeId].name;
         case eBuildType::BULLET:

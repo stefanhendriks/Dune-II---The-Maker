@@ -15,7 +15,7 @@
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "player/brains/missions/cPlayerBrainMission.h"
 #include "structs.h"
-#include "gameobjects/units/cUnitInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
 
 #include <memory>
