@@ -188,9 +188,9 @@ void cGunTurret::think_fire()
             if (unitTarget.isAirbornUnit()) {
                 if (iBull > -1 && bulletType == ROCKET_RTURRET) {
                     // it is a homing missile!
-                    g_Bullets[iBull].iHoming = iTargetID;
+                    game.g_Bullets[iBull].iHoming = iTargetID;
                     // TODO: property for homing?
-                    g_Bullets[iBull].TIMER_homing = 200;
+                    game.g_Bullets[iBull].TIMER_homing = 200;
                 }
             }
 
