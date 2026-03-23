@@ -49,7 +49,7 @@
 #define MAP_SCROLLSPEED   TILE_SIZE_PIXELS   // pixels per frames scrolling.
 
 // MEMORY USAGE: (units, structures, etc , more info below)
-#define MAX_UNITS        300     // max of units in the game
+// #define MAX_UNITS        300     // max of units in the game
 #define MAX_STRUCTURES   200     // max of structures in the game
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 

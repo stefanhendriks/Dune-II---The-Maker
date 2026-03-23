@@ -22,9 +22,6 @@
  */
 class cUnits {
 public:
-    // Maximum number of units
-    static constexpr int MAX_UNITS_CAPACITY = MAX_UNITS;
-
     /**
      * Default constructor
      */
@@ -89,5 +86,7 @@ public:
     auto end() const { return m_units.end(); }
 
 private:
+    // Maximum number of units
+    static constexpr int MAX_UNITS_CAPACITY = 300;
     std::array<cUnit, MAX_UNITS_CAPACITY> m_units;
 };

@@ -66,7 +66,7 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 {
     int target = -1;
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.getPlayer() == player) continue; // skip self

@@ -182,7 +182,7 @@ void cGame::init()
 
     initPlayers(false);
 
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < m_Units.size(); i++) {
         m_Units[i].init(i);
     }
 

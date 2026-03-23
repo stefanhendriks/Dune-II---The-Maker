@@ -92,7 +92,7 @@ void cGamePlaying::thinkFast()
 void cGamePlaying::thinkNormal()
 {
         // units think
-        for (int i = 0; i < MAX_UNITS; i++) {
+        for (int i = 0; i < game.getUnits().size(); i++) {
             cUnit &cUnit = game.getUnit(i);
             if (cUnit.isValid()) {
                 cUnit.think();
@@ -294,7 +294,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_D)) {
-        for (int i = 0; i < MAX_UNITS; i++) {
+        for (int i = 0; i < game.getUnits().size(); i++) {
             cUnit &u = game.getUnit(i);
             if (u.bSelected && u.iType == MCV && u.getPlayer()->isHuman()) {
                 bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;

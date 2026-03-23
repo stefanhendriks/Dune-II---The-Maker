@@ -115,7 +115,7 @@ void cDrawManager::drawCombatState()
 void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
-    for (int i = 0; i < MAX_UNITS; i++) {
+    for (int i = 0; i < game.getUnits().size(); i++) {
         if (game.getUnit(i).isValid()) {
             unitsUsed++;
         }
@@ -147,7 +147,7 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int startY = 74;
     int height = 14;
-    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, MAX_UNITS));
+    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.getUnits().size()));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
     m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.g_Bullets.size()));
     m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.getParticles().size()));

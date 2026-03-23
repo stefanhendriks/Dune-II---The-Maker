@@ -23,7 +23,7 @@ int cUnitUtils::findUnit(int type, int iPlayerId)
 // find the first unit of type belonging to player Id, and is not the same Id as iIgnoreUnitId.
 int cUnitUtils::findUnit(int type, int iPlayerId, int iIgnoreUnitId)
 {
-    for (int i=0; i < MAX_UNITS; i++) {
+    for (int i=0; i < game.getUnits().size(); i++) {
         if (i == iIgnoreUnitId || !game.getUnit(i).isValid()) {
             continue;
         }
