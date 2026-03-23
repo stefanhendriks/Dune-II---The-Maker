@@ -58,16 +58,12 @@ class cMap;
 
 struct SDL_Surface;
 
-// Process 'extern' stuff, so we can access our classes
 
 // game
 extern cGame		  game;
-// extern cStructureUtils g_structureUtils;
-//extern cDrawManager    *global_drawManager;
-extern SDLDrawer       *global_renderDrawer;
 
-extern cUnits         g_Units;
-extern cBullets       g_Bullets;
+extern SDLDrawer      *global_renderDrawer;
+extern std::shared_ptr<Graphics> gfxdata;
 
 // kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
 extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
@@ -76,6 +72,3 @@ extern s_UpgradeInfo            sUpgradeInfo[MAX_UPGRADETYPES];
 extern s_SpecialInfo            sSpecialInfo[MAX_SPECIALTYPES];
 
 extern cBulletInfos             bulletInfos;
-
-// DATAFILES
-extern std::shared_ptr<Graphics> gfxdata;		// graphics (terrain, units, structures)
