@@ -254,4 +254,15 @@ const int D2TM_PARTICLE_SMOKE_WITH_SHADOW       = 35;
 #define WINLOSEFLAGS_QUOTA                  0x04
 #define WINLOSEFLAGS_TIMEOUT                0x08
 
+
+/**
+ * This is the palette index (in the 8 bit palette of D2TM/Dune 2) that is meant to be rendered as a 'shadow'
+ */
+constexpr int TransparentColorIndex = 223;
+
+/**
+ * The transparency (value between 0-255) when rendering a bitmap/texture with transparency
+ */
+constexpr int ShadowTrans = 160;
+
 #endif /* DEFINITIONS_H_ */
