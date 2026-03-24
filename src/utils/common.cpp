@@ -283,7 +283,7 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
         case eBuildType::BULLET:
             return game.bulletInfos[specificTypeId].description;
         case eBuildType::UPGRADE:
-            return upgradeInfos[specificTypeId].description;
+            return game.upgradeInfos[specificTypeId].description;
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:

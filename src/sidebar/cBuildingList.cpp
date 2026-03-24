@@ -78,8 +78,8 @@ cBuildingListItem *cBuildingList::getItemByBuildId(int buildId)
 
 void cBuildingList::addUpgradeToList(int upgradeType)
 {
-    cBuildingListItem *item = new cBuildingListItem(upgradeType, upgradeInfos[upgradeType],
-            upgradeInfos[upgradeType].providesTypeSubList);
+    cBuildingListItem *item = new cBuildingListItem(upgradeType, game.upgradeInfos[upgradeType],
+            game.upgradeInfos[upgradeType].providesTypeSubList);
     if (!addItemToList(item)) {
         delete item;
     }

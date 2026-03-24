@@ -1018,189 +1018,189 @@ void IniGameRessources::install_upgrades()
 {
     logbook("Installing:  UPGRADES");
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
-        upgradeInfos[i].enabled = false;
-        upgradeInfos[i].techLevel = -1;
-        upgradeInfos[i].house = 0;
-        upgradeInfos[i].needsStructureType = -1;
-        upgradeInfos[i].icon = ICON_STR_PALACE;
-        upgradeInfos[i].cost = 100;
-        upgradeInfos[i].atUpgradeLevel = -1;
-        upgradeInfos[i].structureType = CONSTYARD;
-        upgradeInfos[i].providesTypeId = -1;
-        upgradeInfos[i].providesType = STRUCTURE;
-        upgradeInfos[i].providesTypeList = eListType::LIST_NONE;
-        upgradeInfos[i].providesTypeSubList = -1;
-        upgradeInfos[i].buildTime = 5;
-        strcpy(upgradeInfos[i].description, "Upgrade");
+        game.upgradeInfos[i].enabled = false;
+        game.upgradeInfos[i].techLevel = -1;
+        game.upgradeInfos[i].house = 0;
+        game.upgradeInfos[i].needsStructureType = -1;
+        game.upgradeInfos[i].icon = ICON_STR_PALACE;
+        game.upgradeInfos[i].cost = 100;
+        game.upgradeInfos[i].atUpgradeLevel = -1;
+        game.upgradeInfos[i].structureType = CONSTYARD;
+        game.upgradeInfos[i].providesTypeId = -1;
+        game.upgradeInfos[i].providesType = STRUCTURE;
+        game.upgradeInfos[i].providesTypeList = eListType::LIST_NONE;
+        game.upgradeInfos[i].providesTypeSubList = -1;
+        game.upgradeInfos[i].buildTime = 5;
+        strcpy(game.upgradeInfos[i].description, "Upgrade");
     }
 
     // CONSTYARD UPGRADES
 
     // First upgrade Constyard: 4Slabs
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].techLevel = 4; // start from mission 4
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].icon = ICON_STR_4SLAB;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = 200;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].structureType = CONSTYARD;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].atUpgradeLevel = 0;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesType = STRUCTURE;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = eListType::LIST_CONSTYARD;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
-    strcpy(upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].techLevel = 4; // start from mission 4
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].icon = ICON_STR_4SLAB;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = 200;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].structureType = CONSTYARD;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].atUpgradeLevel = 0;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesType = STRUCTURE;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = eListType::LIST_CONSTYARD;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
 
     // Second upgrade Constyard: Rturret
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].techLevel = 6;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].icon = ICON_STR_RTURRET;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = 200;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].needsStructureType = RADAR;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].structureType = CONSTYARD;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].atUpgradeLevel = 1;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesType = STRUCTURE;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = eListType::LIST_CONSTYARD;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
-    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].techLevel = 6;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].icon = ICON_STR_RTURRET;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = 200;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].needsStructureType = RADAR;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].structureType = CONSTYARD;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].atUpgradeLevel = 1;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesType = STRUCTURE;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = eListType::LIST_CONSTYARD;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
+    game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
 
-    strcpy(upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = structureInfos[LIGHTFACTORY].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].needsStructureType = LIGHTFACTORY;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].structureType = LIGHTFACTORY;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeId = QUAD;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = eListType::LIST_UNITS;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = structureInfos[LIGHTFACTORY].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].needsStructureType = LIGHTFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].structureType = LIGHTFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeId = QUAD;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = eListType::LIST_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
+    game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
 
-    strcpy(upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
 
     // HEAVYFACTORY UPGRADES:
 
     // ALL HOUSES GET MVC
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = structureInfos[HEAVYFACTORY].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].needsStructureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeId = MCV;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = eListType::LIST_UNITS;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = structureInfos[HEAVYFACTORY].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].needsStructureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeId = MCV;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = eListType::LIST_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
 
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
 
     // Harkonnen/Atreides only
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = structureInfos[HEAVYFACTORY].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].needsStructureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].structureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeId = LAUNCHER;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = eListType::LIST_UNITS;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = structureInfos[HEAVYFACTORY].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].needsStructureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].structureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeId = LAUNCHER;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = eListType::LIST_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
 
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
 
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = structureInfos[HEAVYFACTORY].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].needsStructureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].structureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeId = SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = eListType::LIST_UNITS;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = structureInfos[HEAVYFACTORY].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].needsStructureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].structureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeId = SIEGETANK;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = eListType::LIST_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
 
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
 
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].techLevel = 6;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = structureInfos[HEAVYFACTORY].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].needsStructureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].structureType = HEAVYFACTORY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeId = SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = eListType::LIST_UNITS;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].techLevel = 6;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].icon = ICON_UNIT_SIEGETANK;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = structureInfos[HEAVYFACTORY].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].needsStructureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].structureType = HEAVYFACTORY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeId = SIEGETANK;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = eListType::LIST_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
 
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = structureInfos[HIGHTECH].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = eListType::LIST_UNITS;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = structureInfos[HIGHTECH].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = eListType::LIST_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
+    game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
 
     // WOR (Harkonnen & Ordos)
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = structureInfos[WOR].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].structureType = WOR;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = structureInfos[WOR].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].structureType = WOR;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
     if (!game.isDebugMode()) {
-        upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
+        game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
 
     // BARRACKS (Atreides & Ordos)
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos | Sardaukar;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = structureInfos[BARRACKS].cost / 2;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].structureType = BARRACKS;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos | Sardaukar;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = structureInfos[BARRACKS].cost / 2;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].structureType = BARRACKS;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
+    game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
     if (!game.isDebugMode()) {
-        upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
+        game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
+    strcpy(game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
 
 }
 
