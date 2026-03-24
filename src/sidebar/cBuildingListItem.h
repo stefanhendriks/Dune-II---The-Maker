@@ -7,15 +7,15 @@
  */
 #pragma once
 
-#include "structs.h"
-
 #include <string>
+#include "include/enums.h"
 
 class cBuildingList;
 struct s_SpecialInfo;
 struct s_UpgradeInfo;
 struct s_UnitInfo;
 struct s_StructureInfo;
+struct s_TerrainInfo;
 
 class cBuildingListItem {
 

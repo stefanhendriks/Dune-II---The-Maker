@@ -12,7 +12,6 @@
 
 #pragma once
 
-// #include "structs.h"
 #include "utils/cRectangle.h"
 #include "utils/common.h"
 #include "gameobjects/particles/cParticleInfos.h"
