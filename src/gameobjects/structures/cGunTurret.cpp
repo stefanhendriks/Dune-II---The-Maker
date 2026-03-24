@@ -228,7 +228,7 @@ void cGunTurret::think_guard()
 
         int distanceForAttacking = getSight();
         if (lowPower && getType() == RTURRET) {
-            distanceForAttacking = sStructureInfo[TURRET].sight; // HACK HACK: way to reduce distance for rturret on low power
+            distanceForAttacking = structureInfos[TURRET].sight; // HACK HACK: way to reduce distance for rturret on low power
         }
 
         // scan area for units

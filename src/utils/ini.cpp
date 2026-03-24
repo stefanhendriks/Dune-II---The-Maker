@@ -1554,16 +1554,16 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
                 if (wordtype == WORD_HITPOINTS) {
-                    sStructureInfo[id].hp = ToInt(word_right);
+                    structureInfos[id].hp = ToInt(word_right);
                 }
-                if (wordtype == WORD_FIXHP) sStructureInfo[id].fixhp = ToInt(word_right);
-                if (wordtype == WORD_POWERDRAIN) sStructureInfo[id].power_drain = ToInt(word_right);
-                if (wordtype == WORD_HAS_CONCRETE) sStructureInfo[id].hasConcrete = ToBool(word_right);
-                if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = ToInt(word_right);
-                if (wordtype == WORD_COST) sStructureInfo[id].cost = ToInt(word_right);
-                if (wordtype == WORD_BUILDTIME) sStructureInfo[id].buildTime = ToInt(word_right);
-                if (wordtype == WORD_CANATTACKAIRUNITS) sStructureInfo[id].canAttackAirUnits = ToBool(word_right);
-                if (wordtype == WORD_CANATTACKUNITS) sStructureInfo[id].canAttackGroundUnits = ToBool(word_right);
+                if (wordtype == WORD_FIXHP) structureInfos[id].fixhp = ToInt(word_right);
+                if (wordtype == WORD_POWERDRAIN) structureInfos[id].power_drain = ToInt(word_right);
+                if (wordtype == WORD_HAS_CONCRETE) structureInfos[id].hasConcrete = ToBool(word_right);
+                if (wordtype == WORD_POWERGIVE) structureInfos[id].power_give = ToInt(word_right);
+                if (wordtype == WORD_COST) structureInfos[id].cost = ToInt(word_right);
+                if (wordtype == WORD_BUILDTIME) structureInfos[id].buildTime = ToInt(word_right);
+                if (wordtype == WORD_CANATTACKAIRUNITS) structureInfos[id].canAttackAirUnits = ToBool(word_right);
+                if (wordtype == WORD_CANATTACKUNITS) structureInfos[id].canAttackGroundUnits = ToBool(word_right);
             }
 
             if (section == INI_BULLETS && id > -1) {

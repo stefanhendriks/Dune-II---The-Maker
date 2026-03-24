@@ -1073,7 +1073,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = sStructureInfo[LIGHTFACTORY].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = structureInfos[LIGHTFACTORY].cost / 2;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].needsStructureType = LIGHTFACTORY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].structureType = LIGHTFACTORY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
@@ -1092,7 +1092,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = sStructureInfo[HEAVYFACTORY].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = structureInfos[HEAVYFACTORY].cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
@@ -1109,7 +1109,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = sStructureInfo[HEAVYFACTORY].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = structureInfos[HEAVYFACTORY].cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
@@ -1125,7 +1125,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = sStructureInfo[HEAVYFACTORY].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = structureInfos[HEAVYFACTORY].cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
@@ -1141,7 +1141,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].techLevel = 6;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = sStructureInfo[HEAVYFACTORY].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = structureInfos[HEAVYFACTORY].cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1;
@@ -1158,7 +1158,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = sStructureInfo[HIGHTECH].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = structureInfos[HIGHTECH].cost / 2;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
@@ -1173,7 +1173,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = sStructureInfo[WOR].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = structureInfos[WOR].cost / 2;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].structureType = WOR;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
@@ -1190,7 +1190,7 @@ void IniGameRessources::install_upgrades()
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = sStructureInfo[BARRACKS].cost / 2;
+    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = structureInfos[BARRACKS].cost / 2;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].structureType = BARRACKS;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
@@ -1213,7 +1213,7 @@ void IniGameRessources::install_structures()
 
     logbook("Installing:  STRUCTURES");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-        s_StructureInfo &structureInfo = sStructureInfo[i];
+        s_StructureInfo &structureInfo = structureInfos[i];
         structureInfo.bmp = gfxdata->getSurface(BUILD_WINDTRAP); // in case an invalid bitmap, we are a windtrap
         structureInfo.shadow = nullptr;
         structureInfo.flash = nullptr;
@@ -1240,303 +1240,303 @@ void IniGameRessources::install_structures()
     }
 
     // Single and 4 slabs
-    sStructureInfo[SLAB1].bmp = gfxdata->getSurface(PLACE_SLAB1); // in case an invalid bitmap, we are a windtrap
-    sStructureInfo[SLAB1].icon = ICON_STR_1SLAB;
-    sStructureInfo[SLAB1].hp = 25;            // Not functional in-game, only for building
-    sStructureInfo[SLAB1].bmp_width = 16 * 2;
-    sStructureInfo[SLAB1].bmp_height = 16 * 2;
-    sStructureInfo[SLAB1].configured = true;
-    sStructureInfo[SLAB1].queuable = true;
-    strcpy(sStructureInfo[SLAB1].name, "Concrete Slab");
+    structureInfos[SLAB1].bmp = gfxdata->getSurface(PLACE_SLAB1); // in case an invalid bitmap, we are a windtrap
+    structureInfos[SLAB1].icon = ICON_STR_1SLAB;
+    structureInfos[SLAB1].hp = 25;            // Not functional in-game, only for building
+    structureInfos[SLAB1].bmp_width = 16 * 2;
+    structureInfos[SLAB1].bmp_height = 16 * 2;
+    structureInfos[SLAB1].configured = true;
+    structureInfos[SLAB1].queuable = true;
+    strcpy(structureInfos[SLAB1].name, "Concrete Slab");
 
-    sStructureInfo[SLAB4].bmp = gfxdata->getSurface(PLACE_SLAB4); // in case an invalid bitmap, we are a windtrap
-    sStructureInfo[SLAB4].icon = ICON_STR_4SLAB;
-    sStructureInfo[SLAB4].hp = 75;            // Not functional in-game, only for building
-    sStructureInfo[SLAB4].bmp_width = 32 * 2;
-    sStructureInfo[SLAB4].bmp_height = 32 * 2;
-    sStructureInfo[SLAB4].configured = true;
-    sStructureInfo[SLAB4].queuable = true;
-    strcpy(sStructureInfo[SLAB4].name, "4 Concrete Slabs");
+    structureInfos[SLAB4].bmp = gfxdata->getSurface(PLACE_SLAB4); // in case an invalid bitmap, we are a windtrap
+    structureInfos[SLAB4].icon = ICON_STR_4SLAB;
+    structureInfos[SLAB4].hp = 75;            // Not functional in-game, only for building
+    structureInfos[SLAB4].bmp_width = 32 * 2;
+    structureInfos[SLAB4].bmp_height = 32 * 2;
+    structureInfos[SLAB4].configured = true;
+    structureInfos[SLAB4].queuable = true;
+    strcpy(structureInfos[SLAB4].name, "4 Concrete Slabs");
 
 
     // Concrete Wall
-    sStructureInfo[WALL].bmp = gfxdata->getSurface(PLACE_WALL); // in case an invalid bitmap, we are a windtrap
-    sStructureInfo[WALL].icon = ICON_STR_WALL;
-    sStructureInfo[WALL].hp = 75;            // Not functional in-game, only for building
-    sStructureInfo[WALL].bmp_width = 16 * 2;
-    sStructureInfo[WALL].bmp_height = 16 * 2;
-    sStructureInfo[WALL].queuable = true;
-    sStructureInfo[WALL].configured = true;
-    strcpy(sStructureInfo[WALL].name, "Concrete Wall");
+    structureInfos[WALL].bmp = gfxdata->getSurface(PLACE_WALL); // in case an invalid bitmap, we are a windtrap
+    structureInfos[WALL].icon = ICON_STR_WALL;
+    structureInfos[WALL].hp = 75;            // Not functional in-game, only for building
+    structureInfos[WALL].bmp_width = 16 * 2;
+    structureInfos[WALL].bmp_height = 16 * 2;
+    structureInfos[WALL].queuable = true;
+    structureInfos[WALL].configured = true;
+    strcpy(structureInfos[WALL].name, "Concrete Wall");
 
     // Structure    : Windtrap
     // Description  : <none>
-    sStructureInfo[WINDTRAP].bmp = gfxdata->getSurface(BUILD_WINDTRAP);
-    sStructureInfo[WINDTRAP].shadow = gfxdata->getTexture(BUILD_WINDTRAP_SHADOW); // shadow
-    sStructureInfo[WINDTRAP].fadecol = 128;
-    sStructureInfo[WINDTRAP].fademax = 134;
-    sStructureInfo[WINDTRAP].icon = ICON_STR_WINDTRAP;
-    sStructureInfo[WINDTRAP].configured = true;
-    sStructureInfo[WINDTRAP].flags.push_back(s_FlagInfo{
+    structureInfos[WINDTRAP].bmp = gfxdata->getSurface(BUILD_WINDTRAP);
+    structureInfos[WINDTRAP].shadow = gfxdata->getTexture(BUILD_WINDTRAP_SHADOW); // shadow
+    structureInfos[WINDTRAP].fadecol = 128;
+    structureInfos[WINDTRAP].fademax = 134;
+    structureInfos[WINDTRAP].icon = ICON_STR_WINDTRAP;
+    structureInfos[WINDTRAP].configured = true;
+    structureInfos[WINDTRAP].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 53,
         .relY = 37
     });
-    strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
+    strcpy(structureInfos[WINDTRAP].name, "Windtrap");
 
     // Structure    : Heavy Factory
     // Description  : <none>
-    sStructureInfo[HEAVYFACTORY].bmp_width = 48 * 2;
-    sStructureInfo[HEAVYFACTORY].bmp_height = 32 * 2;
-    sStructureInfo[HEAVYFACTORY].bmp = gfxdata->getSurface(BUILD_HEAVYFACTORY);
-    sStructureInfo[HEAVYFACTORY].shadow = gfxdata->getTexture(BUILD_HEAVYFACTORY_SHADOW); // shadow
-    sStructureInfo[HEAVYFACTORY].flash = gfxdata->getSurface(BUILD_HEAVYFACTORY_FLASH);
-    sStructureInfo[HEAVYFACTORY].fadecol = -1;
-    sStructureInfo[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
-    sStructureInfo[HEAVYFACTORY].configured = true;
-    sStructureInfo[HEAVYFACTORY].flags.push_back(s_FlagInfo{
+    structureInfos[HEAVYFACTORY].bmp_width = 48 * 2;
+    structureInfos[HEAVYFACTORY].bmp_height = 32 * 2;
+    structureInfos[HEAVYFACTORY].bmp = gfxdata->getSurface(BUILD_HEAVYFACTORY);
+    structureInfos[HEAVYFACTORY].shadow = gfxdata->getTexture(BUILD_HEAVYFACTORY_SHADOW); // shadow
+    structureInfos[HEAVYFACTORY].flash = gfxdata->getSurface(BUILD_HEAVYFACTORY_FLASH);
+    structureInfos[HEAVYFACTORY].fadecol = -1;
+    structureInfos[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
+    structureInfos[HEAVYFACTORY].configured = true;
+    structureInfos[HEAVYFACTORY].flags.push_back(s_FlagInfo{
         .big = false,
         .relX = 25,
         .relY = 3
     });
-    strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
+    strcpy(structureInfos[HEAVYFACTORY].name, "Heavy Factory");
 
     // Structure    : Hight Tech Factory (for aircraft only)
     // Description  : <none>
-    sStructureInfo[HIGHTECH].bmp_width = 48 * 2;
-    sStructureInfo[HIGHTECH].bmp_height = 32 * 2;
-    sStructureInfo[HIGHTECH].bmp = gfxdata->getSurface(BUILD_HIGHTECH);
-    sStructureInfo[HIGHTECH].shadow = gfxdata->getTexture(BUILD_HIGHTECH_SHADOW);
-    sStructureInfo[HIGHTECH].fadecol = -1;
-    sStructureInfo[HIGHTECH].icon = ICON_STR_HIGHTECH;
-    sStructureInfo[HIGHTECH].configured = true;
-    sStructureInfo[HIGHTECH].flags.push_back(s_FlagInfo{
+    structureInfos[HIGHTECH].bmp_width = 48 * 2;
+    structureInfos[HIGHTECH].bmp_height = 32 * 2;
+    structureInfos[HIGHTECH].bmp = gfxdata->getSurface(BUILD_HIGHTECH);
+    structureInfos[HIGHTECH].shadow = gfxdata->getTexture(BUILD_HIGHTECH_SHADOW);
+    structureInfos[HIGHTECH].fadecol = -1;
+    structureInfos[HIGHTECH].icon = ICON_STR_HIGHTECH;
+    structureInfos[HIGHTECH].configured = true;
+    structureInfos[HIGHTECH].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 19,
         .relY = 36
     });
-    strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
+    strcpy(structureInfos[HIGHTECH].name, "Hi-Tech");
 
     // Structure    : Repair
     // Description  : <none>
-    sStructureInfo[REPAIR].bmp_width = 48 * 2;
-    sStructureInfo[REPAIR].bmp_height = 32 * 2;
-    sStructureInfo[REPAIR].bmp = gfxdata->getSurface(BUILD_REPAIR);
-    sStructureInfo[REPAIR].shadow = gfxdata->getTexture(BUILD_REPAIR_SHADOW);
-    sStructureInfo[REPAIR].fadecol = -1;
-    sStructureInfo[REPAIR].icon = ICON_STR_REPAIR;
-    sStructureInfo[REPAIR].configured = true;
-    sStructureInfo[REPAIR].flags.push_back(s_FlagInfo{
+    structureInfos[REPAIR].bmp_width = 48 * 2;
+    structureInfos[REPAIR].bmp_height = 32 * 2;
+    structureInfos[REPAIR].bmp = gfxdata->getSurface(BUILD_REPAIR);
+    structureInfos[REPAIR].shadow = gfxdata->getTexture(BUILD_REPAIR_SHADOW);
+    structureInfos[REPAIR].fadecol = -1;
+    structureInfos[REPAIR].icon = ICON_STR_REPAIR;
+    structureInfos[REPAIR].configured = true;
+    structureInfos[REPAIR].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 41,
         .relY = 3
     });
-    strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
+    strcpy(structureInfos[REPAIR].name, "Repair Facility");
 
     // Structure    : Palace
     // Description  : <none>
-    sStructureInfo[PALACE].bmp_width = 48 * 2;
-    sStructureInfo[PALACE].bmp_height = 48 * 2;
-    sStructureInfo[PALACE].bmp = gfxdata->getSurface(BUILD_PALACE);
-    sStructureInfo[PALACE].shadow = gfxdata->getTexture(BUILD_PALACE_SHADOW);
-    sStructureInfo[PALACE].icon = ICON_STR_PALACE;
-    sStructureInfo[PALACE].configured = true;
-    sStructureInfo[PALACE].flags.push_back(s_FlagInfo{
+    structureInfos[PALACE].bmp_width = 48 * 2;
+    structureInfos[PALACE].bmp_height = 48 * 2;
+    structureInfos[PALACE].bmp = gfxdata->getSurface(BUILD_PALACE);
+    structureInfos[PALACE].shadow = gfxdata->getTexture(BUILD_PALACE_SHADOW);
+    structureInfos[PALACE].icon = ICON_STR_PALACE;
+    structureInfos[PALACE].configured = true;
+    structureInfos[PALACE].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 28,
         .relY = 14
     });
-    strcpy(sStructureInfo[PALACE].name, "Palace");
+    strcpy(structureInfos[PALACE].name, "Palace");
 
     // Structure    : Light Factory
     // Description  : <none>
-    sStructureInfo[LIGHTFACTORY].bmp_width = 32 * 2;
-    sStructureInfo[LIGHTFACTORY].bmp_height = 32 * 2;
-    sStructureInfo[LIGHTFACTORY].bmp = gfxdata->getSurface(BUILD_LIGHTFACTORY);
-    sStructureInfo[LIGHTFACTORY].shadow = gfxdata->getTexture(BUILD_LIGHTFACTORY_SHADOW);
-    sStructureInfo[LIGHTFACTORY].flash = gfxdata->getSurface(BUILD_LIGHTFACTORY_FLASH);
-    sStructureInfo[LIGHTFACTORY].fadecol = -1;
-    sStructureInfo[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
-    sStructureInfo[LIGHTFACTORY].configured = true;
-    sStructureInfo[LIGHTFACTORY].flags.push_back(s_FlagInfo{
+    structureInfos[LIGHTFACTORY].bmp_width = 32 * 2;
+    structureInfos[LIGHTFACTORY].bmp_height = 32 * 2;
+    structureInfos[LIGHTFACTORY].bmp = gfxdata->getSurface(BUILD_LIGHTFACTORY);
+    structureInfos[LIGHTFACTORY].shadow = gfxdata->getTexture(BUILD_LIGHTFACTORY_SHADOW);
+    structureInfos[LIGHTFACTORY].flash = gfxdata->getSurface(BUILD_LIGHTFACTORY_FLASH);
+    structureInfos[LIGHTFACTORY].fadecol = -1;
+    structureInfos[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
+    structureInfos[LIGHTFACTORY].configured = true;
+    structureInfos[LIGHTFACTORY].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 41,
         .relY = 2
     });
-    strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
+    strcpy(structureInfos[LIGHTFACTORY].name, "Light Factory");
 
     // Structure    : Radar
     // Description  : <none>
-    sStructureInfo[RADAR].bmp_width = 32 * 2;
-    sStructureInfo[RADAR].bmp_height = 32 * 2;
-    sStructureInfo[RADAR].bmp = gfxdata->getSurface(BUILD_RADAR);
-    sStructureInfo[RADAR].shadow = gfxdata->getTexture(BUILD_RADAR_SHADOW); // shadow
-    sStructureInfo[RADAR].sight = 12;
-    sStructureInfo[RADAR].fadecol = -1;
-    sStructureInfo[RADAR].icon = ICON_STR_RADAR;
-    sStructureInfo[RADAR].configured = true;
+    structureInfos[RADAR].bmp_width = 32 * 2;
+    structureInfos[RADAR].bmp_height = 32 * 2;
+    structureInfos[RADAR].bmp = gfxdata->getSurface(BUILD_RADAR);
+    structureInfos[RADAR].shadow = gfxdata->getTexture(BUILD_RADAR_SHADOW); // shadow
+    structureInfos[RADAR].sight = 12;
+    structureInfos[RADAR].fadecol = -1;
+    structureInfos[RADAR].icon = ICON_STR_RADAR;
+    structureInfos[RADAR].configured = true;
     // outpost has 2 flags
-    sStructureInfo[RADAR].flags.push_back(s_FlagInfo{
+    structureInfos[RADAR].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 17,
         .relY = 38
     });
-    sStructureInfo[RADAR].flags.push_back(s_FlagInfo{
+    structureInfos[RADAR].flags.push_back(s_FlagInfo{
         .big = false,
         .relX = 12,
         .relY = 46
     });
-    strcpy(sStructureInfo[RADAR].name, "Outpost");
+    strcpy(structureInfos[RADAR].name, "Outpost");
 
     // Structure    : Barracks
     // Description  : <none>
-    sStructureInfo[BARRACKS].bmp_width = 32 * 2;
-    sStructureInfo[BARRACKS].bmp_height = 32 * 2;
-    sStructureInfo[BARRACKS].bmp = gfxdata->getSurface(BUILD_BARRACKS);
-    sStructureInfo[BARRACKS].shadow = gfxdata->getTexture(BUILD_BARRACKS_SHADOW);
-    sStructureInfo[BARRACKS].fadecol = -1;
-    sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
-    sStructureInfo[BARRACKS].configured = true;
-    sStructureInfo[BARRACKS].flags.push_back(s_FlagInfo{
+    structureInfos[BARRACKS].bmp_width = 32 * 2;
+    structureInfos[BARRACKS].bmp_height = 32 * 2;
+    structureInfos[BARRACKS].bmp = gfxdata->getSurface(BUILD_BARRACKS);
+    structureInfos[BARRACKS].shadow = gfxdata->getTexture(BUILD_BARRACKS_SHADOW);
+    structureInfos[BARRACKS].fadecol = -1;
+    structureInfos[BARRACKS].icon = ICON_STR_BARRACKS;
+    structureInfos[BARRACKS].configured = true;
+    structureInfos[BARRACKS].flags.push_back(s_FlagInfo{
         .big = false,
         .relX = 60,
         .relY = 47
     });
-    sStructureInfo[BARRACKS].flags.push_back(s_FlagInfo{
+    structureInfos[BARRACKS].flags.push_back(s_FlagInfo{
         .big = false,
         .relX = 51,
         .relY = 50
     });
-    strcpy(sStructureInfo[BARRACKS].name, "Barracks");
+    strcpy(structureInfos[BARRACKS].name, "Barracks");
 
     // Structure    : WOR
     // Description  : <none>
-    sStructureInfo[WOR].bmp_width = 32 * 2;
-    sStructureInfo[WOR].bmp_height = 32 * 2;
-    sStructureInfo[WOR].bmp = gfxdata->getSurface(BUILD_WOR);
-    sStructureInfo[WOR].shadow = gfxdata->getTexture(BUILD_WOR_SHADOW);
-    sStructureInfo[WOR].fadecol = -1;
-    sStructureInfo[WOR].icon = ICON_STR_WOR;
-    sStructureInfo[WOR].configured = true;
-    sStructureInfo[WOR].flags.push_back(s_FlagInfo{
+    structureInfos[WOR].bmp_width = 32 * 2;
+    structureInfos[WOR].bmp_height = 32 * 2;
+    structureInfos[WOR].bmp = gfxdata->getSurface(BUILD_WOR);
+    structureInfos[WOR].shadow = gfxdata->getTexture(BUILD_WOR_SHADOW);
+    structureInfos[WOR].fadecol = -1;
+    structureInfos[WOR].icon = ICON_STR_WOR;
+    structureInfos[WOR].configured = true;
+    structureInfos[WOR].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 21,
         .relY = 31
     });
-    strcpy(sStructureInfo[WOR].name, "WOR");
+    strcpy(structureInfos[WOR].name, "WOR");
 
 
     // Structure    : Silo
     // Description  : <none>
-    sStructureInfo[SILO].bmp_width = 32 * 2;
-    sStructureInfo[SILO].bmp_height = 32 * 2;
-    sStructureInfo[SILO].bmp = gfxdata->getSurface(BUILD_SILO);
-    sStructureInfo[SILO].shadow = gfxdata->getTexture(BUILD_SILO_SHADOW);
-    sStructureInfo[SILO].fadecol = -1;
-    sStructureInfo[SILO].icon = ICON_STR_SILO;
-    sStructureInfo[SILO].configured = true;
-    sStructureInfo[SILO].queuable = true;
-    sStructureInfo[SILO].flags.push_back(s_FlagInfo{
+    structureInfos[SILO].bmp_width = 32 * 2;
+    structureInfos[SILO].bmp_height = 32 * 2;
+    structureInfos[SILO].bmp = gfxdata->getSurface(BUILD_SILO);
+    structureInfos[SILO].shadow = gfxdata->getTexture(BUILD_SILO_SHADOW);
+    structureInfos[SILO].fadecol = -1;
+    structureInfos[SILO].icon = ICON_STR_SILO;
+    structureInfos[SILO].configured = true;
+    structureInfos[SILO].queuable = true;
+    structureInfos[SILO].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 43,
         .relY = 20
     });
-    strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
+    strcpy(structureInfos[SILO].name, "Spice Storage Silo");
 
     // Structure    : Refinery
     // Description  : <none>
-    sStructureInfo[REFINERY].bmp_width = 48 * 2;
-    sStructureInfo[REFINERY].bmp_height = 32 * 2;
-    sStructureInfo[REFINERY].bmp = gfxdata->getSurface(BUILD_REFINERY);
-    sStructureInfo[REFINERY].shadow = gfxdata->getTexture(BUILD_REFINERY_SHADOW);
-    sStructureInfo[REFINERY].fadecol = -1;
-    sStructureInfo[REFINERY].icon = ICON_STR_REFINERY;
-    sStructureInfo[REFINERY].configured = true;
-    sStructureInfo[REFINERY].flags.push_back(s_FlagInfo{
+    structureInfos[REFINERY].bmp_width = 48 * 2;
+    structureInfos[REFINERY].bmp_height = 32 * 2;
+    structureInfos[REFINERY].bmp = gfxdata->getSurface(BUILD_REFINERY);
+    structureInfos[REFINERY].shadow = gfxdata->getTexture(BUILD_REFINERY_SHADOW);
+    structureInfos[REFINERY].fadecol = -1;
+    structureInfos[REFINERY].icon = ICON_STR_REFINERY;
+    structureInfos[REFINERY].configured = true;
+    structureInfos[REFINERY].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 45,
         .relY = 12
     });
-    strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
+    strcpy(structureInfos[REFINERY].name, "Spice Refinery");
 
     // Structure    : Construction Yard
     // Description  : <none>
-    sStructureInfo[CONSTYARD].bmp_width = 32 * 2;
-    sStructureInfo[CONSTYARD].bmp_height = 32 * 2;
-    sStructureInfo[CONSTYARD].sight = 4;
-    sStructureInfo[CONSTYARD].bmp = gfxdata->getSurface(BUILD_CONSTYARD);
-    sStructureInfo[CONSTYARD].shadow = gfxdata->getTexture(BUILD_CONSTYARD_SHADOW);
-    sStructureInfo[CONSTYARD].hasConcrete = false;
-    sStructureInfo[CONSTYARD].flags.push_back(s_FlagInfo{
+    structureInfos[CONSTYARD].bmp_width = 32 * 2;
+    structureInfos[CONSTYARD].bmp_height = 32 * 2;
+    structureInfos[CONSTYARD].sight = 4;
+    structureInfos[CONSTYARD].bmp = gfxdata->getSurface(BUILD_CONSTYARD);
+    structureInfos[CONSTYARD].shadow = gfxdata->getTexture(BUILD_CONSTYARD_SHADOW);
+    structureInfos[CONSTYARD].hasConcrete = false;
+    structureInfos[CONSTYARD].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 14,
         .relY = 14
     });
-    sStructureInfo[CONSTYARD].fadecol = -1;
-    sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
-    sStructureInfo[CONSTYARD].configured = true;
-    strcpy(sStructureInfo[CONSTYARD].name, "Construction Yard");
+    structureInfos[CONSTYARD].fadecol = -1;
+    structureInfos[CONSTYARD].icon = ICON_STR_CONSTYARD;
+    structureInfos[CONSTYARD].configured = true;
+    strcpy(structureInfos[CONSTYARD].name, "Construction Yard");
 
     // Structure    : Starport
     // Description  : You can order units from this structure
-    sStructureInfo[STARPORT].bmp_width = 48 * 2;
-    sStructureInfo[STARPORT].bmp_height = 48 * 2;
-    sStructureInfo[STARPORT].bmp = gfxdata->getSurface(BUILD_STARPORT);
-    sStructureInfo[STARPORT].shadow = gfxdata->getTexture(BUILD_STARPORT_SHADOW);
-    sStructureInfo[STARPORT].fadecol = -1;
-    sStructureInfo[STARPORT].icon = ICON_STR_STARPORT;
-    sStructureInfo[STARPORT].configured = true;
-    sStructureInfo[STARPORT].flags.push_back(s_FlagInfo{
+    structureInfos[STARPORT].bmp_width = 48 * 2;
+    structureInfos[STARPORT].bmp_height = 48 * 2;
+    structureInfos[STARPORT].bmp = gfxdata->getSurface(BUILD_STARPORT);
+    structureInfos[STARPORT].shadow = gfxdata->getTexture(BUILD_STARPORT_SHADOW);
+    structureInfos[STARPORT].fadecol = -1;
+    structureInfos[STARPORT].icon = ICON_STR_STARPORT;
+    structureInfos[STARPORT].configured = true;
+    structureInfos[STARPORT].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 16,
         .relY = 3
     });
-    strcpy(sStructureInfo[STARPORT].name, "Starport");
+    strcpy(structureInfos[STARPORT].name, "Starport");
 
     // Structure    : House of IX
     // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
-    sStructureInfo[IX].bmp_width = 32 * 2;
-    sStructureInfo[IX].bmp_height = 32 * 2;
-    sStructureInfo[IX].bmp = gfxdata->getSurface(BUILD_IX);
-    sStructureInfo[IX].shadow = gfxdata->getTexture(BUILD_IX_SHADOW);
-    sStructureInfo[IX].fadecol = -1;
-    sStructureInfo[IX].icon = ICON_STR_IX;
-    sStructureInfo[IX].configured = true;
-    sStructureInfo[IX].flags.push_back(s_FlagInfo{
+    structureInfos[IX].bmp_width = 32 * 2;
+    structureInfos[IX].bmp_height = 32 * 2;
+    structureInfos[IX].bmp = gfxdata->getSurface(BUILD_IX);
+    structureInfos[IX].shadow = gfxdata->getTexture(BUILD_IX_SHADOW);
+    structureInfos[IX].fadecol = -1;
+    structureInfos[IX].icon = ICON_STR_IX;
+    structureInfos[IX].configured = true;
+    structureInfos[IX].flags.push_back(s_FlagInfo{
         .big = true,
         .relX = 60, // 60
         .relY = 40  // 40
     });
-    strcpy(sStructureInfo[IX].name, "House of IX");
+    strcpy(structureInfos[IX].name, "House of IX");
 
     // Structure    : Normal Turret
     // Description  : defence
-    sStructureInfo[TURRET].bmp_width = 16 * 2;
-    sStructureInfo[TURRET].bmp_height = 16 * 2;
-    sStructureInfo[TURRET].bmp = gfxdata->getSurface(BUILD_TURRET);
-    sStructureInfo[TURRET].shadow = gfxdata->getTexture(BUILD_TURRET_SHADOW);
-    sStructureInfo[TURRET].fadecol = -1;
-    sStructureInfo[TURRET].icon = ICON_STR_TURRET;
-    sStructureInfo[TURRET].sight = 7;
-    sStructureInfo[TURRET].configured = true;
-    sStructureInfo[TURRET].canAttackGroundUnits = true;
-    sStructureInfo[TURRET].fireRate = 275;
-    strcpy(sStructureInfo[TURRET].name, "Gun Turret");
+    structureInfos[TURRET].bmp_width = 16 * 2;
+    structureInfos[TURRET].bmp_height = 16 * 2;
+    structureInfos[TURRET].bmp = gfxdata->getSurface(BUILD_TURRET);
+    structureInfos[TURRET].shadow = gfxdata->getTexture(BUILD_TURRET_SHADOW);
+    structureInfos[TURRET].fadecol = -1;
+    structureInfos[TURRET].icon = ICON_STR_TURRET;
+    structureInfos[TURRET].sight = 7;
+    structureInfos[TURRET].configured = true;
+    structureInfos[TURRET].canAttackGroundUnits = true;
+    structureInfos[TURRET].fireRate = 275;
+    strcpy(structureInfos[TURRET].name, "Gun Turret");
 
     // Structure    : Rocket Turret
     // Description  : defence
-    sStructureInfo[RTURRET].bmp_width = 16 * 2;
-    sStructureInfo[RTURRET].bmp_height = 16 * 2;
-    sStructureInfo[RTURRET].bmp = gfxdata->getSurface(BUILD_RTURRET);
-    sStructureInfo[RTURRET].shadow = gfxdata->getTexture(BUILD_RTURRET_SHADOW);
-    sStructureInfo[RTURRET].fadecol = -1;
-    sStructureInfo[RTURRET].icon = ICON_STR_RTURRET;
-    sStructureInfo[RTURRET].sight = 10;
-    sStructureInfo[RTURRET].configured = true;
-    sStructureInfo[RTURRET].canAttackAirUnits = true;
-    sStructureInfo[RTURRET].canAttackGroundUnits = true;
-    sStructureInfo[RTURRET].fireRate = 350;
-    strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
+    structureInfos[RTURRET].bmp_width = 16 * 2;
+    structureInfos[RTURRET].bmp_height = 16 * 2;
+    structureInfos[RTURRET].bmp = gfxdata->getSurface(BUILD_RTURRET);
+    structureInfos[RTURRET].shadow = gfxdata->getTexture(BUILD_RTURRET_SHADOW);
+    structureInfos[RTURRET].fadecol = -1;
+    structureInfos[RTURRET].icon = ICON_STR_RTURRET;
+    structureInfos[RTURRET].sight = 10;
+    structureInfos[RTURRET].configured = true;
+    structureInfos[RTURRET].canAttackAirUnits = true;
+    structureInfos[RTURRET].canAttackGroundUnits = true;
+    structureInfos[RTURRET].fireRate = 350;
+    strcpy(structureInfos[RTURRET].name, "Rocket Turret");
 
     // Structure    : Windtrap
     // Description  : <none>

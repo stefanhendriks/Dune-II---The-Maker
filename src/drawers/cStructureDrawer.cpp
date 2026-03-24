@@ -53,8 +53,8 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     assert(theStructure);
     int drawX = theStructure->iDrawX();
     int drawY = theStructure->iDrawY();
-    int width = sStructureInfo[theStructure->getType()].bmp_width - 1;
-    int height = sStructureInfo[theStructure->getType()].bmp_height - 1;
+    int width = structureInfos[theStructure->getType()].bmp_width - 1;
+    int height = structureInfos[theStructure->getType()].bmp_height - 1;
 
     int width_x = game.m_mapCamera->factorZoomLevel(width);
     int height_y = game.m_mapCamera->factorZoomLevel(height);

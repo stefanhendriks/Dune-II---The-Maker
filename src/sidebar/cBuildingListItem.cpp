@@ -150,7 +150,7 @@ void cBuildingListItem::increaseProgress(int byAmount)
 int cBuildingListItem::getTotalBuildTime() const
 {
     if (type == STRUCTURE) {
-        return sStructureInfo[buildId].buildTime;
+        return structureInfos[buildId].buildTime;
     }
     if (type == UPGRADE) {
         return upgradeInfos[buildId].buildTime;
@@ -229,7 +229,7 @@ s_StructureInfo &cBuildingListItem::getStructureInfo()
         logbook("ERROR!!! - calling getStructureInfo while type is not STRUCTURE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return sStructureInfo[buildId];
+    return structureInfos[buildId];
 }
 
 void cBuildingListItem::resetTimesOrdered()
@@ -324,7 +324,7 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
             buildTime = unitInfos[buildId].buildTime;
             break;
         case STRUCTURE:
-            buildTime = sStructureInfo[buildId].buildTime;
+            buildTime = structureInfos[buildId].buildTime;
             break;
         case SPECIAL:
             buildTime = specialInfos[buildId].buildTime;
@@ -346,7 +346,7 @@ int cBuildingListItem::getListId(eBuildType type, int buildId)
         case UNIT:
             return eListTypeAsInt(unitInfos[buildId].listType);
         case STRUCTURE:
-            return sStructureInfo[buildId].list;
+            return structureInfos[buildId].list;
         case SPECIAL:
             return eListTypeAsInt(specialInfos[buildId].listType);
             break;

@@ -123,7 +123,7 @@ void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order)
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
             msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
-                              buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
+                              buildOrder.buildId, structureInfos[buildOrder.buildId].name, buildOrder.priority,
                               buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {
@@ -260,7 +260,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
-            s_StructureInfo &sStructures = sStructureInfo[event.entitySpecificType];
+            s_StructureInfo &sStructures = structureInfos[event.entitySpecificType];
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                 pStructure->startRepairing();
             }
@@ -296,7 +296,7 @@ void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event)
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
-            s_StructureInfo &sStructures = sStructureInfo[event.entitySpecificType];
+            s_StructureInfo &sStructures = structureInfos[event.entitySpecificType];
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                 pStructure->startRepairing();
             }

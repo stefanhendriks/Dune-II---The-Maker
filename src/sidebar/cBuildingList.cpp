@@ -87,7 +87,7 @@ void cBuildingList::addUpgradeToList(int upgradeType)
 
 void cBuildingList::addStructureToList(int structureType, int subList)
 {
-    cBuildingListItem *item = new cBuildingListItem(structureType, sStructureInfo[structureType], subList);
+    cBuildingListItem *item = new cBuildingListItem(structureType, structureInfos[structureType], subList);
     if (!addItemToList(item)) {
         delete item;
     }

@@ -70,3 +70,43 @@ struct s_StructureInfo {
 
 };
 
+
+
+
+
+class cStructureInfos {
+public:
+    cStructureInfos()
+    {}
+
+    // accès
+    s_StructureInfo &operator[](std::size_t i) {
+        if (i >= MAX_STRUCTURETYPES) throw std::out_of_range("UpgradeInfo index");
+        return m_data[i];
+    }
+
+    const s_StructureInfo &operator[](std::size_t i) const {
+        if (i >= MAX_STRUCTURETYPES) throw std::out_of_range("UpgradeInfo index");
+        return m_data[i];
+    }
+
+    // getter explicite
+    s_StructureInfo &get(std::size_t i) { return (*this)[i]; }
+    const s_StructureInfo &get(std::size_t i) const { return (*this)[i]; }
+
+    // taille
+    static constexpr std::size_t size() noexcept { return MAX_STRUCTURETYPES; }
+
+    // recherche/existence
+    bool valid(std::size_t i) const noexcept { return i < MAX_STRUCTURETYPES; }
+
+
+    // itérateurs
+    auto begin() noexcept { return m_data.begin(); }
+    auto end() noexcept { return m_data.end(); }
+    auto begin() const noexcept { return m_data.begin(); }
+    auto end() const noexcept { return m_data.end(); }
+
+private:
+    std::array<s_StructureInfo, MAX_STRUCTURETYPES> m_data;
+};

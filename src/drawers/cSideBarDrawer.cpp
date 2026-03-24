@@ -298,7 +298,7 @@ void cSideBarDrawer::drawPowerUsage() const
     m_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::black()); //renderDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
-    int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
+    int maxPowerOutageOfWindtrap = structureInfos[WINDTRAP].power_give;
     float totalPowerOutput = (1 + (m_player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
     float powerIn = (float)m_player->getPowerProduced() / totalPowerOutput;
     float powerUse = (float)m_player->getPowerUsage() / totalPowerOutput;
