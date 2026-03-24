@@ -101,7 +101,7 @@ void cPlayerBrainCampaign::addBuildOrder(S_buildOrder order)
         std::string msg;
         if (buildOrder.buildType == eBuildType::UNIT) {
             msg = std::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              unitInfos[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              game.unitInfos[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
             msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,

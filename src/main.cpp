@@ -42,7 +42,7 @@ SDLDrawer                   *global_renderDrawer = nullptr;
 std::shared_ptr<Graphics>   gfxdata;
 
 cStructureInfos             structureInfos;
-cUnitInfos                  unitInfos;
+
 
 
 

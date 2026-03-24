@@ -541,7 +541,7 @@ int cUnit::center_draw_y()
 
 int cUnit::getBmpHeight() const
 {
-    return unitInfos[iType].bmp_height;
+    return game.unitInfos[iType].bmp_height;
 }
 
 void cUnit::draw_spice()
@@ -566,7 +566,7 @@ void cUnit::draw_spice()
 
 int cUnit::getBmpWidth() const
 {
-    return unitInfos[iType].bmp_width;
+    return game.unitInfos[iType].bmp_width;
 }
 
 float cUnit::getHealthNormalized()
@@ -1312,7 +1312,7 @@ void cUnit::think_turn_to_desired_body_facing()
     // BODY is not facing correctly
     TIMER_turn++;
 
-    float turnspeed = unitInfos[iType].turnspeed;
+    float turnspeed = game.unitInfos[iType].turnspeed;
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
         double distance = game.getMap().distance(iCell, iGoalCell);
@@ -2074,7 +2074,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     if (isInfantryUnit()) {
         if (iType == INFANTRY || iType == TROOPERS) {
             // turn into soldier or trooper when on 50% health
-            if (iHitPoints <= (unitInfos[iType].hp / 3)) {
+            if (iHitPoints <= (game.unitInfos[iType].hp / 3)) {
                 // leave 2 dead bodies (of 3 ;))
 
                 // turn into single one
@@ -2084,7 +2084,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                 if (iType == TROOPERS)
                     iType = TROOPER;
 
-                iHitPoints = unitInfos[iType].hp;
+                iHitPoints = game.unitInfos[iType].hp;
 
                 int half = 16;
                 int iDieX = pos_x() + half;
@@ -2104,7 +2104,7 @@ void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
     game.getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, iGoalCell = {}] '{}'",
-                                     iID, iType, unitInfos[iType].name, iCell, iGoalCell, txt));
+                                     iID, iType, game.unitInfos[iType].name, iCell, iGoalCell, txt));
 }
 
 /**
@@ -2414,7 +2414,7 @@ int cUnit::getSight() const
 
 s_UnitInfo &cUnit::getUnitInfo() const
 {
-    return unitInfos[iType];
+    return game.unitInfos[iType];
 }
 
 // thinking about movement (called every 5 ms)
@@ -2965,10 +2965,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         if (iPlayer == AI_CPU5 && game.getPlayer(HUMAN).isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            game.getMap().clearShroud(iCell, unitInfos[iType].sight, HUMAN);
+            game.getMap().clearShroud(iCell, game.unitInfos[iType].sight, HUMAN);
         }
 
-        game.getMap().clearShroud(iCell, unitInfos[iType].sight, iPlayer);
+        game.getMap().clearShroud(iCell, game.unitInfos[iType].sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (bCalculateNewPath) {
@@ -3025,7 +3025,7 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait)
 
 bool cUnit::isInfantryUnit() const
 {
-    return unitInfos[iType].infantry;
+    return game.unitInfos[iType].infantry;
 }
 
 cUnit::cUnit()
@@ -3706,7 +3706,7 @@ int cUnit::findNearbyStructureToAttack(int range)
 
 int cUnit::getTurnSpeed()
 {
-    return unitInfos[iType].turnspeed;
+    return game.unitInfos[iType].turnspeed;
 }
 
 void cUnit::think_harvester()
@@ -3741,7 +3741,7 @@ void cUnit::think_harvester()
 
         // when we should harvest...
         cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
-        if (TIMER_harvest > (difficultySettings->getHarvestSpeed(unitInfos[iType].harvesting_speed)) &&
+        if (TIMER_harvest > (difficultySettings->getHarvestSpeed(game.unitInfos[iType].harvesting_speed)) &&
                 iCredits < getUnitInfo().credit_capacity) {
             TIMER_harvest = 1;
 
@@ -3750,8 +3750,8 @@ void cUnit::think_harvester()
             if (iFrame > 3)
                 iFrame = 1;
 
-            iCredits += unitInfos[iType].harvesting_amount;
-            game.getMap().cellTakeCredits(iCell, unitInfos[iType].harvesting_amount);
+            iCredits += game.unitInfos[iType].harvesting_amount;
+            game.getMap().cellTakeCredits(iCell, game.unitInfos[iType].harvesting_amount);
 
             // turn into sand/spice (when spicehill)
             if (game.getMap().getCellCredits(iCell) <= 0) {
@@ -3903,7 +3903,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
         return -1;
     }
 
-    s_UnitInfo &sUnitType = unitInfos[unitType];
+    s_UnitInfo &sUnitType = game.unitInfos[unitType];
 
     // check if unit already exists on location
     if (!sUnitType.airborn && game.getMap().cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
@@ -4557,7 +4557,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = game.getMap().getCellType(cll);
-                    if (unitInfos[game.getUnit(iID).iType].infantry) {
+                    if (game.unitInfos[game.getUnit(iID).iType].infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }

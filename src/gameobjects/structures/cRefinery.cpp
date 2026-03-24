@@ -53,7 +53,7 @@ void cRefinery::think_unit_occupation()
         int iAmount = 5;
 
         // cap at max
-        s_UnitInfo &unitType = unitInfos[cUnit.iType];
+        s_UnitInfo &unitType = game.unitInfos[cUnit.iType];
 
         if (cUnit.iCredits > unitType.credit_capacity) {
             cUnit.iCredits = unitType.credit_capacity;
