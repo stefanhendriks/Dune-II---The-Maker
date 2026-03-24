@@ -17,40 +17,14 @@
 **/
 #pragma once
 
-#include "definitions.h"
-#include "structs.h"
-#include "utils/cStructureUtils.h"
 #include "game/cGame.h"
-#include "gameobjects/particles/cParticleInfos.h"
-#include "gameobjects/projectiles/cBulletInfos.h"
-#include "gameobjects/projectiles/cBullets.h"
-#include "gameobjects/particles/cParticles.h"
-#include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/structures/cStructures.h"
-#include "gameobjects/cSpecialInfos.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
+
 
 #include <memory>
-#include <array>
-#include <SDL2/SDL_ttf.h>
 
-
-
-class cAbstractStructure;
 class SDLDrawer;
-class cBullet;
-class cDrawManager;
-class cMapCamera;
-class cUnit;
-class cUnits;
-class cParticle;
-class cPlayer;
-class cPlayers;
 class Graphics;
 class cGame;
-class cMap;
 
 struct SDL_Surface;
 

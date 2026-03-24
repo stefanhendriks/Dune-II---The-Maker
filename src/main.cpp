@@ -10,22 +10,13 @@
 
   */
 
-#include "d2tmc.h"
 #include "game/cGame.h"
-#include "gameobjects/particles/cParticle.h"
 
-#include "gameobjects/projectiles/bullet.h"
-#include "gamestates/cSelectYourNextConquestState.h"
-#include "map/cMapEditor.h"
-#include "player/cPlayer.h"
-#include "player/cPlayers.h"
 #include "utils/cLog.h"
 #include "drawers/SDLDrawer.hpp"
-
 #include "utils/Graphics.hpp"
-
 #include "utils/cHandleArgument.h"
-#include "utils/common.h"
+
 
 #include <string>
 
