@@ -470,7 +470,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
             if (ownerUnit.isValid()) {
                 // TODO: update statistics
 
-                if (unitInfos[groundUnitTakingDamage.iType].infantry) {
+                if (game.unitInfos[groundUnitTakingDamage.iType].infantry) {
                     ownerUnit.fExperience += 0.25; // 4 kills = 1 star
                 }
                 else {

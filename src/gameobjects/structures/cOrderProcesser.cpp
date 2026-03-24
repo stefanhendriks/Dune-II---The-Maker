@@ -139,7 +139,7 @@ void cOrderProcesser::updatePricesForStarport()
         cBuildingListItem *item = list->getItem(i);
         if (item) {
             int id = item->getBuildId();
-            int originalPrice = unitInfos[id].cost;
+            int originalPrice = game.unitInfos[id].cost;
             int slice = originalPrice / 2;
             int newPrice = (originalPrice - slice) + (RNG::rnd(slice * 2));
             item->setBuildCost(newPrice);

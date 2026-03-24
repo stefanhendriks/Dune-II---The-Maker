@@ -32,6 +32,8 @@
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/cSpecialInfos.h"
 #include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
+#include "gameobjects/structures/cStructureInfo.h"
 
 #include <memory>
 #include <string>
@@ -126,6 +128,7 @@ public:
     cBulletInfos   			    bulletInfos;
     cSpecialInfos               specialInfos;
     cUpgradeInfos               upgradeInfos;
+    cUnitInfos                  unitInfos;
 
     // Initialization functions
     void init();		            // initialize all game variables
