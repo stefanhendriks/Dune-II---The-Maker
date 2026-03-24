@@ -336,8 +336,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
 {
     // figure out size
-    int iW= structureInfos[structureId].bmp_width / 32;
-    int iH= structureInfos[structureId].bmp_height / 32;
+    int iW= game.structureInfos[structureId].bmp_width / 32;
+    int iH= game.structureInfos[structureId].bmp_height / 32;
     int iTile = GRID_1X1;
 
     if (iW == 2 && iH == 2) {

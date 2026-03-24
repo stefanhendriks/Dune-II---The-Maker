@@ -1554,16 +1554,16 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
                 if (wordtype == WORD_HITPOINTS) {
-                    structureInfos[id].hp = ToInt(word_right);
+                    game.structureInfos[id].hp = ToInt(word_right);
                 }
-                if (wordtype == WORD_FIXHP) structureInfos[id].fixhp = ToInt(word_right);
-                if (wordtype == WORD_POWERDRAIN) structureInfos[id].power_drain = ToInt(word_right);
-                if (wordtype == WORD_HAS_CONCRETE) structureInfos[id].hasConcrete = ToBool(word_right);
-                if (wordtype == WORD_POWERGIVE) structureInfos[id].power_give = ToInt(word_right);
-                if (wordtype == WORD_COST) structureInfos[id].cost = ToInt(word_right);
-                if (wordtype == WORD_BUILDTIME) structureInfos[id].buildTime = ToInt(word_right);
-                if (wordtype == WORD_CANATTACKAIRUNITS) structureInfos[id].canAttackAirUnits = ToBool(word_right);
-                if (wordtype == WORD_CANATTACKUNITS) structureInfos[id].canAttackGroundUnits = ToBool(word_right);
+                if (wordtype == WORD_FIXHP) game.structureInfos[id].fixhp = ToInt(word_right);
+                if (wordtype == WORD_POWERDRAIN) game.structureInfos[id].power_drain = ToInt(word_right);
+                if (wordtype == WORD_HAS_CONCRETE) game.structureInfos[id].hasConcrete = ToBool(word_right);
+                if (wordtype == WORD_POWERGIVE) game.structureInfos[id].power_give = ToInt(word_right);
+                if (wordtype == WORD_COST) game.structureInfos[id].cost = ToInt(word_right);
+                if (wordtype == WORD_BUILDTIME) game.structureInfos[id].buildTime = ToInt(word_right);
+                if (wordtype == WORD_CANATTACKAIRUNITS) game.structureInfos[id].canAttackAirUnits = ToBool(word_right);
+                if (wordtype == WORD_CANATTACKUNITS) game.structureInfos[id].canAttackGroundUnits = ToBool(word_right);
             }
 
             if (section == INI_BULLETS && id > -1) {

@@ -26,10 +26,6 @@
 
 #include "utils/cHandleArgument.h"
 #include "utils/common.h"
-#include "gameobjects/units/cUnits.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
 
 #include <string>
 
@@ -40,12 +36,6 @@
 cGame          				game;
 SDLDrawer                   *global_renderDrawer = nullptr;
 std::shared_ptr<Graphics>   gfxdata;
-
-cStructureInfos             structureInfos;
-
-
-
-
 
 
 int main(int argc, char **argv)

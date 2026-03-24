@@ -129,6 +129,7 @@ public:
     cSpecialInfos               specialInfos;
     cUpgradeInfos               upgradeInfos;
     cUnitInfos                  unitInfos;
+    cStructureInfos             structureInfos;
 
     // Initialization functions
     void init();		            // initialize all game variables
