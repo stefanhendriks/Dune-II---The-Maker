@@ -43,7 +43,7 @@ std::shared_ptr<Graphics>   gfxdata;
 
 cStructureInfos             structureInfos;
 cUnitInfos                  unitInfos;
-cUpgradeInfos               upgradeInfos;
+
 
 
 

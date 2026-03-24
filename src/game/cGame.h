@@ -125,6 +125,7 @@ public:
     cStructureUtils             m_structureUtils;
     cBulletInfos   			    bulletInfos;
     cSpecialInfos               specialInfos;
+    cUpgradeInfos               upgradeInfos;
 
     // Initialization functions
     void init();		            // initialize all game variables
