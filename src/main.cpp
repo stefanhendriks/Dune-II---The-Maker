@@ -42,7 +42,8 @@ SDLDrawer                   *global_renderDrawer = nullptr;
 std::shared_ptr<Graphics>   gfxdata;
 
 // Structs of all kinds of objects (*info)
-s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
+// s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
+cStructureInfos            structureInfos;
 //s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
 cUnitInfos                  unitInfos;
 

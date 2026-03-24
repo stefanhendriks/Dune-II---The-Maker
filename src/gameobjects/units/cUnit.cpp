@@ -381,7 +381,7 @@ void cUnit::createExplosionParticle()
 
                         int iChance = 10;
 
-                        if (pStructure->getHitPoints() < (sStructureInfo[pStructure->getType()].hp / 2)) {
+                        if (pStructure->getHitPoints() < (structureInfos[pStructure->getType()].hp / 2)) {
                             iChance = 30;
                         }
 
@@ -3302,7 +3302,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     }
 
     log(std::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
-                    sStructureInfo[structureType].name));
+                    structureInfos[structureType].name));
 
     const sFindBestStructureResult &result = findBestStructureCandidateToHeadTo(structureType);
 

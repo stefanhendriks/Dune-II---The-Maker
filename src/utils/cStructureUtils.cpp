@@ -23,14 +23,14 @@ int cStructureUtils::getHeightOfStructureTypeInCells(int structureType)
 {
     assert(structureType >= 0);
     assert(structureType < MAX_STRUCTURETYPES);
-    return sStructureInfo[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    return structureInfos[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 }
 
 int cStructureUtils::getWidthOfStructureTypeInCells(int structureType)
 {
     assert(structureType >= 0);
     assert(structureType < MAX_STRUCTURETYPES);
-    return sStructureInfo[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    return structureInfos[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
 }
 
 
@@ -110,7 +110,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer *pPlayer, int structureTy
 
     if (game.isDebugMode()) {
         logbook(std::format(
-                    "Looking for primary building (type {}, name {}, pPlayer {})", structureType, sStructureInfo[structureType].name, playerId));
+                    "Looking for primary building (type {}, name {}, pPlayer {})", structureType, structureInfos[structureType].name, playerId));
     }
 
     // check primary building first if set
