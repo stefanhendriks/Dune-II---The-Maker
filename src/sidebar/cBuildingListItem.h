@@ -15,6 +15,7 @@ class cBuildingList;
 struct s_SpecialInfo;
 struct s_UpgradeInfo;
 struct s_UnitInfo;
+struct s_StructureInfo;
 
 class cBuildingListItem {
 

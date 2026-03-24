@@ -29,6 +29,8 @@
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/cUpgradeInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
+#include "gameobjects/structures/cStructureInfo.h"
+
 #include <string>
 
 #include <iostream>
