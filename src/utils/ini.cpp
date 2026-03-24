@@ -31,6 +31,7 @@
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/sTerrainInfo.h"
 #include "utils/RNG.hpp"
 
 #include <format>

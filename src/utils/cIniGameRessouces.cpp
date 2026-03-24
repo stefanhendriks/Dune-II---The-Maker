@@ -8,6 +8,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/sTerrainInfo.h"
 
 
 /********************************

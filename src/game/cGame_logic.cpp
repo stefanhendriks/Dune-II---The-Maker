@@ -68,6 +68,7 @@
 #include "context/GameContext.hpp"
 #include "context/ContextCreator.hpp"
 #include "utils/cIniGameRessouces.h"
+#include "gameobjects/sTerrainInfo.h"
 
 #include "game/cScreenShake.h"
 #include "game/cTimeCounter.h"

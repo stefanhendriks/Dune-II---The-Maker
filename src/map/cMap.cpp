@@ -26,6 +26,7 @@
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
+#include "gameobjects/sTerrainInfo.h"
 #include <format>
 
 #include <algorithm>

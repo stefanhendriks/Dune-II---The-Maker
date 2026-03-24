@@ -10,7 +10,7 @@
 #include "player/cPlayerDifficultySettings.h"
 #include "sGameEvent.h"
 #include "sidebar/cBuildingList.h"
-#include "structs.h"
+
 #include "utils/cLog.h"
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
