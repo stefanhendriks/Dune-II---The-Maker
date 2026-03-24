@@ -1124,8 +1124,8 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     int amountOfSoldiersToSpawn = RNG::genInt(minAmountOfSoldiersToSpawnPotentially, maxAmountOfSoldiersToSpawnPotentially);
 
 
-    int widthInCells = structureInfos[event.entitySpecificType].bmp_width / 32;
-    int heightInCells = structureInfos[event.entitySpecificType].bmp_height / 32;
+    int widthInCells = game.structureInfos[event.entitySpecificType].bmp_width / 32;
+    int heightInCells = game.structureInfos[event.entitySpecificType].bmp_height / 32;
 
     int cellX = m_map.getGeometry().getCellX(event.atCell);
     int cellY = m_map.getGeometry().getCellY(event.atCell);

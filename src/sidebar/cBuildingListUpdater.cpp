@@ -501,7 +501,7 @@ void cBuildingListUpdater::evaluateUpgrades()
         if (!hasRequiredStructureType) {
             addToUpgradesList = false;
             player->log(std::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
-                                    upgradeInfo.description, structureInfos[upgradeInfo.structureType].name));
+                                    upgradeInfo.description, game.structureInfos[upgradeInfo.structureType].name));
         }
 
         // check if player has the additional structure (if required)
@@ -510,7 +510,7 @@ void cBuildingListUpdater::evaluateUpgrades()
             if (!hasRequiredStructureType) {
                 addToUpgradesList = false;
                 player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
-                                        upgradeInfo.description, structureInfos[upgradeInfo.needsStructureType].name));
+                                        upgradeInfo.description, game.structureInfos[upgradeInfo.needsStructureType].name));
             }
         }
 

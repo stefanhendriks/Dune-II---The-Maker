@@ -139,6 +139,6 @@ void cRefinery::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity()
 {
-    float percentage = ((float) getHitPoints() / (float) structureInfos[getType()].hp);
+    float percentage = ((float) getHitPoints() / (float) game.structureInfos[getType()].hp);
     return 1000 * percentage;
 }

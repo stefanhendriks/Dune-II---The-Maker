@@ -143,26 +143,26 @@ cPlayer *cAbstractStructure::getPlayer()
 int cAbstractStructure::getMaxHP()
 {
     int type = getType();
-    return structureInfos[type].hp;
+    return game.structureInfos[type].hp;
 }
 
 int cAbstractStructure::getCaptureHP()
 {
     int type = getType();
     // TODO: Capture hp threshold (property in structure)
-    return ((float)structureInfos[type].hp) * 0.30f;
+    return ((float)game.structureInfos[type].hp) * 0.30f;
 }
 
 int cAbstractStructure::getSight()
 {
     int type = getType();
-    return structureInfos[type].sight;
+    return game.structureInfos[type].sight;
 }
 
 int cAbstractStructure::getRange()
 {
     int type = getType();
-    return structureInfos[type].sight;
+    return game.structureInfos[type].sight;
 }
 
 
@@ -536,7 +536,7 @@ void cAbstractStructure::damage(int hp, int originId)
 void cAbstractStructure::setHitPoints(int hp)
 {
     iHitPoints = hp;
-    int maxHp = structureInfos[getType()].hp;
+    int maxHp = game.structureInfos[getType()].hp;
 
     if (iHitPoints > maxHp) {
         logbook(std::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
@@ -593,7 +593,7 @@ void cAbstractStructure::think_repair()
     if (bRepair) {
         cPlayer &player = game.getPlayer(iPlayer);
         float costToRepair = 1.0f;
-        s_StructureInfo &structureInfo = structureInfos[getType()];
+        s_StructureInfo &structureInfo = game.structureInfos[getType()];
         if (player.hasEnoughCreditsFor(costToRepair)) {
             TIMER_repair++;
 
@@ -616,7 +616,7 @@ void cAbstractStructure::think_repair()
 
 s_StructureInfo cAbstractStructure::getStructureInfo() const
 {
-    return structureInfos[getType()];
+    return game.structureInfos[getType()];
 }
 
 int cAbstractStructure::getPercentageNotPaved()
