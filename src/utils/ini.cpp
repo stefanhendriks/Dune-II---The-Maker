@@ -1474,7 +1474,7 @@ void cIni::installGame(std::string filename)
                         }
 
                         id = cIniUtils::getBulletTypeFromString(name_bullet);
-                        if (id >= bulletInfos.size()) id--;
+                        if (id >= game.bulletInfos.size()) id--;
                     } // found a new bullet type
                 }
                 continue; // next line
@@ -1571,11 +1571,11 @@ void cIni::installGame(std::string filename)
                 wordtype = INI_WordType(word_left, section);
             
                 // Bullet properties
-                if (wordtype == WORD_DAMAGE_VEHICLE) bulletInfos[id].damage_vehicles = ToInt(word_right);
-                if (wordtype == WORD_DAMAGE_INFANTRY) bulletInfos[id].damage_infantry = ToInt(word_right);
-                if (wordtype == WORD_DEVIATE_PROBABILITY) bulletInfos[id].deviateProbability = ToInt(word_right);
-                if (wordtype == WORD_EXPLOSION_SIZE) bulletInfos[id].explosionSize = ToInt(word_right);
-                if (wordtype == WORD_GROUND_BULLET) bulletInfos[id].groundBullet = ToBool(word_right);
+                if (wordtype == WORD_DAMAGE_VEHICLE) game.bulletInfos[id].damage_vehicles = ToInt(word_right);
+                if (wordtype == WORD_DAMAGE_INFANTRY) game.bulletInfos[id].damage_infantry = ToInt(word_right);
+                if (wordtype == WORD_DEVIATE_PROBABILITY) game.bulletInfos[id].deviateProbability = ToInt(word_right);
+                if (wordtype == WORD_EXPLOSION_SIZE) game.bulletInfos[id].explosionSize = ToInt(word_right);
+                if (wordtype == WORD_GROUND_BULLET) game.bulletInfos[id].groundBullet = ToBool(word_right);
             }
 
         } // while

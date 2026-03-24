@@ -119,6 +119,7 @@ public:
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     cStructureUtils             m_structureUtils;
+    cBulletInfos   			    bulletInfos;
 
     // Initialization functions
     void init();		            // initialize all game variables

@@ -45,7 +45,7 @@ cStructureInfos             structureInfos;
 cUnitInfos                  unitInfos;
 cUpgradeInfos               upgradeInfos;
 cSpecialInfos               specialInfos;
-cBulletInfos   			    bulletInfos;
+
 
 
 int main(int argc, char **argv)
