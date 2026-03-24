@@ -61,13 +61,8 @@ extern cGame		  game;
 extern SDLDrawer      *global_renderDrawer;
 extern std::shared_ptr<Graphics> gfxdata;
 
-// kinds of entities (structures, units, sUpgradeInfo, specials, bullets, reinforcements)
-// extern s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
-extern cStructureInfos            structureInfos;
-//extern s_UnitInfo         			unitInfos[MAX_UNITTYPES];
+extern cStructureInfos          structureInfos;
 extern cUnitInfos               unitInfos;
-// extern s_UpgradeInfo            sUpgradeInfo[MAX_UPGRADETYPES];
 extern cUpgradeInfos            upgradeInfos;
-// extern s_SpecialInfo            sSpecialInfo[MAX_SPECIALTYPES];
 extern cSpecialInfos            specialInfos;
 extern cBulletInfos             bulletInfos;

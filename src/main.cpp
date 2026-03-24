@@ -41,16 +41,9 @@ cGame          				game;
 SDLDrawer                   *global_renderDrawer = nullptr;
 std::shared_ptr<Graphics>   gfxdata;
 
-// Structs of all kinds of objects (*info)
-// s_StructureInfo    			sStructureInfo[MAX_STRUCTURETYPES];
-cStructureInfos            structureInfos;
-//s_UnitInfo         			sUnitInfo[MAX_UNITTYPES];
+cStructureInfos             structureInfos;
 cUnitInfos                  unitInfos;
-
-// s_UpgradeInfo              sUpgradeInfo[MAX_UPGRADETYPES];
 cUpgradeInfos               upgradeInfos;
-//s_SpecialInfo             sSpecialInfo[MAX_SPECIALTYPES];
-
 cSpecialInfos               specialInfos;
 cBulletInfos   			    bulletInfos;
 
