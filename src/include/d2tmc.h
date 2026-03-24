@@ -64,4 +64,3 @@ extern std::shared_ptr<Graphics> gfxdata;
 extern cStructureInfos          structureInfos;
 extern cUnitInfos               unitInfos;
 extern cUpgradeInfos            upgradeInfos;
-extern cSpecialInfos            specialInfos;

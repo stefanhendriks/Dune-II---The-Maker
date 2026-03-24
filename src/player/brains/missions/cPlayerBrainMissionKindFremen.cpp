@@ -13,8 +13,8 @@ cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cP
     assert(player != nullptr);
     assert(mission != nullptr);
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
-    specificBuildTypeToGoToSelectTargetState = specialInfos[SPECIAL_FREMEN].providesType;
-    specificBuildIdToGoToSelectTargetState = specialInfos[SPECIAL_FREMEN].providesTypeId;
+    specificBuildTypeToGoToSelectTargetState = game.specialInfos[SPECIAL_FREMEN].providesType;
+    specificBuildIdToGoToSelectTargetState = game.specialInfos[SPECIAL_FREMEN].providesTypeId;
     specificPlayerForEventToGoToSelectTargetState = &game.getPlayer(AI_CPU5);
 }
 

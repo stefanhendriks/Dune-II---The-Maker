@@ -28,6 +28,10 @@
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/projectiles/cBullets.h"
 #include "utils/cStructureUtils.h"
+#include "gameobjects/units/cUnitInfos.h"
+#include "gameobjects/structures/cStructureInfo.h"
+#include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/cUpgradeInfo.h"
 
 #include <memory>
 #include <string>
@@ -120,6 +124,7 @@ public:
     cDrawManager                *m_drawManager;
     cStructureUtils             m_structureUtils;
     cBulletInfos   			    bulletInfos;
+    cSpecialInfos               specialInfos;
 
     // Initialization functions
     void init();		            // initialize all game variables

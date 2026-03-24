@@ -887,7 +887,7 @@ bool cPlayer::canBuildUnitType(int iUnitType) const
 
 bool cPlayer::canBuildSpecialType(int iType) const
 {
-    eListType listType = specialInfos[iType].listType;
+    eListType listType = game.specialInfos[iType].listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iType);
 
     bool result = pItem != nullptr;
@@ -1067,7 +1067,7 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(std::format("Wanting to build special [{}] iSpecialType = [{}], with listType[{}] - {}",
-                        specialInfos[iSpecialType].description, iSpecialType, eListTypeAsInt(listType), result));
+                        game.specialInfos[iSpecialType].description, iSpecialType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }
@@ -1303,7 +1303,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType)
 {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    s_SpecialInfo &special = specialInfos[iType];
+    s_SpecialInfo &special = game.specialInfos[iType];
     log(std::format("canBuildSpecial: Wanting to build iType = [{}(={})] allowed?...", iType, special.description));
 
     // Do we have the building needed?
@@ -1926,7 +1926,7 @@ bool cPlayer::startBuilding(eBuildType buildType, int buildId)
 
 bool cPlayer::couldBuildSpecial(int iType)
 {
-    s_SpecialInfo &special = specialInfos[iType];
+    s_SpecialInfo &special = game.specialInfos[iType];
     if (special.house & getHouseBitFlag()) {
         // it is applicable for this house
         return true;
