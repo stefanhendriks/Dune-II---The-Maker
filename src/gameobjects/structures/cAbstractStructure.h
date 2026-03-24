@@ -14,6 +14,7 @@
 #include "gameobjects/cFlag.h"
 #include "structs.h"
 #include "observers/cScenarioObserver.h"
+#include "gameobjects/structures/cStructureInfo.h"
 
 #include <vector>
 #include <string>

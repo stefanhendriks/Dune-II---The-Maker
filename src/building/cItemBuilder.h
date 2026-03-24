@@ -4,6 +4,7 @@
 #include "enums.h"
 
 #include "observers/cInputObserver.h"
+#include "gameobjects/structures/cStructureInfo.h"
 
 #include "sidebar/cBuildingListItem.h"
 #include "sidebar/cBuildingListUpdater.h"
