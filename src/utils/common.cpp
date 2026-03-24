@@ -260,7 +260,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     }
 
     // play sound (when we have one)
-    s_BulletInfo &sBullet = bulletInfos[type];
+    s_BulletInfo &sBullet = game.bulletInfos[type];
     if (sBullet.sound > -1) {
         game.playSoundWithDistance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell));
     }
@@ -281,7 +281,7 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
         case eBuildType::STRUCTURE:
             return structureInfos[specificTypeId].name;
         case eBuildType::BULLET:
-            return bulletInfos[specificTypeId].description;
+            return game.bulletInfos[specificTypeId].description;
         case eBuildType::UPGRADE:
             return upgradeInfos[specificTypeId].description;
         case eBuildType::UNKNOWN:

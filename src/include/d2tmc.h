@@ -65,4 +65,3 @@ extern cStructureInfos          structureInfos;
 extern cUnitInfos               unitInfos;
 extern cUpgradeInfos            upgradeInfos;
 extern cSpecialInfos            specialInfos;
-extern cBulletInfos             bulletInfos;
