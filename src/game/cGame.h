@@ -130,6 +130,12 @@ public:
     cUpgradeInfos               upgradeInfos;
     cUnitInfos                  unitInfos;
     cStructureInfos             structureInfos;
+    cPlayers                    m_Players;
+    cParticles                  m_particles;
+    cParticleInfos              m_particleInfos;
+    cStructures                 m_pStructures;
+    cUnits                      m_Units;
+    cMap                        m_map;
 
     // Initialization functions
     void init();		            // initialize all game variables
@@ -262,9 +268,6 @@ public:
     cParticles& getParticles();
     const cParticles& getParticles() const;
 
-    cParticleInfos& getParticleInfos();
-    const cParticleInfos& getParticleInfos() const;
-
     cMap& getMap();
     const cMap& getMap() const;
 
@@ -307,13 +310,6 @@ private:
 
     std::shared_ptr<cHousesInfo> m_Houses;
     std::shared_ptr<s_TerrainInfo> m_TerrainInfo;
-
-    cPlayers m_Players;
-    cParticles m_particles;
-    cParticleInfos m_particleInfos;
-    cStructures m_pStructures;
-    cUnits m_Units;
-    cMap m_map;
 
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
