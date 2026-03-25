@@ -41,7 +41,7 @@ void cGamePlaying::thinkFast()
 
     game.m_mapCamera->thinkFast();
 
-    for (cPlayer &pPlayer : game.getPlayers()) {
+    for (cPlayer &pPlayer : game.m_Players) {
         pPlayer.thinkFast();
     }
 
@@ -59,7 +59,7 @@ void cGamePlaying::thinkFast()
         }
     }
 
-    for (cPlayer &pPlayer : game.getPlayers()) {
+    for (cPlayer &pPlayer : game.m_Players) {
         cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
         if (itemBuilder) {
             itemBuilder->thinkFast();
@@ -432,7 +432,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
 void cGamePlaying::update()
 {
-    for (auto &pPlayer : game.getPlayers()) {
+    for (auto &pPlayer : game.m_Players) {
         pPlayer.update();
     }
 }
