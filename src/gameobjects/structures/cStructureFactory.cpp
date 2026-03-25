@@ -128,7 +128,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
         return nullptr; // fail
     }
 
-    cPoint absTopLeft = game.getMap().getAbsolutePositionFromCell(iCell);
+    cPoint absTopLeft = game.m_map.getAbsolutePositionFromCell(iCell);
     cPlayer *player = &game.getPlayer(iPlayer);
 
     for (auto flag : structureInfo.flags) {
@@ -205,7 +205,7 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
     cPlayer &cPlayer = game.getPlayer(iPlayer);
     cPlayer.increaseStructureAmount(iStructureType);
 
-    auto mapEditor = cMapEditor(game.getMap());
+    auto mapEditor = cMapEditor(game.m_map);
 
     if (iStructureType == SLAB1) {
         mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
@@ -213,29 +213,29 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
     }
 
     if (iStructureType == SLAB4) {
-        if (game.getMap().occupiedByUnit(iCell) == false) {
-            if (game.getMap().getCellType(iCell) == TERRAIN_ROCK) {
+        if (game.m_map.occupiedByUnit(iCell) == false) {
+            if (game.m_map.getCellType(iCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
             }
         }
 
-        int cellRight = game.getMap().getCellRight(iCell);
-        if (game.getMap().occupiedByUnit(cellRight) == false) {
-            if (game.getMap().getCellType(cellRight) == TERRAIN_ROCK) {
+        int cellRight = game.m_map.getCellRight(iCell);
+        if (game.m_map.occupiedByUnit(cellRight) == false) {
+            if (game.m_map.getCellType(cellRight) == TERRAIN_ROCK) {
                 mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
             }
         }
 
-        int oneRowBelowCell = game.getMap().getCellBelow(iCell);
-        if (game.getMap().occupiedByUnit(oneRowBelowCell) == false) {
-            if (game.getMap().getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
+        int oneRowBelowCell = game.m_map.getCellBelow(iCell);
+        if (game.m_map.occupiedByUnit(oneRowBelowCell) == false) {
+            if (game.m_map.getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
             }
         }
 
-        int rightToRowBelowCell = game.getMap().getCellRight(oneRowBelowCell);
-        if (game.getMap().occupiedByUnit(rightToRowBelowCell) == false) {
-            if (game.getMap().getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
+        int rightToRowBelowCell = game.m_map.getCellRight(oneRowBelowCell);
+        if (game.m_map.occupiedByUnit(rightToRowBelowCell) == false) {
+            if (game.m_map.getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
             }
         }
@@ -274,14 +274,14 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
     int iWidth = game.structureInfos[iStructureType].bmp_width / 32;;
     int iHeight = game.structureInfos[iStructureType].bmp_height / 32;
 
-    int iCellX = game.getMap().getCellX(iCell);
-    int iCellY = game.getMap().getCellY(iCell);
+    int iCellX = game.m_map.getCellX(iCell);
+    int iCellY = game.m_map.getCellY(iCell);
     int iCellXMax = iCellX + iWidth;
     int iCellYMax = iCellY + iHeight;
 
     for (int x = iCellX; x < iCellXMax; x++) {
         for (int y = iCellY; y < iCellYMax; y++) {
-            game.getMap().clearShroud(game.getMap().getGeometry().makeCell(x, y), iSight, iPlayer);
+            game.m_map.clearShroud(game.m_map.getGeometry().makeCell(x, y), iSight, iPlayer);
         }
     }
 }
@@ -315,7 +315,7 @@ int cStructureFactory::getFreeSlot()
 **/
 int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
 {
-    if (!game.getMap().isValidCell(iCell)) return 0;
+    if (!game.m_map.isValidCell(iCell)) return 0;
 
     // checks if this structure can be placed on this cell
     int w = game.structureInfos[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
@@ -323,19 +323,19 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
 
     int slabs = 0;
 
-    int x = game.getMap().getCellX(iCell);
-    int y = game.getMap().getCellY(iCell);
+    int x = game.m_map.getCellX(iCell);
+    int y = game.m_map.getCellY(iCell);
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = game.getMap().getGeometry().getCellWithMapBorders(cx + x, cy + y);
+            int cll = game.m_map.getGeometry().getCellWithMapBorders(cx + x, cy + y);
 
             if (cll < 0) {
                 continue;
             }
 
             // If the 'terrain' type is 'slab' increase value of found slabs.
-            if (game.getMap().getCellType(cll) == TERRAIN_SLAB) {
+            if (game.m_map.getCellType(cll) == TERRAIN_SLAB) {
                 slabs++;
             }
         }
@@ -352,15 +352,15 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
     int height = game.structureInfos[iStructureType].bmp_height / 32;
     int width = game.structureInfos[iStructureType].bmp_width / 32;
 
-    int cellX = game.getMap().getCellX(iCell);
-    int cellY = game.getMap().getCellY(iCell);
+    int cellX = game.m_map.getCellX(iCell);
+    int cellY = game.m_map.getCellY(iCell);
 
     int endCellX = cellX + width;
     int endCellY = cellY + height;
-    auto mapEditor = cMapEditor(game.getMap());
+    auto mapEditor = cMapEditor(game.m_map);
     for (int y = cellY; y < endCellY; y++) {
         for (int x = cellX; x < endCellX; x++) {
-            int cell = game.getMap().getGeometry().getCellWithMapDimensions(x, y);
+            int cell = game.m_map.getGeometry().getCellWithMapDimensions(x, y);
             mapEditor.createCell(cell, TERRAIN_SLAB, 0);
         }
     }
@@ -392,15 +392,15 @@ void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer)
     int width = sStructures.bmp_width / TILESIZE_WIDTH_PIXELS;
     int height = sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int x = game.getMap().getCellX(iCll);
-    int y = game.getMap().getCellY(iCll);
+    int x = game.m_map.getCellX(iCll);
+    int y = game.m_map.getCellY(iCll);
 
     int endX = x + width;
     int endY = y + height;
 
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            createStructure(game.getMap().getGeometry().getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
+            createStructure(game.m_map.getGeometry().getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
         }
     }
 }

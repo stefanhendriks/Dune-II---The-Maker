@@ -268,9 +268,6 @@ public:
     cParticles& getParticles();
     const cParticles& getParticles() const;
 
-    cMap& getMap();
-    const cMap& getMap() const;
-
     cStructures& getStructures();
     const cStructures& getStructures() const;
 
