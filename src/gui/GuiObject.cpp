@@ -6,7 +6,7 @@
 
 
 GuiObject::GuiObject(SDLDrawer* drawer, const cRectangle &rect) : 
-    m_rect(rect), m_drawer(drawer)
+    m_rect(rect), m_renderDrawer(drawer)
 {
     assert(drawer != nullptr);
 }
@@ -33,13 +33,13 @@ void GuiObject::drawRectBorder(Color borderRect, Color borderBottomRight) const
     int width = m_rect.getWidth();
     int height = m_rect.getHeight();
     //std::cout <<":" << x1 << " " << y1 << " " << width << " " << height << std::endl;
-    global_renderDrawer->renderRectColor(m_rect,borderRect);
-    global_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height,borderBottomRight);
-    global_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, borderBottomRight);
+    m_renderDrawer->renderRectColor(m_rect,borderRect);
+    m_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height,borderBottomRight);
+    m_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, borderBottomRight);
 }
 
 void GuiObject::drawRectFillBorder(const GuiTheme& theme) const
 {
-    global_renderDrawer->renderRectFillColor(m_rect, theme.fillColor);
+    m_renderDrawer->renderRectFillColor(m_rect, theme.fillColor);
     drawRectBorder(theme.borderLight, theme.borderDark);
 }
