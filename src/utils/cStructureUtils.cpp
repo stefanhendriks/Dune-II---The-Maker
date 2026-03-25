@@ -48,7 +48,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer *pPlayer)
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(STARPORT);
 
     if (primaryBuildingOfStructureType > -1) {
-        cAbstractStructure *theStructure = game.getStructures()[primaryBuildingOfStructureType];
+        cAbstractStructure *theStructure = game.m_pStructures[primaryBuildingOfStructureType];
         if (theStructure && theStructure->getNonOccupiedCellAroundStructure() > -1) {
             return primaryBuildingOfStructureType;
         }
@@ -59,7 +59,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer *pPlayer)
     int firstFoundStarportId = -1;
     bool foundStarportWithFreeAround = false;
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
         if (theStructure && theStructure->getOwner() == playerId) {
             if (theStructure->getType() == STARPORT) {
                 // when no id set, always set one id
@@ -117,7 +117,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer *pPlayer, int structureTy
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(structureType);
 
     if (primaryBuildingOfStructureType > -1) {
-        cAbstractStructure *theStructure = game.getStructures()[primaryBuildingOfStructureType];
+        cAbstractStructure *theStructure = game.m_pStructures[primaryBuildingOfStructureType];
         // this IF is needed, because the structure could be destroyed/replaced
         if (theStructure &&
                 theStructure->isValid() &&
@@ -270,7 +270,7 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer *pPlayer)
     int totalPowerUsage = 0;
 
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
         if (theStructure) {
             if (theStructure->getPlayer()->getId() == pPlayer->getId()) {
                 int powerUsageOfStructure = theStructure->getPowerUsage();
@@ -288,7 +288,7 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer *pPlayer)
 
     int totalCapacity = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
         if (theStructure == nullptr) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer()->getId() != pPlayer->getId()) continue; // does not belong to pPlayer
@@ -316,7 +316,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer *pPlayer)
 
     int totalPowerOut = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
         if (theStructure == nullptr) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer()->getId() != pPlayer->getId()) continue; // not for pPlayer
@@ -348,7 +348,7 @@ int cStructureUtils::findHiTechToDeployAirUnit(cPlayer *pPlayer)
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(HIGHTECH);
 
     if (primaryBuildingOfStructureType > -1) {
-        cAbstractStructure *theStructure = game.getStructures()[primaryBuildingOfStructureType];
+        cAbstractStructure *theStructure = game.m_pStructures[primaryBuildingOfStructureType];
         // this IF is needed, because the structure could be destroyed/replaced
         if (theStructure &&
                 theStructure->isValid() &&
@@ -376,7 +376,7 @@ int cStructureUtils::findStructureBy(int iPlayer, int iType, bool bFreeAround)
     if (iType < 0) return -1;
 
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
         if (theStructure &&
                 theStructure->isValid() &&
                 theStructure->belongsTo(iPlayer) &&

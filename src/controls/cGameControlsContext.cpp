@@ -138,7 +138,7 @@ cAbstractStructure *cGameControlsContext::getStructurePointerWhereMouseHovers() 
     if (m_mouseHoveringOverStructureId < 0) {
         return nullptr;
     }
-    return game.getStructures()[m_mouseHoveringOverStructureId];
+    return game.m_pStructures[m_mouseHoveringOverStructureId];
 }
 
 void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event)

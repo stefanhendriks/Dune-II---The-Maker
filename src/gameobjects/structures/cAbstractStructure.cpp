@@ -177,7 +177,7 @@ void cAbstractStructure::die()
     }
 
     // remove from array
-    game.getStructures()[id] = nullptr;
+    game.m_pStructures[id] = nullptr;
 
     // Destroy structure, take stuff in effect for the player
     pPlayer->decreaseStructureAmount(getType()); // remove from player building indexes
