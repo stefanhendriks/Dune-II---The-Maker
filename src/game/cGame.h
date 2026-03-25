@@ -120,8 +120,9 @@ public:
     bool m_drawFps;
     bool m_drawTime;
 
+    // TODO: move these to a another class that we can pass around, instead of having them as global variables.
+    // begin
     cBullets                    g_Bullets;
-    // TODO: move these to a 'game context' class that we can pass around, instead of having them as global variables.
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     cStructureUtils             m_structureUtils;
@@ -136,6 +137,7 @@ public:
     cStructures                 m_pStructures;
     cUnits                      m_Units;
     cMap                        m_map;
+    // end
 
     // Initialization functions
     void init();		            // initialize all game variables
@@ -255,11 +257,13 @@ public:
     void drawTextTime() const;
     void checkMissionWinOrFail();
 
+    // this functions need to be removed
+    // begin
     cPlayer& getPlayer(int index);
     const cPlayer& getPlayer(int index) const;
-
     cUnit& getUnit(int index);
     const cUnit& getUnit(int index) const;
+    // end
 
 private:
     /**
