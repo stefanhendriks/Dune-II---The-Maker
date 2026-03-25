@@ -7,6 +7,7 @@
 const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStrings{
     {"-game",                   Options::GAME},
     {"-windowed",               Options::WINDOWED},
+    {"-fullscreen",             Options::FULLSCREEN},
     {"-nomusic",                Options::NOMUSIC},
     {"-nosound",                Options::NOSOUND},
     {"-debug",                  Options::DEBUG},
@@ -51,6 +52,9 @@ int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *setti
                 break;
             case Options::WINDOWED:
                 settings->windowed = true;
+                break;
+            case Options::FULLSCREEN:
+                settings->windowed = false;
                 break;
             case Options::NOMUSIC:
                 settings->playMusic = false;
@@ -114,6 +118,7 @@ void cHandleArgument::printInstructions() const
     std::cout << "Graphics\n";
     std::cout << "--------\n\n";
     std::cout << "-windowed              - Run game in window instead of fullscreen\n";
+    std::cout << "-fullscreen            - Run game in fullscreen instead of windowed\n";
     std::cout << "-screenWidth <value>   - Width of screen / window (minimum 800)\n";
     std::cout << "-screenHeight <value>  - Height of screen / window (minimum 600)\n";
     std::cout << "\n\n";

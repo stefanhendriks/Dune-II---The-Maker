@@ -15,6 +15,7 @@ private:
     enum class Options : char {
         GAME,
         WINDOWED,
+        FULLSCREEN,
         NOMUSIC,
         NOSOUND,
         DEBUG,
