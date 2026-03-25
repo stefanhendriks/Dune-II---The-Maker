@@ -55,6 +55,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(creditsRect)        
             .withLabel("CREDITS")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -77,7 +78,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new GuiWindow(window, m_textDrawer);
+    gui_window = new GuiWindow(m_renderDrawer, window, m_textDrawer);
     gui_window->setTheme(GuiTheme::Light());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
@@ -85,6 +86,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(campaign)        
             .withLabel("Campaign")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -99,6 +101,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(skirmish)        
             .withLabel("Skirmish")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -115,6 +118,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(multiplayer)        
             .withLabel("Multiplayer")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
@@ -128,6 +132,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(load)        
             .withLabel("Load")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
@@ -141,6 +146,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(editors)        
             .withLabel("New Map Editor")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_NEW_MAP_EDITOR);})
@@ -154,6 +160,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(options)        
             .withLabel("Options")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_OPTIONS);})
@@ -167,6 +174,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(hof)        
             .withLabel("Hall of Fame")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Inactive())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
@@ -180,6 +188,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withRect(exit)        
             .withLabel("Exit")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {

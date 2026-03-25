@@ -43,6 +43,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
             .withRect(backButtonRect)
             .withLabel("BACK")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {

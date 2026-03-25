@@ -3,9 +3,10 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
+#include <cassert>
 
-GuiCheckBox::GuiCheckBox(const cRectangle &rect)
-    : GuiObject(rect)
+GuiCheckBox::GuiCheckBox(SDLDrawer* drawer,const cRectangle &rect)
+    : GuiObject(drawer, rect)
     , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
     , m_onCheckAction(nullptr)
     , m_onUnCheckAction(nullptr)
@@ -14,6 +15,7 @@ GuiCheckBox::GuiCheckBox(const cRectangle &rect)
     , m_enabled(true)
     , m_checked(true)
 {
+    assert(drawer != nullptr);
 }
 
 GuiCheckBox::~GuiCheckBox()

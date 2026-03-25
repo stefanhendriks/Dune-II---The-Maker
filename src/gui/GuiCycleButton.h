@@ -6,10 +6,11 @@
 #include <string>
 #include <functional>
 
+class SDLDrawer;
 
 class GuiCycleButton : public GuiObject {
 public:
-    GuiCycleButton(const cRectangle& rect, const std::vector<int>& values);
+    GuiCycleButton(SDLDrawer* drawer, const cRectangle& rect, const std::vector<int>& values);
 
     void onNotifyMouseEvent(const s_MouseEvent& event) override;
 
@@ -39,6 +40,11 @@ public:
         return *this;
     }
 
+    GuiCycleButtonBuilder& withRenderer(SDLDrawer* render) {
+        params.renderer = render;
+        return *this;
+    }
+
     GuiCycleButtonBuilder& withValues(const std::vector<int>& values) {
         params.values = values;
         return *this;
@@ -60,7 +66,7 @@ public:
     }
 
     GuiCycleButton* build() const {
-        GuiCycleButton* btn = new GuiCycleButton(params.rect, params.values);
+        GuiCycleButton* btn = new GuiCycleButton(params.renderer, params.rect, params.values);
         btn->setTextDrawer(params.drawer);
         btn->setTheme(params.theme);
         if (params.onChanged) {
@@ -72,6 +78,7 @@ public:
 private:
     struct {
         cRectangle rect;
+        SDLDrawer* renderer;
         std::vector<int> values;
         cTextDrawer* drawer = nullptr;
         GuiTheme theme = GuiTheme::Light();

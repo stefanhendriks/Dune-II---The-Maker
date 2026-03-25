@@ -78,6 +78,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
             .withLabel("Mission select")
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})

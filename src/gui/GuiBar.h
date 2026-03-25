@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+class SDLDrawer;
+
 enum class GuiBarPlacement :char {
     HORIZONTAL = 0,
     VERTICAL = 1
@@ -13,7 +15,7 @@ enum class GuiBarPlacement :char {
 
 class GuiBar : protected GuiObject {
 public:
-    explicit GuiBar(const cRectangle &rect, GuiBarPlacement placement, int iconSize = 40);
+    explicit GuiBar(SDLDrawer* drawer, const cRectangle &rect, GuiBarPlacement placement, int iconSize = 40);
     ~GuiBar() noexcept override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;

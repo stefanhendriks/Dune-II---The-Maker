@@ -17,6 +17,8 @@ enum GuiTextAlignHorizontal {
     CENTER
 };
 
+class SDLDrawer;
+
 class GuiObject : public cInputObserver {
 public:
     virtual ~GuiObject() = default;
@@ -26,10 +28,11 @@ public:
     void setPosition(int x, int y);
     void setSize(int width, int height);
 protected:
-    explicit GuiObject(const cRectangle &rect) : m_rect(rect) {}
+    explicit GuiObject(SDLDrawer* drawer, const cRectangle &rect);
     // any gui object has a position and size. Hence its always a 'rect'.
     cRectangle m_rect;
     GuiTheme m_theme;
+    SDLDrawer* m_drawer = nullptr;
     void drawRectBorder(Color borderRect, Color borderBottomRight) const;
     void drawRectFillBorder(const GuiTheme& theme) const;
 };

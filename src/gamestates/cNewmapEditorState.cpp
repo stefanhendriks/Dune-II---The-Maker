@@ -38,7 +38,7 @@ void cNewMapEditorState::constructWindow()
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    m_guiWindow = new GuiWindow(window, m_textDrawer);
+    m_guiWindow = new GuiWindow(m_renderDrawer, window, m_textDrawer);
     m_guiWindow->setTheme(GuiTheme::Light());
 
     // Title
@@ -53,13 +53,14 @@ void cNewMapEditorState::constructWindow()
     GuiLabel *gui_NameLabel = GuiLabelBuilder()
         .withLabel("Name your new map:")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(nameRect)
         .build();
     m_guiWindow->addGuiObject(gui_NameLabel);
 
-    m_inputName = new GuiTextInput(
+    m_inputName = new GuiTextInput( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
     m_guiWindow->addGuiObject(m_inputName);
@@ -69,13 +70,14 @@ void cNewMapEditorState::constructWindow()
     GuiLabel *gui_authorLabel = GuiLabelBuilder()
         .withLabel("Name of author:")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(authorRect)
         .build();
     m_guiWindow->addGuiObject(gui_authorLabel);
     
-    m_inputAuthor = new GuiTextInput(
+    m_inputAuthor = new GuiTextInput(m_renderDrawer, 
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
     m_guiWindow->addGuiObject(m_inputAuthor);
@@ -85,13 +87,14 @@ void cNewMapEditorState::constructWindow()
     GuiLabel *gui_descriptionLabel = GuiLabelBuilder()
         .withLabel("Description:")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(descriptionRect)
         .build();
     m_guiWindow->addGuiObject(gui_descriptionLabel);
 
-    m_inputDescription = new GuiTextInput(
+    m_inputDescription = new GuiTextInput( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*2-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
     m_guiWindow->addGuiObject(m_inputDescription);
@@ -101,6 +104,7 @@ void cNewMapEditorState::constructWindow()
     GuiLabel *gui_widthLabel = GuiLabelBuilder()
         .withLabel("Width size:")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(widthRect)
@@ -111,6 +115,7 @@ void cNewMapEditorState::constructWindow()
         .withRect( m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*3, 50, buttonHeight) )
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
+        .withRenderer(m_renderDrawer)
         .withTheme( GuiTheme::Light() )
         .build();
     m_guiWindow->addGuiObject(m_cycleWidth);
@@ -120,6 +125,7 @@ void cNewMapEditorState::constructWindow()
     GuiLabel *gui_heightLabel = GuiLabelBuilder()
         .withLabel("Height size:")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(heightRect)
@@ -130,6 +136,7 @@ void cNewMapEditorState::constructWindow()
         .withRect( m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*4, 50, buttonHeight) )
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
+        .withRenderer(m_renderDrawer)
         .withTheme( GuiTheme::Light() )
         .build();
     m_guiWindow->addGuiObject(m_cycleHeight);
@@ -142,6 +149,7 @@ void cNewMapEditorState::constructWindow()
         .withRect(quitRect)        
         .withLabel("Return to menu")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withTextAlign(GuiTextAlignHorizontal::CENTER)
         .withTheme(GuiTheme::Light())
         .onClick([this]() {
@@ -158,6 +166,7 @@ void cNewMapEditorState::constructWindow()
         .withRect(backRect)        
         .withLabel("Create map !")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withTheme(GuiTheme::Light())
         .onClick([this](){
             s_PreviewMap newMap = cPreviewMaps::createEmptyMap(

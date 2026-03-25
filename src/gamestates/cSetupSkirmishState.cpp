@@ -182,6 +182,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         .withRect(nextMaps)
         .withLabel("Next")
         .withTextDrawer(m_textDrawer)
+        .withRenderer(m_renderDrawer)
         .withTheme(GuiTheme::Light())
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .onClick(nextFunction)
@@ -191,6 +192,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withRect(previousMaps)
             .withLabel("Previous")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick(previousFunction)
@@ -240,6 +242,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withRect(backButtonRect)        
             .withLabel("BACK")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -258,6 +261,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withRect(startButtonRect)        
             .withLabel("START")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -277,6 +281,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withRect(modifyButtonRect)        
             .withLabel("Modify")
             .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
             .withTheme(GuiTheme::Light())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {

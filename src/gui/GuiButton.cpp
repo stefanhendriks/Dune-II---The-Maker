@@ -3,9 +3,10 @@
 #include "d2tmc.h"
 #include "game/cGame.h"
 #include "drawers/SDLDrawer.hpp"
+#include <cassert>
 
-GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
-    : GuiObject(rect)
+GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
+    : GuiObject(drawer, rect)
     , m_textDrawer(nullptr)
     , m_buttonText(btnText)
     , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
@@ -17,6 +18,7 @@ GuiButton::GuiButton(const cRectangle &rect, const std::string &btnText)
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
+    assert(drawer != nullptr);
 }
 
 GuiButton::~GuiButton()

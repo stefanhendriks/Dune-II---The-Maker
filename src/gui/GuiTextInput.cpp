@@ -3,9 +3,10 @@
 #include <iostream>
 #include <cassert>
 
-GuiTextInput::GuiTextInput(const cRectangle& rect, cTextDrawer* textDrawer)
-    : GuiObject(rect), m_writer(textDrawer)
+GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer* textDrawer)
+    : GuiObject(drawer, rect), m_writer(textDrawer)
 {
+    assert(drawer != nullptr);
     assert(textDrawer != nullptr);
 }
 
