@@ -542,8 +542,8 @@ void IniGameRessources::install_units()
 
 void IniGameRessources::install_particles()
 {
-    for (unsigned int i = 0; i < game.getParticleInfos().size(); i++) {
-        s_ParticleInfo &particleInfo = game.getParticleInfos()[i];
+    for (unsigned int i = 0; i < game.m_particleInfos.size(); i++) {
+        s_ParticleInfo &particleInfo = game.m_particleInfos[i];
         particleInfo.bmpIndex = -1;
         particleInfo.startAlpha = -1;
         particleInfo.usesAdditiveBlending = false;
@@ -559,162 +559,162 @@ void IniGameRessources::install_particles()
     }
 
     // move
-    game.getParticleInfos()[D2TM_PARTICLE_MOVE].bmpIndex = MOVE_INDICATOR;
-    game.getParticleInfos()[D2TM_PARTICLE_MOVE].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_MOVE].bmpIndex = MOVE_INDICATOR;
+    game.m_particleInfos[D2TM_PARTICLE_MOVE].startAlpha = 128;
 
     // attack
-    game.getParticleInfos()[D2TM_PARTICLE_ATTACK].bmpIndex = ATTACK_INDICATOR;
-    game.getParticleInfos()[D2TM_PARTICLE_ATTACK].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_ATTACK].bmpIndex = ATTACK_INDICATOR;
+    game.m_particleInfos[D2TM_PARTICLE_ATTACK].startAlpha = 128;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TRIKE].bmpIndex = EXPLOSION_TRIKE;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TRIKE].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TRIKE].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TRIKE].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].bmpIndex = EXPLOSION_TRIKE;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TRIKE].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE].bmpIndex = OBJECT_SMOKE;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE].startAlpha = 0;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE].frameWidth = 32;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE].bmpIndex = OBJECT_SMOKE;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE].startAlpha = 0;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE].frameWidth = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_WITH_SHADOW].bmpIndex = OBJECT_SMOKE;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_WITH_SHADOW].startAlpha = 0;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameWidth = 32;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].bmpIndex = OBJECT_SMOKE;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].startAlpha = 0;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameWidth = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_WITH_SHADOW].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = OBJECT_SMOKE_SHADOW;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_SHADOW].startAlpha = 0;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_SHADOW].frameWidth = 36;
-    game.getParticleInfos()[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = OBJECT_SMOKE_SHADOW;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].startAlpha = 0;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].frameWidth = 36;
+    game.m_particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
 
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_DIA].bmpIndex = TRACK_DIA;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_DIA].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].bmpIndex = TRACK_DIA;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
 
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_HOR].bmpIndex = TRACK_HOR;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_HOR].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].bmpIndex = TRACK_HOR;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
 
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_VER].bmpIndex = TRACK_VER;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_VER].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].bmpIndex = TRACK_VER;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
 
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = TRACK_DIA2;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_DIA2].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = TRACK_DIA2;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
 
-    game.getParticleInfos()[D2TM_PARTICLE_BULLET_PUF].bmpIndex = BULLET_PUF;
-    game.getParticleInfos()[D2TM_PARTICLE_BULLET_PUF].frameWidth = 18;
-    game.getParticleInfos()[D2TM_PARTICLE_BULLET_PUF].frameHeight = 18;
+    game.m_particleInfos[D2TM_PARTICLE_BULLET_PUF].bmpIndex = BULLET_PUF;
+    game.m_particleInfos[D2TM_PARTICLE_BULLET_PUF].frameWidth = 18;
+    game.m_particleInfos[D2TM_PARTICLE_BULLET_PUF].frameHeight = 18;
 
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_FIRE].bmpIndex = EXPLOSION_FIRE;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_FIRE].bmpIndex = EXPLOSION_FIRE;
 
-    game.getParticleInfos()[D2TM_PARTICLE_WORMEAT].bmpIndex = OBJECT_WORMEAT;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMEAT].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMEAT].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMEAT].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_WORMEAT].bmpIndex = OBJECT_WORMEAT;
+    game.m_particleInfos[D2TM_PARTICLE_WORMEAT].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_WORMEAT].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_WORMEAT].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_ONE].bmpIndex = EXPLOSION_TANK_ONE;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_ONE].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].bmpIndex = EXPLOSION_TANK_ONE;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_TWO].bmpIndex = EXPLOSION_TANK_TWO;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_TWO].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].bmpIndex = EXPLOSION_TANK_TWO;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].bmpIndex = EXPLOSION_STRUCTURE01;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].bmpIndex = EXPLOSION_STRUCTURE01;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].bmpIndex = EXPLOSION_STRUCTURE02;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].bmpIndex = EXPLOSION_STRUCTURE02;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_GAS].bmpIndex = EXPLOSION_GAS;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_GAS].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_GAS].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].bmpIndex = EXPLOSION_GAS;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_WORMTRAIL].bmpIndex = OBJECT_WORMTRAIL;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMTRAIL].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
-    game.getParticleInfos()[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
+    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].bmpIndex = OBJECT_WORMTRAIL;
+    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
+    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
+    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
 
-    game.getParticleInfos()[D2TM_PARTICLE_DEADINF01].bmpIndex = OBJECT_DEADINF01;
-    game.getParticleInfos()[D2TM_PARTICLE_DEADINF01].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_DEADINF01].bmpIndex = OBJECT_DEADINF01;
+    game.m_particleInfos[D2TM_PARTICLE_DEADINF01].layer = RenderLayerParticle::BOTTOM;
 
-    game.getParticleInfos()[D2TM_PARTICLE_DEADINF02].bmpIndex = OBJECT_DEADINF02;
-    game.getParticleInfos()[D2TM_PARTICLE_DEADINF02].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_DEADINF02].bmpIndex = OBJECT_DEADINF02;
+    game.m_particleInfos[D2TM_PARTICLE_DEADINF02].layer = RenderLayerParticle::BOTTOM;
 
-    game.getParticleInfos()[D2TM_PARTICLE_TANKSHOOT].bmpIndex = OBJECT_TANKSHOOT;
-    game.getParticleInfos()[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
-    game.getParticleInfos()[D2TM_PARTICLE_TANKSHOOT].frameWidth = 64;
-    game.getParticleInfos()[D2TM_PARTICLE_TANKSHOOT].frameHeight = 64;
+    game.m_particleInfos[D2TM_PARTICLE_TANKSHOOT].bmpIndex = OBJECT_TANKSHOOT;
+    game.m_particleInfos[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_TANKSHOOT].frameWidth = 64;
+    game.m_particleInfos[D2TM_PARTICLE_TANKSHOOT].frameHeight = 64;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SIEGESHOOT].bmpIndex = OBJECT_SIEGESHOOT;
-    game.getParticleInfos()[D2TM_PARTICLE_SIEGESHOOT].startAlpha = 128;
-    game.getParticleInfos()[D2TM_PARTICLE_SIEGESHOOT].frameWidth = 64;
-    game.getParticleInfos()[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
+    game.m_particleInfos[D2TM_PARTICLE_SIEGESHOOT].bmpIndex = OBJECT_SIEGESHOOT;
+    game.m_particleInfos[D2TM_PARTICLE_SIEGESHOOT].startAlpha = 128;
+    game.m_particleInfos[D2TM_PARTICLE_SIEGESHOOT].frameWidth = 64;
+    game.m_particleInfos[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH01].bmpIndex = EXPLOSION_SQUISH01;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH01].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].bmpIndex = EXPLOSION_SQUISH01;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH02].bmpIndex = EXPLOSION_SQUISH02;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH02].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].bmpIndex = EXPLOSION_SQUISH02;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH03].bmpIndex = EXPLOSION_SQUISH03;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH03].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
-    game.getParticleInfos()[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].bmpIndex = EXPLOSION_SQUISH03;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = EXPLOSION_ORNI;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ORNI].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = EXPLOSION_ORNI;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
 
-    game.getParticleInfos()[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
+    game.m_particleInfos[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
 
-    game.getParticleInfos()[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
-    game.getParticleInfos()[D2TM_PARTICLE_CARRYPUFF].layer = RenderLayerParticle::BOTTOM;
-    game.getParticleInfos()[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
-    game.getParticleInfos()[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
+    game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
+    game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
+    game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ROCKET].bmpIndex = EXPLOSION_ROCKET;
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL].bmpIndex = EXPLOSION_ROCKET_SMALL;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ROCKET].bmpIndex = EXPLOSION_ROCKET;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL].bmpIndex = EXPLOSION_ROCKET_SMALL;
 
-    game.getParticleInfos()[D2TM_PARTICLE_EXPLOSION_BULLET].bmpIndex = EXPLOSION_BULLET;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_BULLET].bmpIndex = EXPLOSION_BULLET;
 
     // the nice flare/light effects that come with explosions
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM01].bmpIndex = OBJECT_BOOM01;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM01].usesAdditiveBlending = true;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM01].startAlpha = 240;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM01].frameWidth = 512;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM01].frameHeight = 512;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].bmpIndex = OBJECT_BOOM01;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].usesAdditiveBlending = true;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].startAlpha = 240;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].frameWidth = 512;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM01].frameHeight = 512;
 
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = OBJECT_BOOM02;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM02].usesAdditiveBlending = true;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM02].startAlpha = 230;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM02].frameWidth = 256;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM02].frameHeight = 256;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = OBJECT_BOOM02;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].usesAdditiveBlending = true;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].startAlpha = 230;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].frameWidth = 256;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM02].frameHeight = 256;
 
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM03].bmpIndex = OBJECT_BOOM03;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM03].usesAdditiveBlending = true;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM03].startAlpha = 220;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM03].frameWidth = 128;
-    game.getParticleInfos()[D2TM_PARTICLE_OBJECT_BOOM03].frameHeight = 128;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].bmpIndex = OBJECT_BOOM03;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].usesAdditiveBlending = true;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].startAlpha = 220;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].frameWidth = 128;
+    game.m_particleInfos[D2TM_PARTICLE_OBJECT_BOOM03].frameHeight = 128;
 }
 
 void IniGameRessources::install_specials()
