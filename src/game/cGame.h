@@ -255,8 +255,6 @@ public:
     void drawTextTime() const;
     void checkMissionWinOrFail();
 
-    cPlayers& getPlayers();
-    const cPlayers& getPlayers() const;
     cPlayer& getPlayer(int index);
     const cPlayer& getPlayer(int index) const;
 
