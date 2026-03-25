@@ -51,7 +51,7 @@ void GuiStateButton::changeState(GuiState newState)
 
 void GuiStateButton::draw() const 
 {
-    global_renderDrawer->renderStrechSprite(m_tex, *m_currentRectState, m_rect);
+    m_renderDrawer->renderStrechSprite(m_tex, *m_currentRectState, m_rect);
 }
 
 void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
