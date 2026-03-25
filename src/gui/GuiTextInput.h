@@ -5,10 +5,11 @@
 #include <functional>
 
 class cTextDrawer;
+class SDLDrawer;
 
 class GuiTextInput : public GuiObject {
 public:
-    GuiTextInput(const cRectangle& rect, cTextDrawer* textDrawer);
+    GuiTextInput(SDLDrawer* drawer, const cRectangle& rect, cTextDrawer* textDrawer);
 
     void draw() const override;
     void onNotifyKeyboardEvent(const cKeyboardEvent& event) override;
@@ -34,7 +35,10 @@ public:
         params.rect = rect;
         return *this;
     }
-
+    GuiTextInputBuilder& withRenderer(SDLDrawer* render) {
+        params.renderer = render;
+        return *this;
+    }
     GuiTextInputBuilder& withTextDrawer(cTextDrawer* drawer) {
         params.drawer = drawer;
         return *this;
@@ -51,7 +55,7 @@ public:
     }
 
     GuiTextInput* build() const {
-        GuiTextInput* btn = new GuiTextInput(params.rect, params.drawer);
+        GuiTextInput* btn = new GuiTextInput(params.renderer, params.rect, params.drawer);
         btn->setTextDrawer(params.drawer);
         btn->setTheme(params.theme);
         if (params.onChanged) {
@@ -64,6 +68,7 @@ private:
     struct {
         cRectangle rect;
         cTextDrawer* drawer = nullptr;
+        SDLDrawer* renderer = nullptr;
         GuiTheme theme = GuiTheme::Light();
         std::function<void(const std::string&)> onChanged = nullptr;
     } params;

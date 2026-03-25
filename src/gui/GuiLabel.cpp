@@ -2,9 +2,10 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
+#include <cassert>
 
-GuiLabel::GuiLabel(const cRectangle &rect, const std::string &btnText)
-    : GuiObject(rect)
+GuiLabel::GuiLabel(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
+    : GuiObject(drawer, rect)
     , m_textDrawer(nullptr)
     , m_buttonText(btnText)
     , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
@@ -12,7 +13,9 @@ GuiLabel::GuiLabel(const cRectangle &rect, const std::string &btnText)
     , m_tex(nullptr)
     , m_focus(false)
     , m_enabled(true)
-{}
+{
+    assert(drawer != nullptr);
+}
 
 GuiLabel::~GuiLabel()
 {}

@@ -6,8 +6,11 @@
 #include <string>
 #include <functional>
 
+class SDLDrawer;
+
 struct GuiCheckBoxParams {
     cRectangle rect;
+    SDLDrawer* renderer;
     GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme theme = GuiTheme::Light();
     std::function<void()> onCheckAction = nullptr;
@@ -17,7 +20,7 @@ struct GuiCheckBoxParams {
 
 class GuiCheckBox : public GuiObject {
 public:
-    GuiCheckBox(const cRectangle &rect);
+    GuiCheckBox(SDLDrawer* drawer, const cRectangle &rect);
     ~GuiCheckBox();
 
     // From cInputObserver
@@ -65,6 +68,11 @@ public:
         return *this;
     }
 
+    GuiCheckBoxBuilder& withRenderer(SDLDrawer* render) {
+        params.renderer = render;
+        return *this;
+    }
+
     GuiCheckBoxBuilder& withKind(GuiRenderKind kind) {
         params.kind = kind;
         return *this;
@@ -86,7 +94,7 @@ public:
     }
 
     GuiCheckBox* build() const {
-        GuiCheckBox* btn = new GuiCheckBox(params.rect);
+        GuiCheckBox* btn = new GuiCheckBox(params.renderer, params.rect);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         if (params.onCheckAction)

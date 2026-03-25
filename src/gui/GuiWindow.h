@@ -5,10 +5,11 @@
 
 #include <string>
 #include <vector>
+class SDLDrawer;
 
 class GuiWindow : protected GuiObject {
 public:
-    explicit GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer);
+    explicit GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _textDrawer);
     ~GuiWindow() noexcept override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;

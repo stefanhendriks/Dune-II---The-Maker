@@ -7,9 +7,12 @@
 #include <string>
 #include <functional>
 
+class SDLDrawer;
+
 struct GuiButtonParams {
     cTextDrawer* drawer = nullptr;
     cRectangle rect;
+    SDLDrawer* renderer;
     std::string label = "";
     GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme theme = GuiTheme::Light();
@@ -22,7 +25,7 @@ struct GuiButtonParams {
 
 class GuiButton : public GuiObject {
 public:
-    GuiButton(const cRectangle &rect, const std::string &btnText);
+    GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText);
     ~GuiButton();
 
     // From cInputObserver
@@ -85,6 +88,11 @@ public:
         return *this;
     }
 
+    GuiButtonBuilder& withRenderer(SDLDrawer* render) {
+        params.renderer = render;
+        return *this;
+    }
+
     GuiButtonBuilder& withLabel(const std::string& label) {
         params.label = label;
         return *this;
@@ -121,7 +129,7 @@ public:
     }
 
     GuiButton* build() const {
-        GuiButton* btn = new GuiButton(params.rect, params.label);
+        GuiButton* btn = new GuiButton(params.renderer, params.rect, params.label);
         btn->setTextDrawer(params.drawer);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);

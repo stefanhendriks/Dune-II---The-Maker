@@ -2,11 +2,12 @@
 
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
+#include <cassert>
 
-
-GuiBar::GuiBar(const cRectangle &rect, GuiBarPlacement placement, int heightBarSize) :
-    GuiObject(rect), gui_objects(std::vector<GuiObject *>(0)), m_placement(placement), placementPosition(0), heightBarSize(heightBarSize)
+GuiBar::GuiBar(SDLDrawer* drawer, const cRectangle &rect, GuiBarPlacement placement, int heightBarSize) :
+    GuiObject(drawer, rect), gui_objects(std::vector<GuiObject *>(0)), m_placement(placement), placementPosition(0), heightBarSize(heightBarSize)
 {
+    assert(drawer != nullptr);
     if (m_placement == GuiBarPlacement::HORIZONTAL) {
        halfMarginBetweenButtons = (rect.getHeight()-heightBarSize)/2;
     } else {

@@ -3,16 +3,17 @@
 #include "drawers/SDLDrawer.hpp"
 #include <algorithm>
 #include <iostream>
-
+#include <cassert>
 static constexpr auto GUI_KNOB_WIDTH = 12;
 
-GuiSlider::GuiSlider(const cRectangle &rect, int minValue, int maxValue, int initialValue)
-    : GuiObject(rect)
+GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, int maxValue, int initialValue)
+    : GuiObject(drawer, rect)
     , m_minValue(minValue)
     , m_maxValue(maxValue)
     , m_value(std::clamp(initialValue, minValue, maxValue))
     , m_dragging(false)
 {
+    assert(drawer != nullptr);
 }
 
 void GuiSlider::draw() const {

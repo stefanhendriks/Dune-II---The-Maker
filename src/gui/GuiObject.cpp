@@ -2,6 +2,15 @@
 #include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
+#include <cassert>
+
+
+GuiObject::GuiObject(SDLDrawer* drawer, const cRectangle &rect) : 
+    m_rect(rect), m_drawer(drawer)
+{
+    assert(drawer != nullptr);
+}
+
 
 void GuiObject::setTheme(const GuiTheme& theme)
 {

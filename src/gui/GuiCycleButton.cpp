@@ -1,8 +1,12 @@
 #include "gui/GuiCycleButton.h"
 
-GuiCycleButton::GuiCycleButton(const cRectangle& rect, const std::vector<int>& values) 
-        : GuiObject(rect), m_values(values), m_currentIndex(0), m_textDrawer(nullptr)
-{}
+#include <cassert>
+
+GuiCycleButton::GuiCycleButton(SDLDrawer* drawer,const cRectangle& rect, const std::vector<int>& values) 
+        : GuiObject(drawer, rect), m_values(values), m_currentIndex(0), m_textDrawer(nullptr)
+{
+    assert(drawer != nullptr);
+}
 
 void GuiCycleButton::onNotifyMouseEvent(const s_MouseEvent& event) 
 {

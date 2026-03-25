@@ -4,12 +4,13 @@
 #include "drawers/SDLDrawer.hpp"
 #include <cassert>
 
-GuiWindow::GuiWindow(const cRectangle &rect, cTextDrawer* _textDrawer) :
-    GuiObject(rect),
+GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _textDrawer) :
+    GuiObject(drawer,rect),
     gui_objects(std::vector<GuiObject *>(0)),
     title(""),
     m_textDrawer(_textDrawer)
 {
+    assert(drawer != nullptr);
     assert(_textDrawer != nullptr);
 }
 

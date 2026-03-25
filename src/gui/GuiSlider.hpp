@@ -3,9 +3,11 @@
 #include "gui/GuiObject.h"
 #include <functional>
 
+class SDLDrawer;
 
 struct GuiSliderParams {
     cRectangle rect;
+    SDLDrawer* renderer;
     int minValue = 0;
     int maxValue = 100;
     int initialValue = 0;
@@ -15,7 +17,7 @@ struct GuiSliderParams {
 
 class GuiSlider : public GuiObject {
 public:
-    GuiSlider(const cRectangle &rect, int minValue = 0, int maxValue = 100, int initialValue = 0);
+    GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue = 0, int maxValue = 100, int initialValue = 0);
 
     void draw() const override;
 
@@ -47,6 +49,11 @@ public:
         return *this;
     }
 
+    GuiSliderBuilder& withRenderer(SDLDrawer* render) {
+        params.renderer = render;
+        return *this;
+    }
+
     GuiSliderBuilder& withMinValue(int minVal) {
         params.minValue = minVal;
         return *this;
@@ -73,7 +80,7 @@ public:
     }
 
     GuiSlider* build() const {
-        GuiSlider* slider = new GuiSlider(params.rect, params.minValue, params.maxValue, params.initialValue);
+        GuiSlider* slider = new GuiSlider(params.renderer, params.rect, params.minValue, params.maxValue, params.initialValue);
         slider->setTheme(params.theme);
         if (params.onValueChanged)
             slider->setOnValueChanged(params.onValueChanged);

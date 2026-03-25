@@ -24,7 +24,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new GuiWindow(window, m_textDrawer);
+    gui_window = new GuiWindow(m_renderDrawer, window, m_textDrawer);
     gui_window->setTheme(GuiTheme::Light());
 
     // Title
@@ -40,7 +40,8 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
         GuiButton *btnMission = GuiButtonBuilder()
             .withRect(rect)        
             .withLabel(std::format("Mission {}", i))
-            .withTextDrawer(m_textDrawer)    
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,i]() {
                 m_game.jumpToSelectYourNextConquestMission(i);
@@ -59,7 +60,8 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     GuiButton *gui_btn_Back = GuiButtonBuilder()
             .withRect(backRect)        
             .withLabel("Back")
-            .withTextDrawer(m_textDrawer)    
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)    
             .withTheme(GuiTheme::Light())
             .onClick([this,prevState]() {
                 m_game.setNextStateToTransitionTo(prevState);

@@ -6,10 +6,12 @@
 #include <optional>
 
 class Texture;
+class SDLDrawer;
 class GuiButtonGroup;
 
 struct GuiStateButtonParams {
     cRectangle rect;
+    SDLDrawer* renderer = nullptr;
     GuiRenderKind kind = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
     GuiTheme theme = GuiTheme::Light();
     std::function<void()> onLeftClick = nullptr;
@@ -20,7 +22,7 @@ struct GuiStateButtonParams {
 
 class GuiStateButton : public GuiObject {
 public:
-    explicit GuiStateButton(const cRectangle &rect);
+    explicit GuiStateButton(SDLDrawer* drawer, const cRectangle &rect);
     ~GuiStateButton();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -53,7 +55,11 @@ public:
         params.rect = rect;
         return *this;
     }
-
+    GuiStateButtonBuilder& withRenderer(SDLDrawer* render) {
+        params.renderer = render;
+        return *this;
+    }
+    
     GuiStateButtonBuilder& withKind(GuiRenderKind kind) {
         params.kind = kind;
         return *this;
@@ -80,7 +86,7 @@ public:
     }
 
     GuiStateButton* build() const {
-        GuiStateButton* btn = new GuiStateButton(params.rect);
+        GuiStateButton* btn = new GuiStateButton(params.renderer, params.rect);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         btn->setTexture(params.tex);
