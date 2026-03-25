@@ -1703,16 +1703,6 @@ const cUnits& cGame::getUnits() const
     return m_Units;
 }
 
-cMap& cGame::getMap()
-{
-    return m_map;
-}
-
-const cMap& cGame::getMap() const
-{
-    return m_map;
-}
-
 cUnit& cGame::getUnit(int index)
 {
     return m_Units[index];

@@ -227,12 +227,12 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
     for (int w = 0; w < theStructure->getWidth(); w++) {
         for (int h = 0; h < theStructure->getHeight(); h++)	{
-            int xOfStructureCell = game.getMap().getCellX(cellOfStructure);
-            int yOfStructureCell = game.getMap().getCellY(cellOfStructure);
+            int xOfStructureCell = game.m_map.getCellX(cellOfStructure);
+            int yOfStructureCell = game.m_map.getCellY(cellOfStructure);
 
-            int iCell = game.getMap().getGeometry().makeCell(xOfStructureCell + w, yOfStructureCell + h);
+            int iCell = game.m_map.getGeometry().makeCell(xOfStructureCell + w, yOfStructureCell + h);
 
-            game.getMap().cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
+            game.m_map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
         }
     }
 }

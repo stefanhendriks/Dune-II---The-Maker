@@ -151,18 +151,18 @@ float healthBar(float max_w, int i, int w)
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll)
 {
-    return game.getMap().findCloseMapBorderCellRelativelyToDestinationCel(iCll);
+    return game.m_map.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 }
 
 
 int distanceBetweenCellAndCenterOfScreen(int iCell)
 {
-    if (game.getMap().isValidCell(iCell)) {
+    if (game.m_map.isValidCell(iCell)) {
         int centerX = game.m_mapCamera->getViewportCenterX();
         int centerY = game.m_mapCamera->getViewportCenterY();
 
-        int cellX = game.getMap().getAbsoluteXPositionFromCell(iCell);
-        int cellY = game.getMap().getAbsoluteYPositionFromCell(iCell);
+        int cellX = game.m_map.getAbsoluteXPositionFromCell(iCell);
+        int cellY = game.m_map.getAbsoluteYPositionFromCell(iCell);
 
         return ABS_length(centerX, centerY, cellX, cellY);
     }
@@ -201,19 +201,19 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.posX = game.getMap().getAbsoluteXPositionFromCellCentered(fromCell);
-    newBullet.posY = game.getMap().getAbsoluteYPositionFromCellCentered(fromCell);
+    newBullet.posX = game.m_map.getAbsoluteXPositionFromCellCentered(fromCell);
+    newBullet.posY = game.m_map.getAbsoluteYPositionFromCellCentered(fromCell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.targetX = game.getMap().getAbsoluteXPositionFromCellCentered(targetCell);
-    newBullet.targetY = game.getMap().getAbsoluteYPositionFromCellCentered(targetCell);
+    newBullet.targetX = game.m_map.getAbsoluteXPositionFromCellCentered(targetCell);
+    newBullet.targetY = game.m_map.getAbsoluteYPositionFromCellCentered(targetCell);
 
     // if we start firing from a mountain, flag it so the bullet won't be blocked by mountains along
     // the way
-    newBullet.bStartedFromMountain = game.getMap().getCell(fromCell)->type == TERRAIN_MOUNTAIN;
+    newBullet.bStartedFromMountain = game.m_map.getCell(fromCell)->type == TERRAIN_MOUNTAIN;
 
-    int structureIdAtTargetCell = game.getMap().getCellIdStructuresLayer(targetCell);
+    int structureIdAtTargetCell = game.m_map.getCellIdStructuresLayer(targetCell);
     if (structureIdAtTargetCell > -1) {
         cAbstractStructure *pStructure = game.getStructures()[structureIdAtTargetCell];
         if (pStructure && pStructure->isValid()) {
@@ -232,7 +232,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
         newBullet.iPlayer = cUnit.iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {
-            game.getMap().clearShroudForAllPlayers(fromCell, 2);
+            game.m_map.clearShroudForAllPlayers(fromCell, 2);
         }
     }
 
@@ -240,18 +240,18 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
         cAbstractStructure *pStructure = game.getStructures()[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
 
-        int unitIdAtTargetCell = game.getMap().getCellIdUnitLayer(targetCell);
+        int unitIdAtTargetCell = game.m_map.getCellIdUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
             cUnit &unitTarget = game.getUnit(unitIdAtTargetCell);
             // reveal for player which is being attacked
-            game.getMap().clearShroud(fromCell, 2, unitTarget.iPlayer);
+            game.m_map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
 
-        unitIdAtTargetCell = game.getMap().getCellIdAirUnitLayer(targetCell);
+        unitIdAtTargetCell = game.m_map.getCellIdAirUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
             cUnit &unitTarget = game.getUnit(unitIdAtTargetCell);
             // reveal for player which is being attacked
-            game.getMap().clearShroud(fromCell, 2, unitTarget.iPlayer);
+            game.m_map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
     }
 

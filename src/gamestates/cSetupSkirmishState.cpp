@@ -586,10 +586,10 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     startCellsOnSkirmishMap = iStartPositions.size();
 
     // REGENERATE MAP DATA FROM INFO
-    game.getMap().init(selectedMap.width, selectedMap.height);
+    game.m_map.init(selectedMap.width, selectedMap.height);
 
-    auto mapEditor = cMapEditor(game.getMap());
-    for (int c = 0; c < game.getMap().getMaxCells(); c++) {
+    auto mapEditor = cMapEditor(game.m_map);
+    for (int c = 0; c < game.m_map.getMaxCells(); c++) {
         mapEditor.createCell(c, selectedMap.terrainType[c], 0);
     }
     mapEditor.smoothMap();
@@ -761,7 +761,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
             int minRange = 3;
             int maxRange = 12;
-            int cell = game.getMap().getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+            int cell = game.m_map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
                        minRange,
                        maxRange,
                        iPlayerUnitType);
@@ -809,20 +809,20 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     m_game.playMusicByType(MUSIC_PEACE);
 
-    game.getMap().setAutoSpawnSpiceBlooms(spawnBlooms);
-    game.getMap().setAutoDetonateSpiceBlooms(detonateBlooms);
-    game.getMap().setDesiredAmountOfWorms(spawnWorms);
+    game.m_map.setAutoSpawnSpiceBlooms(spawnBlooms);
+    game.m_map.setAutoDetonateSpiceBlooms(detonateBlooms);
+    game.m_map.setDesiredAmountOfWorms(spawnWorms);
 
     // spawn requested amount of worms at start
     if (spawnWorms > 0) {
         int worms = spawnWorms;
         int minDistance = worms * 12; // so on 64x64 maps this still could work
         int maxDistance = worms * 32; // 128 / 4
-        int wormCell = game.getMap().getRandomCell();
+        int wormCell = game.m_map.getRandomCell();
         int failures = 0;
         logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
-            int cell = game.getMap().getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
+            int cell = game.m_map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                        SANDWORM);
             if (cell < 0) {
                 // retry
@@ -1165,7 +1165,7 @@ void cSetupSkirmishState::generateRandomMap()
 
     randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, randomMap);
 
-    // @mira do better than (game.getMap().getWidth() * game.getMap().getHeight() > 64 * 64)
+    // @mira do better than (game.m_map.getWidth() * game.m_map.getHeight() > 64 * 64)
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
     randomMap.validMap = true;

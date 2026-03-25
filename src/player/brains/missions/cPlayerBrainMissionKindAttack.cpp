@@ -52,7 +52,7 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!game.getMap().isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!game.m_map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         target =  theStructure->getStructureId();
@@ -71,7 +71,7 @@ int cPlayerBrainMissionKindAttack::findEnemyUnit() const
         if (!pUnit.isValid()) continue;
         if (pUnit.getPlayer() == player) continue; // skip self
         if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-        if (!game.getMap().isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+        if (!game.m_map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
         if (pUnit.isSandworm() || pUnit.isAirbornUnit()) continue; // don't attack air units or sandworms
 
         // enemy unit

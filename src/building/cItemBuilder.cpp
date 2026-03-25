@@ -287,10 +287,10 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = game.getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+                        int iCll = game.m_map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
-                            bool passable = game.getMap().isCellPassableForFootUnits(iCll);
+                            bool passable = game.m_map.isCellPassableForFootUnits(iCll);
 
                             if (passable) {
                                 UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
@@ -299,8 +299,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = game.getMap().getCellX(iCll);
-                            int y = game.getMap().getCellY(iCll);
+                            int x = game.m_map.getCellX(iCll);
+                            int y = game.m_map.getCellY(iCll);
                             int amount = RNG::rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
@@ -319,9 +319,9 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                     break;
                             }
                             // change cell
-                            cPoint::split(x, y) = game.getMap().fixCoordinatesToBeWithinMap(x, y);
+                            cPoint::split(x, y) = game.m_map.fixCoordinatesToBeWithinMap(x, y);
 
-                            iCll = game.getMap().getGeometry().makeCell(x, y);
+                            iCll = game.m_map.getGeometry().makeCell(x, y);
                         }
                     }
                     item->stopBuilding();
