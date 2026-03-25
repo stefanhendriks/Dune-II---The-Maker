@@ -183,7 +183,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     // Animation / Sound
 
     // Anyone who was attacking this unit is on actionGuard
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue; // skip invalid
         if (pUnit.iAttackUnit != iID) continue; // skip those who did not want to attack me
@@ -1245,7 +1245,7 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
     int iDistance = 9999;
     int iTarget = -1;
 
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &target = game.getUnit(i);
         if (target.isValid() && i != iID) {
             if (pPlayer->isSameTeamAs(target.getPlayer()))
@@ -2945,7 +2945,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // this). An alternative is to have a function return per 'segment' the units within it (so we don't need to
         // iterate over all units)
         if (canSquishInfantry()) {
-            for (int iq = 0; iq < game.getUnits().size(); iq++) {
+            for (int iq = 0; iq < game.m_Units.size(); iq++) {
                 cUnit &potentialDeadUnit = game.getUnit(iq);
                 if (iq == iID) continue; // skip self
                 if (!potentialDeadUnit.isValid()) continue;
@@ -3509,7 +3509,7 @@ void cUnit::thinkFast_guard_sandworm()
     int iDistance = 9999;
     int unitIdToAttack = -1;
 
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &potentialDinner = game.getUnit(i);
         if (i == iID) continue;
         if (!potentialDinner.isValid()) continue;
@@ -3560,7 +3560,7 @@ int cUnit::findNearbyGroundUnitToAttack(int range)
     int iDistance = 9999;
     int unitIdToAttack = -1;
 
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         if (i == iID) continue; // skip self
         cUnit &potentialThreat = game.getUnit(i);
         if (!potentialThreat.isValid()) continue;
@@ -3585,7 +3585,7 @@ int cUnit::findNearbyAirUnitToAttack(int range)
     int iDistance = 9999;
     int airUnitToAttack = -1;
 
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         if (i == iID) continue; // skip self
         cUnit &potentialThreat = game.getUnit(i);
         if (!potentialThreat.isValid()) continue;
@@ -3863,7 +3863,7 @@ bool cUnit::canUnload()
 // return new valid ID
 int UNIT_NEW()
 {
-    for (int i = 0; i < game.getUnits().size(); i++)
+    for (int i = 0; i < game.m_Units.size(); i++)
         if (!game.getUnit(i).isValid())
             return i;
 
@@ -4667,7 +4667,7 @@ int UNIT_find_harvest_spot(int id)
 int CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
 {
     // find a free carry all
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != iPlayer) continue;

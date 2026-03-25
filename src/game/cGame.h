@@ -258,8 +258,6 @@ public:
     cPlayer& getPlayer(int index);
     const cPlayer& getPlayer(int index) const;
 
-    cUnits& getUnits();
-    const cUnits& getUnits() const;
     cUnit& getUnit(int index);
     const cUnit& getUnit(int index) const;
 
