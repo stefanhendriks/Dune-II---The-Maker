@@ -1683,16 +1683,6 @@ s_DataCampaign* cGame::getDataCampaign() const
     return m_dataCampaign.get();
 }
 
-cUnits& cGame::getUnits()
-{
-    return m_Units;
-}
-
-const cUnits& cGame::getUnits() const
-{
-    return m_Units;
-}
-
 cUnit& cGame::getUnit(int index)
 {
     return m_Units[index];

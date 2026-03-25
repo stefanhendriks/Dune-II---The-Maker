@@ -389,7 +389,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 {
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
-    for (auto &pUnit : game.getUnits()) {
+    for (auto &pUnit : game.m_Units) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.bSelected) {
@@ -407,7 +407,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
@@ -424,7 +424,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
@@ -450,7 +450,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
 int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
 {
     int count = 0;
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != this->getId()) continue;
@@ -1351,7 +1351,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
 
     int maxTargets = 0;
 
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != playerIndexToAttack) continue;
@@ -2108,7 +2108,7 @@ std::vector<int> cPlayer::getAllMyUnits()
 std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead() && !pUnit.isHidden()) continue; // hidden units play "dead" :/
@@ -2145,7 +2145,7 @@ bool cPlayer::evaluateStillAlive()
 
     if (!alive) {
         // check units now
-        for (int i = 0; i < game.getUnits().size(); i++) {
+        for (int i = 0; i < game.m_Units.size(); i++) {
             cUnit &pUnit = game.getUnit(i);
             if (!pUnit.isValid()) continue;
             if (pUnit.isAirbornUnit()) continue; // do not count airborn units
@@ -2189,7 +2189,7 @@ void cPlayer::deselectStructure()
 std::vector<int> cPlayer::getSelectedUnits() const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.getUnits().size(); i++) {
+    for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (!cUnit.belongsTo(this)) continue;
