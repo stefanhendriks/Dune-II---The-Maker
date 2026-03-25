@@ -265,9 +265,6 @@ public:
     cUnit& getUnit(int index);
     const cUnit& getUnit(int index) const;
 
-    cParticles& getParticles();
-    const cParticles& getParticles() const;
-
 private:
     /**
      * Variables start here
