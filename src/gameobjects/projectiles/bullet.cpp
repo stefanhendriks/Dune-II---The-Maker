@@ -249,7 +249,7 @@ void cBullet::think_move()
             }
             else {
                 // do not hit own or allied structures
-                if (!game.getStructures()[id]->getPlayer()->isSameTeamAs(getPlayer())) {
+                if (!game.m_pStructures[id]->getPlayer()->isSameTeamAs(getPlayer())) {
                     bHitsEnemyBuilding = true;
                 }
             }
@@ -677,7 +677,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
         iDamage += iDam;
     }
 
-    cAbstractStructure *pStructure = game.getStructures()[id];
+    cAbstractStructure *pStructure = game.m_pStructures[id];
     if (pStructure == nullptr) {
         return; // invalid pointer!
     }

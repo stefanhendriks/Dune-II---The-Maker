@@ -268,9 +268,6 @@ public:
     cParticles& getParticles();
     const cParticles& getParticles() const;
 
-    cStructures& getStructures();
-    const cStructures& getStructures() const;
-
 private:
     /**
      * Variables start here

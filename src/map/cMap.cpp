@@ -50,12 +50,12 @@ cMap::~cMap()
     // do not trigger getInstance from structure factory
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
-        cAbstractStructure *pStructure = game.getStructures()[i];
+        cAbstractStructure *pStructure = game.m_pStructures[i];
         if (pStructure) {
             delete pStructure;
         }
         // clear pointer
-        game.getStructures()[i] = nullptr;
+        game.m_pStructures[i] = nullptr;
     }
 }
 
@@ -492,7 +492,7 @@ void cMap::clearShroud(int c, int size, int playerId)
 
                 int structureId = getCellIdStructuresLayer(cl);
                 if (structureId > -1) {
-                    cAbstractStructure *pStructure = game.getStructures()[structureId];
+                    cAbstractStructure *pStructure = game.m_pStructures[structureId];
                     s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                         .entityType = eBuildType::STRUCTURE,
@@ -1303,7 +1303,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
 
     const std::vector<int> &myStructuresAsId = player->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.getStructures()[i];
+        cAbstractStructure *pStructure = game.m_pStructures[i];
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
 
@@ -1317,7 +1317,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
     }
 
     if (foundStructureId > -1) {
-        return game.getStructures()[foundStructureId];
+        return game.m_pStructures[foundStructureId];
     }
 
     return nullptr;
@@ -1393,7 +1393,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
 
     const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.getStructures()[i];
+        cAbstractStructure *pStructure = game.m_pStructures[i];
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
         if (pStructure->hasUnitWithin()) continue; // already occupied
@@ -1408,7 +1408,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
     }
 
     if (foundStructureId > -1) {
-        return game.getStructures()[foundStructureId];
+        return game.m_pStructures[foundStructureId];
     }
 
     return nullptr;
@@ -1428,7 +1428,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
 
     const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.getStructures()[i];
+        cAbstractStructure *pStructure = game.m_pStructures[i];
         if (pStructure == nullptr) continue;
         if (pStructure->getOwner() != playerId) continue;
         if (pStructure->getType() != structureType) continue;
@@ -1446,7 +1446,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
     }
 
     if (foundStructureId > -1) {
-        return game.getStructures()[foundStructureId];
+        return game.m_pStructures[foundStructureId];
     }
 
     return nullptr;

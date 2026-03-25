@@ -319,7 +319,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 void cStructureDrawer::drawStructuresForLayer(int layer)
 {
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
 
         if (!theStructure) continue;
 
@@ -348,7 +348,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
 {
     if (iStructure < 0 || iStructure >= MAX_STRUCTURES) return;
 
-    cAbstractStructure *theStructure = game.getStructures()[iStructure];
+    cAbstractStructure *theStructure = game.m_pStructures[iStructure];
 
     if (!theStructure) {
         return;

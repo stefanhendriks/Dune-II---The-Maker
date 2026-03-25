@@ -47,7 +47,7 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 {
     int target = -1;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.getStructures()[i];
+        cAbstractStructure *theStructure = game.m_pStructures[i];
         if (!theStructure) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
@@ -91,7 +91,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
     }
 
     if (targetStructureID > -1) {
-        cAbstractStructure *pStructure = game.getStructures()[targetStructureID];
+        cAbstractStructure *pStructure = game.m_pStructures[targetStructureID];
         if (!pStructure || !pStructure->isValid()) {
             mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
             return;

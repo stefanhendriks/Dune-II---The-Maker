@@ -169,7 +169,7 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureCreated(const s_GameEvent &event)
 {
     // a structure was created, update our baseplan
-    cAbstractStructure *pStructure = game.getStructures()[event.entityID];
+    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
     int placedAtCell = pStructure->getCell();
     bool foundExistingStructureInBase = false;
     for (auto &structurePosition : m_myBase) {
@@ -245,7 +245,7 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.getStructures()[event.entityID];
+        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = game.structureInfos[event.entitySpecificType];
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -272,7 +272,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureDecayed(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.getStructures()[event.entityID];
+        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = game.structureInfos[event.entitySpecificType];
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -1741,7 +1741,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                     }
                 }
                 else if (event.entityType == eBuildType::STRUCTURE) {
-                    cAbstractStructure *pStructure = game.getStructures()[event.entityID];
+                    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
                     if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                         // found enemy structure
                         m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
@@ -1767,7 +1767,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                         }
                     }
                     else if (event.entityType == eBuildType::STRUCTURE) {
-                        cAbstractStructure *pStructure = game.getStructures()[event.entityID];
+                        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
                         // the other player discovered a structure of mine
                         if (pStructure->getPlayer() == player) {
                             // found my structure
