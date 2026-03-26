@@ -475,8 +475,19 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
     }
 
     // go to repair state
-    if (event.hasKey(SDL_SCANCODE_R)  && m_player->getSelectedUnits().size() == 0) {
-        m_context->setMouseState(MOUSESTATE_REPAIR);
+    if (event.hasKey(SDL_SCANCODE_R)) {
+        if (m_player->getSelectedUnits().size() == 0) { // no units selected
+            m_context->setMouseState(MOUSESTATE_REPAIR);
+        } else { // units selected
+            for (auto id: m_selectedUnits) {
+                cUnit &pUnit = game.getUnit(id);
+                if (pUnit.isEligibleForRepair()) {
+                    pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
+                    pUnit.bSelected = false;
+                    spawnParticle(D2TM_PARTICLE_MOVE);
+                }
+            }
+        }
     }
 
     // order any selected harvester to return to refinery
