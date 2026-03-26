@@ -1,8 +1,7 @@
 #pragma once
 
 // this class holds the game controls context. This means, the updateMouseAndKeyboardStateAndGamePlaying() method
-// will check how the mouse is positioned in this particular frame. It then updates
-// any ids, or other relevant data.
+// will check how the mouse is positioned in this particular frame. It then updates any ids, or other relevant data.
 //
 // For instance, this class knows if a mouse is hovering above a structure, or a unit. The sidebar
 // or above the minimap. It also knows if an order has been issued (attack, move, repair, etc).
@@ -57,11 +56,9 @@ public:
     bool isMouseOnSidebarOrMinimap() const {
         return isMouseOnSidebar() || isMouseOnMiniMap();
     }
+
     bool isMouseOnBattleField() const;
 
-    // bool shouldDrawToolTip() const {
-    //     return m_drawToolTip;
-    // }
     bool isMouseRightButtonPressed() const{
         return m_mouse->isRightButtonPressed();
     }
@@ -83,7 +80,6 @@ public:
     void onFocusMouseStateEvent();
 
 protected:
-    // void determineToolTip();
     void determineHoveringOverStructureId();
     void determineHoveringOverUnitId();
 
@@ -91,8 +87,6 @@ private:
     int m_mouseHoveringOverStructureId;
     int m_mouseHoveringOverUnitId;
     bool m_mouseOnBattleField;
-
-    // bool m_drawToolTip;
 
     // on what cell is the mouse hovering
     int m_mouseCell;

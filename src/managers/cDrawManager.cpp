@@ -18,15 +18,6 @@
 #include <cassert>
 
 cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
-    //m_sidebarDrawer(ctx, thePlayer),
-    // m_creditsDrawer(ctx, thePlayer),
-    // m_orderDrawer(ctx, thePlayer),
-    // m_mapDrawer(&game.m_map, thePlayer, mapCamera),
-    // miniMapDrawer(ctx, &game.m_map, thePlayer, mapCamera),
-    // m_particleDrawer(),
-    // m_messageDrawer(ctx),
-    // m_placeitDrawer(thePlayer),
-    // m_structureDrawer(ctx),
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
@@ -216,7 +207,6 @@ void cDrawManager::drawStructurePlacing()
 void cDrawManager::drawMessage()
 {
     m_messageDrawer->draw();
-
     // TODO: replace messageDrawer with drawMessageBar?
     // messageBarDrawer->drawMessageBar();
 }
@@ -226,7 +216,6 @@ void cDrawManager::drawCombatMouse()
     drawMouse();
 
     cGameControlsContext *context = m_player->getGameControlsContext();
-    //context->isMouseRightButtonPressed()
     if (m_drawToolTip && context->isMouseOnBattleField() ) {
         m_mouseDrawer->drawToolTip();
     }
