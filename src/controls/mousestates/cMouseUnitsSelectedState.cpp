@@ -487,6 +487,9 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
             if (pUnit.isHarvester() && pUnit.canUnload()) {
                 pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
             }
+            if (pUnit.isType(DEVASTATOR) ) {
+                pUnit.die(true, false);
+            }
         }
     }
 
