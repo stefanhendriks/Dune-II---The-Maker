@@ -245,7 +245,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_R)) {
+    if (event.hasKey(SDL_SCANCODE_R) && m_player->getSelectedUnits().size() == 0) {
         m_context->setMouseState(MOUSESTATE_REPAIR);
     }
 }
