@@ -11,7 +11,6 @@ cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_mouseHoveringOverStructureId(-1),
     m_mouseHoveringOverUnitId(-1),
     m_mouseOnBattleField(false),
-    // m_drawToolTip(true),
     m_mouseCell(-99),
     m_player(player),
     m_state(MOUSESTATE_SELECT),
@@ -73,16 +72,6 @@ int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
     int absMapY = game.m_mapCamera->getAbsMapMouseY(mouseY);
     return game.m_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
 }
-
-// void cGameControlsContext::determineToolTip()
-// {
-    // @Mira : magical call to key ...
-    // @mira: this function activate drawToolTip with GUI branch
-    // m_drawToolTip = false;
-    // if (key[SDL_SCANCODE_T] && isMouseOnBattleField()) { // TODO: this gets removed later, when we redo tooltips anyway
-    // m_drawToolTip = true;
-    // }
-// }
 
 void cGameControlsContext::determineHoveringOverStructureId()
 {
@@ -146,7 +135,6 @@ void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event)
     updateMouseCell(event.coords);
     bool mouseOnBattleField = isMouseOnBattleField();
     if (mouseOnBattleField) {
-        // determineToolTip();
         determineHoveringOverStructureId();
         determineHoveringOverUnitId();
 
