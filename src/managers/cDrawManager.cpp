@@ -227,7 +227,7 @@ void cDrawManager::drawCombatMouse()
 
     cGameControlsContext *context = m_player->getGameControlsContext();
     //context->isMouseRightButtonPressed()
-    if (context->shouldDrawToolTip()) {
+    if (m_drawToolTip && context->isMouseOnBattleField() ) {
         m_mouseDrawer->drawToolTip();
     }
 }
@@ -326,6 +326,9 @@ void cDrawManager::onKeyDown(const cKeyboardEvent &event)
             m_mapDrawer->setDrawGrid(true);
         }
     }
+    if (event.hasKey(SDL_SCANCODE_T)) {
+        m_drawToolTip = true;
+    }
 }
 
 void cDrawManager::onKeyPressed(const cKeyboardEvent &event)
@@ -339,6 +342,9 @@ void cDrawManager::onKeyPressed(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_G)) {
             m_mapDrawer->setDrawGrid(false);
         }
+    }
+    if (event.hasKey(SDL_SCANCODE_T)) {
+        m_drawToolTip = false;
     }
 }
 
