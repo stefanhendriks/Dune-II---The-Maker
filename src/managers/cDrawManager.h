@@ -118,7 +118,7 @@ private:
     std::unique_ptr<cStructureDrawer> m_structureDrawer;
     Color m_sidebarColor;
     Texture *btnOptions;
-
+    bool m_drawToolTip = false;
     // TODO: bullet/projectile drawer
     cPlayer *m_player;
     cTextDrawer *m_textDrawer = nullptr;
