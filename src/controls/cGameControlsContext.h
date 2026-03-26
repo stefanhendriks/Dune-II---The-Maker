@@ -59,9 +59,9 @@ public:
     }
     bool isMouseOnBattleField() const;
 
-    bool shouldDrawToolTip() const {
-        return m_drawToolTip;
-    }
+    // bool shouldDrawToolTip() const {
+    //     return m_drawToolTip;
+    // }
     bool isMouseRightButtonPressed() const{
         return m_mouse->isRightButtonPressed();
     }
@@ -83,7 +83,7 @@ public:
     void onFocusMouseStateEvent();
 
 protected:
-    void determineToolTip();
+    // void determineToolTip();
     void determineHoveringOverStructureId();
     void determineHoveringOverUnitId();
 
@@ -92,7 +92,7 @@ private:
     int m_mouseHoveringOverUnitId;
     bool m_mouseOnBattleField;
 
-    bool m_drawToolTip;
+    // bool m_drawToolTip;
 
     // on what cell is the mouse hovering
     int m_mouseCell;
