@@ -147,6 +147,7 @@ public:
     bool bHovered;      // mouse hovers over this unit or not?
 
     void retreatToNearbyBase();
+    void deselect();
 
     float fExpDamage();	// experience damage by bullet (extra damage that is)
 

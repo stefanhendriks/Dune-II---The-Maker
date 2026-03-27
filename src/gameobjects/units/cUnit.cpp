@@ -2618,7 +2618,7 @@ void cUnit::thinkFast_move()
                         else {
                             // start entering the structure at next cell
                             pStructure->startEnteringStructure(iID);
-                            bSelected = false; // deselect unit
+                            deselect();
                         }
 
                         // TODO: this should be done via events (EVENT_CAPTURED? and then make unit choose different structure)
@@ -3807,6 +3807,10 @@ void cUnit::retreatToNearbyBase()
     int cellToRetreatTo = findNewDropLocation(iType, pStructure->getCell());
 
     move_to(cellToRetreatTo); // intent retreat?
+}
+
+void cUnit::deselect() {
+    this->bSelected = false;
 }
 
 std::string cUnit::getHarvesterStatusForMessageBar()
