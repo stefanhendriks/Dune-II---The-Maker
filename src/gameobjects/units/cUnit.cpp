@@ -55,7 +55,7 @@ void cUnit::init(int i)
 {
     mission = -1;
     boundParticleId = -1;
-    bSelected = false;
+    m_bSelected = false;
     bHovered  = false;
 
     unitsEaten = 0;
@@ -106,7 +106,7 @@ void cUnit::init(int i)
     iAttackCell = -1;
 
     // selected
-    bSelected = false;
+    m_bSelected = false;
 
     // Action given code
     iUnitID = -1;        // Unit ID to attack/pickup, etc
@@ -789,7 +789,7 @@ void cUnit::draw()
         global_renderDrawer->renderSprite(gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
     }
 
-    if (bSelected) {
+    if (m_bSelected) {
         SDL_Surface *focusBitmap = gfxdata->getSurface(FOCUS);
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
@@ -3809,15 +3809,15 @@ void cUnit::retreatToNearbyBase()
 }
 
 void cUnit::deselect() {
-    this->bSelected = false;
+    this->m_bSelected = false;
 }
 
 void cUnit::select() {
-    this->bSelected = true;
+    this->m_bSelected = true;
 }
 
 bool cUnit::isSelected() const {
-    return bSelected;
+    return m_bSelected;
 }
 
 

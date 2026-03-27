@@ -471,7 +471,7 @@ private:
 
     void takeDamage(int damage);
 
-    bool bSelected;     // selected or not?
+    bool m_bSelected;     // selected or not?
 
     int iCell;          // cell of unit
 
