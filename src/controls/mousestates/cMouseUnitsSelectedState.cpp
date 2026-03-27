@@ -7,7 +7,6 @@
 #include "gameobjects/particles/cParticle.h"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
-#include "utils/cSoundPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
 
@@ -476,24 +475,19 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
 
     // go to repair state
     if (event.hasKey(SDL_SCANCODE_R)) {
-        if (m_player->getSelectedUnits().size() == 0) { // no units selected
+        if (m_player->getSelectedUnits().empty()) {
             m_context->setMouseState(MOUSESTATE_REPAIR);
-        } else { // units selected
+        } else {
             for (auto id: m_selectedUnits) {
                 cUnit &pUnit = game.getUnit(id);
                 if (pUnit.isEligibleForRepair()) {
                     pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
                     pUnit.bSelected = false;
-                    spawnParticle(D2TM_PARTICLE_MOVE);
                 }
             }
-            // @Mira Another loop. I'm looking into how to rewrite this code more elegantly.
             std::erase_if(m_selectedUnits, [&](auto id) {
                 cUnit &pUnit = game.getUnit(id);
-                if (pUnit.isEligibleForRepair()) {
-                    return true; // remove from selection
-                }
-                    return false; // keep in selection
+                return pUnit.isEligibleForRepair(); // remove from selection
             });
         }
     }
