@@ -514,6 +514,13 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
         }
         m_selectedUnits.clear();
     }
+
+    if (event.hasKey(SDL_SCANCODE_B)) {
+        if (m_selectedUnits.size()==1) {
+            cUnit &pUnit = game.getUnit(m_selectedUnits[0]);
+            selectSameUnitsOnScreen(pUnit.iType);
+        }
+    }
 }
 
 void cMouseUnitsSelectedState::toPreviousState()
@@ -537,4 +544,17 @@ void cMouseUnitsSelectedState::onBlur()
 {
     m_mouse->resetBoxSelect();
     m_mouse->resetDragViewportInteraction();
+}
+
+void cMouseUnitsSelectedState::selectSameUnitsOnScreen(int iIDType)
+{
+    const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(*game.m_mapViewport);
+    std::vector<int> sameUnits =std::vector<int>();
+    for (int i : ids) {
+        cUnit &pUnit = game.getUnit(i);
+        if (pUnit.iType == iIDType) {
+            sameUnits.push_back(i);
+        }
+    }
+    m_player->selectUnits(sameUnits);
 }
