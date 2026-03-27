@@ -1113,26 +1113,15 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     if (event.entityType != eBuildType::STRUCTURE) {
         return;
     }
-    // TODO(https://github.com/stefanhendriks/Dune-II---The-Maker/issues/755) - Make this configurable via game.ini
 
-    int minAmountOfSoldiersToSpawnPotentially = 1;
-    int maxAmountOfSoldiersToSpawnPotentially = 3;
-
-    // bigger structures, can spawn a bigger range of
-    if (event.entitySpecificType == PALACE || event.entitySpecificType == STARPORT) {
-        maxAmountOfSoldiersToSpawnPotentially = 5;
-    }
-
-    if (event.entitySpecificType == TURRET || event.entitySpecificType == RTURRET || event.entitySpecificType == WALL) {
-        minAmountOfSoldiersToSpawnPotentially = 0;
-        maxAmountOfSoldiersToSpawnPotentially = 0;
-    }
+    const auto structureInfo = structureInfos[event.entitySpecificType];
+    int minAmountOfSoldiersToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMin;
+    int maxAmountOfSoldiersToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMax;
 
     int amountOfSoldiersToSpawn = RNG::genInt(minAmountOfSoldiersToSpawnPotentially, maxAmountOfSoldiersToSpawnPotentially);
 
-
-    int widthInCells = game.structureInfos[event.entitySpecificType].bmp_width / 32;
-    int heightInCells = game.structureInfos[event.entitySpecificType].bmp_height / 32;
+    int widthInCells = structureInfo.bmp_width / 32;
+    int heightInCells = structureInfo.bmp_height / 32;
 
     int cellX = m_map.getGeometry().getCellX(event.atCell);
     int cellY = m_map.getGeometry().getCellY(event.atCell);
@@ -1142,7 +1131,7 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         UNIT_CREATE(
             m_map.getGeometry().makeCell(randomX, randomY),
-            SOLDIER,
+            SOLDIER, // TODO(https://github.com/stefanhendriks/Dune-II---The-Maker/issues/755) - Make this configurable via game.ini
             event.player->getId(),
             false,
             false,

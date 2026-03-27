@@ -68,6 +68,10 @@ struct s_StructureInfo {
     bool canAttackGroundUnits;
     int fireRate;         // delay before firing
 
+    // amount of units to spawn when structure is destroyed
+    int uponDestructionSpawnUnitAmountMin;
+    int uponDestructionSpawnUnitAmountMax;
+    // TODO(https://github.com/stefanhendriks/Dune-II---The-Maker/issues/755) - Make unit to spawn configurable
 };
 
 

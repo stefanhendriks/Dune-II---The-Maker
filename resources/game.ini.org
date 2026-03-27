@@ -462,6 +462,8 @@ FixPoints=1
 BuildTime=200
 PowerDrain=80
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=3
+UponDestructionSpawnUnitAmountMax=5
 
 ; ---------------------
 ; Structure: Windtrap
@@ -473,6 +475,8 @@ FixPoints=3
 BuildTime=34
 PowerDrain=0
 PowerGive=100
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Heavy Factory
@@ -484,6 +488,8 @@ FixPoints=2
 BuildTime=130
 PowerDrain=30
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=3
 
 ; ---------------------
 ; Structure: Light Factory
@@ -495,6 +501,8 @@ FixPoints=3
 BuildTime=66
 PowerDrain=20
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Construction Yard
@@ -506,6 +514,9 @@ FixPoints=3
 BuildTime=0
 PowerDrain=0
 PowerGive=1
+HasConcrete=False
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Silo
@@ -517,6 +528,8 @@ FixPoints=5
 BuildTime=28
 PowerDrain=5
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: High-Tech
@@ -528,6 +541,8 @@ FixPoints=2
 BuildTime=110
 PowerDrain=35
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=3
 
 ; ---------------------
 ; Structure: House of IX
@@ -539,6 +554,8 @@ FixPoints=2
 BuildTime=110
 PowerDrain=60
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Repair Facility
@@ -550,6 +567,8 @@ FixPoints=5
 BuildTime=60
 PowerDrain=20
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=3
 
 ; ---------------------
 ; Structure: Radar
@@ -561,6 +580,8 @@ FixPoints=3
 BuildTime=60
 PowerDrain=30
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Spice Refinery
@@ -572,6 +593,8 @@ FixPoints=3
 BuildTime=65
 PowerDrain=30
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=3
 
 ; ---------------------
 ; Structure: WOR
@@ -583,6 +606,8 @@ FixPoints=3
 BuildTime=94
 PowerDrain=20
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Barracks
@@ -594,6 +619,8 @@ FixPoints=4
 BuildTime=62
 PowerDrain=10
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=1
+UponDestructionSpawnUnitAmountMax=2
 
 ; ---------------------
 ; Structure: Starport
@@ -605,6 +632,8 @@ FixPoints=3
 BuildTime=110
 PowerDrain=50
 PowerGive=0
+UponDestructionSpawnUnitAmountMin=2
+UponDestructionSpawnUnitAmountMax=4
 
 ; ---------------------
 ; Structure: Gun Turret

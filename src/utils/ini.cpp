@@ -251,6 +251,8 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "PowerGive"))         return WORD_POWERGIVE;
         if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
         if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMin"))         return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax"))         return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
     }
     else if (section == INI_UNITS) {
         if (cIniUtils::caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
@@ -1565,6 +1567,8 @@ void cIni::installGame(std::string filename)
                 if (wordtype == WORD_BUILDTIME) game.structureInfos[id].buildTime = ToInt(word_right);
                 if (wordtype == WORD_CANATTACKAIRUNITS) game.structureInfos[id].canAttackAirUnits = ToBool(word_right);
                 if (wordtype == WORD_CANATTACKUNITS) game.structureInfos[id].canAttackGroundUnits = ToBool(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) game.structureInfos[id].uponDestructionSpawnUnitAmountMin = ToInt(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) game.structureInfos[id].uponDestructionSpawnUnitAmountMax = ToInt(word_right);
             }
 
             if (section == INI_BULLETS && id > -1) {

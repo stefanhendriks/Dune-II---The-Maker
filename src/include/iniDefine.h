@@ -108,7 +108,9 @@
 #define WORD_DAMAGE_INFANTRY 196    // game.ini (Damage to infantry)
 #define WORD_EXPLOSION_SIZE 197    // game.ini (Explosion size)
 #define WORD_DEVIATE_PROBABILITY 199  // game.ini (Deviation probability)
-#define WORD_GROUND_BULLET 200  // game.ini (blocked by montains, walls, structures)
+#define WORD_GROUND_BULLET 200  // game.ini (blocked by mountains, walls, structures)
+#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN 201  // game.ini (structures, how many units to spawn if destroyed? (min))
+#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX 202  // game.ini (structures, how many units to spawn if destroyed? (max))
 
 
 #define WORD_BLOOMTIMERDURATION 241 // game.ini BLOOM TIMER DURATION
