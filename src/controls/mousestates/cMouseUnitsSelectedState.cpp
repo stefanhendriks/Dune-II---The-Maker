@@ -505,8 +505,15 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
             }
         }
     }
-
-    // force move?
+    if (event.hasKey(SDL_SCANCODE_F)) {
+        for (auto id: m_selectedUnits) {
+            cUnit &pUnit = game.getUnit(id);
+            pUnit.retreatToNearbyBase();
+            pUnit.bSelected = false;
+            spawnParticle(D2TM_PARTICLE_MOVE);
+        }
+        m_selectedUnits.clear();
+    }
 }
 
 void cMouseUnitsSelectedState::toPreviousState()
