@@ -482,7 +482,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
                 cUnit &pUnit = game.getUnit(id);
                 if (pUnit.isEligibleForRepair()) {
                     pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
-                    pUnit.bSelected = false;
+                    pUnit.deselect();
                 }
             }
             std::erase_if(m_selectedUnits, [&](auto id) {
@@ -505,12 +505,12 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
             }
         }
     }
+
     if (event.hasKey(SDL_SCANCODE_F)) {
         for (auto id: m_selectedUnits) {
             cUnit &pUnit = game.getUnit(id);
             pUnit.retreatToNearbyBase();
-            pUnit.bSelected = false;
-            spawnParticle(D2TM_PARTICLE_MOVE);
+            pUnit.deselect();
         }
         m_selectedUnits.clear();
     }

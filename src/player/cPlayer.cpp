@@ -2294,7 +2294,7 @@ void cPlayer::thinkSlow()
 
 void cPlayer::deselectUnit(const int &unitId)
 {
-    game.getUnit(unitId).bSelected = false;
+    game.getUnit(unitId).deselect();
 }
 
 void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
