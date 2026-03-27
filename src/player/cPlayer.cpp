@@ -392,7 +392,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
     for (auto &pUnit : game.m_Units) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
-        if (pUnit.bSelected) {
+        if (pUnit.isSelected()) {
             pUnit.iGroup = groupId;
             continue;
         }
@@ -2193,7 +2193,7 @@ std::vector<int> cPlayer::getSelectedUnits() const
         cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (!cUnit.belongsTo(this)) continue;
-        if (cUnit.bSelected) {
+        if (cUnit.isSelected()) {
             ids.push_back(i);
         }
     }
@@ -2238,8 +2238,8 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
             if (pUnit.isAirbornUnit()) continue;
             if (!pUnit.isHarvester()) continue;
             // only check if it has not been selected, so we only play sound when we truly select a new unit.
-            if (!pUnit.bSelected) {
-                pUnit.bSelected = true;
+            if (!pUnit.isSelected()) {
+                pUnit.select();
                 unitSelected = true; // do it here, instead of iterating again
             }
         }
@@ -2251,8 +2251,8 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
             if (pUnit.isAirbornUnit()) continue;
             if (pUnit.isHarvester()) continue;
             // only check if it has not been selected, so we only play sound when we truly select a new unit.
-            if (!pUnit.bSelected) {
-                pUnit.bSelected = true;
+            if (!pUnit.isSelected()) {
+                pUnit.select();
                 if (pUnit.isInfantryUnit()) {
                     infantrySelected = true;
                 }

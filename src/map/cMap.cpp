@@ -613,7 +613,7 @@ void cMap::draw_units_2nd()
     for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
-        if (!pUnit.bHovered && !pUnit.bSelected) continue;
+        if (!pUnit.bHovered && !pUnit.isSelected()) continue;
         if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
         if (pUnit.isHidden()) continue;
 

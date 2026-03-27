@@ -143,11 +143,12 @@ public:
     int iHeadShouldFace;    // where should the unit look at?
     int iFrame;         // framed (animated stuff)
 
-    bool bSelected;     // selected or not?
     bool bHovered;      // mouse hovers over this unit or not?
 
     void retreatToNearbyBase();
     void deselect();
+    [[nodiscard]] bool isSelected() const;
+    void select();
 
     float fExpDamage();	// experience damage by bullet (extra damage that is)
 
@@ -469,6 +470,8 @@ private:
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait);
 
     void takeDamage(int damage);
+
+    bool bSelected;     // selected or not?
 
     int iCell;          // cell of unit
 

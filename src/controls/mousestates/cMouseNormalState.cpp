@@ -93,8 +93,8 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                 m_player->deselectAllUnits();
 
                 cUnit &pUnit = game.getUnit(hoverUnitId);
-                if (pUnit.isValid() && pUnit.belongsTo(m_player) && !pUnit.bSelected) {
-                    pUnit.bSelected = true;
+                if (pUnit.isValid() && pUnit.belongsTo(m_player) && !pUnit.isSelected()) {
+                    pUnit.select();
                     if (pUnit.isInfantryUnit()) {
                         infantrySelected = true;
                     }
