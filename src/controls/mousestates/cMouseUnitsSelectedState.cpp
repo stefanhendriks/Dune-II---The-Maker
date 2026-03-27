@@ -475,7 +475,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
 
     // go to repair state
     if (event.hasKey(SDL_SCANCODE_R)) {
-        if (m_player->getSelectedUnits().empty()) {
+        if (m_selectedUnits.empty()) {
             m_context->setMouseState(MOUSESTATE_REPAIR);
         } else {
             for (auto id: m_selectedUnits) {
