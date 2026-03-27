@@ -462,7 +462,6 @@ void cUnit::unitWillNoLongerBeInteractingWithStructure() const
     }
 }
 
-
 /**
  * Returns true when it belongs to a player. If removeMe flag is set, it does not care if it is dead yet; and will return true.
  * Meaning, a dead unit still is valid when removeMe flag is set. This is usually done when a unit is in the process of
@@ -3813,6 +3812,15 @@ void cUnit::deselect() {
     this->bSelected = false;
 }
 
+void cUnit::select() {
+    this->bSelected = true;
+}
+
+bool cUnit::isSelected() const {
+    return bSelected;
+}
+
+
 std::string cUnit::getHarvesterStatusForMessageBar()
 {
     s_UnitInfo &info = getUnitInfo();
@@ -3960,7 +3968,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     newUnit.setHp(sUnitType.hp * hpPercentage);
     newUnit.iGoalCell = iCll;
 
-    newUnit.bSelected = false;
+    newUnit.deselect();
     newUnit.bHovered = false;
 
     newUnit.TIMER_bored = RNG::rnd(3000);

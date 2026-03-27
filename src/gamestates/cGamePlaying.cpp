@@ -296,7 +296,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     if (event.hasKey(SDL_SCANCODE_D)) {
         for (int i = 0; i < game.m_Units.size(); i++) {
             cUnit &u = game.getUnit(i);
-            if (u.bSelected && u.iType == MCV && u.getPlayer()->isHuman()) {
+            if (u.isSelected() && u.iType == MCV && u.getPlayer()->isHuman()) {
                 bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
                 if (canPlace) {
                     int iLocation = u.getCell();
