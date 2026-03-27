@@ -46,6 +46,7 @@ public:
     void onFocus() override;
     void onBlur() override;
 
+    void selectSameUnitsOnScreen(int iType);
 private:
     // A list of unit id's that we have selected
     std::vector<int> m_selectedUnits;
