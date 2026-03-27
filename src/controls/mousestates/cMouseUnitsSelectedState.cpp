@@ -487,6 +487,14 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
                     spawnParticle(D2TM_PARTICLE_MOVE);
                 }
             }
+            // @Mira Another loop. I'm looking into how to rewrite this code more elegantly.
+            std::erase_if(m_selectedUnits, [&](auto id) {
+                cUnit &pUnit = game.getUnit(id);
+                if (pUnit.isEligibleForRepair()) {
+                    return true; // remove from selection
+                }
+                    return false; // keep in selection
+            });
         }
     }
 
