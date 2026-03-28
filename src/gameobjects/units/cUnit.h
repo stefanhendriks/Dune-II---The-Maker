@@ -588,7 +588,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
 // int CREATE_PATH(int iUnitId, int iPathCountUnits);
 
-int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
+// int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 int UNIT_find_harvest_spot(int id);
 

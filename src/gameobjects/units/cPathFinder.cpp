@@ -511,3 +511,76 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     return -1;
 }
 
+
+// find
+int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
+{
+    //
+    int iSize = 1;
+    int iStartX = game.m_map.getCellX(iCll) - iSize;
+    int iStartY = game.m_map.getCellY(iCll) - iSize;
+    int iEndX = game.m_map.getCellX(iCll) + iSize;
+    int iEndY = game.m_map.getCellX(iCll) + iSize;
+
+    float dDistance = 9999;
+
+    int ix = game.m_map.getCellX(iMyCell);
+    int iy = game.m_map.getCellY(iMyCell);
+
+    bool bSearch = true;
+
+    int iTheClosest = -1;
+
+    while (bSearch) {
+        iStartX = game.m_map.getCellX(iCll) - iSize;
+        iStartY = game.m_map.getCellY(iCll) - iSize;
+        iEndX = game.m_map.getCellX(iCll) + iSize;
+        iEndY = game.m_map.getCellY(iCll) + iSize;
+
+        // Fix boundaries
+        cPoint::split(iStartX, iStartY) = game.m_map.fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
+        cPoint::split(iEndX, iEndY) = game.m_map.fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
+
+        // search
+        for (int iSX = iStartX; iSX < iEndX; iSX++)
+            for (int iSY = iStartY; iSY < iEndY; iSY++) {
+                // find an empty cell
+                int cll = game.m_map.getGeometry().getCellWithMapDimensions(iSX, iSY);
+
+                float dDistance2 = ABS_length(iSX, iSY, ix, iy);
+
+                int idOfStructureAtCell = game.m_map.getCellIdStructuresLayer(cll);
+                int idOfUnitAtCell = game.m_map.getCellIdUnitLayer(cll);
+
+                if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
+                    // depending on unit type, do not choose walls (or mountains)
+                    int cellType = game.m_map.getCellType(cll);
+                    if (game.unitInfos[game.getUnit(iID).iType].infantry) {
+                        if (cellType == TERRAIN_MOUNTAIN)
+                            continue; // do not use this one
+                    }
+
+                    if (cellType == TERRAIN_WALL)
+                        continue; // do not use this one
+
+                    if (dDistance2 < dDistance) {
+                        dDistance = dDistance2;
+                        iTheClosest = cll;
+                    }
+                }
+            }
+
+        if (iTheClosest > -1)
+            return iTheClosest;
+
+        iSize++;
+
+        if (iSize > 9) {
+            bSearch = false;
+            break; // get out
+        }
+    }
+
+    // fail
+    return iCll;
+}
