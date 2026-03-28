@@ -586,7 +586,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage);
 
-int CREATE_PATH(int iUnitId, int iPathCountUnits);
+// int CREATE_PATH(int iUnitId, int iPathCountUnits);
 
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
