@@ -366,7 +366,7 @@ void cMap::thinkAboutRespawningWorms()
                 continue;
             }
             logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
-            UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
+            cUnits::UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
             break;
         }
     }

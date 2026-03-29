@@ -188,7 +188,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
                         iTpe, iPlr, iStartCell, iCll));
 
     // STEP 2: create carryall
-    int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true, isReinforcement);
+    int iUnit = cUnits::UNIT_CREATE(iStartCell, CARRYALL, iPlr, true, isReinforcement);
     if (iUnit < 0) {
         // cannot create carry-all!
         logbook("ERROR (reinforce): Cannot create CARRYALL unit.");

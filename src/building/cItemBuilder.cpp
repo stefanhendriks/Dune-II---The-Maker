@@ -242,7 +242,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 if (structureToDeployUnit > -1) {
                     cAbstractStructure *pStructureToDeploy = game.m_pStructures[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
-                    int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
+                    int unitId = cUnits::UNIT_CREATE(pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
                     if (unitId > -1) {
                         int rallyPoint = pStructureToDeploy->getRallyPoint();
                         if (rallyPoint > -1) {
@@ -293,7 +293,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                             bool passable = game.m_map.isCellPassableForFootUnits(iCll);
 
                             if (passable) {
-                                UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
+                                cUnits::UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
                             }
                             else {
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
@@ -412,7 +412,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
         int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
         if (cell > -1) {
             pStructureToDeploy->setAnimating(true); // animate
-            int unitId = UNIT_CREATE(cell, buildIdToProduce, m_player->getId(), false);
+            int unitId = cUnits::UNIT_CREATE(cell, buildIdToProduce, m_player->getId(), false);
             if (unitId > -1) {
                 int rallyPoint = pStructureToDeploy->getRallyPoint();
                 if (rallyPoint > -1) {

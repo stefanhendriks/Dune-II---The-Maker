@@ -1134,7 +1134,7 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     for (int i = 0; i < amountOfUnitsToSpawn; i++) {
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
-        UNIT_CREATE(
+        cUnits::UNIT_CREATE(
             m_map.getGeometry().makeCell(randomX, randomY),
             unitTypeToSpawn,
             event.player->getId(),
@@ -1572,7 +1572,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     // SPAWN ENEMY AIR UNIT
     if (event.hasKey(SDL_SCANCODE_F8)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
-        UNIT_CREATE(
+        cUnits::UNIT_CREATE(
             mc,
             ORNITHOPTER,
             1,
