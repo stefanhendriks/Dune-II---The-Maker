@@ -1190,7 +1190,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
     }
 
     if (iController > -1) {
-        cUnits::UNIT_CREATE(iCell, iType, iController, true);
+        cUnits::unitCreate(iCell, iType, iController, true);
     }
     return bSetUpPlayers;
 }
