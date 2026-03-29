@@ -568,23 +568,23 @@ private:
 };
 
 
-int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
+// int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
 
-/**
- * creates a unit, the isReinforcement flag is true when the unit is created for / by reinforcements. This
- * flag will make sure to trigger a different event type (not CREATED, but REINFORCED) so that we can distinguish
- * between them.
- *
- * @param iCll
- * @param unitType
- * @param iPlayer
- * @param bOnStart
- * @param isReinforcement
- * @return
- */
-int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
+// /**
+//  * creates a unit, the isReinforcement flag is true when the unit is created for / by reinforcements. This
+//  * flag will make sure to trigger a different event type (not CREATED, but REINFORCED) so that we can distinguish
+//  * between them.
+//  *
+//  * @param iCll
+//  * @param unitType
+//  * @param iPlayer
+//  * @param bOnStart
+//  * @param isReinforcement
+//  * @return
+//  */
+// int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
 
-int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage);
+// int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage);
 
 // int CREATE_PATH(int iUnitId, int iPathCountUnits);
 

@@ -10,9 +10,12 @@
 
   */
 
-#include "cUnits.h"
-#include "cUnit.h"
+#include "gameobjects/units/cUnit.h"
+#include "gameobjects/units/cUnits.h"
+#include "include/d2tmc.h"
+#include "game/cGame.h"
 #include "utils/cLog.h"
+#include "utils/RNG.hpp"
 #include <format>
 
 cUnits::cUnits() {
@@ -68,4 +71,167 @@ int cUnits::getValidUnitsCount() const {
         }
     }
     return count;
+}
+
+
+
+// return new valid ID
+int UNIT_NEW()
+{
+    for (int i = 0; i < game.m_Units.size(); i++)
+        if (!game.getUnit(i).isValid())
+            return i;
+
+    return -1; // NONE
+}
+
+/**
+ * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ * Assumes the creation of a unit is NOT a reinforcement.
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart (if true, then AI will *not* move unit away immediately to a nearby random position)
+ * @return
+ */
+int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart)
+{
+    return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, false);
+}
+
+/**
+ * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ *
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @param hpPercentage multiplies with hp of unit type for starting hp. 1.0 means 100% health
+ * @param isReinforement flag to set on event
+ * @return
+ */
+int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
+    if (!game.m_map.isValidCell(iCll)) {
+        logbook("UNIT_CREATE: Invalid cell as param");
+        return -1;
+    }
+
+    s_UnitInfo &sUnitType = game.unitInfos[unitType];
+
+    // check if unit already exists on location
+    if (!sUnitType.airborn && game.m_map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
+        return -1; // cannot place unit, structure exists at location
+    }
+
+    int mapIdIndex = MAPID_UNITS;
+    if (sUnitType.airborn) {
+        mapIdIndex = MAPID_AIR;
+    }
+    else if (unitType == SANDWORM) {
+        mapIdIndex = MAPID_WORMS;
+    }
+
+    // check if unit already exists on location
+    if (game.m_map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
+        return -1; // cannot place unit
+    }
+
+    // check if placed on invalid terrain type
+    if (unitType == SANDWORM) {
+        if (!game.m_map.isCellPassableForWorm(iCll)) {
+            return -1;
+        }
+    }
+
+    bool validCell = game.m_map.canDeployUnitTypeAtCell(iCll, unitType);
+    if (!validCell) {
+        return -1;
+    }
+
+    int iNewId = UNIT_NEW();
+
+    if (iNewId < 0) {
+        logbook("UNIT_CREATE:Could not find new unit index");
+        return -1;
+    }
+
+    cUnit &newUnit = game.getUnit(iNewId);
+    newUnit.init(iNewId);
+
+    newUnit.setCell(iCll);
+    newUnit.iBodyFacing = RNG::rnd(8);
+    newUnit.iHeadFacing = RNG::rnd(8);
+
+    newUnit.iBodyShouldFace = newUnit.iBodyFacing;
+    newUnit.iHeadShouldFace = newUnit.iHeadFacing;
+
+    newUnit.iType = unitType;
+    newUnit.setHp(sUnitType.hp * hpPercentage);
+    newUnit.iGoalCell = iCll;
+
+    newUnit.deselect();
+    newUnit.bHovered = false;
+
+    newUnit.TIMER_bored = RNG::rnd(3000);
+    newUnit.TIMER_guard = 20 + RNG::rnd(70);
+    newUnit.recreateDimensions();
+
+    // set (Correct!?) player id, when type is SANDWORM (!?)
+    if (unitType == SANDWORM) {
+        if (iPlayer != AI_WORM) {
+            newUnit.log("ERROR: Wanted to create sandworm for player other than AI_WORM!?");
+        }
+        iPlayer = AI_WORM;
+    }
+
+    newUnit.iPlayer = iPlayer;
+
+    // AI player immediately moves unit away
+    if (iPlayer > 0 && iPlayer < AI_WORM && !sUnitType.airborn && !bOnStart) {
+        int iF = UNIT_FREE_AROUND_MOVE(iNewId);
+
+        if (iF > -1) {
+            newUnit.log("Order move #2");
+            game.getUnit(iNewId).move_to(iF);
+        }
+    }
+
+    // Put on map too!:
+    game.m_map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
+
+    newUnit.updateCellXAndY();
+
+    game.m_map.clearShroud(iCll, sUnitType.sight, iPlayer);
+
+    s_GameEvent event {
+        .eventType = eGameEventType::GAME_EVENT_CREATED,
+        .entityType = eBuildType::UNIT,
+        .entityID = iNewId,
+        .player = newUnit.getPlayer(),
+        .entitySpecificType = unitType,
+        .atCell = -1,
+        .isReinforce = isReinforcement
+    };
+
+    game.onNotifyGameEvent(event);
+
+    return iNewId;
+}
+
+/**
+ * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ *
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @param isReinforement flag to set on event
+ * @return
+ */
+int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
+{
+    return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
 }
