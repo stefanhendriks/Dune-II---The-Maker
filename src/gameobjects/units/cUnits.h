@@ -86,6 +86,17 @@ public:
     auto end() const { return m_units.end(); }
 
     /**
+     * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+     * Assumes the creation of a unit is NOT a reinforcement.
+     *
+     * @param iCll
+     * @param unitType
+     * @param iPlayer
+     * @param bOnStart (if true, then AI will *not* move unit away immediately to a nearby random position)
+     * @return
+     */
+    static int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
+    /**
     * creates a unit, the isReinforcement flag is true when the unit is created for / by reinforcements. This
     * flag will make sure to trigger a different event type (not CREATED, but REINFORCED) so that we can distinguish
     * between them.
@@ -97,8 +108,19 @@ public:
     * @param isReinforcement
     * @return
     */
-    static int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
     static int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
+    /**
+     * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+     *
+     *
+     * @param iCll
+     * @param unitType
+     * @param iPlayer
+     * @param bOnStart
+     * @param hpPercentage multiplies with hp of unit type for starting hp. 1.0 means 100% health
+     * @param isReinforement flag to set on event
+     * @return
+     */
     static int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage);
 
 

@@ -73,10 +73,8 @@ int cUnits::getValidUnitsCount() const {
     return count;
 }
 
-
-
 // return new valid ID
-int UNIT_NEW()
+static int UNIT_NEW()
 {
     for (int i = 0; i < game.m_Units.size(); i++)
         if (!game.getUnit(i).isValid())
@@ -85,33 +83,11 @@ int UNIT_NEW()
     return -1; // NONE
 }
 
-/**
- * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
- * Assumes the creation of a unit is NOT a reinforcement.
- *
- * @param iCll
- * @param unitType
- * @param iPlayer
- * @param bOnStart (if true, then AI will *not* move unit away immediately to a nearby random position)
- * @return
- */
 int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart)
 {
     return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, false);
 }
 
-/**
- * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
- *
- *
- * @param iCll
- * @param unitType
- * @param iPlayer
- * @param bOnStart
- * @param hpPercentage multiplies with hp of unit type for starting hp. 1.0 means 100% health
- * @param isReinforement flag to set on event
- * @return
- */
 int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
     if (!game.m_map.isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
