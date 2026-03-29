@@ -728,7 +728,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         const s_PlaceResult &result = pPlayer.canPlaceStructureAt(pPlayer.getFocusCell(), CONSTYARD);
         if (!result.success) {
             // when failure, create mcv instead
-            cUnits::UNIT_CREATE(pPlayer.getFocusCell(), MCV, p, true);
+            cUnits::unitCreate(pPlayer.getFocusCell(), MCV, p, true);
         }
         else {
             pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
@@ -771,7 +771,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                        maxRange,
                        iPlayerUnitType);
 
-            cUnits::UNIT_CREATE(cell, iPlayerUnitType, p, true);
+            cUnits::unitCreate(cell, iPlayerUnitType, p, true);
 
             cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
                                         std::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
@@ -840,7 +840,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 continue;
             }
             logbook(std::format("Spawning sandworm at {}", cell));
-            cUnits::UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
+            cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
             wormCell = cell; // start from here to spawn new worm
             worms--;
             failures = 0; // reset failures

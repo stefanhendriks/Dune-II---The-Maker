@@ -84,7 +84,7 @@ void cStarPort::think_deploy()
                 int rallyPoint = getRallyPoint();
 
                 if (cellToDeployTo >= 0) {
-                    int id = cUnits::UNIT_CREATE(cellToDeployTo, item->getBuildId(), iPlayer, true);
+                    int id = cUnits::unitCreate(cellToDeployTo, item->getBuildId(), iPlayer, true);
                     if (rallyPoint > -1) {
                         game.getUnit(id).move_to(rallyPoint, -1, -1);
                     }

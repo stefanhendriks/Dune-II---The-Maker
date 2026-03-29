@@ -74,7 +74,7 @@ int cUnits::getValidUnitsCount() const {
 }
 
 // return new valid ID
-static int UNIT_NEW()
+static int unitNewID()
 {
     for (int i = 0; i < game.m_Units.size(); i++)
         if (!game.getUnit(i).isValid())
@@ -83,12 +83,12 @@ static int UNIT_NEW()
     return -1; // NONE
 }
 
-int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart)
+int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart)
 {
-    return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, false);
+    return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
 }
 
-int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
+int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
     if (!game.m_map.isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
@@ -126,7 +126,7 @@ int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool
         return -1;
     }
 
-    int iNewId = UNIT_NEW();
+    int iNewId = unitNewID();
 
     if (iNewId < 0) {
         logbook("UNIT_CREATE:Could not find new unit index");
@@ -207,7 +207,7 @@ int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool
  * @param isReinforement flag to set on event
  * @return
  */
-int cUnits::UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
+int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
 {
-    return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
+    return unitCreate(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
 }

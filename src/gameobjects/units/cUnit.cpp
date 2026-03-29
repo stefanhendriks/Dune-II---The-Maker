@@ -1599,7 +1599,7 @@ void cUnit::thinkFast_move_airUnit()
             if (canDeployAtCell && isWithinMapBoundaries) {
                 // drop unit
                 if (iNewUnitType > -1) {
-                    int id = cUnits::UNIT_CREATE(iCell, iNewUnitType, iPlayer, true, isReinforcement);
+                    int id = cUnits::unitCreate(iCell, iNewUnitType, iPlayer, true, isReinforcement);
 
                     if (id > -1) {
                         game.m_map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
