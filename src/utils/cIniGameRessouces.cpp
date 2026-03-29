@@ -1239,6 +1239,7 @@ void IniGameRessources::install_structures()
         structureInfo.canAttackGroundUnits = false;
         structureInfo.uponDestructionSpawnUnitAmountMin = 0;
         structureInfo.uponDestructionSpawnUnitAmountMax = 0;
+        structureInfo.uponDestructionSpawnUnitType = -1;
         strcpy(structureInfo.name, "Unknown");
     }
 

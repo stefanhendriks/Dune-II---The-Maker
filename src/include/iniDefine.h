@@ -111,6 +111,7 @@
 #define WORD_GROUND_BULLET 200  // game.ini (blocked by mountains, walls, structures)
 #define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN 201  // game.ini (structures, how many units to spawn if destroyed? (min))
 #define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX 202  // game.ini (structures, how many units to spawn if destroyed? (max))
+#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE  203  // game.ini (structures, which type of unit to spawn if destroyed?)
 
 
 #define WORD_BLOOMTIMERDURATION 241 // game.ini BLOOM TIMER DURATION

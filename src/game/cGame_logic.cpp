@@ -1115,10 +1115,15 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     }
 
     const auto structureInfo = structureInfos[event.entitySpecificType];
-    int minAmountOfSoldiersToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMin;
-    int maxAmountOfSoldiersToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMax;
+    int unitTypeToSpawn = structureInfo.uponDestructionSpawnUnitType;
+    if (unitTypeToSpawn < 0) {
+        return;
+    }
 
-    int amountOfSoldiersToSpawn = RNG::genInt(minAmountOfSoldiersToSpawnPotentially, maxAmountOfSoldiersToSpawnPotentially);
+    int minAmountOfUnitsToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMin;
+    int maxAmountOfUnitsToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMax;
+
+    int amountOfUnitsToSpawn = RNG::genInt(minAmountOfUnitsToSpawnPotentially, maxAmountOfUnitsToSpawnPotentially);
 
     int widthInCells = structureInfo.bmp_width / 32;
     int heightInCells = structureInfo.bmp_height / 32;
@@ -1126,12 +1131,12 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     int cellX = m_map.getGeometry().getCellX(event.atCell);
     int cellY = m_map.getGeometry().getCellY(event.atCell);
 
-    for (int i = 0; i < amountOfSoldiersToSpawn; i++) {
+    for (int i = 0; i < amountOfUnitsToSpawn; i++) {
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         UNIT_CREATE(
             m_map.getGeometry().makeCell(randomX, randomY),
-            SOLDIER, // TODO(https://github.com/stefanhendriks/Dune-II---The-Maker/issues/755) - Make this configurable via game.ini
+            unitTypeToSpawn,
             event.player->getId(),
             false,
             false,
