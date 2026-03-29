@@ -546,15 +546,16 @@ void cMouseUnitsSelectedState::onBlur()
     m_mouse->resetDragViewportInteraction();
 }
 
-void cMouseUnitsSelectedState::selectSameUnitsOnScreen(int iIDType)
+void cMouseUnitsSelectedState::selectSameUnitsOnScreen(int unitType)
 {
     const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(*game.m_mapViewport);
     std::vector<int> sameUnits =std::vector<int>();
     for (int i : ids) {
         cUnit &pUnit = game.getUnit(i);
-        if (pUnit.iType == iIDType) {
+        if (pUnit.iType == unitType) {
             sameUnits.push_back(i);
         }
     }
     m_player->selectUnits(sameUnits);
+    m_selectedUnits = m_player->getSelectedUnits();
 }
