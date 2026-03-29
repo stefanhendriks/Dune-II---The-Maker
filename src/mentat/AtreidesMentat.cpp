@@ -21,6 +21,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withRect(*leftButton)        
             .withLabel("Repeat")
             .withTexture(gfxmentat->getTexture(BTN_REPEAT))
+            .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
             .build();
@@ -29,6 +30,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
+            .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::changeStateFromMentat()");
