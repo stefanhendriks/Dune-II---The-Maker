@@ -459,6 +459,14 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         }
     }
     // force move?
+
+    bool controlPressed = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
+    if (controlPressed && event.hasKey(SDL_SCANCODE_Z)) {
+        if (m_selectedUnits.size() == 1) {
+            cUnit &pUnit = game.getUnit(m_selectedUnits[0]);
+            selectSameUnitsOnScreen(pUnit.iType);
+        }
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
@@ -513,13 +521,6 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
             pUnit.deselect();
         }
         m_selectedUnits.clear();
-    }
-
-    if (event.hasKey(SDL_SCANCODE_B)) {
-        if (m_selectedUnits.size()==1) {
-            cUnit &pUnit = game.getUnit(m_selectedUnits[0]);
-            selectSameUnitsOnScreen(pUnit.iType);
-        }
     }
 }
 
