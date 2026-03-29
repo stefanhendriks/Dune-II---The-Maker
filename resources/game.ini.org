@@ -462,6 +462,7 @@ FixPoints=1
 BuildTime=200
 PowerDrain=80
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=3
 UponDestructionSpawnUnitAmountMax=5
 
@@ -475,6 +476,7 @@ FixPoints=3
 BuildTime=34
 PowerDrain=0
 PowerGive=100
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -488,6 +490,7 @@ FixPoints=2
 BuildTime=130
 PowerDrain=30
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=3
 
@@ -501,6 +504,7 @@ FixPoints=3
 BuildTime=66
 PowerDrain=20
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -515,6 +519,7 @@ BuildTime=0
 PowerDrain=0
 PowerGive=1
 HasConcrete=False
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -528,6 +533,7 @@ FixPoints=5
 BuildTime=28
 PowerDrain=5
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -541,6 +547,7 @@ FixPoints=2
 BuildTime=110
 PowerDrain=35
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=3
 
@@ -554,6 +561,7 @@ FixPoints=2
 BuildTime=110
 PowerDrain=60
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -567,6 +575,7 @@ FixPoints=5
 BuildTime=60
 PowerDrain=20
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=3
 
@@ -580,6 +589,7 @@ FixPoints=3
 BuildTime=60
 PowerDrain=30
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -593,6 +603,7 @@ FixPoints=3
 BuildTime=65
 PowerDrain=30
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=3
 
@@ -606,6 +617,7 @@ FixPoints=3
 BuildTime=94
 PowerDrain=20
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -619,6 +631,7 @@ FixPoints=4
 BuildTime=62
 PowerDrain=10
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=1
 UponDestructionSpawnUnitAmountMax=2
 
@@ -632,6 +645,7 @@ FixPoints=3
 BuildTime=110
 PowerDrain=50
 PowerGive=0
+UponDestructionSpawnUnitType=SOLDIER
 UponDestructionSpawnUnitAmountMin=2
 UponDestructionSpawnUnitAmountMax=4
 
