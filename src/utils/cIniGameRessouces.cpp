@@ -1173,7 +1173,7 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
     game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
-    if (!game.isDebugMode()) { //@mira: cheat mode
+    if (!game.isCheatMode()) {
         game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
     strcpy(game.upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
@@ -1190,7 +1190,7 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
     game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
-    if (!game.isDebugMode()) { //@mira: cheat mode
+    if (!game.isCheatMode()) {
         game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
     strcpy(game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
