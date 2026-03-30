@@ -83,10 +83,10 @@ static int unitNewID()
     return -1; // NONE
 }
 
-int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart)
-{
-    return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
-}
+// int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart)
+// {
+//     return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
+// }
 
 int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
     if (!game.m_map.isValidCell(iCll)) {
@@ -207,7 +207,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
  * @param isReinforement flag to set on event
  * @return
  */
-int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
-{
-    return unitCreate(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
-}
+// int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement)
+// {
+//     return unitCreate(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
+// }
