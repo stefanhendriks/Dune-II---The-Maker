@@ -1401,10 +1401,9 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
     float volumeFactor = m_mapCamera->factorZoomLevel(0.7f);
     int iVolFactored = volumeFactor * volume;
 
-    if (game.isDebugMode()) {
-        logbook(std::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
-                            iDistance, distanceNormalized, maxDistance, m_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_SOUND, "Play sound with distance",
+        std::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+            iDistance, distanceNormalized, maxDistance, m_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
 
     playSound(sampleId, iVolFactored);
 }

@@ -2,6 +2,7 @@
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
+#include "utils/cLog.h"
 #include "definitions.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
@@ -10,9 +11,8 @@
 // Constructor
 cWindTrap::cWindTrap()
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("(cWindTrap)(ID {}) Constructor", this->id));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting cWindTrap", 
+                std::format("(cWindTrap)(ID {}) Constructor", this->id));
     // other variables (class specific)
     iFade = RNG::rnd(63);
     bFadeDir = true;
@@ -28,9 +28,8 @@ int cWindTrap::getType() const
 
 cWindTrap::~cWindTrap()
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("(~cWindTrap)(ID {}) Destructor", this->id));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Destroying structure", 
+            std::format("(cWindTrap)(ID {}) Destructor", this->id));
 }
 
 void cWindTrap::thinkFast()

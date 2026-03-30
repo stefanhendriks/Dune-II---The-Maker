@@ -1,5 +1,6 @@
 #include "game/cGameConditionChecker.h"
 #include "game/cGame.h"
+#include "utils/cLog.h"
 #include "include/d2tmc.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
@@ -21,17 +22,15 @@ void cGameConditionChecker::missionInit()
 
 void cGameConditionChecker::setWinFlags(int value)
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("Changing m_winFlags from {} to {}", m_winFlags, value));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_GAMESTATE, "Setting win flags", 
+                std::format("Changing m_winFlags from {} to {}", m_winFlags, value));
     m_winFlags = value;
 }
 
 void cGameConditionChecker::setLoseFlags(int value)
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("Changing m_loseFlags from {} to {}", m_loseFlags, value));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_GAMESTATE, "Setting win flags", 
+                std::format("Changing m_loseFlags from {} to {}", m_winFlags, value));
     m_loseFlags = value;
 }
 

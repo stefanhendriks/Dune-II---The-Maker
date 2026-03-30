@@ -1,5 +1,6 @@
 #include "cBuildingListItem.h"
 
+#include "utils/cLog.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "sidebar/cBuildingList.h"
@@ -33,7 +34,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     TIMER_progressFrame = 0.0f;
     TIMER_flashing = 500;
 
-    timerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    timerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap; //@mira: cheat mode
 
     myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
@@ -42,12 +43,9 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
         creditsPerProgressTime = (float)this->cost / (float)totalBuildTime;
     }
 
-    if (game.isDebugMode()) {
-        logbook(std::format("cBuildingListItem constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
-                            getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
-
-    }
-
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "cBuildingListItem",
+        std::format("constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
+            getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
 }
 
 cBuildingListItem::~cBuildingListItem()
