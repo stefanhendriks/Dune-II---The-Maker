@@ -17,6 +17,8 @@ std::string getLogLevelString(eLogLevel level)
             return "WARN";
         case LOG_ERROR:
             return "ERROR";
+        case LOG_DEBUG:
+            return "DEBUG";
         case LOG_TRACE:
             return "TRACE";
         case LOG_INFO:
@@ -74,6 +76,8 @@ std::string getLogComponentString(eLogComponent component)
             return "REGIONINI";
         case COMP_PLAYER:
             return "PLAYER";
+        case COMP_GAMESTATE:
+            return "GAMESTATE";
     }
     return "UNIDENTIFIED";
 }

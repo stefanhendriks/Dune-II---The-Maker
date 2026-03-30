@@ -7,6 +7,7 @@
 enum eLogLevel {
     LOG_INFO,
     LOG_TRACE,
+    LOG_DEBUG,
     LOG_WARN,
     LOG_ERROR,
     LOG_FATAL
@@ -35,7 +36,8 @@ enum eLogComponent {
     COMP_ALFONT, 		/** ALFONT library specific **/
     COMP_SOUND, 		/** Sound related **/
     COMP_REGIONINI,		/** Used for regions **/
-    COMP_PLAYER			/** Player related **/
+    COMP_PLAYER,			/** Player related **/
+    COMP_GAMESTATE			/** Used for game state changes **/
 };
 
 enum eLogOutcome {
