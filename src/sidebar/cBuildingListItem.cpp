@@ -34,7 +34,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     TIMER_progressFrame = 0.0f;
     TIMER_flashing = 500;
 
-    timerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap; //@mira: cheat mode
+    timerCap = game.isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
