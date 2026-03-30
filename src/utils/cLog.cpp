@@ -78,6 +78,8 @@ std::string getLogComponentString(eLogComponent component)
             return "PLAYER";
         case COMP_GAMESTATE:
             return "GAMESTATE";
+        case COMP_CHEATS:
+            return "CHEATS";
     }
     return "UNIDENTIFIED";
 }
