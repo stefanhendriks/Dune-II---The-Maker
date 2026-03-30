@@ -233,6 +233,10 @@ public:
         return m_debugMode;
     }
 
+    bool isCheatMode() {
+        return m_cheatMode;
+    }
+
     void applySettings(GameSettings *gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
@@ -269,7 +273,8 @@ private:
     /**
      * Variables start here
      */
-    bool m_debugMode;               // ...
+    bool m_debugMode = false;
+    bool m_cheatMode = false;
 
     // if true, then turrets won't do anything on low power (both gun and rocket turrets)
     bool m_turretsDownOnLowPower;
