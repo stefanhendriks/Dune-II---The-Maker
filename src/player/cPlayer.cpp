@@ -113,21 +113,21 @@ void cPlayer::clearUnitTypeBitmaps()
 {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
-            if (game.isDebugMode()) {
+            // if (game.isDebugMode()) {
 //                char msg[255];
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
 //                log(msg);
-            }
+            // }
             delete (bmp_unit[i]);
         }
         bmp_unit[i] = nullptr;
 
         if (bmp_unit_top[i]) {
-            if (game.isDebugMode()) {
+            // if (game.isDebugMode()) {
 //                char msg[255];
 //                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
 //                log(msg);
-            }
+            // }
             delete (bmp_unit_top[i]);
         }
         bmp_unit_top[i] = nullptr;

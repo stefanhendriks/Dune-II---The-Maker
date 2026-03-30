@@ -653,12 +653,9 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
             if (blooms[iB] > -1) {
                 //   map.cell[blooms[iB]].tile = BLOOM;
 
-                if (game.isDebugMode()) {
-                    logbook(std::format("[SCENARIO] Placing spice BLOOM at cell : {}", blooms[iB]));
-                }
-
+                cLogger::getInstance()->log(LOG_DEBUG, COMP_SCENARIOINI, "[SCENARIO]", 
+                    std::format("Placing spice BLOOM at cell : {}", blooms[iB]));
                 mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
-
             }
         }
         // At this point, show list of unit types
@@ -666,12 +663,10 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
         for (int iB = 0; iB < 30; iB++) {
             // when
             if (fields[iB] > -1) {
-                if (game.isDebugMode()) {
-                    logbook(std::format("[SCENARIO] Placing spice FIELD at cell : {}", fields[iB]));
-                }
+                cLogger::getInstance()->log(LOG_DEBUG, COMP_SCENARIOINI, "[SCENARIO]", 
+                    std::format("Placing spice FIELD at cell : {}", fields[iB]));
                 mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
             }
-
         }
 
         logbook("[SCENARIO] Done reading");

@@ -148,9 +148,8 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     // calculate actual health
     float fHealth = hp * fPercent;
 
-    if (game.isDebugMode()) {
-        logbook(std::format("Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting win flags", 
+            std::format("Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth));
 
     int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;
 

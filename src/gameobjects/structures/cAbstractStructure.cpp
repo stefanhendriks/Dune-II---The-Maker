@@ -14,6 +14,7 @@
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
+#include "utils/cLog.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
@@ -78,17 +79,15 @@ cAbstractStructure::cAbstractStructure() :
 
     dead = false;
 
-    if (game.isDebugMode()) {
-        logbook(std::format("(cAbstractStructure)(ID {}) Constructor", this->id));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting win flags", 
+                std::format("(cAbstractStructure)(ID {}) Constructor", this->id));
 }
 
 cAbstractStructure::~cAbstractStructure()
 {
     // destructor
-    if (game.isDebugMode()) {
-        logbook(std::format("(cAbstractStructure)(ID {}) Destructor", this->id));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting win flags", 
+                std::format("(cAbstractStructure)(ID {}) Destructor", this->id));
     iHitPoints = -1;
     iCell = -1;
     posX = -1;

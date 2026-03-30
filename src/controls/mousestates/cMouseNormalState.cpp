@@ -12,6 +12,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 
+#include "utils/cLog.h"
 #include "data/gfxdata.h"
 
 #include <format>
@@ -252,9 +253,8 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
 
 void cMouseNormalState::setState(eMouseNormalState newState)
 {
-    if (game.isDebugMode()) {
-        logbook(std::format("Setting state from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
-    }
+    cLogger::getInstance()->log(LOG_DEBUG, COMP_GAMESTATE, "Setting state", 
+                std::format("from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
     m_state = newState;
 }
 

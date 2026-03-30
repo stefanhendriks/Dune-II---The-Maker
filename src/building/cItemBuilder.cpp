@@ -77,7 +77,7 @@ cItemBuilder::~cItemBuilder()
  */
 int cItemBuilder::getTimerCap(cBuildingListItem *item)
 {
-    int iTimerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    int iTimerCap = game.isDebugMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap; //@mira: cheat mode
 
     // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {
