@@ -95,7 +95,7 @@ public:
      * @param bOnStart (if true, then AI will *not* move unit away immediately to a nearby random position)
      * @return
      */
-    static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart);
+    // static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart);
     /**
     * creates a unit, the isReinforcement flag is true when the unit is created for / by reinforcements. This
     * flag will make sure to trigger a different event type (not CREATED, but REINFORCED) so that we can distinguish
@@ -108,7 +108,7 @@ public:
     * @param isReinforcement
     * @return
     */
-    static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
+    // static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
     /**
      * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
      *
@@ -121,7 +121,7 @@ public:
      * @param isReinforement flag to set on event
      * @return
      */
-    static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage);
+    static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage =1.0f);
 
 
 private:
