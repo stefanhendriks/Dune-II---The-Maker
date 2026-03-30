@@ -29,6 +29,9 @@ void IniGameRessources::install_units()
     // So, the higher the number, the faster it is.
 
 
+
+    // Unit        : <name>
+    // Description : <description>
     // some things for ALL unit types; initialization
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         s_UnitInfo &unitInfo = game.unitInfos[i];
@@ -533,11 +536,6 @@ void IniGameRessources::install_units()
     game.unitInfos[SANDWORM].squish = false;
     game.unitInfos[SANDWORM].canGuard = true;
     game.unitInfos[SANDWORM].canAttackUnits = true;
-
-
-    // Unit        : <name>
-    // Description : <description>
-
 }
 
 void IniGameRessources::install_particles()
@@ -1066,7 +1064,6 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = eListType::LIST_CONSTYARD;
     game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
     game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
-
     strcpy(game.upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
@@ -1083,7 +1080,6 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = eListType::LIST_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
     game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
-
     strcpy(game.upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
 
     // HEAVYFACTORY UPGRADES:
@@ -1102,7 +1098,6 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = eListType::LIST_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
-
     strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
 
     // Harkonnen/Atreides only
@@ -1119,7 +1114,6 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = eListType::LIST_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
-
     strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
 
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
@@ -1135,7 +1129,6 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = eListType::LIST_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
-
     strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
 
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
@@ -1151,7 +1144,6 @@ void IniGameRessources::install_upgrades()
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = eListType::LIST_UNITS;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
-
     strcpy(game.upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
@@ -1202,7 +1194,6 @@ void IniGameRessources::install_upgrades()
         game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
     strcpy(game.upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
-
 }
 
 
@@ -1541,10 +1532,6 @@ void IniGameRessources::install_structures()
     game.structureInfos[RTURRET].canAttackGroundUnits = true;
     game.structureInfos[RTURRET].fireRate = 350;
     strcpy(game.structureInfos[RTURRET].name, "Rocket Turret");
-
-    // Structure    : Windtrap
-    // Description  : <none>
-
 }
 
 
