@@ -147,6 +147,11 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string &e
         return;
     }
 
+    if (level == LOG_DEBUG && !m_debugMode) {
+        // debug level is only in debug mode
+        return;
+    }
+
     auto diffTime = getTimeInMilisDifference();
 
     // log line starts with time
