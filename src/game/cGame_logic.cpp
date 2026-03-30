@@ -1371,6 +1371,11 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
             m_windowed = true;
         }
     }
+
+    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_C)) {
+        m_cheatMode = true;
+        cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode enabled", "All cheats are now enabled. Have fun!");
+    }
 }
 
 void cGame::playSound(int sampleId)
