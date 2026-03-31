@@ -81,6 +81,7 @@
 
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
+#include "map/cMapCamera.h"
 
 #include <format>
 

@@ -8,6 +8,7 @@
 #include "game/cGame.h"
 #include "drawers/cMiniMapDrawer.h"
 #include "player/cPlayer.h"
+#include "map/cMapCamera.h"
 
 cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()
 {

@@ -11,7 +11,7 @@
   */
 
 #include "cMap.h"
-
+#include "gameobjects/structures/cAbstractStructure.h"
 #include "cMapCamera.h"
 #include "cMapEditor.h"
 #include "d2tmc.h"

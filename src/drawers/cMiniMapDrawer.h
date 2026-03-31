@@ -7,11 +7,15 @@
 
 #pragma once
 
-#include "map/cMap.h"
-#include "map/cMapCamera.h"
+// #include "map/cMap.h"
+// #include "map/cMapCamera.h"
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
+#include "sMouseEvent.h"
 
+
+class cMap;
+class cMapCamera;
 class cPlayer;
 class Texture;
 class GameContext;
