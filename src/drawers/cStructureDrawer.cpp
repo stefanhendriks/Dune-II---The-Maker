@@ -9,6 +9,7 @@
 #include "gameobjects/structures/cRepairFacility.h"
 #include "gameobjects/structures/cRocketTurret.h"
 #include "gameobjects/structures/cWindTrap.h"
+#include "sidebar/cSideBar.h"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"

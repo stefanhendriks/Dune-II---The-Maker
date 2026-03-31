@@ -19,15 +19,15 @@
   */
 #pragma once
 
-#include "controls/cGameControlsContext.h"
+
 #include "controls/mousestates/eMouseStates.h"
 #include "cPlayerNotification.h"
 #include "definitions.h"
-#include "gameobjects/structures/cOrderProcesser.h"
 #include "observers/cScenarioObserver.h"
 #include "player/brains/cPlayerBrain.h"
-#include "player/cPlayerDifficultySettings.h"
-#include "sidebar/cSideBar.h"
+#include "utils/cRectangle.h"
+
+
 #include "gameobjects/units/cUnitInfos.h"
 
 #include <set>
@@ -39,6 +39,11 @@ class cItemBuilder;
 class cBuildingListUpdater;
 class cHousesInfo;
 class Texture;
+class cSideBar;
+class cPlayerDifficultySettings;
+class cOrderProcesser;
+class cGameControlsContext;
+
 
 struct sEntityForDistance {
     int distance = 9999;
