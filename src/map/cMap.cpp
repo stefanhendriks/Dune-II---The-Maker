@@ -29,6 +29,7 @@
 #include "gameobjects/sTerrainInfo.h"
 #include "utils/d2tm_math.h"
 #include "controls/cGameControlsContext.h"
+#include "gameobjects/units/cUnit.h"
 
 #include <format>
 #include <algorithm>

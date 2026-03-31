@@ -13,12 +13,13 @@
 
 #include "definitions.h"
 // #include "gameobjects/structures/cAbstractStructure.h"
-#include "player/brains/missions/cPlayerBrainMission.h"
+// #include "player/brains/missions/cPlayerBrainMission.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
 
 #include <memory>
 
+class cPlayer;
 class cTextDrawer;
 class cAbstractStructure;
 

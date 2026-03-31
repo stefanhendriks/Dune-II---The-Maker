@@ -1,3 +1,4 @@
+#include "cPlayerBrainMission.h"
 #include "cPlayerBrainMissionKindDeathHand.h"
 
 #include "d2tmc.h"
