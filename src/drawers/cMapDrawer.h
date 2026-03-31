@@ -1,13 +1,15 @@
 #pragma once
 
-#include "map/cMap.h"
-#include "map/cMapCamera.h"
+// #include "map/cMap.h"
+// #include "map/cMapCamera.h"
 
 struct SDL_Surface;
 class cPlayer;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cMap;
+class cMapCamera;
 
 class cMapDrawer {
 public:
