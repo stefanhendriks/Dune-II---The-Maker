@@ -11,7 +11,7 @@
 
 // 01/01/2022 -> Move this into a `Combat` state object; or within player object as state.
 
-#include "gameobjects/structures/cAbstractStructure.h"
+// #include "gameobjects/structures/cAbstractStructure.h"
 #include "include/definitions.h"
 
 #include "controls/mousestates/eMouseStates.h"
@@ -20,6 +20,8 @@
 #include "controls/mousestates/cMouseRepairState.h"
 #include "controls/mousestates/cMousePlaceState.h"
 #include "controls/mousestates/cMouseDeployState.h"
+
+class cAbstractStructure;
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
 public:
