@@ -362,3 +362,13 @@ void cMapCamera::onMouseRightButtonClicked(const s_MouseEvent &)
     m_moveX = 0.0f;
     m_moveY = 0.0f;
 }
+
+int cMapCamera::getWindowXPositionFromCellWithOffset(int cell, int offset) {
+    int absoluteXPosition = m_pMap->getAbsoluteXPositionFromCell(cell);
+    return getWindowXPositionWithOffset(absoluteXPosition, offset);
+}
+
+int cMapCamera::getWindowYPositionFromCellWithOffset(int cell, int offset) {
+    int absoluteYPosition = m_pMap->getAbsoluteYPositionFromCell(cell);
+    return getWindowYPositionWithOffset(absoluteYPosition, offset);
+}
