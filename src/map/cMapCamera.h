@@ -11,11 +11,12 @@
 
 #pragma once
 
-#include "cMap.h"
+// #include "cMap.h"
 
 #include "observers/cInputObserver.h"
-
 #include <cmath>
+
+class cMap;
 
 class cMapCamera : cInputObserver {
 
@@ -61,15 +62,8 @@ public:
         return getWindowYPositionFromCellWithOffset(cell, 0);
     }
 
-    int getWindowXPositionFromCellWithOffset(int cell, int offset) {
-        int absoluteXPosition = m_pMap->getAbsoluteXPositionFromCell(cell);
-        return getWindowXPositionWithOffset(absoluteXPosition, offset);
-    }
-
-    int getWindowYPositionFromCellWithOffset(int cell, int offset) {
-        int absoluteYPosition = m_pMap->getAbsoluteYPositionFromCell(cell);
-        return getWindowYPositionWithOffset(absoluteYPosition, offset);
-    }
+    int getWindowXPositionFromCellWithOffset(int cell, int offset);
+    int getWindowYPositionFromCellWithOffset(int cell, int offset);
 
     /**
      * Translates an absolute X position into a position on the window. The offset is added after translating
