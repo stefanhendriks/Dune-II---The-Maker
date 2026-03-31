@@ -4,6 +4,7 @@
 #include "d2tmc.h"
 #include "game/cGame.h"
 #include "managers/cDrawManager.h"
+#include "map/cMapCamera.h"
 
 #include <cassert>
 

@@ -15,7 +15,7 @@
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
 #include "map/cCell.h"
-// #include "sGameEvent.h"
+#include "sGameEvent.h"
 // #include "utils/d2tm_math.h"
 
 #include <map>
@@ -25,6 +25,7 @@
 #define TILESIZE_WIDTH_PIXELS 32
 #define TILESIZE_HEIGHT_PIXELS 32
 
+class cAbstractStructure;
 class cReinforcements;
 class MapGeometry;
 struct s_TerrainInfo;

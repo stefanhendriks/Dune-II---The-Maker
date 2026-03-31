@@ -20,6 +20,7 @@
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "controls/cGameControlsContext.h"
+#include "map/cMapCamera.h"
 
 #include <cassert>
 
