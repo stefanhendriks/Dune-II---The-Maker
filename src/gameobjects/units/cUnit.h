@@ -12,7 +12,7 @@
 #pragma once
 
 #include "definitions.h"
-#include "gameobjects/structures/cAbstractStructure.h"
+// #include "gameobjects/structures/cAbstractStructure.h"
 #include "player/brains/missions/cPlayerBrainMission.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
@@ -20,6 +20,7 @@
 #include <memory>
 
 class cTextDrawer;
+class cAbstractStructure;
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
