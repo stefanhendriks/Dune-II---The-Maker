@@ -15,6 +15,12 @@
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
+#include "gameobjects/structures/cOrderProcesser.h"
+#include "controls/cGameControlsContext.h"
+#include "player/cPlayerDifficultySettings.h"
+#include "sidebar/cSideBar.h"
+
+
 #include <SDL2/SDL.h>
 #include <format>
 #include <iostream>

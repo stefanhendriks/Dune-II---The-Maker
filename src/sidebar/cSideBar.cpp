@@ -7,12 +7,14 @@
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
+#include "controls/cGameControlsContext.h"
+#include "gameobjects/structures/cOrderProcesser.h"
+#include "data/gfxaudio.h"
 
 #include <format>
-
 #include <cassert>
 
-#include "data/gfxaudio.h"
+
 
 cSideBar::cSideBar(cPlayer *thePlayer) : player(thePlayer)
 {

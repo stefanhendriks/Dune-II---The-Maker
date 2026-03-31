@@ -79,6 +79,9 @@
 #include "utils/ini.h"
 #include "utils/RNG.hpp"
 
+#include "controls/cGameControlsContext.h"
+#include "gameobjects/structures/cOrderProcesser.h"
+
 #include <format>
 
 

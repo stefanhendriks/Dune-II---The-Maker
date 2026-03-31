@@ -6,6 +6,7 @@
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "player/cPlayer.h"
+#include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
 #include "map/MapGeometry.hpp"
 #include <algorithm>

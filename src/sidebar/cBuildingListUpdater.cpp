@@ -1,13 +1,13 @@
 #include "cBuildingListUpdater.h"
-
 #include "building/cItemBuilder.h"
 #include "d2tmc.h"
 #include "game/cGame.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"
+#include "sidebar/cSideBar.h"
+#include "gameobjects/structures/cOrderProcesser.h"
 
 #include <format>
-
 #include <cassert>
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer)
