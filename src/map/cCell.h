@@ -2,6 +2,7 @@
 #define CCELL_H_
 
 #include "definitions.h"
+#include "enums.h"
 #include <optional>
 
 struct tCell {

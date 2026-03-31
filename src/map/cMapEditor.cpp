@@ -1,5 +1,5 @@
 #include "cMapEditor.h"
-
+#include "map/cMap.h"
 #include "data/gfxdata.h"
 #include "utils/common.h"
 #include "utils/d2tm_math.h"

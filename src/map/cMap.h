@@ -12,12 +12,13 @@
 #pragma once
 
 #include "definitions.h"
-#include "gameobjects/structures/cAbstractStructure.h"
-#include "gameobjects/units/cUnit.h"
+//#include "gameobjects/structures/cAbstractStructure.h"
+// #include "gameobjects/units/cUnit.h"
 #include "map/cCell.h"
+#include "observers/cScenarioObserver.h"
 #include "sGameEvent.h"
 // #include "utils/d2tm_math.h"
-
+#include "utils/cPoint.h"
 #include <map>
 #include <vector>
 #include <memory>
@@ -31,6 +32,7 @@ class MapGeometry;
 struct s_TerrainInfo;
 class GameContext;
 class cUnit;
+class cTextDrawer;
 
 
 class cMap : public cScenarioObserver {
@@ -41,8 +43,7 @@ public:
     ~cMap();
 
     void init(int width, int height);
-
-    void onNotifyGameEvent(const s_GameEvent &event) override;
+    virtual void onNotifyGameEvent(const s_GameEvent &event) override;
 
     bool canDeployUnitAtCell(int iCell, int iUnitId);
     bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
