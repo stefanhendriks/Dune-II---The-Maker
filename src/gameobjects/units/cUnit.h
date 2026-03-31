@@ -18,6 +18,7 @@
 #include "utils/cRectangle.h"
 
 #include <memory>
+#include <string>
 
 class cPlayer;
 class cTextDrawer;
