@@ -16,6 +16,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "utils/d2tm_math.h"
 #include <SDL2/SDL.h>
 #include <cassert>
 

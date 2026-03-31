@@ -33,6 +33,7 @@
 #include <format>
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/units/cPathFinder.h"
+#include "utils/d2tm_math.h"
 
 #include <cmath>
 

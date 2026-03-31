@@ -15,8 +15,8 @@
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/units/cUnit.h"
 #include "map/cCell.h"
-#include "sGameEvent.h"
-#include "utils/d2tm_math.h"
+// #include "sGameEvent.h"
+// #include "utils/d2tm_math.h"
 
 #include <map>
 #include <vector>
@@ -29,6 +29,7 @@ class cReinforcements;
 class MapGeometry;
 struct s_TerrainInfo;
 class GameContext;
+
 
 class cMap : public cScenarioObserver {
 
@@ -433,13 +434,7 @@ public:
         return width;
     }
 
-    int getMaxDistanceInPixels() {
-        int tileWidth = 32;
-        int tileHeight = 32;
-        int maxWidthDistance = width * tileWidth;
-        int maxHeightDistance = height * tileHeight;
-        return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
-    }
+    int getMaxDistanceInPixels() const;
 
     /**
      * Returns the amount of cells of a specific type

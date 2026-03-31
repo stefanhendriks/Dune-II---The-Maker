@@ -24,6 +24,7 @@
 #include "utils/cIniFile.h"
 #include "utils/Graphics.hpp"
 #include "utils/GameSettings.hpp"
+#include "utils/d2tm_math.h"
 
 #include <cmath>
 

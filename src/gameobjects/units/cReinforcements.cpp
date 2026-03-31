@@ -5,6 +5,7 @@
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/RNG.hpp"
+#include "utils/d2tm_math.h"
 #include <algorithm>
 #include <format>
 
