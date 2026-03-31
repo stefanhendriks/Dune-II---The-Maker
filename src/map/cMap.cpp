@@ -27,7 +27,7 @@
 #include "map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
 #include "gameobjects/sTerrainInfo.h"
-
+#include "utils/d2tm_math.h"
 #include "controls/cGameControlsContext.h"
 
 #include <format>
@@ -929,6 +929,14 @@ double cMap::distance(int cell1, int cell2) //rip
     int x2 = getCellX(cell2);
     int y2 = getCellY(cell2);
     return ABS_length(x1, y1, x2, y2);
+}
+
+int cMap::getMaxDistanceInPixels() const {
+    int tileWidth = 32;
+    int tileHeight = 32;
+    int maxWidthDistance = width * tileWidth;
+    int maxHeightDistance = height * tileHeight;
+    return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
 }
 
 bool cMap::isValidCell(int c) const //rip

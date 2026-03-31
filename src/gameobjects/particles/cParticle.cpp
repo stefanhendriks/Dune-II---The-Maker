@@ -16,10 +16,11 @@
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
-#include <SDL2/SDL.h>
 #include "utils/Graphics.hpp"
+#include "utils/d2tm_math.h"
 #include "gameobjects/particles/cParticleInfos.h"
 
+#include <SDL2/SDL.h>
 #include <iostream>
 
 std::map<std::pair<int, int>, Texture*> cParticle::particleTextureCache = {};

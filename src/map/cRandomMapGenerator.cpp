@@ -9,6 +9,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
+#include "utils/d2tm_math.h"
 
 cRandomMapGenerator::cRandomMapGenerator()
 {

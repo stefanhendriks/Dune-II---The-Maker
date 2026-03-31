@@ -6,6 +6,7 @@
 #include "utils/common.h"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
+#include "utils/d2tm_math.h"
 
 // Path creation definitions / var
 #define CLOSED        -1

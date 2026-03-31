@@ -25,6 +25,7 @@
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
+#include "utils/d2tm_math.h"
 #include <format>
 #include <cmath>
 

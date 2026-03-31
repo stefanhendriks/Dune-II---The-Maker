@@ -11,6 +11,7 @@
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
+#include "utils/d2tm_math.h"
 #include <format>
 
 #include "data/gfxaudio.h"
