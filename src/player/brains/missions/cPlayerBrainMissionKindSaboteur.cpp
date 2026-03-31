@@ -1,5 +1,5 @@
+#include "cPlayerBrainMission.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
-
 #include "d2tmc.h"
 #include "map/cMap.h"
 #include "utils/RNG.hpp"

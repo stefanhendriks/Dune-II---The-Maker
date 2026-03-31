@@ -29,6 +29,7 @@ class cReinforcements;
 class MapGeometry;
 struct s_TerrainInfo;
 class GameContext;
+class cUnit;
 
 
 class cMap : public cScenarioObserver {
