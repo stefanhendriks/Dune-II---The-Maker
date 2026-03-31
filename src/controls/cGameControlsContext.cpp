@@ -1,5 +1,5 @@
 #include "cGameControlsContext.h"
-
+#include "gameobjects/structures/cAbstractStructure.h"
 #include "data/gfxdata.h"
 #include "d2tmc.h"
 #include "game/cGame.h"
