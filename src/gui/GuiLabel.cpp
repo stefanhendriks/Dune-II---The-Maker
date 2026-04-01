@@ -1,6 +1,5 @@
 #include "gui/GuiLabel.hpp"
 
-#include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <cassert>
 

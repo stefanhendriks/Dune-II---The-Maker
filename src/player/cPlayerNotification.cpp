@@ -1,6 +1,6 @@
 #include "cPlayerNotification.h"
 
-#include "d2tmc.h"
+#include <cassert>
 
 
 std::string eNotificationTypeString(const eNotificationType &type)

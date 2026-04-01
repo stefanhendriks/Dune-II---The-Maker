@@ -1,5 +1,4 @@
 #include "gui/GuiSlider.hpp"
-#include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <algorithm>
 #include <iostream>
