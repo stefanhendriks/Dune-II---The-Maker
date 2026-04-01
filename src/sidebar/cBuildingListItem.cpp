@@ -1,7 +1,7 @@
 #include "cBuildingListItem.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "sidebar/cBuildingList.h"
 
 #include <format>

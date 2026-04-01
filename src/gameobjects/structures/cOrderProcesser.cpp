@@ -6,8 +6,8 @@
  */
 #include "cOrderProcesser.h"
 #include "utils/RNG.hpp"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"

@@ -14,8 +14,8 @@
 #include "cUnits.h"
 
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"

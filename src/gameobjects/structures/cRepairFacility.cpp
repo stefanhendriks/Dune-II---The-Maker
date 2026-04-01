@@ -1,6 +1,7 @@
 #include "cRepairFacility.h"
 
-#include "d2tmc.h"
+#include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "definitions.h"
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayer.h"

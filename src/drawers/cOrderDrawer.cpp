@@ -1,7 +1,7 @@
 #include "cOrderDrawer.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"

@@ -1,8 +1,8 @@
 #include "cDrawManager.h"
 
 #include "controls/cGameControlsContext.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"

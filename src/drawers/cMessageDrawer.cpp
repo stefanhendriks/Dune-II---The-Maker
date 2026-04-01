@@ -1,7 +1,7 @@
 #include "cMessageDrawer.h"
 #include "data/gfxinter.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"

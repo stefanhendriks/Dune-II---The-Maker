@@ -1,8 +1,8 @@
 #include "cSideBar.h"
 
 #include "building/cItemBuilder.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/cLog.h"

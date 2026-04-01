@@ -1,6 +1,7 @@
 #include "cLightFactory.h"
 
-#include "d2tmc.h"
+#include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "definitions.h"
 #include "map/cMapCamera.h"
