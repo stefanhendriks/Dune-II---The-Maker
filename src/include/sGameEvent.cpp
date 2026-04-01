@@ -1,4 +1,5 @@
 #include "include/sGameEvent.h"
+#include "sidebar/cBuildingListItem.h"
 
 const char *s_GameEvent::toString(const eGameEventType &eventType)
 {
