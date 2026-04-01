@@ -1,7 +1,7 @@
 #pragma once
 
 #include "enums.h"
-#include "enum_GameEvent.h"
+#include "eGameEventType.h"
 
 
 #include <format>
