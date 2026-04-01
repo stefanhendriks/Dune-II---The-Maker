@@ -1,6 +1,7 @@
 #include "cMouse.h"
 
 #include "controls/cGameControlsContext.h"
+#include "observers/cInputObserver.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
