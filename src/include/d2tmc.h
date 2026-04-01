@@ -17,9 +17,6 @@
 **/
 #pragma once
 
-#include "game/cGame.h"
-
-
 #include <memory>
 
 class SDLDrawer;
