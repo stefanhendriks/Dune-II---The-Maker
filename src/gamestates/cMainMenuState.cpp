@@ -1,8 +1,8 @@
 #include "cMainMenuState.h"
 
-#include "d2tmc.h"
-#include "config.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
+#include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"

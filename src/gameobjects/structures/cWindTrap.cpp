@@ -1,7 +1,7 @@
 #include "cWindTrap.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "definitions.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"

@@ -1,6 +1,7 @@
 #include "cSpiceSilo.h"
 
-#include "d2tmc.h"
+#include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "definitions.h"
 
 cSpiceSilo::cSpiceSilo()

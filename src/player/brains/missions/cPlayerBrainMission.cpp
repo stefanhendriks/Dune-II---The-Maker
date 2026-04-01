@@ -7,7 +7,8 @@
 #include "cPlayerBrainMissionKindSaboteur.h"
 #include "cPlayerBrainMissionKindFremen.h"
 #include "sidebar/cSideBar.h"
-#include "d2tmc.h"
+#include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "map/cMap.h"
 
 #include <format>

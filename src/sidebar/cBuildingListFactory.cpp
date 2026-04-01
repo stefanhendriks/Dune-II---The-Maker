@@ -1,7 +1,7 @@
 #include "cBuildingListFactory.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxinter.h"
 
 cBuildingListFactory *cBuildingListFactory::instance = NULL;

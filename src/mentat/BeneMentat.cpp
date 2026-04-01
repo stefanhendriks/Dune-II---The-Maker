@@ -1,8 +1,8 @@
 #include "BeneMentat.h"
 
 #include "data/gfxmentat.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "include/sDataCampaign.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"

@@ -1,6 +1,7 @@
 #include "cParticleDrawer.h"
 
-#include "d2tmc.h"
+#include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/particles/cParticle.h"
 

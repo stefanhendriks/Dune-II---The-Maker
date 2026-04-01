@@ -14,8 +14,8 @@
 #include "iniDefine.h"
 #include "utils/cIniUtils.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "definitions.h"
 #include "include/sDataCampaign.h"

@@ -1,8 +1,8 @@
 #include "cMapCamera.h"
 
 #include "data/gfxdata.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "sidebar/cSideBar.h"
 #include "map/MapGeometry.hpp"
 

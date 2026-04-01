@@ -1,8 +1,8 @@
 #include "cBuildingListDrawer.h"
 
 #include "drawers/SDLDrawer.hpp"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"

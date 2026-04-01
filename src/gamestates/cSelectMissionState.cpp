@@ -1,7 +1,7 @@
 #include "cSelectMissionState.h"
 #include "context/GameContext.hpp"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gui/GuiButton.h"
