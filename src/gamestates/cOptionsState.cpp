@@ -11,6 +11,7 @@
 #include "gui/GuiSlider.hpp"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
+#include "drawers/cTextDrawer.h"
 
 #include <cassert>
 

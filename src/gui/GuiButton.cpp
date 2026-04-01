@@ -3,6 +3,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include <cassert>
 
 GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)

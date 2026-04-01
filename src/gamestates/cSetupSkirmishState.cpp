@@ -4,6 +4,7 @@
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
