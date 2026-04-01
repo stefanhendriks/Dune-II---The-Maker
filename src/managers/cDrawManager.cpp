@@ -14,6 +14,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "map/cMapCamera.h"
+#include "drawers/cSideBarDrawer.h"
 
 #include <SDL2/SDL.h>
 #include <cassert>
@@ -377,4 +378,8 @@ void cDrawManager::regionInit(int offsetX, int offsetY)
 bool cDrawManager::hasMessage()
 {
     return m_messageDrawer->hasMessage();
+}
+
+cBuildingListDrawer *cDrawManager::getBuildingListDrawer() {
+    return m_sidebarDrawer->getBuildingListDrawer();
 }

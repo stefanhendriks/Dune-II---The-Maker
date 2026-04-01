@@ -10,7 +10,7 @@
 #include "drawers/cParticleDrawer.h"
 #include "drawers/cPlaceItDrawer.h"
 #include "drawers/CreditsDrawer.h"
-#include "drawers/cSideBarDrawer.h"
+//#include "drawers/cSideBarDrawer.h"
 #include "drawers/cStructureDrawer.h"
 
 #include "observers/cInputObserver.h"
@@ -24,6 +24,7 @@ class Texture;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cSideBarDrawer;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
@@ -56,9 +57,7 @@ public:
         return m_placeitDrawer.get();
     }
 
-    cBuildingListDrawer *getBuildingListDrawer() {
-        return m_sidebarDrawer->getBuildingListDrawer();
-    }
+    cBuildingListDrawer *getBuildingListDrawer();
 
     void drawMouse();
 
