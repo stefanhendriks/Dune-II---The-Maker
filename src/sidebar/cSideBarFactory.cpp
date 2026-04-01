@@ -1,5 +1,6 @@
 #include "cSideBarFactory.h"
-
+#include "cSideBar.h"
+#include "player/cPlayer.h"
 #include "cBuildingListFactory.h"
 
 #include <cassert>
