@@ -10,6 +10,7 @@
 #include "include/Texture.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "drawers/cTextDrawer.h"
 #include <algorithm>
 #include <cassert>
 
