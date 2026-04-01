@@ -2,7 +2,6 @@
 
 #include "enums.h"
 #include "enum_GameEvent.h"
-#include "sidebar/cBuildingListItem.h"
 #include "utils/common.h"
 
 #include <format>
@@ -12,6 +11,7 @@
 
 class cPlayer;
 class cBuildingList;
+class cBuildingListItem;
 
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
