@@ -23,7 +23,7 @@
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
 #include "utils/Graphics.hpp"
-#include "drawers/cTextDrawer.h"
+
 #include <string>
 #include <memory>
 #include <SDL2/SDL_ttf.h>
@@ -33,6 +33,7 @@ struct SDL_Surface;
 class Texture;
 class GameContext;
 class SDLDrawer;
+class cTextDrawer;
 
 enum eMentatState {
     INIT,               // for loading data (Default state)
