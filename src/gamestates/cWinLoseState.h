@@ -2,11 +2,11 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
 #include "sMouseEvent.h"
 
 class Texture;
 class cGame;
+class cTextDrawer;
 
 enum class Outcome : char {Win, Lose};
 
