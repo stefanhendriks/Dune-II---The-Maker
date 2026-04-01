@@ -1,5 +1,5 @@
 #include "gui/GuiCycleButton.h"
-
+#include "drawers/cTextDrawer.h"
 #include <cassert>
 
 GuiCycleButton::GuiCycleButton(SDLDrawer* drawer,const cRectangle& rect, const std::vector<int>& values) 

@@ -1,5 +1,5 @@
 #include "gui/GuiLabel.hpp"
-
+#include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
 #include <cassert>
 
