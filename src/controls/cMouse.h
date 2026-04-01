@@ -1,7 +1,5 @@
 #pragma once
 
-#include "drawers/cTextDrawer.h"
-#include "observers/cInputObserver.h"
 #include "utils/cPoint.h"
 
 #include <SDL2/SDL.h>
@@ -11,6 +9,8 @@
 class cRectangle;
 class GameContext;
 class SDLDrawer;
+class cTextDrawer;
+class cInputObserver;
 
 class cMouse {
 
