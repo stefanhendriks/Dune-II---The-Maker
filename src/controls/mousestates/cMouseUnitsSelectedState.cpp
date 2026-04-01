@@ -1,7 +1,7 @@
 #include "cMouseUnitsSelectedState.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticle.h"

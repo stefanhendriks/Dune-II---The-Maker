@@ -1,8 +1,8 @@
 #include "cGameControlsContext.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "data/gfxdata.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
 

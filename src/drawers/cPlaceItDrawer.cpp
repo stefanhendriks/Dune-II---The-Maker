@@ -1,7 +1,7 @@
 #include "cPlaceItDrawer.h"
 
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "context/GameContext.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"

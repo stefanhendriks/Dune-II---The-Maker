@@ -1,8 +1,8 @@
 #include "cPlayer.h"
 
 #include "building/cItemBuilder.h"
-#include "d2tmc.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"

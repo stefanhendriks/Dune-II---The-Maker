@@ -2,9 +2,9 @@
 
 #include "actions/cRespondToThreatAction.h"
 #include "enums.h"
-#include "d2tmc.h"
-#include "map/cMap.h"
 #include "game/cGame.h"
+#include "include/d2tmc.h"
+#include "map/cMap.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/RNG.hpp"
