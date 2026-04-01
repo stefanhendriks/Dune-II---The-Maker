@@ -1,6 +1,5 @@
 #include "SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-#include "d2tmc.h"
 
 #include <iostream>
 #include <algorithm>

@@ -4,13 +4,16 @@
 #include "map/MapGeometry.hpp"
 #include "include/d2tmc.h"
 #include "include/Texture.hpp"
+#include "utils/common.h"
+#include "utils/cIniFile.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
 #include <algorithm>
 #include <cassert>
-#include "utils/cIniFile.h"
+#include <format>
+
 
 cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode) : m_renderDrawer(renderDrawer), m_debugMode(debugMode)
 {
