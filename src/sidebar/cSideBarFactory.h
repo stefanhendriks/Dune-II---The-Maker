@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cSideBar.h"
-#include "player/cPlayer.h"
+class cSideBar;
+class cPlayer;
 
 class cSideBarFactory {
 
