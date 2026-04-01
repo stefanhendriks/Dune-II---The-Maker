@@ -1,6 +1,5 @@
 #include "gui/GuiCheckBox.hpp"
 
-#include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
 #include <cassert>

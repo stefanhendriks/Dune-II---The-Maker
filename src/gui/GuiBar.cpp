@@ -1,6 +1,5 @@
 #include "gui/GuiBar.h"
 
-#include "d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include <cassert>
 
