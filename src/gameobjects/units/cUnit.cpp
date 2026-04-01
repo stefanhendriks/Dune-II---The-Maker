@@ -126,7 +126,7 @@ void cUnit::init(int i)
     iFrame = 0;
 
     // TIMERS
-    TIMER_blink = 0;
+    // TIMER_blink = 0;
     TIMER_move = 0;
     TIMER_movewait = 0;
     TIMER_thinkwait = 0;    // wait with normal thinking..
@@ -1097,9 +1097,9 @@ void cUnit::think()
 
 void cUnit::thinkActionAgnostic()
 {
-    if (TIMER_blink > 0) {
-        TIMER_blink--;
-    }
+    // if (TIMER_blink > 0) {
+    //     TIMER_blink--;
+    // }
 
     // if (iType == MCV) {
     //     think_MVC();

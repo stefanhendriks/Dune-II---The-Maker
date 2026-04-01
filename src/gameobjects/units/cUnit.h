@@ -245,7 +245,7 @@ public:
     void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     // -------------
-    int TIMER_blink;	    // blink
+    // int TIMER_blink;	    // blink
 
     int TIMER_move;         // movement timer
     int TIMER_movewait;     // wait for move think...
