@@ -166,7 +166,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
     // AI player immediately moves unit away
     if (iPlayer > 0 && iPlayer < AI_WORM && !sUnitType.airborn && !bOnStart) {
-        int iF = UNIT_FREE_AROUND_MOVE(iNewId);
+        int iF = cUnit::UNIT_FREE_AROUND_MOVE(iNewId);
 
         if (iF > -1) {
             newUnit.log("Order move #2");

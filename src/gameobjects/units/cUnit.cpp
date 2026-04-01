@@ -3861,7 +3861,7 @@ bool cUnit::canUnload()
     return iCredits > 0;
 }
 
-int UNIT_find_harvest_spot(int id)
+int cUnit::UNIT_find_harvest_spot(int id)
 {
     // finds the closest harvest spot
     cUnit &cUnit = game.getUnit(id);
@@ -3938,7 +3938,7 @@ int UNIT_find_harvest_spot(int id)
     return TargetSpice;
 }
 
-int CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
+int cUnit::CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
 {
     // find a free carry all
     for (int i = 0; i < game.m_Units.size(); i++) {
@@ -3960,7 +3960,7 @@ int CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
  * @param iGoal
  * @return
  */
-int CARRYALL_TRANSFER(int iuID, int iGoal)
+int cUnit::CARRYALL_TRANSFER(int iuID, int iGoal)
 {
     int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(game.getUnit(iuID).iPlayer);
     if (carryAllUnitId > -1) {
@@ -3970,7 +3970,7 @@ int CARRYALL_TRANSFER(int iuID, int iGoal)
     return carryAllUnitId;
 }
 
-int UNIT_FREE_AROUND_MOVE(int iUnit)
+int cUnit::UNIT_FREE_AROUND_MOVE(int iUnit)
 {
     if (iUnit < 0) {
         logbook("Invalid unit");
