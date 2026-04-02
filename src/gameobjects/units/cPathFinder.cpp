@@ -73,7 +73,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     int iCell = pUnit.getCell(); // current cell
 
     // When the goal == cell, then skip.
-    if (iCell == pUnit.iGoalCell) {
+    if (iCell == pUnit.movement.iGoalCell) {
         pUnit.log("CREATE_PATH -- END 4");
         pUnit.log("ODD: The goal = cell?");
         return -1;
@@ -89,13 +89,13 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     // Now start create path
 
     // Clear unit path settings (index & path string)
-    memset(pUnit.iPath, -1, sizeof(pUnit.iPath));
+    memset(pUnit.movement.iPath, -1, sizeof(pUnit.movement.iPath));
 
-    pUnit.iPathIndex = -1;
+    pUnit.movement.iPathIndex = -1;
 
     // Search around a cell:
     int cx, cy, the_cll, ex, ey;
-    int goal_cell = pUnit.iGoalCell;
+    int goal_cell = pUnit.movement.iGoalCell;
     int controller = pUnit.iPlayer;
 
     game.m_pathsCreated++;
@@ -462,7 +462,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                         z = iGoodZ;
                 }
 
-                pUnit.iPath[a] = temp_path[z];
+                pUnit.movement.iPath[a] = temp_path[z];
                 iPrevCell = temp_path[z];
                 a++;
             }
@@ -471,14 +471,14 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         // optimize path
         //nextcell=cell;
-        pUnit.iPathIndex = 1;
+        pUnit.movement.iPathIndex = 1;
 
         // take the closest bordering cell as 'far' away to start with
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
-            int pathCell = pUnit.iPath[i];
+            int pathCell = pUnit.movement.iPath[i];
             if (pathCell > -1) {
                 if (game.m_map.isCellAdjacentToOtherCell(pUnit.getCell(), pathCell)) {
-                    pUnit.iPathIndex = i;
+                    pUnit.movement.iPathIndex = i;
                 }
             }
         }
@@ -486,7 +486,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         // debug debug
         if (game.isDebugMode()) {
             for (int i = 0; i < MAX_PATH_SIZE; i++) {
-                int pathCell = pUnit.iPath[i];
+                int pathCell = pUnit.movement.iPath[i];
                 if (pathCell > -1) {
                     pUnit.log(std::format("WAYPOINT {} = {} ", i, pathCell));
                 }
@@ -494,7 +494,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         }
 
         pUnit.updateCellXAndY();
-        pUnit.bCalculateNewPath = false;
+        pUnit.movement.bCalculateNewPath = false;
 
 
         //log("SUCCES");
