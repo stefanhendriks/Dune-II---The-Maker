@@ -16,6 +16,7 @@
 // #include "player/brains/missions/cPlayerBrainMission.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
+#include "gameobjects/units/cTimer.h"
 
 #include <memory>
 #include <string>
@@ -303,7 +304,8 @@ public:
 
     int TIMER_attack;       // when to shoot?
 
-    int TIMER_wormtrail;    // when to spawn a trail when moving
+    // int TIMER_wormtrail;    // when to spawn a trail when moving
+    cTimer wormTrailTimer;    // when to spawn a trail when moving
 
     s_UnitInfo &getUnitInfo() const;
 
