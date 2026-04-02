@@ -134,7 +134,8 @@ void cUnit::init(int i)
     TIMER_frame = 0;
     // TIMER_harvest = 0;
     harvestTimer.reset(0);
-    TIMER_guard = 0;    // guard scanning timer
+    // TIMER_guard = 0;    // guard scanning timer
+    guardTimer.reset(0);
     TIMER_bored = 0;    // how long are we bored?
     TIMER_attack = 0;
     // TIMER_wormtrail = 0;
@@ -985,20 +986,22 @@ void cUnit::thinkFast_guard()
         rendering.iHeadShouldFace = RNG::rnd(8);
     }
 
-    if (TIMER_guard > 0) {
-        TIMER_guard--; // scan time
-    }
+    // if (TIMER_guard > 0) {
+        // TIMER_guard--; // scan time
+    // }
+    guardTimer.decrementUntil(0);
 
     if (TIMER_movewait > 0) {
         TIMER_movewait--;
     }
 
-    if (TIMER_movewait > 0 || TIMER_guard > 0) {
+    if (TIMER_movewait > 0 || guardTimer.get() > 0) {
         return;
     }
 
     // scan area
-    TIMER_guard = 20 + RNG::rnd(35); // do not scan all at the same time
+    // TIMER_guard = 20 + RNG::rnd(35); // do not scan all at the same time
+    guardTimer.reset(20 + RNG::rnd(35));
 
     updateCellXAndY();
 
@@ -2261,7 +2264,8 @@ void cUnit::think_attack_sandworm()
         game.playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(position.iCell));
         actionGuard();
         TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
-        TIMER_guard = (1000/5) * 4; // timer guard works other way around..
+        // TIMER_guard = (1000/5) * 4; // timer guard works other way around..
+        guardTimer.reset((1000/5) * 4); // timer guard works other way around..
 
         if (unitsEaten >= getUnitInfo().appetite) {
             // let worm die (and respawn later)
@@ -2269,12 +2273,13 @@ void cUnit::think_attack_sandworm()
             takeDamage(1); // get below the thresh-hold to die/vanish
         }
         else {
-            TIMER_guard = (1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten)));
+            // TIMER_guard = (1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten)));
+            guardTimer.reset((1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten))));
         }
 
         cLogger::getInstance()->log(LOG_DEBUG, COMP_UNITS, "think_attack_sandworm() -> eaten unit", 
                 std::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
-                unitsEaten, TIMER_guard));
+                unitsEaten, guardTimer.get()));
         return;
     }
 
@@ -3393,7 +3398,7 @@ void cUnit::draw_debug(cTextDrawer* textDrawer)
     global_renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
     textDrawer->drawText(draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, std::format("{}", iID));
     if (isSandworm()) {
-        textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, TIMER_guard, TIMER_movewait));
+        textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), TIMER_movewait));
     }
 }
 
