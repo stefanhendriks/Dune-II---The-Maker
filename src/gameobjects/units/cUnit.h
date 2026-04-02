@@ -297,7 +297,8 @@ public:
 
     int TIMER_frame;        // When moving, infantry has some animation
 
-    int TIMER_harvest;      // harvesting
+    // int TIMER_harvest;      // harvesting
+    cTimer harvestTimer;      // harvesting timer
 
     int TIMER_guard;        // guard scanning timer
     int TIMER_bored;        // how long are we bored?
