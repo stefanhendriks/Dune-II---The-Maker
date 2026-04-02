@@ -107,6 +107,20 @@ struct sCombat {
     int iAttackCell;      // attacking a cell (which is force attack)
 };
 
+class cPosition {
+public:
+    explicit cPosition(): iCell(0), iCellX(0), iCellY(0), posX(0), posY(0) {}
+private:
+    int iCell;          // cell of unit
+    int iCellX;         // my cell x
+    int iCellY;         // my cell y
+    // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
+    // thus are snapped to the grid.
+    float posX, posY;
+    friend class cUnit;
+};
+
+
 class cUnit {
 
 public:
@@ -386,13 +400,13 @@ public:
 
     void setCell(int cll);
     int getCell() {
-        return iCell;
+        return position.iCell;
     }
     int getCellX() {
-        return iCellX;
+        return position.iCellX;
     }
     int getCellY() {
-        return iCellY;
+        return position.iCellY;
     }
 
     cPlayer *getPlayer();
@@ -506,12 +520,13 @@ private:
 
     bool m_bSelected;     // selected or not?
 
-    int iCell;          // cell of unit
-    int iCellX;         // my cell x
-    int iCellY;         // my cell y
-    // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
-    // thus are snapped to the grid.
-    float posX, posY;
+    // int iCell;          // cell of unit
+    // int iCellX;         // my cell x
+    // int iCellY;         // my cell y
+    //absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
+    //thus are snapped to the grid.
+    // float posX, posY;
+    cPosition position;
     void setPosX(float newVal);
     void setPosY(float newVal);
 

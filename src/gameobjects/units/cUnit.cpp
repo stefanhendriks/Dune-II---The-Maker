@@ -73,11 +73,11 @@ void cUnit::init(int i)
     // Movement
     movement.iNextCell = -1;      // where to move to (next cell)
     movement.iGoalCell = -1;      // the goal cell (goal of path)
-    iCell = -1;          // cell of unit
-    iCellX = -1;
-    iCellY = -1;
-    posX = -1;
-    posY = -1;
+    position.iCell = -1;          // cell of unit
+    position.iCellX = -1;
+    position.iCellY = -1;
+    position.posX = -1;
+    position.posY = -1;
     memset(movement.iPath, -1, sizeof(movement.iPath));    // path of unit
     movement.iPathIndex = -1;     // where are we?
     movement.iPathFails = 0;
@@ -243,11 +243,11 @@ void cUnit::createSquishedParticle()
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
         int iType1 = D2TM_PARTICLE_SQUISH01 + RNG::rnd(2);
         cParticle::create(iDieX, iDieY, iType1, iHouse, rendering.iFrame);
-        game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(position.iCell));
     }
     else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iHouse, rendering.iFrame);
-        game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(position.iCell));
     }
 }
 
@@ -261,7 +261,7 @@ void cUnit::createExplosionParticle()
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1);
-        game.playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(position.iCell));
 
         if (RNG::rnd(100) < 30) {
             cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
@@ -279,11 +279,11 @@ void cUnit::createExplosionParticle()
         // play quick 'boom' sound and show animation
         if (RNG::rnd(100) < 50) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
-            game.playSoundWithDistance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
+            game.playSoundWithDistance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(position.iCell));
         }
         else {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1);
-            game.playSoundWithDistance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+            game.playSoundWithDistance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(position.iCell));
         }
 
         if (RNG::rnd(100) < 30) {
@@ -292,7 +292,7 @@ void cUnit::createExplosionParticle()
 
         if (iType == HARVESTER) {
             game.shakeScreen(25);
-            mapEditor.createRandomField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
+            mapEditor.createRandomField(position.iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
         }
 
         // For now carry-all and ornithopter share same death particle
@@ -323,12 +323,12 @@ void cUnit::createExplosionParticle()
                 }
 
                 if (RNG::rnd(100) < 35)
-                    game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
+                    game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(position.iCell));
 
                 // calculate cell and damage stuff around this
-                int cll = game.m_map.getGeometry().getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
+                int cll = game.m_map.getGeometry().getCellWithMapBorders((position.iCellX - 1) + cx, (position.iCellY - 1) + cy);
 
-                if (cll < 0 || cll == iCell)
+                if (cll < 0 || cll == position.iCell)
                     continue; // do not do own cell
 
                 if (game.m_map.getCellType(cll) == TERRAIN_WALL) {
@@ -424,7 +424,7 @@ void cUnit::createExplosionParticle()
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1);
 
-        game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(position.iCell));
     }
 
     if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
@@ -432,7 +432,7 @@ void cUnit::createExplosionParticle()
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
-        game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(position.iCell));
     }
 }
 
@@ -466,7 +466,7 @@ bool cUnit::isValid() const
         return false;
 
     // invalid cell, not good
-    if (iCell < 0 || iCell >= game.m_map.getMaxCells())
+    if (position.iCell < 0 || position.iCell >= game.m_map.getMaxCells())
         return false;
 
     // not marked (not dying) so do a health check. Else, don't care about health check.
@@ -485,12 +485,12 @@ bool cUnit::isValid() const
 
 int cUnit::pos_x()
 {
-    return posX;
+    return position.posX;
 }
 
 int cUnit::pos_y()
 {
-    return posY;
+    return position.posY;
 }
 
 int cUnit::draw_x()
@@ -675,7 +675,7 @@ void cUnit::draw_experience()
 void cUnit::draw_path() const
 {
     // for debugging purposes
-    if (iCell == movement.iGoalCell)
+    if (position.iCell == movement.iGoalCell)
         return;
 
     if (movement.iPath[0] < 0)
@@ -805,8 +805,8 @@ void cUnit::draw()
 // TODO: only do this when iCell is updated
 void cUnit::updateCellXAndY()
 {
-    iCellX = game.m_map.getCellX(iCell);
-    iCellY = game.m_map.getCellY(iCell);
+    position.iCellX = game.m_map.getCellX(position.iCell);
+    position.iCellY = game.m_map.getCellY(position.iCell);
 }
 
 /**
@@ -821,7 +821,7 @@ void cUnit::attackUnit(int targetUnit)
 void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
 {
     log(std::format("attackUnit() : targetUnit is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
-    attack(game.getUnit(targetUnit).iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
+    attack(game.getUnit(targetUnit).position.iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure)
@@ -1041,7 +1041,7 @@ void cUnit::thinkFast_guard()
         if (!getPlayer()->isHuman()) {
             if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
                 // AI will try to squish infantry units
-                move_to(unitToAttack.iCell);
+                move_to(unitToAttack.position.iCell);
             }
             else {
                 attackUnit(unitIdToAttack, false);
@@ -1151,9 +1151,9 @@ void cUnit::thinkActionAgnostic()
         return;
 
     // when any non-airborn, non-sandworm unit is on a spice bloom, it dies
-    int cellType = game.m_map.getCellType(iCell);
+    int cellType = game.m_map.getCellType(position.iCell);
     if (!isAirbornUnit() && !isSandworm() && cellType == TERRAIN_BLOOM) {
-        game.m_map.detonateSpiceBloom(iCell);
+        game.m_map.detonateSpiceBloom(position.iCell);
         die(true, false);
         return;
     }
@@ -1177,17 +1177,17 @@ void cUnit::thinkActionAgnostic()
 
 cAbstractStructure *cUnit::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType)
 {
-    return game.m_map.findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(iCell, structureType, getPlayer());
+    return game.m_map.findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(position.iCell, structureType, getPlayer());
 }
 
 cAbstractStructure *cUnit::findClosestAvailableStructureType(int structureType)
 {
-    return game.m_map.findClosestAvailableStructureType(iCell, structureType, getPlayer());
+    return game.m_map.findClosestAvailableStructureType(position.iCell, structureType, getPlayer());
 }
 
 cAbstractStructure *cUnit::findClosestStructureType(int structureType)
 {
-    return game.m_map.findClosestStructureType(iCell, structureType, getPlayer());
+    return game.m_map.findClosestStructureType(position.iCell, structureType, getPlayer());
 }
 
 void cUnit::think_carryAll()  // A carry-all has something when:
@@ -1244,9 +1244,9 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
 
             // not ours and its visible
             if (target.iPlayer != iPlayer &&
-                    game.m_map.isVisible(target.iCell, iPlayer) &&
+                    game.m_map.isVisible(target.position.iCell, iPlayer) &&
                     !target.isAirbornUnit()) { // for now, to prevent orni's taking down carry-alls?
-                int distance = ABS_length(iCellX, iCellY, target.iCellX, target.iCellY);
+                int distance = ABS_length(position.iCellX, position.iCellY, target.position.iCellX, target.position.iCellY);
 
                 if (distance <= getRange() && distance < iDistance) {
                     // ATTACK
@@ -1282,7 +1282,7 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
             if (pStructure->getPlayerId() != iPlayer && // enemy
                     game.m_map.isStructureVisible(pStructure, iPlayer)) {
                 int c = pStructure->getCell();
-                int distance = game.m_map.distance(iCell, c);
+                int distance = game.m_map.distance(position.iCell, c);
 
                 // attack closest structure
                 if (distance < iDistance) {
@@ -1306,14 +1306,14 @@ void cUnit::think_turn_to_desired_body_facing()
     float turnspeed = game.unitInfos[iType].turnspeed;
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
-        double distance = game.m_map.distance(iCell, movement.iGoalCell);
+        double distance = game.m_map.distance(position.iCell, movement.iGoalCell);
         int distanceInCells = 8;
         if (distance < distanceInCells) {
             turnspeed = (turnspeed/distanceInCells) * distance;
         }
         else {
             // when close to a border, then reduce turnspeed so that orni's wont crash over the map borders
-            if ((iCellX < 4 || iCellX >= (game.m_map.getWidth()-4)) || (iCellY < 4 || iCellY >= (game.m_map.getHeight()-4))) {
+            if ((position.iCellX < 4 || position.iCellX >= (game.m_map.getWidth()-4)) || (position.iCellY < 4 || position.iCellY >= (game.m_map.getHeight()-4))) {
                 turnspeed = 0;
             }
         }
@@ -1366,7 +1366,7 @@ void cUnit::thinkFast_move_airUnit()
 
     movement.iNextCell = getNextCellToMoveTo();
 
-    if (!game.m_map.isValidCell(iCell)) {
+    if (!game.m_map.isValidCell(position.iCell)) {
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
@@ -1375,7 +1375,7 @@ void cUnit::thinkFast_move_airUnit()
         return;
     }
 
-    if (game.m_map.isAtMapBoundaries(iCell)) {
+    if (game.m_map.isAtMapBoundaries(position.iCell)) {
         if (!isReinforcement) {
             // let unit face directly to ideal angle, so it won't fly into its doom (out of map)
             rendering.iBodyFacing = rendering.iBodyShouldFace;
@@ -1384,15 +1384,15 @@ void cUnit::thinkFast_move_airUnit()
     }
 
     if (!game.m_map.isValidCell(movement.iNextCell))
-        movement.iNextCell = iCell;
+        movement.iNextCell = position.iCell;
 
     if (!game.m_map.isValidCell(movement.iGoalCell)) {
-        setGoalCell(iCell);
+        setGoalCell(position.iCell);
     }
 
     // same cell (no goal specified or something)
-    if (movement.iNextCell == iCell) {
-        bool isWithinMapBoundaries = game.m_map.isWithinBoundaries(iCellX, iCellY);
+    if (movement.iNextCell == position.iCell) {
+        bool isWithinMapBoundaries = game.m_map.isWithinBoundaries(position.iCellX, position.iCellY);
 
         // reinforcement stuff happens here...
         if (m_transferType == eTransferType::DIE) {
@@ -1416,7 +1416,7 @@ void cUnit::thinkFast_move_airUnit()
                     // on unit that is being picked up!? (unit to pick up is not changed, the CARRY-ALL is though)
                     if (unitToPickupOrDrop.bPickedUp == false) {
                         // CARRY-ALL: when we are at the same cell as the unit to pick up
-                        if (iCell == unitToPickupOrDrop.iCell) {
+                        if (position.iCell == unitToPickupOrDrop.position.iCell) {
                             // when this unit is NOT moving
                             if (!unitToPickupOrDrop.isMovingBetweenCells()) {
                                 TIMER_movedelay = 300; // this will make carry-all speed up slowly
@@ -1432,7 +1432,7 @@ void cUnit::thinkFast_move_airUnit()
                                 unitToPickupOrDrop.iHitPoints = -1;
 
                                 // remove unit from map id (so it wont block other units)
-                                game.m_map.cellResetIdFromLayer(iCell, MAPID_UNITS);
+                                game.m_map.cellResetIdFromLayer(position.iCell, MAPID_UNITS);
 
                                 // now move air unit to the 'bring target'
                                 setGoalCell(iBringTarget);
@@ -1452,7 +1452,7 @@ void cUnit::thinkFast_move_airUnit()
 
                             if (!unitToPickupOrDrop.bPickedUp) {
                                 // keep updating goal as long as unit has not been picked up yet.
-                                setGoalCell(unitToPickupOrDrop.iCell);
+                                setGoalCell(unitToPickupOrDrop.position.iCell);
                             }
                             else {
                                 forgetAboutUnitToPickUp();
@@ -1464,17 +1464,17 @@ void cUnit::thinkFast_move_airUnit()
                 else {
                     // picked up unit! yay, we are at the destination where we had to
                     // bring it... w00t
-                    if (iCell == iBringTarget) {
+                    if (position.iCell == iBringTarget) {
                         TIMER_movedelay = 300; // this will make carry-all speed up slowly
-                        lastDroppedOffCell = iCell; // remember this cell
+                        lastDroppedOffCell = position.iCell; // remember this cell
 
                         // check if its valid for this unit...
-                        if (!game.m_map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
+                        if (!game.m_map.occupied(position.iCell, iUnitID) && isWithinMapBoundaries) {
                             // valid structure
                             cAbstractStructure *structureUnitWantsToEnter = unitToPickupOrDrop.getStructureUnitWantsToEnter();
 
                             if (structureUnitWantsToEnter) {
-                                bool isAttemptingDeployingAtStructure = game.m_map.getCellIdStructuresLayer(iCell) == structureUnitWantsToEnter->getStructureId();
+                                bool isAttemptingDeployingAtStructure = game.m_map.getCellIdStructuresLayer(position.iCell) == structureUnitWantsToEnter->getStructureId();
 
                                 if (isAttemptingDeployingAtStructure) {
                                     if (structureUnitWantsToEnter->isInProcessOfBeingEnteredOrOccupiedByUnit(unitToPickupOrDrop.iID)) {
@@ -1491,7 +1491,7 @@ void cUnit::thinkFast_move_airUnit()
                                         }
                                         else {
                                             // !?
-                                            int dropLocation = game.m_map.findNearByValidDropLocation(iCell, 3, unitToPickupOrDrop.iType);
+                                            int dropLocation = game.m_map.findNearByValidDropLocation(position.iCell, 3, unitToPickupOrDrop.iType);
 //                                            carryAll_transferUnitTo(iUnitID, dropLocation);
                                             setGoalCell(dropLocation);
                                             iBringTarget = dropLocation;
@@ -1502,10 +1502,10 @@ void cUnit::thinkFast_move_airUnit()
                             }
 
                             // dump it here (unload from carry-all)
-                            unitToPickupOrDrop.setCell(iCell);
-                            unitToPickupOrDrop.setGoalCell(iCell);
+                            unitToPickupOrDrop.setCell(position.iCell);
+                            unitToPickupOrDrop.setGoalCell(position.iCell);
                             unitToPickupOrDrop.updateCellXAndY(); // update cellx and celly
-                            game.m_map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
+                            game.m_map.cellSetIdForLayer(position.iCell, MAPID_UNITS, iUnitID);
 
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
@@ -1520,7 +1520,7 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.rendering.iBodyShouldFace = rendering.iBodyShouldFace;
 
                             // clear spot
-                            game.m_map.clearShroud(iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
+                            game.m_map.clearShroud(position.iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
 
                             int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
@@ -1542,7 +1542,7 @@ void cUnit::thinkFast_move_airUnit()
                         else {
                             // find a new spot
                             updateCellXAndY();
-                            setGoalCell(findNewDropLocation(game.getUnit(iUnitID).iType, iCell));
+                            setGoalCell(findNewDropLocation(game.getUnit(iUnitID).iType, position.iCell));
                             iBringTarget = movement.iGoalCell;
                             return;
                         }
@@ -1561,10 +1561,10 @@ void cUnit::thinkFast_move_airUnit()
             // bring a new unit
 
             if (iType == FRIGATE) {
-                int iStrucId = game.m_map.getCellIdStructuresLayer(iCell);
+                int iStrucId = game.m_map.getCellIdStructuresLayer(position.iCell);
 
                 if (iStrucId > -1) {
-                    setGoalCell(iFindCloseBorderCell(iCell));
+                    setGoalCell(iFindCloseBorderCell(position.iCell));
                     m_transferType = eTransferType::DIE;
 
                     game.m_pStructures[iStrucId]->setFrame(4); // show package on this structure
@@ -1589,20 +1589,20 @@ void cUnit::thinkFast_move_airUnit()
                 return; // override for frigates
             }
 
-            bool canDeployAtCell = game.m_map.occupied(iCell, iID) == false;
+            bool canDeployAtCell = game.m_map.occupied(position.iCell, iID) == false;
 
             if (iNewUnitType > -1) {
-                canDeployAtCell = game.m_map.canDeployUnitAtCell(iCell, iID);
+                canDeployAtCell = game.m_map.canDeployUnitAtCell(position.iCell, iID);
             }
 
             // first check if this cell is clear
             if (canDeployAtCell && isWithinMapBoundaries) {
                 // drop unit
                 if (iNewUnitType > -1) {
-                    int id = cUnits::unitCreate(iCell, iNewUnitType, iPlayer, true, isReinforcement);
+                    int id = cUnits::unitCreate(position.iCell, iNewUnitType, iPlayer, true, isReinforcement);
 
                     if (id > -1) {
-                        game.m_map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
+                        game.m_map.cellSetIdForLayer(position.iCell, MAPID_UNITS, id);
                     }
                 }
 
@@ -1614,7 +1614,7 @@ void cUnit::thinkFast_move_airUnit()
                     m_transferType = eTransferType::DIE;
 
                     // find a new border cell close to us... to die
-                    setGoalCell(iFindCloseBorderCell(iCell));
+                    setGoalCell(iFindCloseBorderCell(position.iCell));
                     return;
                 }
                 else if (m_transferType == eTransferType::NEW_STAY) {
@@ -1627,7 +1627,7 @@ void cUnit::thinkFast_move_airUnit()
             else {
                 // find a new spot for delivery
                 updateCellXAndY();
-                setGoalCell(findNewDropLocation(iNewUnitType, iCell));
+                setGoalCell(findNewDropLocation(iNewUnitType, position.iCell));
                 return;
             }
         }
@@ -1650,7 +1650,7 @@ void cUnit::thinkFast_move_airUnit()
 
     // use this when picking something up
     if (iUnitID > -1 || (m_transferType != eTransferType::DIE && m_transferType != eTransferType::NONE)) {
-        int iLength = ABS_length(iCellX, iCellY, goalCellX, goalCellY);
+        int iLength = ABS_length(position.iCellX, position.iCellY, goalCellX, goalCellY);
 
         if (iType != FRIGATE) {
             // 'sand dust' when nearing target and hovering over sandy terrain
@@ -1660,7 +1660,7 @@ void cUnit::thinkFast_move_airUnit()
             float slowDownStep = maxSlowDown / dist;
             if (iLength < dist) {
                 if (RNG::rnd(100) < 5) {
-                    int cellType = game.m_map.getCellType(iCell);
+                    int cellType = game.m_map.getCellType(position.iCell);
                     if (cellType == TERRAIN_SAND ||
                             cellType == TERRAIN_SPICE ||
                             cellType == TERRAIN_HILL ||
@@ -1696,7 +1696,7 @@ void cUnit::thinkFast_move_airUnit()
     TIMER_move = 0;
 
     // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
-    int d = fDegrees(iCellX, iCellY, goalCellX, goalCellY);
+    int d = fDegrees(position.iCellX, position.iCellY, goalCellX, goalCellY);
     int idealAngle = faceAngle(d);
     int f = faceAngle(d); // get the angle
     float angle = 0;
@@ -1705,8 +1705,8 @@ void cUnit::thinkFast_move_airUnit()
     if (rendering.iBodyFacing != rendering.iBodyShouldFace) {
         // not ideal angle, the aircraft flies straight ahead which it is facing.
         // since we don't have a velocity vector, we do it like this for now:
-        int nextX = iCellX;
-        int nextY = iCellY;
+        int nextX = position.iCellX;
+        int nextY = position.iCellY;
 
         switch (rendering.iBodyFacing) {
             case FACE_UP:
@@ -1738,35 +1738,35 @@ void cUnit::thinkFast_move_airUnit()
                 nextX--;
                 break;
         }
-        angle = fRadians(iCellX, iCellY, nextX, nextY);
+        angle = fRadians(position.iCellX, position.iCellY, nextX, nextY);
     }
     else {
         // using ideal angle, just fly straight towards goal
-        angle = fRadians(iCellX, iCellY, goalCellX, goalCellY);
+        angle = fRadians(position.iCellX, position.iCellY, goalCellX, goalCellY);
     }
 
     rendering.iHeadFacing = f;
 
-    game.m_map.cellResetIdFromLayer(iCell, MAPID_AIR);
+    game.m_map.cellResetIdFromLayer(position.iCell, MAPID_AIR);
 
 //    int movespeed = getUnitInfo().speed;
     int movespeed = 2; // 2 pixels, the actual 'speed' is done by the delay above using TIMER_move! :/
-    float newPosX = posX + cos(angle) * movespeed;
-    float newPosY = posY + sin(angle) * movespeed;
+    float newPosX = position.posX + cos(angle) * movespeed;
+    float newPosY = position.posY + sin(angle) * movespeed;
     setPosX(newPosX);
     setPosY(newPosY);
 
     // Cell of unit is determined by its center
-    iCell = game.m_mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
+    position.iCell = game.m_mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
 
     updateCellXAndY();
-    game.m_map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+    game.m_map.cellSetIdForLayer(position.iCell, MAPID_AIR, iID);
 }
 
 void cUnit::setPosX(float newVal)
 {
-    float diff = newVal - posX;
-    posX = newVal;
+    float diff = newVal - position.posX;
+    position.posX = newVal;
     if (boundParticleId > -1) {
         cParticle &pParticle = game.m_particles[boundParticleId];
         pParticle.addPosX(diff);
@@ -1775,8 +1775,8 @@ void cUnit::setPosX(float newVal)
 
 void cUnit::setPosY(float newVal)
 {
-    float diff = newVal - posY;
-    posY = newVal;
+    float diff = newVal - position.posY;
+    position.posY = newVal;
     if (boundParticleId > -1) {
         cParticle &pParticle = game.m_particles[boundParticleId];
         pParticle.addPosY(diff);
@@ -1785,7 +1785,7 @@ void cUnit::setPosY(float newVal)
 
 void cUnit::forgetAboutUnitToPickUp()  // forget about this
 {
-    setGoalCell(iCell);
+    setGoalCell(position.iCell);
     m_transferType = eTransferType::NONE;
     iUnitID = -1;
 }
@@ -1858,7 +1858,7 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
         if (pUnit.isValid()) {
             m_transferType = transferType;
 
-            setGoalCell(pUnit.iCell); // first go to the target to pick it up
+            setGoalCell(pUnit.position.iCell); // first go to the target to pick it up
 
             iNewUnitType = -1;
 
@@ -1895,7 +1895,7 @@ void cUnit::shoot(int iTargetCell)
     int bulletType = unitInfo.bulletType;
     // if secondary fire is configured properly
     if (unitInfo.fireSecondaryWithinRange > -1 && unitInfo.bulletTypeSecondary > -1) {
-        if (game.m_map.distance(iCell, iTargetCell) <= unitInfo.fireSecondaryWithinRange) {
+        if (game.m_map.distance(position.iCell, iTargetCell) <= unitInfo.fireSecondaryWithinRange) {
             bulletType = unitInfo.bulletTypeSecondary;
         }
     }
@@ -1903,7 +1903,7 @@ void cUnit::shoot(int iTargetCell)
 
     if (bulletType < 0) return; // no bullet type to spawn
 
-    int iBull = createBullet(bulletType, iCell, iTargetCell, iID, -1);
+    int iBull = createBullet(bulletType, position.iCell, iTargetCell, iID, -1);
 
     cUnit *attackUnit = nullptr;
     if (combat.iAttackUnit > -1) {
@@ -1921,8 +1921,8 @@ void cUnit::shoot(int iTargetCell)
 int cUnit::getNextCellToMoveTo()
 {
     if (isAirbornUnit()) {
-        if (movement.iGoalCell == iCell) {
-            return iCell;
+        if (movement.iGoalCell == position.iCell) {
+            return position.iCell;
         }
 
         return movement.iGoalCell; // return the goal
@@ -1973,7 +1973,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
         }
 
         if (!getPlayer()->isHuman()) {
-            int unitCellWhichShotMe = game.getUnit(iShotUnit).iCell;
+            int unitCellWhichShotMe = game.getUnit(iShotUnit).position.iCell;
             if (isHarvester()) {
                 if (game.getUnit(iShotUnit).isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
@@ -1990,12 +1990,12 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                     if (canSquishInfantry() && unitWhoShotMeIsInfantry) {
                         if (movement.iGoalCell != unitCellWhichShotMe) {
                             double distance = 9999;
-                            if (movement.iGoalCell != iCell && m_action == eActionType::MOVE) {
+                            if (movement.iGoalCell != position.iCell && m_action == eActionType::MOVE) {
                                 // moving towards a goal already
-                                distance = game.m_map.distance(iCell, unitCellWhichShotMe);
+                                distance = game.m_map.distance(position.iCell, unitCellWhichShotMe);
                             }
                             // found a unit closer to squish, so move towards it
-                            if (distance < game.m_map.distance(iCell, movement.iGoalCell)) {
+                            if (distance < game.m_map.distance(position.iCell, movement.iGoalCell)) {
                                 // AI tries to run over infantry units that attack it
                                 move_to(unitCellWhichShotMe);
                             }
@@ -2004,7 +2004,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                     else {
                         if (!unitWhoShotMeIsAirborn) {
                             if (isSandworm()) {
-                                if (game.m_map.isCellPassableForWorm(unitWhoShotMe.iCell)) {
+                                if (game.m_map.isCellPassableForWorm(unitWhoShotMe.position.iCell)) {
                                     attackUnit(iShotUnit);
                                 }
                                 else {
@@ -2024,7 +2024,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                     if (iDestCell < 0) {
                         if (combat.iAttackUnit > -1)
-                            iDestCell = game.getUnit(combat.iAttackUnit).iCell;
+                            iDestCell = game.getUnit(combat.iAttackUnit).position.iCell;
 
                         if (combat.iAttackStructure > -1) {
                             cAbstractStructure *pStructure = game.m_pStructures[combat.iAttackStructure];
@@ -2034,7 +2034,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                             }
                         }
 
-                        if (game.m_map.distance(iCell, iDestCell) < getRange()) {
+                        if (game.m_map.distance(position.iCell, iDestCell) < getRange()) {
                             // within range, don't move (just prepare retaliation fire)
                         }
                         else {
@@ -2082,7 +2082,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                 cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
                 game.playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5),
-                                           distanceBetweenCellAndCenterOfScreen(iCell));
+                                           distanceBetweenCellAndCenterOfScreen(position.iCell));
 
             }
         }
@@ -2093,7 +2093,7 @@ void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
     game.getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, movement.iGoalCell = {}] '{}'",
-                                     iID, iType, game.unitInfos[iType].name, iCell, movement.iGoalCell, txt));
+                                     iID, iType, game.unitInfos[iType].name, position.iCell, movement.iGoalCell, txt));
 }
 
 /**
@@ -2124,7 +2124,7 @@ void cUnit::think_attack()
             return;
         }
 
-        setGoalCell(attackUnit->iCell);
+        setGoalCell(attackUnit->position.iCell);
     }
 
     cAbstractStructure *pStructure = nullptr;
@@ -2136,7 +2136,7 @@ void cUnit::think_attack()
         else {
             combat.iAttackUnit = -1;
             combat.iAttackStructure = -1;
-            setGoalCell(iCell);
+            setGoalCell(position.iCell);
             setAction(eActionType::GUARD);
             return;
         }
@@ -2171,7 +2171,7 @@ void cUnit::think_attack()
     }
 
     // Distance check
-    int distance = game.m_map.distance(iCell, movement.iGoalCell);
+    int distance = game.m_map.distance(position.iCell, movement.iGoalCell);
 
     if (isAirbornUnit()) {
         // AIRBORN UNITS ATTACK THINKING
@@ -2249,14 +2249,14 @@ void cUnit::think_attack_sandworm()
     }
 
     // update movement.iGoalCell with where the attacking unit is (chase)
-    setGoalCell(attackUnit->iCell);
-    if (movement.iGoalCell == iCell) {
+    setGoalCell(attackUnit->position.iCell);
+    if (movement.iGoalCell == position.iCell) {
         attackUnit->die(false, false);
         unitsEaten++;
         long x = pos_x_centered();
         long y = pos_y_centered();
         cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
-        game.playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
+        game.playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(position.iCell));
         actionGuard();
         TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
         TIMER_guard = (1000/5) * 4; // timer guard works other way around..
@@ -2276,7 +2276,7 @@ void cUnit::think_attack_sandworm()
         return;
     }
 
-    if (attackUnit->isIdle() && !game.m_map.isCellPassableForWorm(attackUnit->iCell)) {
+    if (attackUnit->isIdle() && !game.m_map.isCellPassableForWorm(attackUnit->position.iCell)) {
         // forget about unit that is not reachable
         actionGuard();
         return;
@@ -2296,7 +2296,7 @@ void cUnit::actionGuard()
 
 int cUnit::getFaceAngleToCell(int cell) const
 {
-    int d = fDegrees(iCellX, iCellY, game.m_map.getCellX(cell), game.m_map.getCellY(cell));
+    int d = fDegrees(position.iCellX, position.iCellY, game.m_map.getCellX(cell), game.m_map.getCellY(cell));
     return faceAngle(d); // get the angle
 }
 
@@ -2320,7 +2320,7 @@ void cUnit::startChasingTarget()
         else {
             // do not chase air units, very ... inconvenient
             setAction(eActionType::GUARD);
-            setGoalCell(iCell);
+            setGoalCell(position.iCell);
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
     }
@@ -2434,7 +2434,7 @@ void cUnit::thinkFast_move()
     }
 
     // when there is a valid goal cell (differs), then we go further
-    if (movement.iGoalCell == iCell) {
+    if (movement.iGoalCell == position.iCell) {
         setAction(eActionType::GUARD); // do nothing
         forgetAboutCurrentPathAndPrepareToCreateNewOne();
         return;
@@ -2449,7 +2449,7 @@ void cUnit::thinkFast_move()
             forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
 
             // when we do have a different goal, we should get a path:
-            if (movement.iGoalCell != iCell) {
+            if (movement.iGoalCell != position.iCell) {
                 int iResult = cPathFinder::createPath(iID, 0); // do not take units into account yet
                 log(std::format("Create path ... result = {}", iResult));
 
@@ -2467,11 +2467,11 @@ void cUnit::thinkFast_move()
                         if (uID > -1 && uID != iID) {
                             // occupied, not by self
                             // find a goal cell near to it
-                            int iNewGoal = cPathFinder::returnCloseGoal(movement.iGoalCell, iCell, iID);
+                            int iNewGoal = cPathFinder::returnCloseGoal(movement.iGoalCell, position.iCell, iID);
 
                             if (iNewGoal == movement.iGoalCell) {
                                 // same goal, cant find new, stop
-                                setGoalCell(iCell);
+                                setGoalCell(position.iCell);
                                 log("Could not find alternative goal");
                                 movement.iPathIndex = -1;
                                 movement.iPathFails = 0;
@@ -2489,13 +2489,13 @@ void cUnit::thinkFast_move()
                             log("Want to enter structure, yet ID's do not match");
                             log("Resetting structure id and such to redo what i was doing?");
                             iStructureID = -1;
-                            setGoalCell(iCell);
+                            setGoalCell(position.iCell);
                             movement.iPathIndex = -1;
                             movement.iPathFails = 0;
                         }
                         else {
                             log("Something else blocks path, but goal itself is not occupied.");
-                            setGoalCell(iCell);
+                            setGoalCell(position.iCell);
                             movement.iPathIndex = -1;
                             movement.iPathFails = 0;
                             iStructureID = -1;
@@ -2528,14 +2528,14 @@ void cUnit::thinkFast_move()
                             .entityID = iID,
                             .player = getPlayer(),
                             .entitySpecificType = iType,
-                            .atCell = iCell,
+                            .atCell = position.iCell,
                             .isReinforce = isReinforcement
                         };
 
                         game.onNotifyGameEvent(event);
 
                         // stop trying - forget about path stuff
-                        setGoalCell(iCell);
+                        setGoalCell(position.iCell);
                         movement.iPathFails = 0;
                         movement.iPathIndex = -1;
                         if (TIMER_movewait <= 0) {
@@ -2639,8 +2639,8 @@ void cUnit::thinkFast_move()
                     else if (intent == eUnitActionIntent::INTENT_CAPTURE) {
                         if (pStructure->getPlayer()->isSameTeamAs(getPlayer())) {
                             iStructureID = -1;
-                            setGoalCell(iCell);
-                            movement.iNextCell = iCell;
+                            setGoalCell(position.iCell);
+                            movement.iNextCell = position.iCell;
                             TIMER_movewait = 100; // we wait
                             bOccupied = true; // obviously - but will do nothing :S
                             return; // bail, else the logic below will kick of (ugh, bad code)
@@ -2683,7 +2683,7 @@ void cUnit::thinkFast_move()
     if (bOccupied) {
         if (movement.iNextCell == movement.iGoalCell) {
             // it is our goal cell, close enough
-            setGoalCell(iCell);
+            setGoalCell(position.iCell);
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
             return;
         }
@@ -2700,7 +2700,7 @@ void cUnit::thinkFast_move()
             cUnit &unitOccupyingNextCell = game.getUnit(uID);
             if (unitOccupyingNextCell.isValid() &&
                     unitOccupyingNextCell.TIMER_movewait <= 0 &&
-                    unitOccupyingNextCell.movement.iGoalCell != unitOccupyingNextCell.iCell) {
+                    unitOccupyingNextCell.movement.iGoalCell != unitOccupyingNextCell.position.iCell) {
                 // this unit is also moving, so wait for it to move
                 TIMER_movewait = 50;
                 return;
@@ -2725,7 +2725,7 @@ void cUnit::thinkFast_move()
         if (result == eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL ||
                 result == eUnitMoveToCellResult::MOVERESULT_AT_CELL) {
             // not occupied cell;
-            int idOfStructureAtCurrentCell = game.m_map.getCellIdStructuresLayer(iCell);
+            int idOfStructureAtCurrentCell = game.m_map.getCellIdStructuresLayer(position.iCell);
 
             // we wanted to enter this structure
             if (iStructureID > -1 &&
@@ -2788,18 +2788,18 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int iNextY = game.m_map.getCellY(movement.iNextCell);
 
     // Compare X, Y coordinates
-    if (iNextX < iCellX)
+    if (iNextX < position.iCellX)
         bToLeft = 0; // we head to the left
 
-    if (iNextX > iCellX)
+    if (iNextX > position.iCellX)
         bToLeft = 1; // we head to the right
 
     // we go up
-    if (iNextY < iCellY)
+    if (iNextY < position.iCellY)
         bToDown = 1;
 
     // we go down
-    if (iNextY > iCellY)
+    if (iNextY > position.iCellY)
         bToDown = 0;
 
     // done, since we already have the other stuff set
@@ -2807,8 +2807,8 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
 
     // Influenced by the terrain type
-    int cellType = game.m_map.getCellType(iCell);
-    int iSlowDown = game.m_map.getCellSlowDown(iCell);
+    int cellType = game.m_map.getCellType(position.iCell);
+    int iSlowDown = game.m_map.getCellSlowDown(position.iCell);
 
     cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
     if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
@@ -2877,14 +2877,14 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
     // movement in pixels
     if (bToLeft == 0)
-        setPosX(posX-1);
+        setPosX(position.posX-1);
     else if (bToLeft == 1)
-        setPosX(posX+1);
+        setPosX(position.posX+1);
 
     if (bToDown == 0)
-        setPosY(posY+1);
+        setPosY(position.posY+1);
     else if (bToDown == 1)
-        setPosY(posY-1);
+        setPosY(position.posY-1);
 
     // When moving, infantry has some animation
     if (isInfantryUnit()) {
@@ -2916,10 +2916,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
         // movement to cell complete
         if (isSandworm()) {
-            game.m_map.cellResetIdFromLayer(iCell, MAPID_WORMS);
+            game.m_map.cellResetIdFromLayer(position.iCell, MAPID_WORMS);
         }
         else {
-            game.m_map.cellResetIdFromLayer(iCell, MAPID_UNITS);
+            game.m_map.cellResetIdFromLayer(position.iCell, MAPID_UNITS);
         }
 
         setCell(movement.iNextCell);
@@ -2937,7 +2937,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                 cUnit &potentialDeadUnit = game.getUnit(iq);
                 if (iq == iID) continue; // skip self
                 if (!potentialDeadUnit.isValid()) continue;
-                if (potentialDeadUnit.iCell != iCell) continue; // not on my cell
+                if (potentialDeadUnit.position.iCell != position.iCell) continue; // not on my cell
                 if (!potentialDeadUnit.canBeSquished()) continue;
 
                 if (potentialDeadUnit.isSaboteur()) {
@@ -2953,10 +2953,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         if (iPlayer == AI_CPU5 && game.getPlayer(HUMAN).isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            game.m_map.clearShroud(iCell, game.unitInfos[iType].sight, HUMAN);
+            game.m_map.clearShroud(position.iCell, game.unitInfos[iType].sight, HUMAN);
         }
 
-        game.m_map.clearShroud(iCell, game.unitInfos[iType].sight, iPlayer);
+        game.m_map.clearShroud(position.iCell, game.unitInfos[iType].sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (movement.bCalculateNewPath) {
@@ -2971,7 +2971,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         }
 
         // Just arrived at goal cell
-        if (iCell == movement.iGoalCell) {
+        if (position.iCell == movement.iGoalCell) {
             return eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL;
         }
 
@@ -3043,7 +3043,7 @@ void cUnit::thinkFast_position()
 bool cUnit::isMovingBetweenCells()
 {
     // when not perfectly divisible then it is 'between' cells.
-    return ((int)posX) % TILESIZE_WIDTH_PIXELS != 0 || ((int)posY) % TILESIZE_HEIGHT_PIXELS != 0;
+    return ((int)position.posX) % TILESIZE_WIDTH_PIXELS != 0 || ((int)position.posY) % TILESIZE_HEIGHT_PIXELS != 0;
 }
 
 bool cUnit::isDamaged()
@@ -3137,7 +3137,7 @@ void cUnit::move_to(int iGoalCell)
 
 void cUnit::setCell(int cll)
 {
-    this->iCell = cll;
+    this->position.iCell = cll;
     setPosX(game.m_map.getAbsoluteXPositionFromCell(cll));
     setPosY(game.m_map.getAbsoluteYPositionFromCell(cll));
 }
@@ -3201,14 +3201,14 @@ std::string cUnit::eUnitActionIntentString(eUnitActionIntent intent)
  */
 bool cUnit::isUnableToMove()
 {
-    if (game.m_map.occupied(game.m_map.getCellLeft(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellRight(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellAbove(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellBelow(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellLowerLeft(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellLowerRight(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellUpperRight(iCell), iID) &&
-            game.m_map.occupied(game.m_map.getCellUpperLeft(iCell), iID)) {
+    if (game.m_map.occupied(game.m_map.getCellLeft(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellRight(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellAbove(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellBelow(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellLowerLeft(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellLowerRight(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellUpperRight(position.iCell), iID) &&
+            game.m_map.occupied(game.m_map.getCellUpperLeft(position.iCell), iID)) {
         return true;
     }
 
@@ -3309,7 +3309,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
         // try to get a carry-all to help when a bit bigger distance
         int distanceWeAllowDriving = 4;
-        if (game.m_map.distance(iCell, destCell) > distanceWeAllowDriving) {
+        if (game.m_map.distance(position.iCell, destCell) > distanceWeAllowDriving) {
             if (findAndOrderCarryAllToBringMeToStructureAtCell(pStructure, destCell)) {
                 return eHeadTowardsStructureResult::SUCCESS_AWAITING_CARRYALL;
             }
@@ -3432,7 +3432,7 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                 if (pUnit.isValid()) {
                     originType = eBuildType::UNIT;
                     originId = unitWhoDealsDamage;
-                    originCell = pUnit.iCell;
+                    originCell = pUnit.position.iCell;
                 }
             }
             else if (structureWhoDealsDamage > -1) {
@@ -3505,7 +3505,7 @@ void cUnit::thinkFast_guard_sandworm()
         if (potentialDinner.isAirbornUnit()) continue;
         if (potentialDinner.isSandworm()) continue; // don't eat other worms
 
-        double distance = game.m_map.distance(iCell, potentialDinner.iCell);
+        double distance = game.m_map.distance(position.iCell, potentialDinner.position.iCell);
 
         if (distance <= getSight() && distance < iDistance) {
             iDistance = distance;
@@ -3555,9 +3555,9 @@ int cUnit::findNearbyGroundUnitToAttack(int range)
         if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
         if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
         if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
-        if (!game.m_map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+        if (!game.m_map.isVisible(potentialThreat.position.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-        int distance = game.m_map.distance(iCell, potentialThreat.iCell);
+        int distance = game.m_map.distance(position.iCell, potentialThreat.position.iCell);
 
         if (distance <= range && distance < iDistance) {
             iDistance = distance;
@@ -3581,9 +3581,9 @@ int cUnit::findNearbyAirUnitToAttack(int range)
         if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
         if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
         if (!potentialThreat.isAttackableAirUnit()) continue;
-        if (!game.m_map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+        if (!game.m_map.isVisible(potentialThreat.position.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-        int distance = game.m_map.distance(iCell, potentialThreat.iCell);
+        int distance = game.m_map.distance(position.iCell, potentialThreat.position.iCell);
 
         if (distance <= range &&
                 distance < iDistance) { // closer than found thus far
@@ -3616,7 +3616,7 @@ int cUnit::findNearbyStructureThatCanDamageUnitsToAttack(int range)
         if (!pStructure->canAttackGroundUnits()) continue;
 
         // see big comment about this in findNearbyStructureToAttack
-        int distance = game.m_map.distance(iCell, pStructure->getRandomStructureCell());
+        int distance = game.m_map.distance(position.iCell, pStructure->getRandomStructureCell());
 
         if (distance <= range && distance < iDistance) {
             iDistance = distance;
@@ -3659,7 +3659,7 @@ int cUnit::findNearbyStructureToAttack(int range)
         // cells to evaluate. For every unit * 10 = 240 cells to evaluate.
         //
         // Regardless, this is something to think about. There are probably better/smarter ways to do this.
-        int distance = game.m_map.distance(iCell, pStructure->getRandomStructureCell());
+        int distance = game.m_map.distance(position.iCell, pStructure->getRandomStructureCell());
 
         if (distance <= range && distance < iDistance) {
             iDistance = distance;
@@ -3702,8 +3702,8 @@ void cUnit::think_harvester()
     bool bFindRefinery = false;
 
     // cell = goal cell (doing nothing)
-    if (iCell == movement.iGoalCell) {
-        int cellType = game.m_map.getCellType(iCell);
+    if (position.iCell == movement.iGoalCell) {
+        int cellType = game.m_map.getCellType(position.iCell);
         // when on spice, harvest
         if (cellType == TERRAIN_SPICE ||
                 cellType == TERRAIN_SPICEHILL) {
@@ -3739,22 +3739,22 @@ void cUnit::think_harvester()
                 rendering.iFrame = 1;
 
             iCredits += game.unitInfos[iType].harvesting_amount;
-            game.m_map.cellTakeCredits(iCell, game.unitInfos[iType].harvesting_amount);
+            game.m_map.cellTakeCredits(position.iCell, game.unitInfos[iType].harvesting_amount);
 
             // turn into sand/spice (when spicehill)
-            if (game.m_map.getCellCredits(iCell) <= 0) {
+            if (game.m_map.getCellCredits(position.iCell) <= 0) {
                 if (cellType == TERRAIN_SPICEHILL) {
-                    game.m_map.cellChangeType(iCell, TERRAIN_SPICE);
-                    game.m_map.cellGiveCredits(iCell, RNG::rnd(100));
+                    game.m_map.cellChangeType(position.iCell, TERRAIN_SPICE);
+                    game.m_map.cellGiveCredits(position.iCell, RNG::rnd(100));
                 }
                 else {
-                    game.m_map.cellChangeType(iCell, TERRAIN_SAND);
-                    game.m_map.cellChangeTile(iCell, 0);
+                    game.m_map.cellChangeType(position.iCell, TERRAIN_SAND);
+                    game.m_map.cellChangeTile(position.iCell, 0);
                 }
 
                 move_to(findHarvestSpot(iID), -1, -1);
 
-                cMapEditor(game.m_map).smoothAroundCell(iCell);
+                cMapEditor(game.m_map).smoothAroundCell(position.iCell);
             }
         }
 
@@ -3784,7 +3784,7 @@ void cUnit::setAction(eActionType action)
 
 void cUnit::retreatToNearbyBase()
 {
-    const std::vector<sEntityForDistance> &result = getPlayer()->getAllMyStructuresOrderClosestToCell(iCell);
+    const std::vector<sEntityForDistance> &result = getPlayer()->getAllMyStructuresOrderClosestToCell(position.iCell);
     if (result.empty()) {
         // don't know where to retreat to :/
         return;
