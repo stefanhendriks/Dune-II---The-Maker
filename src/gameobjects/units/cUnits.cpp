@@ -151,7 +151,8 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     newUnit.rendering.bHovered = false;
 
     newUnit.TIMER_bored = RNG::rnd(3000);
-    newUnit.TIMER_guard = 20 + RNG::rnd(70);
+    // newUnit.TIMER_guard = 20 + RNG::rnd(70);
+    newUnit.guardTimer.reset(20 + RNG::rnd(70));
     newUnit.recreateDimensions();
 
     // set (Correct!?) player id, when type is SANDWORM (!?)

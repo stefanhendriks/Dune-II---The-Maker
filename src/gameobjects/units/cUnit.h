@@ -300,7 +300,8 @@ public:
     // int TIMER_harvest;      // harvesting
     cTimer harvestTimer;      // harvesting timer
 
-    int TIMER_guard;        // guard scanning timer
+    // int TIMER_guard;        // guard scanning timer
+    cTimer guardTimer;        // guard scanning timer
     int TIMER_bored;        // how long are we bored?
 
     int TIMER_attack;       // when to shoot?
