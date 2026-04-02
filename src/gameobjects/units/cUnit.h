@@ -92,6 +92,15 @@ struct sMovement {
     bool bCalculateNewPath;
 };
 
+struct sRendering {
+    int iBodyFacing;    // Body of tanks facing
+    int iHeadFacing;    // Head of tanks facing
+    int iBodyShouldFace;    // where should the unit body look at?
+    int iHeadShouldFace;    // where should the unit look at?
+    int iFrame;         // framed (animated stuff)
+    bool bHovered;      // mouse hovers over this unit or not?
+};
+
 class cUnit {
 
 public:
@@ -149,14 +158,14 @@ public:
     int iNewUnitType;	// new unit that will be brought, will be this type
     int lastDroppedOffCell; // last cell where we dropepd off a unit
 
-    // Drawing
-    int iBodyFacing;    // Body of tanks facing
-    int iHeadFacing;    // Head of tanks facing
-    int iBodyShouldFace;    // where should the unit body look at?
-    int iHeadShouldFace;    // where should the unit look at?
-    int iFrame;         // framed (animated stuff)
-
-    bool bHovered;      // mouse hovers over this unit or not?
+    // // Drawing
+    // int iBodyFacing;    // Body of tanks facing
+    // int iHeadFacing;    // Head of tanks facing
+    // int iBodyShouldFace;    // where should the unit body look at?
+    // int iHeadShouldFace;    // where should the unit look at?
+    // int iFrame;         // framed (animated stuff)
+    // bool bHovered;      // mouse hovers over this unit or not?
+    sRendering rendering;
 
     void retreatToNearbyBase();
     void deselect();

@@ -48,7 +48,7 @@ void cUnit::init(int i)
     mission = -1;
     boundParticleId = -1;
     m_bSelected = false;
-    bHovered  = false;
+    rendering.bHovered  = false;
 
     unitsEaten = 0;
 
@@ -118,12 +118,12 @@ void cUnit::init(int i)
     iCredits = 0;
 
     // Drawing
-    iBodyFacing = 0;    // Body of tanks facing
-    iHeadFacing = 0;    // Head of tanks facing
-    iBodyShouldFace = iBodyFacing;    // where should the unit body look at?
-    iHeadShouldFace = iHeadFacing;    // where should th eunit look at?
+    rendering.iBodyFacing = 0;    // Body of tanks facing
+    rendering.iHeadFacing = 0;    // Head of tanks facing
+    rendering.iBodyShouldFace = rendering.iBodyFacing;    // where should the unit body look at?
+    rendering.iHeadShouldFace = rendering.iHeadFacing;    // where should th eunit look at?
 
-    iFrame = 0;
+    rendering.iFrame = 0;
 
     // TIMERS
     // TIMER_blink = 0;
@@ -242,11 +242,11 @@ void cUnit::createSquishedParticle()
     // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
         int iType1 = D2TM_PARTICLE_SQUISH01 + RNG::rnd(2);
-        cParticle::create(iDieX, iDieY, iType1, iHouse, iFrame);
+        cParticle::create(iDieX, iDieY, iType1, iHouse, rendering.iFrame);
         game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
     else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
-        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iHouse, iFrame);
+        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iHouse, rendering.iFrame);
         game.playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
@@ -269,7 +269,7 @@ void cUnit::createExplosionParticle()
     }
 
     if ((iType == SIEGETANK || iType == DEVASTATOR) && RNG::rnd(100) < 25) {
-        if (iBodyFacing == FACE_UPLEFT || iBodyFacing == FACE_DOWNRIGHT) {
+        if (rendering.iBodyFacing == FACE_UPLEFT || rendering.iBodyFacing == FACE_DOWNRIGHT) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
         }
     }
@@ -729,12 +729,12 @@ void cUnit::draw()
     const int bmp_height = unitType.bmp_height;
 
     // the multiplier we will use to draw the unit
-    const int bmp_head = convertAngleToDrawIndex(iHeadFacing);
-    const int bmp_body = convertAngleToDrawIndex(iBodyFacing);
+    const int bmp_head = convertAngleToDrawIndex(rendering.iHeadFacing);
+    const int bmp_body = convertAngleToDrawIndex(rendering.iBodyFacing);
 
     // draw body first
     int start_x = bmp_body * bmp_width;
-    int start_y = bmp_height * iFrame;
+    int start_y = bmp_height * rendering.iFrame;
 
     cPlayer &cPlayer = game.getPlayer(this->iPlayer);
 
@@ -770,7 +770,7 @@ void cUnit::draw()
     if (top && iHitPoints > -1) {
         // recalculate start_x using head instead of body
         start_x = bmp_head * bmp_width;
-        start_y = bmp_height * iFrame;
+        start_y = bmp_height * rendering.iFrame;
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, static_cast<int>(round(game.m_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(game.m_mapCamera->factorZoomLevel(bmp_height)))};
         global_renderDrawer->renderStrechSprite(top,src, dest);
@@ -979,8 +979,8 @@ void cUnit::thinkFast_guard()
     TIMER_bored++;
     if (TIMER_bored > 3500) {
         TIMER_bored = 0;
-        iBodyShouldFace = RNG::rnd(8);
-        iHeadShouldFace = RNG::rnd(8);
+        rendering.iBodyShouldFace = RNG::rnd(8);
+        rendering.iHeadShouldFace = RNG::rnd(8);
     }
 
     if (TIMER_guard > 0) {
@@ -1119,12 +1119,12 @@ void cUnit::thinkActionAgnostic()
 
     // HEAD is not facing correctly
     if (!isAirbornUnit()) {
-        if (iBodyFacing == iBodyShouldFace) {
-            if (iHeadFacing != iHeadShouldFace) {
+        if (rendering.iBodyFacing == rendering.iBodyShouldFace) {
+            if (rendering.iHeadFacing != rendering.iHeadShouldFace) {
                 TIMER_turn++;
                 if (TIMER_turn > getTurnSpeed()) {
                     TIMER_turn = 0;
-                    iHeadFacing = determineNewFacing(iHeadFacing, iHeadShouldFace);
+                    rendering.iHeadFacing = determineNewFacing(rendering.iHeadFacing, rendering.iHeadShouldFace);
                 } // turn
             } // head facing
 
@@ -1136,7 +1136,7 @@ void cUnit::thinkActionAgnostic()
     }
     else {
         // air units, have only 'body' facing
-        if (iBodyFacing != iBodyShouldFace) {
+        if (rendering.iBodyFacing != rendering.iBodyShouldFace) {
             think_turn_to_desired_body_facing();
         }
     }
@@ -1201,24 +1201,24 @@ void cUnit::think_carryAll()  // A carry-all has something when:
 
         // when picking up a unit.. only draw when picked up
         if (m_transferType == eTransferType::PICKUP && bPickedUp)
-            iFrame = 1;
+            rendering.iFrame = 1;
 
         // any other transfer, means it is filled from start...
         if (m_transferType != eTransferType::PICKUP)
-            iFrame = 1;
+            rendering.iFrame = 1;
     }
     else {
-        iFrame = 0;
+        rendering.iFrame = 0;
     }
 }
 
 void cUnit::think_ornithopter()
 {
     cPlayer *pPlayer = getPlayer();
-    iFrame++;
+    rendering.iFrame++;
 
-    if (iFrame > 3) {
-        iFrame = 0;
+    if (rendering.iFrame > 3) {
+        rendering.iFrame = 0;
     }
 
     if (iAttackUnit < 0 && iAttackStructure < 0) {
@@ -1322,7 +1322,7 @@ void cUnit::think_turn_to_desired_body_facing()
     if (TIMER_turn > turnspeed) {
         TIMER_turn = 0;
 
-        iBodyFacing = determineNewFacing(iBodyFacing, iBodyShouldFace);
+        rendering.iBodyFacing = determineNewFacing(rendering.iBodyFacing, rendering.iBodyShouldFace);
     } // turn body
 }
 
@@ -1378,8 +1378,8 @@ void cUnit::thinkFast_move_airUnit()
     if (game.m_map.isAtMapBoundaries(iCell)) {
         if (!isReinforcement) {
             // let unit face directly to ideal angle, so it won't fly into its doom (out of map)
-            iBodyFacing = iBodyShouldFace;
-            iHeadFacing = iHeadShouldFace;
+            rendering.iBodyFacing = rendering.iBodyShouldFace;
+            rendering.iHeadFacing = rendering.iHeadShouldFace;
         }
     }
 
@@ -1514,10 +1514,10 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.iCarryAll = -1;
 
                             // match facing of carryall
-                            unitToPickupOrDrop.iHeadFacing = iHeadFacing;
-                            unitToPickupOrDrop.iHeadShouldFace = iHeadShouldFace;
-                            unitToPickupOrDrop.iBodyFacing = iBodyFacing;
-                            unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
+                            unitToPickupOrDrop.rendering.iHeadFacing = rendering.iHeadFacing;
+                            unitToPickupOrDrop.rendering.iHeadShouldFace = rendering.iHeadShouldFace;
+                            unitToPickupOrDrop.rendering.iBodyFacing = rendering.iBodyFacing;
+                            unitToPickupOrDrop.rendering.iBodyShouldFace = rendering.iBodyShouldFace;
 
                             // clear spot
                             game.m_map.clearShroud(iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
@@ -1701,14 +1701,14 @@ void cUnit::thinkFast_move_airUnit()
     int f = faceAngle(d); // get the angle
     float angle = 0;
 
-    iBodyShouldFace = idealAngle;
-    if (iBodyFacing != iBodyShouldFace) {
+    rendering.iBodyShouldFace = idealAngle;
+    if (rendering.iBodyFacing != rendering.iBodyShouldFace) {
         // not ideal angle, the aircraft flies straight ahead which it is facing.
         // since we don't have a velocity vector, we do it like this for now:
         int nextX = iCellX;
         int nextY = iCellY;
 
-        switch (iBodyFacing) {
+        switch (rendering.iBodyFacing) {
             case FACE_UP:
                 nextY--;
                 break;
@@ -1745,7 +1745,7 @@ void cUnit::thinkFast_move_airUnit()
         angle = fRadians(iCellX, iCellY, goalCellX, goalCellY);
     }
 
-    iHeadFacing = f;
+    rendering.iHeadFacing = f;
 
     game.m_map.cellResetIdFromLayer(iCell, MAPID_AIR);
 
@@ -1881,7 +1881,7 @@ void cUnit::shoot(int iTargetCell)
     // particles are rendered at the center, so do it here as well
     int iShootX = pos_x() + (getBmpWidth() / 2);
     int iShootY = pos_y() + (getBmpHeight() / 2);
-    int bmp_head = convertAngleToDrawIndex(iHeadFacing);
+    int bmp_head = convertAngleToDrawIndex(rendering.iHeadFacing);
 
     // TODO: add this in sUnitInfo
     if (iType == TANK) {
@@ -2337,10 +2337,10 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
     // Facing
     int angle = getFaceAngleToCell(movement.iGoalCell);
 
-    iBodyShouldFace = angle;
-    iHeadShouldFace = angle;
+    rendering.iBodyShouldFace = angle;
+    rendering.iHeadShouldFace = angle;
 
-    if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing) {
+    if (rendering.iBodyShouldFace == rendering.iBodyFacing && rendering.iHeadShouldFace == rendering.iHeadFacing) {
 
         TIMER_attack++;
         if (TIMER_attack >= unitType.attack_frequency) {
@@ -2552,8 +2552,8 @@ void cUnit::thinkFast_move()
     }
 
     // Update the 'should' facing (ideal facing) of body and head.
-    iBodyShouldFace = getFaceAngleToCell(movement.iNextCell);
-    iHeadShouldFace = getFaceAngleToCell(movement.iGoalCell);
+    rendering.iBodyShouldFace = getFaceAngleToCell(movement.iNextCell);
+    rendering.iHeadShouldFace = getFaceAngleToCell(movement.iGoalCell);
 
     // check
     bool bOccupied = false;
@@ -2719,7 +2719,7 @@ void cUnit::thinkFast_move()
 
     updateCellXAndY();
 
-    if (iBodyShouldFace == iBodyFacing) {
+    if (rendering.iBodyShouldFace == rendering.iBodyFacing) {
         eUnitMoveToCellResult result = moveToNextCellLogic();
 
         if (result == eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL ||
@@ -2892,9 +2892,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
         if (TIMER_frame > 3) {
 
-            iFrame++;
-            if (iFrame > 3)
-                iFrame = 0;
+            rendering.iFrame++;
+            if (rendering.iFrame > 3)
+                rendering.iFrame = 0;
 
             TIMER_frame = 0;
         }
@@ -3281,7 +3281,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     bool allowCarryallTransfer,
     eUnitActionIntent actionIntent)
 {
-    iFrame = 0; // stop animating
+    rendering.iFrame = 0; // stop animating
     assert(structureType > -1);
 
     if (intent == actionIntent) {
@@ -3718,7 +3718,7 @@ void cUnit::think_harvester()
                 move_to(findHarvestSpot(iID), -1, -1);
             }
             else {
-                iFrame = 0;
+                rendering.iFrame = 0;
                 bFindRefinery = true;
                 // find a refinery
             }
@@ -3733,10 +3733,10 @@ void cUnit::think_harvester()
                 iCredits < getUnitInfo().credit_capacity) {
             TIMER_harvest = 1;
 
-            iFrame++;
+            rendering.iFrame++;
 
-            if (iFrame > 3)
-                iFrame = 1;
+            if (rendering.iFrame > 3)
+                rendering.iFrame = 1;
 
             iCredits += game.unitInfos[iType].harvesting_amount;
             game.m_map.cellTakeCredits(iCell, game.unitInfos[iType].harvesting_amount);
@@ -3766,7 +3766,7 @@ void cUnit::think_harvester()
     }
     else {
         // ??
-        iFrame = 0;
+        rendering.iFrame = 0;
     }
 }
 
