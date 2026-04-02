@@ -793,7 +793,8 @@ void cAbstractStructure::unitLeavesStructure()
     unitToLeave.iCredits = 0;
     unitToLeave.iStructureID = -1;
 
-    unitToLeave.TIMER_harvest = 0;
+    // unitToLeave.TIMER_harvest = 0;
+    unitToLeave.harvestTimer.reset(0);
     unitToLeave.restoreFromTempHitPoints();
 
     unitToLeave.movement.iGoalCell = unitToLeave.getCell();
