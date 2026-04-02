@@ -2501,7 +2501,7 @@ void cUnit::thinkFast_move()
                             iStructureID = -1;
 
                             // random move around
-                            int iF = UNIT_FREE_AROUND_MOVE(iID);
+                            int iF = freeAroundMove(iID);
 
                             if (iF > -1) {
                                 move_to(iF);
@@ -3324,7 +3324,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
 bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell)
 {
-    int r = CARRYALL_FREE_FOR_TRANSFER(iPlayer);
+    int r = carryallFreeForTransfer(iPlayer);
     if (r < 0) {
         return false;
     }
@@ -3715,7 +3715,7 @@ void cUnit::think_harvester()
             // not on spice, find a new location
             if (iCredits < getUnitInfo().credit_capacity) {
                 // find harvest cell
-                move_to(UNIT_find_harvest_spot(iID), -1, -1);
+                move_to(findHarvestSpot(iID), -1, -1);
             }
             else {
                 iFrame = 0;
@@ -3752,7 +3752,7 @@ void cUnit::think_harvester()
                     game.m_map.cellChangeTile(iCell, 0);
                 }
 
-                move_to(UNIT_find_harvest_spot(iID), -1, -1);
+                move_to(findHarvestSpot(iID), -1, -1);
 
                 cMapEditor(game.m_map).smoothAroundCell(iCell);
             }
@@ -3861,7 +3861,7 @@ bool cUnit::canUnload()
     return iCredits > 0;
 }
 
-int cUnit::UNIT_find_harvest_spot(int id)
+int cUnit::findHarvestSpot(int id)
 {
     // finds the closest harvest spot
     cUnit &cUnit = game.getUnit(id);
@@ -3938,7 +3938,7 @@ int cUnit::UNIT_find_harvest_spot(int id)
     return TargetSpice;
 }
 
-int cUnit::CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
+int cUnit::carryallFreeForTransfer(int iPlayer)
 {
     // find a free carry all
     for (int i = 0; i < game.m_Units.size(); i++) {
@@ -3960,9 +3960,9 @@ int cUnit::CARRYALL_FREE_FOR_TRANSFER(int iPlayer)
  * @param iGoal
  * @return
  */
-int cUnit::CARRYALL_TRANSFER(int iuID, int iGoal)
+int cUnit::carryallTransfer(int iuID, int iGoal)
 {
-    int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(game.getUnit(iuID).iPlayer);
+    int carryAllUnitId = carryallFreeForTransfer(game.getUnit(iuID).iPlayer);
     if (carryAllUnitId > -1) {
         cUnit &cUnit = game.getUnit(carryAllUnitId);
         cUnit.carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
@@ -3970,7 +3970,7 @@ int cUnit::CARRYALL_TRANSFER(int iuID, int iGoal)
     return carryAllUnitId;
 }
 
-int cUnit::UNIT_FREE_AROUND_MOVE(int iUnit)
+int cUnit::freeAroundMove(int iUnit)
 {
     if (iUnit < 0) {
         logbook("Invalid unit");

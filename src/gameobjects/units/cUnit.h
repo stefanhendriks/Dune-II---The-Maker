@@ -448,9 +448,9 @@ public:
 
     bool canUnload();
 
-    static int UNIT_find_harvest_spot(int id);
-    static int CARRYALL_TRANSFER(int iuID, int iGoal);
-    static int UNIT_FREE_AROUND_MOVE(int iUnit);
+    static int findHarvestSpot(int id);
+    static int carryallTransfer(int iuID, int iGoal);
+    static int freeAroundMove(int iUnit);
 
 private:
     eActionType m_action;
@@ -573,7 +573,7 @@ private:
     void setAction(eActionType action);
     void setGoalCell(int goalCell);
 
-    static int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);
+    static int carryallFreeForTransfer(int iPlayer);
 };
 
 
