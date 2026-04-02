@@ -83,6 +83,15 @@ inline std::string eActionTypeString(eActionType actionType)
     return "";
 }
 
+struct sMovement {
+    int iNextCell;
+    int iGoalCell;
+    int iPath[MAX_PATH_SIZE];
+    int iPathIndex;
+    int iPathFails;
+    bool bCalculateNewPath;
+};
+
 class cUnit {
 
 public:
@@ -101,14 +110,15 @@ public:
     int iPlayer;        // belongs to player
 
     // Movement
-    int iNextCell;      // where to move to (next cell)
-    int iGoalCell;      // the goal cell (goal of path)
-//    float iOffsetX;       // X offset
-//    float iOffsetY;       // Y offset
-    int iPath[MAX_PATH_SIZE];    // path of unit
-    int iPathIndex;     // where are we?
-    int iPathFails;     // failed...
-    bool bCalculateNewPath; // calculate new path?
+//     int iNextCell;      // where to move to (next cell)
+//     int iGoalCell;      // the goal cell (goal of path)
+// //    float iOffsetX;       // X offset
+// //    float iOffsetY;       // Y offset
+//     int iPath[MAX_PATH_SIZE];    // path of unit
+//     int iPathIndex;     // where are we?
+//     int iPathFails;     // failed...
+//     bool bCalculateNewPath; // calculate new path?
+    sMovement movement;
 
     // carryall stuff
     bool bCarryMe;		// carry this unit when moving it around?

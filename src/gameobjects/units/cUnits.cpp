@@ -145,7 +145,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
     newUnit.iType = unitType;
     newUnit.setHp(sUnitType.hp * hpPercentage);
-    newUnit.iGoalCell = iCll;
+    newUnit.movement.iGoalCell = iCll;
 
     newUnit.deselect();
     newUnit.bHovered = false;
