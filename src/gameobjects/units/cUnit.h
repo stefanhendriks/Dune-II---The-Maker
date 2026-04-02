@@ -84,12 +84,12 @@ inline std::string eActionTypeString(eActionType actionType)
 }
 
 struct sMovement {
-    int iNextCell;
-    int iGoalCell;
-    int iPath[MAX_PATH_SIZE];
-    int iPathIndex;
-    int iPathFails;
-    bool bCalculateNewPath;
+    int iNextCell;      // where to move to (next cell)
+    int iGoalCell;      // the goal cell (goal of path)
+    int iPath[MAX_PATH_SIZE];    // path of unit
+    int iPathIndex;     // where are we?
+    int iPathFails;     // failed...
+    bool bCalculateNewPath;  // calculate new path?
 };
 
 struct sRendering {
@@ -290,11 +290,11 @@ public:
     int TIMER_move;         // movement timer
     int TIMER_movewait;     // wait for move think...
     int TIMER_movedelay;    // if given, it will delay movement
+    float TIMER_turn;       // turning around
 
     int TIMER_thinkwait;    // wait with normal thinking..
 
-    float TIMER_turn;       // turning around
-    int TIMER_frame;        // frame
+    int TIMER_frame;        // When moving, infantry has some animation
 
     int TIMER_harvest;      // harvesting
 
