@@ -136,7 +136,8 @@ void cUnit::init(int i)
     TIMER_guard = 0;    // guard scanning timer
     TIMER_bored = 0;    // how long are we bored?
     TIMER_attack = 0;
-    TIMER_wormtrail = 0;
+    // TIMER_wormtrail = 0;
+    wormTrailTimer.reset(0);
     TIMER_movedelay = 0;
 }
 
@@ -1108,12 +1109,12 @@ void cUnit::thinkActionAgnostic()
     if (isSandworm()) {
         // add a worm trail behind worm randomly for now (just not every frame, or else this spams a great
         // deal of particles overlapping eachother.
-        TIMER_wormtrail++;
-        if (TIMER_wormtrail > 2) {
+        // TIMER_wormtrail++;
+        if (wormTrailTimer.incrementUntil(2)) {
             long x = pos_x_centered();
             long y = pos_y_centered();
             cParticle::create(x, y, D2TM_PARTICLE_WORMTRAIL, -1, -1);
-            TIMER_wormtrail = 0;
+            // TIMER_wormtrail = 0;
         }
     }
 
