@@ -137,8 +137,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             }
         }
 
-        if (pUnit.iAttackStructure > -1) {
-            if (idOfStructureAtCell == pUnit.iAttackStructure) {
+        if (pUnit.combat.iAttackStructure > -1) {
+            if (idOfStructureAtCell == pUnit.combat.iAttackStructure) {
                 valid = false;
                 success = true;
                 pUnit.log("Found attack structure ID");
@@ -213,8 +213,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     if (idOfStructureAtCell > -1) {
                         // when the cell is a structure, and it is the structure we want to attack, it is good
 
-                        if (pUnit.iAttackStructure > -1)
-                            if (idOfStructureAtCell == pUnit.iAttackStructure)
+                        if (pUnit.combat.iAttackStructure > -1)
+                            if (idOfStructureAtCell == pUnit.combat.iAttackStructure)
                                 good = true;
 
                         if (pUnit.iStructureID > -1)

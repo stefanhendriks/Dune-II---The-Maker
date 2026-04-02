@@ -101,6 +101,12 @@ struct sRendering {
     bool bHovered;      // mouse hovers over this unit or not?
 };
 
+struct sCombat {
+    int iAttackUnit;      // attacking unit id
+    int iAttackStructure; // attack structure id
+    int iAttackCell;      // attacking a cell (which is force attack)
+};
+
 class cUnit {
 
 public:
@@ -136,9 +142,10 @@ public:
 
 
     // WHEN ATTACKING
-    int iAttackUnit;      // attacking unit id
-    int iAttackStructure; // attack structure id
-    int iAttackCell;      // attacking a cell (which is force attack)
+    // int iAttackUnit;      // attacking unit id
+    // int iAttackStructure; // attack structure id
+    // int iAttackCell;      // attacking a cell (which is force attack)
+    sCombat combat;
 
     // Action given code
     int iUnitID;        // Unit ID to attack/pickup, etc

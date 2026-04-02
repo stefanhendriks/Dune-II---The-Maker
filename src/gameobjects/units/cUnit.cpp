@@ -93,9 +93,9 @@ void cUnit::init(int i)
     m_action = eActionType::GUARD;
     intent = INTENT_NONE;
 
-    iAttackUnit = -1;      // attacking unit id
-    iAttackStructure = -1; // attack structure id
-    iAttackCell = -1;
+    combat.iAttackUnit = -1;      // attacking unit id
+    combat.iAttackStructure = -1; // attack structure id
+    combat.iAttackCell = -1;
 
     // selected
     m_bSelected = false;
@@ -178,7 +178,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     for (int i = 0; i < game.m_Units.size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue; // skip invalid
-        if (pUnit.iAttackUnit != iID) continue; // skip those who did not want to attack me
+        if (pUnit.combat.iAttackUnit != iID) continue; // skip those who did not want to attack me
 
         pUnit.actionGuard();
     }
@@ -859,9 +859,9 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
 
     setAction(chaseWhenOutOfRange ? eActionType::ATTACK_CHASE : eActionType::ATTACK);
     setGoalCell(goalCell);
-    iAttackStructure = structureId;
-    iAttackUnit = unitId;
-    this->iAttackCell = attackCell;
+    combat.iAttackStructure = structureId;
+    combat.iAttackUnit = unitId;
+    combat.iAttackCell = attackCell;
     forgetAboutCurrentPathAndPrepareToCreateNewOne(RNG::rnd(5));
 }
 
@@ -930,8 +930,8 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
 
     iUnitID = iUnitIdToPickup;
 
-    iAttackStructure = -1;
-    iAttackCell = -1;
+    combat.iAttackStructure = -1;
+    combat.iAttackCell = -1;
 
     // only when not moving (half on tile) reset nextcell
     if (!isMovingBetweenCells()) {
@@ -1221,7 +1221,7 @@ void cUnit::think_ornithopter()
         rendering.iFrame = 0;
     }
 
-    if (iAttackUnit < 0 && iAttackStructure < 0) {
+    if (combat.iAttackUnit < 0 && combat.iAttackStructure < 0) {
         selectTargetForOrnithopter(pPlayer);
     }
     else {
@@ -1906,12 +1906,12 @@ void cUnit::shoot(int iTargetCell)
     int iBull = createBullet(bulletType, iCell, iTargetCell, iID, -1);
 
     cUnit *attackUnit = nullptr;
-    if (iAttackUnit > -1) {
-        attackUnit = &game.getUnit(iAttackUnit);
+    if (combat.iAttackUnit > -1) {
+        attackUnit = &game.getUnit(combat.iAttackUnit);
         if (attackUnit && !attackUnit->isValid()) {
             // allowing homing bullets towards air units from the ground
             if (iBull > -1 && attackUnit->isAirbornUnit()) {
-                game.g_Bullets[iBull].iHoming = iAttackUnit;
+                game.g_Bullets[iBull].iHoming = combat.iAttackUnit;
                 game.g_Bullets[iBull].TIMER_homing = 200;
             }
         }
@@ -2020,14 +2020,14 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                 else {
                     // we are attacking, but when target is very far away (out of range?) then we should not attack that but defend
                     // ourselves
-                    int iDestCell = iAttackCell;
+                    int iDestCell = combat.iAttackCell;
 
                     if (iDestCell < 0) {
-                        if (iAttackUnit > -1)
-                            iDestCell = game.getUnit(iAttackUnit).iCell;
+                        if (combat.iAttackUnit > -1)
+                            iDestCell = game.getUnit(combat.iAttackUnit).iCell;
 
-                        if (iAttackStructure > -1) {
-                            cAbstractStructure *pStructure = game.m_pStructures[iAttackStructure];
+                        if (combat.iAttackStructure > -1) {
+                            cAbstractStructure *pStructure = game.m_pStructures[combat.iAttackStructure];
                             // it can become null, so check!
                             if (pStructure && pStructure->isValid()) {
                                 iDestCell = pStructure->getCell();
@@ -2109,8 +2109,8 @@ void cUnit::think_attack()
     }
 
     cUnit *attackUnit = nullptr;
-    if (iAttackUnit > -1) {
-        attackUnit = &game.getUnit(iAttackUnit);
+    if (combat.iAttackUnit > -1) {
+        attackUnit = &game.getUnit(combat.iAttackUnit);
 
         // should be impossible
         if (!attackUnit) {
@@ -2128,14 +2128,14 @@ void cUnit::think_attack()
     }
 
     cAbstractStructure *pStructure = nullptr;
-    if (iAttackStructure > -1) {
-        pStructure = game.m_pStructures[iAttackStructure];
+    if (combat.iAttackStructure > -1) {
+        pStructure = game.m_pStructures[combat.iAttackStructure];
         if (pStructure && pStructure->isValid()) {
             setGoalCell(pStructure->getCell());
         }
         else {
-            iAttackUnit = -1;
-            iAttackStructure = -1;
+            combat.iAttackUnit = -1;
+            combat.iAttackStructure = -1;
             setGoalCell(iCell);
             setAction(eActionType::GUARD);
             return;
@@ -2148,15 +2148,15 @@ void cUnit::think_attack()
         }
     }
 
-    if (iAttackCell > -1) {
-        setGoalCell(iAttackCell);
+    if (combat.iAttackCell > -1) {
+        setGoalCell(combat.iAttackCell);
 
         bool isBloomOrWallTerrain =
-            game.m_map.getCellType(iAttackCell) == TERRAIN_BLOOM || game.m_map.getCellType(iAttackCell) == TERRAIN_WALL;
+            game.m_map.getCellType(combat.iAttackCell) == TERRAIN_BLOOM || game.m_map.getCellType(combat.iAttackCell) == TERRAIN_WALL;
 
         if (isBloomOrWallTerrain) {
             // stop attacking a spice bloom or a wall when it got destroyed
-            if (game.m_map.getCellHealth(iAttackCell) < 0) {
+            if (game.m_map.getCellHealth(combat.iAttackCell) < 0) {
                 actionGuard();
                 return;
             }
@@ -2184,8 +2184,8 @@ void cUnit::think_attack()
                 int rx = game.m_map.getCellX(randomCellFrom);
                 int ry = game.m_map.getCellY(randomCellFrom);
 
-                iAttackUnit = -1;
-                iAttackStructure = -1;
+                combat.iAttackUnit = -1;
+                combat.iAttackStructure = -1;
                 setAction(eActionType::MOVE);
                 setGoalCell(game.m_map.getGeometry().getCellWithMapDimensions(rx, ry));
             }
@@ -2193,8 +2193,8 @@ void cUnit::think_attack()
         else {
             // stop attacking, move instead?
             setAction(eActionType::MOVE);
-            iAttackUnit = -1;
-            iAttackStructure = -1;
+            combat.iAttackUnit = -1;
+            combat.iAttackStructure = -1;
         }
 
         return; // bail, air-unit attack thinking finished
@@ -2228,13 +2228,13 @@ void cUnit::think_attack()
 
 void cUnit::think_attack_sandworm()
 {
-    if (iAttackUnit < 0) {
+    if (combat.iAttackUnit < 0) {
         // no attack unit
         actionGuard();
         return;
     }
 
-    cUnit *attackUnit = &game.getUnit(iAttackUnit);
+    cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
 
     // should be impossible
     if (!attackUnit) {
@@ -2289,9 +2289,9 @@ void cUnit::think_attack_sandworm()
 void cUnit::actionGuard()
 {
     setAction(eActionType::GUARD);
-    iAttackUnit = -1;
-    iAttackCell = -1;
-    iAttackStructure =-1;
+    combat.iAttackUnit = -1;
+    combat.iAttackCell = -1;
+    combat.iAttackStructure =-1;
 }
 
 int cUnit::getFaceAngleToCell(int cell) const
@@ -2302,13 +2302,13 @@ int cUnit::getFaceAngleToCell(int cell) const
 
 void cUnit::startChasingTarget()
 {
-    if (iAttackStructure > -1) {
+    if (combat.iAttackStructure > -1) {
         setAction(eActionType::CHASE);
         // a structure does not move, so don't need to re-calculate path?
 //        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     }
-    else if (iAttackUnit > -1) {
-        cUnit *attackUnit = &game.getUnit(iAttackUnit);
+    else if (combat.iAttackUnit > -1) {
+        cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
         // chase unit, but only when ground unit
         if (!attackUnit->isAirbornUnit()) {
             setAction(eActionType::CHASE);
@@ -2324,7 +2324,7 @@ void cUnit::startChasingTarget()
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
     }
-    else if (iAttackCell > -1) {
+    else if (combat.iAttackCell > -1) {
         setAction(eActionType::CHASE);
     }
 }
@@ -2905,7 +2905,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // when we are chasing, we now set on attack...
         if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            cUnit *attackUnit = &game.getUnit(iAttackUnit);
+            cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
             if (attackUnit && attackUnit->isValid()) {
                 setAction(eActionType::ATTACK_CHASE);
                 if (attackUnit->getCell() != movement.iGoalCell) {
