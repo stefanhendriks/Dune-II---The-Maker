@@ -39,14 +39,16 @@ void cRefinery::think_unit_occupation()
     // the unit id is filled in, that means the unit is IN this structure
     // the TIMER_harvest of the unit will be used to dump the harvest in the
     // refinery
-    cUnit.TIMER_harvest++;
+    // cUnit.TIMER_harvest++;
+    cUnit.harvestTimer.increment();
 
     cPlayer *pPlayer = getPlayer();
     cPlayerDifficultySettings *difficultySettings = pPlayer->getDifficultySettings();
 
-    if (cUnit.TIMER_harvest < difficultySettings->getDumpSpeed(10)) return;
+    if (cUnit.harvestTimer.get() < difficultySettings->getDumpSpeed(10)) return;
 
-    cUnit.TIMER_harvest = 0;
+    // cUnit.TIMER_harvest = 0;
+    cUnit.harvestTimer.reset(0);
 
     // dump credits
     if (cUnit.canUnload()) {

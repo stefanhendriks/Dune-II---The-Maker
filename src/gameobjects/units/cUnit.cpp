@@ -132,7 +132,8 @@ void cUnit::init(int i)
     TIMER_thinkwait = 0;    // wait with normal thinking..
     TIMER_turn = 0;
     TIMER_frame = 0;
-    TIMER_harvest = 0;
+    // TIMER_harvest = 0;
+    harvestTimer.reset(0);
     TIMER_guard = 0;    // guard scanning timer
     TIMER_bored = 0;    // how long are we bored?
     TIMER_attack = 0;
@@ -3710,7 +3711,8 @@ void cUnit::think_harvester()
                 cellType == TERRAIN_SPICEHILL) {
             // do timer stuff
             if (iCredits < getUnitInfo().credit_capacity)
-                TIMER_harvest++;
+                harvestTimer.increment();
+                // TIMER_harvest++;
         }
         else {
             // not on spice, find a new location
@@ -3730,9 +3732,9 @@ void cUnit::think_harvester()
 
         // when we should harvest...
         cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
-        if (TIMER_harvest > (difficultySettings->getHarvestSpeed(game.unitInfos[iType].harvesting_speed)) &&
+        if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(game.unitInfos[iType].harvesting_speed)) &&
                 iCredits < getUnitInfo().credit_capacity) {
-            TIMER_harvest = 1;
+            harvestTimer.reset(1);
 
             rendering.iFrame++;
 
