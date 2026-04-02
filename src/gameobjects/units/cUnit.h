@@ -507,18 +507,17 @@ private:
     bool m_bSelected;     // selected or not?
 
     int iCell;          // cell of unit
-
     int iCellX;         // my cell x
     int iCellY;         // my cell y
-
-    int boundParticleId; // when a unit is damaged, it can spawn a particle on top of it (ie smoke)
-
     // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
     // thus are snapped to the grid.
     float posX, posY;
-
     void setPosX(float newVal);
     void setPosY(float newVal);
+
+    int boundParticleId; // when a unit is damaged, it can spawn a particle on top of it (ie smoke)
+
+
 
     eUnitMoveToCellResult moveToNextCellLogic();
 
