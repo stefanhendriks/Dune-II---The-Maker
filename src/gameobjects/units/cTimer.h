@@ -23,9 +23,9 @@ public:
         return false;
     }
 
-    bool decrementUntil(int value) {
-        decrement();
-        if (m_ticks < value) {
+    bool decrementUntil(int value = 0) {
+        if (m_ticks > value) {
+            decrement();
             return true;
         }
         return false;
