@@ -207,10 +207,10 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     int f = faceAngle(d); // get the angle
 
     cUnit &carryall = game.getUnit(iUnit);
-    carryall.iBodyShouldFace = f;
-    carryall.iBodyFacing = f;
-    carryall.iHeadShouldFace = f;
-    carryall.iHeadFacing = f;
+    carryall.rendering.iBodyShouldFace = f;
+    carryall.rendering.iBodyFacing = f;
+    carryall.rendering.iHeadShouldFace = f;
+    carryall.rendering.iHeadFacing = f;
 
     carryall.carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
 }

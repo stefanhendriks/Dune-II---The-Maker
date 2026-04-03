@@ -16,6 +16,7 @@
 // #include "player/brains/missions/cPlayerBrainMission.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
+#include "gameobjects/units/cTimer.h"
 
 #include <memory>
 #include <string>
@@ -83,6 +84,44 @@ inline std::string eActionTypeString(eActionType actionType)
     return "";
 }
 
+struct sMovement {
+    int iNextCell;      // where to move to (next cell)
+    int iGoalCell;      // the goal cell (goal of path)
+    int iPath[MAX_PATH_SIZE];    // path of unit
+    int iPathIndex;     // where are we?
+    int iPathFails;     // failed...
+    bool bCalculateNewPath;  // calculate new path?
+};
+
+struct sRendering {
+    int iBodyFacing;    // Body of tanks facing
+    int iHeadFacing;    // Head of tanks facing
+    int iBodyShouldFace;    // where should the unit body look at?
+    int iHeadShouldFace;    // where should the unit look at?
+    int iFrame;         // framed (animated stuff)
+    bool bHovered;      // mouse hovers over this unit or not?
+};
+
+struct sCombat {
+    int iAttackUnit;      // attacking unit id
+    int iAttackStructure; // attack structure id
+    int iAttackCell;      // attacking a cell (which is force attack)
+};
+
+class cPosition {
+public:
+    explicit cPosition(): iCell(0), iCellX(0), iCellY(0), posX(0), posY(0) {}
+private:
+    int iCell;          // cell of unit
+    int iCellX;         // my cell x
+    int iCellY;         // my cell y
+    // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
+    // thus are snapped to the grid.
+    float posX, posY;
+    friend class cUnit;
+};
+
+
 class cUnit {
 
 public:
@@ -101,14 +140,15 @@ public:
     int iPlayer;        // belongs to player
 
     // Movement
-    int iNextCell;      // where to move to (next cell)
-    int iGoalCell;      // the goal cell (goal of path)
-//    float iOffsetX;       // X offset
-//    float iOffsetY;       // Y offset
-    int iPath[MAX_PATH_SIZE];    // path of unit
-    int iPathIndex;     // where are we?
-    int iPathFails;     // failed...
-    bool bCalculateNewPath; // calculate new path?
+//     int iNextCell;      // where to move to (next cell)
+//     int iGoalCell;      // the goal cell (goal of path)
+// //    float iOffsetX;       // X offset
+// //    float iOffsetY;       // Y offset
+//     int iPath[MAX_PATH_SIZE];    // path of unit
+//     int iPathIndex;     // where are we?
+//     int iPathFails;     // failed...
+//     bool bCalculateNewPath; // calculate new path?
+    sMovement movement;
 
     // carryall stuff
     bool bCarryMe;		// carry this unit when moving it around?
@@ -117,9 +157,10 @@ public:
 
 
     // WHEN ATTACKING
-    int iAttackUnit;      // attacking unit id
-    int iAttackStructure; // attack structure id
-    int iAttackCell;      // attacking a cell (which is force attack)
+    // int iAttackUnit;      // attacking unit id
+    // int iAttackStructure; // attack structure id
+    // int iAttackCell;      // attacking a cell (which is force attack)
+    sCombat combat;
 
     // Action given code
     int iUnitID;        // Unit ID to attack/pickup, etc
@@ -139,14 +180,14 @@ public:
     int iNewUnitType;	// new unit that will be brought, will be this type
     int lastDroppedOffCell; // last cell where we dropepd off a unit
 
-    // Drawing
-    int iBodyFacing;    // Body of tanks facing
-    int iHeadFacing;    // Head of tanks facing
-    int iBodyShouldFace;    // where should the unit body look at?
-    int iHeadShouldFace;    // where should the unit look at?
-    int iFrame;         // framed (animated stuff)
-
-    bool bHovered;      // mouse hovers over this unit or not?
+    // // Drawing
+    // int iBodyFacing;    // Body of tanks facing
+    // int iHeadFacing;    // Head of tanks facing
+    // int iBodyShouldFace;    // where should the unit body look at?
+    // int iHeadShouldFace;    // where should the unit look at?
+    // int iFrame;         // framed (animated stuff)
+    // bool bHovered;      // mouse hovers over this unit or not?
+    sRendering rendering;
 
     void retreatToNearbyBase();
     void deselect();
@@ -245,25 +286,28 @@ public:
     void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     // -------------
-    int TIMER_blink;	    // blink
+    // int TIMER_blink;	    // blink
 
     int TIMER_move;         // movement timer
     int TIMER_movewait;     // wait for move think...
     int TIMER_movedelay;    // if given, it will delay movement
+    float TIMER_turn;       // turning around
 
     int TIMER_thinkwait;    // wait with normal thinking..
 
-    float TIMER_turn;       // turning around
-    int TIMER_frame;        // frame
+    int TIMER_frame;        // When moving, infantry has some animation
 
-    int TIMER_harvest;      // harvesting
+    // int TIMER_harvest;      // harvesting
+    cTimer harvestTimer;      // harvesting timer
 
-    int TIMER_guard;        // guard scanning timer
+    // int TIMER_guard;        // guard scanning timer
+    cTimer guardTimer;        // guard scanning timer
     int TIMER_bored;        // how long are we bored?
 
     int TIMER_attack;       // when to shoot?
 
-    int TIMER_wormtrail;    // when to spawn a trail when moving
+    // int TIMER_wormtrail;    // when to spawn a trail when moving
+    cTimer wormTrailTimer;    // when to spawn a trail when moving
 
     s_UnitInfo &getUnitInfo() const;
 
@@ -360,13 +404,13 @@ public:
 
     void setCell(int cll);
     int getCell() {
-        return iCell;
+        return position.iCell;
     }
     int getCellX() {
-        return iCellX;
+        return position.iCellX;
     }
     int getCellY() {
-        return iCellY;
+        return position.iCellY;
     }
 
     cPlayer *getPlayer();
@@ -448,6 +492,10 @@ public:
 
     bool canUnload();
 
+    static int findHarvestSpot(int id);
+    static int carryallTransfer(int iuID, int iGoal);
+    static int freeAroundMove(int iUnit);
+
 private:
     eActionType m_action;
     eUnitActionIntent intent;
@@ -476,19 +524,19 @@ private:
 
     bool m_bSelected;     // selected or not?
 
-    int iCell;          // cell of unit
-
-    int iCellX;         // my cell x
-    int iCellY;         // my cell y
+    // int iCell;          // cell of unit
+    // int iCellX;         // my cell x
+    // int iCellY;         // my cell y
+    //absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
+    //thus are snapped to the grid.
+    // float posX, posY;
+    cPosition position;
+    void setPosX(float newVal);
+    void setPosY(float newVal);
 
     int boundParticleId; // when a unit is damaged, it can spawn a particle on top of it (ie smoke)
 
-    // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
-    // thus are snapped to the grid.
-    float posX, posY;
 
-    void setPosX(float newVal);
-    void setPosY(float newVal);
 
     eUnitMoveToCellResult moveToNextCellLogic();
 
@@ -568,6 +616,8 @@ private:
 
     void setAction(eActionType action);
     void setGoalCell(int goalCell);
+
+    static int carryallFreeForTransfer(int iPlayer);
 };
 
 
@@ -593,10 +643,4 @@ private:
 
 // int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
-int UNIT_find_harvest_spot(int id);
 
-int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);
-
-int CARRYALL_TRANSFER(int iuID, int iGoal);
-
-int UNIT_FREE_AROUND_MOVE(int iUnit);

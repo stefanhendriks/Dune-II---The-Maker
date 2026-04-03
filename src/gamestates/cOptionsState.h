@@ -2,13 +2,14 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
-#include "gui/GuiWindow.h"
 #include "sMouseEvent.h"
+#include "include/Texture.hpp"
 
 struct SDL_Surface;
 class cGame;
 class GameContext;
+class cTextDrawer;
+class GuiWindow;
 
 class cOptionsState : public cGameState {
 public:

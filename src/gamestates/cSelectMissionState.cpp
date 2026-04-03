@@ -4,6 +4,7 @@
 #include "include/d2tmc.h"
 #include "config.h"
 #include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 #include <cassert>

@@ -7,11 +7,14 @@
 
 #pragma once
 
-#include "drawers/cTextDrawer.h"
+#include "utils/Color.hpp"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <format>
+
+class cTextDrawer;
 
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
 // every new command it will start on a new line.
