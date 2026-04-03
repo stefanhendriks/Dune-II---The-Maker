@@ -6,6 +6,7 @@
 #include "data/gfxinter.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"

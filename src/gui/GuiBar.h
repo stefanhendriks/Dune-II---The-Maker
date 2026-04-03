@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GuiObject.h"
-#include "drawers/cTextDrawer.h"
 
 #include <string>
 #include <vector>

@@ -39,14 +39,16 @@ void cRefinery::think_unit_occupation()
     // the unit id is filled in, that means the unit is IN this structure
     // the TIMER_harvest of the unit will be used to dump the harvest in the
     // refinery
-    cUnit.TIMER_harvest++;
+    // cUnit.TIMER_harvest++;
+    cUnit.harvestTimer.increment();
 
     cPlayer *pPlayer = getPlayer();
     cPlayerDifficultySettings *difficultySettings = pPlayer->getDifficultySettings();
 
-    if (cUnit.TIMER_harvest < difficultySettings->getDumpSpeed(10)) return;
+    if (cUnit.harvestTimer.get() < difficultySettings->getDumpSpeed(10)) return;
 
-    cUnit.TIMER_harvest = 0;
+    // cUnit.TIMER_harvest = 0;
+    cUnit.harvestTimer.reset(0);
 
     // dump credits
     if (cUnit.canUnload()) {
@@ -81,10 +83,10 @@ void cRefinery::think_unit_occupation()
     }
 
     // perhaps we can find a carryall to help us out
-    int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
+    int iHarvestCell = cUnit::findHarvestSpot(iUnitID);
 
     if (iHarvestCell > -1) {
-        int iCarry = CARRYALL_TRANSFER(iUnitID, iHarvestCell);
+        int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell);
 
         if (iCarry > -1) {
             cUnit.TIMER_movewait = 500;
