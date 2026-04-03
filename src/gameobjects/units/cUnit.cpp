@@ -1371,7 +1371,7 @@ void cUnit::thinkFast_move_airUnit()
 
         // KILL UNITS WHO SOMEHOW GET INVALID
         cLogger::getInstance()->log(LOG_DEBUG, COMP_UNITS, "Air unit got out of bounds",
-                         std::format("Air unit [{}] got invalid cell [{}], and thus got killed.", iID, iCell) );
+                         std::format("Air unit [{}] got invalid cell [{}], and thus got killed.", iID, position.iCell) );
         return;
     }
 
