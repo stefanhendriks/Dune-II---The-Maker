@@ -8,7 +8,7 @@
 class Texture;
 class cGame;
 class cReinforcements;
-
+class cTextDrawer;
 
 
 class cGamePlaying : public cGameState {

@@ -2,7 +2,6 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
 #include "gui/GuiWindow.h"
 #include "gui/GuiCycleButton.h"
 #include "gui/GuiTextInput.h"
@@ -11,6 +10,7 @@
 struct SDL_Surface;
 class cGame;
 class GameContext;
+class cTextDrawer;
 
 class cNewMapEditorState : public cGameState {
 public:

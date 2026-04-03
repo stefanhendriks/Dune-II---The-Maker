@@ -2,12 +2,12 @@
 
 #include "GuiObject.h"
 #include "utils/cRectangle.h"
-#include "drawers/cTextDrawer.h"
 
 #include <string>
 #include <functional>
 
 class SDLDrawer;
+class cTextDrawer;
 
 struct GuiButtonParams {
     cTextDrawer* drawer = nullptr;

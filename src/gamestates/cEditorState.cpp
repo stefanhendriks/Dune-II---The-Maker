@@ -11,6 +11,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "drawers/cTextDrawer.h"
 #include "map/cPreviewMaps.h"
 #include "utils/Graphics.hpp"
 #include "data/gfxeditor.h"

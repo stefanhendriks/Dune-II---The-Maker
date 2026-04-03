@@ -137,18 +137,18 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     newUnit.init(iNewId);
 
     newUnit.setCell(iCll);
-    newUnit.iBodyFacing = RNG::rnd(8);
-    newUnit.iHeadFacing = RNG::rnd(8);
+    newUnit.rendering.iBodyFacing = RNG::rnd(8);
+    newUnit.rendering.iHeadFacing = RNG::rnd(8);
 
-    newUnit.iBodyShouldFace = newUnit.iBodyFacing;
-    newUnit.iHeadShouldFace = newUnit.iHeadFacing;
+    newUnit.rendering.iBodyShouldFace = newUnit.rendering.iBodyFacing;
+    newUnit.rendering.iHeadShouldFace = newUnit.rendering.iHeadFacing;
 
     newUnit.iType = unitType;
     newUnit.setHp(sUnitType.hp * hpPercentage);
-    newUnit.iGoalCell = iCll;
+    newUnit.movement.iGoalCell = iCll;
 
     newUnit.deselect();
-    newUnit.bHovered = false;
+    newUnit.rendering.bHovered = false;
 
     newUnit.TIMER_bored = RNG::rnd(3000);
     newUnit.TIMER_guard = 20 + RNG::rnd(70);
@@ -166,7 +166,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
     // AI player immediately moves unit away
     if (iPlayer > 0 && iPlayer < AI_WORM && !sUnitType.airborn && !bOnStart) {
-        int iF = UNIT_FREE_AROUND_MOVE(iNewId);
+        int iF = cUnit::freeAroundMove(iNewId);
 
         if (iF > -1) {
             newUnit.log("Order move #2");

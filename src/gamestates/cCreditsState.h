@@ -2,7 +2,6 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
 #include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cPoint.h"
@@ -12,6 +11,7 @@
 
 class Texture;
 class cGame;
+class cTextDrawer;
 
 struct s_CreditLine {
     std::string name;

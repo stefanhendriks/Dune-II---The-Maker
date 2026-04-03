@@ -1,12 +1,12 @@
 #pragma once
 
 #include "gui/GuiObject.h"
-#include "drawers/cTextDrawer.h"
 #include <vector>
 #include <string>
 #include <functional>
 
 class SDLDrawer;
+class cTextDrawer;
 
 class GuiCycleButton : public GuiObject {
 public:
