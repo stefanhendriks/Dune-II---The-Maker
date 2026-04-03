@@ -482,47 +482,47 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
         evaluateMouseMoveState();
     }
 
-    // go to repair state
-    if (event.hasKey(SDL_SCANCODE_R)) {
-        if (m_selectedUnits.empty()) {
-            m_context->setMouseState(MOUSESTATE_REPAIR);
-        } else {
-            for (auto id: m_selectedUnits) {
-                cUnit &pUnit = game.getUnit(id);
-                if (pUnit.isEligibleForRepair()) {
-                    pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
-                    pUnit.deselect();
-                }
-            }
-            std::erase_if(m_selectedUnits, [&](auto id) {
-                cUnit &pUnit = game.getUnit(id);
-                return pUnit.isEligibleForRepair(); // remove from selection
-            });
-        }
-    }
+    // // go to repair state
+    // if (event.hasKey(SDL_SCANCODE_R)) {
+    //     if (m_selectedUnits.empty()) {
+    //         m_context->setMouseState(MOUSESTATE_REPAIR);
+    //     } else {
+    //         for (auto id: m_selectedUnits) {
+    //             cUnit &pUnit = game.getUnit(id);
+    //             if (pUnit.isEligibleForRepair()) {
+    //                 pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
+    //                 pUnit.deselect();
+    //             }
+    //         }
+    //         std::erase_if(m_selectedUnits, [&](auto id) {
+    //             cUnit &pUnit = game.getUnit(id);
+    //             return pUnit.isEligibleForRepair(); // remove from selection
+    //         });
+    //     }
+    // }
 
     // order any selected harvester to return to refinery
-    if (event.hasKey(SDL_SCANCODE_D)) {
-        const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
-        for (auto &id : selectedUnits) {
-            cUnit &pUnit = game.getUnit(id);
-            if (pUnit.isHarvester() && pUnit.canUnload()) {
-                pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
-            }
-            if (pUnit.isType(DEVASTATOR) ) {
-                pUnit.die(true, false);
-            }
-        }
-    }
+    // if (event.hasKey(SDL_SCANCODE_D)) {
+    //     const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
+    //     for (auto &id : selectedUnits) {
+    //         cUnit &pUnit = game.getUnit(id);
+    //         if (pUnit.isHarvester() && pUnit.canUnload()) {
+    //             pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
+    //         }
+    //         if (pUnit.isType(DEVASTATOR) ) {
+    //             pUnit.die(true, false);
+    //         }
+    //     }
+    // }
 
-    if (event.hasKey(SDL_SCANCODE_F)) {
-        for (auto id: m_selectedUnits) {
-            cUnit &pUnit = game.getUnit(id);
-            pUnit.retreatToNearbyBase();
-            pUnit.deselect();
-        }
-        m_selectedUnits.clear();
-    }
+    // if (event.hasKey(SDL_SCANCODE_F)) {
+    //     for (auto id: m_selectedUnits) {
+    //         cUnit &pUnit = game.getUnit(id);
+    //         pUnit.retreatToNearbyBase();
+    //         pUnit.deselect();
+    //     }
+    //     m_selectedUnits.clear();
+    // }
 }
 
 void cMouseUnitsSelectedState::toPreviousState()
