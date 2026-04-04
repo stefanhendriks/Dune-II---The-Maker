@@ -129,7 +129,8 @@ void cUnit::init(int i)
     // TIMER_blink = 0;
     TIMER_move = 0;
     TIMER_movewait = 0;
-    TIMER_thinkwait = 0;    // wait with normal thinking..
+    // TIMER_thinkwait = 0;
+    thinkwaitTimer.reset(0);    // wait with normal thinking..
     TIMER_turn = 0;
     frameTimer.reset(0);
     // TIMER_harvest = 0;
@@ -1149,10 +1150,11 @@ void cUnit::thinkActionAgnostic()
     }
 
     // when waiting.. wait
-    if (TIMER_thinkwait > 0) {
-        TIMER_thinkwait--;
-        return;
-    }
+    // if (TIMER_thinkwait > 0) {
+        // TIMER_thinkwait--;
+        // return;
+    // }
+    thinkwaitTimer.decrementUntil(0);
 
     if (isHidden())
         return;
@@ -1517,7 +1519,7 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
                             unitToPickupOrDrop.TIMER_movewait = 0;
-                            unitToPickupOrDrop.TIMER_thinkwait = 0;
+                            unitToPickupOrDrop.thinkwaitTimer.reset(0);
                             unitToPickupOrDrop.iCarryAll = -1;
 
                             // match facing of carryall
@@ -3305,7 +3307,8 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
     // No structure found, so bail
     if (result.reason == eFindBestStructureResultReason::NO_RESULT) {
-        TIMER_thinkwait = 10;
+        // TIMER_thinkwait = 10;
+        thinkwaitTimer.reset(10);
         return eHeadTowardsStructureResult::FAILED_NO_STRUCTURE_AVAILABLE;
     }
 
@@ -3356,7 +3359,8 @@ void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell)
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate)
 {
     TIMER_movewait = 650; // wait for pickup!
-    TIMER_thinkwait = 650;
+    // TIMER_thinkwait = 650;
+    thinkwaitTimer.reset(650);
     if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
         candidate->unitHeadsTowardsStructure(iID);
         iStructureID = candidate->getStructureId();
