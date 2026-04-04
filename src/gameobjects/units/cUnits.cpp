@@ -150,7 +150,9 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     newUnit.deselect();
     newUnit.rendering.bHovered = false;
 
-    newUnit.TIMER_bored = RNG::rnd(3000);
+    // newUnit.TIMER_bored = RNG::rnd(3000);
+    newUnit.boredTimer.reset(RNG::rnd(3000));
+    
     // newUnit.TIMER_guard = 20 + RNG::rnd(70);
     newUnit.guardTimer.reset(20 + RNG::rnd(70));
     newUnit.recreateDimensions();

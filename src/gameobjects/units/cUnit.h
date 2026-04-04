@@ -303,7 +303,8 @@ public:
 
     // int TIMER_guard;        // guard scanning timer
     cTimer guardTimer;        // guard scanning timer
-    int TIMER_bored;        // how long are we bored?
+    // int TIMER_bored;        // how long are we bored?
+    cTimer boredTimer;        // how long are we bored?
 
     int TIMER_attack;       // when to shoot?
 
