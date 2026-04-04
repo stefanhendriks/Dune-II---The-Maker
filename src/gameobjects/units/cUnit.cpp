@@ -131,7 +131,7 @@ void cUnit::init(int i)
     TIMER_movewait = 0;
     TIMER_thinkwait = 0;    // wait with normal thinking..
     TIMER_turn = 0;
-    TIMER_frame = 0;
+    frameTimer.reset(0);
     // TIMER_harvest = 0;
     harvestTimer.reset(0);
     // TIMER_guard = 0;    // guard scanning timer
@@ -2895,15 +2895,15 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
     // When moving, infantry has some animation
     if (isInfantryUnit()) {
-        TIMER_frame++;
+        // TIMER_frame++;
 
-        if (TIMER_frame > 3) {
-
+        // if (TIMER_frame > 3) {
+        if (frameTimer.incrementUntil(3)) {
             rendering.iFrame++;
             if (rendering.iFrame > 3)
                 rendering.iFrame = 0;
 
-            TIMER_frame = 0;
+            // TIMER_frame = 0;
         }
     }
 
