@@ -89,7 +89,9 @@ void cRefinery::think_unit_occupation()
         int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell);
 
         if (iCarry > -1) {
-            cUnit.TIMER_movewait = 500;
+            // cUnit.TIMER_movewait = 500;
+            cUnit.movewaitTimer.reset(500);
+            
             // cUnit.TIMER_thinkwait = 500;
             cUnit.thinkwaitTimer.reset(500);
 

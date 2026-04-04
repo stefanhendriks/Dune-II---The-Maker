@@ -32,7 +32,7 @@ void cPlayerBrainSandworm::think()
         cUnit &pSandWorm = game.getUnit(i);
 
         // when on guard
-        bool allowedToMove = pSandWorm.TIMER_movewait < 1;
+        bool allowedToMove = pSandWorm.movewaitTimer.get() < 1;
         if (pSandWorm.isIdle() && allowedToMove) {
             findRandomValidLocationToMoveToAndGoThere(pSandWorm);
         }
