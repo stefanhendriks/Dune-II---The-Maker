@@ -66,9 +66,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     // make sure not to create too many paths at once
     if (game.m_pathsCreated > 40) {
         pUnit.log("CREATE_PATH -- END 3");
-        // pUnit.TIMER_movewait = (50 + RNG::rnd(50));
         pUnit.movewaitTimer.reset(50 + RNG::rnd(50));
-
         return -3;
     }
 
@@ -84,16 +82,13 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     // when all around the unit there is no space, dont even bother
     if (pUnit.isUnableToMove()) {
         pUnit.log("CREATE_PATH -- END 5");
-        // pUnit.TIMER_movewait = 30 + RNG::rnd(50);
         pUnit.movewaitTimer.reset(30 + RNG::rnd(50));
         return -2;
     }
 
     // Now start create path
-
     // Clear unit path settings (index & path string)
     memset(pUnit.movement.iPath, -1, sizeof(pUnit.movement.iPath));
-
     pUnit.movement.iPathIndex = -1;
 
     // Search around a cell:

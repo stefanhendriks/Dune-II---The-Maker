@@ -10,7 +10,6 @@
 
 cRefinery::cRefinery()
 {
-
     // other variables (class specific)
     shouldAnimateWhenUnitHeadsTowardsStructure = true;
 }
@@ -22,7 +21,6 @@ int cRefinery::getType() const
 
 void cRefinery::thinkFast()
 {
-
     if (hasUnitWithin()) { // unit has entered structure
         think_unit_occupation();
     }
@@ -39,7 +37,6 @@ void cRefinery::think_unit_occupation()
     // the unit id is filled in, that means the unit is IN this structure
     // the TIMER_harvest of the unit will be used to dump the harvest in the
     // refinery
-    // cUnit.TIMER_harvest++;
     cUnit.harvestTimer.increment();
 
     cPlayer *pPlayer = getPlayer();
@@ -47,7 +44,6 @@ void cRefinery::think_unit_occupation()
 
     if (cUnit.harvestTimer.get() < difficultySettings->getDumpSpeed(10)) return;
 
-    // cUnit.TIMER_harvest = 0;
     cUnit.harvestTimer.reset(0);
 
     // dump credits
@@ -89,12 +85,8 @@ void cRefinery::think_unit_occupation()
         int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell);
 
         if (iCarry > -1) {
-            // cUnit.TIMER_movewait = 500;
             cUnit.movewaitTimer.reset(500);
-            
-            // cUnit.TIMER_thinkwait = 500;
             cUnit.thinkwaitTimer.reset(500);
-
         }
     }
 }
