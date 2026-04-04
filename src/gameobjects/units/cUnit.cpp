@@ -136,7 +136,8 @@ void cUnit::init(int i)
     harvestTimer.reset(0);
     // TIMER_guard = 0;    // guard scanning timer
     guardTimer.reset(0);
-    TIMER_bored = 0;    // how long are we bored?
+    // TIMER_bored = 0;    // how long are we bored?
+    boredTimer.reset(0);    // how long are we bored?
     TIMER_attack = 0;
     // TIMER_wormtrail = 0;
     wormTrailTimer.reset(0);
@@ -979,9 +980,10 @@ void cUnit::thinkFast_guard()
         return;
     }
 
-    TIMER_bored++;
-    if (TIMER_bored > 3500) {
-        TIMER_bored = 0;
+    // TIMER_bored++;
+    // if (TIMER_bored > 3500) {
+    if (boredTimer.incrementUntil(3500)) {
+        // TIMER_bored = 0;
         rendering.iBodyShouldFace = RNG::rnd(8);
         rendering.iHeadShouldFace = RNG::rnd(8);
     }
