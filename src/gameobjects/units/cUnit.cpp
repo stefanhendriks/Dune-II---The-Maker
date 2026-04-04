@@ -126,27 +126,16 @@ void cUnit::init(int i)
     rendering.iFrame = 0;
 
     // TIMERS
-    // TIMER_blink = 0;
-    // TIMER_move = 0;
     moveTimer.reset(0);
-    // TIMER_movewait = 0;
     movewaitTimer.reset(0);
-    // TIMER_thinkwait = 0;
     thinkwaitTimer.reset(0);    // wait with normal thinking..
-    // TIMER_turn = 0;
     turnTimer.reset(0);       // turning around
     frameTimer.reset(0);
-    // TIMER_harvest = 0;
     harvestTimer.reset(0);
-    // TIMER_guard = 0;    // guard scanning timer
     guardTimer.reset(0);
-    // TIMER_bored = 0;    // how long are we bored?
     boredTimer.reset(0);    // how long are we bored?
-    // TIMER_attack = 0;
     attackTimer.reset(0);
-    // TIMER_wormtrail = 0;
     wormTrailTimer.reset(0);
-    // TIMER_movedelay = 0;
     movedelayTimer.reset(0);
 }
 
@@ -622,7 +611,6 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
     // draw group
     // TODO: make text smaller depending on zoom factor?
     if (iGroup > 0 && iPlayer == HUMAN) {
-        // @mira I don't fix group name without acces to textDrawer: fixed on ctx branch
         textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),std::format("{}",iGroup));
         textDrawer->drawText(drawx + 26, drawy - 12, Color::white(),std::format("{}",iGroup));
     }
@@ -646,8 +634,6 @@ float cUnit::fExpDamage()
 
 void cUnit::draw_experience()
 {
-    // draws experience above health
-
     int iStars = (int) fExperience;
 
     if (iStars < 1)
@@ -986,30 +972,18 @@ void cUnit::thinkFast_guard()
         return;
     }
 
-    // TIMER_bored++;
-    // if (TIMER_bored > 3500) {
     if (boredTimer.incrementUntil(3500)) {
-        // TIMER_bored = 0;
         rendering.iBodyShouldFace = RNG::rnd(8);
         rendering.iHeadShouldFace = RNG::rnd(8);
     }
 
-    // if (TIMER_guard > 0) {
-        // TIMER_guard--; // scan time
-    // }
     guardTimer.decrementUntil(0);
-
-    // if (TIMER_movewait > 0) {
-        // TIMER_movewait--;
-    // }
     movewaitTimer.decrementUntil(0);
-
     if (movewaitTimer.get() > 0 || guardTimer.get() > 0) {
         return;
     }
 
     // scan area
-    // TIMER_guard = 20 + RNG::rnd(35); // do not scan all at the same time
     guardTimer.reset(20 + RNG::rnd(35));
 
     updateCellXAndY();
@@ -1073,7 +1047,6 @@ void cUnit::thinkFast_guard()
     if (!getPlayer()->isHuman()) {
         // TODO: Move this to the AI / brain classes?
         // ai units will auto-attack structures nearby
-
         int range = getSight() + 3;
         int id = findNearbyStructureToAttack(range);
 
@@ -1111,14 +1084,6 @@ void cUnit::think()
 
 void cUnit::thinkActionAgnostic()
 {
-    // if (TIMER_blink > 0) {
-    //     TIMER_blink--;
-    // }
-
-    // if (iType == MCV) {
-    //     think_MVC();
-    // }
-
     if (isSandworm()) {
         // add a worm trail behind worm randomly for now (just not every frame, or else this spams a great
         // deal of particles overlapping eachother.
@@ -1127,7 +1092,6 @@ void cUnit::thinkActionAgnostic()
             long x = pos_x_centered();
             long y = pos_y_centered();
             cParticle::create(x, y, D2TM_PARTICLE_WORMTRAIL, -1, -1);
-            // TIMER_wormtrail = 0;
         }
     }
 
@@ -1135,7 +1099,6 @@ void cUnit::thinkActionAgnostic()
     if (!isAirbornUnit()) {
         if (rendering.iBodyFacing == rendering.iBodyShouldFace) {
             if (rendering.iHeadFacing != rendering.iHeadShouldFace) {
-                // TIMER_turn++;
                 if (turnTimer.incrementUntil(getTurnSpeed())) {
                     turnTimer.reset(0);
                     rendering.iHeadFacing = determineNewFacing(rendering.iHeadFacing, rendering.iHeadShouldFace);
@@ -1239,7 +1202,6 @@ void cUnit::think_ornithopter()
         selectTargetForOrnithopter(pPlayer);
     }
     else {
-        // TIMER_attack++;
         attackTimer.increment();
     }
 }
@@ -1316,7 +1278,6 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
 void cUnit::think_turn_to_desired_body_facing()
 {
     // BODY is not facing correctly
-    // TIMER_turn++;
     turnTimer.increment();
 
     float turnspeed = game.unitInfos[iType].turnspeed;
@@ -1335,8 +1296,6 @@ void cUnit::think_turn_to_desired_body_facing()
         }
     }
 
-    // if (TIMER_turn > turnspeed) {
-        // TIMER_turn = 0;
     if (turnTimer.get() > turnspeed) {
         turnTimer.reset(0);
         rendering.iBodyFacing = determineNewFacing(rendering.iBodyFacing, rendering.iBodyShouldFace);
@@ -1376,12 +1335,7 @@ void cUnit::thinkFast_move_airUnit()
         return;
     }
 
-    // if (TIMER_movewait > 0) {
-        // TIMER_movewait--;
-        // return;
-    // }
     if (movewaitTimer.get() > 0) {
-        // TIMER_movewait--;
         movewaitTimer.decrement();
         return;
     }
@@ -1667,7 +1621,6 @@ void cUnit::thinkFast_move_airUnit()
     }
 
     // goal cell == next cell (move straight to it)
-    // TIMER_move++;
     moveTimer.increment();
 
     // now move
@@ -1696,24 +1649,18 @@ void cUnit::thinkFast_move_airUnit()
                         cParticle::create(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
                     }
                 }
-                // TIMER_movedelay = (dist - iLength) * (dist * slowDownStep);
                 movedelayTimer.reset((dist - iLength) * (dist * slowDownStep));
             }
         }
         else {
             int dist = 6;
             if (iLength < dist) {
-                // TIMER_movedelay = (dist - iLength) * (dist * 6);
                 movedelayTimer.reset((dist - iLength) * (dist * 6));
             }
         }
     }
 
     int iSlowDown = 0;
-    // if (TIMER_movedelay > 0) {
-    //     iSlowDown = (TIMER_movedelay/20);
-    //     TIMER_movedelay--;
-    // }
     if (movedelayTimer.get() > 0) {
         iSlowDown = (movedelayTimer.get()/20);
         movedelayTimer.decrement();
@@ -1726,7 +1673,6 @@ void cUnit::thinkFast_move_airUnit()
         return;
     }
 
-    // TIMER_move = 0;
     moveTimer.reset(0);
 
     // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
@@ -2292,9 +2238,7 @@ void cUnit::think_attack_sandworm()
         cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
         game.playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(position.iCell));
         actionGuard();
-        // TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
         movewaitTimer.reset((1000/5) * 4); // wait for 4 seconds before moving again
-        // TIMER_guard = (1000/5) * 4; // timer guard works other way around..
         guardTimer.reset((1000/5) * 4); // timer guard works other way around..
 
         if (unitsEaten >= getUnitInfo().appetite) {
@@ -2303,7 +2247,6 @@ void cUnit::think_attack_sandworm()
             takeDamage(1); // get below the thresh-hold to die/vanish
         }
         else {
-            // TIMER_guard = (1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten)));
             guardTimer.reset((1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten))));
         }
 
@@ -2379,9 +2322,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
 
     if (rendering.iBodyShouldFace == rendering.iBodyFacing && rendering.iHeadShouldFace == rendering.iHeadFacing) {
 
-        // TIMER_attack++;
         attackTimer.increment();
-        // if (TIMER_attack >= unitType.attack_frequency) {
         if (attackTimer.get() >= unitType.attack_frequency) {
             int shootCell = movement.iGoalCell;
 
@@ -2403,7 +2344,6 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
             }
 
             // first bullet
-            // if (TIMER_attack == unitType.attack_frequency) {
             if (attackTimer.get() == unitType.attack_frequency) {
                 shoot(shootCell);
             }
@@ -2419,10 +2359,8 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
                                           :
                                           unitType.attack_frequency + unitType.next_attack_frequency;
 
-                // if (TIMER_attack > secondShotTimeLimit) {
                 if (attackTimer.get() > secondShotTimeLimit) {
                     shoot(shootCell);
-                    // TIMER_attack = 0;
                     attackTimer.reset(0);
                     return true;
                 }
@@ -2470,10 +2408,6 @@ void cUnit::thinkFast_move()
         return;
     }
 
-    // if (TIMER_movewait > 0) {
-        // TIMER_movewait--;
-        // return;
-    // }
     if (movewaitTimer.get() > 0) {
         movewaitTimer.decrement();
         return;
@@ -2526,7 +2460,6 @@ void cUnit::thinkFast_move()
                             }
                             else {
                                 setGoalCell(iNewGoal);
-                                // TIMER_movewait = RNG::rnd(20);
                                 movewaitTimer.reset(RNG::rnd(20));
                                 log("Found alternative goal");
                                 return;
@@ -2585,9 +2518,6 @@ void cUnit::thinkFast_move()
                         setGoalCell(position.iCell);
                         movement.iPathFails = 0;
                         movement.iPathIndex = -1;
-                        // if (TIMER_movewait <= 0) {
-                            // TIMER_movewait = 100;
-                        // }
                         if (movewaitTimer.get() <= 0) {
                             movewaitTimer.reset(100);
                         }
@@ -2681,7 +2611,6 @@ void cUnit::thinkFast_move()
                             }
                             else {
                                 // wait, maybe we can enter later!
-                                // TIMER_movewait = 100; // we wait
                                 movewaitTimer.reset(100); // we wait
                                 return; // bail, else the logic below will kick of (ugh, bad code)
                             }
@@ -2692,7 +2621,6 @@ void cUnit::thinkFast_move()
                             iStructureID = -1;
                             setGoalCell(position.iCell);
                             movement.iNextCell = position.iCell;
-                            // TIMER_movewait = 100; // we wait
                             movewaitTimer.reset(100); // we wait
                             bOccupied = true; // obviously - but will do nothing :S
                             return; // bail, else the logic below will kick of (ugh, bad code)
@@ -2751,11 +2679,9 @@ void cUnit::thinkFast_move()
             // Wait when the obstacle is moving, perhaps it will clear our way
             cUnit &unitOccupyingNextCell = game.getUnit(uID);
             if (unitOccupyingNextCell.isValid() &&
-                    //unitOccupyingNextCell.TIMER_movewait <= 0 &&
                     unitOccupyingNextCell.movewaitTimer.get() <= 0 &&
                     unitOccupyingNextCell.movement.iGoalCell != unitOccupyingNextCell.position.iCell) {
                 // this unit is also moving, so wait for it to move
-                // TIMER_movewait = 50;
                 movewaitTimer.reset(50);
                 return;
             }
@@ -2857,7 +2783,6 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         bToDown = 0;
 
     // done, since we already have the other stuff set
-    // TIMER_move++;
     moveTimer.increment();
 
 
@@ -2866,12 +2791,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int iSlowDown = game.m_map.getCellSlowDown(position.iCell);
 
     cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
-    // if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
     if (moveTimer.get() < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
 
-    // TIMER_move = 0; // reset to 0
     moveTimer.reset(0);
 
     // from here on, set the map id, so no other unit can take its place
@@ -2945,15 +2868,11 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
 
     // When moving, infantry has some animation
     if (isInfantryUnit()) {
-        // TIMER_frame++;
 
-        // if (TIMER_frame > 3) {
         if (frameTimer.incrementUntil(3)) {
             rendering.iFrame++;
             if (rendering.iFrame > 3)
                 rendering.iFrame = 0;
-
-            // TIMER_frame = 0;
         }
     }
 
@@ -3032,7 +2951,6 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
             return eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL;
         }
 
-        // TIMER_movewait = 2 + ((getUnitInfo().speed + iSlowDown) * 3);
         movewaitTimer.reset(2 + ((getUnitInfo().speed + iSlowDown) * 3));
         return eUnitMoveToCellResult::MOVERESULT_AT_CELL;
     }
@@ -3066,7 +2984,6 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait)
 {
     memset(movement.iPath, -1, sizeof(movement.iPath));
     movement.iPathIndex = -1;
-    // TIMER_movewait = timeToWait;
     movewaitTimer.reset(timeToWait);
 }
 
@@ -3378,7 +3295,6 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
     // no Carry-all found/required, or we are close enough to drive
     move_to_enter_structure(pStructure, actionIntent);
-    // TIMER_movewait = 0;
     movewaitTimer.reset(0);
     return eHeadTowardsStructureResult::SUCCESS_RETURNING;
 }
@@ -3407,9 +3323,7 @@ void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell)
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate)
 {
-    // TIMER_movewait = 650; // wait for pickup!
-    movewaitTimer.reset(650);
-    // TIMER_thinkwait = 650;
+    movewaitTimer.reset(650); // wait for pickup!
     thinkwaitTimer.reset(650);
     if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
         candidate->unitHeadsTowardsStructure(iID);
@@ -3454,7 +3368,6 @@ void cUnit::draw_debug(cTextDrawer* textDrawer)
     global_renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
     textDrawer->drawText(draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, std::format("{}", iID));
     if (isSandworm()) {
-        // textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), TIMER_movewait));
         textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), movewaitTimer.get()));
     }
 }
@@ -3733,28 +3646,6 @@ int cUnit::findNearbyStructureToAttack(int range)
 
     return structureIdToAttack;
 }
-
-// void cUnit::think_MVC() {
-//     cPlayer *pPlayer = getPlayer();
-//     if (pPlayer->isHuman()) {
-//         // TODO: React upon keypress and then issue a command to deploy MCV instead of using this hacky via think function
-//         if (bSelected) {
-//             if (key[SDL_SCANCODE_D]) {
-//                 bool result = pPlayer->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
-
-//                 if (result) {
-//                     int iLocation = iCell;
-
-//                     die(false, false);
-
-//                     // place const yard
-//                     pPlayer->placeStructure(iLocation, CONSTYARD, 100);
-//                     return;
-//                 }
-//             }
-//         }
-//     }
-// }
 
 int cUnit::getTurnSpeed()
 {
