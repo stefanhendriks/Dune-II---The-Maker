@@ -292,7 +292,8 @@ public:
     cTimer moveTimer;         // movement timer
     // int TIMER_movewait;     // wait for move think...
     cTimer movewaitTimer;     // wait for move think...
-    int TIMER_movedelay;    // if given, it will delay movement
+    // int TIMER_movedelay;    // if given, it will delay movement
+    cTimer movedelayTimer;    // if given, it will delay movement
     // float TIMER_turn;       // turning around
     cTimer turnTimer;       // turning around
 
