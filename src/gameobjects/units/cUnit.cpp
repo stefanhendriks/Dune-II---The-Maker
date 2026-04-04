@@ -129,7 +129,8 @@ void cUnit::init(int i)
     // TIMER_blink = 0;
     // TIMER_move = 0;
     moveTimer.reset(0);
-    TIMER_movewait = 0;
+    // TIMER_movewait = 0;
+    movewaitTimer.reset(0);
     // TIMER_thinkwait = 0;
     thinkwaitTimer.reset(0);    // wait with normal thinking..
     // TIMER_turn = 0;
@@ -997,11 +998,12 @@ void cUnit::thinkFast_guard()
     // }
     guardTimer.decrementUntil(0);
 
-    if (TIMER_movewait > 0) {
-        TIMER_movewait--;
-    }
+    // if (TIMER_movewait > 0) {
+        // TIMER_movewait--;
+    // }
+    movewaitTimer.decrementUntil(0);
 
-    if (TIMER_movewait > 0 || guardTimer.get() > 0) {
+    if (movewaitTimer.get() > 0 || guardTimer.get() > 0) {
         return;
     }
 
@@ -1374,8 +1376,13 @@ void cUnit::thinkFast_move_airUnit()
         return;
     }
 
-    if (TIMER_movewait > 0) {
-        TIMER_movewait--;
+    // if (TIMER_movewait > 0) {
+        // TIMER_movewait--;
+        // return;
+    // }
+    if (movewaitTimer.get() > 0) {
+        // TIMER_movewait--;
+        movewaitTimer.decrement();
         return;
     }
 
@@ -1524,7 +1531,8 @@ void cUnit::thinkFast_move_airUnit()
 
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
-                            unitToPickupOrDrop.TIMER_movewait = 0;
+                            // unitToPickupOrDrop.TIMER_movewait = 0;
+                            unitToPickupOrDrop.movewaitTimer.reset(0);
                             unitToPickupOrDrop.thinkwaitTimer.reset(0);
                             unitToPickupOrDrop.iCarryAll = -1;
 
@@ -2276,7 +2284,8 @@ void cUnit::think_attack_sandworm()
         cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
         game.playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(position.iCell));
         actionGuard();
-        TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
+        // TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
+        movewaitTimer.reset((1000/5) * 4); // wait for 4 seconds before moving again
         // TIMER_guard = (1000/5) * 4; // timer guard works other way around..
         guardTimer.reset((1000/5) * 4); // timer guard works other way around..
 
@@ -2453,8 +2462,12 @@ void cUnit::thinkFast_move()
         return;
     }
 
-    if (TIMER_movewait > 0) {
-        TIMER_movewait--;
+    // if (TIMER_movewait > 0) {
+        // TIMER_movewait--;
+        // return;
+    // }
+    if (movewaitTimer.get() > 0) {
+        movewaitTimer.decrement();
         return;
     }
 
@@ -2505,7 +2518,8 @@ void cUnit::thinkFast_move()
                             }
                             else {
                                 setGoalCell(iNewGoal);
-                                TIMER_movewait = RNG::rnd(20);
+                                // TIMER_movewait = RNG::rnd(20);
+                                movewaitTimer.reset(RNG::rnd(20));
                                 log("Found alternative goal");
                                 return;
                             }
@@ -2563,8 +2577,11 @@ void cUnit::thinkFast_move()
                         setGoalCell(position.iCell);
                         movement.iPathFails = 0;
                         movement.iPathIndex = -1;
-                        if (TIMER_movewait <= 0) {
-                            TIMER_movewait = 100;
+                        // if (TIMER_movewait <= 0) {
+                            // TIMER_movewait = 100;
+                        // }
+                        if (movewaitTimer.get() <= 0) {
+                            movewaitTimer.reset(100);
                         }
                     }
                 }
@@ -2656,7 +2673,8 @@ void cUnit::thinkFast_move()
                             }
                             else {
                                 // wait, maybe we can enter later!
-                                TIMER_movewait = 100; // we wait
+                                // TIMER_movewait = 100; // we wait
+                                movewaitTimer.reset(100); // we wait
                                 return; // bail, else the logic below will kick of (ugh, bad code)
                             }
                         }
@@ -2666,7 +2684,8 @@ void cUnit::thinkFast_move()
                             iStructureID = -1;
                             setGoalCell(position.iCell);
                             movement.iNextCell = position.iCell;
-                            TIMER_movewait = 100; // we wait
+                            // TIMER_movewait = 100; // we wait
+                            movewaitTimer.reset(100); // we wait
                             bOccupied = true; // obviously - but will do nothing :S
                             return; // bail, else the logic below will kick of (ugh, bad code)
                         }
@@ -2724,10 +2743,12 @@ void cUnit::thinkFast_move()
             // Wait when the obstacle is moving, perhaps it will clear our way
             cUnit &unitOccupyingNextCell = game.getUnit(uID);
             if (unitOccupyingNextCell.isValid() &&
-                    unitOccupyingNextCell.TIMER_movewait <= 0 &&
+                    //unitOccupyingNextCell.TIMER_movewait <= 0 &&
+                    unitOccupyingNextCell.movewaitTimer.get() <= 0 &&
                     unitOccupyingNextCell.movement.iGoalCell != unitOccupyingNextCell.position.iCell) {
                 // this unit is also moving, so wait for it to move
-                TIMER_movewait = 50;
+                // TIMER_movewait = 50;
+                movewaitTimer.reset(50);
                 return;
             }
             else {
@@ -3003,7 +3024,8 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
             return eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL;
         }
 
-        TIMER_movewait = 2 + ((getUnitInfo().speed + iSlowDown) * 3);
+        // TIMER_movewait = 2 + ((getUnitInfo().speed + iSlowDown) * 3);
+        movewaitTimer.reset(2 + ((getUnitInfo().speed + iSlowDown) * 3));
         return eUnitMoveToCellResult::MOVERESULT_AT_CELL;
     }
     return eUnitMoveToCellResult::MOVERESULT_BUSY_MOVING;
@@ -3036,7 +3058,8 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait)
 {
     memset(movement.iPath, -1, sizeof(movement.iPath));
     movement.iPathIndex = -1;
-    TIMER_movewait = timeToWait;
+    // TIMER_movewait = timeToWait;
+    movewaitTimer.reset(timeToWait);
 }
 
 bool cUnit::isInfantryUnit() const
@@ -3347,7 +3370,8 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
     // no Carry-all found/required, or we are close enough to drive
     move_to_enter_structure(pStructure, actionIntent);
-    TIMER_movewait = 0;
+    // TIMER_movewait = 0;
+    movewaitTimer.reset(0);
     return eHeadTowardsStructureResult::SUCCESS_RETURNING;
 }
 
@@ -3375,7 +3399,8 @@ void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell)
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate)
 {
-    TIMER_movewait = 650; // wait for pickup!
+    // TIMER_movewait = 650; // wait for pickup!
+    movewaitTimer.reset(650);
     // TIMER_thinkwait = 650;
     thinkwaitTimer.reset(650);
     if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
@@ -3421,7 +3446,8 @@ void cUnit::draw_debug(cTextDrawer* textDrawer)
     global_renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
     textDrawer->drawText(draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, std::format("{}", iID));
     if (isSandworm()) {
-        textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), TIMER_movewait));
+        // textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), TIMER_movewait));
+        textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), movewaitTimer.get()));
     }
 }
 
