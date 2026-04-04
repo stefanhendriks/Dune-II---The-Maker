@@ -1156,11 +1156,10 @@ void cUnit::thinkActionAgnostic()
     }
 
     // when waiting.. wait
-    // if (TIMER_thinkwait > 0) {
-        // TIMER_thinkwait--;
-        // return;
-    // }
-    thinkwaitTimer.decrementUntil(0);
+    if (thinkwaitTimer.get() > 0) {
+        thinkwaitTimer.decrement();
+        return;
+    }   
 
     if (isHidden())
         return;
