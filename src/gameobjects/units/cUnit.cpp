@@ -127,7 +127,8 @@ void cUnit::init(int i)
 
     // TIMERS
     // TIMER_blink = 0;
-    TIMER_move = 0;
+    // TIMER_move = 0;
+    moveTimer.reset(0);
     TIMER_movewait = 0;
     // TIMER_thinkwait = 0;
     thinkwaitTimer.reset(0);    // wait with normal thinking..
@@ -1656,7 +1657,8 @@ void cUnit::thinkFast_move_airUnit()
     }
 
     // goal cell == next cell (move straight to it)
-    TIMER_move++;
+    // TIMER_move++;
+    moveTimer.increment();
 
     // now move
     int goalCellX = game.m_map.getCellX(movement.iGoalCell);
@@ -1703,11 +1705,13 @@ void cUnit::thinkFast_move_airUnit()
 
     cPlayerDifficultySettings *difficultySettings = getPlayer()->getDifficultySettings();
 
-    if (TIMER_move < (difficultySettings->getMoveSpeed(iType, iSlowDown))) {
+    // if (TIMER_move < (difficultySettings->getMoveSpeed(iType, iSlowDown))) {
+    if (moveTimer.get() < (difficultySettings->getMoveSpeed(iType, iSlowDown))) {
         return;
     }
 
-    TIMER_move = 0;
+    // TIMER_move = 0;
+    moveTimer.reset(0);
 
     // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
     int d = fDegrees(position.iCellX, position.iCellY, goalCellX, goalCellY);
@@ -2824,7 +2828,8 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         bToDown = 0;
 
     // done, since we already have the other stuff set
-    TIMER_move++;
+    // TIMER_move++;
+    moveTimer.increment();
 
 
     // Influenced by the terrain type
@@ -2832,11 +2837,13 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int iSlowDown = game.m_map.getCellSlowDown(position.iCell);
 
     cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
-    if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
+    // if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
+    if (moveTimer.get() < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
 
-    TIMER_move = 0; // reset to 0
+    // TIMER_move = 0; // reset to 0
+    moveTimer.reset(0);
 
     // from here on, set the map id, so no other unit can take its place
     if (!isSandworm()) {
