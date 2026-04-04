@@ -131,7 +131,8 @@ void cUnit::init(int i)
     TIMER_movewait = 0;
     // TIMER_thinkwait = 0;
     thinkwaitTimer.reset(0);    // wait with normal thinking..
-    TIMER_turn = 0;
+    // TIMER_turn = 0;
+    turnTimer.reset(0);       // turning around
     frameTimer.reset(0);
     // TIMER_harvest = 0;
     harvestTimer.reset(0);
@@ -1130,9 +1131,9 @@ void cUnit::thinkActionAgnostic()
     if (!isAirbornUnit()) {
         if (rendering.iBodyFacing == rendering.iBodyShouldFace) {
             if (rendering.iHeadFacing != rendering.iHeadShouldFace) {
-                TIMER_turn++;
-                if (TIMER_turn > getTurnSpeed()) {
-                    TIMER_turn = 0;
+                // TIMER_turn++;
+                if (turnTimer.incrementUntil(getTurnSpeed())) {
+                    turnTimer.reset(0);
                     rendering.iHeadFacing = determineNewFacing(rendering.iHeadFacing, rendering.iHeadShouldFace);
                 } // turn
             } // head facing
@@ -1312,7 +1313,8 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
 void cUnit::think_turn_to_desired_body_facing()
 {
     // BODY is not facing correctly
-    TIMER_turn++;
+    // TIMER_turn++;
+    turnTimer.increment();
 
     float turnspeed = game.unitInfos[iType].turnspeed;
     if (isAirbornUnit()) {
@@ -1330,9 +1332,10 @@ void cUnit::think_turn_to_desired_body_facing()
         }
     }
 
-    if (TIMER_turn > turnspeed) {
-        TIMER_turn = 0;
-
+    // if (TIMER_turn > turnspeed) {
+        // TIMER_turn = 0;
+    if (turnTimer.get() > turnspeed) {
+        turnTimer.reset(0);
         rendering.iBodyFacing = determineNewFacing(rendering.iBodyFacing, rendering.iBodyShouldFace);
     } // turn body
 }
