@@ -293,7 +293,8 @@ public:
     int TIMER_movedelay;    // if given, it will delay movement
     float TIMER_turn;       // turning around
 
-    int TIMER_thinkwait;    // wait with normal thinking..
+    // int TIMER_thinkwait;    // wait with normal thinking..
+    cTimer thinkwaitTimer;    // wait with normal thinking..
 
     // int TIMER_frame;        // When moving, infantry has some animation
     cTimer frameTimer;
