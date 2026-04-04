@@ -90,7 +90,9 @@ void cRefinery::think_unit_occupation()
 
         if (iCarry > -1) {
             cUnit.TIMER_movewait = 500;
-            cUnit.TIMER_thinkwait = 500;
+            // cUnit.TIMER_thinkwait = 500;
+            cUnit.thinkwaitTimer.reset(500);
+
         }
     }
 }

@@ -801,7 +801,8 @@ void cAbstractStructure::unitLeavesStructure()
     unitToLeave.movement.iPathIndex = -1;
 
     unitToLeave.TIMER_movewait = 0;
-    unitToLeave.TIMER_thinkwait = 0;
+    // unitToLeave.TIMER_thinkwait = 0;
+    unitToLeave.thinkwaitTimer.reset(0);
 
     if (getRallyPoint() > -1) {
         unitToLeave.move_to(getRallyPoint(), -1, -1);
