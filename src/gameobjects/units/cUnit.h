@@ -307,7 +307,8 @@ public:
     // int TIMER_bored;        // how long are we bored?
     cTimer boredTimer;        // how long are we bored?
 
-    int TIMER_attack;       // when to shoot?
+    // int TIMER_attack;       // when to shoot?
+    cTimer attackTimer;       // when to shoot?
 
     // int TIMER_wormtrail;    // when to spawn a trail when moving
     cTimer wormTrailTimer;    // when to spawn a trail when moving

@@ -139,7 +139,8 @@ void cUnit::init(int i)
     guardTimer.reset(0);
     // TIMER_bored = 0;    // how long are we bored?
     boredTimer.reset(0);    // how long are we bored?
-    TIMER_attack = 0;
+    // TIMER_attack = 0;
+    attackTimer.reset(0);
     // TIMER_wormtrail = 0;
     wormTrailTimer.reset(0);
     TIMER_movedelay = 0;
@@ -1234,7 +1235,8 @@ void cUnit::think_ornithopter()
         selectTargetForOrnithopter(pPlayer);
     }
     else {
-        TIMER_attack++;
+        // TIMER_attack++;
+        attackTimer.increment();
     }
 }
 
@@ -2353,8 +2355,10 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
 
     if (rendering.iBodyShouldFace == rendering.iBodyFacing && rendering.iHeadShouldFace == rendering.iHeadFacing) {
 
-        TIMER_attack++;
-        if (TIMER_attack >= unitType.attack_frequency) {
+        // TIMER_attack++;
+        attackTimer.increment();
+        // if (TIMER_attack >= unitType.attack_frequency) {
+        if (attackTimer.get() >= unitType.attack_frequency) {
             int shootCell = movement.iGoalCell;
 
             if (iType == LAUNCHER || iType == DEVIATOR) {
@@ -2375,13 +2379,14 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
             }
 
             // first bullet
-            if (TIMER_attack == unitType.attack_frequency) {
+            // if (TIMER_attack == unitType.attack_frequency) {
+            if (attackTimer.get() == unitType.attack_frequency) {
                 shoot(shootCell);
             }
 
             bool canFireTwice = unitType.fireTwice && getHealthNormalized() > unitType.fireTwiceHpThresholdFactor;
             if (!canFireTwice) {
-                TIMER_attack = 0;
+                attackTimer.reset(0);
                 return true;
             }
             else {
@@ -2390,9 +2395,11 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
                                           :
                                           unitType.attack_frequency + unitType.next_attack_frequency;
 
-                if (TIMER_attack > secondShotTimeLimit) {
+                // if (TIMER_attack > secondShotTimeLimit) {
+                if (attackTimer.get() > secondShotTimeLimit) {
                     shoot(shootCell);
-                    TIMER_attack = 0;
+                    // TIMER_attack = 0;
+                    attackTimer.reset(0);
                     return true;
                 }
             }
