@@ -337,6 +337,9 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
                 selectedStructure->onNotifyGameEvent(event);
             }
         }
+        if (event.hasKey(SDL_SCANCODE_P)) {
+            humanPlayer.setPrimaryBuildingForStructureType(selectedStructure->getType(), selectedStructure->getStructureId());
+        }
         // other keys for other structures?
         // like: repair/stop repairing?
     }
