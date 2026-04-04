@@ -146,7 +146,8 @@ void cUnit::init(int i)
     attackTimer.reset(0);
     // TIMER_wormtrail = 0;
     wormTrailTimer.reset(0);
-    TIMER_movedelay = 0;
+    // TIMER_movedelay = 0;
+    movedelayTimer.reset(0);
 }
 
 void cUnit::recreateDimensions()
@@ -1441,7 +1442,8 @@ void cUnit::thinkFast_move_airUnit()
                         if (position.iCell == unitToPickupOrDrop.position.iCell) {
                             // when this unit is NOT moving
                             if (!unitToPickupOrDrop.isMovingBetweenCells()) {
-                                TIMER_movedelay = 300; // this will make carry-all speed up slowly
+                                // TIMER_movedelay = 300; // this will make carry-all speed up slowly
+                                movedelayTimer.reset(300);
 
                                 unitToPickupOrDrop.willBePickedUpBy = -1; // set state in aircraft, that it has picked up a unit
                                 bPickedUp = true;
@@ -1487,7 +1489,8 @@ void cUnit::thinkFast_move_airUnit()
                     // picked up unit! yay, we are at the destination where we had to
                     // bring it... w00t
                     if (position.iCell == iBringTarget) {
-                        TIMER_movedelay = 300; // this will make carry-all speed up slowly
+                        // TIMER_movedelay = 300; // this will make carry-all speed up slowly
+                        movedelayTimer.reset(300);
                         lastDroppedOffCell = position.iCell; // remember this cell
 
                         // check if its valid for this unit...
@@ -1694,21 +1697,27 @@ void cUnit::thinkFast_move_airUnit()
                         cParticle::create(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
                     }
                 }
-                TIMER_movedelay = (dist - iLength) * (dist * slowDownStep);
+                // TIMER_movedelay = (dist - iLength) * (dist * slowDownStep);
+                movedelayTimer.reset((dist - iLength) * (dist * slowDownStep));
             }
         }
         else {
             int dist = 6;
             if (iLength < dist) {
-                TIMER_movedelay = (dist - iLength) * (dist * 6);
+                // TIMER_movedelay = (dist - iLength) * (dist * 6);
+                movedelayTimer.reset((dist - iLength) * (dist * 6));
             }
         }
     }
 
     int iSlowDown = 0;
-    if (TIMER_movedelay > 0) {
-        iSlowDown = (TIMER_movedelay/20);
-        TIMER_movedelay--;
+    // if (TIMER_movedelay > 0) {
+    //     iSlowDown = (TIMER_movedelay/20);
+    //     TIMER_movedelay--;
+    // }
+    if (movedelayTimer.get() > 0) {
+        iSlowDown = (movedelayTimer.get()/20);
+        movedelayTimer.decrement();
     }
 
     cPlayerDifficultySettings *difficultySettings = getPlayer()->getDifficultySettings();
