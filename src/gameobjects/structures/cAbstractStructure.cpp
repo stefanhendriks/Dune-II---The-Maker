@@ -800,7 +800,8 @@ void cAbstractStructure::unitLeavesStructure()
     unitToLeave.movement.iGoalCell = unitToLeave.getCell();
     unitToLeave.movement.iPathIndex = -1;
 
-    unitToLeave.TIMER_movewait = 0;
+    // unitToLeave.TIMER_movewait = 0;
+    unitToLeave.movewaitTimer.reset(0);
     // unitToLeave.TIMER_thinkwait = 0;
     unitToLeave.thinkwaitTimer.reset(0);
 
