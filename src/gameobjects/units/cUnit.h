@@ -295,7 +295,8 @@ public:
 
     int TIMER_thinkwait;    // wait with normal thinking..
 
-    int TIMER_frame;        // When moving, infantry has some animation
+    // int TIMER_frame;        // When moving, infantry has some animation
+    cTimer frameTimer;
 
     // int TIMER_harvest;      // harvesting
     cTimer harvestTimer;      // harvesting timer
