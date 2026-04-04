@@ -11,6 +11,7 @@
 #include "gui/GuiSlider.hpp"
 #include "gui/GuiTextInput.h"
 #include "context/GameContext.hpp"
+#include "drawers/cTextDrawer.h"
 
 #include <iostream>
 #include <memory>

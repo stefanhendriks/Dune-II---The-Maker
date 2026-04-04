@@ -90,7 +90,7 @@ void cGameControlsContext::determineHoveringOverUnitId()
     if (m_mouseHoveringOverUnitId > -1) {
         cUnit &aUnit = game.getUnit(m_mouseHoveringOverUnitId);
         if (aUnit.isValid()) {
-            aUnit.bHovered = false;
+            aUnit.rendering.bHovered = false;
         }
     }
     m_mouseHoveringOverUnitId = -1;
@@ -118,7 +118,7 @@ void cGameControlsContext::determineHoveringOverUnitId()
     if (m_mouseHoveringOverUnitId > -1) {
         cUnit &aUnit = game.getUnit(m_mouseHoveringOverUnitId);
         if (aUnit.isValid()) {
-            aUnit.bHovered = true;
+            aUnit.rendering.bHovered = true;
         }
     }
 }

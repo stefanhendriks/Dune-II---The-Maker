@@ -3,8 +3,8 @@
 #include "cGameState.h"
 #include "utils/cMatrix.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
 #include "sMouseEvent.h"
+#include "utils/cRectangle.h"
 
 #include <memory>
 #include <array>
@@ -15,6 +15,7 @@ class cGame;
 class s_PreviewMap;
 class GuiBar;
 class GuiButtonGroup;
+class cTextDrawer;
 
 class cEditorState : public cGameState {
 public:

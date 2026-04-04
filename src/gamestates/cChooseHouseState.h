@@ -2,7 +2,6 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
 
@@ -10,6 +9,7 @@ struct SDL_Surface;
 class Texture;
 class cGame;
 class GameContext;
+class cTextDrawer;
 class Graphics;
 
 class cChooseHouseState : public cGameState {

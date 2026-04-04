@@ -1,4 +1,5 @@
 #include "cTextWriter.h"
+#include "drawers/cTextDrawer.h"
 #include <cassert>
 
 cTextWriter::cTextWriter(cTextDrawer* _textDrawer, int theFontSize)
