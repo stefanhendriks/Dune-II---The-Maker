@@ -6,23 +6,12 @@
 
 #include "utils/cPoint.h"
 #include "utils/common.h"
-
-enum class eKeyEventType {
-    NONE,
-    /**
-     * key is being pressed down (hold)
-     */
-    HOLD,
-    /**
-     * key is held, then released. Makes a key "pressed".
-     */
-    PRESSED,
-};
+#include "controls/eKeyboardEnum.h"
 
 class cKeyboardEvent {
 
 public:
-    cKeyboardEvent(eKeyEventType eventType, std::set<SDL_Scancode> &keys);
+    cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo);
 
     eKeyEventType eventType = eKeyEventType::NONE;
 
@@ -69,6 +58,8 @@ public:
     bool isBackspace() const;
     bool isEnter() const;
     bool isShiftPressed() const;
+    bool isAltPressed() const;
+    bool isCtrlPressed() const;
     char getChar() const;
 
     /**
@@ -93,5 +84,6 @@ private:
         return "";
     }
 
-    std::set<SDL_Scancode> keys;
+    const std::set<SDL_Scancode> &keys;
+    const s_KeysCombo &combo;
 };

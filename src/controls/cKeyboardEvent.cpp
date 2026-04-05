@@ -1,9 +1,10 @@
 #include "cKeyboardEvent.h"
-cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, std::set<SDL_Scancode> &keys) :
-    eventType(eventType),
-    keys(keys)
-{
 
+cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo) :
+    eventType(eventType),
+    keys(keys),
+    combo(combo)
+{
 }
 
 int cKeyboardEvent::getGroupNumber() const
@@ -50,7 +51,17 @@ bool cKeyboardEvent::isEnter() const
 
 bool cKeyboardEvent::isShiftPressed() const
 {
-    return hasKey(SDL_SCANCODE_LSHIFT) || hasKey(SDL_SCANCODE_RSHIFT);
+    return combo.shiftPressed;
+}
+
+bool cKeyboardEvent::isAltPressed() const
+{
+    return combo.altPressed;
+}
+
+bool cKeyboardEvent::isCtrlPressed() const
+{
+    return combo.ctrlPressed;
 }
 
 char cKeyboardEvent::getChar() const
