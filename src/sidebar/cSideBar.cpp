@@ -16,22 +16,22 @@
 
 
 
-cSideBar::cSideBar(cPlayer *thePlayer) : player(thePlayer)
+cSideBar::cSideBar(cPlayer *thePlayer) : m_player(thePlayer)
 {
     assert(thePlayer != nullptr && "Expected player to be not null!");
-    selectedListID = -1; // nothing is selected
-    isMouseOverSidebarValue = false;
-    memset(lists, 0, sizeof(lists));
+    m_selectedListID = -1; // nothing is selected
+    m_isMouseOverSidebarValue = false;
+    memset(m_lists, 0, sizeof(m_lists));
 }
 
 cSideBar::~cSideBar()
 {
     for (int i = 0; i < LIST_MAX; i++) {
-        cBuildingList *pList = lists[i];
+        cBuildingList *pList = m_lists[i];
         if (pList) {
             pList->removeAllItems();
             delete pList; // delete list (also removes pointers within the list)
-            lists[i] = nullptr;
+            m_lists[i] = nullptr;
         }
     }
 }
@@ -39,12 +39,12 @@ cSideBar::~cSideBar()
 void cSideBar::setList(eListType listType, cBuildingList *list)
 {
     int listId = eListTypeAsInt(listType);
-    if (lists[listId]) {
+    if (m_lists[listId]) {
         logbook("WARNING: Setting list, while list already set. Deleting old entry before assigning new.");
-        delete lists[listId];
+        delete m_lists[listId];
     }
 
-    lists[listId] = list;
+    m_lists[listId] = list;
 }
 
 /**
@@ -74,7 +74,7 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
     cBuildingList *list = item->getList();
     if (item->isAvailable()) {
         // Item should not be placed, so it can be built
-        cItemBuilder *itemBuilder = player->getItemBuilder();
+        cItemBuilder *itemBuilder = m_player->getItemBuilder();
         bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
 
         if (item->isQueuable()) {
@@ -117,7 +117,7 @@ cBuildingListItem *cSideBar::getBuildingListItem(eListType listType, int buildId
 {
     int listId = eListTypeAsInt(listType);
 
-    cBuildingList *pList = lists[listId];
+    cBuildingList *pList = m_lists[listId];
     if (pList == nullptr) return nullptr;
 
     return pList->getItemByBuildId(buildId);
@@ -137,13 +137,13 @@ void cSideBar::thinkProgressAnimation()
 
 void cSideBar::onMouseAt(const s_MouseEvent &event)
 {
-    isMouseOverSidebarValue = event.coords.x > (game.m_screenW - cSideBar::SidebarWidth);
-    game.m_drawManager->setKeepMessage(isMouseOverSidebarValue);
+    m_isMouseOverSidebarValue = event.coords.x > (game.m_screenW - cSideBar::SidebarWidth);
+    game.m_drawManager->setKeepMessage(m_isMouseOverSidebarValue);
 
-    if (selectedListID < 0) return;
+    if (m_selectedListID < 0) return;
 
     // when mouse is selecting a list, and over an item, then draw message bar...!?
-    cBuildingList *list = getList(selectedListID);
+    cBuildingList *list = getList(m_selectedListID);
     cBuildingListDrawer *buildingListDrawer = game.m_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
@@ -159,7 +159,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
 
     // button interaction
     for (int i = startPos; i < LIST_MAX; i++) {
-        if (i == selectedListID) continue; // skip selected list for button interaction
+        if (i == m_selectedListID) continue; // skip selected list for button interaction
         cBuildingList *list = getList(i);
         if (list == nullptr) continue;
         if (!list->isAvailable()) continue; // not available, so no interaction possible
@@ -173,16 +173,16 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         }
     }
 
-    if (selectedListID < 0) return;
+    if (m_selectedListID < 0) return;
 
     // when mouse pressed, build item if over item
-    cBuildingList *list = getList(selectedListID);
+    cBuildingList *list = getList(m_selectedListID);
 
     if (list == nullptr) return;
 
     if (!list->isAvailable()) {
         // unselect this list
-        player->getSideBar()->setSelectedListId(eListType::LIST_NONE);
+        m_player->getSideBar()->setSelectedListId(eListType::LIST_NONE);
         return;
     }
 
@@ -203,24 +203,24 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
     if (list->getType() != eListType::LIST_STARPORT) {
         // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
         if (item->shouldPlaceIt()) {
-            player->setContextMouseState(eMouseState::MOUSESTATE_PLACE);
+            m_player->setContextMouseState(eMouseState::MOUSESTATE_PLACE);
         }
         else if (item->shouldDeployIt()) {
-            player->setContextMouseState(eMouseState::MOUSESTATE_DEPLOY);
+            m_player->setContextMouseState(eMouseState::MOUSESTATE_DEPLOY);
         }
         else {
             startBuildingItemIfOk(item);
         }
     }
     else {
-        cOrderProcesser *orderProcesser = player->getOrderProcesser();
+        cOrderProcesser *orderProcesser = m_player->getOrderProcesser();
 
         // add orders
         if (orderProcesser->acceptsOrders()) {
-            if (player->hasEnoughCreditsFor(item->getBuildCost())) {
+            if (m_player->hasEnoughCreditsFor(item->getBuildCost())) {
                 item->increaseTimesOrdered();
                 orderProcesser->addOrder(item);
-                player->substractCredits(item->getBuildCost());
+                m_player->substractCredits(item->getBuildCost());
             }
         }
     }
@@ -228,10 +228,10 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
 
 void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
 {
-    if (selectedListID < 0) return;
+    if (m_selectedListID < 0) return;
 
     // when mouse pressed, build item if over item
-    cBuildingList *list = getList(selectedListID);
+    cBuildingList *list = getList(m_selectedListID);
 
     cBuildingListDrawer *buildingListDrawer = game.m_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
@@ -242,7 +242,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
         cancelBuildingListItem(item);
     }
     else {
-        cOrderProcesser *orderProcesser = player->getOrderProcesser();
+        cOrderProcesser *orderProcesser = m_player->getOrderProcesser();
 
         assert(orderProcesser);
         if (!orderProcesser->isOrderPlaced()) {
@@ -266,8 +266,8 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
             // only give money back for item that is being built
             if (item->isBuilding()) {
                 // calculate the amount of money back:
-                player->giveCredits(item->getRefundAmount());
-                player->getBuildingListUpdater()->onBuildItemCancelled(item);
+                m_player->giveCredits(item->getRefundAmount());
+                m_player->getBuildingListUpdater()->onBuildItemCancelled(item);
             }
             item->setIsBuilding(false);
             item->resetProgress();
@@ -277,7 +277,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED,
                 .entityType = item->getBuildType(),
                 .entityID = -1,
-                .player = player,
+                .player = m_player,
                 .entitySpecificType = item->getBuildId(),
                 .atCell = -1,
                 .isReinforce = false,
@@ -287,7 +287,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
             game.onNotifyGameEvent(event);
             // else, only the number is decreased (used for queueing)
 
-            cItemBuilder *itemBuilder = player->getItemBuilder();
+            cItemBuilder *itemBuilder = m_player->getItemBuilder();
             itemBuilder->removeItemFromList(item);
         }
     }
@@ -295,7 +295,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
 
 void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event)
 {
-    cGameControlsContext *pContext = player->getGameControlsContext();
+    cGameControlsContext *pContext = m_player->getGameControlsContext();
 
     if (!pContext->isMouseOnSidebarOrMinimap()) {
         // we're only interested in mouse movement
@@ -323,7 +323,7 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event)
 void cSideBar::onNotify(const s_GameEvent &event)
 {
     // event is for specific player, and we are not that player...
-    if (event.player != nullptr && event.player != player) {
+    if (event.player != nullptr && event.player != m_player) {
         return;
     }
 
@@ -374,35 +374,35 @@ void cSideBar::onListBecameUnavailableEvent(const s_GameEvent &event)
 
 cBuildingList *cSideBar::getSelectedList() const
 {
-    if (selectedListID < 0) return nullptr;
-    return lists[selectedListID];
+    if (m_selectedListID < 0) return nullptr;
+    return m_lists[m_selectedListID];
 }
 
 void cSideBar::findFirstActiveListAndSelectIt()
 {
-    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [{}]", selectedListID));
+    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - current m_selectedListID is [{}]", m_selectedListID));
     for (int i = 0; i < LIST_MAX; i++) {
-        cBuildingList *pList = lists[i];
+        cBuildingList *pList = m_lists[i];
         if (pList && pList->isAvailable()) {
             setSelectedListId(eListTypeFromInt(i));
             break;
         }
     }
-    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [{}]", selectedListID));
+    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - new m_selectedListID is [{}]", m_selectedListID));
 }
 
 void cSideBar::setSelectedListId(eListType value)
 {
     logbook(std::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]",
-                        player->getId(), selectedListID, eListTypeAsInt(value)));
+                        m_player->getId(), m_selectedListID, eListTypeAsInt(value)));
 
-    int oldListId = selectedListID;
-    selectedListID = eListTypeAsInt(value);
+    int oldListId = m_selectedListID;
+    m_selectedListID = eListTypeAsInt(value);
     if (oldListId > -1 && oldListId < LIST_MAX) {
-        lists[oldListId]->setSelected(false);
+        m_lists[oldListId]->setSelected(false);
     }
 
-    if (selectedListID > -1 && selectedListID < LIST_MAX) {
-        lists[selectedListID]->setSelected(true);
+    if (m_selectedListID > -1 && m_selectedListID < LIST_MAX) {
+        m_lists[m_selectedListID]->setSelected(true);
     }
 }
