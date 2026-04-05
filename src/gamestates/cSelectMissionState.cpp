@@ -1,10 +1,9 @@
 #include "cSelectMissionState.h"
 #include "context/GameContext.hpp"
 #include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "config.h"
-#include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
+#include "gui/GuiTheme.hpp"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 #include <cassert>
@@ -26,7 +25,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = new GuiWindow(m_renderDrawer, window, m_textDrawer);
-    gui_window->setTheme(GuiTheme::Light());
+    gui_window->setTheme(cGuiThemeBuilder().light().build());
 
     // Title
     gui_window->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
@@ -43,7 +42,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
             .withLabel(std::format("Mission {}", i))
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)    
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,i]() {
                 m_game.jumpToSelectYourNextConquestMission(i);
                 m_game.setNextStateToTransitionTo(GAME_REGION);
@@ -63,7 +62,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)    
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState]() {
                 m_game.setNextStateToTransitionTo(prevState);
             })

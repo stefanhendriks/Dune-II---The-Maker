@@ -79,7 +79,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();   

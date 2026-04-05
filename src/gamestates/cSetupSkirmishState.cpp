@@ -77,13 +77,15 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     spawnBlooms = true;
     detonateBlooms = true;
 
+    auto theme = cGuiThemeBuilder().light().build();
+
     // Colors
-    colorDarkishBackground = GuiTheme::Light().background;
-    colorDarkishBorder = GuiTheme::Light().borderLight;
-    colorDarkerYellow = GuiTheme::Light().textDarkColor;
-    colorDisabled = GuiTheme::Light().disabled;
-    colorLightBackground = GuiTheme::Light().fillColor;
-    colorOtherBorder = GuiTheme::Light().borderDark;
+    colorDarkishBackground = theme.background;
+    colorDarkishBorder = theme.borderLight;
+    colorDarkerYellow = theme.textDarkColor;
+    colorDisabled = theme.disabled;
+    colorLightBackground = theme.fillColor;
+    colorOtherBorder = theme.borderDark;
 
     // Basic coordinates
     topBarHeight = 21;
@@ -184,7 +186,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         .withLabel("Next")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withTheme(GuiTheme::Light())
+        .withTheme(theme)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .onClick(nextFunction)
         .build();
@@ -194,7 +196,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withLabel("Previous")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(theme)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick(previousFunction)
             .build();
@@ -244,7 +246,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withLabel("BACK")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(theme)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MENU);
@@ -263,7 +265,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withLabel("START")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(theme)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
@@ -283,7 +285,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withLabel("Modify")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(theme)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {

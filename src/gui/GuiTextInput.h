@@ -69,7 +69,7 @@ private:
         cRectangle rect;
         cTextDrawer* drawer = nullptr;
         SDLDrawer* renderer = nullptr;
-        GuiTheme theme = GuiTheme::Light();
+        GuiTheme theme = cGuiThemeBuilder().light().build();
         std::function<void(const std::string&)> onChanged = nullptr;
     } params;
 };

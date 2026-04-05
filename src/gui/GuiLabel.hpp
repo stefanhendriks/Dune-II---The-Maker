@@ -15,7 +15,7 @@ struct GuiLabelParams {
     SDLDrawer* renderer;
     std::string label = "";
     GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
-    GuiTheme theme = GuiTheme::Light();
+    GuiTheme theme = cGuiThemeBuilder().light().build();
     GuiTextAlignHorizontal align = GuiTextAlignHorizontal::CENTER;
     Texture *tex = nullptr;
 };

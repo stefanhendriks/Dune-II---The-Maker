@@ -81,7 +81,7 @@ private:
         SDLDrawer* renderer;
         std::vector<int> values;
         cTextDrawer* drawer = nullptr;
-        GuiTheme theme = GuiTheme::Light();
+        GuiTheme theme = cGuiThemeBuilder().light().build();
         std::function<void(int)> onChanged = nullptr;
     } params;
 };

@@ -138,7 +138,7 @@ private:
     SDLDrawer* m_renderer;
     std::string m_label = "";
     GuiRenderKind m_kind = GuiRenderKind::OPAQUE_WITH_BORDER;
-    GuiTheme m_theme = GuiTheme::Light();
+    GuiTheme m_theme = cGuiThemeBuilder().light().build();
     GuiTextAlignHorizontal m_align = GuiTextAlignHorizontal::CENTER;
     std::function<void()> m_onLeftClick = nullptr;
     std::function<void()> m_onRightClick = nullptr;

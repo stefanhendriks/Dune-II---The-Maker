@@ -3,23 +3,16 @@
 #include "gui/GuiStateButton.h"
 #include "gui/GuiButtonGroup.h"
 #include "game/cGame.h"
-#include "include/d2tmc.h"
-#include "config.h"
-#include "data/gfxinter.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
-#include "drawers/cTextDrawer.h"
 #include "map/cPreviewMaps.h"
-#include "utils/Graphics.hpp"
 #include "data/gfxeditor.h"
-#include "data/gfxinter.h"
 
 #include <SDL2/SDL.h>
 #include <cassert>
-#include <format>
 #include <iostream>
 #include <fstream>
 
@@ -44,13 +37,13 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_startCellBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_symmetricBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
 
-    m_selectBar->setTheme(GuiTheme::Light());
+    m_selectBar->setTheme(cGuiThemeBuilder().light().build());
     m_selectBar->beginPlacement(heightBarSize);
-    m_topologyBar->setTheme(GuiTheme::Light());
+    m_topologyBar->setTheme(cGuiThemeBuilder().light().build());
     m_topologyBar->beginPlacement(heightBarSize);
-    m_startCellBar->setTheme(GuiTheme::Light());
+    m_startCellBar->setTheme(cGuiThemeBuilder().light().build());
     m_startCellBar->beginPlacement(heightBarSize);
-    m_symmetricBar->setTheme(GuiTheme::Light());
+    m_symmetricBar->setTheme(cGuiThemeBuilder().light().build());
     m_symmetricBar->beginPlacement(heightBarSize);
 
     populateSelectBar();

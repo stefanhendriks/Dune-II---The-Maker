@@ -11,7 +11,7 @@ struct GuiSliderParams {
     int minValue = 0;
     int maxValue = 100;
     int initialValue = 0;
-    GuiTheme theme = GuiTheme::Light();
+    GuiTheme theme = cGuiThemeBuilder().light().build();
     std::function<void(int)> onValueChanged = nullptr;
 };
 

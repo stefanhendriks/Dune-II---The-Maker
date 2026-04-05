@@ -40,7 +40,7 @@ void cOptionsState::constructWindow(int prevState)
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = new GuiWindow(m_renderDrawer, window, m_textDrawer);
-    m_guiWindow->setTheme(GuiTheme::Light());
+    m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
     cSoundPlayer* soundPlayer = m_ctx->getSoundPlayer();
 
     // Title
@@ -55,7 +55,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Back to main menu")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MENU);
                 m_game.initiateFadingOut();})
@@ -69,6 +69,7 @@ void cOptionsState::constructWindow(int prevState)
                 .withTextDrawer(m_textDrawer)
                 .withRenderer(m_renderDrawer)
                 .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+                .withTheme(cGuiThemeBuilder().light().withTextColor(Color::yellow()).build())
                 .withRect(cheatRect)
                 .build();
         m_guiWindow->addGuiObject(gui_cheatLabel);
@@ -83,7 +84,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Quit game")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_game.m_playing = false;
                 m_game.initiateFadingOut();})
@@ -99,7 +100,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState](){
                 m_game.setNextStateToTransitionTo(prevState);})
             .build();
@@ -116,7 +117,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Mission select")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
             .build();

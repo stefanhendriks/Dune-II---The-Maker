@@ -1,20 +1,14 @@
 #include "gamestates/cNewMapEditorState.h"
 
 #include "game/cGame.h"
-#include "include/d2tmc.h"
-#include "config.h"
 
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 #include "gui/GuiLabel.hpp"
-#include "gui/GuiCheckBox.hpp"
-#include "gui/GuiSlider.hpp"
 #include "gui/GuiTextInput.h"
 #include "context/GameContext.hpp"
 #include "drawers/cTextDrawer.h"
 
-#include <iostream>
-#include <memory>
 #include <cassert>
 
 cNewMapEditorState::cNewMapEditorState(cGame &theGame, GameContext *ctx)
@@ -40,7 +34,7 @@ void cNewMapEditorState::constructWindow()
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = new GuiWindow(m_renderDrawer, window, m_textDrawer);
-    m_guiWindow->setTheme(GuiTheme::Light());
+    m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
 
     // Title
     m_guiWindow->setTitle("New map editor configuration");
@@ -117,7 +111,7 @@ void cNewMapEditorState::constructWindow()
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_renderDrawer)
-        .withTheme( GuiTheme::Light() )
+        .withTheme(cGuiThemeBuilder().light().build())
         .build();
     m_guiWindow->addGuiObject(m_cycleWidth);
 
@@ -138,7 +132,7 @@ void cNewMapEditorState::constructWindow()
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_renderDrawer)
-        .withTheme( GuiTheme::Light() )
+        .withTheme( cGuiThemeBuilder().light().build() )
         .build();
     m_guiWindow->addGuiObject(m_cycleHeight);
 
@@ -152,7 +146,7 @@ void cNewMapEditorState::constructWindow()
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
         .withTextAlign(GuiTextAlignHorizontal::CENTER)
-        .withTheme(GuiTheme::Light())
+        .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this]() {
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();})
@@ -168,7 +162,7 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Create map !")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withTheme(GuiTheme::Light())
+        .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this](){
             s_PreviewMap newMap = cPreviewMaps::createEmptyMap(
                 m_inputName->getText(), m_inputAuthor->getText(), m_inputDescription->getText(),
