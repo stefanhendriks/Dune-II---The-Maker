@@ -9,19 +9,6 @@
 class SDLDrawer;
 class cTextDrawer;
 
-struct GuiButtonParams {
-    cTextDrawer* drawer = nullptr;
-    cRectangle rect;
-    SDLDrawer* renderer;
-    std::string label = "";
-    GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
-    GuiTheme theme = GuiTheme::Light();
-    GuiTextAlignHorizontal align = GuiTextAlignHorizontal::CENTER;
-    std::function<void()> onLeftClick = nullptr;
-    std::function<void()> onRightClick = nullptr;
-    Texture *tex = nullptr;
-};
-
 
 class GuiButton : public GuiObject {
 public:
@@ -79,72 +66,81 @@ private:
 class GuiButtonBuilder {
 public:
     GuiButtonBuilder& withTextDrawer(cTextDrawer* drawer) {
-        params.drawer = drawer;
+        this->m_drawer = drawer;
         return *this;
     }
 
     GuiButtonBuilder& withRect(const cRectangle& rect) {
-        params.rect = rect;
+        this->m_rect = rect;
         return *this;
     }
 
     GuiButtonBuilder& withRenderer(SDLDrawer* render) {
-        params.renderer = render;
+        this->m_renderer = render;
         return *this;
     }
 
     GuiButtonBuilder& withLabel(const std::string& label) {
-        params.label = label;
+        this->m_label = label;
         return *this;
     }
 
     GuiButtonBuilder& withKind(GuiRenderKind kind) {
-        params.kind = kind;
+        this->m_kind = kind;
         return *this;
     }
 
     GuiButtonBuilder& withTheme(const GuiTheme& theme) {
-        params.theme = theme;
+        this->m_theme = theme;
         return *this;
     }
 
     GuiButtonBuilder& withTextAlign(GuiTextAlignHorizontal align) {
-        params.align = align;
+        this->m_align = align;
         return *this;
     }
 
     GuiButtonBuilder& onClick(std::function<void()> callback) {
-        params.onLeftClick = std::move(callback);
+        this->m_onLeftClick = std::move(callback);
         return *this;
     }
 
     GuiButtonBuilder& onRightClick(std::function<void()> callback) {
-        params.onRightClick = std::move(callback);
+        this->m_onRightClick = std::move(callback);
         return *this;
     }
 
     GuiButtonBuilder& withTexture(Texture* tex) {
-        params.tex = tex;
+        this->m_tex = tex;
         return *this;
     }
 
     GuiButton* build() const {
-        GuiButton* btn = new GuiButton(params.renderer, params.rect, params.label);
-        btn->setTextDrawer(params.drawer);
-        btn->setRenderKind(params.kind);
-        btn->setTheme(params.theme);
-        btn->setTextAlignHorizontal(params.align);
-        btn->setTexture(params.tex);
-        if (params.onLeftClick) {
-            btn->setOnLeftMouseButtonClickedAction(params.onLeftClick);
+        GuiButton* btn = new GuiButton(m_renderer, m_rect, m_label);
+        btn->setTextDrawer(m_drawer);
+        btn->setRenderKind(m_kind);
+        btn->setTheme(m_theme);
+        btn->setTextAlignHorizontal(m_align);
+        btn->setTexture(m_tex);
+        if (m_onLeftClick) {
+            btn->setOnLeftMouseButtonClickedAction(m_onLeftClick);
         }
-        if (params.onRightClick) {
-            btn->setOnRightMouseButtonClickedAction(params.onRightClick);
+        if (m_onRightClick) {
+            btn->setOnRightMouseButtonClickedAction(m_onRightClick);
         }
         
         return btn;
     }
 
 private:
-    GuiButtonParams params;
+    cTextDrawer* m_drawer = nullptr;
+    cRectangle m_rect;
+    SDLDrawer* m_renderer;
+    std::string m_label = "";
+    GuiRenderKind m_kind = GuiRenderKind::OPAQUE_WITH_BORDER;
+    GuiTheme m_theme = GuiTheme::Light();
+    GuiTextAlignHorizontal m_align = GuiTextAlignHorizontal::CENTER;
+    std::function<void()> m_onLeftClick = nullptr;
+    std::function<void()> m_onRightClick = nullptr;
+    Texture *m_tex = nullptr;
 };
