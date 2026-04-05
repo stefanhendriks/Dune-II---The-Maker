@@ -4,10 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-D2TM (Dune II - The Maker) is a C++23 remake of the classic RTS game Dune II. It uses SDL2 (+ SDL2_image, SDL2_ttf, SDL2_mixer) for rendering, audio, and input. There are no automated tests in this project.
+D2TM (Dune II - The Maker) is a C++23 remake of the classic RTS game Dune II. 
+It uses SDL2 (+ SDL2_image, SDL2_ttf, SDL2_mixer) for rendering, audio, and input. 
+
+There are no automated tests in this project.
 
 ## Build Commands
-
 **macOS (one-time setup):**
 ```sh
 ./install_dependencies_macosx.sh   # installs gcc, cmake, ninja, sdl2 via brew
@@ -26,11 +28,9 @@ make -j4          # or: cmake --build . --target all -- -j 6
 ```
 
 The binary is `build/d2tm`. Run it from the repo root so it can find `bin/` (game data lives there).
+Before you can run the game, make sure to run ./create_release script (on Windows this is .bat, on *nix systems .sh one)
 
-## Creating a binary to test
-- Create build script as above stated
-- Then make sure to run ./create_release script (on Windows this is .bat, on *nix systems .sh one)
-- After that you will have a complete package in <PROJECT ROOT>/bin
+After that you will have a complete package in <PROJECT ROOT>/bin where you can execute d2tm.exe or ./d2tm
 
 **CLion on macOS (Apple Silicon):** Set C compiler to `/opt/homebrew/bin/gcc-15`, C++ to `/opt/homebrew/bin/g++-15`.
 
@@ -43,7 +43,9 @@ python3 astyle.py
 
 ### Entry Point & Global State
 
-`src/include/d2tmc.h` declares the single global `cGame game` instance plus `global_renderDrawer` and `gfxdata`. These globals are explicitly acknowledged as legacy and are being incrementally moved into proper classes.
+`src/include/d2tmc.h` declares the single global `cGame game` instance plus `global_renderDrawer` and `gfxdata`. 
+
+These globals are explicitly acknowledged as legacy and are being incrementally moved into proper classes.
 
 ### cGame — Central Facade
 
@@ -72,7 +74,8 @@ State transitions go through `cGame::setNextStateToTransitionTo()` + `initiateFa
 
 `src/drawers/` contains specialized drawers (one per concern: map, minimap, sidebar, particles, structures, mouse, messages, etc.). `cDrawManager` (`src/managers/cDrawManager.h`) composes them for the combat/playing state. All rendering goes through `SDLDrawer` which wraps SDL2's renderer.
 
-Graphics assets are loaded from `.dat` files in `bin/data/` via the `Graphics` class. Multiple `Graphics` instances are used: `gfxdata`, `gfxinter`, `gfxworld`, `gfxmentat`, etc. (declared in `src/data/gfx*.h`).
+Graphics assets are loaded from `.dat` files in `bin/data/` via the `Graphics` class. 
+Multiple `Graphics` instances are used: `gfxdata`, `gfxinter`, `gfxworld`, `gfxmentat`, etc. (declared in `src/data/gfx*.h`).
 
 ### Game Objects
 
@@ -84,7 +87,11 @@ All live in `src/gameobjects/`:
 
 ### Players & AI
 
-`src/player/cPlayer.h` represents each of up to 7 players (index 0 = human, 1–6 = AI). Each player owns a `cPlayerBrain` (`src/player/brains/`) with variants: `cPlayerBrainCampaign`, `cPlayerBrainSkirmish`, `cPlayerBrainSandworm`, `cPlayerBrainEmpty`. Brains are ticked every ~100 ms and execute `cPlayerBrainMission`s (attack, explore, DeathHand, Fremen, Saboteur).
+`src/player/cPlayer.h` represents each of up to 7 players (index 0 = human, 1–6 = AI). 
+
+Each player owns a `cPlayerBrain` (`src/player/brains/`) with variants: `cPlayerBrainCampaign`, `cPlayerBrainSkirmish`, `cPlayerBrainSandworm`, `cPlayerBrainEmpty`. 
+
+Brains are ticked every ~100 ms and execute `cPlayerBrainMission`s (attack, explore, DeathHand, Fremen, Saboteur).
 
 ### Map
 
@@ -115,7 +122,6 @@ From comments in `cGame.h`:
 
 - This is a RTS game. Based on Dune 2; but with modernizations. (Much like Red Alert of Command & Conquer)
 - A 'cell' is a tile on a map
-- 
 
 ## Code & Github
 - changes should never be done directly on master or main branch, if you are on master or main branch create a new branch
@@ -123,6 +129,3 @@ From comments in `cGame.h`:
 - branch names are usually: `<prefix>/<ticket-githubnr here>/<short-description-of-feature>`
   - prefixes can be `feature` (new feature), `bugfix` or `improv` (for technical improvements usually)
 -
-
-## Architecture
-- TODO
