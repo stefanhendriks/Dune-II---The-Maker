@@ -239,7 +239,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
 
 void cMapCamera::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyHold(event);
             break;

@@ -12,12 +12,12 @@ public:
     void updateState();
 
     void setKeyboardObserver(cInputObserver *keyboardObserver) {
-        _keyboardObserver = keyboardObserver;
+        m_keyboardObserver = keyboardObserver;
     }
 
 private:
-    cInputObserver *_keyboardObserver;
-    std::set<SDL_Scancode> keysPressed;
-    std::set<SDL_Scancode> keysReleased;
-    s_KeysCombo currentCombo;
+    cInputObserver *m_keyboardObserver;
+    std::set<SDL_Scancode> m_keysPressed;
+    std::set<SDL_Scancode> m_keysReleased;
+    s_KeysCombo m_currentCombo;
 };

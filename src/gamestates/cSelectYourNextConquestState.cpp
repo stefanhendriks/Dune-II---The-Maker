@@ -670,7 +670,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 
 void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.eventType == eKeyEventType::PRESSED) {
+    if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
             m_game.setNextStateToTransitionTo(GAME_OPTIONS);
         }

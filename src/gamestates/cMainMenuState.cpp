@@ -262,7 +262,7 @@ eGameStateType cMainMenuState::getType()
 
 void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.eventType == eKeyEventType::PRESSED) {
+    if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
             m_game.m_playing=false;
         }

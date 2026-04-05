@@ -295,7 +295,7 @@ void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     m_sidebarDrawer->onNotifyKeyboardEvent(event);
 
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyDown(event);
             break;

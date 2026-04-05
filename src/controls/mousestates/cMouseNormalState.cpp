@@ -33,7 +33,7 @@ cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *cont
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
 
-    // these methods can have a side-effect which changes mouseTile...
+    // these methods can have a side-effect which changes m_mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_PRESSED:
             m_mouse->boxSelectLogic(m_context->getMouseCell());
@@ -56,7 +56,7 @@ void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     // ... so set it here
     if (m_context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
-        m_mouse->setTile(mouseTile);
+        m_mouse->setTile(m_mouseTile);
     }
 }
 
@@ -164,10 +164,10 @@ void cMouseNormalState::onMouseRightButtonClicked()
 void cMouseNormalState::onMouseMovedTo()
 {
     if (m_state == SELECT_STATE_NORMAL) {
-        mouseTile = getMouseTileForNormalState();
+        m_mouseTile = getMouseTileForNormalState();
     }
     else if (m_state == SELECT_STATE_RALLY) {
-        mouseTile = MOUSE_RALLY;
+        m_mouseTile = MOUSE_RALLY;
     }
 }
 
@@ -188,14 +188,14 @@ int cMouseNormalState::getMouseTileForNormalState() const
 
 void cMouseNormalState::onStateSet()
 {
-    mouseTile = MOUSE_NORMAL;
-    m_mouse->setTile(mouseTile);
+    m_mouseTile = MOUSE_NORMAL;
+    m_mouse->setTile(m_mouseTile);
 }
 
 void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    // these methods can have a side-effect which changes mouseTile...
-    switch (event.eventType) {
+    // these methods can have a side-effect which changes m_mouseTile...
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyDown(event);
             break;
@@ -208,7 +208,7 @@ void cMouseNormalState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
     // ... so set it here
     if (m_context->isState(MOUSESTATE_SELECT)) { // if , required in case we switched state
-        m_mouse->setTile(mouseTile);
+        m_mouse->setTile(m_mouseTile);
     }
 }
 
@@ -219,7 +219,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         // when selecting a structure
         if (pSelectedStructure && pSelectedStructure->belongsTo(m_player) && pSelectedStructure->canSpawnUnits()) {
             setState(SELECT_STATE_RALLY);
-            mouseTile = MOUSE_RALLY;
+            m_mouseTile = MOUSE_RALLY;
         }
     }
 }
@@ -230,7 +230,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
     if (createGroup) {
         // actual group creation is at cGameLogic onKeyPressed
         setState(SELECT_STATE_NORMAL);
-        mouseTile = MOUSE_NORMAL;
+        m_mouseTile = MOUSE_NORMAL;
     }
     else {
         // select group
@@ -260,7 +260,7 @@ void cMouseNormalState::setState(eMouseNormalState newState)
 
 void cMouseNormalState::onFocus()
 {
-    m_mouse->setTile(mouseTile);
+    m_mouse->setTile(m_mouseTile);
 }
 
 void cMouseNormalState::onBlur()

@@ -1,9 +1,9 @@
 #include "cKeyboardEvent.h"
 
 cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo) :
-    eventType(eventType),
-    keys(keys),
-    combo(combo)
+    m_eventType(eventType),
+    m_keys(keys),
+    m_combo(combo)
 {
 }
 
@@ -29,8 +29,8 @@ int cKeyboardEvent::getGroupNumber() const
 
 bool cKeyboardEvent::isPrintable() const
 {
-    if (keys.empty() || keys.size() > 2) return false;
-    for (auto sc : keys) {
+    if (m_keys.empty() || m_keys.size() > 2) return false;
+    for (auto sc : m_keys) {
         if (sc != SDL_SCANCODE_LSHIFT && sc != SDL_SCANCODE_RSHIFT) {
             SDL_Keycode key = SDL_GetKeyFromScancode(sc);
             if (key >= 32 && key <= 126) return true;
@@ -51,23 +51,23 @@ bool cKeyboardEvent::isEnter() const
 
 bool cKeyboardEvent::isShiftPressed() const
 {
-    return combo.shiftPressed;
+    return m_combo.shiftPressed;
 }
 
 bool cKeyboardEvent::isAltPressed() const
 {
-    return combo.altPressed;
+    return m_combo.altPressed;
 }
 
 bool cKeyboardEvent::isCtrlPressed() const
 {
-    return combo.ctrlPressed;
+    return m_combo.ctrlPressed;
 }
 
 char cKeyboardEvent::getChar() const
 {
     if (!isPrintable()) return '\0';
-    SDL_Scancode sc = *keys.begin();
+    SDL_Scancode sc = *m_keys.begin();
     SDL_Keycode key = SDL_GetKeyFromScancode(sc);
     return static_cast<char>(key);
 }

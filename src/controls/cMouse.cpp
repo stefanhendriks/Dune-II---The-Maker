@@ -22,43 +22,43 @@ cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_renderDrawer(ctx->getSDLDrawer()),
-    coords(cPoint(0,0))
+    m_coords(cPoint(0,0))
 {
     assert(m_ctx!=nullptr);
-    leftButtonPressed=false;
-    rightButtonPressed=false;
-    leftButtonReleased=false;
-    rightButtonReleased=false;
-    mouseScrolledUp=false;
-    mouseScrolledDown=false;
-    leftButtonClickedInPreviousFrame = false;
-    rightButtonClickedInPreviousFrame = false;
-    _mouseObserver = nullptr; // set later
-    debugLines = std::vector<std::string>();
-    didMouseMove = false;
+    m_leftButtonPressed=false;
+    m_rightButtonPressed=false;
+    m_leftButtonReleased=false;
+    m_rightButtonReleased=false;
+    m_mouseScrolledUp=false;
+    m_mouseScrolledDown=false;
+    m_leftButtonClickedInPreviousFrame = false;
+    m_rightButtonClickedInPreviousFrame = false;
+    m_mouseObserver = nullptr; // set later
+    m_debugLines = std::vector<std::string>();
+    m_didMouseMove = false;
     init();
 }
 
 cMouse::~cMouse()
 {
-    _mouseObserver = nullptr; // we do not own this, so don't delete
+    m_mouseObserver = nullptr; // we do not own this, so don't delete
 }
 
 void cMouse::init()
 {
-    mouse_tile = MOUSE_NORMAL;
+    m_mouseTile = MOUSE_NORMAL;
 
-    mouse_co_x1 = -1;
-    mouse_co_y1 = -1;
-    mouse_co_x2 = -1;
-    mouse_co_y2 = -1;
+    m_mouseCoX1 = -1;
+    m_mouseCoY1 = -1;
+    m_mouseCoX2 = -1;
+    m_mouseCoY2 = -1;
 
-    mouse_mv_x1 = -1;
-    mouse_mv_y1 = -1;
-    mouse_mv_x2 = -1;
-    mouse_mv_y2 = -1;
+    m_mouseMvX1 = -1;
+    m_mouseMvY1 = -1;
+    m_mouseMvX2 = -1;
+    m_mouseMvY2 = -1;
 
-    debugLines.clear();
+    m_debugLines.clear();
 }
 
 void cMouse::handleEvent(const SDL_Event &event)
@@ -66,126 +66,126 @@ void cMouse::handleEvent(const SDL_Event &event)
     switch (event.type) {
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_LEFT) {
-                leftButtonPressed = true;
-                coordsOnClick.x = event.motion.x;
-                coordsOnClick.y = event.motion.y;
+                m_leftButtonPressed = true;
+                m_coordsOnClick.x = event.motion.x;
+                m_coordsOnClick.y = event.motion.y;
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
-                rightButtonPressed = true;
-                coordsOnClick.x = event.motion.x;
-                coordsOnClick.y = event.motion.y;
+                m_rightButtonPressed = true;
+                m_coordsOnClick.x = event.motion.x;
+                m_coordsOnClick.y = event.motion.y;
             }
             break;
         case SDL_MOUSEBUTTONUP:
             if (event.button.button == SDL_BUTTON_LEFT) {
-                leftButtonPressed = false;
-                leftButtonReleased = true;
-                int dist = (coordsOnClick.x - event.motion.x)*(coordsOnClick.x - event.motion.x) + (coordsOnClick.y - event.motion.y)*(coordsOnClick.y - event.motion.y);
+                m_leftButtonPressed = false;
+                m_leftButtonReleased = true;
+                int dist = (m_coordsOnClick.x - event.motion.x)*(m_coordsOnClick.x - event.motion.x) + (m_coordsOnClick.y - event.motion.y)*(m_coordsOnClick.y - event.motion.y);
                 if (dist < 16) {
                     // std::cout << "left click" << std::endl;
-                    leftButtonClicked = true;
+                    m_leftButtonClicked = true;
                 }
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
-                rightButtonPressed = false;
-                rightButtonReleased = true;
-                int dist = (coordsOnClick.x - event.motion.x)*(coordsOnClick.x - event.motion.x) + (coordsOnClick.y - event.motion.y)*(coordsOnClick.y - event.motion.y);
+                m_rightButtonPressed = false;
+                m_rightButtonReleased = true;
+                int dist = (m_coordsOnClick.x - event.motion.x)*(m_coordsOnClick.x - event.motion.x) + (m_coordsOnClick.y - event.motion.y)*(m_coordsOnClick.y - event.motion.y);
                 if (dist < 16) {
                     // std::cout << "right click" << std::endl;
-                    rightButtonClicked = true;
+                    m_rightButtonClicked = true;
                 }
             }
             break;
         case SDL_MOUSEMOTION:
-            coords.x = event.motion.x;
-            coords.y = event.motion.y;
-            didMouseMove = true;
+            m_coords.x = event.motion.x;
+            m_coords.y = event.motion.y;
+            m_didMouseMove = true;
             break;
         case SDL_MOUSEWHEEL:
-            if (event.wheel.y > 0) mouseScrolledUp = true;
-            if (event.wheel.y < 0) mouseScrolledDown = true;
+            if (event.wheel.y > 0) m_mouseScrolledUp = true;
+            if (event.wheel.y < 0) m_mouseScrolledDown = true;
             break;
     }
 }
 
 void cMouse::updateState()
 {
-    debugLines.clear();
+    m_debugLines.clear();
 
-    if (leftButtonClickedInPreviousFrame == true)
-        leftButtonClicked = false;
-    if (rightButtonClickedInPreviousFrame == true)
-        rightButtonClicked = false;
+    if (m_leftButtonClickedInPreviousFrame == true)
+        m_leftButtonClicked = false;
+    if (m_rightButtonClickedInPreviousFrame == true)
+        m_rightButtonClicked = false;
 
     // mouse moved
-    if (_mouseObserver) {
-        s_MouseEvent event {eMouseEventType::MOUSE_MOVED_TO, coords};
+    if (m_mouseObserver) {
+        s_MouseEvent event {eMouseEventType::MOUSE_MOVED_TO, m_coords};
 
-        if (didMouseMove) {
-            s_MouseEvent event {eMouseEventType::MOUSE_MOVED_TO, coords};
-            _mouseObserver->onNotifyMouseEvent(event);
+        if (m_didMouseMove) {
+            s_MouseEvent event {eMouseEventType::MOUSE_MOVED_TO, m_coords};
+            m_mouseObserver->onNotifyMouseEvent(event);
         }
 
-        if (mouseScrolledUp) {
+        if (m_mouseScrolledUp) {
             event.eventType = eMouseEventType::MOUSE_SCROLLED_UP;
-            _mouseObserver->onNotifyMouseEvent(event);
+            m_mouseObserver->onNotifyMouseEvent(event);
         }
 
-        if (mouseScrolledDown) {
+        if (m_mouseScrolledDown) {
             event.eventType = eMouseEventType::MOUSE_SCROLLED_DOWN;
-            _mouseObserver->onNotifyMouseEvent(event);
+            m_mouseObserver->onNotifyMouseEvent(event);
         }
 
-        if (leftButtonPressed) {
+        if (m_leftButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED;
-            _mouseObserver->onNotifyMouseEvent(event);
+            m_mouseObserver->onNotifyMouseEvent(event);
             // std::cout << "emit left pressed" << std::endl;
         }
 
-        if (leftButtonReleased) {
+        if (m_leftButtonReleased) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
-            _mouseObserver->onNotifyMouseEvent(event);
+            m_mouseObserver->onNotifyMouseEvent(event);
             // std::cout << "emit left released" << std::endl;
         }
 
-        if (rightButtonPressed) {
+        if (m_rightButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED;
-            _mouseObserver->onNotifyMouseEvent(event);
+            m_mouseObserver->onNotifyMouseEvent(event);
             // std::cout << "emit right pressed" << std::endl;
         }
 
-        if (rightButtonReleased) {
+        if (m_rightButtonReleased) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED;
-            _mouseObserver->onNotifyMouseEvent(event);
+            m_mouseObserver->onNotifyMouseEvent(event);
             // std::cout << "emit right click" << std::endl;
         }
     }
 
     // HACK HACK:
     // make -1 to -2, so that we can prevent placeIt/deployIt=false when just stopped viewport dragging
-    if (mouse_mv_x2 == -1) {
-        mouse_mv_x2 = -2;
+    if (m_mouseMvX2 == -1) {
+        m_mouseMvX2 = -2;
     }
-    if (mouse_mv_y2 == -1) {
-        mouse_mv_y2 = -2;
+    if (m_mouseMvY2 == -1) {
+        m_mouseMvY2 = -2;
     }
-    didMouseMove = false;
-    leftButtonReleased = false;
-    rightButtonReleased = false;
-    mouseScrolledDown = false;
-    mouseScrolledUp = false;
-    leftButtonClickedInPreviousFrame = leftButtonClicked;
-    rightButtonClickedInPreviousFrame = rightButtonClicked;
+    m_didMouseMove = false;
+    m_leftButtonReleased = false;
+    m_rightButtonReleased = false;
+    m_mouseScrolledDown = false;
+    m_mouseScrolledUp = false;
+    m_leftButtonClickedInPreviousFrame = m_leftButtonClicked;
+    m_rightButtonClickedInPreviousFrame = m_rightButtonClicked;
 }
 
 void cMouse::setCursorPosition(SDL_Window *_windows, int x, int y)
 {
     SDL_WarpMouseInWindow(_windows, x, y); // allegro function
-    if (_mouseObserver) {
+    if (m_mouseObserver) {
         s_MouseEvent event {
             eMouseEventType::MOUSE_MOVED_TO,
             cPoint(x,y)};
-        _mouseObserver->onNotifyMouseEvent(event);
+        m_mouseObserver->onNotifyMouseEvent(event);
     }
 }
 
@@ -206,41 +206,41 @@ bool cMouse::isOverRectangle(cRectangle *rectangle)
  */
 bool cMouse::isMapScrolling()
 {
-    return mouse_mv_x1 > -1 && mouse_mv_y1 > -1 && mouse_mv_x2 > -1 && mouse_mv_y2 > -1;
+    return m_mouseMvX1 > -1 && m_mouseMvY1 > -1 && m_mouseMvX2 > -1 && m_mouseMvY2 > -1;
 }
 
 bool cMouse::isBoxSelecting()
 {
-    return mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
-           mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
-           mouse_co_x2 > -1 && mouse_co_y2 > -1;
+    return m_mouseCoX1 > -1 && m_mouseCoY1 > -1 &&
+           m_mouseCoX2 != m_mouseCoX1 && m_mouseCoY2 != m_mouseCoY1 &&
+           m_mouseCoX2 > -1 && m_mouseCoY2 > -1;
 }
 
 void cMouse::resetDragViewportInteraction()
 {
-    if (mouse_mv_x1 > -1 || mouse_mv_y1 > -1 || mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
-        mouse_mv_x1 = -1;
-        if (mouse_mv_x2 > -1) mouse_mv_x2 = -1;
+    if (m_mouseMvX1 > -1 || m_mouseMvY1 > -1 || m_mouseMvX2 > -1 || m_mouseMvY2 > -1) {
+        m_mouseMvX1 = -1;
+        if (m_mouseMvX2 > -1) m_mouseMvX2 = -1;
 
-        mouse_mv_y1 = -1;
-        if (mouse_mv_y2 > -1) mouse_mv_y2 = -1;
+        m_mouseMvY1 = -1;
+        if (m_mouseMvY2 > -1) m_mouseMvY2 = -1;
     }
 }
 
 void cMouse::dragViewportInteraction()
 {
-    if (mouse_mv_x1 < 0 || mouse_mv_y1 < 0) {
-        mouse_mv_x1 = coords.x;
-        mouse_mv_y1 = coords.y;
+    if (m_mouseMvX1 < 0 || m_mouseMvY1 < 0) {
+        m_mouseMvX1 = m_coords.x;
+        m_mouseMvY1 = m_coords.y;
     }
     else {
         // mouse mv 1st coordinates filled
         // when mouse is deviating from this coordinate, draw a line
 
-        if (ABS_length(coords.x, coords.y, mouse_mv_x1, mouse_mv_y1) > 4) {
+        if (ABS_length(m_coords.x, m_coords.y, m_mouseMvX1, m_mouseMvY1) > 4) {
             // assign 2nd coordinates
-            mouse_mv_x2 = coords.x;
-            mouse_mv_y2 = coords.y;
+            m_mouseMvX2 = m_coords.x;
+            m_mouseMvY2 = m_coords.y;
         }
     }
 }
@@ -250,22 +250,21 @@ void cMouse::boxSelectLogic(int mouseCell)
 // When the mouse is pressed, we will check if the first coordinates are filled in
     // if so, we will update the second coordinates. If the player holds his mouse we
     // keep updating the second coordinates and create a rectangle to select units with.
-    if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
-        if (abs(coords.x - mouse_co_x1) > 4 && abs(coords.y - mouse_co_y1) > 4) {
+    if (m_mouseCoX1 > -1 && m_mouseCoY1 > -1) {
+        if (abs(m_coords.x - m_mouseCoX1) > 4 && abs(m_coords.y - m_mouseCoY1) > 4) {
             // assign 2nd coordinates
-            mouse_co_x2 = coords.x;
-            if (coords.x > game.m_screenW - cSideBar::SidebarWidth) {
-                mouse_co_x2 = game.m_screenW - cSideBar::SidebarWidth - 1;
+            m_mouseCoX2 = m_coords.x;
+            if (m_coords.x > game.m_screenW - cSideBar::SidebarWidth) {
+                m_mouseCoX2 = game.m_screenW - cSideBar::SidebarWidth - 1;
             }
 
-            mouse_co_y2 = coords.y;
-            if (mouse_co_y2 < cSideBar::TopBarHeight) {
-                mouse_co_y2 = cSideBar::TopBarHeight;
+            m_mouseCoY2 = m_coords.y;
+            if (m_mouseCoY2 < cSideBar::TopBarHeight) {
+                m_mouseCoY2 = cSideBar::TopBarHeight;
             }
 
             // and draw the selection box
-            //_rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, game.getColorFadeSelected(255, 255, 255));
-            m_renderDrawer->renderRectColor(mouse_co_x1, mouse_co_y1, mouse_co_x2-mouse_co_x1, mouse_co_y2-mouse_co_y1, game.getColorFadeSelected(255, 255, 255));
+            m_renderDrawer->renderRectColor(m_mouseCoX1, m_mouseCoY1, m_mouseCoX2-m_mouseCoX1, m_mouseCoY2-m_mouseCoY1, game.getColorFadeSelected(255, 255, 255));
         }
 
         // Note that we have to fix up the coordinates when checking 'within border'
@@ -273,8 +272,8 @@ void cMouse::boxSelectLogic(int mouseCell)
     }
     else if (mouseCell > -1) {
         // no first coordinates set, so do that here.
-        mouse_co_x1 = coords.x;
-        mouse_co_y1 = coords.y;
+        m_mouseCoX1 = m_coords.x;
+        m_mouseCoY1 = m_coords.y;
     }
 }
 
@@ -284,70 +283,70 @@ cRectangle cMouse::getBoxSelectRectangle()
     int max_x, max_y;
 
     // sort out borders:
-    if (mouse_co_x1 < mouse_co_x2) {
-        min_x = mouse_co_x1;
-        max_x = mouse_co_x2;
+    if (m_mouseCoX1 < m_mouseCoX2) {
+        min_x = m_mouseCoX1;
+        max_x = m_mouseCoX2;
     }
     else {
-        max_x = mouse_co_x1;
-        min_x = mouse_co_x2;
+        max_x = m_mouseCoX1;
+        min_x = m_mouseCoX2;
     }
 
     // Y coordinates
-    if (mouse_co_y1 < mouse_co_y2) {
-        min_y = mouse_co_y1;
-        max_y = mouse_co_y2;
+    if (m_mouseCoY1 < m_mouseCoY2) {
+        min_y = m_mouseCoY1;
+        max_y = m_mouseCoY2;
     }
     else {
-        max_y = mouse_co_y1;
-        min_y = mouse_co_y2;
+        max_y = m_mouseCoY1;
+        min_y = m_mouseCoY2;
     }
     return cRectangle(min_x, min_y, (max_x-min_x), (max_y-min_y));
 }
 
 void cMouse::resetBoxSelect()
 {
-    mouse_co_x1 = -1;
-    mouse_co_y1 = -1;
-    mouse_co_x2 = -1;
-    mouse_co_y2 = -1;
+    m_mouseCoX1 = -1;
+    m_mouseCoY1 = -1;
+    m_mouseCoX2 = -1;
+    m_mouseCoY2 = -1;
 }
 
 bool cMouse::isTile(int value)
 {
-    return mouse_tile == value;
+    return m_mouseTile == value;
 }
 
 void cMouse::draw()
 {
-    int mouseDrawX = coords.x;
-    int mouseDrawY = coords.y;
+    int mouseDrawX = m_coords.x;
+    int mouseDrawY = m_coords.y;
 
-    if (mouse_tile > -1) {
+    if (m_mouseTile > -1) {
         // adjust coordinates of drawing according to the specific mouse sprite/tile
-        if (mouse_tile == MOUSE_DOWN) {
+        if (m_mouseTile == MOUSE_DOWN) {
             mouseDrawY -= 16;
         }
-        else if (mouse_tile == MOUSE_RIGHT) {
+        else if (m_mouseTile == MOUSE_RIGHT) {
             mouseDrawX -= 16;
         }
-        else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY) {
-            mouseDrawX -= 16;
-            mouseDrawY -= 16;
-        }
-        else if (mouse_tile == MOUSE_ATTACK) {
+        else if (m_mouseTile == MOUSE_MOVE || m_mouseTile == MOUSE_RALLY) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (mouse_tile == MOUSE_REPAIR) {
+        else if (m_mouseTile == MOUSE_ATTACK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (mouse_tile == MOUSE_FORBIDDEN) {
+        else if (m_mouseTile == MOUSE_REPAIR) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (mouse_tile == MOUSE_PICK) {
+        else if (m_mouseTile == MOUSE_FORBIDDEN) {
+            mouseDrawX -= 16;
+            mouseDrawY -= 16;
+        }
+        else if (m_mouseTile == MOUSE_PICK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
@@ -363,11 +362,11 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    global_renderDrawer->renderSprite(gfxdata->getTexture(mouse_tile),mouseDrawX, mouseDrawY);
+    global_renderDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
 
     if (game.isDebugMode()) {
         int y = mouseDrawY;
-        for (auto line: debugLines) {
+        for (auto line: m_debugLines) {
             m_textDrawer->drawText(mouseDrawX + 32, y, line.c_str());
             y += m_textDrawer->getFontHeight() + 2;
         }
@@ -378,17 +377,17 @@ bool cMouse::isNormalRightClick()
 {
     // < -1 means we have had this evaluation before :/
     // poor man's solution as opposed to events
-    return mouse_mv_x2 < -1 && mouse_mv_y2 < -1;
+    return m_mouseMvX2 < -1 && m_mouseMvY2 < -1;
 }
 
 int cMouse::getMouseDragDeltaX()
 {
-    return mouse_mv_x2 - mouse_mv_x1;
+    return m_mouseMvX2 - m_mouseMvX1;
 }
 
 int cMouse::getMouseDragDeltaY()
 {
-    return mouse_mv_y2 - mouse_mv_y1;
+    return m_mouseMvY2 - m_mouseMvY1;
 }
 
 cPoint cMouse::getMouseCoords() {
@@ -397,20 +396,20 @@ cPoint cMouse::getMouseCoords() {
 
 cPoint cMouse::getDragLineStartPoint()
 {
-    return cPoint(mouse_mv_x1, mouse_mv_y1);
+    return cPoint(m_mouseMvX1, m_mouseMvY1);
 }
 
 cPoint cMouse::getDragLineEndPoint()
 {
-    return cPoint(mouse_mv_x2, mouse_mv_y2);
+    return cPoint(m_mouseMvX2, m_mouseMvY2);
 }
 
 void cMouse::setTile(int value)
 {
-    if (value != mouse_tile) {
-        logbook(std::format("cMouse::setTile(): Changing mouse tile from {} ({}) to {} ({})", mouse_tile,
-                            mouseTileName(mouse_tile).c_str(), value, mouseTileName(value).c_str()));
-        mouse_tile = value;
+    if (value != m_mouseTile) {
+        logbook(std::format("cMouse::setTile(): Changing mouse tile from {} ({}) to {} ({})", m_mouseTile,
+                            mouseTileName(m_mouseTile).c_str(), value, mouseTileName(value).c_str()));
+        m_mouseTile = value;
     }
 }
 
@@ -436,5 +435,5 @@ std::string cMouse::mouseTileName(int tile)
 
 void cMouse::addDebugLine(std::string basicString)
 {
-    this->debugLines.push_back(basicString);
+    this->m_debugLines.push_back(basicString);
 }

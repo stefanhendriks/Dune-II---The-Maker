@@ -64,7 +64,7 @@ cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControl
 void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
 
-    // these methods can have a side-effect which changes mouseTile...
+    // these methods can have a side-effect which changes m_mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_PRESSED:
             m_mouse->boxSelectLogic(m_context->getMouseCell());
@@ -87,7 +87,7 @@ void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     // ... so set it here
     if (m_context->isState(MOUSESTATE_UNITS_SELECTED)) { // if , required in case we switched state
-        m_mouse->setTile(mouseTile);
+        m_mouse->setTile(m_mouseTile);
     }
 }
 
@@ -242,14 +242,14 @@ void cMouseUnitsSelectedState::onMouseRightButtonClicked()
 void cMouseUnitsSelectedState::onMouseMovedTo()
 {
     if (m_state == SELECTED_STATE_FORCE_ATTACK) {
-        mouseTile = MOUSE_ATTACK;
+        m_mouseTile = MOUSE_ATTACK;
     }
     if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
         if (m_mouse->isBoxSelecting()) {
-            mouseTile = MOUSE_NORMAL;
+            m_mouseTile = MOUSE_NORMAL;
         }
         else {
-            mouseTile = MOUSE_PICK;
+            m_mouseTile = MOUSE_PICK;
         }
     }
     else {
@@ -259,7 +259,7 @@ void cMouseUnitsSelectedState::onMouseMovedTo()
 
 void cMouseUnitsSelectedState::evaluateMouseMoveState()
 {
-    mouseTile = MOUSE_MOVE;
+    m_mouseTile = MOUSE_MOVE;
     setState(SELECTED_STATE_MOVE);
 
     cAbstractStructure *hoverStructure = m_context->getStructurePointerWhereMouseHovers();
@@ -271,7 +271,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
     if (hoverStructure) {
         if (!hoverStructure->getPlayer()->isSameTeamAs(m_player)) {
             if (unitsWhichCanAttackSelected) {
-                mouseTile = MOUSE_ATTACK;
+                m_mouseTile = MOUSE_ATTACK;
                 setState(SELECTED_STATE_ATTACK);
             }
         }
@@ -282,7 +282,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
                 }
                 else {
                     setState(SELECTED_STATE_SELECT);
-                    mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                    m_mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                 }
             }
             else if (hoverStructure->getType() == REPAIR) {
@@ -291,12 +291,12 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
                 }
                 else {
                     setState(SELECTED_STATE_SELECT);
-                    mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                    m_mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                 }
             }
             else {
                 setState(SELECTED_STATE_SELECT);
-                mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                m_mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
             }
         }
     }
@@ -307,11 +307,11 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
             cUnit &pUnit = game.getUnit(hoverUnitId);
             if (pUnit.isValid()) {
                 if (!pUnit.getPlayer()->isSameTeamAs(m_player)) {
-                    mouseTile = MOUSE_ATTACK;
+                    m_mouseTile = MOUSE_ATTACK;
                     setState(SELECTED_STATE_ATTACK);
                 }
                 else if (pUnit.getPlayer() == m_player) {
-                    mouseTile = MOUSE_PICK;
+                    m_mouseTile = MOUSE_PICK;
                     setState(SELECTED_STATE_SELECT); // allow selecting of my unit
                 }
             }
@@ -327,8 +327,8 @@ void cMouseUnitsSelectedState::onStateSet()
     evaluateSelectedUnits();
     updateSelectedUnitsState();
 
-    mouseTile = MOUSE_MOVE; // TODO: check if unit at cell
-    m_mouse->setTile(mouseTile);
+    m_mouseTile = MOUSE_MOVE; // TODO: check if unit at cell
+    m_mouse->setTile(m_mouseTile);
 }
 
 void cMouseUnitsSelectedState::updateSelectedUnitsState()
@@ -385,7 +385,7 @@ void cMouseUnitsSelectedState::setState(eMouseUnitsSelectedState newState)
 
 void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyDown(event);
             break;
@@ -402,7 +402,7 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const cKeyboardEvent &event
     }
 
     if (m_context->isState(MOUSESTATE_UNITS_SELECTED)) { // if , required in case we switched state
-        m_mouse->setTile(mouseTile);
+        m_mouse->setTile(m_mouseTile);
     }
 }
 
@@ -410,20 +410,20 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 {
     if (event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL)) {
         setState(SELECTED_STATE_ATTACK);
-        mouseTile = MOUSE_ATTACK;
+        m_mouseTile = MOUSE_ATTACK;
     }
 
     bool appendingSelectionToGroup = event.hasKey(SDL_SCANCODE_LSHIFT) || event.hasKey(SDL_SCANCODE_RSHIFT);
     if (appendingSelectionToGroup) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
-        mouseTile = MOUSE_NORMAL;
+        m_mouseTile = MOUSE_NORMAL;
 
         if (!m_mouse->isBoxSelecting()) {
             int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
                 cUnit &pUnit = game.getUnit(hoverUnitId);
                 if (pUnit.getPlayer() == m_player) {
-                    mouseTile = MOUSE_PICK;
+                    m_mouseTile = MOUSE_PICK;
                 }
             }
         }
@@ -538,7 +538,7 @@ void cMouseUnitsSelectedState::spawnParticle(const int type)
 
 void cMouseUnitsSelectedState::onFocus()
 {
-    m_mouse->setTile(mouseTile);
+    m_mouse->setTile(m_mouseTile);
 }
 
 void cMouseUnitsSelectedState::onBlur()

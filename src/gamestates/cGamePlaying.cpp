@@ -165,7 +165,7 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
     game.m_drawManager->onNotifyKeyboardEvent(event);
 
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyDownGamePlaying(event);
             break;

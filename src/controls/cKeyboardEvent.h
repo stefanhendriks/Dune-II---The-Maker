@@ -13,12 +13,10 @@ class cKeyboardEvent {
 public:
     cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo);
 
-    eKeyEventType eventType = eKeyEventType::NONE;
-
     inline const std::string toString() const {
-        std::string str= std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(eventType));
+        std::string str= std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(m_eventType));
         str.append("[");
-        for (auto aKey : keys) {
+        for (auto aKey : m_keys) {
             str.append(SDL_GetScancodeName(aKey));
         }
         str.append("]");
@@ -27,7 +25,7 @@ public:
     }
 
     bool hasKey(SDL_Scancode scanCode) const {
-        return keys.find(scanCode) != keys.end();
+        return m_keys.find(scanCode) != m_keys.end();
     }
 
     /**
@@ -50,8 +48,12 @@ public:
         return hasKey(firstScanCode) || hasKey(secondScanCode);
     }
 
+    eKeyEventType getType() const {
+        return m_eventType;
+    }
+
     bool isType(eKeyEventType type) const {
-        return eventType == type;
+        return m_eventType == type;
     }
 
     bool isPrintable() const;
@@ -84,6 +86,7 @@ private:
         return "";
     }
 
-    const std::set<SDL_Scancode> &keys;
-    const s_KeysCombo &combo;
+    eKeyEventType m_eventType = eKeyEventType::NONE;
+    const std::set<SDL_Scancode> &m_keys;
+    const s_KeysCombo &m_combo;
 };

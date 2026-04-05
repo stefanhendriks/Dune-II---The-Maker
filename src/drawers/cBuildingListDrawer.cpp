@@ -409,7 +409,7 @@ void cBuildingListDrawer::onNotifyMouseEvent(const s_MouseEvent &)
 
 void cBuildingListDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyHold(event);
             break;
