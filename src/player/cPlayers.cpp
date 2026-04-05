@@ -19,24 +19,17 @@ cPlayers::cPlayers() {
 }
 
 cPlayer& cPlayers::operator[](int index) {
-    if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
-        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_PLAYER, "cPlayers::operator[]", 
-            std::format("Invalid player index: {}", index));
-        return m_players[0];  // Return first player as fallback
-    }
+    assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] out of bounds");
     return m_players[index];
 }
 
 const cPlayer& cPlayers::operator[](int index) const {
-    if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
-        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_PLAYER, "cPlayers::operator[] const", 
-            std::format("Invalid player index: {}", index));
-        return m_players[0];  // Return first player as fallback
-    }
+    assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] const out of bounds");
     return m_players[index];
 }
 
 cPlayer* cPlayers::getPlayer(int index) {
+    assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer out of bounds");
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
@@ -44,6 +37,7 @@ cPlayer* cPlayers::getPlayer(int index) {
 }
 
 const cPlayer* cPlayers::getPlayer(int index) const {
+    assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer const out of bounds");
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
