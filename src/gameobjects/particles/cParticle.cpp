@@ -753,7 +753,7 @@ int cParticle::getFrameHeight()
     return getParticleInfo().frameHeight;
 }
 
-RenderLayerParticle cParticle::getLayer()
+eRenderLayerParticle cParticle::getLayer()
 {
     return getParticleInfo().layer;
 }

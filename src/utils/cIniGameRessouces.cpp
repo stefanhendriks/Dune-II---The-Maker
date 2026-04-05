@@ -546,7 +546,7 @@ void IniGameRessources::install_particles()
         particleInfo.startAlpha = -1;
         particleInfo.usesAdditiveBlending = false;
 
-        particleInfo.layer = RenderLayerParticle::TOP;
+        particleInfo.layer = eRenderLayerParticle::TOP;
 
         // default to 32x32 (for now)
         particleInfo.frameWidth = 32;
@@ -585,19 +585,19 @@ void IniGameRessources::install_particles()
     game.m_particleInfos[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
 
     game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].bmpIndex = TRACK_DIA;
-    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
 
     game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].bmpIndex = TRACK_HOR;
-    game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
 
     game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].bmpIndex = TRACK_VER;
-    game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
 
     game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = TRACK_DIA2;
-    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
 
     game.m_particleInfos[D2TM_PARTICLE_BULLET_PUF].bmpIndex = BULLET_PUF;
@@ -638,16 +638,16 @@ void IniGameRessources::install_particles()
     game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
 
     game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].bmpIndex = OBJECT_WORMTRAIL;
-    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
     game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
     game.m_particleInfos[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
 
     game.m_particleInfos[D2TM_PARTICLE_DEADINF01].bmpIndex = OBJECT_DEADINF01;
-    game.m_particleInfos[D2TM_PARTICLE_DEADINF01].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_DEADINF01].layer = eRenderLayerParticle::BOTTOM;
 
     game.m_particleInfos[D2TM_PARTICLE_DEADINF02].bmpIndex = OBJECT_DEADINF02;
-    game.m_particleInfos[D2TM_PARTICLE_DEADINF02].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_DEADINF02].layer = eRenderLayerParticle::BOTTOM;
 
     game.m_particleInfos[D2TM_PARTICLE_TANKSHOOT].bmpIndex = OBJECT_TANKSHOOT;
     game.m_particleInfos[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
@@ -660,25 +660,25 @@ void IniGameRessources::install_particles()
     game.m_particleInfos[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
 
     game.m_particleInfos[D2TM_PARTICLE_SQUISH01].bmpIndex = EXPLOSION_SQUISH01;
-    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH01].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
 
     game.m_particleInfos[D2TM_PARTICLE_SQUISH02].bmpIndex = EXPLOSION_SQUISH02;
-    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH02].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
 
     game.m_particleInfos[D2TM_PARTICLE_SQUISH03].bmpIndex = EXPLOSION_SQUISH03;
-    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_SQUISH03].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
     game.m_particleInfos[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
 
     game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = EXPLOSION_ORNI;
-    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
     game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
     game.m_particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
@@ -686,7 +686,7 @@ void IniGameRessources::install_particles()
     game.m_particleInfos[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
 
     game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
-    game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].layer = RenderLayerParticle::BOTTOM;
+    game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].layer = eRenderLayerParticle::BOTTOM;
     game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
     game.m_particleInfos[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
 

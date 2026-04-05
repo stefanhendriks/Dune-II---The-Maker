@@ -14,10 +14,10 @@ void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 
-        if (pParticle.getLayer() == RenderLayerParticle::BOTTOM) {
+        if (pParticle.getLayer() == eRenderLayerParticle::BOTTOM) {
             particlesLowerLayer.push_back(i);
         }
-        else if (pParticle.getLayer() == RenderLayerParticle::TOP) {
+        else if (pParticle.getLayer() == eRenderLayerParticle::TOP) {
             particlesTopLayer.push_back(i);
         }
     }
