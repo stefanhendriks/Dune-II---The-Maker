@@ -1362,7 +1362,15 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
         timerManager->setGlobalSpeedVariation(1);
     }
 
-    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_RETURN)) {
+    if (event.isAltPressed()) {
+        onKeyPressedLALTGame(event);
+    }
+}
+
+void cGame::onKeyPressedLALTGame(const cKeyboardEvent &event)
+{
+    // toggle fullscreen
+    if (event.hasKey(SDL_SCANCODE_RETURN)) {
         if (m_windowed) {
             m_Screen->setFullScreenMode();
             m_windowed = false;
@@ -1372,7 +1380,8 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKeys(SDL_SCANCODE_LALT,SDL_SCANCODE_C)) {
+    // toggle cheat mode
+    if (event.hasKey(SDL_SCANCODE_C)) {
         m_cheatMode = true;
         cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode enabled", "All cheats are now enabled. Have fun!");
     }
