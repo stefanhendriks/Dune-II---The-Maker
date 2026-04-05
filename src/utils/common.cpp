@@ -185,9 +185,9 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 {
     int new_id = -1;
 
-    for (int i = 0; i < (int)game.g_Bullets.size(); i++)
+    for (size_t i = 0; i < game.g_Bullets.size(); i++)
         if (game.g_Bullets[i].bAlive == false) {
-            new_id = i;
+            new_id = static_cast<int>(i);
             break;
         }
 

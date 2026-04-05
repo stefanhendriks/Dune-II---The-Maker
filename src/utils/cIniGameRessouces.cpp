@@ -791,23 +791,23 @@ void IniGameRessources::install_bullets()
 {
     logbook("Installing:  BULLET TYPES");
 
-    for (int i = 0; i < (int)game.bulletInfos.size(); i++) {
-        game.bulletInfos[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
-        game.bulletInfos[i].moveSpeed = 2;
-        game.bulletInfos[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
-        game.bulletInfos[i].damage_vehicles = 0;      // damage to vehicles
-        game.bulletInfos[i].damage_infantry = 0;  // damage to infantry
-        game.bulletInfos[i].max_frames = 1;  // 1 frame animation
-        game.bulletInfos[i].max_deadframes = 4; // 4 frame animation
-        game.bulletInfos[i].smokeParticle = -1; // by default no smoke particle is spawned
-        game.bulletInfos[i].bmp_width = 8 * 2;
-        game.bulletInfos[i].sound = -1;    // no sound
-        game.bulletInfos[i].explosionSize = 1; // 1 tile sized explosion
-        game.bulletInfos[i].deviateProbability = 0; // no probability of deviating a unit
-        game.bulletInfos[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
-        game.bulletInfos[i].canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
-        game.bulletInfos[i].canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
-        strcpy(game.bulletInfos[i].description, "Unknown");
+    for (auto& info : game.bulletInfos) {
+        info.bmp = nullptr; // in case an invalid bitmap; default is a small rocket
+        info.moveSpeed = 2;
+        info.deathParticle = -1; // this points to a bitmap (in data file, using index)
+        info.damage_vehicles = 0;      // damage to vehicles
+        info.damage_infantry = 0;  // damage to infantry
+        info.max_frames = 1;  // 1 frame animation
+        info.max_deadframes = 4; // 4 frame animation
+        info.smokeParticle = -1; // by default no smoke particle is spawned
+        info.bmp_width = 8 * 2;
+        info.sound = -1;    // no sound
+        info.explosionSize = 1; // 1 tile sized explosion
+        info.deviateProbability = 0; // no probability of deviating a unit
+        info.groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
+        info.canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
+        info.canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
+        strcpy(info.description, "Unknown");
     }
 
     // huge rocket/missile

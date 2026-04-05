@@ -123,17 +123,15 @@ void cDrawManager::drawDebugInfoUsages() const
     }
 
     int bulletsUsed = 0;
-    for (int i = 0; i < (int)game.g_Bullets.size(); i++) {
-        cBullet &pBullet = game.g_Bullets[i];
-        if (pBullet.bAlive) {
+    for (const auto& bullet : game.g_Bullets) {
+        if (bullet.bAlive) {
             bulletsUsed++;
         }
     }
 
     int particlesUsed = 0;
-    for (int i = 0; i < (int)game.m_particles.size(); i++) {
-        cParticle &pParticle = game.m_particles[i];
-        if (pParticle.isValid()) {
+    for (const auto& particle : game.m_particles) {
+        if (particle.isValid()) {
             particlesUsed++;
         }
     }
