@@ -81,23 +81,23 @@ void CreatorState::createStateFromScratch(GameState gameState)
         break;
 
     case GameState::WINNING:
-        m_states[GameState::WINNING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
+        m_states[GameState::WINNING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, eOutcome::Lose);
         break;
 
     case GameState::LOSING:
-        m_states[GameState::LOSING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
+        m_states[GameState::LOSING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, eOutcome::Lose);
         break;
 
     case GameState::BRIEFING:
-        m_states[GameState::BRIEFING] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::Briefing, m_game->getDataCampaign());
+        m_states[GameState::BRIEFING] = std::make_unique<cMentatState>(*m_game, m_ctx, eMentatMode::Briefing, m_game->getDataCampaign());
         break;
 
     case GameState::WINBRIEF:
-        m_states[GameState::WINBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::WinBrief, m_game->getDataCampaign());
+        m_states[GameState::WINBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, eMentatMode::WinBrief, m_game->getDataCampaign());
         break;
 
     case GameState::LOSEBRIEF:
-        m_states[GameState::LOSEBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::LoseBrief, m_game->getDataCampaign());
+        m_states[GameState::LOSEBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, eMentatMode::LoseBrief, m_game->getDataCampaign());
         break;
 
     case GameState::TELLHOUSE:

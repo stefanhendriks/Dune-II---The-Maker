@@ -14,13 +14,13 @@
 #include <format>
 #include <cassert>
 
-cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value) : cGameState(theGame, ctx), m_statement(value)
+cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, eOutcome value) : cGameState(theGame, ctx), m_statement(value)
 {
     assert(ctx != nullptr);
     if (m_game.getScreenTexture() != nullptr)
         m_backgroundTexture = m_game.getScreenTexture();
-    
-    if (m_statement == Outcome::Lose) {
+
+    if (m_statement == eOutcome::Lose) {
         m_tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
     } else {
         m_tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
@@ -73,7 +73,7 @@ void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &)
 
 void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
 {
-    if (m_statement == Outcome::Lose) {
+    if (m_statement == eOutcome::Lose) {
         game.goingToWinLoseBrief(GAME_LOSEBRIEF);
     } else {
         game.goingToWinLoseBrief(GAME_WINBRIEF);

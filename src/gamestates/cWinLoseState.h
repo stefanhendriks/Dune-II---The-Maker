@@ -8,12 +8,12 @@ class Texture;
 class cGame;
 class cTextDrawer;
 
-enum class Outcome : char {Win, Lose};
+enum class eOutcome : char {Win, Lose};
 
 
 class cWinLoseState : public cGameState {
 public:
-    explicit cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value);
+    explicit cWinLoseState(cGame &theGame, GameContext* ctx, eOutcome value);
     ~cWinLoseState() override;
 
     void thinkFast() override;
@@ -27,6 +27,6 @@ public:
 private:
     Texture *m_backgroundTexture;
     Texture *m_tex;
-    Outcome m_statement;
+    eOutcome m_statement;
     void onMouseLeftButtonClicked(const s_MouseEvent &event) const;
 };

@@ -16,7 +16,7 @@
 #include <iostream>
 #include <cassert>
 
-cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign)
+cMentatState::cMentatState(cGame &game, GameContext* ctx, eMentatMode mode, s_DataCampaign* dataCampaign)
     : cGameState(game, ctx), m_dataCampaign(dataCampaign), m_mode(mode), m_house(dataCampaign->housePlayer)
 {
     assert(ctx != nullptr);
@@ -47,7 +47,7 @@ void cMentatState::prepareMentat(int house)
     if (m_mentat)
         delete m_mentat;
     switch (m_mode) {
-        case MentatMode::Briefing:
+        case eMentatMode::Briefing:
             if (house == ATREIDES)
                 m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
@@ -61,7 +61,7 @@ void cMentatState::prepareMentat(int house)
             cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat, m_game.getReinforcements(),m_dataCampaign);
             cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
             break;
-        case MentatMode::WinBrief:
+        case eMentatMode::WinBrief:
             if (house == ATREIDES)
                 m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
@@ -77,7 +77,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat->loadScene("win02");
             cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
             break;
-        case MentatMode::LoseBrief:
+        case eMentatMode::LoseBrief:
             if (house == ATREIDES) 
                 m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)

@@ -935,10 +935,10 @@ void cGame::setState(int newState)
                 newStatePtr = new cGamePlaying(*this, ctx.get());
             }
             else if (newState == GAME_LOSING) {
-                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
+                newStatePtr = new cWinLoseState(*this, ctx.get(), eOutcome::Lose);
             }
             else if (newState == GAME_WINNING) {
-                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
+                newStatePtr = new cWinLoseState(*this, ctx.get(), eOutcome::Win);
             }
             else if (newState == GAME_TELLHOUSE) {
                 m_dataCampaign->housePlayer = game.getPlayer(HUMAN).getHouse();
@@ -946,13 +946,13 @@ void cGame::setState(int newState)
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
-                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
+                newStatePtr = new cMentatState(*this, ctx.get(), eMentatMode::Briefing, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
-                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
+                newStatePtr = new cMentatState(*this, ctx.get(), eMentatMode::WinBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
-                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
+                newStatePtr = new cMentatState(*this, ctx.get(), eMentatMode::LoseBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
 
