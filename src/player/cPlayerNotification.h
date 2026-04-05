@@ -18,20 +18,20 @@ public:
     void thinkFast();
 
     bool isVisible() const {
-        return TIMER > 0;
+        return m_TIMER > 0;
     }
 
     const std::string &getMessage() const;
 
     int getTimer() const {
-        return TIMER;
+        return m_TIMER;
     }
 
     Color getColor() const;
 
 private:
-    std::string msg;
-    int TIMER;
-    int initialDuration;
-    eNotificationType type;
+    std::string m_msg;
+    int m_TIMER;
+    int m_initialDuration;
+    eNotificationType m_type;
 };
