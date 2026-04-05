@@ -13,7 +13,7 @@ struct GuiStateButtonParams {
     cRectangle rect;
     SDLDrawer* renderer = nullptr;
     GuiRenderKind kind = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
-    GuiTheme theme = GuiTheme::Light();
+    GuiTheme theme = cGuiThemeBuilder().light().build();
     std::function<void()> onLeftClick = nullptr;
     std::function<void()> onRightClick = nullptr;
     Texture *tex = nullptr;

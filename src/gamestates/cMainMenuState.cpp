@@ -57,7 +57,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("CREDITS")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_CREDITS);
@@ -80,7 +80,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = new GuiWindow(m_renderDrawer, window, m_textDrawer);
-    gui_window->setTheme(GuiTheme::Light());
+    gui_window->setTheme(cGuiThemeBuilder().light().build());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
     GuiButton *gui_btn_SelectHouse = GuiButtonBuilder()
@@ -88,7 +88,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Campaign")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
@@ -103,7 +103,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Skirmish")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.loadSkirmishMaps();
@@ -148,7 +148,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("New Map Editor")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_NEW_MAP_EDITOR);})
             .build();
@@ -162,7 +162,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Options")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_OPTIONS);})
             .build();
@@ -190,7 +190,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Exit")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.m_playing = false;

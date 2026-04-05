@@ -12,7 +12,7 @@ struct GuiCheckBoxParams {
     cRectangle rect;
     SDLDrawer* renderer;
     GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
-    GuiTheme theme = GuiTheme::Light();
+    GuiTheme theme = cGuiThemeBuilder().light().build();
     std::function<void()> onCheckAction = nullptr;
     std::function<void()> onUnCheckAction = nullptr;
 };

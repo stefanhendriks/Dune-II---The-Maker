@@ -45,7 +45,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
             .withLabel("BACK")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MENU);

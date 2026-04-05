@@ -69,7 +69,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
             .withLabel("Mission select")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)    
-            .withTheme(GuiTheme::Light())
+            .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([] {
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);
