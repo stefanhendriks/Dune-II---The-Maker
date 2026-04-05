@@ -189,6 +189,10 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string &e
 
     m_file << logline << '\n';
     m_file.flush();
+
+    if (m_debugMode && (level == LOG_ERROR || level == LOG_FATAL) ) {
+        std::cout << logline << std::endl;
+    }
 }
 
 void cLogger::logCommentLine(const std::string &txt)
