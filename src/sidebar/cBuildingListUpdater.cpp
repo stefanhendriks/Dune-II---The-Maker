@@ -13,23 +13,23 @@
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer)
 {
     assert(thePlayer!=nullptr);
-    player = thePlayer;
+    m_player = thePlayer;
 }
 
 void cBuildingListUpdater::onStructureCreated(int structureType)
 {
-    player->log("onStructureCreated - begin");
+    m_player->log("onStructureCreated - begin");
 
-    if (player->isHuman()) {
+    if (m_player->isHuman()) {
         // always strict (skirmish) mode. Which means, do not cheat...
         onStructureCreatedSkirmishMode(structureType);
         evaluateUpgrades();
     }
     else {
-        // AI players...
+        // AI m_players...
 
         if (game.m_skirmish) {
-            // on skirmish mode use the 'strict' / no cheating mode (same as human players)
+            // on skirmish mode use the 'strict' / no cheating mode (same as human m_players)
             onStructureCreatedSkirmishMode(structureType);
             evaluateUpgrades();
         }
@@ -40,33 +40,33 @@ void cBuildingListUpdater::onStructureCreated(int structureType)
         }
     }
 
-    player->logStructures();
-    player->log("onStructureCreated - end");
+    m_player->logStructures();
+    m_player->log("onStructureCreated - end");
 }
 
 void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) const
 {
 
     // this is (should be) only called by the AI and in Campaign mode.
-    // there the AI only re-builds things. The tech-tree used for players makes no sense if you compare it
+    // there the AI only re-builds things. The tech-tree used for m_players makes no sense if you compare it
     // with the AI. The AI can build anything, even with low power. For example, mission 9 has AI's with low
     // power (yet their turrets should work), but also they don't have all structures to have others (ie, there
-    // is a PALACE, but AI players do not have the prerequisites for such a structure).
+    // is a PALACE, but AI m_players do not have the prerequisites for such a structure).
     //
     // long story short: we give the AI the ability to build *any* structure (and *any* unit, though that is
-    // limited to techLevel so the AI can't build things that the player cant unit-wise).
+    // limited to techLevel so the AI can't build things that the m_player cant unit-wise).
 
     // activate/deactivate any lists if needed
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
     cBuildingList *listConstYard = sideBar->getList(eListType::LIST_CONSTYARD);
     cBuildingList *listFootUnits = sideBar->getList(eListType::LIST_FOOT_UNITS);
     cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
 
-    int house = player->getHouse();
-    int techLevel = player->getTechLevel();
+    int house = m_player->getHouse();
+    int techLevel = m_player->getTechLevel();
 
     cLogger::getInstance()->log(LOG_TRACE, COMP_STRUCTURES, "onStructureCreatedCampaignMode",
-                                std::format("For player [{}], structureType [{}], techlevel [{}], house [{}]", player->getId(), structureType, techLevel, house));
+                                std::format("For m_player [{}], structureType [{}], techlevel [{}], house [{}]", m_player->getId(), structureType, techLevel, house));
 
     assert(listConstYard);
     assert(listFootUnits);
@@ -206,13 +206,13 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
 void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) const
 {
     // activate/deactivate any lists if needed
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
     cBuildingList *listConstYard = sideBar->getList(eListType::LIST_CONSTYARD);
     cBuildingList *listFootUnits = sideBar->getList(eListType::LIST_FOOT_UNITS);
     cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
 
-    int house = player->getHouse();
-    int techLevel = player->getTechLevel();
+    int house = m_player->getHouse();
+    int techLevel = m_player->getTechLevel();
 
     assert(listConstYard);
     assert(listFootUnits);
@@ -221,27 +221,27 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     if (structureType == CONSTYARD) {
         // add items
         listConstYard->addStructureToList(SLAB1, 0);
-        player->log("onStructureCreated - added SLAB1 to list");
+        m_player->log("onStructureCreated - added SLAB1 to list");
 
         if (techLevel >= 2) {
             if (house == ATREIDES || house == ORDOS) {
                 listConstYard->addStructureToList(BARRACKS, 0);
-                player->log("onStructureCreated - added BARRACKS to list");
+                m_player->log("onStructureCreated - added BARRACKS to list");
             }
             if (house == HARKONNEN) {
                 listConstYard->addStructureToList(WOR, 0);
-                player->log("onStructureCreated - added WOR to list");
+                m_player->log("onStructureCreated - added WOR to list");
             }
         }
 
         if (techLevel >= 4) {
             //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
             listConstYard->addStructureToList(WALL, 0);
-            player->log("onStructureCreated - added WALL to list");
+            m_player->log("onStructureCreated - added WALL to list");
         }
 
         listConstYard->addStructureToList(WINDTRAP, 0);
-        player->log("onStructureCreated - added WINDTRAP to list");
+        m_player->log("onStructureCreated - added WINDTRAP to list");
     }
 
     if (structureType == WINDTRAP) {
@@ -268,7 +268,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         }
 
         // TODO: use events for this
-        player->getOrderProcesser()->updatePricesForStarport();
+        m_player->getOrderProcesser()->updatePricesForStarport();
     }
 
     if (structureType == REFINERY) {
@@ -369,26 +369,26 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 
     // Heavyfactory
     if (techLevel >= 7) {
-        if (player->hasAtleastOneStructure(HEAVYFACTORY) &&
-                player->hasAtleastOneStructure(IX)) {
-            if (player->getHouse() == ATREIDES) {
+        if (m_player->hasAtleastOneStructure(HEAVYFACTORY) &&
+                m_player->hasAtleastOneStructure(IX)) {
+            if (m_player->getHouse() == ATREIDES) {
                 listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
             }
-            else if (player->getHouse() == HARKONNEN) {
+            else if (m_player->getHouse() == HARKONNEN) {
                 listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
             }
-            else if (player->getHouse() == ORDOS) {
+            else if (m_player->getHouse() == ORDOS) {
                 listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
             }
         }
         else {
-            if (player->getHouse() == ATREIDES) {
+            if (m_player->getHouse() == ATREIDES) {
                 listUnits->removeItemFromListByBuildId(SONICTANK);
             }
-            else if (player->getHouse() == HARKONNEN) {
+            else if (m_player->getHouse() == HARKONNEN) {
                 listUnits->removeItemFromListByBuildId(DEVASTATOR);
             }
-            else if (player->getHouse() == ORDOS) {
+            else if (m_player->getHouse() == ORDOS) {
                 listUnits->removeItemFromListByBuildId(DEVIATOR);
             }
         }
@@ -421,45 +421,45 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 /**
  * A structure of *structureType* got destroyed...
  *
- * This is called *after* the structure count has been updated. Ie you can use player->hasAtleastOneStructure() because
+ * This is called *after* the structure count has been updated. Ie you can use m_player->hasAtleastOneStructure() because
  * it already is updated to the new state.
  *
  * @param structureType
  */
 void cBuildingListUpdater::onStructureDestroyed(int structureType)
 {
-    player->log("onStructureDestroyed - begin");
+    m_player->log("onStructureDestroyed - begin");
 
     // activate/deactivate any lists if needed
-    cSideBar *sideBar = player->getSideBar();
-    cItemBuilder *pItemBuilder = player->getItemBuilder();
+    cSideBar *sideBar = m_player->getSideBar();
+    cItemBuilder *pItemBuilder = m_player->getItemBuilder();
     cBuildingList *listConstYard = sideBar->getList(eListType::LIST_CONSTYARD);
 
     if (structureType == STARPORT) {
-        if (!player->hasAtleastOneStructure(STARPORT)) {
+        if (!m_player->hasAtleastOneStructure(STARPORT)) {
             listConstYard->removeItemFromListByBuildId(IX);
-            cOrderProcesser *pProcesser = player->getOrderProcesser();
+            cOrderProcesser *pProcesser = m_player->getOrderProcesser();
             pProcesser->clear();
             cBuildingList *listStarport = sideBar->getList(eListType::LIST_STARPORT);
             listStarport->resetTimesOrderedForAllItems();
         }
     }
 
-    if (!player->hasAtleastOneStructure(CONSTYARD)) {
+    if (!m_player->hasAtleastOneStructure(CONSTYARD)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_CONSTYARD, SUBLIST_CONSTYARD);
         listConstYard->removeAllSublistItems(SUBLIST_CONSTYARD);
     }
 
-    if (player->isHuman()) {
+    if (m_player->isHuman()) {
         // always strict (skirmish) mode. Which means, do not cheat...
         onStructureDestroyedSkirmishMode();
         evaluateUpgrades();
     }
     else {
-        // AI players...
+        // AI m_players...
 
         if (game.m_skirmish) {
-            // on skirmish mode use the 'strict' / no cheating mode (same as human players)
+            // on skirmish mode use the 'strict' / no cheating mode (same as human m_players)
             onStructureDestroyedSkirmishMode();
             evaluateUpgrades();
         }
@@ -470,15 +470,15 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType)
         }
     }
 
-    player->logStructures();
-    player->log("onStructureDestroyed - end");
+    m_player->logStructures();
+    m_player->log("onStructureDestroyed - end");
 }
 
 
 void cBuildingListUpdater::evaluateUpgrades()
 {
-    player->log("evaluateUpgrades - start");
-    cSideBar *sideBar = player->getSideBar();
+    m_player->log("evaluateUpgrades - start");
+    cSideBar *sideBar = m_player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
@@ -486,36 +486,36 @@ void cBuildingListUpdater::evaluateUpgrades()
         if (!upgradeInfo.enabled) continue;
         // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
-        if (player->getTechLevel() < upgradeInfo.techLevel) continue;
+        if (m_player->getTechLevel() < upgradeInfo.techLevel) continue;
 
-        if (!(upgradeInfo.house & player->getHouseBitFlag())) {
-            // house specific upgradeInfo, player house does not match
-            player->log(std::format("Upgrade [{}] has not same house.", upgradeInfo.description));
+        if (!(upgradeInfo.house & m_player->getHouseBitFlag())) {
+            // house specific upgradeInfo, m_player house does not match
+            m_player->log(std::format("Upgrade [{}] has not same house.", upgradeInfo.description));
             continue;
         }
 
         bool addToUpgradesList = true;
 
-        // check if player has structure to upgrade
-        bool hasRequiredStructureType = player->hasAtleastOneStructure(upgradeInfo.structureType);
+        // check if m_player has structure to upgrade
+        bool hasRequiredStructureType = m_player->hasAtleastOneStructure(upgradeInfo.structureType);
         if (!hasRequiredStructureType) {
             addToUpgradesList = false;
-            player->log(std::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
+            m_player->log(std::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
                                     upgradeInfo.description, game.structureInfos[upgradeInfo.structureType].name));
         }
 
-        // check if player has the additional structure (if required)
+        // check if m_player has the additional structure (if required)
         if (upgradeInfo.needsStructureType > -1) {
-            hasRequiredStructureType = player->hasAtleastOneStructure(upgradeInfo.needsStructureType);
+            hasRequiredStructureType = m_player->hasAtleastOneStructure(upgradeInfo.needsStructureType);
             if (!hasRequiredStructureType) {
                 addToUpgradesList = false;
-                player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
+                m_player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
                                         upgradeInfo.description, game.structureInfos[upgradeInfo.needsStructureType].name));
             }
         }
 
         // check if the structure to upgradeInfo is at the expected level
-        int structureUpgradeLevel = player->getStructureUpgradeLevel(upgradeInfo.structureType);
+        int structureUpgradeLevel = m_player->getStructureUpgradeLevel(upgradeInfo.structureType);
 
         if (structureUpgradeLevel != upgradeInfo.atUpgradeLevel) {
             // already at correct upgradeInfo level, no = comparison because that means it should be offered
@@ -524,18 +524,18 @@ void cBuildingListUpdater::evaluateUpgrades()
                 // but only if we have the required structure(s)
                 if (hasRequiredStructureType) {
                     applyUpgrade(upgradeInfo);
-                    player->log(std::format(
+                    m_player->log(std::format(
                                     "Upgrade [{}] has already been achieved, so re-apply. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={}.",
                                     upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
                 }
                 else {
-                    player->log(std::format(
+                    m_player->log(std::format(
                                     "Upgrade [{}] has already been achieved, But will not be re-applied because required (additional) structure type is/are present.",
                                     upgradeInfo.description));
                 }
             }
             addToUpgradesList = false;
-            player->log(std::format(
+            m_player->log(std::format(
                             "Upgrade [{}] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={} not required additional structureType (upgradeInfo.needsStructureType).",
                             upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
         }
@@ -553,11 +553,11 @@ void cBuildingListUpdater::evaluateUpgrades()
                     // only give money back for item that is being built
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
-                        player->giveCredits(item->getRefundAmount());
+                        m_player->giveCredits(item->getRefundAmount());
                     }
                     item->setIsBuilding(false);
                     item->resetProgress();
-                    cItemBuilder *itemBuilder = player->getItemBuilder();
+                    cItemBuilder *itemBuilder = m_player->getItemBuilder();
                     itemBuilder->removeItemFromList(item);
                 }
             }
@@ -567,7 +567,7 @@ void cBuildingListUpdater::evaluateUpgrades()
         }
     }
 
-    player->log("evaluateUpgrades - end");
+    m_player->log("evaluateUpgrades - end");
 }
 
 /**
@@ -577,7 +577,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item)
 {
     assert(item);
     if (!item->isTypeUpgrade()) {
-        player->log("ERROR ERROR ERROR! -> the provided item is NOT an upgrade type!");
+        m_player->log("ERROR ERROR ERROR! -> the provided item is NOT an upgrade type!");
         assert(false && "the provided item is NOT an upgrade type!");
         return;
     }
@@ -585,7 +585,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item)
     const s_UpgradeInfo &upgradeType = item->getUpgradeInfo();
 
     // Upgrade structure + provide any unit or structure
-    player->increaseStructureUpgradeLevel(upgradeType.structureType);
+    m_player->increaseStructureUpgradeLevel(upgradeType.structureType);
 
     applyUpgrade(upgradeType);
 
@@ -601,7 +601,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item)
  */
 void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeInfo)
 {
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
     eListType listType = upgradeInfo.providesTypeList;
     int subListType = upgradeInfo.providesTypeSubList;
 
@@ -630,7 +630,7 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem)
 {
     assert(pItem);
     assert(pItem->isTypeUpgrade() && "Expected type upgrade");
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
 
     // get the structure type it is upgrading
     const s_UpgradeInfo &upgrade = pItem->getUpgradeInfo();
@@ -648,11 +648,11 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem)
  */
 void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem)
 {
-    player->log("onUpgradeCancelled - start");
+    m_player->log("onUpgradeCancelled - start");
     assert(pItem);
     assert(pItem->isTypeUpgrade() && "Expected type Upgrade for onUpgradeCancelled");
 
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
 
     // get the structure type it is upgrading
     const s_UpgradeInfo &upgrade = pItem->getUpgradeInfo();
@@ -662,12 +662,12 @@ void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem)
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusAvailable(subListType);
 
-    player->log("onUpgradeCancelled - end");
+    m_player->log("onUpgradeCancelled - end");
 }
 
 void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem)
 {
-    player->log("onBuildItemCancelled - start");
+    m_player->log("onBuildItemCancelled - start");
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         onUpgradeCancelled(pItem);
@@ -675,11 +675,11 @@ void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem)
     }
 
     // it is a unit/structure/special
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
 
-    player->log("onBuildItemCancelled - end");
+    m_player->log("onBuildItemCancelled - end");
 }
 
 /**
@@ -700,7 +700,7 @@ void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem)
     }
 
     // it is a unit/structure/special
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
     listUpgrades->setStatusPendingBuilding(pItem->getSubList());
 }
@@ -714,7 +714,7 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem)
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         // do nothing, this is normally called via OnUpgradeCompleted, see method above.
-        player->log("Wrongfully called onBuildItemCompleted when OnUpgradeCompleted was expected.");
+        m_player->log("Wrongfully called onBuildItemCompleted when OnUpgradeCompleted was expected.");
         return;
     }
 
@@ -725,62 +725,62 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem)
     }
 
     // it is a unit/structure/special
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
 }
 
 void cBuildingListUpdater::onStructureDestroyedSkirmishMode() const
 {
-    cSideBar *sideBar = player->getSideBar();
-    cItemBuilder *pItemBuilder = player->getItemBuilder();
+    cSideBar *sideBar = m_player->getSideBar();
+    cItemBuilder *pItemBuilder = m_player->getItemBuilder();
     cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
     cBuildingList *listFootUnits = sideBar->getList(eListType::LIST_FOOT_UNITS);
 
-    if (player->getTechLevel() >= 7) {
-        if (!player->hasAtleastOneStructure(HEAVYFACTORY) ||
-                !player->hasAtleastOneStructure(IX)) {
-            if (player->getHouse() == ATREIDES) {
+    if (m_player->getTechLevel() >= 7) {
+        if (!m_player->hasAtleastOneStructure(HEAVYFACTORY) ||
+                !m_player->hasAtleastOneStructure(IX)) {
+            if (m_player->getHouse() == ATREIDES) {
                 pItemBuilder->removeItemsByBuildId(UNIT, SONICTANK);
                 listUnits->removeItemFromListByBuildId(SONICTANK);
             }
-            else if (player->getHouse() == HARKONNEN) {
+            else if (m_player->getHouse() == HARKONNEN) {
                 pItemBuilder->removeItemsByBuildId(UNIT, DEVASTATOR);
                 listUnits->removeItemFromListByBuildId(DEVASTATOR);
             }
-            else if (player->getHouse() == ORDOS) {
+            else if (m_player->getHouse() == ORDOS) {
                 pItemBuilder->removeItemsByBuildId(UNIT, DEVIATOR);
                 listUnits->removeItemFromListByBuildId(DEVIATOR);
             }
         }
     }
 
-    if (!player->hasAtleastOneStructure(HIGHTECH)) {
+    if (!m_player->hasAtleastOneStructure(HIGHTECH)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HIGHTECH);
         listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
     }
 
-    if (!player->hasAtleastOneStructure(WOR)) {
+    if (!m_player->hasAtleastOneStructure(WOR)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_FOOT_UNITS, SUBLIST_TROOPERS);
         listFootUnits->removeAllSublistItems(SUBLIST_TROOPERS);
     }
 
-    if (!player->hasAtleastOneStructure(BARRACKS)) {
+    if (!m_player->hasAtleastOneStructure(BARRACKS)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_FOOT_UNITS, SUBLIST_INFANTRY);
         listFootUnits->removeAllSublistItems(SUBLIST_INFANTRY);
     }
 
-    if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
+    if (!m_player->hasAtleastOneStructure(LIGHTFACTORY)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_LIGHTFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
     }
 
-    if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
+    if (!m_player->hasAtleastOneStructure(HEAVYFACTORY)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HEAVYFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
     }
 
-    if (!player->hasAtleastOneStructure(PALACE)) {
+    if (!m_player->hasAtleastOneStructure(PALACE)) {
         cBuildingList *listPalace = sideBar->getList(eListType::LIST_PALACE);
         pItemBuilder->removeItemsFromListType(eListType::LIST_PALACE, 0);
         listPalace->removeAllSublistItems(0);
@@ -789,26 +789,26 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode() const
 
 void cBuildingListUpdater::onStructureDestroyedCampaignMode() const
 {
-    cSideBar *sideBar = player->getSideBar();
-    cItemBuilder *pItemBuilder = player->getItemBuilder();
+    cSideBar *sideBar = m_player->getSideBar();
+    cItemBuilder *pItemBuilder = m_player->getItemBuilder();
     cBuildingList *listUnits = sideBar->getList(eListType::LIST_UNITS);
 
-    if (!player->hasAtleastOneStructure(HIGHTECH)) {
+    if (!m_player->hasAtleastOneStructure(HIGHTECH)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HIGHTECH);
         listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
     }
 
-    if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
+    if (!m_player->hasAtleastOneStructure(LIGHTFACTORY)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_LIGHTFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
     }
 
-    if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
+    if (!m_player->hasAtleastOneStructure(HEAVYFACTORY)) {
         pItemBuilder->removeItemsFromListType(eListType::LIST_UNITS, SUBLIST_HEAVYFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
     }
 
-    if (!player->hasAtleastOneStructure(PALACE)) {
+    if (!m_player->hasAtleastOneStructure(PALACE)) {
         cBuildingList *listPalace = sideBar->getList(eListType::LIST_PALACE);
         pItemBuilder->removeItemsFromListType(eListType::LIST_PALACE, 0);
         listPalace->removeAllSublistItems(0);

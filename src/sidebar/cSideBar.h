@@ -55,7 +55,7 @@ public:
     ~cSideBar();
 
     cBuildingList *getList(int listId) {
-        return lists[listId];
+        return m_lists[listId];
     }
 
     cBuildingList *getList(eListType listType) {
@@ -67,7 +67,7 @@ public:
     void setList(eListType listType, cBuildingList *list);
 
     int getSelectedListID() {
-        return selectedListID;
+        return m_selectedListID;
     }
     cBuildingListItem *getBuildingListItem(eListType listType, int buildId) const;
 
@@ -109,12 +109,12 @@ private:
     void onMouseClickedRight(const s_MouseEvent &event);
 
     // the lists:
-    cBuildingList *lists[LIST_MAX];
-    cPlayer *player;
+    cBuildingList *m_lists[LIST_MAX];
+    cPlayer *m_player;
 
-    bool isMouseOverSidebarValue;
+    bool m_isMouseOverSidebarValue;
 
-    int selectedListID;
+    int m_selectedListID;
 
     bool startBuildingItemIfOk(cBuildingListItem *item) const;
 
