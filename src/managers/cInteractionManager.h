@@ -30,8 +30,8 @@ public:
     void setPlayerToInteractFor(cPlayer *thePlayer);
 
 private:
-    cSideBar *sidebar;
-    cPlayer *player;
+    cSideBar *m_sidebar;
+    cPlayer *m_player;
 
     void onMouseAt(const s_MouseEvent &mouseEvent);
     void onMouseClickedLeft(const s_MouseEvent &mouseEvent);

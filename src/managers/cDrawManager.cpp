@@ -33,12 +33,12 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
     m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
     m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
-    miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
+    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
     m_structureDrawer = std::make_unique<cStructureDrawer>(ctx);
-    btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
+    m_btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
     m_mouseDrawer = new cMouseDrawer(thePlayer, ctx->getTextContext()->getSmallTextDrawer());
@@ -46,8 +46,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
 
 cDrawManager::~cDrawManager()
 {
-    if (btnOptions) {
-        delete btnOptions;
+    if (m_btnOptions) {
+        delete m_btnOptions;
     }
 }
 
@@ -187,7 +187,7 @@ void cDrawManager::drawSidebar()
 {
     m_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
     m_sidebarDrawer->draw();
-    miniMapDrawer->draw();
+    m_miniMapDrawer->draw();
     m_renderDrawer->resetClippingFor();
 }
 
@@ -235,7 +235,7 @@ void cDrawManager::drawTopBarBackground()
         m_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    m_renderDrawer->renderSprite(btnOptions, 1, 0);
+    m_renderDrawer->renderSprite(m_btnOptions, 1, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -250,7 +250,7 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
     m_creditsDrawer->setPlayer(playerToDraw);
     m_sidebarDrawer->setPlayer(playerToDraw);
     m_orderDrawer->setPlayer(playerToDraw);
-    miniMapDrawer->setPlayer(playerToDraw);
+    m_miniMapDrawer->setPlayer(playerToDraw);
     m_mapDrawer->setPlayer(playerToDraw);
 }
 
@@ -278,12 +278,12 @@ void cDrawManager::drawNotifications()
 
 void cDrawManager::think()
 {
-    miniMapDrawer->think();
+    m_miniMapDrawer->think();
 }
 
 void cDrawManager::init()
 {
-    miniMapDrawer->init();
+    m_miniMapDrawer->init();
 }
 
 void cDrawManager::onNotifyMouseEvent(const s_MouseEvent &event)
