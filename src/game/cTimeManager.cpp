@@ -215,26 +215,26 @@ int cTimeManager::getFps() const
 
 void cTimeManager::waitForCPU()
 {
-    if (waitingTime > 0) {
-        SDL_Delay(waitingTime);
+    if (m_waitingTime > 0) {
+        SDL_Delay(m_waitingTime);
     }
-    frameCount++;
+    m_frameCount++;
 }
 
 void cTimeManager::capFps()
 {
-    m_fps = frameCount;
-    frameCount = 0;
+    m_fps = m_frameCount;
+    m_frameCount = 0;
 }
 
 void cTimeManager::adaptWaitingTime()
 {
     if (m_fps > IDEAL_FPS) {
-        waitingTime += 1;
+        m_waitingTime += 1;
     } else {
-        waitingTime -= 1;
-        if (waitingTime < 1) {
-            waitingTime = 1; // never wait less than 1 ms
+        m_waitingTime -= 1;
+        if (m_waitingTime < 1) {
+            m_waitingTime = 1; // never wait less than 1 ms
         }
     }
 }
