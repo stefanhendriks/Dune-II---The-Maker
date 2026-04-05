@@ -18,20 +18,20 @@ public:
     static cFlag *createSmallFlag(cPlayer *player, cPoint &position);
 
     void setBig(bool value) {
-        big = value;
+        m_big = value;
     }
 private:
-    cPoint absCoords;
+    cPoint m_absCoords;
 
-    cPlayer *player;
-    int TIMER_animate;
+    cPlayer *m_player;
+    int m_TIMER_animate;
 
-    bool big;
+    bool m_big;
 
     // move to 'type object' later (ie flag definitions)
-    int animationDelay;
-    int frames; // max amount of frames
+    int m_animationDelay;
+    int m_frames; // max amount of frames
 
-    int frame;  // frame to draw
+    int m_frame;  // frame to draw
 
 };
