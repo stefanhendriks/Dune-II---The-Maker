@@ -20,7 +20,7 @@ cMouseRepairState::cMouseRepairState(cPlayer *player, cGameControlsContext *cont
 
 void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
-    // these methods can have a side-effect which changes mouseTile...
+    // these methods can have a side-effect which changes m_mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked();
@@ -40,7 +40,7 @@ void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     // ... so set it here
     if (m_context->isState(MOUSESTATE_REPAIR)) { // if , required in case we switched state
-        m_mouse->setTile(mouseTile);
+        m_mouse->setTile(m_mouseTile);
     }
 }
 
@@ -78,13 +78,13 @@ void cMouseRepairState::onMouseRightButtonClicked()
 
 void cMouseRepairState::onMouseMovedTo()
 {
-    mouseTile = getMouseTileForRepairState();
+    m_mouseTile = getMouseTileForRepairState();
 }
 
 void cMouseRepairState::onStateSet()
 {
-    mouseTile = getMouseTileForRepairState();
-    m_mouse->setTile(mouseTile);
+    m_mouseTile = getMouseTileForRepairState();
+    m_mouse->setTile(m_mouseTile);
 }
 
 
@@ -117,7 +117,7 @@ int cMouseRepairState::getMouseTileForRepairState()
 
 void cMouseRepairState::onFocus()
 {
-    m_mouse->setTile(mouseTile);
+    m_mouse->setTile(m_mouseTile);
 }
 
 void cMouseRepairState::onBlur()

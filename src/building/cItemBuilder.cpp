@@ -813,7 +813,7 @@ void cItemBuilder::onNotifyMouseEvent(const s_MouseEvent &)
 
 void cItemBuilder::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyHold(event);
             break;

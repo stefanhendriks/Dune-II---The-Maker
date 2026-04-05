@@ -24,7 +24,7 @@ cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *contex
 
 void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
-    // these methods can have a side-effect which changes mouseTile...
+    // these methods can have a side-effect which changes m_mouseTile...
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked();
@@ -44,7 +44,7 @@ void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)
 
     // ... so set it here
     if (m_context->isState(MOUSESTATE_PLACE)) { // if , required in case we switched state
-        m_mouse->setTile(mouseTile);
+        m_mouse->setTile(m_mouseTile);
     }
 }
 
@@ -195,8 +195,8 @@ void cMousePlaceState::onMouseMovedTo()
 
 void cMousePlaceState::onStateSet()
 {
-    mouseTile = MOUSE_NORMAL;
-    m_mouse->setTile(mouseTile);
+    m_mouseTile = MOUSE_NORMAL;
+    m_mouse->setTile(m_mouseTile);
 }
 
 
@@ -206,7 +206,7 @@ void cMousePlaceState::onNotifyKeyboardEvent(const cKeyboardEvent &)
 
 void cMousePlaceState::onFocus()
 {
-    m_mouse->setTile(mouseTile);
+    m_mouse->setTile(m_mouseTile);
 }
 
 void cMousePlaceState::onBlur()

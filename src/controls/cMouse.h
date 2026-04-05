@@ -24,36 +24,36 @@ public:
     void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
     void setMouseObserver(cInputObserver *mouseObserver) {
-        this->_mouseObserver = mouseObserver;
+        this->m_mouseObserver = mouseObserver;
     }
 
     void init();
 
     // these functions return true when the mouse button is being hold down
     bool isLeftButtonPressed() {
-        return leftButtonPressed;
+        return m_leftButtonPressed;
     }
 
     bool isRightButtonPressed() {
-        return rightButtonPressed;
+        return m_rightButtonPressed;
     }
 
     // these functions return true when the mouse button was pressed in the previous
     // frame, but released in the current (which is counted as a 'click')
     bool isLeftButtonClicked() {
-        return leftButtonClicked;
+        return m_leftButtonClicked;
     }
 
     bool isRightButtonClicked() {
-        return rightButtonClicked;
+        return m_rightButtonClicked;
     }
 
     int getX() {
-        return coords.x;
+        return m_coords.x;
     }
 
     int getY() {
-        return coords.y;
+        return m_coords.y;
     }
 
     void setCursorPosition(SDL_Window *_windows, int x, int y);
@@ -97,44 +97,44 @@ public:
     void addDebugLine(std::string basicString);
 
 private:
-    cInputObserver *_mouseObserver;
+    cInputObserver *m_mouseObserver;
     GameContext* m_ctx = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     SDLDrawer* m_renderDrawer = nullptr;
 
-    bool leftButtonPressed;
-    bool rightButtonPressed;
+    bool m_leftButtonPressed;
+    bool m_rightButtonPressed;
 
-    bool leftButtonReleased;
-    bool rightButtonReleased;
+    bool m_leftButtonReleased;
+    bool m_rightButtonReleased;
 
-    bool leftButtonClicked;
-    bool rightButtonClicked;
+    bool m_leftButtonClicked;
+    bool m_rightButtonClicked;
 
-    bool leftButtonClickedInPreviousFrame;
-    bool rightButtonClickedInPreviousFrame;
+    bool m_leftButtonClickedInPreviousFrame;
+    bool m_rightButtonClickedInPreviousFrame;
 
-    bool mouseScrolledUp;
-    bool mouseScrolledDown;
-    bool didMouseMove;
+    bool m_mouseScrolledUp;
+    bool m_mouseScrolledDown;
+    bool m_didMouseMove;
 
-    cPoint coords;
-    cPoint coordsOnClick;
+    cPoint m_coords;
+    cPoint m_coordsOnClick;
 
     // Mouse information - for select box and dragging, etc
-    int mouse_co_x1;        // coordinates
-    int mouse_co_y1;        // of
-    int mouse_co_x2;        // the
-    int mouse_co_y2;        // select box
+    int m_mouseCoX1;        // coordinates
+    int m_mouseCoY1;        // of
+    int m_mouseCoX2;        // the
+    int m_mouseCoY2;        // select box
 
-    int mouse_mv_x1;        // coordinates
-    int mouse_mv_y1;        // of
-    int mouse_mv_x2;        // the
-    int mouse_mv_y2;        // dragging viewport
+    int m_mouseMvX1;        // coordinates
+    int m_mouseMvY1;        // of
+    int m_mouseMvX2;        // the
+    int m_mouseMvY2;        // dragging viewport
 
-    int mouse_tile;       // mouse picture in gfxdata
+    int m_mouseTile;       // mouse picture in gfxdata
 
-    std::vector<std::string> debugLines;
+    std::vector<std::string> m_debugLines;
 
     std::string mouseTileName(int tile);
 

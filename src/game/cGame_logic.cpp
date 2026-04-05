@@ -1282,7 +1282,7 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         m_currentState->onNotifyKeyboardEvent(event);
     }
 
-    switch (event.eventType) {
+    switch (event.getType()) {
         case eKeyEventType::HOLD:
             onKeyDownGame(event);
             break;

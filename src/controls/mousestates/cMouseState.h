@@ -25,6 +25,6 @@ protected:
     cGameControlsContext *m_context;
     cMouse *m_mouse;
 
-    int mouseTile;
+    int m_mouseTile;
 
 };
