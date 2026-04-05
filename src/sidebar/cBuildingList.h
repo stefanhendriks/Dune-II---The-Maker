@@ -56,31 +56,31 @@ public:
 
     // get
     bool isSelected() {
-        return selected;
+        return m_selected;
     }
 
     int getLastClickedId() {
-        return lastClickedId;
+        return m_lastClickedId;
     }
 
     int getButtonIconIdPressed() {
-        return buttonIconIdPressed;
+        return m_buttonIconIdPressed;
     }
 
     int getButtonIconIdUnpressed() {
-        return buttonIconIdUnpressed;
+        return m_buttonIconIdUnpressed;
     }
 
     int getButtonDrawX() {
-        return buttonDrawX;
+        return m_buttonDrawX;
     }
 
     int getButtonDrawY() {
-        return buttonDrawY;
+        return m_buttonDrawY;
     }
 
     bool isAvailable() {
-        return maxItems > 0;
+        return m_maxItems > 0;
     }
 
     std::array<int, 6> isBuildingItem();
@@ -89,7 +89,7 @@ public:
 
     // set
     void setSelected(bool value) {
-        selected = value;
+        m_selected = value;
     }
 
     void setStatusPendingUpgrade(int subListId);
@@ -99,31 +99,31 @@ public:
     void setStatusAvailable(int subListId);
 
     void setButtonIconIdPressed(int iconId) {
-        buttonIconIdPressed = iconId;
+        m_buttonIconIdPressed = iconId;
     }
 
     void setButtonIconIdUnpressed(int iconId) {
-        buttonIconIdUnpressed = iconId;
+        m_buttonIconIdUnpressed = iconId;
     }
 
     void setButtonWidth(int value) {
-        buttonWidth = value;
+        m_buttonWidth = value;
     }
 
     void setButtonHeight(int value) {
-        buttonHeight = value;
+        m_buttonHeight = value;
     }
 
     void setButtonDrawX(int value) {
-        buttonDrawX = value;
+        m_buttonDrawX = value;
     }
 
     void setButtonDrawY(int value) {
-        buttonDrawY = value;
+        m_buttonDrawY = value;
     }
 
     void setLastClickedId(int value) {
-        lastClickedId = value;
+        m_lastClickedId = value;
     }
 
     /**
@@ -131,7 +131,7 @@ public:
     * @param value
     */
     eListType getType() {
-        return typeOfList;
+        return m_typeOfList;
     }
 
     void removeAllSublistItems(int sublistId);
@@ -143,7 +143,7 @@ public:
     void startFlashing();
 
     bool isFlashing() {
-        return TIMER_flashing > 0;
+        return m_TIMER_flashing > 0;
     }
 
     Color getFlashingColor();
@@ -156,26 +156,26 @@ protected:
     // nothing
 
 private:
-    int lastClickedId;    // last clicked item id
-    int buttonIconIdPressed;    // the button to draw at the left of the list when pressed (selected)
-    int buttonIconIdUnpressed;    // the button to draw at the left of the list when unpressed
-    int buttonDrawX;
-    int buttonDrawY;
-    int buttonWidth;
-    int buttonHeight;
+    int m_lastClickedId;    // last clicked item id
+    int m_buttonIconIdPressed;    // the button to draw at the left of the list when pressed (selected)
+    int m_buttonIconIdUnpressed;    // the button to draw at the left of the list when unpressed
+    int m_buttonDrawX;
+    int m_buttonDrawY;
+    int m_buttonWidth;
+    int m_buttonHeight;
 
-    int TIMER_flashing;
+    int m_TIMER_flashing;
 
-    int maxItems;         // how many items have been set in the list?
+    int m_maxItems;         // how many items have been set in the list?
 
-    bool selected;          // is this list selected at sidebar or not?
+    bool m_selected;          // is this list selected at sidebar or not?
 
     // the list of icons
-    cBuildingListItem *items[MAX_ITEMS];
+    cBuildingListItem *m_items[MAX_ITEMS];
 
     cItemBuilder *m_itemBuilder;
 
     int getFreeSlot();
 
-    eListType typeOfList;
+    eListType m_typeOfList;
 };

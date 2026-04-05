@@ -11,46 +11,46 @@
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
 {
     assert(buildId >= 0);
-    this->icon = icon;
-    this->buildId = buildId;
-    this->type = type;
-    this->cost = cost;
-    building = false;
-    state = AVAILABLE;
-    progress = 0;
-    buildFrameToDraw = 0;
-    timesToBuild = 0;
-    timesOrdered  = 0;
-    slotId = -1; // is set later
+    m_icon = icon;
+    m_buildId = buildId;
+    m_type = type;
+    m_cost = cost;
+    m_building = false;
+    m_state = AVAILABLE;
+    m_progress = 0;
+    m_buildFrameToDraw = 0;
+    m_timesToBuild = 0;
+    m_timesOrdered  = 0;
+    m_slotId = -1; // is set later
 
-    creditsPerProgressTime = 0;
-    placeIt = false;
-    deployIt = false;
-    this->queuable = queuable;
+    m_creditsPerProgressTime = 0;
+    m_placeIt = false;
+    m_deployIt = false;
+    m_queuable = queuable;
 
 //    this->totalBuildTime = totalBuildTime;
-    this->subList = subList;
+    m_subList = subList;
 
-    TIMER_progressFrame = 0.0f;
-    TIMER_flashing = 500;
+    m_TIMER_progressFrame = 0.0f;
+    m_TIMER_flashing = 500;
 
-    timerCap = game.isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    m_timerCap = game.isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
-    myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
+    m_myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
     int totalBuildTime = getTotalBuildTime();
-    if (cost > 0 && totalBuildTime > 0) {
-        creditsPerProgressTime = (float)this->cost / (float)totalBuildTime;
+    if (m_cost > 0 && totalBuildTime > 0) {
+        m_creditsPerProgressTime = (float)m_cost / (float)totalBuildTime;
     }
 
     cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "cBuildingListItem",
         std::format("constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
-            getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime));
+            getNameString().c_str(), m_cost, totalBuildTime, m_creditsPerProgressTime));
 }
 
 cBuildingListItem::~cBuildingListItem()
 {
-    myList = NULL;
+    m_myList = NULL;
 }
 
 /**
@@ -123,16 +123,16 @@ cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, int subList
  */
 float cBuildingListItem::getRefundAmount()
 {
-    float fProgress = progress;
+    float fProgress = m_progress;
     if (fProgress < 1.0F) {
         return 0.0F;
     }
-    return (fProgress * creditsPerProgressTime);
+    return (fProgress * m_creditsPerProgressTime);
 }
 
 void cBuildingListItem::decreaseTimesToBuild()
 {
-    timesToBuild--;
+    m_timesToBuild--;
 }
 
 void cBuildingListItem::increaseProgress(int byAmount)
@@ -147,17 +147,17 @@ void cBuildingListItem::increaseProgress(int byAmount)
  */
 int cBuildingListItem::getTotalBuildTime() const
 {
-    if (type == STRUCTURE) {
-        return game.structureInfos[buildId].buildTime;
+    if (m_type == STRUCTURE) {
+        return game.structureInfos[m_buildId].buildTime;
     }
-    if (type == UPGRADE) {
-        return game.upgradeInfos[buildId].buildTime;
+    if (m_type == UPGRADE) {
+        return game.upgradeInfos[m_buildId].buildTime;
     }
-    if (type == SPECIAL) {
-        return game.specialInfos[buildId].buildTime;
+    if (m_type == SPECIAL) {
+        return game.specialInfos[m_buildId].buildTime;
     }
     // assumes units by default
-    return game.unitInfos[buildId].buildTime;
+    return game.unitInfos[m_buildId].buildTime;
 }
 
 bool cBuildingListItem::isDoneBuilding()
@@ -232,13 +232,13 @@ s_StructureInfo &cBuildingListItem::getStructureInfo()
 
 void cBuildingListItem::resetTimesOrdered()
 {
-    timesOrdered = 0;
+    m_timesOrdered = 0;
 }
 
 eListType cBuildingListItem::getListType()
 {
-    if (myList) {
-        return myList->getType();
+    if (m_myList) {
+        return m_myList->getType();
     }
     return eListType::LIST_NONE;
 }
@@ -246,8 +246,8 @@ eListType cBuildingListItem::getListType()
 int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress()
 {
     // frame to draw (for building in progress)
-//    int iFrame = health_bar(31, progress, getTotalBuildTime());
-    int iFrame = healthBar(31, progress, getTotalBuildTime());
+//    int iFrame = health_bar(31, m_progress, getTotalBuildTime());
+    int iFrame = healthBar(31, m_progress, getTotalBuildTime());
 
     if (iFrame > 31) {
         iFrame = 31;
@@ -258,12 +258,12 @@ int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress()
 
 void cBuildingListItem::decreaseProgressFrameTimer()
 {
-    TIMER_progressFrame--;
+    m_TIMER_progressFrame--;
 }
 
 float cBuildingListItem::getProgressFrameTimer()
 {
-    return TIMER_progressFrame;
+    return m_TIMER_progressFrame;
 }
 
 void cBuildingListItem::resetProgressFrameTimer()
@@ -272,10 +272,10 @@ void cBuildingListItem::resetProgressFrameTimer()
     // divide that by frames (31), and get the time between frames!
     int buildTimeInTicks = getTotalBuildTimeInTicks();
     if (buildTimeInTicks > 0) {
-        TIMER_progressFrame = buildTimeInTicks / 31;
+        m_TIMER_progressFrame = buildTimeInTicks / 31;
     }
     else {
-        TIMER_progressFrame = 0;
+        m_TIMER_progressFrame = 0;
     }
 }
 
@@ -286,12 +286,12 @@ int cBuildingListItem::getTotalBuildTimeInTicks() const
 
 int cBuildingListItem::getInTicks(int getTimeInTicks) const
 {
-    return timerCap * getTimeInTicks;
+    return m_timerCap * getTimeInTicks;
 }
 
 void cBuildingListItem::setTimerCap(int value)
 {
-    timerCap = value;
+    m_timerCap = value;
 }
 
 /**
@@ -311,7 +311,7 @@ int cBuildingListItem::getTotalBuildTimeInMs()
  */
 int cBuildingListItem::getProgressBuildTimeInMs()
 {
-    return getInTicks(progress) * 5; // 5 = ms for every time we call the itemBuilder
+    return getInTicks(m_progress) * 5; // 5 = ms for every time we call the itemBuilder
 }
 
 int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
@@ -369,7 +369,7 @@ bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId)
 
 bool cBuildingListItem::isAutoBuild()
 {
-    return cBuildingListItem::isAutoBuild(type, buildId);
+    return cBuildingListItem::isAutoBuild(m_type, m_buildId);
 }
 
 std::string cBuildingListItem::getInfo()
@@ -410,17 +410,17 @@ std::string cBuildingListItem::getInfo()
 
 bool cBuildingListItem::isFlashing()
 {
-    return TIMER_flashing > 0;
+    return m_TIMER_flashing > 0;
 }
 
 void cBuildingListItem::decreaseFlashingTimer()
 {
-    if (TIMER_flashing > 0) TIMER_flashing--;
+    if (m_TIMER_flashing > 0) m_TIMER_flashing--;
 }
 
 std::string cBuildingListItem::getTypeString()
 {
-    return std::string(eBuildTypeString(this->type));
+    return std::string(eBuildTypeString(m_type));
 }
 
 std::string cBuildingListItem::getNameString()
