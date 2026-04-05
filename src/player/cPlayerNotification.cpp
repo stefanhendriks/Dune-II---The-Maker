@@ -20,28 +20,28 @@ std::string eNotificationTypeString(const eNotificationType &type)
 }
 
 cPlayerNotification::cPlayerNotification(const std::string &msg, eNotificationType type)
-    : msg(msg), TIMER((1000/5) * 7), initialDuration(TIMER), type(type)
+    : m_msg(msg), m_TIMER((1000/5) * 7), m_initialDuration(m_TIMER), m_type(type)
 {
 }
 
 void cPlayerNotification::thinkFast()
 {
-    TIMER--;
+    m_TIMER--;
 }
 
 const std::string &cPlayerNotification::getMessage() const
 {
-    return msg;
+    return m_msg;
 }
 
 Color cPlayerNotification::getColor() const
 {
     // @Mira regression on color
-    //bool justStarted = (initialDuration - TIMER) < 500;
+    //bool justStarted = (m_initialDuration - m_TIMER) < 500;
     static const Color neutralColor = Color::white(); //Color{255, 255, 255,255}; // white
     static const Color priorityColor = Color::yellow(); //Color{255, 207, 41,255}; // yellow
     static const Color badColor = Color::red(); //{255, 0, 0,255}; // red
-    switch (type) {
+    switch (m_type) {
         case NEUTRAL:
             return /*justStarted ? game.getColorFadeSelected(neutralColor) :*/ neutralColor;
         case PRIORITY:

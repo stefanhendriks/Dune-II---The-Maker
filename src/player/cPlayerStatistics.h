@@ -6,75 +6,75 @@ public:
 
     // set methods
     void setEnemyUnitsDestroyed(int theEnemyUnitsDestroyed) {
-        enemyUnitsDestroyed = theEnemyUnitsDestroyed;
+        m_enemyUnitsDestroyed = theEnemyUnitsDestroyed;
     }
     void setEnemyStructuresDestroyed(int theEnemyStructuresDestroyed) {
-        enemyStructuresDestroyed = theEnemyStructuresDestroyed;
+        m_enemyStructuresDestroyed = theEnemyStructuresDestroyed;
     }
     void setUnitsDestroyed(int theUnitsDestroyed) {
-        unitsDestroyed = theUnitsDestroyed;
+        m_unitsDestroyed = theUnitsDestroyed;
     }
     void setUnitsEaten(int theUnitsEaten) {
-        unitsEaten = theUnitsEaten;
+        m_unitsEaten = theUnitsEaten;
     }
     void setStructuresDestroyed(int theStructuresDestroyed) {
-        structuresDestroyed = theStructuresDestroyed;
+        m_structuresDestroyed = theStructuresDestroyed;
     }
     void setSpiceMined(int theSpiceMined) {
-        spiceMined = theSpiceMined;
+        m_spiceMined = theSpiceMined;
     }
     void setStructuresConstructed(int theStructuresConstructed) {
-        structuresConstructed = theStructuresConstructed;
+        m_structuresConstructed = theStructuresConstructed;
     }
     void setUnitsConstructed(int theUnitsConstructed) {
-        unitsConstructed = theUnitsConstructed;
+        m_unitsConstructed = theUnitsConstructed;
     }
     void setSuperWeaponsUsed(int theSuperWeaponsUsed) {
-        superWeaponsUsed = theSuperWeaponsUsed;
+        m_superWeaponsUsed = theSuperWeaponsUsed;
     }
 
     // get methods
     int getEnemyUnitsDestroyed() {
-        return enemyUnitsDestroyed;
+        return m_enemyUnitsDestroyed;
     }
     int getEnemyStructuresDestroyed() {
-        return enemyStructuresDestroyed;
+        return m_enemyStructuresDestroyed;
     }
     int getUnitsDestroyed() {
-        return unitsDestroyed;
+        return m_unitsDestroyed;
     }
     int getUnitsEaten() {
-        return unitsEaten;
+        return m_unitsEaten;
     }
     int getStructuresDestroyed() {
-        return structuresDestroyed;
+        return m_structuresDestroyed;
     }
     int getSpiceMined() {
-        return spiceMined;
+        return m_spiceMined;
     }
     int getStructuresConstructed() {
-        return structuresConstructed;
+        return m_structuresConstructed;
     }
     int getUnitsConstructed() {
-        return unitsConstructed;
+        return m_unitsConstructed;
     }
     int getSuperWeaponsUsed() {
-        return superWeaponsUsed;
+        return m_superWeaponsUsed;
     }
 
 private:
     // enemy units and structures destroyed
-    int enemyUnitsDestroyed;
-    int enemyStructuresDestroyed;
+    int m_enemyUnitsDestroyed;
+    int m_enemyStructuresDestroyed;
 
     // casualties
-    int unitsDestroyed;	// unit has been destroyed by (enemy) fire
-    int unitsEaten; // unit has been eaten by sandworm
-    int structuresDestroyed; // structure has been destroyed
+    int m_unitsDestroyed;	// unit has been destroyed by (enemy) fire
+    int m_unitsEaten; // unit has been eaten by sandworm
+    int m_structuresDestroyed; // structure has been destroyed
 
     // misc
-    int spiceMined;	// total amount of spice mined
-    int structuresConstructed; // total amount of structures constructed
-    int unitsConstructed; // total amount of units constructed
-    int superWeaponsUsed; // total amount of super weapons used
+    int m_spiceMined;	// total amount of spice mined
+    int m_structuresConstructed; // total amount of structures constructed
+    int m_unitsConstructed; // total amount of units constructed
+    int m_superWeaponsUsed; // total amount of super weapons used
 };
