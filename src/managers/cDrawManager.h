@@ -42,7 +42,7 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     cMiniMapDrawer *getMiniMapDrawer() {
-        return miniMapDrawer.get();
+        return m_miniMapDrawer.get();
     }
 
     cOrderDrawer *getOrderDrawer() {
@@ -110,13 +110,13 @@ private:
     std::unique_ptr<CreditsDrawer> m_creditsDrawer;
     std::unique_ptr<cOrderDrawer> m_orderDrawer;
     std::unique_ptr<cMapDrawer> m_mapDrawer;
-    std::unique_ptr<cMiniMapDrawer> miniMapDrawer;
+    std::unique_ptr<cMiniMapDrawer> m_miniMapDrawer;
     std::unique_ptr<cParticleDrawer> m_particleDrawer;
     std::unique_ptr<cMessageDrawer> m_messageDrawer;
     std::unique_ptr<cPlaceItDrawer> m_placeitDrawer;
     std::unique_ptr<cStructureDrawer> m_structureDrawer;
     Color m_sidebarColor;
-    Texture *btnOptions;
+    Texture *m_btnOptions;
     bool m_drawToolTip = false;
     // TODO: bullet/projectile drawer
     cPlayer *m_player;

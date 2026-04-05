@@ -14,22 +14,22 @@ cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()
 {
     assert(thePlayer!=nullptr);
     // does not own these things!
-    player = thePlayer;
-    sidebar = thePlayer->getSideBar();
+    m_player = thePlayer;
+    m_sidebar = thePlayer->getSideBar();
     logbook("cInteractionManager constructor");
 }
 
 cInteractionManager::~cInteractionManager()
 {
-    player = nullptr;
-    sidebar = nullptr;
+    m_player = nullptr;
+    m_sidebar = nullptr;
     logbook("cInteractionManager destructor");
 }
 
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer)
 {
-    this->sidebar = thePlayer->getSideBar();
-    this->player = thePlayer;
+    this->m_sidebar = thePlayer->getSideBar();
+    this->m_player = thePlayer;
     logbook(std::format("cInteractionManager::setPlayerToInteractFor for player [{}] [{}]", thePlayer->getId(), thePlayer->getHouseName()));
 }
 
@@ -83,16 +83,16 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
     // TODO: call state instead (get rid of this interaction manager thing, so we don't need to do this)
     if (game.isState(GAME_PLAYING)) {
         // now call all its other interested listeners
-        cGameControlsContext *pContext = player->getGameControlsContext();
+        cGameControlsContext *pContext = m_player->getGameControlsContext();
         pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
 
-        sidebar->onNotifyMouseEvent(mouseEvent);
+        m_sidebar->onNotifyMouseEvent(mouseEvent);
         game.m_mapCamera->onNotifyMouseEvent(mouseEvent);
 
         // do like this because drawManager gets deleted/recreated
         game.m_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
         game.m_drawManager->getOrderDrawer()->onNotify(mouseEvent);
-        cItemBuilder *pBuilder = player->getItemBuilder();
+        cItemBuilder *pBuilder = m_player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyMouseEvent(mouseEvent);
         }
@@ -110,11 +110,11 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
 void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (game.isState(GAME_PLAYING)) {
-        cGameControlsContext *pContext = player->getGameControlsContext();
+        cGameControlsContext *pContext = m_player->getGameControlsContext();
         pContext->onNotifyKeyboardEvent(event);
 
         game.m_mapCamera->onNotifyKeyboardEvent(event);
-        cItemBuilder *pBuilder = player->getItemBuilder();
+        cItemBuilder *pBuilder = m_player->getItemBuilder();
         if (pBuilder) {
             pBuilder->onNotifyKeyboardEvent(event);
         }
