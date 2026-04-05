@@ -38,6 +38,10 @@ public:
     void reset(int value) {
         m_ticks = value;
     }
+
+    void zero() {
+        reset(0);
+    }
 private:
     int m_ticks;
 };

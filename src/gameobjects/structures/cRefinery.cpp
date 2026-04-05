@@ -44,7 +44,7 @@ void cRefinery::think_unit_occupation()
 
     if (cUnit.harvestTimer.get() < difficultySettings->getDumpSpeed(10)) return;
 
-    cUnit.harvestTimer.reset(0);
+    cUnit.harvestTimer.zero();
 
     // dump credits
     if (cUnit.canUnload()) {
