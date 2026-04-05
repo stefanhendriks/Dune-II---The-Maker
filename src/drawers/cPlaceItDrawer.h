@@ -22,8 +22,8 @@ protected:
     void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 
 private:
-    cStructureUtils structureUtils;
-    cPlayer *player;
+    cStructureUtils m_structureUtils;
+    cPlayer *m_player;
     GameContext *m_ctx;
     SDLDrawer *m_renderDrawer;
     Graphics *m_gfxdata;

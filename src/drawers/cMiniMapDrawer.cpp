@@ -37,24 +37,24 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
     int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
-    factorZoom = std::min(reportX, reportY);
+    m_factorZoom = std::min(reportX, reportY);
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
     int topLeftX = game.m_screenW - cSideBar::WidthOfMinimap;
-    drawX = topLeftX + (halfWidthOfMinimap - factorZoom*halfWidthOfMap);
+    m_drawX = topLeftX + (halfWidthOfMinimap - m_factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
     int halfHeightOfMap = getMapHeightInPixels() / 2;
     int topLeftY = cSideBar::TopBarHeight;
-    drawY = topLeftY + (halfHeightOfMinimap - factorZoom*halfHeightOfMap);
+    m_drawY = topLeftY + (halfHeightOfMinimap - m_factorZoom*halfHeightOfMap);
 
-    centerX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
-    centerY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
+    m_centerX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
+    m_centerY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
 
-    m_RectMinimap = cRectangle(drawX, drawY, factorZoom*getMapWidthInPixels(), factorZoom * getMapHeightInPixels());
+    m_RectMinimap = cRectangle(m_drawX, m_drawY, m_factorZoom*getMapWidthInPixels(), m_factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
-    mipMapTex = m_renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
+    m_mipMapTex = m_renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
 cMiniMapDrawer::~cMiniMapDrawer()
@@ -86,7 +86,7 @@ void cMiniMapDrawer::draw()
         cleanDrawTerrain();
         drawUnitsAndStructures(true);
     }
-    m_renderDrawer->renderStrechFullSprite(mipMapTex, m_RectMinimap);
+    m_renderDrawer->renderStrechFullSprite(m_mipMapTex, m_RectMinimap);
 
     drawStaticFrame();
     drawViewPortRectangle();
@@ -213,7 +213,7 @@ void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void cMiniMapDrawer::drawTerrain()
 {
-    m_renderDrawer->beginDrawingToTexture(mipMapTex);
+    m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
     Color iColor = Color{0, 0, 0,255};
 
     for (int x = 0; x < (m_map->getWidth()); x++) {
@@ -246,10 +246,10 @@ void cMiniMapDrawer::drawViewPortRectangle()
     iWidth--;
     iHeight--;
 
-    int pixelSize = factorZoom;
+    int pixelSize = m_factorZoom;
 
-    int startX = drawX + ((m_mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
-    int startY = drawY + ((m_mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
+    int startX = m_drawX + ((m_mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
+    int startY = m_drawY + ((m_mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
 
     int minimapWidth = iWidth * (pixelSize) + 1;
     int minimapHeight = iHeight * (pixelSize) + 1;
@@ -278,7 +278,7 @@ void cMiniMapDrawer::drawViewPortRectangle()
  * @param playerOnly (if false, draws all other players than player)
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
-    m_renderDrawer->beginDrawingToTexture(mipMapTex);
+    m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
     const Color black = Color::black();
     for (int x = 0; x < m_map->getWidth(); x++) {
         for (int y = 0; y < m_map->getHeight(); y++) {
@@ -397,17 +397,17 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
 }
 
 void cMiniMapDrawer::cleanDrawTerrain() const {
-    m_renderDrawer->beginDrawingToTexture(mipMapTex);
+    m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
     m_renderDrawer->renderClearToColor(Color::black());
     m_renderDrawer->endDrawingToTexture();
 }
 
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
 {
-    int mouseMiniMapX = mouseX - drawX;
-    int mouseMiniMapY = mouseY - drawY;
-    mouseMiniMapX /= factorZoom;
-    mouseMiniMapY /= factorZoom;
+    int mouseMiniMapX = mouseX - m_drawX;
+    int mouseMiniMapY = mouseY - m_drawY;
+    mouseMiniMapX /= m_factorZoom;
+    mouseMiniMapY /= m_factorZoom;
     auto mouseMiniMapPoint = m_map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     return m_map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);

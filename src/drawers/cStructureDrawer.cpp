@@ -325,7 +325,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
 
         if (!theStructure) continue;
 
-        if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
+        if (m_structureUtils.isStructureVisibleOnScreen(theStructure)) {
             // draw
             drawStructureForLayer(theStructure, layer);
 

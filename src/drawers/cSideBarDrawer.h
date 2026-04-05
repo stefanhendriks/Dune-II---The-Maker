@@ -48,8 +48,8 @@ private:
 
     void drawPowerUsage() const;
     void drawCreditsUsage();
-    Texture *candyBarBall=nullptr;
-    Texture *candyBarPiece=nullptr;
-    Texture *candyHorizonBar=nullptr;
-    Texture *candiBarRenderer= nullptr;
+    Texture *m_candyBarBall=nullptr;
+    Texture *m_candyBarPiece=nullptr;
+    Texture *m_candyHorizonBar=nullptr;
+    Texture *m_candiBarRenderer= nullptr;
 };
