@@ -35,9 +35,6 @@ private:
     int m_TIMER_evaluatePlayerStatus;
     cReinforcements* m_reinforcements;
 
-    // win/lose flags
-    int8_t m_winFlags, m_loseFlags;
-
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);

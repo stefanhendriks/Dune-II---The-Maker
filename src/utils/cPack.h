@@ -64,7 +64,6 @@ private:
     void writeHeader();
     void writeFileLines();
     void copyFile();
-    int numberFile = 0;
     std::unique_ptr<SDL_RWops, decltype(&SDL_RWclose)> wfp{nullptr, SDL_RWclose}; //wfp as writeFilePack
     std::vector<FileInPack> fileInPack;
 };

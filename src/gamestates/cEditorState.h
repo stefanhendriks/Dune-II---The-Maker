@@ -12,7 +12,7 @@
 class Texture;
 class Graphics;
 class cGame;
-class s_PreviewMap;
+struct s_PreviewMap;
 class GuiBar;
 class GuiButtonGroup;
 class cTextDrawer;

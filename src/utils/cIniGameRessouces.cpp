@@ -791,7 +791,7 @@ void IniGameRessources::install_bullets()
 {
     logbook("Installing:  BULLET TYPES");
 
-    for (int i = 0; i < game.bulletInfos.size(); i++) {
+    for (int i = 0; i < (int)game.bulletInfos.size(); i++) {
         game.bulletInfos[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
         game.bulletInfos[i].moveSpeed = 2;
         game.bulletInfos[i].deathParticle = -1; // this points to a bitmap (in data file, using index)

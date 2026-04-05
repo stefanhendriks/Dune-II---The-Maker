@@ -118,12 +118,11 @@ if (APPLE)
         target_compile_definitions(${PROJECT_NAME} PRIVATE D2TM_CLANG=1)
     endif()
 
+    set(ALL_SDL_LIBS ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+    list(REMOVE_DUPLICATES ALL_SDL_LIBS)
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
-            ${SDL2_LIBRARIES}
-            ${SDL2_IMAGE_LIBRARIES}
-            ${SDL2_TTF_LIBRARIES}
-            ${SDL2_MIXER_LIBRARIES}
+            ${ALL_SDL_LIBS}
     )
     target_compile_options(${PROJECT_NAME}
       PRIVATE
