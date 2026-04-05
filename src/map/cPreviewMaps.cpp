@@ -23,7 +23,7 @@ cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode) : m_renderDr
 void cPreviewMaps::destroy()
 {
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
-        s_PreviewMap &previewMap = PreviewMap[i];
+        s_PreviewMap &previewMap = m_PreviewMap[i];
         if (previewMap.terrain) {
             SDL_FreeSurface(previewMap.terrain);
             previewMap.terrain = nullptr;
@@ -39,7 +39,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 {
     int iNew = -1;
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
-        if (PreviewMap[i].name[0] == '\0') {
+        if (m_PreviewMap[i].name[0] == '\0') {
             iNew = i;
             break;
         }
@@ -56,7 +56,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     }
 
     const cSection &section = conf.getSection("SKIRMISH");
-    s_PreviewMap &previewMap = PreviewMap[iNew];
+    s_PreviewMap &previewMap = m_PreviewMap[iNew];
     previewMap.name = section.getStringValue("Title");
     previewMap.author = section.getStringValue("Author");
     previewMap.description = section.getStringValue("Description");
@@ -186,7 +186,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
         previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
     }
-    numberOfMaps++;
+    m_numberOfMaps++;
     if (m_debugMode) {
         logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",
                             previewMap.name, previewMap.width, previewMap.height));
@@ -198,12 +198,12 @@ Scanning of skirmish maps:
 
 - for each file in the folder "skirmish"
 - if extension is .ini, open file (else skip)
-- load the file, into a sPreviewMap struct
+- load the file, into a sm_PreviewMap struct
   - also creates a preview of map in BITMAP (minimap preview)
 */
 void cPreviewMaps::loadSkirmishMaps()
 {
-    numberOfMaps = 0; // reset number of maps
+    m_numberOfMaps = 0; // reset number of maps
     initPreviews(); // clear all of them
 
     const std::filesystem::path pathfile{"skirmish"};
@@ -222,7 +222,7 @@ void cPreviewMaps::initPreviews()
     //reset all ressources
     destroy();
     for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
-        s_PreviewMap &previewMap = PreviewMap[i];
+        s_PreviewMap &previewMap = m_PreviewMap[i];
         // clear out name
         previewMap.name.clear();
 
@@ -243,7 +243,7 @@ void cPreviewMaps::initPreviews()
 
 void cPreviewMaps::initRandomMap()
 {
-    s_PreviewMap &firstSkirmishMap = PreviewMap[0];
+    s_PreviewMap &firstSkirmishMap = m_PreviewMap[0];
     firstSkirmishMap.name = "Random map";
     firstSkirmishMap.validMap = false;
 
@@ -262,7 +262,7 @@ std::string cPreviewMaps::getMapSize(int i) const {
     if (i > MAX_SKIRMISHMAPS) {
         return "Invalid";
     }
-    int playableCells = (PreviewMap[i].width-2) * (PreviewMap[i].height-2);
+    int playableCells = (m_PreviewMap[i].width-2) * (m_PreviewMap[i].height-2);
     if (playableCells < 32 *32) {
         return "SMALL";
     }
