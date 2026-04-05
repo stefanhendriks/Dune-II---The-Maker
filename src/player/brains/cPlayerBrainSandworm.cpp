@@ -56,7 +56,7 @@ void cPlayerBrainSandworm::onNotifyGameEvent(const s_GameEvent &)
 
 }
 
-void cPlayerBrainSandworm::addBuildOrder(S_buildOrder)
+void cPlayerBrainSandworm::addBuildOrder(s_buildOrder)
 {
 
 }

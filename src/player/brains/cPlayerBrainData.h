@@ -106,7 +106,7 @@ enum ePlayerBrainSkirmishThinkState {
 
 };
 
-struct S_structurePosition {
+struct s_structurePosition {
     int cell;
     int type;
     int structureId;
@@ -114,7 +114,7 @@ struct S_structurePosition {
 };
 
 
-struct S_buildOrder {
+struct s_buildOrder {
     eBuildType buildType; // ie UNIT
     int priority;       // the higher, the more priority to build this
     int buildId;        // ie QUAD

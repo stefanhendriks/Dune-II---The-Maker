@@ -18,7 +18,7 @@
 namespace brains {
 
 cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind,
-        cPlayerBrain *brain, std::vector<S_groupKind> group,
+        cPlayerBrain *brain, std::vector<s_groupKind> group,
         int initialDelay, int uniqueId)
     : TIMER_delay(initialDelay)
     , TIMER_awaitingGatheringResoures(-1)
@@ -321,7 +321,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 
                 // else, we order stuff, if we didn't already?
                 while (thingIWant.ordered < thingIWant.required) {
-                    brain->addBuildOrder(S_buildOrder{
+                    brain->addBuildOrder(s_buildOrder{
                         .buildType = thingIWant.buildType,
                         .priority = 0,
                         .buildId = thingIWant.type,

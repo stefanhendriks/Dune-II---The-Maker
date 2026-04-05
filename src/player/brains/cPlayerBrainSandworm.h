@@ -17,7 +17,7 @@ public:
 
     void onNotifyGameEvent(const s_GameEvent &event) override;
 
-    void addBuildOrder(S_buildOrder order) override;
+    void addBuildOrder(s_buildOrder order) override;
 
 private:
     int TIMER_think;
