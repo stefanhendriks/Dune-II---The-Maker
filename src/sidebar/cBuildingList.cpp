@@ -8,16 +8,16 @@
 
 cBuildingList::cBuildingList(eListType listType)
 {
-    TIMER_flashing = 0;
-    lastClickedId = 0;
-    buttonIconIdPressed = 0;	// the button to draw at the left of the list
-    buttonDrawX = 0;
-    buttonDrawY = 0;
-    memset(items, 0, sizeof(items));
-    typeOfList = listType;
-    maxItems = 0;
+    m_TIMER_flashing = 0;
+    m_lastClickedId = 0;
+    m_buttonIconIdPressed = 0;	// the button to draw at the left of the list
+    m_buttonDrawX = 0;
+    m_buttonDrawY = 0;
+    memset(m_items, 0, sizeof(m_items));
+    m_typeOfList = listType;
+    m_maxItems = 0;
     m_itemBuilder = nullptr;
-    selected = false;
+    m_selected = false;
 }
 
 cBuildingList::~cBuildingList()
@@ -29,7 +29,7 @@ cBuildingListItem *cBuildingList::getItem(int i)
 {
     if (i < 0) return nullptr;
     if (i >= MAX_ICONS) return nullptr;
-    return items[i];
+    return m_items[i];
 }
 
 /**
@@ -40,7 +40,7 @@ cBuildingListItem *cBuildingList::getItem(int i)
 int cBuildingList::getFreeSlot()
 {
     for (int i = 0; i < MAX_ICONS; i++) {
-        if (items[i] == nullptr) {
+        if (m_items[i] == nullptr) {
             return i; // return free slot
         }
     }
@@ -51,8 +51,8 @@ int cBuildingList::getFreeSlot()
 void cBuildingList::removeAllItems()
 {
     for (int i =0 ; i < MAX_ICONS; i++) {
-        delete items[i];
-        items[i] = nullptr;
+        delete m_items[i];
+        m_items[i] = nullptr;
     }
 }
 
@@ -127,12 +127,12 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
     bool beforeAddingAvailable = isAvailable();
 
     // add
-    items[slotId] = item;
+    m_items[slotId] = item;
     item->setSlotId(slotId);
     item->setList(this);
-    maxItems = slotId + 1;
+    m_maxItems = slotId + 1;
 //	char msg[355];
-//	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
+//	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set m_maxItems to [%d]", item->getBuildId(), slot, m_maxItems);
 //	logbook(msg);
 
     // notify game that the item just has been added!
@@ -210,20 +210,20 @@ bool cBuildingList::removeItemFromList(int position)
     bool beforeRemovingAvailable = isAvailable();
 
     delete item;
-    items[position] = nullptr;
+    m_items[position] = nullptr;
 
     // starting from 'position' which became NULL, make sure everything
     // after that slotIndex is moved. So we don't get gaps.
-    for (int i = (position + 1); i < maxItems; i++) {
-        items[i-1] = items[i];
-        items[i-1]->setSlotId(i-1);
+    for (int i = (position + 1); i < m_maxItems; i++) {
+        m_items[i-1] = m_items[i];
+        m_items[i-1]->setSlotId(i-1);
 
         // and clear it out, which in the next loop will be filled
         // if there is any other pointer. If not, the 'last' item is NULL now.
-        items[i] = nullptr;
+        m_items[i] = nullptr;
     }
 
-    maxItems--; // now we can do this
+    m_maxItems--; // now we can do this
 
     if (isAvailable() != beforeRemovingAvailable) {
         // emit another event that this list became un-available!
@@ -435,8 +435,8 @@ Color cBuildingList::getFlashingColor()
 
 void cBuildingList::think()
 {
-    if (TIMER_flashing > 0) {
-        TIMER_flashing--;
+    if (m_TIMER_flashing > 0) {
+        m_TIMER_flashing--;
     }
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = getItem(i);
@@ -464,10 +464,10 @@ void cBuildingList::think()
 
 void cBuildingList::stopFlashing()
 {
-    TIMER_flashing = 0;
+    m_TIMER_flashing = 0;
 }
 
 void cBuildingList::startFlashing()
 {
-    TIMER_flashing = 2500;
+    m_TIMER_flashing = 2500;
 }

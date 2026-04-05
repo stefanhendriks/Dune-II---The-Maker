@@ -38,7 +38,7 @@ public:
     int getTotalBuildTimeInMs();
     int getProgressBuildTimeInMs(); // how much time has passed for build item
     int getIconId() {
-        return icon;
+        return m_icon;
     }
     std::string getInfo();
 
@@ -52,7 +52,7 @@ public:
      * @return
      */
     int getBuildId() {
-        return buildId;
+        return m_buildId;
     }
 
     /**
@@ -60,23 +60,23 @@ public:
      * @return
      */
     int getSubList() {
-        return subList;
+        return m_subList;
     }
 
     eBuildType getBuildType() {
-        return type;
+        return m_type;
     }
     int getBuildCost() const {
-        return cost;
+        return m_cost;
     }
     int getProgress() {
-        return progress;
+        return m_progress;
     }
     bool isBuilding() {
-        return building;
+        return m_building;
     }
     bool isState(eBuildingListItemState value) {
-        return state == value;
+        return m_state == value;
     }
 
     /**
@@ -104,13 +104,13 @@ public:
     }
 
     int getTimesToBuild() {
-        return timesToBuild;
+        return m_timesToBuild;
     }
     int getSlotId() {
-        return slotId;    // return index of items[] array (set after adding item to list, default is < 0)
+        return m_slotId;    // return index of items[] array (set after adding item to list, default is < 0)
     }
     int getTimesOrdered() {
-        return timesOrdered;
+        return m_timesOrdered;
     }
 
     s_SpecialInfo &getSpecialInfo();
@@ -119,86 +119,86 @@ public:
     s_StructureInfo &getStructureInfo();
 
     float getCreditsPerProgressTime() {
-        return creditsPerProgressTime;
+        return m_creditsPerProgressTime;
     }
 
     float getRefundAmount();
 
     bool shouldPlaceIt() {
-        return placeIt;
+        return m_placeIt;
     }
     bool shouldDeployIt() {
-        return deployIt;
+        return m_deployIt;
     }
     bool isQueuable() {
-        return queuable;
+        return m_queuable;
     }
 
     // setters
     void setIconId(int value) {
-        icon = value;
+        m_icon = value;
     }
     void setBuildCost(int value) {
-        cost = value;
+        m_cost = value;
     }
     void setIsBuilding(bool value) {
-        building = value;
+        m_building = value;
     }
     void stopBuilding() {
         setIsBuilding(false);
         resetProgress();
     }
     void setStatusPendingUpgrade() {
-        state = eBuildingListItemState::PENDING_UPGRADE;
+        m_state = eBuildingListItemState::PENDING_UPGRADE;
     }
     void setStatusAvailable() {
-        state = eBuildingListItemState::AVAILABLE;
+        m_state = eBuildingListItemState::AVAILABLE;
     }
     void setStatusPendingBuilding() {
-        state = eBuildingListItemState::PENDING_BUILDING;
+        m_state = eBuildingListItemState::PENDING_BUILDING;
     }
     void setIsAvailable(bool value) {
-        value ? state = eBuildingListItemState::AVAILABLE : eBuildingListItemState::UNAVAILABLE;
+        value ? m_state = eBuildingListItemState::AVAILABLE : eBuildingListItemState::UNAVAILABLE;
     }
     void setTimesToBuild(int value) {
-        timesToBuild = value;
+        m_timesToBuild = value;
     }
     void setTimesOrdered(int value) {
-        timesOrdered = value;
+        m_timesOrdered = value;
     }
     void increaseTimesToBuild() {
-        timesToBuild++;
+        m_timesToBuild++;
     }
     void increaseTimesToBuildNTimes(int amount) {
-        if (queuable) {
-            timesToBuild += amount;
+        if (m_queuable) {
+            m_timesToBuild += amount;
         }
         else {
-            timesToBuild = 1; // not queueable always means 1
+            m_timesToBuild = 1; // not queueable always means 1
         }
     }
     void decreaseTimesToBuild();
     void increaseTimesOrdered() {
-        timesOrdered++;
+        m_timesOrdered++;
     }
     void decreaseTimesOrdered() {
-        timesOrdered--;
+        m_timesOrdered--;
     }
     void setSlotId(int value) {
-        slotId = value;
+        m_slotId = value;
     }
     void setPlaceIt(bool value) {
-        placeIt = value;
+        m_placeIt = value;
     }
     void setDeployIt(bool value) {
-        deployIt = value;
+        m_deployIt = value;
     }
     void setList(cBuildingList *theList) {
-        myList = theList;
+        m_myList = theList;
     }
 
     cBuildingList *getList() {
-        return myList;    // returns the list it belongs to
+        return m_myList;    // returns the list it belongs to
     }
 
     /**
@@ -210,9 +210,9 @@ public:
     void increaseProgress(int byAmount);
 
     void resetProgress() {
-        progress = 0;
-        buildFrameToDraw = 0;
-        TIMER_progressFrame = 0.0f;
+        m_progress = 0;
+        m_buildFrameToDraw = 0;
+        m_TIMER_progressFrame = 0.0f;
     }
 
     int getTotalBuildTime() const;
@@ -227,10 +227,10 @@ public:
     void resetTimesOrdered();
 
     void increaseBuildProgressFrame() {
-        buildFrameToDraw++;
+        m_buildFrameToDraw++;
     }
     int getBuildProgressFrame() {
-        return buildFrameToDraw;
+        return m_buildFrameToDraw;
     }
 
     int calculateBuildProgressFrameBasedOnBuildProgress();
@@ -257,33 +257,33 @@ public:
 
 private:
     void setProgress(int value) {
-        progress = value;
+        m_progress = value;
     }
 
-    int icon;				// the icon ID to draw (from datafile)
-    int buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
-    eBuildType type;		// .. of this type of thing (ie, UNIT or STRUCTURE)
-    int cost;				// price
-    bool building;			// building this item? (default = false)
-    eBuildingListItemState state;
-    int progress;			// progress building this item
-    int buildFrameToDraw;   // for the progress drawing
-    int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
-    int timesOrdered;		// the amount of times this item has been ordered (starport related)
-    int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
+    int m_icon;				// the icon ID to draw (from datafile)
+    int m_buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
+    eBuildType m_type;		// .. of this type of thing (ie, UNIT or STRUCTURE)
+    int m_cost;				// price
+    bool m_building;			// building this item? (default = false)
+    eBuildingListItemState m_state;
+    int m_progress;			// progress building this item
+    int m_buildFrameToDraw;   // for the progress drawing
+    int m_timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
+    int m_timesOrdered;		// the amount of times this item has been ordered (starport related)
+    int m_slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
 
-    float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
-    bool placeIt;			// when true, this item is ready for placement
-    bool deployIt;			// when true, this item is ready for deployment (FYI, super weapons)
-    bool queuable;			// when true, this item can be ordered multiple times to build
+    float m_creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
+    bool m_placeIt;			// when true, this item is ready for placement
+    bool m_deployIt;			// when true, this item is ready for deployment (FYI, super weapons)
+    bool m_queuable;			// when true, this item can be ordered multiple times to build
 
-    int subList;            // subList id's allow us to distinguish built items within the same buildingList.
+    int m_subList;            // subList id's allow us to distinguish built items within the same buildingList.
 
-    float TIMER_progressFrame; // timer used for progress drawing animation
-    int TIMER_flashing;        // if > 0 then this item is 'flashing'
-    int timerCap;           // passed in by item builder (determined by power outage, etc)
+    float m_TIMER_progressFrame; // timer used for progress drawing animation
+    int m_TIMER_flashing;        // if > 0 then this item is 'flashing'
+    int m_timerCap;           // passed in by item builder (determined by power outage, etc)
 
-    cBuildingList *myList;
+    cBuildingList *m_myList;
 
     cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList *list, int subList);
     cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList *list, int subList);
