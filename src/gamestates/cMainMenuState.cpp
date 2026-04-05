@@ -120,7 +120,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Multiplayer")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Inactive())
+            .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
             .build();
@@ -134,7 +134,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Load")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Inactive())
+            .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
             .build();
@@ -176,7 +176,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withLabel("Hall of Fame")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withTheme(GuiTheme::Inactive())
+            .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
             .build();
