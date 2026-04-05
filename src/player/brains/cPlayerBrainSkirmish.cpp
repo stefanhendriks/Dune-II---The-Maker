@@ -43,8 +43,8 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
     m_idealCarryallCount = 2 + RNG::rnd(2); // TODO: base this on difficulty setting?
     m_idealOrnisCount = RNG::rnd(5); // TODO: base this on difficulty setting?
 
-    m_myBase = std::vector<S_structurePosition>();
-    m_buildOrders = std::vector<S_buildOrder>();
+    m_myBase = std::vector<s_structurePosition>();
+    m_buildOrders = std::vector<s_buildOrder>();
     m_discoveredEnemyAtCell = std::set<int>();
     m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
     m_economyScore = 50;
@@ -88,7 +88,7 @@ void cPlayerBrainSkirmish::think()
     log("think() - FINISHED");
 }
 
-void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order)
+void cPlayerBrainSkirmish::addBuildOrder(s_buildOrder order)
 {
     // check if we can find a similar build order
     if (order.buildType == eBuildType::STRUCTURE) {
@@ -108,7 +108,7 @@ void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order)
     m_buildOrders.push_back(order);
 
     // re-order based on priority
-    std::sort(m_buildOrders.begin(), m_buildOrders.end(), [](const S_buildOrder &lhs, const S_buildOrder &rhs) {
+    std::sort(m_buildOrders.begin(), m_buildOrders.end(), [](const s_buildOrder &lhs, const s_buildOrder &rhs) {
         return lhs.priority > rhs.priority;
     });
 
@@ -221,7 +221,7 @@ void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event)
                         pStructure->getStructureInfo().name));
 
         // new structure placed, update base register
-        S_structurePosition position = {
+        s_structurePosition position = {
             .cell = pStructure->getCell(),
             .type = pStructure->getType(),
             .structureId = pStructure->getStructureId(),
@@ -244,7 +244,7 @@ void cPlayerBrainSkirmish::onMyStructureDestroyed(const s_GameEvent &event)
             // this structure got destroyed, so mark it as destroyed in my base plan
             structurePosition.isDestroyed = true;
             // and add order to rebuild it
-            addBuildOrder(S_buildOrder{
+            addBuildOrder(s_buildOrder{
                 .buildType = STRUCTURE,
                 .priority = 1,
                 .buildId = structurePosition.type,
@@ -353,7 +353,7 @@ void cPlayerBrainSkirmish::thinkState_Base()
             // add it to the build queue
 
             if (result.structureType > -1 && result.cell > -1) {
-                addBuildOrder(S_buildOrder{
+                addBuildOrder(s_buildOrder{
                     .buildType = STRUCTURE,
                     .priority = 1,
                     .buildId = result.structureType,
@@ -494,7 +494,7 @@ void cPlayerBrainSkirmish::buildUnitIfICanAndNotAlreadyQueued(int type)
 
 void cPlayerBrainSkirmish::addBuildOrderForUnit(int type)
 {
-    addBuildOrder(S_buildOrder{
+    addBuildOrder(s_buildOrder{
         .buildType = UNIT,
         .priority = 0,
         .buildId = type,
@@ -542,8 +542,8 @@ void cPlayerBrainSkirmish::produceEconomyImprovingMissions()
     if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
         if (amountOfHarvesters < idealAmountHarvesters) {
             if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER)) {
-                std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back(S_groupKind{
+                std::vector<s_groupKind> group = std::vector<s_groupKind>();
+                group.push_back(s_groupKind{
                     .buildType = UNIT,
                     .type = HARVESTER,
                     .required = 1,
@@ -560,8 +560,8 @@ void cPlayerBrainSkirmish::produceEconomyImprovingMissions()
         int idealAmountOfCarryAlls = (amountOfHarvesters/2)+1;
         if (player->getAmountOfUnitsForType(CARRYALL) < idealAmountOfCarryAlls) {
             if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL)) {
-                std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back(S_groupKind{
+                std::vector<s_groupKind> group = std::vector<s_groupKind>();
+                group.push_back(s_groupKind{
                     .buildType = UNIT,
                     .type = CARRYALL,
                     .required = 1,
@@ -578,21 +578,21 @@ void cPlayerBrainSkirmish::produceEconomyImprovingMissions()
 void cPlayerBrainSkirmish::produceSuperWeaponMissionsWhenApplicable()
 {
     if (player->couldBuildSpecial(SPECIAL_DEATHHAND) && !hasMission(SPECIAL_MISSION1)) {
-        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        std::vector<s_groupKind> group = std::vector<s_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
         addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, RNG::rnd(10), SPECIAL_MISSION1);
     }
 
     if (player->couldBuildSpecial(SPECIAL_SABOTEUR) && !hasMission(SPECIAL_MISSION2)) {
-        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        std::vector<s_groupKind> group = std::vector<s_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
         addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, RNG::rnd(10), SPECIAL_MISSION2);
     }
 
     if (player->couldBuildSpecial(SPECIAL_FREMEN) && !hasMission(SPECIAL_MISSION3)) {
-        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        std::vector<s_groupKind> group = std::vector<s_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
         addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, RNG::rnd(10), SPECIAL_MISSION3);
@@ -616,15 +616,15 @@ void cPlayerBrainSkirmish::produceMissionsWhenEnemyDetected()
 
     if (!hasMission(MISSION_GUARDFORCE) && player->canBuildUnitBool(QUAD) && player->canBuildUnitBool(TANK)) {
         // add a minimum defending force
-        std::vector<S_groupKind> group = std::vector<S_groupKind>();
-        group.push_back(S_groupKind{
+        std::vector<s_groupKind> group = std::vector<s_groupKind>();
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = QUAD,
             .required = 1,
             .ordered = 0,
             .produced = 0,
         });
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = TANK,
             .required = 2,
@@ -637,8 +637,8 @@ void cPlayerBrainSkirmish::produceMissionsWhenEnemyDetected()
     // separate mission for air attacks
     if (!hasMission(MISSION_ATTACK5)) {
         if (player->canBuildUnitBool(ORNITHOPTER)) {
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back(S_groupKind{
+            std::vector<s_groupKind> group = std::vector<s_groupKind>();
+            group.push_back(s_groupKind{
                 .buildType = UNIT,
                 .type = ORNITHOPTER,
                 .required = 1 + RNG::rnd(3),
@@ -656,8 +656,8 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
     if (player->canBuildUnitBool(scoutingUnitType)) {
         if (!hasMission(MISSION_SCOUT1)) {
             // add scouting mission
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back(S_groupKind{
+            std::vector<s_groupKind> group = std::vector<s_groupKind>();
+            group.push_back(s_groupKind{
                 .buildType = UNIT,
                 .type = scoutingUnitType,
                 .required = 1,
@@ -670,8 +670,8 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
         }
         else if (!hasMission(MISSION_SCOUT2)) {
             // add scouting mission
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back(S_groupKind{
+            std::vector<s_groupKind> group = std::vector<s_groupKind>();
+            group.push_back(s_groupKind{
                 .buildType = UNIT,
                 .type = scoutingUnitType,
                 .required = 1,
@@ -684,8 +684,8 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
         }
         else if (!hasMission(MISSION_SCOUT3)) {
             // add scouting mission
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back(S_groupKind{
+            std::vector<s_groupKind> group = std::vector<s_groupKind>();
+            group.push_back(s_groupKind{
                 .buildType = UNIT,
                 .type = scoutingUnitType,
                 .required = 1,
@@ -699,15 +699,15 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
 
     if (!hasMission(MISSION_GUARDFORCE) && player->canBuildUnitBool(QUAD) && player->canBuildUnitBool(TANK)) {
         // add defending force
-        std::vector<S_groupKind> group = std::vector<S_groupKind>();
-        group.push_back(S_groupKind{
+        std::vector<s_groupKind> group = std::vector<s_groupKind>();
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = QUAD,
             .required = 1,
             .ordered = 0,
             .produced = 0,
         });
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = TANK,
             .required = 2,
@@ -721,7 +721,7 @@ void cPlayerBrainSkirmish::produceMissionsDuringPeacetime(int scoutingUnitType)
 void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
 {
     log(std::format("produceSkirmishGroundAttackMission for mission id %d - called", missionId));
-    std::vector<S_groupKind> group = std::vector<S_groupKind>();
+    std::vector<s_groupKind> group = std::vector<s_groupKind>();
     int smallChance = 15;
     int normalChance = 50;
     int bigChance = 75;
@@ -740,7 +740,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
     }
 
     if (RNG::rnd(100) < normalChance && player->canBuildUnitBool(SIEGETANK)) {
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = SIEGETANK,
             .required = 1+RNG::rnd(4),
@@ -754,7 +754,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
         if (player->canBuildUnitBool(TROOPERS)) {
             trooperUnit = TROOPERS;
         }
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = trooperUnit,
             .required = 1 + RNG::rnd(2),
@@ -768,7 +768,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
         if (player->canBuildUnitBool(INFANTRY)) {
             infantryUnit = INFANTRY;
         }
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = infantryUnit,
             .required = 1 + RNG::rnd(2),
@@ -778,7 +778,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
     }
 
     if (RNG::rnd(100) < bigChance && player->canBuildUnitBool(LAUNCHER)) {
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = LAUNCHER,
             .required = 1+RNG::rnd(3),
@@ -788,7 +788,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
     }
 
     if (RNG::rnd(100) < bigChance && player->canBuildUnitBool(TANK)) {
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = TANK,
             .required = 1+RNG::rnd(4),
@@ -799,7 +799,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
 
     int scoutingUnitType = player->getScoutingUnitType();
     if (RNG::rnd(100) < smallChance && player->canBuildUnitBool(scoutingUnitType)) {
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = scoutingUnitType,
             .required = 1+RNG::rnd(2),
@@ -809,7 +809,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
     }
 
     if (QUAD != scoutingUnitType && player->canBuildUnitBool(QUAD) && RNG::rnd(100) < normalChance) {
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = QUAD,
             .required = 1+RNG::rnd(3),
@@ -820,7 +820,7 @@ void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int missionId)
 
     int specialType = player->getSpecialUnitType();
     if (RNG::rnd(100) < normalChance && player->canBuildUnitBool(specialType)) {
-        group.push_back(S_groupKind{
+        group.push_back(s_groupKind{
             .buildType = UNIT,
             .type = specialType,
             .required = 1+RNG::rnd(2),
@@ -841,7 +841,7 @@ bool cPlayerBrainSkirmish::hasMission(const int id)
     return hasMission;
 }
 
-void cPlayerBrainSkirmish::addMission(ePlayerBrainMissionKind kind, std::vector<S_groupKind> &group,
+void cPlayerBrainSkirmish::addMission(ePlayerBrainMissionKind kind, std::vector<s_groupKind> &group,
                                       int initialDelay,
                                       int id)
 {
@@ -1098,7 +1098,7 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
         std::remove_if(
             m_buildOrders.begin(),
             m_buildOrders.end(),
-    [](const S_buildOrder &o) {
+    [](const s_buildOrder &o) {
         return o.state == buildOrder::eBuildOrderState::REMOVEME;
     }),
     m_buildOrders.end()
@@ -1108,7 +1108,7 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
     if (player->isBuildingStructureAwaitingPlacement()) {
         int structureType = player->getStructureTypeBeingBuilt();
 
-        S_buildOrder *matchingOrder = nullptr;
+        s_buildOrder *matchingOrder = nullptr;
         for (auto &buildOrder : m_buildOrders) {
             if (buildOrder.buildType != eBuildType::STRUCTURE) {
                 continue;
@@ -1141,7 +1141,7 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
     changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_EVALUATE);
 }
 
-bool cPlayerBrainSkirmish::findNewPlaceToPlaceStructureOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem)
+bool cPlayerBrainSkirmish::findNewPlaceToPlaceStructureOrCancelBuild(s_buildOrder *pBuildOrder, cBuildingListItem *pItem)
 {
     // pick a new spot?
     int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
@@ -1158,7 +1158,7 @@ bool cPlayerBrainSkirmish::findNewPlaceToPlaceStructureOrCancelBuild(S_buildOrde
     return true;
 }
 
-void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_buildOrder *pBuildOrder,
+void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(s_buildOrder *pBuildOrder,
         cBuildingListItem *pItem,
         const s_PlaceResult &placeResult)
 {

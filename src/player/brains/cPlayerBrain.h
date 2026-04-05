@@ -34,7 +34,7 @@ public:
      */
     virtual void thinkFast() = 0;
 
-    virtual void addBuildOrder(S_buildOrder order) = 0;
+    virtual void addBuildOrder(s_buildOrder order) = 0;
 
 protected:
     cPlayer *player;
