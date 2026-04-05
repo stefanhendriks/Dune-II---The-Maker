@@ -35,11 +35,11 @@ public:
     }
 
     bool isOrderPlaced() {
-        return orderPlaced;
+        return m_orderPlaced;
     }
 
     bool isFrigateSent() {
-        return frigateSent;
+        return m_frigateSent;
     }
 
     bool hasOrderedAnything();
@@ -70,21 +70,21 @@ protected:
     int getRandomizedSecondsToWait();
 
 private:
-    cBuildingListItem *orderedItems[kMaxItemsToOrder];
-    int pricePaidForItem[kMaxItemsToOrder];
+    cBuildingListItem *m_orderedItems[kMaxItemsToOrder];
+    int m_pricePaidForItem[kMaxItemsToOrder];
 
-    cPlayer *player;
+    cPlayer *m_player;
 
-    bool orderPlaced;
+    bool m_orderPlaced;
 
     // sent frigate to deliver order
-    bool frigateSent;
-    int unitIdOfFrigateSent;
+    bool m_frigateSent;
+    int m_unitIdOfFrigateSent;
 
     // when above zero, this will be substracted by one (by the think function).
-    int secondsUntilArrival;
+    int m_secondsUntilArrival;
 
     // this is randomly set to 60 or more seconds. After the time runs out, new prices
     // will be set in the LIST_STARPORT
-    int secondsUntilNewPricesWillBeCalculated;
+    int m_secondsUntilNewPricesWillBeCalculated;
 };
