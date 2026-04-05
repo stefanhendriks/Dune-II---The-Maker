@@ -436,7 +436,8 @@ bool cBullet::damageAirUnit(int cell) const
 
     if (doesAirUnitTakeDamage(unitIdOnAirLayer)) {
         cUnit &airUnit = game.getUnit(unitIdOnAirLayer);
-        airUnit.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
+        int originUnitId = (iOwnerUnit > -1 && game.getUnit(iOwnerUnit).isValid()) ? iOwnerUnit : -1;
+        airUnit.takeDamage(iDamage, originUnitId, iOwnerStructure);
         return true;
     }
 
@@ -453,21 +454,23 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (!game.m_map.isValidCell(cell)) return false;
     int id = game.m_map.getCellIdUnitLayer(cell);
     if (id < 0) return false;
-    if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
+    if (iOwnerUnit >= 0 && id == iOwnerUnit) return false; // do not damage self
 
     cUnit &groundUnitTakingDamage = game.getUnit(id);
+    if (!groundUnitTakingDamage.isValid()) return false;
 
     float iDamage = getDamageToInflictToUnit(groundUnitTakingDamage) * factor;
-    groundUnitTakingDamage.takeDamage(iDamage, iOwnerUnit, iOwnerStructure);
+    int originUnitId = (iOwnerUnit > -1 && game.getUnit(iOwnerUnit).isValid()) ? iOwnerUnit : -1;
+    groundUnitTakingDamage.takeDamage(iDamage, originUnitId, iOwnerStructure);
 
     // this unit will think what to do now (he got hit ouchy!)
-    groundUnitTakingDamage.think_hit(iOwnerUnit, iOwnerStructure);
+    groundUnitTakingDamage.think_hit(originUnitId, iOwnerStructure);
 
     // NO HP LEFT, DIE
     if (groundUnitTakingDamage.isDead()) {
         // who is to blame for killing this unit?
-        if (iOwnerUnit > -1) {
-            cUnit &ownerUnit = game.getUnit(iOwnerUnit);
+        if (originUnitId > -1) {
+            cUnit &ownerUnit = game.getUnit(originUnitId);
             if (ownerUnit.isValid()) {
                 // TODO: update statistics
 
@@ -555,7 +558,8 @@ void cBullet::damageSandworm(int cell, double factor) const
 
     cUnit &worm = game.getUnit(id);
     float damage = getDamageToInflictToNonInfantry() * factor;
-    worm.takeDamage(damage, iOwnerUnit, iOwnerStructure);
+    int originUnitId = (iOwnerUnit > -1 && game.getUnit(iOwnerUnit).isValid()) ? iOwnerUnit : -1;
+    worm.takeDamage(damage, originUnitId, iOwnerStructure);
 }
 
 bool cBullet::isAtDestination() const
@@ -667,9 +671,11 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
     float iDamage = difficultySettings->getInflictDamage(game.bulletInfos[iType].damage_vehicles) * factor;
 
     cUnit *pUnit = nullptr;
+    int originId = -1;
     if (iOwnerUnit > -1) {
         if (game.getUnit(iOwnerUnit).isValid()) {
             pUnit = &game.getUnit(iOwnerUnit);
+            originId = iOwnerUnit;
         }
     }
 
@@ -683,7 +689,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
         return; // invalid pointer!
     }
 
-    pStructure->damage(iDamage, iOwnerUnit);
+    pStructure->damage(iDamage, originId);
 
     if (pStructure->isDead()) {
         if (pUnit) {
