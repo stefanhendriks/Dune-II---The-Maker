@@ -15,7 +15,7 @@ void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
         if (!pParticle.isWithinViewport(viewport)) continue;
 
         if (pParticle.getLayer() == RenderLayerParticle::BOTTOM) {
-            m_particlesTopLayer.push_back(i);
+            m_particlesLowerLayer.push_back(i);
         }
         else if (pParticle.getLayer() == RenderLayerParticle::TOP) {
             m_particlesTopLayer.push_back(i);
