@@ -3,6 +3,7 @@
 #include "definitions.h"
 
 #include <ctime>
+#include <iostream>
 #include <system_error>
 
 namespace {

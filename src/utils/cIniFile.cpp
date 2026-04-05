@@ -1,6 +1,7 @@
 #include "cIniFile.h"
 #include "utils/cLog.h"
 #include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <format>
 #include <algorithm>
@@ -245,7 +246,7 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
     }
     else {
         if (m_debugMode) {
-            std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
+            //std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
             cLogger *logger = cLogger::getInstance();
             logger->log(LOG_ERROR, COMP_GAMERULES, "(cIniFile)",
                         std::format(" getStringValue section {} didn't exist", section));
