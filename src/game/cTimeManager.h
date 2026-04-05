@@ -30,7 +30,7 @@ public:
     // returns the current FPS
     int getFps() const;
     // return time to wait for CPU
-    int getWaitingTime() const { return waitingTime; }
+    int getWaitingTime() const { return m_waitingTime; }
     // wait for CPU to catch up
     void waitForCPU();
     // get after 1s the FPS
@@ -88,8 +88,8 @@ private:
 
     int m_gameTime = 0;         // Definition of game time (= in seconds)
     int m_fps = 0;			    // Frames per second
-    int frameCount = 0;		    // Frame count for FPS calculation
-    int waitingTime = 10;	    // Waiting time in ms, used to adapt FPS
+    int m_frameCount = 0;	    // Frame count for FPS calculation
+    int m_waitingTime = 10;	    // Waiting time in ms, used to adapt FPS
     int m_focusLostTime = 0;    // Time when focus was lost, used to calculate time to catch up when focus is regained
 
     std::unique_ptr<cTimeCounter> m_timeCounter;

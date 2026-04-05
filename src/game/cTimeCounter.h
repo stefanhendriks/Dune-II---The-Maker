@@ -14,6 +14,6 @@ public:
     void addTime(uint64_t delta);
 
 private:
-    uint64_t durationTimer = 0;
-    bool isPartyTimer = false;
+    uint64_t m_durationTimer = 0;
+    bool m_isPartyTimer = false;
 };

@@ -1,37 +1,37 @@
 #include "game/cTimeCounter.h"
 
 cTimeCounter::cTimeCounter()
-        : durationTimer(0), isPartyTimer(false)
+        : m_durationTimer(0), m_isPartyTimer(false)
 {}
- 
+
 cTimeCounter::~cTimeCounter()
 {}
 
 void cTimeCounter::start()
 {
-    isPartyTimer = true;
-    durationTimer = 0;
+    m_isPartyTimer = true;
+    m_durationTimer = 0;
 }
 
 void cTimeCounter::pause()
 {
-    isPartyTimer = false;
+    m_isPartyTimer = false;
 }
 
 void cTimeCounter::restart()
 {
-    isPartyTimer = true;
+    m_isPartyTimer = true;
 }
 
 void  cTimeCounter::addTime(uint64_t delta)
 {
-    if (isPartyTimer) {
-        durationTimer += delta;
+    if (m_isPartyTimer) {
+        m_durationTimer += delta;
     }
 }
 
 
 uint64_t cTimeCounter::getTime() const
 {
-    return durationTimer;
+    return m_durationTimer;
 }
