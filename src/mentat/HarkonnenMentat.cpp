@@ -30,7 +30,7 @@ HarkonnenMentat::HarkonnenMentat(GameContext* ctx, bool allowMissionSelect) : Ab
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([this]() {
+            .onClick([]() {
                 logbook("cYesButtonCommand::changeStateFromMentat()");
                 game.changeStateFromMentat();})
             .build();

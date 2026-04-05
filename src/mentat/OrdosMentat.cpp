@@ -29,7 +29,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([this]() {
+            .onClick([]() {
                 logbook("cYesButtonCommand::changeStateFromMentat()");
                 game.changeStateFromMentat();})
             .build();

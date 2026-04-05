@@ -160,14 +160,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     maxMapsInSelectAreaVertically = selectArea.getHeight() / (mapItemButtonHeight+5);
     maxMapsInSelectArea = maxMapsInSelectAreaHorizontally * maxMapsInSelectAreaVertically;
 
-    // Stefan: Pages are computed here
-    int qMaps = m_previewMaps->getMapCount() / maxMapsInSelectArea;
-    int rMaps = m_previewMaps->getMapCount() % maxMapsInSelectArea;
-    if (rMaps > 0) {
-        qMaps++;
-    }
-
-    nextFunction = [this, qMaps]() {
+    nextFunction = [this]() {
         // Go to the next map
         int intendedNextStartIndex = mapStartingIndexToDisplay + maxMapsInSelectArea;
         if (intendedNextStartIndex <= m_previewMaps->getMapCount()) {
