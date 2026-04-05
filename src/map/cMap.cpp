@@ -39,13 +39,13 @@
 
 cMap::cMap()
 {
-    TIMER_scroll = 0;
-    iScrollSpeed = 1;
-    maxCells = 0;
+    m_TIMER_scroll = 0;
+    m_iScrollSpeed = 1;
+    m_maxCells = 0;
     m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
-    mapGeometry = std::make_unique<MapGeometry>(64,64);
+    m_mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
     m_terrainInfo = nullptr;
 }
@@ -66,7 +66,7 @@ cMap::~cMap()
 
 MapGeometry &cMap::getGeometry() const
 {
-    return *mapGeometry;
+    return *m_mapGeometry;
 }
 
 void cMap::setGameContext(GameContext* ctx)
@@ -101,8 +101,8 @@ void cMap::init(int width, int height)
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
 
-    maxCells = width * height;
-    cell = std::vector<tCell>(maxCells, tCell());
+    m_maxCells = width * height;
+    m_cell = std::vector<tCell>(m_maxCells, tCell());
 
     // clear out all cells
     clearAllCells();
@@ -121,12 +121,12 @@ void cMap::init(int width, int height)
         game.getUnit(i).init(i);
     }
 
-    TIMER_scroll = 0;
-    iScrollSpeed = 1;
+    m_TIMER_scroll = 0;
+    m_iScrollSpeed = 1;
 
-    this->width = width;
-    this->height = height;
-    mapGeometry->resize(this->width,this->height);
+    m_width = width;
+    m_height = height;
+    m_mapGeometry->resize(m_width, m_height);
 }
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)
@@ -163,7 +163,7 @@ void cMap::smudge_increase(SmudgeType iType, int iCell)
  */
 bool cMap::occupiedByWallOrMountain(int iCell)
 {
-    if (iCell < 0 || iCell >= maxCells) return false;
+    if (iCell < 0 || iCell >= m_maxCells) return false;
 
     if (getCellType(iCell) == TERRAIN_WALL) return true;
     if (getCellType(iCell) == TERRAIN_MOUNTAIN) return true;
@@ -176,7 +176,7 @@ bool cMap::occupiedInDimension(int iCell, int dimension)
     if (!isValidCell(iCell)) return false;
     if (dimension < 0 || dimension >= MAPID_MAX) return false;
 
-    return cell[iCell].id[dimension] > -1;
+    return m_cell[iCell].id[dimension] > -1;
 }
 
 bool cMap::occupiedByUnit(int iCell)
@@ -192,7 +192,7 @@ bool cMap::occupiedByUnit(int iCell)
  */
 bool cMap::occupied(int iCell)
 {
-    if (iCell < 0 || iCell >= maxCells) return false;
+    if (iCell < 0 || iCell >= m_maxCells) return false;
 
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
@@ -397,8 +397,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     int totalSpiceBloomsCount = blooms.size();
 
     // When no blooms are detected, we must 'spawn' one
-    // @mira: do better than width*height>64*64
-    int desiredAmountOfSpiceBloomsInMap = (width*height>64*64) ? 6 : 3;
+    // @mira: do better than m_width*m_height>64*64
+    int desiredAmountOfSpiceBloomsInMap = (m_width*m_height>64*64) ? 6 : 3;
 
     if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
         // randomly create a new spice bloom somewhere on the map
@@ -455,8 +455,8 @@ void cMap::draw_bullets()
 
 void cMap::clear_all(int playerId)
 {
-    for (int c = 0; c < maxCells; c++) {
-        cell[c].iVisible[playerId] = true;
+    for (int c = 0; c < m_maxCells; c++) {
+        m_cell[c].iVisible[playerId] = true;
     }
 }
 
@@ -536,8 +536,8 @@ void cMap::clearShroud(int c, int size, int playerId)
 void cMap::remove_id(int iIndex, int iIDType)
 {
     // Search through the entire map and remove the id
-    for (int iCell = 0; iCell < maxCells; iCell++) {
-        tCell &tCell = cell[iCell];
+    for (int iCell = 0; iCell < m_maxCells; iCell++) {
+        tCell &tCell = m_cell[iCell];
         if (tCell.id[iIDType] == iIndex) {
             tCell.id[iIDType] = -1;
         }
@@ -690,7 +690,7 @@ int cMap::getTotalCountCellType(int cellType)
 std::vector<int> cMap::getAllCellsOfType(int cellType)
 {
     std::vector<int> cellsOfType = std::vector<int>();
-    for (int c = 0; c < maxCells; c++) {
+    for (int c = 0; c < m_maxCells; c++) {
         if (getCellType(c) == cellType) {
             cellsOfType.push_back(c);
         }
@@ -727,14 +727,14 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     int cll = -1;
 
     // HORIZONTAL cells
-    for (int iX = 0; iX < width; iX++) {
+    for (int iX = 0; iX < m_width; iX++) {
         // check when Y = 0 (top)
         tDistance = distance(iX, 0, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = mapGeometry->makeCell(iX, 0);
+            cll = m_mapGeometry->makeCell(iX, 0);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
@@ -742,12 +742,12 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when Y = map_height (bottom)
-        tDistance = distance(iX, height - 1, iCllX, iCllY);
+        tDistance = distance(iX, m_height - 1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = mapGeometry->makeCell(iX, height - 1);
+            cll = m_mapGeometry->makeCell(iX, m_height - 1);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
@@ -756,26 +756,26 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     }
 
     // VERTICAL cells
-    for (int iY = 0; iY < height; iY++) {
+    for (int iY = 0; iY < m_height; iY++) {
         // check when X = 0 (left)
         tDistance = distance(0, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = mapGeometry->makeCell(0, iY);
+            cll = m_mapGeometry->makeCell(0, iY);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
             }
         }
 
-        // check when XY = map_width (bottom)
-        tDistance = distance(width - 1, iY, iCllX, iCllY);
+        // check when XY = map_m_width (bottom)
+        tDistance = distance(m_width - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
-            cll = mapGeometry->makeCell(width - 1, iY);
+            cll = m_mapGeometry->makeCell(m_width - 1, iY);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
@@ -797,20 +797,20 @@ double cMap::distance(int x1, int y1, int x2, int y2)  //rip
 
 int cMap::getCellY(int c) const//rip
 {
-    if (c < 0 || c >= maxCells) {
+    if (c < 0 || c >= m_maxCells) {
         return -1;
     }
 
-    return (c / width);
+    return (c / m_width);
 }
 
 int cMap::getCellX(int c) const//rip
 {
-    if (c < 0 || c >= maxCells) {
+    if (c < 0 || c >= m_maxCells) {
         return -1;
     }
 
-    int cellX = c - ((c / width) * width);
+    int cellX = c - ((c / m_width) * m_width);
     return cellX;
 }
 
@@ -833,7 +833,7 @@ bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell)
 int cMap::getCellLowerRight(int c)
 {
     int lowerRightCell = getCellBelow(c) + 1;
-    if (lowerRightCell >= maxCells) return -1;
+    if (lowerRightCell >= m_maxCells) return -1;
     if (lowerRightCell < 0) return -1;
 
     return lowerRightCell;
@@ -843,7 +843,7 @@ int cMap::getCellLowerLeft(int c)
 {
     int lowerLeftCell = getCellBelow(c) - 1;
     if (lowerLeftCell < 0) return -1;
-    if (lowerLeftCell >= maxCells) return -1;
+    if (lowerLeftCell >= m_maxCells) return -1;
     return lowerLeftCell;
 }
 
@@ -867,8 +867,8 @@ int cMap::getCellRight(int c)
 {
     int x = getCellX(c);
     int cellRight = x + 1;
-    if (cellRight >= maxCells) return -1;
-    if (cellRight >= width) return -1;
+    if (cellRight >= m_maxCells) return -1;
+    if (cellRight >= m_width) return -1;
 
     return c + 1;
 }
@@ -885,8 +885,8 @@ int cMap::getCellLeft(int c)
 int cMap::getCellBelow(int c)
 {
     if (c < 0) return -1;
-    int cellBelow = c + width;
-    if (cellBelow >= maxCells)
+    int cellBelow = c + m_width;
+    if (cellBelow >= m_maxCells)
         return -1;
 
     return cellBelow;
@@ -895,7 +895,7 @@ int cMap::getCellBelow(int c)
 int cMap::getCellAbove(int c)
 {
     if (c < 0) return -1;
-    int cellAbove = c - width;
+    int cellAbove = c - m_width;
 
     if (cellAbove < 0) return -1;
 
@@ -937,14 +937,14 @@ double cMap::distance(int cell1, int cell2) //rip
 int cMap::getMaxDistanceInPixels() const {
     int tileWidth = 32;
     int tileHeight = 32;
-    int maxWidthDistance = width * tileWidth;
-    int maxHeightDistance = height * tileHeight;
+    int maxWidthDistance = m_width * tileWidth;
+    int maxHeightDistance = m_height * tileHeight;
     return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
 }
 
 bool cMap::isValidCell(int c) const //rip
 {
-    return !(c < 0 || c >= maxCells);
+    return !(c < 0 || c >= m_maxCells);
 }
 
 /**
@@ -953,7 +953,7 @@ bool cMap::isValidCell(int c) const //rip
  */
 int cMap::getRandomCell() //rip
 {
-    return RNG::rnd(maxCells);
+    return RNG::rnd(m_maxCells);
 }
 
 void cMap::createCell(int cell, int terrainType, int tile)
@@ -1032,11 +1032,11 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
 int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) const //rip
 {
     // distance = 2
-    // width = 64
+    // m_width = 64
     // => 2 + (64 - 4) => 2 + (...60) = min 2, max 62
-    return mapGeometry->getCellWithMapBorders(
-               distance + RNG::rnd(width - (distance * 2)),
-               distance + RNG::rnd(height - (distance * 2))
+    return m_mapGeometry->getCellWithMapBorders(
+               distance + RNG::rnd(m_width - (distance * 2)),
+               distance + RNG::rnd(m_height - (distance * 2))
            );
 }
 
@@ -1056,7 +1056,7 @@ void cMap::setVisible(int iCell, int iPlayer, bool flag)
     if (!isValidCell(iCell)) return;
     if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return;
 
-    cell[iCell].iVisible[iPlayer] = flag;
+    m_cell[iCell].iVisible[iPlayer] = flag;
 }
 
 int cMap::findNearestSpiceBloom(int iCell)
@@ -1148,7 +1148,7 @@ int cMap::getRandomCellFrom(int cell, int distance) //rip
     int yDir = RNG::rnd(100) < 50 ? -1 : 1;
     int newX = (startX - distance) + (xDir * distance);
     int newY = (startY - distance) + (yDir * distance);
-    return mapGeometry->getCellWithMapBorders(newX, newY);
+    return m_mapGeometry->getCellWithMapBorders(newX, newY);
 }
 
 /**
@@ -1164,7 +1164,7 @@ int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) //rip
     int startY = getCellY(cell);
     int newX = (startX - distance) + (RNG::rnd(distance * 2));
     int newY = (startY - distance) + (RNG::rnd(distance * 2));
-    return mapGeometry->getCellWithMapBorders(newX, newY);
+    return m_mapGeometry->getCellWithMapBorders(newX, newY);
 }
 
 /**
@@ -1208,8 +1208,8 @@ bool cMap::isAtMapBoundaries(int cell)  //rip
     bool validCell = isValidCell(cell);
     if (!validCell) return false;
 
-    int maxHeight = (height - 2); // hence the -2!
-    int maxWidth = (width - 2);
+    int maxHeight = (m_height - 2); // hence the -2!
+    int maxWidth = (m_width - 2);
 
     int x = getCellX(cell);
     int y = getCellY(cell);

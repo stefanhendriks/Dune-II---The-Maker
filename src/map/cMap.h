@@ -139,8 +139,8 @@ public:
         //     x = 0  ...  0 > 0 ? no
         //     x = 1  ...  1 > 0 ? yes, in bounds
 
-        return  x > 0 && x <= (width-2) &&
-                y > 0 && y <= (height -2);
+        return  x > 0 && x <= (m_width-2) &&
+                y > 0 && y <= (m_height -2);
     }
 
     double distance(int x1, int y1, int x2, int y2);
@@ -182,8 +182,8 @@ public:
      */
     tCell *getCell(int cellNr) {
         if (cellNr < 0) return nullptr;
-        if (cellNr >= maxCells) return nullptr;
-        return &cell[cellNr];
+        if (cellNr >= m_maxCells) return nullptr;
+        return &m_cell[cellNr];
     }
 
     int getCellType(int cellNr) {
@@ -395,7 +395,7 @@ public:
     bool isVisible(int iCell, int iPlayer) {
         if (!isValidCell(iCell)) return false;
         if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
-        return cell[iCell].iVisible[iPlayer];
+        return m_cell[iCell].iVisible[iPlayer];
     }
 
     /**
@@ -426,7 +426,7 @@ public:
      * @return
      */
     int getHeight() const {
-        return height;
+        return m_height;
     }
 
     /**
@@ -434,7 +434,7 @@ public:
      * @return
      */
     int getWidth() const {
-        return width;
+        return m_width;
     }
 
     int getMaxDistanceInPixels() const;
@@ -465,7 +465,7 @@ public:
     int getRandomCell();
 
     int getMaxCells() const {
-        return maxCells;
+        return m_maxCells;
     }
 
     void createCell(int cell, int terrainType, int tile);
@@ -538,11 +538,11 @@ public:
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
-    std::vector<tCell> cell;
+    std::vector<tCell> m_cell;
     GameContext *m_ctx = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
 
-    std::unique_ptr<MapGeometry> mapGeometry;
+    std::unique_ptr<MapGeometry> m_mapGeometry;
 
     // Spice Blooms related
     bool m_bAutoSpawnSpiceBlooms;
@@ -557,13 +557,13 @@ private:
     int m_iTIMER_respawnSandworms;
 
     // Scrolling around map, timer based
-    int TIMER_scroll;
-    int iScrollSpeed;
+    int m_TIMER_scroll;
+    int m_iScrollSpeed;
 
     // sizes of the map (outer limits, including the invisible map boundaries)
-    int height, width;
+    int m_height, m_width;
 
-    int maxCells;
+    int m_maxCells;
 
     void drawUnitDebug(cUnit &pUnit) const;
 
