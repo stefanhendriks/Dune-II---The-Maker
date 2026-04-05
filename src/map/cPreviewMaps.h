@@ -35,26 +35,26 @@ public:
 
     s_PreviewMap &getMap(int i) {
         if (i > MAX_SKIRMISHMAPS) {
-            return PreviewMap[0];
+            return m_PreviewMap[0];
         }
-        return PreviewMap[i];
+        return m_PreviewMap[i];
     }
 
     std::string getMapSize(int i) const;
     int getMapCount() const {
-        return numberOfMaps+1;
+        return m_numberOfMaps+1;
     }
 
-    static s_PreviewMap createEmptyMap(const std::string &name, const std::string &author, 
+    static s_PreviewMap createEmptyMap(const std::string &name, const std::string &author,
             const std::string &desciption, int width, int height);
 
 private:
     void loadSkirmish(const std::string &filename);
     void initRandomMap();
     void initPreviews();
-    int numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array PreviewMap?
+    int m_numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array m_PreviewMap?
 
-    std::array<s_PreviewMap, MAX_SKIRMISHMAPS> PreviewMap;
+    std::array<s_PreviewMap, MAX_SKIRMISHMAPS> m_PreviewMap;
     SDLDrawer * m_renderDrawer;
     bool m_debugMode;
 };
