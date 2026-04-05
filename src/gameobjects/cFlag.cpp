@@ -9,34 +9,34 @@
 #include <cassert>
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
-    : absCoords(absCoords)
-    , player(player)
-    , TIMER_animate(0)
-    , big(true)
-    , animationDelay(animationDelay)
-    , frames(frames)
-    , frame(0)
+    : m_absCoords(absCoords)
+    , m_player(player)
+    , m_TIMER_animate(0)
+    , m_big(true)
+    , m_animationDelay(animationDelay)
+    , m_frames(frames)
+    , m_frame(0)
 {
     assert(player != nullptr);
 }
 
 void cFlag::draw()
 {
-    Texture *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
+    Texture *flagBitmap = m_big? m_player->getFlagBitmap() : m_player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
-    int drawX = game.m_mapCamera->getWindowXPosition(absCoords.x);
-    int drawY = game.m_mapCamera->getWindowYPosition(absCoords.y);
+    int drawX = game.m_mapCamera->getWindowXPosition(m_absCoords.x);
+    int drawY = game.m_mapCamera->getWindowYPosition(m_absCoords.y);
 
     if ((drawX >= 0 && drawX < game.m_screenW) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
 
         int pixelWidth = flagBitmap->w;
-        int pixelHeight = flagBitmap->h / frames; // frames in a flag
+        int pixelHeight = flagBitmap->h / m_frames; // frames in a flag
 
         // The Y coordinates determine what frame is being drawn.
         // So multiply the height of the flag size times frame
-        int iSourceY = pixelHeight * frame;
+        int iSourceY = pixelHeight * m_frame;
 
         int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
         int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
@@ -49,11 +49,11 @@ void cFlag::draw()
 
 void cFlag::thinkFast()
 {
-    TIMER_animate++;
-    if (TIMER_animate > animationDelay) {
-        frame++;
-        if (frame > (frames-1)) frame = 0;
-        TIMER_animate = 0;
+    m_TIMER_animate++;
+    if (m_TIMER_animate > m_animationDelay) {
+        m_frame++;
+        if (m_frame > (m_frames-1)) m_frame = 0;
+        m_TIMER_animate = 0;
     }
 }
 
