@@ -32,7 +32,7 @@ private:
     SDLDrawer* m_renderDrawer;
     Graphics *m_gfxinter;
     Graphics *m_gfxdata;
-    cStructureUtils structureUtils;
+    cStructureUtils m_structureUtils;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
     void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;

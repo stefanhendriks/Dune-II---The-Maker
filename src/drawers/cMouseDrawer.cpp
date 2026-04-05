@@ -14,12 +14,12 @@
 #include <algorithm>
 #include <cassert>
 
-cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : player(thePlayer)
+cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_player(thePlayer)
 {
     assert(thePlayer != nullptr);
     assert(textDrawer != nullptr);
-    mouseX = mouseY = 0;
-    textWriter = new cTextWriter(textDrawer,12);
+    m_mouseX = m_mouseY = 0;
+    m_textWriter = new cTextWriter(textDrawer,12);
 }
 
 void cMouseDrawer::draw()
@@ -29,7 +29,7 @@ void cMouseDrawer::draw()
 
 int cMouseDrawer::getDrawXToolTip(int width)
 {
-    int x = mouseX + 32;
+    int x = m_mouseX + 32;
 
     // correct drawing position so it does not fall off screen.
     int diffX = (x + width) - game.m_screenW;
@@ -41,7 +41,7 @@ int cMouseDrawer::getDrawXToolTip(int width)
 
 int cMouseDrawer::getDrawYToolTip(int height)
 {
-    int y = mouseY + 32;
+    int y = m_mouseY + 32;
 
     // correct drawing position so it does not fall off screen.
     int diffY = (y + height) - game.m_screenH;
@@ -53,7 +53,7 @@ int cMouseDrawer::getDrawYToolTip(int height)
 
 int cMouseDrawer::getWidthToolTip()
 {
-    cGameControlsContext *context = player->getGameControlsContext();
+    cGameControlsContext *context = m_player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
         return 250;
@@ -64,7 +64,7 @@ int cMouseDrawer::getWidthToolTip()
 
 int cMouseDrawer::getHeightToolTip()
 {
-    cGameControlsContext *context = player->getGameControlsContext();
+    cGameControlsContext *context = m_player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
@@ -108,10 +108,10 @@ void cMouseDrawer::drawToolTip()
     int x = getDrawXToolTip(width);
     int y = getDrawYToolTip(height);
 
-    cGameControlsContext *context = player->getGameControlsContext();
+    cGameControlsContext *context = m_player->getGameControlsContext();
 
     if (context->isMouseOverStructure()) {
-        textWriter->moveTo(x + 2, y + 2);
+        m_textWriter->moveTo(x + 2, y + 2);
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
 
         drawToolTipBackground();
@@ -135,7 +135,7 @@ void cMouseDrawer::drawToolTip()
 
 void cMouseDrawer::drawToolTipBackground()
 {
-    cGameControlsContext *context = player->getGameControlsContext();
+    cGameControlsContext *context = m_player->getGameControlsContext();
 
     int width = getWidthToolTip();
     int height = getHeightToolTip();
@@ -143,7 +143,7 @@ void cMouseDrawer::drawToolTipBackground()
     int x = getDrawXToolTip(width);
     int y = getDrawYToolTip(height);
 
-    Color color = player->getMinimapColor();
+    Color color = m_player->getMinimapColor();
 
     if (context->isMouseOverStructure()) {
         cAbstractStructure *theStructure = context->getStructurePointerWhereMouseHovers();
@@ -172,13 +172,13 @@ void cMouseDrawer::drawToolTipBackground()
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure)
 {
     assert(theStructure);
-    if (theStructure->belongsTo(player)) {
-        textWriter->write(std::format("Sight : {}", theStructure->getSight()));
-        textWriter->write(std::format("Range : {}", theStructure->getRange()));
+    if (theStructure->belongsTo(m_player)) {
+        m_textWriter->write(std::format("Sight : {}", theStructure->getSight()));
+        m_textWriter->write(std::format("Range : {}", theStructure->getRange()));
     }
     else {
-        textWriter->write("Sight : Unknown");
-        textWriter->write("Range : Unknown");
+        m_textWriter->write("Sight : Unknown");
+        m_textWriter->write("Range : Unknown");
     }
 }
 
@@ -194,10 +194,10 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
     else {
         description=std::format("{}", structureType.name);
     }
-    textWriter->write(description.c_str(), Color{255, 255, 0,255});
-    textWriter->writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());
-    textWriter->writef("Armor : {}", theStructure->getArmor());
-    textWriter->writef("Protected : {}%%", (100-theStructure->getPercentageNotPaved()));
+    m_textWriter->write(description.c_str(), Color{255, 255, 0,255});
+    m_textWriter->writef("Hitpoints : {}/{}", theStructure->getHitPoints(), theStructure->getMaxHP());
+    m_textWriter->writef("Armor : {}", theStructure->getArmor());
+    m_textWriter->writef("Protected : {}%%", (100-theStructure->getPercentageNotPaved()));
 }
 
 void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap)
@@ -208,16 +208,16 @@ void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap)
         int powerUse = theWindTrap->getPlayer()->getPowerUsage();
 
         if (powerUse <= powerOut) {
-            textWriter->writef("Total usage : {}/{} (OK)", powerUse, powerOut);
+            m_textWriter->writef("Total usage : {}/{} (OK)", powerUse, powerOut);
         }
         else {
-            textWriter->writef("Total usage : {}/{} (LOW)", powerUse, powerOut);
+            m_textWriter->writef("Total usage : {}/{} (LOW)", powerUse, powerOut);
         }
-        textWriter->writef("Windtrap outage : {}/{}", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
+        m_textWriter->writef("Windtrap outage : {}/{}", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
     }
     else {
-        textWriter->write("Total usage : Unknown");
-        textWriter->write("Windtrap outage : Unknown");
+        m_textWriter->write("Total usage : Unknown");
+        m_textWriter->write("Windtrap outage : Unknown");
     }
 }
 
@@ -244,22 +244,22 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure)
         int maxSpice = thePlayer->getMaxCredits();
         int currentSpice =  thePlayer->getCredits();
         if (currentSpice <= maxSpice) {
-            textWriter->writef("Total usage : {}/{} (OK)", currentSpice, maxSpice);
+            m_textWriter->writef("Total usage : {}/{} (OK)", currentSpice, maxSpice);
         }
         else {
-            textWriter->writef("Total usage : {}/{} (NOK)", currentSpice, maxSpice);
+            m_textWriter->writef("Total usage : {}/{} (NOK)", currentSpice, maxSpice);
         }
-        textWriter->writef("Silo capacity : {}/{}", spiceCapacityOfStructure, 1000);
+        m_textWriter->writef("Silo capacity : {}/{}", spiceCapacityOfStructure, 1000);
     }
     else {
-        textWriter->write("Spice usage : Unknown");
+        m_textWriter->write("Spice usage : Unknown");
     }
 }
 
 void cMouseDrawer::onMouseAt(const s_MouseEvent &event)
 {
-    this->mouseX = event.coords.x;
-    this->mouseY = event.coords.y;
+    this->m_mouseX = event.coords.x;
+    this->m_mouseY = event.coords.y;
 }
 
 void cMouseDrawer::onNotify(const s_MouseEvent &event)
