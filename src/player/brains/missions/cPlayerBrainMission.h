@@ -44,7 +44,7 @@ enum ePlayerBrainMissionState {
 
 };
 
-struct S_groupKind {
+struct s_groupKind {
     /**
      * Which kind of thing to build? (UNIT/STRUCTURE/SPECIAL?)
      */
@@ -83,7 +83,7 @@ class cPlayerBrainMission : public cScenarioObserver {
 public:
 
     cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind, cPlayerBrain *brain,
-                        std::vector<S_groupKind> group, int initialDelay, int uniqueId);
+                        std::vector<s_groupKind> group, int initialDelay, int uniqueId);
 
     ~cPlayerBrainMission() override;
 
@@ -143,7 +143,7 @@ private:
     std::vector<int> units;
 
     // the desired group of units
-    std::vector<S_groupKind> group;
+    std::vector<s_groupKind> group;
 
     void thinkState_InitialDelay();
 

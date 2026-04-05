@@ -90,7 +90,7 @@ void cPlayerBrainFremenSuperWeapon::onNotifyGameEvent(const s_GameEvent &)
     // not interested
 }
 
-void cPlayerBrainFremenSuperWeapon::addBuildOrder(S_buildOrder)
+void cPlayerBrainFremenSuperWeapon::addBuildOrder(s_buildOrder)
 {
 
 }

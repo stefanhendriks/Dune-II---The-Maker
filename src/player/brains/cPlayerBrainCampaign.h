@@ -31,7 +31,7 @@ public:
 
     void onNotifyGameEvent(const s_GameEvent &event) override;
 
-    void addBuildOrder(S_buildOrder order) override;
+    void addBuildOrder(s_buildOrder order) override;
 
     void log(const std::string &txt);
 
@@ -46,8 +46,8 @@ private:
     std::set<int> m_discoveredEnemyAtCell;
 
     std::vector<cPlayerBrainMission> m_missions;
-    std::vector<S_structurePosition> m_myBase;
-    std::vector<S_buildOrder> m_buildOrders;
+    std::vector<s_structurePosition> m_myBase;
+    std::vector<s_buildOrder> m_buildOrders;
 
     int m_centerOfBaseCell;
 
@@ -117,7 +117,7 @@ private:
 
     void produceMissions();
 
-    void addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group, int initialDelay,
+    void addMission(ePlayerBrainMissionKind kind, const std::vector<s_groupKind> &group, int initialDelay,
                     int id);
 
     bool hasMission(const int id);

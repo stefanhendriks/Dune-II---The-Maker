@@ -18,7 +18,7 @@ void cPlayerBrainEmpty::onNotifyGameEvent(const s_GameEvent &)
     // NOOP
 }
 
-void cPlayerBrainEmpty::addBuildOrder(S_buildOrder)
+void cPlayerBrainEmpty::addBuildOrder(s_buildOrder)
 {
     // NOOP
 }
