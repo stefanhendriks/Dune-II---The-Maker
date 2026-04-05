@@ -1925,6 +1925,10 @@ int cUnit::getNextCellToMoveTo()
 // ouch, who shot me?
 void cUnit::think_hit(int iShotUnit, int iShotStructure)
 {
+    if (!isValid()) {
+        return;
+    }
+
     if (isDead()) {
         // I've died , so don't bother
         return;
@@ -1937,6 +1941,9 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
     if (iShotUnit > -1) {
         cUnit &unitWhoShotMe = game.getUnit(iShotUnit);
+        if (!unitWhoShotMe.isValid()) {
+            return;
+        }
         if (unitWhoShotMe.getPlayer()->isSameTeamAs(getPlayer())) return; // ignore friendly fire
 
         bool unitWhoShotMeIsInfantry = unitWhoShotMe.isInfantryUnit();
