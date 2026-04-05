@@ -17,30 +17,27 @@
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
 #include <format>
+#include <cassert>
 
 cUnits::cUnits() {
     // Units will be initialized through default constructors of std::array
 }
 
-cUnit& cUnits::operator[](int index) {
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
-        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMEOBJECTS, "cUnits::operator[]", 
-            std::format("Invalid unit index: {}", index));
-        return m_units[0];  // Return first unit as fallback
-    }
+cUnit& cUnits::operator[](int index)
+{
+    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return m_units[index];
 }
 
-const cUnit& cUnits::operator[](int index) const {
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
-        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMEOBJECTS, "cUnits::operator[] const", 
-            std::format("Invalid unit index: {}", index));
-        return m_units[0];  // Return first unit as fallback
-    }
+const cUnit& cUnits::operator[](int index) const
+{
+    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return m_units[index];
 }
 
-cUnit* cUnits::getUnit(int index) {
+cUnit* cUnits::getUnit(int index)
+{
+    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         return nullptr;
     }
@@ -48,6 +45,7 @@ cUnit* cUnits::getUnit(int index) {
 }
 
 const cUnit* cUnits::getUnit(int index) const {
+    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         return nullptr;
     }
