@@ -461,8 +461,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
     }
     // force move?
 
-    bool controlPressed = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
-    if (controlPressed && event.hasKey(SDL_SCANCODE_Z)) {
+    if (event.isCtrlPressed() && event.hasKey(SDL_SCANCODE_Z)) {
         if (m_selectedUnits.size() == 1) {
             cUnit &pUnit = game.getUnit(m_selectedUnits[0]);
             selectSameUnitsOnScreen(pUnit.iType);
