@@ -19,28 +19,28 @@
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
 {
     assert(thePlayer);
-    player = thePlayer;
-    orderPlaced = false;
-    frigateSent = false;
-    secondsUntilArrival = -1;
-    secondsUntilNewPricesWillBeCalculated = 1; // initially randomize prices immediately
-    memset(pricePaidForItem, -1, sizeof(pricePaidForItem));
+    m_player = thePlayer;
+    m_orderPlaced = false;
+    m_frigateSent = false;
+    m_secondsUntilArrival = -1;
+    m_secondsUntilNewPricesWillBeCalculated = 1; // initially randomize prices immediately
+    memset(m_pricePaidForItem, -1, sizeof(m_pricePaidForItem));
     removeAllItems();
     updatePricesForStarport();
-    unitIdOfFrigateSent = -1;
+    m_unitIdOfFrigateSent = -1;
 }
 
 cOrderProcesser::~cOrderProcesser()
 {
     removeAllItems();
-    player = nullptr;
+    m_player = nullptr;
 }
 
 cBuildingListItem *cOrderProcesser::getItemToDeploy()
 {
     for (int i = 0; i < kMaxItemsToOrder; i++) {
-        if (orderedItems[i] != nullptr) {
-            return orderedItems[i];
+        if (m_orderedItems[i] != nullptr) {
+            return m_orderedItems[i];
         }
     }
     return nullptr;
@@ -59,14 +59,14 @@ void cOrderProcesser::markOrderAsDeployed(cBuildingListItem *item)
     int slot = getSlotForItem(item);
     assert(slot > -1);
     // remove item from the ordered items
-    orderedItems[slot] = nullptr;
-    pricePaidForItem[slot] = -1;
+    m_orderedItems[slot] = nullptr;
+    m_pricePaidForItem[slot] = -1;
 }
 
 bool cOrderProcesser::acceptsOrders()
 {
     int freeSlot = getFreeSlot();
-    bool result = frigateSent == false && orderPlaced == false && freeSlot > -1;
+    bool result = m_frigateSent == false && m_orderPlaced == false && freeSlot > -1;
     return result;
 }
 
@@ -75,24 +75,24 @@ void cOrderProcesser::playTMinusSound(int seconds)
     int soundIdToPlay = -1;
 
     if (seconds == 0) {
-        if (player->getHouse() == ATREIDES) {
+        if (m_player->getHouse() == ATREIDES) {
             soundIdToPlay = SOUND_VOICE_06_ATR;
         }
-        else if (player->getHouse() == HARKONNEN) {
+        else if (m_player->getHouse() == HARKONNEN) {
             soundIdToPlay = SOUND_VOICE_06_HAR;
         }
-        else if (player->getHouse() == ORDOS) {
+        else if (m_player->getHouse() == ORDOS) {
             soundIdToPlay = SOUND_VOICE_06_ORD;
         }
     }
     else {
-        if (player->getHouse() == ATREIDES) {
+        if (m_player->getHouse() == ATREIDES) {
             soundIdToPlay = (SOUND_ATR_S1 + (seconds - 1));
         }
-        else if (player->getHouse() == HARKONNEN) {
+        else if (m_player->getHouse() == HARKONNEN) {
             soundIdToPlay = (SOUND_HAR_S1 + (seconds - 1));
         }
-        else if (player->getHouse() == ORDOS) {
+        else if (m_player->getHouse() == ORDOS) {
             soundIdToPlay = (SOUND_ORD_S1 + (seconds - 1));
         }
     }
@@ -106,15 +106,15 @@ void cOrderProcesser::playTMinusSound(int seconds)
 // time based (per second)
 void cOrderProcesser::think()
 {
-    if (secondsUntilArrival > 0) {
-        secondsUntilArrival--;
-        std::string msg = std::format("T-{} before Frigate arrival.", secondsUntilArrival);
+    if (m_secondsUntilArrival > 0) {
+        m_secondsUntilArrival--;
+        std::string msg = std::format("T-{} before Frigate arrival.", m_secondsUntilArrival);
 
-        if (secondsUntilArrival <= 5 && player->getId() == HUMAN) {
-            playTMinusSound(secondsUntilArrival);
+        if (m_secondsUntilArrival <= 5 && m_player->getId() == HUMAN) {
+            playTMinusSound(m_secondsUntilArrival);
         }
 
-        if (secondsUntilArrival == 0) {
+        if (m_secondsUntilArrival == 0) {
             sendFrigate();
             game.m_drawManager->setMessage("Frigate is arriving...");
         }
@@ -123,18 +123,18 @@ void cOrderProcesser::think()
         }
     }
 
-    if (secondsUntilNewPricesWillBeCalculated > 0) {
-        secondsUntilNewPricesWillBeCalculated--;
+    if (m_secondsUntilNewPricesWillBeCalculated > 0) {
+        m_secondsUntilNewPricesWillBeCalculated--;
     }
     else {
         updatePricesForStarport();
-        secondsUntilNewPricesWillBeCalculated = getRandomizedSecondsToWait();
+        m_secondsUntilNewPricesWillBeCalculated = getRandomizedSecondsToWait();
     }
 }
 
 void cOrderProcesser::updatePricesForStarport()
 {
-    cBuildingList *list = player->getSideBar()->getList(eListType::LIST_STARPORT);
+    cBuildingList *list = m_player->getSideBar()->getList(eListType::LIST_STARPORT);
     assert(list);
     for (int i = 0; i < MAX_ICONS; i++) {
         cBuildingListItem *item = list->getItem(i);
@@ -153,11 +153,11 @@ void cOrderProcesser::addOrder(cBuildingListItem *item)
     assert(item);
     int freeSlot = getFreeSlot();
     if (freeSlot > -1) {
-        orderedItems[freeSlot] = item;
+        m_orderedItems[freeSlot] = item;
         // store the original paid price, so in case the player decides
         // to undo an order, he gets the same amount of money back that he paid for
         // (since the prices can still fluctuate during the order process)
-        pricePaidForItem[freeSlot] = item->getBuildCost();
+        m_pricePaidForItem[freeSlot] = item->getBuildCost();
     }
 }
 
@@ -171,7 +171,7 @@ void cOrderProcesser::removeOrder(cBuildingListItem *item)
 int cOrderProcesser::getFreeSlot()
 {
     for (int i = 0; i < kMaxItemsToOrder; i++) {
-        if (orderedItems[i] == nullptr) {
+        if (m_orderedItems[i] == nullptr) {
             return i;
         }
     }
@@ -181,7 +181,7 @@ int cOrderProcesser::getFreeSlot()
 int cOrderProcesser::getSlotForItem(cBuildingListItem *item)
 {
     for (int i = 0; i < kMaxItemsToOrder; i++) {
-        if (orderedItems[i] == item) {
+        if (m_orderedItems[i] == item) {
             return i;
         }
     }
@@ -199,20 +199,20 @@ void cOrderProcesser::removeItem(int slot)
 {
     assert(slot >= 0);
     assert(slot < kMaxItemsToOrder);
-    orderedItems[slot] = nullptr;
+    m_orderedItems[slot] = nullptr;
     // give money back to player
-    if (pricePaidForItem[slot] > 0) {
-        player->giveCredits(pricePaidForItem[slot]);
+    if (m_pricePaidForItem[slot] > 0) {
+        m_player->giveCredits(m_pricePaidForItem[slot]);
     }
     // and reset the amount
-    pricePaidForItem[slot] = -1;
+    m_pricePaidForItem[slot] = -1;
 }
 
 void cOrderProcesser::placeOrder()
 {
-    orderPlaced = true;
-    frigateSent = false;
-    secondsUntilArrival = 10; // wait 10 seconds
+    m_orderPlaced = true;
+    m_frigateSent = false;
+    m_secondsUntilArrival = 10; // wait 10 seconds
 }
 
 int cOrderProcesser::getRandomizedSecondsToWait()
@@ -224,7 +224,7 @@ void cOrderProcesser::sendFrigate()
 {
     // iCll = structure start cell (up left), since we must go to the center
     // of the cell:
-    int structureId = game.m_structureUtils.findStarportToDeployUnit(player);
+    int structureId = game.m_structureUtils.findStarportToDeployUnit(m_player);
 
     if (structureId > -1) {
         // found structure
@@ -239,7 +239,7 @@ void cOrderProcesser::sendFrigate()
         }
         else {
             // STEP 2: create frigate
-            int unitId = cUnits::unitCreate(iStartCell, FRIGATE, player->getId(), true);
+            int unitId = cUnits::unitCreate(iStartCell, FRIGATE, m_player->getId(), true);
             if (unitId < 0) {
                 logbook("cOrderProcesser::sendFrigate : unable to spawn frigate");
                 return;
@@ -261,8 +261,8 @@ void cOrderProcesser::sendFrigate()
 
             // STEP 3: assign order to frigate (use carryall order function)
             game.getUnit(unitId).carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
-            unitIdOfFrigateSent = unitId;
-            frigateSent = true;
+            m_unitIdOfFrigateSent = unitId;
+            m_frigateSent = true;
         }
     }
     else {
@@ -273,10 +273,10 @@ void cOrderProcesser::sendFrigate()
 
 void cOrderProcesser::setOrderHasBeenProcessed()
 {
-    orderPlaced = false;
-    frigateSent = false;
+    m_orderPlaced = false;
+    m_frigateSent = false;
     removeAllItems();
-    unitIdOfFrigateSent = -1;
+    m_unitIdOfFrigateSent = -1;
 }
 
 /**
