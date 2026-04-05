@@ -46,7 +46,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MENU);
                 m_game.initiateFadingOut();

@@ -49,8 +49,8 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Name your new map:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(eGuiTextAlignHorizontal::LEFT)
         .withRect(nameRect)
         .build();
     m_guiWindow->addGuiObject(gui_NameLabel);
@@ -66,8 +66,8 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Name of author:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(eGuiTextAlignHorizontal::LEFT)
         .withRect(authorRect)
         .build();
     m_guiWindow->addGuiObject(gui_authorLabel);
@@ -83,8 +83,8 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Description:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(eGuiTextAlignHorizontal::LEFT)
         .withRect(descriptionRect)
         .build();
     m_guiWindow->addGuiObject(gui_descriptionLabel);
@@ -100,8 +100,8 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Width size:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(eGuiTextAlignHorizontal::LEFT)
         .withRect(widthRect)
         .build();
     m_guiWindow->addGuiObject(gui_widthLabel);
@@ -121,8 +121,8 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Height size:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(eGuiTextAlignHorizontal::LEFT)
         .withRect(heightRect)
         .build();
     m_guiWindow->addGuiObject(gui_heightLabel);
@@ -145,7 +145,7 @@ void cNewMapEditorState::constructWindow()
         .withLabel("Return to menu")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
-        .withTextAlign(GuiTextAlignHorizontal::CENTER)
+        .withTextAlign(eGuiTextAlignHorizontal::CENTER)
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this]() {
             m_game.setNextStateToTransitionTo(GAME_MENU);

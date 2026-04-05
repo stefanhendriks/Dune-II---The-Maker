@@ -68,7 +68,7 @@ void cOptionsState::constructWindow(int prevState)
                 .withLabel("Cheat mode enabled")
                 .withTextDrawer(m_textDrawer)
                 .withRenderer(m_renderDrawer)
-                .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+                .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
                 .withTheme(cGuiThemeBuilder().light().withTextColor(Color::yellow()).build())
                 .withRect(cheatRect)
                 .build();
@@ -128,7 +128,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Music")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(musicRect)
             .build();
     m_guiWindow->addGuiObject(gui_MusicLabel);
@@ -152,7 +152,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Volume")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(musicVolumeRect)
             .build();
     m_guiWindow->addGuiObject(gui_MusicVolumeLabel);
@@ -175,7 +175,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Sound")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(soundRect)
             .build();
     m_guiWindow->addGuiObject(gui_SoundLabel);
@@ -199,7 +199,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Volume")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(soundVolumeRect)
             .build();
     m_guiWindow->addGuiObject(gui_SoundVolumeLabel);
@@ -222,7 +222,7 @@ void cOptionsState::constructWindow(int prevState)
             .withLabel("Speed")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(speedRect)
             .build();
     m_guiWindow->addGuiObject(gui_DifficultyLabel);

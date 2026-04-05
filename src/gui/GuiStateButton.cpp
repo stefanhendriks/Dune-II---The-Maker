@@ -91,7 +91,7 @@ void GuiStateButton::setOnRightMouseButtonClickedAction(std::function<void()> ac
     m_onRightMouseButtonClickedAction = std::move(action);
 }
 
-void GuiStateButton::setRenderKind(GuiRenderKind value)
+void GuiStateButton::setRenderKind(eGuiRenderKind value)
 {
     m_renderKind = value;
 }

@@ -187,7 +187,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
         .withTheme(theme)
-        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .onClick(nextFunction)
         .build();
 
@@ -197,7 +197,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick(previousFunction)
             .build();
 
@@ -247,7 +247,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MENU);
                 m_game.initiateFadingOut();
@@ -266,7 +266,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
@@ -286,7 +286,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     m_game.loadMapFromEditor(iSkirmishMap);

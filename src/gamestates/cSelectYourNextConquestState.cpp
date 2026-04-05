@@ -76,7 +76,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())

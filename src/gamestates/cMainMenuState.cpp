@@ -58,7 +58,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_CREDITS);
                 m_game.initiateFadingOut();})
@@ -89,7 +89,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
                 m_game.initiateFadingOut();})
@@ -104,7 +104,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.loadSkirmishMaps();
                 m_game.initSkirmish();
@@ -121,7 +121,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Multiplayer);
@@ -135,7 +135,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Load);
@@ -149,7 +149,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_NEW_MAP_EDITOR);})
             .build();
     gui_window->addGuiObject(gui_btn_Editor);
@@ -163,7 +163,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.setNextStateToTransitionTo(GAME_OPTIONS);})
             .build();
     gui_window->addGuiObject(gui_btn_Options);
@@ -177,7 +177,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Hof);
@@ -191,7 +191,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_game.m_playing = false;
                 m_game.initiateFadingOut();})

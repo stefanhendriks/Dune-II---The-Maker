@@ -7,8 +7,8 @@ GuiLabel::GuiLabel(SDLDrawer* drawer, const cRectangle &rect, const std::string 
     : GuiObject(drawer, rect)
     , m_textDrawer(nullptr)
     , m_buttonText(btnText)
-    , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
-    , m_textAlignHorizontal(GuiTextAlignHorizontal::CENTER)
+    , m_renderKind(eGuiRenderKind::OPAQUE_WITHOUT_BORDER)
+    , m_textAlignHorizontal(eGuiTextAlignHorizontal::CENTER)
     , m_tex(nullptr)
     , m_focus(false)
     , m_enabled(true)
@@ -46,12 +46,12 @@ void GuiLabel::draw() const
     }
 }
 
-void GuiLabel::setTextAlignHorizontal(GuiTextAlignHorizontal value)
+void GuiLabel::setTextAlignHorizontal(eGuiTextAlignHorizontal value)
 {
     m_textAlignHorizontal = value;
 }
 
-void GuiLabel::setRenderKind(GuiRenderKind value)
+void GuiLabel::setRenderKind(eGuiRenderKind value)
 {
     m_renderKind = value;
 }
@@ -71,10 +71,10 @@ void GuiLabel::drawText() const
     Color textColor = m_theme.textColor;
 
     switch (m_textAlignHorizontal) {
-        case GuiTextAlignHorizontal::CENTER:
+        case eGuiTextAlignHorizontal::CENTER:
             m_textDrawer->drawTextCenteredInBox(m_buttonText.c_str(), m_rect, textColor);
             break;
-        case GuiTextAlignHorizontal::LEFT:
+        case eGuiTextAlignHorizontal::LEFT:
             m_textDrawer->drawText(m_rect.getX(), m_rect.getY(), textColor, m_buttonText.c_str());
             break;
     }
@@ -82,27 +82,27 @@ void GuiLabel::drawText() const
 
 void GuiLabel::nextRenderKind()
 {
-    if (m_renderKind == GuiRenderKind::OPAQUE_WITH_BORDER) {
-        m_renderKind = GuiRenderKind::OPAQUE_WITHOUT_BORDER;
+    if (m_renderKind == eGuiRenderKind::OPAQUE_WITH_BORDER) {
+        m_renderKind = eGuiRenderKind::OPAQUE_WITHOUT_BORDER;
     }
-    else if (m_renderKind == GuiRenderKind::OPAQUE_WITHOUT_BORDER) {
-        m_renderKind = GuiRenderKind::TRANSPARENT_WITH_BORDER;
+    else if (m_renderKind == eGuiRenderKind::OPAQUE_WITHOUT_BORDER) {
+        m_renderKind = eGuiRenderKind::TRANSPARENT_WITH_BORDER;
     }
-    else if (m_renderKind == GuiRenderKind::TRANSPARENT_WITH_BORDER) {
-        m_renderKind = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    else if (m_renderKind == eGuiRenderKind::TRANSPARENT_WITH_BORDER) {
+        m_renderKind = eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
     }
-    else if (m_renderKind == GuiRenderKind::TRANSPARENT_WITHOUT_BORDER) {
-        m_renderKind = GuiRenderKind::OPAQUE_WITH_BORDER;
+    else if (m_renderKind == eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER) {
+        m_renderKind = eGuiRenderKind::OPAQUE_WITH_BORDER;
     }
 }
 
 void GuiLabel::toggleTextAlignHorizontal()
 {
-    if (m_textAlignHorizontal == GuiTextAlignHorizontal::CENTER) {
-        m_textAlignHorizontal = GuiTextAlignHorizontal::LEFT;
+    if (m_textAlignHorizontal == eGuiTextAlignHorizontal::CENTER) {
+        m_textAlignHorizontal = eGuiTextAlignHorizontal::LEFT;
     }
     else {
-        m_textAlignHorizontal = GuiTextAlignHorizontal::CENTER;
+        m_textAlignHorizontal = eGuiTextAlignHorizontal::CENTER;
     }
 }
 

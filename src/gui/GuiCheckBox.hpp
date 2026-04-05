@@ -11,7 +11,7 @@ class SDLDrawer;
 struct GuiCheckBoxParams {
     cRectangle rect;
     SDLDrawer* renderer;
-    GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
+    eGuiRenderKind kind = eGuiRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme theme = cGuiThemeBuilder().light().build();
     std::function<void()> onCheckAction = nullptr;
     std::function<void()> onUnCheckAction = nullptr;
@@ -32,7 +32,7 @@ public:
 
     void renderChecked() const;
 
-    void setRenderKind(GuiRenderKind value);
+    void setRenderKind(eGuiRenderKind value);
 
     void nextRenderKind();
     void setCheckAction(std::function<void()> checkAction);
@@ -44,7 +44,7 @@ public:
     void setChecked(bool value);
 
 private:
-    GuiRenderKind m_renderKind;
+    eGuiRenderKind m_renderKind;
     std::function<void()> m_onCheckAction;
     std::function<void()> m_onUnCheckAction;
 
@@ -73,7 +73,7 @@ public:
         return *this;
     }
 
-    GuiCheckBoxBuilder& withKind(GuiRenderKind kind) {
+    GuiCheckBoxBuilder& withKind(eGuiRenderKind kind) {
         params.kind = kind;
         return *this;
     }

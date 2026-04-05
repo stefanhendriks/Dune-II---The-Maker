@@ -19,7 +19,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withLabel("Repeat")
             .withTexture(gfxmentat->getTexture(BTN_REPEAT))
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::WITH_TEXTURE)
+            .withKind(eGuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
             .build();
 
@@ -28,7 +28,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::WITH_TEXTURE)
+            .withKind(eGuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 logbook("cYesButtonCommand::changeStateFromMentat()");
                 game.changeStateFromMentat();})

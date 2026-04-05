@@ -27,7 +27,7 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
             .withLabel("No")
             .withTexture(gfxmentat->getTexture(BTN_NO))
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::WITH_TEXTURE)
+            .withKind(eGuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onNoButtonPressed(); })
             .build();
 
@@ -36,7 +36,7 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::WITH_TEXTURE)
+            .withKind(eGuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onYesButtonPressed(); })
             .build();
 }

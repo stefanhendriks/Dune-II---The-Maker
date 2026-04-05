@@ -14,9 +14,9 @@ struct GuiLabelParams {
     cRectangle rect;
     SDLDrawer* renderer;
     std::string label = "";
-    GuiRenderKind kind = GuiRenderKind::OPAQUE_WITH_BORDER;
+    eGuiRenderKind kind = eGuiRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme theme = cGuiThemeBuilder().light().build();
-    GuiTextAlignHorizontal align = GuiTextAlignHorizontal::CENTER;
+    eGuiTextAlignHorizontal align = eGuiTextAlignHorizontal::CENTER;
     Texture *tex = nullptr;
 };
 
@@ -32,9 +32,9 @@ public:
 
     // From GuiObject
     void draw() const override;
-    void setTextAlignHorizontal(GuiTextAlignHorizontal value);
+    void setTextAlignHorizontal(eGuiTextAlignHorizontal value);
     void setTextDrawer(cTextDrawer *cTextDrawer);
-    void setRenderKind(GuiRenderKind value);
+    void setRenderKind(eGuiRenderKind value);
     void setTexture(Texture *tex);
 
     void nextRenderKind();
@@ -46,8 +46,8 @@ public:
 private:
     cTextDrawer *m_textDrawer;
     std::string m_buttonText;
-    GuiRenderKind m_renderKind;
-    GuiTextAlignHorizontal m_textAlignHorizontal;
+    eGuiRenderKind m_renderKind;
+    eGuiTextAlignHorizontal m_textAlignHorizontal;
     Texture *m_tex;
 
     bool m_focus;
@@ -81,7 +81,7 @@ public:
         return *this;
     }
 
-    GuiLabelBuilder& withKind(GuiRenderKind kind) {
+    GuiLabelBuilder& withKind(eGuiRenderKind kind) {
         params.kind = kind;
         return *this;
     }
@@ -91,7 +91,7 @@ public:
         return *this;
     }
 
-    GuiLabelBuilder& withTextAlign(GuiTextAlignHorizontal align) {
+    GuiLabelBuilder& withTextAlign(eGuiTextAlignHorizontal align) {
         params.align = align;
         return *this;
     }

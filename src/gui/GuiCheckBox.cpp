@@ -6,7 +6,7 @@
 
 GuiCheckBox::GuiCheckBox(SDLDrawer* drawer,const cRectangle &rect)
     : GuiObject(drawer, rect)
-    , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
+    , m_renderKind(eGuiRenderKind::OPAQUE_WITHOUT_BORDER)
     , m_onCheckAction(nullptr)
     , m_onUnCheckAction(nullptr)
     , m_focus(false)
@@ -85,24 +85,24 @@ void GuiCheckBox::drawBox() const
     }
 }
 
-void GuiCheckBox::setRenderKind(GuiRenderKind value)
+void GuiCheckBox::setRenderKind(eGuiRenderKind value)
 {
     m_renderKind = value;
 }
 
 void GuiCheckBox::nextRenderKind()
 {
-    if (m_renderKind == GuiRenderKind::OPAQUE_WITH_BORDER) {
-        m_renderKind = GuiRenderKind::OPAQUE_WITHOUT_BORDER;
+    if (m_renderKind == eGuiRenderKind::OPAQUE_WITH_BORDER) {
+        m_renderKind = eGuiRenderKind::OPAQUE_WITHOUT_BORDER;
     }
-    else if (m_renderKind == GuiRenderKind::OPAQUE_WITHOUT_BORDER) {
-        m_renderKind = GuiRenderKind::TRANSPARENT_WITH_BORDER;
+    else if (m_renderKind == eGuiRenderKind::OPAQUE_WITHOUT_BORDER) {
+        m_renderKind = eGuiRenderKind::TRANSPARENT_WITH_BORDER;
     }
-    else if (m_renderKind == GuiRenderKind::TRANSPARENT_WITH_BORDER) {
-        m_renderKind = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    else if (m_renderKind == eGuiRenderKind::TRANSPARENT_WITH_BORDER) {
+        m_renderKind = eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
     }
-    else if (m_renderKind == GuiRenderKind::TRANSPARENT_WITHOUT_BORDER) {
-        m_renderKind = GuiRenderKind::OPAQUE_WITH_BORDER;
+    else if (m_renderKind == eGuiRenderKind::TRANSPARENT_WITHOUT_BORDER) {
+        m_renderKind = eGuiRenderKind::OPAQUE_WITH_BORDER;
     }
 }
 

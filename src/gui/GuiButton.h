@@ -22,9 +22,9 @@ public:
     // From GuiObject
     void draw() const override;
 
-    void setTextAlignHorizontal(GuiTextAlignHorizontal value);
+    void setTextAlignHorizontal(eGuiTextAlignHorizontal value);
     void setTextDrawer(cTextDrawer *cTextDrawer);
-    void setRenderKind(GuiRenderKind value);
+    void setRenderKind(eGuiRenderKind value);
     void setTexture(Texture *tex);
 
     void nextRenderKind();
@@ -39,8 +39,8 @@ public:
 private:
     cTextDrawer *m_textDrawer;
     std::string m_buttonText;
-    GuiRenderKind m_renderKind;
-    GuiTextAlignHorizontal m_textAlignHorizontal;
+    eGuiRenderKind m_renderKind;
+    eGuiTextAlignHorizontal m_textAlignHorizontal;
     std::function<void()> m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onRightMouseButtonClickedAction;
     Texture *m_tex;
@@ -85,7 +85,7 @@ public:
         return *this;
     }
 
-    GuiButtonBuilder& withKind(GuiRenderKind kind) {
+    GuiButtonBuilder& withKind(eGuiRenderKind kind) {
         this->m_kind = kind;
         return *this;
     }
@@ -95,7 +95,7 @@ public:
         return *this;
     }
 
-    GuiButtonBuilder& withTextAlign(GuiTextAlignHorizontal align) {
+    GuiButtonBuilder& withTextAlign(eGuiTextAlignHorizontal align) {
         this->m_align = align;
         return *this;
     }
@@ -137,9 +137,9 @@ private:
     cRectangle m_rect;
     SDLDrawer* m_renderer;
     std::string m_label = "";
-    GuiRenderKind m_kind = GuiRenderKind::OPAQUE_WITH_BORDER;
+    eGuiRenderKind m_kind = eGuiRenderKind::OPAQUE_WITH_BORDER;
     GuiTheme m_theme = cGuiThemeBuilder().light().build();
-    GuiTextAlignHorizontal m_align = GuiTextAlignHorizontal::CENTER;
+    eGuiTextAlignHorizontal m_align = eGuiTextAlignHorizontal::CENTER;
     std::function<void()> m_onLeftClick = nullptr;
     std::function<void()> m_onRightClick = nullptr;
     Texture *m_tex = nullptr;
