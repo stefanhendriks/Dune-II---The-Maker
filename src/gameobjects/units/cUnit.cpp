@@ -126,17 +126,17 @@ void cUnit::init(int i)
     rendering.iFrame = 0;
 
     // TIMERS
-    moveTimer.reset(0);
-    movewaitTimer.reset(0);
-    thinkwaitTimer.reset(0);    // wait with normal thinking..
-    turnTimer.reset(0);       // turning around
-    frameTimer.reset(0);
-    harvestTimer.reset(0);
-    guardTimer.reset(0);
-    boredTimer.reset(0);    // how long are we bored?
-    attackTimer.reset(0);
-    wormTrailTimer.reset(0);
-    movedelayTimer.reset(0);
+    moveTimer.zero();
+    movewaitTimer.zero();
+    thinkwaitTimer.zero();    // wait with normal thinking..
+    turnTimer.zero();       // turning around
+    frameTimer.zero();
+    harvestTimer.zero();
+    guardTimer.zero();
+    boredTimer.zero();    // how long are we bored?
+    attackTimer.zero();
+    wormTrailTimer.zero();
+    movedelayTimer.zero();
 }
 
 void cUnit::recreateDimensions()
@@ -1100,7 +1100,6 @@ void cUnit::thinkActionAgnostic()
         if (rendering.iBodyFacing == rendering.iBodyShouldFace) {
             if (rendering.iHeadFacing != rendering.iHeadShouldFace) {
                 if (turnTimer.incrementUntil(getTurnSpeed())) {
-                    turnTimer.reset(0);
                     rendering.iHeadFacing = determineNewFacing(rendering.iHeadFacing, rendering.iHeadShouldFace);
                 } // turn
             } // head facing
@@ -1297,7 +1296,7 @@ void cUnit::think_turn_to_desired_body_facing()
     }
 
     if (turnTimer.get() > turnspeed) {
-        turnTimer.reset(0);
+        turnTimer.zero();
         rendering.iBodyFacing = determineNewFacing(rendering.iBodyFacing, rendering.iBodyShouldFace);
     } // turn body
 }
@@ -1488,8 +1487,8 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
                             // unitToPickupOrDrop.TIMER_movewait = 0;
-                            unitToPickupOrDrop.movewaitTimer.reset(0);
-                            unitToPickupOrDrop.thinkwaitTimer.reset(0);
+                            unitToPickupOrDrop.movewaitTimer.zero();
+                            unitToPickupOrDrop.thinkwaitTimer.zero();
                             unitToPickupOrDrop.iCarryAll = -1;
 
                             // match facing of carryall
@@ -1673,7 +1672,7 @@ void cUnit::thinkFast_move_airUnit()
         return;
     }
 
-    moveTimer.reset(0);
+    moveTimer.zero();
 
     // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
     int d = fDegrees(position.iCellX, position.iCellY, goalCellX, goalCellY);
@@ -2350,7 +2349,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
 
             bool canFireTwice = unitType.fireTwice && getHealthNormalized() > unitType.fireTwiceHpThresholdFactor;
             if (!canFireTwice) {
-                attackTimer.reset(0);
+                attackTimer.zero();
                 return true;
             }
             else {
@@ -2361,7 +2360,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
 
                 if (attackTimer.get() > secondShotTimeLimit) {
                     shoot(shootCell);
-                    attackTimer.reset(0);
+                    attackTimer.zero();
                     return true;
                 }
             }
@@ -2795,7 +2794,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
 
-    moveTimer.reset(0);
+    moveTimer.zero();
 
     // from here on, set the map id, so no other unit can take its place
     if (!isSandworm()) {
@@ -3295,7 +3294,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
     // no Carry-all found/required, or we are close enough to drive
     move_to_enter_structure(pStructure, actionIntent);
-    movewaitTimer.reset(0);
+    movewaitTimer.zero();
     return eHeadTowardsStructureResult::SUCCESS_RETURNING;
 }
 

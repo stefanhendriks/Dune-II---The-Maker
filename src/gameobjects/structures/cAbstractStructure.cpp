@@ -793,14 +793,14 @@ void cAbstractStructure::unitLeavesStructure()
     unitToLeave.iCredits = 0;
     unitToLeave.iStructureID = -1;
 
-    unitToLeave.harvestTimer.reset(0);
+    unitToLeave.harvestTimer.zero();
     unitToLeave.restoreFromTempHitPoints();
 
     unitToLeave.movement.iGoalCell = unitToLeave.getCell();
     unitToLeave.movement.iPathIndex = -1;
 
-    unitToLeave.movewaitTimer.reset(0);
-    unitToLeave.thinkwaitTimer.reset(0);
+    unitToLeave.movewaitTimer.zero();
+    unitToLeave.thinkwaitTimer.zero();
 
     if (getRallyPoint() > -1) {
         unitToLeave.move_to(getRallyPoint(), -1, -1);
