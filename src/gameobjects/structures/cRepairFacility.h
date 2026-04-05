@@ -7,9 +7,9 @@ class cRepairFacility : public cAbstractStructure {
 private:
     void think_animation_unitDeploy();
 
-    int TIMER_repairunit;
+    int m_TIMER_repairunit;
 
-    eAnimationDirection animDir;
+    eAnimationDirection m_animDir;
 
 public:
     cRepairFacility();

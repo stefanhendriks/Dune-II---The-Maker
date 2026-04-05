@@ -10,9 +10,9 @@
 cHeavyFactory::cHeavyFactory()
 {
     // other variables (class specific)
-    drawFlash = false;
-    flashes = 0;
-    TIMER_animation = 0;
+    m_drawFlash = false;
+    m_flashes = 0;
+    m_TIMER_animation = 0;
 }
 
 int cHeavyFactory::getType() const
@@ -30,30 +30,30 @@ void cHeavyFactory::thinkFast()
 void cHeavyFactory::think_animation_unitDeploy()
 {
     if (!isAnimating()) {
-        drawFlash = false;
-        flashes = 0;
+        m_drawFlash = false;
+        m_flashes = 0;
         return; // do nothing when not animating
     }
 
     if (iFrame < 10) {
-        TIMER_animation++;
-        if (TIMER_animation > 35) {
-            TIMER_animation = 0;
+        m_TIMER_animation++;
+        if (m_TIMER_animation > 35) {
+            m_TIMER_animation = 0;
             iFrame++;
         }
     }
 
-    if (flashes > 0) {
+    if (m_flashes > 0) {
         TIMER_flag++;
         if (TIMER_flag > 70) {
-            flashes--;
-            drawFlash = !drawFlash;
+            m_flashes--;
+            m_drawFlash = !m_drawFlash;
             TIMER_flag = 0;
         }
     }
     else {
         TIMER_flag = 0;
-        drawFlash = false;
+        m_drawFlash = false;
     }
 
     if (iFrame > 9) {
@@ -78,7 +78,7 @@ void cHeavyFactory::draw()
 {
     drawWithShadow();
     // draw flashing light
-    if (drawFlash) {
+    if (m_drawFlash) {
         int pixelWidth = getWidthInPixels();
         int pixelHeight = getHeightInPixels();
 
@@ -104,13 +104,13 @@ void cHeavyFactory::draw()
 void cHeavyFactory::startAnimating()
 {
     if (isAnimating()) {
-        flashes = 5;
-        drawFlash = true;
+        m_flashes = 5;
+        m_drawFlash = true;
     }
     else {
         iFrame = 0;
-        flashes = 0;
-        drawFlash = false;
+        m_flashes = 0;
+        m_drawFlash = false;
         TIMER_flag = 0;
     }
 }

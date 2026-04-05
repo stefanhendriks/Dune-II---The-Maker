@@ -4,13 +4,13 @@
 
 class cGunTurret : public cAbstractStructure {
 private:
-    int iHeadFacing;        // (for turrets only) what is this structure facing at?
-    int iShouldHeadFacing;  // where should we look face at?
-    int iTargetID;           // target id (assumes is always a unit)
+    int m_iHeadFacing;        // (for turrets only) what is this structure facing at?
+    int m_iShouldHeadFacing;  // where should we look face at?
+    int m_iTargetID;           // target id (assumes is always a unit)
 
-    int TIMER_fire;
-    int TIMER_turn;
-    int TIMER_guard;         // timed 'area scanning'
+    int m_TIMER_fire;
+    int m_TIMER_turn;
+    int m_TIMER_guard;         // timed 'area scanning'
 
 public:
     cGunTurret();
@@ -31,7 +31,7 @@ public:
     int getFacingAngles();
 
     void setShouldHeadFacing(int value) {
-        iShouldHeadFacing = value;
+        m_iShouldHeadFacing = value;
     }
 
     void startAnimating() override {}
@@ -43,7 +43,7 @@ public:
     int getType() const override;
 
     int getHeadFacing() {
-        return iHeadFacing;
+        return m_iHeadFacing;
     }
 
     void think_turning();

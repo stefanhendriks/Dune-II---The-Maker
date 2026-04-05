@@ -18,13 +18,13 @@ constexpr auto kTurretFacings = 8;
 cGunTurret::cGunTurret()
 {
 // other variables (class specific)
-    iHeadFacing=0;        // (for turrets only) what is this structure facing at?
-    iShouldHeadFacing=0;  // where should we look face at?
-    iTargetID=-1;           // target id
+    m_iHeadFacing=0;        // (for turrets only) what is this structure facing at?
+    m_iShouldHeadFacing=0;  // where should we look face at?
+    m_iTargetID=-1;           // target id
 
-    TIMER_fire=0;
-    TIMER_turn=0;
-    TIMER_guard=0;         // timed 'area scanning'
+    m_TIMER_fire=0;
+    m_TIMER_turn=0;
+    m_TIMER_guard=0;         // timed 'area scanning'
 }
 
 
@@ -42,7 +42,7 @@ void cGunTurret::thinkFast()
     }
 
     // turning & shooting
-    if (iTargetID > -1) {
+    if (m_iTargetID > -1) {
         think_attack();
     }
 
@@ -62,7 +62,7 @@ void cGunTurret::think_animation()
 
 void cGunTurret::think_attack()
 {
-    cUnit &unitTarget = game.getUnit(iTargetID);
+    cUnit &unitTarget = game.getUnit(m_iTargetID);
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         int iCellX = game.m_map.getCellX(getCell());
         int iCellY = game.m_map.getCellY(getCell());
@@ -83,33 +83,33 @@ void cGunTurret::think_attack()
         }
     }
     else {
-        iTargetID = -1;
+        m_iTargetID = -1;
     }
 }
 
 bool cGunTurret::isFacingTarget() const
 {
-    return iShouldHeadFacing == iHeadFacing;
+    return m_iShouldHeadFacing == m_iHeadFacing;
 }
 
 void cGunTurret::think_turning()
 {
-    TIMER_turn++;
+    m_TIMER_turn++;
 
     int iSlowDown = 125; // for 8 facings , TODO: make it configurable (turnSpeed)
     if (kTurretFacings > 8) {
         iSlowDown = 65; // for 16 facings , TODO: make it configurable (turnSpeed)
     }
 
-    if (TIMER_turn > iSlowDown) {
-        TIMER_turn = 0;
+    if (m_TIMER_turn > iSlowDown) {
+        m_TIMER_turn = 0;
         int facingsZeroBased = kTurretFacings - 1;
 
         // incrementing means going clockwise (to the 'right' so to speak)
         int increment = 1;
 
         // check difference when we go over 'left' (counter-clockwise)
-        int counterClockwiseSteps = (iHeadFacing + kTurretFacings) - iShouldHeadFacing;
+        int counterClockwiseSteps = (m_iHeadFacing + kTurretFacings) - m_iShouldHeadFacing;
         if (counterClockwiseSteps > facingsZeroBased) counterClockwiseSteps -= kTurretFacings;
 
         // and difference going clockwise
@@ -123,14 +123,14 @@ void cGunTurret::think_turning()
         // clockwise is taking longer than counter-clockwise so go counter-clockwise
         if (clockwiseSteps > counterClockwiseSteps) increment = -1;
 
-        iHeadFacing += increment;
+        m_iHeadFacing += increment;
 
         // deal with going around (index < 0 becomes max, and vice versa)
-        if (iHeadFacing < 0) {
-            iHeadFacing = facingsZeroBased;
+        if (m_iHeadFacing < 0) {
+            m_iHeadFacing = facingsZeroBased;
         }
-        if (iHeadFacing > facingsZeroBased) {
-            iHeadFacing = 0;
+        if (m_iHeadFacing > facingsZeroBased) {
+            m_iHeadFacing = 0;
         }
     } // turning
 }
@@ -139,14 +139,14 @@ void cGunTurret::think_fire()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
 
-    cUnit &unitTarget = game.getUnit(iTargetID);
+    cUnit &unitTarget = game.getUnit(m_iTargetID);
     if (unitTarget.isValid() && !unitTarget.isDead()) {
-        TIMER_fire++;
+        m_TIMER_fire++;
 
         int iDistance = game.m_map.distance(getCell(), unitTarget.getCell());
 
         if (iDistance > getSight()) {
-            iTargetID = -1;
+            m_iTargetID = -1;
             // went out of sight, unfortunately
             return;
         }
@@ -154,7 +154,7 @@ void cGunTurret::think_fire()
         if (lowPower) {
             if (unitTarget.isAirbornUnit()) {
                 // no longer able, forget it
-                iTargetID = -1;
+                m_iTargetID = -1;
                 return;
             }
         }
@@ -162,7 +162,7 @@ void cGunTurret::think_fire()
         // TODO: move '3' to property (distanceForSecondaryFire?)
         int distanceForSecondaryFire = 3;
         int iSlowDown = getStructureInfo().fireRate;
-        if (TIMER_fire > iSlowDown) {
+        if (m_TIMER_fire > iSlowDown) {
             int iTargetCell = unitTarget.getCell();
 
             int bulletType = BULLET_TURRET; // short range bullet
@@ -178,7 +178,7 @@ void cGunTurret::think_fire()
                     int half = 16;
                     int iShootX = pos_x() + half;
                     int iShootY = pos_y() + half;
-                    int bmp_head = convertAngleToDrawIndex(iHeadFacing);
+                    int bmp_head = convertAngleToDrawIndex(m_iHeadFacing);
                     cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
                 }
             }
@@ -189,13 +189,13 @@ void cGunTurret::think_fire()
             if (unitTarget.isAirbornUnit()) {
                 if (iBull > -1 && bulletType == ROCKET_RTURRET) {
                     // it is a homing missile!
-                    game.g_Bullets[iBull].iHoming = iTargetID;
+                    game.g_Bullets[iBull].iHoming = m_iTargetID;
                     // TODO: property for homing?
                     game.g_Bullets[iBull].TIMER_homing = 200;
                 }
             }
 
-            TIMER_fire = 0;
+            m_TIMER_fire = 0;
         }
     }
 }
@@ -208,10 +208,10 @@ void cGunTurret::think_guard()
         return;
     }
 
-    TIMER_guard++;
+    m_TIMER_guard++;
 
-    if (TIMER_guard > 10) {
-        TIMER_guard=0-RNG::rnd(20);
+    if (m_TIMER_guard > 10) {
+        m_TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
         int iCellX = game.m_map.getCellX(c);
@@ -223,9 +223,9 @@ void cGunTurret::think_guard()
         int iWorm=-1;       // worm lowest priority
         int iDanger=-1;     // danger id (unit to attack)
 
-        int prevTarget = iTargetID;
+        int prevTarget = m_iTargetID;
 
-        iTargetID=-1;       // no target
+        m_iTargetID=-1;       // no target
 
         int distanceForAttacking = getSight();
         if (lowPower && getType() == RTURRET) {
@@ -276,18 +276,18 @@ void cGunTurret::think_guard()
 
         // set target
         if (iAir > -1) {
-            iTargetID = iAir;
+            m_iTargetID = iAir;
         }
         else if (iDanger > -1) {
-            iTargetID = iDanger;
+            m_iTargetID = iDanger;
         }
         else if (iWorm > -1) {
-            iTargetID = iWorm;
+            m_iTargetID = iWorm;
         }
 
         // discovered a new target
-        if (iTargetID > -1 && iTargetID != prevTarget) {
-            cUnit &unitToAttack = game.getUnit(iTargetID);
+        if (m_iTargetID > -1 && m_iTargetID != prevTarget) {
+            cUnit &unitToAttack = game.getUnit(m_iTargetID);
             if (unitToAttack.isValid()) {
                 s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,

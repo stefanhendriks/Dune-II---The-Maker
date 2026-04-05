@@ -7,8 +7,8 @@
 #include "player/cPlayer.h"
 
 cRepairFacility::cRepairFacility()
-    : TIMER_repairunit(0)
-    , animDir(ANIM_NONE)
+    : m_TIMER_repairunit(0)
+    , m_m_animDir(ANIM_NONE)
 {
 }
 
@@ -37,14 +37,14 @@ void cRepairFacility::think_repairUnit()  // must repair...
 //    int maxHpForUnitType = game.unitInfos[unitToRepair.iType].hp;
 
     if (unitToRepair.requiresRepairing()) {
-        TIMER_repairunit++;
+        m_TIMER_repairunit++;
 
         // TODO: move to structure info? (or unit info?)
         int REPAIR_SPEED = 15;
 
-        if (TIMER_repairunit < REPAIR_SPEED) return;
+        if (m_TIMER_repairunit < REPAIR_SPEED) return;
 
-        TIMER_repairunit = 0;
+        m_TIMER_repairunit = 0;
 
         cPlayer *pPlayer = getPlayer();
         int REPAIR_COST_PER_TICK = 1;
@@ -83,24 +83,24 @@ void cRepairFacility::think_animation_unitDeploy()
 {
     if (!isAnimating()) return; // do nothing when not animating
     TIMER_flag++;
-    int waitLimit = animDir == eAnimationDirection::ANIM_SPAWN_UNIT ? 120 : 30;
+    int waitLimit = m_animDir == eAnimationDirection::ANIM_SPAWN_UNIT ? 120 : 30;
     if (TIMER_flag > waitLimit) {
 
-        switch (animDir) {
+        switch (m_animDir) {
             case eAnimationDirection::ANIM_OPEN:
                 iFrame++;
                 if (iFrame > 6) {
-                    animDir = eAnimationDirection::ANIM_SPAWN_UNIT;
+                    m_animDir = eAnimationDirection::ANIM_SPAWN_UNIT;
                 }
                 break;
             case eAnimationDirection::ANIM_SPAWN_UNIT:
-                animDir = eAnimationDirection::ANIM_CLOSE; // and close again
+                m_animDir = eAnimationDirection::ANIM_CLOSE; // and close again
                 break;
             case eAnimationDirection::ANIM_CLOSE:
                 iFrame--;
                 if (iFrame < 1) {
                     // no longer animating
-                    animDir = eAnimationDirection::ANIM_NONE;
+                    m_animDir = eAnimationDirection::ANIM_NONE;
                     setAnimating(false);
                 }
                 break;
@@ -120,7 +120,7 @@ void cRepairFacility::think_guard()
 
 void cRepairFacility::startAnimating()
 {
-    animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
+    m_animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
 }
 
 void cRepairFacility::onNotifyGameEvent(const s_GameEvent &event)

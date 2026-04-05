@@ -14,11 +14,11 @@ cWindTrap::cWindTrap()
     cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting cWindTrap", 
                 std::format("(cWindTrap)(ID {}) Constructor", this->id));
     // other variables (class specific)
-    iFade = RNG::rnd(63);
-    bFadeDir = true;
+    m_iFade = RNG::rnd(63);
+    m_bFadeDir = true;
 
     // Timers
-    TIMER_fade = 0;
+    m_TIMER_fade = 0;
 }
 
 int cWindTrap::getType() const
@@ -40,12 +40,12 @@ void cWindTrap::thinkFast()
 
 void cWindTrap::think_fade()
 {
-    TIMER_fade++;
+    m_TIMER_fade++;
 
     int iTime; // the speed of fading
 
     // depending on fade direction, fade in slower/faster
-    if (bFadeDir) { // go to blue
+    if (m_bFadeDir) { // go to blue
         iTime = 3;
     }
     else {   // go to black
@@ -53,23 +53,23 @@ void cWindTrap::think_fade()
     }
 
     // time passed, we may change fade color
-    if (TIMER_fade > iTime) {
-        if (bFadeDir) {
-            iFade++;
+    if (m_TIMER_fade > iTime) {
+        if (m_bFadeDir) {
+            m_iFade++;
 
-            if (iFade > 254) {
-                bFadeDir = false;
+            if (m_iFade > 254) {
+                m_bFadeDir = false;
             }
         }
         else {
-            iFade--;
+            m_iFade--;
 
-            if (iFade < 1) {
-                bFadeDir = true;
+            if (m_iFade < 1) {
+                m_bFadeDir = true;
             }
         }
 
-        TIMER_fade = 0;
+        m_TIMER_fade = 0;
     }
 }
 

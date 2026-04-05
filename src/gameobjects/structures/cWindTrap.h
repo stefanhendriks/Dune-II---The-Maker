@@ -4,11 +4,11 @@
 
 class cWindTrap : public cAbstractStructure {
 private:
-    int iFade;          // Fading progress (windtraps)
-    bool bFadeDir;      // Fading direction (TRUE -> up, FALSE -> down)
+    int m_iFade;          // Fading progress (windtraps)
+    bool m_bFadeDir;      // Fading direction (TRUE -> up, FALSE -> down)
 
     // TIMER
-    int TIMER_fade;
+    int m_TIMER_fade;
 
     // windtrap specific animation:
     void think_fade();
@@ -39,7 +39,7 @@ public:
     int getMaxPowerOut() const;
 
     int getFade() {
-        return iFade;
+        return m_iFade;
     }
 
     std::string getStatusForMessageBar() const override;

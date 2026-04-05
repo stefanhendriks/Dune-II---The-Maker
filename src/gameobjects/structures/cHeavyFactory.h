@@ -6,10 +6,10 @@ class cHeavyFactory : public cAbstractStructure {
 private:
     void think_animation_unitDeploy();
 
-    bool drawFlash;
-    int flashes;
+    bool m_drawFlash;
+    int m_flashes;
 
-    int TIMER_animation;
+    int m_TIMER_animation;
 
 public:
     cHeavyFactory();
