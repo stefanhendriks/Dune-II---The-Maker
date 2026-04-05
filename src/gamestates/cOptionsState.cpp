@@ -62,6 +62,18 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_btn_toMenu);
 
+    if (m_game.isCheatMode()) {
+        const cRectangle &cheatRect = m_guiWindow->getRelativeRect(margin, toMainMenu - 2*(buttonHeight + margin), buttonWidth, buttonHeight);
+        GuiLabel *gui_cheatLabel = GuiLabelBuilder()
+                .withLabel("Cheat mode enabled")
+                .withTextDrawer(m_textDrawer)
+                .withRenderer(m_renderDrawer)
+                .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+                .withRect(cheatRect)
+                .build();
+        m_guiWindow->addGuiObject(gui_cheatLabel);
+    }
+
     // QUIT game
     int quit = mainMenuHeight - (buttonHeight + margin);// 464
     int width = (buttonWidth / 2);
