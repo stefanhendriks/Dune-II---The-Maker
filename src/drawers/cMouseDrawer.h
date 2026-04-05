@@ -32,8 +32,8 @@ protected:
 private:
     void onMouseAt(const s_MouseEvent &event);
 
-    cPlayer *player;
-    int mouseX, mouseY;
-    cTextWriter* textWriter = nullptr;
+    cPlayer *m_player;
+    int m_mouseX, m_mouseY;
+    cTextWriter* m_textWriter = nullptr;
 };
 

@@ -14,6 +14,6 @@ public:
     void determineParticlesToDraw(const cRectangle &viewport);
 
 private:
-    std::vector<int> particlesLowerLayer;
-    std::vector<int> particlesTopLayer;
+    std::vector<int> m_particlesLowerLayer;
+    std::vector<int> m_particlesTopLayer;
 };

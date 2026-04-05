@@ -13,7 +13,7 @@
 
 #include <cassert>
 
-cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
+cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : m_player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
 {
     assert(thePlayer != nullptr);
     assert(ctx != nullptr);
@@ -22,7 +22,7 @@ cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : player(th
 
 cPlaceItDrawer::~cPlaceItDrawer()
 {
-    player = nullptr;
+    m_player = nullptr;
 }
 
 void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell)
@@ -49,8 +49,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     assert(structureId > -1);
 
     bool bWithinBuildDistance = false;
-    int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureId);
-    int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureId);
+    int cellWidth = m_structureUtils.getWidthOfStructureTypeInCells(structureId);
+    int cellHeight = m_structureUtils.getHeightOfStructureTypeInCells(structureId);
 
 #define SCANWIDTH	1
 
@@ -178,7 +178,7 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
         bmp = m_gfxdata->getTexture(PLACE_WALL);
     }
     else {
-        bmp = player->getStructureBitmap(structureId);
+        bmp = m_player->getStructureBitmap(structureId);
     }
     // We need to take a source rectangle, as the structure BMP contains multiple frames of the structure
     // therefore we cannot use renderStrechFullSprite (as that assumes the source texture can be used as a whole

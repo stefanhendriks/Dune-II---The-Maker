@@ -77,7 +77,7 @@ private:
     cMapCamera *m_mapCamera;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
-    Texture *mipMapTex;
+    Texture *m_mipMapTex;
     Graphics *m_gfxinter;
     SDLDrawer *m_renderDrawer;
 
@@ -87,9 +87,9 @@ private:
     int m_iTrans;							// transparancy
 
     // the top left coordinates for the minimap
-    int drawX, drawY;
-    int centerX, centerY; // the center of the minimap
+    int m_drawX, m_drawY;
+    int m_centerX, m_centerY; // the center of the minimap
 
     // bool isBigMap;
-    int factorZoom = 1; // factor to zoom the minimap, based on the map size and the minimap size
+    int m_factorZoom = 1; // factor to zoom the minimap, based on the map size and the minimap size
 };

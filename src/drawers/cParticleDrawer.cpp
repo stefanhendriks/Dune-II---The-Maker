@@ -7,32 +7,32 @@
 
 void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {
-    particlesLowerLayer.clear();
-    particlesTopLayer.clear();
+    m_particlesLowerLayer.clear();
+    m_particlesTopLayer.clear();
     for (int i=0; i < game.m_particles.size(); i++) {
         cParticle &pParticle = game.m_particles[i];
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 
         if (pParticle.getLayer() == RenderLayerParticle::BOTTOM) {
-            particlesLowerLayer.push_back(i);
+            m_particlesTopLayer.push_back(i);
         }
         else if (pParticle.getLayer() == RenderLayerParticle::TOP) {
-            particlesTopLayer.push_back(i);
+            m_particlesTopLayer.push_back(i);
         }
     }
 }
 
 void cParticleDrawer::drawLowerLayer()
 {
-    for (auto &i : particlesLowerLayer) {
+    for (auto &i : m_particlesLowerLayer) {
         game.m_particles[i].draw();
     }
 }
 
 void cParticleDrawer::drawTopLayer()
 {
-    for (auto &i : particlesTopLayer) {
+    for (auto &i : m_particlesTopLayer) {
         game.m_particles[i].draw();
     }
 }
@@ -40,5 +40,5 @@ void cParticleDrawer::drawTopLayer()
 void cParticleDrawer::drawDebugInfo(cTextDrawer* textDrawer)
 {
     textDrawer->drawText(0, 100,
-                        std::format("Visible particles BOTTOM: {}/ TOP: {}", particlesLowerLayer.size(), particlesTopLayer.size()));
+                        std::format("Visible particles BOTTOM: {}/ TOP: {}", m_particlesLowerLayer.size(), m_particlesTopLayer.size()));
 }
