@@ -2880,11 +2880,13 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // when we are chasing, we now set on attack...
         if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
-            cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
-            if (attackUnit && attackUnit->isValid()) {
-                setAction(eActionType::ATTACK_CHASE);
-                if (attackUnit->getCell() != movement.iGoalCell) {
-                    forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
+            if (combat.iAttackUnit > -1) {
+                cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
+                if (attackUnit && attackUnit->isValid()) {
+                    setAction(eActionType::ATTACK_CHASE);
+                    if (attackUnit->getCell() != movement.iGoalCell) {
+                        forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
+                    }
                 }
             }
         }
