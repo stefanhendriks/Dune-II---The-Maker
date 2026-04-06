@@ -9,6 +9,7 @@ class cSpecialInfos;
 class cUpgradeInfos;
 class cUnitInfos;
 class SDL_Renderer;
+struct s_TerrainInfo;
 
 class cInfoContextCreator {
 public:
@@ -21,6 +22,8 @@ public:
     std::unique_ptr<cSpecialInfos> createSpecialInfos();
     std::unique_ptr<cUpgradeInfos> createUpgradeInfos();
     std::unique_ptr<cUnitInfos> createUnitInfos();
+
+    void installTerrain(std::shared_ptr<s_TerrainInfo>& terrainInfo);
 
 private:
     void initUnits(cUnitInfos& unitInfos);
