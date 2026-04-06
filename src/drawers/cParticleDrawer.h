@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "utils/cRectangle.h"
+#include "gameobjects/particles/cParticle.h"
 
 class cTextDrawer;
 
@@ -14,6 +15,6 @@ public:
     void determineParticlesToDraw(const cRectangle &viewport);
 
 private:
-    std::vector<int> m_particlesLowerLayer;
-    std::vector<int> m_particlesTopLayer;
+    std::vector<cParticle*> m_particlesLowerLayer;
+    std::vector<cParticle*> m_particlesTopLayer;
 };

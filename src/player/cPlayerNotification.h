@@ -32,6 +32,5 @@ public:
 private:
     std::string m_msg;
     int m_TIMER;
-    int m_initialDuration;
     eNotificationType m_type;
 };

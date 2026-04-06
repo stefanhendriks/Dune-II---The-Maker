@@ -20,7 +20,7 @@ std::string eNotificationTypeString(const eNotificationType &type)
 }
 
 cPlayerNotification::cPlayerNotification(const std::string &msg, eNotificationType type)
-    : m_msg(msg), m_TIMER((1000/5) * 7), m_initialDuration(m_TIMER), m_type(type)
+    : m_msg(msg), m_TIMER((1000/5) * 7), m_type(type)
 {
 }
 
