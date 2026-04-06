@@ -30,6 +30,7 @@ public:
     cUpgradeInfos* getUpgradeInfos() const;
     void setUnitInfos(std::unique_ptr<cUnitInfos> unitInfos);
     cUnitInfos* getUnitInfos() const;
+    void initializeDefaultInfos();
 
     // Convenience getters for individual elements
     s_ParticleInfo& getParticleInfo(int i) const;

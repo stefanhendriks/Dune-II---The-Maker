@@ -71,6 +71,16 @@ void cInfoContext::setUnitInfos(std::unique_ptr<cUnitInfos> unitInfos) {
     m_unitInfos = std::move(unitInfos);
 }
 
+void cInfoContext::initializeDefaultInfos()
+{
+    setBulletInfos(std::make_unique<cBulletInfos>());
+    setSpecialInfos(std::make_unique<cSpecialInfos>());
+    setUpgradeInfos(std::make_unique<cUpgradeInfos>());
+    setUnitInfos(std::make_unique<cUnitInfos>());
+    setStructureInfos(std::make_unique<cStructureInfos>());
+    setParticleInfos(std::make_unique<cParticleInfos>());
+}
+
 cUnitInfos* cInfoContext::getUnitInfos() const {
     return m_unitInfos.get();
 }
