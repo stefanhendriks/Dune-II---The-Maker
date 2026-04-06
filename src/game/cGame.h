@@ -125,7 +125,7 @@ public:
     cStructures                 m_pStructures;
     cUnits                      m_Units;
     cMap                        m_map;
-    cInfoContext                m_infoContext;
+    std::unique_ptr<cInfoContext> m_infoContext;
 
     // Initialization functions
     void init();		            // initialize all game variables

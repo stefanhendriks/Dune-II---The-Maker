@@ -51,7 +51,7 @@ void cRefinery::think_unit_occupation()
         int iAmount = 5;
 
         // cap at max
-        s_UnitInfo &unitType = game.m_infoContext.getUnitInfo(cUnit.iType);
+        s_UnitInfo &unitType = game.m_infoContext->getUnitInfo(cUnit.iType);
 
         if (cUnit.iCredits > unitType.credit_capacity) {
             cUnit.iCredits = unitType.credit_capacity;
@@ -137,6 +137,6 @@ void cRefinery::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity()
 {
-    float percentage = ((float) getHitPoints() / (float) game.m_infoContext.getStructureInfo(getType()).hp);
+    float percentage = ((float) getHitPoints() / (float) game.m_infoContext->getStructureInfo(getType()).hp);
     return 1000 * percentage;
 }

@@ -89,7 +89,7 @@ void cWindTrap::think_guard()
 
 int cWindTrap::getPowerOut() const
 {
-    float percentage = ((float) getHitPoints() / (float) game.m_infoContext.getStructureInfo(getType()).hp);
+    float percentage = ((float) getHitPoints() / (float) game.m_infoContext->getStructureInfo(getType()).hp);
     return getMaxPowerOut() * percentage;
 }
 

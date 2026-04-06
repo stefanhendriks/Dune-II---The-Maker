@@ -128,6 +128,8 @@ cGame::cGame()
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
 
     m_cScreenFader = std::make_unique<cScreenFader>();
+
+    m_infoContext = std::make_unique<cInfoContext>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -158,8 +160,8 @@ void cGame::applySettings(GameSettings *gs)
 
 void cGame::init()
 {
-    m_infoContext.initializeDefaultInfos();
-    m_map.setTerrainInfo(m_infoContext.getTerrainInfo());
+    m_infoContext->initializeDefaultInfos();
+    m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -201,7 +203,7 @@ void cGame::init()
     }
 
     // Initialize InfoContext with empty objects that will be populated by cIni::installGame()
-    m_infoContext.initializeDefaultInfos();
+    m_infoContext->initializeDefaultInfos();
 
     // Units & Structures are already initialized in map.init()
     // Load properties
@@ -224,7 +226,7 @@ void cGame::missionInit()
 
     m_map.init(64, 64);
     // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
-    m_map.setTerrainInfo(m_infoContext.getTerrainInfo());
+    m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
 
     initPlayers(true);
 
@@ -658,7 +660,7 @@ bool cGame::setupGame()
         game.getPlayer(i).setHousesInfo(m_Houses);
     }
     cInfoContextCreator infoCreator;
-    infoCreator.installInfos(game.m_infoContext);
+    infoCreator.installInfos(*game.m_infoContext);
 
     delete m_mapCamera;
     m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
@@ -671,7 +673,7 @@ bool cGame::setupGame()
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
-    game.m_infoContext.setUpgradeInfos(infoCreator.createUpgradeInfos());
+    game.m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos());
     cPlayer *humanPlayer = &game.getPlayer(HUMAN);
 
     delete game.m_drawManager;
@@ -1112,7 +1114,7 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
         return;
     }
 
-    const auto structureInfo = (*m_infoContext.getStructureInfos())[event.entitySpecificType];
+    const auto structureInfo = (*m_infoContext->getStructureInfos())[event.entitySpecificType];
     int unitTypeToSpawn = structureInfo.uponDestructionSpawnUnitType;
     if (unitTypeToSpawn < 0) {
         return;
