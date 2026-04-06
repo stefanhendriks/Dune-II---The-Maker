@@ -1,0 +1,31 @@
+#pragma once
+
+#include <stdexcept>
+#include <memory>
+
+#include "context/cInfoContextCreator.h"
+
+class SDLDrawer;
+
+class GameContext {
+public:
+    GameContext() = default;
+    ~GameContext();
+
+    void setParticleInfos(std::unique_ptr<cParticleInfos> particleInfos);
+    cParticleInfos* getParticleInfos() const;
+    void setStructureInfos(std::unique_ptr<cStructureInfos> structureInfos);
+    cStructureInfos* getStructureInfos() const;
+    void setBulletInfos(std::unique_ptr<cBulletInfos> bulletInfos);
+    cBulletInfos* getBulletInfos() const;
+    void setSpecialInfos(std::unique_ptr<cSpecialInfos> specialInfos);
+    cSpecialInfos* getSpecialInfos() const;
+    void setUpgradeInfos(std::unique_ptr<cUpgradeInfos> upgradeInfos);
+    cUpgradeInfos* getUpgradeInfos() const;
+private:
+    std::unique_ptr<cParticleInfos> m_particleInfos;
+    std::unique_ptr<cStructureInfos> m_structureInfos;
+    std::unique_ptr<cBulletInfos> m_bulletInfos;
+    std::unique_ptr<cSpecialInfos> m_specialInfos;
+    std::unique_ptr<cUpgradeInfos> m_upgradeInfos;
+};
