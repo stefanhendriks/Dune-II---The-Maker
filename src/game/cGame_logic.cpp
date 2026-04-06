@@ -34,12 +34,7 @@
 #include "gameobjects/sTerrainInfo.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
-#include "gameobjects/projectiles/cBulletInfos.h"
-#include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
-#include "gameobjects/cSpecialInfos.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/units/cUnitInfos.h"
 
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"
@@ -208,12 +203,7 @@ void cGame::init()
     }
 
     // Initialize InfoContext with empty objects that will be populated by cIni::installGame()
-    m_infoContext.setBulletInfos(std::make_unique<cBulletInfos>());
-    m_infoContext.setSpecialInfos(std::make_unique<cSpecialInfos>());
-    m_infoContext.setUpgradeInfos(std::make_unique<cUpgradeInfos>());
-    m_infoContext.setUnitInfos(std::make_unique<cUnitInfos>());
-    m_infoContext.setStructureInfos(std::make_unique<cStructureInfos>());
-    m_infoContext.setParticleInfos(std::make_unique<cParticleInfos>());
+    m_infoContext.initializeDefaultInfos();
 
     // Units & Structures are already initialized in map.init()
     // Load properties
