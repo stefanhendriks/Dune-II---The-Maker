@@ -9,31 +9,30 @@ void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {
     m_particlesLowerLayer.clear();
     m_particlesTopLayer.clear();
-    for (int i=0; i < game.m_particles.size(); i++) {
-        cParticle &pParticle = game.m_particles[i];
+    for (auto &pParticle : game.m_particles) {
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 
         if (pParticle.getLayer() == RenderLayerParticle::BOTTOM) {
-            m_particlesLowerLayer.push_back(i);
+            m_particlesLowerLayer.push_back(&pParticle);
         }
         else if (pParticle.getLayer() == RenderLayerParticle::TOP) {
-            m_particlesTopLayer.push_back(i);
+            m_particlesTopLayer.push_back(&pParticle);
         }
     }
 }
 
 void cParticleDrawer::drawLowerLayer()
 {
-    for (auto &i : m_particlesLowerLayer) {
-        game.m_particles[i].draw();
+    for (auto *pParticle : m_particlesLowerLayer) {
+        pParticle->draw();
     }
 }
 
 void cParticleDrawer::drawTopLayer()
 {
-    for (auto &i : m_particlesTopLayer) {
-        game.m_particles[i].draw();
+    for (auto *pParticle : m_particlesTopLayer) {
+        pParticle->draw();
     }
 }
 
