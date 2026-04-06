@@ -22,10 +22,10 @@ public:
     std::unique_ptr<cSpecialInfos> createSpecialInfos();
     std::unique_ptr<cUpgradeInfos> createUpgradeInfos();
     std::unique_ptr<cUnitInfos> createUnitInfos();
-
-    void installTerrain(const std::shared_ptr<s_TerrainInfo>& terrainInfo);
+    std::unique_ptr<s_TerrainInfo> createTerrainInfos();
 
 private:
+    void installTerrain(s_TerrainInfo* terrainInfo);
     void initUnits(cUnitInfos& unitInfos);
     void initStructures(cStructureInfos& structureInfos);
     void initBullets(cBulletInfos& bulletInfos);

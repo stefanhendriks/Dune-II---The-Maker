@@ -667,7 +667,7 @@ bool cGame::setupGame()
     logbook("Setup:  PARTICLES");
     game.m_infoContext.setParticleInfos(infoCreator.createParticleInfos());
     logbook("Setup:  TERRAINS");
-    infoCreator.installTerrain(game.m_infoContext.getTerrainInfo());
+    game.m_infoContext.setTerrainInfo(infoCreator.createTerrainInfos());
 
     delete m_mapCamera;
     m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);

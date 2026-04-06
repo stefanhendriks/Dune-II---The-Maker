@@ -80,7 +80,7 @@ void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
     m_reinforcements = reinforcements;
 }
 
-void cMap::setTerrainInfo(std::shared_ptr<s_TerrainInfo> terrainInfo)
+void cMap::setTerrainInfo(s_TerrainInfo* terrainInfo)
 {
     m_terrainInfo = terrainInfo;
 }
