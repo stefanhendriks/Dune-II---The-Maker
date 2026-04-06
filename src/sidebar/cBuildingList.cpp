@@ -78,8 +78,8 @@ cBuildingListItem *cBuildingList::getItemByBuildId(int buildId)
 
 void cBuildingList::addUpgradeToList(int upgradeType)
 {
-    cBuildingListItem *item = new cBuildingListItem(upgradeType, game.upgradeInfos[upgradeType],
-            game.upgradeInfos[upgradeType].providesTypeSubList);
+    cBuildingListItem *item = new cBuildingListItem(upgradeType, game.m_infoContext.getUpgradeInfo(upgradeType),
+            game.m_infoContext.getUpgradeInfo(upgradeType).providesTypeSubList);
     if (!addItemToList(item)) {
         delete item;
     }
@@ -87,7 +87,7 @@ void cBuildingList::addUpgradeToList(int upgradeType)
 
 void cBuildingList::addStructureToList(int structureType, int subList)
 {
-    cBuildingListItem *item = new cBuildingListItem(structureType, game.structureInfos[structureType], subList);
+    cBuildingListItem *item = new cBuildingListItem(structureType, game.m_infoContext.getStructureInfo(structureType), subList);
     if (!addItemToList(item)) {
         delete item;
     }
@@ -95,7 +95,7 @@ void cBuildingList::addStructureToList(int structureType, int subList)
 
 void cBuildingList::addUnitToList(int unitType, int subList)
 {
-    cBuildingListItem *item = new cBuildingListItem(unitType, game.unitInfos[unitType], subList);
+    cBuildingListItem *item = new cBuildingListItem(unitType, game.m_infoContext.getUnitInfo(unitType), subList);
     if (!addItemToList(item)) {
         delete item;
     }
@@ -103,7 +103,7 @@ void cBuildingList::addUnitToList(int unitType, int subList)
 
 void cBuildingList::addSpecialToList(int specialType, int subList)
 {
-    s_SpecialInfo &special = game.specialInfos[specialType];
+    s_SpecialInfo &special = game.m_infoContext.getSpecialInfo(specialType);
     cBuildingListItem *item = new cBuildingListItem(specialType, special, subList);
     if (!addItemToList(item)) {
         delete item;

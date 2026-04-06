@@ -264,7 +264,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     }
 
     // play sound (when we have one)
-    s_BulletInfo &sBullet = game.bulletInfos[type];
+    s_BulletInfo &sBullet = game.m_infoContext.getBulletInfo(type);
     if (sBullet.sound > -1) {
         game.playSoundWithDistance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell));
     }
@@ -279,15 +279,15 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
     }
     switch (buildType) {
         case eBuildType::SPECIAL:
-            return game.specialInfos[specificTypeId].description;
+            return game.m_infoContext.getSpecialInfo(specificTypeId).description;
         case eBuildType::UNIT:
-            return game.unitInfos[specificTypeId].name;
+            return game.m_infoContext.getUnitInfo(specificTypeId).name;
         case eBuildType::STRUCTURE:
-            return game.structureInfos[specificTypeId].name;
+            return game.m_infoContext.getStructureInfo(specificTypeId).name;
         case eBuildType::BULLET:
-            return game.bulletInfos[specificTypeId].description;
+            return game.m_infoContext.getBulletInfo(specificTypeId).description;
         case eBuildType::UPGRADE:
-            return game.upgradeInfos[specificTypeId].description;
+            return game.m_infoContext.getUpgradeInfo(specificTypeId).description;
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:

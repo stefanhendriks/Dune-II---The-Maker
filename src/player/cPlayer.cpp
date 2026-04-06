@@ -272,7 +272,7 @@ void cPlayer::setHouse(int iHouse)
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-            s_StructureInfo &structureType = game.structureInfos[i];
+            s_StructureInfo &structureType = game.m_infoContext.getStructureInfo(i);
 
             if (!structureType.configured) continue;
 
@@ -296,7 +296,7 @@ void cPlayer::setHouse(int iHouse)
 
         // same goes for units
         for (int i = 0; i < MAX_UNITTYPES; i++) {
-            s_UnitInfo &unitType = game.unitInfos[i];
+            s_UnitInfo &unitType = game.m_infoContext.getUnitInfo(i);
 
             bmp_unit[i] = createTextureFromIndexedSurfaceWithPalette(unitType.bmp, TransparentColorIndex);
             if (!bmp_unit[i]) {
@@ -539,9 +539,9 @@ Texture *cPlayer::getUnitTopBitmap(int index)
  */
 // SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
 // {
-// if (game.unitInfos[index].shadow) {
-// int bmp_width = game.unitInfos[index].bmp_width;
-// int bmp_height = game.unitInfos[index].bmp_height;
+// if (game.m_infoContext.getUnitInfo(index).shadow) {
+// int bmp_width = game.m_infoContext.getUnitInfo(index).bmp_width;
+// int bmp_height = game.m_infoContext.getUnitInfo(index).bmp_height;
 // int start_x = bodyFacing * bmp_width;
 // int start_y = bmp_height * animationFrame;
 //
@@ -553,15 +553,15 @@ Texture *cPlayer::getUnitTopBitmap(int index)
 //
 // SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
 // renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
-// renderDrawer->blit(game.unitInfos[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+// renderDrawer->blit(game.m_infoContext.getUnitInfo(index).shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
 // return shadow;
 // }
 // return nullptr;
 // }
 Texture *cPlayer::getUnitShadowBitmap(int index)
 {
-    if (game.unitInfos[index].shadow) {
-        return game.unitInfos[index].shadow;
+    if (game.m_infoContext.getUnitInfo(index).shadow) {
+        return game.m_infoContext.getUnitInfo(index).shadow;
     } else
         return nullptr;
 }
@@ -593,19 +593,19 @@ bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const
 bool cPlayer::hasEnoughCreditsForUnit(int unitType)
 {
     if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
-    return this->credits >= game.unitInfos[unitType].cost;
+    return this->credits >= game.m_infoContext.getUnitInfo(unitType).cost;
 }
 
 bool cPlayer::hasEnoughCreditsForStructure(int structureType)
 {
     if (structureType < 0 || structureType >= MAX_STRUCTURETYPES) return false;
-    return this->credits >= game.structureInfos[structureType].cost;
+    return this->credits >= game.m_infoContext.getStructureInfo(structureType).cost;
 }
 
 bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType)
 {
     if (upgradeType < 0 || upgradeType >= MAX_UPGRADETYPES) return false;
-    return this->credits >= game.upgradeInfos[upgradeType].cost;
+    return this->credits >= game.m_infoContext.getUpgradeInfo(upgradeType).cost;
 }
 
 /**
@@ -681,7 +681,7 @@ void cPlayer::increaseStructureAmount(int structureType)
     iStructures[structureType]++;
 
     log(std::format("increaseStructureAmount result: iStructures[{}(={})]={}",
-                    structureType, game.structureInfos[structureType].name, iStructures[structureType]));
+                    structureType, game.m_infoContext.getStructureInfo(structureType).name, iStructures[structureType]));
 }
 
 void cPlayer::decreaseStructureAmount(int structureType)
@@ -692,7 +692,7 @@ void cPlayer::decreaseStructureAmount(int structureType)
     iStructures[structureType]--;
 
     log(std::format("decreaseStructureAmount result: iStructures[{}(={})]={}",
-                    structureType, game.structureInfos[structureType].name, iStructures[structureType]));
+                    structureType, game.m_infoContext.getStructureInfo(structureType).name, iStructures[structureType]));
 }
 
 std::string cPlayer::getHouseName() const
@@ -884,7 +884,7 @@ bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const
 
 bool cPlayer::canBuildUnitType(int iUnitType) const
 {
-    eListType listType = game.unitInfos[iUnitType].listType;
+    eListType listType = game.m_infoContext.getUnitInfo(iUnitType).listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iUnitType);
     bool result = pItem != nullptr;
     log(std::format("canBuildUnitType(unitType={}) -> {}", iUnitType, result ? "TRUE" : "FALSE"));
@@ -893,7 +893,7 @@ bool cPlayer::canBuildUnitType(int iUnitType) const
 
 bool cPlayer::canBuildSpecialType(int iType) const
 {
-    eListType listType = game.specialInfos[iType].listType;
+    eListType listType = game.m_infoContext.getSpecialInfo(iType).listType;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listType, iType);
 
     bool result = pItem != nullptr;
@@ -927,7 +927,7 @@ cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const
  */
 bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const
 {
-    s_UnitInfo &p = game.unitInfos[iUnitType];
+    s_UnitInfo &p = game.m_infoContext.getUnitInfo(iUnitType);
     eListType listType = p.listType;
     int subListId = p.subListId;
 
@@ -1038,7 +1038,7 @@ cBuildingListItem *cPlayer::isBuildingStructure() const
 
 bool cPlayer::startBuildingUnit(int iUnitType) const
 {
-    s_UnitInfo &unitType = game.unitInfos[iUnitType];
+    s_UnitInfo &unitType = game.m_infoContext.getUnitInfo(iUnitType);
     eListType listType = unitType.listType;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listType, iUnitType);
 
@@ -1059,7 +1059,7 @@ bool cPlayer::startBuildingStructure(int iStructureType) const
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(std::format("Wanting to build structure [{}] iStructureType = [{}], with listType[{}] - {}",
-                        game.structureInfos[iStructureType].name, iStructureType, eListTypeAsInt(listType), startedBuilding));
+                        game.m_infoContext.getStructureInfo(iStructureType).name, iStructureType, eListTypeAsInt(listType), startedBuilding));
     }
     return startedBuilding;
 }
@@ -1073,7 +1073,7 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(std::format("Wanting to build special [{}] iSpecialType = [{}], with listType[{}] - {}",
-                        game.specialInfos[iSpecialType].description, iSpecialType, eListTypeAsInt(listType), result));
+                        game.m_infoContext.getSpecialInfo(iSpecialType).description, iSpecialType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }
@@ -1086,7 +1086,7 @@ bool cPlayer::startUpgrading(int iUpgradeType) const
     if (game.isDebugMode()) {
         const std::string result = startedBuilding ? "SUCCESS" : "FALSE";
         log(std::format("Wanting to start upgrade [{}] iUpgradeType = [{}], with listType[{}] - {}",
-                        game.upgradeInfos[iUpgradeType].description, iUpgradeType, eListTypeAsInt(listType), result));
+                        game.m_infoContext.getUpgradeInfo(iUpgradeType).description, iUpgradeType, eListTypeAsInt(listType), result));
     }
     return startedBuilding;
 }
@@ -1137,8 +1137,8 @@ int cPlayer::findCellToPlaceStructure(int structureType)
     const std::vector<int> &allMyStructuresAsId = getAllMyStructuresAsId();
     std::vector<int> potentialCells = std::vector<int>();
 
-    int iWidth = game.structureInfos[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
-    int iHeight = game.structureInfos[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    int iWidth = game.m_infoContext.getStructureInfo(structureType).bmp_width / TILESIZE_WIDTH_PIXELS;
+    int iHeight = game.m_infoContext.getStructureInfo(structureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     for (auto &id : allMyStructuresAsId) {
         cAbstractStructure *aStructure = game.m_pStructures[id];
@@ -1259,12 +1259,12 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
 {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    log(std::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, game.unitInfos[iUnitType].name));
+    log(std::format("canBuildUnit: Wanting to build iUnitType = [{}(={})] allowed?...", iUnitType, game.m_infoContext.getUnitInfo(iUnitType).name));
 
     // CHECK 1: Do we have the money?
     if (checkIfAffordable) {
         if (!hasEnoughCreditsForUnit(iUnitType)) {
-            log(std::format("canBuildUnit: FALSE, because cost {} higher than credits {}", game.unitInfos[iUnitType].cost, getCredits()));
+            log(std::format("canBuildUnit: FALSE, because cost {} higher than credits {}", game.m_infoContext.getUnitInfo(iUnitType).cost, getCredits()));
             return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
         }
     }
@@ -1280,14 +1280,14 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(iStrucType)) {
         log(std::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for this unit: [{}]",
-                        game.structureInfos[iStrucType].name, game.unitInfos[iUnitType].name));
+                        game.m_infoContext.getStructureInfo(iStrucType).name, game.m_infoContext.getUnitInfo(iUnitType).name));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
     if (iUnitType == DEVASTATOR || iUnitType == SONICTANK || iUnitType == DEVIATOR) {
         if (!hasAtleastOneStructure(IX)) {
             log(std::format("canBuildUnit: FALSE, because we do not own the required ADDITIONAL structure type [{}] for this unit: [{}]",
-                            game.structureInfos[IX].name, game.unitInfos[iUnitType].name));
+                            game.m_infoContext.getStructureInfo(IX).name, game.m_infoContext.getUnitInfo(iUnitType).name));
             return eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE;
         }
     }
@@ -1296,7 +1296,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         // not available to build (not in list)
         // assume it requires an upgrade?
         log(std::format("canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [{}] for this unit: [{}]",
-                        eListTypeAsInt(game.unitInfos[iUnitType].listType), game.unitInfos[iUnitType].name));
+                        eListTypeAsInt(game.m_infoContext.getUnitInfo(iUnitType).listType), game.m_infoContext.getUnitInfo(iUnitType).name));
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
@@ -1309,14 +1309,14 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType)
 {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    s_SpecialInfo &special = game.specialInfos[iType];
+    s_SpecialInfo &special = game.m_infoContext.getSpecialInfo(iType);
     log(std::format("canBuildSpecial: Wanting to build iType = [{}(={})] allowed?...", iType, special.description));
 
     // Do we have the building needed?
     int iStrucType = PALACE; // TODO: get from "special" data structure?
     if (!hasAtleastOneStructure(iStrucType)) {
         log(std::format("canBuildUnit: FALSE, because we do not own the required structure type [{}] for [{}]",
-                        game.structureInfos[iStrucType].name, special.description));
+                        game.m_infoContext.getStructureInfo(iStrucType).name, special.description));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
@@ -1423,7 +1423,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
 
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    const s_StructureInfo &structureType = game.structureInfos[iStructureType];
+    const s_StructureInfo &structureType = game.m_infoContext.getStructureInfo(iStructureType);
     log(std::format("canBuildStructure: Wanting to build iStructureType = [{}(={})], allowed?...",
                     iStructureType, structureType.name));
 
@@ -1437,7 +1437,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(CONSTYARD)) {
         log(std::format("canBuildStructure: FALSE, reason REQUIRES_STRUCTURE: we do not own the required structure type [{}] for this structure: [{}]",
-                        game.structureInfos[CONSTYARD].name, structureType.name));
+                        game.m_infoContext.getStructureInfo(CONSTYARD).name, structureType.name));
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
@@ -1467,7 +1467,7 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
         return nullptr;
     }
 
-    if (m_autoSlabStructures && game.structureInfos[iStructureTypeId].hasConcrete) {
+    if (m_autoSlabStructures && game.m_infoContext.getStructureInfo(iStructureTypeId).hasConcrete) {
         pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
     }
 
@@ -1496,10 +1496,10 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
 
     int healthPercentage = 100;
 
-    if (game.structureInfos[iStructureTypeId].hasConcrete) {
+    if (game.m_infoContext.getStructureInfo(iStructureTypeId).hasConcrete) {
         int slabbed = pStructureFactory->getSlabStatus(destinationCell, iStructureTypeId);
-        int height = game.structureInfos[iStructureTypeId].bmp_height / TILESIZE_HEIGHT_PIXELS;
-        int width = game.structureInfos[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
+        int height = game.m_infoContext.getStructureInfo(iStructureTypeId).bmp_height / TILESIZE_HEIGHT_PIXELS;
+        int width = game.m_infoContext.getStructureInfo(iStructureTypeId).bmp_width / TILESIZE_WIDTH_PIXELS;
         int surface = width * height;
         healthPercentage = 50 + healthBar(50, slabbed, surface); // the minimum is 50% (with no slabs)
     }
@@ -1676,14 +1676,14 @@ bool cPlayer::hasEnoughPowerFor(int structureType) const
     assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");
     assert(structureType < MAX_STRUCTURETYPES && "hasEnoughPowerFor called with structureType >= MAX_STRUCTURETYPES!");
     int powerLeft = powerProduce_ - powerUsage_;
-    return game.structureInfos[structureType].power_drain <= powerLeft;
+    return game.m_infoContext.getStructureInfo(structureType).power_drain <= powerLeft;
 }
 
 void cPlayer::logStructures()
 {
     log("cPlayer::logStructures() START");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-        log(std::format("[{}] amount [{}]", game.structureInfos[i].name, iStructures[i]));
+        log(std::format("[{}] amount [{}]", game.m_infoContext.getStructureInfo(i).name, iStructures[i]));
     }
     log("cPlayer::logStructures() END");
 }
@@ -1765,8 +1765,8 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     }
 
     // checks if this structure can be placed on this cell
-    int w = game.structureInfos[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
-    int h = game.structureInfos[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    int w = game.m_infoContext.getStructureInfo(iStructureType).bmp_width / TILESIZE_WIDTH_PIXELS;
+    int h = game.m_infoContext.getStructureInfo(iStructureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     int x = game.m_map.getCellX(iCell);
     int y = game.m_map.getCellY(iCell);
@@ -1932,7 +1932,7 @@ bool cPlayer::startBuilding(eBuildType buildType, int buildId)
 
 bool cPlayer::couldBuildSpecial(int iType)
 {
-    s_SpecialInfo &special = game.specialInfos[iType];
+    s_SpecialInfo &special = game.m_infoContext.getSpecialInfo(iType);
     if (special.house & getHouseBitFlag()) {
         // it is applicable for this house
         return true;

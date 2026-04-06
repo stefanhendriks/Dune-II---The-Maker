@@ -34,6 +34,12 @@
 #include "gameobjects/sTerrainInfo.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/projectiles/cBulletInfos.h"
+#include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/structures/cStructureInfo.h"
+#include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"
@@ -69,7 +75,6 @@
 #include "utils/cFileValidator.h"
 #include "utils/cFocusManager.h"
 #include "utils/cIniFile.h"
-#include "utils/cIniGameRessouces.h"
 #include "utils/cLog.h"
 #include "utils/Color.hpp"
 #include "utils/cSoundPlayer.h"
@@ -158,6 +163,7 @@ void cGame::applySettings(GameSettings *gs)
     m_gameFilename = gs->gameFilename;
 }
 
+
 void cGame::init()
 {
     m_map.setTerrainInfo(m_TerrainInfo);
@@ -200,6 +206,14 @@ void cGame::init()
     for (auto& particle : m_particles) {
         particle.init();
     }
+
+    // Initialize InfoContext with empty objects that will be populated by cIni::installGame()
+    m_infoContext.setBulletInfos(std::make_unique<cBulletInfos>());
+    m_infoContext.setSpecialInfos(std::make_unique<cSpecialInfos>());
+    m_infoContext.setUpgradeInfos(std::make_unique<cUpgradeInfos>());
+    m_infoContext.setUnitInfos(std::make_unique<cUnitInfos>());
+    m_infoContext.setStructureInfos(std::make_unique<cStructureInfos>());
+    m_infoContext.setParticleInfos(std::make_unique<cParticleInfos>());
 
     // Units & Structures are already initialized in map.init()
     // Load properties
@@ -654,17 +668,18 @@ bool cGame::setupGame()
         game.getPlayer(i).setHousesInfo(m_Houses);
     }
     logbook("Setup:  STRUCTURES");
-    IniGameRessources::install_structures();
+    cInfoContextCreator infoCreator;
+    game.m_infoContext.setStructureInfos(infoCreator.createStructureInfos());
     logbook("Setup:  PROJECTILES");
-    IniGameRessources::install_bullets();
+    game.m_infoContext.setBulletInfos(infoCreator.createBulletInfos());
     logbook("Setup:  UNITS");
-    IniGameRessources::install_units();
+    game.m_infoContext.setUnitInfos(infoCreator.createUnitInfos());
     logbook("Setup:  SPECIALS");
-    IniGameRessources::install_specials();
+    game.m_infoContext.setSpecialInfos(infoCreator.createSpecialInfos());
     logbook("Setup:  PARTICLES");
-    IniGameRessources::install_particles();
+    game.m_infoContext.setParticleInfos(infoCreator.createParticleInfos());
     logbook("Setup:  TERRAINS");
-    IniGameRessources::install_terrain(m_TerrainInfo);
+    infoCreator.installTerrain(m_TerrainInfo);
 
     delete m_mapCamera;
     m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
@@ -677,7 +692,7 @@ bool cGame::setupGame()
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
-    IniGameRessources::install_upgrades();
+    game.m_infoContext.setUpgradeInfos(infoCreator.createUpgradeInfos());
     cPlayer *humanPlayer = &game.getPlayer(HUMAN);
 
     delete game.m_drawManager;
@@ -1118,7 +1133,7 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
         return;
     }
 
-    const auto structureInfo = structureInfos[event.entitySpecificType];
+    const auto structureInfo = (*m_infoContext.getStructureInfos())[event.entitySpecificType];
     int unitTypeToSpawn = structureInfo.uponDestructionSpawnUnitType;
     if (unitTypeToSpawn < 0) {
         return;

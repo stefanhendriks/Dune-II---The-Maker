@@ -215,10 +215,10 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                         }
                         else if (thingIWant.buildType == eBuildType::SPECIAL) {
                             // or a special kind of thing I ordered should produce a unit
-                            if (game.specialInfos[thingIWant.type].providesType == eBuildType::UNIT) {
+                            if (game.m_infoContext.getSpecialInfo(thingIWant.type).providesType == eBuildType::UNIT) {
                                 // it provides a unit AND the kind of unit it provides matches that what
                                 // has been created... then we *also* are interested.
-                                if (game.specialInfos[thingIWant.type].providesTypeId == event.entitySpecificType) {
+                                if (game.m_infoContext.getSpecialInfo(thingIWant.type).providesTypeId == event.entitySpecificType) {
                                     // in case we have multiple entries with same type we check for produced vs required
 
                                     // do not look at produced property, because we should have only ONE SPECIAL KIND
@@ -352,7 +352,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                     cSideBar *pSideBar = player->getSideBar();
                     int awaitingResourcesTimeToIncrease = 15;
                     if (thingIWant.buildType == UNIT) {
-                        cBuildingListItem *pItem = pSideBar->getBuildingListItem(game.unitInfos[thingIWant.type].listType,
+                        cBuildingListItem *pItem = pSideBar->getBuildingListItem(game.m_infoContext.getUnitInfo(thingIWant.type).listType,
                                                    thingIWant.type);
 
                         if (pItem) {
