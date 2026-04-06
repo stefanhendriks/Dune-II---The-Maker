@@ -52,7 +52,9 @@ void cFlag::thinkFast()
     m_TIMER_animate++;
     if (m_TIMER_animate > m_animationDelay) {
         m_frame++;
-        if (m_frame > (m_frames-1)) m_frame = 0;
+        if (m_frame > (m_frames-1)) {
+            m_frame = 0;
+        }
         m_TIMER_animate = 0;
     }
 }
