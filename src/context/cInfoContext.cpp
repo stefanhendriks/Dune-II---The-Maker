@@ -75,3 +75,26 @@ cUnitInfos* cInfoContext::getUnitInfos() const {
     return m_unitInfos.get();
 }
 
+s_ParticleInfo& cInfoContext::getParticleInfo(int i) const {
+    return (*m_particleInfos)[i];
+}
+
+s_StructureInfo& cInfoContext::getStructureInfo(int i) const {
+    return (*m_structureInfos)[i];
+}
+
+s_BulletInfo& cInfoContext::getBulletInfo(int i) const {
+    return (*m_bulletInfos)[i];
+}
+
+s_SpecialInfo& cInfoContext::getSpecialInfo(int i) const {
+    return (*m_specialInfos)[i];
+}
+
+s_UpgradeInfo& cInfoContext::getUpgradeInfo(int i) const {
+    return (*m_upgradeInfos)[i];
+}
+
+s_UnitInfo& cInfoContext::getUnitInfo(int i) const {
+    return (*m_unitInfos)[i];
+}

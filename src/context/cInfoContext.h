@@ -30,6 +30,15 @@ public:
     cUpgradeInfos* getUpgradeInfos() const;
     void setUnitInfos(std::unique_ptr<cUnitInfos> unitInfos);
     cUnitInfos* getUnitInfos() const;
+
+    // Convenience getters for individual elements
+    s_ParticleInfo& getParticleInfo(int i) const;
+    s_StructureInfo& getStructureInfo(int i) const;
+    s_BulletInfo& getBulletInfo(int i) const;
+    s_SpecialInfo& getSpecialInfo(int i) const;
+    s_UpgradeInfo& getUpgradeInfo(int i) const;
+    s_UnitInfo& getUnitInfo(int i) const;
+
 private:
     std::unique_ptr<cParticleInfos> m_particleInfos;
     std::unique_ptr<cStructureInfos> m_structureInfos;
