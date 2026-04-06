@@ -14,6 +14,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/sTerrainInfo.h"
 
 std::unique_ptr<cUnitInfos> cInfoContextCreator::createUnitInfos() {
     auto unitInfos = std::make_unique<cUnitInfos>();
@@ -1572,3 +1573,15 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     strcpy(structureInfos[RTURRET].name, "Rocket Turret");
 }
 
+/*****************************
+ Terrain Rules
+ *****************************/
+void cInfoContextCreator::installTerrain(std::shared_ptr<s_TerrainInfo>& terrainInfo)
+{
+    terrainInfo->bloomTimerDuration = 200;
+    terrainInfo->terrainSpiceMinSpice = 50;
+    terrainInfo->terrainSpiceMaxSpice = 125;
+    terrainInfo->terrainSpiceHillMinSpice = 75;
+    terrainInfo->terrainSpiceHillMaxSpice = 150;
+    terrainInfo->terrainWallHp = 100;
+}
