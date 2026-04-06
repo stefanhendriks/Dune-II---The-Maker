@@ -24,16 +24,19 @@
 #include "player/cPlayers.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/projectiles/cBullets.h"
 #include "utils/cStructureUtils.h"
+
+// rip this in InfoContextCreator
+#include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/cSpecialInfos.h"
 #include "gameobjects/cUpgradeInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
+// end rip
 
 #include <memory>
 #include <string>
@@ -126,17 +129,18 @@ public:
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     cStructureUtils             m_structureUtils;
+    cPlayers                    m_Players;
+    cParticles                  m_particles;
+    cStructures                 m_pStructures;
+    cUnits                      m_Units;
+    cMap                        m_map;
+    // rip this in InfoContextCreator
     cBulletInfos   			    bulletInfos;
     cSpecialInfos               specialInfos;
     cUpgradeInfos               upgradeInfos;
     cUnitInfos                  unitInfos;
     cStructureInfos             structureInfos;
-    cPlayers                    m_Players;
-    cParticles                  m_particles;
     cParticleInfos              m_particleInfos;
-    cStructures                 m_pStructures;
-    cUnits                      m_Units;
-    cMap                        m_map;
     // end
 
     // Initialization functions
