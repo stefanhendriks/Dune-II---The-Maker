@@ -185,11 +185,14 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 {
     int new_id = -1;
 
-    for (size_t i = 0; i < game.g_Bullets.size(); i++)
-        if (game.g_Bullets[i].bAlive == false) {
-            new_id = static_cast<int>(i);
+    int i = 0;
+    for (auto &bullet : game.g_Bullets) {
+        if (!bullet.bAlive) {
+            new_id = i;
             break;
         }
+        i++;
+    }
 
     if (new_id < 0)
         return -1;  // failed

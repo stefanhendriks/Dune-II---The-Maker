@@ -586,7 +586,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     cParticle &pParticle = game.m_particles[iNewId];
-    if (iType >= 0 && static_cast<size_t>(iType) < game.m_particleInfos.size()) {
+    const int particleInfoCount = game.m_particleInfos.size();
+    if (iType >= 0 && iType < particleInfoCount) {
         s_ParticleInfo &sParticle = game.m_particleInfos[iType];
         pParticle.init(sParticle);
     }
@@ -717,9 +718,12 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
 int cParticle::findNewSlot()
 {
-    for (size_t i = 0; i < game.m_particles.size(); i++) {
-        if (!game.m_particles[i].isValid())
-            return static_cast<int>(i);
+    int i = 0;
+    for (auto &particle : game.m_particles) {
+        if (!particle.isValid()) {
+            return i;
+        }
+        i++;
     }
 
     return -1;
