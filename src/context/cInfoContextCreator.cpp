@@ -1,4 +1,5 @@
 #include "context/cInfoContextCreator.h"
+#include "context/cInfoContext.h"
 #include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
@@ -56,6 +57,21 @@ std::unique_ptr<s_TerrainInfo> cInfoContextCreator::createTerrainInfos() {
     auto terrainInfo = std::make_unique<s_TerrainInfo>();
     installTerrain(terrainInfo.get());
     return terrainInfo;
+}
+
+void cInfoContextCreator::installInfos(cInfoContext& infoContext) {
+    logbook("Setup:  STRUCTURES");
+    infoContext.setStructureInfos(createStructureInfos());
+    logbook("Setup:  PROJECTILES");
+    infoContext.setBulletInfos(createBulletInfos());
+    logbook("Setup:  UNITS");
+    infoContext.setUnitInfos(createUnitInfos());
+    logbook("Setup:  SPECIALS");
+    infoContext.setSpecialInfos(createSpecialInfos());
+    logbook("Setup:  PARTICLES");
+    infoContext.setParticleInfos(createParticleInfos());
+    logbook("Setup:  TERRAINS");
+    infoContext.setTerrainInfo(createTerrainInfos());
 }
 
 /********************************
