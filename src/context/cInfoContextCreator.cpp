@@ -52,6 +52,12 @@ std::unique_ptr<cUpgradeInfos> cInfoContextCreator::createUpgradeInfos() {
     return upgradeInfos;
 }
 
+std::unique_ptr<s_TerrainInfo> cInfoContextCreator::createTerrainInfos() {
+    auto terrainInfo = std::make_unique<s_TerrainInfo>();
+    installTerrain(terrainInfo.get());
+    return terrainInfo;
+}
+
 /********************************
  House Rules
  ********************************/
@@ -1576,7 +1582,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
 /*****************************
  Terrain Rules
  *****************************/
-void cInfoContextCreator::installTerrain(const std::shared_ptr<s_TerrainInfo>& terrainInfo)
+void cInfoContextCreator::installTerrain(s_TerrainInfo* terrainInfo)
 {
     terrainInfo->bloomTimerDuration = 200;
     terrainInfo->terrainSpiceMinSpice = 50;

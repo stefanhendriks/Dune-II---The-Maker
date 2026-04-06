@@ -9,9 +9,9 @@
 #include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/cSpecialInfos.h"
 #include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/sTerrainInfo.h"
 #include "context/cInfoContextCreator.h"
 
-struct s_TerrainInfo;
 class SDLDrawer;
 
 class cInfoContext {
@@ -31,8 +31,8 @@ public:
     cUpgradeInfos* getUpgradeInfos() const;
     void setUnitInfos(std::unique_ptr<cUnitInfos> unitInfos);
     cUnitInfos* getUnitInfos() const;
-    void setTerrainInfo(std::shared_ptr<s_TerrainInfo> terrainInfo);
-    std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
+    void setTerrainInfo(std::unique_ptr<s_TerrainInfo> terrainInfo);
+    s_TerrainInfo* getTerrainInfo() const;
     void initializeDefaultInfos();
 
     // Convenience getters for individual elements
@@ -50,5 +50,5 @@ private:
     std::unique_ptr<cSpecialInfos> m_specialInfos;
     std::unique_ptr<cUpgradeInfos> m_upgradeInfos;
     std::unique_ptr<cUnitInfos> m_unitInfos;
-    std::shared_ptr<s_TerrainInfo> m_terrainInfo;
+    std::unique_ptr<s_TerrainInfo> m_terrainInfo;
 };
