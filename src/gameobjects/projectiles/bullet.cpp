@@ -133,16 +133,16 @@ void cBullet::draw()
         return;
     }
 
-    if (game.bulletInfos[iType].bmp != nullptr) {
+    if (game.m_infoContext.getBulletInfo(iType).bmp != nullptr) {
         cRectangle src = {sx,sy, bmp_width, bmp_width};
         cRectangle dest = {x,y, static_cast<int>(round(game.m_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(game.m_mapCamera->factorZoomLevel(bmp_width)))};
-        global_renderDrawer->renderStrechSprite(game.bulletInfos[iType].bmp, src, dest);
+        global_renderDrawer->renderStrechSprite(game.m_infoContext.getBulletInfo(iType).bmp, src, dest);
     }
 }
 
 int cBullet::getBulletBmpWidth() const
 {
-    return game.bulletInfos[iType].bmp_width;
+    return game.m_infoContext.getBulletInfo(iType).bmp_width;
 }
 
 int cBullet::getBulletBmpHeight() const
@@ -474,7 +474,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
             if (ownerUnit.isValid()) {
                 // TODO: update statistics
 
-                if (game.unitInfos[groundUnitTakingDamage.iType].infantry) {
+                if (game.m_infoContext.getUnitInfo(groundUnitTakingDamage.iType).infantry) {
                     ownerUnit.fExperience += 0.25; // 4 kills = 1 star
                 }
                 else {
@@ -531,7 +531,7 @@ float cBullet::getDamageToInflictToInfantry() const
 {
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float result = difficultySettings->getInflictDamage(game.bulletInfos[iType].damage_infantry);
+    float result = difficultySettings->getInflictDamage(game.m_infoContext.getBulletInfo(iType).damage_infantry);
 
     if (iOwnerUnit > -1) {
         float fDam = game.getUnit(iOwnerUnit).fExpDamage() * result;
@@ -646,7 +646,7 @@ cPlayerDifficultySettings *cBullet::getDifficultySettings() const
 
 s_BulletInfo cBullet::gets_Bullet() const
 {
-    return game.bulletInfos[iType];
+    return game.m_infoContext.getBulletInfo(iType);
 }
 
 cPlayer *cBullet::getPlayer() const
@@ -668,7 +668,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float iDamage = difficultySettings->getInflictDamage(game.bulletInfos[iType].damage_vehicles) * factor;
+    float iDamage = difficultySettings->getInflictDamage(game.m_infoContext.getBulletInfo(iType).damage_vehicles) * factor;
 
     cUnit *pUnit = nullptr;
     int originId = -1;

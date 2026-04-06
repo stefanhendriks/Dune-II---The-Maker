@@ -92,7 +92,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
         return -1;
     }
 
-    s_UnitInfo &sUnitType = game.unitInfos[unitType];
+    s_UnitInfo &sUnitType = game.m_infoContext.getUnitInfo(unitType);
 
     // check if unit already exists on location
     if (!sUnitType.airborn && game.m_map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {

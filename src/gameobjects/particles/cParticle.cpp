@@ -140,7 +140,7 @@ void cParticle::draw()
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const {
-    s_ParticleInfo &particleInfo = game.m_particleInfos[iType];
+    s_ParticleInfo &particleInfo = game.m_infoContext.getParticleInfo(iType);
     return particleInfo;
 }
 
@@ -586,9 +586,9 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     cParticle &pParticle = game.m_particles[iNewId];
-    const int particleInfoCount = game.m_particleInfos.size();
+    const int particleInfoCount = game.m_infoContext.getParticleInfos()->size();
     if (iType >= 0 && iType < particleInfoCount) {
-        s_ParticleInfo &sParticle = game.m_particleInfos[iType];
+        s_ParticleInfo &sParticle = game.m_infoContext.getParticleInfo(iType);
         pParticle.init(sParticle);
     }
     else {
@@ -832,7 +832,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
 
-    int bmpIndex = game.m_particleInfos[iType].bmpIndex;
+    int bmpIndex = game.m_infoContext.getParticleInfo(iType).bmpIndex;
     if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;

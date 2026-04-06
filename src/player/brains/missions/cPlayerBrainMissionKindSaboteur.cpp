@@ -15,8 +15,8 @@ cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player
     assert(mission != nullptr);
     targetStructureID = -1;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
-    specificBuildTypeToGoToSelectTargetState = game.specialInfos[SPECIAL_SABOTEUR].providesType;
-    specificBuildIdToGoToSelectTargetState = game.specialInfos[SPECIAL_SABOTEUR].providesTypeId;
+    specificBuildTypeToGoToSelectTargetState = game.m_infoContext.getSpecialInfo(SPECIAL_SABOTEUR).providesType;
+    specificBuildIdToGoToSelectTargetState = game.m_infoContext.getSpecialInfo(SPECIAL_SABOTEUR).providesTypeId;
 }
 
 cPlayerBrainMissionKindSaboteur::~cPlayerBrainMissionKindSaboteur()

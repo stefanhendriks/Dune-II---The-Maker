@@ -28,15 +28,7 @@
 #include "gameobjects/projectiles/cBullets.h"
 #include "utils/cStructureUtils.h"
 
-// rip this in InfoContextCreator
-#include "gameobjects/particles/cParticleInfos.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
-#include "gameobjects/cSpecialInfos.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
-// end rip
+#include "context/cInfoContext.h"
 
 #include <memory>
 #include <string>
@@ -134,14 +126,7 @@ public:
     cStructures                 m_pStructures;
     cUnits                      m_Units;
     cMap                        m_map;
-    // rip this in InfoContextCreator
-    cBulletInfos   			    bulletInfos;
-    cSpecialInfos               specialInfos;
-    cUpgradeInfos               upgradeInfos;
-    cUnitInfos                  unitInfos;
-    cStructureInfos             structureInfos;
-    cParticleInfos              m_particleInfos;
-    // end
+    cInfoContext                m_infoContext;
 
     // Initialization functions
     void init();		            // initialize all game variables

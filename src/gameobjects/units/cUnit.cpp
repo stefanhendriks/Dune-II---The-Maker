@@ -372,7 +372,7 @@ void cUnit::createExplosionParticle()
 
                         int iChance = 10;
 
-                        if (pStructure->getHitPoints() < (game.structureInfos[pStructure->getType()].hp / 2)) {
+                        if (pStructure->getHitPoints() < (game.m_infoContext.getStructureInfo(pStructure->getType()).hp / 2)) {
                             iChance = 30;
                         }
 
@@ -531,7 +531,7 @@ int cUnit::center_draw_y()
 
 int cUnit::getBmpHeight() const
 {
-    return game.unitInfos[iType].bmp_height;
+    return game.m_infoContext.getUnitInfo(iType).bmp_height;
 }
 
 void cUnit::draw_spice()
@@ -556,7 +556,7 @@ void cUnit::draw_spice()
 
 int cUnit::getBmpWidth() const
 {
-    return game.unitInfos[iType].bmp_width;
+    return game.m_infoContext.getUnitInfo(iType).bmp_width;
 }
 
 float cUnit::getHealthNormalized()
@@ -1279,7 +1279,7 @@ void cUnit::think_turn_to_desired_body_facing()
     // BODY is not facing correctly
     turnTimer.increment();
 
-    float turnspeed = game.unitInfos[iType].turnspeed;
+    float turnspeed = game.m_infoContext.getUnitInfo(iType).turnspeed;
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
         double distance = game.m_map.distance(position.iCell, movement.iGoalCell);
@@ -2049,7 +2049,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     if (isInfantryUnit()) {
         if (iType == INFANTRY || iType == TROOPERS) {
             // turn into soldier or trooper when on 50% health
-            if (iHitPoints <= (game.unitInfos[iType].hp / 3)) {
+            if (iHitPoints <= (game.m_infoContext.getUnitInfo(iType).hp / 3)) {
                 // leave 2 dead bodies (of 3 ;))
 
                 // turn into single one
@@ -2059,7 +2059,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                 if (iType == TROOPERS)
                     iType = TROOPER;
 
-                iHitPoints = game.unitInfos[iType].hp;
+                iHitPoints = game.m_infoContext.getUnitInfo(iType).hp;
 
                 int half = 16;
                 int iDieX = pos_x() + half;
@@ -2079,7 +2079,7 @@ void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
     game.getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, movement.iGoalCell = {}] '{}'",
-                                     iID, iType, game.unitInfos[iType].name, position.iCell, movement.iGoalCell, txt));
+                                     iID, iType, game.m_infoContext.getUnitInfo(iType).name, position.iCell, movement.iGoalCell, txt));
 }
 
 /**
@@ -2388,7 +2388,7 @@ int cUnit::getSight() const
 
 s_UnitInfo &cUnit::getUnitInfo() const
 {
-    return game.unitInfos[iType];
+    return game.m_infoContext.getUnitInfo(iType);
 }
 
 // thinking about movement (called every 5 ms)
@@ -2937,10 +2937,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         if (iPlayer == AI_CPU5 && game.getPlayer(HUMAN).isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            game.m_map.clearShroud(position.iCell, game.unitInfos[iType].sight, HUMAN);
+            game.m_map.clearShroud(position.iCell, game.m_infoContext.getUnitInfo(iType).sight, HUMAN);
         }
 
-        game.m_map.clearShroud(position.iCell, game.unitInfos[iType].sight, iPlayer);
+        game.m_map.clearShroud(position.iCell, game.m_infoContext.getUnitInfo(iType).sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (movement.bCalculateNewPath) {
@@ -2997,7 +2997,7 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait)
 
 bool cUnit::isInfantryUnit() const
 {
-    return game.unitInfos[iType].infantry;
+    return game.m_infoContext.getUnitInfo(iType).infantry;
 }
 
 cUnit::cUnit()
@@ -3274,7 +3274,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     }
 
     log(std::format("cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [{}]",
-                    game.structureInfos[structureType].name));
+                    game.m_infoContext.getStructureInfo(structureType).name));
 
     const sFindBestStructureResult &result = findBestStructureCandidateToHeadTo(structureType);
 
@@ -3657,7 +3657,7 @@ int cUnit::findNearbyStructureToAttack(int range)
 
 int cUnit::getTurnSpeed()
 {
-    return game.unitInfos[iType].turnspeed;
+    return game.m_infoContext.getUnitInfo(iType).turnspeed;
 }
 
 void cUnit::think_harvester()
@@ -3693,7 +3693,7 @@ void cUnit::think_harvester()
 
         // when we should harvest...
         cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
-        if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(game.unitInfos[iType].harvesting_speed)) &&
+        if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(game.m_infoContext.getUnitInfo(iType).harvesting_speed)) &&
                 iCredits < getUnitInfo().credit_capacity) {
             harvestTimer.reset(1);
 
@@ -3702,8 +3702,8 @@ void cUnit::think_harvester()
             if (rendering.iFrame > 3)
                 rendering.iFrame = 1;
 
-            iCredits += game.unitInfos[iType].harvesting_amount;
-            game.m_map.cellTakeCredits(position.iCell, game.unitInfos[iType].harvesting_amount);
+            iCredits += game.m_infoContext.getUnitInfo(iType).harvesting_amount;
+            game.m_map.cellTakeCredits(position.iCell, game.m_infoContext.getUnitInfo(iType).harvesting_amount);
 
             // turn into sand/spice (when spicehill)
             if (game.m_map.getCellCredits(position.iCell) <= 0) {
