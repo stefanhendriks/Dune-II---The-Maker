@@ -119,16 +119,16 @@ void cPlayerBrainSkirmish::addBuildOrder(s_buildOrder order)
         std::string msg;
         if (buildOrder.buildType == eBuildType::UNIT) {
             msg = std::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              game.m_infoContext.getUnitInfo(buildOrder.buildId).name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              game.m_infoContext->getUnitInfo(buildOrder.buildId).name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
             msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
-                              buildOrder.buildId, game.m_infoContext.getStructureInfo(buildOrder.buildId).name, buildOrder.priority,
+                              buildOrder.buildId, game.m_infoContext->getStructureInfo(buildOrder.buildId).name, buildOrder.priority,
                               buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {
             msg = std::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              game.m_infoContext.getSpecialInfo(buildOrder.buildId).description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              game.m_infoContext->getSpecialInfo(buildOrder.buildId).description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::BULLET) {
             msg = std::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
@@ -260,7 +260,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
         if (!pStructure->isRepairing()) {
-            s_StructureInfo &sStructures = game.m_infoContext.getStructureInfo(event.entitySpecificType);
+            s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                 pStructure->startRepairing();
             }
@@ -296,7 +296,7 @@ void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event)
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
         if (!pStructure->isRepairing()) {
-            s_StructureInfo &sStructures = game.m_infoContext.getStructureInfo(event.entitySpecificType);
+            s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                 pStructure->startRepairing();
             }

@@ -1133,7 +1133,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = game.m_infoContext.getStructureInfo(LIGHTFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = game.m_infoContext->getStructureInfo(LIGHTFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].needsStructureType = LIGHTFACTORY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].structureType = LIGHTFACTORY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
@@ -1151,7 +1151,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = game.m_infoContext.getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
@@ -1167,7 +1167,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = game.m_infoContext.getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
@@ -1182,7 +1182,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = game.m_infoContext.getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
@@ -1197,7 +1197,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].techLevel = 6;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = game.m_infoContext.getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1;
@@ -1213,7 +1213,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = game.m_infoContext.getStructureInfo(HIGHTECH).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = game.m_infoContext->getStructureInfo(HIGHTECH).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
@@ -1228,7 +1228,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = game.m_infoContext.getStructureInfo(WOR).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = game.m_infoContext->getStructureInfo(WOR).cost / 2;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].structureType = WOR;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
@@ -1245,7 +1245,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = game.m_infoContext.getStructureInfo(BARRACKS).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = game.m_infoContext->getStructureInfo(BARRACKS).cost / 2;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].structureType = BARRACKS;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
