@@ -223,6 +223,8 @@ void cGame::missionInit()
     m_screenShake->reset();
 
     m_map.init(64, 64);
+    // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
+    m_map.setTerrainInfo(m_infoContext.getTerrainInfo());
 
     initPlayers(true);
 
@@ -655,19 +657,8 @@ bool cGame::setupGame()
         game.getPlayer(i).init(i, nullptr);
         game.getPlayer(i).setHousesInfo(m_Houses);
     }
-    logbook("Setup:  STRUCTURES");
     cInfoContextCreator infoCreator;
-    game.m_infoContext.setStructureInfos(infoCreator.createStructureInfos());
-    logbook("Setup:  PROJECTILES");
-    game.m_infoContext.setBulletInfos(infoCreator.createBulletInfos());
-    logbook("Setup:  UNITS");
-    game.m_infoContext.setUnitInfos(infoCreator.createUnitInfos());
-    logbook("Setup:  SPECIALS");
-    game.m_infoContext.setSpecialInfos(infoCreator.createSpecialInfos());
-    logbook("Setup:  PARTICLES");
-    game.m_infoContext.setParticleInfos(infoCreator.createParticleInfos());
-    logbook("Setup:  TERRAINS");
-    game.m_infoContext.setTerrainInfo(infoCreator.createTerrainInfos());
+    infoCreator.installInfos(game.m_infoContext);
 
     delete m_mapCamera;
     m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
