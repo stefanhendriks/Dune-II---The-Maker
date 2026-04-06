@@ -31,7 +31,6 @@
 
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/sTerrainInfo.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureInfo.h"
@@ -121,8 +120,6 @@ cGame::cGame()
     ctx->setTimeManager(std::move(timeManager));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
-    // initialisation terrainInfo
-    m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 
     m_screenShake = std::make_unique<cScreenShake>();
 
@@ -161,7 +158,8 @@ void cGame::applySettings(GameSettings *gs)
 
 void cGame::init()
 {
-    m_map.setTerrainInfo(m_TerrainInfo);
+    m_infoContext.initializeDefaultInfos();
+    m_map.setTerrainInfo(m_infoContext.getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -669,7 +667,7 @@ bool cGame::setupGame()
     logbook("Setup:  PARTICLES");
     game.m_infoContext.setParticleInfos(infoCreator.createParticleInfos());
     logbook("Setup:  TERRAINS");
-    infoCreator.installTerrain(m_TerrainInfo);
+    infoCreator.installTerrain(game.m_infoContext.getTerrainInfo());
 
     delete m_mapCamera;
     m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
@@ -1682,11 +1680,6 @@ void cGame::takeBackGroundScreen()
     m_renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
     m_renderDrawer->endDrawingToTexture();
-}
-
-std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
-{
-    return m_TerrainInfo;
 }
 
 cReinforcements* cGame::getReinforcements() const

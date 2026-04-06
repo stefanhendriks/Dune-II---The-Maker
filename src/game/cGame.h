@@ -57,7 +57,6 @@ class SDLDrawer;
 class cMapCamera;
 class cDrawManager;
 
-struct s_TerrainInfo;
 struct s_DataCampaign;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -236,8 +235,6 @@ public:
     }
     void takeBackGroundScreen();
 
-    std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
-
     void goingToWinLoseBrief(int value);
 
     cReinforcements* getReinforcements() const;
@@ -294,8 +291,6 @@ private:
     SDLDrawer *m_renderDrawer = nullptr;
 
     std::shared_ptr<cHousesInfo> m_Houses;
-    std::shared_ptr<s_TerrainInfo> m_TerrainInfo;
-
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
     int m_newMusicSample;

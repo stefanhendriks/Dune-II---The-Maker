@@ -1576,7 +1576,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
 /*****************************
  Terrain Rules
  *****************************/
-void cInfoContextCreator::installTerrain(std::shared_ptr<s_TerrainInfo>& terrainInfo)
+void cInfoContextCreator::installTerrain(const std::shared_ptr<s_TerrainInfo>& terrainInfo)
 {
     terrainInfo->bloomTimerDuration = 200;
     terrainInfo->terrainSpiceMinSpice = 50;

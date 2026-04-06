@@ -5,6 +5,7 @@
 #include "gameobjects/cSpecialInfos.h"
 #include "gameobjects/cUpgradeInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
+#include "gameobjects/sTerrainInfo.h"
 
 cInfoContext::~cInfoContext() {
 }
@@ -71,6 +72,17 @@ void cInfoContext::setUnitInfos(std::unique_ptr<cUnitInfos> unitInfos) {
     m_unitInfos = std::move(unitInfos);
 }
 
+void cInfoContext::setTerrainInfo(std::shared_ptr<s_TerrainInfo> terrainInfo) {
+    if (!terrainInfo) {
+        throw std::runtime_error("s_TerrainInfo is not initialized!");
+    }
+    m_terrainInfo = std::move(terrainInfo);
+}
+
+std::shared_ptr<s_TerrainInfo> cInfoContext::getTerrainInfo() const {
+    return m_terrainInfo;
+}
+
 void cInfoContext::initializeDefaultInfos()
 {
     setBulletInfos(std::make_unique<cBulletInfos>());
@@ -79,6 +91,7 @@ void cInfoContext::initializeDefaultInfos()
     setUnitInfos(std::make_unique<cUnitInfos>());
     setStructureInfos(std::make_unique<cStructureInfos>());
     setParticleInfos(std::make_unique<cParticleInfos>());
+    setTerrainInfo(std::make_shared<s_TerrainInfo>());
 }
 
 cUnitInfos* cInfoContext::getUnitInfos() const {

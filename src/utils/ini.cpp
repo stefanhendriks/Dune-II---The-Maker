@@ -1543,12 +1543,12 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
 
-                if (wordtype == WORD_BLOOMTIMERDURATION) game.getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MINSPICE) game.getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MAXSPICE) game.getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MINSPICE) game.getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MAXSPICE) game.getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINWALL_HP) game.getTerrainInfo()->terrainWallHp = ToInt(word_right);
+                if (wordtype == WORD_BLOOMTIMERDURATION) game.m_infoContext.getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MINSPICE) game.m_infoContext.getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MAXSPICE) game.m_infoContext.getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MINSPICE) game.m_infoContext.getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MAXSPICE) game.m_infoContext.getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINWALL_HP) game.m_infoContext.getTerrainInfo()->terrainWallHp = ToInt(word_right);
             }
 
             // Structure w0h00
