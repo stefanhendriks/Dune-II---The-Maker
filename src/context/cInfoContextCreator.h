@@ -23,7 +23,7 @@ public:
     std::unique_ptr<cUpgradeInfos> createUpgradeInfos();
     std::unique_ptr<cUnitInfos> createUnitInfos();
 
-    void installTerrain(std::shared_ptr<s_TerrainInfo>& terrainInfo);
+    void installTerrain(const std::shared_ptr<s_TerrainInfo>& terrainInfo);
 
 private:
     void initUnits(cUnitInfos& unitInfos);
