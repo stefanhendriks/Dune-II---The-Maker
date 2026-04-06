@@ -7,6 +7,7 @@ class cStructureInfos;
 class cBulletInfos;
 class cSpecialInfos;
 class cUpgradeInfos;
+class cUnitInfos;
 class SDL_Renderer;
 
 class cInfoContextCreator {
@@ -20,6 +21,7 @@ public:
     std::unique_ptr<cBulletInfos> createBulletInfos();
     std::unique_ptr<cSpecialInfos> createSpecialInfos();
     std::unique_ptr<cUpgradeInfos> createUpgradeInfos();
+    std::unique_ptr<cUnitInfos> createUnitInfos();
 
 private:
     std::unique_ptr<cParticleInfos> m_particleInfos;
@@ -27,4 +29,5 @@ private:
     std::unique_ptr<cBulletInfos> m_bulletInfos;
     std::unique_ptr<cSpecialInfos> m_specialInfos;
     std::unique_ptr<cUpgradeInfos> m_upgradeInfos;
+    std::unique_ptr<cUnitInfos> m_unitInfos;
 };
