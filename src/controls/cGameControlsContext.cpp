@@ -43,23 +43,22 @@ cGameControlsContext::~cGameControlsContext()
     delete m_mouseDeployState;
 }
 
-
 void cGameControlsContext::updateMouseCell(const cPoint &coords)
 {
     if (coords.y < cSideBar::TopBarHeight) {
-        m_mouseCell = MOUSECELL_TOPBAR; // at the top bar or higher, so no mouse cell id.
+        m_mouseCell = MOUSE_CELL_HOVER_TOPBAR; // at the top bar or higher, so no mouse cell id.
         m_mouseOnBattleField = false;
         return;
     }
 
     if (game.m_drawManager->getMiniMapDrawer()->isMouseOver()) {
-        m_mouseCell = MOUSECELL_MINIMAP; // on minimap
+        m_mouseCell = MOUSE_CELL_HOVER_MINIMAP; // on minimap
         m_mouseOnBattleField = false;
         return;
     }
 
     if (coords.x > (game.m_screenW - cSideBar::SidebarWidth)) {
-        m_mouseCell = MOUSECELL_SIDEBAR; // on sidebar
+        m_mouseCell = MOUSE_CELL_HOVER_SIDEBAR; // on sidebar
         m_mouseOnBattleField = false;
         return;
     }
