@@ -572,6 +572,13 @@ bool cGame::setupGame()
     m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
+    m_keyBindings.loadDefaults();
+    if (settings->hasSection("KEYS")) {
+        m_keyBindings.loadFromSection(settings->getSection("KEYS"));
+    }
+    m_keyboard->setKeyBindings(&m_keyBindings);
+    logger->log(LOG_INFO, COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section", OUTC_SUCCESS);
+
     m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();

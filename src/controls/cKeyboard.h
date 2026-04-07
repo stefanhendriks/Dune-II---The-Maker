@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <set>
 
+class cKeyBindings;
+
 class cKeyboard {
 public:
     cKeyboard();
@@ -15,8 +17,13 @@ public:
         m_keyboardObserver = keyboardObserver;
     }
 
+    void setKeyBindings(const cKeyBindings *keyBindings) {
+        m_keyBindings = keyBindings;
+    }
+
 private:
     cInputObserver *m_keyboardObserver;
+    const cKeyBindings *m_keyBindings = nullptr;
     std::set<SDL_Scancode> m_keysPressed;
     std::set<SDL_Scancode> m_keysReleased;
     s_KeysCombo m_currentCombo;

@@ -1,29 +1,28 @@
 #include "cKeyboardEvent.h"
+#include "controls/cKeyBindings.h"
 
-cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo) :
+cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys,
+                               const s_KeysCombo &combo, const cKeyBindings *keyBindings) :
     m_eventType(eventType),
     m_keys(keys),
-    m_combo(combo)
+    m_combo(combo),
+    m_keyBindings(keyBindings)
 {
+}
+
+bool cKeyboardEvent::isAction(eKeyAction action) const
+{
+    if (!m_keyBindings) return false;
+    return m_keyBindings->matches(m_keys, m_combo, action);
 }
 
 int cKeyboardEvent::getGroupNumber() const
 {
-    if (hasKey(SDL_SCANCODE_1)) {
-        return 1;
-    }
-    if (hasKey(SDL_SCANCODE_2)) {
-        return 2;
-    }
-    if (hasKey(SDL_SCANCODE_3)) {
-        return 3;
-    }
-    if (hasKey(SDL_SCANCODE_4)) {
-        return 4;
-    }
-    if (hasKey(SDL_SCANCODE_5)) {
-        return 5;
-    }
+    if (isAction(eKeyAction::GROUP_1)) return 1;
+    if (isAction(eKeyAction::GROUP_2)) return 2;
+    if (isAction(eKeyAction::GROUP_3)) return 3;
+    if (isAction(eKeyAction::GROUP_4)) return 4;
+    if (isAction(eKeyAction::GROUP_5)) return 5;
     return 0;
 }
 
