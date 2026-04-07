@@ -46,7 +46,7 @@
 // #define MAP_FOG           2   // area is still fogged
 
 // SCROLLING (on a map)
-#define MAP_SCROLLSPEED   TILE_SIZE_PIXELS   // pixels per frames scrolling.
+// #define MAP_SCROLLSPEED   TILE_SIZE_PIXELS   // pixels per frames scrolling.
 
 // MEMORY USAGE: (units, structures, etc , more info below)
 // #define MAX_UNITS        300     // max of units in the game
