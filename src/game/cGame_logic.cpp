@@ -80,6 +80,7 @@
 #include "utils/RNG.hpp"
 
 #include "controls/cGameControlsContext.h"
+#include "controls/eKeyAction.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "map/cMapCamera.h"
 
@@ -1334,50 +1335,39 @@ void cGame::onKeyDownGame(const cKeyboardEvent &)
 
 void cGame::onKeyPressedGame(const cKeyboardEvent &event)
 {
-    // take screenshot
-    if (event.hasKey(SDL_SCANCODE_F11)) {
+    if (event.isAction(eKeyAction::SCREENSHOT)) {
         saveBmpScreenToDisk();
     }
 
-    if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
+    if (event.isAction(eKeyAction::TOGGLE_MUSIC)) {
         game.m_playMusic = !game.m_playMusic;
         if (!game.m_playMusic) {
             m_soundPlayer->stopMusic();
-            //@mira regression humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
         }
         else {
             m_soundPlayer->playMusic(m_newMusicSample);
-            //@mira regression humanPlayer.addNotification("Music enabled", eNotificationType::NEUTRAL);
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_O) || event.hasKey(SDL_SCANCODE_VOLUMEDOWN)) {
+    if (event.isAction(eKeyAction::MUSIC_VOLUME_DOWN)) {
         m_soundPlayer->changeMusicVolume(-10);
     }
 
-    if (event.hasKey(SDL_SCANCODE_P) || event.hasKey(SDL_SCANCODE_VOLUMEUP) ) {
+    if (event.isAction(eKeyAction::MUSIC_VOLUME_UP)) {
         m_soundPlayer->changeMusicVolume(10);
     }
 
-    if (event.hasKey(SDL_SCANCODE_KP_PLUS)) {
+    if (event.isAction(eKeyAction::GAME_SPEED_UP)) {
         auto timerManager = ctx->getTimeManager();
         timerManager->setGlobalSpeedVariation(-1);
     }
 
-    if (event.hasKey(SDL_SCANCODE_KP_MINUS)) {
+    if (event.isAction(eKeyAction::GAME_SPEED_DOWN)) {
         auto timerManager = ctx->getTimeManager();
         timerManager->setGlobalSpeedVariation(1);
     }
 
-    if (event.isAltPressed()) {
-        onKeyPressedLALTGame(event);
-    }
-}
-
-void cGame::onKeyPressedLALTGame(const cKeyboardEvent &event)
-{
-    // toggle fullscreen
-    if (event.hasKey(SDL_SCANCODE_RETURN)) {
+    if (event.isAction(eKeyAction::TOGGLE_FULLSCREEN)) {
         if (m_windowed) {
             m_Screen->setFullScreenMode();
             m_windowed = false;
@@ -1387,8 +1377,7 @@ void cGame::onKeyPressedLALTGame(const cKeyboardEvent &event)
         }
     }
 
-    // toggle cheat mode
-    if (event.hasKey(SDL_SCANCODE_C)) {
+    if (event.isAction(eKeyAction::TOGGLE_CHEAT)) {
         m_cheatMode = !m_cheatMode;
         cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode enabled", "All cheats are now enabled. Have fun!");
     }
@@ -1559,54 +1548,43 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
     const cPlayer &humanPlayer = game.getPlayer(HUMAN);
 
-    if (event.hasKey(SDL_SCANCODE_0)) {
+    if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
         game.m_drawManager->setPlayerToDraw(&game.getPlayer(0));
         game.setPlayerToInteractFor(&game.getPlayer(0));
     }
-    else if (event.hasKey(SDL_SCANCODE_1)) {
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
         game.m_drawManager->setPlayerToDraw(&game.getPlayer(1));
         game.setPlayerToInteractFor(&game.getPlayer(1));
     }
-    else if (event.hasKey(SDL_SCANCODE_2)) {
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
         game.m_drawManager->setPlayerToDraw(&game.getPlayer(2));
         game.setPlayerToInteractFor(&game.getPlayer(2));
     }
-    else if (event.hasKey(SDL_SCANCODE_3)) {
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
         game.m_drawManager->setPlayerToDraw(&game.getPlayer(3));
         game.setPlayerToInteractFor(&game.getPlayer(3));
     }
 
-    // WIN MISSION
-    if (event.hasKey(SDL_SCANCODE_F2)) {
+    if (event.isAction(eKeyAction::DEBUG_WIN)) {
         game.setMissionWon();
     }
 
-    // LOSE MISSION
-    if (event.hasKey(SDL_SCANCODE_F3)) {
+    if (event.isAction(eKeyAction::DEBUG_LOSE)) {
         game.setMissionLost();
     }
 
-    // GIVE CREDITS TO ALL PLAYERS
-    if (event.hasKey(SDL_SCANCODE_F4)) {
+    if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {
         for (int i = 0; i < AI_WORM; i++) {
             game.getPlayer(i).setCredits(5000);
         }
     }
 
-    // SPAWN ENEMY AIR UNIT
-    if (event.hasKey(SDL_SCANCODE_F8)) {
+    if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(
-            mc,
-            ORNITHOPTER,
-            1,
-            false,
-            false
-        );
+        cUnits::unitCreate(mc, ORNITHOPTER, 1, false, false);
     }
 
-    //DESTROY UNIT OR BUILDING
-    if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
+    if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_map.getCellIdUnitLayer(mc);
@@ -1631,8 +1609,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         }
     }
 
-    //DESTROY UNIT OR BUILDING
-    if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
+    if (event.isAction(eKeyAction::DEBUG_DAMAGE_AT_CURSOR)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_map.getCellIdUnitLayer(mc);
@@ -1644,18 +1621,13 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
                 }
             }
         }
-    }
-    else {
-        // REVEAL MAP
-        if (event.hasKey(SDL_SCANCODE_F5)) {
-            for (int i = 0; i < AI_WORM; i++) {
-                m_map.clear_all(i);
-            }
+    } else if (event.isAction(eKeyAction::DEBUG_REVEAL_MAP)) {
+        for (int i = 0; i < AI_WORM; i++) {
+            m_map.clear_all(i);
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_F6)) {
-        // kill all carry-all's
+    if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
             cUnit &pUnit = m_Units[unitId];

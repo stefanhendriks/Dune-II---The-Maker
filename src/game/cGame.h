@@ -341,7 +341,6 @@ private:
     void onKeyDownGame(const cKeyboardEvent &event);
     void onKeyPressedGame(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);
-    void onKeyPressedLALTGame(const cKeyboardEvent &event);
 
     void fadeOutOrBlitScreenBuffer() const;
 
