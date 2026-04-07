@@ -15,7 +15,7 @@
 // #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
 // Max length of a path (per unit)
-#define MAX_PATH_SIZE    256
+// #define MAX_PATH_SIZE    256
 
 // // INTRO SCENES:
 // #define SCENE_NONE		-1
