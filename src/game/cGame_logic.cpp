@@ -31,9 +31,9 @@
 
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/sTerrainInfo.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/structures/cStructureInfo.h"
 
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"
@@ -69,7 +69,6 @@
 #include "utils/cFileValidator.h"
 #include "utils/cFocusManager.h"
 #include "utils/cIniFile.h"
-#include "utils/cIniGameRessouces.h"
 #include "utils/cLog.h"
 #include "utils/Color.hpp"
 #include "utils/cSoundPlayer.h"
@@ -121,8 +120,6 @@ cGame::cGame()
     ctx->setTimeManager(std::move(timeManager));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
-    // initialisation terrainInfo
-    m_TerrainInfo = std::make_shared<s_TerrainInfo>();
 
     m_screenShake = std::make_unique<cScreenShake>();
 
@@ -131,6 +128,8 @@ cGame::cGame()
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
 
     m_cScreenFader = std::make_unique<cScreenFader>();
+
+    m_infoContext = std::make_unique<cInfoContext>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -158,9 +157,11 @@ void cGame::applySettings(GameSettings *gs)
     m_gameFilename = gs->gameFilename;
 }
 
+
 void cGame::init()
 {
-    m_map.setTerrainInfo(m_TerrainInfo);
+    m_infoContext->initializeDefaultInfos();
+    m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -201,6 +202,9 @@ void cGame::init()
         particle.init();
     }
 
+    // Initialize InfoContext with empty objects that will be populated by cIni::installGame()
+    m_infoContext->initializeDefaultInfos();
+
     // Units & Structures are already initialized in map.init()
     // Load properties
     cIni::installGame(m_gameFilename);
@@ -221,6 +225,8 @@ void cGame::missionInit()
     m_screenShake->reset();
 
     m_map.init(64, 64);
+    // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
+    m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
 
     initPlayers(true);
 
@@ -653,18 +659,8 @@ bool cGame::setupGame()
         game.getPlayer(i).init(i, nullptr);
         game.getPlayer(i).setHousesInfo(m_Houses);
     }
-    logbook("Setup:  STRUCTURES");
-    IniGameRessources::install_structures();
-    logbook("Setup:  PROJECTILES");
-    IniGameRessources::install_bullets();
-    logbook("Setup:  UNITS");
-    IniGameRessources::install_units();
-    logbook("Setup:  SPECIALS");
-    IniGameRessources::install_specials();
-    logbook("Setup:  PARTICLES");
-    IniGameRessources::install_particles();
-    logbook("Setup:  TERRAINS");
-    IniGameRessources::install_terrain(m_TerrainInfo);
+    cInfoContextCreator infoCreator;
+    infoCreator.installInfos(*game.m_infoContext);
 
     delete m_mapCamera;
     m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
@@ -677,7 +673,7 @@ bool cGame::setupGame()
 
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
-    IniGameRessources::install_upgrades();
+    game.m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos());
     cPlayer *humanPlayer = &game.getPlayer(HUMAN);
 
     delete game.m_drawManager;
@@ -1118,7 +1114,7 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
         return;
     }
 
-    const auto structureInfo = structureInfos[event.entitySpecificType];
+    const auto structureInfo = (*m_infoContext->getStructureInfos())[event.entitySpecificType];
     int unitTypeToSpawn = structureInfo.uponDestructionSpawnUnitType;
     if (unitTypeToSpawn < 0) {
         return;
@@ -1677,11 +1673,6 @@ void cGame::takeBackGroundScreen()
     m_renderDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
     m_renderDrawer->endDrawingToTexture();
-}
-
-std::shared_ptr<s_TerrainInfo> cGame::getTerrainInfo() const
-{
-    return m_TerrainInfo;
 }
 
 cReinforcements* cGame::getReinforcements() const

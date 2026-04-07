@@ -482,7 +482,7 @@ void cBuildingListUpdater::evaluateUpgrades()
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
-        s_UpgradeInfo &upgradeInfo = game.upgradeInfos[i];
+        s_UpgradeInfo &upgradeInfo = game.m_infoContext->getUpgradeInfo(i);
         if (!upgradeInfo.enabled) continue;
         // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
@@ -501,7 +501,7 @@ void cBuildingListUpdater::evaluateUpgrades()
         if (!hasRequiredStructureType) {
             addToUpgradesList = false;
             m_player->log(std::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
-                                    upgradeInfo.description, game.structureInfos[upgradeInfo.structureType].name));
+                                    upgradeInfo.description, game.m_infoContext->getStructureInfo(upgradeInfo.structureType).name));
         }
 
         // check if m_player has the additional structure (if required)
@@ -510,7 +510,7 @@ void cBuildingListUpdater::evaluateUpgrades()
             if (!hasRequiredStructureType) {
                 addToUpgradesList = false;
                 m_player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
-                                        upgradeInfo.description, game.structureInfos[upgradeInfo.needsStructureType].name));
+                                        upgradeInfo.description, game.m_infoContext->getStructureInfo(upgradeInfo.needsStructureType).name));
             }
         }
 

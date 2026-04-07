@@ -80,7 +80,7 @@ void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
     m_reinforcements = reinforcements;
 }
 
-void cMap::setTerrainInfo(std::shared_ptr<s_TerrainInfo> terrainInfo)
+void cMap::setTerrainInfo(s_TerrainInfo* terrainInfo)
 {
     m_terrainInfo = terrainInfo;
 }
@@ -207,7 +207,7 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType)
     if (iCell < 0 || iUnitType < 0)
         return false;
 
-    s_UnitInfo &unitToDeploy = game.unitInfos[iUnitType];
+    s_UnitInfo &unitToDeploy = game.m_infoContext->getUnitInfo(iUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -259,7 +259,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
         return false;
     }
 
-    s_UnitInfo &unitToDeploy = game.unitInfos[pUnit.iNewUnitType];
+    s_UnitInfo &unitToDeploy = game.m_infoContext->getUnitInfo(pUnit.iNewUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;

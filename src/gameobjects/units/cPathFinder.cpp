@@ -554,7 +554,7 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = game.m_map.getCellType(cll);
-                    if (game.unitInfos[game.getUnit(iID).iType].infantry) {
+                    if (game.m_infoContext->getUnitInfo(game.getUnit(iID).iType).infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }

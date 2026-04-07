@@ -161,8 +161,8 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int iDrawX = game.m_map.mouse_draw_x();
     int iDrawY = game.m_map.mouse_draw_y();
 
-    int width = game.structureInfos[structureId].bmp_width;
-    int height = game.structureInfos[structureId].bmp_height;
+    int width = game.m_infoContext->getStructureInfo(structureId).bmp_width;
+    int height = game.m_infoContext->getStructureInfo(structureId).bmp_height;
 
     int scaledWidth = game.m_mapCamera->factorZoomLevel(width);
     int scaledHeight = game.m_mapCamera->factorZoomLevel(height);
