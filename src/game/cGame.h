@@ -116,15 +116,20 @@ public:
 
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
-    cBullets                    g_Bullets;
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     cStructureUtils             m_structureUtils;
+    // end
+
+    // TODO: this should be moved on a GameObjectContext class same method as std::unique_ptr<cInfoContext> m_infoContext;
+    cBullets                    g_Bullets;    
     cPlayers                    m_Players;
     cParticles                  m_particles;
     cStructures                 m_pStructures;
     cUnits                      m_Units;
     cMap                        m_map;
+    
+    //todo: this should get moved to private, but not yet.
     std::unique_ptr<cInfoContext> m_infoContext;
 
     // Initialization functions
