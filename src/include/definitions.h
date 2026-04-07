@@ -12,7 +12,7 @@
 #define MAPID_WORMS  3
 #define MAPID_MAX	 4 // used for clearing all
 
-#define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
+// #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
 // Max length of a path (per unit)
 #define MAX_PATH_SIZE    256
