@@ -1,5 +1,6 @@
 #include "cMainMenuState.h"
 
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "config.h"
@@ -263,11 +264,11 @@ eGameStateType cMainMenuState::getType()
 void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        if (event.isAction(eKeyAction::MENU_BACK)) {
             m_game.m_gameSettings->setPlaying(false);
         }
 
-        if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
+        if (event.isAction(eKeyAction::TOGGLE_MUSIC) || event.hasKey(SDL_SCANCODE_MUTE)) {
             auto m_soundPlayer = m_ctx->getSoundPlayer();
             game.m_gameSettings->setPlayMusic(!game.m_gameSettings->isPlayMusic());
             if (!game.m_gameSettings->isPlayMusic()) {
