@@ -21,6 +21,10 @@
 #include "controls/mousestates/cMousePlaceState.h"
 #include "controls/mousestates/cMouseDeployState.h"
 
+#define MOUSECELL_TOPBAR  -1
+#define MOUSECELL_MINIMAP -2
+#define MOUSECELL_SIDEBAR -3
+
 class cAbstractStructure;
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
