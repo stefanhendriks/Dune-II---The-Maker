@@ -51,7 +51,7 @@
 // MEMORY USAGE: (units, structures, etc , more info below)
 // #define MAX_UNITS        300     // max of units in the game
 #define MAX_STRUCTURES   200     // max of structures in the game
-#define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
+// #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 
 #define HUMAN			0  // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
 #define AI_CPU1         1  // 1 = CPU (Atreides)
