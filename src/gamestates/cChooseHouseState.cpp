@@ -1,5 +1,7 @@
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
+
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
@@ -145,7 +147,7 @@ void cChooseHouseState::onMouseMoved(const s_MouseEvent &event)
 void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        if (event.isAction(eKeyAction::MENU_BACK)) {
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();
         }

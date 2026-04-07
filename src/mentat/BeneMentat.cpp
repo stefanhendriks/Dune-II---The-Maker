@@ -1,5 +1,6 @@
 #include "BeneMentat.h"
 
+#include "controls/eKeyAction.h"
 #include "data/gfxmentat.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -100,11 +101,11 @@ void BeneMentat::draw_mouth()
 
 void BeneMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.hasKey(SDL_SCANCODE_RETURN)) {
+    if (event.isAction(eKeyAction::MENU_CONFIRM)) {
         this->onYesButtonPressed();
     }
     else
-    if (event.hasKey(SDL_SCANCODE_BACKSPACE)) {
+    if (event.isAction(eKeyAction::MENU_CANCEL)) {
         this->onNoButtonPressed();
     }
 }
