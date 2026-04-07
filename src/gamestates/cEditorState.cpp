@@ -1,4 +1,5 @@
 #include "gamestates/cEditorState.h"
+#include "controls/eKeyAction.h"
 #include "gui/GuiBar.h"
 #include "gui/GuiStateButton.h"
 #include "gui/GuiButtonGroup.h"
@@ -359,26 +360,26 @@ eGameStateType cEditorState::getType()
 void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (m_mapData == nullptr) {
-        if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();
         }
         return;
     }
     if (event.isType(eKeyEventType::PRESSED)) {
-        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        if (event.isAction(eKeyAction::MENU_BACK)) {
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();
         }
-        if (event.hasKey(SDL_SCANCODE_S)) {
+        if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
             saveMap();
         }
-        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
+        if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
             zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles();
         }
-        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
+        if (event.isAction(eKeyAction::EDITOR_ZOOM_OUT)) {
             zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles();
         }
@@ -388,35 +389,35 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
-        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_LEFT)) {
+        if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             cameraX -=tileLenSize;
             clampCameraXToMapBounds();
             updateVisibleTiles();
         }
-        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_RIGHT)) {
+        if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
             cameraX +=tileLenSize;
             clampCameraXToMapBounds();
             updateVisibleTiles();
         }
-        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_UP)) {
+        if (event.isAction(eKeyAction::SCROLL_UP)) {
             cameraY -=tileLenSize;
             clampCameraYToMapBounds();
             updateVisibleTiles();
         }
-        if (event.hasKey(SDL_Scancode::SDL_SCANCODE_DOWN)) {
+        if (event.isAction(eKeyAction::SCROLL_DOWN)) {
             cameraY +=tileLenSize;
             clampCameraYToMapBounds();
-            updateVisibleTiles(); 
+            updateVisibleTiles();
         }
-        if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
+        if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
             zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
-            updateVisibleTiles(); 
+            updateVisibleTiles();
         }
-        if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
+        if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
             zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
-            updateVisibleTiles(); 
+            updateVisibleTiles();
         }
-        //to test : updateVisibleTiles(); 
+        //to test : updateVisibleTiles();
     }
 }
 
