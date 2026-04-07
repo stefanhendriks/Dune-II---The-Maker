@@ -1,5 +1,6 @@
 #include "cMapCamera.h"
 
+#include "controls/eKeyAction.h"
 #include "data/gfxdata.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -308,25 +309,25 @@ void cMapCamera::onKeyHold(const cKeyboardEvent &event)
 
     // mouse is 'moving by pressing right mouse button', this supersedes reacting to keypress
     if (!pMouse->isMapScrolling()) {
-        if (event.hasKey(SDL_SCANCODE_LEFT)) {
+        if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_LEFT);
             m_keyPressedLeft = true;
         }
 
-        if (event.hasKey(SDL_SCANCODE_UP)) {
+        if (event.isAction(eKeyAction::SCROLL_UP)) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_UP);
             m_keyPressedUp = true;
         }
 
-        if (event.hasKey(SDL_SCANCODE_RIGHT)) {
+        if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_RIGHT);
             m_keyPressedRight = true;
         }
 
-        if (event.hasKey(SDL_SCANCODE_DOWN)) {
+        if (event.isAction(eKeyAction::SCROLL_DOWN)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_DOWN);
             m_keyPressedDown = true;
@@ -336,22 +337,22 @@ void cMapCamera::onKeyHold(const cKeyboardEvent &event)
 
 void cMapCamera::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.hasKey(SDL_SCANCODE_LEFT)) {
+    if (event.isAction(eKeyAction::SCROLL_LEFT)) {
         setMoveX(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedLeft = false;
     }
 
-    if (event.hasKey(SDL_SCANCODE_UP)) {
+    if (event.isAction(eKeyAction::SCROLL_UP)) {
         setMoveY(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedUp = false;
     }
 
-    if (event.hasKey(SDL_SCANCODE_RIGHT)) {
+    if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
         setMoveX(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedRight = false;
     }
 
-    if (event.hasKey(SDL_SCANCODE_DOWN)) {
+    if (event.isAction(eKeyAction::SCROLL_DOWN)) {
         setMoveY(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedDown = false;
     }
