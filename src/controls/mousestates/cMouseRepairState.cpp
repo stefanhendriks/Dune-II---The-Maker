@@ -1,5 +1,6 @@
 #include "cMouseRepairState.h"
 
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -90,7 +91,7 @@ void cMouseRepairState::onStateSet()
 
 void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_R)) {
+    if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::REPAIR_UNIT)) {
         m_context->toPreviousState();
     }
 }
