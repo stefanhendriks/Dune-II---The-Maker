@@ -2,7 +2,7 @@
 
 #include "definitions.h"
 #include "cGameState.h"
-#include "definitions.h"
+// #include "definitions.h"
 #include "drawers/cTextDrawer.h"
 
 class cGame;
@@ -15,8 +15,6 @@ class GameContext;
 class SDLDrawer;
 
 struct s_DataCampaign;
-
-
 enum eRegionState {
     REGSTATE_INIT,                   // Initialization
     REGSTATE_INTRODUCTION,           // The very beginning, ie "3 houses have come to Dune" and ends with drawing the dune regions
@@ -51,7 +49,9 @@ class cSelectYourNextConquestState : public cGameState {
 public:
     explicit cSelectYourNextConquestState(cGame &theGame, GameContext *ctx, s_DataCampaign* dataCompaign);
     ~cSelectYourNextConquestState() override;
+static constexpr int MAX_REGIONS = 27;
 
+    
     void thinkFast() override;
     void draw() const override;
 
