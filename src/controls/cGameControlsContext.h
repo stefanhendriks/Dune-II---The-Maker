@@ -21,10 +21,6 @@
 #include "controls/mousestates/cMousePlaceState.h"
 #include "controls/mousestates/cMouseDeployState.h"
 
-#define MOUSECELL_TOPBAR  -1
-#define MOUSECELL_MINIMAP -2
-#define MOUSECELL_SIDEBAR -3
-
 class cAbstractStructure;
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
@@ -51,13 +47,13 @@ public:
     }
 
     bool isMouseOnSidebar() const {
-        return m_mouseCell == MOUSECELL_SIDEBAR;
+        return m_mouseCell == MOUSE_CELL_HOVER_SIDEBAR;
     }
     bool isMouseOnTopBar() const {
-        return m_mouseCell == MOUSECELL_TOPBAR;
+        return m_mouseCell == MOUSE_CELL_HOVER_TOPBAR;
     }
     bool isMouseOnMiniMap() const {
-        return m_mouseCell == MOUSECELL_MINIMAP;
+        return m_mouseCell == MOUSE_CELL_HOVER_MINIMAP;
     }
     bool isMouseOnSidebarOrMinimap() const {
         return isMouseOnSidebar() || isMouseOnMiniMap();
@@ -124,4 +120,8 @@ private:
     void onBlurMouseStateEvent();
     void onMouseMovedTo(const s_MouseEvent &event);
     void updateMouseCell(const cPoint &coords);
+
+    static constexpr int MOUSE_CELL_HOVER_TOPBAR = -1;
+    static constexpr int MOUSE_CELL_HOVER_MINIMAP = -2;
+    static constexpr int MOUSE_CELL_HOVER_SIDEBAR = -3;
 };
