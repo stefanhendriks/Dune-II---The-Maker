@@ -8,15 +8,12 @@
 #include "map/MapGeometry.hpp"
 #include "utils/d2tm_math.h"
 
+// Initialize the static temp_map
+ASTAR cPathFinder::temp_map[16384];
+
 // Path creation definitions / var
 #define CLOSED        -1
 #define OPEN          0
-
-struct ASTAR {
-    int cost;
-    int parent;
-    int state;
-};
 
 /*
   Pathfinder
@@ -43,8 +40,6 @@ struct ASTAR {
   */
 int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 {
-    ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
-
     logbook("CREATE_PATH -- START");
     if (iUnitId < 0) {
         logbook("CREATE_PATH -- END 1");
