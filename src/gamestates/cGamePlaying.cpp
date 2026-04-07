@@ -26,6 +26,7 @@
 #include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "controls/eKeyAction.h"
 #include "map/cMapCamera.h"
 #include "map/cMap.h"
 
@@ -246,10 +247,8 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
     const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
-    bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
-    if (createGroup) {
+    if (event.isAction(eKeyAction::ATTACK_MODE)) {
         int iGroup = event.getGroupNumber();
-
         if (iGroup > 0) {
             humanPlayer.markUnitsForGroup(iGroup);
         }
@@ -260,7 +259,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
             onKeyDownDebugMode(event);
         }
 
-        if (event.hasKey(SDL_SCANCODE_F4)) {
+        if (event.isAction(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR)) {
             int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
                 game.m_gameObjectsContext->getMap().clearShroud(mouseCell, 6, HUMAN);
@@ -268,44 +267,44 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_Z)) {
+    if (event.isAction(eKeyAction::ZOOM_RESET)) {
         game.m_mapCamera->resetZoom();
     }
 
-    if (event.hasKey(SDL_SCANCODE_H)) {
+    if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
         game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
-    // Center on the selected structure
-    if (event.hasKey(SDL_SCANCODE_C)) {
+    if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
             game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+    if (event.isAction(eKeyAction::OPEN_MENU)) {
         game.setNextStateToTransitionTo(GAME_OPTIONS);
     }
 
-    if (event.hasKey(SDL_SCANCODE_F)) {
+    if (event.isAction(eKeyAction::TOGGLE_FPS)) {
         game.m_gameSettings->setDrawFps(true);
     }
 }
+
 
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
     cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
-    if (event.hasKey(SDL_SCANCODE_F)) {
+    if (event.isAction(eKeyAction::TOGGLE_FPS)) {
         m_game.m_gameSettings->setDrawFps(false);
     }
 
-    if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
+    if (event.isAction(eKeyAction::TOGGLE_TIME_DISPLAY)) {
         m_game.m_gameSettings->setDrawTime(! m_game.m_gameSettings->shouldDrawTime());
     }
 
-    if (event.hasKey(SDL_SCANCODE_D)) {
+    if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
         for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
             cUnit &u = game.m_gameObjectsContext->getUnits()[i];
             if (u.isSelected() && u.iType == MCV && u.getPlayer()->isHuman()) {
@@ -319,12 +318,11 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_H)) {
+    if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
         game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
-    // Center on the selected structure
-    if (event.hasKey(SDL_SCANCODE_C)) {
+    if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
             game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
@@ -333,25 +331,20 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
     cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
     if (selectedStructure) {
-        // depending on type of structure, a key could mean a different thing?
-        // so, kind of like event.hasKey(selectedStructure->KeyForDeploying()) ?
-        // and then perform?
-        if (event.hasKey(SDL_SCANCODE_D)) {
-            if (selectedStructure->getType() == REPAIR) { // this should be done differently?
-                s_GameEvent event {
+        if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
+            if (selectedStructure->getType() == REPAIR) {
+                s_GameEvent deployEvent {
                     .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
                     .entityType = eBuildType::UNKNOWN,
                     .entityID = -1,
                     .player = &humanPlayer
                 };
-                selectedStructure->onNotifyGameEvent(event);
+                selectedStructure->onNotifyGameEvent(deployEvent);
             }
         }
-        if (event.hasKey(SDL_SCANCODE_P)) {
+        if (event.isAction(eKeyAction::SET_PRIMARY)) {
             humanPlayer.setPrimaryBuildingForStructureType(selectedStructure->getType(), selectedStructure->getStructureId());
         }
-        // other keys for other structures?
-        // like: repair/stop repairing?
     }
 }
 
@@ -359,42 +352,38 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
     const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
-    if (event.hasKey(SDL_SCANCODE_0)) {
+    if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
         game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(0));
         game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(0));
     }
-    else if (event.hasKey(SDL_SCANCODE_1)) {
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
         game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(1));
         game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(1));
     }
-    else if (event.hasKey(SDL_SCANCODE_2)) {
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
         game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(2));
         game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(2));
     }
-    else if (event.hasKey(SDL_SCANCODE_3)) {
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
         game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(3));
         game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(3));
     }
 
-    // WIN MISSION
-    if (event.hasKey(SDL_SCANCODE_F2)) {
+    if (event.isAction(eKeyAction::DEBUG_WIN)) {
         game.setMissionWon();
     }
 
-    // LOSE MISSION
-    if (event.hasKey(SDL_SCANCODE_F3)) {
+    if (event.isAction(eKeyAction::DEBUG_LOSE)) {
         game.setMissionLost();
     }
 
-    // GIVE CREDITS TO ALL PLAYERS
-    if (event.hasKey(SDL_SCANCODE_F4)) {
+    if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {
         for (int i = 0; i < AI_WORM; i++) {
             game.m_gameObjectsContext->getPlayer(i).setCredits(5000);
         }
     }
 
-    //DESTROY UNIT OR BUILDING
-    if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
+    if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
@@ -414,8 +403,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         }
     }
 
-    //DESTROY UNIT OR BUILDING
-    if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
+    if (event.isAction(eKeyAction::DEBUG_DAMAGE_AT_CURSOR)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
@@ -427,16 +415,11 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
                 }
             }
         }
-    }
-    else {
-        // REVEAL MAP
-        if (event.hasKey(SDL_SCANCODE_F5)) {
-            game.m_gameObjectsContext->getMap().clear_all(HUMAN);
-        }
+    } else if (event.isAction(eKeyAction::DEBUG_REVEAL_MAP)) {
+        game.m_gameObjectsContext->getMap().clear_all(HUMAN);
     }
 
-    if (event.hasKey(SDL_SCANCODE_F6)) {
-        // kill all carry-all's
+    if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
             cUnit &pUnit = game.m_gameObjectsContext->getUnits()[unitId];
