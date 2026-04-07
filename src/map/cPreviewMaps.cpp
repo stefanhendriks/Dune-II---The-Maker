@@ -22,7 +22,7 @@ cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode) : m_renderDr
 
 void cPreviewMaps::destroy()
 {
-    for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
+    for (int i = 0; i < MAX_SKIRMISHMAPS_CAPACITY; i++) {
         s_PreviewMap &previewMap = m_PreviewMap[i];
         if (previewMap.terrain) {
             SDL_FreeSurface(previewMap.terrain);
@@ -38,7 +38,7 @@ void cPreviewMaps::destroy()
 void cPreviewMaps::loadSkirmish(const std::string &filename)
 {
     int iNew = -1;
-    for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
+    for (int i = 0; i < MAX_SKIRMISHMAPS_CAPACITY; i++) {
         if (m_PreviewMap[i].name[0] == '\0') {
             iNew = i;
             break;
@@ -221,7 +221,7 @@ void cPreviewMaps::initPreviews()
 {
     //reset all ressources
     destroy();
-    for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
+    for (int i = 0; i < MAX_SKIRMISHMAPS_CAPACITY; i++) {
         s_PreviewMap &previewMap = m_PreviewMap[i];
         // clear out name
         previewMap.name.clear();
@@ -259,7 +259,7 @@ void cPreviewMaps::initRandomMap()
 }
 
 std::string cPreviewMaps::getMapSize(int i) const {
-    if (i > MAX_SKIRMISHMAPS) {
+    if (i > MAX_SKIRMISHMAPS_CAPACITY) {
         return "Invalid";
     }
     int playableCells = (m_PreviewMap[i].width-2) * (m_PreviewMap[i].height-2);
