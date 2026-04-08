@@ -127,11 +127,7 @@ cGame::cGame()
 
     m_infoContext = std::make_unique<cInfoContext>();
     
-    m_gameObjectsContext = std::make_unique<cGameObjectContext>();
-
-    // Initialize game objects in the context
-    cGameObjectsContextCreator creator;
-    creator.installGameObjects(*m_gameObjectsContext);
+    m_gameObjectsContext = cGameObjectsContextCreator::create();
 
     m_screenShake = std::make_unique<cScreenShake>();
 
