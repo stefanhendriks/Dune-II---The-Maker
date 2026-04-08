@@ -12,25 +12,20 @@ class cMap;
 
 class cGameObjectContext {
 public:
-    cGameObjectContext() = default;
+    cGameObjectContext(
+        std::unique_ptr<cBullets> bullets,
+        std::unique_ptr<cPlayers> players,
+        std::unique_ptr<cParticles> particles,
+        std::unique_ptr<cStructures> structures,
+        std::unique_ptr<cUnits> units,
+        std::unique_ptr<cMap> map);
     ~cGameObjectContext();
 
-    void setBullets(std::unique_ptr<cBullets> bullets);
     cBullets& getBullets() const;
-
-    void setPlayers(std::unique_ptr<cPlayers> players);
     cPlayers& getPlayers() const;
-
-    void setParticles(std::unique_ptr<cParticles> particles);
     cParticles& getParticles() const;
-
-    void setStructures(std::unique_ptr<cStructures> structures);
     cStructures& getStructures() const;
-
-    void setUnits(std::unique_ptr<cUnits> units);
     cUnits& getUnits() const;
-
-    void setMap(std::unique_ptr<cMap> map);
     cMap& getMap() const;
 
 private:
