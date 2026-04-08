@@ -130,7 +130,8 @@ cGame::cGame()
     m_gameObjectsContext = std::make_unique<cGameObjectContext>();
 
     // Initialize game objects in the context
-    setupGameObjects();
+    cGameObjectsContextCreator creator;
+    creator.installGameObjects(*m_gameObjectsContext);
 
     m_screenShake = std::make_unique<cScreenShake>();
 
@@ -1763,9 +1764,4 @@ void cGame::loadMapFromEditor(s_PreviewMap *map)
     setState(GAME_EDITOR);
     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
     pState->loadMap(map);
-}
-
-void cGame::setupGameObjects(){
-    cGameObjectsContextCreator creator;
-    creator.installGameObjects(*m_gameObjectsContext);
 }
