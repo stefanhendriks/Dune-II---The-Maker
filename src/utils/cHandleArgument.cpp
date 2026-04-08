@@ -1,5 +1,4 @@
 #include "cHandleArgument.h"
-#include "utils/GameSettings.hpp"
 #include <iostream>
 #include <string>
 #include <format>
@@ -24,7 +23,7 @@ const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStr
     {"--help",                  Options::HELP}
 };
 
-int cHandleArgument::handleArguments(int argc, char *argv[], GameSettings *settings)
+int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings *settings)
 {
     if (argc < 2) {
         return 0;

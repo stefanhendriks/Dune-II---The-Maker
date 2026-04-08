@@ -2,14 +2,14 @@
 
 #include <map>
 #include <string>
-#include "utils/GameSettings.hpp"
+#include "utils/InitialGameSettings.hpp"
 
 class cHandleArgument {
 public:
     cHandleArgument() = default;
     ~cHandleArgument() = default;
 
-    int handleArguments(int argc, char *argv[], GameSettings *settings);
+    int handleArguments(int argc, char *argv[], InitialGameSettings *settings);
 
 private:
     enum class Options : char {

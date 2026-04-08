@@ -18,7 +18,7 @@
 #include <memory>
 #include <SDL2/SDL.h>
 
-struct GameSettings;
+struct InitialGameSettings;
 
 
 /**
@@ -52,4 +52,4 @@ int distanceBetweenCellAndCenterOfScreen(int iCell);
 
 const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
 
-std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename);
+std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename);

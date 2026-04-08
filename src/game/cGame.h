@@ -46,7 +46,7 @@ class cScreenInit;
 class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
-struct GameSettings;
+struct InitialGameSettings;
 
 class ContextCreator;
 class GameContext;
@@ -215,7 +215,7 @@ public:
         return m_cheatMode;
     }
 
-    void applySettings(GameSettings *gs);
+    void applySettings(InitialGameSettings *gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
     void loadMapFromEditor(s_PreviewMap *map);

@@ -74,7 +74,7 @@
 #include "utils/Color.hpp"
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
-#include "utils/GameSettings.hpp"
+#include "utils/InitialGameSettings.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/ini.h"
 #include "utils/RNG.hpp"
