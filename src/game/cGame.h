@@ -215,7 +215,7 @@ public:
         return m_cheatMode;
     }
 
-    void applySettings(InitialGameSettings *gs);
+    void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
     void loadMapFromEditor(s_PreviewMap *map);
@@ -277,6 +277,7 @@ private:
     std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     std::shared_ptr<cReinforcements> m_reinforcements;
+    std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
