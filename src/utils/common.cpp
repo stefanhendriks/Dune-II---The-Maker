@@ -186,7 +186,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     int new_id = -1;
 
     int i = 0;
-    for (auto &bullet : game.g_Bullets) {
+    for (auto &bullet : game.m_Bullets) {
         if (!bullet.bAlive) {
             new_id = i;
             break;
@@ -201,7 +201,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
         return -1; // failed
 
 
-    cBullet &newBullet = game.g_Bullets[new_id];
+    cBullet &newBullet = game.m_Bullets[new_id];
     newBullet.init();
 
     newBullet.iType = type;
