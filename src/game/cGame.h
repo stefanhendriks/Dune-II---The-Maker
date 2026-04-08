@@ -128,9 +128,6 @@ public:
     //todo: this should get moved to private, but not yet.
     std::unique_ptr<cInfoContext> m_infoContext;
 
-    // Initialize game objects - must be called once after cGameObjectContext is created
-    void setupGameObjects();
-
     // Initialization functions
     void init();		            // initialize all game variables
     void missionInit();             // initialize variables for mission loading only
