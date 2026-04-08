@@ -109,18 +109,6 @@ void cMap::init(int width, int height)
 
     cStructureFactory::getInstance()->deleteAllExistingStructures();
 
-    for (auto& bullet : game.m_gameObjectsContext->getBullets()) {
-        bullet.init();
-    }
-
-    for (auto& particle : game.m_gameObjectsContext->getParticles()) {
-        particle.init();
-    }
-
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        game.m_gameObjectsContext->getUnits()[i].init(i);
-    }
-
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
 
