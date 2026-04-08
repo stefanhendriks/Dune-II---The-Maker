@@ -32,8 +32,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(ctx, thePlayer);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
     m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
-    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
-    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
+    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.m_gameObjectsContext->getMap(), thePlayer, game.m_mapCamera);
+    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.m_gameObjectsContext->getMap(), thePlayer, game.m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
@@ -63,13 +63,13 @@ void cDrawManager::drawCombatState()
     m_particleDrawer->determineParticlesToDraw(*game.m_mapViewport);
     m_particleDrawer->drawLowerLayer();
 
-    game.m_map.draw_units();
+    game.m_gameObjectsContext->getMap().draw_units();
 
-    game.m_map.draw_bullets();
+    game.m_gameObjectsContext->getMap().draw_bullets();
 
     m_structureDrawer->drawStructuresSecondLayer();
 
-    game.m_map.draw_units_2nd();
+    game.m_gameObjectsContext->getMap().draw_units_2nd();
 
     m_particleDrawer->drawTopLayer();
     m_structureDrawer->drawStructuresHealthBars();
@@ -108,7 +108,7 @@ void cDrawManager::drawCombatState()
 void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
-    for (int i = 0; i < game.m_Units.size(); i++) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
         if (game.getUnit(i).isValid()) {
             unitsUsed++;
         }
@@ -116,21 +116,21 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int structuresUsed = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = game.m_pStructures[i];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
         if (pStructure) {
             structuresUsed++;
         }
     }
 
     int bulletsUsed = 0;
-    for (const auto& bullet : game.m_Bullets) {
+    for (const auto& bullet : game.m_gameObjectsContext->getBullets()) {
         if (bullet.bAlive) {
             bulletsUsed++;
         }
     }
 
     int particlesUsed = 0;
-    for (const auto& particle : game.m_particles) {
+    for (const auto& particle : game.m_gameObjectsContext->getParticles()) {
         if (particle.isValid()) {
             particlesUsed++;
         }
@@ -138,10 +138,10 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int startY = 74;
     int height = 14;
-    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.m_Units.size()));
+    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.m_gameObjectsContext->getUnits().size()));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.m_Bullets.size()));
-    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.m_particles.size()));
+    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.m_gameObjectsContext->getBullets().size()));
+    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.m_gameObjectsContext->getParticles().size()));
 }
 
 void cDrawManager::drawCredits()
@@ -153,7 +153,7 @@ void cDrawManager::drawRallyPoint()
 {
     cPlayer &humanPlayer = game.getPlayer(HUMAN);
     if (humanPlayer.selected_structure < 0) return;
-    cAbstractStructure *theStructure = game.m_pStructures[humanPlayer.selected_structure];
+    cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[humanPlayer.selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;

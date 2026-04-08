@@ -166,11 +166,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             m_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
-            int mouseCellX = game.m_map.getCellX(pContext->getMouseCell());
-            int mouseCellY = game.m_map.getCellY(pContext->getMouseCell());
+            int mouseCellX = game.m_gameObjectsContext->getMap().getCellX(pContext->getMouseCell());
+            int mouseCellY = game.m_gameObjectsContext->getMap().getCellY(pContext->getMouseCell());
 
-            int cellX = game.m_map.getCellX(structure->getCell());
-            int cellY = game.m_map.getCellY(structure->getCell());
+            int cellX = game.m_gameObjectsContext->getMap().getCellX(structure->getCell());
+            int cellY = game.m_gameObjectsContext->getMap().getCellY(structure->getCell());
 
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
 
@@ -321,7 +321,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 void cStructureDrawer::drawStructuresForLayer(int layer)
 {
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
 
         if (!theStructure) continue;
 
@@ -350,7 +350,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
 {
     if (iStructure < 0 || iStructure >= MAX_STRUCTURES) return;
 
-    cAbstractStructure *theStructure = game.m_pStructures[iStructure];
+    cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[iStructure];
 
     if (!theStructure) {
         return;

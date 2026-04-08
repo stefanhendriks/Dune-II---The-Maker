@@ -188,7 +188,7 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event)
 {
     // a structure was created, update our baseplan
-    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
 
     if (event.entitySpecificType == PALACE) {
         // built a palace, create super weapon missions asap!
@@ -258,7 +258,7 @@ void cPlayerBrainSkirmish::onMyStructureDestroyed(const s_GameEvent &event)
 void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -294,7 +294,7 @@ void cPlayerBrainSkirmish::respondToThreat(cUnit *threat, cUnit *victim, int cel
 void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -971,7 +971,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
 
     int cellToAttack = -1;
     if (RNG::rnd(100) < 50) {
-        for (int i = 0; i < game.m_Units.size(); i++) {
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
             cUnit &cUnit = game.getUnit(i);
             if (!cUnit.isValid()) continue;
             if (cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
@@ -985,7 +985,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
     }
     else {
         for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *theStructure = game.m_pStructures[i];
+            cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
             if (!theStructure) continue;
             if (!theStructure->isValid()) continue;
             if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
@@ -1182,7 +1182,7 @@ void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(s_
                 }
                 // move it when idle, else don't do a thing
                 if (aUnit.isIdle()) {
-                    aUnit.move_to(game.m_map.getRandomCellFrom(aUnit.getCell(), 3));
+                    aUnit.move_to(game.m_gameObjectsContext->getMap().getRandomCellFrom(aUnit.getCell(), 3));
                 }
             }
             else {
@@ -1248,13 +1248,13 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
-                        if (m_centerOfBaseCell > -1 && game.m_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
                 else if (event.entityType == eBuildType::STRUCTURE) {
-                    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+                    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
                     if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                         // found enemy structure
                         m_TIMER_produceMissionCooldown = 0;
@@ -1282,7 +1282,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                         }
                     }
                     else if (event.entityType == eBuildType::STRUCTURE) {
-                        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+                        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
                         // the other player discovered a structure of mine
                         if (pStructure->getPlayer() == player) {
                             // found my structure
@@ -1310,7 +1310,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                 if (event.entityType == eBuildType::UNIT) {
                     cUnit &pUnit = game.getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
-                        if (m_centerOfBaseCell > -1 && game.m_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }

@@ -169,7 +169,7 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureCreated(const s_GameEvent &event)
 {
     // a structure was created, update our baseplan
-    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
     int placedAtCell = pStructure->getCell();
     bool foundExistingStructureInBase = false;
     for (auto &structurePosition : m_myBase) {
@@ -245,7 +245,7 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -272,7 +272,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureDecayed(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
@@ -1735,13 +1735,13 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
-                        if (m_centerOfBaseCell > -1 && game.m_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
                 else if (event.entityType == eBuildType::STRUCTURE) {
-                    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+                    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
                     if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                         // found enemy structure
                         m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
@@ -1767,7 +1767,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                         }
                     }
                     else if (event.entityType == eBuildType::STRUCTURE) {
-                        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+                        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
                         // the other player discovered a structure of mine
                         if (pStructure->getPlayer() == player) {
                             // found my structure
@@ -1794,7 +1794,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                 if (event.entityType == eBuildType::UNIT) {
                     cUnit &pUnit = game.getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
-                        if (m_centerOfBaseCell > -1 && game.m_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }

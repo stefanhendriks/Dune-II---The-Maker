@@ -585,7 +585,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         return -1;
     }
 
-    cParticle &pParticle = game.m_particles[iNewId];
+    cParticle &pParticle = game.m_gameObjectsContext->getParticles()[iNewId];
     const int particleInfoCount = game.m_infoContext->getParticleInfos()->size();
     if (iType >= 0 && iType < particleInfoCount) {
         s_ParticleInfo &sParticle = game.m_infoContext->getParticleInfo(iType);
@@ -719,7 +719,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 int cParticle::findNewSlot()
 {
     int i = 0;
-    for (auto &particle : game.m_particles) {
+    for (auto &particle : game.m_gameObjectsContext->getParticles()) {
         if (!particle.isValid()) {
             return i;
         }
@@ -789,7 +789,7 @@ void cParticle::addPosX(float d)
 {
     this->x += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = game.m_particles[boundParticleID];
+        cParticle &otherParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosX(d);
         }
@@ -803,7 +803,7 @@ void cParticle::addPosY(float d)
 {
     this->y += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = game.m_particles[boundParticleID];
+        cParticle &otherParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosY(d);
         }
@@ -818,7 +818,7 @@ void cParticle::die()
     bindToUnit(-1);
     bAlive = false;
     if (boundParticleID > -1) {
-        cParticle &pParticle = game.m_particles[boundParticleID];
+        cParticle &pParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
         if (pParticle.isValid()) {
             pParticle.die();
         }
