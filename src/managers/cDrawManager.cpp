@@ -11,6 +11,7 @@
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/Graphics.hpp"
+#include "utils/texture_utils.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "map/cMapCamera.h"
@@ -38,8 +39,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
     m_structureDrawer = std::make_unique<cStructureDrawer>(ctx);
-    m_btnOptions = thePlayer->createTextureFromIndexedSurfaceWithPalette(
-        m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
+    m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(
+        thePlayer, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
     m_mouseDrawer = new cMouseDrawer(thePlayer, ctx->getTextContext()->getSmallTextDrawer());
 }

@@ -8,6 +8,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
 #include "utils/ini.h"
+#include "utils/texture_utils.h"
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
@@ -483,7 +484,7 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
         cPlayer &temp = game.getPlayer(regionPiece.iHouse);
         // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp, TransparentColorIndex);
+            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(&temp, regionPiece.bmp, TransparentColorIndex);
             regionPiece.oldHouse=regionPiece.iHouse;
         }
         drawRegion(regionPiece);
@@ -494,7 +495,7 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
         int iHouse = game.getPlayer(HUMAN).getHouse();
         cPlayer &temp = game.getPlayer(iHouse);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp, TransparentColorIndex);
+            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(&temp, regionPiece.bmp, TransparentColorIndex);
         }
         drawRegion(regionPiece);
     }

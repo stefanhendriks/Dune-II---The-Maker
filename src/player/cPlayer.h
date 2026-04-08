@@ -492,7 +492,8 @@ public:
 
     void deselectUnit(const int &unitId);
 
-    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency);
+    int getSwapColor() const;
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
