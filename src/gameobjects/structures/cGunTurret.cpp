@@ -64,13 +64,13 @@ void cGunTurret::think_attack()
 {
     cUnit &unitTarget = game.getUnit(iTargetID);
     if (unitTarget.isValid() && !unitTarget.isDead()) {
-        int iCellX = game.m_map.getCellX(getCell());
-        int iCellY = game.m_map.getCellY(getCell());
+        int iCellX = game.m_gameObjectsContext->getMap().getCellX(getCell());
+        int iCellY = game.m_gameObjectsContext->getMap().getCellY(getCell());
 
         int unitCell = unitTarget.getCell();
 
-        int iTargetX = game.m_map.getCellX(unitCell);
-        int iTargetY = game.m_map.getCellY(unitCell);
+        int iTargetX = game.m_gameObjectsContext->getMap().getCellX(unitCell);
+        int iTargetY = game.m_gameObjectsContext->getMap().getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int facingAngle = faceAngle(d, kTurretFacings); // get the angle
@@ -143,7 +143,7 @@ void cGunTurret::think_fire()
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         TIMER_fire++;
 
-        int iDistance = game.m_map.distance(getCell(), unitTarget.getCell());
+        int iDistance = game.m_gameObjectsContext->getMap().distance(getCell(), unitTarget.getCell());
 
         if (iDistance > getSight()) {
             iTargetID = -1;
@@ -189,9 +189,9 @@ void cGunTurret::think_fire()
             if (unitTarget.isAirbornUnit()) {
                 if (iBull > -1 && bulletType == ROCKET_RTURRET) {
                     // it is a homing missile!
-                    game.m_Bullets[iBull].iHoming = iTargetID;
+                    game.m_gameObjectsContext->getBullets()[iBull].iHoming = iTargetID;
                     // TODO: property for homing?
-                    game.m_Bullets[iBull].TIMER_homing = 200;
+                    game.m_gameObjectsContext->getBullets()[iBull].TIMER_homing = 200;
                 }
             }
 
@@ -214,8 +214,8 @@ void cGunTurret::think_guard()
         TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
-        int iCellX = game.m_map.getCellX(c);
-        int iCellY = game.m_map.getCellY(c);
+        int iCellX = game.m_gameObjectsContext->getMap().getCellX(c);
+        int iCellY = game.m_gameObjectsContext->getMap().getCellY(c);
 
         int iDistance=9999; // closest distance
 
@@ -233,13 +233,13 @@ void cGunTurret::think_guard()
         }
 
         // scan area for units
-        for (int i = 0; i < game.m_Units.size(); i++) {
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
             // is valid
-            cUnit &cUnit = game.getUnit(i);
+            cUnit &cUnit = game.m_gameObjectsContext->getUnits()[i];
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
             if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
-            if (!game.m_map.isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
+            if (!game.m_gameObjectsContext->getMap().isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
 
             if (!canAttackAirUnits()) {
                 if (cUnit.isAirbornUnit()) {
@@ -257,7 +257,7 @@ void cGunTurret::think_guard()
             }
 
             int c1 = cUnit.getCell();
-            int distance = ABS_length(iCellX, iCellY, game.m_map.getCellX(c1), game.m_map.getCellY(c1));
+            int distance = ABS_length(iCellX, iCellY, game.m_gameObjectsContext->getMap().getCellX(c1), game.m_gameObjectsContext->getMap().getCellY(c1));
 
             if (distance <= distanceForAttacking) {
                 if (cUnit.isAttackableAirUnit()) {

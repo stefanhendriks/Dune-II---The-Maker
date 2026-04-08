@@ -30,12 +30,12 @@ bool cPlayerBrainMissionKindSaboteur::think_SelectTarget()
 
     // TODO: based on priority?
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (!theStructure) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!game.m_map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!game.m_gameObjectsContext->getMap().isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         targetStructureID = theStructure->getStructureId();
@@ -54,7 +54,7 @@ void cPlayerBrainMissionKindSaboteur::think_Execute()
     }
 
     if (targetStructureID > -1) {
-        cAbstractStructure *pStructure = game.m_pStructures[targetStructureID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[targetStructureID];
         assert(pStructure != nullptr);
         if (pStructure->isValid()) {
             const std::vector<int> &units = mission->getUnits();

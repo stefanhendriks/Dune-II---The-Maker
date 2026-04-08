@@ -167,7 +167,8 @@ void cGame::init()
     setupGameObjects();
     
     m_infoContext->initializeDefaultInfos();
-    m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
+    auto &map = m_gameObjectsContext->getMap();
+    map.setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -196,15 +197,15 @@ void cGame::init()
     m_cameraBorderOrKeyMoveSpeed=0.5;
     m_cameraEdgeMove = true;
 
-    m_map.init(64, 64);
+    map.init(64, 64);
 
     initPlayers(false);
 
-    for (int i = 0; i < m_Units.size(); i++) {
-        m_Units[i].init(i);
+    for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
+        m_gameObjectsContext->getUnits()[i].init(i);
     }
 
-    for (auto& particle : m_particles) {
+    for (auto& particle : m_gameObjectsContext->getParticles()) {
         particle.init();
     }
 
@@ -230,9 +231,9 @@ void cGame::missionInit()
 
     m_screenShake->reset();
 
-    m_map.init(64, 64);
+    m_gameObjectsContext->getMap().init(64, 64);
     // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
-    m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
+    m_gameObjectsContext->getMap().setTerrainInfo(m_infoContext->getTerrainInfo());
 
     initPlayers(true);
 
@@ -467,7 +468,7 @@ void cGame::shakeScreen(int duration)
 */
 void cGame::shutdown()
 {
-    m_particles.reset();
+    m_gameObjectsContext->getParticles().reset();
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("SHUTDOWN");
 
@@ -547,7 +548,7 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
-    m_map.setReinforcements(m_reinforcements);
+    m_gameObjectsContext->getMap().setReinforcements(m_reinforcements);
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
@@ -600,7 +601,7 @@ bool cGame::setupGame()
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext());
-    m_map.setGameContext(ctx.get());
+    m_gameObjectsContext->getMap().setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
 
@@ -669,7 +670,7 @@ bool cGame::setupGame()
     infoCreator.installInfos(*game.m_infoContext);
 
     delete m_mapCamera;
-    m_mapCamera = new cMapCamera(&m_map, game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
+    m_mapCamera = new cMapCamera(&game.m_gameObjectsContext->getMap(), game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     cIni::installGame(m_gameFilename);
     // Now we are ready for the menu state
@@ -920,7 +921,7 @@ void cGame::setState(int newState)
                         cPlayer &player = game.getPlayer(i);
                         player.evaluateStillAlive();
                     }
-                    m_particles.reset();
+                    m_gameObjectsContext->getParticles().reset();
                     // in-between solution until we have a proper combat state object
                     game.m_drawManager->init();
 
@@ -1095,7 +1096,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 {
     logbook(s_GameEvent::toString(event));
 
-    m_map.onNotifyGameEvent(event);
+    m_gameObjectsContext->getMap().onNotifyGameEvent(event);
 
     // game itself handles events
     switch (event.eventType) {
@@ -1134,14 +1135,14 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     int widthInCells = structureInfo.bmp_width / 32;
     int heightInCells = structureInfo.bmp_height / 32;
 
-    int cellX = m_map.getGeometry().getCellX(event.atCell);
-    int cellY = m_map.getGeometry().getCellY(event.atCell);
+    int cellX = m_gameObjectsContext->getMap().getGeometry().getCellX(event.atCell);
+    int cellY = m_gameObjectsContext->getMap().getGeometry().getCellY(event.atCell);
 
     for (int i = 0; i < amountOfUnitsToSpawn; i++) {
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         cUnits::unitCreate(
-            m_map.getGeometry().makeCell(randomX, randomY),
+            m_gameObjectsContext->getMap().getGeometry().makeCell(randomX, randomY),
             unitTypeToSpawn,
             event.player->getId(),
             false,
@@ -1164,19 +1165,19 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
         }
         else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
             int precision = special.deployTargetPrecision;
-            int mouseCellX = m_map.getCellX(iMouseCell) - precision;
-            int mouseCellY = m_map.getCellY(iMouseCell) - precision;
+            int mouseCellX = m_gameObjectsContext->getMap().getCellX(iMouseCell) - precision;
+            int mouseCellY = m_gameObjectsContext->getMap().getCellY(iMouseCell) - precision;
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = m_map.fixCoordinatesToBeWithinPlayableMap(posX, posY);
+            cPoint::split(posX, posY) = m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = m_map.getGeometry().makeCell(posX, posY);
+            deployCell = m_gameObjectsContext->getMap().getGeometry().makeCell(posX, posY);
         }
 
 
@@ -1184,7 +1185,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
             // from where
             int structureId = game.m_structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
             if (structureId > -1) {
-                cAbstractStructure *pStructure = game.m_pStructures[structureId];
+                cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {
                     m_soundPlayer->playSound(SOUND_PLACE);
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
@@ -1408,7 +1409,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = m_mapCamera->divideByZoomLevel(m_map.getMaxDistanceInPixels() / 2);
+    float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMap().getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
@@ -1604,24 +1605,24 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = m_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_Units[idOfUnitAtCell].die(true, false);
+                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(true, false);
             }
 
-            int idOfStructureAtCell = m_map.getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = m_gameObjectsContext->getMap().getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
-                game.m_pStructures[idOfStructureAtCell]->die();
+                game.m_gameObjectsContext->getStructures()[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = m_map.getCellIdWormsLayer(mc);
+            idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_Units[idOfUnitAtCell].die(false, false);
+                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
             }
 
-            idOfUnitAtCell = m_map.getCellIdAirUnitLayer(mc);
+            idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_Units[idOfUnitAtCell].die(false, false);
+                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
             }
         }
     }
@@ -1630,9 +1631,9 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = m_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = m_Units[idOfUnitAtCell];
+                cUnit &pUnit = m_gameObjectsContext->getUnits()[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
                     pUnit.takeDamage(damageToTake, -1, -1);
@@ -1644,7 +1645,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
             for (int i = 0; i < AI_WORM; i++) {
-                m_map.clear_all(i);
+                m_gameObjectsContext->getMap().clear_all(i);
             }
         }
     }
@@ -1653,7 +1654,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         // kill all carry-all's
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = m_Units[unitId];
+            cUnit &pUnit = m_gameObjectsContext->getUnits()[unitId];
             pUnit.die(true, false);
         }
     }
@@ -1693,22 +1694,22 @@ s_DataCampaign* cGame::getDataCampaign() const
 
 cUnit& cGame::getUnit(int index)
 {
-    return m_Units[index];
+    return m_gameObjectsContext->getUnits()[index];
 }
 
 const cUnit& cGame::getUnit(int index) const
 {
-    return m_Units[index];
+    return m_gameObjectsContext->getUnits()[index];
 }
 
 cPlayer& cGame::getPlayer(int index)
 {
-    return m_Players[index];
+    return m_gameObjectsContext->getPlayers()[index];
 }
 
 const cPlayer& cGame::getPlayer(int index) const
 {
-    return m_Players[index];
+    return m_gameObjectsContext->getPlayers()[index];
 }
 
 int cGame::getCurrentState() const
