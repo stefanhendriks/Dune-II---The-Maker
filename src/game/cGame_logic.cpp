@@ -209,6 +209,10 @@ void cGame::init()
         particle.init();
     }
 
+    for (auto& bullet : m_gameObjectsContext->getBullets()) {
+        bullet.init();
+    }
+
     // Initialize InfoContext with empty objects that will be populated by cIni::installGame()
     m_infoContext->initializeDefaultInfos();
 
@@ -234,6 +238,18 @@ void cGame::missionInit()
     m_gameObjectsContext->getMap().init(64, 64);
     // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
     m_gameObjectsContext->getMap().setTerrainInfo(m_infoContext->getTerrainInfo());
+
+    for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
+        m_gameObjectsContext->getUnits()[i].init(i);
+    }
+
+    for (auto& particle : m_gameObjectsContext->getParticles()) {
+        particle.init();
+    }
+
+    for (auto& bullet : m_gameObjectsContext->getBullets()) {
+        bullet.init();
+    }
 
     initPlayers(true);
 
