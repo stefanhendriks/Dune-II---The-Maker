@@ -2,10 +2,16 @@
 
 #include <vector>
 
+struct ASTAR {
+    int cost;
+    int parent;
+    int state;
+};
+
 class cPathFinder {
 public:
     static int createPath(int iUnitId, int iPathCountUnits);
     static int returnCloseGoal(int iCll, int iMyCell, int iID);
-private: 
-
+private:
+    static ASTAR temp_map[16384];
 };

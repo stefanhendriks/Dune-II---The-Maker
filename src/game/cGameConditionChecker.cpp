@@ -7,6 +7,11 @@
 
 #include <cassert>
 
+#define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01
+#define WINLOSEFLAGS_HUMAN_HAS_BUILDINGS    0x02
+#define WINLOSEFLAGS_QUOTA                  0x04
+#define WINLOSEFLAGS_TIMEOUT                0x08
+
 cGameConditionChecker::cGameConditionChecker(cGame* game) : m_game(game)
 {   
     assert(game != nullptr); 

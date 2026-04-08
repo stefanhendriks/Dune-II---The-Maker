@@ -12,7 +12,7 @@
 // 01/01/2022 -> Move this into a `Combat` state object; or within player object as state.
 
 // #include "gameobjects/structures/cAbstractStructure.h"
-#include "include/definitions.h"
+// #include "include/definitions.h"
 
 #include "controls/mousestates/eMouseStates.h"
 #include "controls/mousestates/cMouseNormalState.h"
@@ -47,13 +47,13 @@ public:
     }
 
     bool isMouseOnSidebar() const {
-        return m_mouseCell == MOUSECELL_SIDEBAR;
+        return m_mouseCell == MOUSE_CELL_HOVER_SIDEBAR;
     }
     bool isMouseOnTopBar() const {
-        return m_mouseCell == MOUSECELL_TOPBAR;
+        return m_mouseCell == MOUSE_CELL_HOVER_TOPBAR;
     }
     bool isMouseOnMiniMap() const {
-        return m_mouseCell == MOUSECELL_MINIMAP;
+        return m_mouseCell == MOUSE_CELL_HOVER_MINIMAP;
     }
     bool isMouseOnSidebarOrMinimap() const {
         return isMouseOnSidebar() || isMouseOnMiniMap();
@@ -120,4 +120,8 @@ private:
     void onBlurMouseStateEvent();
     void onMouseMovedTo(const s_MouseEvent &event);
     void updateMouseCell(const cPoint &coords);
+
+    static constexpr int MOUSE_CELL_HOVER_TOPBAR = -1;
+    static constexpr int MOUSE_CELL_HOVER_MINIMAP = -2;
+    static constexpr int MOUSE_CELL_HOVER_SIDEBAR = -3;
 };

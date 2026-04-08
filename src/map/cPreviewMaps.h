@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
+// #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 
 #include <SDL2/SDL.h>
 #include <vector>
@@ -34,7 +34,7 @@ public:
     void destroy();
 
     s_PreviewMap &getMap(int i) {
-        if (i > MAX_SKIRMISHMAPS) {
+        if (i > MAX_SKIRMISHMAPS_CAPACITY) {
             return m_PreviewMap[0];
         }
         return m_PreviewMap[i];
@@ -53,8 +53,9 @@ private:
     void initRandomMap();
     void initPreviews();
     int m_numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array m_PreviewMap?
+    static constexpr int MAX_SKIRMISHMAPS_CAPACITY = 300;
 
-    std::array<s_PreviewMap, MAX_SKIRMISHMAPS> m_PreviewMap;
+    std::array<s_PreviewMap, MAX_SKIRMISHMAPS_CAPACITY> m_PreviewMap;
     SDLDrawer * m_renderDrawer;
     bool m_debugMode;
 };

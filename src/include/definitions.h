@@ -1,9 +1,9 @@
 #ifndef DEFINITIONS_H_
 #define DEFINITIONS_H_
 
-#define MOUSECELL_TOPBAR  -1
-#define MOUSECELL_MINIMAP -2
-#define MOUSECELL_SIDEBAR -3
+// #define MOUSECELL_TOPBAR  -1
+// #define MOUSECELL_MINIMAP -2
+// #define MOUSECELL_SIDEBAR -3
 
 // MAP ID
 #define MAPID_UNITS  0
@@ -12,10 +12,10 @@
 #define MAPID_WORMS  3
 #define MAPID_MAX	 4 // used for clearing all
 
-#define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
+// #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
 // Max length of a path (per unit)
-#define MAX_PATH_SIZE    256
+// #define MAX_PATH_SIZE    256
 
 // // INTRO SCENES:
 // #define SCENE_NONE		-1
@@ -46,12 +46,12 @@
 // #define MAP_FOG           2   // area is still fogged
 
 // SCROLLING (on a map)
-#define MAP_SCROLLSPEED   TILE_SIZE_PIXELS   // pixels per frames scrolling.
+// #define MAP_SCROLLSPEED   TILE_SIZE_PIXELS   // pixels per frames scrolling.
 
 // MEMORY USAGE: (units, structures, etc , more info below)
 // #define MAX_UNITS        300     // max of units in the game
 #define MAX_STRUCTURES   200     // max of structures in the game
-#define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
+// #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 
 #define HUMAN			0  // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
 #define AI_CPU1         1  // 1 = CPU (Atreides)
@@ -249,10 +249,10 @@ const int D2TM_PARTICLE_SMOKE_WITH_SHADOW       = 35;
 // #define SMUDGE_WALL 2
 
 // Win/lose bit flags, borrowed from Dune Legacy's implementation
-#define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01
-#define WINLOSEFLAGS_HUMAN_HAS_BUILDINGS    0x02
-#define WINLOSEFLAGS_QUOTA                  0x04
-#define WINLOSEFLAGS_TIMEOUT                0x08
+// #define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01
+// #define WINLOSEFLAGS_HUMAN_HAS_BUILDINGS    0x02
+// #define WINLOSEFLAGS_QUOTA                  0x04
+// #define WINLOSEFLAGS_TIMEOUT                0x08
 
 
 /**
