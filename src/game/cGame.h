@@ -196,16 +196,16 @@ public:
     bool isTurretsDownOnLowPower() {
         return m_turretsDownOnLowPower;
     }
-    void setTurretsDownOnLowPower(bool value) {
-        m_turretsDownOnLowPower = value;
-    }
+    // void setTurretsDownOnLowPower(bool value) {
+    //     m_turretsDownOnLowPower = value;
+    // }
 
     bool isRocketTurretsDownOnLowPower() {
         return m_rocketTurretsDownOnLowPower;
     }
-    void setRocketTurretsDownOnLowPower(bool value) {
-        m_rocketTurretsDownOnLowPower = value;
-    }
+    // void setRocketTurretsDownOnLowPower(bool value) {
+    //     m_rocketTurretsDownOnLowPower = value;
+    // }
 
     bool isDebugMode() {
         return m_debugMode;
