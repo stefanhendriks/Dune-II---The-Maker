@@ -48,12 +48,12 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 {
     int target = -1;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (!theStructure) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!game.m_map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!game.m_gameObjectsContext->getMap().isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         target =  theStructure->getStructureId();
@@ -67,12 +67,12 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 {
     int target = -1;
-    for (int i = 0; i < game.m_Units.size(); i++) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.getPlayer() == player) continue; // skip self
         if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-        if (!game.m_map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+        if (!game.m_gameObjectsContext->getMap().isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
         if (pUnit.isSandworm() || pUnit.isAirbornUnit()) continue; // don't attack air units or sandworms
 
         // enemy unit
@@ -92,7 +92,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
     }
 
     if (targetStructureID > -1) {
-        cAbstractStructure *pStructure = game.m_pStructures[targetStructureID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[targetStructureID];
         if (!pStructure || !pStructure->isValid()) {
             mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
             return;

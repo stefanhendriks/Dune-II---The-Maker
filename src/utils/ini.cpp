@@ -371,11 +371,11 @@ void cIni::INI_Load_seed(int seed)
     auto seedMap = seedGenerator.generateSeedMap();
     logbook("Seedmap generated");
 
-    auto mapEditor = cMapEditor(game.m_map);
+    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
-            int iCell = game.m_map.getGeometry().makeCell(mapX, mapY);
+            int iCell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -558,7 +558,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     memset(iPl_house, -1, sizeof(iPl_house));
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
-    auto mapEditor = cMapEditor(game.m_map);
+    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
         // char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
         std::string linesection;
@@ -673,7 +673,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     // }
 
     mapEditor.smoothMap();
-    game.m_map.setDesiredAmountOfWorms(game.getPlayer(AI_WORM).getAmountOfUnitsForType(SANDWORM));
+    game.m_gameObjectsContext->getMap().setDesiredAmountOfWorms(game.getPlayer(AI_WORM).getAmountOfUnitsForType(SANDWORM));
 }
 
 void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
@@ -735,7 +735,7 @@ int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credi
 
 void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
 {
-    game.m_map.init(64, 64);
+    game.m_gameObjectsContext->getMap().init(64, 64);
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
@@ -779,7 +779,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = game.m_map.getGeometry().makeCell(iCellX, iCellY);
+                d2tm_cell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(iCellX, iCellY);
                 blooms[iBloomID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -832,7 +832,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = game.m_map.getGeometry().makeCell(iCellX, iCellY);
+                d2tm_cell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(iCellX, iCellY);
                 fields[iFieldID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -1473,7 +1473,7 @@ void cIni::installGame(std::string filename)
                         }
 
                         id = cIniUtils::getBulletTypeFromString(name_bullet);
-                        const int bulletInfoCount = game.bulletInfos.size();
+                        const int bulletInfoCount = game.m_infoContext->getBulletInfos()->size();
                         if (id >= 0 && id >= bulletInfoCount) {
                             id--;
                         }
@@ -1491,7 +1491,7 @@ void cIni::installGame(std::string filename)
                 // Valid ID
                 if (section == INI_UNITS && id > -1) {
                     // Unit properties
-                    s_UnitInfo &unitInfo = game.unitInfos[id];
+                    s_UnitInfo &unitInfo = game.m_infoContext->getUnitInfo(id);
 
                     if (wordtype == WORD_HITPOINTS) unitInfo.hp = ToInt(word_right);
                     if (wordtype == WORD_APPETITE) unitInfo.appetite = ToInt(word_right);
@@ -1543,12 +1543,12 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
 
-                if (wordtype == WORD_BLOOMTIMERDURATION) game.getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MINSPICE) game.getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MAXSPICE) game.getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MINSPICE) game.getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MAXSPICE) game.getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINWALL_HP) game.getTerrainInfo()->terrainWallHp = ToInt(word_right);
+                if (wordtype == WORD_BLOOMTIMERDURATION) game.m_infoContext->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MINSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MAXSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MINSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MAXSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINWALL_HP) game.m_infoContext->getTerrainInfo()->terrainWallHp = ToInt(word_right);
             }
 
             // Structure w0h00
@@ -1556,19 +1556,19 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
                 if (wordtype == WORD_HITPOINTS) {
-                    game.structureInfos[id].hp = ToInt(word_right);
+                    game.m_infoContext->getStructureInfo(id).hp = ToInt(word_right);
                 }
-                if (wordtype == WORD_FIXHP) game.structureInfos[id].fixhp = ToInt(word_right);
-                if (wordtype == WORD_POWERDRAIN) game.structureInfos[id].power_drain = ToInt(word_right);
-                if (wordtype == WORD_HAS_CONCRETE) game.structureInfos[id].hasConcrete = ToBool(word_right);
-                if (wordtype == WORD_POWERGIVE) game.structureInfos[id].power_give = ToInt(word_right);
-                if (wordtype == WORD_COST) game.structureInfos[id].cost = ToInt(word_right);
-                if (wordtype == WORD_BUILDTIME) game.structureInfos[id].buildTime = ToInt(word_right);
-                if (wordtype == WORD_CANATTACKAIRUNITS) game.structureInfos[id].canAttackAirUnits = ToBool(word_right);
-                if (wordtype == WORD_CANATTACKUNITS) game.structureInfos[id].canAttackGroundUnits = ToBool(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) game.structureInfos[id].uponDestructionSpawnUnitAmountMin = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) game.structureInfos[id].uponDestructionSpawnUnitAmountMax = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE) game.structureInfos[id].uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
+                if (wordtype == WORD_FIXHP) game.m_infoContext->getStructureInfo(id).fixhp = ToInt(word_right);
+                if (wordtype == WORD_POWERDRAIN) game.m_infoContext->getStructureInfo(id).power_drain = ToInt(word_right);
+                if (wordtype == WORD_HAS_CONCRETE) game.m_infoContext->getStructureInfo(id).hasConcrete = ToBool(word_right);
+                if (wordtype == WORD_POWERGIVE) game.m_infoContext->getStructureInfo(id).power_give = ToInt(word_right);
+                if (wordtype == WORD_COST) game.m_infoContext->getStructureInfo(id).cost = ToInt(word_right);
+                if (wordtype == WORD_BUILDTIME) game.m_infoContext->getStructureInfo(id).buildTime = ToInt(word_right);
+                if (wordtype == WORD_CANATTACKAIRUNITS) game.m_infoContext->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
+                if (wordtype == WORD_CANATTACKUNITS) game.m_infoContext->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) game.m_infoContext->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) game.m_infoContext->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE) game.m_infoContext->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
             }
 
             if (section == INI_BULLETS && id > -1) {
@@ -1576,11 +1576,11 @@ void cIni::installGame(std::string filename)
                 wordtype = INI_WordType(word_left, section);
             
                 // Bullet properties
-                if (wordtype == WORD_DAMAGE_VEHICLE) game.bulletInfos[id].damage_vehicles = ToInt(word_right);
-                if (wordtype == WORD_DAMAGE_INFANTRY) game.bulletInfos[id].damage_infantry = ToInt(word_right);
-                if (wordtype == WORD_DEVIATE_PROBABILITY) game.bulletInfos[id].deviateProbability = ToInt(word_right);
-                if (wordtype == WORD_EXPLOSION_SIZE) game.bulletInfos[id].explosionSize = ToInt(word_right);
-                if (wordtype == WORD_GROUND_BULLET) game.bulletInfos[id].groundBullet = ToBool(word_right);
+                if (wordtype == WORD_DAMAGE_VEHICLE) game.m_infoContext->getBulletInfo(id).damage_vehicles = ToInt(word_right);
+                if (wordtype == WORD_DAMAGE_INFANTRY) game.m_infoContext->getBulletInfo(id).damage_infantry = ToInt(word_right);
+                if (wordtype == WORD_DEVIATE_PROBABILITY) game.m_infoContext->getBulletInfo(id).deviateProbability = ToInt(word_right);
+                if (wordtype == WORD_EXPLOSION_SIZE) game.m_infoContext->getBulletInfo(id).explosionSize = ToInt(word_right);
+                if (wordtype == WORD_GROUND_BULLET) game.m_infoContext->getBulletInfo(id).groundBullet = ToBool(word_right);
             }
 
         } // while

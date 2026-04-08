@@ -101,7 +101,7 @@ void cStarPort::think_deploy()
                         // assume that the cell to drop is the location of the structure itself
                         cellToDeployTo = getCell();
                     }
-                    int cellAtBorderOfMap = game.m_map.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
+                    int cellAtBorderOfMap = game.m_gameObjectsContext->getMap().findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
                     REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
                 }
             }

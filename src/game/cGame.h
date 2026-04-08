@@ -24,16 +24,12 @@
 #include "player/cPlayers.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/projectiles/cBullets.h"
 #include "utils/cStructureUtils.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
-#include "gameobjects/cSpecialInfos.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
+
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <memory>
 #include <string>
@@ -62,7 +58,6 @@ class SDLDrawer;
 class cMapCamera;
 class cDrawManager;
 
-struct s_TerrainInfo;
 struct s_DataCampaign;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
@@ -122,22 +117,16 @@ public:
 
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
-    cBullets                    g_Bullets;
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     cStructureUtils             m_structureUtils;
-    cBulletInfos   			    bulletInfos;
-    cSpecialInfos               specialInfos;
-    cUpgradeInfos               upgradeInfos;
-    cUnitInfos                  unitInfos;
-    cStructureInfos             structureInfos;
-    cPlayers                    m_Players;
-    cParticles                  m_particles;
-    cParticleInfos              m_particleInfos;
-    cStructures                 m_pStructures;
-    cUnits                      m_Units;
-    cMap                        m_map;
     // end
+
+    //todo: this should get moved to private, but not yet.
+    std::unique_ptr<cGameObjectContext> m_gameObjectsContext;
+    
+    //todo: this should get moved to private, but not yet.
+    std::unique_ptr<cInfoContext> m_infoContext;
 
     // Initialization functions
     void init();		            // initialize all game variables
@@ -247,8 +236,6 @@ public:
     }
     void takeBackGroundScreen();
 
-    std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
-
     void goingToWinLoseBrief(int value);
 
     cReinforcements* getReinforcements() const;
@@ -305,8 +292,6 @@ private:
     SDLDrawer *m_renderDrawer = nullptr;
 
     std::shared_ptr<cHousesInfo> m_Houses;
-    std::shared_ptr<s_TerrainInfo> m_TerrainInfo;
-
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
     int m_newMusicSample;

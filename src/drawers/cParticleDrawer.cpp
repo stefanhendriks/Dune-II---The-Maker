@@ -9,7 +9,7 @@ void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {
     m_particlesLowerLayer.clear();
     m_particlesTopLayer.clear();
-    for (auto &pParticle : game.m_particles) {
+    for (auto &pParticle : game.m_gameObjectsContext->getParticles()) {
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 

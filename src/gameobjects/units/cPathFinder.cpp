@@ -102,11 +102,11 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     the_cll = -1;
     ex = -1;
     ey = -1;
-    cx = game.m_map.getCellX(iCell);
-    cy = game.m_map.getCellY(iCell);
+    cx = game.m_gameObjectsContext->getMap().getCellX(iCell);
+    cy = game.m_gameObjectsContext->getMap().getCellY(iCell);
 
     // set very first... our start cell
-    temp_map[iCell].cost = ABS_length(cx, cy, game.m_map.getCellX(goal_cell), game.m_map.getCellY(goal_cell));
+    temp_map[iCell].cost = ABS_length(cx, cy, game.m_gameObjectsContext->getMap().getCellX(goal_cell), game.m_gameObjectsContext->getMap().getCellY(goal_cell));
     temp_map[iCell].parent = -1;
     temp_map[iCell].state = OPEN; // this one is opened by default
 
@@ -125,7 +125,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             break;
         }
 
-        int idOfStructureAtCell = game.m_map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
+        int idOfStructureAtCell = game.m_gameObjectsContext->getMap().cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
         if (pUnit.iStructureID > -1) {
             if (idOfStructureAtCell == pUnit.iStructureID) {
                 valid = false;
@@ -144,8 +144,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             }
         }
 
-        cx = game.m_map.getCellX(iCell);
-        cy = game.m_map.getCellY(iCell);
+        cx = game.m_gameObjectsContext->getMap().getCellX(iCell);
+        cy = game.m_gameObjectsContext->getMap().getCellY(iCell);
 
         // starting position is cx-1 and cy-1
         sx = cx - 1;
@@ -156,8 +156,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         ey = cy + 1;
 
         // boundaries
-        cPoint::split(sx, sy) = game.m_map.fixCoordinatesToBeWithinPlayableMap(sx, sy);
-        cPoint::split(ex, ey) = game.m_map.fixCoordinatesToBeWithinPlayableMap(ex, ey);
+        cPoint::split(sx, sy) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(sx, sy);
+        cPoint::split(ex, ey) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(ex, ey);
 
 //        if (ex <= cx)
 //            pUnit.log("CX = EX");
@@ -175,7 +175,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = game.m_map.getGeometry().getCellWithMapBorders(cx, cy);
+                int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(cx, cy);
 
                 // skip invalid cells
                 if (cll < 0)
@@ -193,15 +193,15 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 bool good = false; // not good by default
 
                 // not a sandworm
-                int cellType = game.m_map.getCellType(cll);
+                int cellType = game.m_gameObjectsContext->getMap().getCellType(cll);
                 if (!pUnit.isSandworm()) {
                     // Step by step determine if its good
                     // 2 fases:
                     // 1 -> Occupation by unit/structures
                     // 2 -> Occupation by terrain (but only when it is visible, since we do not want to have an
                     //      advantage or some super intelligence by units for unknown territories!)
-                    int idOfUnitAtCell = game.m_map.getCellIdUnitLayer(cll);
-                    int idOfStructureAtCell = game.m_map.getCellIdStructuresLayer(cll);
+                    int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(cll);
+                    int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(cll);
 
                     if (idOfUnitAtCell == -1 && idOfStructureAtCell == -1) {
                         // there is nothing on this cell, that is good
@@ -250,7 +250,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     }
 
                     // is not visible, always good (since we don't know yet if its blocked!)
-                    if (game.m_map.isVisible(cll, controller) == false) {
+                    if (game.m_gameObjectsContext->getMap().isVisible(cll, controller) == false) {
                         good = true;
                     }
                     else {
@@ -269,7 +269,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
                 else {
                     // Sandworm only cares about terrain type for good/bad cells
-                    good = game.m_map.isCellPassableForWorm(cll);
+                    good = game.m_gameObjectsContext->getMap().isCellPassableForWorm(cll);
                 }
 
                 if (!good) {
@@ -294,12 +294,12 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 // the cell is CLOSED (not checked yet)
                 if (cll != iCell &&         // not checking on our own
                         isClosed) {            // and is closed (else it's not valid to check)
-                    int gcx = game.m_map.getCellX(goal_cell);
-                    int gcy = game.m_map.getCellY(goal_cell);
+                    int gcx = game.m_gameObjectsContext->getMap().getCellX(goal_cell);
+                    int gcy = game.m_gameObjectsContext->getMap().getCellY(goal_cell);
 
                     // calculate the cost
                     int tempCost = temp_map[cll].cost;
-                    double distanceCost = game.m_map.distance(cx, cy, gcx, gcy);
+                    double distanceCost = game.m_gameObjectsContext->getMap().distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
 //                        pUnit.log(std::format(
 //                                "CREATE_PATH: tempCost [{}] + distanceCost [{}] = newCost = [{}] vs current cost [{}]",
@@ -446,7 +446,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     for (int sz = z; sz > 0; sz--) {
                         if (temp_path[sz] > -1) {
 
-                            if (game.m_map.isCellAdjacentToOtherCell(iPrevCell, temp_path[sz])) {
+                            if (game.m_gameObjectsContext->getMap().isCellAdjacentToOtherCell(iPrevCell, temp_path[sz])) {
                                 iGoodZ = sz;
                             }
                             //if (ABS_length(iCellGiveX(iPrevCell), iCellGiveY(iPrevCell), iCellGiveX(temp_path[sz]), iCellGiveY(temp_path[sz])) <= 1)
@@ -475,7 +475,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
             int pathCell = pUnit.movement.iPath[i];
             if (pathCell > -1) {
-                if (game.m_map.isCellAdjacentToOtherCell(pUnit.getCell(), pathCell)) {
+                if (game.m_gameObjectsContext->getMap().isCellAdjacentToOtherCell(pUnit.getCell(), pathCell)) {
                     pUnit.movement.iPathIndex = i;
                 }
             }
@@ -516,45 +516,45 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
 {
     //
     int iSize = 1;
-    int iStartX = game.m_map.getCellX(iCll) - iSize;
-    int iStartY = game.m_map.getCellY(iCll) - iSize;
-    int iEndX = game.m_map.getCellX(iCll) + iSize;
-    int iEndY = game.m_map.getCellX(iCll) + iSize;
+    int iStartX = game.m_gameObjectsContext->getMap().getCellX(iCll) - iSize;
+    int iStartY = game.m_gameObjectsContext->getMap().getCellY(iCll) - iSize;
+    int iEndX = game.m_gameObjectsContext->getMap().getCellX(iCll) + iSize;
+    int iEndY = game.m_gameObjectsContext->getMap().getCellX(iCll) + iSize;
 
     float dDistance = 9999;
 
-    int ix = game.m_map.getCellX(iMyCell);
-    int iy = game.m_map.getCellY(iMyCell);
+    int ix = game.m_gameObjectsContext->getMap().getCellX(iMyCell);
+    int iy = game.m_gameObjectsContext->getMap().getCellY(iMyCell);
 
     bool bSearch = true;
 
     int iTheClosest = -1;
 
     while (bSearch) {
-        iStartX = game.m_map.getCellX(iCll) - iSize;
-        iStartY = game.m_map.getCellY(iCll) - iSize;
-        iEndX = game.m_map.getCellX(iCll) + iSize;
-        iEndY = game.m_map.getCellY(iCll) + iSize;
+        iStartX = game.m_gameObjectsContext->getMap().getCellX(iCll) - iSize;
+        iStartY = game.m_gameObjectsContext->getMap().getCellY(iCll) - iSize;
+        iEndX = game.m_gameObjectsContext->getMap().getCellX(iCll) + iSize;
+        iEndY = game.m_gameObjectsContext->getMap().getCellY(iCll) + iSize;
 
         // Fix boundaries
-        cPoint::split(iStartX, iStartY) = game.m_map.fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
-        cPoint::split(iEndX, iEndY) = game.m_map.fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
+        cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
+        cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
 
         // search
         for (int iSX = iStartX; iSX < iEndX; iSX++)
             for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
-                int cll = game.m_map.getGeometry().getCellWithMapDimensions(iSX, iSY);
+                int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
-                int idOfStructureAtCell = game.m_map.getCellIdStructuresLayer(cll);
-                int idOfUnitAtCell = game.m_map.getCellIdUnitLayer(cll);
+                int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(cll);
+                int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(cll);
 
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
-                    int cellType = game.m_map.getCellType(cll);
-                    if (game.unitInfos[game.getUnit(iID).iType].infantry) {
+                    int cellType = game.m_gameObjectsContext->getMap().getCellType(cll);
+                    if (game.m_infoContext->getUnitInfo(game.getUnit(iID).iType).infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }

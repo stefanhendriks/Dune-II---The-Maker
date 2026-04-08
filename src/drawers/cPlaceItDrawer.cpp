@@ -54,8 +54,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-    int iCellX = game.m_map.getCellX(mouseCell);
-    int iCellY = game.m_map.getCellY(mouseCell);
+    int iCellX = game.m_gameObjectsContext->getMap().getCellX(mouseCell);
+    int iCellY = game.m_gameObjectsContext->getMap().getCellY(mouseCell);
 
     // check
     int iStartX = iCellX-SCANWIDTH;
@@ -65,20 +65,20 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    cPoint::split(iStartX, iStartY) = game.m_map.fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    cPoint::split(iEndX, iEndY) = game.m_map.fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX=iStartX; iX < iEndX; iX++) {
         for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = game.m_map.getGeometry().getCellWithMapDimensions(iX, iY);
+            int iCll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
-                int idOfStructureAtCell = game.m_map.getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
-                    if (game.m_pStructures[iID]->getOwner() == HUMAN) {
+                    if (game.m_gameObjectsContext->getStructures()[iID]->getOwner() == HUMAN) {
                         bWithinBuildDistance = true; // connection!
                         break;
                     }
@@ -86,8 +86,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     // TODO: Allow placement nearby allies?
                 }
 
-                if (game.m_map.getCellType(iCll) == TERRAIN_WALL ||
-                        game.m_map.getCellType(iCll) == TERRAIN_SLAB) {
+                if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_WALL ||
+                        game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance=true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
@@ -96,8 +96,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
         }
     }
 
-    int iDrawX = game.m_map.mouse_draw_x();
-    int iDrawY = game.m_map.mouse_draw_y();
+    int iDrawX = game.m_gameObjectsContext->getMap().mouse_draw_x();
+    int iDrawY = game.m_gameObjectsContext->getMap().mouse_draw_y();
 
     if (!bWithinBuildDistance) {
         itemToPlaceColor = game.getColorPlaceBad();
@@ -111,27 +111,27 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int cellX = iCellX + iX;
                 int cellY = iCellY + iY;
 
-                if (!game.m_map.isWithinBoundaries(cellX, cellY)) {
+                if (!game.m_gameObjectsContext->getMap().isWithinBoundaries(cellX, cellY)) {
                     continue;
                 }
 
-                int iCll = game.m_map.getGeometry().makeCell(cellX, cellY);
+                int iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(cellX, cellY);
 
-                if (!game.m_map.isCellPassable(iCll) || game.m_map.getCellType(iCll) != TERRAIN_ROCK) {
+                if (!game.m_gameObjectsContext->getMap().isCellPassable(iCll) || game.m_gameObjectsContext->getMap().getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = game.getColorPlaceBad();
                 }
 
-                if (game.m_map.getCellType(iCll) == TERRAIN_SLAB) {
+                if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
                     itemToPlaceColor = game.getColorPlaceGood();
                 }
 
                 // occupied by units or structures
-                int idOfStructureAtCell = game.m_map.getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     itemToPlaceColor = game.getColorPlaceBad();
                 }
 
-                int unitIdOnMap = game.m_map.getCellIdUnitLayer(iCll);
+                int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!game.getUnit(unitIdOnMap).isDead()) {
@@ -158,11 +158,11 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     int structureId = itemToPlace->getBuildId();
 
-    int iDrawX = game.m_map.mouse_draw_x();
-    int iDrawY = game.m_map.mouse_draw_y();
+    int iDrawX = game.m_gameObjectsContext->getMap().mouse_draw_x();
+    int iDrawY = game.m_gameObjectsContext->getMap().mouse_draw_y();
 
-    int width = game.structureInfos[structureId].bmp_width;
-    int height = game.structureInfos[structureId].bmp_height;
+    int width = game.m_infoContext->getStructureInfo(structureId).bmp_width;
+    int height = game.m_infoContext->getStructureInfo(structureId).bmp_height;
 
     int scaledWidth = game.m_mapCamera->factorZoomLevel(width);
     int scaledHeight = game.m_mapCamera->factorZoomLevel(height);
