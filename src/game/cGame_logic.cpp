@@ -138,8 +138,10 @@ cGame::cGame()
     m_cScreenFader = std::make_unique<cScreenFader>();
 }
 
-void cGame::applySettings(GameSettings *gs)
+void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 {
+    // save settings for later use
+    m_initialGameSettings = std::move(gs);
     m_screenW = gs->screenW;
     m_screenH = gs->screenH;
     m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
