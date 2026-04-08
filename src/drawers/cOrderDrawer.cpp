@@ -8,6 +8,7 @@
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
+#include "utils/texture_utils.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
@@ -21,7 +22,7 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     assert(player != nullptr);
     assert(ctx != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    m_buttonBitmap = player->createTextureFromIndexedSurfaceWithPalette(gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
+    m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport

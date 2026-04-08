@@ -11,6 +11,7 @@
 
 #include "cParticle.h"
 #include "utils/RNG.hpp"
+#include "utils/texture_utils.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
@@ -848,7 +849,7 @@ void cParticle::recolorForHouseIfGiven() {
     
     cPlayer &player = game.getPlayer(this->iHousePal);
     auto tex = gfxdata->getSurface(bmpIndex);
-    auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
+    auto recoloredBmp = createPlayerTextureFromIndexedSurfaceWithPalette(&player, tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {
         // but why did createTextureFromIndexedSurfaceWithPalette give an error ?
         bmp = recoloredBmp;

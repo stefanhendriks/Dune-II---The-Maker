@@ -8,6 +8,7 @@
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
+#include "utils/texture_utils.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 
@@ -26,12 +27,12 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     assert(player!= nullptr);
     assert(ctx != nullptr);
 
-    m_candyBarBall = m_player->createTextureFromIndexedSurfaceWithPalette(
-        m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
-    m_candyBarPiece = m_player->createTextureFromIndexedSurfaceWithPalette(
-        m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
-    m_candyHorizonBar = m_player->createTextureFromIndexedSurfaceWithPalette(
-        m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
+    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(
+        m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
+    m_candyBarPiece = createPlayerTextureFromIndexedSurfaceWithPalette(
+        m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
+    m_candyHorizonBar = createPlayerTextureFromIndexedSurfaceWithPalette(
+        m_player, m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
     m_candiBarRenderer = m_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_screenH-40);
     m_renderDrawer->beginDrawingToTexture(m_candiBarRenderer);
