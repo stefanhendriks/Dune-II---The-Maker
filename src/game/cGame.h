@@ -122,7 +122,7 @@ public:
     // end
 
     // TODO: this should be moved on a GameObjectContext class same method as std::unique_ptr<cInfoContext> m_infoContext;
-    cBullets                    g_Bullets;    
+    cBullets                    m_Bullets;    
     cPlayers                    m_Players;
     cParticles                  m_particles;
     cStructures                 m_pStructures;
