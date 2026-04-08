@@ -228,10 +228,10 @@ void cOrderProcesser::sendFrigate()
 
     if (structureId > -1) {
         // found structure
-        game.m_pStructures[structureId]->setAnimating(true);
-        int destinationCell = game.m_pStructures[structureId]->getCell();
+        game.m_gameObjectsContext->getStructures()[structureId]->setAnimating(true);
+        int destinationCell = game.m_gameObjectsContext->getStructures()[structureId]->getCell();
 
-        int iStartCell = game.m_map.findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+        int iStartCell = game.m_gameObjectsContext->getMap().findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
         if (iStartCell < 0) {
             logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");
@@ -246,10 +246,10 @@ void cOrderProcesser::sendFrigate()
             }
 
             // STEP 2b: make sure its facing the starport directly
-            int iCellX = game.m_map.getCellX(iStartCell);
-            int iCellY = game.m_map.getCellY(iStartCell);
-            int cx = game.m_map.getCellX(destinationCell);
-            int cy = game.m_map.getCellY(destinationCell);
+            int iCellX = game.m_gameObjectsContext->getMap().getCellX(iStartCell);
+            int iCellY = game.m_gameObjectsContext->getMap().getCellY(iStartCell);
+            int cx = game.m_gameObjectsContext->getMap().getCellX(destinationCell);
+            int cy = game.m_gameObjectsContext->getMap().getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
             int f = faceAngle(d); // get the angle

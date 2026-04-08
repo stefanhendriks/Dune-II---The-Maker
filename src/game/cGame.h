@@ -122,15 +122,8 @@ public:
     cStructureUtils             m_structureUtils;
     // end
 
-    // Game object context manages all game entities
+    //todo: this should get moved to private, but not yet.
     std::unique_ptr<cGameObjectContext> m_gameObjectsContext;
-        // TODO: this should be moved on a GameObjectContext class same method as std::unique_ptr<cInfoContext> m_infoContext;
-    cBullets                    m_Bullets;    
-    cPlayers                    m_Players;
-    cParticles                  m_particles;
-    cStructures                 m_pStructures;
-    cUnits                      m_Units;
-    cMap                        m_map;
     
     //todo: this should get moved to private, but not yet.
     std::unique_ptr<cInfoContext> m_infoContext;

@@ -32,7 +32,7 @@ std::unique_ptr<cMap> cGameObjectsContextCreator::createMap() {
     return std::make_unique<cMap>();
 }
 
-void cGameObjectsContextCreator::installGameObjects(cGameObjectContext& gameObjectContext) {
+void cGameObjectsContextCreator::installGameObjects(cGameObjectContext& gameObjectContext){
     gameObjectContext.setBullets(createBullets());
     gameObjectContext.setPlayers(createPlayers());
     gameObjectContext.setParticles(createParticles());

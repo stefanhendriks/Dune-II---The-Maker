@@ -395,7 +395,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 {
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
-    for (auto &pUnit : game.m_Units) {
+    for (auto &pUnit : game.m_gameObjectsContext->getUnits()) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.isSelected()) {
@@ -413,8 +413,8 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.m_Units.size(); i++) {
-        cUnit &pUnit = game.getUnit(i);
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
@@ -430,8 +430,8 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.m_Units.size(); i++) {
-        cUnit &pUnit = game.getUnit(i);
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
@@ -456,8 +456,8 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
 int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
 {
     int count = 0;
-    for (int i = 0; i < game.m_Units.size(); i++) {
-        cUnit &cUnit = game.getUnit(i);
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        cUnit &cUnit = game.m_gameObjectsContext->getUnits()[i];
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != this->getId()) continue;
         if (std::find(unitTypes.begin(), unitTypes.end(), cUnit.iType) != unitTypes.end()) {
@@ -751,7 +751,7 @@ std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType)
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *abstractStructure = game.m_pStructures[i];
+        cAbstractStructure *abstractStructure = game.m_gameObjectsContext->getStructures()[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
@@ -1141,11 +1141,11 @@ int cPlayer::findCellToPlaceStructure(int structureType)
     int iHeight = game.m_infoContext->getStructureInfo(structureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     for (auto &id : allMyStructuresAsId) {
-        cAbstractStructure *aStructure = game.m_pStructures[id];
+        cAbstractStructure *aStructure = game.m_gameObjectsContext->getStructures()[id];
 
         // go around any structure, and try to find a cell where we can place a structure.
-        int iStartX = game.m_map.getCellX(aStructure->getCell());
-        int iStartY = game.m_map.getCellY(aStructure->getCell());
+        int iStartX = game.m_gameObjectsContext->getMap().getCellX(aStructure->getCell());
+        int iStartY = game.m_gameObjectsContext->getMap().getCellY(aStructure->getCell());
 
         int iEndX = iStartX + aStructure->getWidth(); // not plus 1 because iStartX is 1st cell
         int iEndY = iStartY + aStructure->getHeight(); // not plus 1 because iStartY is 1st cell
@@ -1158,7 +1158,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
 
         // check: from top left to top right
         for (int sx = topLeftX; sx < iEndX; sx++) {
-            int cell = game.m_map.getGeometry().getCellWithMapBorders(sx, topLeftY);
+            int cell = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(sx, topLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1172,7 +1172,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int bottomLeftY = iEndY;
         // check: from bottom left to bottom right
         for (int sx = bottomLeftX; sx < iEndX; sx++) {
-            int cell = game.m_map.getGeometry().getCellWithMapBorders(sx, bottomLeftY);
+            int cell = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(sx, bottomLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1186,7 +1186,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justLeftX = topLeftX;
         int justLeftY = iStartY - (iHeight - 1);
         for (int sy = justLeftY; sy < iEndY; sy++) {
-            int cell = game.m_map.getGeometry().getCellWithMapBorders(justLeftX, sy);
+            int cell = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(justLeftX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1200,7 +1200,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justRightX = iEndX;
         int justRightY = iStartY - (iHeight - 1);
         for (int sy = justRightY; sy < iEndY; sy++) {
-            int cell = game.m_map.getGeometry().getCellWithMapBorders(justRightX, sy);
+            int cell = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(justRightX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1357,13 +1357,13 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
 
     int maxTargets = 0;
 
-    for (int i = 0; i < game.m_Units.size(); i++) {
-        cUnit &cUnit = game.getUnit(i);
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        cUnit &cUnit = game.m_gameObjectsContext->getUnits()[i];
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = game.m_map.isVisible(cUnit.getCell(), this);
+        bool isVisibleForPlayer = game.m_gameObjectsContext->getMap().isVisible(cUnit.getCell(), this);
 
         if (game.isDebugMode()) {
             log(std::format("Visible = {}", isVisibleForPlayer));
@@ -1395,9 +1395,9 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
     int iT = 0;
 
     for (int i = 0; i < MAX_STRUCTURES; i++)
-        if (game.m_pStructures[i])
-            if (game.m_pStructures[i]->getOwner() == iAttackPlayer)
-                if (game.m_map.isVisible(game.m_pStructures[i]->getCell(), this) ||
+        if (game.m_gameObjectsContext->getStructures()[i])
+            if (game.m_gameObjectsContext->getStructures()[i]->getOwner() == iAttackPlayer)
+                if (game.m_gameObjectsContext->getMap().isVisible(game.m_gameObjectsContext->getStructures()[i]->getCell(), this) ||
                         game.m_skirmish) {
                     iTargets[iT] = i;
 
@@ -1759,7 +1759,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 {
     s_PlaceResult result;
 
-    if (!game.m_map.isValidCell(iCell)) {
+    if (!game.m_gameObjectsContext->getMap().isValidCell(iCell)) {
         result.outOfBounds = true;
         return result;
     }
@@ -1768,28 +1768,28 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     int w = game.m_infoContext->getStructureInfo(iStructureType).bmp_width / TILESIZE_WIDTH_PIXELS;
     int h = game.m_infoContext->getStructureInfo(iStructureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int x = game.m_map.getCellX(iCell);
-    int y = game.m_map.getCellY(iCell);
+    int x = game.m_gameObjectsContext->getMap().getCellX(iCell);
+    int y = game.m_gameObjectsContext->getMap().getCellY(iCell);
 
     bool foundUnitFromOtherPlayerThanMe = false;
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = game.m_map.getGeometry().getCellWithMapBorders(cx + x, cy + y);
+            int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(cx + x, cy + y);
 
-            if (!result.badTerrain && !game.m_map.isValidTerrainForStructureAtCell(cll)) {
+            if (!result.badTerrain && !game.m_gameObjectsContext->getMap().isValidTerrainForStructureAtCell(cll)) {
                 result.badTerrain = true;
             }
 
             // another structure found on this location, "blocked"
-            int structureId = game.m_map.getCellIdStructuresLayer(cll);
+            int structureId = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(cll);
             if (structureId > -1) {
                 result.structureIds.insert(structureId);
             }
 
-            int idOfUnitAtCell = game.m_map.getCellIdUnitLayer(cll);
+            int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
-                if (game.getUnit(idOfUnitAtCell).isValid() && game.getUnit(idOfUnitAtCell).getPlayer() != this) {
+                if (game.m_gameObjectsContext->getUnits()[idOfUnitAtCell].isValid() && game.m_gameObjectsContext->getUnits()[idOfUnitAtCell].getPlayer() != this) {
                     foundUnitFromOtherPlayerThanMe = true;
                 }
                 if (iUnitIDToIgnore > -1) {
@@ -1877,7 +1877,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
         }
     }
     else if (event.entityType == eBuildType::STRUCTURE) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         bool detectedEntityIsHuman = pStructure->getPlayer()->isHuman();
 
         // structure discovered is NOT the same team, so enemy detected / music trigger
@@ -1977,7 +1977,7 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
 {
     s_PlaceResult result;
 
-    if (!game.m_map.isValidCell(iCell)) {
+    if (!game.m_gameObjectsContext->getMap().isValidCell(iCell)) {
         result.outOfBounds = true;
         return result;
     }
@@ -2009,7 +2009,7 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
             reinforceHarvesterIfNeeded(pUnit.getCell());
 
             for (auto &structureId: refineries) {
-                cAbstractStructure *pStructure = game.m_pStructures[structureId];
+                cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
                 pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
             }
         }
@@ -2039,7 +2039,7 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
             addNotification("No more Harvester left, reinforcing...", BAD);
 
             // deliver
-            cAbstractStructure *refinery = game.m_map.findClosestStructureType(cell, REFINERY, this);
+            cAbstractStructure *refinery = game.m_gameObjectsContext->getMap().findClosestStructureType(cell, REFINERY, this);
 
             // found a refinery, deliver harvester to that
             if (refinery) {
@@ -2061,7 +2061,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
 
     for (auto &unitId : ids) {
         cUnit aUnit = game.getUnit(unitId);
-        double dist = game.m_map.distance(aUnit.getCell(), cell);
+        double dist = game.m_gameObjectsContext->getMap().distance(aUnit.getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = unitId
@@ -2079,8 +2079,8 @@ std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(in
     std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
     for (auto &structureId : ids) {
-        cAbstractStructure *pStructure = game.m_pStructures[structureId];
-        double dist = game.m_map.distance(pStructure->getCell(), cell);
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
+        double dist = game.m_gameObjectsContext->getMap().distance(pStructure->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = structureId
@@ -2114,7 +2114,7 @@ std::vector<int> cPlayer::getAllMyUnits()
 std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.m_Units.size(); i++) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
         cUnit &pUnit = game.getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead() && !pUnit.isHidden()) continue; // hidden units play "dead" :/
@@ -2141,7 +2141,7 @@ bool cPlayer::evaluateStillAlive()
 {
     alive = false;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *abstractStructure = game.m_pStructures[i];
+        cAbstractStructure *abstractStructure = game.m_gameObjectsContext->getStructures()[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
@@ -2151,7 +2151,7 @@ bool cPlayer::evaluateStillAlive()
 
     if (!alive) {
         // check units now
-        for (int i = 0; i < game.m_Units.size(); i++) {
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
             cUnit &pUnit = game.getUnit(i);
             if (!pUnit.isValid()) continue;
             if (pUnit.isAirbornUnit()) continue; // do not count airborn units
@@ -2184,7 +2184,7 @@ void cPlayer::addNotification(const std::string &msg, eNotificationType type)
 cAbstractStructure *cPlayer::getSelectedStructure() const
 {
     if (selected_structure < 0) return nullptr;
-    return game.m_pStructures[selected_structure];
+    return game.m_gameObjectsContext->getStructures()[selected_structure];
 }
 
 void cPlayer::deselectStructure()
@@ -2195,7 +2195,7 @@ void cPlayer::deselectStructure()
 std::vector<int> cPlayer::getSelectedUnits() const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < game.m_Units.size(); i++) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
         cUnit &cUnit = game.getUnit(i);
         if (!cUnit.isValid()) continue;
         if (!cUnit.belongsTo(this)) continue;
