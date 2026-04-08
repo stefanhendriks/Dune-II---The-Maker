@@ -29,6 +29,7 @@
 #include "utils/cStructureUtils.h"
 
 #include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <memory>
 #include <string>
@@ -121,7 +122,9 @@ public:
     cStructureUtils             m_structureUtils;
     // end
 
-    // TODO: this should be moved on a GameObjectContext class same method as std::unique_ptr<cInfoContext> m_infoContext;
+    // Game object context manages all game entities
+    std::unique_ptr<cGameObjectContext> m_gameObjectsContext;
+        // TODO: this should be moved on a GameObjectContext class same method as std::unique_ptr<cInfoContext> m_infoContext;
     cBullets                    m_Bullets;    
     cPlayers                    m_Players;
     cParticles                  m_particles;
@@ -131,6 +134,9 @@ public:
     
     //todo: this should get moved to private, but not yet.
     std::unique_ptr<cInfoContext> m_infoContext;
+
+    // Initialize game objects - must be called once after cGameObjectContext is created
+    void setupGameObjects();
 
     // Initialization functions
     void init();		            // initialize all game variables

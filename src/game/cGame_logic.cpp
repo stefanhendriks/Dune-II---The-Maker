@@ -14,6 +14,7 @@
 #include "config.h"
 #include "context/ContextCreator.hpp"
 #include "context/GameContext.hpp"
+#include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -130,6 +131,8 @@ cGame::cGame()
     m_cScreenFader = std::make_unique<cScreenFader>();
 
     m_infoContext = std::make_unique<cInfoContext>();
+    
+    m_gameObjectsContext = std::make_unique<cGameObjectContext>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -160,6 +163,9 @@ void cGame::applySettings(GameSettings *gs)
 
 void cGame::init()
 {
+    // Initialize game objects in the context
+    setupGameObjects();
+    
     m_infoContext->initializeDefaultInfos();
     m_map.setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
@@ -1749,4 +1755,9 @@ void cGame::loadMapFromEditor(s_PreviewMap *map)
     setState(GAME_EDITOR);
     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
     pState->loadMap(map);
+}
+
+void cGame::setupGameObjects(){
+    cGameObjectsContextCreator creator;
+    creator.installGameObjects(*m_gameObjectsContext);
 }
