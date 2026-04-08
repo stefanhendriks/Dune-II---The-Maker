@@ -111,6 +111,9 @@ cGame::cGame()
     ctx = nullptr;
     m_pauseWhenLosingFocus = false;
 
+    m_mapCamera = nullptr;
+    m_drawManager = nullptr;
+
     // create GameContext
     ctx = std::make_unique<GameContext>();
     // create TimeManager
@@ -122,6 +125,13 @@ cGame::cGame()
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
 
+    m_infoContext = std::make_unique<cInfoContext>();
+    
+    m_gameObjectsContext = std::make_unique<cGameObjectContext>();
+
+    // Initialize game objects in the context
+    setupGameObjects();
+
     m_screenShake = std::make_unique<cScreenShake>();
 
     m_dataCampaign = std::make_unique<s_DataCampaign>();
@@ -129,10 +139,6 @@ cGame::cGame()
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
 
     m_cScreenFader = std::make_unique<cScreenFader>();
-
-    m_infoContext = std::make_unique<cInfoContext>();
-    
-    m_gameObjectsContext = std::make_unique<cGameObjectContext>();
 }
 
 void cGame::applySettings(GameSettings *gs)
@@ -163,9 +169,6 @@ void cGame::applySettings(GameSettings *gs)
 
 void cGame::init()
 {
-    // Initialize game objects in the context
-    setupGameObjects();
-    
     m_infoContext->initializeDefaultInfos();
     auto &map = m_gameObjectsContext->getMap();
     map.setTerrainInfo(m_infoContext->getTerrainInfo());
@@ -669,7 +672,9 @@ bool cGame::setupGame()
     cInfoContextCreator infoCreator;
     infoCreator.installInfos(*game.m_infoContext);
 
-    delete m_mapCamera;
+    if (m_mapCamera != nullptr)
+        delete m_mapCamera;
+
     m_mapCamera = new cMapCamera(&game.m_gameObjectsContext->getMap(), game.m_cameraDragMoveSpeed, game.m_cameraBorderOrKeyMoveSpeed, game.m_cameraEdgeMove);
 
     cIni::installGame(m_gameFilename);
@@ -683,7 +688,9 @@ bool cGame::setupGame()
     game.m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos());
     cPlayer *humanPlayer = &game.getPlayer(HUMAN);
 
-    delete game.m_drawManager;
+    // if (m_drawManager!=nullptr) {
+    //     delete game.m_drawManager;
+    // }
     game.m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
