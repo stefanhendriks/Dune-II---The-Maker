@@ -48,7 +48,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    game.applySettings(settings.get());
+    game.applySettings(std::move(settings));
 
     try {
         if (game.setupGame()) {
