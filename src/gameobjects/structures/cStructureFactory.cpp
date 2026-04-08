@@ -367,6 +367,8 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 
 void cStructureFactory::deleteAllExistingStructures()
 {
+    if (game.m_gameObjectsContext == nullptr)
+        return;
     for (int i=0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
         cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
