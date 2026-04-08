@@ -31,7 +31,7 @@ std::shared_ptr<Graphics>   gfxdata;
 
 int main(int argc, char **argv)
 {
-    std::unique_ptr<GameSettings> settings = loadSettingsFromIni("settings.ini");
+    std::unique_ptr<InitialGameSettings> settings = loadSettingsFromIni("settings.ini");
     
     // read command-line arguments, can override settings.ini
     cHandleArgument handleArg;

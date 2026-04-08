@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-struct GameSettings {
+struct InitialGameSettings {
     int screenW = 800;
     int screenH = 600;
     float cameraDragMoveSpeed = 0.5f;

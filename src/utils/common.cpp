@@ -23,17 +23,17 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/cIniFile.h"
 #include "utils/Graphics.hpp"
-#include "utils/GameSettings.hpp"
+#include "utils/InitialGameSettings.hpp"
 #include "utils/d2tm_math.h"
 
 #include <cmath>
 
 #include "data/gfxaudio.h"
 
-std::unique_ptr<GameSettings> loadSettingsFromIni(const std::string& filename)
+std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename)
 {
     std::shared_ptr<cIniFile> file = std::make_shared<cIniFile>(filename, true);
-    std::unique_ptr<GameSettings> gameSettings = std::make_unique<GameSettings>();
+    std::unique_ptr<InitialGameSettings> gameSettings = std::make_unique<InitialGameSettings>();
 
     if (!file->hasSection("SETTINGS")) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_GAMERULES, filename, "Expected to find [SETTINGS] in file.ini file");
