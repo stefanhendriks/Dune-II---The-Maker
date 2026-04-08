@@ -123,7 +123,7 @@ void cDrawManager::drawDebugInfoUsages() const
     }
 
     int bulletsUsed = 0;
-    for (const auto& bullet : game.g_Bullets) {
+    for (const auto& bullet : game.m_Bullets) {
         if (bullet.bAlive) {
             bulletsUsed++;
         }
@@ -140,7 +140,7 @@ void cDrawManager::drawDebugInfoUsages() const
     int height = 14;
     m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.m_Units.size()));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.g_Bullets.size()));
+    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.m_Bullets.size()));
     m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.m_particles.size()));
 }
 

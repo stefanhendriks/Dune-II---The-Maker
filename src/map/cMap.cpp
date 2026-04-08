@@ -109,7 +109,7 @@ void cMap::init(int width, int height)
 
     cStructureFactory::getInstance()->deleteAllExistingStructures();
 
-    for (auto& bullet : game.g_Bullets) {
+    for (auto& bullet : game.m_Bullets) {
         bullet.init();
     }
 
@@ -446,7 +446,7 @@ void cMap::thinkAutoDetonateSpiceBlooms()  // let spice bloom detonate after X a
 void cMap::draw_bullets()
 {
     // Loop through all units, check if they should be drawn, and if so, draw them
-    for (auto& bullet : game.g_Bullets) {
+    for (auto& bullet : game.m_Bullets) {
         if (bullet.bAlive) {
             bullet.draw();
         }
