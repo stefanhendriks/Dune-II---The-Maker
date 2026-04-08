@@ -81,14 +81,10 @@ public:
         m_gameFilename = filename;
     }
 
-    bool m_windowed;			    // windowed
-    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
-
     // resolution of the game
     int m_screenW;
     int m_screenH;
 
-    bool m_playSound;                       // play sound?
     bool m_disableAI;                       // disable AI thinking?
     bool m_oneAi;                           // disable all but one AI brain? (default == false)
     bool m_disableWormAi;                   // disable worm AI brain? (default == false)
@@ -97,24 +93,17 @@ public:
     bool m_drawUnitDebug;                   // draw the unit debug info (rects, paths, etc)
     bool m_noAiRest;                        // Campaign AI does not have long initial REST time
     bool m_playMusic;                       // play any music?
-    bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
-    float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
-    float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
-    bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
 
     bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
+    bool m_drawFps;
+    bool m_drawTime;
+    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
     int m_pathsCreated;
-
-    int m_musicVolume;              // volume of the music
     int m_musicType;
 
     cRectangle *m_mapViewport;
-
-    bool m_drawFps;
-    bool m_drawTime;
-
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
     cMapCamera					*m_mapCamera;
@@ -262,6 +251,14 @@ private:
      */
     bool m_debugMode = false;
     bool m_cheatMode = false;
+
+    bool m_playSound;                       // play sound?
+    bool m_windowed;        			    // windowed
+    bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
+    float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
+    float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
+    bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
+    int m_musicVolume;                      // volume of the music
 
     // if true, then turrets won't do anything on low power (both gun and rocket turrets)
     bool m_turretsDownOnLowPower;
