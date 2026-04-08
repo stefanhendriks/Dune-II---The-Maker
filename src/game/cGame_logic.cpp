@@ -140,8 +140,7 @@ cGame::cGame()
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 {
-    // save settings for later use
-    m_initialGameSettings = std::move(gs);
+    // keep settings alive after initialization
     m_screenW = gs->screenW;
     m_screenH = gs->screenH;
     m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
@@ -163,6 +162,9 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_noAiRest = gs->noAiRest;
     m_drawUsages = gs->drawUsages;
     m_gameFilename = gs->gameFilename;
+
+    // save settings for later use
+    m_initialGameSettings = std::move(gs);
 }
 
 
