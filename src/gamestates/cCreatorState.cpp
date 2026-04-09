@@ -25,16 +25,16 @@ CreatorState::CreatorState(cGame* game, GameContext* ctx): m_game(game), m_ctx(c
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
     // this States should not be recreated when we need to use
-    needToRecreateState[GameState::OPTIONS] = false;
-    needToRecreateState[GameState::PLAYING] = false;
-    needToRecreateState[GameState::SETUPSKIRMISH] = false;
-    needToRecreateState[GameState::CREDITS] = false;
-    needToRecreateState[GameState::MISSIONSELECT] = false;
-    needToRecreateState[GameState::MENU] = false;
-    needToRecreateState[GameState::EDITOR] = false;
-    needToRecreateState[GameState::NEW_MAP_EDITOR] = false;
-    needToRecreateState[GameState::WINNING] = false;
-    needToRecreateState[GameState::LOSING] = false;
+    needToRecreateState[eGameState::OPTIONS] = false;
+    needToRecreateState[eGameState::PLAYING] = false;
+    needToRecreateState[eGameState::SETUPSKIRMISH] = false;
+    needToRecreateState[eGameState::CREDITS] = false;
+    needToRecreateState[eGameState::MISSIONSELECT] = false;
+    needToRecreateState[eGameState::MENU] = false;
+    needToRecreateState[eGameState::EDITOR] = false;
+    needToRecreateState[eGameState::NEW_MAP_EDITOR] = false;
+    needToRecreateState[eGameState::WINNING] = false;
+    needToRecreateState[eGameState::LOSING] = false;
 }
 
 CreatorState::~CreatorState()
@@ -43,7 +43,7 @@ CreatorState::~CreatorState()
 }
 
 
-cGameState* CreatorState::getState(GameState gameState, bool forceRecreate)
+cGameState* CreatorState::getState(eGameState gameState, bool forceRecreate)
 {
     // no existing state ...
     if (!m_states[gameState].has_value()) {
@@ -60,64 +60,64 @@ cGameState* CreatorState::getState(GameState gameState, bool forceRecreate)
     }
 }
 
-void CreatorState::createStateFromScratch(GameState gameState)
+void CreatorState::createStateFromScratch(eGameState gameState)
 {
     switch (gameState)
     {
-    case GameState::MENU:
-        m_states[GameState::MENU] = std::make_unique<cMainMenuState>(*m_game, m_ctx);
+    case eGameState::MENU:
+        m_states[eGameState::MENU] = std::make_unique<cMainMenuState>(*m_game, m_ctx);
         break;
 
-    case GameState::CREDITS:
-        m_states[GameState::CREDITS] = std::make_unique<cCreditsState>(*m_game, m_ctx);
+    case eGameState::CREDITS:
+        m_states[eGameState::CREDITS] = std::make_unique<cCreditsState>(*m_game, m_ctx);
         break;
 
-    case GameState::EDITOR:
-        m_states[GameState::EDITOR] = std::make_unique<cEditorState>(*m_game, m_ctx);
+    case eGameState::EDITOR:
+        m_states[eGameState::EDITOR] = std::make_unique<cEditorState>(*m_game, m_ctx);
         break;
 
-    case GameState::NEW_MAP_EDITOR:
-        m_states[GameState::EDITOR] = std::make_unique<cNewMapEditorState>(*m_game, m_ctx);
+    case eGameState::NEW_MAP_EDITOR:
+        m_states[eGameState::EDITOR] = std::make_unique<cNewMapEditorState>(*m_game, m_ctx);
         break;
 
-    case GameState::WINNING:
-        m_states[GameState::WINNING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
+    case eGameState::WINNING:
+        m_states[eGameState::WINNING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
         break;
 
-    case GameState::LOSING:
-        m_states[GameState::LOSING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
+    case eGameState::LOSING:
+        m_states[eGameState::LOSING] = std::make_unique<cWinLoseState>(*m_game, m_ctx, Outcome::Lose);
         break;
 
-    case GameState::BRIEFING:
-        m_states[GameState::BRIEFING] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::Briefing, m_game->getDataCampaign());
+    case eGameState::BRIEFING:
+        m_states[eGameState::BRIEFING] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::Briefing, m_game->getDataCampaign());
         break;
 
-    case GameState::WINBRIEF:
-        m_states[GameState::WINBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::WinBrief, m_game->getDataCampaign());
+    case eGameState::WINBRIEF:
+        m_states[eGameState::WINBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::WinBrief, m_game->getDataCampaign());
         break;
 
-    case GameState::LOSEBRIEF:
-        m_states[GameState::LOSEBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::LoseBrief, m_game->getDataCampaign());
+    case eGameState::LOSEBRIEF:
+        m_states[eGameState::LOSEBRIEF] = std::make_unique<cMentatState>(*m_game, m_ctx, MentatMode::LoseBrief, m_game->getDataCampaign());
         break;
 
-    case GameState::TELLHOUSE:
-        m_states[GameState::TELLHOUSE] = std::make_unique<cTellHouseState>(*m_game, m_ctx, m_game->getDataCampaign());
+    case eGameState::TELLHOUSE:
+        m_states[eGameState::TELLHOUSE] = std::make_unique<cTellHouseState>(*m_game, m_ctx, m_game->getDataCampaign());
         break;
 
-    case GameState::SELECT_HOUSE:
-        m_states[GameState::SELECT_HOUSE] = std::make_unique<cChooseHouseState>(*m_game, m_ctx);
+    case eGameState::SELECT_HOUSE:
+        m_states[eGameState::SELECT_HOUSE] = std::make_unique<cChooseHouseState>(*m_game, m_ctx);
         break;
 
-    case GameState::REGION:
-        m_states[GameState::REGION] = std::make_unique<cSelectYourNextConquestState>(*m_game, m_ctx, m_game->getDataCampaign());
+    case eGameState::REGION:
+        m_states[eGameState::REGION] = std::make_unique<cSelectYourNextConquestState>(*m_game, m_ctx, m_game->getDataCampaign());
         break;
 
-    case GameState::PLAYING:
-        m_states[GameState::PLAYING] = std::make_unique<cGamePlaying>(*m_game, m_ctx);
+    case eGameState::PLAYING:
+        m_states[eGameState::PLAYING] = std::make_unique<cGamePlaying>(*m_game, m_ctx);
         break;
 
-    case GameState::OPTIONS:
-        m_states[GameState::OPTIONS] = std::make_unique<cOptionsState>(*m_game, m_ctx, m_game->getCurrentState());
+    case eGameState::OPTIONS:
+        m_states[eGameState::OPTIONS] = std::make_unique<cOptionsState>(*m_game, m_ctx, m_game->getCurrentState());
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten

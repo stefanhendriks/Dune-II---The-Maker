@@ -1,5 +1,5 @@
 #include <cassert>
-#include "include/enums GameState.h"
+#include "include/eGameState.h"
 
 
 const char *stateToString(const int &state)
