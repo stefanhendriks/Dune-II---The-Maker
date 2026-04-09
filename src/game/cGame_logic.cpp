@@ -123,6 +123,8 @@ cGame::cGame()
     m_mapCamera = nullptr;
     m_drawManager = nullptr;
 
+    m_structureUtils = std::make_unique<cStructureUtils>();
+
     // create GameContext
     ctx = std::make_unique<GameContext>();
     // create TimeManager
@@ -1224,7 +1226,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
 
         if (special.providesType == eBuildType::BULLET) {
             // from where
-            int structureId = game.m_structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
+            int structureId = game.m_structureUtils->findStructureBy(player->getId(), special.deployAtStructure, false);
             if (structureId > -1) {
                 cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {

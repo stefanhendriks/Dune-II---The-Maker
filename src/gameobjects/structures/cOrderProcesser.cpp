@@ -226,7 +226,7 @@ void cOrderProcesser::sendFrigate()
 {
     // iCll = structure start cell (up left), since we must go to the center
     // of the cell:
-    int structureId = game.m_structureUtils.findStarportToDeployUnit(m_player);
+    int structureId = game.m_structureUtils->findStarportToDeployUnit(m_player);
 
     if (structureId > -1) {
         // found structure
