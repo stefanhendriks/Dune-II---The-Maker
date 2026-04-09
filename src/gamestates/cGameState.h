@@ -3,7 +3,7 @@
 #include "controls/cKeyboardEvent.h"
 #include "observers/cInputObserver.h"
 #include "sMouseEvent.h"
-#include "enums GameState.h"
+#include "include/eGameState.h"
 
 class cGame;
 class GameContext;
@@ -65,4 +65,4 @@ private:
 
 };
 
-const char *gameStateToString(GameState state);
+const char *gameStateToString(eGameState state);

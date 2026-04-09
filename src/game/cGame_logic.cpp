@@ -20,7 +20,7 @@
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-#include "enums GameState.h"
+#include "include/eGameState.h"
 
 #include "game/cGameConditionChecker.h"
 #include "game/cPlatformLayerInit.h"
