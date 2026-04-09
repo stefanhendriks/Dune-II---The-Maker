@@ -138,7 +138,7 @@ cPlayer *cAbstractStructure::getPlayer()
 {
     assert(iPlayer >= HUMAN);
     assert(iPlayer < MAX_PLAYERS);
-    return &game.getPlayer(iPlayer);
+    return &game.m_gameObjectsContext->getPlayer(iPlayer);
 }
 
 int cAbstractStructure::getMaxHP()
@@ -185,16 +185,16 @@ void cAbstractStructure::die()
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitIDWithinStructure > -1) {
-        game.getUnit(iUnitIDWithinStructure).init(iUnitIDWithinStructure); // die here... softly
+        game.m_gameObjectsContext->getUnit(iUnitIDWithinStructure).init(iUnitIDWithinStructure); // die here... softly
     }
 
     if (iUnitIDEnteringStructure > -1) {
-        game.getUnit(iUnitIDEnteringStructure).die(true, false);
+        game.m_gameObjectsContext->getUnit(iUnitIDEnteringStructure).die(true, false);
     }
 
     if (iUnitIDHeadingForStructure > -1) {
         // reset structure ID
-        game.getUnit(iUnitIDHeadingForStructure).iStructureID = -1;
+        game.m_gameObjectsContext->getUnit(iUnitIDHeadingForStructure).iStructureID = -1;
         iUnitIDHeadingForStructure = -1;
     }
 
@@ -592,7 +592,7 @@ void cAbstractStructure::think_repair()
 {
     // REPAIRING (from think_fast, so called every 5 ms).
     if (bRepair) {
-        cPlayer &player = game.getPlayer(iPlayer);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(iPlayer);
         float costToRepair = 1.0f;
         s_StructureInfo &structureInfo = game.m_infoContext->getStructureInfo(getType());
         if (player.hasEnoughCreditsFor(costToRepair)) {
@@ -769,7 +769,7 @@ void cAbstractStructure::enterStructure(int unitId)
     setAnimating(false);
     setFrame(0);
 
-    cUnit &pUnit = game.getUnit(unitId);
+    cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
 
     pUnit.hideUnit();
     pUnit.setCell(getCell());
@@ -780,7 +780,7 @@ void cAbstractStructure::enterStructure(int unitId)
 
 void cAbstractStructure::unitLeavesStructure()
 {
-    cUnit &unitToLeave = game.getUnit(iUnitIDWithinStructure);
+    cUnit &unitToLeave = game.m_gameObjectsContext->getUnit(iUnitIDWithinStructure);
     int iNewCell = getNonOccupiedCellAroundStructure();
 
     if (iNewCell > -1) {

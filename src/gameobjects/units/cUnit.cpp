@@ -178,7 +178,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
 
     // Anyone who was attacking this unit is on actionGuard
     for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.getUnit(i);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(i);
         if (!pUnit.isValid()) continue; // skip invalid
         if (pUnit.combat.iAttackUnit != iID) continue; // skip those who did not want to attack me
 
@@ -192,7 +192,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     if (isAirbornUnit()) {
         if (iUnitID > -1) {
             // we intended to pick up this unit
-            cUnit &pUnit = game.getUnit(iUnitID);
+            cUnit &pUnit = game.m_gameObjectsContext->getUnit(iUnitID);
             if (pUnit.isValid()) {
                 pUnit.willBePickedUpBy = -1; // no longer being picked up by this one
             }
@@ -352,12 +352,12 @@ void cUnit::createExplosionParticle()
                 if (idOfUnitAtCell > -1) {
                     int id = idOfUnitAtCell;
 
-                    if (game.getUnit(id).iHitPoints > 0) {
-                        game.getUnit(id).iHitPoints -= 150;
+                    if (game.m_gameObjectsContext->getUnit(id).iHitPoints > 0) {
+                        game.m_gameObjectsContext->getUnit(id).iHitPoints -= 150;
 
                         // NO HP LEFT, DIE
-                        if (game.getUnit(id).iHitPoints <= 1)
-                            game.getUnit(id).die(true, false);
+                        if (game.m_gameObjectsContext->getUnit(id).iHitPoints <= 1)
+                            game.m_gameObjectsContext->getUnit(id).die(true, false);
                     } // only die when the unit is going to die
                 }
 
@@ -735,7 +735,7 @@ void cUnit::draw()
     int start_x = bmp_body * bmp_width;
     int start_y = bmp_height * rendering.iFrame;
 
-    cPlayer &cPlayer = game.getPlayer(this->iPlayer);
+    cPlayer &cPlayer = game.m_gameObjectsContext->getPlayer(this->iPlayer);
 
     const float scaledWidth = game.m_mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = game.m_mapCamera->factorZoomLevel(bmp_height);
@@ -820,7 +820,7 @@ void cUnit::attackUnit(int targetUnit)
 void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
 {
     log(std::format("attackUnit() : targetUnit is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
-    attack(game.getUnit(targetUnit).position.iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
+    attack(game.m_gameObjectsContext->getUnit(targetUnit).position.iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure)
@@ -953,7 +953,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
 void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const
 {
     if (willBePickedUpBy > -1) {
-        cUnit &pUnit = game.getUnit(willBePickedUpBy);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(willBePickedUpBy);
         if (pUnit.isValid()) {
             pUnit.forgetAboutUnitToPickUp();
         }
@@ -1014,7 +1014,7 @@ void cUnit::thinkFast_guard()
     }
 
     if (unitIdToAttack > -1) {
-        cUnit &unitToAttack = game.getUnit(unitIdToAttack);
+        cUnit &unitToAttack = game.m_gameObjectsContext->getUnit(unitIdToAttack);
 
         if (unitToAttack.isValid()) {
 //            s_GameEvent event {
@@ -1216,7 +1216,7 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
     int iTarget = -1;
 
     for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &target = game.getUnit(i);
+        cUnit &target = game.m_gameObjectsContext->getUnit(i);
         if (target.isValid() && i != iID) {
             if (pPlayer->isSameTeamAs(target.getPlayer()))
                 continue;
@@ -1522,7 +1522,7 @@ void cUnit::thinkFast_move_airUnit()
                         else {
                             // find a new spot
                             updateCellXAndY();
-                            setGoalCell(findNewDropLocation(game.getUnit(iUnitID).iType, position.iCell));
+                            setGoalCell(findNewDropLocation(game.m_gameObjectsContext->getUnit(iUnitID).iType, position.iCell));
                             iBringTarget = movement.iGoalCell;
                             return;
                         }
@@ -1774,7 +1774,7 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
 cUnit &cUnit::getUnitToPickupOrDrop() const
 {
     assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
-    return game.getUnit(iUnitID);
+    return game.m_gameObjectsContext->getUnit(iUnitID);
 }
 
 cAbstractStructure *cUnit::getStructureUnitWantsToEnter() const
@@ -1835,7 +1835,7 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
     }
     else if (transferType == eTransferType::PICKUP && iuID > -1) {
         // the carryall must pickup the unit, and then bring it to the iBring stuff
-        cUnit &pUnit = game.getUnit(iuID);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(iuID);
         if (pUnit.isValid()) {
             m_transferType = transferType;
 
@@ -1888,7 +1888,7 @@ void cUnit::shoot(int iTargetCell)
 
     cUnit *attackUnit = nullptr;
     if (combat.iAttackUnit > -1) {
-        attackUnit = &game.getUnit(combat.iAttackUnit);
+        attackUnit = &game.m_gameObjectsContext->getUnit(combat.iAttackUnit);
         if (attackUnit && !attackUnit->isValid()) {
             // allowing homing bullets towards air units from the ground
             if (iBull > -1 && attackUnit->isAirbornUnit()) {
@@ -1942,7 +1942,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     }
 
     if (iShotUnit > -1) {
-        cUnit &unitWhoShotMe = game.getUnit(iShotUnit);
+        cUnit &unitWhoShotMe = game.m_gameObjectsContext->getUnit(iShotUnit);
         if (!unitWhoShotMe.isValid()) {
             return;
         }
@@ -1961,9 +1961,9 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
         }
 
         if (!getPlayer()->isHuman()) {
-            int unitCellWhichShotMe = game.getUnit(iShotUnit).position.iCell;
+            int unitCellWhichShotMe = game.m_gameObjectsContext->getUnit(iShotUnit).position.iCell;
             if (isHarvester()) {
-                if (game.getUnit(iShotUnit).isInfantryUnit() && !isMovingBetweenCells()) {
+                if (game.m_gameObjectsContext->getUnit(iShotUnit).isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
                     move_to(unitCellWhichShotMe);
                 }
@@ -2012,7 +2012,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                     if (iDestCell < 0) {
                         if (combat.iAttackUnit > -1)
-                            iDestCell = game.getUnit(combat.iAttackUnit).position.iCell;
+                            iDestCell = game.m_gameObjectsContext->getUnit(combat.iAttackUnit).position.iCell;
 
                         if (combat.iAttackStructure > -1) {
                             cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[combat.iAttackStructure];
@@ -2080,7 +2080,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
-    game.getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, movement.iGoalCell = {}] '{}'",
+    game.m_gameObjectsContext->getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, movement.iGoalCell = {}] '{}'",
                                      iID, iType, game.m_infoContext->getUnitInfo(iType).name, position.iCell, movement.iGoalCell, txt));
 }
 
@@ -2098,7 +2098,7 @@ void cUnit::think_attack()
 
     cUnit *attackUnit = nullptr;
     if (combat.iAttackUnit > -1) {
-        attackUnit = &game.getUnit(combat.iAttackUnit);
+        attackUnit = &game.m_gameObjectsContext->getUnit(combat.iAttackUnit);
 
         // should be impossible
         if (!attackUnit) {
@@ -2222,7 +2222,7 @@ void cUnit::think_attack_sandworm()
         return;
     }
 
-    cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
+    cUnit *attackUnit = &game.m_gameObjectsContext->getUnit(combat.iAttackUnit);
 
     // should be impossible
     if (!attackUnit) {
@@ -2296,7 +2296,7 @@ void cUnit::startChasingTarget()
 //        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     }
     else if (combat.iAttackUnit > -1) {
-        cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
+        cUnit *attackUnit = &game.m_gameObjectsContext->getUnit(combat.iAttackUnit);
         // chase unit, but only when ground unit
         if (!attackUnit->isAirbornUnit()) {
             setAction(eActionType::CHASE);
@@ -2557,7 +2557,7 @@ void cUnit::thinkFast_move()
         bOccupied = true;
         // unless... it is an enemy infantry unit and I can squish stuff
         if (canSquishInfantry()) {
-            cUnit &unitAtCell = game.getUnit(iUID);
+            cUnit &unitAtCell = game.m_gameObjectsContext->getUnit(iUID);
             if (unitAtCell.isValid() &&
                     unitAtCell.iPlayer != iPlayer && // enemy player?
                     unitAtCell.isInfantryUnit() // squishable?
@@ -2685,7 +2685,7 @@ void cUnit::thinkFast_move()
             int uID = idOfUnitAtNextCell;
 
             // Wait when the obstacle is moving, perhaps it will clear our way
-            cUnit &unitOccupyingNextCell = game.getUnit(uID);
+            cUnit &unitOccupyingNextCell = game.m_gameObjectsContext->getUnit(uID);
             if (unitOccupyingNextCell.isValid() &&
                     unitOccupyingNextCell.movewaitTimer.get() <= 0 &&
                     unitOccupyingNextCell.movement.iGoalCell != unitOccupyingNextCell.position.iCell) {
@@ -2798,7 +2798,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int cellType = game.m_gameObjectsContext->getMap().getCellType(position.iCell);
     int iSlowDown = game.m_gameObjectsContext->getMap().getCellSlowDown(position.iCell);
 
-    cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = game.m_gameObjectsContext->getPlayer(iPlayer).getDifficultySettings();
     if (moveTimer.get() < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
@@ -2890,7 +2890,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         if (m_action == eActionType::CHASE) {
             // next time we think, will be checking for distance, etc
             if (combat.iAttackUnit > -1) {
-                cUnit *attackUnit = &game.getUnit(combat.iAttackUnit);
+                cUnit *attackUnit = &game.m_gameObjectsContext->getUnit(combat.iAttackUnit);
                 if (attackUnit && attackUnit->isValid()) {
                     setAction(eActionType::ATTACK_CHASE);
                     if (attackUnit->getCell() != movement.iGoalCell) {
@@ -2920,7 +2920,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // iterate over all units)
         if (canSquishInfantry()) {
             for (int iq = 0; iq < game.m_gameObjectsContext->getUnits().size(); iq++) {
-                cUnit &potentialDeadUnit = game.getUnit(iq);
+                cUnit &potentialDeadUnit = game.m_gameObjectsContext->getUnit(iq);
                 if (iq == iID) continue; // skip self
                 if (!potentialDeadUnit.isValid()) continue;
                 if (potentialDeadUnit.position.iCell != position.iCell) continue; // not on my cell
@@ -2936,7 +2936,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
             }
         }
 
-        if (iPlayer == AI_CPU5 && game.getPlayer(HUMAN).isHouse(ATREIDES)) {
+        if (iPlayer == AI_CPU5 && game.m_gameObjectsContext->getPlayer(HUMAN).isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
             game.m_gameObjectsContext->getMap().clearShroud(position.iCell, game.m_infoContext->getUnitInfo(iType).sight, HUMAN);
@@ -3064,7 +3064,7 @@ bool cUnit::canBeSquished()
 
 cPlayer *cUnit::getPlayer()
 {
-    return &game.getPlayer(iPlayer);
+    return &game.m_gameObjectsContext->getPlayer(iPlayer);
 }
 
 bool cUnit::isSaboteur()
@@ -3316,7 +3316,7 @@ bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *c
         return false;
     }
 
-    cUnit &carryAll = game.getUnit(r);
+    cUnit &carryAll = game.m_gameObjectsContext->getUnit(r);
     carryAll.carryAll_transferUnitTo(iID, destCell);
 
     // todo: "getCellWhereToBringUnit"? where to enter structure so to speak?
@@ -3415,7 +3415,7 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
             auto originId = -1;
             auto originCell = -1;
             if (unitWhoDealsDamage > -1) {
-                cUnit &pUnit = game.getUnit(unitWhoDealsDamage);
+                cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitWhoDealsDamage);
                 if (pUnit.isValid()) {
                     originType = eBuildType::UNIT;
                     originId = unitWhoDealsDamage;
@@ -3501,7 +3501,7 @@ void cUnit::thinkFast_guard_sandworm()
     }
 
     if (unitIdToAttack > -1) {
-        cUnit &unitToAttack = game.getUnit(unitIdToAttack);
+        cUnit &unitToAttack = game.m_gameObjectsContext->getUnit(unitIdToAttack);
 
         if (unitToAttack.isValid()) {
 //            s_GameEvent event {
@@ -3694,7 +3694,7 @@ void cUnit::think_harvester()
             bFindRefinery = true;
 
         // when we should harvest...
-        cPlayerDifficultySettings *difficultySettings = game.getPlayer(iPlayer).getDifficultySettings();
+        cPlayerDifficultySettings *difficultySettings = game.m_gameObjectsContext->getPlayer(iPlayer).getDifficultySettings();
         if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(game.m_infoContext->getUnitInfo(iType).harvesting_speed)) &&
                 iCredits < getUnitInfo().credit_capacity) {
             harvestTimer.reset(1);
@@ -3830,7 +3830,7 @@ bool cUnit::canUnload()
 int cUnit::findHarvestSpot(int id)
 {
     // finds the closest harvest spot
-    cUnit &cUnit = game.getUnit(id);
+    cUnit &cUnit = game.m_gameObjectsContext->getUnit(id);
     cUnit.updateCellXAndY();
     int cx = cUnit.getCellX();
     int cy = cUnit.getCellY();
@@ -3928,9 +3928,9 @@ int cUnit::carryallFreeForTransfer(int iPlayer)
  */
 int cUnit::carryallTransfer(int iuID, int iGoal)
 {
-    int carryAllUnitId = carryallFreeForTransfer(game.getUnit(iuID).iPlayer);
+    int carryAllUnitId = carryallFreeForTransfer(game.m_gameObjectsContext->getUnit(iuID).iPlayer);
     if (carryAllUnitId > -1) {
-        cUnit &cUnit = game.getUnit(carryAllUnitId);
+        cUnit &cUnit = game.m_gameObjectsContext->getUnit(carryAllUnitId);
         cUnit.carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
     }
     return carryAllUnitId;
@@ -3943,7 +3943,7 @@ int cUnit::freeAroundMove(int iUnit)
         return -1;
     }
 
-    cUnit &cUnit = game.getUnit(iUnit);
+    cUnit &cUnit = game.m_gameObjectsContext->getUnit(iUnit);
 
     cUnit.updateCellXAndY();
     int iStartX = cUnit.getCellX();

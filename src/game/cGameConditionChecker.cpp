@@ -36,7 +36,7 @@ void cGameConditionChecker::setLoseFlags(int value)
 
 bool cGameConditionChecker::isMissionWon() const
 {
-    cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     if (hasGameOverConditionHarvestForSpiceQuota()) {
         if (humanPlayer.hasMetQuota()) {
             return true;
@@ -71,7 +71,7 @@ bool cGameConditionChecker::isMissionFailed() const
     if (hasGameOverConditionHarvestForSpiceQuota()) {
         // check for non-human players if they have met spice quota, if so, they win (and thus human player loses)
         for (int i = 1; i < MAX_PLAYERS; i++) {
-            cPlayer &player = game.getPlayer(i);
+            cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
             if (player.isAlive() && player.hasMetQuota()) {
                 return true;
             }
@@ -79,7 +79,7 @@ bool cGameConditionChecker::isMissionFailed() const
     }
 
     if (hasGameOverConditionPlayerHasNoBuildings()) {
-        cPlayer &humanPlayer = game.getPlayer(HUMAN);
+        cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
         if (!humanPlayer.isAlive()) {
             /**
              * If any of the bits in “LoseFlags” is set and the corresponding condition holds true
@@ -106,10 +106,10 @@ bool cGameConditionChecker::isMissionFailed() const
 
 bool cGameConditionChecker::allEnemyAIPlayersAreDestroyed() const
 {
-    cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer *player = &game.getPlayer(i);
+        cPlayer *player = &game.m_gameObjectsContext->getPlayer(i);
         if (!player->isAlive()) continue;
         if (humanPlayer.isSameTeamAs(player)) continue; // skip allied AI players
         return false;

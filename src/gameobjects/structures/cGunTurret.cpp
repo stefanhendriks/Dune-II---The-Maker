@@ -63,7 +63,7 @@ void cGunTurret::think_animation()
 
 void cGunTurret::think_attack()
 {
-    cUnit &unitTarget = game.getUnit(iTargetID);
+    cUnit &unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         int iCellX = game.m_gameObjectsContext->getMap().getCellX(getCell());
         int iCellY = game.m_gameObjectsContext->getMap().getCellY(getCell());
@@ -140,7 +140,7 @@ void cGunTurret::think_fire()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
 
-    cUnit &unitTarget = game.getUnit(iTargetID);
+    cUnit &unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
     if (unitTarget.isValid() && !unitTarget.isDead()) {
         TIMER_fire++;
 
@@ -288,7 +288,7 @@ void cGunTurret::think_guard()
 
         // discovered a new target
         if (iTargetID > -1 && iTargetID != prevTarget) {
-            cUnit &unitToAttack = game.getUnit(iTargetID);
+            cUnit &unitToAttack = game.m_gameObjectsContext->getUnit(iTargetID);
             if (unitToAttack.isValid()) {
                 s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,

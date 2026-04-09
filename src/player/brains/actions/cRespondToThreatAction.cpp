@@ -50,7 +50,7 @@ void cRespondToThreatAction::execute()
             int unitsOrdered = 0;
             // find units that can counter-attack an air unit
             for (auto &ufd: units) {
-                cUnit &pUnit = game.getUnit(ufd.entityId);
+                cUnit &pUnit = game.m_gameObjectsContext->getUnit(ufd.entityId);
                 if (pUnit.iID == skipThisUnit) continue;
                 if (!pUnit.isIdle()) continue;
                 if (!pUnit.canAttackAirUnits()) continue;
@@ -70,7 +70,7 @@ void cRespondToThreatAction::execute()
     int unitsOrdered = 0;
 
     for (auto &ufd : units) {
-        cUnit &pUnit = game.getUnit(ufd.entityId);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(ufd.entityId);
         if (pUnit.iID == skipThisUnit) continue;
         if (!pUnit.isIdle()) continue;
         if (!pUnit.isAttackingUnit()) continue; // is a unit that is used generally for attacking

@@ -235,10 +235,10 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event)
     cUnit *threat = nullptr;
     if (event.originType == eBuildType::UNIT) {
         assert(event.originId > -1);
-        threat = &game.getUnit(event.originId);
+        threat = &game.m_gameObjectsContext->getUnit(event.originId);
     }
 
-    cUnit &victim = game.getUnit(event.entityID);
+    cUnit &victim = game.m_gameObjectsContext->getUnit(event.entityID);
     if (victim.isHarvester()) {
         respondToThreat(threat, &victim, event.atCell, 2 + RNG::rnd(4));
     }
@@ -259,7 +259,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
     int unitIdThatAttacks = event.originId;
     if (unitIdThatAttacks > -1) {
         // respond to something that attacks us
-        cUnit originUnit = game.getUnit(unitIdThatAttacks);
+        cUnit originUnit = game.m_gameObjectsContext->getUnit(unitIdThatAttacks);
         if (originUnit.getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
             log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
@@ -1730,7 +1730,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
             if (event.player == player) {
                 // i discovered something
                 if (event.entityType == eBuildType::UNIT) {
-                    cUnit &pUnit = game.getUnit(event.entityID);
+                    cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                         // found enemy unit
                         m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
@@ -1754,12 +1754,12 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
             }
             else {
                 // event.player == player who discovered something
-                if (event.player == &game.getPlayer(AI_WORM)) {
+                if (event.player == &game.m_gameObjectsContext->getPlayer(AI_WORM)) {
                     // ignore anything that the WORM AI player detected.
                 }
                 else if (!event.player->isSameTeamAs(player)) {
                     if (event.entityType == eBuildType::UNIT) {
-                        cUnit &pUnit = game.getUnit(event.entityID);
+                        cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                         // the other player discovered a unit of mine
                         if (pUnit.isValid() && pUnit.getPlayer() == player) {
                             // found my unit
@@ -1794,7 +1794,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
             if (event.player == player) {
                 // i discovered something
                 if (event.entityType == eBuildType::UNIT) {
-                    cUnit &pUnit = game.getUnit(event.entityID);
+                    cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                         if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
