@@ -47,6 +47,7 @@ class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
 struct InitialGameSettings;
+class cGameSettings;
 
 class ContextCreator;
 class GameContext;
@@ -116,6 +117,9 @@ public:
     
     //todo: this should get moved to private, but not yet.
     std::unique_ptr<cInfoContext> m_infoContext;
+
+    //todo: this should get moved to private, but not yet.
+    std::unique_ptr<cGameSettings> m_gameSettings;
 
     // Initialization functions
     void init();		            // initialize all game variables
