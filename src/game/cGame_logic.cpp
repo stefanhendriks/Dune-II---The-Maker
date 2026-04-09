@@ -103,7 +103,7 @@ cGame::cGame()
     m_nextState = -1;
     m_currentState = nullptr;
     // m_screenW = -1;
-    m_gameSettings->m_screenH = -1;
+    // m_gameSettings->m_screenH = -1;
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
