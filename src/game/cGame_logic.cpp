@@ -60,6 +60,7 @@
 #include "managers/cInteractionManager.h"
 #include "map/cPreviewMaps.h"
 #include "map/MapGeometry.hpp"
+#include "map/cMap.h"
 #include "player/brains/cPlayerBrainCampaign.h"
 #include "player/brains/cPlayerBrainSandworm.h"
 #include "player/brains/cPlayerBrainSkirmish.h"

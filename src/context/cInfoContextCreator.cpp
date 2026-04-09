@@ -14,7 +14,7 @@
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
-#include "gameobjects/particles/cParticleInfos.h"
+#include "map/cMap.h"
 #include "gameobjects/sTerrainInfo.h"
 
 std::unique_ptr<cUnitInfos> cInfoContextCreator::createUnitInfos() {

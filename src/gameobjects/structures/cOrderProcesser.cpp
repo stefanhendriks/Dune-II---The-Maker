@@ -13,6 +13,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "gameobjects/structures/cStructures.h"
+#include "map/cMap.h"
 #include <format>
 
 #include "data/gfxaudio.h"

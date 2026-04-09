@@ -18,6 +18,7 @@
 #include "include/d2tmc.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 #include "sidebar/cSideBar.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"

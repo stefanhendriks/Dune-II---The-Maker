@@ -24,6 +24,7 @@
 #include "player/cPlayers.h"
 #include "controls/cGameControlsContext.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 
 #include <cassert>
 
