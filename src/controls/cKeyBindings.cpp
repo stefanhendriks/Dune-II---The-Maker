@@ -1,6 +1,7 @@
 #include "cKeyBindings.h"
 #include "utils/cLog.h"
 
+#include <algorithm>
 #include <sstream>
 #include <format>
 
@@ -135,12 +136,12 @@ void cKeyBindings::loadFromSection(const cSection &section)
     for (auto &[name, action] : ACTIONS) {
         if (section.hasValue(name)) {
             std::string value = section.getStringValue(name);
-            auto parsed = parseKeys(value);
-            if (!parsed.empty()) {
-                m_bindings[action].keys = parsed;
+            s_KeyBinding parsed = parseBinding(value);
+            if (!parsed.keys.empty()) {
+                m_bindings[action] = parsed;
             } else {
                 cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
-                    std::format("Unknown scancode name '{}' for action '{}', keeping default", value, name));
+                    std::format("No valid key found for action '{}' (value: '{}'), keeping default", name, value));
             }
         }
     }
@@ -169,9 +170,9 @@ void cKeyBindings::bind(eKeyAction action, std::initializer_list<SDL_Scancode> k
     m_bindings[action] = s_KeyBinding{std::vector<SDL_Scancode>(keys), requireCtrl, requireAlt, requireShift};
 }
 
-std::vector<SDL_Scancode> cKeyBindings::parseKeys(const std::string &value)
+s_KeyBinding cKeyBindings::parseBinding(const std::string &value)
 {
-    std::vector<SDL_Scancode> result;
+    s_KeyBinding binding;
     std::istringstream ss(value);
     std::string token;
     while (std::getline(ss, token, ',')) {
@@ -181,13 +182,21 @@ std::vector<SDL_Scancode> cKeyBindings::parseKeys(const std::string &value)
         if (start == std::string::npos) continue;
         token = token.substr(start, end - start + 1);
 
-        SDL_Scancode sc = SDL_GetScancodeFromName(token.c_str());
-        if (sc != SDL_SCANCODE_UNKNOWN) {
-            result.push_back(sc);
-        } else {
-            cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
-                std::format("Unknown SDL scancode name: '{}'", token));
+        // Check for modifier tokens (case-insensitive)
+        std::string lower = token;
+        std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+        if      (lower == "alt")   { binding.requireAlt   = true; }
+        else if (lower == "ctrl")  { binding.requireCtrl  = true; }
+        else if (lower == "shift") { binding.requireShift = true; }
+        else {
+            SDL_Scancode sc = SDL_GetScancodeFromName(token.c_str());
+            if (sc != SDL_SCANCODE_UNKNOWN) {
+                binding.keys.push_back(sc);
+            } else {
+                cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
+                    std::format("Unknown SDL scancode name: '{}'", token));
+            }
         }
     }
-    return result;
+    return binding;
 }

@@ -35,5 +35,5 @@ private:
     void bind(eKeyAction action, std::initializer_list<SDL_Scancode> keys,
               bool requireCtrl = false, bool requireAlt = false, bool requireShift = false);
 
-    static std::vector<SDL_Scancode> parseKeys(const std::string &value);
+    static s_KeyBinding parseBinding(const std::string &value);
 };
