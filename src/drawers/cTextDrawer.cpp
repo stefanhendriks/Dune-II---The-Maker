@@ -1,6 +1,6 @@
 #include "cTextDrawer.h"
 #include "drawers/cTextTextureCache.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
@@ -52,7 +52,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) c
     int w,h;
     TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int half = w / 2;
-    int xPos = (game.m_screenW / 2) - half;
+    int xPos = (game.m_gameSettings->getScreenW() / 2) - half;
     drawText(xPos, y, color, msg);
 }
 
@@ -108,7 +108,7 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
     int w,h;
     TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
-    int x = game.m_screenW - lenghtInPixels-margin;
+    int x = game.m_gameSettings->getScreenW() - lenghtInPixels-margin;
     int y = game.m_screenH - getFontHeight()-20-margin;
     drawText(x, y, color, msg);
 }

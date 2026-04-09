@@ -1,5 +1,5 @@
 #include "cStructureDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
@@ -342,7 +342,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         }
     }
 
-    m_renderDrawer->renderRectFillColor((game.m_screenW - cSideBar::SidebarWidth), 0,
+    m_renderDrawer->renderRectFillColor((game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth), 0,
                                       cSideBar::SidebarWidth, game.m_screenH, 0, 0, 0,255);
 }
 

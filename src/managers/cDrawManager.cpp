@@ -183,7 +183,7 @@ void cDrawManager::drawRallyPoint()
 
 void cDrawManager::drawSidebar()
 {
-    m_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
+    m_renderDrawer->setClippingFor(game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, game.m_gameSettings->getScreenW(), game.m_screenH);
     m_sidebarDrawer->draw();
     m_miniMapDrawer->draw();
     m_renderDrawer->resetClippingFor();
@@ -229,7 +229,7 @@ void cDrawManager::drawMouse()
 void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
-    for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
+    for (int x = 0; x < game.m_gameSettings->getScreenW(); x+= topbarPiece->w) {
         m_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
@@ -255,10 +255,10 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    m_renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    m_renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
+    m_renderDrawer->renderRectFillColor(0, 0, game.m_gameSettings->getScreenW(), cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor(0,game.m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
 
-    for (int w = 0; w < (game.m_screenW + 800); w += 789) {
+    for (int w = 0; w < (game.m_gameSettings->getScreenW() + 800); w += 789) {
         m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }

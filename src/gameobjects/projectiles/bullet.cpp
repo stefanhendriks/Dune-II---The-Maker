@@ -11,7 +11,7 @@
   */
 
 #include "bullet.h"
-
+#include "game/cGameSettings.h"
 #include "data/gfxdata.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -87,7 +87,7 @@ void cBullet::draw()
     int x = draw_x();
     int y = draw_y();
 
-    if (x < -getBulletBmpWidth() || x > (game.m_screenW + getBulletBmpWidth()))
+    if (x < -getBulletBmpWidth() || x > (game.m_gameSettings->getScreenW() + getBulletBmpWidth()))
         return;
 
     if (y < getBulletBmpHeight() || y > game.m_screenH + getBulletBmpHeight())

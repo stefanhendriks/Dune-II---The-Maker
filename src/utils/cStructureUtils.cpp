@@ -1,5 +1,5 @@
 #include "cStructureUtils.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "utils/cLog.h"
@@ -247,7 +247,7 @@ bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure)
     int width = game.m_mapCamera->factorZoomLevel(structure->getWidthInPixels());
     int height = game.m_mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
-    return (drawX + width  >= 0 && drawX < game.m_screenW) &&
+    return (drawX + width  >= 0 && drawX < game.m_gameSettings->getScreenW()) &&
            (drawY + height >= 0 && drawY < game.m_screenH);
 }
 

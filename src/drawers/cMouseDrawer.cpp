@@ -1,5 +1,5 @@
 #include "cMouseDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "controls/cGameControlsContext.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -32,7 +32,7 @@ int cMouseDrawer::getDrawXToolTip(int width)
     int x = m_mouseX + 32;
 
     // correct drawing position so it does not fall off screen.
-    int diffX = (x + width) - game.m_screenW;
+    int diffX = (x + width) - game.m_gameSettings->getScreenW();
     if (diffX > 0) {
         x-= diffX;
     }

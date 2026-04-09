@@ -1,5 +1,5 @@
 #include "cBuildingListFactory.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
@@ -28,7 +28,7 @@ int cBuildingListFactory::getButtonDrawY()
 
 int cBuildingListFactory::getButtonDrawXStart()
 {
-    return (game.m_screenW - 200) + 2;
+    return (game.m_gameSettings->getScreenW() - 200) + 2;
 }
 
 

@@ -1,5 +1,5 @@
 #include "gamestates/cChooseHouseState.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
@@ -25,13 +25,13 @@ cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
     backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_screenH - m_textDrawer->getFontHeight(), " BACK");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
-    int duneAtTheRight = m_game.m_screenW - bmp_Dune->w;
+    int duneAtTheRight = m_game.m_gameSettings->getScreenW() - bmp_Dune->w;
     int duneAlmostAtBottom = m_game.m_screenH - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
     bmp_SelectYourHouseTitle = m_gfxinter->getTexture(BMP_SELECT_YOUR_HOUSE);
 
-    selectYourHouseXCentered = (m_game.m_screenW / 2) - bmp_SelectYourHouseTitle->w / 2;
+    selectYourHouseXCentered = (m_game.m_gameSettings->getScreenW() / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
     bmp_HouseAtreides = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
@@ -40,7 +40,7 @@ cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
 
     int selectYourHouseY = m_game.m_screenH * 0.25f;
 
-    int columnWidth = m_game.m_screenW / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
+    int columnWidth = m_game.m_gameSettings->getScreenW() / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
 
     int offset = (columnWidth / 2) - (bmp_HouseAtreides->w / 2);
 
