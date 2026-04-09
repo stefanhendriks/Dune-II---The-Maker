@@ -147,7 +147,7 @@ void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainMission::onEventDeviated(const s_GameEvent &event)
 {
     if (event.entityType == UNIT) {
-        cUnit &entityUnit = game.getUnit(event.entityID);
+        cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
         if (entityUnit.getPlayer() != player) {
             // not our unit, if it was in our units list, remove it.
             removeUnitIdFromListIfPresent(event.entityID);
@@ -195,7 +195,7 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                 state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
             // unit got created, not reinforced
             if (event.entityType == UNIT && !event.isReinforce) {
-                cUnit &entityUnit = game.getUnit(event.entityID);
+                cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
 
                 // this unit has not been assigned to a mission yet
                 if (!entityUnit.isAssignedAnyMission()) {
@@ -255,7 +255,7 @@ void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove)
         // found unit in our list, so someone of ours got destroyed!
         log(std::format("removeUnitIdFromListIfPresent [{}] has removed unit from the list!", unitIdToRemove).c_str());
         units.erase(position);
-        game.getUnit(unitIdToRemove).unAssignMission();
+        game.m_gameObjectsContext->getUnit(unitIdToRemove).unAssignMission();
         log("These units are still available:");
         logUnits();
     }
@@ -291,7 +291,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 
                 if (thingIWant.buildType == eBuildType::UNIT) {
                     for (auto &unitId : allMyUnits) {
-                        cUnit &pUnit = game.getUnit(unitId);
+                        cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
                         if (!pUnit.isValid()) continue;
                         if (pUnit.getType() != thingIWant.type) continue;
                         if (!pUnit.isIdle()) continue;
@@ -446,7 +446,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 void cPlayerBrainMission::logUnits()
 {
     for (auto &myUnitId : units) {
-        cUnit &myUnit = game.getUnit(myUnitId);
+        cUnit &myUnit = game.m_gameObjectsContext->getUnit(myUnitId);
         log(std::format("logUnits() : Unit {}, type {} ({})", myUnit.iID, myUnit.iType, myUnit.getUnitInfo().name).c_str());
     }
 }
@@ -503,7 +503,7 @@ void cPlayerBrainMission::thinkState_Execute()
 
     bool teamIsStillAlive = false;
     for (auto &myUnit : units) {
-        cUnit &aUnit = game.getUnit(myUnit);
+        cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
         if (aUnit.isValid() &&
                 aUnit.isAssignedMission(uniqueIdentifier)) { // in case this unit ID was re-spawned...
             teamIsStillAlive = true;

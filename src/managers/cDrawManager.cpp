@@ -113,7 +113,7 @@ void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
     for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        if (game.getUnit(i).isValid()) {
+        if (game.m_gameObjectsContext->getUnit(i).isValid()) {
             unitsUsed++;
         }
     }
@@ -155,7 +155,7 @@ void cDrawManager::drawCredits()
 
 void cDrawManager::drawRallyPoint()
 {
-    cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     if (humanPlayer.selected_structure < 0) return;
     cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[humanPlayer.selected_structure];
     if (!theStructure) return;
@@ -182,7 +182,7 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    m_renderDrawer->renderLine( startX, startY, endX, endY, game.getPlayer(HUMAN).getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, game.m_gameObjectsContext->getPlayer(HUMAN).getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()

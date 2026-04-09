@@ -33,7 +33,7 @@ void cRefinery::thinkFast()
 void cRefinery::think_unit_occupation()
 {
     int iUnitID = getUnitIdWithin();
-    cUnit &cUnit = game.getUnit(iUnitID);
+    cUnit &cUnit = game.m_gameObjectsContext->getUnit(iUnitID);
 
     // the unit id is filled in, that means the unit is IN this structure
     // the TIMER_harvest of the unit will be used to dump the harvest in the

@@ -53,7 +53,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
     if (target < 0) {
         // find any unit to attack instead
         for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-            cUnit &pUnit = game.getUnit(i);
+            cUnit &pUnit = game.m_gameObjectsContext->getUnit(i);
             if (!pUnit.isValid()) continue;
             if (pUnit.getPlayer() == player) continue; // skip self
             if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self

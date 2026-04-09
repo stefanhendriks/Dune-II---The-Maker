@@ -236,7 +236,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     newBullet.iPlayer = -1;
 
     if (unitWhichShoots > -1 ) {
-        cUnit &cUnit = game.getUnit(unitWhichShoots);
+        cUnit &cUnit = game.m_gameObjectsContext->getUnit(unitWhichShoots);
         newBullet.iPlayer = cUnit.iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {

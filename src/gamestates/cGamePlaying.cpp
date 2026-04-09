@@ -108,7 +108,7 @@ void cGamePlaying::thinkNormal()
         game.m_drawManager->think();
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            game.getPlayer(i).think();
+            game.m_gameObjectsContext->getPlayer(i).think();
         }
 }
 
@@ -132,7 +132,7 @@ void cGamePlaying::thinkSlow()
     }
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &player = game.getPlayer(i);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
         player.thinkSlow();
     }
 }
@@ -191,7 +191,7 @@ void cGamePlaying::evaluatePlayerStatus()
         // TODO: Better way is with events (ie created/destroyed). However, there is no such
         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            cPlayer &player = game.getPlayer(i);
+            cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
             bool isAlive = player.isAlive();
             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
             player.evaluateStillAlive();
@@ -238,7 +238,7 @@ void cGamePlaying::missionInit()
 
 void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
     if (createGroup) {
@@ -289,7 +289,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
-    cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_F)) {
         m_game.m_drawFps = false;
@@ -351,23 +351,23 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(0));
-        game.setPlayerToInteractFor(&game.getPlayer(0));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(0));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(0));
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(1));
-        game.setPlayerToInteractFor(&game.getPlayer(1));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(1));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(1));
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(2));
-        game.setPlayerToInteractFor(&game.getPlayer(2));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(2));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(2));
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(3));
-        game.setPlayerToInteractFor(&game.getPlayer(3));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(3));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(3));
     }
 
     // WIN MISSION
@@ -383,7 +383,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     // GIVE CREDITS TO ALL PLAYERS
     if (event.hasKey(SDL_SCANCODE_F4)) {
         for (int i = 0; i < AI_WORM; i++) {
-            game.getPlayer(i).setCredits(5000);
+            game.m_gameObjectsContext->getPlayer(i).setCredits(5000);
         }
     }
 
