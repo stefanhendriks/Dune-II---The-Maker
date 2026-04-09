@@ -9,6 +9,8 @@ class cParticles;
 class cStructures;
 class cUnits;
 class cMap;
+class cPlayer;
+class cUnit;
 
 class cGameObjectContext {
 public:
@@ -27,6 +29,11 @@ public:
     cStructures& getStructures() const;
     cUnits& getUnits() const;
     cMap& getMap() const;
+
+    cPlayer& getPlayer(int index);
+    const cPlayer& getPlayer(int index) const;
+    cUnit& getUnit(int index);
+    const cUnit& getUnit(int index) const;
 
 private:
     std::unique_ptr<cBullets> m_Bullets;

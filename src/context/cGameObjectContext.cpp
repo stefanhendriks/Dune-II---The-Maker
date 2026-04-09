@@ -67,3 +67,23 @@ cMap& cGameObjectContext::getMap() const {
     }
     return *m_map;
 }
+
+cUnit& cGameObjectContext::getUnit(int index)
+{
+    return (*m_Units)[index];
+}
+
+const cUnit& cGameObjectContext::getUnit(int index) const
+{
+    return (*m_Units)[index];
+}
+
+cPlayer& cGameObjectContext::getPlayer(int index)
+{
+    return (*m_Players)[index];
+}
+
+const cPlayer& cGameObjectContext::getPlayer(int index) const
+{
+    return (*m_Players)[index];
+}
