@@ -8,6 +8,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "data/gfxdata.h"

@@ -7,6 +7,7 @@
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
+#include "player/cPlayerDifficultySettings.h"
 
 cRefinery::cRefinery()
 {

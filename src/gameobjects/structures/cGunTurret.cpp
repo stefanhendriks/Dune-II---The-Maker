@@ -6,6 +6,7 @@
 #include "definitions.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/units/cUnit.h"
 #include "utils/d2tm_math.h"
 #include "player/cPlayer.h"
