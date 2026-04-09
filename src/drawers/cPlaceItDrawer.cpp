@@ -9,6 +9,7 @@
 #include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
+#include "map/cMap.h"
 #include "gameobjects/structures/cStructures.h"
 #include <SDL2/SDL.h>
 

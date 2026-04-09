@@ -17,6 +17,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 #include "drawers/cSideBarDrawer.h"
 
 #include <SDL2/SDL.h>

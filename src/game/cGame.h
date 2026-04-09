@@ -20,7 +20,7 @@
 #include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
-#include "map/cMap.h"
+// #include "map/cMap.h"
 #include "player/cPlayers.h"
 //#include "gameobjects/particles/cParticles.h"
 //#include "gameobjects/structures/cStructures.h"

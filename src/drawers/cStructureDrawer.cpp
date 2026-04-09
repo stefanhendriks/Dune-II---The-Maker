@@ -13,6 +13,7 @@
 #include "gameobjects/structures/cWindTrap.h"
 #include "sidebar/cSideBar.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/Graphics.hpp"
