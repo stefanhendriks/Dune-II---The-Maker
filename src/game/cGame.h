@@ -15,7 +15,7 @@
 #include "controls/cKeyboard.h"
 #include "definitions.h"
 #include "include/enums GameState.h"
-#include "observers/cScenarioObserver.h"
+//#include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 // #include "game/cTimeManager.h"
 //#include "utils/cIniFile.h"

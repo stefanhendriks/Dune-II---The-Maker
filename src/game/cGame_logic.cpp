@@ -85,6 +85,7 @@
 #include "utils/RNG.hpp"
 #include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
+#include "observers/cScenarioObserver.h"
 
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
