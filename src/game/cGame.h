@@ -19,7 +19,7 @@
 #include "utils/cRectangle.h"
 // #include "game/cTimeManager.h"
 //#include "utils/cIniFile.h"
-#include "map/cPreviewMaps.h"
+//#include "map/cPreviewMaps.h"
 // #include "map/cMap.h"
 #include "player/cPlayers.h"
 //#include "gameobjects/particles/cParticles.h"
@@ -61,6 +61,7 @@ class cDrawManager;
 class cTimeManager;
 
 struct s_DataCampaign;
+struct s_PreviewMap;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
