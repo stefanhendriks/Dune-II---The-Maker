@@ -4,6 +4,7 @@
 #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "definitions.h"
+#include "gameobjects/units/cUnits.h"
 
 cUnitUtils::cUnitUtils()
 {

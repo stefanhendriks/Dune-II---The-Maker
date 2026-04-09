@@ -7,6 +7,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/units/cUnits.h"
 #include "utils/cStructureUtils.h"
 #include "player/cPlayer.h"
 #include "player/cPlayerDifficultySettings.h"

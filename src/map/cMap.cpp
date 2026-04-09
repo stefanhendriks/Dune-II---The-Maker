@@ -34,6 +34,7 @@
 #include "utils/d2tm_math.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/units/cUnit.h"
+#include "gameobjects/units/cUnits.h"
 #include "drawers/cTextDrawer.h"
 
 #include <format>

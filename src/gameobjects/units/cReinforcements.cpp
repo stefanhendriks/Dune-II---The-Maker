@@ -2,6 +2,7 @@
 #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "cReinforcements.h"
+#include "gameobjects/units/cUnits.h"
 #include "utils/common.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"

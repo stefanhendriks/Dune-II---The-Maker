@@ -10,6 +10,7 @@
 #include "player/cPlayers.h"
 #include "utils/cSoundPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/units/cUnits.h"
 
 cStarPort::cStarPort()
 {

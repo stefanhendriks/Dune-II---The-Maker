@@ -21,6 +21,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "include/sDataCampaign.h"
+#include "gameobjects/units/cUnits.h"
 
 #include <format>
 #include <algorithm>

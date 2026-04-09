@@ -22,6 +22,7 @@
 #include "controls/cGameControlsContext.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
+#include "gameobjects/units/cUnits.h"
 
 
 #include <SDL2/SDL.h>

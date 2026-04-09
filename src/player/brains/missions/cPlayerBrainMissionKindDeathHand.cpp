@@ -2,6 +2,7 @@
 #include "cPlayerBrainMissionKindDeathHand.h"
 //#include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
 #include "utils/cStructureUtils.h"
 
 #include "game/cGame.h"

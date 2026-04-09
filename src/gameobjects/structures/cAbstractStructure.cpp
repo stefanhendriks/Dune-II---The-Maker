@@ -20,6 +20,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"

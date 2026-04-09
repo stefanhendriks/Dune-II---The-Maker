@@ -28,6 +28,7 @@
 // #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/projectiles/cBullets.h"
+#include "gameobjects/units/cUnits.h"
 #include "utils/d2tm_math.h"
 
 #include <cmath>
