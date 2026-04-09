@@ -24,6 +24,7 @@
 #include "data/gfxdata.h"
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"
+#include "utils/cStructureUtils.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/cLog.h"

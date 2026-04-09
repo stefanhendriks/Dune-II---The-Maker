@@ -5,6 +5,7 @@
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticle.h"
+#include "utils/cStructureUtils.h"
 #include "sidebar/cSideBar.h"
 #include "map/cMapCamera.h"
 #include "player/cPlayer.h"

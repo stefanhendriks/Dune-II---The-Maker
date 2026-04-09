@@ -3,6 +3,7 @@
 #include "actions/cRespondToThreatAction.h"
 //#include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "utils/cStructureUtils.h"
 #include "enums.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"

@@ -26,7 +26,7 @@
 //#include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
 // #include "gameobjects/projectiles/cBullets.h"
-#include "utils/cStructureUtils.h"
+//#include "utils/cStructureUtils.h"
 
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
@@ -59,6 +59,7 @@ class SDLDrawer;
 class cMapCamera;
 class cDrawManager;
 class cTimeManager;
+class cStructureUtils;
 
 struct s_DataCampaign;
 struct s_PreviewMap;

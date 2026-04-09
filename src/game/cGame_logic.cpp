@@ -29,6 +29,7 @@
 #include "game/cScreenShake.h"
 #include "game/cScreenShotSaver.h"
 #include "game/cTimeCounter.h"
+#include "utils/cStructureUtils.h"
 
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
