@@ -83,6 +83,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/ini.h"
 #include "utils/RNG.hpp"
+#include "utils/cIniFile.h"
 
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
