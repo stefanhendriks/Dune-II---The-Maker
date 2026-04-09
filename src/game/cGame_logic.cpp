@@ -102,7 +102,7 @@ cGame::cGame()
     m_drawTime = false;
     m_nextState = -1;
     m_currentState = nullptr;
-    m_screenW = -1;
+    // m_screenW = -1;
     m_screenH = -1;
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
@@ -144,7 +144,7 @@ cGame::cGame()
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 {
     // keep settings alive after initialization
-    m_screenW = gs->screenW;
+    // m_screenW = gs->screenW;
     m_gameSettings->m_screenW = gs->screenW;
 
     m_screenH = gs->screenH;
@@ -434,8 +434,8 @@ void cGame::drawState()
 */
 void cGame::run()
 {
-    actualRenderer = m_renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
-    screenTexture = m_renderDrawer->createRenderTargetTexture(m_screenW, m_screenH);
+    actualRenderer = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_screenH);
+    screenTexture = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_screenH);
     SDL_Event event;
     while (m_playing) {
         if (m_focusManager->isGameWindowActive()) {
@@ -612,12 +612,12 @@ bool cGame::setupGame()
     m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
-    m_Screen = std::make_unique<cScreenInit>(m_screenW, m_screenH, title);
+    m_Screen = std::make_unique<cScreenInit>(m_gameSettings->m_screenW, m_screenH, title);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }
 
-    m_screenW = m_Screen->Width();
+    m_gameSettings->m_screenW = m_Screen->Width();
     m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
@@ -1349,7 +1349,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 
 void cGame::saveBmpScreenToDisk()
 {
-    if (cScreenShotSaver::saveScreen(renderer, m_screenW, m_screenH)) {
+    if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_screenH)) {
         game.getPlayer(HUMAN).addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }
