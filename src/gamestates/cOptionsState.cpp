@@ -28,11 +28,11 @@ cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
 
 void cOptionsState::constructWindow(int prevState)
 {
-    int margin = m_game.m_screenH * 0.3;
+    int margin = m_game.m_gameSettings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
     int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
-    int mainMenuHeight = m_game.m_screenH - (margin * 2);
+    int mainMenuHeight = m_game.m_gameSettings->getScreenH() - (margin * 2);
 
     margin = 4;
     int buttonHeight = (m_textDrawer->getFontHeight() + margin);

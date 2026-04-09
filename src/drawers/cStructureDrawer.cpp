@@ -343,7 +343,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
     }
 
     m_renderDrawer->renderRectFillColor((game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth), 0,
-                                      cSideBar::SidebarWidth, game.m_screenH, 0, 0, 0,255);
+                                      cSideBar::SidebarWidth, game.m_gameSettings->getScreenH(), 0, 0, 0,255);
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure)

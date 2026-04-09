@@ -27,7 +27,7 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_heightOfTopBar = cSideBar::TopBarHeight;
 
     m_windowWidth= game.m_gameSettings->getScreenW() - widthOfSidebar;
-    m_windowHeight= game.m_screenH - m_heightOfTopBar;
+    m_windowHeight= game.m_gameSettings->getScreenH() - m_heightOfTopBar;
 
     m_viewportWidth=m_windowWidth;
     m_viewportHeight=m_windowHeight;
@@ -225,7 +225,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_UP);
         }
-        else if (mouseY >= (game.m_screenH - 2)) {
+        else if (mouseY >= (game.m_gameSettings->getScreenH() - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_DOWN);
         }
