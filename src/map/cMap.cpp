@@ -23,6 +23,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "gameobjects/units/cReinforcements.h"
