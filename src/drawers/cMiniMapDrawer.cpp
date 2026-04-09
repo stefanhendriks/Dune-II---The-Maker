@@ -16,6 +16,7 @@
 #include "map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "map/cMap.h"
 #include <cassert>
 #include <iostream>
 

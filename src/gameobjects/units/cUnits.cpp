@@ -12,6 +12,7 @@
 
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cUnits.h"
+#include "map/cMap.h"
 #include "include/d2tmc.h"
 #include "game/cGame.h"
 #include "utils/cLog.h"

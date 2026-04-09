@@ -9,6 +9,7 @@
 // #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 #include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 
