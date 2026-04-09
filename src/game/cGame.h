@@ -111,7 +111,7 @@ public:
     // begin
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
-    cStructureUtils             m_structureUtils;
+    std::unique_ptr<cStructureUtils>   m_structureUtils;
     // end
 
     //todo: this should get moved to private, but not yet.
