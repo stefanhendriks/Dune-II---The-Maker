@@ -1,6 +1,6 @@
 #pragma once
 
-enum class GameState : char {
+enum class eGameState : char {
     INITIALIZE = 0,        // initialize game
     OVER,                  // game over
     MENU,                  // in a menu

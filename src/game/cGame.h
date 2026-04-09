@@ -14,7 +14,7 @@
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "include/enums GameState.h"
+#include "include/eGameState.h"
 //#include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 // #include "game/cTimeManager.h"
