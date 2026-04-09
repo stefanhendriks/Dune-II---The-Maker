@@ -17,6 +17,7 @@
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
+#include "gameobjects/structures/cStructures.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"
