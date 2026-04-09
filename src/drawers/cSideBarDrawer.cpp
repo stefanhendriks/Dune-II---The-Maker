@@ -32,7 +32,7 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_candyHorizonBar = m_player->createTextureFromIndexedSurfaceWithPalette(
         m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
-    m_candiBarRenderer = m_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_screenH-40);
+    m_candiBarRenderer = m_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_gameSettings->getScreenH()-40);
     m_renderDrawer->beginDrawingToTexture(m_candiBarRenderer);
     createCandyBar();
     m_renderDrawer->endDrawingToTexture();
@@ -65,7 +65,7 @@ void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cSideBarDrawer::draw()
 {
     // black out sidebar
-    m_renderDrawer->renderRectFillColor((game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_screenH, Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor((game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_gameSettings->getScreenH(), Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -107,7 +107,7 @@ void cSideBarDrawer::drawBuildingLists()
                  cSideBar::HeightOfListButton;
 
     for (; drawX < game.m_gameSettings->getScreenW(); drawX += backgroundSprite->w) {
-        for (int drawY=startY; drawY < game.m_screenH; drawY += backgroundSprite->h) {
+        for (int drawY=startY; drawY < game.m_gameSettings->getScreenH(); drawY += backgroundSprite->h) {
             m_renderDrawer->renderSprite(backgroundSprite, drawX, drawY);
         }
     }
@@ -126,11 +126,11 @@ void cSideBarDrawer::drawBuildingLists()
         selectedList = m_sidebar->getList(selectedListId);
     }
 
-    int endY = game.m_screenH;
+    int endY = game.m_gameSettings->getScreenH();
     int rows = 6;
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         rows = 5;
-        endY = game.m_screenH - 50;
+        endY = game.m_gameSettings->getScreenH() - 50;
     }
 
     for (int i = 1; i < 3; i++) {
@@ -149,12 +149,12 @@ void cSideBarDrawer::drawBuildingLists()
     }
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
-        m_renderDrawer->renderRectFillColor(iDrawX, endY, game.m_gameSettings->getScreenW()-iDrawX, game.m_screenH-endY, m_sidebarColor);
+        m_renderDrawer->renderRectFillColor(iDrawX, endY, game.m_gameSettings->getScreenW()-iDrawX, game.m_gameSettings->getScreenH()-endY, m_sidebarColor);
         m_renderDrawer->renderSprite(horBar, iDrawX-1, endY); // just below the last icons
     }
 
     // vertical lines at the side
-    m_renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_screenH, Color{255, 211, 125,255}); // left
+    m_renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_gameSettings->getScreenH(), Color{255, 211, 125,255}); // left
     m_renderDrawer->renderLine( game.m_gameSettings->getScreenW() - 1, iDrawY - 38, game.m_gameSettings->getScreenW() - 1, endY, Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
@@ -254,7 +254,7 @@ void cSideBarDrawer::drawMinimap()
 
 void cSideBarDrawer::createCandyBar()
 {
-    int heightInPixels = (game.m_screenH - cSideBar::TopBarHeight);
+    int heightInPixels = (game.m_gameSettings->getScreenH() - cSideBar::TopBarHeight);
     // ball first
     m_renderDrawer->renderSprite(m_candyBarBall, 0,0); // height of ball = 25
     m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
@@ -289,7 +289,7 @@ void cSideBarDrawer::createCandyBar()
 void cSideBarDrawer::drawPowerUsage() const
 {
     int arbitraryMargin = 6;
-    int barTotalHeight = game.m_screenH - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
+    int barTotalHeight = game.m_gameSettings->getScreenH() - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
     int barX = (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;

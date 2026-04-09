@@ -97,7 +97,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
 
     // Screen
     screen_x = m_game.m_gameSettings->getScreenW();
-    screen_y = m_game.m_screenH;
+    screen_y = m_game.m_gameSettings->getScreenH();
 
     // Rectangles for GUI interaction
     int topBarWidth = screen_x + 4;

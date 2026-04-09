@@ -61,7 +61,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
         int length = m_textDrawer->getTextLength("Mission select");
         const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(game.m_gameSettings->getScreenW() - length,
-                                                game.m_screenH - m_textDrawer->getFontHeight(),
+                                                game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(),
                                                 "Mission select");
         
         GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
@@ -85,7 +85,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
     // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
     offsetX = (game.m_gameSettings->getScreenW() - 640) / 2;
-    offsetY = (game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetY = (game.m_gameSettings->getScreenH() - 480) / 2; // same goes for offsetY (but then for 480 height).
     movieTopleftX = offsetX + 256;
     movieTopleftY = offsetY + 120;
     memset(sentence, 0, sizeof(sentence));

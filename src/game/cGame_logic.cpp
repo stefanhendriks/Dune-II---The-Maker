@@ -103,7 +103,7 @@ cGame::cGame()
     m_nextState = -1;
     m_currentState = nullptr;
     // m_screenW = -1;
-    m_screenH = -1;
+    m_gameSettings->m_screenH = -1;
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
@@ -147,7 +147,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     // m_screenW = gs->screenW;
     m_gameSettings->m_screenW = gs->screenW;
 
-    m_screenH = gs->screenH;
+    // m_screenH = gs->screenH;
     m_gameSettings->m_screenH = gs->screenH;
 
     m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
@@ -434,8 +434,8 @@ void cGame::drawState()
 */
 void cGame::run()
 {
-    actualRenderer = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_screenH);
-    screenTexture = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_screenH);
+    actualRenderer = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
+    screenTexture = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
     SDL_Event event;
     while (m_playing) {
         if (m_focusManager->isGameWindowActive()) {
@@ -612,13 +612,13 @@ bool cGame::setupGame()
     m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
-    m_Screen = std::make_unique<cScreenInit>(m_gameSettings->m_screenW, m_screenH, title);
+    m_Screen = std::make_unique<cScreenInit>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }
 
     m_gameSettings->m_screenW = m_Screen->Width();
-    m_screenH = m_Screen->Height();
+    m_gameSettings->m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
     renderer = m_Screen->getRenderer();
 
@@ -656,7 +656,7 @@ bool cGame::setupGame()
     /***
      * Viewport(s)
      */
-    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, game.m_screenH - cSideBar::TopBarHeight);
+    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, game.m_gameSettings->getScreenH() - cSideBar::TopBarHeight);
 
     logbook("Color conversion method set");
 
@@ -1055,7 +1055,7 @@ void cGame::changeStateFromMentat()
         game.m_drawManager->missionInit();
 
         // CENTER MOUSE
-        game.setMousePosition(game.m_gameSettings->getScreenW() / 2, game.m_screenH / 2);
+        game.setMousePosition(game.m_gameSettings->getScreenW() / 2, game.m_gameSettings->getScreenH() / 2);
 
         game.initiateFadingOut();
 
@@ -1349,7 +1349,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 
 void cGame::saveBmpScreenToDisk()
 {
-    if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_screenH)) {
+    if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_gameSettings->m_screenH)) {
         game.getPlayer(HUMAN).addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }

@@ -248,7 +248,7 @@ bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure)
     int height = game.m_mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
     return (drawX + width  >= 0 && drawX < game.m_gameSettings->getScreenW()) &&
-           (drawY + height >= 0 && drawY < game.m_screenH);
+           (drawY + height >= 0 && drawY < game.m_gameSettings->getScreenH());
 }
 
 bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int screenX, int screenY)
