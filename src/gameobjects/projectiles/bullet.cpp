@@ -535,7 +535,7 @@ float cBullet::getDamageToInflictToInfantry() const
     float result = difficultySettings->getInflictDamage(game.m_infoContext->getBulletInfo(iType).damage_infantry);
 
     if (iOwnerUnit > -1) {
-        float fDam = game.getUnit(iOwnerUnit).fExpDamage() * result;
+        float fDam = game.m_gameObjectsContext->getUnit(iOwnerUnit).fExpDamage() * result;
         result += fDam;
     }
     return result;
@@ -557,9 +557,9 @@ void cBullet::damageSandworm(int cell, double factor) const
     int id = game.m_gameObjectsContext->getMap().getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
-    cUnit &worm = game.getUnit(id);
+    cUnit &worm = game.m_gameObjectsContext->getUnit(id);
     float damage = getDamageToInflictToNonInfantry() * factor;
-    int originUnitId = (iOwnerUnit > -1 && game.getUnit(iOwnerUnit).isValid()) ? iOwnerUnit : -1;
+    int originUnitId = (iOwnerUnit > -1 && game.m_gameObjectsContext->getUnit(iOwnerUnit).isValid()) ? iOwnerUnit : -1;
     worm.takeDamage(damage, originUnitId, iOwnerStructure);
 }
 
@@ -628,7 +628,7 @@ float cBullet::getDamageToInflictToNonInfantry() const
     // increase damage by experience of unit
     if (iOwnerUnit > -1) {
         // extra damage by experience:
-        cUnit &cUnit = game.getUnit(iOwnerUnit);
+        cUnit &cUnit = game.m_gameObjectsContext->getUnit(iOwnerUnit);
         if (cUnit.isValid()) { // in case the unit died while firing
             float iDam = (cUnit.fExpDamage() * iDamage);
             iDamage = iDamage + iDam;
@@ -652,7 +652,7 @@ s_BulletInfo cBullet::gets_Bullet() const
 
 cPlayer *cBullet::getPlayer() const
 {
-    return &game.getPlayer(iPlayer);
+    return &game.m_gameObjectsContext->getPlayer(iPlayer);
 }
 
 /**
@@ -674,8 +674,8 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
     cUnit *pUnit = nullptr;
     int originId = -1;
     if (iOwnerUnit > -1) {
-        if (game.getUnit(iOwnerUnit).isValid()) {
-            pUnit = &game.getUnit(iOwnerUnit);
+        if (game.m_gameObjectsContext->getUnit(iOwnerUnit).isValid()) {
+            pUnit = &game.m_gameObjectsContext->getUnit(iOwnerUnit);
             originId = iOwnerUnit;
         }
     }

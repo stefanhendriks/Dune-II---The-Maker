@@ -673,7 +673,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     // }
 
     mapEditor.smoothMap();
-    game.m_gameObjectsContext->getMap().setDesiredAmountOfWorms(game.getPlayer(AI_WORM).getAmountOfUnitsForType(SANDWORM));
+    game.m_gameObjectsContext->getMap().setDesiredAmountOfWorms(game.m_gameObjectsContext->getPlayer(AI_WORM).getAmountOfUnitsForType(SANDWORM));
 }
 
 void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
@@ -690,7 +690,7 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
     }
     else if (wordtype == WORD_FOCUS) {
         int focusCell = ToInt(linefeed);
-        game.getPlayer(0).setFocusCell(focusCell);
+        game.m_gameObjectsContext->getPlayer(0).setFocusCell(focusCell);
         game.m_mapCamera->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
@@ -906,7 +906,7 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                 if (iHouse > -1) {
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
-                        if (game.getPlayer(i).getHouse() == iHouse) {
+                        if (game.m_gameObjectsContext->getPlayer(i).getHouse() == iHouse) {
                             playerId = i; // set controller here.. phew
                             break;
                         }
@@ -919,7 +919,7 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
             else if (iPart == 2) {
                 // Homebase is home of that house
                 if (strcmp(chunk, "Homebase") == 0) {
-                    targetCell = game.getPlayer(playerId).getFocusCell();
+                    targetCell = game.m_gameObjectsContext->getPlayer(playerId).getFocusCell();
                 }
                 else {
                     // enemy base
@@ -927,14 +927,14 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                     if (playerId == 0) {
                         // Find corresponding house and get controller
                         for (int i = 0; i < MAX_PLAYERS; i++)
-                            if (game.getPlayer(i).getHouse() == iHouse && i != playerId) {
-                                targetCell = game.getPlayer(i).getFocusCell();
+                            if (game.m_gameObjectsContext->getPlayer(i).getHouse() == iHouse && i != playerId) {
+                                targetCell = game.m_gameObjectsContext->getPlayer(i).getFocusCell();
                                 break;
                             }
                     }
                     else {
                         // computer player must find enemy = human
-                        targetCell = game.getPlayer(0).getFocusCell();
+                        targetCell = game.m_gameObjectsContext->getPlayer(0).getFocusCell();
                     }
                 }
 
@@ -1025,7 +1025,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
                         //char msg[80];
                         //sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
                         //logbook(msg);
-                        if (game.getPlayer(i).getHouse() == iHouse) {
+                        if (game.m_gameObjectsContext->getPlayer(i).getHouse() == iHouse) {
                             iController = i; // set controller here.. phew
                             break;
                         }
@@ -1055,7 +1055,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
-                        if (game.getPlayer(i).getHouse() == iHouse) {
+                        if (game.m_gameObjectsContext->getPlayer(i).getHouse() == iHouse) {
                             iController = i; // set controller here.. phew
                             break;
                         }
@@ -1092,7 +1092,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
     }
 
     if (iController > -1) {
-        game.getPlayer(iController).placeStructure(iCell, iType, 100);
+        game.m_gameObjectsContext->getPlayer(iController).placeStructure(iCell, iType, 100);
     }
     else {
         logbook("WARNING: Identifying house/controller of structure (typo?)");
@@ -1153,7 +1153,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
                 // Search for a player with this house
                 for (int i = 0; i < MAX_PLAYERS; i++) {
                     // this is why we require setUpPlayers... because it matches by house type
-                    if (game.getPlayer(i).getHouse() == iHouse) {
+                    if (game.m_gameObjectsContext->getPlayer(i).getHouse() == iHouse) {
                         iController = i; // set controller here.. phew
                         break;
                     }
@@ -1207,14 +1207,14 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
             if (playerIndex == iHumanID) {
                 logbook(std::format("INI: Setting up human player, credits to [{}], house [{}] and team [{}]", creditsPlayer, houseForPlayer, 0));
-                game.getPlayer(HUMAN).setCredits(creditsPlayer);
-                game.getPlayer(HUMAN).setHouse(houseForPlayer);
-                game.getPlayer(HUMAN).setTeam(0);
-                game.getPlayer(HUMAN).setAutoSlabStructures(false);
+                game.m_gameObjectsContext->getPlayer(HUMAN).setCredits(creditsPlayer);
+                game.m_gameObjectsContext->getPlayer(HUMAN).setHouse(houseForPlayer);
+                game.m_gameObjectsContext->getPlayer(HUMAN).setTeam(0);
+                game.m_gameObjectsContext->getPlayer(HUMAN).setAutoSlabStructures(false);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
-                game.getPlayer(AI_CPU5).setHouse(FREMEN);
+                game.m_gameObjectsContext->getPlayer(AI_CPU5).setHouse(FREMEN);
                 if (houseForPlayer == ATREIDES) {
                     fremenIsHumanAlly = true;
                 }
@@ -1223,15 +1223,15 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                 game.m_drawManager->missionInit();
 
                 if (quota > 0) {
-                    game.getPlayer(HUMAN).setQuota(quota);
+                    game.m_gameObjectsContext->getPlayer(HUMAN).setQuota(quota);
                 }
 
             }
             else {
-                game.getPlayer(iCPUId).setAutoSlabStructures(true);
+                game.m_gameObjectsContext->getPlayer(iCPUId).setAutoSlabStructures(true);
 
                 if (quota > 0) {
-                    game.getPlayer(iCPUId).setQuota(quota);
+                    game.m_gameObjectsContext->getPlayer(iCPUId).setQuota(quota);
                 }
 
                 if (houseForPlayer == FREMEN) {
@@ -1239,13 +1239,13 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     assert(false && "No FREMEN supported in INI files yet");
                 }
 
-                game.getPlayer(iCPUId).setTeam(teamIndexAI);
+                game.m_gameObjectsContext->getPlayer(iCPUId).setTeam(teamIndexAI);
 
                 logbook(std::format("INI: Setting up CPU player, credits to [{}], house to [{}] and team [{}]",
                                     creditsPlayer, houseForPlayer, teamIndexAI));
 
-                game.getPlayer(iCPUId).setCredits(creditsPlayer);
-                game.getPlayer(iCPUId).setHouse(houseForPlayer);
+                game.m_gameObjectsContext->getPlayer(iCPUId).setCredits(creditsPlayer);
+                game.m_gameObjectsContext->getPlayer(iCPUId).setHouse(houseForPlayer);
                 iCPUId++;
             }
         }
@@ -1256,14 +1256,14 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
     if (fremenIsHumanAlly) {
         // same team as human
-        game.getPlayer(AI_CPU5).setTeam(0);
+        game.m_gameObjectsContext->getPlayer(AI_CPU5).setTeam(0);
     }
     else {
         // same team as enemy cpu's
-        game.getPlayer(AI_CPU5).setTeam(teamIndexAI);
+        game.m_gameObjectsContext->getPlayer(AI_CPU5).setTeam(teamIndexAI);
     }
 
-    game.getPlayer(AI_WORM).setTeam(2); // the WORM player is nobody's ally, ever
+    game.m_gameObjectsContext->getPlayer(AI_WORM).setTeam(2); // the WORM player is nobody's ally, ever
 }
 
 void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)

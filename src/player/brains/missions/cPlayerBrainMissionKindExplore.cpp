@@ -30,7 +30,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
 {
     const std::vector<int> &units = mission->getUnits();
     for (auto &myUnit : units) {
-        cUnit &aUnit = game.getUnit(myUnit);
+        cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
         if (aUnit.isValid()) {
             if (aUnit.isIdle()) {
                 if (game.m_gameObjectsContext->getMap().distance(aUnit.getCell(), targetCell) < 4) {

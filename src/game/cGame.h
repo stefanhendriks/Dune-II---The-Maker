@@ -246,10 +246,10 @@ public:
 
     // this functions need to be removed
     // begin
-    cPlayer& getPlayer(int index);
-    const cPlayer& getPlayer(int index) const;
-    cUnit& getUnit(int index);
-    const cUnit& getUnit(int index) const;
+    // cPlayer& getPlayer(int index);
+    // const cPlayer& getPlayer(int index) const;
+    // cUnit& getUnit(int index);
+    // const cUnit& getUnit(int index) const;
     // end
 
 private:

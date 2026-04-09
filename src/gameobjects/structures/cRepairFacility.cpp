@@ -33,7 +33,7 @@ void cRepairFacility::thinkFast()
 void cRepairFacility::think_repairUnit()  // must repair...
 {
     int iUnitID = getUnitIdWithin();
-    cUnit &unitToRepair = game.getUnit(iUnitID);
+    cUnit &unitToRepair = game.m_gameObjectsContext->getUnit(iUnitID);
 //    int maxHpForUnitType = game.m_infoContext->getUnitInfo(unitToRepair.iType).hp;
 
     if (unitToRepair.requiresRepairing()) {

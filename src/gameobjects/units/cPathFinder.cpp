@@ -47,7 +47,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         return -99; // Wut!?
     }
 
-    cUnit &pUnit = game.getUnit(iUnitId);
+    cUnit &pUnit = game.m_gameObjectsContext->getUnit(iUnitId);
     if (!pUnit.isValid() || pUnit.isDead()) {
         return -99; // for now...
     }
@@ -231,7 +231,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                                 }
                             }
 
-                            cUnit &unitAtCell = game.getUnit(iUID);
+                            cUnit &unitAtCell = game.m_gameObjectsContext->getUnit(iUID);
                             if (!unitAtCell.getPlayer()->isSameTeamAs(pUnit.getPlayer())) {
                                 // allow running over enemy infantry/squishable units
                                 if (unitAtCell.isInfantryUnit() &&
@@ -550,7 +550,7 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = game.m_gameObjectsContext->getMap().getCellType(cll);
-                    if (game.m_infoContext->getUnitInfo(game.getUnit(iID).iType).infantry) {
+                    if (game.m_infoContext->getUnitInfo(game.m_gameObjectsContext->getUnit(iID).iType).infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }

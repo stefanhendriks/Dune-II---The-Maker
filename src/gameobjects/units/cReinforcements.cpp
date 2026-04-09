@@ -68,7 +68,7 @@ bool cReinforcement::isReady() const
 
 void cReinforcement::execute() const
 {
-    int focusCell = game.getPlayer(m_playerId).getFocusCell();
+    int focusCell = game.m_gameObjectsContext->getPlayer(m_playerId).getFocusCell();
     REINFORCE(m_playerId, m_unitType, m_cell, focusCell, true);
 }
 
@@ -206,7 +206,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     int d = fDegrees(iCellX, iCellY, cx, cy);
     int f = faceAngle(d); // get the angle
 
-    cUnit &carryall = game.getUnit(iUnit);
+    cUnit &carryall = game.m_gameObjectsContext->getUnit(iUnit);
     carryall.rendering.iBodyShouldFace = f;
     carryall.rendering.iBodyFacing = f;
     carryall.rendering.iHeadShouldFace = f;

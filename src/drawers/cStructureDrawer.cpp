@@ -44,7 +44,7 @@ void cStructureDrawer::drawStructuresSecondLayer()
 
 void cStructureDrawer::drawStructuresHealthBars()
 {
-    cGameControlsContext *context = game.getPlayer(HUMAN).getGameControlsContext();
+    cGameControlsContext *context = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext();
 
     // DRAW HEALTH
     if (context->isMouseOverStructure()) {
@@ -156,7 +156,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
     // :-/
     if (game.isDebugMode()) {
-        cPlayer &humanPlayer = game.getPlayer(HUMAN);
+        cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
         cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
         if (pStructure && pStructure == structure) {
             cMouse *pMouse = game.getMouse();
@@ -281,7 +281,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
     assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
-    cUnit &pUnit = game.getUnit(unitId);
+    cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
     int iconId = pUnit.getUnitInfo().icon;
 
     int iconWidth = (m_gfxinter->getSurface(iconId))->w;
@@ -332,7 +332,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            cPlayer &player = game.getPlayer(HUMAN); // TODO: Pass it as variable? (instead of getting it from here)
+            cPlayer &player = game.m_gameObjectsContext->getPlayer(HUMAN); // TODO: Pass it as variable? (instead of getting it from here)
             // regardless if selected, render this so you know from which structure things will come?
             if (player.isPrimaryStructureForStructureType(theStructure->getType(), i)) {
                 drawRectangleOfStructure(theStructure, player.getPrimaryBuildingFadingColor());

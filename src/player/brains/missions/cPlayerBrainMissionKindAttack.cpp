@@ -70,7 +70,7 @@ int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 {
     int target = -1;
     for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.getUnit(i);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.getPlayer() == player) continue; // skip self
         if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
@@ -102,7 +102,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
 
         const std::vector<int> &units = mission->getUnits();
         for (auto &myUnit : units) {
-            cUnit &aUnit = game.getUnit(myUnit);
+            cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
             if (aUnit.isValid() && aUnit.isIdle()) {
                 log("cPlayerBrainMissionKindAttack::thinkState_Execute(): Ordering unit to attack!");
                 aUnit.attackStructure(targetStructureID);
@@ -112,7 +112,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
     else if (targetUnitID > -1) {
         const std::vector<int> &units = mission->getUnits();
         for (auto &myUnit : units) {
-            cUnit &aUnit = game.getUnit(myUnit);
+            cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
             if (aUnit.isValid() && aUnit.isIdle()) {
                 log("cPlayerBrainMissionKindAttack::thinkState_Execute(): Ordering unit to attack!");
                 aUnit.attackUnit(targetUnitID);
@@ -142,7 +142,7 @@ void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainMissionKindAttack::onEventDeviated(const s_GameEvent &event)
 {
     if (event.entityType == UNIT) {
-        cUnit &entityUnit = game.getUnit(event.entityID);
+        cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
         if (entityUnit.getPlayer() == player) {
             // the unit is ours, if it was a target, then we can forget it.
             if (targetUnitID == event.entityID) {

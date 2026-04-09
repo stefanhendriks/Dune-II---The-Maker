@@ -633,7 +633,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         if (playableFaction) {
             if (!sSkirmishPlayer.bPlaying) {
                 // make sure it is a brain dead AI...
-                cPlayer &cPlayer = game.getPlayer(p);
+                cPlayer &cPlayer = game.m_gameObjectsContext->getPlayer(p);
                 cPlayer.init(p, nullptr);
                 continue;
             }
@@ -659,7 +659,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                             houseInUse = true;
                         }
 
-                        if (game.getPlayer(pl).getHouse() == iHouse) {
+                        if (game.m_gameObjectsContext->getPlayer(pl).getHouse() == iHouse) {
                             // already in use by a already-setup player
                             houseInUse = true;
                         }
@@ -680,7 +680,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             }
         }
 
-        cPlayer &pPlayer = game.getPlayer(p);
+        cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(p);
 
         // TEAM Logic
         if (p == HUMAN) {
@@ -749,7 +749,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         int iType = RNG::rnd(12);
 
         for (int p = 0; p < MAX_PLAYERS; p++) {
-            cPlayer &pPlayer = game.getPlayer(p);
+            cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(p);
             s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
 
             if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
@@ -779,7 +779,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = game.getPlayer(p);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(p);
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
         if (p == HUMAN) {
             player.setTeam(sSkirmishPlayer.team);
@@ -797,9 +797,9 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = game.getPlayer(p);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(p);
         if (player.getHouse() == ATREIDES) {
-            game.getPlayer(AI_CPU5).setTeam(player.getTeam());
+            game.m_gameObjectsContext->getPlayer(AI_CPU5).setTeam(player.getTeam());
         }
     }
 

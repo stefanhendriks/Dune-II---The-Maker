@@ -76,7 +76,7 @@ int cUnits::getValidUnitsCount() const {
 static int unitNewID()
 {
     for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++)
-        if (!game.getUnit(i).isValid())
+        if (!game.m_gameObjectsContext->getUnit(i).isValid())
             return i;
 
     return -1; // NONE
@@ -132,7 +132,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
         return -1;
     }
 
-    cUnit &newUnit = game.getUnit(iNewId);
+    cUnit &newUnit = game.m_gameObjectsContext->getUnit(iNewId);
     newUnit.init(iNewId);
 
     newUnit.setCell(iCll);
@@ -172,7 +172,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
         if (iF > -1) {
             newUnit.log("Order move #2");
-            game.getUnit(iNewId).move_to(iF);
+            game.m_gameObjectsContext->getUnit(iNewId).move_to(iF);
         }
     }
 

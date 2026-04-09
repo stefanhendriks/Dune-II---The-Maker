@@ -29,7 +29,7 @@ void cPlayerBrainSandworm::think()
     // loop through all its worms and move them around
     const std::vector<int> &wormIds = player->getAllMyUnitsForType(SANDWORM);
     for (auto &i : wormIds) {
-        cUnit &pSandWorm = game.getUnit(i);
+        cUnit &pSandWorm = game.m_gameObjectsContext->getUnit(i);
 
         // when on guard
         bool allowedToMove = pSandWorm.movewaitTimer.get() < 1;

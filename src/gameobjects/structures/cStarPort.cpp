@@ -75,7 +75,7 @@ void cStarPort::think_deploy()
         if (TIMER_deploy < 0) {
             TIMER_deploy = 1;
             // deploy unit
-            cOrderProcesser *orderProcesser = game.getPlayer(iPlayer).getOrderProcesser();
+            cOrderProcesser *orderProcesser = game.m_gameObjectsContext->getPlayer(iPlayer).getOrderProcesser();
             cBuildingListItem *item = orderProcesser->getItemToDeploy();
             if (item) {
                 int cellToDeployTo = getNonOccupiedCellAroundStructure();
@@ -86,7 +86,7 @@ void cStarPort::think_deploy()
                 if (cellToDeployTo >= 0) {
                     int id = cUnits::unitCreate(cellToDeployTo, item->getBuildId(), iPlayer, true);
                     if (rallyPoint > -1) {
-                        game.getUnit(id).move_to(rallyPoint, -1, -1);
+                        game.m_gameObjectsContext->getUnit(id).move_to(rallyPoint, -1, -1);
                     }
                     game.playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
                 }

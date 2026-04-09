@@ -96,7 +96,7 @@ int cParticle::draw_y() const {
 void cParticle::think_position()
 {
     if (boundUnitID > -1) {
-        cUnit &pUnit = game.getUnit(boundUnitID);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(boundUnitID);
         if (!pUnit.isValid()) {
             bindToUnit(-1);
         }
@@ -778,7 +778,7 @@ void cParticle::think_new()
 void cParticle::bindToUnit(int unitID)
 {
     if (boundUnitID > -1) {
-        cUnit &pUnit = game.getUnit(boundUnitID);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(boundUnitID);
         if (pUnit.isValid()) {
             pUnit.setBoundParticleId(-1);
         }
@@ -847,7 +847,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
     
-    cPlayer &player = game.getPlayer(this->iHousePal);
+    cPlayer &player = game.m_gameObjectsContext->getPlayer(this->iHousePal);
     auto tex = gfxdata->getSurface(bmpIndex);
     auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {
