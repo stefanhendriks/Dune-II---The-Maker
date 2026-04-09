@@ -1,14 +1,23 @@
 #include "cKeyboard.h"
 #include "cKeyboardEvent.h"
+#include "utils/cIniFile.h"
 
 #include <algorithm>
 
 cKeyboard::cKeyboard() :
     m_keyboardObserver(nullptr),
-    m_keyBindings(nullptr),
+    m_keyBindings(),
     m_keysPressed(),
     m_currentCombo()
 {
+}
+
+void cKeyboard::loadKeyBindings(const cSection *section)
+{
+    m_keyBindings.loadDefaults();
+    if (section) {
+        m_keyBindings.loadFromSection(*section);
+    }
 }
 
 void cKeyboard::handleEvent(const SDL_Event &event)
@@ -33,10 +42,10 @@ void cKeyboard::handleEvent(const SDL_Event &event)
 void cKeyboard::updateState()
 {
     if (!m_keysPressed.empty()) {
-        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, m_keysPressed, m_currentCombo, m_keyBindings));
+        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, m_keysPressed, m_currentCombo, &m_keyBindings));
     }
     if (!m_keysReleased.empty()) {
-        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, m_keysReleased, m_currentCombo, m_keyBindings));
+        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, m_keysReleased, m_currentCombo, &m_keyBindings));
         m_keysReleased.clear();
     }
 }
