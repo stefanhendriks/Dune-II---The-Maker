@@ -18,7 +18,7 @@
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
 // #include "game/cTimeManager.h"
-#include "utils/cIniFile.h"
+//#include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
 // #include "map/cMap.h"
 #include "player/cPlayers.h"
