@@ -1,5 +1,7 @@
 #include "cPlayerBrainMission.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
+// #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"

@@ -1,6 +1,7 @@
 #include "cStructureFactory.h"
 
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/structures/cStructures.h"
 
 #include "cBarracks.h"
 #include "cConstYard.h"

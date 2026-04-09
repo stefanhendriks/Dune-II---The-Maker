@@ -7,6 +7,8 @@
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureFactory.h"
+// #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 #include "player/cHousesInfo.h"

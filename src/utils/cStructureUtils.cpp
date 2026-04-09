@@ -6,6 +6,8 @@
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
 #include "gameobjects/structures/cWindTrap.h"
+// #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "map/cMapCamera.h"
 #include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"

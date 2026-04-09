@@ -20,6 +20,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/d2tm_math.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/particles/cParticles.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>

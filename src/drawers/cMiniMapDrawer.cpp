@@ -1,6 +1,7 @@
 #include "cMiniMapDrawer.h"
 #include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
+#include "gameobjects/structures/cStructures.h"
 #include "map/cMapCamera.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"

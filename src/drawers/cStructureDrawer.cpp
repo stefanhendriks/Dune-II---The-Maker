@@ -2,6 +2,8 @@
 #include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
 #include "controls/cGameControlsContext.h"
+#include "gameobjects/particles/cParticle.h"
+#include "gameobjects/structures/cStructures.h"
 #include "data/gfxdata.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
