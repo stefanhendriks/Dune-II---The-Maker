@@ -1,4 +1,5 @@
 #include "cGameControlsContext.h"
+#include "game/cGameSettings.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "data/gfxdata.h"
 #include "game/cGame.h"
@@ -57,7 +58,7 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords)
         return;
     }
 
-    if (coords.x > (game.m_screenW - cSideBar::SidebarWidth)) {
+    if (coords.x > (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth)) {
         m_mouseCell = MOUSE_CELL_HOVER_SIDEBAR; // on sidebar
         m_mouseOnBattleField = false;
         return;

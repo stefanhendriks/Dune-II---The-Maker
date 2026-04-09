@@ -16,7 +16,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int margin = m_game.m_screenH * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = m_game.m_screenW - (margin * 2);
+    int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
     int mainMenuHeight = m_game.m_screenH - (margin * 2);
 
     margin = 4;

@@ -145,7 +145,11 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 {
     // keep settings alive after initialization
     m_screenW = gs->screenW;
+    m_gameSettings->m_screenW = gs->screenW;
+
     m_screenH = gs->screenH;
+    m_gameSettings->m_screenH = gs->screenH;
+
     m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
     m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
     m_cameraEdgeMove = gs->cameraEdgeMove;
@@ -652,7 +656,7 @@ bool cGame::setupGame()
     /***
      * Viewport(s)
      */
-    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_screenW - cSideBar::SidebarWidth, game.m_screenH - cSideBar::TopBarHeight);
+    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, game.m_screenH - cSideBar::TopBarHeight);
 
     logbook("Color conversion method set");
 
@@ -1051,7 +1055,7 @@ void cGame::changeStateFromMentat()
         game.m_drawManager->missionInit();
 
         // CENTER MOUSE
-        game.setMousePosition(game.m_screenW / 2, game.m_screenH / 2);
+        game.setMousePosition(game.m_gameSettings->getScreenW() / 2, game.m_screenH / 2);
 
         game.initiateFadingOut();
 
@@ -1752,9 +1756,9 @@ void cGame::drawTextFps() const
 void cGame::drawTextTime() const
 {
     auto time = m_timeManager->getCurrentTime();
-    m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
+    m_textDrawer->drawText(game.m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
     time = m_timeManager->getCurrentTimer();
-    m_textDrawer->drawText(game.m_screenW- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
+    m_textDrawer->drawText(game.m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
 }
 
 void cGame::checkMissionWinOrFail()

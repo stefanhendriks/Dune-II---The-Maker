@@ -1,5 +1,5 @@
 #include "cSideBar.h"
-
+#include "game/cGameSettings.h"
 #include "building/cItemBuilder.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -137,7 +137,7 @@ void cSideBar::thinkProgressAnimation()
 
 void cSideBar::onMouseAt(const s_MouseEvent &event)
 {
-    m_isMouseOverSidebarValue = event.coords.x > (game.m_screenW - cSideBar::SidebarWidth);
+    m_isMouseOverSidebarValue = event.coords.x > (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth);
     game.m_drawManager->setKeepMessage(m_isMouseOverSidebarValue);
 
     if (m_selectedListID < 0) return;

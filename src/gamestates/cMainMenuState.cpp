@@ -26,7 +26,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
 
-    int centerOfScreen = m_game.m_screenW / 2;
+    int centerOfScreen = m_game.m_gameSettings->getScreenW() / 2;
 
     logoX = centerOfScreen - (logoWidth / 2);
     logoY = (logoHeight/10);
@@ -49,7 +49,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     int buttonWidth = m_textDrawer->getTextLength("CREDITS") / 2;
     int buttonHeight = m_textDrawer->getFontHeight() + 4; // a bit more space
 
-    int creditsX = (m_game.m_screenW / 2) - buttonWidth;
+    int creditsX = (m_game.m_gameSettings->getScreenW() / 2) - buttonWidth;
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
 
     gui_btn_credits = GuiButtonBuilder()
@@ -200,9 +200,9 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
     // prepare to drawing in cache texture
     if (m_game.isDebugMode()) {
-        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_screenW, m_game.m_screenH);
+        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_gameSettings->getScreenW(), m_game.m_screenH);
         m_renderDrawer->beginDrawingToTexture(backGroundDebug);
-        for (int x = 0; x < m_game.m_screenW; x += 60) {
+        for (int x = 0; x < m_game.m_gameSettings->getScreenW(); x += 60) {
             for (int y = 0; y < m_game.m_screenH; y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }

@@ -1,5 +1,5 @@
 #include "cMiniMapDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
 #include "map/cMapCamera.h"
 #include "game/cGame.h"
@@ -41,7 +41,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
-    int topLeftX = game.m_screenW - cSideBar::WidthOfMinimap;
+    int topLeftX = game.m_gameSettings->getScreenW() - cSideBar::WidthOfMinimap;
     m_drawX = topLeftX + (halfWidthOfMinimap - m_factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;

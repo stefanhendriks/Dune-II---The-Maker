@@ -1,5 +1,5 @@
 #include "cBuildingListDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -116,7 +116,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
 int cBuildingListDrawer::getDrawX()
 {
-    return (game.m_screenW - cSideBar::SidebarWidthWithoutCandyBar) + 2;
+    return (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar) + 2;
 }
 
 int cBuildingListDrawer::getDrawY()
