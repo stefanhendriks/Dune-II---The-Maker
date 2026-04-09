@@ -11,6 +11,7 @@
 #include "utils/Graphics.hpp"
 #include "map/cMap.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
 #include <SDL2/SDL.h>
 
 #include <cassert>

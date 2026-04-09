@@ -33,6 +33,7 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/sTerrainInfo.h"
 #include "utils/RNG.hpp"
+#include "gameobjects/units/cUnits.h"
 
 #include <format>
 #include <filesystem>

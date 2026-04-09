@@ -6,6 +6,7 @@
 #include "cPlayerBrainMissionKindDeathHand.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
 #include "cPlayerBrainMissionKindFremen.h"
+#include "gameobjects/units/cUnits.h"
 #include "sidebar/cSideBar.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"

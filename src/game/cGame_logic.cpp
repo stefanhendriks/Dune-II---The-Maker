@@ -71,6 +71,7 @@
 #include "player/cPlayers.h"
 #include "sidebar/cBuildingListFactory.h"
 #include "sidebar/cSideBarFactory.h"
+#include "gameobjects/units/cUnits.h"
 
 #include "utils/cFileValidator.h"
 #include "utils/cFocusManager.h"

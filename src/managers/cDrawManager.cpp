@@ -13,6 +13,7 @@
 #include "gameobjects/projectiles/cBullets.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
+#include "gameobjects/units/cUnits.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
