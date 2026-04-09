@@ -75,6 +75,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "utils/InitialGameSettings.hpp"
+#include "game/cGameSettings.h"
 #include "utils/Graphics.hpp"
 #include "utils/ini.h"
 #include "utils/RNG.hpp"
@@ -136,6 +137,8 @@ cGame::cGame()
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
 
     m_cScreenFader = std::make_unique<cScreenFader>();
+
+    m_gameSettings = std::make_unique<cGameSettings>();
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
