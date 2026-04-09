@@ -162,7 +162,9 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_debugMode = gs->debugMode;
     m_drawUnitDebug = gs->drawUnitDebug;
     m_pauseWhenLosingFocus = gs->pauseWhenLosingFocus;
-    m_disableAI = gs->disableAI;
+    //m_disableAI = gs->disableAI;
+    m_gameSettings->m_disableAI = gs->disableAI;
+
     m_oneAi = gs->oneAi;
     m_disableWormAi = gs->disableWormAi;
     m_disableReinforcements = gs->disableReinforcements;
@@ -284,7 +286,7 @@ void cGame::initPlayers(bool rememberHouse) const
 
         if (i > HUMAN && i < AI_CPU5) {
             // TODO: playing attribute? (from ai player class?)
-            if (!game.m_disableAI) {
+            if (!game.m_gameSettings->isDisableAI()) {
                 if (maxThinkingAIs > 0) {
                     if (game.m_skirmish) {
                         brain = new brains::cPlayerBrainSkirmish(&pPlayer);
