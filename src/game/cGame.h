@@ -13,7 +13,6 @@
 
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
-#include "controls/cKeyBindings.h"
 #include "definitions.h"
 #include "include/eGameState.h"
 //#include "observers/cScenarioObserver.h"
@@ -290,8 +289,6 @@ private:
 
     std::shared_ptr<cReinforcements> m_reinforcements;
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
-
-    cKeyBindings m_keyBindings;
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
