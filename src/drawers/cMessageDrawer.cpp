@@ -7,6 +7,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "game/cGameSettings.h"
 
 #include <SDL2/SDL.h>
 #include <cassert>
@@ -130,7 +131,7 @@ void cMessageDrawer::initCombatPosition()
 
     int margin = 4;
     int widthOfOptionsButton = 160 + margin;
-    int desiredWidth = game.m_screenW - (cSideBar::SidebarWidth + widthOfOptionsButton);
+    int desiredWidth = game.m_gameSettings->getScreenW() - (cSideBar::SidebarWidth + widthOfOptionsButton);
     createMessageBarBmp(desiredWidth);
     // default positions in-game (battle mode)
     m_position.x = widthOfOptionsButton;

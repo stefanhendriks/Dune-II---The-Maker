@@ -5,7 +5,7 @@
 #include "include/d2tmc.h"
 #include "sidebar/cSideBar.h"
 #include "map/MapGeometry.hpp"
-
+#include "game/cGameSettings.h"
 #include <algorithm>
 #include <cassert>
 
@@ -26,7 +26,7 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     int widthOfSidebar = cSideBar::SidebarWidth;
     m_heightOfTopBar = cSideBar::TopBarHeight;
 
-    m_windowWidth= game.m_screenW - widthOfSidebar;
+    m_windowWidth= game.m_gameSettings->getScreenW() - widthOfSidebar;
     m_windowHeight= game.m_screenH - m_heightOfTopBar;
 
     m_viewportWidth=m_windowWidth;
@@ -211,7 +211,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_LEFT);
         }
-        else if (mouseX >= (game.m_screenW - 2)) {
+        else if (mouseX >= (game.m_gameSettings->getScreenW() - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_RIGHT);
         }

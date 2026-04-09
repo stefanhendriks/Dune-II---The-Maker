@@ -5,6 +5,7 @@
 
 #include "context/GraphicsContext.hpp"
 #include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
 
 class cTimeManager;
 class cSoundPlayer;

@@ -1,5 +1,5 @@
 #include "cFlag.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
@@ -28,7 +28,7 @@ void cFlag::draw()
     int drawX = game.m_mapCamera->getWindowXPosition(m_absCoords.x);
     int drawY = game.m_mapCamera->getWindowYPosition(m_absCoords.y);
 
-    if ((drawX >= 0 && drawX < game.m_screenW) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
+    if ((drawX >= 0 && drawX < game.m_gameSettings->getScreenW()) && (drawY >= 0 && drawY < game.m_screenH)) { // within screen
         // draw it
 
         int pixelWidth = flagBitmap->w;

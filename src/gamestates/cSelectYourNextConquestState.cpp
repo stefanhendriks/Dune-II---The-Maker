@@ -70,7 +70,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     isFinishedConqueringRegions = true;
 
     int length = m_textDrawer->getTextLength("Mission select");
-    const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_game.m_screenW - length,
+    const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_game.m_gameSettings->getScreenW() - length,
                                             m_game.m_screenH - m_textDrawer->getFontHeight(),
                                             "Mission select");
     GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
@@ -88,7 +88,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
 
 void cSelectYourNextConquestState::calculateOffset()
 {
-    offsetX = (m_game.m_screenW - 640) / 2;
+    offsetX = (m_game.m_gameSettings->getScreenW() - 640) / 2;
     offsetY = (m_game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
 }
 
