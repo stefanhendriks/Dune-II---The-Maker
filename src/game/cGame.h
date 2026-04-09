@@ -83,7 +83,7 @@ public:
     }
 
     // resolution of the game
-    int m_screenW;
+    //int m_screenW;
     int m_screenH;
 
     bool m_disableAI;                       // disable AI thinking?
