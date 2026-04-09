@@ -87,6 +87,7 @@
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "map/cMapCamera.h"
+#include "game/cTimeManager.h"
 
 #include <format>
 

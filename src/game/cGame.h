@@ -17,7 +17,7 @@
 #include "include/enums GameState.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-#include "game/cTimeManager.h"
+// #include "game/cTimeManager.h"
 #include "utils/cIniFile.h"
 #include "map/cPreviewMaps.h"
 // #include "map/cMap.h"
@@ -58,6 +58,7 @@ class cScreenFader;
 class SDLDrawer;
 class cMapCamera;
 class cDrawManager;
+class cTimeManager;
 
 struct s_DataCampaign;
 // Naming thoughts:
