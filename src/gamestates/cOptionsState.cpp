@@ -9,6 +9,7 @@
 #include "gui/GuiLabel.hpp"
 #include "gui/GuiCheckBox.hpp"
 #include "gui/GuiSlider.hpp"
+#include "game/cTimeManager.h"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
