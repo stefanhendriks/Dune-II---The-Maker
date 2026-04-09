@@ -617,7 +617,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         maxThinkingAIs = 1;
     }
 
-    if (m_game.m_disableAI) {
+    if (m_game.m_gameSettings->isDisableAI()) {
         maxThinkingAIs = 0;
     }
 
