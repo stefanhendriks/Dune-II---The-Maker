@@ -24,6 +24,7 @@
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStarPort.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "map/cMapCamera.h"
 #include "map/cMapEditor.h"
 #include "map/MapGeometry.hpp"

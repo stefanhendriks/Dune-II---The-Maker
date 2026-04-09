@@ -10,6 +10,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/Graphics.hpp"

@@ -26,6 +26,7 @@
 #include "utils/InitialGameSettings.hpp"
 // #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "utils/d2tm_math.h"
 
 #include <cmath>
