@@ -4,6 +4,8 @@
 #include "include/d2tmc.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/particles/cParticle.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 
 void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {

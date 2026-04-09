@@ -4,6 +4,7 @@
 #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "gameobjects/structures/cAbstractStructure.h"
+#include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "player/cPlayer.h"

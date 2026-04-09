@@ -4,6 +4,8 @@
 #include "include/definitions.h"
 #include "building/cItemBuilder.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "config.h"

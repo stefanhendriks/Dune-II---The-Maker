@@ -35,6 +35,8 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureInfo.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"
