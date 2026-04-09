@@ -17,6 +17,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/units/cUnits.h"
 #include <SDL2/SDL.h>
 #include <format>
 #include "managers/cDrawManager.h"

@@ -2,6 +2,7 @@
 #include "game/cGameSettings.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
 #include "map/cMap.h"
 #include "data/gfxdata.h"
 #include "game/cGame.h"

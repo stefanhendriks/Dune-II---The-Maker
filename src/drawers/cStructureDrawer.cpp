@@ -11,6 +11,7 @@
 #include "gameobjects/structures/cRepairFacility.h"
 #include "gameobjects/structures/cRocketTurret.h"
 #include "gameobjects/structures/cWindTrap.h"
+#include "gameobjects/units/cUnits.h"
 #include "sidebar/cSideBar.h"
 #include "map/cMapCamera.h"
 #include "map/cMap.h"
