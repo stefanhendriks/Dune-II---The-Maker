@@ -24,7 +24,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);
     int duneAtTheRight = m_game.m_gameSettings->getScreenW() - (m_duneBmp->w * 1.1f);
-    int duneAlmostAtBottom = m_game.m_screenH - (m_duneBmp->h * 1.1f);
+    int duneAlmostAtBottom = m_game.m_gameSettings->getScreenH() - (m_duneBmp->h * 1.1f);
     m_duneCoordinates = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
     int titleWidth = m_titleBmp->w;
@@ -37,7 +37,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
 
     int backButtonWidth = m_textDrawer->getTextLength(" BACK");
     int backButtonHeight = 21;
-    int backButtonY = m_game.m_screenH - 21;
+    int backButtonY = m_game.m_gameSettings->getScreenH() - 21;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     backButton = GuiButtonBuilder()
@@ -355,7 +355,7 @@ void cCreditsState::prepareCrawlerLines()
 
 void cCreditsState::resetCrawler()
 {
-    m_crawlerY = m_game.m_screenH + 1;
+    m_crawlerY = m_game.m_gameSettings->getScreenH() + 1;
 }
 
 cCreditsState::~cCreditsState()

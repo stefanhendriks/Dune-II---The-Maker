@@ -200,10 +200,10 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
     // prepare to drawing in cache texture
     if (m_game.isDebugMode()) {
-        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_gameSettings->getScreenW(), m_game.m_screenH);
+        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_gameSettings->getScreenW(), m_game.m_gameSettings->getScreenH());
         m_renderDrawer->beginDrawingToTexture(backGroundDebug);
         for (int x = 0; x < m_game.m_gameSettings->getScreenW(); x += 60) {
-            for (int y = 0; y < m_game.m_screenH; y += 20) {
+            for (int y = 0; y < m_game.m_gameSettings->getScreenH(); y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }

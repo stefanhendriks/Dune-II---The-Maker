@@ -90,7 +90,7 @@ void cBullet::draw()
     if (x < -getBulletBmpWidth() || x > (game.m_gameSettings->getScreenW() + getBulletBmpWidth()))
         return;
 
-    if (y < getBulletBmpHeight() || y > game.m_screenH + getBulletBmpHeight())
+    if (y < getBulletBmpHeight() || y > game.m_gameSettings->getScreenH() + getBulletBmpHeight())
         return;
 
     int ba = bullet_face_angle(fDegrees(posX, posY, targetX, targetY));

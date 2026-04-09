@@ -84,7 +84,7 @@ public:
 
     // resolution of the game
     //int m_screenW;
-    int m_screenH;
+    // int m_screenH;
 
     bool m_disableAI;                       // disable AI thinking?
     bool m_oneAi;                           // disable all but one AI brain? (default == false)

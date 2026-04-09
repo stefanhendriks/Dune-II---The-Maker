@@ -109,7 +109,7 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
     TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
     int lenghtInPixels = w;
     int x = game.m_gameSettings->getScreenW() - lenghtInPixels-margin;
-    int y = game.m_screenH - getFontHeight()-20-margin;
+    int y = game.m_gameSettings->getScreenH() - getFontHeight()-20-margin;
     drawText(x, y, color, msg);
 }
 
@@ -123,7 +123,7 @@ void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int ma
     if (msg.empty()) return;
     int w,h;
     TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
-    int y = game.m_screenH - h-20-margin;
+    int y = game.m_gameSettings->getScreenH() - h-20-margin;
     drawText(margin, y, color, msg);
 }
 

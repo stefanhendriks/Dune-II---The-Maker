@@ -44,7 +44,7 @@ int cMouseDrawer::getDrawYToolTip(int height)
     int y = m_mouseY + 32;
 
     // correct drawing position so it does not fall off screen.
-    int diffY = (y + height) - game.m_screenH;
+    int diffY = (y + height) - game.m_gameSettings->getScreenH();
     if (diffY > 0) {
         y -= diffY;
     }

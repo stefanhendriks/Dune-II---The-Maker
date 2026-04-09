@@ -54,7 +54,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_screenH);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_gameSettings->getScreenH());
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
@@ -183,7 +183,7 @@ void cDrawManager::drawRallyPoint()
 
 void cDrawManager::drawSidebar()
 {
-    m_renderDrawer->setClippingFor(game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, game.m_gameSettings->getScreenW(), game.m_screenH);
+    m_renderDrawer->setClippingFor(game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, game.m_gameSettings->getScreenW(), game.m_gameSettings->getScreenH());
     m_sidebarDrawer->draw();
     m_miniMapDrawer->draw();
     m_renderDrawer->resetClippingFor();
@@ -267,7 +267,7 @@ void cDrawManager::drawNotifications()
 {
     std::vector<cPlayerNotification> &notifications = m_player->getNotifications();
 //    int y = cSideBar::TopBarHeight + 14; // 12 pixels
-    int y = game.m_screenH - 44;
+    int y = game.m_gameSettings->getScreenH() - 44;
     for (auto &notification : notifications) {
         m_textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;
