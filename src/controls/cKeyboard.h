@@ -1,16 +1,18 @@
 #pragma once
 
-#include "controls/cKeyBindings.h"
 #include "controls/eKeyboardEnum.h"
 #include "observers/cInputObserver.h"
 #include <SDL2/SDL.h>
+#include <memory>
 #include <set>
 
+class cKeyBindings;
 class cSection;
 
 class cKeyboard {
 public:
     cKeyboard();
+    ~cKeyboard();
     void handleEvent(const SDL_Event &event);
     void updateState();
 
@@ -26,7 +28,7 @@ public:
 
 private:
     cInputObserver *m_keyboardObserver;
-    cKeyBindings m_keyBindings;
+    std::unique_ptr<cKeyBindings> m_keyBindings;
     std::set<SDL_Scancode> m_keysPressed;
     std::set<SDL_Scancode> m_keysReleased;
     s_KeysCombo m_currentCombo;
