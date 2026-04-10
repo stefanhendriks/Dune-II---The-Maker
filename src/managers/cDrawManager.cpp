@@ -106,7 +106,7 @@ void cDrawManager::drawCombatState()
 
     m_renderDrawer->resetClippingFor();
 
-    if (game.m_drawUsages) {
+    if (game.m_gameSettings->isDrawUsages()) {
         drawDebugInfoUsages();
         m_particleDrawer->drawDebugInfo(m_textDrawer);
     }
