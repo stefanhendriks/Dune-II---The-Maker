@@ -20,6 +20,8 @@
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <cassert>
 

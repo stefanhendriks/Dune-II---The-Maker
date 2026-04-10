@@ -11,7 +11,8 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <format>
 #include <cassert>
 #include <algorithm>

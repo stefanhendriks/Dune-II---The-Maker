@@ -4,6 +4,8 @@
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/units/cUnits.h"
 #include "utils/cStructureUtils.h"

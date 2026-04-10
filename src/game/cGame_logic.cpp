@@ -94,6 +94,8 @@
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "map/cMapCamera.h"
 #include "game/cTimeManager.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <format>
 

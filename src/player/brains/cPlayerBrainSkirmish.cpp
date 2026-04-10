@@ -1,5 +1,6 @@
 #include "cPlayerBrainSkirmish.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "actions/cRespondToThreatAction.h"
 //#include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"

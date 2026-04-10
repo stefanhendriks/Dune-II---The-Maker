@@ -1,5 +1,6 @@
 #include "cPlayerDifficultySettings.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "definitions.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"

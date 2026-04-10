@@ -6,6 +6,8 @@
 #include "utils/cLog.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/structures/cOrderProcesser.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <format>
 #include <cassert>

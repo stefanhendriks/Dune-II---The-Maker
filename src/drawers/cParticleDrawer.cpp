@@ -6,6 +6,8 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {

@@ -23,7 +23,8 @@
 #include "player/cPlayerDifficultySettings.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/units/cUnits.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <SDL2/SDL.h>
 #include <format>

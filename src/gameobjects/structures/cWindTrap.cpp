@@ -6,6 +6,8 @@
 #include "definitions.h"
 #include "player/cPlayer.h"
 #include "utils/RNG.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <format>
 
 // Constructor

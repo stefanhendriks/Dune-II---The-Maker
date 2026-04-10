@@ -12,6 +12,8 @@
 #include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
 #include "map/MapGeometry.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <algorithm>
 #include <cassert>
 

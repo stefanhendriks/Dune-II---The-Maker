@@ -8,6 +8,8 @@
 #include "player/cPlayers.h"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <algorithm>
 #include <format>
 

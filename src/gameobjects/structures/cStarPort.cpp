@@ -11,6 +11,8 @@
 #include "utils/cSoundPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cStarPort::cStarPort()
 {
