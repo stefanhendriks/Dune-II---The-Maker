@@ -122,7 +122,7 @@ void cGamePlaying::thinkSlow()
     game.m_pathsCreated = 0;
 
     //@mira
-    if (!game.m_disableReinforcements) {
+    if (!game.m_gameSettings->isDisableReinforcements()) {
         m_reinforcements->thinkSlow();
     }
 
