@@ -215,7 +215,7 @@ void cGame::init()
     m_missionWasWon = false;
     m_currentState = nullptr;
     m_gameSettings->m_playing = true;
-    m_skirmish = false;
+    m_gameSettings->m_skirmish = false;
 
     m_musicVolume = 96; // volume is 0...
 
@@ -314,7 +314,7 @@ void cGame::initPlayers(bool rememberHouse) const
             // TODO: playing attribute? (from ai player class?)
             if (!game.m_gameSettings->isDisableAI()) {
                 if (maxThinkingAIs > 0) {
-                    if (game.m_skirmish) {
+                    if (game.m_gameSettings->isSkirmish()) {
                         brain = new brains::cPlayerBrainSkirmish(&pPlayer);
                     }
                     else {
@@ -340,7 +340,7 @@ void cGame::initPlayers(bool rememberHouse) const
             pPlayer.setHouse(h);
         }
 
-        if (m_skirmish) {
+        if (m_gameSettings->m_skirmish) {
             pPlayer.setCredits(2500);
         }
     }
@@ -1091,7 +1091,7 @@ void cGame::changeStateFromMentat()
         return;
     }
 
-    if (game.m_skirmish) {
+    if (game.m_gameSettings->isSkirmish()) {
         if (game.isState(GAME_WINBRIEF) || game.isState(GAME_LOSEBRIEF)) {
             // regardless of drawStateWinning or drawStateLosing, always go back to main menu
             game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);

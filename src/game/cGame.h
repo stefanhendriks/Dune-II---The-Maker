@@ -103,7 +103,7 @@ public:
     // bool m_playMusic;                       // play any music?
 
     // bool m_playing;				    // playing or not
-    bool m_skirmish;                // playing a skirmish game or not
+    // bool m_skirmish;                // playing a skirmish game or not
     bool m_drawFps;
     bool m_drawTime;
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false

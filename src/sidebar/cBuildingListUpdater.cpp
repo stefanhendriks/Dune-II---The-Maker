@@ -8,6 +8,7 @@
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 
 #include <format>
 #include <cassert>
@@ -30,7 +31,7 @@ void cBuildingListUpdater::onStructureCreated(int structureType)
     else {
         // AI m_players...
 
-        if (game.m_skirmish) {
+        if (game.m_gameSettings->isSkirmish()) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human m_players)
             onStructureCreatedSkirmishMode(structureType);
             evaluateUpgrades();
@@ -460,7 +461,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType)
     else {
         // AI m_players...
 
-        if (game.m_skirmish) {
+        if (game.m_gameSettings->isSkirmish()) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human m_players)
             onStructureDestroyedSkirmishMode();
             evaluateUpgrades();

@@ -349,7 +349,7 @@ bool cPlayer::bEnoughSpiceCapacityToStoreCredits(int threshold) const
 
 bool cPlayer::bEnoughPower() const
 {
-    if (!game.m_skirmish) {
+    if (!game.m_gameSettings->isSkirmish()) {
         // AI cheats on power
         if (!m_Human) {
             // Dune 2 non-skirmish AI cheats; else it will be unplayable in some missions.
@@ -1376,7 +1376,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
         }
 
         // HACK HACK: the AI player does not need to discover an enemy player yet
-        if (isVisibleForPlayer || game.m_skirmish) {
+        if (isVisibleForPlayer || game.m_gameSettings->isSkirmish()) {
             iTargets[maxTargets] = i;
             maxTargets++;
 
@@ -1404,7 +1404,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
         if (game.m_gameObjectsContext->getStructures()[i])
             if (game.m_gameObjectsContext->getStructures()[i]->getOwner() == iAttackPlayer)
                 if (game.m_gameObjectsContext->getMap().isVisible(game.m_gameObjectsContext->getStructures()[i]->getCell(), this) ||
-                        game.m_skirmish) {
+                        game.m_gameSettings->isSkirmish()) {
                     iTargets[iT] = i;
 
                     iT++;

@@ -338,7 +338,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer *pPlayer)
         }
     }
 
-    if (!game.m_skirmish) {
+    if (!game.m_gameSettings->isSkirmish()) {
         // ?? (mission 9 etc AI has no power)
     }
     return totalPowerOut;

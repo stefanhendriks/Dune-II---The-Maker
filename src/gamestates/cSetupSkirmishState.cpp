@@ -575,7 +575,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     m_game.setupPlayers();
 
     // Starting skirmish mode
-    m_game.m_skirmish = true;
+    m_game.m_gameSettings->setSkirmish(true);
 
     /* set up starting positions */
     std::vector<int> iStartPositions;

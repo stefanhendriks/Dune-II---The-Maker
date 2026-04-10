@@ -49,6 +49,9 @@ public:
     bool isSkirmish() const {
         return m_skirmish;
     }
+    void setSkirmish(bool value) {
+        m_skirmish = value;
+    }
     bool shouldDrawFps() const {
         return m_drawFps;
     }
