@@ -11,6 +11,8 @@
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cRandomMapGenerator::cRandomMapGenerator()
 {

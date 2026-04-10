@@ -9,6 +9,8 @@
 #include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "map/cMapCamera.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <cassert>
 

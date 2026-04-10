@@ -14,6 +14,8 @@
 
 #include "utils/cLog.h"
 #include "data/gfxdata.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <format>
 #include <algorithm>

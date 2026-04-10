@@ -20,6 +20,8 @@
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "include/sDataCampaign.h"
 #include "gameobjects/units/cUnits.h"
 

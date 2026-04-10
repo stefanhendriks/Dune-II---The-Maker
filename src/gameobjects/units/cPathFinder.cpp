@@ -9,6 +9,8 @@
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
 #include "utils/d2tm_math.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 // Path creation definitions / var
 #define CLOSED        -1

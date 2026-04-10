@@ -1,4 +1,6 @@
 #include "game/cGameConditionChecker.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "game/cGame.h"
 #include "utils/cLog.h"
 #include "include/d2tmc.h"

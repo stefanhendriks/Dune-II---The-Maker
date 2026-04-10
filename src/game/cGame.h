@@ -28,8 +28,8 @@
 // #include "gameobjects/projectiles/cBullets.h"
 //#include "utils/cStructureUtils.h"
 #include "observers/cScenarioObserver.h"
-#include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
+//#include "context/cInfoContext.h"
+//#include "context/cGameObjectContext.h"
 #include "utils/Color.hpp"
 
 #include <memory>
@@ -38,6 +38,8 @@
 #include <SDL2/SDL_mixer.h>
 
 class cGameControlsContext;
+class cGameObjectContext;
+class cInfoContext;
 class cGameState;
 class cInteractionManager;
 class cPlatformLayerInit;
@@ -61,6 +63,7 @@ class cMapCamera;
 class cDrawManager;
 class cTimeManager;
 class cStructureUtils;
+class Texture;
 
 struct s_DataCampaign;
 struct s_PreviewMap;

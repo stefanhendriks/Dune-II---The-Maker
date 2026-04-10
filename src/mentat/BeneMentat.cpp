@@ -12,6 +12,8 @@
 #include <SDL2/SDL_ttf.h>
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <iostream>
 
 BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, false), m_dataCampaign(dataCampaign)

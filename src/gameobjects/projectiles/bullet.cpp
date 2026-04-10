@@ -32,6 +32,8 @@
 #include <cmath>
 
 #include "data/gfxaudio.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 static constexpr auto ANIMATION_SPEED = 12;
 

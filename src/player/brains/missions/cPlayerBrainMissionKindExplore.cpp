@@ -7,6 +7,9 @@
 #include <cassert>
 #include <format>
 
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
+
 namespace brains {
 
 cPlayerBrainMissionKindExplore::cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)

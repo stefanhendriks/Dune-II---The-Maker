@@ -33,6 +33,8 @@
 #include "gameobjects/sTerrainInfo.h"
 #include "utils/d2tm_math.h"
 #include "controls/cGameControlsContext.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cUnits.h"
 #include "drawers/cTextDrawer.h"
