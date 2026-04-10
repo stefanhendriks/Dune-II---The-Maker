@@ -36,7 +36,8 @@ cGamePlaying::cGamePlaying(cGame &theGame, GameContext* ctx) : cGameState(theGam
     assert(ctx != nullptr);
     m_reinforcements = game.getReinforcements();
     m_TIMER_evaluatePlayerStatus = 5;
-    game.m_pathsCreated = 0;
+    //game.m_pathsCreated = 0;
+    game.m_gameSettings->setPathsCreated(0);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -119,7 +120,8 @@ void cGamePlaying::thinkSlow()
 {
     evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-    game.m_pathsCreated = 0;
+    //game.m_pathsCreated = 0;
+    game.m_gameSettings->setPathsCreated(0);
 
     //@mira
     if (!game.m_gameSettings->isDisableReinforcements()) {
@@ -234,7 +236,8 @@ void cGamePlaying::drawCombatMouse() const
 
 void cGamePlaying::missionInit()
 {
-    game.m_pathsCreated = 0;
+    // game.m_pathsCreated = 0;
+    game.m_gameSettings->setPathsCreated(0);
     m_TIMER_evaluatePlayerStatus = 5;
 }
 
