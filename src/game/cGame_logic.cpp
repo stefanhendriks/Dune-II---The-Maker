@@ -111,7 +111,6 @@ cGame::cGame()
 {
     memset(m_states, 0, sizeof(cGameState *));
 
-    m_drawTime = false;
     m_nextState = -1;
     m_currentState = nullptr;
     // m_screenW = -1;
@@ -155,7 +154,7 @@ cGame::cGame()
     // m_playMusic = true;
     m_gameSettings->m_playMusic = true;
     m_gameSettings->m_drawFps = false;
-
+    m_gameSettings->m_drawTime = false;
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
