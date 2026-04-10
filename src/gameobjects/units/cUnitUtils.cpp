@@ -5,6 +5,8 @@
 #include "map/cMap.h"
 #include "definitions.h"
 #include "gameobjects/units/cUnits.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cUnitUtils::cUnitUtils()
 {

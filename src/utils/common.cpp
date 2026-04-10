@@ -30,7 +30,8 @@
 #include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/units/cUnits.h"
 #include "utils/d2tm_math.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <cmath>
 
 #include "data/gfxaudio.h"

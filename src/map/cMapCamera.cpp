@@ -6,6 +6,8 @@
 #include "sidebar/cSideBar.h"
 #include "map/MapGeometry.hpp"
 #include "game/cGameSettings.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "map/cMap.h"
 #include <algorithm>
 #include <cassert>

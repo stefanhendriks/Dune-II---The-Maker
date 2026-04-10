@@ -4,7 +4,8 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "sidebar/cBuildingList.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <format>
 #include <cassert>
 

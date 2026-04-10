@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <cassert>
 #include "include/sDataCampaign.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 namespace brains {
 

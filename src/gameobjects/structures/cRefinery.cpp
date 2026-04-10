@@ -8,6 +8,8 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "player/cPlayerDifficultySettings.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cRefinery::cRefinery()
 {

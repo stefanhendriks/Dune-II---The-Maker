@@ -2,6 +2,8 @@
 
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructures.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include "cBarracks.h"
 #include "cConstYard.h"

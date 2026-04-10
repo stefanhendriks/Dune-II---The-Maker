@@ -16,7 +16,8 @@
 #include "gameobjects/units/cUnits.h"
 #include "map/cMap.h"
 #include <format>
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "data/gfxaudio.h"
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)

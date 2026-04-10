@@ -5,6 +5,8 @@
 #include "definitions.h"
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayer.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cRepairFacility::cRepairFacility()
     : TIMER_repairunit(0)

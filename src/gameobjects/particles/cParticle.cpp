@@ -22,6 +22,8 @@
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/units/cUnits.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>

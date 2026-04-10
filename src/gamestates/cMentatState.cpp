@@ -4,6 +4,8 @@
 #include "mentat/HarkonnenMentat.h"
 #include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "utils/ini.h"
 #include "include/d2tmc.h"
 #include "include/iniDefine.h"
