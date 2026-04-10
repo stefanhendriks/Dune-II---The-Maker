@@ -693,7 +693,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         }
         else if (p == AI_CPU6) {
-            if (!m_game.m_disableWormAi) {
+            if (!m_game.m_gameSettings->isDisableWormAi()) {
                 pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
             }
             else {

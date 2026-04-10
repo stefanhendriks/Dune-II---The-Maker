@@ -40,6 +40,7 @@
 #include "utils/d2tm_math.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/GameContext.hpp"
 #include <cmath>
 
 #include "data/gfxaudio.h"
@@ -904,7 +905,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup)
 
 void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent)
 {
-    if (isSandworm() && game.m_disableWormAi) {
+    if (isSandworm() && game.m_gameSettings->isDisableWormAi()) {
         // don't do anything
         return;
     }
@@ -992,7 +993,7 @@ void cUnit::thinkFast_guard()
 
     updateCellXAndY();
 
-    if (isSandworm() && !game.m_disableWormAi) {
+    if (isSandworm() && !game.m_gameSettings->isDisableWormAi()) {
         thinkFast_guard_sandworm();
         return;
     }
@@ -2402,7 +2403,7 @@ void cUnit::thinkFast_move()
         assert(false && "Expected to have a valid unit calling thinkFast_move()");
     }
 
-    if (isSandworm() && game.m_disableWormAi) {
+    if (isSandworm() && game.m_gameSettings->isDisableWormAi()) {
         return; // skip
     }
 

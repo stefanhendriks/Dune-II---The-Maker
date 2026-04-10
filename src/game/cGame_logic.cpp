@@ -182,7 +182,9 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 
     // m_oneAi = gs->oneAi;
     m_gameSettings->m_oneAi = gs->oneAi;
-    m_disableWormAi = gs->disableWormAi;
+    // m_disableWormAi = gs->disableWormAi;
+    m_gameSettings->m_disableWormAi = gs->disableWormAi;
+
     m_disableReinforcements = gs->disableReinforcements;
     m_noAiRest = gs->noAiRest;
     m_drawUsages = gs->drawUsages;
@@ -319,7 +321,7 @@ void cGame::initPlayers(bool rememberHouse) const
             brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
         }
         else if (i == AI_CPU6) {
-            if (!game.m_disableWormAi) {
+            if (!game.m_gameSettings->isDisableWormAi()) {
                 brain = new brains::cPlayerBrainSandworm(&pPlayer);
             }
         }
