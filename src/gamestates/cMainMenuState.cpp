@@ -269,8 +269,8 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
         if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
             auto m_soundPlayer = m_ctx->getSoundPlayer();
-            game.m_playMusic = !game.m_playMusic;
-            if (!game.m_playMusic) {
+            game.m_gameSettings->setPlayMusic(!game.m_gameSettings->isPlayMusic());
+            if (!game.m_gameSettings->isPlayMusic()) {
                 m_soundPlayer->stopMusic();
             }
         }

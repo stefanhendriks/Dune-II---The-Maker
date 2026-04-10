@@ -120,7 +120,8 @@ cGame::cGame()
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
-    m_playMusic = true;
+    // m_playMusic = true;
+    m_gameSettings->m_playMusic = true;
     context = nullptr;
     ctx = nullptr;
     m_pauseWhenLosingFocus = false;
@@ -172,7 +173,9 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
     m_turretsDownOnLowPower = gs->turretsDownOnLowPower;
     m_rocketTurretsDownOnLowPower = gs->rocketTurretsDownOnLowPower;
-    m_playMusic = gs->playMusic;
+    // m_playMusic = gs->playMusic;
+    m_gameSettings->m_playMusic = gs->playMusic;
+
     m_playSound = gs->playSound;
     m_debugMode = gs->debugMode;
     // m_drawUnitDebug = gs->drawUnitDebug;
@@ -377,7 +380,7 @@ void cGame::setMissionLost()
 // think function belongs to combat state (tbd)
 void cGame::thinkFast_audio()
 {
-    if (!game.m_playMusic) // no music enabled, so no need to think
+    if (!game.m_gameSettings->isPlayMusic()) // no music enabled, so no need to think
         return;
 
     // all this does is repeating music in the same theme.
@@ -662,7 +665,7 @@ bool cGame::setupGame()
     if (!m_playSound) {
         m_soundPlayer->setSoundEnabled(false);
     }
-    if (!m_playMusic) {
+    if (!m_gameSettings->m_playMusic) {
         m_soundPlayer->setMusicEnabled(false);
     }
 
@@ -1391,8 +1394,8 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {
-        game.m_playMusic = !game.m_playMusic;
-        if (!game.m_playMusic) {
+        m_gameSettings->m_playMusic = !m_gameSettings->m_playMusic;
+        if (!m_gameSettings->isPlayMusic()) {
             m_soundPlayer->stopMusic();
             //@mira regression humanPlayer.addNotification("Music muted", eNotificationType::NEUTRAL);
         }
@@ -1513,7 +1516,7 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
     m_musicType = iType;
     logbook(std::format("m_musicType = {}", m_musicType));
 
-    if (!m_playMusic) {
+    if (!m_gameSettings->m_playMusic) {
         return false; // todo: have a 'no-sound soundplayer' instead of doing this :/
     }
 
