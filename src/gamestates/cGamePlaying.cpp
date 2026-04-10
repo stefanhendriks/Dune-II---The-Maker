@@ -146,7 +146,7 @@ void cGamePlaying::thinkSlow()
 void cGamePlaying::draw() const
 {
     game.m_drawManager->drawCombatState();
-    if (m_game.m_drawFps) {
+    if (m_game.m_gameSettings->shouldDrawFps()) {
         game.drawTextFps();
     }
 
@@ -289,7 +289,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_F)) {
-        game.m_drawFps = true;
+        game.m_gameSettings->setDrawFps(true);
     }
 }
 
@@ -298,7 +298,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_F)) {
-        m_game.m_drawFps = false;
+        m_game.m_gameSettings->setDrawFps(false);
     }
 
     if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
