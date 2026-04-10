@@ -6,12 +6,16 @@
 
 #include "utils/cPoint.h"
 #include "utils/common.h"
+#include "controls/eKeyAction.h"
 #include "controls/eKeyboardEnum.h"
+
+class cKeyBindings;
 
 class cKeyboardEvent {
 
 public:
-    cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo);
+    cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo,
+                   const cKeyBindings *keyBindings);
 
     inline const std::string toString() const {
         std::string str= std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(m_eventType));
@@ -24,30 +28,6 @@ public:
         return str;
     }
 
-    bool hasKey(SDL_Scancode scanCode) const {
-        return m_keys.find(scanCode) != m_keys.end();
-    }
-
-    /**
-     * Returns true when both scancodes are present in this event
-     * @param firstScanCode
-     * @param secondScanCode
-     * @return
-     */
-    bool hasKeys(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
-        return hasKey(firstScanCode) && hasKey(secondScanCode);
-    }
-
-    /**
-     * Returns true when one of both scancodes are present in this event
-     * @param firstScanCode
-     * @param secondScanCode
-     * @return
-     */
-    bool hasEitherKey(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
-        return hasKey(firstScanCode) || hasKey(secondScanCode);
-    }
-
     eKeyEventType getType() const {
         return m_eventType;
     }
@@ -55,6 +35,11 @@ public:
     bool isType(eKeyEventType type) const {
         return m_eventType == type;
     }
+
+    /**
+     * Returns true when the event matches the given game action, according to the configured key bindings.
+     */
+    bool isAction(eKeyAction action) const;
 
     bool isPrintable() const;
     bool isBackspace() const;
@@ -65,10 +50,22 @@ public:
     char getChar() const;
 
     /**
-     * If a numerical key is pressed, return that value.
-     * @return
+     * Returns the group number (1–5) if a group key is pressed according to the configured bindings, 0 otherwise.
      */
     int getGroupNumber() const;
+
+    // Raw key checks — kept public during migration to isAction(); will be removed once all callers are converted.
+    bool hasKey(SDL_Scancode scanCode) const {
+        return m_keys.find(scanCode) != m_keys.end();
+    }
+
+    bool hasKeys(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
+        return hasKey(firstScanCode) && hasKey(secondScanCode);
+    }
+
+    bool hasEitherKey(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
+        return hasKey(firstScanCode) || hasKey(secondScanCode);
+    }
 
 private:
     inline const char *toStringKeyboardEventType(const eKeyEventType &type) const {
@@ -89,4 +86,5 @@ private:
     eKeyEventType m_eventType = eKeyEventType::NONE;
     const std::set<SDL_Scancode> &m_keys;
     const s_KeysCombo &m_combo;
+    const cKeyBindings *m_keyBindings;
 };

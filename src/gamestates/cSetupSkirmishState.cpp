@@ -1,5 +1,6 @@
 #include "gamestates/cSetupSkirmishState.h"
 
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
@@ -1303,14 +1304,14 @@ void cSetupSkirmishState::onMouseMovedTo(const s_MouseEvent &)
 void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        if (event.isAction(eKeyAction::MENU_BACK)) {
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();
         }
-        if (event.hasKey(SDL_SCANCODE_LEFT)) {
+        if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             previousFunction();
         }
-        if (event.hasKey(SDL_SCANCODE_RIGHT)) {
+        if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
             nextFunction();
         }
     }

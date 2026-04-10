@@ -1,5 +1,6 @@
 #include "cSelectYourNextConquestState.h"
 
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -671,7 +672,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
+        if (event.isAction(eKeyAction::MENU_BACK)) {
             m_game.setNextStateToTransitionTo(GAME_OPTIONS);
         }
     }

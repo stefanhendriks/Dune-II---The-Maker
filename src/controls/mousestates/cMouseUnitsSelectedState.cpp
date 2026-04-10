@@ -1,5 +1,6 @@
 #include "cMouseUnitsSelectedState.h"
 
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -408,13 +409,12 @@ void cMouseUnitsSelectedState::onNotifyKeyboardEvent(const cKeyboardEvent &event
 
 void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 {
-    if (event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL)) {
+    if (event.isAction(eKeyAction::ATTACK_MODE)) {
         setState(SELECTED_STATE_ATTACK);
         m_mouseTile = MOUSE_ATTACK;
     }
 
-    bool appendingSelectionToGroup = event.hasKey(SDL_SCANCODE_LSHIFT) || event.hasKey(SDL_SCANCODE_RSHIFT);
-    if (appendingSelectionToGroup) {
+    if (event.isAction(eKeyAction::ADD_TO_SELECTION)) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
         m_mouseTile = MOUSE_NORMAL;
 
@@ -438,10 +438,9 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         m_selectedUnits = m_player->getSelectedUnits();
     }
     else {
-        bool createGroup = event.hasKey(SDL_SCANCODE_RCTRL) || event.hasKey(SDL_SCANCODE_LCTRL);
         // Do this within the "HOLD" event, because if we do it at Pressed event
         // we miss the fact that we hold SHIFT as well (see cKeyboard for reason).
-        if (!createGroup) {
+        if (!event.isAction(eKeyAction::ATTACK_MODE)) {
             int iGroup = event.getGroupNumber();
 
             if (iGroup > 0) {
@@ -459,9 +458,8 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
             }
         }
     }
-    // force move?
 
-    if (event.isCtrlPressed() && event.hasKey(SDL_SCANCODE_Z)) {
+    if (event.isAction(eKeyAction::SELECT_SAME_TYPE_ON_SCREEN)) {
         if (m_selectedUnits.size() == 1) {
             cUnit &pUnit = game.getUnit(m_selectedUnits[0]);
             selectSameUnitsOnScreen(pUnit.iType);
@@ -471,18 +469,18 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL)) {
+    if (event.isAction(eKeyAction::ATTACK_MODE)) {
         setState(SELECTED_STATE_ATTACK);
         evaluateMouseMoveState();
     }
 
-    if (event.hasKey(SDL_SCANCODE_LSHIFT) || event.hasKey(SDL_SCANCODE_RSHIFT)) {
+    if (event.isAction(eKeyAction::ADD_TO_SELECTION)) {
         toPreviousState();
         evaluateMouseMoveState();
     }
 
     // go to repair state
-    if (event.hasKey(SDL_SCANCODE_R)) {
+    if (event.isAction(eKeyAction::REPAIR_UNIT)) {
         if (m_selectedUnits.empty()) {
             m_context->setMouseState(MOUSESTATE_REPAIR);
         } else {
@@ -501,7 +499,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
     }
 
     // order any selected harvester to return to refinery
-    if (event.hasKey(SDL_SCANCODE_D)) {
+    if (event.isAction(eKeyAction::SEND_TO_REFINERY)) {
         const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
         for (auto &id : selectedUnits) {
             cUnit &pUnit = game.getUnit(id);
@@ -514,7 +512,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
         }
     }
 
-    if (event.hasKey(SDL_SCANCODE_F)) {
+    if (event.isAction(eKeyAction::RETURN_TO_BASE)) {
         for (auto id: m_selectedUnits) {
             cUnit &pUnit = game.getUnit(id);
             pUnit.retreatToNearbyBase();

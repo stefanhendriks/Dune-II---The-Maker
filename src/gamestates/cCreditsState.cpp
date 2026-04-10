@@ -1,5 +1,6 @@
 #include "cCreditsState.h"
 
+#include "controls/eKeyAction.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "config.h"
@@ -429,7 +430,7 @@ eGameStateType cCreditsState::getType()
 
 void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_ESCAPE)) {
+    if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
         m_game.setNextStateToTransitionTo(GAME_MENU);
         m_game.initiateFadingOut();
     }
