@@ -39,6 +39,7 @@
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/projectiles/cBullets.h"
+#include "player/cPlayers.h"
 
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"

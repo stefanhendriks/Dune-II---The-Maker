@@ -21,15 +21,16 @@
 //#include "utils/cIniFile.h"
 //#include "map/cPreviewMaps.h"
 // #include "map/cMap.h"
-#include "player/cPlayers.h"
+// #include "player/cPlayers.h"
 //#include "gameobjects/particles/cParticles.h"
 //#include "gameobjects/structures/cStructures.h"
 // #include "gameobjects/units/cUnits.h"
 // #include "gameobjects/projectiles/cBullets.h"
 //#include "utils/cStructureUtils.h"
-
+#include "observers/cScenarioObserver.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "utils/Color.hpp"
 
 #include <memory>
 #include <string>
