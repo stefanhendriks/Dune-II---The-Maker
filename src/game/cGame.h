@@ -109,7 +109,7 @@ public:
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
     int m_pathsCreated;
-    int m_musicType;
+    // int m_musicType;
 
     cRectangle *m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
