@@ -61,6 +61,9 @@ public:
     bool shouldDrawTime() const {
         return m_drawTime;
     }
+    void setDrawTime(bool value) {
+        m_drawTime = value;
+    }
 
     bool isAllowRepeatingReinforcements() const {
         return m_allowRepeatingReinforcements;

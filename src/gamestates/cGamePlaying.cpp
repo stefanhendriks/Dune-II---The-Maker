@@ -152,7 +152,7 @@ void cGamePlaying::draw() const
 
     drawCombatMouse();
 
-    if (m_game.m_drawTime) {
+    if (m_game.m_gameSettings->shouldDrawTime()) {
         game.drawTextTime();
     }
     // MOUSE
@@ -302,7 +302,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
-        m_game.m_drawTime = ! m_game.m_drawTime;
+        m_game.m_gameSettings->setDrawTime(! m_game.m_gameSettings->shouldDrawTime());
     }
 
     if (event.hasKey(SDL_SCANCODE_D)) {
