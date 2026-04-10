@@ -549,7 +549,7 @@ void cMap::draw_units()
         if (!pUnit.isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
-        if (game.m_drawUnitDebug) {
+        if (game.m_gameSettings->isDrawUnitDebug()) {
             pUnit.draw_path();
         }
 
@@ -600,7 +600,7 @@ void cMap::draw_units()
 
 void cMap::drawUnitDebug(cUnit &pUnit) const
 {
-    if (!game.m_drawUnitDebug) return;
+    if (!game.m_gameSettings->isDrawUnitDebug()) return;
 
     pUnit.draw_debug(m_textDrawer);
 }
