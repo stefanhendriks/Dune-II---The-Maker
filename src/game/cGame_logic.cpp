@@ -111,7 +111,6 @@ cGame::cGame()
 {
     memset(m_states, 0, sizeof(cGameState *));
 
-    m_gameSettings->m_drawFps = false;
     m_drawTime = false;
     m_nextState = -1;
     m_currentState = nullptr;
@@ -120,8 +119,6 @@ cGame::cGame()
     m_windowed = false;
     m_allowRepeatingReinforcements = false;
     m_playSound = true;
-    // m_playMusic = true;
-    m_gameSettings->m_playMusic = true;
     context = nullptr;
     ctx = nullptr;
     m_pauseWhenLosingFocus = false;
@@ -155,6 +152,10 @@ cGame::cGame()
     m_cScreenFader = std::make_unique<cScreenFader>();
 
     m_gameSettings = std::make_unique<cGameSettings>();
+    // m_playMusic = true;
+    m_gameSettings->m_playMusic = true;
+    m_gameSettings->m_drawFps = false;
+
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
