@@ -1,6 +1,7 @@
 #include "cPlayerBrainSkirmish.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 #include "actions/cRespondToThreatAction.h"
 //#include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
@@ -30,7 +31,7 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        m_TIMER_rest = (10 * 60) * 4;
     m_TIMER_rest = RNG::rnd(25); // todo: based on difficulty?
-    if (game.m_noAiRest) {
+    if (game.m_gameSettings->isNoAiRest()) {
         m_TIMER_rest = 10;
     }
     m_TIMER_produceMissionCooldown = 0;
