@@ -1,5 +1,6 @@
 #include "gameobjects/units/cPathFinder.h"
 #include "gameobjects/units/cUnit.h"
+#include "player/cPlayers.h"
 #include "map/cMap.h"
 #include "game/cGame.h"
 #include "data/gfxdata.h"
