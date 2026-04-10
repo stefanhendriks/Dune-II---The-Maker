@@ -106,7 +106,7 @@ public:
     // bool m_skirmish;                // playing a skirmish game or not
     // bool m_drawFps;
     // bool m_drawTime;
-    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
+    // bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
     // int m_pathsCreated;
     // int m_musicType;
