@@ -87,7 +87,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_game.m_playing = false;
+                m_game.m_gameSettings->setPlaying(false);
                 m_game.initiateFadingOut();})
             .build();
     m_guiWindow->addGuiObject(gui_btn_Quit);

@@ -214,7 +214,7 @@ void cGame::init()
     m_nextState = -1;
     m_missionWasWon = false;
     m_currentState = nullptr;
-    m_playing = true;
+    m_gameSettings->m_playing = true;
     m_skirmish = false;
 
     m_musicVolume = 96; // volume is 0...
@@ -465,14 +465,14 @@ void cGame::run()
     actualRenderer = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
     screenTexture = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
     SDL_Event event;
-    while (m_playing) {
+    while (m_gameSettings->m_playing) {
         if (m_focusManager->isGameWindowActive()) {
             m_timeManager->processTime();
         }
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    m_playing = false;
+                    m_gameSettings->m_playing = false;
                     break;
                 case SDL_WINDOWEVENT:
                     m_focusManager->onWindowsFocus(event.window);
@@ -709,7 +709,7 @@ bool cGame::setupGame()
     logbook(std::format("Seed is {}", t));
     srand(t);
 
-    game.m_playing = true;
+    m_gameSettings->m_playing = true;
     game.m_state = GAME_INITIALIZE;
 
     logbook("Setup:  HOUSES");
