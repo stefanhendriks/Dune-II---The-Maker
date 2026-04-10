@@ -36,6 +36,9 @@ public:
     bool isPlayMusic() const {
         return m_playMusic;
     }
+    void setPlayMusic(bool value) {
+        m_playMusic = value;
+    }
 
     bool isPlaying() const {
         return m_playing;
