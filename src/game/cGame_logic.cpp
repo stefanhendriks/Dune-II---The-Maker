@@ -175,7 +175,8 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_playMusic = gs->playMusic;
     m_playSound = gs->playSound;
     m_debugMode = gs->debugMode;
-    m_drawUnitDebug = gs->drawUnitDebug;
+    // m_drawUnitDebug = gs->drawUnitDebug;
+    m_gameSettings->m_drawUnitDebug = gs->drawUnitDebug;
     m_pauseWhenLosingFocus = gs->pauseWhenLosingFocus;
     //m_disableAI = gs->disableAI;
     m_gameSettings->m_disableAI = gs->disableAI;

@@ -794,7 +794,7 @@ void cUnit::draw()
         global_renderDrawer->renderStrechFullSprite(gfxdata->getTexture(FOCUS), dest);
     }
 
-    if (game.m_drawUnitDebug) {
+    if (game.m_gameSettings->isDrawUnitDebug()) {
         // render pixel at the very center
         global_renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 255, 0,255},2);
 

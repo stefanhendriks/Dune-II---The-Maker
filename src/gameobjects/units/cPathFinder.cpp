@@ -351,7 +351,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             // int iDx = game.m_mapCamera->getWindowXPositionFromCellWithOffset(the_cll, halfTile);
             // int iDy = game.m_mapCamera->getWindowYPositionFromCellWithOffset(the_cll, halfTile);
 
-            // if (game.m_drawUnitDebug) {
+            // if (game.m_gameSettings->isDrawUnitDebug()) {
                 // global_renderDrawer->renderLine( iPrevX, iPrevY, iDx, iDy, Color{0, 255, 0,255});
             // }
 
