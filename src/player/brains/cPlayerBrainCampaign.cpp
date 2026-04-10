@@ -3,6 +3,7 @@
 #include "actions/cRespondToThreatAction.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
@@ -30,7 +31,7 @@ cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* data
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
     m_TIMER_rest = (10 * 60) * 4;
-    if (game.m_noAiRest) {
+    if (game.m_gameSettings->isNoAiRest()) {
         m_TIMER_rest = 10;
     }
     m_myBase = std::vector<s_structurePosition>();
