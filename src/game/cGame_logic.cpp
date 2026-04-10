@@ -229,7 +229,8 @@ void cGame::init()
 
     m_screenShake->reset();
 
-    m_musicType = -1;
+    //m_musicType = -1;
+    m_gameSettings->m_musicType = -1;
 
     m_cameraDragMoveSpeed=0.5f;
     m_cameraBorderOrKeyMoveSpeed=0.5;
@@ -384,7 +385,7 @@ void cGame::thinkFast_audio()
         return;
 
     // all this does is repeating music in the same theme.
-    if (m_musicType < 0)
+    if (m_gameSettings->m_musicType < 0)
         return;
 
     if (m_newMusicCountdown > 0) {
@@ -398,8 +399,8 @@ void cGame::thinkFast_audio()
 
     if (m_newMusicCountdown < 0) {
         if (!m_soundPlayer->isMusicPlaying()) {
-            int desiredMusicType = m_musicType;
-            if (m_musicType == MUSIC_ATTACK) {
+            int desiredMusicType = m_gameSettings->m_musicType;
+            if (m_gameSettings->m_musicType == MUSIC_ATTACK) {
                 desiredMusicType = MUSIC_PEACE; // set back to peace
             }
             playMusicByType(desiredMusicType);
@@ -1491,7 +1492,7 @@ void cGame::playVoice(int sampleId, int playerId)
 
 void cGame::playMusicByTypeForStateTransition(int iType)
 {
-    if (m_musicType != iType) {
+    if (m_gameSettings->m_musicType != iType) {
         m_newMusicCountdown = 0;
         playMusicByType(iType, HUMAN, false);
     }
@@ -1507,14 +1508,14 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
     logbook(std::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
 
     if (triggerWithVoice) {
-        if (iType == m_musicType) {
-            logbook(std::format("m_musicType = {}, iType is {}, so bailing", m_musicType, iType));
+        if (iType == m_gameSettings->m_musicType) {
+            logbook(std::format("m_musicType = {}, iType is {}, so bailing", m_gameSettings->m_musicType, iType));
             return false;
         }
     }
 
-    m_musicType = iType;
-    logbook(std::format("m_musicType = {}", m_musicType));
+    m_gameSettings->m_musicType = iType;
+    logbook(std::format("m_musicType = {}", m_gameSettings->m_musicType));
 
     if (!m_gameSettings->m_playMusic) {
         return false; // todo: have a 'no-sound soundplayer' instead of doing this :/

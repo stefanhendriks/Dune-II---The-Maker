@@ -25,6 +25,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 
 #include <SDL2/SDL.h>
 #include <format>
@@ -1848,7 +1849,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
 //        return;
 //    }
 
-    if (game.m_musicType != MUSIC_PEACE) {
+    if (game.m_gameSettings->getMusicType() != MUSIC_PEACE) {
         // nothing to do here music-wise
         return;
     }
@@ -1905,7 +1906,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
 
     bool mayPlayVoice = true;
     if (triggerMusic) {
-        if (game.m_musicType != MUSIC_ATTACK) {
+        if (game.m_gameSettings->getMusicType() != MUSIC_ATTACK) {
             mayPlayVoice = game.playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
         }
         else {
