@@ -193,7 +193,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.m_playing = false;
+                m_game.m_gameSettings->setPlaying(false);
                 m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(gui_btn_Exit);
@@ -264,7 +264,7 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.hasKey(SDL_SCANCODE_ESCAPE)) {
-            m_game.m_playing=false;
+            m_game.m_gameSettings->setPlaying(false);
         }
 
         if (event.hasKey(SDL_SCANCODE_M) || event.hasKey(SDL_SCANCODE_MUTE)) {

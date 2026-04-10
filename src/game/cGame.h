@@ -102,7 +102,7 @@ public:
     // bool m_noAiRest;                        // Campaign AI does not have long initial REST time
     // bool m_playMusic;                       // play any music?
 
-    bool m_playing;				    // playing or not
+    // bool m_playing;				    // playing or not
     bool m_skirmish;                // playing a skirmish game or not
     bool m_drawFps;
     bool m_drawTime;

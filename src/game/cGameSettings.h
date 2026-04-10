@@ -43,6 +43,9 @@ public:
     bool isPlaying() const {
         return m_playing;
     }
+    void setPlaying(bool value) {
+        m_playing = value;
+    }
     bool isSkirmish() const {
         return m_skirmish;
     }
