@@ -177,7 +177,8 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     //m_disableAI = gs->disableAI;
     m_gameSettings->m_disableAI = gs->disableAI;
 
-    m_oneAi = gs->oneAi;
+    // m_oneAi = gs->oneAi;
+    m_gameSettings->m_oneAi = gs->oneAi;
     m_disableWormAi = gs->disableWormAi;
     m_disableReinforcements = gs->disableReinforcements;
     m_noAiRest = gs->noAiRest;
@@ -284,7 +285,7 @@ void cGame::missionInit()
 void cGame::initPlayers(bool rememberHouse) const
 {
     int maxThinkingAIs = MAX_PLAYERS;
-    if (m_oneAi) {
+    if (m_gameSettings->m_oneAi) {
         maxThinkingAIs = 1;
     }
 
