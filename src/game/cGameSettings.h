@@ -55,6 +55,9 @@ public:
     bool shouldDrawFps() const {
         return m_drawFps;
     }
+    void setDrawFps(bool value) {
+        m_drawFps = value;
+    }
     bool shouldDrawTime() const {
         return m_drawTime;
     }
