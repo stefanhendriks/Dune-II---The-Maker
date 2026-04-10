@@ -99,7 +99,7 @@ public:
     // bool m_disableReinforcements;           // disable any reinforcements from scenario ini file?
     // bool m_drawUsages;                      // draw the amount of structures/units/bullets used during combat
     // bool m_drawUnitDebug;                   // draw the unit debug info (rects, paths, etc)
-    bool m_noAiRest;                        // Campaign AI does not have long initial REST time
+    // bool m_noAiRest;                        // Campaign AI does not have long initial REST time
     bool m_playMusic;                       // play any music?
 
     bool m_playing;				    // playing or not
