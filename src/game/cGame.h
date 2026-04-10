@@ -108,7 +108,7 @@ public:
     bool m_drawTime;
     bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
-    int m_pathsCreated;
+    // int m_pathsCreated;
     // int m_musicType;
 
     cRectangle *m_mapViewport;

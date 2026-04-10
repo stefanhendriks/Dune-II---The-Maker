@@ -11,6 +11,7 @@
 #include "utils/d2tm_math.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 
 // Initialize the static temp_map
 ASTAR cPathFinder::temp_map[16384];
@@ -63,7 +64,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     // Too many paths where created , so we wait a little.
     // make sure not to create too many paths at once
-    if (game.m_pathsCreated > 40) {
+    if (game.m_gameSettings->getPathsCreated() > 40) {
         pUnit.log("CREATE_PATH -- END 3");
         pUnit.movewaitTimer.reset(50 + RNG::rnd(50));
         return -3;
@@ -95,7 +96,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     int goal_cell = pUnit.movement.iGoalCell;
     int controller = pUnit.iPlayer;
 
-    game.m_pathsCreated++;
+    //game.m_pathsCreated++;
+    game.m_gameSettings->setPathsCreated(game.m_gameSettings->getPathsCreated()+1);
     memset(temp_map, -1, sizeof(temp_map));
 
     the_cll = -1;

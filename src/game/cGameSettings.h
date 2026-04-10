@@ -59,6 +59,9 @@ public:
     int getPathsCreated() const {
         return m_pathsCreated;
     }
+    void setPathsCreated(int value) {
+        m_pathsCreated = value;
+    }
     int getMusicType() const {
         return m_musicType;
     }
