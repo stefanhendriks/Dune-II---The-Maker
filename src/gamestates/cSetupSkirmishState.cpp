@@ -614,7 +614,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     int maxThinkingAIs = MAX_PLAYERS;
-    if (m_game.m_oneAi) {
+    if (m_game.m_gameSettings->isOneAi()) {
         maxThinkingAIs = 1;
     }
 

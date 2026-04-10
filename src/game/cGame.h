@@ -90,7 +90,7 @@ public:
     // int m_screenH;
 
     // bool m_disableAI;                       // disable AI thinking?
-    bool m_oneAi;                           // disable all but one AI brain? (default == false)
+    // bool m_oneAi;                           // disable all but one AI brain? (default == false)
     bool m_disableWormAi;                   // disable worm AI brain? (default == false)
     bool m_disableReinforcements;           // disable any reinforcements from scenario ini file?
     bool m_drawUsages;                      // draw the amount of structures/units/bullets used during combat
