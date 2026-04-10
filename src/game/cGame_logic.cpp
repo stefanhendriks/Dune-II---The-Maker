@@ -111,7 +111,7 @@ cGame::cGame()
 {
     memset(m_states, 0, sizeof(cGameState *));
 
-    m_drawFps = false;
+    m_gameSettings->m_drawFps = false;
     m_drawTime = false;
     m_nextState = -1;
     m_currentState = nullptr;
@@ -210,7 +210,7 @@ void cGame::init()
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
-    m_drawFps = false;
+    m_gameSettings->m_drawFps = false;
     m_nextState = -1;
     m_missionWasWon = false;
     m_currentState = nullptr;
