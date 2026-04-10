@@ -116,7 +116,6 @@ cGame::cGame()
     // m_screenW = -1;
     // m_gameSettings->m_screenH = -1;
     m_windowed = false;
-    m_allowRepeatingReinforcements = false;
     m_playSound = true;
     context = nullptr;
     ctx = nullptr;
@@ -155,6 +154,7 @@ cGame::cGame()
     m_gameSettings->m_playMusic = true;
     m_gameSettings->m_drawFps = false;
     m_gameSettings->m_drawTime = false;
+    m_gameSettings->m_allowRepeatingReinforcements = false;
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
@@ -170,7 +170,8 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
     m_cameraEdgeMove = gs->cameraEdgeMove;
     m_windowed = gs->windowed;
-    m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
+    // m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
+    m_gameSettings->m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
     m_turretsDownOnLowPower = gs->turretsDownOnLowPower;
     m_rocketTurretsDownOnLowPower = gs->rocketTurretsDownOnLowPower;
     // m_playMusic = gs->playMusic;
