@@ -36,6 +36,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 #include <format>
 #include <filesystem>
 namespace fs=std::filesystem;
@@ -525,7 +526,7 @@ int getTechLevelByRegion(int iRegion)
 
 void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
-    game.m_skirmish = false;
+    game.m_gameSettings->setSkirmish(false);
     game.missionInit();
     int iHouse = dataCampaign->housePlayer;
     int iRegion = dataCampaign->region;
