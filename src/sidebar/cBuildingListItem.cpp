@@ -6,6 +6,7 @@
 #include "sidebar/cBuildingList.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 #include <format>
 #include <cassert>
 
@@ -35,7 +36,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     m_TIMER_progressFrame = 0.0f;
     m_TIMER_flashing = 500;
 
-    m_timerCap = game.isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    m_timerCap = game.m_gameSettings->isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     m_myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 

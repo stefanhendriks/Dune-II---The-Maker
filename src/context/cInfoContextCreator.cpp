@@ -1,5 +1,6 @@
 #include "context/cInfoContextCreator.h"
 #include "context/cInfoContext.h"
+#include "game/cGameSettings.h"
 #include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
@@ -16,6 +17,7 @@
 #include "utils/common.h"
 #include "map/cMap.h"
 #include "gameobjects/sTerrainInfo.h"
+
 
 std::unique_ptr<cUnitInfos> cInfoContextCreator::createUnitInfos() {
     auto unitInfos = std::make_unique<cUnitInfos>();
@@ -1235,7 +1237,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
-    if (!game.isCheatMode()) {
+    if (!game.m_gameSettings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
@@ -1252,7 +1254,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
-    if (!game.isCheatMode()) {
+    if (!game.m_gameSettings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");

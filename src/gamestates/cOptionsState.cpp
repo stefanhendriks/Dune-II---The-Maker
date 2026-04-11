@@ -63,7 +63,7 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_btn_toMenu);
 
-    if (m_game.isCheatMode()) {
+    if (m_game.m_gameSettings->isCheatMode()) {
         const cRectangle &cheatRect = m_guiWindow->getRelativeRect(margin, toMainMenu - 2*(buttonHeight + margin), buttonWidth, buttonHeight);
         GuiLabel *gui_cheatLabel = GuiLabelBuilder()
                 .withLabel("Cheat mode enabled")
