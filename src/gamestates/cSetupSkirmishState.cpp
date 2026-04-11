@@ -598,7 +598,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
     mapEditor.smoothMap();
 
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -608,7 +608,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     logbook("Shuffling starting positions");
     std::shuffle(iStartPositions.begin(), iStartPositions.end(), RNG::getGenerator());
 
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));

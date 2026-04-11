@@ -199,7 +199,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
     gui_window->addGuiObject(gui_btn_Exit);
 
     // prepare to drawing in cache texture
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_gameSettings->getScreenW(), m_game.m_gameSettings->getScreenH());
         m_renderDrawer->beginDrawingToTexture(backGroundDebug);
         for (int x = 0; x < m_game.m_gameSettings->getScreenW(); x += 60) {
@@ -215,7 +215,7 @@ cMainMenuState::~cMainMenuState()
 {
     delete gui_window;
     delete gui_btn_credits;
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         delete backGroundDebug;
     }
 }
@@ -226,7 +226,7 @@ void cMainMenuState::thinkFast()
 
 void cMainMenuState::draw() const
 {
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         m_renderDrawer->renderSprite(backGroundDebug,0,0);
     }
 
@@ -239,7 +239,7 @@ void cMainMenuState::draw() const
     m_textDrawer->drawTextBottomRight(D2TM_VERSION,20);
     m_textDrawer->drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         auto m_mouse = m_game.getMouse();
         m_textDrawer->drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
