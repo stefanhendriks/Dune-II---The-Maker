@@ -817,6 +817,10 @@ void cUnit::attackUnit(int targetUnit)
 void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
 {
     log(std::format("attackUnit() : targetUnit is [{}]. Chase target? [{}]", targetUnit, chaseWhenOutOfRange));
+    if (targetUnit == iID) {
+        log(std::format("attackUnit() : targetUnit is [{}] Cannot attack self.", targetUnit));
+        return;
+    }
     attack(game.getUnit(targetUnit).position.iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
@@ -843,6 +847,11 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
 
     if (unitId < 0 && structureId < 0 && attackCell < 0) {
         log("What is this? Ordered to attack but no target?");
+        return;
+    }
+
+    if (unitId == iID) {
+        log("Cannot attack self");
         return;
     }
 
