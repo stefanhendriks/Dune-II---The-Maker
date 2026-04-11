@@ -83,6 +83,9 @@ public:
     bool isDebugMode() const {
         return m_debugMode;
     }
+    bool isCheatMode() const {
+        return m_cheatMode;
+    }
     bool isWindowed() const {
         return m_windowed;
     }
@@ -113,6 +116,7 @@ private:
     //-----------------------
     bool m_playSound;
     bool m_debugMode;
+    bool m_cheatMode;
     bool m_windowed;
     //-----------------------
 

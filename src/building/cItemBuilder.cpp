@@ -22,6 +22,7 @@
 #include "map/MapGeometry.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 
 #include <cassert>
 
@@ -82,7 +83,7 @@ cItemBuilder::~cItemBuilder()
  */
 int cItemBuilder::getTimerCap(cBuildingListItem *item)
 {
-    int iTimerCap = game.isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    int iTimerCap = game.m_gameSettings->isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {

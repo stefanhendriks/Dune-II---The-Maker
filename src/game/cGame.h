@@ -222,9 +222,9 @@ public:
         return m_debugMode;
     }
 
-    bool isCheatMode() {
-        return m_cheatMode;
-    }
+    // bool isCheatMode() {
+    //     return m_cheatMode;
+    // }
 
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
@@ -261,7 +261,7 @@ private:
      * Variables start here
      */
     bool m_debugMode = false;
-    bool m_cheatMode = false;
+    // bool m_cheatMode = false;
 
     bool m_playSound;                       // play sound?
     bool m_windowed;        			    // windowed

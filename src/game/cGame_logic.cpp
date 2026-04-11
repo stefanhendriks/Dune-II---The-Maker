@@ -1445,7 +1445,7 @@ void cGame::onKeyPressedLALTGame(const cKeyboardEvent &event)
 
     // toggle cheat mode
     if (event.hasKey(SDL_SCANCODE_C)) {
-        m_cheatMode = !m_cheatMode;
+        m_gameSettings->m_cheatMode = !m_gameSettings->m_cheatMode;
         cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode enabled", "All cheats are now enabled. Have fun!");
     }
 }
