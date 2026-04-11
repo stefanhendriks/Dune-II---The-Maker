@@ -139,8 +139,6 @@ cGame::cGame()
 
     m_infoContext = std::make_unique<cInfoContext>();
     
-    m_gameObjectsContext = cGameObjectsContextCreator::create();
-
     m_screenShake = std::make_unique<cScreenShake>();
 
     m_dataCampaign = std::make_unique<s_DataCampaign>();
@@ -155,6 +153,8 @@ cGame::cGame()
     m_gameSettings->m_drawFps = false;
     m_gameSettings->m_drawTime = false;
     m_gameSettings->m_allowRepeatingReinforcements = false;
+
+    m_gameObjectsContext = cGameObjectsContextCreator::create();
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
