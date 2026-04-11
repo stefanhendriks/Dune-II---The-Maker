@@ -20,7 +20,10 @@
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "include/sDataCampaign.h"
+#include "gameobjects/units/cUnits.h"
 
 #include <format>
 #include <algorithm>
@@ -96,8 +99,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
     mapItemButtonWidth = 145;
 
     // Screen
-    screen_x = m_game.m_screenW;
-    screen_y = m_game.m_screenH;
+    screen_x = m_game.m_gameSettings->getScreenW();
+    screen_y = m_game.m_gameSettings->getScreenH();
 
     // Rectangles for GUI interaction
     int topBarWidth = screen_x + 4;
@@ -572,7 +575,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     m_game.setupPlayers();
 
     // Starting skirmish mode
-    m_game.m_skirmish = true;
+    m_game.m_gameSettings->setSkirmish(true);
 
     /* set up starting positions */
     std::vector<int> iStartPositions;
@@ -587,15 +590,15 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     startCellsOnSkirmishMap = iStartPositions.size();
 
     // REGENERATE MAP DATA FROM INFO
-    game.m_map.init(selectedMap.width, selectedMap.height);
+    game.m_gameObjectsContext->getMap().init(selectedMap.width, selectedMap.height);
 
-    auto mapEditor = cMapEditor(game.m_map);
-    for (int c = 0; c < game.m_map.getMaxCells(); c++) {
+    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
+    for (int c = 0; c < game.m_gameObjectsContext->getMap().getMaxCells(); c++) {
         mapEditor.createCell(c, selectedMap.terrainType[c], 0);
     }
     mapEditor.smoothMap();
 
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -605,7 +608,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     logbook("Shuffling starting positions");
     std::shuffle(iStartPositions.begin(), iStartPositions.end(), RNG::getGenerator());
 
-    if (m_game.isDebugMode()) {
+    if (m_game.m_gameSettings->isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -613,11 +616,11 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     int maxThinkingAIs = MAX_PLAYERS;
-    if (m_game.m_oneAi) {
+    if (m_game.m_gameSettings->isOneAi()) {
         maxThinkingAIs = 1;
     }
 
-    if (m_game.m_disableAI) {
+    if (m_game.m_gameSettings->isDisableAI()) {
         maxThinkingAIs = 0;
     }
 
@@ -633,7 +636,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         if (playableFaction) {
             if (!sSkirmishPlayer.bPlaying) {
                 // make sure it is a brain dead AI...
-                cPlayer &cPlayer = game.getPlayer(p);
+                cPlayer &cPlayer = game.m_gameObjectsContext->getPlayer(p);
                 cPlayer.init(p, nullptr);
                 continue;
             }
@@ -659,7 +662,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                             houseInUse = true;
                         }
 
-                        if (game.getPlayer(pl).getHouse() == iHouse) {
+                        if (game.m_gameObjectsContext->getPlayer(pl).getHouse() == iHouse) {
                             // already in use by a already-setup player
                             houseInUse = true;
                         }
@@ -680,7 +683,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             }
         }
 
-        cPlayer &pPlayer = game.getPlayer(p);
+        cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(p);
 
         // TEAM Logic
         if (p == HUMAN) {
@@ -690,7 +693,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         }
         else if (p == AI_CPU6) {
-            if (!m_game.m_disableWormAi) {
+            if (!m_game.m_gameSettings->isDisableWormAi()) {
                 pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
             }
             else {
@@ -749,7 +752,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         int iType = RNG::rnd(12);
 
         for (int p = 0; p < MAX_PLAYERS; p++) {
-            cPlayer &pPlayer = game.getPlayer(p);
+            cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(p);
             s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
 
             if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
@@ -762,7 +765,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
             int minRange = 3;
             int maxRange = 12;
-            int cell = game.m_map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+            int cell = game.m_gameObjectsContext->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
                        minRange,
                        maxRange,
                        iPlayerUnitType);
@@ -779,7 +782,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = game.getPlayer(p);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(p);
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
         if (p == HUMAN) {
             player.setTeam(sSkirmishPlayer.team);
@@ -797,9 +800,9 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = game.getPlayer(p);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(p);
         if (player.getHouse() == ATREIDES) {
-            game.getPlayer(AI_CPU5).setTeam(player.getTeam());
+            game.m_gameObjectsContext->getPlayer(AI_CPU5).setTeam(player.getTeam());
         }
     }
 
@@ -810,20 +813,20 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     m_game.playMusicByType(MUSIC_PEACE);
 
-    game.m_map.setAutoSpawnSpiceBlooms(spawnBlooms);
-    game.m_map.setAutoDetonateSpiceBlooms(detonateBlooms);
-    game.m_map.setDesiredAmountOfWorms(spawnWorms);
+    game.m_gameObjectsContext->getMap().setAutoSpawnSpiceBlooms(spawnBlooms);
+    game.m_gameObjectsContext->getMap().setAutoDetonateSpiceBlooms(detonateBlooms);
+    game.m_gameObjectsContext->getMap().setDesiredAmountOfWorms(spawnWorms);
 
     // spawn requested amount of worms at start
     if (spawnWorms > 0) {
         int worms = spawnWorms;
         int minDistance = worms * 12; // so on 64x64 maps this still could work
         int maxDistance = worms * 32; // 128 / 4
-        int wormCell = game.m_map.getRandomCell();
+        int wormCell = game.m_gameObjectsContext->getMap().getRandomCell();
         int failures = 0;
         logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
-            int cell = game.m_map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
+            int cell = game.m_gameObjectsContext->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                        SANDWORM);
             if (cell < 0) {
                 // retry
@@ -1166,7 +1169,7 @@ void cSetupSkirmishState::generateRandomMap()
 
     randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, randomMap);
 
-    // @mira do better than (game.m_map.getWidth() * game.m_map.getHeight() > 64 * 64)
+    // @mira do better than (game.m_gameObjectsContext->getMap().getWidth() * game.m_gameObjectsContext->getMap().getHeight() > 64 * 64)
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
     randomMap.validMap = true;

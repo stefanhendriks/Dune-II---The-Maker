@@ -8,6 +8,7 @@
 #include "gui/GuiTextInput.h"
 #include "context/GameContext.hpp"
 #include "drawers/cTextDrawer.h"
+#include "map/cPreviewMaps.h"
 
 #include <cassert>
 
@@ -22,11 +23,11 @@ cNewMapEditorState::cNewMapEditorState(cGame &theGame, GameContext *ctx)
 
 void cNewMapEditorState::constructWindow()
 {
-    int margin = m_game.m_screenH * 0.3;
+    int margin = m_game.m_gameSettings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = m_game.m_screenW - (margin * 2);
-    int mainMenuHeight = m_game.m_screenH - (margin * 2);
+    int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
+    int mainMenuHeight = m_game.m_gameSettings->getScreenH() - (margin * 2);
 
     margin = 4;
     int buttonHeight = (m_textDrawer->getFontHeight() + margin);

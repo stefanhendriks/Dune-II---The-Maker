@@ -5,6 +5,8 @@
 #include "map/cMap.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <cassert>
 
 namespace brains {
@@ -14,9 +16,9 @@ cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cP
     assert(player != nullptr);
     assert(mission != nullptr);
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
-    specificBuildTypeToGoToSelectTargetState = game.specialInfos[SPECIAL_FREMEN].providesType;
-    specificBuildIdToGoToSelectTargetState = game.specialInfos[SPECIAL_FREMEN].providesTypeId;
-    specificPlayerForEventToGoToSelectTargetState = &game.getPlayer(AI_CPU5);
+    specificBuildTypeToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_FREMEN).providesType;
+    specificBuildIdToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_FREMEN).providesTypeId;
+    specificPlayerForEventToGoToSelectTargetState = &game.m_gameObjectsContext->getPlayer(AI_CPU5);
 }
 
 cPlayerBrainMissionKindFremen::~cPlayerBrainMissionKindFremen()

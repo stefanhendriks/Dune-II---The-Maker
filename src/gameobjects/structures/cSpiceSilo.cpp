@@ -1,5 +1,6 @@
 #include "cSpiceSilo.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "definitions.h"
@@ -37,6 +38,6 @@ void cSpiceSilo::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cSpiceSilo::getSpiceSiloCapacity()
 {
-    float percentage = ((float) getHitPoints() / (float) game.structureInfos[getType()].hp);
+    float percentage = ((float) getHitPoints() / (float) game.m_infoContext->getStructureInfo(getType()).hp);
     return 1000 * percentage;
 }

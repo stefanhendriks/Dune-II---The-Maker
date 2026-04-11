@@ -1,6 +1,11 @@
 #include "cPlayerBrainMission.h"
 #include "cPlayerBrainMissionKindDeathHand.h"
-
+//#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
+#include "utils/cStructureUtils.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
@@ -33,12 +38,12 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
 {
     // and execute whatever?? (can merge with select target state?)
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (!theStructure) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!game.m_map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!game.m_gameObjectsContext->getMap().isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         target = theStructure->getCell();
@@ -49,12 +54,12 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
 
     if (target < 0) {
         // find any unit to attack instead
-        for (int i = 0; i < game.m_Units.size(); i++) {
-            cUnit &pUnit = game.getUnit(i);
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+            cUnit &pUnit = game.m_gameObjectsContext->getUnit(i);
             if (!pUnit.isValid()) continue;
             if (pUnit.getPlayer() == player) continue; // skip self
             if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-            if (!game.m_map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+            if (!game.m_gameObjectsContext->getMap().isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
             // enemy unit
             target = i;
             if (RNG::rnd(100) < 5) {

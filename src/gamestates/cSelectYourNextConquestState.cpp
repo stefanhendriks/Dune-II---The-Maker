@@ -15,6 +15,8 @@
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -70,8 +72,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     isFinishedConqueringRegions = true;
 
     int length = m_textDrawer->getTextLength("Mission select");
-    const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_game.m_screenW - length,
-                                            m_game.m_screenH - m_textDrawer->getFontHeight(),
+    const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_game.m_gameSettings->getScreenW() - length,
+                                            m_game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(),
                                             "Mission select");
     GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
@@ -88,8 +90,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
 
 void cSelectYourNextConquestState::calculateOffset()
 {
-    offsetX = (m_game.m_screenW - 640) / 2;
-    offsetY = (m_game.m_screenH - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetX = (m_game.m_gameSettings->getScreenW() - 640) / 2;
+    offsetY = (m_game.m_gameSettings->getScreenH() - 480) / 2; // same goes for offsetY (but then for 480 height).
 }
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
@@ -119,7 +121,7 @@ void cSelectYourNextConquestState::thinkFast()
             iRegionSceneAlpha = 255;
         }
 
-        int iHouse = game.getPlayer(0).getHouse();
+        int iHouse = game.m_gameObjectsContext->getPlayer(0).getHouse();
         int iMission = m_dataCompaign->mission;
 
         bool hasMessage = game.m_drawManager->hasMessage();
@@ -250,7 +252,7 @@ void cSelectYourNextConquestState::draw() const
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-    int iHouse = game.getPlayer(0).getHouse();
+    int iHouse = game.m_gameObjectsContext->getPlayer(0).getHouse();
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
         drawStateIntroduction();
     }
@@ -429,8 +431,8 @@ void cSelectYourNextConquestState::regionSetupLostMission()
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        game.getPlayer(i).init(i, nullptr);
-        game.getPlayer(i).setHouse(i);
+        game.m_gameObjectsContext->getPlayer(i).init(i, nullptr);
+        game.m_gameObjectsContext->getPlayer(i).setHouse(i);
     }
 
     return;
@@ -461,8 +463,8 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        game.getPlayer(i).init(i, nullptr);
-        game.getPlayer(i).setHouse(i);
+        game.m_gameObjectsContext->getPlayer(i).init(i, nullptr);
+        game.m_gameObjectsContext->getPlayer(i).setHouse(i);
     }
 
     return;
@@ -480,7 +482,7 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
     if (regionPiece.iHouse > -1) {
         // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
         // is the player we want to get the correct house collor for this piece...
-        cPlayer &temp = game.getPlayer(regionPiece.iHouse);
+        cPlayer &temp = game.m_gameObjectsContext->getPlayer(regionPiece.iHouse);
         // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
             regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp, TransparentColorIndex);
@@ -491,8 +493,8 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
 
     // select your next conquest... always draw them in the human playing house color
     if (regionPiece.bSelectable && state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
-        int iHouse = game.getPlayer(HUMAN).getHouse();
-        cPlayer &temp = game.getPlayer(iHouse);
+        int iHouse = game.m_gameObjectsContext->getPlayer(HUMAN).getHouse();
+        cPlayer &temp = game.m_gameObjectsContext->getPlayer(iHouse);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
             regionPiece.bmpColor = temp.createTextureFromIndexedSurfaceWithPalette(regionPiece.bmp, TransparentColorIndex);
         }

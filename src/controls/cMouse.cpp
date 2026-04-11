@@ -1,5 +1,5 @@
 #include "cMouse.h"
-
+#include "game/cGameSettings.h"
 #include "controls/cGameControlsContext.h"
 #include "observers/cInputObserver.h"
 #include "game/cGame.h"
@@ -13,7 +13,8 @@
 #include "utils/d2tm_math.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <cassert>
@@ -254,8 +255,8 @@ void cMouse::boxSelectLogic(int mouseCell)
         if (abs(m_coords.x - m_mouseCoX1) > 4 && abs(m_coords.y - m_mouseCoY1) > 4) {
             // assign 2nd coordinates
             m_mouseCoX2 = m_coords.x;
-            if (m_coords.x > game.m_screenW - cSideBar::SidebarWidth) {
-                m_mouseCoX2 = game.m_screenW - cSideBar::SidebarWidth - 1;
+            if (m_coords.x > game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth) {
+                m_mouseCoX2 = game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth - 1;
             }
 
             m_mouseCoY2 = m_coords.y;
@@ -353,9 +354,9 @@ void cMouse::draw()
         else {
         }
 
-        if (game.isDebugMode()) {
+        if (game.m_gameSettings->isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
-                int mouseCell = game.getPlayer(HUMAN).getGameControlsContext()->getMouseCell(); // Ugh :/
+                int mouseCell = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext()->getMouseCell(); // Ugh :/
                 m_textDrawer->drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
             }
         }
@@ -364,7 +365,7 @@ void cMouse::draw()
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
     global_renderDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
 
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         int y = mouseDrawY;
         for (auto line: m_debugLines) {
             m_textDrawer->drawText(mouseDrawX + 32, y, line.c_str());

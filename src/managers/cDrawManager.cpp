@@ -1,6 +1,8 @@
 #include "cDrawManager.h"
 
 #include "controls/cGameControlsContext.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -8,12 +10,17 @@
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
+#include "gameobjects/units/cUnits.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 #include "drawers/cSideBarDrawer.h"
 
 #include <SDL2/SDL.h>
@@ -32,8 +39,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(ctx, thePlayer);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(ctx, thePlayer);
     m_orderDrawer = std::make_unique<cOrderDrawer>(ctx, thePlayer);
-    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
-    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.m_map, thePlayer, game.m_mapCamera);
+    m_mapDrawer = std::make_unique<cMapDrawer>(ctx, &game.m_gameObjectsContext->getMap(), thePlayer, game.m_mapCamera);
+    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(ctx, &game.m_gameObjectsContext->getMap(), thePlayer, game.m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
@@ -54,7 +61,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_screenH);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_gameSettings->getScreenH());
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
@@ -63,13 +70,13 @@ void cDrawManager::drawCombatState()
     m_particleDrawer->determineParticlesToDraw(*game.m_mapViewport);
     m_particleDrawer->drawLowerLayer();
 
-    game.m_map.draw_units();
+    game.m_gameObjectsContext->getMap().draw_units();
 
-    game.m_map.draw_bullets();
+    game.m_gameObjectsContext->getMap().draw_bullets();
 
     m_structureDrawer->drawStructuresSecondLayer();
 
-    game.m_map.draw_units_2nd();
+    game.m_gameObjectsContext->getMap().draw_units_2nd();
 
     m_particleDrawer->drawTopLayer();
     m_structureDrawer->drawStructuresHealthBars();
@@ -99,7 +106,7 @@ void cDrawManager::drawCombatState()
 
     m_renderDrawer->resetClippingFor();
 
-    if (game.m_drawUsages) {
+    if (game.m_gameSettings->isDrawUsages()) {
         drawDebugInfoUsages();
         m_particleDrawer->drawDebugInfo(m_textDrawer);
     }
@@ -108,29 +115,29 @@ void cDrawManager::drawCombatState()
 void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
-    for (int i = 0; i < game.m_Units.size(); i++) {
-        if (game.getUnit(i).isValid()) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        if (game.m_gameObjectsContext->getUnit(i).isValid()) {
             unitsUsed++;
         }
     }
 
     int structuresUsed = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = game.m_pStructures[i];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
         if (pStructure) {
             structuresUsed++;
         }
     }
 
     int bulletsUsed = 0;
-    for (const auto& bullet : game.g_Bullets) {
+    for (const auto& bullet : game.m_gameObjectsContext->getBullets()) {
         if (bullet.bAlive) {
             bulletsUsed++;
         }
     }
 
     int particlesUsed = 0;
-    for (const auto& particle : game.m_particles) {
+    for (const auto& particle : game.m_gameObjectsContext->getParticles()) {
         if (particle.isValid()) {
             particlesUsed++;
         }
@@ -138,10 +145,10 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int startY = 74;
     int height = 14;
-    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.m_Units.size()));
+    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.m_gameObjectsContext->getUnits().size()));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.g_Bullets.size()));
-    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.m_particles.size()));
+    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.m_gameObjectsContext->getBullets().size()));
+    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.m_gameObjectsContext->getParticles().size()));
 }
 
 void cDrawManager::drawCredits()
@@ -151,9 +158,9 @@ void cDrawManager::drawCredits()
 
 void cDrawManager::drawRallyPoint()
 {
-    cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     if (humanPlayer.selected_structure < 0) return;
-    cAbstractStructure *theStructure = game.m_pStructures[humanPlayer.selected_structure];
+    cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[humanPlayer.selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
@@ -178,12 +185,12 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    m_renderDrawer->renderLine( startX, startY, endX, endY, game.getPlayer(HUMAN).getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, game.m_gameObjectsContext->getPlayer(HUMAN).getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
 {
-    m_renderDrawer->setClippingFor(game.m_screenW - cSideBar::SidebarWidth, 0, game.m_screenW, game.m_screenH);
+    m_renderDrawer->setClippingFor(game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, game.m_gameSettings->getScreenW(), game.m_gameSettings->getScreenH());
     m_sidebarDrawer->draw();
     m_miniMapDrawer->draw();
     m_renderDrawer->resetClippingFor();
@@ -229,7 +236,7 @@ void cDrawManager::drawMouse()
 void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
-    for (int x = 0; x < game.m_screenW; x+= topbarPiece->w) {
+    for (int x = 0; x < game.m_gameSettings->getScreenW(); x+= topbarPiece->w) {
         m_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
@@ -255,10 +262,10 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    m_renderDrawer->renderRectFillColor(0, 0, game.m_screenW, cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    m_renderDrawer->renderRectFillColor(0,game.m_screenW, 40,32, Color{214,149,20,255});
+    m_renderDrawer->renderRectFillColor(0, 0, game.m_gameSettings->getScreenW(), cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor(0,game.m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
 
-    for (int w = 0; w < (game.m_screenW + 800); w += 789) {
+    for (int w = 0; w < (game.m_gameSettings->getScreenW() + 800); w += 789) {
         m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
@@ -267,7 +274,7 @@ void cDrawManager::drawNotifications()
 {
     std::vector<cPlayerNotification> &notifications = m_player->getNotifications();
 //    int y = cSideBar::TopBarHeight + 14; // 12 pixels
-    int y = game.m_screenH - 44;
+    int y = game.m_gameSettings->getScreenH() - 44;
     for (auto &notification : notifications) {
         m_textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;
@@ -307,7 +314,7 @@ void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cDrawManager::onKeyDown(const cKeyboardEvent &event)
 {
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         if (event.hasKeys(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
             m_mapDrawer->setDrawWithoutShroudTiles(true);
         }
@@ -322,7 +329,7 @@ void cDrawManager::onKeyDown(const cKeyboardEvent &event)
 
 void cDrawManager::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         // one of these we're pressed, that's enough info to revert back as it breaks the
         // mandatory 'both keys must be pressed' state:
         if (event.hasEitherKey(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {

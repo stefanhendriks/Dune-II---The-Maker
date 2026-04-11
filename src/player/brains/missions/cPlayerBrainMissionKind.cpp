@@ -3,6 +3,9 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
+#include "gameobjects/units/cUnits.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <format>
 #include <cassert>
@@ -98,7 +101,7 @@ void cPlayerBrainMissionKind::onExecuteSpecificStateSwitch(const s_GameEvent &ev
 {
     // unit got created, not reinforced - add it to the units list (ie saboteur to command)
     if (event.entityType == UNIT && !event.isReinforce) {
-        cUnit &entityUnit = game.getUnit(event.entityID);
+        cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
 
         // this unit has not been assigned to a mission yet
         if (!entityUnit.isAssignedAnyMission()) {

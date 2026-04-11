@@ -1,5 +1,5 @@
 #include "CreditsDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -38,7 +38,7 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
 
     // center credits bar within sidebar
     int widthCreditsBar = (m_gfxinter->getSurface(CREDITS_BAR))->w;
-    m_drawX = game.m_screenW - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
+    m_drawX = game.m_gameSettings->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     m_drawY = 0;
 }
 

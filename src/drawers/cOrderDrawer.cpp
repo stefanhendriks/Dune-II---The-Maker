@@ -1,5 +1,5 @@
 #include "cOrderDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
@@ -26,8 +26,8 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
     int halfOfButtonHeight = m_buttonBitmap->h / 2;
-    m_buttonRect = cRectangle((game.m_screenW - halfOfSidebar) - halfOfButton,
-                            (game.m_screenH - halfOfHeightLeftForButton) - halfOfButtonHeight,
+    m_buttonRect = cRectangle((game.m_gameSettings->getScreenW() - halfOfSidebar) - halfOfButton,
+                            (game.m_gameSettings->getScreenH() - halfOfHeightLeftForButton) - halfOfButtonHeight,
                             m_buttonBitmap->w, m_buttonBitmap->h);
     m_isMouseOverOrderButton = false;
 }

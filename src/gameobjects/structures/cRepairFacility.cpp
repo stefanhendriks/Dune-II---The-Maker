@@ -5,6 +5,8 @@
 #include "definitions.h"
 #include "gameobjects/units/cUnit.h"
 #include "player/cPlayer.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cRepairFacility::cRepairFacility()
     : TIMER_repairunit(0)
@@ -33,8 +35,8 @@ void cRepairFacility::thinkFast()
 void cRepairFacility::think_repairUnit()  // must repair...
 {
     int iUnitID = getUnitIdWithin();
-    cUnit &unitToRepair = game.getUnit(iUnitID);
-//    int maxHpForUnitType = game.unitInfos[unitToRepair.iType].hp;
+    cUnit &unitToRepair = game.m_gameObjectsContext->getUnit(iUnitID);
+//    int maxHpForUnitType = game.m_infoContext->getUnitInfo(unitToRepair.iType).hp;
 
     if (unitToRepair.requiresRepairing()) {
         TIMER_repairunit++;

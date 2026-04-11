@@ -20,6 +20,10 @@
 #include "utils/Graphics.hpp"
 #include "utils/d2tm_math.h"
 #include "gameobjects/particles/cParticleInfos.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/units/cUnits.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -95,7 +99,7 @@ int cParticle::draw_y() const {
 void cParticle::think_position()
 {
     if (boundUnitID > -1) {
-        cUnit &pUnit = game.getUnit(boundUnitID);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(boundUnitID);
         if (!pUnit.isValid()) {
             bindToUnit(-1);
         }
@@ -140,7 +144,7 @@ void cParticle::draw()
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const {
-    s_ParticleInfo &particleInfo = game.m_particleInfos[iType];
+    s_ParticleInfo &particleInfo = game.m_infoContext->getParticleInfo(iType);
     return particleInfo;
 }
 
@@ -585,10 +589,10 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         return -1;
     }
 
-    cParticle &pParticle = game.m_particles[iNewId];
-    const int particleInfoCount = game.m_particleInfos.size();
+    cParticle &pParticle = game.m_gameObjectsContext->getParticles()[iNewId];
+    const int particleInfoCount = game.m_infoContext->getParticleInfos()->size();
     if (iType >= 0 && iType < particleInfoCount) {
-        s_ParticleInfo &sParticle = game.m_particleInfos[iType];
+        s_ParticleInfo &sParticle = game.m_infoContext->getParticleInfo(iType);
         pParticle.init(sParticle);
     }
     else {
@@ -719,7 +723,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 int cParticle::findNewSlot()
 {
     int i = 0;
-    for (auto &particle : game.m_particles) {
+    for (auto &particle : game.m_gameObjectsContext->getParticles()) {
         if (!particle.isValid()) {
             return i;
         }
@@ -777,7 +781,7 @@ void cParticle::think_new()
 void cParticle::bindToUnit(int unitID)
 {
     if (boundUnitID > -1) {
-        cUnit &pUnit = game.getUnit(boundUnitID);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(boundUnitID);
         if (pUnit.isValid()) {
             pUnit.setBoundParticleId(-1);
         }
@@ -789,7 +793,7 @@ void cParticle::addPosX(float d)
 {
     this->x += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = game.m_particles[boundParticleID];
+        cParticle &otherParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosX(d);
         }
@@ -803,7 +807,7 @@ void cParticle::addPosY(float d)
 {
     this->y += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = game.m_particles[boundParticleID];
+        cParticle &otherParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosY(d);
         }
@@ -818,7 +822,7 @@ void cParticle::die()
     bindToUnit(-1);
     bAlive = false;
     if (boundParticleID > -1) {
-        cParticle &pParticle = game.m_particles[boundParticleID];
+        cParticle &pParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
         if (pParticle.isValid()) {
             pParticle.die();
         }
@@ -832,7 +836,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
 
-    int bmpIndex = game.m_particleInfos[iType].bmpIndex;
+    int bmpIndex = game.m_infoContext->getParticleInfo(iType).bmpIndex;
     if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
@@ -846,7 +850,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
     
-    cPlayer &player = game.getPlayer(this->iHousePal);
+    cPlayer &player = game.m_gameObjectsContext->getPlayer(this->iHousePal);
     auto tex = gfxdata->getSurface(bmpIndex);
     auto recoloredBmp = player.createTextureFromIndexedSurfaceWithPalette(tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {

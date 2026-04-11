@@ -13,32 +13,32 @@ cGameState::cGameState(cGame &theGame, GameContext* _ctx) :
 }
 
 
-const char *gameStateToString(GameState state)
+const char *gameStateToString(eGameState state)
 {
     switch (state) {
-        case GameState::INITIALIZE: return "INITIALIZE";
-        case GameState::OVER: return "OVER";
-        case GameState::MENU: return "MENU";
-        case GameState::PLAYING: return "PLAYING";
-        case GameState::BRIEFING: return "BRIEFING";
-        case GameState::EDITOR: return "EDITOR";
-        case GameState::NEW_MAP_EDITOR: return "NEW_MAP_EDITOR";
-        case GameState::OPTIONS: return "OPTIONS";
-        case GameState::REGION: return "REGION";
-        case GameState::SELECT_HOUSE: return "SELECT_HOUSE";
-        case GameState::INTRO: return "INTRO";
-        case GameState::TELLHOUSE: return "TELLHOUSE";
-        case GameState::WINNING: return "WINNING";
-        case GameState::WINBRIEF: return "WINBRIEF";
-        case GameState::LOSEBRIEF: return "LOSEBRIEF";
-        case GameState::LOSING: return "LOSING";
-        case GameState::SKIRMISH: return "SKIRMISH";
-        case GameState::SETUPSKIRMISH: return "SETUPSKIRMISH";
-        case GameState::CREDITS: return "CREDITS";
-        case GameState::MISSIONSELECT: return "MISSIONSELECT";
+        case eGameState::INITIALIZE: return "INITIALIZE";
+        case eGameState::OVER: return "OVER";
+        case eGameState::MENU: return "MENU";
+        case eGameState::PLAYING: return "PLAYING";
+        case eGameState::BRIEFING: return "BRIEFING";
+        case eGameState::EDITOR: return "EDITOR";
+        case eGameState::NEW_MAP_EDITOR: return "NEW_MAP_EDITOR";
+        case eGameState::OPTIONS: return "OPTIONS";
+        case eGameState::REGION: return "REGION";
+        case eGameState::SELECT_HOUSE: return "SELECT_HOUSE";
+        case eGameState::INTRO: return "INTRO";
+        case eGameState::TELLHOUSE: return "TELLHOUSE";
+        case eGameState::WINNING: return "WINNING";
+        case eGameState::WINBRIEF: return "WINBRIEF";
+        case eGameState::LOSEBRIEF: return "LOSEBRIEF";
+        case eGameState::LOSING: return "LOSING";
+        case eGameState::SKIRMISH: return "SKIRMISH";
+        case eGameState::SETUPSKIRMISH: return "SETUPSKIRMISH";
+        case eGameState::CREDITS: return "CREDITS";
+        case eGameState::MISSIONSELECT: return "MISSIONSELECT";
         // COUNT is not a valid state for the game, but it is for the iteration.
         // We return a special string. Maybe an out of range error is better ?
-        case GameState::COUNT: return "[Error: GameState::COUNT]";
+        case eGameState::COUNT: return "[Error: GameState::COUNT]";
     }
     // Handling unrecognized values ​​(if the enum is cast from an arbitrary character)
     throw std::out_of_range("Unknown GameState value");

@@ -4,8 +4,11 @@
 #include "include/definitions.h"
 #include "building/cItemBuilder.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
+#include "gameobjects/projectiles/cBullets.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "data/gfxdata.h"
@@ -14,13 +17,17 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/units/cUnits.h"
 #include <SDL2/SDL.h>
 #include <format>
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "controls/cGameControlsContext.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 
 #include <cassert>
 
@@ -29,7 +36,8 @@ cGamePlaying::cGamePlaying(cGame &theGame, GameContext* ctx) : cGameState(theGam
     assert(ctx != nullptr);
     m_reinforcements = game.getReinforcements();
     m_TIMER_evaluatePlayerStatus = 5;
-    game.m_pathsCreated = 0;
+    //game.m_pathsCreated = 0;
+    game.m_gameSettings->setPathsCreated(0);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -43,12 +51,12 @@ void cGamePlaying::thinkFast()
 
     game.m_mapCamera->thinkFast();
 
-    for (cPlayer &pPlayer : game.m_Players) {
+    for (cPlayer &pPlayer : game.m_gameObjectsContext->getPlayers()) {
         pPlayer.thinkFast();
     }
 
     // structures think
-    for (cAbstractStructure *pStructure : game.m_pStructures) {
+    for (cAbstractStructure *pStructure : game.m_gameObjectsContext->getStructures()) {
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
             pStructure->thinkFast();       // think about actions going on
@@ -61,31 +69,31 @@ void cGamePlaying::thinkFast()
         }
     }
 
-    for (cPlayer &pPlayer : game.m_Players) {
+    for (cPlayer &pPlayer : game.m_gameObjectsContext->getPlayers()) {
         cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
         if (itemBuilder) {
             itemBuilder->thinkFast();
         }
     }
 
-    game.m_map.thinkFast();
+    game.m_gameObjectsContext->getMap().thinkFast();
 
     game.reduceShaking();
 
     // units think (move only)
-    for (cUnit &cUnit : game.m_Units) {
+    for (cUnit &cUnit : game.m_gameObjectsContext->getUnits()) {
         if (!cUnit.isValid()) continue;
         cUnit.thinkFast();
     }
 
-    for (cParticle &pParticle : game.m_particles) {
+    for (cParticle &pParticle : game.m_gameObjectsContext->getParticles()) {
         if (!pParticle.isValid()) continue;
         pParticle.thinkFast();
     }
 
     // when not drawing the options, the game does all it needs to do
     // bullets think
-    for (cBullet &cBullet : game.g_Bullets) {
+    for (cBullet &cBullet : game.m_gameObjectsContext->getBullets()) {
         if (!cBullet.bAlive) continue;
         cBullet.thinkFast();
     }
@@ -94,8 +102,8 @@ void cGamePlaying::thinkFast()
 void cGamePlaying::thinkNormal()
 {
         // units think
-        for (int i = 0; i < game.m_Units.size(); i++) {
-            cUnit &cUnit = game.getUnit(i);
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+            cUnit &cUnit = game.m_gameObjectsContext->getUnits()[i];
             if (cUnit.isValid()) {
                 cUnit.think();
             }
@@ -104,7 +112,7 @@ void cGamePlaying::thinkNormal()
         game.m_drawManager->think();
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            game.getPlayer(i).think();
+            game.m_gameObjectsContext->getPlayer(i).think();
         }
 }
 
@@ -112,23 +120,24 @@ void cGamePlaying::thinkSlow()
 {
     evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-    game.m_pathsCreated = 0;
+    //game.m_pathsCreated = 0;
+    game.m_gameSettings->setPathsCreated(0);
 
     //@mira
-    if (!game.m_disableReinforcements) {
+    if (!game.m_gameSettings->isDisableReinforcements()) {
         m_reinforcements->thinkSlow();
     }
 
     // starports think per second for deployment (if any)
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = game.m_pStructures[i];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
         if (pStructure && pStructure->isValid()) {
             pStructure->thinkSlow();
         }
     }
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &player = game.getPlayer(i);
+        cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
         player.thinkSlow();
     }
 }
@@ -137,13 +146,13 @@ void cGamePlaying::thinkSlow()
 void cGamePlaying::draw() const
 {
     game.m_drawManager->drawCombatState();
-    if (m_game.m_drawFps) {
+    if (m_game.m_gameSettings->shouldDrawFps()) {
         game.drawTextFps();
     }
 
     drawCombatMouse();
 
-    if (m_game.m_drawTime) {
+    if (m_game.m_gameSettings->shouldDrawTime()) {
         game.drawTextTime();
     }
     // MOUSE
@@ -187,7 +196,7 @@ void cGamePlaying::evaluatePlayerStatus()
         // TODO: Better way is with events (ie created/destroyed). However, there is no such
         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            cPlayer &player = game.getPlayer(i);
+            cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
             bool isAlive = player.isAlive();
             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
             player.evaluateStillAlive();
@@ -227,14 +236,15 @@ void cGamePlaying::drawCombatMouse() const
 
 void cGamePlaying::missionInit()
 {
-    game.m_pathsCreated = 0;
+    // game.m_pathsCreated = 0;
+    game.m_gameSettings->setPathsCreated(0);
     m_TIMER_evaluatePlayerStatus = 5;
 }
 
 
 void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     bool createGroup = event.hasKey(SDL_SCANCODE_LCTRL) || event.hasKey(SDL_SCANCODE_RCTRL);
     if (createGroup) {
@@ -245,7 +255,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (game.isDebugMode()) { // debug mode has additional keys
+    if (game.m_gameSettings->isDebugMode()) { // debug mode has additional keys
         if (event.hasKey(SDL_SCANCODE_TAB)) {
             onKeyDownDebugMode(event);
         }
@@ -253,7 +263,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         if (event.hasKey(SDL_SCANCODE_F4)) {
             int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
-                game.m_map.clearShroud(mouseCell, 6, HUMAN);
+                game.m_gameObjectsContext->getMap().clearShroud(mouseCell, 6, HUMAN);
             }
         }
     }
@@ -279,25 +289,25 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.hasKey(SDL_SCANCODE_F)) {
-        game.m_drawFps = true;
+        game.m_gameSettings->setDrawFps(true);
     }
 }
 
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
-    cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_F)) {
-        m_game.m_drawFps = false;
+        m_game.m_gameSettings->setDrawFps(false);
     }
 
     if (event.hasKey(SDL_SCANCODE_BACKSLASH)) {
-        m_game.m_drawTime = ! m_game.m_drawTime;
+        m_game.m_gameSettings->setDrawTime(! m_game.m_gameSettings->shouldDrawTime());
     }
 
     if (event.hasKey(SDL_SCANCODE_D)) {
-        for (int i = 0; i < game.m_Units.size(); i++) {
-            cUnit &u = game.getUnit(i);
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+            cUnit &u = game.m_gameObjectsContext->getUnits()[i];
             if (u.isSelected() && u.iType == MCV && u.getPlayer()->isHuman()) {
                 bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
                 if (canPlace) {
@@ -347,23 +357,23 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = game.getPlayer(HUMAN);
+    const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     if (event.hasKey(SDL_SCANCODE_0)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(0));
-        game.setPlayerToInteractFor(&game.getPlayer(0));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(0));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(0));
     }
     else if (event.hasKey(SDL_SCANCODE_1)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(1));
-        game.setPlayerToInteractFor(&game.getPlayer(1));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(1));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(1));
     }
     else if (event.hasKey(SDL_SCANCODE_2)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(2));
-        game.setPlayerToInteractFor(&game.getPlayer(2));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(2));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(2));
     }
     else if (event.hasKey(SDL_SCANCODE_3)) {
-        game.m_drawManager->setPlayerToDraw(&game.getPlayer(3));
-        game.setPlayerToInteractFor(&game.getPlayer(3));
+        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(3));
+        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(3));
     }
 
     // WIN MISSION
@@ -379,7 +389,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     // GIVE CREDITS TO ALL PLAYERS
     if (event.hasKey(SDL_SCANCODE_F4)) {
         for (int i = 0; i < AI_WORM; i++) {
-            game.getPlayer(i).setCredits(5000);
+            game.m_gameObjectsContext->getPlayer(i).setCredits(5000);
         }
     }
 
@@ -387,19 +397,19 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F4, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = game.m_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                game.getUnit(idOfUnitAtCell).die(true, false);
+                game.m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(true, false);
             }
 
-            int idOfStructureAtCell = game.m_map.getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
-                game.m_pStructures[idOfStructureAtCell]->die();
+                game.m_gameObjectsContext->getStructures()[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = game.m_map.getCellIdWormsLayer(mc);
+            idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                game.getUnit(idOfUnitAtCell).die(false, false);
+                game.m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
             }
         }
     }
@@ -408,9 +418,9 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.hasKeys(SDL_SCANCODE_F5, SDL_SCANCODE_LSHIFT)) {
         int mc = humanPlayer.getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = game.m_map.getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = game.getUnit(idOfUnitAtCell);
+                cUnit &pUnit = game.m_gameObjectsContext->getUnits()[idOfUnitAtCell];
                 int damageToTake = pUnit.getHitPoints() - 25;
                 if (damageToTake > 0) {
                     pUnit.takeDamage(damageToTake, -1, -1);
@@ -421,7 +431,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     else {
         // REVEAL MAP
         if (event.hasKey(SDL_SCANCODE_F5)) {
-            game.m_map.clear_all(HUMAN);
+            game.m_gameObjectsContext->getMap().clear_all(HUMAN);
         }
     }
 
@@ -429,7 +439,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         // kill all carry-all's
         const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = game.getUnit(unitId);
+            cUnit &pUnit = game.m_gameObjectsContext->getUnits()[unitId];
             pUnit.die(true, false);
         }
     }
@@ -437,7 +447,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
 void cGamePlaying::update()
 {
-    for (auto &pPlayer : game.m_Players) {
+    for (auto &pPlayer : game.m_gameObjectsContext->getPlayers()) {
         pPlayer.update();
     }
 }

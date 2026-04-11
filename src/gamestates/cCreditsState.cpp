@@ -1,5 +1,5 @@
 #include "cCreditsState.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "config.h"
@@ -23,21 +23,21 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);
-    int duneAtTheRight = m_game.m_screenW - (m_duneBmp->w * 1.1f);
-    int duneAlmostAtBottom = m_game.m_screenH - (m_duneBmp->h * 1.1f);
+    int duneAtTheRight = m_game.m_gameSettings->getScreenW() - (m_duneBmp->w * 1.1f);
+    int duneAlmostAtBottom = m_game.m_gameSettings->getScreenH() - (m_duneBmp->h * 1.1f);
     m_duneCoordinates = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
     int titleWidth = m_titleBmp->w;
     m_titleHeight = m_titleBmp->h;
 
-    int centerOfScreen = m_game.m_screenW / 2;
+    int centerOfScreen = m_game.m_gameSettings->getScreenW() / 2;
 
     m_titleX = centerOfScreen - (titleWidth / 2);
     resetCrawler();
 
     int backButtonWidth = m_textDrawer->getTextLength(" BACK");
     int backButtonHeight = 21;
-    int backButtonY = m_game.m_screenH - 21;
+    int backButtonY = m_game.m_gameSettings->getScreenH() - 21;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     backButton = GuiButtonBuilder()
@@ -355,7 +355,7 @@ void cCreditsState::prepareCrawlerLines()
 
 void cCreditsState::resetCrawler()
 {
-    m_crawlerY = m_game.m_screenH + 1;
+    m_crawlerY = m_game.m_gameSettings->getScreenH() + 1;
 }
 
 cCreditsState::~cCreditsState()
@@ -382,7 +382,7 @@ void cCreditsState::draw() const
 {
     m_renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
-    int halfScreen = m_game.m_screenW / 2;
+    int halfScreen = m_game.m_gameSettings->getScreenW() / 2;
 
     // draw crawler
     m_renderDrawer->renderSprite(m_titleBmp, m_titleX, m_crawlerY);

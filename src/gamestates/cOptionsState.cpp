@@ -9,6 +9,7 @@
 #include "gui/GuiLabel.hpp"
 #include "gui/GuiCheckBox.hpp"
 #include "gui/GuiSlider.hpp"
+#include "game/cTimeManager.h"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
@@ -28,11 +29,11 @@ cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
 
 void cOptionsState::constructWindow(int prevState)
 {
-    int margin = m_game.m_screenH * 0.3;
+    int margin = m_game.m_gameSettings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = m_game.m_screenW - (margin * 2);
-    int mainMenuHeight = m_game.m_screenH - (margin * 2);
+    int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
+    int mainMenuHeight = m_game.m_gameSettings->getScreenH() - (margin * 2);
 
     margin = 4;
     int buttonHeight = (m_textDrawer->getFontHeight() + margin);
@@ -62,7 +63,7 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(gui_btn_toMenu);
 
-    if (m_game.isCheatMode()) {
+    if (m_game.m_gameSettings->isCheatMode()) {
         const cRectangle &cheatRect = m_guiWindow->getRelativeRect(margin, toMainMenu - 2*(buttonHeight + margin), buttonWidth, buttonHeight);
         GuiLabel *gui_cheatLabel = GuiLabelBuilder()
                 .withLabel("Cheat mode enabled")
@@ -86,7 +87,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_game.m_playing = false;
+                m_game.m_gameSettings->setPlaying(false);
                 m_game.initiateFadingOut();})
             .build();
     m_guiWindow->addGuiObject(gui_btn_Quit);

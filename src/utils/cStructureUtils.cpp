@@ -1,12 +1,17 @@
 #include "cStructureUtils.h"
-
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "utils/cLog.h"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
 #include "gameobjects/structures/cWindTrap.h"
+// #include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "map/cMapCamera.h"
+#include "map/cMap.h"
 #include "map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 
@@ -24,14 +29,14 @@ int cStructureUtils::getHeightOfStructureTypeInCells(int structureType)
 {
     assert(structureType >= 0);
     assert(structureType < MAX_STRUCTURETYPES);
-    return game.structureInfos[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    return game.m_infoContext->getStructureInfo(structureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 }
 
 int cStructureUtils::getWidthOfStructureTypeInCells(int structureType)
 {
     assert(structureType >= 0);
     assert(structureType < MAX_STRUCTURETYPES);
-    return game.structureInfos[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    return game.m_infoContext->getStructureInfo(structureType).bmp_width / TILESIZE_WIDTH_PIXELS;
 }
 
 
@@ -49,7 +54,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer *pPlayer)
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(STARPORT);
 
     if (primaryBuildingOfStructureType > -1) {
-        cAbstractStructure *theStructure = game.m_pStructures[primaryBuildingOfStructureType];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[primaryBuildingOfStructureType];
         if (theStructure && theStructure->getNonOccupiedCellAroundStructure() > -1) {
             return primaryBuildingOfStructureType;
         }
@@ -60,7 +65,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer *pPlayer)
     int firstFoundStarportId = -1;
     bool foundStarportWithFreeAround = false;
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (theStructure && theStructure->getOwner() == playerId) {
             if (theStructure->getType() == STARPORT) {
                 // when no id set, always set one id
@@ -111,14 +116,14 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer *pPlayer, int structureTy
 
     cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES,"Primary building",
         std::format("Looking for (type {}, name {}, pPlayer {})", structureType, 
-            game.structureInfos[structureType].name, playerId));
+            game.m_infoContext->getStructureInfo(structureType).name, playerId));
 
 
     // check primary building first if set
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(structureType);
 
     if (primaryBuildingOfStructureType > -1) {
-        cAbstractStructure *theStructure = game.m_pStructures[primaryBuildingOfStructureType];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[primaryBuildingOfStructureType];
         // this IF is needed, because the structure could be destroyed/replaced
         if (theStructure &&
                 theStructure->isValid() &&
@@ -228,12 +233,12 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
     for (int w = 0; w < theStructure->getWidth(); w++) {
         for (int h = 0; h < theStructure->getHeight(); h++)	{
-            int xOfStructureCell = game.m_map.getCellX(cellOfStructure);
-            int yOfStructureCell = game.m_map.getCellY(cellOfStructure);
+            int xOfStructureCell = game.m_gameObjectsContext->getMap().getCellX(cellOfStructure);
+            int yOfStructureCell = game.m_gameObjectsContext->getMap().getCellY(cellOfStructure);
 
-            int iCell = game.m_map.getGeometry().makeCell(xOfStructureCell + w, yOfStructureCell + h);
+            int iCell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(xOfStructureCell + w, yOfStructureCell + h);
 
-            game.m_map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
+            game.m_gameObjectsContext->getMap().cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
         }
     }
 }
@@ -247,8 +252,8 @@ bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure)
     int width = game.m_mapCamera->factorZoomLevel(structure->getWidthInPixels());
     int height = game.m_mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
-    return (drawX + width  >= 0 && drawX < game.m_screenW) &&
-           (drawY + height >= 0 && drawY < game.m_screenH);
+    return (drawX + width  >= 0 && drawX < game.m_gameSettings->getScreenW()) &&
+           (drawY + height >= 0 && drawY < game.m_gameSettings->getScreenH());
 }
 
 bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int screenX, int screenY)
@@ -271,7 +276,7 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer *pPlayer)
     int totalPowerUsage = 0;
 
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (theStructure) {
             if (theStructure->getPlayer()->getId() == pPlayer->getId()) {
                 int powerUsageOfStructure = theStructure->getPowerUsage();
@@ -289,7 +294,7 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer *pPlayer)
 
     int totalCapacity = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (theStructure == nullptr) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer()->getId() != pPlayer->getId()) continue; // does not belong to pPlayer
@@ -317,7 +322,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer *pPlayer)
 
     int totalPowerOut = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (theStructure == nullptr) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer()->getId() != pPlayer->getId()) continue; // not for pPlayer
@@ -333,7 +338,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer *pPlayer)
         }
     }
 
-    if (!game.m_skirmish) {
+    if (!game.m_gameSettings->isSkirmish()) {
         // ?? (mission 9 etc AI has no power)
     }
     return totalPowerOut;
@@ -349,7 +354,7 @@ int cStructureUtils::findHiTechToDeployAirUnit(cPlayer *pPlayer)
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(HIGHTECH);
 
     if (primaryBuildingOfStructureType > -1) {
-        cAbstractStructure *theStructure = game.m_pStructures[primaryBuildingOfStructureType];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[primaryBuildingOfStructureType];
         // this IF is needed, because the structure could be destroyed/replaced
         if (theStructure &&
                 theStructure->isValid() &&
@@ -377,7 +382,7 @@ int cStructureUtils::findStructureBy(int iPlayer, int iType, bool bFreeAround)
     if (iType < 0) return -1;
 
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_pStructures[i];
+        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
         if (theStructure &&
                 theStructure->isValid() &&
                 theStructure->belongsTo(iPlayer) &&

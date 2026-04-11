@@ -12,6 +12,8 @@
 #include <SDL2/SDL_ttf.h>
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <iostream>
 
 BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, false), m_dataCampaign(dataCampaign)
@@ -48,7 +50,7 @@ void BeneMentat::onYesButtonPressed()
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
     game.missionInit();
-    game.getPlayer(HUMAN).setHouse(this->getHouse());
+    game.m_gameObjectsContext->getPlayer(HUMAN).setHouse(this->getHouse());
     m_dataCampaign->housePlayer = this->getHouse();
     game.initiateFadingOut();
 }
@@ -57,7 +59,7 @@ void BeneMentat::onNoButtonPressed()
 {
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
-    game.getPlayer(HUMAN).setHouse(GENERALHOUSE);
+    game.m_gameObjectsContext->getPlayer(HUMAN).setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
     game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
     game.initiateFadingOut();

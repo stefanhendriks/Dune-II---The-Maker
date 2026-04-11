@@ -4,6 +4,9 @@
 #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "definitions.h"
+#include "gameobjects/units/cUnits.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cUnitUtils::cUnitUtils()
 {
@@ -24,12 +27,12 @@ int cUnitUtils::findUnit(int type, int iPlayerId)
 // find the first unit of type belonging to player Id, and is not the same Id as iIgnoreUnitId.
 int cUnitUtils::findUnit(int type, int iPlayerId, int iIgnoreUnitId)
 {
-    for (int i=0; i < game.m_Units.size(); i++) {
-        if (i == iIgnoreUnitId || !game.getUnit(i).isValid()) {
+    for (int i=0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        if (i == iIgnoreUnitId || !game.m_gameObjectsContext->getUnits()[i].isValid()) {
             continue;
         }
 
-        if (game.getUnit(i).iPlayer == iPlayerId && game.getUnit(i).iType == type) {
+        if (game.m_gameObjectsContext->getUnits()[i].iPlayer == iPlayerId && game.m_gameObjectsContext->getUnits()[i].iType == type) {
             return i;
         }
     }

@@ -4,6 +4,9 @@
 #include "mentat/HarkonnenMentat.h"
 #include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 #include "utils/ini.h"
 #include "include/d2tmc.h"
 #include "include/iniDefine.h"
@@ -38,10 +41,10 @@ void cMentatState::prepareMentat(int house)
 {
     // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
     //std::cout << "house I " << house << std::endl;
-    house = (m_house != -1) ? m_house : game.getPlayer(HUMAN).getHouse();
+    house = (m_house != -1) ? m_house : game.m_gameObjectsContext->getPlayer(HUMAN).getHouse();
     //std::cout << "house After " << house << std::endl;
-    //std::cout << "skirmish ? " << m_game.m_skirmish<< std::endl;
-    bool allowMissionSelect = !m_game.m_skirmish;
+    //std::cout << "skirmish ? " << m_game.m_gameSettings->isSkirmish()<< std::endl;
+    bool allowMissionSelect = !m_game.m_gameSettings->isSkirmish();
     // allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
     //std::cout << "allowMissionSelect " << allowMissionSelect <<std::endl ;
     if (m_mentat)

@@ -5,6 +5,10 @@
 #include "data/gfxdata.h"
 #include "map/cMap.h"
 #include "controls/cGameControlsContext.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
+#include "gameobjects/units/cUnits.h"
+#include "utils/cStructureUtils.h"
 #include "player/cPlayer.h"
 
 #include <algorithm>
@@ -48,7 +52,7 @@ void cMouseRepairState::onMouseLeftButtonClicked()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit &pUnit = game.getUnit(hoverUnitId);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
         if (pUnit.isValid() && pUnit.belongsTo(m_player) && pUnit.isEligibleForRepair()) {
             pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
         }
@@ -99,7 +103,7 @@ int cMouseRepairState::getMouseTileForRepairState()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit &pUnit = game.getUnit(hoverUnitId);
+        cUnit &pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
         if (pUnit.isValid() && pUnit.belongsTo(m_player) && pUnit.isEligibleForRepair()) {
             return MOUSE_REPAIR;
         }

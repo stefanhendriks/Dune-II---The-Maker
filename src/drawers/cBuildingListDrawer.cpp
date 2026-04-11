@@ -1,5 +1,5 @@
 #include "cBuildingListDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -8,6 +8,8 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 #include <SDL2/SDL.h>
 #include <format>
@@ -116,7 +118,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
 int cBuildingListDrawer::getDrawX()
 {
-    return (game.m_screenW - cSideBar::SidebarWidthWithoutCandyBar) + 2;
+    return (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar) + 2;
 }
 
 int cBuildingListDrawer::getDrawY()
@@ -289,7 +291,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             m_gameTextDrawer->drawText(textX, textY, std::format("{}",amountToShow));
         }
 
-        if (game.isDebugMode()) {
+        if (game.m_gameSettings->isDebugMode()) {
             if (m_renderListIds) {
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
@@ -336,8 +338,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
 {
     // figure out size
-    int iW= game.structureInfos[structureId].bmp_width / 32;
-    int iH= game.structureInfos[structureId].bmp_height / 32;
+    int iW= game.m_infoContext->getStructureInfo(structureId).bmp_width / 32;
+    int iH= game.m_infoContext->getStructureInfo(structureId).bmp_height / 32;
     int iTile = GRID_1X1;
 
     if (iW == 2 && iH == 2) {

@@ -1,6 +1,8 @@
 #include "cMiniMapDrawer.h"
-
+#include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
+#include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
 #include "map/cMapCamera.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -15,6 +17,9 @@
 #include "map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
+#include "map/cMap.h"
 #include <cassert>
 #include <iostream>
 
@@ -41,7 +46,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
-    int topLeftX = game.m_screenW - cSideBar::WidthOfMinimap;
+    int topLeftX = game.m_gameSettings->getScreenW() - cSideBar::WidthOfMinimap;
     m_drawX = topLeftX + (halfWidthOfMinimap - m_factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
@@ -297,29 +302,29 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfStructureAtCell = m_map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
-                int iPlr = game.m_pStructures[idOfStructureAtCell]->getOwner();
+                int iPlr = game.m_gameObjectsContext->getStructures()[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.getPlayer(iPlr).getMinimapColor();
+                iColor = game.m_gameObjectsContext->getPlayer(iPlr).getMinimapColor();
             }
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
-                int iPlr = game.getUnit(idOfUnitAtCell).iPlayer;
+                int iPlr = game.m_gameObjectsContext->getUnit(idOfUnitAtCell).iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.getPlayer(iPlr).getMinimapColor();
+                iColor = game.m_gameObjectsContext->getPlayer(iPlr).getMinimapColor();
             }
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
-                int iPlr = game.getUnit(idOfAirUnitAtCell).iPlayer;
+                int iPlr = game.m_gameObjectsContext->getUnit(idOfAirUnitAtCell).iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.getPlayer(iPlr).getMinimapColor();
+                iColor = game.m_gameObjectsContext->getPlayer(iPlr).getMinimapColor();
             }
 
             int idOfWormAtCell = m_map->getCellIdWormsLayer(iCll);

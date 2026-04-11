@@ -4,12 +4,16 @@
 #include "include/d2tmc.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/particles/cParticle.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {
     m_particlesLowerLayer.clear();
     m_particlesTopLayer.clear();
-    for (auto &pParticle : game.m_particles) {
+    for (auto &pParticle : game.m_gameObjectsContext->getParticles()) {
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 

@@ -6,11 +6,13 @@
 #include "cPlayerBrainMissionKindDeathHand.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
 #include "cPlayerBrainMissionKindFremen.h"
+#include "gameobjects/units/cUnits.h"
 #include "sidebar/cSideBar.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include <format>
 #include <cassert>
 #include <algorithm>
@@ -147,7 +149,7 @@ void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainMission::onEventDeviated(const s_GameEvent &event)
 {
     if (event.entityType == UNIT) {
-        cUnit &entityUnit = game.getUnit(event.entityID);
+        cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
         if (entityUnit.getPlayer() != player) {
             // not our unit, if it was in our units list, remove it.
             removeUnitIdFromListIfPresent(event.entityID);
@@ -195,7 +197,7 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                 state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
             // unit got created, not reinforced
             if (event.entityType == UNIT && !event.isReinforce) {
-                cUnit &entityUnit = game.getUnit(event.entityID);
+                cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
 
                 // this unit has not been assigned to a mission yet
                 if (!entityUnit.isAssignedAnyMission()) {
@@ -215,10 +217,10 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                         }
                         else if (thingIWant.buildType == eBuildType::SPECIAL) {
                             // or a special kind of thing I ordered should produce a unit
-                            if (game.specialInfos[thingIWant.type].providesType == eBuildType::UNIT) {
+                            if (game.m_infoContext->getSpecialInfo(thingIWant.type).providesType == eBuildType::UNIT) {
                                 // it provides a unit AND the kind of unit it provides matches that what
                                 // has been created... then we *also* are interested.
-                                if (game.specialInfos[thingIWant.type].providesTypeId == event.entitySpecificType) {
+                                if (game.m_infoContext->getSpecialInfo(thingIWant.type).providesTypeId == event.entitySpecificType) {
                                     // in case we have multiple entries with same type we check for produced vs required
 
                                     // do not look at produced property, because we should have only ONE SPECIAL KIND
@@ -255,7 +257,7 @@ void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove)
         // found unit in our list, so someone of ours got destroyed!
         log(std::format("removeUnitIdFromListIfPresent [{}] has removed unit from the list!", unitIdToRemove).c_str());
         units.erase(position);
-        game.getUnit(unitIdToRemove).unAssignMission();
+        game.m_gameObjectsContext->getUnit(unitIdToRemove).unAssignMission();
         log("These units are still available:");
         logUnits();
     }
@@ -291,7 +293,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 
                 if (thingIWant.buildType == eBuildType::UNIT) {
                     for (auto &unitId : allMyUnits) {
-                        cUnit &pUnit = game.getUnit(unitId);
+                        cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
                         if (!pUnit.isValid()) continue;
                         if (pUnit.getType() != thingIWant.type) continue;
                         if (!pUnit.isIdle()) continue;
@@ -352,7 +354,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                     cSideBar *pSideBar = player->getSideBar();
                     int awaitingResourcesTimeToIncrease = 15;
                     if (thingIWant.buildType == UNIT) {
-                        cBuildingListItem *pItem = pSideBar->getBuildingListItem(game.unitInfos[thingIWant.type].listType,
+                        cBuildingListItem *pItem = pSideBar->getBuildingListItem(game.m_infoContext->getUnitInfo(thingIWant.type).listType,
                                                    thingIWant.type);
 
                         if (pItem) {
@@ -446,7 +448,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 void cPlayerBrainMission::logUnits()
 {
     for (auto &myUnitId : units) {
-        cUnit &myUnit = game.getUnit(myUnitId);
+        cUnit &myUnit = game.m_gameObjectsContext->getUnit(myUnitId);
         log(std::format("logUnits() : Unit {}, type {} ({})", myUnit.iID, myUnit.iType, myUnit.getUnitInfo().name).c_str());
     }
 }
@@ -503,7 +505,7 @@ void cPlayerBrainMission::thinkState_Execute()
 
     bool teamIsStillAlive = false;
     for (auto &myUnit : units) {
-        cUnit &aUnit = game.getUnit(myUnit);
+        cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
         if (aUnit.isValid() &&
                 aUnit.isAssignedMission(uniqueIdentifier)) { // in case this unit ID was re-spawned...
             teamIsStillAlive = true;

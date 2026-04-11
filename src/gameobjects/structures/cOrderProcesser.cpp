@@ -12,8 +12,12 @@
 #include "player/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
+#include "gameobjects/structures/cStructures.h"
+#include "gameobjects/units/cUnits.h"
+#include "map/cMap.h"
 #include <format>
-
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 #include "data/gfxaudio.h"
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
@@ -140,7 +144,7 @@ void cOrderProcesser::updatePricesForStarport()
         cBuildingListItem *item = list->getItem(i);
         if (item) {
             int id = item->getBuildId();
-            int originalPrice = game.unitInfos[id].cost;
+            int originalPrice = game.m_infoContext->getUnitInfo(id).cost;
             int slice = originalPrice / 2;
             int newPrice = (originalPrice - slice) + (RNG::rnd(slice * 2));
             item->setBuildCost(newPrice);
@@ -224,14 +228,14 @@ void cOrderProcesser::sendFrigate()
 {
     // iCll = structure start cell (up left), since we must go to the center
     // of the cell:
-    int structureId = game.m_structureUtils.findStarportToDeployUnit(m_player);
+    int structureId = game.m_structureUtils->findStarportToDeployUnit(m_player);
 
     if (structureId > -1) {
         // found structure
-        game.m_pStructures[structureId]->setAnimating(true);
-        int destinationCell = game.m_pStructures[structureId]->getCell();
+        game.m_gameObjectsContext->getStructures()[structureId]->setAnimating(true);
+        int destinationCell = game.m_gameObjectsContext->getStructures()[structureId]->getCell();
 
-        int iStartCell = game.m_map.findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+        int iStartCell = game.m_gameObjectsContext->getMap().findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
         if (iStartCell < 0) {
             logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");
@@ -246,21 +250,21 @@ void cOrderProcesser::sendFrigate()
             }
 
             // STEP 2b: make sure its facing the starport directly
-            int iCellX = game.m_map.getCellX(iStartCell);
-            int iCellY = game.m_map.getCellY(iStartCell);
-            int cx = game.m_map.getCellX(destinationCell);
-            int cy = game.m_map.getCellY(destinationCell);
+            int iCellX = game.m_gameObjectsContext->getMap().getCellX(iStartCell);
+            int iCellY = game.m_gameObjectsContext->getMap().getCellY(iStartCell);
+            int cx = game.m_gameObjectsContext->getMap().getCellX(destinationCell);
+            int cy = game.m_gameObjectsContext->getMap().getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
             int f = faceAngle(d); // get the angle
 
-            game.getUnit(unitId).rendering.iBodyShouldFace = f;
-            game.getUnit(unitId).rendering.iBodyFacing = f;
-            game.getUnit(unitId).rendering.iHeadShouldFace = f;
-            game.getUnit(unitId).rendering.iHeadFacing = f;
+            game.m_gameObjectsContext->getUnit(unitId).rendering.iBodyShouldFace = f;
+            game.m_gameObjectsContext->getUnit(unitId).rendering.iBodyFacing = f;
+            game.m_gameObjectsContext->getUnit(unitId).rendering.iHeadShouldFace = f;
+            game.m_gameObjectsContext->getUnit(unitId).rendering.iHeadFacing = f;
 
             // STEP 3: assign order to frigate (use carryall order function)
-            game.getUnit(unitId).carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
+            game.m_gameObjectsContext->getUnit(unitId).carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
             m_unitIdOfFrigateSent = unitId;
             m_frigateSent = true;
         }

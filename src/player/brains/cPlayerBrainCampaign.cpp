@@ -1,6 +1,9 @@
 #include "cPlayerBrainCampaign.h"
 
 #include "actions/cRespondToThreatAction.h"
+#include "gameobjects/particles/cParticles.h"
+#include "gameobjects/structures/cStructures.h"
+#include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
@@ -12,6 +15,8 @@
 #include <algorithm>
 #include <cassert>
 #include "include/sDataCampaign.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 namespace brains {
 
@@ -26,7 +31,7 @@ cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* data
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
     m_TIMER_rest = (10 * 60) * 4;
-    if (game.m_noAiRest) {
+    if (game.m_gameSettings->isNoAiRest()) {
         m_TIMER_rest = 10;
     }
     m_myBase = std::vector<s_structurePosition>();
@@ -101,16 +106,16 @@ void cPlayerBrainCampaign::addBuildOrder(s_buildOrder order)
         std::string msg;
         if (buildOrder.buildType == eBuildType::UNIT) {
             msg = std::format("[{}] - type = UNIT, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              game.unitInfos[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              game.m_infoContext->getUnitInfo(buildOrder.buildId).name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::STRUCTURE) {
             msg = std::format("[{}] - type = STRUCTURE, buildId = {} (={}), priority = {}, place at {}, state = {}", id,
-                              buildOrder.buildId, game.structureInfos[buildOrder.buildId].name, buildOrder.priority,
+                              buildOrder.buildId, game.m_infoContext->getStructureInfo(buildOrder.buildId).name, buildOrder.priority,
                               buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {
             msg = std::format("[{}] - type = SPECIAL, buildId = {} (={}), priority = {}, state = {}", id, buildOrder.buildId,
-                              game.specialInfos[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                              game.m_infoContext->getSpecialInfo(buildOrder.buildId).description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
         }
         else if (buildOrder.buildType == eBuildType::BULLET) {
             msg = std::format("[{}] - type = SPECIAL, buildId = {} (=NOT YET IMPLEMENTED), priority = {}, state = {}", id,
@@ -169,7 +174,7 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureCreated(const s_GameEvent &event)
 {
     // a structure was created, update our baseplan
-    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
     int placedAtCell = pStructure->getCell();
     bool foundExistingStructureInBase = false;
     for (auto &structurePosition : m_myBase) {
@@ -233,10 +238,10 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event)
     cUnit *threat = nullptr;
     if (event.originType == eBuildType::UNIT) {
         assert(event.originId > -1);
-        threat = &game.getUnit(event.originId);
+        threat = &game.m_gameObjectsContext->getUnit(event.originId);
     }
 
-    cUnit &victim = game.getUnit(event.entityID);
+    cUnit &victim = game.m_gameObjectsContext->getUnit(event.entityID);
     if (victim.isHarvester()) {
         respondToThreat(threat, &victim, event.atCell, 2 + RNG::rnd(4));
     }
@@ -245,9 +250,9 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
-            s_StructureInfo &sStructures = game.structureInfos[event.entitySpecificType];
+            s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                 pStructure->startRepairing();
             }
@@ -257,7 +262,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
     int unitIdThatAttacks = event.originId;
     if (unitIdThatAttacks > -1) {
         // respond to something that attacks us
-        cUnit originUnit = game.getUnit(unitIdThatAttacks);
+        cUnit originUnit = game.m_gameObjectsContext->getUnit(unitIdThatAttacks);
         if (originUnit.getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
             log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
@@ -272,9 +277,9 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const s_GameEvent &event)
 void cPlayerBrainCampaign::onMyStructureDecayed(const s_GameEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
-        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
-            s_StructureInfo &sStructures = game.structureInfos[event.entitySpecificType];
+            s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(event.entitySpecificType);
             if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                 pStructure->startRepairing();
             }
@@ -1728,20 +1733,20 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
             if (event.player == player) {
                 // i discovered something
                 if (event.entityType == eBuildType::UNIT) {
-                    cUnit &pUnit = game.getUnit(event.entityID);
+                    cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
                         // found enemy unit
                         m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
                         m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
-                        if (m_centerOfBaseCell > -1 && game.m_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
                 else if (event.entityType == eBuildType::STRUCTURE) {
-                    cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+                    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
                     if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                         // found enemy structure
                         m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
@@ -1752,12 +1757,12 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
             }
             else {
                 // event.player == player who discovered something
-                if (event.player == &game.getPlayer(AI_WORM)) {
+                if (event.player == &game.m_gameObjectsContext->getPlayer(AI_WORM)) {
                     // ignore anything that the WORM AI player detected.
                 }
                 else if (!event.player->isSameTeamAs(player)) {
                     if (event.entityType == eBuildType::UNIT) {
-                        cUnit &pUnit = game.getUnit(event.entityID);
+                        cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                         // the other player discovered a unit of mine
                         if (pUnit.isValid() && pUnit.getPlayer() == player) {
                             // found my unit
@@ -1767,7 +1772,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                         }
                     }
                     else if (event.entityType == eBuildType::STRUCTURE) {
-                        cAbstractStructure *pStructure = game.m_pStructures[event.entityID];
+                        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
                         // the other player discovered a structure of mine
                         if (pStructure->getPlayer() == player) {
                             // found my structure
@@ -1792,9 +1797,9 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
             if (event.player == player) {
                 // i discovered something
                 if (event.entityType == eBuildType::UNIT) {
-                    cUnit &pUnit = game.getUnit(event.entityID);
+                    cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                     if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
-                        if (m_centerOfBaseCell > -1 && game.m_map.distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }

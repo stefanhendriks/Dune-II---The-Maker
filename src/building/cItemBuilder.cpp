@@ -4,8 +4,11 @@
 #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "gameobjects/structures/cAbstractStructure.h"
+#include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/units/cUnits.h"
+#include "utils/cStructureUtils.h"
 #include "player/cPlayer.h"
 #include "player/cPlayerDifficultySettings.h"
 #include "sGameEvent.h"
@@ -17,6 +20,9 @@
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 
 #include <cassert>
 
@@ -77,13 +83,13 @@ cItemBuilder::~cItemBuilder()
  */
 int cItemBuilder::getTimerCap(cBuildingListItem *item)
 {
-    int iTimerCap = game.isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    int iTimerCap = game.m_gameSettings->isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
-        int structureTypeItLeavesFrom = game.unitInfos[item->getBuildId()].structureTypeItLeavesFrom;
+        int structureTypeItLeavesFrom = game.m_infoContext->getUnitInfo(item->getBuildId()).structureTypeItLeavesFrom;
         int structureCount = m_player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
         if (structureCount > 1) {
             iTimerCap /= structureCount;
@@ -238,15 +244,15 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             }
             else {
                 // airborn unit
-                int structureToDeployUnit = game.m_structureUtils.findHiTechToDeployAirUnit(m_player);
+                int structureToDeployUnit = game.m_structureUtils->findHiTechToDeployAirUnit(m_player);
                 if (structureToDeployUnit > -1) {
-                    cAbstractStructure *pStructureToDeploy = game.m_pStructures[structureToDeployUnit];
+                    cAbstractStructure *pStructureToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
                     int unitId = cUnits::unitCreate(pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
                     if (unitId > -1) {
                         int rallyPoint = pStructureToDeploy->getRallyPoint();
                         if (rallyPoint > -1) {
-                            game.getUnit(unitId).move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                            game.m_gameObjectsContext->getUnit(unitId).move_to(rallyPoint, -1, -1, INTENT_MOVE);
                         }
                     }
                 }
@@ -287,10 +293,10 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = game.m_map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+                        int iCll = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
-                            bool passable = game.m_map.isCellPassableForFootUnits(iCll);
+                            bool passable = game.m_gameObjectsContext->getMap().isCellPassableForFootUnits(iCll);
 
                             if (passable) {
                                 cUnits::unitCreate(iCll, special.providesTypeId, FREMEN, false);
@@ -299,8 +305,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = game.m_map.getCellX(iCll);
-                            int y = game.m_map.getCellY(iCll);
+                            int x = game.m_gameObjectsContext->getMap().getCellX(iCll);
+                            int y = game.m_gameObjectsContext->getMap().getCellY(iCll);
                             int amount = RNG::rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
@@ -319,9 +325,9 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                     break;
                             }
                             // change cell
-                            cPoint::split(x, y) = game.m_map.fixCoordinatesToBeWithinMap(x, y);
+                            cPoint::split(x, y) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(x, y);
 
-                            iCll = game.m_map.getGeometry().makeCell(x, y);
+                            iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(x, y);
                         }
                     }
                     item->stopBuilding();
@@ -402,12 +408,12 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
  */
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
 {
-    int structureTypeByItem = game.m_structureUtils.findStructureTypeByTypeOfList(item);
+    int structureTypeByItem = game.m_structureUtils->findStructureTypeByTypeOfList(item);
     assert(structureTypeByItem > -1);
-    int structureToDeployUnit = game.m_structureUtils.findStructureToDeployUnit(m_player, structureTypeByItem);
+    int structureToDeployUnit = game.m_structureUtils->findStructureToDeployUnit(m_player, structureTypeByItem);
     int buildIdToProduce = buildId;
     if (structureToDeployUnit > -1) {
-        cAbstractStructure *pStructureToDeploy = game.m_pStructures[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit];
         // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
         int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
         if (cell > -1) {
@@ -416,7 +422,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             if (unitId > -1) {
                 int rallyPoint = pStructureToDeploy->getRallyPoint();
                 if (rallyPoint > -1) {
-                    game.getUnit(unitId).move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                    game.m_gameObjectsContext->getUnit(unitId).move_to(rallyPoint, -1, -1, INTENT_MOVE);
                 }
             }
         }
@@ -429,7 +435,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
         if (structureToDeployUnit < 0) {
             // find any structure of type (regardless if we can deploy or not)
             for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
-                cAbstractStructure *pStructure = game.m_pStructures[structureId];
+                cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
                 if (pStructure &&
                         pStructure->isValid() &&
                         pStructure->belongsTo(m_player->getId()) &&
@@ -440,9 +446,9 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             }
         }
 
-        cAbstractStructure *pStructureToDeploy = game.m_pStructures[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit];
         if (pStructureToDeploy && pStructureToDeploy->isValid()) {
-            int cellToDeploy = game.m_pStructures[structureToDeployUnit]->getCell();
+            int cellToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit]->getCell();
             if (pStructureToDeploy->getRallyPoint() > -1) {
                 cellToDeploy = pStructureToDeploy->getRallyPoint();
             }

@@ -5,7 +5,10 @@
 #include "include/d2tmc.h"
 #include "sidebar/cSideBar.h"
 #include "map/MapGeometry.hpp"
-
+#include "game/cGameSettings.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
+#include "map/cMap.h"
 #include <algorithm>
 #include <cassert>
 
@@ -26,8 +29,8 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     int widthOfSidebar = cSideBar::SidebarWidth;
     m_heightOfTopBar = cSideBar::TopBarHeight;
 
-    m_windowWidth= game.m_screenW - widthOfSidebar;
-    m_windowHeight= game.m_screenH - m_heightOfTopBar;
+    m_windowWidth= game.m_gameSettings->getScreenW() - widthOfSidebar;
+    m_windowHeight= game.m_gameSettings->getScreenH() - m_heightOfTopBar;
 
     m_viewportWidth=m_windowWidth;
     m_viewportHeight=m_windowHeight;
@@ -106,12 +109,12 @@ void cMapCamera::keepViewportWithinReasonableBounds()
         m_viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (game.m_map.getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (game.m_gameObjectsContext->getMap().getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         m_viewportStartX = maxWidth - m_viewportWidth;
     }
 
-    int maxHeight = (game.m_map.getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (game.m_gameObjectsContext->getMap().getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         m_viewportStartY = maxHeight - m_viewportHeight;
     }
@@ -121,7 +124,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell)
 {
     // fix any boundaries
     if (cell < 0) cell = 0;
-    if (cell >= game.m_map.getMaxCells()) cell = (game.m_map.getMaxCells()-1);
+    if (cell >= game.m_gameObjectsContext->getMap().getMaxCells()) cell = (game.m_gameObjectsContext->getMap().getMaxCells()-1);
 
     int mapCellX = m_pMap->getAbsoluteXPositionFromCell(cell);
     int mapCellY = m_pMap->getAbsoluteYPositionFromCell(cell);
@@ -170,7 +173,7 @@ void cMapCamera::setViewportPosition(int x, int y)
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y)
 {
-    return game.m_map.getGeometry().getCellWithMapDimensions((x / 32), (y / 32));
+    return game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions((x / 32), (y / 32));
 }
 
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -211,7 +214,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_LEFT);
         }
-        else if (mouseX >= (game.m_screenW - 2)) {
+        else if (mouseX >= (game.m_gameSettings->getScreenW() - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_RIGHT);
         }
@@ -225,7 +228,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_UP);
         }
-        else if (mouseY >= (game.m_screenH - 2)) {
+        else if (mouseY >= (game.m_gameSettings->getScreenH() - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             pMouse->setTile(MOUSE_DOWN);
         }

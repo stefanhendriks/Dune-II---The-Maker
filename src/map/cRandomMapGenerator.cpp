@@ -11,6 +11,8 @@
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
+#include "context/cInfoContext.h"
+#include "context/cGameObjectContext.h"
 
 cRandomMapGenerator::cRandomMapGenerator()
 {
@@ -19,8 +21,8 @@ cRandomMapGenerator::cRandomMapGenerator()
 void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry)
 {
     // create random map
-    game.m_map.init(width, height);
-    auto mapEditor = cMapEditor(game.m_map);
+    game.m_gameObjectsContext->getMap().init(width, height);
+    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
 
     int a_spice = RNG::rnd((startingPoints * 8)) + (startingPoints * 12);
     int a_rock = 32 + RNG::rnd(startingPoints * 3);
@@ -48,15 +50,15 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
 
     // draw
     while (a_rock > 0) {
-        int iCll = game.m_map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+        int iCll = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(4);
         if (iCll < 0) continue;
 
         bool bOk = true;
         if (iSpot < maxRockSpots) {
             for (int s = 0; s < maxRockSpots; s++) {
                 if (iSpotRock[s] > -1) {
-                    if (ABS_length(game.m_map.getCellX(iCll), game.m_map.getCellY(iCll), game.m_map.getCellX(iSpotRock[s]),
-                                   game.m_map.getCellY(iSpotRock[s])) < iDistance) {
+                    if (ABS_length(game.m_gameObjectsContext->getMap().getCellX(iCll), game.m_gameObjectsContext->getMap().getCellY(iCll), game.m_gameObjectsContext->getMap().getCellX(iSpotRock[s]),
+                                   game.m_gameObjectsContext->getMap().getCellY(iSpotRock[s])) < iDistance) {
                         bOk = false;
                     }
                     else {
@@ -98,13 +100,13 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     mapEditor.removeSingleRockSpots();
 
     while (a_spice > 0) {
-        int iCll = game.m_map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
+        int iCll = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createRandomField(iCll, TERRAIN_SPICE, 2500);
         a_spice--;
     }
 
     while (a_hill > 0) {
-        int cell = game.m_map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
+        int cell = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createRandomField(cell, TERRAIN_HILL, 500 + RNG::rnd(500));
         a_hill--;
     }
@@ -122,16 +124,16 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     global_renderDrawer->FillWithColor(randomMapEntry.terrain, Color::black());
 
     // now put in previewmap 0
-    for (int x = 0; x < game.m_map.getWidth(); x++) {
-        for (int y = 0; y < game.m_map.getHeight(); y++) {
+    for (int x = 0; x < game.m_gameObjectsContext->getMap().getWidth(); x++) {
+        for (int y = 0; y < game.m_gameObjectsContext->getMap().getHeight(); y++) {
 
-            int cll = game.m_map.getGeometry().getCellWithMapDimensions(x, y);
+            int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             Color iColor = Color{194, 125, 60,255};
 
             // rock
-            int cellType = game.m_map.getCellType(cll);
+            int cellType = game.m_gameObjectsContext->getMap().getCellType(cll);
             if (cellType == TERRAIN_ROCK) iColor = Color{80, 80, 60,255};
             if (cellType == TERRAIN_MOUNTAIN) iColor = Color{48, 48, 36,255};
             if (cellType == TERRAIN_SPICEHILL) iColor = Color{180, 90, 25,255}; // a bit darker
@@ -142,8 +144,8 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
 
             for (int s = 0; s < 4; s++) {
                 if (randomMapEntry.iStartCell[s] > -1) {
-                    int sx = game.m_map.getCellX(randomMapEntry.iStartCell[s]);
-                    int sy = game.m_map.getCellY(randomMapEntry.iStartCell[s]);
+                    int sx = game.m_gameObjectsContext->getMap().getCellX(randomMapEntry.iStartCell[s]);
+                    int sy = game.m_gameObjectsContext->getMap().getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
                         iColor = Color::white();

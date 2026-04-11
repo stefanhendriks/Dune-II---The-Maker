@@ -10,7 +10,6 @@
 #include "context/GraphicsContext.hpp"
 #include "map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
-
 #include <SDL2/SDL.h>
 #include <cassert>
 #include <iostream>
@@ -29,9 +28,9 @@ cEditorState::cEditorState(cGame &theGame, GameContext* ctx)
     m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
 {
     assert(ctx != nullptr);
-    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_screenW, heightBarSize);
-    const cRectangle &modifRect = cRectangle(m_game.m_screenW-heightBarSize, heightBarSize, heightBarSize, m_game.m_screenH-heightBarSize);
-    mapSizeArea = cRectangle(0,heightBarSize,m_game.m_screenW-heightBarSize,m_game.m_screenH-heightBarSize);
+    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_gameSettings->getScreenW(), heightBarSize);
+    const cRectangle &modifRect = cRectangle(m_game.m_gameSettings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_game.m_gameSettings->getScreenH()-heightBarSize);
+    mapSizeArea = cRectangle(0,heightBarSize,m_game.m_gameSettings->getScreenW()-heightBarSize,m_game.m_gameSettings->getScreenH()-heightBarSize);
     m_selectBar = std::make_unique<GuiBar>(m_renderDrawer, selectRect,GuiBarPlacement::HORIZONTAL,heightButtonSize);
     m_topologyBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_startCellBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
@@ -376,11 +375,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             saveMap();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEUP)) {
-            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles();
         }
         if (event.hasKey(SDL_Scancode::SDL_SCANCODE_PAGEDOWN)) {
-            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles();
         }
         // to test : updateVisibleTiles();
@@ -410,11 +409,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             updateVisibleTiles(); 
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_UP)) {
-            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomIn);
+            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles(); 
         }
         if (event.hasKeys(SDL_Scancode::SDL_SCANCODE_LSHIFT ,SDL_Scancode::SDL_SCANCODE_DOWN)) {
-            zoomAtMapPosition(m_game.m_screenW/2, m_game.m_screenH/2, ZoomDirection::zoomOut);
+            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles(); 
         }
         //to test : updateVisibleTiles(); 
@@ -629,7 +628,7 @@ void cEditorState::drawStartCells() const
             x = startCells[i].x * tileLenSize - cameraX;
             y = heightBarSize + startCells[i].y * tileLenSize - cameraY;
             // Display if onscreen
-            if (x + tileLenSize > 0 && x < m_game.m_screenW &&y + tileLenSize > heightBarSize && y < m_game.m_screenH) {
+            if (x + tileLenSize > 0 && x < m_game.m_gameSettings->getScreenW() &&y + tileLenSize > heightBarSize && y < m_game.m_gameSettings->getScreenH()) {
                 destRect = cRectangle(x, y, tileLenSize, tileLenSize);
                 m_renderDrawer->renderStrechSprite(m_gfxeditor->getTexture(STARTPOSITION1+i), srcRect, destRect);
             }

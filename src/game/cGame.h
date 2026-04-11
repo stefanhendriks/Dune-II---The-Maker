@@ -14,26 +14,23 @@
 #include "controls/cMouse.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "include/enums GameState.h"
-#include "observers/cScenarioObserver.h"
+#include "include/eGameState.h"
+//#include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-#include "game/cTimeManager.h"
-#include "utils/cIniFile.h"
-#include "map/cPreviewMaps.h"
-#include "map/cMap.h"
-#include "player/cPlayers.h"
-#include "gameobjects/particles/cParticles.h"
-#include "gameobjects/structures/cStructures.h"
-#include "gameobjects/particles/cParticleInfos.h"
-#include "gameobjects/units/cUnits.h"
-#include "gameobjects/projectiles/cBullets.h"
-#include "utils/cStructureUtils.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
-#include "gameobjects/cSpecialInfos.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
+// #include "game/cTimeManager.h"
+//#include "utils/cIniFile.h"
+//#include "map/cPreviewMaps.h"
+// #include "map/cMap.h"
+// #include "player/cPlayers.h"
+//#include "gameobjects/particles/cParticles.h"
+//#include "gameobjects/structures/cStructures.h"
+// #include "gameobjects/units/cUnits.h"
+// #include "gameobjects/projectiles/cBullets.h"
+//#include "utils/cStructureUtils.h"
+#include "observers/cScenarioObserver.h"
+//#include "context/cInfoContext.h"
+//#include "context/cGameObjectContext.h"
+#include "utils/Color.hpp"
 
 #include <memory>
 #include <string>
@@ -41,6 +38,8 @@
 #include <SDL2/SDL_mixer.h>
 
 class cGameControlsContext;
+class cGameObjectContext;
+class cInfoContext;
 class cGameState;
 class cInteractionManager;
 class cPlatformLayerInit;
@@ -50,7 +49,8 @@ class cScreenInit;
 class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
-struct GameSettings;
+struct InitialGameSettings;
+class cGameSettings;
 
 class ContextCreator;
 class GameContext;
@@ -61,9 +61,12 @@ class cScreenFader;
 class SDLDrawer;
 class cMapCamera;
 class cDrawManager;
+class cTimeManager;
+class cStructureUtils;
+class Texture;
 
-struct s_TerrainInfo;
 struct s_DataCampaign;
+struct s_PreviewMap;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -86,58 +89,44 @@ public:
         m_gameFilename = filename;
     }
 
-    bool m_windowed;			    // windowed
-    bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
-
     // resolution of the game
-    int m_screenW;
-    int m_screenH;
+    //int m_screenW;
+    // int m_screenH;
 
-    bool m_playSound;                       // play sound?
-    bool m_disableAI;                       // disable AI thinking?
-    bool m_oneAi;                           // disable all but one AI brain? (default == false)
-    bool m_disableWormAi;                   // disable worm AI brain? (default == false)
-    bool m_disableReinforcements;           // disable any reinforcements from scenario ini file?
-    bool m_drawUsages;                      // draw the amount of structures/units/bullets used during combat
-    bool m_drawUnitDebug;                   // draw the unit debug info (rects, paths, etc)
-    bool m_noAiRest;                        // Campaign AI does not have long initial REST time
-    bool m_playMusic;                       // play any music?
-    bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
-    float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
-    float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
-    bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
+    // bool m_disableAI;                       // disable AI thinking?
+    // bool m_oneAi;                           // disable all but one AI brain? (default == false)
+    // bool m_disableWormAi;                   // disable worm AI brain? (default == false)
+    // bool m_disableReinforcements;           // disable any reinforcements from scenario ini file?
+    // bool m_drawUsages;                      // draw the amount of structures/units/bullets used during combat
+    // bool m_drawUnitDebug;                   // draw the unit debug info (rects, paths, etc)
+    // bool m_noAiRest;                        // Campaign AI does not have long initial REST time
+    // bool m_playMusic;                       // play any music?
 
-    bool m_playing;				    // playing or not
-    bool m_skirmish;                // playing a skirmish game or not
+    // bool m_playing;				    // playing or not
+    // bool m_skirmish;                // playing a skirmish game or not
+    // bool m_drawFps;
+    // bool m_drawTime;
+    // bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
 
-    int m_pathsCreated;
-
-    int m_musicVolume;              // volume of the music
-    int m_musicType;
+    // int m_pathsCreated;
+    // int m_musicType;
 
     cRectangle *m_mapViewport;
-
-    bool m_drawFps;
-    bool m_drawTime;
-
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
-    cBullets                    g_Bullets;
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
-    cStructureUtils             m_structureUtils;
-    cBulletInfos   			    bulletInfos;
-    cSpecialInfos               specialInfos;
-    cUpgradeInfos               upgradeInfos;
-    cUnitInfos                  unitInfos;
-    cStructureInfos             structureInfos;
-    cPlayers                    m_Players;
-    cParticles                  m_particles;
-    cParticleInfos              m_particleInfos;
-    cStructures                 m_pStructures;
-    cUnits                      m_Units;
-    cMap                        m_map;
+    std::unique_ptr<cStructureUtils>   m_structureUtils;
     // end
+
+    //todo: this should get moved to private, but not yet.
+    std::unique_ptr<cGameObjectContext> m_gameObjectsContext;
+    
+    //todo: this should get moved to private, but not yet.
+    std::unique_ptr<cInfoContext> m_infoContext;
+
+    //todo: this should get moved to private, but not yet.
+    std::unique_ptr<cGameSettings> m_gameSettings;
 
     // Initialization functions
     void init();		            // initialize all game variables
@@ -218,26 +207,26 @@ public:
     bool isTurretsDownOnLowPower() {
         return m_turretsDownOnLowPower;
     }
-    void setTurretsDownOnLowPower(bool value) {
-        m_turretsDownOnLowPower = value;
-    }
+    // void setTurretsDownOnLowPower(bool value) {
+    //     m_turretsDownOnLowPower = value;
+    // }
 
     bool isRocketTurretsDownOnLowPower() {
         return m_rocketTurretsDownOnLowPower;
     }
-    void setRocketTurretsDownOnLowPower(bool value) {
-        m_rocketTurretsDownOnLowPower = value;
-    }
+    // void setRocketTurretsDownOnLowPower(bool value) {
+    //     m_rocketTurretsDownOnLowPower = value;
+    // }
 
-    bool isDebugMode() {
-        return m_debugMode;
-    }
+    // bool isDebugMode() {
+    //     return m_debugMode;
+    // }
 
-    bool isCheatMode() {
-        return m_cheatMode;
-    }
+    // bool isCheatMode() {
+    //     return m_cheatMode;
+    // }
 
-    void applySettings(GameSettings *gs);
+    void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
     void loadMapFromEditor(s_PreviewMap *map);
@@ -246,8 +235,6 @@ public:
         return screenTexture;
     }
     void takeBackGroundScreen();
-
-    std::shared_ptr<s_TerrainInfo> getTerrainInfo() const;
 
     void goingToWinLoseBrief(int value);
 
@@ -263,18 +250,26 @@ public:
 
     // this functions need to be removed
     // begin
-    cPlayer& getPlayer(int index);
-    const cPlayer& getPlayer(int index) const;
-    cUnit& getUnit(int index);
-    const cUnit& getUnit(int index) const;
+    // cPlayer& getPlayer(int index);
+    // const cPlayer& getPlayer(int index) const;
+    // cUnit& getUnit(int index);
+    // const cUnit& getUnit(int index) const;
     // end
 
 private:
     /**
      * Variables start here
      */
-    bool m_debugMode = false;
-    bool m_cheatMode = false;
+    // bool m_debugMode = false;
+    // bool m_cheatMode = false;
+
+    bool m_playSound;                       // play sound?
+    bool m_windowed;        			    // windowed
+    bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
+    float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
+    float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
+    bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
+    int m_musicVolume;                      // volume of the music
 
     // if true, then turrets won't do anything on low power (both gun and rocket turrets)
     bool m_turretsDownOnLowPower;
@@ -293,6 +288,7 @@ private:
     std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     std::shared_ptr<cReinforcements> m_reinforcements;
+    std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
@@ -305,8 +301,6 @@ private:
     SDLDrawer *m_renderDrawer = nullptr;
 
     std::shared_ptr<cHousesInfo> m_Houses;
-    std::shared_ptr<s_TerrainInfo> m_TerrainInfo;
-
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
     int m_newMusicSample;
