@@ -178,7 +178,8 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_gameSettings->m_playMusic = gs->playMusic;
 
     m_playSound = gs->playSound;
-    m_debugMode = gs->debugMode;
+    // m_debugMode = gs->debugMode;
+    m_gameSettings->m_debugMode = gs->debugMode;
     // m_drawUnitDebug = gs->drawUnitDebug;
     m_gameSettings->m_drawUnitDebug = gs->drawUnitDebug;
     m_pauseWhenLosingFocus = gs->pauseWhenLosingFocus;
@@ -591,7 +592,7 @@ void cGame::shutdown()
 bool cGame::setupGame()
 {
     cLogger *logger = cLogger::getInstance();
-    logger->setDebugMode(m_debugMode);
+    logger->setDebugMode(m_gameSettings->m_debugMode);
     logger->logHeader("Dune II - The Maker");
     logger->logCommentLine(""); // whitespace
 
@@ -600,8 +601,8 @@ bool cGame::setupGame()
                 std::format("Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__));
 
     // SETTINGS.INI
-    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_debugMode);
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_debugMode);
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_gameSettings->m_debugMode);
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_gameSettings->m_debugMode);
 
     m_reinforcements = std::make_shared<cReinforcements>();
     m_gameObjectsContext->getMap().setReinforcements(m_reinforcements);
@@ -757,7 +758,7 @@ bool cGame::setupGame()
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
 
     // I need m_renderDrawer to create cPreviewMaps
-    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_debugMode);
+    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_gameSettings->m_debugMode);
 
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);

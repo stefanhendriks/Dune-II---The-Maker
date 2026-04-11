@@ -166,7 +166,7 @@ void cMapDrawer::drawTerrain()
             }
 
             // Draw debugging information
-            if (game.isDebugMode()) {
+            if (game.m_gameSettings->isDebugMode()) {
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
@@ -190,7 +190,7 @@ void cMapDrawer::drawTerrain()
         }
     }
 
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
 //        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
 //        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);

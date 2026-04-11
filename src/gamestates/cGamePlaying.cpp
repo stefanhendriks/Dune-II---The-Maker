@@ -255,7 +255,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (game.isDebugMode()) { // debug mode has additional keys
+    if (game.m_gameSettings->isDebugMode()) { // debug mode has additional keys
         if (event.hasKey(SDL_SCANCODE_TAB)) {
             onKeyDownDebugMode(event);
         }

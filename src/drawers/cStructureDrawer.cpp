@@ -158,7 +158,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
     }
 
     // :-/
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
         cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
         if (pStructure && pStructure == structure) {

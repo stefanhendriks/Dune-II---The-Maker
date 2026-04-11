@@ -378,7 +378,7 @@ void cPlayerBrainSkirmish::thinkState_Missions()
 {
     log("thinkState_Missions()");
 
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         log("Missions - before deleting");
         logMissions();
     }
@@ -394,14 +394,14 @@ void cPlayerBrainSkirmish::thinkState_Missions()
     m_missions.end()
     );
 
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         log("Missions - after deleting - before produceMissions()");
         logMissions();
     }
 
     produceMissions();
 
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         log("Missions - after produceMissions()");
         logMissions();
     }

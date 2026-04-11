@@ -218,9 +218,9 @@ public:
     //     m_rocketTurretsDownOnLowPower = value;
     // }
 
-    bool isDebugMode() {
-        return m_debugMode;
-    }
+    // bool isDebugMode() {
+    //     return m_debugMode;
+    // }
 
     // bool isCheatMode() {
     //     return m_cheatMode;
@@ -260,7 +260,7 @@ private:
     /**
      * Variables start here
      */
-    bool m_debugMode = false;
+    // bool m_debugMode = false;
     // bool m_cheatMode = false;
 
     bool m_playSound;                       // play sound?

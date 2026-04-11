@@ -488,7 +488,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         }
 
         // debug debug
-        if (game.isDebugMode()) {
+        if (game.m_gameSettings->isDebugMode()) {
             for (int i = 0; i < MAX_PATH_SIZE; i++) {
                 int pathCell = pUnit.movement.iPath[i];
                 if (pathCell > -1) {
