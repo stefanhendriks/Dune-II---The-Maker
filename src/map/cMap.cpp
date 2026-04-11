@@ -634,7 +634,7 @@ void cMap::draw_units_2nd()
             pUnit.draw();
             // TODO: Only human players?
             pUnit.draw_health();
-            if (game.isDebugMode()) {
+            if (game.m_gameSettings->isDebugMode()) {
                 drawUnitDebug(pUnit);
             }
         }

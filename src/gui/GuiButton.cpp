@@ -4,6 +4,7 @@
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
+#include "game/cGameSettings.h"
 #include <cassert>
 
 GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
@@ -161,7 +162,7 @@ void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 
 void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
 
         // TODO: replace with code in onNotifyKeyboardEvent
         // DEBUG: Shift through render kinds

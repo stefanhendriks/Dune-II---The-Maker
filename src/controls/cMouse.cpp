@@ -354,7 +354,7 @@ void cMouse::draw()
         else {
         }
 
-        if (game.isDebugMode()) {
+        if (game.m_gameSettings->isDebugMode()) {
             if (game.isState(GAME_PLAYING)) {
                 int mouseCell = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext()->getMouseCell(); // Ugh :/
                 m_textDrawer->drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
@@ -365,7 +365,7 @@ void cMouse::draw()
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
     global_renderDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
 
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         int y = mouseDrawY;
         for (auto line: m_debugLines) {
             m_textDrawer->drawText(mouseDrawX + 32, y, line.c_str());

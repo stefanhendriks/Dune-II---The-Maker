@@ -32,6 +32,7 @@
 #include "utils/d2tm_math.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
 #include <cmath>
 
 #include "data/gfxaudio.h"
@@ -99,12 +100,12 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
 
 
 /**
- * Default printing in logs. Only will be done if game.isDebugMode() is true.
+ * Default printing in logs. Only will be done if game.m_gameSettings->isDebugMode() is true.
  * @param txt
  */
 void logbook(const std::string &txt)
 {
-    if (game.isDebugMode()) {
+    if (game.m_gameSettings->isDebugMode()) {
         cLogger *logger = cLogger::getInstance();
         logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
     }
