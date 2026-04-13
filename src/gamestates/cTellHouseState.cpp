@@ -22,9 +22,7 @@ cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* 
 }
 
 cTellHouseState::~cTellHouseState()
-{
-    // delete m_mentat;
-}
+{}
 
 eGameStateType cTellHouseState::getType()
 {
@@ -34,7 +32,6 @@ eGameStateType cTellHouseState::getType()
 void cTellHouseState::prepareMentat(int house)
 {
     m_house = house;
-    // delete m_mentat;
     m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
     m_mentat->setHouse(house);
     if (house == ATREIDES) {
