@@ -5,24 +5,11 @@
 
 #include <cassert>
 
-cSideBarFactory *cSideBarFactory::instance = nullptr;
-
 cSideBarFactory::cSideBarFactory()
-{
-}
+{}
 
 cSideBarFactory::~cSideBarFactory()
-{
-}
-
-cSideBarFactory *cSideBarFactory::getInstance()
-{
-    if (instance == nullptr) {
-        instance = new cSideBarFactory();
-    }
-
-    return instance;
-}
+{}
 
 // construct a cSideBar
 cSideBar *cSideBarFactory::createSideBar(cPlayer *thePlayer)
@@ -35,14 +22,5 @@ cSideBar *cSideBarFactory::createSideBar(cPlayer *thePlayer)
         sidebar->setList(listType, list);
         list->setItemBuilder(thePlayer->getItemBuilder()); // TODO: this should be easier!?
     }
-
     return sidebar;
 }
-
-void cSideBarFactory::destroy()
-{
-    if (instance) {
-        delete instance;
-    }
-}
-

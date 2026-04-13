@@ -4,20 +4,10 @@ class cSideBar;
 class cPlayer;
 
 class cSideBarFactory {
-
-private:
-    static cSideBarFactory *instance;
-
-protected:
+public:
+    cSideBar *createSideBar(cPlayer *thePlayer);
     cSideBarFactory();
     ~cSideBarFactory();
-
-public:
-    static cSideBarFactory *getInstance();
-    static void destroy();
-
-    cSideBar *createSideBar(cPlayer *thePlayer);
-
 private:
 
 };
