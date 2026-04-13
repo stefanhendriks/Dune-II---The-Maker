@@ -159,6 +159,7 @@ cGame::cGame()
 
     m_structureFactory = std::make_unique<cStructureFactory>();
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
+    m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
@@ -575,7 +576,7 @@ void cGame::shutdown()
 
     // cStructureFactory::destroy();
     // cSideBarFactory::destroy();
-    cBuildingListFactory::destroy();
+    // cBuildingListFactory::destroy();
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         game.m_gameObjectsContext->getPlayer(i).destroyAllegroBitmaps();

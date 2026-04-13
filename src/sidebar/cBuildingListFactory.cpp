@@ -4,20 +4,8 @@
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 
-cBuildingListFactory *cBuildingListFactory::instance = NULL;
-
 cBuildingListFactory::cBuildingListFactory()
-{
-}
-
-cBuildingListFactory *cBuildingListFactory::getInstance()
-{
-    if (instance == nullptr) {
-        instance = new cBuildingListFactory();
-    }
-
-    return instance;
-}
+{}
 
 int cBuildingListFactory::getButtonDrawY()
 {
@@ -115,11 +103,4 @@ cBuildingList *cBuildingListFactory::createList(eListType listType)
     cBuildingList *list = new cBuildingList(listType);
     initializeList(list, listType);
     return list;
-}
-
-void cBuildingListFactory::destroy()
-{
-    if (instance) {
-        delete instance;
-    }
 }
