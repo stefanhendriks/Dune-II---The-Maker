@@ -29,7 +29,7 @@ cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_Dat
 
 cMentatState::~cMentatState()
 {
-    delete m_mentat;
+    // delete m_mentat;
 }
 
 eGameStateType cMentatState::getType()
@@ -47,55 +47,55 @@ void cMentatState::prepareMentat(int house)
     bool allowMissionSelect = !m_game.m_gameSettings->isSkirmish();
     // allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
     //std::cout << "allowMissionSelect " << allowMissionSelect <<std::endl ;
-    if (m_mentat)
-        delete m_mentat;
+    // if (m_mentat)
+    //     delete m_mentat;
     switch (m_mode) {
         case MentatMode::Briefing:
             if (house == ATREIDES)
-                m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
             else 
-                m_mentat = new BeneMentat(m_ctx, m_dataCampaign);
+                m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
             m_game.missionInit();
             m_game.setupPlayers();
-            cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat, m_game.getReinforcements(),m_dataCampaign);
-            cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat);
+            cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat.get(), m_game.getReinforcements(),m_dataCampaign);
+            cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
-                m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, allowMissionSelect);
             else if (house == ORDOS) 
-                m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
             else 
-                m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
+                m_mentat = std::make_unique<BeneMentat>(m_ctx,m_dataCampaign);
             
             if (RNG::rnd(100) < 50)
                 m_mentat->loadScene("win01");
             else
                 m_mentat->loadScene("win02");
-            cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat);
+            cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat.get());
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
-                m_mentat = new AtreidesMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = new HarkonnenMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = new OrdosMentat(m_ctx, allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
             else 
-                m_mentat = new BeneMentat(m_ctx,m_dataCampaign);
+                m_mentat = std::make_unique<BeneMentat>(m_ctx,m_dataCampaign);
             
             if (RNG::rnd(100) < 50)
                 m_mentat->loadScene("lose01");
             else
                 m_mentat->loadScene("lose02");
             
-            cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat);
+            cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat.get());
             break;
     }
     m_mentat->speak();
@@ -125,10 +125,10 @@ void cMentatState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cMentatState::loadScenario(cReinforcements *reinforcements)
 {
-    cIni::loadScenario(/*m_dataCampaign->housePlayer, m_dataCampaign->region,*/ m_mentat, reinforcements, m_dataCampaign);
+    cIni::loadScenario(/*m_dataCampaign->housePlayer, m_dataCampaign->region,*/ m_mentat.get(), reinforcements, m_dataCampaign);
 }
 
 void cMentatState::loadBriefing(int iScenarioFind, int iSectionFind)
 {
-    cIni::loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat);
+    cIni::loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat.get());
 }

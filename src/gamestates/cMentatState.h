@@ -2,6 +2,7 @@
 
 #include "cGameState.h"
 #include "mentat/AbstractMentat.h"
+#include <memory>
 
 struct s_DataCampaign;
 class cReinforcements;
@@ -28,7 +29,7 @@ public:
     void loadBriefing(int iScenarioFind, int iSectionFind);
     void prepareMentat(int house);
 private:
-    AbstractMentat* m_mentat = nullptr;
+    std::unique_ptr<AbstractMentat> m_mentat;
     s_DataCampaign* m_dataCampaign = nullptr;
     MentatMode m_mode;
     int m_house;
