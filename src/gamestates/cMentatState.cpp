@@ -28,9 +28,7 @@ cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_Dat
 }
 
 cMentatState::~cMentatState()
-{
-    // delete m_mentat;
-}
+{}
 
 eGameStateType cMentatState::getType()
 {
@@ -47,8 +45,6 @@ void cMentatState::prepareMentat(int house)
     bool allowMissionSelect = !m_game.m_gameSettings->isSkirmish();
     // allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
     //std::cout << "allowMissionSelect " << allowMissionSelect <<std::endl ;
-    // if (m_mentat)
-    //     delete m_mentat;
     switch (m_mode) {
         case MentatMode::Briefing:
             if (house == ATREIDES)
