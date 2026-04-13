@@ -4,19 +4,13 @@
 
 class cBuildingListFactory {
 
-private:
-    static cBuildingListFactory *instance;
-
-protected:
-    cBuildingListFactory();
-    int getButtonDrawY();
-    int getButtonDrawXStart();
-
 public:
-    static cBuildingListFactory *getInstance();
-    static void destroy();
-
+    cBuildingListFactory();
+    ~cBuildingListFactory() = default;
     void initializeList(cBuildingList *list, eListType listType);
     cBuildingList *createList(eListType listType);
 
+protected:
+    int getButtonDrawY();
+    int getButtonDrawXStart();
 };

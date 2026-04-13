@@ -54,6 +54,7 @@ class cGameSettings;
 
 class cStructureFactory;
 class cSideBarFactory;
+class cBuildingListFactory;
 
 class ContextCreator;
 class GameContext;
@@ -133,6 +134,8 @@ public:
 
     std::unique_ptr<cStructureFactory> m_structureFactory;
     std::unique_ptr<cSideBarFactory> m_sideBarFactory;
+    std::unique_ptr<cBuildingListFactory> m_buildingListFactory;
+
 
     // Initialization functions
     void init();		            // initialize all game variables
