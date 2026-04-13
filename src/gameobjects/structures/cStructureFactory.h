@@ -15,15 +15,10 @@
 #include "cAbstractStructure.h"
 
 class cStructureFactory {
-protected:
+public:
     cStructureFactory();
 
-public:
     ~cStructureFactory();
-
-    static cStructureFactory *getInstance();
-
-    static void destroy();
 
     void deleteStructureInstance(cAbstractStructure *pStructure);
 
@@ -49,5 +44,4 @@ public:
 
 private:
     cAbstractStructure *createStructureInstance(int type);
-
 };

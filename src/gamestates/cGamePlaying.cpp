@@ -66,7 +66,7 @@ void cGamePlaying::thinkFast()
         }
 
         if (pStructure->isDead()) {
-            cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
+            game.m_structureFactory->deleteStructureInstance(pStructure);
         }
     }
 
