@@ -30,6 +30,7 @@
 #include <algorithm>
 #include <utility>
 #include <cassert>
+#include <iostream>
 
 #include "config.h"
 
@@ -576,13 +577,15 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     /* set up starting positions */
     std::vector<int> iStartPositions;
-
+    std::cout << "number of start cell in prepareSkirmishGameToPlayAndTransitionToCombatState: " << iStartingPoints << std::endl;
     int startCellsOnSkirmishMap = 0;
     for (int s = 0; s < 5; s++) {
         int startPosition = selectedMap.iStartCell[s];
-        if (startPosition < 0) continue;
+        if (startPosition < 1) continue;
+        std::cout << "Adding start position: " << startPosition << std::endl;
         iStartPositions.push_back(startPosition);
     }
+
 
     startCellsOnSkirmishMap = iStartPositions.size();
 
@@ -1135,6 +1138,11 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
                     if (s > -1) {
                         iStartingPoints++;
                     }
+                    std::cout << "number of start cell: " << iStartingPoints << std::endl;
+                }
+                // remove CPU players if new map has less starting points than currently set
+                for (int p = iStartingPoints; p < (AI_WORM - 1); p++) {
+                    skirmishPlayer[p].bPlaying = false;
                 }
             }
         }
