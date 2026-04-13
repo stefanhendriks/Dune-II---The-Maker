@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utils/cPoint.h>
+#include <memory>
 
 class cPlayer;
 
@@ -14,8 +15,8 @@ public:
 
     void thinkFast();
 
-    static cFlag *createBigFlag(cPlayer *player, cPoint &position);
-    static cFlag *createSmallFlag(cPlayer *player, cPoint &position);
+    static std::unique_ptr<cFlag> createBigFlag(cPlayer *player, cPoint &position);
+    static std::unique_ptr<cFlag> createSmallFlag(cPlayer *player, cPoint &position);
 
     void setBig(bool value) {
         m_big = value;
