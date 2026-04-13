@@ -39,13 +39,7 @@ cStructureFactory::cStructureFactory()
 
 cStructureFactory::~cStructureFactory()
 {
-    destroy();
-}
-
-cStructureFactory *cStructureFactory::getInstance()
-{
-    static cStructureFactory structureFactory;
-    return &structureFactory;
+    deleteAllExistingStructures();
 }
 
 cAbstractStructure *cStructureFactory::createStructureInstance(int type)
@@ -383,12 +377,6 @@ void cStructureFactory::deleteAllExistingStructures()
         game.m_gameObjectsContext->getStructures()[i] = nullptr;
     }
 }
-
-void cStructureFactory::destroy()
-{
-    cStructureFactory::getInstance()->deleteAllExistingStructures();
-}
-
 
 void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer)
 {

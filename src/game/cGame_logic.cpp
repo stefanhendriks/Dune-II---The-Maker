@@ -156,6 +156,8 @@ cGame::cGame()
     m_gameSettings->m_allowRepeatingReinforcements = false;
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
+
+    m_structureFactory = std::make_unique<cStructureFactory>();
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
@@ -570,7 +572,7 @@ void cGame::shutdown()
 
     delete m_mapCamera;
 
-    cStructureFactory::destroy();
+    // cStructureFactory::destroy();
     cSideBarFactory::destroy();
     cBuildingListFactory::destroy();
 

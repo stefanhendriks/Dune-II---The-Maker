@@ -52,6 +52,8 @@ class cPreviewMaps;
 struct InitialGameSettings;
 class cGameSettings;
 
+class cStructureFactory;
+
 class ContextCreator;
 class GameContext;
 class cScreenShake;
@@ -127,6 +129,8 @@ public:
 
     //todo: this should get moved to private, but not yet.
     std::unique_ptr<cGameSettings> m_gameSettings;
+
+    std::unique_ptr<cStructureFactory> m_structureFactory;
 
     // Initialization functions
     void init();		            // initialize all game variables
