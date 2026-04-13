@@ -3,6 +3,8 @@
 #include "cGameState.h"
 #include "mentat/AbstractMentat.h"
 
+#include <memory>
+
 struct s_DataCampaign;
 
 class cTellHouseState : public cGameState {
@@ -20,7 +22,7 @@ public:
     void prepareMentat(int house);
 
 private:
-    AbstractMentat* m_mentat = nullptr;
+    std::unique_ptr<AbstractMentat> m_mentat;
     int m_house = -1;
     s_DataCampaign* m_dataCampaign;
 };
