@@ -63,7 +63,7 @@ protected:
     int frames;         // amount of frames to iterate over in default/flag mode (old behavior, default = 1)
 
     // flags, if any
-    std::vector<cFlag *> flags;
+    std::vector<std::unique_ptr<cFlag>> flags;
 
     // draw structure with shadow
     void drawWithShadow();
@@ -105,7 +105,7 @@ public:
     void think_flag();				  // think method for flag animation
 
     void drawFlags();                   // draw all flags
-    void addFlag(cFlag *flag);
+    void addFlag(std::unique_ptr<cFlag> flag);
 
     int getSmokeChance();             // probability to create smoke particle
 

@@ -59,26 +59,28 @@ void cFlag::thinkFast()
     }
 }
 
-cFlag *cFlag::createBigFlag(cPlayer *player, cPoint &position)
+std::unique_ptr<cFlag> cFlag::createBigFlag(cPlayer *player, cPoint &position)
 {
     cPoint correctedPoint = cPoint(
                                 position.x,
                                 position.y
                             );
     correctedPoint.x -= 15; // width of flag
-    cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
+    auto pFlag = std::make_unique<cFlag>(player, correctedPoint, 12, 24);
+    // cFlag *pFlag = newFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(true);
-    return pFlag;
+    return std::move(pFlag);
 }
 
-cFlag *cFlag::createSmallFlag(cPlayer *player, cPoint &position)
+std::unique_ptr<cFlag> cFlag::createSmallFlag(cPlayer *player, cPoint &position)
 {
     cPoint correctedPoint = cPoint(
                                 position.x,
                                 position.y
                             );
     correctedPoint.x -= 10; // width of flag
-    cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
+    auto pFlag = std::make_unique<cFlag>(player, correctedPoint, 12, 24);
+    // cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(false);
-    return pFlag;
+    return std::move(pFlag);
 }

@@ -37,8 +37,8 @@
 #include "data/gfxaudio.h"
 
 // "default" Constructor
-cAbstractStructure::cAbstractStructure() :
-    flags(std::vector<cFlag *>())
+cAbstractStructure::cAbstractStructure() //:
+    // flags(std::vector<cFlag *>())
 {
     frames = 1;
     iHitPoints=-1;      // default = no hitpoints
@@ -99,9 +99,9 @@ cAbstractStructure::~cAbstractStructure()
     posY = -1;
 
     // delete all flags
-    for (auto flag : flags) {
-        delete flag;
-    }
+    // for (auto flag : flags) {
+    //     delete flag;
+    // }
 }
 
 int cAbstractStructure::pos_x()
@@ -397,7 +397,7 @@ void cAbstractStructure::think_flag()
 void cAbstractStructure::think_flag_new()
 {
     // iterate over all flags and think
-    for (auto flag : flags) {
+    for (const auto& flag : flags) {
         flag->thinkFast();
     }
 }
@@ -883,14 +883,14 @@ void cAbstractStructure::unitIsNoLongerInteractingWithStructure(int unitID)
 
 void cAbstractStructure::drawFlags()
 {
-    for (auto flag : flags) {
+    for (const auto& flag : flags) {
         flag->draw();
     }
 }
 
-void cAbstractStructure::addFlag(cFlag *flag)
+void cAbstractStructure::addFlag(std::unique_ptr<cFlag> flag)
 {
-    flags.push_back(flag);
+    flags.push_back(std::move(flag));
 }
 
 void cAbstractStructure::drawWithShadow()
