@@ -53,6 +53,7 @@ struct InitialGameSettings;
 class cGameSettings;
 
 class cStructureFactory;
+class cSideBarFactory;
 
 class ContextCreator;
 class GameContext;
@@ -131,6 +132,7 @@ public:
     std::unique_ptr<cGameSettings> m_gameSettings;
 
     std::unique_ptr<cStructureFactory> m_structureFactory;
+    std::unique_ptr<cSideBarFactory> m_sideBarFactory;
 
     // Initialization functions
     void init();		            // initialize all game variables

@@ -158,6 +158,7 @@ cGame::cGame()
     m_gameObjectsContext = cGameObjectsContextCreator::create();
 
     m_structureFactory = std::make_unique<cStructureFactory>();
+    m_sideBarFactory = std::make_unique<cSideBarFactory>();
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
@@ -573,7 +574,7 @@ void cGame::shutdown()
     delete m_mapCamera;
 
     // cStructureFactory::destroy();
-    cSideBarFactory::destroy();
+    // cSideBarFactory::destroy();
     cBuildingListFactory::destroy();
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -792,7 +793,7 @@ void cGame::setupPlayers()
         auto *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-        auto *sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
+        auto *sidebar = m_sideBarFactory->createSideBar(thePlayer);
         thePlayer->setSideBar(sidebar);
 
         auto *orderProcesser = new cOrderProcesser(thePlayer);
