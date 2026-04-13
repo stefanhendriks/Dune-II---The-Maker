@@ -97,11 +97,6 @@ cAbstractStructure::~cAbstractStructure()
     iCell = -1;
     posX = -1;
     posY = -1;
-
-    // delete all flags
-    // for (auto flag : flags) {
-    //     delete flag;
-    // }
 }
 
 int cAbstractStructure::pos_x()
