@@ -20,12 +20,12 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
 {
     if (src == nullptr) return;
     SDL_Rect tmp = {x,y, src->w, src->h };
-    SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    if (SDL_SetTextureAlphaMod(src->tex, opacity)<0) {
+    if (SDL_SetTextureAlphaMod(src->tex.get(), opacity)<0) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
-    SDL_RenderCopy(renderer, src->tex, NULL, &tmp);
+    SDL_RenderCopy(renderer, src->tex.get(), NULL, &tmp);
 }
 
 void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint8 opacity)
@@ -58,23 +58,23 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 
 void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity)
 {
-    if (SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND) < 0) {
+    if (SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND) < 0) {
         std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
-    SDL_SetTextureAlphaMod(src->tex, opacity);
+    SDL_SetTextureAlphaMod(src->tex.get(), opacity);
     SDL_Rect srcRect = src_pos.toSDL();
     SDL_Rect destRect = dest_pos.toSDL();
-    SDL_RenderCopy(renderer, src->tex, &srcRect, &destRect);
+    SDL_RenderCopy(renderer, src->tex.get(), &srcRect, &destRect);
 }
 
 void SDLDrawer::renderStrechFullSprite(Texture *src, cRectangle dest_pos, Uint8 opacity)
 {
-    if (SDL_SetTextureBlendMode(src->tex, SDL_BLENDMODE_BLEND) < 0) {
+    if (SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND) < 0) {
         std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
-    SDL_SetTextureAlphaMod(src->tex, opacity);
+    SDL_SetTextureAlphaMod(src->tex.get(), opacity);
     SDL_Rect destRect = dest_pos.toSDL();
-    SDL_RenderCopy(renderer, src->tex, nullptr, &destRect);
+    SDL_RenderCopy(renderer, src->tex.get(), nullptr, &destRect);
 }
 
 void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, Uint8 opacity)
@@ -302,7 +302,7 @@ void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
     SDL_Texture* currentTarget = SDL_GetRenderTarget(renderer);
     renderTargetStack.push(currentTarget);
 
-    if (SDL_SetRenderTarget(renderer, targetTexture->tex) < 0) {
+    if (SDL_SetRenderTarget(renderer, targetTexture->tex.get()) < 0) {
         renderTargetStack.pop();
         throw std::runtime_error("Error changing render target: " + std::string(SDL_GetError()));
     }

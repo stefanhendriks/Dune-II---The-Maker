@@ -31,5 +31,5 @@ public:
 private:
     SDL_Renderer *renderer;
     std::unique_ptr<DataPack> dataPack;
-    std::unordered_map<int, Texture *> texCache;
+    std::unordered_map<int, std::unique_ptr<Texture>> texCache;
 };

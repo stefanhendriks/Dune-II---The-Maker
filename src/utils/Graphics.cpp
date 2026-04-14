@@ -11,16 +11,7 @@ Graphics::Graphics(SDL_Renderer *_renderer,const std::string &filePackName): ren
 
 Graphics::~Graphics()
 {
-    for (auto& [_, texObj] : texCache) {
-        // auto delete with smartptr required
-        if (texObj) {
-            // deleting Graphics will not free an SDL_Texture on GPU
-            // this line will be done with using smartptr
-            SDL_DestroyTexture(texObj->tex);
-            delete(texObj);
-        }
-    }
-    texCache.clear();
+    // Smart pointers handle automatic cleanup
 }
 
 SDL_Surface *Graphics::getSurface(int index) const
@@ -41,7 +32,7 @@ Texture *Graphics::getTexture(int index)
     }
     auto it = texCache.find(index);
     if (it != texCache.end())
-        return it->second;
+        return it->second.get();
 
     SDL_Surface *outSurface = dataPack->getSurface(index);
     if (!outSurface) {
@@ -53,9 +44,8 @@ Texture *Graphics::getTexture(int index)
         std::cerr << "Graphics: Failed to convert texture " << index << " : " <<SDL_GetError() << std::endl;
         return nullptr;
     }
-    Texture *Tex = new Texture(outTexture, outSurface->w, outSurface->h);
-    texCache[index] = Tex;
-    return Tex;
+    texCache.emplace(index, std::make_unique<Texture>(outTexture, outSurface->w, outSurface->h));
+    return texCache[index].get();
 }
 
 Texture *Graphics::getTexture(const std::string &name)
