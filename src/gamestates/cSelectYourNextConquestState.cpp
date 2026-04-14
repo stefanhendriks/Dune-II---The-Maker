@@ -76,7 +76,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
     const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_game.m_gameSettings->getScreenW() - length,
                                             m_game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(),
                                             "Mission select");
-    GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+    m_guiBtnToMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
@@ -85,8 +85,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, GameC
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
-            .build();   
-    m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
+            .build();
 }
 
 void cSelectYourNextConquestState::calculateOffset()

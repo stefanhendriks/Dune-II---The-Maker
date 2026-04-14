@@ -5,6 +5,7 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 class SDLDrawer;
 class cTextDrawer;
@@ -101,8 +102,8 @@ public:
         return *this;
     }
 
-    GuiLabel* build() const {
-        GuiLabel* btn = new GuiLabel(params.renderer, params.rect, params.label);
+    std::unique_ptr<GuiLabel> build() const {
+        auto btn = std::make_unique<GuiLabel>(params.renderer, params.rect, params.label);
         btn->setTextDrawer(params.drawer);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);

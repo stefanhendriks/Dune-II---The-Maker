@@ -3,6 +3,7 @@
 #include "GuiObject.h"
 #include <string>
 #include <functional>
+#include <memory>
 
 class cTextDrawer;
 class SDLDrawer;
@@ -54,8 +55,8 @@ public:
         return *this;
     }
 
-    GuiTextInput* build() const {
-        GuiTextInput* btn = new GuiTextInput(params.renderer, params.rect, params.drawer);
+    std::unique_ptr<GuiTextInput> build() const {
+        auto btn = std::make_unique<GuiTextInput>(params.renderer, params.rect, params.drawer);
         btn->setTextDrawer(params.drawer);
         btn->setTheme(params.theme);
         if (params.onChanged) {

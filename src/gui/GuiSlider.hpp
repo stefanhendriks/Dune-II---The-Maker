@@ -2,6 +2,7 @@
 
 #include "gui/GuiObject.h"
 #include <functional>
+#include <memory>
 
 class SDLDrawer;
 
@@ -79,8 +80,8 @@ public:
         return *this;
     }
 
-    GuiSlider* build() const {
-        GuiSlider* slider = new GuiSlider(params.renderer, params.rect, params.minValue, params.maxValue, params.initialValue);
+    std::unique_ptr<GuiSlider> build() const {
+        auto slider = std::make_unique<GuiSlider>(params.renderer, params.rect, params.minValue, params.maxValue, params.initialValue);
         slider->setTheme(params.theme);
         if (params.onValueChanged)
             slider->setOnValueChanged(params.onValueChanged);

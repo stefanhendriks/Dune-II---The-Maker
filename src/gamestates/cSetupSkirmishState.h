@@ -106,11 +106,11 @@ private:
     cRectangle techLevelRect;
     cRectangle selectArea;
 
-    GuiButton *backButton;
-    GuiButton *startButton;
-    GuiButton *modifyButton;
-    GuiButton *nextMapButton;
-    GuiButton *previousMapButton;
+    std::unique_ptr<GuiButton> backButton;
+    std::unique_ptr<GuiButton> startButton;
+    std::unique_ptr<GuiButton> modifyButton;
+    std::unique_ptr<GuiButton> nextMapButton;
+    std::unique_ptr<GuiButton> previousMapButton;
     Graphics* m_gfxinter;
 
     // Functions

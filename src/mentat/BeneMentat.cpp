@@ -25,23 +25,23 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_YES), 466, 423);
 
-    leftGuiButton = GuiButtonBuilder()
+    leftGuiButton = std::move(GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("No")
             .withTexture(gfxmentat->getTexture(BTN_NO))
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onNoButtonPressed(); })
-            .build();
+            .build());
 
-    rightGuiButton = GuiButtonBuilder()
+    rightGuiButton = std::move(GuiButtonBuilder()
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onYesButtonPressed(); })
-            .build();
+            .build());
 }
 
 void BeneMentat::onYesButtonPressed()

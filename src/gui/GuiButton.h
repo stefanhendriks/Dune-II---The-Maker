@@ -5,6 +5,7 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 class SDLDrawer;
 class cTextDrawer;
@@ -115,8 +116,8 @@ public:
         return *this;
     }
 
-    GuiButton* build() const {
-        GuiButton* btn = new GuiButton(m_renderer, m_rect, m_label);
+    std::unique_ptr<GuiButton> build() const {
+        auto btn = std::make_unique<GuiButton>(m_renderer, m_rect, m_label);
         btn->setTextDrawer(m_drawer);
         btn->setRenderKind(m_kind);
         btn->setTheme(m_theme);

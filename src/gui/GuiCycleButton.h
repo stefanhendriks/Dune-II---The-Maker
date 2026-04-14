@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <memory>
 
 class SDLDrawer;
 class cTextDrawer;
@@ -65,8 +66,8 @@ public:
         return *this;
     }
 
-    GuiCycleButton* build() const {
-        GuiCycleButton* btn = new GuiCycleButton(params.renderer, params.rect, params.values);
+    std::unique_ptr<GuiCycleButton> build() const {
+        auto btn = std::make_unique<GuiCycleButton>(params.renderer, params.rect, params.values);
         btn->setTextDrawer(params.drawer);
         btn->setTheme(params.theme);
         if (params.onChanged) {
