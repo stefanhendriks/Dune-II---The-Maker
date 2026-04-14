@@ -42,15 +42,11 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
 
 cSideBarDrawer::~cSideBarDrawer()
 {
-    if (m_candyBarBall)
-        delete m_candyBarBall;
-    if (m_candyBarPiece)
-        delete m_candyBarPiece;
-    if (m_candyHorizonBar)
-        delete m_candyHorizonBar;
-
-    if (m_candiBarRenderer)
-        delete m_candiBarRenderer;
+    // smart pointers handle cleanup
+    // delete m_candyBarBall; --- IGNORE ---
+    // delete m_candyBarPiece; --- IGNORE ---
+    // delete m_candyHorizonBar; --- IGNORE ---
+    // delete m_candiBarRenderer; --- IGNORE ---
 }
 
 void cSideBarDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
