@@ -94,11 +94,9 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
 AbstractMentat::~AbstractMentat()
 {
-    delete leftButton;
-    delete rightButton;
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
-    delete m_guiBtnToMissionSelect;
+    // m_guiBtnToMissionSelect will be a unique_ptr, auto-cleaned
 
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
