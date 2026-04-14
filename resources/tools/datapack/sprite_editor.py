@@ -29,7 +29,7 @@ class SpriteEditor:
 
         self.width, self.height = self.image.size
         self.zoom = 20  # Facteur de zoom pour l'aspect pixel art
-        self.current_color_index = 0
+        self.current_color_index = 1
         self.undo_stack = []
         self.current_undo_data = None
         
@@ -109,10 +109,15 @@ class SpriteEditor:
         x2, y2 = x1 + size, y1 + size
         
         if index == 223:
-            # Motif de transparence : gris clair avec une croix grise
+            # Motif de transparence : gris clair avec une croix grise (pour index 223 et 0)
             canvas.create_rectangle(x1, y1, x2, y2, fill="#D3D3D3", outline=outline, tags=tag)
             canvas.create_line(x1, y1, x2, y2, fill="#808080", tags=tag)
             canvas.create_line(x1, y2, x2, y1, fill="#808080", tags=tag)
+        elif index == 0:
+            # Motif de transparence : gris clair avec une croix grise (pour index 223 et 0)
+            canvas.create_rectangle(x1, y1, x2, y2, fill="#000000", outline=outline, tags=tag)
+            canvas.create_line(x1, y1, x2, y2, fill="#AAAAAA", tags=tag)
+            canvas.create_line(x1, y2, x2, y1, fill="#AAAAAA", tags=tag)
         else:
             color = self._get_color_from_palette(index)
             canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=outline, tags=tag)
@@ -178,7 +183,11 @@ class SpriteEditor:
         """Sélectionne une couleur dans la palette."""
         col, row = event.x // 20, event.y // 20
         if 0 <= col < 8 and 0 <= row < 32:
-            self.current_color_index = row * 8 + col
+            new_index = row * 8 + col
+            if new_index == 0:
+                return # L'index 0 (souvent transparence) n'est pas sélectionnable
+            
+            self.current_color_index = new_index
             self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
             self.draw_palette()
 
@@ -189,8 +198,12 @@ class SpriteEditor:
         x, y = int(canvas_x // self.zoom), int(canvas_y // self.zoom)
         
         if 0 <= x < self.width and 0 <= y < self.height:
-            # On récupère l'index directement depuis l'image PIL (mode P)
-            self.current_color_index = self.image.getpixel((x, y))
+            index = self.image.getpixel((x, y))
+            if index == 0:
+                return # On ignore l'index 0 à la pipette
+                
+            # On récupère l'index directement depuis l'image PIL
+            self.current_color_index = index
             self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
             self.draw_palette()
 
