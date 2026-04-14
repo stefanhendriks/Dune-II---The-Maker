@@ -63,8 +63,13 @@ class SpriteEditor:
             yscrollcommand=self.v_scroll.set
         )
         self.sprite_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.h_scroll.config(command=self.sprite_canvas.xview)
-        self.v_scroll.config(command=self.sprite_canvas.yview)
+        
+        # Définir la zone de défilement totale dès le début
+        self.sprite_canvas.config(scrollregion=(0, 0, self.width * self.zoom, self.height * self.zoom))
+
+        self.h_scroll.config(command=self.on_scroll_h)
+        self.v_scroll.config(command=self.on_scroll_v)
+        self.sprite_canvas.bind("<Configure>", lambda e: self.draw_sprite())
 
         self.sprite_canvas.bind("<Button-1>", self.on_sprite_press)
         self.sprite_canvas.bind("<B1-Motion>", self.on_sprite_click)
@@ -112,16 +117,45 @@ class SpriteEditor:
             color = self._get_color_from_palette(index)
             canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=outline, tags=tag)
 
+    def on_scroll_h(self, *args):
+        """Gère le défilement horizontal et redessine les pixels visibles."""
+        self.sprite_canvas.xview(*args)
+        self.draw_sprite()
+
+    def on_scroll_v(self, *args):
+        """Gère le défilement vertical et redessine les pixels visibles."""
+        self.sprite_canvas.yview(*args)
+        self.draw_sprite()
+
     def draw_sprite(self):
-        """Dessine la grille de pixels sur le canvas de gauche."""
+        """Dessine seulement les pixels visibles sur le canvas de gauche (Culling)."""
         self.sprite_canvas.delete("all")
+        
+        # Coordonnées réelles du viewport dans le canvas (tenant compte du scroll)
+        x_left = self.sprite_canvas.canvasx(0)
+        y_top = self.sprite_canvas.canvasy(0)
+        
+        # Dimensions visibles du widget
+        width = self.sprite_canvas.winfo_width()
+        height = self.sprite_canvas.winfo_height()
+        
+        # Au démarrage winfo renvoie 1, on attend l'affichage réel
+        if width <= 1 or height <= 1:
+            return
+
+        x_right = x_left + width
+        y_bottom = y_top + height
+
+        # Conversion des coordonnées écran en index de grille image
+        start_x = max(0, int(x_left // self.zoom))
+        end_x = min(self.width, int(x_right // self.zoom) + 1)
+        start_y = max(0, int(y_top // self.zoom))
+        end_y = min(self.height, int(y_bottom // self.zoom) + 1)
+
         pixels = self.image.load()
-        for y in range(self.height):
-            for x in range(self.width):
+        for y in range(start_y, end_y):
+            for x in range(start_x, end_x):
                 self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, pixels[x, y], f"pixel_{x}_{y}")
-                
-        # Mise à jour de la zone de défilement après le dessin
-        self.sprite_canvas.config(scrollregion=self.sprite_canvas.bbox("all"))
 
     def draw_palette(self):
         """Dessine la grille 8x32 des couleurs de la palette."""
