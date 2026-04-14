@@ -12,6 +12,12 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 
+#include "controls/mousestates/cMouseNormalState.h"
+#include "controls/mousestates/cMouseUnitsSelectedState.h"
+#include "controls/mousestates/cMouseRepairState.h"
+#include "controls/mousestates/cMousePlaceState.h"
+#include "controls/mousestates/cMouseDeployState.h"
+
 #include <cassert>
 
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
