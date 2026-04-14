@@ -22,8 +22,8 @@ public:
 
     void draw() const override;
 
-    void addGuiObject(GuiObject *guiObject);
-    void addAutoGuiObject(GuiObject *guiObject);
+    void addGuiObject(std::unique_ptr<GuiObject> guiObject);
+    void addAutoGuiObject(std::unique_ptr<GuiObject> guiObject);
 
     cRectangle getRelativeRect(int x, int y, int width, int height);
 
@@ -35,7 +35,7 @@ public:
         placementPosition = value;
     }
 private:
-    std::vector<GuiObject *> gui_objects;
+    std::vector<std::unique_ptr<GuiObject>> gui_objects;
     GuiBarPlacement m_placement;
     int placementPosition;
     int heightBarSize;
