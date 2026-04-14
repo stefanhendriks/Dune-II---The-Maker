@@ -248,7 +248,7 @@ void cOptionsState::constructWindow(int prevState)
 
 cOptionsState::~cOptionsState()
 {
-    delete m_guiWindow;
+    // Smart pointers handle cleanup
 }
 
 void cOptionsState::thinkFast()

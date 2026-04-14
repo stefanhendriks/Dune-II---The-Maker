@@ -295,11 +295,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::sha
 
 cSetupSkirmishState::~cSetupSkirmishState()
 {
-    delete backButton;
-    delete startButton;
-    delete nextMapButton;
-    delete previousMapButton;
-    delete modifyButton;
+    // Smart pointers handle cleanup
 }
 
 bool cSetupSkirmishState::guiDrawFrame(int x, int y, int width, int height) const

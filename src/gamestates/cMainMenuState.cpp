@@ -214,8 +214,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
 
 cMainMenuState::~cMainMenuState()
 {
-    delete gui_window;
-    delete gui_btn_credits;
+    // Smart pointers handle cleanup
     if (m_game.m_gameSettings->isDebugMode()) {
         delete backGroundDebug;
     }

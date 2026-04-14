@@ -72,7 +72,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
 
 cSelectMissionState::~cSelectMissionState()
 {
-    delete gui_window;
+    // Smart pointers handle cleanup
 }
 
 void cSelectMissionState::thinkFast()

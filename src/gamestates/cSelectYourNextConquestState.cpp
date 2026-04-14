@@ -97,7 +97,7 @@ void cSelectYourNextConquestState::calculateOffset()
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState()
 {
-    delete m_guiBtnToMissionSelect;
+    // Smart pointers handle cleanup
 }
 
 void cSelectYourNextConquestState::thinkFast()

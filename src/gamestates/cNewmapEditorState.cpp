@@ -176,7 +176,7 @@ void cNewMapEditorState::constructWindow()
 
 cNewMapEditorState::~cNewMapEditorState()
 {
-    delete m_guiWindow;
+    // Smart pointers handle cleanup
 }
 
 void cNewMapEditorState::thinkFast()

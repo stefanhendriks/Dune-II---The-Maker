@@ -15,9 +15,7 @@ GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _te
 
 GuiWindow::~GuiWindow() noexcept
 {
-    for (auto gui_object : gui_objects) {
-        delete gui_object;
-    }
+    // Smart pointers handle cleanup
 }
 
 void GuiWindow::draw() const
