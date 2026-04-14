@@ -33,10 +33,7 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
 }
 
 cOrderDrawer::~cOrderDrawer()
-{
-    if (m_buttonBitmap)
-        delete m_buttonBitmap;
-}
+{}
 
 void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
 {
@@ -83,7 +80,6 @@ void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &)
             orderProcesser->placeOrder();
         }
     }
-
 }
 
 void cOrderDrawer::onNotify(const s_MouseEvent &event)
