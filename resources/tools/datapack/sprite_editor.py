@@ -108,8 +108,8 @@ class SpriteEditor:
         self.b_entry = tk.Entry(rgb_frame, width=5)
         self.b_entry.grid(row=2, column=1, padx=2)
         
-        apply_color_btn = tk.Button(right_frame, text="Appliquer Couleur", command=self.update_palette_color)
-        apply_color_btn.pack(pady=5)
+        self.apply_color_btn = tk.Button(right_frame, text="Appliquer Couleur", command=self.update_palette_color)
+        self.apply_color_btn.pack(pady=5)
 
         save_btn = tk.Button(right_frame, text="Sauvegarder l'image", command=self.save_image)
         save_btn.pack(side=tk.BOTTOM, pady=20)
@@ -199,6 +199,14 @@ class SpriteEditor:
                 x1, y1 = gx * size, gy * size
                 self.palette_canvas.create_rectangle(x1, y1, x1+size, y1+size, outline="red", width=2, tags=tag)
 
+    def _is_index_protected(self, index):
+        """Vérifie si l'index appartient aux plages réservées (Team Colors)."""
+        protected_ranges = [
+            (144, 150), (160, 166), (176, 182), (192, 198),
+            (208, 214), (224, 230), (240, 246)
+        ]
+        return any(start <= index <= end for start, end in protected_ranges)
+
     def _update_rgb_entries(self):
         """Met à jour les champs R, G, B avec les valeurs de l'index actuel."""
         palette = self.image.getpalette()
@@ -206,15 +214,29 @@ class SpriteEditor:
             r = palette[self.current_color_index * 3]
             g = palette[self.current_color_index * 3 + 1]
             b = palette[self.current_color_index * 3 + 2]
-            self.r_entry.delete(0, tk.END)
-            self.r_entry.insert(0, str(r))
-            self.g_entry.delete(0, tk.END)
-            self.g_entry.insert(0, str(g))
-            self.b_entry.delete(0, tk.END)
-            self.b_entry.insert(0, str(b))
+
+            is_protected = self._is_index_protected(self.current_color_index)
+            state = tk.DISABLED if is_protected else tk.NORMAL
+
+            # On déverrouille temporairement pour mettre à jour le texte
+            for entry, val in [(self.r_entry, r), (self.g_entry, g), (self.b_entry, b)]:
+                entry.config(state=tk.NORMAL)
+                entry.delete(0, tk.END)
+                entry.insert(0, str(val))
+                entry.config(state=state)
+            
+            self.apply_color_btn.config(state=state)
+            
+            if is_protected:
+                self.selected_label.config(text=f"Index {self.current_color_index} (Protégé - Team Color)")
+            else:
+                self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
 
     def update_palette_color(self):
         """Applique les valeurs des entrées R, G, B à la palette de l'image."""
+        if self._is_index_protected(self.current_color_index):
+            return
+
         try:
             r_raw = int(self.r_entry.get())
             g_raw = int(self.g_entry.get())
