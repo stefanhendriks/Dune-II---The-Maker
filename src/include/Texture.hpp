@@ -1,10 +1,15 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include <memory>
+
+struct SDLTextureDeleter {
+    void operator()(SDL_Texture* t) const { if (t) SDL_DestroyTexture(t); }
+};
 
 class Texture {
 
 public:
-    SDL_Texture *tex;
+    std::unique_ptr<SDL_Texture, SDLTextureDeleter> tex;
     int w=0;
     int h=0;
     bool isRenderTarget=false;
@@ -14,10 +19,5 @@ public:
 
     Texture() = delete;
 
-    ~Texture() {
-        if (tex) {
-            SDL_DestroyTexture(tex);
-            tex = nullptr;
-        }
-    }
+    ~Texture() = default; // Smart pointer handles cleanup
 };

@@ -1716,14 +1716,14 @@ void cGame::initiateFadingOut()
     m_cScreenFader->startFadeOut();
 
     m_renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
+    SDL_RenderCopy(renderer, actualRenderer->tex.get(),nullptr, nullptr);
     m_renderDrawer->endDrawingToTexture();
 }
 
 void cGame::takeBackGroundScreen()
 {
     m_renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex,nullptr, nullptr);
+    SDL_RenderCopy(renderer, actualRenderer->tex.get(),nullptr, nullptr);
     m_renderDrawer->endDrawingToTexture();
 }
 
