@@ -36,6 +36,7 @@ class SpriteEditor:
         self.setup_ui()
         self.draw_sprite()
         self.draw_palette()
+        self._update_rgb_entries()
 
     def setup_ui(self):
         """Initialise l'interface utilisateur."""
@@ -91,6 +92,25 @@ class SpriteEditor:
         self.selected_label = tk.Label(right_frame, text=f"Index sélectionné : {self.current_color_index}")
         self.selected_label.pack(pady=10)
         
+        # Champs de modification RGB
+        rgb_frame = tk.Frame(right_frame)
+        rgb_frame.pack(pady=5)
+        
+        tk.Label(rgb_frame, text="R:").grid(row=0, column=0)
+        self.r_entry = tk.Entry(rgb_frame, width=5)
+        self.r_entry.grid(row=0, column=1, padx=2)
+
+        tk.Label(rgb_frame, text="G:").grid(row=1, column=0)
+        self.g_entry = tk.Entry(rgb_frame, width=5)
+        self.g_entry.grid(row=1, column=1, padx=2)
+
+        tk.Label(rgb_frame, text="B:").grid(row=2, column=0)
+        self.b_entry = tk.Entry(rgb_frame, width=5)
+        self.b_entry.grid(row=2, column=1, padx=2)
+        
+        apply_color_btn = tk.Button(right_frame, text="Appliquer Couleur", command=self.update_palette_color)
+        apply_color_btn.pack(pady=5)
+
         save_btn = tk.Button(right_frame, text="Sauvegarder l'image", command=self.save_image)
         save_btn.pack(side=tk.BOTTOM, pady=20)
 
@@ -179,6 +199,51 @@ class SpriteEditor:
                 x1, y1 = gx * size, gy * size
                 self.palette_canvas.create_rectangle(x1, y1, x1+size, y1+size, outline="red", width=2, tags=tag)
 
+    def _update_rgb_entries(self):
+        """Met à jour les champs R, G, B avec les valeurs de l'index actuel."""
+        palette = self.image.getpalette()
+        if palette:
+            r = palette[self.current_color_index * 3]
+            g = palette[self.current_color_index * 3 + 1]
+            b = palette[self.current_color_index * 3 + 2]
+            self.r_entry.delete(0, tk.END)
+            self.r_entry.insert(0, str(r))
+            self.g_entry.delete(0, tk.END)
+            self.g_entry.insert(0, str(g))
+            self.b_entry.delete(0, tk.END)
+            self.b_entry.insert(0, str(b))
+
+    def update_palette_color(self):
+        """Applique les valeurs des entrées R, G, B à la palette de l'image."""
+        try:
+            r_raw = int(self.r_entry.get())
+            g_raw = int(self.g_entry.get())
+            b_raw = int(self.b_entry.get())
+        except ValueError:
+            messagebox.showerror("Erreur", "Les valeurs RGB doivent être des entiers.")
+            return
+
+        # Limiteur : clamp les valeurs entre 0 et 255
+        r = max(0, min(255, r_raw))
+        g = max(0, min(255, g_raw))
+        b = max(0, min(255, b_raw))
+
+        # Mettre à jour les champs de saisie pour afficher les valeurs corrigées
+        self.r_entry.delete(0, tk.END)
+        self.r_entry.insert(0, str(r))
+        self.g_entry.delete(0, tk.END)
+        self.g_entry.insert(0, str(g))
+        self.b_entry.delete(0, tk.END)
+        self.b_entry.insert(0, str(b))
+
+        palette = list(self.image.getpalette())
+        palette[self.current_color_index * 3] = r
+        palette[self.current_color_index * 3 + 1] = g
+        palette[self.current_color_index * 3 + 2] = b
+        self.image.putpalette(palette)
+        self.draw_palette()
+        self.draw_sprite()
+
     def on_palette_click(self, event):
         """Sélectionne une couleur dans la palette."""
         col, row = event.x // 20, event.y // 20
@@ -190,6 +255,7 @@ class SpriteEditor:
             self.current_color_index = new_index
             self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
             self.draw_palette()
+            self._update_rgb_entries()
 
     def on_sprite_right_click(self, event):
         """Récupère l'index de couleur du pixel sous la souris (Pipette)."""
@@ -206,6 +272,7 @@ class SpriteEditor:
             self.current_color_index = index
             self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
             self.draw_palette()
+            self._update_rgb_entries()
 
     def on_sprite_press(self, event):
         """Démarre l'enregistrement d'un nouveau tracé pour l'historique."""
