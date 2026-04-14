@@ -24,11 +24,11 @@ cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_prevState(MOUSESTATE_SELECT),
     m_prevStateBeforeRepair(MOUSESTATE_SELECT),
     m_mouse(mouse),
-    m_mouseNormalState(new cMouseNormalState(player, this, m_mouse)),
-    m_mouseUnitsSelectedState(new cMouseUnitsSelectedState(player, this, m_mouse)),
-    m_mouseRepairState(new cMouseRepairState(player, this, m_mouse)),
-    m_mousePlaceState(new cMousePlaceState(player, this, m_mouse)),
-    m_mouseDeployState(new cMouseDeployState(player, this, m_mouse)),
+    m_mouseNormalState(std::make_unique<cMouseNormalState>(player, this, m_mouse)),
+    m_mouseUnitsSelectedState(std::make_unique<cMouseUnitsSelectedState>(player, this, m_mouse)),
+    m_mouseRepairState(std::make_unique<cMouseRepairState>(player, this, m_mouse)),
+    m_mousePlaceState(std::make_unique<cMousePlaceState>(player, this, m_mouse)),
+    m_mouseDeployState(std::make_unique<cMouseDeployState>(player, this, m_mouse)),
     m_prevTickMouseAtBattleField(false)
 {
     assert(player!=nullptr && "Expected player in cGameControlsContext constructor");
@@ -41,12 +41,7 @@ cGameControlsContext::~cGameControlsContext()
     m_player = nullptr;
     m_mouse = nullptr;
 
-    // created these, so delete
-    delete m_mouseNormalState;
-    delete m_mouseUnitsSelectedState;
-    delete m_mouseRepairState;
-    delete m_mousePlaceState;
-    delete m_mouseDeployState;
+    // smart pointers handle cleanup
 }
 
 void cGameControlsContext::updateMouseCell(const cPoint &coords)
