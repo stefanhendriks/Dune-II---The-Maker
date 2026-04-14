@@ -5,6 +5,7 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 class SDLDrawer;
 
@@ -93,8 +94,8 @@ public:
         return *this;
     }
 
-    GuiCheckBox* build() const {
-        GuiCheckBox* btn = new GuiCheckBox(params.renderer, params.rect);
+    std::unique_ptr<GuiCheckBox> build() const {
+        auto btn = std::make_unique<GuiCheckBox>(params.renderer, params.rect);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         if (params.onCheckAction)

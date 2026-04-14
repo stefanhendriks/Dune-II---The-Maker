@@ -42,7 +42,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
     int backButtonY = m_game.m_gameSettings->getScreenH() - 21;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-    backButton = GuiButtonBuilder()
+    backButton = std::move(GuiButtonBuilder()
             .withRect(backButtonRect)
             .withLabel("BACK")
             .withTextDrawer(m_textDrawer)
@@ -53,7 +53,7 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
                 m_game.setNextStateToTransitionTo(GAME_MENU);
                 m_game.initiateFadingOut();
             })
-            .build();
+            .build());
 
     m_lines = std::vector<s_CreditLine>();
     prepareCrawlerLines();

@@ -5,7 +5,7 @@
 
 GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _textDrawer) :
     GuiObject(drawer,rect),
-    gui_objects(std::vector<GuiObject *>(0)),
+    gui_objects(),
     title(""),
     m_textDrawer(_textDrawer)
 {
@@ -30,9 +30,9 @@ void GuiWindow::draw() const
     m_textDrawer->drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::yellow());
 }
 
-void GuiWindow::addGuiObject(GuiObject *guiObject)
+void GuiWindow::addGuiObject(std::unique_ptr<GuiObject> guiObject)
 {
-    gui_objects.push_back(guiObject);
+    gui_objects.push_back(std::move(guiObject));
 }
 
 

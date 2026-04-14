@@ -107,7 +107,7 @@ private:
 
     bool fastForward = false;
 
-    GuiButton *m_guiBtnToMissionSelect;
+    std::unique_ptr<GuiButton> m_guiBtnToMissionSelect;
 
     // Functions
     void regionDraw(cRegion &regionPiece) const;

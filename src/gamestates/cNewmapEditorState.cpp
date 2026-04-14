@@ -34,7 +34,7 @@ void cNewMapEditorState::constructWindow()
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    m_guiWindow = new GuiWindow(m_renderDrawer, window, m_textDrawer);
+    m_guiWindow = std::make_unique<GuiWindow>(m_renderDrawer, window, m_textDrawer);
     m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
 
     // Title
@@ -46,7 +46,7 @@ void cNewMapEditorState::constructWindow()
 
     // name
     const cRectangle &nameRect = m_guiWindow->getRelativeRect(labelX, labelY, 75, buttonHeight);
-    GuiLabel *gui_NameLabel = GuiLabelBuilder()
+    auto gui_NameLabel = GuiLabelBuilder()
         .withLabel("Name your new map:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
@@ -54,16 +54,16 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(nameRect)
         .build();
-    m_guiWindow->addGuiObject(gui_NameLabel);
+    m_guiWindow->addGuiObject(std::move(gui_NameLabel));
 
-    m_inputName = new GuiTextInput( m_renderDrawer,
+    m_inputName = std::make_unique<GuiTextInput>( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_guiWindow->addGuiObject(m_inputName);
+    m_guiWindow->addGuiObject(std::move(m_inputName));
 
     // author
     const cRectangle &authorRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY, 75, buttonHeight);
-    GuiLabel *gui_authorLabel = GuiLabelBuilder()
+    auto gui_authorLabel = GuiLabelBuilder()
         .withLabel("Name of author:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
@@ -71,16 +71,16 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(authorRect)
         .build();
-    m_guiWindow->addGuiObject(gui_authorLabel);
+    m_guiWindow->addGuiObject(std::move(gui_authorLabel));
     
-    m_inputAuthor = new GuiTextInput(m_renderDrawer, 
+    m_inputAuthor = std::make_unique<GuiTextInput>(m_renderDrawer, 
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_guiWindow->addGuiObject(m_inputAuthor);
+    m_guiWindow->addGuiObject(std::move(m_inputAuthor));
 
     // Description
     const cRectangle &descriptionRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*2, 75, buttonHeight);
-    GuiLabel *gui_descriptionLabel = GuiLabelBuilder()
+    auto gui_descriptionLabel = GuiLabelBuilder()
         .withLabel("Description:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
@@ -88,16 +88,16 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(descriptionRect)
         .build();
-    m_guiWindow->addGuiObject(gui_descriptionLabel);
+    m_guiWindow->addGuiObject(std::move(gui_descriptionLabel));
 
-    m_inputDescription = new GuiTextInput( m_renderDrawer,
+    m_inputDescription = std::make_unique<GuiTextInput>( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*2-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_guiWindow->addGuiObject(m_inputDescription);
+    m_guiWindow->addGuiObject(std::move(m_inputDescription));
 
     // width
     const cRectangle &widthRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*3, 75, buttonHeight);
-    GuiLabel *gui_widthLabel = GuiLabelBuilder()
+    auto gui_widthLabel = GuiLabelBuilder()
         .withLabel("Width size:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
@@ -105,20 +105,20 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(widthRect)
         .build();
-    m_guiWindow->addGuiObject(gui_widthLabel);
+    m_guiWindow->addGuiObject(std::move(gui_widthLabel));
 
-    m_cycleWidth = GuiCycleButtonBuilder()
+    m_cycleWidth = std::move(GuiCycleButtonBuilder()
         .withRect( m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*3, 50, buttonHeight) )
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_renderDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
-        .build();
-    m_guiWindow->addGuiObject(m_cycleWidth);
+        .build());
+    m_guiWindow->addGuiObject(std::move(m_cycleWidth));
 
     // height
     const cRectangle &heightRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*4, 75, buttonHeight);
-    GuiLabel *gui_heightLabel = GuiLabelBuilder()
+    auto gui_heightLabel = GuiLabelBuilder()
         .withLabel("Height size:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_renderDrawer)
@@ -126,22 +126,22 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::LEFT)
         .withRect(heightRect)
         .build();
-    m_guiWindow->addGuiObject(gui_heightLabel);
+    m_guiWindow->addGuiObject(std::move(gui_heightLabel));
 
-    m_cycleHeight = GuiCycleButtonBuilder()
+    m_cycleHeight = std::move(GuiCycleButtonBuilder()
         .withRect( m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*4, 50, buttonHeight) )
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_renderDrawer)
         .withTheme( cGuiThemeBuilder().light().build() )
-        .build();
-    m_guiWindow->addGuiObject(m_cycleHeight);
+        .build());
+    m_guiWindow->addGuiObject(std::move(m_cycleHeight));
 
     // QUIT game
     int quit = mainMenuHeight - (buttonHeight + margin);// 464
     int width = (buttonWidth / 2);
     const cRectangle &quitRect = m_guiWindow->getRelativeRect(margin, quit, width, buttonHeight);
-    GuiButton *gui_btn_Quit = GuiButtonBuilder()
+    auto gui_btn_Quit = GuiButtonBuilder()
         .withRect(quitRect)        
         .withLabel("Return to menu")
         .withTextDrawer(m_textDrawer)
@@ -152,13 +152,13 @@ void cNewMapEditorState::constructWindow()
             m_game.setNextStateToTransitionTo(GAME_MENU);
             m_game.initiateFadingOut();})
         .build();
-    m_guiWindow->addGuiObject(gui_btn_Quit);
+    m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
 
     // BACK to where we came from
     int back = mainMenuHeight - (buttonHeight + margin);// 444
     const cRectangle &backRect = m_guiWindow->getRelativeRect(margin + width + margin, back, (width - margin), buttonHeight);
     
-    GuiButton *gui_btn_Back = GuiButtonBuilder()
+    auto gui_btn_Back = GuiButtonBuilder()
         .withRect(backRect)        
         .withLabel("Create map !")
         .withTextDrawer(m_textDrawer)
@@ -171,7 +171,7 @@ void cNewMapEditorState::constructWindow()
             m_game.loadMapFromEditor(&newMap);
             m_game.initiateFadingOut();})
         .build();
-    m_guiWindow->addGuiObject(gui_btn_Back);
+    m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 }
 
 cNewMapEditorState::~cNewMapEditorState()

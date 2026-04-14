@@ -5,6 +5,8 @@
 #include "sMouseEvent.h"
 #include "include/Texture.hpp"
 
+#include <memory>
+
 struct SDL_Surface;
 class cGame;
 class GameContext;
@@ -32,7 +34,7 @@ private:
 
     int m_prevState;
 
-    GuiWindow *m_guiWindow;
+    std::unique_ptr<GuiWindow> m_guiWindow;
 
     void constructWindow(int prevState);
     Texture *m_backgroundTexture = nullptr;

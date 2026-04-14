@@ -6,6 +6,8 @@
 #include "gui/GuiWindow.h"
 #include "sMouseEvent.h"
 
+#include <memory>
+
 class Texture;
 class cGame;
 class cTextDrawer;
@@ -35,8 +37,8 @@ private:
     cTextDrawer* m_textDrawer=nullptr;
     cRectangle sdl2power;
 
-    GuiWindow *gui_window;
-    GuiButton *gui_btn_credits;
+    std::unique_ptr<GuiWindow> gui_window;
+    std::unique_ptr<GuiButton> gui_btn_credits;
 
     Texture *bmp_D2TM_Title;
     Texture *backGroundDebug = nullptr;

@@ -24,7 +24,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = new GuiWindow(m_renderDrawer, window, m_textDrawer);
+    gui_window = std::make_unique<GuiWindow>(m_renderDrawer, window, m_textDrawer);
     gui_window->setTheme(cGuiThemeBuilder().light().build());
 
     // Title
@@ -37,7 +37,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int y = 40;
     for (int i = 2; i <= 9; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
-        GuiButton *btnMission = GuiButtonBuilder()
+        auto btnMission = GuiButtonBuilder()
             .withRect(rect)        
             .withLabel(std::format("Mission {}", i))
             .withTextDrawer(m_textDrawer)
@@ -48,7 +48,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
                 m_game.setNextStateToTransitionTo(GAME_REGION);
                 m_game.initiateFadingOut();})
             .build();   
-        gui_window->addGuiObject(btnMission);
+        gui_window->addGuiObject(std::move(btnMission));
 
         y += buttonHeight + margin;
     }
@@ -57,7 +57,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
     int back = mainMenuHeight - (buttonHeight + margin);
     width = buttonWidth;
     const cRectangle &backRect = gui_window->getRelativeRect(margin, back, (width - margin), buttonHeight);
-    GuiButton *gui_btn_Back = GuiButtonBuilder()
+    auto gui_btn_Back = GuiButtonBuilder()
             .withRect(backRect)        
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
@@ -67,7 +67,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int p
                 m_game.setNextStateToTransitionTo(prevState);
             })
             .build();  
-    gui_window->addGuiObject(gui_btn_Back);
+    gui_window->addGuiObject(std::move(gui_btn_Back));
 }
 
 cSelectMissionState::~cSelectMissionState()

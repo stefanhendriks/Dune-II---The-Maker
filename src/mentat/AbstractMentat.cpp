@@ -64,7 +64,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
                                                 game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(),
                                                 "Mission select");
         
-        GuiButton *gui_btn_toMissionSelect = GuiButtonBuilder()
+        auto gui_btn_toMissionSelect = GuiButtonBuilder()
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withTextDrawer(m_textDrawer)
@@ -75,7 +75,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
                 game.setNextStateToTransitionTo(GAME_MISSIONSELECT);
             })
             .build();
-        m_guiBtnToMissionSelect = gui_btn_toMissionSelect;
+        m_guiBtnToMissionSelect = std::move(gui_btn_toMissionSelect);
     }
     else {
         m_guiBtnToMissionSelect = nullptr;

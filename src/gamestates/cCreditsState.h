@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 class Texture;
 class cGame;
@@ -48,7 +49,7 @@ private:
     cPoint m_duneCoordinates;
     Texture *m_duneBmp;
     Texture *m_titleBmp;
-    GuiButton *backButton;
+    std::unique_ptr<GuiButton> backButton;
 
     void resetCrawler();
     void prepareCrawlerLines();

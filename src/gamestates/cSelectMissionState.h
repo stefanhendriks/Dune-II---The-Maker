@@ -4,6 +4,8 @@
 #include "controls/cKeyboardEvent.h"
 #include "sMouseEvent.h"
 
+#include <memory>
+
 struct SDL_Surface;
 class cGame;
 class GameContext;
@@ -26,5 +28,5 @@ public:
 private:
     cTextDrawer *m_textDrawer = nullptr;
 
-    GuiWindow *gui_window;
+    std::unique_ptr<GuiWindow> gui_window;
 };
