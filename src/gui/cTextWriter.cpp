@@ -13,9 +13,7 @@ cTextWriter::cTextWriter(cTextDrawer* _textDrawer, int theFontSize)
 }
 
 cTextWriter::~cTextWriter()
-{
-    delete m_textDrawer;
-}
+{}
 
 void cTextWriter::moveTo(int x, int y)
 {
