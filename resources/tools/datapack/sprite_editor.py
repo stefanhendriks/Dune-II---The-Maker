@@ -5,6 +5,14 @@ from tkinter import messagebox, filedialog
 from PIL import Image
 
 class SpriteEditor:
+    # Constantes pour la clarté et la maintenance
+    PROTECTED_RANGES = [
+        (144, 150), (160, 166), (176, 182), (192, 198),
+        (208, 214), (224, 230), (240, 246)
+    ]
+    ZOOM_DEFAULT = 20
+    PALETTE_CELL_SIZE = 20
+
     def __init__(self, root, image_path):
         self.root = root
         self.root.title(f"D2TM Sprite Editor - {image_path}")
@@ -28,7 +36,7 @@ class SpriteEditor:
             sys.exit(1)
 
         self.width, self.height = self.image.size
-        self.zoom = 20  # Facteur de zoom pour l'aspect pixel art
+        self.zoom = self.ZOOM_DEFAULT
         self.current_color_index = 1
         self.undo_stack = []
         self.current_undo_data = None
@@ -85,7 +93,7 @@ class SpriteEditor:
         
         tk.Label(right_frame, text="Palette (256 couleurs)").pack()
         
-        self.palette_canvas = tk.Canvas(right_frame, width=8 * 20, height=32 * 20, bg="white")
+        self.palette_canvas = tk.Canvas(right_frame, width=8 * self.PALETTE_CELL_SIZE, height=32 * self.PALETTE_CELL_SIZE, bg="white")
         self.palette_canvas.pack()
         self.palette_canvas.bind("<Button-1>", self.on_palette_click)
 
@@ -185,7 +193,7 @@ class SpriteEditor:
     def draw_palette(self):
         """Dessine la grille 8x32 des couleurs de la palette."""
         self.palette_canvas.delete("all")
-        size = 20
+        size = self.PALETTE_CELL_SIZE
         for i in range(256):
             gx, gy = i % 8, i // 8
             tag = f"pal_{i}"
@@ -201,11 +209,14 @@ class SpriteEditor:
 
     def _is_index_protected(self, index):
         """Vérifie si l'index appartient aux plages réservées (Team Colors)."""
-        protected_ranges = [
-            (144, 150), (160, 166), (176, 182), (192, 198),
-            (208, 214), (224, 230), (240, 246)
-        ]
-        return any(start <= index <= end for start, end in protected_ranges)
+        return any(start <= index <= end for start, end in self.PROTECTED_RANGES)
+
+    def _set_entry_value(self, entry, value, state=tk.NORMAL):
+        """Utilitaire pour mettre à jour un champ de saisie proprement."""
+        entry.config(state=tk.NORMAL)
+        entry.delete(0, tk.END)
+        entry.insert(0, str(value))
+        entry.config(state=state)
 
     def _update_rgb_entries(self):
         """Met à jour les champs R, G, B avec les valeurs de l'index actuel."""
@@ -218,13 +229,10 @@ class SpriteEditor:
             is_protected = self._is_index_protected(self.current_color_index)
             state = tk.DISABLED if is_protected else tk.NORMAL
 
-            # On déverrouille temporairement pour mettre à jour le texte
-            for entry, val in [(self.r_entry, r), (self.g_entry, g), (self.b_entry, b)]:
-                entry.config(state=tk.NORMAL)
-                entry.delete(0, tk.END)
-                entry.insert(0, str(val))
-                entry.config(state=state)
-            
+            self._set_entry_value(self.r_entry, r, state)
+            self._set_entry_value(self.g_entry, g, state)
+            self._set_entry_value(self.b_entry, b, state)
+
             self.apply_color_btn.config(state=state)
             
             if is_protected:
@@ -245,18 +253,12 @@ class SpriteEditor:
             messagebox.showerror("Erreur", "Les valeurs RGB doivent être des entiers.")
             return
 
-        # Limiteur : clamp les valeurs entre 0 et 255
-        r = max(0, min(255, r_raw))
-        g = max(0, min(255, g_raw))
-        b = max(0, min(255, b_raw))
+        # Limiteur : clamp les valeurs entre 0 et 255 (plus élégant)
+        clamp = lambda n: max(0, min(255, n))
+        r, g, b = map(clamp, [r_raw, g_raw, b_raw])
 
-        # Mettre à jour les champs de saisie pour afficher les valeurs corrigées
-        self.r_entry.delete(0, tk.END)
-        self.r_entry.insert(0, str(r))
-        self.g_entry.delete(0, tk.END)
-        self.g_entry.insert(0, str(g))
-        self.b_entry.delete(0, tk.END)
-        self.b_entry.insert(0, str(b))
+        # On ré-affiche les valeurs (si elles ont été bridées)
+        self._update_rgb_entries()
 
         palette = list(self.image.getpalette())
         palette[self.current_color_index * 3] = r
@@ -268,7 +270,7 @@ class SpriteEditor:
 
     def on_palette_click(self, event):
         """Sélectionne une couleur dans la palette."""
-        col, row = event.x // 20, event.y // 20
+        col, row = event.x // self.PALETTE_CELL_SIZE, event.y // self.PALETTE_CELL_SIZE
         if 0 <= col < 8 and 0 <= row < 32:
             new_index = row * 8 + col
             if new_index == 0:
