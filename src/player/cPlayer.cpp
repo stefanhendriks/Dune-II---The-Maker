@@ -82,12 +82,12 @@ cPlayer::~cPlayer()
 
 void cPlayer::destroyAllegroBitmaps()
 {
-    if (bmp_flag) {
-        delete bmp_flag;
-    }
-    if (bmp_flag_small) {
-        delete bmp_flag_small;
-    }
+    // if (bmp_flag) {
+    //     delete bmp_flag;
+    // }
+    // if (bmp_flag_small) {
+    //     delete bmp_flag_small;
+    // }
     clearStructureTypeBitmaps();
     clearUnitTypeBitmaps();
 }
