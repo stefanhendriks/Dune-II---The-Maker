@@ -39,7 +39,7 @@ cParticle::cParticle()
 cParticle::~cParticle()
 {
     bmp = nullptr;
-    delete dimensions;
+    dimensions.reset();
 }
 
 void cParticle::reset()
@@ -75,8 +75,7 @@ void cParticle::init()
 
     TIMER_dead = 0;     // when > -1, this timer will determine when the thing dies
 
-    delete dimensions;
-    dimensions = nullptr;
+    dimensions.reset();
     //std::cout << "cParticle initialized: size cache " << particleTextureCache.size() << std::endl;
 }
 
@@ -768,10 +767,7 @@ RenderLayerParticle cParticle::getLayer()
 
 void cParticle::recreateDimensions()
 {
-    if (dimensions) {
-        delete dimensions;
-    }
-    dimensions = new cRectangle(draw_x(), draw_y(), getFrameWidth(), getFrameHeight());
+    dimensions = std::make_unique<cRectangle>(draw_x(), draw_y(), getFrameWidth(), getFrameHeight());
 }
 
 void cParticle::think_new()

@@ -17,6 +17,7 @@
 #include "gameobjects/particles/cParticleInfos.h"
 
 #include <map>
+#include <memory>
 #include <tuple>
 
 class Texture;
@@ -70,7 +71,7 @@ private:
     float x, y;
 
     // the actual position + dimensions of particle
-    cRectangle *dimensions;
+    std::unique_ptr<cRectangle> dimensions;
 
     int iType;
 
