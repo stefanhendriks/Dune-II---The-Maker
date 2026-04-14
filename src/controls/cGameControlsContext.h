@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 // this class holds the game controls context. This means, the updateMouseAndKeyboardStateAndGamePlaying() method
 // will check how the mouse is positioned in this particular frame. It then updates any ids, or other relevant data.
 //
@@ -106,11 +108,11 @@ private:
 
     // the states, initialized once to save a lot of construct/destructs (and make it possible
     // to switch between states without needing to restore 'state' within the state object)
-    cMouseNormalState *m_mouseNormalState;
-    cMouseUnitsSelectedState *m_mouseUnitsSelectedState;
-    cMouseRepairState *m_mouseRepairState;
-    cMousePlaceState *m_mousePlaceState;
-    cMouseDeployState *m_mouseDeployState;
+    std::unique_ptr<cMouseNormalState> m_mouseNormalState;
+    std::unique_ptr<cMouseUnitsSelectedState> m_mouseUnitsSelectedState;
+    std::unique_ptr<cMouseRepairState> m_mouseRepairState;
+    std::unique_ptr<cMousePlaceState> m_mousePlaceState;
+    std::unique_ptr<cMouseDeployState> m_mouseDeployState;
 
     //
     bool m_prevTickMouseAtBattleField;
