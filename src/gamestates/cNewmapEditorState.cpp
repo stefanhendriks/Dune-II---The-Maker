@@ -56,10 +56,11 @@ void cNewMapEditorState::constructWindow()
         .build();
     m_guiWindow->addGuiObject(std::move(gui_NameLabel));
 
-    m_inputName = std::make_unique<GuiTextInput>( m_renderDrawer,
+    auto inputName = std::make_unique<GuiTextInput>( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_guiWindow->addGuiObject(std::move(m_inputName));
+    m_inputName = inputName.get();
+    m_guiWindow->addGuiObject(std::move(inputName));
 
     // author
     const cRectangle &authorRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY, 75, buttonHeight);
@@ -73,10 +74,11 @@ void cNewMapEditorState::constructWindow()
         .build();
     m_guiWindow->addGuiObject(std::move(gui_authorLabel));
     
-    m_inputAuthor = std::make_unique<GuiTextInput>(m_renderDrawer, 
+    auto inputAuthor = std::make_unique<GuiTextInput>(m_renderDrawer, 
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_guiWindow->addGuiObject(std::move(m_inputAuthor));
+    m_inputAuthor = inputAuthor.get();
+    m_guiWindow->addGuiObject(std::move(inputAuthor));
 
     // Description
     const cRectangle &descriptionRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*2, 75, buttonHeight);
@@ -90,10 +92,11 @@ void cNewMapEditorState::constructWindow()
         .build();
     m_guiWindow->addGuiObject(std::move(gui_descriptionLabel));
 
-    m_inputDescription = std::make_unique<GuiTextInput>( m_renderDrawer,
+    auto inputDescription = std::make_unique<GuiTextInput>( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*2-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_guiWindow->addGuiObject(std::move(m_inputDescription));
+    m_inputDescription = inputDescription.get();
+    m_guiWindow->addGuiObject(std::move(inputDescription));
 
     // width
     const cRectangle &widthRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*3, 75, buttonHeight);
@@ -107,14 +110,15 @@ void cNewMapEditorState::constructWindow()
         .build();
     m_guiWindow->addGuiObject(std::move(gui_widthLabel));
 
-    m_cycleWidth = std::move(GuiCycleButtonBuilder()
+    auto cycleWidth = GuiCycleButtonBuilder()
         .withRect( m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*3, 50, buttonHeight) )
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_renderDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
-        .build());
-    m_guiWindow->addGuiObject(std::move(m_cycleWidth));
+        .build();
+    m_cycleWidth = cycleWidth.get();
+    m_guiWindow->addGuiObject(std::move(cycleWidth));
 
     // height
     const cRectangle &heightRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*4, 75, buttonHeight);
@@ -128,14 +132,15 @@ void cNewMapEditorState::constructWindow()
         .build();
     m_guiWindow->addGuiObject(std::move(gui_heightLabel));
 
-    m_cycleHeight = std::move(GuiCycleButtonBuilder()
+    auto cycleHeight = GuiCycleButtonBuilder()
         .withRect( m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*4, 50, buttonHeight) )
         .withValues( m_sizesMap )
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_renderDrawer)
         .withTheme( cGuiThemeBuilder().light().build() )
-        .build());
-    m_guiWindow->addGuiObject(std::move(m_cycleHeight));
+        .build();
+    m_cycleHeight = cycleHeight.get();
+    m_guiWindow->addGuiObject(std::move(cycleHeight));
 
     // QUIT game
     int quit = mainMenuHeight - (buttonHeight + margin);// 464
@@ -165,11 +170,16 @@ void cNewMapEditorState::constructWindow()
         .withRenderer(m_renderDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this](){
-            s_PreviewMap newMap = cPreviewMaps::createEmptyMap(
-                m_inputName->getText(), m_inputAuthor->getText(), m_inputDescription->getText(),
-                m_cycleWidth->getSelectedValue(), m_cycleHeight->getSelectedValue());
+            // On récupère les valeurs localement pour être sûr
+            std::string name = m_inputName->getText();
+            std::string author = m_inputAuthor->getText();
+            std::string desc = m_inputDescription->getText();
+            int width = m_cycleWidth->getSelectedValue();
+            int height = m_cycleHeight->getSelectedValue();
+            s_PreviewMap newMap = cPreviewMaps::createEmptyMap(name, author, desc, width, height);
             m_game.loadMapFromEditor(&newMap);
-            m_game.initiateFadingOut();})
+            m_game.initiateFadingOut();
+            })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 }
