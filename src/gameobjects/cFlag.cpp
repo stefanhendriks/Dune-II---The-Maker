@@ -69,7 +69,7 @@ std::unique_ptr<cFlag> cFlag::createBigFlag(cPlayer *player, cPoint &position)
     auto pFlag = std::make_unique<cFlag>(player, correctedPoint, 12, 24);
     // cFlag *pFlag = newFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(true);
-    return std::move(pFlag);
+    return pFlag;
 }
 
 std::unique_ptr<cFlag> cFlag::createSmallFlag(cPlayer *player, cPoint &position)
@@ -82,5 +82,5 @@ std::unique_ptr<cFlag> cFlag::createSmallFlag(cPlayer *player, cPoint &position)
     auto pFlag = std::make_unique<cFlag>(player, correctedPoint, 12, 24);
     // cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(false);
-    return std::move(pFlag);
+    return pFlag;
 }
