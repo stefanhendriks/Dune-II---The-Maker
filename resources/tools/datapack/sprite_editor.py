@@ -30,6 +30,8 @@ class SpriteEditor:
         self.width, self.height = self.image.size
         self.zoom = 20  # Facteur de zoom pour l'aspect pixel art
         self.current_color_index = 0
+        self.undo_stack = []
+        self.current_undo_data = None
         
         self.setup_ui()
         self.draw_sprite()
@@ -64,9 +66,12 @@ class SpriteEditor:
         self.h_scroll.config(command=self.sprite_canvas.xview)
         self.v_scroll.config(command=self.sprite_canvas.yview)
 
-        self.sprite_canvas.bind("<Button-1>", self.on_sprite_click)
+        self.sprite_canvas.bind("<Button-1>", self.on_sprite_press)
         self.sprite_canvas.bind("<B1-Motion>", self.on_sprite_click)
+        self.sprite_canvas.bind("<ButtonRelease-1>", self.on_sprite_release)
         self.sprite_canvas.bind("<Button-3>", self.on_sprite_right_click)
+        
+        self.root.bind("<Control-z>", self.undo)
 
         # Zone de droite : Palette
         right_frame = tk.Frame(self.main_frame)
@@ -155,6 +160,27 @@ class SpriteEditor:
             self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
             self.draw_palette()
 
+    def on_sprite_press(self, event):
+        """Démarre l'enregistrement d'un nouveau tracé pour l'historique."""
+        self.current_undo_data = {}
+        self.on_sprite_click(event)
+
+    def on_sprite_release(self, event):
+        """Ferme le tracé en cours et l'ajoute à la pile d'annulation."""
+        if self.current_undo_data:
+            self.undo_stack.append(self.current_undo_data)
+        self.current_undo_data = None
+
+    def undo(self, event=None):
+        """Annule le dernier tracé en restaurant pixel par pixel."""
+        if self.undo_stack:
+            changes = self.undo_stack.pop()
+            for (x, y), old_index in changes.items():
+                self.image.putpixel((x, y), old_index)
+                tag = f"pixel_{x}_{y}"
+                self.sprite_canvas.delete(tag)
+                self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, old_index, tag)
+
     def on_sprite_click(self, event):
         """Modifie le pixel sous la souris sur le sprite."""
         # Conversion des coordonnées de l'événement en coordonnées réelles du canvas
@@ -164,6 +190,14 @@ class SpriteEditor:
         x, y = int(canvas_x // self.zoom), int(canvas_y // self.zoom)
         
         if 0 <= x < self.width and 0 <= y < self.height:
+            old_index = self.image.getpixel((x, y))
+            if old_index == self.current_color_index:
+                return
+
+            # Enregistrement du pixel avant modification (une seule fois par tracé)
+            if self.current_undo_data is not None and (x, y) not in self.current_undo_data:
+                self.current_undo_data[(x, y)] = old_index
+
             self.image.putpixel((x, y), self.current_color_index)
             # On redessine le pixel spécifique (on supprime l'ancien car 223 utilise plusieurs objets)
             tag = f"pixel_{x}_{y}"
