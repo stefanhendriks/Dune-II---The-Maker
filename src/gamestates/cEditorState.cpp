@@ -72,7 +72,7 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     guiButton->setPressed(true);
-    m_selectBar->addAutoGuiObject(guiButton);
+    m_selectBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -83,7 +83,7 @@ void cEditorState::populateSelectBar()
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
-    m_selectBar->addAutoGuiObject(guiButton);
+    m_selectBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -94,7 +94,7 @@ void cEditorState::populateSelectBar()
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
-    m_selectBar->addAutoGuiObject(guiButton);
+    m_selectBar->addAutoGuiObject(std::move(guiButton));
 }
 
 void cEditorState::populateTopologyBar()
@@ -110,7 +110,7 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addAutoGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -121,7 +121,7 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addAutoGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -132,7 +132,7 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addAutoGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -143,8 +143,8 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addAutoGuiObject(guiButton);
     guiButton->setPressed(true);
+    m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -155,7 +155,7 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addAutoGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -166,7 +166,7 @@ void cEditorState::populateTopologyBar()
             })
             .build();
     guiButton->setGroup(m_topologyGroup.get());
-    m_topologyBar->addAutoGuiObject(guiButton);
+    m_topologyBar->addAutoGuiObject(std::move(guiButton));
 }
 
 void cEditorState::populateStartCellBar()
@@ -183,7 +183,7 @@ void cEditorState::populateStartCellBar()
             .build();
     guiButton->setGroup(m_startCellGroup.get());
     guiButton->setPressed(true);
-    m_startCellBar->addAutoGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -194,7 +194,7 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addAutoGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -205,7 +205,7 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addAutoGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -216,7 +216,7 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addAutoGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -227,9 +227,8 @@ void cEditorState::populateStartCellBar()
             })
             .build();
     guiButton->setGroup(m_startCellGroup.get());
-    m_startCellBar->addAutoGuiObject(guiButton);
+    m_startCellBar->addAutoGuiObject(std::move(guiButton));
 }
-
 
 void cEditorState::populateSymmetricBar()
 {
@@ -245,7 +244,7 @@ void cEditorState::populateSymmetricBar()
             })
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
-    m_symmetricBar->addAutoGuiObject(guiButton);
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -257,7 +256,7 @@ void cEditorState::populateSymmetricBar()
             })
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
-    m_symmetricBar->addAutoGuiObject(guiButton);
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -269,7 +268,7 @@ void cEditorState::populateSymmetricBar()
             })
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
-    m_symmetricBar->addAutoGuiObject(guiButton);
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -281,7 +280,7 @@ void cEditorState::populateSymmetricBar()
             })
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
-    m_symmetricBar->addAutoGuiObject(guiButton);
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));
 }
 
 void cEditorState::thinkFast()

@@ -85,8 +85,8 @@ public:
         return *this;
     }
 
-    GuiStateButton* build() const {
-        GuiStateButton* btn = new GuiStateButton(params.renderer, params.rect);
+    std::unique_ptr<GuiStateButton> build() const {
+        auto btn = std::make_unique<GuiStateButton>(params.renderer, params.rect);
         btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         btn->setTexture(params.tex);
