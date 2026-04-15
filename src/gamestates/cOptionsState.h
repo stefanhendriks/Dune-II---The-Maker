@@ -31,6 +31,7 @@ public:
 
 private:
     cTextDrawer* m_textDrawer = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     int m_prevState;
 
