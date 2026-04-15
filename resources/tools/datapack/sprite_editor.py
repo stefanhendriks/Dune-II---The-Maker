@@ -5,7 +5,7 @@ from tkinter import messagebox, filedialog
 from PIL import Image
 
 class SpriteEditor:
-    # Constantes pour la clarté et la maintenance
+    # Constants for clarity and maintenance
     PROTECTED_RANGES = [
         (144, 150), (160, 166), (176, 182), (192, 198),
         (208, 214), (224, 230), (240, 246)
@@ -23,19 +23,19 @@ class SpriteEditor:
         self.image_path = image_path
         
         try:
-            # Restriction aux fichiers PNG seulement
+            # Restricted to PNG files only
             if not image_path.lower().endswith('.png'):
-                messagebox.showerror("Erreur", "Ce programme ne supporte que les fichiers PNG.")
+                messagebox.showerror("Error", "This program only supports PNG files.")
                 sys.exit(1)
 
-            # Ouverture de l'image avec PIL
+            # Opening the image with PIL
             self.image = Image.open(image_path)
-            # On s'assure que l'image est en mode palette (P) pour accéder aux index
+            # We ensure that the image is in palette mode (P) to access the indexes
             if self.image.mode != 'P':
-                print("Note: Conversion de l'image en mode palette (8-bit).")
+                print("Note: Image converted to palette mode (8-bit).")
                 self.image = self.image.convert('P')
         except Exception as e:
-            messagebox.showerror("Erreur", f"Impossible d'ouvrir l'image : {e}")
+            messagebox.showerror("Error", f"Unable to open image: {e}")
             sys.exit(1)
 
         self.width, self.height = self.image.size
@@ -51,16 +51,16 @@ class SpriteEditor:
         self._update_rgb_entries()
 
     def setup_ui(self):
-        """Initialise l'interface utilisateur."""
+        """Initializes the user interface."""
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Zone de gauche : Canvas pour le Sprite
+        # Left area: Canvas for the Sprite
         left_frame = tk.Frame(self.main_frame)
         left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        tk.Label(left_frame, text="Edition du Sprite").pack()
+        tk.Label(left_frame, text="Sprite editor").pack()
 
-        # Container pour le Canvas et ses barres de défilement
+        # Container for the Canvas and its scroll bars
         canvas_container = tk.Frame(left_frame)
         canvas_container.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
@@ -77,7 +77,7 @@ class SpriteEditor:
         )
         self.sprite_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
-        # Définir la zone de défilement totale dès le début (utilise la valeur initiale du zoom)
+        # Define the total scroll area from the start
         self.sprite_canvas.config(scrollregion=(0, 0, self.width * self.zoom, self.height * self.zoom))
 
         self.h_scroll.config(command=self.on_scroll_h)
@@ -91,20 +91,20 @@ class SpriteEditor:
         
         self.root.bind("<Control-z>", self.undo)
 
-        # Zone de droite : Palette
+        # Right Zone : Palette
         right_frame = tk.Frame(self.main_frame)
         right_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=10)
         
-        tk.Label(right_frame, text="Palette (256 couleurs)").pack()
+        tk.Label(right_frame, text="Palette (256 colours)").pack()
         
         self.palette_canvas = tk.Canvas(right_frame, width=8 * self.PALETTE_CELL_SIZE, height=32 * self.PALETTE_CELL_SIZE, bg="white")
         self.palette_canvas.pack()
         self.palette_canvas.bind("<Button-1>", self.on_palette_click)
 
-        self.selected_label = tk.Label(right_frame, text=f"Index sélectionné : {self.current_color_index}")
+        self.selected_label = tk.Label(right_frame, text=f"Index selection : {self.current_color_index}")
         self.selected_label.pack(pady=10)
         
-        # Champs de modification RGB
+        # RGB modification fields
         rgb_frame = tk.Frame(right_frame)
         rgb_frame.pack(pady=5)
         
@@ -120,10 +120,10 @@ class SpriteEditor:
         self.b_entry = tk.Entry(rgb_frame, width=5)
         self.b_entry.grid(row=2, column=1, padx=2)
         
-        self.apply_color_btn = tk.Button(right_frame, text="Appliquer Couleur", command=self.update_palette_color)
+        self.apply_color_btn = tk.Button(right_frame, text="Apply Colour", command=self.update_palette_color)
         self.apply_color_btn.pack(pady=5)
 
-        # Contrôle du Zoom
+        # Zoom control
         zoom_frame = tk.Frame(right_frame)
         zoom_frame.pack(pady=5)
         tk.Label(zoom_frame, text="Zoom:").pack(side=tk.LEFT)
@@ -136,11 +136,11 @@ class SpriteEditor:
         )
         self.zoom_slider.pack(side=tk.LEFT, padx=5)
 
-        save_btn = tk.Button(right_frame, text="Sauvegarder l'image", command=self.save_image)
+        save_btn = tk.Button(right_frame, text="Save image", command=self.save_image)
         save_btn.pack(side=tk.BOTTOM, pady=20)
 
     def _get_color_from_palette(self, index):
-        """Récupère la couleur hexadécimale depuis la palette PIL."""
+        """Retrieves the hexadecimal colour from the PIL palette."""
         palette = self.image.getpalette() # Liste [R,G,B, R,G,B, ...]
         if not palette: return "#000000"
         r = palette[index * 3]
@@ -149,7 +149,7 @@ class SpriteEditor:
         return f'#{r:02x}{g:02x}{b:02x}'
 
     def _draw_pixel_to_canvas(self, canvas, grid_x, grid_y, size, index, tag, outline="#111111"):
-        """Dessine un pixel (rect simple ou motif spécial pour l'index 223)."""
+        """Draw a pixel (simple rectangle or special pattern for index 223)."""
         x1, y1 = grid_x * size, grid_y * size
         x2, y2 = x1 + size, y1 + size
         
@@ -168,7 +168,7 @@ class SpriteEditor:
             canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=outline, tags=tag)
 
     def on_scroll_h(self, *args):
-        """Gère le défilement horizontal et redessine les pixels visibles."""
+        """Manage horizontal scrolling and redraw visible pixels."""
         self.sprite_canvas.xview(*args)
         self.draw_sprite()
 
@@ -180,30 +180,30 @@ class SpriteEditor:
         self.draw_sprite()
 
     def on_scroll_v(self, *args):
-        """Gère le défilement vertical et redessine les pixels visibles."""
+        """Manage vertical scrolling and redraw visible pixels."""
         self.sprite_canvas.yview(*args)
         self.draw_sprite()
 
     def draw_sprite(self):
-        """Dessine seulement les pixels visibles sur le canvas de gauche (Culling)."""
+        """Draw only the pixels visible on the left canvas (Culling)."""
         self.sprite_canvas.delete("all")
         
-        # Coordonnées réelles du viewport dans le canvas (tenant compte du scroll)
+        # Actual coordinates of the viewport within the canvas (taking scrolling into account)
         x_left = self.sprite_canvas.canvasx(0)
         y_top = self.sprite_canvas.canvasy(0)
         
-        # Dimensions visibles du widget
+        # Visible dimensions of the widget
         width = self.sprite_canvas.winfo_width()
         height = self.sprite_canvas.winfo_height()
         
-        # Au démarrage winfo renvoie 1, on attend l'affichage réel
+        # At startup, winfo returns 1; we are waiting for the actual display.
         if width <= 1 or height <= 1:
             return
 
         x_right = x_left + width
         y_bottom = y_top + height
 
-        # Conversion des coordonnées écran en index de grille image
+        # Converting screen coordinates to image grid index
         start_x = max(0, int(x_left // self.zoom))
         end_x = min(self.width, int(x_right // self.zoom) + 1)
         start_y = max(0, int(y_top // self.zoom))
@@ -211,11 +211,11 @@ class SpriteEditor:
 
         pixels = self.image.load()
         for y in range(start_y, end_y):
-            for x in range(start_x, end_x): # self.zoom est maintenant mis à jour par le slider
+            for x in range(start_x, end_x): # self.zoom is now update by the slider
                 self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, pixels[x, y], f"pixel_{x}_{y}")
 
     def draw_palette(self):
-        """Dessine la grille 8x32 des couleurs de la palette."""
+        """Draw the 8x32 grid of colours from the palette."""
         self.palette_canvas.delete("all")
         size = self.PALETTE_CELL_SIZE
         for i in range(256):
@@ -227,23 +227,23 @@ class SpriteEditor:
             self._draw_pixel_to_canvas(self.palette_canvas, gx, gy, size, i, tag, outline=outline)
             
             if is_selected:
-                # Forcer l'épaisseur de la bordure pour la sélection
+                # Force border thickness for selection
                 x1, y1 = gx * size, gy * size
                 self.palette_canvas.create_rectangle(x1, y1, x1+size, y1+size, outline="red", width=2, tags=tag)
 
     def _is_index_protected(self, index):
-        """Vérifie si l'index appartient aux plages réservées (Team Colors)."""
+        """Checks if the index belongs to the reserved ranges (Team Colours)."""
         return any(start <= index <= end for start, end in self.PROTECTED_RANGES)
 
     def _set_entry_value(self, entry, value, state=tk.NORMAL):
-        """Utilitaire pour mettre à jour un champ de saisie proprement."""
+        """Utility for updating an input field cleanly."""
         entry.config(state=tk.NORMAL)
         entry.delete(0, tk.END)
         entry.insert(0, str(value))
         entry.config(state=state)
 
     def _update_rgb_entries(self):
-        """Met à jour les champs R, G, B avec les valeurs de l'index actuel."""
+        """Updates the R, G, B fields with the values ​​of the current index."""
         palette = self.image.getpalette()
         if palette:
             r = palette[self.current_color_index * 3]
@@ -260,12 +260,12 @@ class SpriteEditor:
             self.apply_color_btn.config(state=state)
             
             if is_protected:
-                self.selected_label.config(text=f"Index {self.current_color_index} (Protégé - Team Color)")
+                self.selected_label.config(text=f"Index {self.current_color_index} (Protected - Team Color)")
             else:
-                self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
+                self.selected_label.config(text=f"Index Selection : {self.current_color_index}")
 
     def update_palette_color(self):
-        """Applique les valeurs des entrées R, G, B à la palette de l'image."""
+        """Applies the values ​​of the R, G, B inputs to the image palette."""
         if self._is_index_protected(self.current_color_index):
             return
 
@@ -274,14 +274,14 @@ class SpriteEditor:
             g_raw = int(self.g_entry.get())
             b_raw = int(self.b_entry.get())
         except ValueError:
-            messagebox.showerror("Erreur", "Les valeurs RGB doivent être des entiers.")
+            messagebox.showerror("Error", "RGB values ​​must be integers.")
             return
 
-        # Limiteur : clamp les valeurs entre 0 et 255 (plus élégant)
+        # Limiter: clamps values ​​between 0 and 255 (more elegant)
         clamp = lambda n: max(0, min(255, n))
         r, g, b = map(clamp, [r_raw, g_raw, b_raw])
 
-        # On ré-affiche les valeurs (si elles ont été bridées)
+        # The values ​​are redisplayed (if they have been limited).
         self._update_rgb_entries()
 
         palette = list(self.image.getpalette())
@@ -293,7 +293,7 @@ class SpriteEditor:
         self.draw_sprite()
 
     def on_palette_click(self, event):
-        """Sélectionne une couleur dans la palette."""
+        """Select a colour from the palette."""
         col, row = event.x // self.PALETTE_CELL_SIZE, event.y // self.PALETTE_CELL_SIZE
         if 0 <= col < 8 and 0 <= row < 32:
             new_index = row * 8 + col
@@ -301,12 +301,12 @@ class SpriteEditor:
                 return # L'index 0 (souvent transparence) n'est pas sélectionnable
             
             self.current_color_index = new_index
-            self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
+            self.selected_label.config(text=f"Index selection : {self.current_color_index}")
             self.draw_palette()
             self._update_rgb_entries()
 
     def on_sprite_right_click(self, event):
-        """Récupère l'index de couleur du pixel sous la souris (Pipette)."""
+        """Retrieves the colour index of the pixel under the mouse (Eyedropper)."""
         canvas_x = self.sprite_canvas.canvasx(event.x)
         canvas_y = self.sprite_canvas.canvasy(event.y)
         x, y = int(canvas_x // self.zoom), int(canvas_y // self.zoom)
@@ -314,7 +314,7 @@ class SpriteEditor:
         if 0 <= x < self.width and 0 <= y < self.height:
             index = self.image.getpixel((x, y))
             if index == 0:
-                return # On ignore l'index 0 à la pipette
+                return # The index 0 is ignored when using the pipette.
                 
             # On récupère l'index directement depuis l'image PIL
             self.current_color_index = index
@@ -323,18 +323,18 @@ class SpriteEditor:
             self._update_rgb_entries()
 
     def on_sprite_press(self, event):
-        """Démarre l'enregistrement d'un nouveau tracé pour l'historique."""
+        """Starts recording a new track for the history."""
         self.current_undo_data = {}
         self.on_sprite_click(event)
 
     def on_sprite_release(self, event):
-        """Ferme le tracé en cours et l'ajoute à la pile d'annulation."""
+        """Closes the current path and adds it to the undo stack."""
         if self.current_undo_data:
             self.undo_stack.append(self.current_undo_data)
         self.current_undo_data = None
 
     def undo(self, event=None):
-        """Annule le dernier tracé en restaurant pixel par pixel."""
+        """Undoes the last trace by restoring pixel by pixel."""
         if self.undo_stack:
             changes = self.undo_stack.pop()
             for (x, y), old_index in changes.items():
@@ -344,9 +344,9 @@ class SpriteEditor:
                 self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, old_index, tag)
 
     def on_sprite_click(self, event):
-        """Modifie le pixel sous la souris sur le sprite."""
-        # Conversion des coordonnées de l'événement en coordonnées réelles du canvas
-        # (prend en compte le décalage du scroll)
+        """Modify the pixel under the mouse on the sprite."""
+        # Converting event coordinates into actual canvas coordinates
+        # (takes into account the scroll offset)
         canvas_x = self.sprite_canvas.canvasx(event.x)
         canvas_y = self.sprite_canvas.canvasy(event.y)
         x, y = int(canvas_x // self.zoom), int(canvas_y // self.zoom)
@@ -356,18 +356,18 @@ class SpriteEditor:
             if old_index == self.current_color_index:
                 return
 
-            # Enregistrement du pixel avant modification (une seule fois par tracé)
+            # Pixel recording before modification (only once per path)
             if self.current_undo_data is not None and (x, y) not in self.current_undo_data:
                 self.current_undo_data[(x, y)] = old_index
 
             self.image.putpixel((x, y), self.current_color_index)
-            # On redessine le pixel spécifique (on supprime l'ancien car 223 utilise plusieurs objets)
+            # We redraw the specific pixel (we delete the old one because 223 uses multiple objects)
             tag = f"pixel_{x}_{y}"
             self.sprite_canvas.delete(tag)
             self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, self.current_color_index, tag)
 
     def save_image(self):
-        """Sauvegarde l'image modifiée."""
+        """Save the modified image."""
         ext = ".png"
 
         path = filedialog.asksaveasfilename(
@@ -377,13 +377,13 @@ class SpriteEditor:
         )
         
         if path:
-            # L'objet self.image est maintenu en mode 'P' (Palette).
-            # Pillow sauvegarde donc automatiquement en 8 bits indexés avec la palette actuelle.
+            # The self.image object is maintained in 'P' (Palette) mode.
+            # Pillow therefore automatically saves in 8 bits indexed with the current palette.
             try:
                 self.image.save(path)
-                messagebox.showinfo("Succès", f"Image sauvegardée en format indexé 8-bit dans :\n{path}")
+                messagebox.showinfo("Success", f"Image saved in 8-bit indexed format in:\n{path}")
             except Exception as e:
-                messagebox.showerror("Erreur", f"Échec de la sauvegarde : {e}")
+                messagebox.showerror("Error", f"Error on saving : {e}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
