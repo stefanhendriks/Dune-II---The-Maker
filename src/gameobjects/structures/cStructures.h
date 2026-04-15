@@ -14,6 +14,12 @@ class cStructures {
 public:
     cStructures() = default;
 
+    ~cStructures() {
+        for (auto* s : m_values) {
+            delete s;
+        }
+    }
+
     cAbstractStructure* &operator[](std::size_t index) {
         assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
         return m_values[index];
