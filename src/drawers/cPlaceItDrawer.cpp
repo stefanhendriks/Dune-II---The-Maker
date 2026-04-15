@@ -105,13 +105,13 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iDrawY = game.m_gameObjectsContext->getMap().mouse_draw_y();
 
     if (!bWithinBuildDistance) {
-        itemToPlaceColor = game.getColorPlaceBad();
+        itemToPlaceColor = Color::PlaceNeutral;
     }
     else {
         // Draw over it the mask for good/bad placing (decorates temp bitmap)
         for (int iX=0; iX < cellWidth; iX++) {
             for (int iY=0; iY < cellHeight; iY++) {
-                itemToPlaceColor = game.getColorPlaceNeutral();
+                itemToPlaceColor = Color::PlaceNeutral;
 
                 int cellX = iCellX + iX;
                 int cellY = iCellY + iY;
@@ -123,24 +123,24 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(cellX, cellY);
 
                 if (!game.m_gameObjectsContext->getMap().isCellPassable(iCll) || game.m_gameObjectsContext->getMap().getCellType(iCll) != TERRAIN_ROCK) {
-                    itemToPlaceColor = game.getColorPlaceBad();
+                    itemToPlaceColor = Color::PlaceNeutral;
                 }
 
                 if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
-                    itemToPlaceColor = game.getColorPlaceGood();
+                    itemToPlaceColor = Color::PlaceGood;
                 }
 
                 // occupied by units or structures
                 int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
-                    itemToPlaceColor = game.getColorPlaceBad();
+                    itemToPlaceColor = Color::PlaceNeutral;
                 }
 
                 int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!game.m_gameObjectsContext->getUnit(unitIdOnMap).isDead()) {
-                        itemToPlaceColor = game.getColorPlaceBad();
+                        itemToPlaceColor = Color::PlaceNeutral;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?
                 }

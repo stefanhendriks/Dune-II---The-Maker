@@ -27,7 +27,7 @@ void GuiWindow::draw() const
     }
 
     // draw title
-    m_textDrawer->drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::yellow());
+    m_textDrawer->drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::Yellow);
 }
 
 void GuiWindow::addGuiObject(std::unique_ptr<GuiObject> guiObject)

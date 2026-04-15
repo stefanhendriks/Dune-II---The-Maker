@@ -616,8 +616,8 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
     // draw group
     // TODO: make text smaller depending on zoom factor?
     if (iGroup > 0 && iPlayer == HUMAN) {
-        textDrawer->drawText(drawx + 26, drawy - 11, Color::black(),std::format("{}",iGroup));
-        textDrawer->drawText(drawx + 26, drawy - 12, Color::white(),std::format("{}",iGroup));
+        textDrawer->drawText(drawx + 26, drawy - 11, Color::Black,std::format("{}",iGroup));
+        textDrawer->drawText(drawx + 26, drawy - 12, Color::White,std::format("{}",iGroup));
     }
 }
 

@@ -24,10 +24,10 @@ public:
         m_borderLight = Color{40, 40, 40, 255};
         m_borderDark = Color{176, 176, 196, 255};
         m_background = Color{32, 32, 32, 255};
-        m_textColor = Color::white();
+        m_textColor = Color::White;
         m_textDarkColor = Color{225, 177, 21, 255};
         m_textColorHover = Color{255, 0, 0, 255};
-        m_textColorShadow = Color::black();
+        m_textColorShadow = Color::Black;
         m_disabled = Color{128, 128, 128, 255};
         return *this;
     }
@@ -39,7 +39,7 @@ public:
         m_background = Color{32, 32, 32, 255};
         m_textColor = Color{192, 192, 192, 255};
         m_textDarkColor = Color{128, 128, 128, 255};
-        m_textColorHover = Color::black();
+        m_textColorHover = Color::Black;
         m_textColorShadow = Color{128, 128, 128, 255};
         m_disabled = Color{128, 128, 128, 255};
         return *this;
@@ -50,10 +50,10 @@ public:
         m_borderLight = Color{252, 252, 252, 255};
         m_borderDark = Color{84, 84, 120, 255};
         m_background = Color{32, 32, 32, 255};
-        m_textColor = Color::white();
+        m_textColor = Color::White;
         m_textDarkColor = Color{225, 177, 21, 255};
         m_textColorHover = Color{255, 0, 0, 255};
-        m_textColorShadow = Color::black();
+        m_textColorShadow = Color::Black;
         m_disabled = Color{128, 128, 128, 255};
         return *this;
     }

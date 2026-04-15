@@ -38,12 +38,12 @@ void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, 
 
 void cTextDrawer::drawText(int x, int y, const std::string &msg, bool applyShadow) const
 {
-    drawText(x, y, Color::white() , msg, applyShadow);
+    drawText(x, y, Color::White , msg, applyShadow);
 }
 
 void cTextDrawer::drawTextCentered(const std::string &msg, int y) const
 {
-    drawTextCentered(msg, y, Color::white());
+    drawTextCentered(msg, y, Color::White);
 }
 
 void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) const
@@ -94,12 +94,12 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int
 
 void cTextDrawer::drawTextBottomRight(const std::string &msg, int margin) const
 {
-    drawTextBottomRight(Color::white(), msg, margin);
+    drawTextBottomRight(Color::White, msg, margin);
 }
 
 void cTextDrawer::drawTextBottomLeft(const std::string &msg, int margin) const
 {
-    drawTextBottomLeft(Color::white(), msg, margin);
+    drawTextBottomLeft(Color::White, msg, margin);
 }
 
 void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int margin) const

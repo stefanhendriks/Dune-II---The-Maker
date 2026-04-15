@@ -328,14 +328,14 @@ void cSetupSkirmishState::draw() const
 
     m_textDrawer->drawTextCentered("Skirmish", 1);
 
-    m_renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::white(), Color::white());
+    m_renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::White, Color::White);
     m_renderDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, colorOtherBorder);
-    m_renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::white(), Color::white());
+    m_renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::White, Color::White);
     m_renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
-    m_textDrawer->drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::yellow());
+    m_textDrawer->drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::Yellow);
     m_renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
-    m_textDrawer->drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::yellow());
+    m_textDrawer->drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::Yellow);
     m_renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     m_renderDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
@@ -446,10 +446,10 @@ Color cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmish
     }
 
     if (sSkirmishPlayer.bHuman) { // should be redundant when player is always m_playing?
-        return Color::white();
+        return Color::White;
     }
 
-    return sSkirmishPlayer.bPlaying ? Color::white() : colorDisabled;
+    return sSkirmishPlayer.bPlaying ? Color::White : colorDisabled;
 }
 
 void cSetupSkirmishState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const
@@ -473,10 +473,10 @@ void cSetupSkirmishState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlaye
 
 void cSetupSkirmishState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const
 {
-    Color textColor = Color::white();
+    Color textColor = Color::White;
     if (iSkirmishMap == 0) { // random map selected
         if (startPoints.isPointWithin(mouse->getX(), mouse->getY())) {
-            textColor = Color::red();
+            textColor = Color::Red;
         }
     }
     else {
@@ -518,13 +518,13 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             }
         }
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
-                            Color::yellow(), std::format("Name: {}", selectedMap.name));
+                            Color::Yellow, std::format("Name: {}", selectedMap.name));
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+8,
-                            Color::white(), std::format("Author: {}", selectedMap.author));
+                            Color::White, std::format("Author: {}", selectedMap.author));
         m_textDrawer->drawText(previewMapRect.getEndX() -50, previewMapRect.getY() + previewMapRect.getHeight() + 16,
                             colorDarkerYellow, std::format("{}", m_previewMaps->getMapSize(iSkirmishMap)));
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+30,
-                            Color::white(), std::format("{}", selectedMap.description));
+                            Color::White, std::format("{}", selectedMap.description));
         
     }
 }
@@ -532,7 +532,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
 void cSetupSkirmishState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const
 {
     if (spawnBlooms) {
-        Color textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
+        Color textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
         m_textDrawer->drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor,
                             std::format("Auto-detonate : {}", detonateBlooms ? "YES" : "NO"));
     }
@@ -543,21 +543,21 @@ void cSetupSkirmishState::drawDetonateBlooms(const cRectangle &detonateBloomsRec
 
 void cSetupSkirmishState::drawBlooms(const cRectangle &bloomsRect) const
 {
-    Color textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
+    Color textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
     m_textDrawer->drawText(bloomsRect.getX(), bloomsRect.getY(), textColor,
                         std::format("Spice blooms : {}", spawnBlooms ? "YES" : "NO"));
 }
 
 void cSetupSkirmishState::drawWorms(const cRectangle &wormsRect) const
 {
-    Color textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
+    Color textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
     m_textDrawer->drawText(wormsRect.getX(), wormsRect.getY(), textColor,
                         std::format("Worms? : {}", spawnWorms));
 }
 
 void cSetupSkirmishState::drawTechLevel(const cRectangle &techLevelRect) const
 {
-    Color textColor = techLevelRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::red() : Color::white();
+    Color textColor = techLevelRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
     m_textDrawer->drawText(techLevelRect.getX(), techLevelRect.getY(), textColor,
                         std::format("TechLevel : {}", techLevel));
 }
@@ -1206,7 +1206,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
         // RENDERS ! & also get true/false if mouse hovers
         const bool bHover = guiDrawFrame(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-        Color textColor = bHover ? Color::red() : Color::white();
+        Color textColor = bHover ? Color::Red : Color::White;
 
         if (bHover && mapToRender.validMap && mouse->isLeftButtonClicked()) {
             // RENDERS (AGAIN)!
@@ -1215,7 +1215,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 
         // selected map, always render as pressed
         if (isRenderingSelectedMap) {
-            textColor = bHover ? colorDarkerYellow : Color::yellow();
+            textColor = bHover ? colorDarkerYellow : Color::Yellow;
             // RENDERS (AGAIN)!
             guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }

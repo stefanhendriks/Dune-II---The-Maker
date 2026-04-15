@@ -121,7 +121,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // end of map creation
     mapEditor.smoothMap();
 
-    global_renderDrawer->FillWithColor(randomMapEntry.terrain, Color::black());
+    global_renderDrawer->FillWithColor(randomMapEntry.terrain, Color::Black);
 
     // now put in previewmap 0
     for (int x = 0; x < game.m_gameObjectsContext->getMap().getWidth(); x++) {
@@ -148,7 +148,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
                     int sy = game.m_gameObjectsContext->getMap().getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
-                        iColor = Color::white();
+                        iColor = Color::White;
                 }
             }
 

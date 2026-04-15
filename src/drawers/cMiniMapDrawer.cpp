@@ -80,7 +80,7 @@ void cMiniMapDrawer::draw()
         return;
     }
 
-    m_renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::black());
+    m_renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::Black);
 
     if (m_status == eMinimapStatus::POWERUP || m_status == eMinimapStatus::RENDERMAP || m_status == eMinimapStatus::POWERDOWN) {
         drawTerrain();
@@ -284,7 +284,7 @@ void cMiniMapDrawer::drawViewPortRectangle()
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
-    const Color black = Color::black();
+    const Color black = Color::Black;
     for (int x = 0; x < m_map->getWidth(); x++) {
         for (int y = 0; y < m_map->getHeight(); y++) {
             // do not show the helper border
@@ -403,7 +403,7 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
 
 void cMiniMapDrawer::cleanDrawTerrain() const {
     m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
-    m_renderDrawer->renderClearToColor(Color::black());
+    m_renderDrawer->renderClearToColor(Color::Black);
     m_renderDrawer->endDrawingToTexture();
 }
 

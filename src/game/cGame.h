@@ -194,11 +194,11 @@ public:
     void shakeScreen(int duration);
     void reduceShaking() const;
 
-    Color getColorPlaceNeutral();
+    // Color getColorPlaceNeutral();
 
-    Color getColorPlaceBad();
+    // Color getColorPlaceBad();
 
-    Color getColorPlaceGood();
+    // Color getColorPlaceGood();
 
     void setWinFlags(int value);
     void setLoseFlags(int value);
