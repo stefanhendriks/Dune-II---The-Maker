@@ -29,11 +29,13 @@ public:
 
     void missionInit();
 private:
+    cGameObjectContext* m_objects = nullptr;
+    cGameSettings* m_settings = nullptr;
+    cReinforcements* m_reinforcements = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
-
     int m_TIMER_evaluatePlayerStatus;
-    cReinforcements* m_reinforcements;
+    
 
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
