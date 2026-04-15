@@ -300,10 +300,13 @@ void cUnit::createExplosionParticle()
         }
 
         // For now carry-all and ornithopter share same death particle
-        if (iType == ORNITHOPTER || iType == CARRYALL) {
+        if (iType == ORNITHOPTER) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_ORNI, -1, -1);
         }
-
+        // For now carry-all and ornithopter share same death particle
+        if (iType == CARRYALL) {
+            cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_CARRYALL, -1, -1);
+        }
         // Frigate death particle? (doesnt exist in Dune 2, but would be cool to have)
     }
 
