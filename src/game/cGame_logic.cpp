@@ -1319,21 +1319,6 @@ Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, b
     return m_cScreenFader->getColorFadeSelected(r,g,b,rFlag,gFlag,bFlag);
 }
 
-// Color cGame::getColorPlaceNeutral()
-// {
-//     return Color{242, 174, 36,64};
-// }
-
-// Color cGame::getColorPlaceBad()
-// {
-//     return Color{160, 0, 0,64};
-// }
-
-// Color cGame::getColorPlaceGood()
-// {
-//     return Color{64, 255, 64,64};
-// }
-
 void cGame::setWinFlags(int value)
 {
     m_gameConditionChecker->setWinFlags(value);
@@ -1736,26 +1721,6 @@ s_DataCampaign* cGame::getDataCampaign() const
 {
     return m_dataCampaign.get();
 }
-
-// cUnit& cGame::getUnit(int index)
-// {
-//     return m_gameObjectsContext->getUnits()[index];
-// }
-
-// const cUnit& cGame::getUnit(int index) const
-// {
-//     return m_gameObjectsContext->getUnits()[index];
-// }
-
-// cPlayer& cGame::getPlayer(int index)
-// {
-//     return m_gameObjectsContext->getPlayers()[index];
-// }
-
-// const cPlayer& cGame::getPlayer(int index) const
-// {
-//     return m_gameObjectsContext->getPlayers()[index];
-// }
 
 int cGame::getCurrentState() const
 {
