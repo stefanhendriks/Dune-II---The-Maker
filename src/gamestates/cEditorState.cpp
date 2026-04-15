@@ -379,11 +379,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             saveMap();
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
-            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
+            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles();
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_OUT)) {
-            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
+            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles();
         }
         // to test : updateVisibleTiles();
@@ -413,11 +413,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             updateVisibleTiles();
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
-            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
+            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles();
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
-            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
+            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles();
         }
         //to test : updateVisibleTiles();
