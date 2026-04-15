@@ -26,12 +26,16 @@ const int deltaTileSize = 4;
 cEditorState::cEditorState(cGame &theGame, sGameServices* services) 
     : cGameState(theGame, services),
     m_gfxdata(m_ctx->getGraphicsContext()->gfxdata.get()),
-    m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get())
+    m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
+    m_settings(services->settings)
 {
-    assert(services != nullptr);
-    const cRectangle &selectRect = cRectangle(0, 0, m_game.m_gameSettings->getScreenW(), heightBarSize);
-    const cRectangle &modifRect = cRectangle(m_game.m_gameSettings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_game.m_gameSettings->getScreenH()-heightBarSize);
-    mapSizeArea = cRectangle(0,heightBarSize,m_game.m_gameSettings->getScreenW()-heightBarSize,m_game.m_gameSettings->getScreenH()-heightBarSize);
+    assert(m_gfxdata != nullptr);
+    assert(m_gfxeditor != nullptr);
+    assert(m_settings != nullptr);
+
+    const cRectangle &selectRect = cRectangle(0, 0, m_settings->getScreenW(), heightBarSize);
+    const cRectangle &modifRect = cRectangle(m_settings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_settings->getScreenH()-heightBarSize);
+    mapSizeArea = cRectangle(0,heightBarSize,m_settings->getScreenW()-heightBarSize,m_settings->getScreenH()-heightBarSize);
     m_selectBar = std::make_unique<GuiBar>(m_renderDrawer, selectRect,GuiBarPlacement::HORIZONTAL,heightButtonSize);
     m_topologyBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_startCellBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
@@ -375,11 +379,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             saveMap();
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
-            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
+            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles();
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_OUT)) {
-            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
+            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles();
         }
         // to test : updateVisibleTiles();
@@ -409,11 +413,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             updateVisibleTiles();
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
-            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
+            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomIn);
             updateVisibleTiles();
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
-            zoomAtMapPosition(m_game.m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
+            zoomAtMapPosition(m_gameSettings->getScreenW()/2, m_game.m_gameSettings->getScreenH()/2, ZoomDirection::zoomOut);
             updateVisibleTiles();
         }
         //to test : updateVisibleTiles();
@@ -628,7 +632,7 @@ void cEditorState::drawStartCells() const
             x = startCells[i].x * tileLenSize - cameraX;
             y = heightBarSize + startCells[i].y * tileLenSize - cameraY;
             // Display if onscreen
-            if (x + tileLenSize > 0 && x < m_game.m_gameSettings->getScreenW() &&y + tileLenSize > heightBarSize && y < m_game.m_gameSettings->getScreenH()) {
+            if (x + tileLenSize > 0 && x < m_settings->getScreenW() &&y + tileLenSize > heightBarSize && y < m_settings->getScreenH()) {
                 destRect = cRectangle(x, y, tileLenSize, tileLenSize);
                 m_renderDrawer->renderStrechSprite(m_gfxeditor->getTexture(STARTPOSITION1+i), srcRect, destRect);
             }

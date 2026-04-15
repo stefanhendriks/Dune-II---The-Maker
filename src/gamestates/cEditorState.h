@@ -31,6 +31,9 @@ public:
 
     eGameStateType getType() override;
 private:
+    Graphics *m_gfxdata = nullptr;
+    Graphics *m_gfxeditor = nullptr;
+    cGameSettings *m_settings = nullptr;
     enum class ZoomDirection : char {
         zoomIn,
         zoomOut
@@ -64,7 +67,6 @@ private:
     std::unique_ptr<GuiBar> m_symmetricBar;
     GuiBar* m_currentBar = nullptr;
     std::unique_ptr<Matrix<int>> m_mapData;
-    Graphics *m_gfxdata, *m_gfxeditor;
     std::unique_ptr<GuiButtonGroup> m_selectGroup;
     std::unique_ptr<GuiButtonGroup> m_topologyGroup;
     std::unique_ptr<GuiButtonGroup> m_startCellGroup;
