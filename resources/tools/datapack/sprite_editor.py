@@ -120,8 +120,8 @@ class SpriteEditor:
         self.b_entry = tk.Entry(rgb_frame, width=5)
         self.b_entry.grid(row=2, column=1, padx=2)
         
-        self.apply_color_btn = tk.Button(right_frame, text="Apply Colour", command=self.update_palette_color)
-        self.apply_color_btn.pack(pady=5)
+        self.apply_color_btn = tk.Button(rgb_frame, text="Apply", command=self.update_palette_color)
+        self.apply_color_btn.grid(row=0, column=2, rowspan=3, padx=10)
 
         # Zoom control
         zoom_frame = tk.Frame(right_frame)
@@ -135,6 +135,21 @@ class SpriteEditor:
             resolution=1
         )
         self.zoom_slider.pack(side=tk.LEFT, padx=5)
+
+        # Zone index overriding
+        replace_frame = tk.Frame(right_frame)
+        replace_frame.pack(pady=10, fill=tk.X)
+
+        tk.Label(replace_frame, text="A:").grid(row=0, column=0, padx=2)
+        self.entry_a = tk.Entry(replace_frame, width=3)
+        self.entry_a.grid(row=0, column=1, padx=2)
+
+        tk.Label(replace_frame, text="B:").grid(row=0, column=2, padx=2)
+        self.entry_b = tk.Entry(replace_frame, width=3)
+        self.entry_b.grid(row=0, column=3, padx=2)
+
+        self.change_btn = tk.Button(replace_frame, text="A->B", command=self.replace_index)
+        self.change_btn.grid(row=0, column=4, padx=5)
 
         save_btn = tk.Button(right_frame, text="Save image", command=self.save_image)
         save_btn.pack(side=tk.BOTTOM, pady=20)
@@ -291,6 +306,34 @@ class SpriteEditor:
         self.image.putpalette(palette)
         self.draw_palette()
         self.draw_sprite()
+
+    def replace_index(self):
+        """Remplace toutes les occurrences de l'index A par l'index B."""
+        try:
+            idx_a = int(self.entry_a.get())
+            idx_b = int(self.entry_b.get())
+        except ValueError:
+            messagebox.showerror("Error", "A and B must be integers (0-255).")
+            return
+
+        if not (0 <= idx_a <= 255 and 0 <= idx_b <= 255):
+            messagebox.showerror("Error", "Indexes must be between 0 and 255.")
+            return
+
+        if idx_a == idx_b:
+            return
+
+        changes = {}
+        pixels = self.image.load()
+        for y in range(self.height):
+            for x in range(self.width):
+                if pixels[x, y] == idx_a:
+                    changes[(x, y)] = idx_a
+                    self.image.putpixel((x, y), idx_b)
+
+        if changes:
+            self.undo_stack.append(changes)
+            self.draw_sprite()
 
     def on_palette_click(self, event):
         """Select a colour from the palette."""
