@@ -19,6 +19,7 @@
 cOptionsState::cOptionsState(cGame &theGame, sGameServices* services, int prevState)
     : cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_settings(services->settings),
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
@@ -29,11 +30,11 @@ cOptionsState::cOptionsState(cGame &theGame, sGameServices* services, int prevSt
 
 void cOptionsState::constructWindow(int prevState)
 {
-    int margin = m_game.m_gameSettings->getScreenH() * 0.3;
+    int margin = m_settings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
-    int mainMenuHeight = m_game.m_gameSettings->getScreenH() - (margin * 2);
+    int mainMenuWidth = m_settings->getScreenW() - (margin * 2);
+    int mainMenuHeight = m_settings->getScreenH() - (margin * 2);
 
     margin = 4;
     int buttonHeight = (m_textDrawer->getFontHeight() + margin);
@@ -63,7 +64,7 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_toMenu));
 
-    if (m_game.m_gameSettings->isCheatMode()) {
+    if (m_settings->isCheatMode()) {
         const cRectangle &cheatRect = m_guiWindow->getRelativeRect(margin, toMainMenu - 2*(buttonHeight + margin), buttonWidth, buttonHeight);
         auto gui_cheatLabel = GuiLabelBuilder()
                 .withLabel("Cheat mode enabled")
@@ -87,7 +88,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_game.m_gameSettings->setPlaying(false);
+                m_settings->setPlaying(false);
                 m_game.initiateFadingOut();})
             .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
