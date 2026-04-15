@@ -55,7 +55,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
     int creditsX = (m_settings->getScreenW() / 2) - buttonWidth;
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
 
-    gui_btn_credits = std::move(GuiButtonBuilder()
+    gui_btn_credits = GuiButtonBuilder()
             .withRect(creditsRect)        
             .withLabel("CREDITS")
             .withTextDrawer(m_textDrawer)
@@ -65,7 +65,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .onClick([this]() {
                 m_game.setNextStateToTransitionTo(GAME_CREDITS);
                 m_game.initiateFadingOut();})
-            .build());
+            .build();
 
     /////////////////////////////////
     //// Main Menu
