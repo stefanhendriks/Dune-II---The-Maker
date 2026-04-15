@@ -4,12 +4,12 @@
 
 #include <cassert>
 
-cGameState::cGameState(cGame &theGame, GameContext* _ctx) :
+cGameState::cGameState(cGame &theGame, sGameServices* services) :
     m_game(theGame),
-    m_ctx(_ctx),
+    m_ctx(services->ctx),
     m_renderDrawer(m_ctx->getSDLDrawer())
 {
-    assert(_ctx != nullptr);
+    assert(m_ctx != nullptr);
 }
 
 

@@ -19,7 +19,7 @@ class cTextDrawer;
 
 class cEditorState : public cGameState {
 public:
-    explicit cEditorState(cGame &theGame, GameContext* ctx);
+    explicit cEditorState(cGame &theGame, sGameServices* services);
     ~cEditorState() override;
 
     void thinkFast() override;

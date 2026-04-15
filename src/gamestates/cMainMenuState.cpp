@@ -16,12 +16,12 @@
 #include <format>
 #include <cassert>
 
-cMainMenuState::cMainMenuState(cGame &theGame, GameContext* ctx) :
-    cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
+cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
+    cGameState(theGame, services),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
 {
-    assert(ctx != nullptr);
-    auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
+    assert(services != nullptr);
+    auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
     int logoWidth = bmp_D2TM_Title->w;

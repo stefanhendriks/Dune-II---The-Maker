@@ -13,7 +13,7 @@ class cTextDrawer;
 
 class cGamePlaying : public cGameState {
 public:
-    explicit cGamePlaying(cGame &theGame, GameContext* ctx);
+    explicit cGamePlaying(cGame &theGame, sGameServices* services);
     ~cGamePlaying() override;
 
     void thinkFast() override;

@@ -14,10 +14,10 @@
 
 #include <cassert>
 
-cTellHouseState::cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* dataCampaign)
-    : cGameState(game, ctx), m_house(dataCampaign->housePlayer), m_dataCampaign(dataCampaign)
+cTellHouseState::cTellHouseState(cGame &game, sGameServices* services, s_DataCampaign* dataCampaign)
+    : cGameState(game, services), m_house(dataCampaign->housePlayer), m_dataCampaign(dataCampaign)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     prepareMentat(m_house);
 }
 

@@ -13,7 +13,7 @@ class GameContext;
 
 class CreatorState {
 public:
-    explicit CreatorState(cGame* game, GameContext* ctx);
+    explicit CreatorState(cGame* game, sGameServices* services);
     ~CreatorState();
 
     cGameState *getState(eGameState gameState, bool forceRecreate = false);
@@ -23,5 +23,5 @@ private:
     EnumArray<bool, eGameState> needToRecreateState;
     void createStateFromScratch(eGameState gameState);
     cGame* m_game;
-    GameContext* m_ctx;
+    sGameServices* m_services;
 };

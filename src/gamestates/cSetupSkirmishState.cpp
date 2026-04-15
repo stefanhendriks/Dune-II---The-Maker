@@ -41,14 +41,14 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 }
 
 
-cSetupSkirmishState::cSetupSkirmishState(cGame &game, GameContext* ctx, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
-    cGameState(game, ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
+cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
+    cGameState(game, services),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_previewMaps(std::move(previewMaps)),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
     m_dataCampaign(dataCompaign)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     assert(m_dataCampaign != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];

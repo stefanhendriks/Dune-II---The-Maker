@@ -47,7 +47,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(cGame &theGame, GameContext *ctx, s_DataCampaign* dataCompaign);
+    explicit cSelectYourNextConquestState(cGame &theGame, sGameServices* services, s_DataCampaign* dataCompaign);
     ~cSelectYourNextConquestState() override;
 static constexpr int MAX_REGIONS = 27;
 

@@ -8,11 +8,11 @@
 #include "gui/GuiWindow.h"
 #include <cassert>
 
-cSelectMissionState::cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState) :
-    cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
+cSelectMissionState::cSelectMissionState(cGame &theGame, sGameServices* services, int prevState) :
+    cGameState(theGame, services),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     int margin = m_game.m_gameSettings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;

@@ -32,9 +32,9 @@
 
 #include <cassert>
 
-cGamePlaying::cGamePlaying(cGame &theGame, GameContext* ctx) : cGameState(theGame, ctx)
+cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) : cGameState(theGame, services)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     m_reinforcements = game.getReinforcements();
     m_TIMER_evaluatePlayerStatus = 5;
     //game.m_pathsCreated = 0;

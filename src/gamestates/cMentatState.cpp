@@ -19,10 +19,10 @@
 #include <iostream>
 #include <cassert>
 
-cMentatState::cMentatState(cGame &game, GameContext* ctx, MentatMode mode, s_DataCampaign* dataCampaign)
-    : cGameState(game, ctx), m_dataCampaign(dataCampaign), m_mode(mode), m_house(dataCampaign->housePlayer)
+cMentatState::cMentatState(cGame &game, sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
+    : cGameState(game, services), m_dataCampaign(dataCampaign), m_mode(mode), m_house(dataCampaign->housePlayer)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     assert(m_dataCampaign != nullptr);
     prepareMentat(m_house);
 }

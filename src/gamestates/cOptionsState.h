@@ -15,7 +15,7 @@ class GuiWindow;
 
 class cOptionsState : public cGameState {
 public:
-    explicit cOptionsState(cGame &theGame, GameContext *ctx, int prevState);
+    explicit cOptionsState(cGame &theGame, sGameServices* services, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;

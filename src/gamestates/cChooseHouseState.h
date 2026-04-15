@@ -14,7 +14,7 @@ class Graphics;
 
 class cChooseHouseState : public cGameState {
 public:
-    explicit cChooseHouseState(cGame &theGame, GameContext* ctx);
+    explicit cChooseHouseState(cGame &theGame, sGameServices* services);
     ~cChooseHouseState() override;
 
     void thinkFast() override;
