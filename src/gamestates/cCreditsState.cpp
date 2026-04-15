@@ -23,9 +23,10 @@ cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings)
 {
-    assert(services != nullptr);
+    assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
+    assert(gfxinter != nullptr);
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);
     int duneAtTheRight = m_settings->getScreenW() - (m_duneBmp->w * 1.1f);

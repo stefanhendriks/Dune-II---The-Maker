@@ -40,7 +40,6 @@ static bool mouse_within_rect(int x, int y, int width, int height)
             && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height)));
 }
 
-
 cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
     cGameState(game, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
@@ -49,9 +48,10 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
     m_previewMaps(std::move(previewMaps)),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
-    assert(services != nullptr);
+    assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);
     assert(m_dataCampaign != nullptr);
+    assert(m_gfxinter != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.

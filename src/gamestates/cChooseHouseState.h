@@ -27,7 +27,7 @@ public:
 
 private:
     cTextDrawer* m_textDrawer = nullptr;
-    Graphics *m_gfxinter;
+    Graphics *m_gfxinter = nullptr;
     cRectangle *backButtonRect;
 
     Texture *bmp_Dune;
