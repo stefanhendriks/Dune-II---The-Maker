@@ -15,21 +15,8 @@
 #include "controls/cKeyboard.h"
 #include "definitions.h"
 #include "include/eGameState.h"
-//#include "observers/cScenarioObserver.h"
 #include "utils/cRectangle.h"
-// #include "game/cTimeManager.h"
-//#include "utils/cIniFile.h"
-//#include "map/cPreviewMaps.h"
-// #include "map/cMap.h"
-// #include "player/cPlayers.h"
-//#include "gameobjects/particles/cParticles.h"
-//#include "gameobjects/structures/cStructures.h"
-// #include "gameobjects/units/cUnits.h"
-// #include "gameobjects/projectiles/cBullets.h"
-//#include "utils/cStructureUtils.h"
 #include "observers/cScenarioObserver.h"
-//#include "context/cInfoContext.h"
-//#include "context/cGameObjectContext.h"
 #include "utils/Color.hpp"
 
 #include <memory>
@@ -92,28 +79,6 @@ public:
     void setGameFilename(const std::string &filename) {
         m_gameFilename = filename;
     }
-
-    // resolution of the game
-    //int m_screenW;
-    // int m_screenH;
-
-    // bool m_disableAI;                       // disable AI thinking?
-    // bool m_oneAi;                           // disable all but one AI brain? (default == false)
-    // bool m_disableWormAi;                   // disable worm AI brain? (default == false)
-    // bool m_disableReinforcements;           // disable any reinforcements from scenario ini file?
-    // bool m_drawUsages;                      // draw the amount of structures/units/bullets used during combat
-    // bool m_drawUnitDebug;                   // draw the unit debug info (rects, paths, etc)
-    // bool m_noAiRest;                        // Campaign AI does not have long initial REST time
-    // bool m_playMusic;                       // play any music?
-
-    // bool m_playing;				    // playing or not
-    // bool m_skirmish;                // playing a skirmish game or not
-    // bool m_drawFps;
-    // bool m_drawTime;
-    // bool m_allowRepeatingReinforcements; // Dune 2 fix: by default false
-
-    // int m_pathsCreated;
-    // int m_musicType;
 
     cRectangle *m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
@@ -194,12 +159,6 @@ public:
     void shakeScreen(int duration);
     void reduceShaking() const;
 
-    // Color getColorPlaceNeutral();
-
-    // Color getColorPlaceBad();
-
-    // Color getColorPlaceGood();
-
     void setWinFlags(int value);
     void setLoseFlags(int value);
 
@@ -216,24 +175,10 @@ public:
     bool isTurretsDownOnLowPower() {
         return m_turretsDownOnLowPower;
     }
-    // void setTurretsDownOnLowPower(bool value) {
-    //     m_turretsDownOnLowPower = value;
-    // }
 
     bool isRocketTurretsDownOnLowPower() {
         return m_rocketTurretsDownOnLowPower;
     }
-    // void setRocketTurretsDownOnLowPower(bool value) {
-    //     m_rocketTurretsDownOnLowPower = value;
-    // }
-
-    // bool isDebugMode() {
-    //     return m_debugMode;
-    // }
-
-    // bool isCheatMode() {
-    //     return m_cheatMode;
-    // }
 
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
@@ -257,21 +202,7 @@ public:
     void drawTextTime() const;
     void checkMissionWinOrFail();
 
-    // this functions need to be removed
-    // begin
-    // cPlayer& getPlayer(int index);
-    // const cPlayer& getPlayer(int index) const;
-    // cUnit& getUnit(int index);
-    // const cUnit& getUnit(int index) const;
-    // end
-
 private:
-    /**
-     * Variables start here
-     */
-    // bool m_debugMode = false;
-    // bool m_cheatMode = false;
-
     bool m_playSound;                       // play sound?
     bool m_windowed;        			    // windowed
     bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
