@@ -14,11 +14,12 @@ class SpriteEditor:
     ZOOM_MAX = 25
     ZOOM_MIN = 10
     PALETTE_CELL_SIZE = 20
+    SCREEN_SIZE = "1920x1080"
 
     def __init__(self, root, image_path):
         self.root = root
         self.root.title(f"D2TM Sprite Editor - {image_path}")
-        self.root.geometry("1920x1080")
+        self.root.geometry(self.SCREEN_SIZE)
         self.image_path = image_path
         
         try:
