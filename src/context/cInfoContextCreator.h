@@ -9,7 +9,7 @@ class cSpecialInfos;
 class cUpgradeInfos;
 class cUnitInfos;
 class cInfoContext;
-class SDL_Renderer;
+struct SDL_Renderer;
 struct s_TerrainInfo;
 
 class cInfoContextCreator {

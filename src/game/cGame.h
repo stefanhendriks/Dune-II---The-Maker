@@ -68,7 +68,7 @@ struct s_PreviewMap;
 // thinkSlow_....() --> for now used to distinguish certain speed of "thinking" / invocations
 // state_...() --> because elegible for moving away
 
-class sGameServices;
+struct sGameServices;
 
 class cGame : public cScenarioObserver, cInputObserver {
 

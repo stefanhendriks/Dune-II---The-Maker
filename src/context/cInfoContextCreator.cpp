@@ -856,7 +856,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
 {
     logbook("Installing:  BULLET TYPES");
 
-    for (int i = 0; i < bulletInfos.size(); i++) {
+    for (size_t i = 0; i < bulletInfos.size(); i++) {
         bulletInfos[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
         bulletInfos[i].moveSpeed = 2;
         bulletInfos[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
