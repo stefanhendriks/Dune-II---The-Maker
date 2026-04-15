@@ -56,19 +56,7 @@ cMap::cMap()
     m_terrainInfo = nullptr;
 }
 
-cMap::~cMap()
-{
-    // do not trigger getInstance from structure factory
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
-        // clear out all structures
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
-        if (pStructure) {
-            delete pStructure;
-        }
-        // clear pointer
-        game.m_gameObjectsContext->getStructures()[i] = nullptr;
-    }
-}
+cMap::~cMap() = default;
 
 MapGeometry &cMap::getGeometry() const
 {
