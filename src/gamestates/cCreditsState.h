@@ -37,14 +37,14 @@ public:
     eGameStateType getType() override;
 
 private:
+    cTextDrawer* m_textDrawer = nullptr;
+    cGameSettings* m_settings = nullptr;
+
     int m_titleX;
     float m_crawlerY;
 
     float m_moveSpeed;
     int m_titleHeight;
-
-    cTextDrawer* m_textDrawer = nullptr;
-    cGameSettings* m_settings = nullptr;
 
     std::vector<s_CreditLine> m_lines;
 
