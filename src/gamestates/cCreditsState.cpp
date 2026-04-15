@@ -19,9 +19,9 @@
 
 cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
-    m_moveSpeed(0.15f),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
-    m_settings(services->settings)
+    m_settings(services->settings),
+    m_moveSpeed(0.15f)
 {
     assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);
