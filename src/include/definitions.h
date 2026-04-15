@@ -238,6 +238,7 @@ const int D2TM_PARTICLE_OBJECT_BOOM02           = 32;
 const int D2TM_PARTICLE_OBJECT_BOOM03           = 33;
 const int D2TM_PARTICLE_EXPLOSION_BULLET        = 34;
 const int D2TM_PARTICLE_SMOKE_WITH_SHADOW       = 35;
+const int D2TM_PARTICLE_EXPLOSION_CARRYALL      = 36;
 
 // Particle drawing layers
 // const int D2TM_RENDER_LAYER_PARTICLE_TOP        = 0;

@@ -748,6 +748,12 @@ void cInfoContextCreator::initParticles(cParticleInfos& particleInfos)
     particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
     particleInfos[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
 
+    particleInfos[D2TM_PARTICLE_EXPLOSION_CARRYALL].bmpIndex = EXPLOSION_CARRYALL;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_CARRYALL].layer = RenderLayerParticle::BOTTOM;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_CARRYALL].startAlpha = 255;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_CARRYALL].frameWidth = 32;
+    particleInfos[D2TM_PARTICLE_EXPLOSION_CARRYALL].frameHeight = 32;
+
     particleInfos[D2TM_PARTICLE_SIEGEDIE].bmpIndex = OBJECT_SIEGEDIE;
 
     particleInfos[D2TM_PARTICLE_CARRYPUFF].bmpIndex = OBJECT_CARRYPUFF;
