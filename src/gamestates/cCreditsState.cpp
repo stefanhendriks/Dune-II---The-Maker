@@ -16,13 +16,13 @@
 #include <iostream>
 #include <cassert>
 
-cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
-    cGameState(theGame, ctx),
+cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
+    cGameState(theGame, services),
     m_moveSpeed(0.15f),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
 {
-    assert(ctx != nullptr);
-    auto *gfxinter = ctx->getGraphicsContext()->gfxinter.get();
+    assert(services != nullptr);
+    auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);
     int duneAtTheRight = m_game.m_gameSettings->getScreenW() - (m_duneBmp->w * 1.1f);

@@ -16,7 +16,7 @@ class cTextDrawer;
 
 class cNewMapEditorState : public cGameState {
 public:
-    explicit cNewMapEditorState(cGame &theGame, GameContext *ctx);
+    explicit cNewMapEditorState(cGame &theGame, sGameServices* services);
     ~cNewMapEditorState() override;
 
     void thinkFast() override;

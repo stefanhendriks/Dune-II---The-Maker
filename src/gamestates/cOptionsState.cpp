@@ -16,13 +16,13 @@
 
 #include <cassert>
 
-cOptionsState::cOptionsState(cGame &theGame, GameContext *ctx, int prevState)
-    : cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
+cOptionsState::cOptionsState(cGame &theGame, sGameServices* services, int prevState)
+    : cGameState(theGame, services),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     refresh();
     m_backgroundTexture = m_game.getScreenTexture();
 }

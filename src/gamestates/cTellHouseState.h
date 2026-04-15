@@ -9,7 +9,7 @@ struct s_DataCampaign;
 
 class cTellHouseState : public cGameState {
 public:
-    cTellHouseState(cGame &game, GameContext* ctx, s_DataCampaign* dataCampaign);
+    cTellHouseState(cGame &game, sGameServices* services, s_DataCampaign* dataCampaign);
     ~cTellHouseState() override;
 
     void thinkFast() override;

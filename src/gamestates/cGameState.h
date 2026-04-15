@@ -4,6 +4,7 @@
 #include "observers/cInputObserver.h"
 #include "sMouseEvent.h"
 #include "include/eGameState.h"
+#include "include/sGameServices.h"
 
 class cGame;
 class GameContext;
@@ -41,7 +42,7 @@ enum eGameStateType {
 class cGameState : cInputObserver {
 
 public:
-    explicit cGameState(cGame &theGame, GameContext* ctx);
+    explicit cGameState(cGame &theGame, sGameServices* services);
     virtual ~cGameState() = default;
 
     virtual void thinkFast() = 0;

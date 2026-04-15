@@ -14,7 +14,7 @@ class GuiWindow;
 
 class cSelectMissionState : public cGameState {
 public:
-    cSelectMissionState(cGame &theGame, GameContext* ctx, int prevState);
+    cSelectMissionState(cGame &theGame, sGameServices* services, int prevState);
     ~cSelectMissionState() override;
 
     void thinkFast() override;

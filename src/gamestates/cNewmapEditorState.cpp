@@ -12,12 +12,12 @@
 
 #include <cassert>
 
-cNewMapEditorState::cNewMapEditorState(cGame &theGame, GameContext *ctx)
-    : cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
+cNewMapEditorState::cNewMapEditorState(cGame &theGame, sGameServices* services)
+    : cGameState(theGame, services),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_guiWindow(nullptr)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     constructWindow();
 }
 

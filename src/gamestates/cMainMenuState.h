@@ -14,7 +14,7 @@ class cTextDrawer;
 
 class cMainMenuState : public cGameState {
 public:
-    explicit cMainMenuState(cGame &theGame, GameContext* ctx);
+    explicit cMainMenuState(cGame &theGame, sGameServices* services);
     ~cMainMenuState() override;
 
     void thinkFast() override;

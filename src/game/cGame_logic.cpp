@@ -829,7 +829,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get(), m_dataCampaign.get());
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, m_services.get(), m_dataCampaign.get());
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();
@@ -930,7 +930,7 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, ctx.get(), m_dataCampaign.get());
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game, m_services.get(), m_dataCampaign.get());
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
@@ -947,28 +947,28 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_SETUPSKIRMISH) {
                 initPlayers(false);
-                newStatePtr = new cSetupSkirmishState(*this, ctx.get(), m_PreviewMaps, m_dataCampaign.get());
+                newStatePtr = new cSetupSkirmishState(*this, m_services.get(), m_PreviewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_CREDITS) {
-                newStatePtr = new cCreditsState(*this, ctx.get());
+                newStatePtr = new cCreditsState(*this, m_services.get());
             }
             else if (newState == GAME_EDITOR) {
-                newStatePtr = new cEditorState(*this, ctx.get());
+                newStatePtr = new cEditorState(*this, m_services.get());
             }
             else if (newState == GAME_MENU) {
-                newStatePtr = new cMainMenuState(*this, ctx.get());
+                newStatePtr = new cMainMenuState(*this, m_services.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_NEW_MAP_EDITOR) {
-                newStatePtr = new cNewMapEditorState(*this, ctx.get());
+                newStatePtr = new cNewMapEditorState(*this, m_services.get());
             }
             else if (newState == GAME_SELECT_HOUSE) {
-                newStatePtr = new cChooseHouseState(*this, ctx.get());
+                newStatePtr = new cChooseHouseState(*this, m_services.get());
             }
             else if (newState == GAME_MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
-                newStatePtr = new cSelectMissionState(*this, ctx.get(), m_state);
+                newStatePtr = new cSelectMissionState(*this, m_services.get(), m_state);
             }
             else if (newState == GAME_OPTIONS) {
                 takeBackGroundScreen();
@@ -982,7 +982,7 @@ void cGame::setState(int newState)
                     // we fall back what was on screen, (which includes mouse cursor for now)
                 }
 
-                newStatePtr = new cOptionsState(*this, ctx.get(), m_state);
+                newStatePtr = new cOptionsState(*this, m_services.get(), m_state);
             }
             else if (newState == GAME_PLAYING) {
                 if (m_state == GAME_OPTIONS) {
@@ -992,7 +992,7 @@ void cGame::setState(int newState)
                     humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
                 }
                 else {
-                    newStatePtr = new cGamePlaying(*this, ctx.get());
+                    newStatePtr = new cGamePlaying(*this, m_services.get());
                     // re-create drawManager
                     delete game.m_drawManager;
                     game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
@@ -1016,27 +1016,27 @@ void cGame::setState(int newState)
                 }
             }
             else if (newState == GAME_PLAYING) {
-                newStatePtr = new cGamePlaying(*this, ctx.get());
+                newStatePtr = new cGamePlaying(*this, m_services.get());
             }
             else if (newState == GAME_LOSING) {
-                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Lose);
+                newStatePtr = new cWinLoseState(*this, m_services.get(), Outcome::Lose);
             }
             else if (newState == GAME_WINNING) {
-                newStatePtr = new cWinLoseState(*this, ctx.get(), Outcome::Win);
+                newStatePtr = new cWinLoseState(*this, m_services.get(), Outcome::Win);
             }
             else if (newState == GAME_TELLHOUSE) {
                 m_dataCampaign->housePlayer = game.m_gameObjectsContext->getPlayer(HUMAN).getHouse();
-                newStatePtr = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
+                newStatePtr = new cTellHouseState(*this, m_services.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
-                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::Briefing, m_dataCampaign.get());
+                newStatePtr = new cMentatState(*this, m_services.get(), MentatMode::Briefing, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
-                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::WinBrief, m_dataCampaign.get());
+                newStatePtr = new cMentatState(*this, m_services.get(), MentatMode::WinBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
-                newStatePtr = new cMentatState(*this, ctx.get(), MentatMode::LoseBrief, m_dataCampaign.get());
+                newStatePtr = new cMentatState(*this, m_services.get(), MentatMode::LoseBrief, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
 
@@ -1079,7 +1079,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
     game.m_gameObjectsContext->getPlayer(HUMAN).setHouse(house);
     m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
-        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, ctx.get(), m_dataCampaign.get());
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(*this, m_services.get(), m_dataCampaign.get());
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
 }

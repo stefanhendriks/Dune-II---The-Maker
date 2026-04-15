@@ -23,12 +23,12 @@ const int maxTileSize = 64;
 const int deltaTileSize = 4;
 
 
-cEditorState::cEditorState(cGame &theGame, GameContext* ctx) 
-    : cGameState(theGame, ctx),
-    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
-    m_gfxeditor(ctx->getGraphicsContext()->gfxeditor.get())
+cEditorState::cEditorState(cGame &theGame, sGameServices* services) 
+    : cGameState(theGame, services),
+    m_gfxdata(m_ctx->getGraphicsContext()->gfxdata.get()),
+    m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get())
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     const cRectangle &selectRect = cRectangle(0, 0, m_game.m_gameSettings->getScreenW(), heightBarSize);
     const cRectangle &modifRect = cRectangle(m_game.m_gameSettings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_game.m_gameSettings->getScreenH()-heightBarSize);
     mapSizeArea = cRectangle(0,heightBarSize,m_game.m_gameSettings->getScreenW()-heightBarSize,m_game.m_gameSettings->getScreenH()-heightBarSize);

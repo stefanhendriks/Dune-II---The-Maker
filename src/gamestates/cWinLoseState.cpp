@@ -14,9 +14,10 @@
 #include <format>
 #include <cassert>
 
-cWinLoseState::cWinLoseState(cGame &theGame, GameContext* ctx, Outcome value) : cGameState(theGame, ctx), m_statement(value)
+cWinLoseState::cWinLoseState(cGame &theGame, sGameServices* services, Outcome value) : 
+    cGameState(theGame, services), m_statement(value)
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     if (m_game.getScreenTexture() != nullptr)
         m_backgroundTexture = m_game.getScreenTexture();
     

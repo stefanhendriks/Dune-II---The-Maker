@@ -18,12 +18,12 @@
 
 #include "data/gfxaudio.h"
 
-cChooseHouseState::cChooseHouseState(cGame &theGame, GameContext* ctx) :
-    cGameState(theGame, ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+cChooseHouseState::cChooseHouseState(cGame &theGame, sGameServices* services) :
+    cGameState(theGame, services),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
-    assert(ctx != nullptr);
+    assert(services != nullptr);
     backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(), " BACK");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
